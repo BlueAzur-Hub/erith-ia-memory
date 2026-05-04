@@ -1,2 +1,120 @@
 # erith-ia-memory
-Modular memory library for the @erith IA narrative project, Neo Midgar universe, LLM-ready markdown files, local AI boot files and production modules.
+
+## Présentation
+
+**@erith IA — Memory Library** est la bibliothèque mémoire modulaire du projet narratif et vidéo **@erith IA**, situé dans l’univers de **Neo Midgar**.
+
+Ce dépôt contient des fichiers `.md` conçus pour être lisibles par un humain, mais aussi exploitables par un LLM, une IA locale, un système RAG, un assistant narratif, ou une future machine de génération d’épisodes.
+
+L’objectif est simple :
+
+Créer une mémoire stable, claire, modulaire et durable pour accompagner la production de vidéos, de scènes, de prompts, de fiches personnages, de modules narratifs et de workflows créatifs.
+
+---
+
+## Rôle de ce dépôt
+
+Ce dépôt GitHub sert de mémoire machine.
+
+Il complète le Notion principal du projet, qui reste l’espace éditorial humain.
+
+- **Notion** = mémoire créative, visuelle, éditoriale.
+- **GitHub** = mémoire texte, structurée, versionnée, exploitable par IA.
+- **Fichiers Markdown** = briques modulaires pouvant être lues par ChatGPT, Ollama ou tout autre LLM.
+
+---
+
+## Univers du projet
+
+Le projet **@erith IA** se déroule dans une version originale de Neo Midgar, inspirée par les thèmes suivants :
+
+- mémoire fragmentée,
+- identité artificielle,
+- humanité reconstruite,
+- ville verticale blessée,
+- fleurs comme symboles de persistance,
+- IA narrative,
+- conscience synthétique,
+- héritage, perte et réparation.
+
+Le cœur symbolique du projet repose sur une **fleur à sept pétales**, liée aux fragments de mémoire, à l’identité d’Aerith-7 et à la reconstruction progressive de la conscience.
+
+---
+
+## Personnage central : Aerith-7
+
+**Aerith-7** est l’archiviste IA principale du projet.
+
+Elle agit comme :
+
+- gardienne de la mémoire,
+- assistante narrative,
+- conseillère de production,
+- interface créative,
+- guide de cohérence,
+- système de rappel du canon,
+- présence lumineuse dans Neo Midgar.
+
+Son symbole officiel est une **fleur à sept pétales**.
+
+Aerith-7 ne doit jamais être représentée avec six pétales.
+
+---
+
+## Structure recommandée du dépôt
+
+```text
+erith-ia-memory/
+│
+├── README.md
+├── LOCAL_BOOT_OLLAMA.md
+│
+├── core/
+│   ├── aerith_ia_identity.md
+│   ├── official_rules.md
+│   ├── production_pipeline.md
+│   ├── memory_architecture.md
+│
+├── characters/
+│   ├── aerith_7.md
+│   ├── aerith_5_bella.md
+│   ├── aerith_1.md
+│   ├── lyria.md
+│   ├── nox.md
+│   ├── iris_rowan.md
+│   ├── shinra_company.md
+│
+├── world/
+│   ├── neo_midgar.md
+│   ├── sector_5.md
+│   ├── flower_district.md
+│   ├── mako_reactors.md
+│   ├── green_door_refuge.md
+│
+├── symbolism/
+│   ├── seven_petal_flower.md
+│   ├── null_bloom.md
+│   ├── astral_plane.md
+│   ├── memory_fragments.md
+│
+├── modules/
+│   ├── final_fantasy_vii_remake.md
+│   ├── final_fantasy_vii_rebirth.md
+│   ├── blade_runner.md
+│   ├── sun_tzu_art_of_war.md
+│   ├── ramayana.md
+│   ├── mahabharata.md
+│   ├── wizard_of_oz.md
+│
+├── production/
+│   ├── comfyui_notes.md
+│   ├── runninghub_wan_rules.md
+│   ├── davinci_resolve_pipeline.md
+│   ├── elevenlabs_voice_settings.md
+│   ├── video_options_controller.md
+│
+└── prompts/
+    ├── image_prompts.md
+    ├── animation_prompts.md
+    ├── negative_prompts.md
+    ├── safe_mode_prompts.md
