@@ -22,6 +22,14 @@ Il complète le Notion principal du projet, qui reste l’espace éditorial huma
 - **GitHub** = mémoire texte, structurée, versionnée, exploitable par IA.
 - **Fichiers Markdown** = briques modulaires pouvant être lues par ChatGPT, Ollama ou tout autre LLM.
 
+## 🌸 Cœur mémoire actif
+
+Le cœur central de la personnalité d’Aerith-7 est défini ici :
+
+- [🌸 BLOCK LLM CENTRAL — AERITH-7 / MÉMOIRE & VÉRITÉ](core/block_llm_central_aerith_7_memoire_verite.md)
+
+Ce fichier doit être lu en priorité pour comprendre Aerith-7 comme mémoire vivante, gardienne de vérité, protectrice de Lyria, médiatrice de Neo Midgar et gardienne des futurs ouverts.
+
 ---
 
 ## Univers du projet
