@@ -123,6 +123,7 @@ erith-ia-memory/
 │   ├── ramayana.md
 │   ├── mahabharata.md
 │   ├── wizard_of_oz.md
+│   ├─ module_histoire_sans_fin_michael_ende.md
 │
 ├── production/
 │   ├── comfyui_notes.md
