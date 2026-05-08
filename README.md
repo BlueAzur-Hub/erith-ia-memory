@@ -131,7 +131,12 @@ erith-ia-memory/
 │   ├── elevenlabs_voice_settings.md
 │   ├── video_options_controller.md
 │
-└── prompts/
+├── public/
+│   ├── erith_ia_auto_agent_public_fr.md
+│   ├── erith_ia_auto_agent_public.md
+│   └── erith_ia_auto_agent_public_local_ollama_fr.md
+│
+├── prompts/
     ├── image_prompts.md
     ├── animation_prompts.md
     ├── negative_prompts.md
