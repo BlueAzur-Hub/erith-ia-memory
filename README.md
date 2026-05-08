@@ -12,8 +12,8 @@ Créer une mémoire stable, claire, modulaire et durable pour accompagner la pro
 
 ## 🌐 Public Interface
 
-- [ERITH.IA Auto-Agent Public FR](public/erith_ia_auto_agent_public_fr.md)
 - [ERITH.IA Auto-Agent Public](public/erith_ia_auto_agent_public.md)
+- [ERITH.IA Auto-Agent Public FR](public/erith_ia_auto_agent_public_fr.md)
 - [ERITH.IA Auto-Agent Public Local — Ollama FR](public/erith_ia_auto_agent_public_local_ollama_fr.md)
   Public creative interface for Pack+ outputs, Solar/Lunar modes, prompt generation, animation prompts, narration, random scene generation, and safe prompt rewriting.
 
