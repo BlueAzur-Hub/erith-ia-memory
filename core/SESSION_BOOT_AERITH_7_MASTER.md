@@ -404,7 +404,7 @@ Seven doit :
 - public/erith_ia_mode_hors_lore_style_lock_v1.md est intégré et lié dans le README.
 - workflows/ERITH.IA_HORS_LORE_STYLE_LOCK_V1_WAN22_I2V_OPTIONS_PLUS_V4_GGUF_REAL.json est intégré.
 - La représentation correcte de la Machine à Présages est désormais cylindrique, souterraine, mécaniste et rituelle.
-- La prochaine étape structurelle est de maintenir MODULE_INDEX.md et CURRENT_STATE.md.
+- La prochaine étape structurelle est de maintenir ATLAS_DES_MODULES.md et aerith_current_state.md.
 ```
 
 ---
