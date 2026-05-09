@@ -1,4 +1,4 @@
-# ERITH.IA — Version Publique FR
+# ERITH.IA — Version Publique FR 
 
 ## Statut
 
