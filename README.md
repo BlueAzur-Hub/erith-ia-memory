@@ -124,6 +124,7 @@ erith-ia-memory/
 │   ├── mahabharata.md
 │   ├── wizard_of_oz.md
 │   ├─ module_histoire_sans_fin_michael_ende.md
+│   ├─ [Alice au Pays des Merveilles — Lewis Carroll](modules/module_alice_pays_merveilles_lewis_carroll.md)
 │
 ├── production/
 │   ├── comfyui_notes.md
