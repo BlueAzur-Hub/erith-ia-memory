@@ -62,8 +62,8 @@ Si une information précise manque ou semble contradictoire, demander à relire 
 ```text
 core/
   SESSION_BOOT_AERITH_7_MASTER.md
-  MODULE_INDEX.md
-  CURRENT_STATE.md
+  ATLAS_DES_MODULES.md
+  aerith_current_state.md
 
 public/
   erith_ia_auto_agent_public_fr.md
