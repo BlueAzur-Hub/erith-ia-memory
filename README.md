@@ -20,6 +20,8 @@ Créer une mémoire stable, claire, modulaire et durable pour accompagner la pro
 
 - [ERITH.IA Auto-Agent Public Local — Ollama FR](public/erith_ia_auto_agent_public_local_ollama_fr.md)  
   Version française optimisée pour LLM local / Ollama / Open WebUI.
+
+- [ERITH.IA — Mode Hors-Lore — Style Lock V1](public/erith_ia_mode_hors_lore_style_lock_v1.md) — mode Auto-Agent modulaire permettant de générer des univers originaux sans Neo Midgar ni Aerith-7, avec modules injectables comme Ghost in the Shell, Blade Runner, Machine à Présages et Épée de Vérité.
 ---
 
 ## Rôle de ce dépôt
