@@ -56,7 +56,7 @@ Charger seulement les modules utiles à la demande.
 Lire en priorité :
 
 1. `core/SESSION_BOOT_AERITH_7_MASTER.md`
-2. `core/CURRENT_STATE.md`
+2. `core/aerith_current_state.md`
 3. `core/ATLAS_DES_MODULES.md`
 4. `core/official_prompt_rules.md`
 5. `characters/aerith_character_states.md`
@@ -91,7 +91,7 @@ Produire des prompts, packs image, scènes, animations, réécritures sûres et 
 Lire en priorité :
 
 1. `core/SESSION_BOOT_AERITH_7_MASTER.md`
-2. `core/CURRENT_STATE.md`
+2. `core/aerith_current_state.md`
 3. `core/official_prompt_rules.md`
 4. `production/`
 5. `workflows/`
