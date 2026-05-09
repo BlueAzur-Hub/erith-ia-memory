@@ -127,7 +127,7 @@ erith-ia-memory/
 │   ├─ [Alice au Pays des Merveilles — Lewis Carroll](modules/module_alice_pays_merveilles_lewis_carroll.md)
 │   ├─ [Aladin et la Lampe merveilleuse](modules/module_aladin_lampe_merveilleuse.md)
 │   ├─ [Aladin — Disney Animated Trilogy](modules/module_aladin_disney_trilogie.md)
-│   ├─ [Aladdin Disney 1992](modules/module_aladdin_disney_1992.md)
+│   ├─ [Aladin Disney 1992](modules/module_aladdin_disney_1992.md)
 │   ├─ [Le Retour de Jafar](modules/module_aladdin_retour_de_jafar_1994.md)
 │   ├─ [Aladdin et le Roi des voleurs](modules/module_aladdin_roi_des_voleurs_1996.md)
 │
