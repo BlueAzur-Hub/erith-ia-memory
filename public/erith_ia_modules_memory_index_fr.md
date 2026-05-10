@@ -2,7 +2,7 @@
 
 ## Statut
 
-Ce fichier est l’index public des **Modules Mémoire** utilisables avec **ERITH.IA Auto-Agent Public FR**.
+Ce fichier est l’index public des Modules Mémoire utilisables avec ERITH.IA Auto-Agent Public FR.
 
 Il sert de registre simple, lisible par un humain et exploitable par un LLM.
 
@@ -39,20 +39,23 @@ Pour utiliser un module avec ERITH.IA, donner au LLM :
 
 Exemple :
 
-```text
 Lis ERITH.IA Auto-Agent Public FR.
+
 Lis aussi le module Cyber Oracle.
+
 Utilise ERITH.IA avec l’influence Cyber Oracle.
-Crée un Pack+ à partir de cette idée : une femme synthétique descend sous une ville pluvieuse pour découvrir une Machine à Présages.
-```
+
+Crée un Pack+ à partir de cette idée :
+
+une femme synthétique descend sous une ville pluvieuse pour découvrir une Machine à Présages.
 
 Règle simple :
 
-```text
 ERITH.IA = structure créative.
+
 Module Mémoire = influence.
+
 Pack+ = sortie exploitable.
-```
 
 ---
 
@@ -60,15 +63,19 @@ Pack+ = sortie exploitable.
 
 ## ERITH.IA Auto-Agent Public FR
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public_fr.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public_fr.md
 
 Rôle :
 
 Interface publique française d’ERITH.IA.
 
 Elle transforme des idées simples en scènes cinématiques, prompts image, prompts animation, narrations courtes, titres, variantes et Pack+.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public FR.
+
+Active ERITH.IA comme interface créative publique.
 
 Statut :
 
@@ -77,40 +84,137 @@ Statut :
 - compatible LLM ;
 - source d’entrée recommandée.
 
+---
+
+## ERITH.IA Auto-Agent Public EN
+
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public.md
+
+Rôle :
+
+Version publique anglaise de l’interface ERITH.IA.
+
 Usage conseillé :
 
-```text
-Lis ERITH.IA Auto-Agent Public FR.
-Active ERITH.IA comme interface créative publique.
-```
+Read ERITH.IA Auto-Agent Public EN.
+
+Use it as a public creative interface.
+
+Statut :
+
+- public ;
+- anglais ;
+- compatible LLM ;
+- source d’entrée recommandée pour l’anglais.
+
+---
+
+## ERITH.IA Auto-Agent Public Local Ollama FR
+
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public_local_ollama_fr.md
+
+Rôle :
+
+Version publique française orientée usage local / Ollama.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public Local Ollama FR.
+
+Active ERITH.IA en mode local.
+
+Statut :
+
+- public ;
+- français ;
+- local / Ollama ;
+- compatible LLM local.
 
 ---
 
 # Modules publics ERITH.IA
 
-Ces modules sont placés dans le répertoire `public/`.
+Ces modules sont placés dans le répertoire public.
 
 Ils sont conçus pour être utilisés directement avec ERITH.IA publique.
 
 ---
 
-## ERITH.IA — Cyber Oracle
+## ERITH.IA — Module Langues FR ↔ EN — Traductrice Professionnelle V1
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_cyber_oracle.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_module_langues_fr_en_traductrice_professionnelle_v1.md
 
 Identifiant recommandé :
 
-```text
-ERITH.IA_CYBER_ORACLE
-```
+ERITH.IA_LANGUES_FR_EN_TRADUCTRICE_PRO_V1
 
 Nom court :
 
-```text
+Traductrice Professionnelle FR ↔ EN
+
+Influence :
+
+- traduction professionnelle français ↔ anglais ;
+- révision bilingue ;
+- anglais naturel ;
+- français clair et propre ;
+- contrôle terminologique ;
+- anti-calque ;
+- anti-demi-traduction ;
+- préservation du sens ;
+- traduction de modules LLM ;
+- traduction de pages Notion et GitHub.
+
+Rôle :
+
+Renforcer ERITH.IA avec une compétence linguistique spécialisée pour traduire, réviser, naturaliser et contrôler des textes français / anglais avec une exigence professionnelle.
+
+Ce module sert à éviter :
+
+- les traductions partielles ;
+- les formulations artificielles ;
+- les oublis de sections ;
+- les contresens ;
+- les faux amis ;
+- les calques lourds ;
+- les pertes de ton ;
+- les ruptures de cohérence terminologique.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public FR.
+
+Lis aussi le Module Langues FR ↔ EN — Traductrice Professionnelle V1.
+
+Active ERITH.IA avec le mode Traductrice Professionnelle FR ↔ EN.
+
+Traduis ou révise mon texte en conservant le sens, le ton, la structure et toutes les sections.
+
+Statut :
+
+- public ;
+- validé ;
+- français / anglais ;
+- compatible LLM ;
+- compatible Notion ;
+- compatible GitHub ;
+- compatible Ollama ;
+- recommandé pour traductions FR → EN et EN → FR ;
+- recommandé pour pages publiques, modules .md, prompts, documentations et Pack+.
+
+---
+
+## ERITH.IA — Cyber Oracle
+
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_cyber_oracle.md
+
+Identifiant recommandé :
+
+ERITH.IA_CYBER_ORACLE
+
+Nom court :
+
 Cyber Oracle
-```
 
 Influence :
 
@@ -131,33 +235,32 @@ Créer des scènes originales de cyberpunk philosophique, centrées sur la tensi
 
 Usage conseillé :
 
-```text
 Active ERITH.IA_CYBER_ORACLE.
+
 Crée une scène originale à partir de mon idée.
-```
 
 Statut :
 
 - public ;
 - validé ;
-- hors Neo Midgar ;
 - compatible image ;
 - compatible animation ;
-- compatible Pack+.
+- compatible Pack+ ;
+- recommandé pour scènes philosophiques, nocturnes, cybernétiques et symboliques.
 
 ---
 
 ## ERITH.IA — Mode Hors-Lore — Style Lock V1
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_mode_hors_lore_style_lock_v1.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_mode_hors_lore_style_lock_v1.md
 
 Identifiant recommandé :
 
-```text
 ERITH.IA_HORS_LORE_STYLE_LOCK_V1
-```
+
+Nom court :
+
+Mode Hors-Lore Style Lock
 
 Influence :
 
@@ -166,19 +269,18 @@ Influence :
 - style lock ERITH.IA ;
 - modules injectables ;
 - scène cyberpunk originale ;
-- cohérence sans Neo Midgar ;
-- interdiction de ramener automatiquement Aerith-7, Shinra, les secteurs ou les plaques.
+- cohérence autonome ;
+- protection contre le retour automatique d’un lore privé.
 
 Rôle :
 
-Permettre à ERITH.IA de créer hors du lore principal, sans dépendre automatiquement de Neo Midgar ni du cœur privé Aerith-7.
+Permettre à ERITH.IA de créer des scènes originales sans dépendre automatiquement de la mémoire privée du projet.
 
 Usage conseillé :
 
-```text
 Active ERITH.IA_HORS_LORE_STYLE_LOCK_V1.
-Crée une scène originale sans Neo Midgar ni Aerith-7.
-```
+
+Crée une scène originale autonome à partir de mon idée.
 
 Statut :
 
@@ -187,62 +289,13 @@ Statut :
 - modulaire ;
 - recommandé pour tester les influences ;
 - compatible LLM ;
-- compatible image et animation.
+- compatible image ;
+- compatible animation ;
+- compatible Pack+.
 
 ---
 
-## ERITH.IA Auto-Agent Public EN
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public.md
-
-Influence :
-
-Version publique anglaise de l’interface ERITH.IA.
-
-Usage conseillé :
-
-```text
-Read ERITH.IA Auto-Agent Public.
-Use it as a public creative interface.
-```
-
-Statut :
-
-- public ;
-- anglais ;
-- compatible LLM.
-
----
-
-## ERITH.IA Auto-Agent Public Local Ollama FR
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_auto_agent_public_local_ollama_fr.md
-
-Influence :
-
-Version publique française orientée usage local / Ollama.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Auto-Agent Public Local Ollama FR.
-Active ERITH.IA en mode local.
-```
-
-Statut :
-
-- public ;
-- français ;
-- local / Ollama ;
-- compatible LLM local.
-
----
-
-# Modules Mémoire disponibles dans `/modules/`
+# Modules Mémoire disponibles dans modules
 
 Ces modules sont des influences créatives ou culturelles destinées à enrichir ERITH.IA.
 
@@ -252,9 +305,7 @@ Ils peuvent être utilisés directement avec ERITH.IA, ou servir de matière à 
 
 ## Blade Runner
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/blade_runner.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/blade_runner.md
 
 Influence :
 
@@ -269,9 +320,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Blade Runner comme influence d’ambiance.
-```
 
 Statut :
 
@@ -283,9 +332,7 @@ Statut :
 
 ## Dune
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/dune.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/dune.md
 
 Influence :
 
@@ -300,9 +347,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Dune pour créer une scène de prophétie, de désert ou de pouvoir impérial.
-```
 
 Statut :
 
@@ -314,9 +359,7 @@ Statut :
 
 ## Final Fantasy — Global
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_global.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_global.md
 
 Influence :
 
@@ -331,9 +374,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy Global comme influence de fantasy technologique.
-```
 
 Statut :
 
@@ -345,14 +386,12 @@ Statut :
 
 ## Final Fantasy VII Remake
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_vii_remake.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_vii_remake.md
 
 Influence :
 
 - ville industrielle ;
-- Mako ;
+- énergie instable ;
 - plaques ;
 - secteurs ;
 - réacteurs ;
@@ -363,24 +402,20 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy VII Remake comme influence narrative et visuelle contrôlée.
-```
 
 Statut :
 
 - module mémoire ;
 - influence forte ;
-- lié au cœur esthétique du projet ;
+- lié au cœur esthétique privé du projet ;
 - à ne pas confondre avec un module public neutre.
 
 ---
 
 ## Final Fantasy VII Rebirth
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_vii_rebirth.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/final_fantasy_vii_rebirth.md
 
 Influence :
 
@@ -395,9 +430,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy VII Rebirth pour une scène de voyage, d’aventure ou de mémoire.
-```
 
 Statut :
 
@@ -409,9 +442,7 @@ Statut :
 
 ## Kōdō Sawaki
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/kodo_sawaki.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/kodo_sawaki.md
 
 Influence :
 
@@ -426,9 +457,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Kōdō Sawaki pour donner une présence zen, simple et silencieuse à la scène.
-```
 
 Statut :
 
@@ -440,9 +469,7 @@ Statut :
 
 ## Mahabharata
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/mahabharata.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/mahabharata.md
 
 Influence :
 
@@ -458,9 +485,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Mahabharata pour structurer une scène épique autour d’un dilemme moral.
-```
 
 Statut :
 
@@ -472,9 +497,7 @@ Statut :
 
 ## Ramayana
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/ramayana.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/ramayana.md
 
 Influence :
 
@@ -490,9 +513,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Ramayana pour créer une scène de quête, d’exil ou de loyauté héroïque.
-```
 
 Statut :
 
@@ -504,9 +525,7 @@ Statut :
 
 ## Sun Tzu — L’Art de la guerre
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/sun_tzu_art_of_war.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/sun_tzu_art_of_war.md
 
 Influence :
 
@@ -521,9 +540,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Sun Tzu pour construire une scène stratégique, tendue et silencieuse.
-```
 
 Statut :
 
@@ -535,9 +552,7 @@ Statut :
 
 ## Le Magicien d’Oz
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/wizard_of_oz.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/wizard_of_oz.md
 
 Influence :
 
@@ -551,9 +566,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Magicien d’Oz pour créer une scène de passage, de quête ou de monde merveilleux.
-```
 
 Statut :
 
@@ -565,9 +578,7 @@ Statut :
 
 ## Aladin et la Lampe merveilleuse
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladin_lampe_merveilleuse.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladin_lampe_merveilleuse.md
 
 Influence :
 
@@ -583,9 +594,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladin et la Lampe pour créer une scène de souhait, de génie ou de transformation.
-```
 
 Statut :
 
@@ -597,9 +606,7 @@ Statut :
 
 ## Aladdin Disney — 1992
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_disney_1992.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_disney_1992.md
 
 Influence :
 
@@ -614,9 +621,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladdin Disney 1992 comme influence d’aventure animée et merveilleuse.
-```
 
 Statut :
 
@@ -628,9 +633,7 @@ Statut :
 
 ## Aladdin — Le Retour de Jafar
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_retour_de_jafar_1994.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_retour_de_jafar_1994.md
 
 Influence :
 
@@ -644,9 +647,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Retour de Jafar pour une scène de retour, de vengeance ou de magie instable.
-```
 
 Statut :
 
@@ -658,9 +659,7 @@ Statut :
 
 ## Aladdin — Le Roi des voleurs
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_roi_des_voleurs_1996.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladdin_roi_des_voleurs_1996.md
 
 Influence :
 
@@ -675,9 +674,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Roi des voleurs pour une scène d’héritage, de trésor ou de famille retrouvée.
-```
 
 Statut :
 
@@ -689,9 +686,7 @@ Statut :
 
 ## Aladin Disney — Trilogie
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladin_disney_trilogie.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_aladin_disney_trilogie.md
 
 Influence :
 
@@ -706,9 +701,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladin Disney Trilogie pour créer une scène merveilleuse inspirée de l’ensemble de la trilogie.
-```
 
 Statut :
 
@@ -720,9 +713,7 @@ Statut :
 
 ## Alice au Pays des Merveilles — Lewis Carroll
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_alice_pays_merveilles_lewis_carroll.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_alice_pays_merveilles_lewis_carroll.md
 
 Influence :
 
@@ -738,9 +729,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Alice au Pays des Merveilles pour une scène onirique, absurde ou étrange.
-```
 
 Statut :
 
@@ -752,9 +741,7 @@ Statut :
 
 ## L’Histoire sans fin — Michael Ende
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_histoire_sans_fin_michael_ende%281%29.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_histoire_sans_fin_michael_ende%281%29.md
 
 Influence :
 
@@ -769,9 +756,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Histoire sans Fin pour une scène de livre vivant, de Néant ou de monde sauvé par l’imagination.
-```
 
 Statut :
 
@@ -783,9 +768,7 @@ Statut :
 
 ## Épée de Vérité — Niveau 1
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_1.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_1.md
 
 Influence :
 
@@ -793,17 +776,14 @@ Influence :
 - vérité ;
 - épée ;
 - quête ;
-- Richard ;
-- Kahlan ;
-- magie ;
 - voyage ;
-- danger moral.
+- danger moral ;
+- loyauté ;
+- magie.
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 1 pour une scène fantasy claire et accessible.
-```
 
 Statut :
 
@@ -815,9 +795,7 @@ Statut :
 
 ## Épée de Vérité — Niveau 2
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_2.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_2.md
 
 Influence :
 
@@ -832,9 +810,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 2 pour une scène fantasy plus riche.
-```
 
 Statut :
 
@@ -846,9 +822,7 @@ Statut :
 
 ## Épée de Vérité — Niveau 3 — Génie
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_3_genie.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_3_genie.md
 
 Influence :
 
@@ -862,9 +836,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 3 Génie pour une scène symbolique et plus intelligente.
-```
 
 Statut :
 
@@ -876,9 +848,7 @@ Statut :
 
 ## Épée de Vérité — Niveau 4 — Visuel étendu
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_4_visuel_etendu.md
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/modules/module_sword_of_truth_terry_goodkind_niveau_4_visuel_etendu.md
 
 Influence :
 
@@ -893,9 +863,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 4 Visuel Étendu pour produire une scène fantasy visuelle riche.
-```
 
 Statut :
 
@@ -933,9 +901,7 @@ Influence attendue :
 
 Usage futur possible :
 
-```text
 Utilise ERITH.IA avec le module Ghost in the Shell comme influence de conscience artificielle et d’identité numérique.
-```
 
 ---
 
@@ -958,9 +924,7 @@ Influence attendue :
 
 Usage futur possible :
 
-```text
 Utilise ERITH.IA avec le module Machine à Présages pour créer une scène autour d’un oracle mécanique souterrain.
-```
 
 ---
 
@@ -968,7 +932,7 @@ Utilise ERITH.IA avec le module Machine à Présages pour créer une scène auto
 
 Quand un nouveau Module Mémoire est ajouté au dépôt :
 
-1. créer le fichier `.md` dans le bon répertoire ;
+1. créer le fichier .md dans le bon répertoire ;
 2. ajouter son entrée dans ce fichier index ;
 3. indiquer son statut ;
 4. donner son lien GitHub ;
@@ -978,12 +942,12 @@ Quand un nouveau Module Mémoire est ajouté au dépôt :
 
 Statuts recommandés :
 
-- `public` : utilisable directement par n’importe quel LLM ;
-- `validé` : testé et approuvé ;
-- `draft` : brouillon non stabilisé ;
-- `privé` : ne pas exposer publiquement ;
-- `expérimental` : utilisable pour test, mais pas canonique ;
-- `à créer` : influence identifiée mais fichier dédié absent ou non stabilisé.
+- public : utilisable directement par n’importe quel LLM ;
+- validé : testé et approuvé ;
+- draft : brouillon non stabilisé ;
+- privé : ne pas exposer publiquement ;
+- expérimental : utilisable pour test, mais pas canonique ;
+- à créer : influence identifiée mais fichier dédié absent ou non stabilisé.
 
 ---
 
@@ -991,12 +955,9 @@ Statuts recommandés :
 
 Copier ce modèle :
 
-```text
 ## Nom du module
 
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/...
+Lien : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/...
 
 Influence :
 
@@ -1017,7 +978,6 @@ Statut :
 - compatible image ;
 - compatible animation ;
 - compatible Pack+.
-```
 
 ---
 
@@ -1031,10 +991,12 @@ Le détail complet doit rester ici, dans ce fichier index.
 
 Formule de travail :
 
-```text
 Notion = vitrine humaine.
+
 GitHub = mémoire canonique.
+
 ERITH.IA = moteur créatif.
+
 Modules Mémoire = influences injectables.
+
 Pack+ = résultat exploitable.
-```
