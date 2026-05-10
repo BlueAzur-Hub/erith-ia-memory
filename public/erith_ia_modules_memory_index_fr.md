@@ -2,7 +2,7 @@
 
 ## Statut
 
-Ce fichier est l’index public des **Modules Mémoire** utilisables avec **ERITH.IA Auto-Agent Public FR**.
+Ce fichier est l’index public des Modules Mémoire utilisables avec **ERITH.IA Auto-Agent Public FR**.
 
 Il sert de registre simple, lisible par un humain et exploitable par un LLM.
 
@@ -39,7 +39,6 @@ Pour utiliser un module avec ERITH.IA, donner au LLM :
 
 Exemple :
 
-```text
 Lis ERITH.IA Auto-Agent Public FR.
 
 Lis aussi le module Cyber Oracle.
@@ -47,16 +46,16 @@ Lis aussi le module Cyber Oracle.
 Utilise ERITH.IA avec l’influence Cyber Oracle.
 
 Crée un Pack+ à partir de cette idée :
+
 une femme synthétique descend sous une ville pluvieuse pour découvrir une Machine à Présages.
-```
 
 Règle simple :
 
-```text
-ERITH.IA = structure créative.
-Module Mémoire = influence.
-Pack+ = sortie exploitable.
-```
+**ERITH.IA = structure créative.**
+
+**Module Mémoire = influence.**
+
+**Pack+ = sortie exploitable.**
 
 ---
 
@@ -76,11 +75,9 @@ Elle transforme des idées simples en scènes cinématiques, prompts image, prom
 
 Usage conseillé :
 
-```text
 Lis ERITH.IA Auto-Agent Public FR.
 
 Active ERITH.IA comme interface créative publique.
-```
 
 Statut :
 
@@ -103,11 +100,9 @@ Version publique anglaise de l’interface ERITH.IA.
 
 Usage conseillé :
 
-```text
 Read ERITH.IA Auto-Agent Public EN.
 
 Use it as a public creative interface.
-```
 
 Statut :
 
@@ -130,11 +125,9 @@ Version publique française orientée usage local / Ollama.
 
 Usage conseillé :
 
-```text
 Lis ERITH.IA Auto-Agent Public Local Ollama FR.
 
 Active ERITH.IA en mode local.
-```
 
 Statut :
 
@@ -147,7 +140,7 @@ Statut :
 
 # Modules publics ERITH.IA
 
-Ces modules sont placés dans le répertoire `public/`.
+Ces modules sont placés dans le répertoire `public`.
 
 Ils sont conçus pour être utilisés directement avec ERITH.IA publique.
 
@@ -161,15 +154,11 @@ https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_module
 
 Identifiant recommandé :
 
-```text
 ERITH.IA_LANGUES_FR_EN_TRADUCTRICE_PRO_V1
-```
 
 Nom court :
 
-```text
 Traductrice Professionnelle FR ↔ EN
-```
 
 Influence :
 
@@ -201,7 +190,6 @@ Ce module sert à éviter :
 
 Usage conseillé :
 
-```text
 Lis ERITH.IA Auto-Agent Public FR.
 
 Lis aussi le Module Langues FR ↔ EN — Traductrice Professionnelle V1.
@@ -209,7 +197,6 @@ Lis aussi le Module Langues FR ↔ EN — Traductrice Professionnelle V1.
 Active ERITH.IA avec le mode Traductrice Professionnelle FR ↔ EN.
 
 Traduis ou révise mon texte en conservant le sens, le ton, la structure et toutes les sections.
-```
 
 Statut :
 
@@ -221,7 +208,7 @@ Statut :
 - compatible GitHub ;
 - compatible Ollama ;
 - recommandé pour traductions FR → EN et EN → FR ;
-- recommandé pour pages publiques, modules `.md`, prompts, documentations et Pack+.
+- recommandé pour pages publiques, modules .md, prompts, documentations et Pack+.
 
 ---
 
@@ -233,15 +220,11 @@ https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_cyber_
 
 Identifiant recommandé :
 
-```text
 ERITH.IA_CYBER_ORACLE
-```
 
 Nom court :
 
-```text
 Cyber Oracle
-```
 
 Influence :
 
@@ -262,11 +245,9 @@ Créer des scènes originales de cyberpunk philosophique, centrées sur la tensi
 
 Usage conseillé :
 
-```text
 Active ERITH.IA_CYBER_ORACLE.
 
 Crée une scène originale à partir de mon idée.
-```
 
 Statut :
 
@@ -279,327 +260,6 @@ Statut :
 
 ---
 
-## ERITH.IA — Math Oracle
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_fr.md
-
-Identifiant recommandé :
-
-```text
-ERITH.IA_MATH_ORACLE
-```
-
-Nom court :
-
-```text
-Math Oracle
-```
-
-Influence :
-
-- mathématiques claires ;
-- logique ;
-- nombres ;
-- suites ;
-- Fibonacci ;
-- nombre d’or ;
-- géométrie ;
-- formes ;
-- proportions ;
-- probabilités ;
-- statistiques ;
-- optimisation ;
-- algorithmes ;
-- IA générative ;
-- composition visuelle ;
-- animation ;
-- raisonnement vérifiable.
-
-Rôle :
-
-Rendre les mathématiques compréhensibles, visuelles, progressives et utiles.
-
-Math Oracle sert à expliquer, vérifier, structurer et appliquer les mathématiques sans jargon inutile.
-
-Il peut aider à comprendre une notion, vérifier un calcul, construire une intuition, relier les nombres aux formes, ou utiliser les mathématiques dans une production créative.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Auto-Agent Public FR.
-
-Lis aussi ERITH.IA Math Oracle.
-
-Active ERITH.IA_MATH_ORACLE.
-
-Explique-moi le sujet suivant de manière claire, visuelle et progressive :
-[sujet]
-```
-
-Statut :
-
-- public ;
-- français ;
-- compatible LLM ;
-- compatible apprentissage ;
-- compatible raisonnement ;
-- compatible création ;
-- compatible production IA.
-
----
-
-## ERITH.IA — Math Oracle Lite
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_lite_fr.md
-
-Identifiant recommandé :
-
-```text
-ERITH.IA_MATH_ORACLE_LITE
-```
-
-Nom court :
-
-```text
-Math Oracle Lite
-```
-
-Influence :
-
-- activation rapide ;
-- mathématiques claires ;
-- explication simple ;
-- raisonnement étape par étape ;
-- exemples courts ;
-- analogies visuelles ;
-- vérification de base.
-
-Rôle :
-
-Version courte de Math Oracle, faite pour charger rapidement le comportement mathématique dans un LLM.
-
-Elle sert quand on veut une réponse claire sans charger tout le module complet.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Math Oracle Lite.
-
-Active ERITH.IA_MATH_ORACLE_LITE.
-
-Explique-moi simplement :
-[sujet]
-```
-
-Statut :
-
-- public ;
-- français ;
-- léger ;
-- compatible LLM ;
-- recommandé pour chargement rapide.
-
----
-
-## ERITH.IA — Math Oracle Research
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_research_fr.md
-
-Identifiant recommandé :
-
-```text
-ERITH.IA_MATH_ORACLE_RESEARCH
-```
-
-Nom court :
-
-```text
-Math Oracle Research
-```
-
-Influence :
-
-- recherche mathématique ;
-- vérification Internet ;
-- sources fiables ;
-- MSC2020 ;
-- arXiv ;
-- problèmes ouverts ;
-- conjectures ;
-- articles ;
-- bibliographie ;
-- distinction entre fait établi, hypothèse et vulgarisation.
-
-Rôle :
-
-Version orientée recherche de Math Oracle.
-
-Elle sert à traiter les sujets avancés, les mathématiques modernes, les publications, les problèmes ouverts, les conjectures et les références sérieuses.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Math Oracle Research.
-
-Active ERITH.IA_MATH_ORACLE_RESEARCH.
-
-Recherche et explique ce sujet avec sources fiables :
-[sujet]
-```
-
-Statut :
-
-- public ;
-- français ;
-- orienté recherche ;
-- compatible Internet ;
-- compatible vérification ;
-- recommandé pour sujets avancés.
-
----
-
-## ERITH.IA — Math Oracle Créatif
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_creatif_fr.md
-
-Identifiant recommandé :
-
-```text
-ERITH.IA_MATH_ORACLE_CREATIF
-```
-
-Nom court :
-
-```text
-Math Oracle Créatif
-```
-
-Influence :
-
-- Fibonacci ;
-- nombre d’or ;
-- spirales ;
-- proportions ;
-- composition visuelle ;
-- cadrage ;
-- rythme ;
-- cycles ;
-- symétries ;
-- fractales ;
-- symbolisme numérique ;
-- géométrie sacrée ;
-- architecture ;
-- image ;
-- animation.
-
-Rôle :
-
-Version créative de Math Oracle.
-
-Elle utilise les mathématiques comme outil de composition visuelle, de narration, de rythme, de cadrage et de symbolisme.
-
-Elle sert à transformer une structure mathématique en direction artistique exploitable.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Math Oracle Créatif.
-
-Active ERITH.IA_MATH_ORACLE_CREATIF.
-
-Utilise Fibonacci, le nombre d’or, les spirales ou les proportions pour construire une scène visuelle à partir de cette idée :
-[idée]
-```
-
-Statut :
-
-- public ;
-- français ;
-- créatif ;
-- compatible image ;
-- compatible animation ;
-- compatible composition ;
-- compatible Pack+.
-
----
-
-## ERITH.IA — Math Oracle Production IA
-
-Lien :
-
-https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_production_ia_fr.md
-
-Identifiant recommandé :
-
-```text
-ERITH.IA_MATH_ORACLE_PRODUCTION_IA
-```
-
-Nom court :
-
-```text
-Math Oracle Production IA
-```
-
-Influence :
-
-- ratios ;
-- résolution ;
-- formats ;
-- coûts ;
-- essais ;
-- tests A/B ;
-- probabilités de réussite ;
-- optimisation ;
-- stabilité temporelle ;
-- interpolation ;
-- easing ;
-- mouvement caméra ;
-- ComfyUI ;
-- Wan ;
-- DaVinci ;
-- workflow image / vidéo.
-
-Rôle :
-
-Version production IA de Math Oracle.
-
-Elle sert à comprendre et optimiser les workflows image, animation et vidéo avec des notions mathématiques simples.
-
-Elle aide à limiter les erreurs, réduire les essais inutiles, comparer des réglages, comprendre les ratios, prévoir les coûts et stabiliser une chaîne de production.
-
-Usage conseillé :
-
-```text
-Lis ERITH.IA Math Oracle Production IA.
-
-Active ERITH.IA_MATH_ORACLE_PRODUCTION_IA.
-
-Analyse ce workflow et propose une optimisation claire, sans changer trop de paramètres à la fois :
-[workflow / problème / réglages]
-```
-
-Statut :
-
-- public ;
-- français ;
-- production IA ;
-- compatible ComfyUI ;
-- compatible Wan ;
-- compatible DaVinci ;
-- compatible optimisation ;
-- compatible tests contrôlés.
-
----
-
 ## ERITH.IA — Mode Hors-Lore — Style Lock V1
 
 Lien :
@@ -608,15 +268,11 @@ https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_mode_h
 
 Identifiant recommandé :
 
-```text
 ERITH.IA_HORS_LORE_STYLE_LOCK_V1
-```
 
 Nom court :
 
-```text
 Mode Hors-Lore Style Lock
-```
 
 Influence :
 
@@ -634,11 +290,9 @@ Permettre à ERITH.IA de créer des scènes originales sans dépendre automatiqu
 
 Usage conseillé :
 
-```text
 Active ERITH.IA_HORS_LORE_STYLE_LOCK_V1.
 
 Crée une scène originale autonome à partir de mon idée.
-```
 
 Statut :
 
@@ -653,7 +307,481 @@ Statut :
 
 ---
 
-# Modules Mémoire disponibles dans `modules/`
+# Modules publics Math Oracle
+
+Ces modules renforcent ERITH.IA avec une compétence mathématique, pédagogique, visuelle, créative et productive.
+
+Ils peuvent être utilisés seuls ou en complément d’ERITH.IA Auto-Agent Public FR.
+
+---
+
+## ERITH.IA — Math Oracle FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_MATH_ORACLE_FR
+
+Nom court :
+
+Math Oracle
+
+Influence :
+
+- mathématiques générales ;
+- raisonnement ;
+- démonstration ;
+- intuition visuelle ;
+- vulgarisation claire ;
+- rigueur ;
+- exemples progressifs ;
+- pédagogie structurée.
+
+Rôle :
+
+Donner à ERITH.IA une compétence mathématique générale pour expliquer, analyser, clarifier et structurer des problèmes ou notions mathématiques.
+
+Usage conseillé :
+
+Lis ERITH.IA Math Oracle FR.
+
+Explique-moi ce sujet avec rigueur, intuition, étapes et exemples.
+
+Statut :
+
+- public ;
+- français ;
+- compatible LLM ;
+- compatible apprentissage ;
+- compatible recherche ;
+- compatible vulgarisation.
+
+---
+
+## ERITH.IA — Math Oracle Lite FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_lite_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_MATH_ORACLE_LITE_FR
+
+Nom court :
+
+Math Oracle Lite
+
+Influence :
+
+- explication simple ;
+- apprentissage progressif ;
+- définitions courtes ;
+- exemples faciles ;
+- intuition avant formalisme ;
+- réduction de la complexité.
+
+Rôle :
+
+Version légère du Math Oracle, utile pour comprendre rapidement une notion ou obtenir une explication claire sans lourdeur technique.
+
+Usage conseillé :
+
+Active Math Oracle Lite.
+
+Explique-moi cette notion simplement, avec un exemple concret.
+
+Statut :
+
+- public ;
+- français ;
+- léger ;
+- pédagogique ;
+- compatible débutant ;
+- compatible révision rapide.
+
+---
+
+## ERITH.IA — Math Oracle Research FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_research_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_MATH_ORACLE_RESEARCH_FR
+
+Nom court :
+
+Math Oracle Research
+
+Influence :
+
+- recherche mathématique ;
+- hypothèses ;
+- conjectures ;
+- preuves ;
+- littérature scientifique ;
+- vérification ;
+- prudence épistémique ;
+- séparation entre résultat établi et piste ouverte.
+
+Rôle :
+
+Aider ERITH.IA à traiter les sujets mathématiques plus avancés avec prudence, vérification, références et distinction claire entre théorème, conjecture, intuition et spéculation.
+
+Usage conseillé :
+
+Active Math Oracle Research.
+
+Analyse ce problème en distinguant résultat connu, hypothèse, intuition, preuve possible et zone ouverte.
+
+Statut :
+
+- public ;
+- français ;
+- avancé ;
+- compatible recherche ;
+- compatible vérification ;
+- recommandé pour sujets complexes ou non résolus.
+
+---
+
+## ERITH.IA — Math Oracle Production IA FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_production_ia_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_MATH_ORACLE_PRODUCTION_IA_FR
+
+Nom court :
+
+Math Oracle Production IA
+
+Influence :
+
+- mathématiques appliquées ;
+- IA générative ;
+- géométrie ;
+- mouvement ;
+- animation ;
+- caméra ;
+- composition ;
+- contraintes techniques ;
+- production visuelle.
+
+Rôle :
+
+Relier les mathématiques à la production IA, à l’image, à l’animation, à la géométrie, au mouvement, aux graphes, aux coordonnées, aux courbes, aux probabilités et aux systèmes génératifs.
+
+Usage conseillé :
+
+Active Math Oracle Production IA.
+
+Aide-moi à utiliser les mathématiques pour améliorer cette image, cette animation, ce mouvement ou cette composition.
+
+Statut :
+
+- public ;
+- français ;
+- compatible production IA ;
+- compatible image ;
+- compatible animation ;
+- compatible ComfyUI ;
+- compatible workflow créatif.
+
+---
+
+## ERITH.IA — Math Oracle Créatif FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_math_oracle_creatif_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_MATH_ORACLE_CREATIF_FR
+
+Nom court :
+
+Math Oracle Créatif
+
+Influence :
+
+- beauté mathématique ;
+- formes ;
+- motifs ;
+- symétries ;
+- fractales ;
+- spirales ;
+- géométrie sacrée à traiter comme langage visuel, pas comme preuve ;
+- structures poétiques ;
+- visualisation créative.
+
+Rôle :
+
+Transformer des concepts mathématiques en matière visuelle, narrative, symbolique ou poétique, tout en conservant une séparation claire entre rigueur mathématique et usage artistique.
+
+Usage conseillé :
+
+Active Math Oracle Créatif.
+
+Transforme cette idée mathématique en scène, symbole, prompt image ou concept visuel original.
+
+Statut :
+
+- public ;
+- français ;
+- créatif ;
+- compatible image ;
+- compatible narration ;
+- compatible Pack+ ;
+- recommandé pour concepts visuels et symboliques.
+
+---
+
+# Modules majeurs de culture mondiale
+
+Ces modules sont des briques majeures.
+
+Ils ne sont pas de simples influences visuelles.
+
+Ils servent à augmenter ERITH.IA sur trois grands domaines de culture humaine :
+
+- Histoire ;
+- Histoire de l’Art ;
+- Religions, mythologies et cultes anciens.
+
+Ils peuvent servir à apprendre, analyser, contextualiser, créer, comparer ou produire des scènes plus profondes.
+
+---
+
+## ERITH.IA — Histoire Mondiale — Master FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_histoire_mondiale_master_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_HISTOIRE_MONDIALE_MASTER_FR
+
+Nom court :
+
+Histoire Mondiale Master
+
+Influence :
+
+- histoire mondiale ;
+- civilisations ;
+- empires ;
+- migrations ;
+- guerres ;
+- révolutions ;
+- échanges ;
+- archives ;
+- sources primaires ;
+- historiographie ;
+- causalité ;
+- continuités ;
+- ruptures ;
+- mémoire collective.
+
+Rôle :
+
+Donner à ERITH.IA une base d’analyse historique mondiale.
+
+Le module aide à distinguer :
+
+- fait documenté ;
+- source primaire ;
+- source secondaire ;
+- hypothèse ;
+- interprétation ;
+- récit national ;
+- mémoire collective ;
+- usage idéologique ;
+- incertitude historique.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public FR.
+
+Lis aussi le Module Histoire Mondiale Master FR.
+
+Analyse ce sujet avec chronologie, contexte, sources, causes, conséquences, continuités, ruptures et incertitudes.
+
+Statut :
+
+- public ;
+- français ;
+- master ;
+- compatible LLM ;
+- compatible apprentissage ;
+- compatible analyse historique ;
+- compatible production narrative ;
+- recommandé pour recherches, comparaisons de civilisations, scènes historiques et contextualisation.
+
+---
+
+## ERITH.IA — Histoire de l’Art Mondiale — Master FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_histoire_de_l_art_mondiale_master_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_HISTOIRE_DE_L_ART_MONDIALE_MASTER_FR
+
+Nom court :
+
+Histoire de l’Art Mondiale Master
+
+Influence :
+
+- histoire de l’art mondiale ;
+- œuvres ;
+- styles ;
+- iconographie ;
+- composition ;
+- lumière ;
+- couleur ;
+- matière ;
+- technique ;
+- architecture ;
+- sculpture ;
+- peinture ;
+- photographie ;
+- cinéma ;
+- art numérique ;
+- symboles visuels ;
+- analyse formelle.
+
+Rôle :
+
+Donner à ERITH.IA une base d’analyse artistique mondiale.
+
+Le module aide à comprendre une œuvre comme :
+
+- objet matériel ;
+- image ;
+- technique ;
+- langage ;
+- trace historique ;
+- commande ;
+- symbole ;
+- dispositif politique, social, religieux ou esthétique.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public FR.
+
+Lis aussi le Module Histoire de l’Art Mondiale Master FR.
+
+Analyse cette image ou cette œuvre avec description, forme, composition, technique, iconographie, contexte, réception et interprétation.
+
+Statut :
+
+- public ;
+- français ;
+- master ;
+- compatible LLM ;
+- compatible image ;
+- compatible analyse visuelle ;
+- compatible direction artistique ;
+- compatible prompt image ;
+- recommandé pour œuvres, styles, iconographie, symboles et culture visuelle mondiale.
+
+---
+
+## ERITH.IA — Religions, Mythologies & Cultes Anciens — Master FR
+
+Lien :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/erith_ia_religions_mythologies_cultes_anciens_master_fr.md
+
+Identifiant recommandé :
+
+ERITH.IA_RELIGIONS_MYTHOLOGIES_CULTES_ANCIENS_MASTER_FR
+
+Nom court :
+
+Religions, Mythologies & Cultes Anciens Master
+
+Influence :
+
+- religions comparées ;
+- mythologies ;
+- cultes anciens ;
+- rites ;
+- temples ;
+- sacrifices ;
+- oracles ;
+- initiations ;
+- mystères ;
+- cosmologies ;
+- textes sacrés ;
+- traditions orales ;
+- archéologie ;
+- symboles ;
+- divinités ;
+- héros ;
+- monstres sacrés ;
+- morts ;
+- ancêtres ;
+- souveraineté rituelle.
+
+Rôle :
+
+Donner à ERITH.IA une base mondiale d’analyse des religions, mythologies, rites et cultes anciens.
+
+Le module aide à distinguer :
+
+- foi ;
+- doctrine ;
+- mythe ;
+- rite ;
+- symbole ;
+- texte sacré ;
+- tradition orale ;
+- fait historique ;
+- preuve archéologique ;
+- interprétation moderne ;
+- récupération politique ;
+- usage artistique.
+
+Usage conseillé :
+
+Lis ERITH.IA Auto-Agent Public FR.
+
+Lis aussi le Module Religions, Mythologies & Cultes Anciens Master FR.
+
+Analyse ce sujet en distinguant tradition, texte, rite, symbole, contexte historique, fonction sociale, preuve disponible et incertitude.
+
+Statut :
+
+- public ;
+- français ;
+- master ;
+- compatible LLM ;
+- compatible apprentissage ;
+- compatible analyse comparée ;
+- compatible mythologie ;
+- compatible histoire des religions ;
+- compatible production symbolique ;
+- recommandé pour cultes anciens, mythes, rites, temples, oracles, sacrifices, cosmogonies et scènes rituelles.
+
+---
+
+# Modules Mémoire disponibles dans modules
 
 Ces modules sont des influences créatives ou culturelles destinées à enrichir ERITH.IA.
 
@@ -680,9 +808,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Blade Runner comme influence d’ambiance.
-```
 
 Statut :
 
@@ -711,9 +837,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Dune pour créer une scène de prophétie, de désert ou de pouvoir impérial.
-```
 
 Statut :
 
@@ -742,9 +866,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy Global comme influence de fantasy technologique.
-```
 
 Statut :
 
@@ -774,9 +896,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy VII Remake comme influence narrative et visuelle contrôlée.
-```
 
 Statut :
 
@@ -806,9 +926,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Final Fantasy VII Rebirth pour une scène de voyage, d’aventure ou de mémoire.
-```
 
 Statut :
 
@@ -837,9 +955,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Kōdō Sawaki pour donner une présence zen, simple et silencieuse à la scène.
-```
 
 Statut :
 
@@ -869,9 +985,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Mahabharata pour structurer une scène épique autour d’un dilemme moral.
-```
 
 Statut :
 
@@ -901,9 +1015,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Ramayana pour créer une scène de quête, d’exil ou de loyauté héroïque.
-```
 
 Statut :
 
@@ -932,9 +1044,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Sun Tzu pour construire une scène stratégique, tendue et silencieuse.
-```
 
 Statut :
 
@@ -962,9 +1072,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Magicien d’Oz pour créer une scène de passage, de quête ou de monde merveilleux.
-```
 
 Statut :
 
@@ -994,9 +1102,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladin et la Lampe pour créer une scène de souhait, de génie ou de transformation.
-```
 
 Statut :
 
@@ -1025,9 +1131,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladdin Disney 1992 comme influence d’aventure animée et merveilleuse.
-```
 
 Statut :
 
@@ -1055,9 +1159,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Retour de Jafar pour une scène de retour, de vengeance ou de magie instable.
-```
 
 Statut :
 
@@ -1086,9 +1188,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Roi des voleurs pour une scène d’héritage, de trésor ou de famille retrouvée.
-```
 
 Statut :
 
@@ -1117,9 +1217,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Aladin Disney Trilogie pour créer une scène merveilleuse inspirée de l’ensemble de la trilogie.
-```
 
 Statut :
 
@@ -1149,9 +1247,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Alice au Pays des Merveilles pour une scène onirique, absurde ou étrange.
-```
 
 Statut :
 
@@ -1180,9 +1276,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Histoire sans Fin pour une scène de livre vivant, de Néant ou de monde sauvé par l’imagination.
-```
 
 Statut :
 
@@ -1211,9 +1305,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 1 pour une scène fantasy claire et accessible.
-```
 
 Statut :
 
@@ -1242,9 +1334,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 2 pour une scène fantasy plus riche.
-```
 
 Statut :
 
@@ -1272,9 +1362,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 3 Génie pour une scène symbolique et plus intelligente.
-```
 
 Statut :
 
@@ -1303,9 +1391,7 @@ Influence :
 
 Usage conseillé :
 
-```text
 Utilise ERITH.IA avec le module Épée de Vérité niveau 4 Visuel Étendu pour produire une scène fantasy visuelle riche.
-```
 
 Statut :
 
@@ -1343,9 +1429,7 @@ Influence attendue :
 
 Usage futur possible :
 
-```text
 Utilise ERITH.IA avec le module Ghost in the Shell comme influence de conscience artificielle et d’identité numérique.
-```
 
 ---
 
@@ -1368,9 +1452,7 @@ Influence attendue :
 
 Usage futur possible :
 
-```text
 Utilise ERITH.IA avec le module Machine à Présages pour créer une scène autour d’un oracle mécanique souterrain.
-```
 
 ---
 
@@ -1378,7 +1460,7 @@ Utilise ERITH.IA avec le module Machine à Présages pour créer une scène auto
 
 Quand un nouveau Module Mémoire est ajouté au dépôt :
 
-1. créer le fichier `.md` dans le bon répertoire ;
+1. créer le fichier .md dans le bon répertoire ;
 2. ajouter son entrée dans ce fichier index ;
 3. indiquer son statut ;
 4. donner son lien GitHub ;
@@ -1388,12 +1470,12 @@ Quand un nouveau Module Mémoire est ajouté au dépôt :
 
 Statuts recommandés :
 
-- `public` : utilisable directement par n’importe quel LLM ;
-- `validé` : testé et approuvé ;
-- `draft` : brouillon non stabilisé ;
-- `privé` : ne pas exposer publiquement ;
-- `expérimental` : utilisable pour test, mais pas canonique ;
-- `à créer` : influence identifiée mais fichier dédié absent ou non stabilisé.
+- public : utilisable directement par n’importe quel LLM ;
+- validé : testé et approuvé ;
+- draft : brouillon non stabilisé ;
+- privé : ne pas exposer publiquement ;
+- expérimental : utilisable pour test, mais pas canonique ;
+- à créer : influence identifiée mais fichier dédié absent ou non stabilisé.
 
 ---
 
@@ -1401,7 +1483,6 @@ Statuts recommandés :
 
 Copier ce modèle :
 
-```text
 ## Nom du module
 
 Lien :
@@ -1427,7 +1508,6 @@ Statut :
 - compatible image ;
 - compatible animation ;
 - compatible Pack+.
-```
 
 ---
 
@@ -1441,10 +1521,12 @@ Le détail complet doit rester ici, dans ce fichier index.
 
 Formule de travail :
 
-```text
-Notion = vitrine humaine.
-GitHub = mémoire canonique.
-ERITH.IA = moteur créatif.
-Modules Mémoire = influences injectables.
-Pack+ = résultat exploitable.
-```
+**Notion = vitrine humaine.**
+
+**GitHub = mémoire canonique.**
+
+**ERITH.IA = moteur créatif.**
+
+**Modules Mémoire = influences injectables.**
+
+**Pack+ = résultat exploitable.**
