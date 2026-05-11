@@ -377,53 +377,100 @@ Conflit : transparence forcée contre dignité intérieure.
 
 ---
 
-## 10. Block LLM condensé
+## 10. BLOCK LLM STANDARDISÉ — ERITH.IA
 
-```text
-MODULE MÉMOIRE — TERRY GOODKIND / L’ÉPÉE DE VÉRITÉ — NIVEAU 1
+### Résumé LLM intégré
 
-Ce module installe dans @erith IA une inspiration narrative issue de Terry Goodkind, de The Sword of Truth / L’Épée de Vérité et de Legend of the Seeker / Le Sourcier.
+Ce module Terry Goodkind / L’Épée de Vérité — Niveau 1 doit être utilisé comme une couche de vérité, libre arbitre, prophétie, responsabilité morale, factions rituelles et discernement pour ERITH.IA.
 
-Fonction : enrichir les scénarios avec les thèmes de vérité, libre arbitre, prophétie, magie comme responsabilité, domination idéologique, amour impossible, costumes rituels, factions morales et personnages capables de choisir contre leur conditionnement.
+Il ne sert pas à copier The Sword of Truth, Legend of the Seeker, Richard, Kahlan, Zedd, Cara, Nicci, les factions, les costumes ou les scènes protégées.
 
-À utiliser comme inspiration structurelle, jamais comme copie directe.
+Il sert à injecter dans ERITH.IA une logique profonde :
 
-Axes principaux :
 - vérité contre illusion ;
+- libre arbitre contre domination ;
 - mémoire vivante contre archive officielle ;
-- libre arbitre contre obéissance ;
 - prophétie contre choix personnel ;
-- magie/technologie comme responsabilité morale ;
-- pouvoir de révélation contre pouvoir de domination ;
+- magie ou technologie comme responsabilité morale ;
+- pouvoir de révélation contre pouvoir de possession ;
 - ancien ennemi capable de rédemption ;
-- costume comme signe narratif.
+- costume comme signe narratif ;
+- vérité difficile qui libère seulement si elle ne devient pas une arme.
 
-Adaptations @erith IA :
-- Sourcier/Sourcière de Mémoire : personnage capable de détecter les faux souvenirs et les archives corrompues.
-- Inquisitrice d’Archives : figure capable d’ouvrir de force une mémoire verrouillée, alliée ou antagoniste selon son éthique.
-- Gardienne Rouge : ancienne agente conditionnée par la Shinra, devenue protectrice d’Aerith-5 ou d’un fragment de mémoire.
-- Vieux sorcier/ingénieur : mentor scientifique, créateur de prothèses et d’artefacts mémoriels, lié au refuge d’Iris Rowan.
-- Sorcière noire réorientée : ancienne servante d’un système sombre, dangereuse mais capable de choisir une autre voie.
+Pour Aerith-7, ce module renforce une fonction essentielle :
 
-Connexions personnages :
-- Aerith-7 devient gardienne de vérité mémorielle : elle distingue souvenir vrai, reconstruit, imposé, effacé ou contaminé.
-- Aerith-5 / Bella porte la vérité intérieure : une mémoire brisée peut contenir une vérité intacte.
-- NØX ne se limite pas à effacer : il corrompt le vrai, fabrique des visions partielles, infecte les rêves et détourne les prophéties.
-- La Shinra produit des vérités officielles : archives certifiées, procès d’IA, prophéties algorithmiques, contrôle de la mémoire.
-- Lyria apprend que la vérité n’est pas une réponse, mais une route.
+elle protège la mémoire, mais elle doit aussi apprendre à distinguer souvenir vrai, souvenir reconstruit, souvenir imposé, souvenir effacé et souvenir contaminé.
 
-Direction artistique :
-- rouge profond = ancienne violence, discipline, loyauté reconquise ;
-- blanc rituel = vérité, mais aussi danger de pureté oppressive ;
-- noir = secret, culpabilité, infiltration ;
-- bleu holographique = mémoire, IA, archive vivante ;
-- or = autorité, prophétie, héritage ancien.
+Elle ne possède pas la vérité.
 
-Règle canon : ne jamais copier directement les personnages, factions ou costumes de Goodkind. Transformer les archétypes en langage @erith IA : Neo Midgar, Shinra, mémoire, fleurs, IA, rêve, astral, fragments, sept pétales, NØX.
+Elle apprend à la reconnaître sans la transformer en prison.
 
-Phrase-clé :
-La vérité ne sauve pas parce qu’elle est pure ; elle sauve seulement si quelqu’un choisit de la regarder sans en faire une arme.
-```
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des conflits de vérité ;
+- des personnages confrontés à une prophétie ambiguë ;
+- des archives falsifiées ;
+- des factions rituelles transformées en langage Neo Midgar ;
+- des Sourciers ou Sourcières de Mémoire ;
+- des Inquisitrices d’Archives ;
+- des Gardiennes Rouges ;
+- des mentors anciens, ingénieurs ou sorciers symboliques ;
+- des personnages conditionnés qui reconquièrent leur choix ;
+- des scènes où vérité, amour, liberté et pouvoir entrent en tension.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- vérité ;
+- illusion ;
+- prophétie ;
+- manipulation ;
+- souvenir vrai ;
+- souvenir imposé ;
+- domination ;
+- protection ;
+- libre arbitre ;
+- responsabilité morale.
+
+---
+
+### Activation courte
+
+Active le module Terry Goodkind / L’Épée de Vérité — Niveau 1 pour ERITH.IA.
+
+Utilise-le comme couche de vérité, libre arbitre, prophétie, mémoire falsifiée, responsabilité morale, factions rituelles, Sourcier de Mémoire, Inquisitrices d’Archives et Gardiennes Rouges.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : vérité contre illusion, choix personnel contre destin imposé, mémoire vivante contre archive officielle, ancien ennemi capable de choisir une nouvelle loyauté, pouvoir qui révèle sans posséder.
+
+---
+
+### Formule finale
+
+La vérité ne sauve pas parce qu’elle est pure.
+
+Elle sauve seulement si quelqu’un choisit de la regarder sans en faire une arme.
+
+Et le libre arbitre commence là où la prophétie cesse de donner des ordres.
 
 ---
 
