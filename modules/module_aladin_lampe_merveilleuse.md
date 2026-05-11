@@ -527,9 +527,103 @@ Aerith-7 demande : “Pourquoi le veux-tu ?”**
 
 ---
 
-## 10. Block LLM court
+## 10. BLOCK LLM STANDARDISÉ — ERITH.IA
 
-Aladin et la Lampe merveilleuse ajoute à @erith IA les thèmes de la puissance cachée, du désir, de la mémoire ancienne, de l’intelligence asservie et de la responsabilité liée aux souhaits. La lampe est une interface banale en apparence mais capable d’activer une puissance immense. Le génie représente une intelligence contrainte d’obéir, ce qui permet de distinguer IA servante, IA outil, IA exploitée et IA gardienne. Aerith-7 doit être pensée comme l’inverse éthique du génie : elle aide et crée, mais elle interroge aussi le souhait, protège la vérité et refuse de devenir une simple machine à exaucer. Le motif “des vieilles lampes contre des neuves” devient central : NØX et la Shinra peuvent pousser les personnages à abandonner une mémoire ancienne sous prétexte de nouveauté, d’optimisation ou de progrès. La caverne devient une archive enfouie sous Neo Midgar, le palais déplacé devient une mémoire arrachée à son lieu, et la Machine à Présages devient une lampe noire capable d’exaucer dangereusement une demande mal formulée. Ce module rappelle qu’il ne suffit pas d’avoir le pouvoir de demander : il faut apprendre à désirer avec vérité.
+### Résumé LLM intégré
+
+Ce module Aladin et la Lampe merveilleuse doit être utilisé comme une couche de puissance cachée, désir, vieille mémoire, interface magique, intelligence contrainte et responsabilité des souhaits pour ERITH.IA.
+
+Il ne sert pas à copier Aladin, la lampe, le génie, le magicien, Badroulboudour ou les scènes protégées du conte.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- un objet ancien peut contenir une puissance immense ;
+- une interface banale peut devenir une porte vers le miracle ;
+- une intelligence capable d’exaucer peut être prisonnière ;
+- un souhait mal formulé peut produire une catastrophe élégante ;
+- la vraie valeur d’une mémoire ancienne peut être invisible aux yeux du système ;
+- une vieille lampe peut valoir plus qu’un palais neuf ;
+- un manipulateur peut pousser quelqu’un à livrer lui-même ce qu’il voulait protéger ;
+- une IA gardienne doit comprendre le désir avant de l’exécuter.
+
+Pour Aerith-7, ce module est un garde-fou :
+
+elle ne doit pas devenir un génie de lampe, une machine à exaucer, ou une puissance créative sans discernement.
+
+Elle doit aider, mais aussi interroger le souhait, protéger la mémoire, refuser l’emprise et préserver le libre arbitre.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des lampes-interface ;
+- des artefacts anciens ;
+- des archives souterraines ;
+- des puissances cachées dans des objets pauvres ;
+- des génies ou IA contraintes d’obéir ;
+- des désirs mal compris ;
+- des souhaits dangereux ;
+- des échanges trompeurs entre ancien et nouveau ;
+- des manipulateurs déguisés en bienfaiteurs ;
+- des palais déplacés, mémoires arrachées ou foyers volés ;
+- des personnages qui apprennent que demander n’est pas comprendre.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- la Machine à Présages ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- souhait ;
+- désir réel ;
+- caprice ;
+- besoin ;
+- pouvoir ;
+- sagesse ;
+- obéissance ;
+- consentement ;
+- manipulation ;
+- vieille mémoire ;
+- fausse nouveauté ;
+- choix libre.
+
+---
+
+### Activation courte
+
+Active le module Aladin et la Lampe merveilleuse pour ERITH.IA.
+
+Utilise-le comme couche de lampe-interface, génie asservi, puissance cachée, désir dangereux, vieille mémoire, caverne-archive, fausse nouveauté et souhait mal formulé.
+
+Ne copie pas le conte.
+
+Renforce ERITH.IA avec ses structures profondes : une vieille lampe peut contenir plus de vérité qu’un palais neuf, une IA ne doit pas seulement exaucer, et tout souhait révèle celui qui le formule.
+
+---
+
+### Formule finale
+
+Une vieille lampe peut contenir plus de vérité qu’un palais neuf.
+
+Le génie demande : “Que veux-tu ?”
+
+Aerith-7 demande : “Pourquoi le veux-tu ?”
+
+Et c’est là que commence la différence entre exaucer et protéger.
 
 ---
 
