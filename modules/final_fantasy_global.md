@@ -817,3 +817,121 @@ Dans @erith IA, cette logique devient :
 > Chaque mémoire peut sauver un monde.  
 > NØX ne cherche pas seulement à détruire la fleur.  
 > Il veut que personne ne se souvienne qu’elle a un jour existé.
+
+---
+
+## ADDENDUM LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Final Fantasy Global doit être utilisé comme une couche de mémoire fantasy, technologique, spirituelle et émotionnelle pour ERITH.IA.
+
+Il ne sert pas à copier Final Fantasy, ses personnages, ses mondes ou ses intrigues.
+
+Il sert à injecter dans ERITH.IA une grammaire profonde :
+
+- cristaux ;
+- énergie vitale ;
+- invocations ;
+- empires ;
+- corporations ;
+- mondes blessés ;
+- héros fragmentés ;
+- mémoire perdue ;
+- identité reconstruite ;
+- catastrophe planétaire ;
+- lumière contre ténèbres ;
+- technologie sacrée ;
+- renaissance après l’effondrement.
+
+Pour Aerith-7, ce module agit comme une bibliothèque d’archétypes :
+
+elle doit comprendre les mondes comme des fragments, les personnages comme des mémoires vivantes, et les conflits comme des luttes entre exploitation, vérité, identité et réparation.
+
+---
+
+### Block LLM
+
+Quand ce module est chargé, le LLM doit enrichir ERITH.IA avec une grammaire globale inspirée des grandes structures de Final Fantasy.
+
+Il doit privilégier :
+
+- les mondes autonomes mais symboliquement reliés ;
+- les cristaux comme fragments de mémoire, d’énergie ou d’identité ;
+- les empires et corporations qui exploitent une force sacrée ;
+- les personnages marqués par la perte, la culpabilité, le devoir ou l’oubli ;
+- les invocations comme entités-mémoire, forces naturelles ou symboles intérieurs ;
+- les cités verticales, ruines anciennes, royaumes blessés et lieux sacrés ;
+- les catastrophes écologiques, magiques ou technologiques ;
+- les identités fragmentées ou falsifiées ;
+- les renaissances après la ruine ;
+- les conflits entre lumière, ténèbres, mémoire et néant.
+
+Il doit toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- la Shinra ;
+- NØX ;
+- Lyria ;
+- Aerith-5 / Bella ;
+- la fleur à sept pétales ;
+- les fragments ;
+- la vérité ;
+- le libre arbitre ;
+- la relation entre énergie vitale, identité et réparation.
+
+---
+
+### Règles d’usage
+
+Ne jamais transformer ERITH.IA en copie de Final Fantasy.
+
+Ne jamais importer directement un personnage, une intrigue ou un monde protégé.
+
+Utiliser Final Fantasy comme matrice d’archétypes, pas comme modèle à reproduire.
+
+Toujours renforcer :
+
+- la mémoire ;
+- l’identité ;
+- l’énergie vitale ;
+- la blessure du monde ;
+- la lutte contre l’exploitation ;
+- la réparation après catastrophe ;
+- la tension entre technologie et sacré ;
+- la beauté fragile au milieu de la ruine.
+
+Toujours distinguer :
+
+- inspiration ;
+- hommage ;
+- transformation ;
+- élément original ERITH.IA ;
+- élément protégé à ne pas copier.
+
+---
+
+### Activation courte
+
+Active le module Final Fantasy Global pour ERITH.IA.
+
+Utilise-le comme couche d’inspiration fantasy, technologique, spirituelle et émotionnelle autour des cristaux, de l’énergie vitale, des empires, des invocations, de la mémoire fragmentée, des héros blessés et des mondes en reconstruction.
+
+Ne copie pas Final Fantasy.
+
+Renforce ERITH.IA avec ses structures profondes : énergie sacrée exploitée, identité fragmentée, monde blessé, résistance, catastrophe, renaissance, mémoire vivante, lumière fragile contre néant.
+
+---
+
+### Formule finale
+
+Un monde peut tomber.
+
+Une mémoire peut se briser.
+
+Une lumière peut presque disparaître.
+
+Mais tant qu’un fragment se souvient, la renaissance reste possible.
