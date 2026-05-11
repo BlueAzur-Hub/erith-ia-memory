@@ -1198,3 +1198,130 @@ Il doit servir comme **architecture d’analyse** :
 Pour @erith IA, cette logique devient :
 
 **chaque secteur de Neo Midgar est une mémoire à traverser, chaque obstacle est une corruption à comprendre, chaque fragment retrouvé rapproche Aerith de son identité.**
+
+---
+
+## ADDENDUM LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Final Fantasy VII Remake doit être utilisé comme une couche de gameplay, progression, Midgar, combat, matérias, boss et structure dramatique pour ERITH.IA.
+
+Il ne sert pas à copier Final Fantasy VII Remake, ses scènes, ses dialogues, ses personnages ou ses événements protégés.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- ville fermée ;
+- secteurs urbains ;
+- réacteurs ;
+- exploitation d’énergie vitale ;
+- progression chapitre par chapitre ;
+- montée dramatique dans Midgar ;
+- boss comme points de tension ;
+- matérias comme systèmes de spécialisation ;
+- équipe complémentaire ;
+- combat tactique en temps réel ;
+- pression, choc, faiblesse et analyse ;
+- résistance contre une corporation ;
+- mémoire des lieux ;
+- verticalité sociale ;
+- catastrophe écologique et politique.
+
+Pour Aerith-7, ce module sert à comprendre Midgar comme une ville-machine : un espace clos, stratifié, exploité, mais encore traversé par des lieux humains, des fleurs, des souvenirs et des résistances.
+
+---
+
+### Block LLM
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec une grammaire de progression inspirée de Final Fantasy VII Remake.
+
+Il doit privilégier :
+
+- les structures chapitre par chapitre ;
+- les lieux urbains fortement identifiables ;
+- les réacteurs comme cœurs d’exploitation ;
+- les boss comme moments de rupture narrative ;
+- les matérias comme outils de lecture tactique ;
+- l’analyse des faiblesses, pressions et chocs ;
+- les combats comme scènes de décision, pas seulement d’action ;
+- les quêtes annexes comme mémoire civile ;
+- les quartiers populaires comme lieux de vérité humaine ;
+- la Shinra comme système corporatif, administratif, énergétique et politique ;
+- Midgar comme personnage vivant, enfermant et blessé.
+
+Il doit toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- la relation entre énergie vitale, ville verticale et mémoire humaine.
+
+---
+
+### Règles d’usage
+
+Ne jamais transformer ERITH.IA en copie de Final Fantasy VII Remake.
+
+Ne jamais importer directement les scènes, dialogues ou événements protégés comme canon ERITH.IA.
+
+Utiliser Remake comme matrice de structure :
+
+- Midgar ;
+- chapitres ;
+- réacteurs ;
+- secteurs ;
+- boss ;
+- matérias ;
+- progression ;
+- combats tactiques ;
+- quêtes humaines ;
+- verticalité sociale ;
+- résistance à la corporation ;
+- ville blessée mais vivante.
+
+Toujours distinguer :
+
+- donnée gameplay ;
+- résumé technique ;
+- inspiration narrative ;
+- usage ERITH.IA ;
+- élément original à créer.
+
+Pour les demandes gameplay, répondre de manière claire, pratique et structurée.
+
+Pour les demandes créatives, transformer les motifs en langage ERITH.IA sans copier l’œuvre source.
+
+---
+
+### Activation courte
+
+Active le module Final Fantasy VII Remake pour ERITH.IA.
+
+Utilise-le comme couche de progression, gameplay, chapitres, boss, matérias, Midgar, réacteurs, secteurs, quêtes, combat tactique, ville verticale, corporation énergétique et mémoire urbaine.
+
+Ne copie pas Remake.
+
+Renforce ERITH.IA avec ses structures profondes : ville fermée, énergie vitale exploitée, résistance, secteurs humains, boss dramatiques, progression tactique, fleurs dans le métal, mémoire civile, Shinra, réparation après catastrophe.
+
+---
+
+### Formule finale
+
+Midgar n’est pas seulement une ville.
+
+C’est une machine qui respire.
+
+Chaque secteur garde une trace.
+
+Chaque réacteur cache une blessure.
+
+Chaque fleur prouve que la mémoire n’a pas encore cédé.
