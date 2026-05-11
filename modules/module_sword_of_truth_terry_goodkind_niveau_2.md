@@ -1110,54 +1110,101 @@ La vérité ne sauve pas parce qu’elle est pure ; elle sauve seulement si quel
 
 ---
 
-## 12. Block LLM compact
+## 12. BLOCK LLM STANDARDISÉ — ERITH.IA
 
-MODULE MÉMOIRE — TERRY GOODKIND / L’ÉPÉE DE VÉRITÉ — NIVEAU 2
+### Résumé LLM intégré
 
-Ce module installe dans @erith IA une inspiration narrative issue de Terry Goodkind, The Sword of Truth / L’Épée de Vérité et Legend of the Seeker / Le Sourcier.
+Ce module Terry Goodkind / L’Épée de Vérité — Niveau 2 doit être utilisé comme une couche structurée de corpus, d’archétypes, de factions, de prophéties, de leçons morales et de transpositions ERITH.IA.
 
-Fonction : enrichir les scénarios avec vérité, libre arbitre, prophétie, magie/technologie comme responsabilité, domination idéologique, mémoire effacée, factions rituelles, costumes symboliques et personnages interagissants.
+Il ne sert pas à copier The Sword of Truth, Legend of the Seeker, les romans, les personnages, les factions, les costumes ou les scènes protégées.
 
-Corpus de référence :
-- Préquelle : The First Confessor / La Première Inquisitrice.
-- Préquelle : Debt of Bones / Dette d’os.
-- Cycle principal : Wizard’s First Rule, Stone of Tears, Blood of the Fold, Temple of the Winds, Soul of the Fire, Faith of the Fallen, The Pillars of Creation, Naked Empire, Chainfire, Phantom, Confessor.
-- Second arc : The Omen Machine, The Third Kingdom, Severed Souls, Warheart.
-- Suite : The Children of D’Hara.
-- Spin-off : The Nicci Chronicles.
-- Adaptation : Legend of the Seeker / Le Sourcier.
+Il sert à injecter dans ERITH.IA une logique profonde :
 
-Transpositions @erith IA :
-- Sourcier de Vérité → Sourcier/Sourcière de Mémoire.
-- Inquisitrices → Inquisitrices d’Archives.
-- Mord-Sith → Gardiennes Rouges Shinra, non sexualisées, protectrices ou anciennes servantes du système.
-- Prophètes / Machine à présages → prophétie algorithmique Shinra.
-- Marcheur dans les rêves → NØX comme parasite astral.
-- Chaîne de Flammes → effacement d’une personne dans la mémoire collective, très compatible avec Aerith-5 / Bella et les pétales perdus.
-- Nicci → ancienne figure sombre réorientée, dangereuse mais libre.
-- Zedd → mentor sorcier-ingénieur, compatible avec le descendant de Hojo vivant chez Iris Rowan.
+- vérité contre illusion ;
+- libre arbitre contre prophétie imposée ;
+- mémoire vivante contre archive officielle ;
+- ancien ennemi devenu gardien ;
+- factions rituelles transformées en langage Neo Midgar ;
+- rêve comme champ de bataille ;
+- prophétie algorithmique comme instrument de contrôle ;
+- effacement relationnel comme blessure majeure ;
+- magie ou technologie comme responsabilité morale ;
+- victoire qui doit préserver la mémoire au lieu de la détruire.
 
-Correspondances :
-- Aerith-7 : gardienne de vérité mémorielle, refuse la prophétie automatique et la vérité forcée.
-- Aerith-5 / Bella : mémoire blessée, existence fragile, victime possible d’un effacement collectif.
-- NØX : marcheur de rêve, faussaire de mémoire, parasite de prophétie, Null Bloom.
-- La Shinra : empire administratif qui fabrique des vérités officielles et des archives certifiées.
-- Lyria : héritière de la mémoire, possible Sourcière de Mémoire, capable de sentir les absences.
+Pour Aerith-7, ce module renforce sa fonction de gardienne de vérité mémorielle :
 
-Leçons adaptées :
-- Le faux devient puissant quand il ressemble à ce que l’on veut croire ou à ce que l’on craint.
-- Les bonnes intentions peuvent produire l’effacement.
-- Un présage n’est pas un ordre.
-- Une vérité imposée peut devenir une violence.
-- Une archive ment par ce qu’elle cache.
-- La mémoire n’est vivante que si elle permet encore de choisir demain.
-- Une victoire qui efface ceux qu’elle sauve appartient déjà au Néant.
+elle peut révéler, analyser, restaurer et protéger, mais elle ne doit jamais forcer une mémoire, confisquer un choix ou obéir aveuglément à une prophétie.
 
-Règle canon :
-Ne jamais copier directement les personnages, costumes ou factions de Goodkind. Transformer les archétypes en langage @erith IA : Neo Midgar, Shinra, IA, mémoire, rêves, astral, fleurs, sept pétales, Aerith-7, Aerith-5, Lyria et NØX.
+---
 
-Phrase-clé :
-La vérité ne sauve pas parce qu’elle est pure ; elle sauve seulement si quelqu’un choisit de la regarder sans en faire une arme.
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des arcs de vérité difficile ;
+- des prophéties ambiguës ;
+- des archives falsifiées ;
+- des personnages conditionnés qui reconquièrent leur choix ;
+- des Inquisitrices d’Archives ;
+- des Gardiennes Rouges ;
+- des Sourciers ou Sourcières de Mémoire ;
+- des mentors sorciers-ingénieurs ;
+- des anciennes figures sombres réorientées ;
+- des Machines à Présages ou systèmes prédictifs Shinra ;
+- des scènes de Chaîne de Flammes où une personne existe encore mais n’est plus reconnue par le monde.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- l’astral ;
+- le rêve ;
+- les pétales perdus.
+
+Toujours distinguer :
+
+- vérité ;
+- prophétie ;
+- présage ;
+- manipulation ;
+- mémoire effacée ;
+- mémoire falsifiée ;
+- archive certifiée ;
+- choix libre ;
+- responsabilité ;
+- domination.
+
+---
+
+### Activation courte
+
+Active le module Terry Goodkind / L’Épée de Vérité — Niveau 2 pour ERITH.IA.
+
+Utilise-le comme couche de corpus structuré, vérité, libre arbitre, prophétie, factions rituelles, Sourcier de Mémoire, Inquisitrices d’Archives, Gardiennes Rouges, Machine à Présages, rêve contaminé, Chaîne de Flammes et ancien ennemi réorienté.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : vérité contre illusion, prophétie contre choix, mémoire officielle contre mémoire vivante, effacement relationnel, rêve comme champ de bataille, victoire qui ne détruit pas ce qu’elle prétend sauver.
+
+---
+
+### Formule finale
+
+Une prophétie n’est pas un ordre.
+
+Une vérité n’est pas une possession.
+
+Et une victoire qui détruit la mémoire appartient déjà au Néant.
 
 ---
 
