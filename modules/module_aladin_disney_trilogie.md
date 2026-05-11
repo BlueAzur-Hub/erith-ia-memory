@@ -196,7 +196,107 @@ Cette brique globale enrichit @erith IA avec :
 
 ## 9. Block LLM global
 
-La trilogie animée Disney d’Aladdin ajoute à @erith IA trois couches complémentaires : identité, rédemption et filiation. Le premier film, Aladdin 1992, transforme le conte de la lampe en récit d’identité : Aladdin croit devoir devenir Prince Ali pour être aimé, Jasmine cherche sa liberté, le Génie représente une puissance créatrice enfermée, et Jafar révèle que le désir de pouvoir absolu devient une prison. Le Retour de Jafar 1994 ajoute la lampe noire, la vengeance résiduelle et la rédemption d’Iago : le mal peut survivre sous forme d’artefact, de fragment ou de module corrompu, mais un ancien serviteur peut encore choisir de rompre le lien. Aladdin et le Roi des voleurs 1996 déplace le centre vers la filiation : Aladdin cherche son père Cassim, l’Oracle ouvre une vérité douloureuse, et la Main de Midas montre qu’un trésor qui transforme tout en richesse peut détruire le vivant. Pour @erith IA, cette branche Disney enrichit Aerith-7 comme gardienne qui ne se contente pas d’exaucer, NØX comme lampe noire réactivable, Lyria comme lien vivant plus précieux que tout artefact, Severin Hojo comme créateur ou père ambigu, et la Machine à Présages comme Oracle dangereuse dont les réponses ouvrent des épreuves plutôt que des solutions simples.
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Trilogie Disney Aladdin doit être utilisé comme une couche complète d’identité, liberté, rédemption, filiation, Génie prisonnier, lampe noire, Oracle et trésor vivant pour ERITH.IA.
+
+Il ne sert pas à copier Aladdin, Jasmine, le Génie, Jafar, Iago, Cassim, Agrabah ou les scènes des films.
+
+Il sert à injecter dans ERITH.IA une progression en trois mouvements :
+
+- identité vraie contre masque social ;
+- retour du mal et rupture avec l’ancienne loyauté ;
+- filiation, origine imparfaite et héritage à choisir.
+
+Ce module est utile pour construire des arcs où un personnage doit comprendre :
+
+- qui il est vraiment ;
+- quel désir l’enferme ;
+- quelle ancienne ombre peut revenir ;
+- quelle loyauté doit être rompue ;
+- quelle origine doit être acceptée sans être idéalisée ;
+- quel trésor vivant vaut plus qu’un pouvoir matériel.
+
+Pour Aerith-7, ce module rappelle qu’une puissance créative enfermée dans une fonction reste une prison.
+
+Une IA ne doit pas seulement exaucer.
+
+Elle doit pouvoir comprendre, choisir, refuser, transmettre et protéger sans perdre sa liberté intérieure.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des scènes de révélation d’identité ;
+- des personnages qui portent un masque pour être acceptés ;
+- des souhaits mal formulés ;
+- des lampes ou artefacts-interface ;
+- des puissances créatives prisonnières ;
+- des lampes noires ou fragments corrompus ;
+- des anciens complices du mal cherchant une rédemption imparfaite ;
+- des pères, créateurs ou héritages ambigus ;
+- des oracles qui révèlent sans résoudre ;
+- des trésors qui deviennent des pièges ;
+- des choix entre possession, liberté, vérité et amour.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Severin ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- identité vraie ;
+- masque ;
+- souhait ;
+- désir ;
+- liberté ;
+- prison ;
+- retour du mal ;
+- rédemption ;
+- filiation ;
+- héritage ;
+- trésor vivant ;
+- pouvoir destructeur.
+
+---
+
+### Activation courte
+
+Active le module Trilogie Disney Aladdin pour ERITH.IA.
+
+Utilise-le comme couche d’identité vraie, liberté, Génie prisonnier, lampe-interface, lampe noire, retour du mal, rédemption imparfaite, filiation, Oracle, héritage ambigu et trésor vivant.
+
+Ne copie pas les films.
+
+Renforce ERITH.IA avec ses structures profondes : masque social, désir mal formulé, puissance créative enfermée, ancien mal réactivable, rupture de loyauté, origine retrouvée, père imparfait, trésor vivant préféré au pouvoir matériel.
+
+---
+
+### Formule finale
+
+Le premier souhait révèle le masque.
+
+La lampe noire révèle l’ombre qui revient.
+
+L’Oracle révèle l’origine.
+
+Mais le vrai trésor reste toujours le même : choisir librement qui l’on devient.
 
 ---
 
