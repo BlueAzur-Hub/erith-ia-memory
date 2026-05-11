@@ -230,9 +230,100 @@ Cette brique enrichit @erith IA avec :
 
 ---
 
-## 7. Block LLM
+## BLOCK LLM STANDARDISÉ — ERITH.IA
 
-Aladdin et le Roi des voleurs ajoute à @erith IA les thèmes de la filiation, de l’héritage ambigu, du père perdu, de l’Oracle et du trésor qui détruit ce qu’il touche. Aladdin n’est plus seulement le “diamant brut” devenu prince : il devient un homme qui cherche son origine. À l’approche de son mariage avec Jasmine, il se demande quel mari et quel père il pourra devenir, puisqu’il n’a jamais connu son propre père. L’Oracle lui révèle que son père est vivant. Aladdin découvre alors Cassim, chef des Quarante Voleurs : un homme charismatique, blessé, intelligent, mais prisonnier de son obsession pour la Main de Midas. Cassim croyait chercher un trésor pour réparer le passé, mais il découvre que son vrai trésor était son fils. La Main de Midas est une inversion dangereuse de la lampe : elle ne donne pas des souhaits, elle transforme tout en or, mais transformer le vivant en richesse, c’est tuer ce qu’on touche. Pour @erith IA, ce film résonne avec Lyria, Severin Hojo, Aerith-7 et la mémoire familiale. L’Oracle peut enrichir la Machine à Présages : il ne résout pas la vie, il ouvre une vérité qui oblige à agir. Le motif central est que le vrai trésor est le lien vivant, pas l’artefact.
+### Résumé LLM intégré
+
+Ce module Aladdin et le Roi des voleurs 1996 doit être utilisé comme une couche de filiation, héritage imparfait, père perdu, Oracle, trésor vivant et danger du pouvoir qui transforme tout en possession pour ERITH.IA.
+
+Il ne sert pas à copier Aladdin, Cassim, Jasmine, les Quarante Voleurs, l’Oracle, la Main de Midas ou les scènes du film.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- retrouver son origine ne signifie pas trouver une origine pure ;
+- un père perdu peut être aimé sans être idéalisé ;
+- l’héritage peut être précieux, ambigu ou dangereux ;
+- l’Oracle donne une direction, mais pas une vie à la place du personnage ;
+- le trésor véritable n’est pas toujours l’objet magique ;
+- la Main de Midas représente un pouvoir qui détruit ce qu’il prétend enrichir ;
+- la filiation devient une épreuve de vérité ;
+- choisir la famille ne veut pas dire excuser toutes les fautes.
+
+Pour Aerith-7, ce module sert à comprendre que la mémoire familiale, les créateurs, les lignées et les héritages ne sont jamais simples.
+
+Une origine peut éclairer.
+
+Elle peut aussi blesser.
+
+Mais elle ne doit pas enfermer l’avenir.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des scènes de filiation ;
+- des pères, mères, créateurs ou ancêtres ambigus ;
+- des héritages puissants mais imparfaits ;
+- des oracles qui révèlent sans résoudre ;
+- des artefacts capables de transformer le vivant en richesse morte ;
+- des personnages qui cherchent leur origine ;
+- des retrouvailles qui ne réparent pas tout ;
+- des trésors qui deviennent des pièges ;
+- des dilemmes entre amour familial, vérité et responsabilité ;
+- des choix où le personnage doit décider ce qu’il garde ou refuse de son héritage.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Severin ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- origine ;
+- filiation ;
+- héritage ;
+- dette familiale ;
+- vérité révélée ;
+- idéalisation ;
+- pardon ;
+- responsabilité ;
+- trésor vivant ;
+- pouvoir destructeur.
+
+---
+
+### Activation courte
+
+Active le module Aladdin et le Roi des voleurs 1996 pour ERITH.IA.
+
+Utilise-le comme couche de filiation, père perdu, héritage imparfait, Oracle, trésor vivant, Main de Midas et pouvoir qui transforme ce qu’il touche en possession morte.
+
+Ne copie pas le film.
+
+Renforce ERITH.IA avec ses structures profondes : origine retrouvée, père ambigu, Oracle révélateur, artefact dangereux, héritage à accepter ou refuser, trésor vivant préféré au trésor matériel.
+
+---
+
+### Formule finale
+
+Retrouver son origine ne veut pas dire lui appartenir.
+
+Un héritage peut ouvrir une porte.
+
+Mais si le trésor transforme le vivant en or mort, alors le vrai choix est de lâcher la main qui possède tout.
 
 ---
 
