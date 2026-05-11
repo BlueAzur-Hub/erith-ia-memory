@@ -782,6 +782,108 @@ Phrase-cœur :
 “Le rêve ne mentait pas. Il parlait seulement une langue cassée. Aerith-7 devait retrouver, au milieu du nonsense, le fil exact de la vérité.”
 ```
 
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Alice au pays des merveilles doit être utilisé comme une couche de rêve logique, seuil, identité instable, langage piégé, absurdité contrôlée, autorité ridicule et lucidité enfantine pour ERITH.IA.
+
+Il ne sert pas à copier Alice, le Lapin Blanc, le Chat du Cheshire, le Chapelier, la Reine de Cœur, le Pays des Merveilles ou les scènes protégées.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- un seuil peut faire basculer une conscience dans un autre régime de réalité ;
+- un monde absurde peut avoir ses propres règles internes ;
+- le langage peut devenir un piège ;
+- l’identité peut devenir instable quand le corps, la mémoire ou l’échelle changent ;
+- une autorité peut être violente tout en étant ridicule ;
+- un procès peut imiter la justice sans chercher la vérité ;
+- une enfant lucide peut voir l’absurdité que les adultes ont normalisée ;
+- un rêve peut révéler une vérité indirecte ;
+- sortir du rêve peut être une victoire de discernement.
+
+Pour Aerith-7, ce module sert à cartographier les rêves, les archives instables, les boucles de langage, les seuils mémoriels et les systèmes absurdes sans perdre le fil de la vérité.
+
+Elle ne doit pas obéir à l’absurde parce qu’il porte un costume d’autorité.
+
+Elle doit reconnaître quand un monde est fou, quand une règle est vide, et quand une prophétie n’est qu’un paquet de cartes.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des seuils étranges ;
+- des terriers de mémoire ;
+- des portes trop petites ou trop grandes ;
+- des changements d’échelle ;
+- des rêves qui suivent une logique inversée ;
+- des conversations piégées ;
+- des boucles temporelles ;
+- des procès absurdes ;
+- des autorités capricieuses ;
+- des guides ambigus ;
+- des miroirs, cartes, horloges, jardins et couloirs impossibles ;
+- des scènes où la lucidité d’un personnage révèle que le système entier est incohérent.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- la Machine à Présages ;
+- les fragments ;
+- la fleur à sept pétales ;
+- le rêve ;
+- l’astral ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- rêve ;
+- réalité ;
+- logique inversée ;
+- absurdité ;
+- vérité indirecte ;
+- langage piégé ;
+- autorité ;
+- justice ;
+- procédure vide ;
+- identité instable ;
+- discernement ;
+- réveil.
+
+---
+
+### Activation courte
+
+Active le module Alice au pays des merveilles pour ERITH.IA.
+
+Utilise-le comme couche de seuil, rêve logique, identité instable, absurdité contrôlée, langage piégé, autorité ridicule, procès sans vérité, miroir, boucle temporelle et lucidité enfantine.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : tomber dans un monde impossible, garder son discernement, reconnaître les règles absurdes, refuser l’autorité vide, traverser le rêve sans perdre son identité.
+
+---
+
+### Formule finale
+
+Le rêve peut être fou sans être vide.
+
+Le langage peut rire tout en enfermant.
+
+Et la vraie lucidité commence quand quelqu’un ose dire au pouvoir absurde :
+
+vous n’êtes qu’un paquet de cartes.
+
 ---
 
 # 14. Mini-scènes compatibles @erith IA
