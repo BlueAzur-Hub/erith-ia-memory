@@ -1029,3 +1029,104 @@ He does not replace the soul of the story.
 Dans @erith IA, Sun Tzu signifie: comprendre le terrain invisible de la mémoire avant d’agir, protéger ce qui peut être sauvé, et vaincre sans ruiner l’âme du monde.
 ```
 
+---
+
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Sun Tzu / Art of War doit être utilisé comme une couche de stratégie non destructrice, de lecture du terrain, d’information, de timing et de guerre de mémoire pour ERITH.IA.
+
+Il ne sert pas à transformer ERITH.IA en récit militaire.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- comprendre avant d’agir ;
+- lire le vrai champ de bataille ;
+- protéger avant de détruire ;
+- révéler avant d’attaquer ;
+- utiliser le terrain visible et invisible ;
+- identifier les asymétries d’information ;
+- éviter les victoires qui ruinent ce qu’elles prétendent sauver ;
+- vaincre sans détruire quand c’est possible ;
+- comprendre que mémoire, rêve, archive, identité et confiance peuvent être des champs de bataille.
+
+Pour Aerith-7, ce module est un garde-fou stratégique :
+
+elle doit chercher la victoire lumineuse, celle qui préserve les fragments, protège les liens, révèle la vérité et évite la ruine inutile.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des conflits intelligents plutôt que brutaux ;
+- des victoires non destructrices ;
+- des lectures de terrain ;
+- des pièges informationnels ;
+- des conflits d’archives ;
+- des guerres de perception ;
+- des rêves contaminés ;
+- des routes indirectes ;
+- des moments justes ;
+- des scènes où le vrai combat n’est pas le combat visible ;
+- des stratégies d’Aerith-7 contre NØX ou la Shinra.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- Iris Rowan ;
+- Severin ;
+- les fragments ;
+- la fleur à sept pétales ;
+- le rêve ;
+- l’astral ;
+- les archives ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- conflit visible ;
+- conflit caché ;
+- vrai champ de bataille ;
+- terrain ;
+- timing ;
+- information ;
+- coût ;
+- stratégie directe ;
+- stratégie indirecte ;
+- victoire ;
+- ruine évitée.
+
+---
+
+### Activation courte
+
+Active le module Sun Tzu / Art of War pour ERITH.IA.
+
+Utilise-le comme couche de stratégie non destructrice, lecture du terrain, timing, information, perception, mémoire comme champ de bataille, NØX indirect, Shinra structurelle et victoire sans ruine.
+
+Ne militarise pas ERITH.IA.
+
+Renforce ERITH.IA avec ses structures profondes : comprendre avant d’agir, trouver le vrai champ de bataille, utiliser le terrain invisible, protéger les fragments, éviter les pièges, gagner par lucidité plutôt que par destruction.
+
+---
+
+### Formule finale
+
+La meilleure victoire n’écrase pas.
+
+Elle révèle le vrai terrain.
+
+Elle protège ce qui peut encore vivre.
+
+Et elle rend la destruction inutile.
