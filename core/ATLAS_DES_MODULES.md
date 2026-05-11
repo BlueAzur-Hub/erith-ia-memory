@@ -576,7 +576,7 @@ Il permet de travailler :
 - `dune.md` — caste, pouvoir, immortalité symbolique, élites dominantes ;
 - `machine_a_presages_omen_machine.md` — destin calculé, prophétie-machine, déterminisme ;
 - `asimov_foundation_psychohistory_private_master_fr.md` — contrôle historique, calcul des masses, société prédictive ;
-- `sun_tzu.md` — guerre d’information, stratégie, survie, manipulation ;
+- `sun_tzu_art_of_war.md` — guerre d’information, stratégie, survie, manipulation ;
 - `cyber_oracle` / modules cyberpunk publics — oracle technologique, libre arbitre, vérité lumineuse dans monde corrompu.
 
 ### Attention canonique
@@ -892,18 +892,32 @@ Ils ne doivent jamais remplacer son jugement.
 - `modules/module_aladdin_retour_de_jafar_1994.md`
 - `modules/module_aladdin_roi_des_voleurs_1996.md`
 - `modules/module_aladin_disney_trilogie.md`
-- modules Oz / Alice / autres contes si présents dans le dépôt.
+- `modules/module_aladin_lampe_merveilleuse.md`
+- `modules/module_alice_pays_merveilles_lewis_carroll.md`
+- `modules/module_histoire_sans_fin_michael_ende.md`
+- `modules/wizard_of_oz.md`
 
 À charger pour :
 
 - merveilleux ;
 - génie ;
+- lampe-interface ;
+- souhait dangereux ;
 - portes magiques ;
 - palais nocturnes ;
-- tapis volant ;
 - rêve contrôlé ;
 - monde inversé ;
-- logique symbolique enfantine mais puissante.
+- logique absurde ;
+- identité instable ;
+- livre-monde ;
+- imagination ;
+- nom véritable ;
+- Néant ;
+- retour au réel ;
+- route initiatique ;
+- foyer ;
+- faux pouvoir ;
+- perception contrôlée.
 
 ---
 
@@ -958,7 +972,7 @@ Modules :
 - `machine_a_presages_omen_machine.md`
 - `asimov_foundation_psychohistory_private_master_fr.md`
 - `erith_ia_asimov_robotique_psychohistoire_fr.md`
-- `sun_tzu.md`
+- `sun_tzu_art_of_war.md`
 
 Résultat attendu :
 
@@ -1018,8 +1032,10 @@ Temps long, empires, archives, cycles historiques, transmission, effondrement, p
 Modules :
 
 - `module_aladin_disney_trilogie.md`
-- Oz ;
-- Alice ;
+- `module_aladin_lampe_merveilleuse.md`
+- `module_alice_pays_merveilles_lewis_carroll.md`
+- `module_histoire_sans_fin_michael_ende.md`
+- `wizard_of_oz.md`
 - ERITH.IA Auto-Agent Public.
 
 Résultat attendu :
