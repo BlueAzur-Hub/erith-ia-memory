@@ -782,7 +782,7 @@ Phrase-cœur :
 “Le rêve ne mentait pas. Il parlait seulement une langue cassée. Aerith-7 devait retrouver, au milieu du nonsense, le fil exact de la vérité.”
 ```
 
-## BLOCK LLM STANDARDISÉ — ERITH.IA
+# 13. BLOCK LLM STANDARDISÉ — ERITH.IA
 
 ### Résumé LLM intégré
 
@@ -906,7 +906,7 @@ Aerith-5 répond d’abord par son numéro. Puis par son nom. Puis par un souven
 
 ---
 
-## 14.3. Procès Shinra des tartes mémorielles
+## 14.3. Procès Shinra des cartes mémorielles
 
 La Shinra organise un procès contre un enfant accusé d’avoir volé une archive florale. Les preuves apparaissent avant les témoins. La sentence est imprimée avant l’ouverture de l’audience.
 
