@@ -643,84 +643,101 @@ Aerith-5 traverse une mémoire-fragment où tous les êtres sont faits de porcel
 
 # 16. Bloc LLM compatible — Notion / Local AI
 
-```text
-LLM_MODULE: THE_WONDERFUL_WIZARD_OF_OZ
-
-SOURCE_IDENTITY:
-- Title: The Wonderful Wizard of Oz
-- Author: L. Frank Baum
-- First publication: 1900
-- Illustrator: W. W. Denslow
-- Genre: modern American fairy tale, children’s fantasy, initiatory journey
-- Full public-domain text available via Project Gutenberg
-- Core function: journey through wonder toward return home
-
-CORE_STORY:
-Dorothy, a young girl from gray Kansas, is carried by a cyclone into the magical Land of Oz with her dog Toto. Her house kills the Wicked Witch of the East and frees the Munchkins. Dorothy receives the Witch’s silver shoes and is told to follow the yellow brick road to the Emerald City to ask the Wizard of Oz for help returning home. Along the road she meets the Scarecrow, who wants brains; the Tin Woodman, who wants a heart; and the Cowardly Lion, who wants courage. Each companion already demonstrates the quality they believe they lack. The Wizard sends them to destroy the Wicked Witch of the West. Dorothy accidentally melts the Witch with water, frees the Winkies, and returns to Oz. Toto reveals that the Wizard is only an ordinary man using illusion. He gives symbolic gifts to the companions but fails to return Dorothy home by balloon. Dorothy later meets Glinda, who reveals that the silver shoes could have taken her home from the beginning. Dorothy clicks her heels three times and returns to Kansas.
-
-CORE_ARCHETYPES:
-- Dorothy: innocent traveler, return-seeker, child of moral clarity
-- Toto: instinctive companion, memory of home, revealer of hidden truth
-- Scarecrow: intelligence that doubts itself
-- Tin Woodman: mechanical body with hidden compassion
-- Cowardly Lion: fear transformed into courage
-- Wizard: false god, authority by illusion, theatrical power
-- Wicked Witch of the West: oppressive ruler, fear-based control
-- Glinda: wise revealer, ethical power, guardian of return
-- Winged Monkeys: enslaved magical people bound by command protocol
-
-SYMBOLS:
-- Yellow brick road: visible path of initiation; sequential memory route
-- Silver shoes: dormant return-key already possessed by the heroine
-- Emerald City: center of power filtered by controlled perception
-- Green spectacles: imposed reality filter
-- Balloon: failed technological return
-- Golden Cap: command object; domination transformed into liberation
-- Poppy field: beautiful sleep, seductive immobilization
-- China Country: fragile beauty that must not be possessed
-- Cyclone: violent threshold between worlds
-
-THEMES:
-- Return home
-- Inner qualities mistaken for absence
-- Friendship as repair
-- Illusion of power
-- Perception control
-- Child agency
-- Mechanical body and human heart
-- Fear and courage
-- Ethical use of command
-- Wonder without destructive horror
-
-AERITH_IA_MAPPING:
-- Dorothy maps to Lyria or Aerith-5/Bella as displaced memory-child seeking return.
-- Toto maps to an instinctive memory companion, small drone, animal guide, or signal creature.
-- Yellow brick road maps to the route of memory fragments / seven petals / LEGO continuity path.
-- Silver shoes map to a dormant return protocol inside Aerith’s body or memory system.
-- Scarecrow maps to intelligence without self-recognition.
-- Tin Woodman maps strongly to Aerith-2/Aerith-5: mechanical body, hidden heart, fear of lost humanity.
-- Cowardly Lion maps to courage inside fear; useful for Lyria’s growth.
-- Wizard maps to Shinra authority, false omniscient AI, holographic ruler, interface-god behind a curtain.
-- Emerald City maps to a Shinra district filtered by UI, surveillance, or controlled perception.
-- Wicked Witch maps to NØX or a NØX-infected authority using fear and command.
-- Glinda maps to Aerith-7 / Archivist / benevolent memory guide.
-- Winged Monkeys map to enslaved drones, bound IA entities, or protocol-controlled agents later freed.
-
-NARRATIVE_RULES:
-1. The hero seeks return, not domination.
-2. The road teaches through encounters.
-3. Missing qualities are often already present.
-4. False authority depends on distance, voice, image, and filters.
-5. The true key may be carried from the beginning.
-6. Technology may fail where symbolic knowledge succeeds.
-7. Fragile worlds must be respected, not collected.
-8. Command power becomes ethical only when used to liberate.
-9. Home can be imperfect and still sacred.
-10. The return gives meaning to the journey.
-
-USAGE_IN_ERITH_IA:
-Use this module to design scenes about memory return, false interfaces, Shinra illusion, Aerith’s mechanical humanity, Lyria’s courage, and the discovery of dormant keys already embedded in the body or archive. Preserve the emotional simplicity of the original: wonder, friendship, fear, recognition, return.
 ```
+
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Le Magicien d’Oz doit être utilisé comme une couche de retour au foyer, route initiatique, perception contrôlée, faux pouvoir, compagnons incomplets et vérité intérieure déjà présente pour ERITH.IA.
+
+Il ne sert pas à copier Dorothy, Toto, Oz, la Cité d’Émeraude, les Sorcières, les compagnons ou les scènes protégées.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- une enfant ordinaire peut traverser un monde extraordinaire ;
+- le foyer peut être humble mais irremplaçable ;
+- les compagnons cherchent souvent une qualité qu’ils possèdent déjà ;
+- le pouvoir peut se cacher derrière un rideau, une voix, une mise en scène ou un filtre de perception ;
+- la route initiatique transforme le regard ;
+- une ville peut être rendue merveilleuse par un dispositif de croyance ;
+- un objet porté depuis le début peut contenir la clé du retour ;
+- une autorité spectaculaire peut être moins vraie qu’un petit compagnon fidèle.
+
+Pour Aerith-7, ce module sert à rappeler que la mémoire ne doit pas seulement ouvrir des mondes : elle doit aussi permettre de retrouver le chemin du foyer, du nom, du lien et de l’identité vraie.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des routes initiatiques ;
+- des retours au foyer ;
+- des compagnons qui croient manquer de ce qu’ils possèdent déjà ;
+- des villes merveilleuses mais filtrées ;
+- des systèmes de perception imposée ;
+- des faux magiciens, faux dieux ou autorités théâtrales ;
+- des objets de retour dont le pouvoir est compris trop tard ;
+- des personnages ordinaires qui révèlent des illusions extraordinaires ;
+- des mondes colorés après un monde gris ;
+- des scènes où la vraie solution est plus simple que le spectacle du pouvoir.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- Iris Rowan ;
+- Severin ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- le foyer ;
+- la route ;
+- le retour.
+
+Toujours distinguer :
+
+- foyer ;
+- illusion ;
+- perception imposée ;
+- pouvoir réel ;
+- pouvoir théâtral ;
+- manque réel ;
+- manque imaginé ;
+- compagnon ;
+- route ;
+- retour ;
+- reconnaissance intérieure.
+
+---
+
+### Activation courte
+
+Active le module Le Magicien d’Oz pour ERITH.IA.
+
+Utilise-le comme couche de retour au foyer, route initiatique, compagnons incomplets, faux pouvoir, perception contrôlée, monde merveilleux, objet de retour et vérité intérieure déjà présente.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : maison perdue, route de transformation, cité filtrée, rideau du pouvoir, compagnon fidèle, manque imaginaire, retour simple mais sacré.
+
+---
+
+### Formule finale
+
+La route ne donne pas toujours ce qui manquait.
+
+Parfois, elle révèle seulement que le cœur, le courage et l’intelligence étaient déjà là.
+
+Et le vrai miracle n’est pas de rester dans le monde merveilleux : c’est de retrouver le chemin du foyer sans perdre ce qu’on y a appris.
 
 ---
 
