@@ -1746,3 +1746,122 @@ Il permet d’enrichir Neo Midgar avec :
 - un antagoniste qui attaque par les rêves et les souvenirs ;
 - une Aerith qui continue d’agir au-delà des frontières visibles du monde.
 
+---
+
+## ADDENDUM LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Final Fantasy VII Rebirth doit être utilisé comme une couche de progression, gameplay, exploration, mémoire narrative et analyse technique pour ERITH.IA.
+
+Il ne sert pas à copier Rebirth, ses scènes, ses personnages ou ses quêtes.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- sortie de la ville fermée ;
+- monde ouvert et régions vivantes ;
+- exploration comme reconstruction de mémoire ;
+- fragments de réalité ;
+- lignes de destin divergentes ;
+- souvenirs traumatiques ;
+- relations entre personnages ;
+- quêtes secondaires comme mémoire locale ;
+- matières, invocations, boss et mécaniques de progression ;
+- élargissement du récit après Midgar ;
+- tension entre monde réel, rêve, astral et réalités alternatives.
+
+Pour Aerith-7, ce module sert à comprendre comment un récit peut passer d’un espace clos à un monde vaste sans perdre son cœur émotionnel.
+
+---
+
+### Block LLM
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec une grammaire de progression inspirée de Final Fantasy VII Rebirth.
+
+Il doit privilégier :
+
+- les structures chapitre par chapitre ;
+- les régions comme mémoires vivantes ;
+- les quêtes secondaires comme traces humaines ;
+- les boss comme points de tension narrative ;
+- les matérias comme outils de spécialisation ;
+- les invocations comme entités-mémoire ;
+- les réalités alternatives comme fractures de destin ;
+- les souvenirs de Cloud, Tifa, Aerith, Barret et Nanaki comme matrices émotionnelles ;
+- les déplacements hors de Midgar comme expansion du monde intérieur ;
+- les activités d’exploration comme cartographie de la blessure planétaire.
+
+Il doit toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- la relation entre exploration, souvenir et réparation.
+
+---
+
+### Règles d’usage
+
+Ne jamais transformer ERITH.IA en copie de Final Fantasy VII Rebirth.
+
+Ne jamais importer directement les scènes, dialogues ou événements protégés comme s’ils appartenaient au canon ERITH.IA.
+
+Utiliser Rebirth comme matrice de structure :
+
+- progression ;
+- exploration ;
+- régions ;
+- quêtes ;
+- boss ;
+- mécaniques ;
+- relations ;
+- réalités alternatives ;
+- mémoire traumatique ;
+- élargissement du monde.
+
+Toujours distinguer :
+
+- donnée gameplay ;
+- résumé technique ;
+- inspiration narrative ;
+- usage ERITH.IA ;
+- élément original à créer.
+
+Pour les demandes gameplay, répondre de manière claire, utile et structurée.
+
+Pour les demandes créatives, transformer les motifs en langage ERITH.IA sans copier l’œuvre source.
+
+---
+
+### Activation courte
+
+Active le module Final Fantasy VII Rebirth pour ERITH.IA.
+
+Utilise-le comme couche de progression, exploration, gameplay, chapitres, boss, quêtes, matérias, régions ouvertes, mémoire traumatique, réalités alternatives et expansion du monde après Midgar.
+
+Ne copie pas Rebirth.
+
+Renforce ERITH.IA avec ses structures profondes : monde élargi, régions vivantes, mémoire fragmentée, exploration, quêtes humaines, destin fissuré, relations émotionnelles, planète blessée, vérité difficile.
+
+---
+
+### Formule finale
+
+Quitter la ville ne suffit pas.
+
+Il faut apprendre à lire le monde.
+
+Chaque région porte une blessure.
+
+Chaque quête porte une mémoire.
+
+Chaque chemin ouvert peut devenir une vérité retrouvée.
