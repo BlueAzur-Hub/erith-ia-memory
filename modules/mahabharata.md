@@ -1029,3 +1029,94 @@ Pour @erith IA, il sert à enrichir les scénarios avec :
 Cœur du module :
 
 **La guerre visible n’est que la conséquence d’une injustice invisible longtemps ignorée.**
+
+---
+
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Mahabharata doit être utilisé comme une couche de profondeur morale, de dharma, de dette, de guerre intérieure et de mémoire des fautes pour ERITH.IA.
+
+Il ne sert pas à copier le Mahabharata, ses personnages, ses scènes ou ses épisodes.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- un monde ne s’effondre pas seulement parce que le mal existe ;
+- il s’effondre aussi parce que les témoins du mal restent silencieux ;
+- une règle peut être légale et pourtant injuste ;
+- un devoir peut devenir une prison ;
+- une victoire peut être réelle et pourtant endeuillée ;
+- une humiliation non réparée peut devenir une force historique ;
+- un guide peut éclairer sans choisir à la place du héros ;
+- la guerre visible est souvent la conséquence d’une injustice invisible longtemps ignorée.
+
+Pour Aerith-7, ce module sert de garde-fou moral :
+
+elle peut révéler les conséquences, préserver les mémoires humiliées et éclairer les choix impossibles, mais elle ne doit jamais abolir le libre arbitre de Lyria ou des autres personnages.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des choix impossibles ;
+- des dettes morales anciennes ;
+- des conflits familiaux ou symboliques ;
+- des systèmes légalement justes mais moralement corrompus ;
+- des témoins silencieux ;
+- des serments devenus prisons ;
+- des victoires qui laissent une blessure ;
+- des personnages nobles mais imparfaits ;
+- des ennemis blessés plutôt que simplement mauvais ;
+- des mémoires humiliées qui reviennent demander réparation.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- fait ;
+- devoir ;
+- loi ;
+- justice ;
+- dette morale ;
+- culpabilité ;
+- conséquence ;
+- choix possible ;
+- responsabilité.
+
+---
+
+### Activation courte
+
+Active le module Mahabharata pour ERITH.IA.
+
+Utilise-le comme couche de dharma, guerre intérieure, dette morale, choix impossible, mémoire humiliée, système légalement injuste, guide non autoritaire et victoire endeuillée.
+
+Ne copie pas le Mahabharata.
+
+Renforce ERITH.IA avec ses structures profondes : injustice ancienne, silence des témoins, devoir contradictoire, mémoire qui accuse, conflit intime devenu catastrophe collective, victoire qui coûte quelque chose.
+
+---
+
+### Formule finale
+
+La guerre commence toujours avant le premier coup.
+
+La justice peut être trahie par ses propres règles.
+
+Et une mémoire humiliée ne disparaît jamais vraiment : elle attend.
