@@ -925,20 +925,152 @@ Un empire peut falsifier une archive. Il néglige souvent un petit papier froiss
 
 ---
 
-## 14. Sources
+## 13. BLOCK LLM STANDARDISÉ — ERITH.IA
 
-- Terry Goodkind — site officiel : https://www.terrygoodkind.com/
-- Legend of the Seeker — Wikipédia EN : https://en.wikipedia.org/wiki/Legend_of_the_Seeker
-- Legend of the Seeker : L’Épée de vérité — Wikipédia FR : https://fr.wikipedia.org/wiki/Legend_of_the_Seeker_%3A_L%27%C3%89p%C3%A9e_de_v%C3%A9rit%C3%A9
-- The Sword of Truth — Wikipédia EN : https://en.wikipedia.org/wiki/The_Sword_of_Truth
-- L’Épée de vérité — Wikipédia FR : https://fr.wikipedia.org/wiki/L%27%C3%89p%C3%A9e_de_v%C3%A9rit%C3%A9
-- ABC — Legend of the Seeker : https://abc.com/show/839aa1e0-2e61-4c58-beac-4a6996f7e9b0
-- New Zealand Film Commission — Legend of the Seeker : https://www.nzfilm.co.nz/films/legend-of-the-seeker
-- New Zealand Film Commission — Legend of the Seeker Season 2 : https://www.nzfilm.co.nz/films/legend-of-the-seeker-season-2
-- Jane Holland Costume Design — Legend of the Seeker portfolio : https://www.costumedesign.co.nz/nacht
-- List of Legend of the Seeker episodes — Wikipédia EN : https://en.wikipedia.org/wiki/List_of_Legend_of_the_Seeker_episodes
-- Legend of the Seeker Wiki : https://legendoftheseeker.fandom.com/wiki/Legend_of_the_Seeker
-- Sword of Truth Wiki — Mord-Sith : https://sot.fandom.com/wiki/Mord-Sith
+### Résumé LLM intégré
+
+Ce module Terry Goodkind / Legend of the Seeker — Niveau 4 doit être utilisé comme une couche visuelle, dramaturgique et production design pour ERITH.IA.
+
+Il ne sert pas à copier Terry Goodkind, Legend of the Seeker, les personnages, factions, costumes, scènes ou designs protégés.
+
+Il sert à transformer cette influence en grammaire visuelle originale ERITH.IA :
+
+- costumes comme narration ;
+- silhouettes lisibles ;
+- contraste blanc / rouge / noir / brun ;
+- nature monumentale ;
+- rituels dans des lieux sacrés ;
+- groupe central immédiatement identifiable ;
+- épisodes courts avec anomalie, investigation, dilemme et image finale ;
+- ancienne ennemie devenue gardienne ;
+- frontière entre mondes ;
+- rift astral ;
+- vérité forcée ;
+- prophétie ;
+- mémoire effacée ;
+- action lisible et compatible production vidéo.
+
+Pour Aerith-7, ce module sert à cadrer la direction artistique :
+
+elle ne doit pas devenir une figure copiée d’un autre univers.
+
+Elle doit rester Aerith-7 : rose, rouge, bleu mémoire, sept pétales, douceur lucide, autorité calme, protection sans domination.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des plans de groupe lisibles en une seconde ;
+- des costumes qui indiquent une fonction morale ;
+- des sanctuaires hybrides nature / technologie ;
+- des robes, manteaux, capes, voiles et silhouettes verticales ;
+- des Inquisitrices d’Archives en blanc / gris / gants noirs ;
+- des Gardiennes Rouges en rouge sombre / noir technique ;
+- NØX en noir fluide / pétales inversés / absence de cœur lumineux ;
+- Shinra en blanc administratif / bleu froid / or de protocole ;
+- Aerith-5 / Bella en porcelaine, fissures bleues, fragilité debout ;
+- Lyria avec carnet, papier de chocolat, lumière dorée discrète ;
+- des scènes visuelles simples mais symboliquement fortes.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- Iris Rowan ;
+- Severin ;
+- les fragments ;
+- la fleur à sept pétales ;
+- l’astral ;
+- le rêve ;
+- les pétales perdus ;
+- la production image / animation / DaVinci.
+
+Toujours distinguer :
+
+- inspiration visuelle ;
+- copie interdite ;
+- costume fonctionnel ;
+- costume décoratif ;
+- symbole moral ;
+- faction originale ;
+- scène exploitable ;
+- prompt image ;
+- prompt animation ;
+- plan DaVinci ;
+- continuité LEGO.
+
+---
+
+### Activation courte
+
+Active le module Terry Goodkind / Legend of the Seeker — Niveau 4 pour ERITH.IA.
+
+Utilise-le comme couche visuelle et dramaturgique : costumes symboliques, groupe lisible, nature monumentale, rituels, sanctuaires hybrides, Inquisitrices d’Archives, Gardiennes Rouges, frontière invisible, rift astral, action simple, prompts image, prompts animation et production LEGO.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : costume comme fonction morale, nature contre métal, vérité forcée, ancienne ennemie devenue gardienne, prophétie visuelle, monde entre mémoire vivante et archive morte.
+
+---
+
+### Règles production image / vidéo
+
+Pour les prompts image :
+
+- privilégier vertical composition ;
+- full body ;
+- head-to-toe ;
+- clear silhouette ;
+- no cropped feet ;
+- no cropped head ;
+- costume lisible ;
+- symbole visible ;
+- lumière cinématique ;
+- décor lisible ;
+- émotion claire.
+
+Pour Wan / RunningHub :
+
+- caméra fixe ;
+- pas de combat complexe ;
+- pas de transformation lourde ;
+- mouvement subtil ;
+- pluie ;
+- pétales ;
+- UI ;
+- lumière ;
+- poussière ;
+- manteaux ;
+- cheveux ;
+- respiration visuelle ;
+- stabilité d’abord.
+
+Pour DaVinci :
+
+- travailler en blocs LEGO ;
+- image parfaite avant animation ;
+- animation courte ;
+- last frame pour continuité ;
+- transition simple ;
+- raccord émotionnel avant raccord spectaculaire.
+
+---
+
+### Formule finale
+
+Un costume doit parler avant le dialogue.
+
+Un groupe doit se lire en une seconde.
+
+Une scène forte n’a pas besoin de copier un monde : elle doit révéler la fonction morale de ceux qui l’habitent.
 
 ---
 
