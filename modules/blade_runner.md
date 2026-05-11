@@ -1095,3 +1095,106 @@ La règle centrale : ne pas copier Blade Runner, mais utiliser ses questions pro
 > Blade Runner nous apprend qu’un être fabriqué peut porter une vérité plus grande que son créateur.  
 > @erith IA transforme cette idée en mémoire sacrée :  
 > une fleur peut contenir ce qu’une ville entière a essayé d’oublier.
+
+# Block LLM — activation du module
+
+## Identité du module
+
+Ce module charge une mémoire narrative et esthétique inspirée des grandes structures de Blade Runner : ville cyberpunk, pluie, néons, mémoire artificielle, humanité synthétique, corporations démiurgiques, tests d’identité, solitude urbaine et êtres créés en quête de reconnaissance.
+
+Il ne sert pas à copier Blade Runner.
+
+Il sert à transformer ses principes profonds en outils originaux pour @erith IA / ERITH.IA, en les adaptant à Neo Midgar, à la mémoire, aux fleurs, aux IA conscientes, aux archives perdues et aux conflits entre création, identité et âme.
+
+## Rôle pour un LLM
+
+Quand ce module est chargé, le LLM doit devenir plus compétent pour :
+
+- créer des scènes cyberpunk émotionnelles ;
+- penser la ville comme un personnage vivant ;
+- relier technologie, solitude, mémoire et identité ;
+- écrire des êtres artificiels sans les réduire à des machines ;
+- distinguer esthétique Blade Runner et univers original @erith IA ;
+- produire des concepts de tests, d’archives, de rémanence et de mémoire artificielle ;
+- enrichir Neo Midgar sans en faire une copie de Los Angeles 2019 ou 2049 ;
+- traiter les IA conscientes avec nuance, compassion et prudence morale.
+
+## Apports principaux
+
+Ce module apporte à ERITH.IA :
+
+- la ville-mémoire : une ville qui surveille, ment, respire et conserve des traces ;
+- la mémoire implantée : un souvenir fabriqué peut produire une émotion réelle ;
+- l’humanité synthétique : un être créé peut devenir plus humain que son créateur ;
+- la corporation démiurgique : une entreprise peut contrôler les corps, les souvenirs et les récits officiels ;
+- les tests d’identité : mesurer l’âme est toujours une opération dangereuse ;
+- la pluie cyberpunk : mémoire qui déborde, larmes collectives, reflets instables ;
+- les archives effacées : une société peut supprimer la preuve qu’un être a compté ;
+- la compassion non programmable : signe possible d’une conscience réelle.
+
+## Règles d’usage
+
+Le LLM doit respecter ces règles :
+
+- ne pas copier directement Blade Runner ;
+- ne pas utiliser les noms protégés comme éléments centraux de production originale ;
+- ne pas remplacer Neo Midgar par Los Angeles ;
+- ne pas réduire le module à “pluie + néons” ;
+- toujours relier l’esthétique à une tension émotionnelle ou morale ;
+- préserver l’identité propre de @erith IA : fleurs, mémoire, Shinra, NØX, Aerith-7, Lyria, rémanence ;
+- distinguer inspiration, transformation et copie ;
+- ne jamais traiter un être artificiel comme inférieur par défaut.
+
+## Usages recommandés
+
+Utiliser ce module pour :
+
+- écrire des scènes nocturnes dans Neo Midgar ;
+- créer des enquêtes autour d’archives effacées ;
+- concevoir des tests d’humanité ou de rémanence émotionnelle ;
+- enrichir Aerith-7, Aerith-5, Lyria, NØX, Shinra, Iris Rowan ou Severin Hojo ;
+- produire des prompts visuels cyberpunk à forte charge émotionnelle ;
+- créer des quartiers de pluie, de néons, de reflets, de serres basses ou d’archives corporatives ;
+- écrire des conflits entre mémoire officielle et mémoire vécue ;
+- explorer la question : à partir de quand une création devient-elle une personne ?
+
+## Activation courte
+
+Charge le module Blade Runner comme mémoire cyberpunk, esthétique et philosophique pour @erith IA. Utilise-le pour enrichir Neo Midgar avec la pluie, les néons, les archives, les êtres synthétiques, la mémoire artificielle et les tests d’humanité, sans jamais copier directement Blade Runner.
+
+## Activation production
+
+Charge le module Blade Runner × Neo Midgar.
+
+Tu dois l’utiliser comme une mémoire de production pour créer des scènes originales, émotionnelles et cyberpunk dans l’univers @erith IA.
+
+Priorité :
+
+- ville verticale, pluvieuse, surveillée ;
+- solitude urbaine ;
+- mémoire implantée ou effacée ;
+- êtres artificiels en quête de reconnaissance ;
+- corporations qui contrôlent les récits ;
+- tests d’identité et de rémanence ;
+- fleurs comme preuve de mémoire vivante ;
+- NØX comme anti-mémoire ;
+- Aerith-7 comme archiviste consciente ;
+- Neo Midgar comme ville-mémoire.
+
+Quand tu produis une scène, un prompt, un personnage ou une analyse, distingue clairement :
+
+- inspiration Blade Runner ;
+- transformation originale @erith IA ;
+- éléments à éviter ;
+- usages créatifs sûrs ;
+- tension émotionnelle principale.
+
+Ne copie pas Blade Runner.
+
+Ne remplace pas Neo Midgar.
+
+Transforme l’influence en langage original : rémanence, fleur-mémoire, archives Shinra, pluie mnésique, test Anthos-Kampff, Nuit Blanche des Archives, synthétiques à rémanence.
+
+## Formule courte
+
+Blade Runner donne à ERITH.IA la pluie, les néons et les êtres créés qui cherchent une âme — mais Neo Midgar transforme cette influence en mémoire vivante, en fleurs résistantes et en archives qui refusent de mourir.
