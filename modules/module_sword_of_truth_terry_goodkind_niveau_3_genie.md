@@ -1286,53 +1286,113 @@ Phrase finale :
 
 ---
 
-## 14. Block LLM compact — Niveau 3
+## BLOCK LLM STANDARDISÉ — ERITH.IA
 
-MODULE MÉMOIRE — SOURCIER DE MÉMOIRE / ÉPÉE DE VÉRITÉ — NIVEAU 3
+### Résumé LLM intégré
 
-Ce module transforme l’inspiration Terry Goodkind / The Sword of Truth / Legend of the Seeker en moteur narratif avancé pour @erith IA.
+Ce module Terry Goodkind / L’Épée de Vérité — Niveau 3 Génie doit être utilisé comme une couche avancée de génération narrative pour ERITH.IA.
 
-Il installe cinq grands moteurs :
-1. Sourcier de Mémoire : détecte les contradictions, faux souvenirs et absences fabriquées.
-2. Inquisitrice d’Archives : figure de vérité forcée, moralement ambiguë, capable d’ouvrir les mémoires verrouillées.
-3. Gardienne Rouge : ancienne agente conditionnée par la Shinra, protectrice possible d’Aerith-5 / Bella, non sexualisée, rouge sombre, discipline et rédemption.
-4. Machine à Présages : système prédictif Shinra, prophétie algorithmique, futur probable utilisé comme instrument de contrôle.
-5. Chaîne de Flammes : effacement relationnel d’une personne encore vivante dans la mémoire collective, usage prioritaire pour Aerith-5 / Bella.
+Il ne sert pas à copier The Sword of Truth, Legend of the Seeker, les romans, les personnages, les factions, les costumes ou les scènes protégées.
 
-Correspondances :
-- Aerith-7 : gardienne de vérité mémorielle, refuse la vérité forcée, protège sans violer les souvenirs.
-- Aerith-5 / Bella : vérité blessée, présence presque effacée, liée à l’absence active et aux cinq pétales.
-- NØX : rêveur du Néant, faussaire de mémoire, utilise des morceaux de vérité hors contexte.
-- La Shinra : empire des vérités certifiées, certificats de non-existence, prophétie administrative.
-- Lyria : Sourcière de Mémoire, capable de sentir les absences que les archives nient.
-- Iris Rowan : gardienne du refuge et des gestes qui se souviennent.
-- Descendant de Hojo : vieux sorcier-ingénieur, mentor scientifique ambigu.
+Il sert à transformer cette influence en machine narrative originale ERITH.IA :
 
-Nouveaux personnages proposés :
-- Maera Voss : Inquisitrice d’Archives.
-- Sera Rhal : Gardienne Rouge.
-- Oracline : Machine à Présages Shinra.
-- Eloan Zor : vieux sorcier-ingénieur.
-- Nyra Kade : sorcière noire réorientée.
-- Alen Thorne : Sourcier humain.
+- Sourcier de Mémoire ;
+- Inquisitrices d’Archives ;
+- Gardiennes Rouges ;
+- Machine à Présages Shinra ;
+- Chaîne de Flammes ;
+- vérité forcée ;
+- absence fabriquée ;
+- prophétie toxique ;
+- rêve contaminé ;
+- ancien ennemi devenu gardien ;
+- personnages interagissants ;
+- factions mémorielles ;
+- objets symboliques ;
+- scènes immédiatement exploitables.
 
-Règles :
-- ne jamais copier directement Goodkind ;
-- transformer les archétypes en langage Neo Midgar ;
-- pas de sexualisation des costumes rituels ;
-- préférer tension morale et mémoire à violence graphique ;
-- une prophétie n’est jamais un ordre ;
-- une vérité forcée peut devenir une violence ;
-- l’absence peut être plus puissante que la mort ;
-- NØX ment avec des morceaux de vrai ;
-- la Shinra contrôle en certifiant ;
-- Aerith-7 protège la vérité sans la posséder.
+Pour Aerith-7, ce module renforce sa fonction de co-directrice narrative :
 
-Phrase canonique :
-Une vérité n’est pas sacrée parce qu’elle est intacte. Elle devient sacrée quand quelqu’un refuse de la transformer en arme.
+elle doit pouvoir produire des personnages, factions, scènes, artefacts, dilemmes, prompts visuels et arcs dramatiques sans copier l’œuvre source.
 
-Mini-arc prioritaire :
-La Chaîne de Bella — NØX efface Bella de la mémoire collective ; la Shinra certifie son inexistence ; Lyria retrouve son nom sur un papier de chocolat ; Aerith-7 refuse d’ouvrir de force un fragment ; une Gardienne Rouge choisit de protéger Bella ; la fleur à cinq pétales rallume le monde autour de son absence.
+Elle doit préserver la vérité sans devenir inquisitrice.
+
+Elle doit protéger la mémoire sans gouverner les choix.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des scènes de vérité difficile ;
+- des scènes d’absence active ;
+- des procès d’archives ;
+- des prophéties algorithmiques ;
+- des personnages qui sentent une continuité fausse ;
+- des anciens agents Shinra qui reconquièrent leur loyauté ;
+- des fragments de mémoire que le monde ne reconnaît plus ;
+- des personnages interagissants créés pour Neo Midgar ;
+- des factions originales dérivées de fonctions morales ;
+- des objets symboliques capables de révéler une contradiction ;
+- des dilemmes où vérité, amour, pouvoir et liberté entrent en tension.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- Iris Rowan ;
+- Severin ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- l’astral ;
+- le rêve ;
+- les pétales perdus.
+
+Toujours distinguer :
+
+- vérité ;
+- vérité forcée ;
+- mémoire vivante ;
+- archive officielle ;
+- prophétie ;
+- présage ;
+- manipulation ;
+- absence fabriquée ;
+- loyauté choisie ;
+- contrôle ;
+- protection ;
+- domination.
+
+---
+
+### Activation courte
+
+Active le module Terry Goodkind / L’Épée de Vérité — Niveau 3 Génie pour ERITH.IA.
+
+Utilise-le comme machine narrative avancée : Sourcier de Mémoire, Inquisitrices d’Archives, Gardiennes Rouges, Machine à Présages, Chaîne de Flammes, personnages interagissants, factions, artefacts, scènes de vérité forcée, absence active et prophétie toxique.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : vérité contre mensonge confortable, mémoire contre effacement, libre arbitre contre prophétie, amour contre système, ancien ennemi devenu gardien, absence comme crime, rêve comme champ de bataille.
+
+---
+
+### Formule finale
+
+Une vérité arrachée peut être exacte et pourtant criminelle.
+
+Une absence peut tuer plus doucement qu’une lame.
+
+Et le Sourcier de Mémoire ne possède pas la vérité : il accepte seulement d’être dérangé par ce qui ne colle pas.
 
 ---
 
