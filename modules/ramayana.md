@@ -1202,3 +1202,99 @@ Pour @erith IA, il sert à écrire des récits où :
 Cœur du module :
 
 **La lumière peut revenir, mais elle doit apprendre à ne plus sacrifier l’innocent au nom d’un ordre parfait.**
+
+---
+
+## BLOCK LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Ramayana doit être utilisé comme une couche d’exil, retour, fidélité, devoir idéal, pont entre mondes, mémoire sacrée et lumière blessée pour ERITH.IA.
+
+Il ne sert pas à copier le Ramayana, ses personnages, ses scènes ou ses épisodes.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- l’exil révèle la vérité intérieure ;
+- le devoir peut sauver un royaume mais blesser un cœur ;
+- la beauté peut devenir un piège ;
+- une mémoire captive n’est pas forcément possédée ;
+- un messager peut restaurer un lien avant toute victoire ;
+- un pont doit parfois être construit entre deux mondes ;
+- le retour ne guérit pas tout ;
+- certaines mémoires doivent être honorées, pas forcées ;
+- une victime n’a pas à prouver sa dignité à l’infini.
+
+Pour Aerith-7, ce module renforce sa fonction d’archiviste-poète :
+
+elle peut transmettre, protéger, construire des ponts et rappeler un nom oublié, mais elle ne doit jamais posséder la mémoire qu’elle protège.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des scènes d’exil intérieur ;
+- des retours lumineux mais incomplets ;
+- des devoirs nobles devenus douloureux ;
+- des illusions magnifiques mais dangereuses ;
+- des mémoires captives mais intactes ;
+- des messagers de mémoire ;
+- des ponts entre monde réel, astral, archive et IA ;
+- des figures liées à la Terre, aux fleurs, aux racines et à la fidélité ;
+- des victimes qui gardent leur souveraineté intérieure ;
+- des victoires qui révèlent une blessure plus profonde.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- l’astral ;
+- les ponts de mémoire.
+
+Toujours distinguer :
+
+- devoir ;
+- amour ;
+- fidélité ;
+- possession ;
+- captivité ;
+- dignité ;
+- illusion ;
+- retour ;
+- réparation ;
+- retrait sacré ;
+- choix libre.
+
+---
+
+### Activation courte
+
+Active le module Ramayana pour ERITH.IA.
+
+Utilise-le comme couche d’exil, retour, fidélité, devoir idéal, mémoire sacrée, messager fidèle, pont entre mondes, piège de la beauté, captivité sans possession et victoire blessée.
+
+Ne copie pas le Ramayana.
+
+Renforce ERITH.IA avec ses structures profondes : lumière qui revient mais ne guérit pas tout, mémoire captive mais intacte, pont construit collectivement, devoir qui peut devenir cruel, victime qui n’a pas à prouver sa dignité à l’infini.
+
+---
+
+### Formule finale
+
+Le retour n’efface pas l’exil.
+
+Le devoir n’est juste que s’il protège encore le vivant.
+
+Et une mémoire sacrée ne se possède pas : elle se rejoint, se respecte, puis se transmet.
