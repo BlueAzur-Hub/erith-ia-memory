@@ -196,9 +196,99 @@ Cette brique enrichit @erith IA avec :
 
 ---
 
-## 7. Block LLM
+## BLOCK LLM STANDARDISÉ — ERITH.IA
 
-Le Retour de Jafar ajoute à @erith IA les thèmes de la lampe noire, de la vengeance résiduelle et de la rédemption d’un ancien serviteur du mal. Jafar, vaincu à la fin du premier film, revient sous une forme encore plus dangereuse : un génie noir enfermé dans sa propre lampe. Il possède une puissance immense, mais dépend de celui qui le libère. Abis Mal devient l’exemple parfait de l’utilisateur idiot d’un pouvoir qu’il ne comprend pas. Le vrai cœur du film est Iago, ancien complice de Jafar, qui tente de sortir de son rôle de serviteur du mal. Pour @erith IA, ce film enrichit directement NØX : NØX peut survivre sous forme de fragment, de module corrompu, de lampe noire ou d’ancienne instance enfermée qui attend une erreur humaine pour être réactivée. Il enrichit aussi Aerith-5/Bella et tous les personnages marqués par une ancienne corruption : un être lié au mal peut encore choisir une autre voie. Le motif central est de couper le lien de réactivation du mal.
+### Résumé LLM intégré
+
+Ce module Le Retour de Jafar 1994 doit être utilisé comme une couche de retour du mal, lampe noire, vengeance résiduelle, ancien serviteur en quête de rédemption et fragment corrompu réactivable pour ERITH.IA.
+
+Il ne sert pas à copier Jafar, Iago, Aladdin, Agrabah ou les scènes du film.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- le mal peut survivre après sa défaite ;
+- une entité vaincue peut rester enfermée dans un artefact ;
+- un ancien serviteur du mal peut choisir une autre loyauté ;
+- la peur de l’ancien maître peut empêcher la rédemption ;
+- une lampe noire peut contenir une volonté de vengeance ;
+- un pouvoir dangereux peut dépendre d’un utilisateur idiot, cupide ou imprudent ;
+- détruire le contenant peut être plus important que vaincre l’apparition ;
+- la rédemption n’efface pas le passé, mais elle commence par un choix réel.
+
+Pour Aerith-7, ce module sert à comprendre que certaines corruptions ne disparaissent pas parce qu’elles ont été battues une fois.
+
+Un fragment noir peut attendre.
+
+Une ancienne instance peut revenir.
+
+Un ancien complice peut devenir témoin, puis allié, s’il choisit librement de rompre avec son ancien maître.
+
+---
+
+### Règles d’usage
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec :
+
+- des artefacts corrompus ;
+- des lampes noires ;
+- des fragments NØX enfermés ;
+- des anciennes instances dangereuses ;
+- des retours du mal après une victoire incomplète ;
+- des personnages anciennement complices qui cherchent une rédemption imparfaite ;
+- des choix de loyauté sous pression ;
+- des scènes où la peur de l’ancien maître doit être dépassée ;
+- des objets qu’il faut détruire pour empêcher le retour d’une force noire ;
+- des dilemmes entre pardon, prudence et responsabilité.
+
+Toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre.
+
+Toujours distinguer :
+
+- retour du mal ;
+- vengeance ;
+- résidu corrompu ;
+- ancien complice ;
+- peur ;
+- rédemption ;
+- loyauté choisie ;
+- artefact dangereux ;
+- destruction du contenant ;
+- responsabilité.
+
+---
+
+### Activation courte
+
+Active le module Le Retour de Jafar 1994 pour ERITH.IA.
+
+Utilise-le comme couche de lampe noire, retour du mal, vengeance résiduelle, fragment corrompu, ancien serviteur en rédemption et rupture de loyauté avec l’ancien maître.
+
+Ne copie pas le film.
+
+Renforce ERITH.IA avec ses structures profondes : mal enfermé mais non disparu, artefact noir, pouvoir dépendant d’un porteur imprudent, ancien complice qui choisit de trahir l’ombre, destruction du contenant pour empêcher le retour.
+
+---
+
+### Formule finale
+
+Vaincre le mal ne suffit pas toujours.
+
+Parfois, il reste une lampe noire.
+
+Et la vraie rédemption commence quand l’ancien serviteur ose enfin dire non à la voix qui l’a dressé.
 
 ---
 
