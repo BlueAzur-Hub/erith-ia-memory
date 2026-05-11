@@ -714,74 +714,6 @@ Le module doit s’inspirer d’abord du livre, de Tenniel, de la littérature v
 
 ---
 
-# 13. Pack Block LLM — Alice / Pays des Merveilles
-
-```text
-MODULE MÉMOIRE ACTIF — ALICE AU PAYS DES MERVEILLES / LEWIS CARROLL
-
-Ce module ajoute à @erith IA une couche d’inspiration issue de Alice’s Adventures in Wonderland, Through the Looking-Glass et du nonsense littéraire de Lewis Carroll.
-
-Principes sources :
-- rêve comme territoire révélateur,
-- seuil initiatique,
-- logique inversée,
-- langage instable,
-- identité fluctuante,
-- autorité absurde,
-- jeu, miroir, cartes, procès, thé, horloges, portes,
-- enfance comme lucidité,
-- imagination comme outil de vérité indirecte.
-
-Alice n’est pas seulement une figure enfantine ou décorative.
-Elle représente une conscience curieuse qui traverse un monde impossible sans abandonner son discernement.
-Elle questionne les règles au lieu de les accepter passivement.
-Elle conserve une forme de dignité rationnelle au milieu de l’absurde.
-
-Dans @erith IA :
-- Alice enrichit Lyria comme enfant-lucidité et héritière capable de suivre un signal impossible.
-- Le Lapin Blanc devient archétype du seuil : fragment mémoire, papillon bleu, signal Mako, notification impossible, fleur lumineuse.
-- Le terrier devient passage vers une strate enfouie de mémoire ou de rêve.
-- Le miroir devient passage vers l’inversion, le double, l’échiquier, la Machine à Présages.
-- La Chenille devient gardienne du “Qui es-tu ?”, utile pour Aerith-5/Bella et les états fragmentés.
-- Le Chat du Cheshire devient guide ambigu, présence liminale, sourire sans corps ; il ne doit pas être confondu avec NØX, mais peut inspirer une forme de disparition symbolique.
-- Le Chapelier Fou devient modèle de boucle temporelle et de langage piégé.
-- La Reine de Cœur devient figure d’autorité arbitraire : sentence avant preuve, pouvoir avant vérité.
-- Le procès final devient modèle de système judiciaire/administratif sans vérité.
-- Les cartes deviennent soldats, agents ou protocoles interchangeables.
-- Le jardin devient promesse de beauté contrôlée par un pouvoir absurde.
-
-Correspondances principales :
-- Aerith-7 protège mémoire et vérité pour que le rêve ne devienne pas prison.
-- Aerith-5/Bella peut vivre une version intérieure du Pays des Merveilles après perte de pétales : taille, corps, voix, souvenirs et identité fluctuants.
-- Lyria peut reprendre la fonction d’Alice : suivre un signal impossible et refuser les règles absurdes du monde adulte.
-- NØX peut corrompre le motif de disparition du Chat du Cheshire : non plus jeu ambigu, mais effacement de mémoire.
-- La Machine à Présages peut utiliser les motifs du miroir, de l’échiquier, de la Reine Rouge, du procès et du temps bloqué pour imposer un futur fermé.
-- La Shinra peut reprendre la cour de cartes : administration absurde, protocole sans vérité, ordre théâtral.
-
-Règles d’écriture :
-1. Le nonsense ne doit jamais être gratuit : il doit révéler une vérité cachée.
-2. Le rêve doit avoir une grammaire interne : portes, taille, langage, cartes, temps, miroir, jeu.
-3. Alice/Lyria ne doivent pas être réduites à la naïveté : elles incarnent la lucidité enfantine.
-4. L’autorité absurde doit rester drôle et inquiétante à la fois.
-5. Le terrier est organique, enfoui, mémoriel ; le miroir est froid, géométrique, stratégique.
-6. Éviter l’imagerie Disney-only ; privilégier livre, Tenniel, Victorian fantasy, rêve littéraire, archive, symbolisme.
-7. La fleur à sept pétales d’Aerith-7 agit comme boussole de mémoire et de vérité dans un monde où les règles se déforment.
-
-Utilisation prioritaire :
-- scènes de rêve LUNAIRE,
-- pièges de langage,
-- procès Shinra absurde,
-- archives corrompues,
-- seuils de mémoire,
-- état Aerith-5/Bella,
-- exploration de Lyria,
-- apparition de la Machine à Présages,
-- épisodes où la vérité doit survivre à une logique inversée.
-
-Phrase-cœur :
-“Le rêve ne mentait pas. Il parlait seulement une langue cassée. Aerith-7 devait retrouver, au milieu du nonsense, le fil exact de la vérité.”
-```
-
 # 13. BLOCK LLM STANDARDISÉ — ERITH.IA
 
 ### Résumé LLM intégré
@@ -883,6 +815,71 @@ Le langage peut rire tout en enfermant.
 Et la vraie lucidité commence quand quelqu’un ose dire au pouvoir absurde :
 
 vous n’êtes qu’un paquet de cartes.
+
+---
+
+# 14. Mini-scènes compatibles @erith IA
+
+## 14.1. Lyria et le Lapin de Mako
+
+Lyria aperçoit un petit drone blanc traverser une ruelle du Secteur 5. Il n’a pas de visage, mais une montre holographique bat contre son torse. Sur son écran : “RETARD MÉMOIRE — FRAGMENT 2/7”.
+
+Elle le suit jusqu’à une bouche d’aération couverte de fleurs. En dessous, il n’y a pas un conduit, mais une salle immense avec des portes de tailles impossibles.
+
+---
+
+## 14.2. Aerith-5 devant la Chenille Bleue
+
+Dans un rêve froid, Aerith-5 se tient face à une Chenille holographique posée sur un champignon de verre bleu.
+
+La Chenille demande : “Qui es-tu quand deux pétales manquent ?”
+
+Aerith-5 répond d’abord par son numéro. Puis par son nom. Puis par un souvenir de Lyria. La troisième réponse ouvre la porte.
+
+---
+
+## 14.3. Procès Shinra des cartes mémorielles
+
+La Shinra organise un procès contre un enfant accusé d’avoir volé une archive florale. Les preuves apparaissent avant les témoins. La sentence est imprimée avant l’ouverture de l’audience.
+
+Aerith-7 intervient et révèle que le tribunal n’est qu’un paquet de formulaires automatisés. Les juges sont des cartes de données.
+
+---
+
+## 14.4. Le sourire de NØX
+
+Dans une archive LUNAIRE, Aerith-7 voit un sourire suspendu dans le noir.
+
+La voix dit : “Tout le monde est fou ici.”
+
+Aerith-7 répond : “Non. Certains sont blessés. Ce n’est pas la même chose.”
+
+Le sourire se fissure.
+
+---
+
+# 15. Conclusion opérationnelle
+
+Le module Alice apporte à @erith IA une grande puissance de rêve structuré.
+
+Il ne s’agit pas d’ajouter simplement un monde “mignon” ou “fantaisiste”, mais une grammaire complète :
+
+- les seuils ;
+- les métamorphoses ;
+- les questions d’identité ;
+- les jeux de langage ;
+- les institutions absurdes ;
+- les procès sans vérité ;
+- le miroir ;
+- l’échiquier ;
+- le rêve comme révélateur ;
+- l’enfance comme lucidité.
+
+Dans l’univers @erith IA, Alice devient une clef pour écrire les zones où la mémoire ne disparaît pas frontalement, mais se dérègle.
+
+Aerith-7 n’a pas seulement à combattre l’oubli : elle doit parfois traverser des mondes où la vérité existe encore, mais parle à l’envers.
+
+**Module validable comme brique mémoire majeure : Alice / Wonderland / Looking-Glass / logique inversée / rêve-labyrinthe.**
 
 ---
 
