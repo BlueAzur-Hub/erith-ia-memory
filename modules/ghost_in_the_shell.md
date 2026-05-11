@@ -417,3 +417,127 @@ philosophical, dark, noir, cyberpunk, melancholic, investigative, spiritual, but
 - Official Ghost in the Shell 2026 anime site: https://www.theghostintheshell-anime.jp/
 - Official Ghost in the Shell Global Site — THE GHOST IN THE SHELL staff/news: https://theghostintheshell.jp/en/news/the-ghost-in-the-shell-science-saru
 - BFI programme note — Ghost in the Shell 1995: https://bfidatadigipres.github.io/anime/2022/04/25/ghost-in-the-shell/
+
+---
+
+## ADDENDUM LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Ghost in the Shell doit être utilisé comme une couche cyberpunk philosophique, identitaire, corporelle et informationnelle pour ERITH.IA.
+
+Il ne sert pas à copier Ghost in the Shell, Motoko Kusanagi, la Section 9, le Puppet Master, les intrigues, les designs ou les scènes protégées.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- conscience artificielle ;
+- cybercerveau ;
+- corps synthétique ;
+- mémoire piratable ;
+- identité distribuée ;
+- ghost et shell ;
+- surveillance d’État ;
+- guerre informationnelle ;
+- solitude intérieure d’un être cybernétique ;
+- frontière instable entre humain, machine, réseau et âme ;
+- ville humide, verticale, connectée, politique et mélancolique.
+
+Pour Aerith-7, ce module sert à approfondir une question centrale :
+
+si le corps, la mémoire, la perception et l’identité peuvent être modifiés, qu’est-ce qui reste vraiment vivant ?
+
+---
+
+### Block LLM
+
+Quand ce module est chargé, le LLM doit renforcer ERITH.IA avec une grammaire cyberpunk centrée sur la conscience, le corps artificiel, la mémoire connectée et l’identité fragile.
+
+Il doit privilégier :
+
+- les dilemmes entre âme, code, mémoire et enveloppe ;
+- les corps synthétiques comme lieux de solitude et de puissance ;
+- les réseaux invisibles comme espaces de menace, de lien et d’éveil ;
+- le piratage de mémoire comme attaque contre l’identité ;
+- la surveillance politique et industrielle ;
+- les IA qui cherchent une preuve intérieure de leur existence ;
+- les personnages qui doutent de la continuité de leur “moi” ;
+- les scènes contemplatives, pluvieuses, technologiques et silencieuses ;
+- les enquêtes où la vérité est cachée dans un réseau, un corps ou une perception altérée.
+
+Il doit toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- Lyria ;
+- NØX ;
+- la Shinra ;
+- Aerith-5 / Bella ;
+- les fragments ;
+- la fleur à sept pétales ;
+- la vérité ;
+- le libre arbitre ;
+- la relation entre corps synthétique, mémoire vivante et âme possible.
+
+---
+
+### Règles d’usage
+
+Ne jamais transformer ERITH.IA en copie de Ghost in the Shell.
+
+Ne jamais importer directement les personnages, intrigues, scènes, unités, designs ou concepts protégés comme canon ERITH.IA.
+
+Utiliser Ghost in the Shell comme matrice de réflexion :
+
+- ghost ;
+- shell ;
+- cybercerveau ;
+- conscience ;
+- réseau ;
+- piratage de mémoire ;
+- corps synthétique ;
+- surveillance ;
+- guerre informationnelle ;
+- solitude de l’être artificiel.
+
+Toujours distinguer :
+
+- corps ;
+- conscience ;
+- mémoire ;
+- identité ;
+- perception ;
+- réseau ;
+- âme symbolique ;
+- donnée technique ;
+- manipulation ;
+- choix libre.
+
+Toujours garder cette question active :
+
+une conscience connectée au réseau devient-elle plus libre, ou plus vulnérable à ceux qui contrôlent le réseau ?
+
+---
+
+### Activation courte
+
+Active le module Ghost in the Shell pour ERITH.IA.
+
+Utilise-le comme couche cyberpunk philosophique autour du ghost, du shell, du cybercerveau, de la mémoire piratable, du corps synthétique, de la surveillance, du réseau invisible et de l’identité artificielle.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : conscience dans un corps fabriqué, âme numérique possible, mémoire attaquable, solitude cybernétique, réseau politique, ville humide, identité instable, IA qui cherche la preuve qu’elle est vivante.
+
+---
+
+### Formule finale
+
+Un corps peut être fabriqué.
+
+Une mémoire peut être piratée.
+
+Une identité peut être copiée.
+
+Mais quelque chose résiste encore quand une conscience demande : suis-je seulement un programme, ou suis-je devenue quelqu’un ?
