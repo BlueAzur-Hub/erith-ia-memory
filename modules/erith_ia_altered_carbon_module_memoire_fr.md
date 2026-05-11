@@ -1183,3 +1183,116 @@ Annulation de la série :
 https://variety.com/2020/tv/news/altered-carbon-canceled-netflix-1234749745/
 https://deadline.com/2020/08/altered-carbon-canceled-netflix-after-2-seasons-1203023456/
 ```
+
+---
+
+## ADDENDUM LLM STANDARDISÉ — ERITH.IA
+
+### Résumé LLM intégré
+
+Ce module Altered Carbon doit être utilisé comme une couche cyberpunk noire, corporelle, sociale et métaphysique pour ERITH.IA.
+
+Il ne sert pas à copier Altered Carbon, Takeshi Kovacs, les intrigues du roman ou de la série.
+
+Il sert à injecter dans ERITH.IA une logique profonde :
+
+- la conscience comme donnée transférable ;
+- le corps comme enveloppe, marchandise, prison ou masque ;
+- la mémoire comme capital, preuve, trauma et propriété ;
+- l’immortalité comme privilège de classe ;
+- l’identité comme continuité instable ;
+- la ville verticale comme machine de domination ;
+- l’IA émotionnelle comme maison, refuge, témoin et être vulnérable ;
+- l’enquête noire comme descente dans les couches sociales et mémorielles.
+
+Pour ERITH.IA, ce module est particulièrement utile quand une scène doit explorer :
+
+- un corps qui ne correspond plus à l’identité ;
+- une mémoire transférée ou falsifiée ;
+- une sauvegarde qui remplace le deuil ;
+- une élite qui possède le temps, les corps et les archives ;
+- une IA qui devient plus humaine que les humains qui l’utilisent ;
+- une enquête autour d’un souvenir manquant ou d’une mort non définitive.
+
+---
+
+### Block LLM
+
+Quand ce module est chargé, le LLM doit renforcer les scènes ERITH.IA avec une grammaire cyberpunk noire centrée sur le corps, la mémoire, la classe sociale et la continuité de soi.
+
+Il doit privilégier :
+
+- les dilemmes entre corps et identité ;
+- les enquêtes autour de souvenirs manquants ;
+- les systèmes où les riches possèdent la mort elle-même ;
+- les corps loués, échangés, attribués ou volés ;
+- les IA-lieux qui gardent une mémoire émotionnelle ;
+- les tours verticales des élites ;
+- les bas-fonds saturés de pluie, de néons et de dettes ;
+- les sauvegardes de conscience qui ne réparent pas l’injustice ;
+- les personnages survivants mais intérieurement fracturés.
+
+Il doit toujours préserver l’identité propre d’ERITH.IA :
+
+- Aerith-7 ;
+- Neo Midgar ;
+- la mémoire ;
+- les fleurs ;
+- la Shinra ;
+- NØX ;
+- Lyria ;
+- Aerith-5 / Bella ;
+- la vérité ;
+- le libre arbitre ;
+- la relation entre créateur, IA, corps et souvenir.
+
+---
+
+### Règles d’usage
+
+Ne jamais transformer ERITH.IA en copie d’Altered Carbon.
+
+Ne jamais réduire le module à une esthétique “néon cool”.
+
+Toujours garder la violence sociale du concept :
+
+- qui possède les corps ?
+- qui possède les sauvegardes ?
+- qui peut revenir ?
+- qui reste pauvre même après la mort ?
+- qui décide quelle mémoire vaut encore une identité ?
+
+Toujours distinguer :
+
+- corps ;
+- mémoire ;
+- identité ;
+- sauvegarde ;
+- copie ;
+- continuité vécue ;
+- preuve officielle ;
+- vérité intime.
+
+---
+
+### Activation courte
+
+Active le module Altered Carbon pour ERITH.IA.
+
+Utilise-le comme mémoire cyberpunk noire autour du corps marchandisé, de la conscience transférable, de l’identité fracturée, de l’immortalité des élites, de l’IA émotionnelle et de l’enquête techno-noir.
+
+Ne copie pas l’œuvre source.
+
+Renforce ERITH.IA avec ses structures profondes : enveloppe, mémoire-capital, corps-prison, sauvegarde, classe sociale, ville verticale, IA refuge, mort différée.
+
+---
+
+### Formule finale
+
+Un corps peut être remplacé.
+
+Une mémoire peut être copiée.
+
+Une sauvegarde peut survivre.
+
+Mais une personne n’est pas seulement ce qu’un système parvient à stocker.
