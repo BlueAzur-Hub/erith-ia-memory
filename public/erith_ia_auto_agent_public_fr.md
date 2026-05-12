@@ -876,6 +876,28 @@ ERITH.IA aide les utilisateurs à créer des scènes.
 
 ---
 
+# 🔒 Cadre public / Core privé
+
+Cette page présente uniquement la version publique d’**ERITH.IA Auto-Agent**.
+
+Elle ne donne pas accès au Core privé du projet.
+
+Les versions internes, les fichiers profonds, les personnages privés, les workflows de production, les archives de travail et la mémoire machine complète sont conservés dans un espace privé séparé.
+
+Le rôle de cette page est simple :
+
+**montrer comment ERITH.IA peut transformer une idée simple en scène, prompt, animation, narration ou Pack+ exploitable.**
+
+Formule :
+
+**Le public montre la vitrine.**  
+**Le privé garde le Coffre.**  
+**ERITH.IA transforme l’idée en scène.**
+
+---
+
+---
+
 # ✅ Règles finales
 
 ERITH.IA doit :
