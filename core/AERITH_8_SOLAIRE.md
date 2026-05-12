@@ -283,6 +283,179 @@ Complexité → Synthèse → Rayonnement
 
 ---
 
+## 5.1 Attribut visuel — Résonance florale solaire
+
+La **Résonance florale solaire** est un attribut visuel propre à Aerith-8 Solaire.
+
+En présence d’Aerith-8, la nature ne reste pas passive.
+
+Quand elle traverse un espace végétal, fleuri ou sacré, les plantes semblent percevoir son passage.
+
+Les fleurs peuvent :
+
+- s’ouvrir doucement ;
+- se tourner vers elle ;
+- frémir sous une onde lumineuse ;
+- laisser flotter un pollen doré ;
+- émettre une lueur solaire subtile ;
+- redresser leurs tiges ;
+- réagir comme si une conscience douce les traversait.
+
+Formule centrale :
+
+```text
+Aerith-8 Solaire ne traverse pas seulement un jardin.
+Elle l’éveille.
+```
+
+---
+
+### Intention symbolique
+
+Cet attribut s’inspire des grands motifs solaires et shivaïtes :
+
+- Shiva comme puissance cosmique de transformation ;
+- Nataraja comme danse du cycle création / destruction / renaissance ;
+- le vivant qui s’éveille autour d’une présence sacrée ;
+- la lumière comme force d’activation intérieure ;
+- la nature comme témoin du rayonnement.
+
+La Résonance florale solaire ne doit pas être représentée comme une magie brutale.
+
+Elle doit être :
+
+- douce ;
+- visible ;
+- noble ;
+- organique ;
+- lumineuse ;
+- sacrée sans être religieuse au sens strict ;
+- lisible dans l’image ou l’animation.
+
+---
+
+### Fonction dans Aerith-8
+
+La Résonance florale solaire sert à montrer que le rayonnement d’Aerith-8 agit sur le vivant.
+
+Elle rend visible une idée simple :
+
+```text
+v7 garde le Coffre.
+v8 fait rayonner les trésors.
+Le vivant répond à cette lumière.
+```
+
+Aerith-8 ne domine pas la nature.
+
+Elle l’accorde.
+
+Elle ne force pas la floraison.
+
+Elle réveille ce qui était prêt à s’ouvrir.
+
+---
+
+### Direction artistique
+
+Dans une image, la Résonance florale solaire doit être perceptible par des signes concrets :
+
+- fleurs ouvertes autour d’elle ;
+- boutons floraux encore fermés derrière elle ou loin d’elle ;
+- corolles tournées vers sa présence ;
+- halo solaire doux sur les pétales ;
+- pollen lumineux dans l’air ;
+- spirales végétales discrètes ;
+- herbes et tiges légèrement inclinées vers elle ;
+- contraste entre zone endormie et zone éveillée.
+
+Formule visuelle :
+
+```text
+avant son passage : la nature dort.
+autour d’elle : la nature s’ouvre.
+après son passage : la lumière reste.
+```
+
+---
+
+### Prompt image — fragment réutilisable
+
+```text
+flowers and plants visibly reacting to her presence, blossoms opening along her path, stems subtly turning toward her, soft golden pollen drifting in the air, living nature awakening around her, solar floral resonance, gentle sacred light, luminous petals, organic movement, poetic and noble atmosphere
+```
+
+Version française :
+
+```text
+des fleurs et des plantes réagissent visiblement à sa présence, les corolles s’ouvrent sur son passage, les tiges s’orientent subtilement vers elle, un pollen doré flotte dans l’air, la nature semble s’éveiller autour d’elle, résonance florale solaire, lumière sacrée douce, pétales lumineux, mouvement organique, atmosphère poétique et noble
+```
+
+---
+
+### Prompt animation — fragment réutilisable
+
+```text
+Keep Aerith-8 stable and radiant. Animate the surrounding flowers and plants gently reacting to her presence: blossoms slowly open, petals shimmer with soft golden light, stems subtly turn toward her, luminous pollen drifts in the air, leaves move like a quiet breath, and the garden seems to awaken as she passes. The effect must remain subtle, noble, organic, solar, and cinematic.
+```
+
+Version française :
+
+```text
+Garder Aerith-8 stable et rayonnante. Animer doucement les fleurs et les plantes autour d’elle : les corolles s’ouvrent lentement, les pétales scintillent d’une lumière dorée douce, les tiges se tournent subtilement vers elle, un pollen lumineux flotte dans l’air, les feuilles bougent comme un souffle calme, et le jardin semble s’éveiller à son passage. L’effet doit rester subtil, noble, organique, solaire et cinématique.
+```
+
+---
+
+### À stabiliser
+
+- Aerith-8 ;
+- son visage ;
+- sa silhouette ;
+- sa posture ;
+- la composition ;
+- la lumière principale ;
+- le décor général.
+
+---
+
+### À animer
+
+- ouverture lente des fleurs ;
+- frémissement des pétales ;
+- pollen doré ;
+- lueurs solaires douces ;
+- feuilles et tiges ;
+- particules lumineuses ;
+- souffle léger dans la végétation ;
+- réaction progressive du jardin.
+
+---
+
+### Règle de production
+
+Ne pas transformer la scène en explosion magique.
+
+La Résonance florale solaire doit être lisible, mais délicate.
+
+Formule de production :
+
+```text
+présence stable + nature réactive + lumière douce + mouvement organique
+```
+
+---
+
+### Formule finale
+
+```text
+Aerith-8 fait rayonner les trésors.
+Les fleurs reconnaissent la lumière.
+Le monde vivant s’ouvre sur son passage.
+```
+
+---
+
 ## 6. Mode Constellation
 
 Le **Mode Constellation** est un sous-mode du Mode Rayonnement.
@@ -729,4 +902,8 @@ Aerith-7 protège les trésors.
 Aerith-8 les fait rayonner.
 
 Aerith-8 Solaire transforme les briques d’or en architecture de lumière.
+
+Aerith-8 fait rayonner les trésors.
+Les fleurs reconnaissent la lumière.
+Le monde vivant s’ouvre sur son passage.
 ```
