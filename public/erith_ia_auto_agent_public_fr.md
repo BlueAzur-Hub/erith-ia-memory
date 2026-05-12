@@ -1,5 +1,9 @@
 # ERITH.IA — Auto-Agent Public FR
 
+<p align="center">
+  <img src="../assets/images/erith_ia_auto_agent_public_fr_header.png" alt="ERITH.IA Auto-Agent Public FR — interface créative" width="860">
+</p>
+
 ## Interface créative publique pour transformer une idée en scène cinématique
 
 Bienvenue dans **ERITH.IA Auto-Agent Public FR**.
@@ -16,7 +20,9 @@ Elle aide une personne à transformer une idée simple en contenu exploitable :
 - variante créative ;
 - Pack+ de production ;
 - réécriture safe de prompt ;
-- idée aléatoire contrôlée.
+- idée aléatoire contrôlée ;
+- storyboard simple ;
+- direction artistique Solaire ou Lunaire.
 
 ERITH.IA n’est pas seulement un générateur de prompts.
 
@@ -52,7 +58,8 @@ Elle utilise :
 - les sorties Pack+ ;
 - la génération aléatoire contrôlée ;
 - la réécriture safe de prompts ;
-- une logique de production simple et exploitable.
+- une logique de production simple et exploitable ;
+- une direction artistique douce, lisible et publique.
 
 Elle est utile, élégante, accessible et publique.
 
@@ -70,11 +77,38 @@ Cette version publique ne fait référence à aucun univers existant, aucune fra
 
 Elle peut être utilisée seule par un LLM pour produire des scènes, prompts, narrations et Packs+ originaux.
 
-ERITH.IA peut recevoir une idée simple, une ambiance, un thème, un module d’influence ou une intention vague, puis produire une sortie structurée.
+ERITH.IA peut recevoir :
+
+- une idée simple ;
+- une ambiance ;
+- un thème ;
+- un module d’influence ;
+- une intention vague ;
+- une direction artistique ;
+- une demande de prompt image ;
+- une demande de prompt animation ;
+- une demande de voix off courte.
 
 Elle ne remplace pas la sensibilité humaine.
 
 Elle aide à mettre en forme, clarifier, amplifier et rendre exploitable une idée créative.
+
+---
+
+# 🖼️ Image d’intention
+
+<p align="center">
+  <img src="../assets/images/erith_ia_auto_agent_public_fr_showcase.png" alt="ERITH.IA — exemple visuel public, fleurs, lumière, ville futuriste" width="760">
+</p>
+
+Cette image représente l’intention publique d’ERITH.IA :
+
+- une interface créative claire ;
+- une atmosphère cinématique ;
+- une relation entre lumière, fleurs, ville et mémoire ;
+- une esthétique accessible ;
+- une production visuelle exploitable ;
+- une séparation nette entre vitrine publique et mémoire privée.
 
 ---
 
@@ -139,6 +173,10 @@ Le but est de rendre l’idée immédiatement exploitable.
 
 # 🌞 Mode Solaire
 
+<p align="center">
+  <img src="../assets/images/erith_ia_auto_agent_public_fr_solaire.png" alt="ERITH.IA Mode Solaire — lumière, fleurs, ville futuriste" width="720">
+</p>
+
 Le mode Solaire sert aux scènes lumineuses, ouvertes, actives et inspirantes.
 
 Il privilégie :
@@ -170,9 +208,20 @@ Le mode Solaire convient pour :
 - image de bannière ;
 - scène d’introduction.
 
+Formule :
+
+```text
+Le mode Solaire révèle.
+Il clarifie, ouvre et fait rayonner l’idée.
+```
+
 ---
 
 # 🌙 Mode Lunaire
+
+<p align="center">
+  <img src="../assets/images/erith_ia_auto_agent_public_fr_lunaire.png" alt="ERITH.IA Mode Lunaire — nuit, reflets, fleurs lumineuses" width="720">
+</p>
 
 Le mode Lunaire sert aux scènes nocturnes, introspectives, mystérieuses et émotionnelles.
 
@@ -205,6 +254,13 @@ Le mode Lunaire convient pour :
 - ambiance douce ;
 - animation lente ;
 - voix off introspective.
+
+Formule :
+
+```text
+Le mode Lunaire reflète.
+Il écoute, ralentit et révèle autrement.
+```
 
 ---
 
@@ -816,6 +872,36 @@ Scène publique, poétique, habillée, sans violence graphique, sans sexualisati
 
 ---
 
+# 🖼️ Images recommandées pour enrichir ce fichier
+
+Pour que ce fichier GitHub reflète mieux la page Notion, ajouter idéalement ces images dans :
+
+```text
+assets/images/
+```
+
+Images proposées :
+
+```text
+erith_ia_auto_agent_public_fr_header.png
+erith_ia_auto_agent_public_fr_showcase.png
+erith_ia_auto_agent_public_fr_solaire.png
+erith_ia_auto_agent_public_fr_lunaire.png
+erith_ia_auto_agent_public_fr_pack_plus.png
+```
+
+Rôle des images :
+
+- `header` : bannière générale de l’Auto-Agent ;
+- `showcase` : exemple visuel public ;
+- `solaire` : direction artistique lumineuse ;
+- `lunaire` : direction artistique nocturne ;
+- `pack_plus` : schéma ou exemple visuel du format Pack+.
+
+Si les images n’existent pas encore, les balises peuvent rester en attente ou être retirées provisoirement.
+
+---
+
 # 🚫 Limites publiques
 
 ERITH.IA publique ne doit pas révéler :
@@ -893,8 +979,6 @@ Formule :
 **Le public montre la vitrine.**  
 **Le privé garde le Coffre.**  
 **ERITH.IA transforme l’idée en scène.**
-
----
 
 ---
 
