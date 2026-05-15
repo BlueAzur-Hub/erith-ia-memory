@@ -357,6 +357,28 @@ Elle sert de visuel Pack+ pour présenter le produit public Cyber Noir Trio dans
 
 ---
 
+---
+
+## 🗂️ Exemple visuel — Noctilux Dossier Flux Anomaly
+
+![Noctilux Dossier Flux Anomaly](../../assets/images/noctilux_dossier_flux_anomaly_v1.png)
+
+Cette image sert d’exemple visuel avancé pour la Carte Mémoire Cyber Noir Trio.
+
+Elle présente un dossier de production complet autour de **Noctilux**, une mégalopole verticale où les souvenirs se monétisent, les corps se louent et la conscience survit dans le réseau.
+
+Le visuel montre comment ERITH.IA peut transformer la carte mémoire en produit créatif exploitable :
+
+- univers original ;
+- personnage post-humain ;
+- tension dramatique ;
+- textures visuelles ;
+- société et pouvoir ;
+- garde-fou créatif ;
+- intentions de production.
+
+Cette image peut servir de référence pour créer un Pack+ Cyber Noir plus complet, orienté personnage, ville, mémoire, corps et conscience.
+
 ## 🔗 Ressources publiques
 
 Image cover principale :
