@@ -30,19 +30,13 @@ Cette carte active une ambiance **urbaine, nocturne, post-humaine et philosophiq
 
 Elle sert à produire rapidement :
 
-🧬 un univers cyber noir original
-
-👤 un personnage post-humain
-
-🌧️ une scène nocturne sous la pluie
-
-🖼️ un prompt image
-
-🎞️ un prompt animation
-
-🎙️ une narration courte
-
-📦 un Pack+ complet
+- 🧬 un univers cyber noir original ;
+- 👤 un personnage post-humain ;
+- 🌧️ une scène nocturne sous la pluie ;
+- 🖼️ un prompt image ;
+- 🎞️ un prompt animation ;
+- 🎙️ une narration courte ;
+- 📦 un Pack+ complet.
 
 ---
 
@@ -90,17 +84,7 @@ pluie, reflets, hologrammes, corps synthétiques, interfaces mentales, ville ver
 
 ### 🎞️ Animation prompt
 
-Pluie lente.
-
-Néons qui vibrent.
-
-Interfaces qui pulsent.
-
-Personnage presque immobile.
-
-Caméra subtile.
-
-Ambiance contemplative, urbaine et mélancolique.
+Pluie lente, néons qui vibrent, interfaces qui pulsent, personnage presque immobile, caméra subtile.
 
 ### 🎙️ Narration courte
 
@@ -112,18 +96,19 @@ Une voix intérieure sur la mémoire, le corps, l’âme et la trace de l’huma
 
 ```text
 Charge le Deck Cyberpunk Noir Trio et produis un Pack+ complet : univers, personnage, image prompt, animation prompt, narration courte.
+```
 
 ---
 
-# 🎛️ Pack+ complet — Cyber Noir Trio
+# 🎛️ Pack+ public — Cyber Noir Trio
 
 Ce Pack+ public montre comment ERITH.IA transforme la Carte Mémoire Cyber Noir Trio en sortie de production complète.
 
 Il sert à générer :
 
 - un univers original ;
-- un personnage ;
-- une scène ;
+- un personnage original ;
+- une scène visuelle ;
 - un prompt image ;
 - un prompt animation ;
 - une narration courte ;
@@ -134,17 +119,7 @@ Il sert à générer :
 
 ## 📌 Nom du Pack+
 
-Cyber Noir Trio — Mémoire, Corps & Ghost
-
----
-
-## 🖼️ Image de couverture associée
-
-![Cyberpunk Noir Trio Memory Card Pack Cover](../../assets/images/cyberpunk_noir_trio_memory_card_pack_cover_v1.png)
-
-Fichier image recommandé :
-
-cyberpunk_noir_trio_memory_card_pack_cover_v1.png
+**Cyber Noir Trio — Mémoire, Corps & Ghost**
 
 ---
 
@@ -162,21 +137,19 @@ Les rues basses survivent sous les néons, les dettes corporelles, les marchés 
 
 Question centrale :
 
-Si le corps change, si la mémoire se copie, si la conscience traverse le réseau, où se cache encore l’être véritable ?
+**Si le corps change, si la mémoire se copie, si la conscience traverse le réseau, où se cache encore l’être véritable ?**
 
 ---
 
-## 👤 Personnage original
+## 👤 Personnage exemple
 
 Nom de travail :
 
-Nara Vey
+**Nara Vey**
 
 Rôle :
 
-Archiviste de mémoire illégale.
-
-Description :
+**Archiviste de mémoire illégale.**
 
 Nara restaure des fragments de souvenirs effacés pour des clients qui ne savent plus s’ils veulent retrouver la vérité ou seulement une version supportable d’eux-mêmes.
 
@@ -188,11 +161,11 @@ Elle entend parfois une voix dans le réseau, une présence inconnue qui semble 
 
 Tension intérieure :
 
-Nara vend la mémoire des autres, mais ne possède plus totalement la sienne.
+**Nara vend la mémoire des autres, mais ne possède plus totalement la sienne.**
 
 ---
 
-## 🎬 Scène visuelle
+## 🎬 Scène exemple
 
 Une rue cyber noir sous une pluie lente.
 
@@ -214,65 +187,51 @@ Elle ne l’a jamais vu.
 
 ## 🖼️ Prompt image — scène principale
 
+```text
 Original cyber noir cinematic scene in a vertical rainy megacity at night, wet reflective streets, deep blue and amber neon lights, black glass towers disappearing into clouds, holographic signs, memory archive interfaces, post-human atmosphere.
 
-A solitary original female memory archivist stands under a broken holographic shelter, holding a floating translucent memory fragment between her hands. Her expression is calm but haunted. Subtle neural interface lights around her temples. Elegant dark coat, refined post-human design, no recognizable franchise elements.
+A solitary original memory archivist stands under a broken holographic shelter, holding a floating translucent memory fragment between their hands. Elegant dark coat, subtle neural interface lights, calm haunted expression, refined post-human design.
 
-Around her, blurred silhouettes walk through rain, their faces partially hidden by faint augmented reality overlays. In the background, luxury towers rise above the lower city, suggesting immortal elites and social fracture.
+Around the character, blurred silhouettes walk through rain, their faces partially hidden by faint augmented reality overlays. In the background, luxury towers rise above the lower city, suggesting immortal elites and social fracture.
 
 Mood: melancholic, philosophical, elegant, cinematic cyber noir. Themes: artificial memory, transferable identity, body as vessel, ghost in the network, soul inside the machine.
 
 Ultra detailed, cinematic lighting, atmospheric rain, shallow depth of field, beautiful composition, original universe, no copyrighted characters, no logos, no existing franchise design.
+```
 
 ---
 
 ## 🧍 Prompt image — portrait personnage
 
+```text
 Cinematic portrait of an original post-human memory archivist in a cyber noir universe, rain on synthetic skin, dark elegant coat, subtle neural interface near the temples, reflective eyes illuminated by blue and amber holograms.
 
-The character holds a small floating memory shard made of light and glass. Behind her, a blurred vertical megacity glows through rain and mist.
+The character holds a small floating memory shard made of light and glass. Behind them, a blurred vertical megacity glows through rain and mist.
 
 Mood of melancholy, identity crisis, artificial memory, ghost in the network, human soul questioned by machine systems.
 
 Refined cyber noir style, elegant composition, emotional face, atmospheric lighting, original character, no copyrighted characters, no logos, no franchise elements.
+```
 
 ---
 
 ## 🌃 Prompt image — décor
 
+```text
 Wide cinematic shot of an original cyber noir megacity under permanent rain, vertical black glass towers, dense neon streets, reflective pavement, floating advertisements, memory clinics, body-transfer salons, neural network temples, luxury districts above the clouds and crowded lower levels below.
 
-The city feels alive, lonely and post-human.
-
-Blue, cyan, amber and red neon reflections.
-
-Holographic memory streams move through the air like ghostly rivers.
+The city feels alive, lonely and post-human. Blue, cyan, amber and red neon reflections. Holographic memory streams move through the air like ghostly rivers.
 
 Dark elegant atmosphere, philosophical science fiction, original worldbuilding, no copyrighted characters, no recognizable franchise design.
+```
 
 ---
 
 ## 🎞️ Prompt animation — Wan / I2V
 
-Subtle cinematic animation.
-
-Rain falls slowly through a cyber noir night city.
-
-Neon reflections ripple on the wet pavement.
-
-Holographic signs flicker gently.
-
-The memory fragment in the character’s hands pulses with soft blue light.
-
-Her coat moves slightly in the rain.
-
-Background silhouettes pass slowly, blurred and quiet.
-
-Faint neural interface glyphs appear and disappear around her head.
-
-Camera nearly locked, very slow atmospheric drift only.
-
-Preserve face, preserve outfit, preserve composition, preserve cyber noir mood.
+```text
+Subtle cinematic animation. Rain falls slowly through a cyber noir night city. Neon reflections ripple on wet pavement. Holographic signs flicker gently. The memory fragment in the character’s hands pulses with soft blue light. The coat moves slightly in the rain. Background silhouettes pass slowly, blurred and quiet. Faint neural interface glyphs appear and disappear around the head. Camera nearly locked, very slow atmospheric drift only. Preserve face, outfit, composition and cyber noir mood.
+```
 
 ---
 
@@ -302,7 +261,9 @@ Il cherche à savoir si une conscience née dans le réseau peut devenir une per
 
 Prompt court :
 
+```text
 Original ghost network cyber noir scene, dark mental cyberspace, floating human silhouettes made of blue light, memory fragments drifting like glass petals, central post-human character connected to invisible neural architecture, calm philosophical mood, identity and soul inside the machine, elegant cinematic composition, no copyrighted characters.
+```
 
 ---
 
@@ -338,6 +299,7 @@ Autorisé :
 
 ## ⚡ Commande complète à donner à ERITH.IA
 
+```text
 Charge la Carte Mémoire Cyber Noir Trio.
 
 Utilise les influences suivantes sans jamais les copier :
@@ -362,13 +324,61 @@ Crée un Pack+ complet avec :
 Règles :
 
 Univers original obligatoire.
-
 Aucun personnage existant.
-
 Aucun nom propre repris.
-
 Aucune intrigue copiée.
-
 Aucun design exact.
-
 Influence oui. Copie non.
+```
+
+---
+
+## 🧩 Formule courte
+
+**Ville + Corps + Conscience**
+
+**Pluie + Luxe + Réseau**
+
+**Mémoire + Immortalité + Âme-machine**
+
+Influence oui.  
+Copie non.  
+Création toujours.
+
+---
+
+## 🖼️ Image Pack+ associée
+
+![Cyberpunk Noir Trio Memory Card Pack Cover](../../assets/images/cyberpunk_noir_trio_memory_card_pack_cover_v1.png)
+
+Cette image complète la cover principale.
+
+Elle sert de visuel Pack+ pour présenter le produit public Cyber Noir Trio dans la vitrine ERITH.IA.
+
+---
+
+## 🔗 Ressources publiques
+
+Image cover principale :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/images/erith_ia_cyber_noir_trio_memory_card_pack_plus_cover_premium_v1.png
+
+Image Pack+ associée :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/images/cyberpunk_noir_trio_memory_card_pack_cover_v1.png
+
+Carte mémoire publique :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/memory_cards/erith_ia_memory_card_cyber_noir_trio_fr.md
+
+---
+
+## 🧾 Note publique
+
+Cette carte fait partie de la vitrine publique ERITH.IA.
+
+Elle expose un produit créatif activable sans publier l’atelier complet, les sources privées ou la mémoire profonde du projet.
+
+Formule :
+
+**On expose le produit, pas tout l’atelier.**
