@@ -389,6 +389,10 @@ Image Pack+ associée :
 
 https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/images/cyberpunk_noir_trio_memory_card_pack_cover_v1.png
 
+Image Noctilux Dossier Flux Anomaly :
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/images/noctilux_dossier_flux_anomaly_v1.png
+
 Carte mémoire publique :
 
 https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/memory_cards/erith_ia_memory_card_cyber_noir_trio_fr.md
