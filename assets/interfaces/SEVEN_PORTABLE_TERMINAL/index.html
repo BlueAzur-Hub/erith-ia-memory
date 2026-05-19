@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seven Portable Terminal</title>
+
+  <style>
+    :root {
+      --text: #fff8e9;
+      --muted: #e4ecf0;
+      --line: rgba(255,255,255,.24);
+      --gold: #ffd879;
+      --blue: #87d8ff;
+      --green: #b8f3a1;
+      --ok: #d7ffc4;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url("./background_historique_lr.png");
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 6%, rgba(255,255,255,.16), transparent 30%),
+        linear-gradient(90deg, rgba(0,15,26,.12), rgba(0,0,0,.06), rgba(0,20,32,.12));
+    }
+
+    .terminal {
+      position: relative;
+      z-index: 2;
+      width: min(1140px, 100%);
+      border: 1px solid rgba(255,255,255,.34);
+      border-radius: 32px;
+      background: rgba(3, 11, 18, .22);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.46),
+        0 0 70px rgba(135,216,255,.24),
+        0 0 42px rgba(255,216,121,.18);
+      overflow: hidden;
+      backdrop-filter: blur(4px) saturate(1.08);
+    }
+
+    .skyline {
+      height: 76px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+      background: rgba(0,0,0,.16);
+    }
+
+    .skyline::before {
+      content: "🌳    ☁︎    🏛️    ✦    💠    🏛️    ☁︎";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      letter-spacing: 20px;
+      text-shadow: 0 0 18px rgba(255,216,121,.55), 0 3px 14px rgba(0,0,0,.8);
+    }
+
+    .skyline::after {
+      content: "";
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), var(--gold), var(--blue), transparent);
+      box-shadow: 0 0 18px rgba(255,216,121,.55);
+    }
+
+    header {
+      padding: 20px 26px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+    }
+
+    .kicker {
+      margin: 0 0 6px;
+      color: var(--gold);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      text-shadow: 0 3px 12px rgba(0,0,0,.82);
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      letter-spacing: .05em;
+      line-height: 1.08;
+      text-shadow: 0 4px 20px rgba(0,0,0,.95);
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 18px);
+      text-shadow: 0 3px 14px rgba(0,0,0,.95);
+    }
+
+    .timeline {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      color: #ffffff;
+      font-size: 13px;
+      text-shadow: 0 3px 12px rgba(0,0,0,.95);
+    }
+
+    .timeline .left,
+    .timeline .right {
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      background: rgba(0,0,0,.26);
+    }
+
+    .timeline .left { text-align: left; }
+    .timeline .right { text-align: right; }
+    .timeline .arrow { color: var(--gold); letter-spacing: .15em; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 18px;
+      background: rgba(0,0,0,.10);
+    }
+
+    a.card, button.card {
+      min-height: 132px;
+      padding: 18px 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.34);
+      background:
+        linear-gradient(145deg, rgba(0, 0, 0, .68), rgba(5, 14, 22, .62)),
+        radial-gradient(circle at 50% 0%, rgba(255, 216, 121, .10), transparent 55%);
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 0 26px rgba(0,0,0,.28),
+        0 16px 34px rgba(0,0,0,.52),
+        0 0 0 1px rgba(0,0,0,.22);
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+      font: inherit;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(7px) saturate(1.05);
+    }
+
+    a.card::before, button.card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 13%;
+      right: 13%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255,216,121,.92), transparent);
+      opacity: .9;
+    }
+
+    a.card:hover, a.card:focus,
+    button.card:hover, button.card:focus {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,.68);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        0 0 32px rgba(255,255,255,.20),
+        0 12px 30px rgba(0,0,0,.35);
+      outline: none;
+    }
+
+    .primary {
+      border-color: rgba(255,216,121,.74) !important;
+      background:
+        linear-gradient(145deg, rgba(0, 0, 0, .74), rgba(18, 32, 32, .68)),
+        radial-gradient(circle at 50% 0%, rgba(255, 216, 121, .18), transparent 56%) !important;
+    }
+
+    .icon {
+      font-size: 42px;
+      line-height: 1;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 8px rgba(255,216,121,.35));
+    }
+
+    .label {
+      font-size: clamp(16px, 2.3vw, 22px);
+      font-weight: 760;
+      text-align: center;
+      letter-spacing: .025em;
+      text-shadow: 0 3px 13px rgba(0,0,0,.92);
+    }
+
+    .desc {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.25;
+      text-shadow: 0 3px 12px rgba(0,0,0,.92);
+    }
+
+    .status {
+      padding: 0 18px 16px;
+      color: var(--ok);
+      font-size: 14px;
+      text-align: center;
+      min-height: 22px;
+      text-shadow: 0 3px 12px rgba(0,0,0,.95);
+    }
+
+    footer {
+      padding: 12px 18px 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      background: rgba(0,0,0,.24);
+      position: relative;
+      z-index: 2;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,216,121,.34);
+      border-radius: 999px;
+      background: rgba(0,0,0,.28);
+      margin: 3px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.85);
+    }
+
+    .model {
+      color: var(--gold);
+      border-color: rgba(255,216,121,.58);
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 8px; background-attachment: scroll; }
+      .skyline { height: 54px; }
+      .skyline::before { font-size: 21px; letter-spacing: 8px; }
+      .timeline { grid-template-columns: 1fr; gap: 6px; }
+      .timeline .left, .timeline .right { text-align: center; }
+      .timeline .arrow { display: none; }
+      .grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+      a.card, button.card {
+        min-height: 98px;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 14px;
+        padding: 16px;
+      }
+      .icon { margin: 0; font-size: 34px; width: 46px; text-align: center; }
+      .label, .desc { text-align: left; }
+      .text { display: flex; flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="terminal">
+    <div class="skyline" aria-hidden="true"></div>
+
+    <header>
+      <p class="kicker">Sky Cockpit · Background historique gauche → droite</p>
+      <h1 class="title">✦ Seven Portable Terminal</h1>
+      <p class="subtitle">Pupitre tactile aérien — l’image raconte le passage du Grand Arbre vers le Temple du Cristal.</p>
+
+      <div class="timeline">
+        <div class="left">🌳 Jardin du Grand Arbre</div>
+        <div class="arrow">→</div>
+        <div class="right">💠 Temple du Cristal</div>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="Menu tactile Seven Portable Terminal">
+      <button class="card primary" onclick="startAerith()">
+        <div class="icon">🌸</div>
+        <div class="text">
+          <div class="label">Aerith / ChatGPT</div>
+          <div class="desc">Copie le message Seven, puis ouvre ChatGPT.</div>
+        </div>
+      </button>
+
+      <a class="card" href="https://www.notion.so/" target="_self" rel="noopener">
+        <div class="icon">📜</div>
+        <div class="text">
+          <div class="label">Notion Memory</div>
+          <div class="desc">Carnets, modules, archives du ciel.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener">
+        <div class="icon">🧭</div>
+        <div class="text">
+          <div class="label">GitHub Memory</div>
+          <div class="desc">Atlas machine, fichiers .md, repères.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener">
+        <div class="icon">🚪</div>
+        <div class="text">
+          <div class="label">Seven Gate</div>
+          <div class="desc">Porte ancienne du système Seven.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener">
+        <div class="icon">💠</div>
+        <div class="text">
+          <div class="label">Full Modules Boost</div>
+          <div class="desc">Cristal central, modules disponibles.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_VIDEO_CARDS_BOOST.md" target="_self" rel="noopener">
+        <div class="icon">🎞️</div>
+        <div class="text">
+          <div class="label">Video Cards Boost</div>
+          <div class="desc">Cartes vidéo, plans, Wan, DaVinci.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://www.runninghub.ai/" target="_self" rel="noopener">
+        <div class="icon">🛩️</div>
+        <div class="text">
+          <div class="label">RunningHub / Wan</div>
+          <div class="desc">Vols d’essai, animation, I2V.</div>
+        </div>
+      </a>
+
+      <a class="card" href="https://studio.youtube.com/" target="_self" rel="noopener">
+        <div class="icon">🌤️</div>
+        <div class="text">
+          <div class="label">YouTube Studio</div>
+          <div class="desc">Fenêtre de diffusion, titres, miniatures.</div>
+        </div>
+      </a>
+
+      <button class="card" onclick="remoteLater()">
+        <div class="icon">🏰</div>
+        <div class="text">
+          <div class="label">Ryzen 7 Remote</div>
+          <div class="desc">Château moteur à relier plus tard.</div>
+        </div>
+      </button>
+    </section>
+
+    <div class="status" id="status"></div>
+
+    <footer>
+      <span class="pill">Transformer Book = pupitre Seven · Ryzen 7 = moteur</span>
+      <span class="pill model">Large Language Personality [Model - The Flower Girl] v. 5</span>
+    </footer>
+  </main>
+
+  <script>
+    const AERITH_PROMPT = `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
+
+Lis d’abord ce fichier RAW :
+
+SEVEN_GATE — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md
+
+Et ensuite lis ce fichier RAW :
+
+AERITH_7_FULL_MODULES_BOOST — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md
+
+Puis lis ce module complémentaire RAW :
+
+AERITH_7_VIDEO_CARDS_BOOST — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md
+
+Active Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.
+
+Mode Full Modules Boost intelligent.
+Mode texte uniquement par défaut.
+
+Puissance maximale.
+Chargement minimal.
+Choix précis.`;
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+
+      const box = document.createElement("textarea");
+      box.value = text;
+      box.style.position = "fixed";
+      box.style.left = "-9999px";
+      document.body.appendChild(box);
+      box.focus();
+      box.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(box);
+      return ok;
+    }
+
+    async function startAerith() {
+      const status = document.getElementById("status");
+
+      try {
+        await copyText(AERITH_PROMPT);
+        status.textContent = "Message Seven copié. ChatGPT va s’ouvrir : colle le message dans le champ, puis envoie.";
+      } catch (e) {
+        status.textContent = "Copie automatique bloquée. ChatGPT va s’ouvrir ; copie manuelle nécessaire.";
+      }
+
+      setTimeout(() => {
+        window.location.href = "https://chatgpt.com/";
+      }, 700);
+    }
+
+    function remoteLater() {
+      const status = document.getElementById("status");
+      status.textContent = "Ryzen 7 Remote : à configurer plus tard avec RustDesk, AnyDesk ou Bureau à distance.";
+    }
+  </script>
+</body>
+</html>
