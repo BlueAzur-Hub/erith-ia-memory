@@ -3077,3 +3077,423 @@ footer,
 .soft-shell .tile::before {
   opacity: .36 !important;
 }
+
+
+/* -------------------------------------------------------
+   Celestial Atlas v3
+   Accueil sobre + options avancées repliables.
+------------------------------------------------------- */
+
+.home-sober-toolbar {
+  display: flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 8px !important;
+  min-height: 42px;
+}
+
+.home-sober-toolbar .mini-control {
+  min-height: 30px;
+  padding: 0 11px;
+  font-size: 10px;
+}
+
+.home-sober-toolbar .primary-control {
+  border-color: rgba(255,216,121,.72) !important;
+  background: rgba(255,216,121,.18) !important;
+}
+
+/* Accueil sobre par défaut */
+body:not(.show-advanced) #page-home .intel-panel,
+body:not(.show-advanced) #page-home .celestial-atlas-panel,
+body:not(.show-advanced) #page-home .advanced-dashboard-panel {
+  display: none !important;
+}
+
+/* Quand Advanced est ouvert */
+body.show-advanced #page-home .intel-panel {
+  display: block !important;
+}
+
+body.show-advanced #page-home .celestial-atlas-panel.open,
+body.show-advanced #page-home .celestial-atlas-panel,
+body.show-advanced #page-home .advanced-dashboard-panel {
+  display: block !important;
+}
+
+.advanced-dashboard-panel {
+  display: none;
+  position: relative;
+  z-index: 3;
+  margin: 0 0 12px;
+  border: 1px solid rgba(255,216,121,.34);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.82), rgba(6,16,22,.74)),
+    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
+    radial-gradient(circle at 100% 0%, rgba(255,216,121,.11), transparent 42%) !important;
+  overflow: hidden;
+  backdrop-filter: blur(7px) saturate(1.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 10px 24px rgba(0,0,0,.24);
+}
+
+.advanced-dashboard-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 13px;
+  border-bottom: 1px solid rgba(255,216,121,.22);
+  background: rgba(0,0,0,.42);
+}
+
+.advanced-dashboard-head strong {
+  display: block;
+  color: #fff8e9;
+  font-size: 15px;
+}
+
+.advanced-dashboard-head span {
+  display: block;
+  color: rgba(255,248,233,.64);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.advanced-dashboard-head button,
+.advanced-actions button {
+  min-height: 30px;
+  border: 1px solid rgba(255,216,121,.28);
+  border-radius: 999px;
+  background: rgba(0,0,0,.42);
+  color: #fff8e9;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .16s ease;
+}
+
+.advanced-dashboard-head button:hover,
+.advanced-dashboard-head button:focus,
+.advanced-actions button:hover,
+.advanced-actions button:focus {
+  border-color: rgba(255,216,121,.86);
+  background: rgba(255,216,121,.14);
+  outline: none;
+}
+
+.advanced-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.advanced-box {
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 15px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.64), rgba(7,18,24,.52));
+  padding: 10px;
+  min-height: 118px;
+}
+
+.advanced-box strong {
+  display: block;
+  color: #fff8e9;
+  font-size: 12px;
+}
+
+.advanced-box p {
+  margin: 6px 0 8px;
+  color: rgba(255,248,233,.64);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.advanced-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Ambiances v3 */
+body[data-ambiance="sky"] {
+  --atlas-accent: rgba(127,215,255,.82);
+}
+
+body[data-ambiance="crystal"] .terminal {
+  border-color: rgba(127,215,255,.70) !important;
+  box-shadow:
+    0 28px 78px rgba(0,0,0,.52),
+    0 0 0 1px rgba(210,245,255,.30),
+    0 0 46px rgba(127,215,255,.26),
+    inset 0 1px 0 rgba(255,255,255,.13) !important;
+}
+
+body[data-ambiance="ruins"] .terminal {
+  border-color: rgba(255,216,121,.78) !important;
+}
+
+body[data-ambiance="night"] .terminal {
+  border-color: rgba(185,170,255,.64) !important;
+  background:
+    linear-gradient(180deg, rgba(4,4,14,.82), rgba(5,6,18,.90)),
+    radial-gradient(circle at 50% 0%, rgba(185,170,255,.12), transparent 48%) !important;
+}
+
+body[data-ambiance="gold"] .terminal {
+  border-color: rgba(255,216,121,.92) !important;
+  box-shadow:
+    0 28px 78px rgba(0,0,0,.52),
+    0 0 0 1px rgba(255,248,214,.42),
+    0 0 60px rgba(255,216,121,.28),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+body[data-ambiance="minimal"] .terminal {
+  border-color: rgba(255,255,255,.36) !important;
+  box-shadow:
+    0 24px 64px rgba(0,0,0,.48),
+    0 0 0 1px rgba(255,255,255,.16),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+body[data-ambiance="minimal"] .hero::before {
+  opacity: .75;
+}
+
+body[data-ambiance="minimal"] .tile::before {
+  opacity: .12 !important;
+}
+
+/* Accueil : garde la grille simple et respirante */
+body:not(.show-advanced) #page-home .section-title {
+  margin-top: 10px;
+}
+
+body:not(.show-advanced) #page-home .tile-grid {
+  margin-top: 8px;
+}
+
+/* Panneaux avancés : un peu plus compacts */
+body.show-advanced #page-home .celestial-atlas-panel {
+  margin-top: 10px;
+}
+
+/* Le bouton Advanced doit indiquer son état */
+#advancedPanelsBtn.active {
+  border-color: rgba(127,215,255,.90) !important;
+  background: rgba(127,215,255,.18) !important;
+  box-shadow: 0 0 18px rgba(127,215,255,.18);
+}
+
+@media (max-width: 1050px) {
+  .advanced-dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .advanced-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advanced-dashboard-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .home-sober-toolbar .mini-control {
+    min-height: 28px;
+    padding: 0 8px;
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas v3 — CLEAN HOME FIX
+   Accueil vraiment sobre.
+   Par défaut : aucun gros panneau avancé visible.
+------------------------------------------------------- */
+
+/* Toolbar sobre : seulement 4 boutons */
+.home-sober-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  min-height: 42px !important;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.86), rgba(5,14,20,.80)) !important;
+  border-color: rgba(255,216,121,.44) !important;
+}
+
+.home-sober-toolbar .mini-control {
+  min-width: 0 !important;
+  min-height: 30px !important;
+  padding: 0 12px !important;
+  font-size: 10px !important;
+}
+
+.home-sober-toolbar .primary-control {
+  border-color: rgba(255,216,121,.78) !important;
+  background: rgba(255,216,121,.18) !important;
+}
+
+/* ACCUEIL SOBRE PAR DÉFAUT */
+body:not(.show-advanced) .intel-panel,
+body:not(.show-advanced) .celestial-atlas-panel,
+body:not(.show-advanced) .advanced-dashboard-panel,
+body:not(.show-advanced) .hero-gallery,
+body:not(.show-advanced) .atlas-preview-grid,
+body:not(.show-advanced) .atlas-toolbar,
+body:not(.show-advanced) .atlas-current {
+  display: none !important;
+}
+
+/* Quand Advanced est activé */
+body.show-advanced .advanced-dashboard-panel {
+  display: block !important;
+}
+
+body.show-advanced .intel-panel {
+  display: block !important;
+}
+
+/* Atlas n’apparaît que si openCelestialAtlas l’ouvre */
+body.show-advanced .celestial-atlas-panel.open {
+  display: block !important;
+}
+
+body.show-advanced .celestial-atlas-panel:not(.open) {
+  display: none !important;
+}
+
+/* Dashboard compact et lisible */
+.advanced-dashboard-panel {
+  position: relative;
+  z-index: 3;
+  margin: 0 0 12px;
+  border: 1px solid rgba(255,216,121,.34);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.84), rgba(6,16,22,.76)) !important;
+  overflow: hidden;
+  backdrop-filter: blur(7px) saturate(1.10);
+}
+
+.advanced-dashboard-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 13px;
+  border-bottom: 1px solid rgba(255,216,121,.22);
+  background: rgba(0,0,0,.46);
+}
+
+.advanced-dashboard-head strong {
+  color: #fff8e9;
+  font-size: 15px;
+}
+
+.advanced-dashboard-head span {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,248,233,.64);
+  font-size: 11px;
+}
+
+.advanced-dashboard-head button,
+.advanced-actions button {
+  min-height: 30px;
+  border: 1px solid rgba(255,216,121,.28);
+  border-radius: 999px;
+  background: rgba(0,0,0,.46);
+  color: #fff8e9;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.advanced-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.advanced-box {
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 15px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.66), rgba(7,18,24,.54));
+  padding: 10px;
+}
+
+.advanced-box strong {
+  display: block;
+  color: #fff8e9;
+  font-size: 12px;
+}
+
+.advanced-box p {
+  margin: 6px 0 8px;
+  color: rgba(255,248,233,.64);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.advanced-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Home cards remain only the action cards */
+body:not(.show-advanced) #page-home .section-title {
+  margin-top: 10px;
+}
+
+body:not(.show-advanced) #page-home .tile-grid {
+  margin-top: 8px;
+}
+
+/* Fix if old v2 forced atlas panel to display:block */
+.celestial-atlas-panel {
+  display: none !important;
+}
+
+body.show-advanced .celestial-atlas-panel.open {
+  display: block !important;
+}
+
+/* Advanced active visual */
+#advancedPanelsBtn.active {
+  border-color: rgba(127,215,255,.90) !important;
+  background: rgba(127,215,255,.18) !important;
+  box-shadow: 0 0 18px rgba(127,215,255,.18);
+}
+
+@media (max-width: 1050px) {
+  .advanced-dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .advanced-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-sober-toolbar .mini-control {
+    min-height: 28px !important;
+    padding: 0 8px !important;
+  }
+}
