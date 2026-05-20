@@ -1214,3 +1214,33 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* FINAL CLEAN — supprimer les boutons inutiles encadrés */
+
+.toolbar {
+  display: none !important;
+}
+
+/* Accueil : garder seulement Seven Boost + Video Cards Boost */
+#page-home .tile-grid .tile:not([data-action="boost"]):not([data-action="video"]) {
+  display: none !important;
+}
+
+#page-home .tile-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+#page-home .tile[data-action="boost"],
+#page-home .tile[data-action="video"] {
+  min-height: 110px !important;
+  background:
+    linear-gradient(145deg, rgba(5,10,15,.70), rgba(8,18,26,.52)) !important;
+  border-color: rgba(255,216,121,.70) !important;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  #page-home .tile-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
