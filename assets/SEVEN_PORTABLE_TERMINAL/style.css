@@ -1114,3 +1114,178 @@ body.deep-glass .terminal {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   GOLDEN GLASS — OPACITY READABILITY PATCH
+   Objectif : garder le fond, mais rendre les boutons et blocs lisibles
+   Ne modifie pas la structure. Additif uniquement.
+========================================================= */
+
+/* Navigation principale */
+.topnav,
+.tab {
+  background: rgba(3, 8, 12, 0.76) !important;
+  backdrop-filter: blur(8px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.15) !important;
+}
+
+/* Barre outils : Advanced / Atlas / Ambiance / etc. */
+.sky-control-strip,
+.home-sober-toolbar,
+.mini-control,
+.hero-position-actions button,
+.advanced-actions button,
+.trace-head-actions button,
+.palette-grid button {
+  background: rgba(4, 10, 16, 0.82) !important;
+  border-color: rgba(255, 216, 121, 0.55) !important;
+  color: #fff8e9 !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95) !important;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Hover plus net */
+.tab:hover,
+.mini-control:hover,
+.hero-position-actions button:hover,
+.advanced-actions button:hover,
+.trace-head-actions button:hover,
+.palette-grid button:hover {
+  background: rgba(0, 0, 0, 0.92) !important;
+  border-color: rgba(255, 216, 121, 0.9) !important;
+}
+
+/* Boutons actifs */
+.tab.active,
+.mini-control.active,
+.mini-control.selected {
+  background:
+    linear-gradient(180deg, rgba(255, 216, 121, 0.28), rgba(0, 0, 0, 0.88)) !important;
+  border-color: rgba(255, 216, 121, 0.95) !important;
+  box-shadow:
+    0 0 18px rgba(255, 216, 121, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Ruban mémoire et badges */
+.aerith-memory-ribbon,
+.chips span,
+.trace-pill,
+.intel-tags span {
+  background: rgba(3, 8, 12, 0.78) !important;
+  border-color: rgba(255, 216, 121, 0.42) !important;
+  color: #fff8e9 !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Titres de section */
+.section-title {
+  background: rgba(3, 8, 12, 0.80) !important;
+  border-color: rgba(255, 216, 121, 0.48) !important;
+  backdrop-filter: blur(8px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
+}
+
+/* Cartes principales : Seven Boost, Video Cards, Wan, etc. */
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0, 0, 0, 0.88), rgba(8, 20, 28, 0.78)) !important;
+  border-color: rgba(255, 216, 121, 0.42) !important;
+  color: #fff8e9 !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95) !important;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Cartes dorées importantes */
+.tile.gold,
+.tile.selected {
+  background:
+    linear-gradient(145deg, rgba(0, 0, 0, 0.92), rgba(48, 35, 12, 0.82)),
+    radial-gradient(circle at 50% 0%, rgba(255, 216, 121, 0.22), transparent 58%) !important;
+  border-color: rgba(255, 216, 121, 0.86) !important;
+}
+
+/* Texte dans les cartes */
+.tile .txt strong,
+.tile .txt em,
+.tile strong,
+.tile em {
+  color: #fff8e9 !important;
+  opacity: 1 !important;
+}
+
+/* Panneau d’aide Seven Guidance */
+.intel-panel {
+  background: rgba(3, 8, 12, 0.82) !important;
+  border-color: rgba(255, 216, 121, 0.42) !important;
+  backdrop-filter: blur(8px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
+}
+
+/* Advanced System Trace */
+.home-system-trace,
+.system-trace-pro,
+.system-trace,
+.trace-card,
+.net-card,
+.device-card {
+  background:
+    linear-gradient(145deg, rgba(3, 8, 12, 0.86), rgba(8, 18, 24, 0.76)) !important;
+  border-color: rgba(255, 216, 121, 0.36) !important;
+  color: #fff8e9 !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Cartes diagnostic système */
+.trace-card strong,
+.trace-card small,
+.trace-card em,
+.net-card strong,
+.net-card span,
+.device-card strong,
+.device-card small,
+.device-card em {
+  color: #fff8e9 !important;
+  opacity: 1 !important;
+}
+
+/* Panneaux avancés si ouverts */
+.advanced-dashboard-panel,
+.advanced-box,
+.celestial-atlas-panel,
+.atlas-current,
+.hero-gallery,
+.hero-position-panel {
+  background:
+    linear-gradient(145deg, rgba(3, 8, 12, 0.88), rgba(8, 18, 24, 0.78)) !important;
+  border-color: rgba(255, 216, 121, 0.42) !important;
+  backdrop-filter: blur(8px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
+}
+
+/* Footer / status */
+.status,
+.system-footer,
+.network-footer,
+footer {
+  background: rgba(3, 8, 12, 0.78) !important;
+  border-color: rgba(255, 216, 121, 0.28) !important;
+  color: #fff8e9 !important;
+}
+
+/* Mode lisibilité : encore plus net */
+body.mode-readability .tile,
+body.visibility-dark .tile,
+body.readability-on .tile,
+body.mode-readability .mini-control,
+body.visibility-dark .mini-control,
+body.readability-on .mini-control,
+body.mode-readability .trace-card,
+body.visibility-dark .trace-card,
+body.readability-on .trace-card {
+  background: rgba(0, 0, 0, 0.92) !important;
+}
