@@ -3662,3 +3662,1578 @@ body:not(.show-advanced) .atlas-toolbar,
 body:not(.show-advanced) .atlas-current {
   display: none !important;
 }
+
+
+/* -------------------------------------------------------
+   Background Reset
+   Atlas images regenerated without added cloud/fog layer.
+   The readability shield remains optional and subtle.
+------------------------------------------------------- */
+
+body::after {
+  background:
+    radial-gradient(circle at 50% 15%, rgba(0,0,0,.08), transparent 42%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.02) 45%, rgba(0,0,0,.14)) !important;
+}
+
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.84), rgba(3,8,12,.88)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.07), transparent 48%) !important;
+}
+
+/* No artificial mist feeling in the UI itself */
+.page,
+.sky-control-strip,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  backdrop-filter: blur(5px) saturate(1.06) !important;
+}
+
+/* When readability is off, backgrounds are almost raw */
+body.readability-off::after {
+  display: none !important;
+}
+
+body.readability-off .terminal {
+  background:
+    linear-gradient(180deg, rgba(3,8,12,.58), rgba(3,8,12,.66)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.05), transparent 48%) !important;
+}
+
+
+/* -------------------------------------------------------
+   Transformer Book Views
+   Fonds basés uniquement sur les 2 images choisies.
+   Pas d’ajout de nuages, pas de brume décorative.
+------------------------------------------------------- */
+
+body {
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.02) 45%, rgba(0,0,0,.10)) !important;
+}
+
+body.readability-off::after {
+  display: none !important;
+}
+
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.82), rgba(3,8,12,.88)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
+}
+
+/* Atlas grid now has only selected Transformer Book shots */
+.atlas-preview-grid {
+  max-height: 260px !important;
+}
+
+.atlas-preview-card img {
+  height: 90px !important;
+}
+
+/* Full-height shots use source side fill; keep the UI readable. */
+.tile::before {
+  filter: saturate(1.00) brightness(.86) !important;
+}
+
+
+/* -------------------------------------------------------
+   System Trace Pro
+   Advanced System Trace plus classe, lisible et cockpit.
+------------------------------------------------------- */
+
+.system-trace-pro {
+  display: none;
+  margin-top: 12px;
+  border: 1px solid rgba(127,215,255,.26);
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.86), rgba(6,18,26,.76)),
+    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
+    radial-gradient(circle at 100% 0%, rgba(255,216,121,.10), transparent 42%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 28px rgba(0,0,0,.28);
+  backdrop-filter: blur(7px) saturate(1.10);
+}
+
+.system-trace-pro.open {
+  display: block;
+}
+
+.pro-trace-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(8,26,36,.46)) !important;
+  border-bottom: 1px solid rgba(127,215,255,.20) !important;
+  padding: 11px 13px !important;
+}
+
+.pro-trace-head strong {
+  display: block;
+  color: #fff8e9;
+  font-size: 15px;
+  letter-spacing: .02em;
+}
+
+.pro-trace-head span {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,248,233,.62);
+  font-size: 11px;
+}
+
+.trace-head-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.trace-head-actions button {
+  min-height: 30px;
+  border: 1px solid rgba(127,215,255,.28);
+  border-radius: 999px;
+  background: rgba(0,0,0,.40);
+  color: #fff8e9;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .16s ease;
+}
+
+.trace-head-actions button:hover,
+.trace-head-actions button:focus {
+  border-color: rgba(127,215,255,.88);
+  background: rgba(127,215,255,.14);
+  outline: none;
+  box-shadow: 0 0 16px rgba(127,215,255,.16);
+}
+
+.trace-status-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 9px 10px 0;
+}
+
+.trace-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  background: rgba(0,0,0,.42);
+  color: rgba(255,248,233,.72);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.trace-pill.safe {
+  border-color: rgba(137,255,188,.30);
+  background: rgba(32,120,72,.20);
+  color: rgba(190,255,218,.92);
+}
+
+.trace-pro-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.trace-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 9px;
+  min-height: 86px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  padding: 10px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.62), rgba(7,20,28,.52)),
+    radial-gradient(circle at 50% 0%, rgba(127,215,255,.08), transparent 64%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 8px 18px rgba(0,0,0,.18);
+}
+
+.trace-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
+  opacity: .7;
+}
+
+.trace-card-secure {
+  border-color: rgba(137,255,188,.24);
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.62), rgba(8,38,24,.45)),
+    radial-gradient(circle at 50% 0%, rgba(137,255,188,.10), transparent 64%);
+}
+
+.trace-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(127,215,255,.22);
+  border-radius: 12px;
+  background: rgba(0,0,0,.36);
+  box-shadow: 0 0 14px rgba(127,215,255,.10);
+  font-size: 15px;
+}
+
+.trace-card small {
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(255,248,233,.56);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.trace-card strong {
+  display: block;
+  color: #fff8e9;
+  font-size: 13px;
+  line-height: 1.15;
+  text-shadow: 0 2px 10px rgba(0,0,0,.72);
+}
+
+.trace-card em {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,248,233,.58);
+  font-size: 9px;
+  font-style: normal;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.trace-console-details {
+  margin: 0 10px 10px;
+  border: 1px solid rgba(255,216,121,.18);
+  border-radius: 15px;
+  background: rgba(0,0,0,.32);
+  overflow: hidden;
+}
+
+.trace-console-details summary {
+  cursor: pointer;
+  padding: 9px 10px;
+  color: rgba(255,248,233,.78);
+  font-size: 11px;
+  letter-spacing: .04em;
+  list-style: none;
+}
+
+.trace-console-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.trace-console-details summary::before {
+  content: "▸ ";
+  color: rgba(255,216,121,.88);
+}
+
+.trace-console-details[open] summary::before {
+  content: "▾ ";
+}
+
+#advancedSystemText {
+  min-height: 170px !important;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.64)) !important;
+  color: rgba(235,245,255,.92) !important;
+  border-top: 1px solid rgba(255,216,121,.14) !important;
+  font-size: 10px !important;
+  line-height: 1.42 !important;
+}
+
+@media (max-width: 1050px) {
+  .trace-pro-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .pro-trace-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .trace-pro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9 — Recovery Hero
+   Hero = aerith_7_memory_cards_avatar_master.png
+   Backgrounds = sharp Transformer Book crops, no blur/fog/cloud.
+------------------------------------------------------- */
+
+body {
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.00) 45%, rgba(0,0,0,.08)) !important;
+}
+
+.hero {
+  min-height: 172px !important;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: cover !important;
+  background-position: center 34% !important;
+  background-repeat: no-repeat !important;
+  border-bottom: 1px solid rgba(124,140,255,.34) !important;
+}
+
+.hero::before {
+  display: block !important;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.18) 58%, rgba(0,0,0,.36)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px) !important;
+}
+
+.no-hero-face .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+}
+
+/* Avatar = same canonical image */
+.hero .portrait img,
+.portrait img,
+.avatar img,
+.top-avatar img {
+  content: url("./aerith_7_memory_cards_avatar_master.png");
+  object-fit: cover !important;
+  object-position: 52% 34% !important;
+}
+
+/* Transparency recovery: readable but not concrete */
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.58), rgba(3,8,12,.68)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
+  backdrop-filter: blur(4px) saturate(1.08) !important;
+}
+
+.topnav,
+.sky-control-strip,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.56), rgba(5,14,20,.46)) !important;
+  backdrop-filter: blur(4px) saturate(1.06) !important;
+}
+
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.54), rgba(7,18,24,.44)) !important;
+}
+
+.tile::before {
+  opacity: .32 !important;
+  filter: saturate(1.02) brightness(.92) !important;
+}
+
+.tile.selected::before,
+.tile.gold::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .46 !important;
+}
+
+.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.28), rgba(3,8,12,.40)) !important;
+}
+
+.deep-glass .topnav,
+.deep-glass .sky-control-strip,
+.deep-glass .section-title,
+.deep-glass .intel-panel,
+.deep-glass .advanced-dashboard-panel,
+.deep-glass .celestial-atlas-panel {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.32), rgba(5,14,20,.26)) !important;
+}
+
+/* Hero parasite cleanup */
+.hero-gallery,
+#heroGalleryGrid,
+.hero-frame-chip,
+#heroFrameBtn,
+button[onclick="cycleHeroFrame()"],
+button[onclick="randomHeroFrame()"] {
+  display: none !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.1 — Transparency Recovery Patch
+   Fichier modifié uniquement : style.css
+
+   Objectif :
+   - menu de base plus transparent ;
+   - boutons non sélectionnés sans fond plein ;
+   - boutons sélectionnés/hover restent colorés ;
+   - Hero Aerith et fonds nets conservés.
+------------------------------------------------------- */
+
+:root {
+  --seven-panel-alpha: .42;
+  --seven-panel-alpha-soft: .34;
+  --seven-panel-alpha-strong: .54;
+  --seven-border-soft: rgba(255,216,121,.28);
+  --seven-border-blue-soft: rgba(127,215,255,.24);
+}
+
+/* Coque globale : plus transparente, mais encore lisible */
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.36), rgba(3,8,12,.50)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.045), transparent 48%) !important;
+  backdrop-filter: blur(3px) saturate(1.06) !important;
+}
+
+/* Menu supérieur moins opaque */
+.topnav {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.46), rgba(4,10,14,.36)) !important;
+  border-bottom: 1px solid rgba(255,216,121,.26) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 8px 18px rgba(0,0,0,.16) !important;
+}
+
+/* Boutons non sélectionnés : presque sans fond */
+.tab,
+.mini-control,
+.atlas-chip,
+.hero-frame-chip,
+.advanced-actions button,
+.advanced-dashboard-head button,
+.trace-head-actions button,
+button:not(.active):not(.selected) {
+  background: rgba(0,0,0,.08) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  box-shadow: none !important;
+}
+
+/* Onglets / mini boutons non sélectionnés : lisibles mais transparents */
+.tab:not(.active):not(:hover):not(:focus),
+.mini-control:not(.active):not(.selected):not(:hover):not(:focus),
+.atlas-chip:not(.selected):not(:hover):not(:focus) {
+  background: rgba(0,0,0,.06) !important;
+  color: rgba(255,248,233,.82) !important;
+}
+
+/* Sélection / survol : là seulement, le bouton prend une couleur */
+.tab.active,
+.tab:hover,
+.tab:focus,
+.mini-control.active,
+.mini-control.selected,
+.mini-control:hover,
+.mini-control:focus,
+.atlas-chip.selected,
+.atlas-chip:hover,
+.atlas-chip:focus,
+button.active,
+button.selected,
+button:hover,
+button:focus {
+  background: rgba(255,216,121,.18) !important;
+  border-color: rgba(255,216,121,.74) !important;
+  color: #fff8e9 !important;
+  box-shadow:
+    0 0 14px rgba(255,216,121,.12),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Boutons bleus / système au hover si accent bleu */
+#advancedPanelsBtn.active,
+#readabilityShieldBtn.active,
+.trace-head-actions button:hover,
+.trace-head-actions button:focus {
+  background: rgba(127,215,255,.14) !important;
+  border-color: rgba(127,215,255,.72) !important;
+  box-shadow:
+    0 0 14px rgba(127,215,255,.14),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Barre de contrôles et rubans : plus transparents */
+.sky-control-strip,
+.aerith-memory-ribbon,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-panel,
+.device-panel,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.36), rgba(5,14,20,.28)) !important;
+  border-color: rgba(255,216,121,.24) !important;
+  backdrop-filter: blur(3px) saturate(1.05) !important;
+}
+
+/* Page / corps des sections : ne plus faire un gros bloc noir */
+.page {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.30), rgba(5,12,18,.22)) !important;
+}
+
+/* Tuiles : fond plus transparent, preview visible */
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.34), rgba(7,18,24,.26)) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+.tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.06), transparent 45%) !important;
+}
+
+.tile::before {
+  opacity: .44 !important;
+  filter: saturate(1.02) brightness(.96) !important;
+}
+
+.tile.gold,
+.tile.selected,
+.tile:hover,
+.tile:focus {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.42), rgba(7,18,24,.32)) !important;
+  border-color: rgba(255,216,121,.58) !important;
+}
+
+.tile.gold::before,
+.tile.selected::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .56 !important;
+}
+
+.tile.gold::after,
+.tile.selected::after,
+.tile:hover::after,
+.tile:focus::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.54), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.18), transparent 46%) !important;
+}
+
+/* Cartes système : plus transparentes, mais lecture conservée */
+.trace-card,
+.net-card,
+.device-card,
+.advanced-box {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.38), rgba(7,20,28,.28)),
+    radial-gradient(circle at 50% 0%, rgba(127,215,255,.045), transparent 64%) !important;
+  border-color: rgba(255,255,255,.14) !important;
+}
+
+/* Mode Deep Glass encore plus aérien */
+.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.20), rgba(3,8,12,.30)) !important;
+}
+
+.deep-glass .topnav,
+.deep-glass .sky-control-strip,
+.deep-glass .section-title,
+.deep-glass .intel-panel,
+.deep-glass .advanced-dashboard-panel,
+.deep-glass .celestial-atlas-panel,
+.deep-glass .page {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.20), rgba(5,14,20,.16)) !important;
+}
+
+.deep-glass .tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.24), rgba(7,18,24,.18)) !important;
+}
+
+.deep-glass .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.14) 58%, rgba(0,0,0,.22)) !important;
+}
+
+/* Hero Aerith : conserver la lecture, mais moins de voile noir */
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.24) 48%, rgba(0,0,0,.50)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.16), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: cover !important;
+  background-position: center 34% !important;
+}
+
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.10) 58%, rgba(0,0,0,.24)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.020) 0 1px, transparent 1px 8px) !important;
+}
+
+/* Les boutons du footer restent très discrets */
+footer span,
+.network-footer span,
+.system-footer span,
+.badge,
+.chip {
+  background: rgba(0,0,0,.18) !important;
+  border-color: rgba(255,255,255,.13) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.3 — REAL GLASS PATCH
+   Fichier modifié uniquement : style.css
+
+   Correction forte :
+   - enlève le voile noir interne qui bloquait la transparence ;
+   - rend le menu de base réellement glass ;
+   - boutons non sélectionnés sans fond ;
+   - boutons actifs seulement colorés ;
+   - garde la Hero Aerith.
+------------------------------------------------------- */
+
+/* Le principal coupable : ancien bouclier sombre interne */
+.terminal::before {
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Le voile global doit rester très léger */
+body::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.025), rgba(0,0,0,0) 48%, rgba(0,0,0,.045)) !important;
+}
+
+/* Coque principale : vrai verre sombre léger */
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.24), rgba(3,8,12,.34)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.035), transparent 48%) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+  box-shadow:
+    0 22px 54px rgba(0,0,0,.26),
+    0 0 0 1px rgba(255,248,214,.20),
+    0 0 34px rgba(255,216,121,.10),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+/* Menu supérieur : presque transparent */
+.topnav {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.26), rgba(4,10,14,.18)) !important;
+  border-bottom: 1px solid rgba(255,216,121,.20) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 8px 16px rgba(0,0,0,.10) !important;
+}
+
+/* Les grands blocs ne doivent plus faire plaque noire */
+.page,
+.sky-control-strip,
+.aerith-memory-ribbon,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-panel,
+.device-panel,
+.system-trace-pro,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.20), rgba(5,14,20,.14)) !important;
+  border-color: rgba(255,216,121,.18) !important;
+  backdrop-filter: blur(2px) saturate(1.03) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 8px 16px rgba(0,0,0,.08) !important;
+}
+
+/* Hero : laisser respirer l’image Aerith */
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.46), rgba(0,0,0,.08) 48%, rgba(0,0,0,.30)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.13), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: cover !important;
+  background-position: center 34% !important;
+}
+
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.04) 58%, rgba(0,0,0,.16)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 8px) !important;
+}
+
+/* Boutons non sélectionnés : pas de fond plein */
+.tab:not(.active):not(:hover):not(:focus),
+.mini-control:not(.active):not(.selected):not(:hover):not(:focus),
+.atlas-chip:not(.selected):not(:hover):not(:focus),
+button:not(.active):not(.selected):not(:hover):not(:focus) {
+  background: rgba(0,0,0,.00) !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: none !important;
+  color: rgba(255,248,233,.82) !important;
+}
+
+/* Boutons actifs / hover : couleur seulement à l’usage */
+.tab.active,
+.tab:hover,
+.tab:focus,
+.mini-control.active,
+.mini-control.selected,
+.mini-control:hover,
+.mini-control:focus,
+.atlas-chip.selected,
+.atlas-chip:hover,
+.atlas-chip:focus,
+button.active,
+button.selected,
+button:hover,
+button:focus {
+  background: rgba(255,216,121,.14) !important;
+  border-color: rgba(255,216,121,.68) !important;
+  color: #fff8e9 !important;
+  box-shadow:
+    0 0 12px rgba(255,216,121,.10),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+/* Bouton Lisibilité actif bleu, mais discret */
+#readabilityShieldBtn.active,
+#advancedPanelsBtn.active {
+  background: rgba(127,215,255,.12) !important;
+  border-color: rgba(127,215,255,.64) !important;
+  box-shadow:
+    0 0 12px rgba(127,215,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+/* Tuiles : transparentes, mais texte lisible */
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.20), rgba(7,18,24,.14)) !important;
+  border-color: rgba(255,255,255,.15) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 6px 16px rgba(0,0,0,.10) !important;
+}
+
+.tile::before {
+  opacity: .58 !important;
+  filter: saturate(1.04) brightness(1.00) !important;
+}
+
+.tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.30), rgba(0,0,0,.10) 58%, rgba(0,0,0,.16)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.045), transparent 45%) !important;
+}
+
+.tile.gold,
+.tile.selected,
+.tile:hover,
+.tile:focus {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.28), rgba(7,18,24,.18)) !important;
+  border-color: rgba(255,216,121,.48) !important;
+}
+
+.tile.gold::before,
+.tile.selected::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .68 !important;
+}
+
+.tile.gold::after,
+.tile.selected::after,
+.tile:hover::after,
+.tile:focus::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.12) 58%, rgba(0,0,0,.18)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.12), transparent 46%) !important;
+}
+
+/* Cartes système / traces : glass plus léger */
+.trace-card,
+.net-card,
+.device-card,
+.advanced-box {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.22), rgba(7,20,28,.14)),
+    radial-gradient(circle at 50% 0%, rgba(127,215,255,.035), transparent 64%) !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+/* Footer et chips très discrets */
+footer span,
+.network-footer span,
+.system-footer span,
+.badge,
+.chip,
+.trace-pill {
+  background: rgba(0,0,0,.10) !important;
+  border-color: rgba(255,255,255,.11) !important;
+}
+
+/* Deep Glass = presque transparent */
+.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.12), rgba(3,8,12,.20)) !important;
+  backdrop-filter: blur(1px) saturate(1.02) !important;
+}
+
+.deep-glass .page,
+.deep-glass .topnav,
+.deep-glass .sky-control-strip,
+.deep-glass .aerith-memory-ribbon,
+.deep-glass .section-title,
+.deep-glass .intel-panel,
+.deep-glass .advanced-dashboard-panel,
+.deep-glass .celestial-atlas-panel,
+.deep-glass .network-panel,
+.deep-glass .device-panel,
+.deep-glass .system-trace-pro {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.10), rgba(5,14,20,.07)) !important;
+  backdrop-filter: blur(1px) saturate(1.01) !important;
+}
+
+.deep-glass .tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.12), rgba(7,18,24,.08)) !important;
+}
+
+.deep-glass .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.06) 58%, rgba(0,0,0,.10)) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.4 — Readability Button Transparent
+   Fichier modifié uniquement : style.css
+
+   Règle demandée :
+   - le bouton Lisibilité reste transparent, point.
+   - même actif, même hover, même focus.
+------------------------------------------------------- */
+
+#readabilityShieldBtn,
+#readabilityShieldBtn.active,
+#readabilityShieldBtn.selected,
+#readabilityShieldBtn:hover,
+#readabilityShieldBtn:focus,
+.mini-control#readabilityShieldBtn,
+.mini-control#readabilityShieldBtn.active,
+.mini-control#readabilityShieldBtn.selected,
+.mini-control#readabilityShieldBtn:hover,
+.mini-control#readabilityShieldBtn:focus,
+button#readabilityShieldBtn,
+button#readabilityShieldBtn.active,
+button#readabilityShieldBtn.selected,
+button#readabilityShieldBtn:hover,
+button#readabilityShieldBtn:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(127,215,255,.46) !important;
+  box-shadow: none !important;
+  color: rgba(225,246,255,.92) !important;
+}
+
+#readabilityShieldBtn::before,
+#readabilityShieldBtn::after {
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+#readabilityShieldBtn:hover,
+#readabilityShieldBtn:focus {
+  border-color: rgba(127,215,255,.72) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  text-shadow: 0 0 10px rgba(127,215,255,.35) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.5 — Hero Manual Focus
+   Fichiers modifiés : index.html + style.css
+
+   Système façon Notion :
+   - X / Y / Zoom réglables manuellement ;
+   - sauvegarde localStorage ;
+   - ne touche pas aux backgrounds généraux.
+------------------------------------------------------- */
+
+:root {
+  --hero-x: 50%;
+  --hero-y: 34%;
+  --hero-zoom: 100%;
+  --hero-size: cover;
+}
+
+/* Force toutes les versions Hero à utiliser les variables de centrage. */
+.hero,
+.no-hero-face .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.46), rgba(0,0,0,.08) 48%, rgba(0,0,0,.30)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.13), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: var(--hero-size, cover) !important;
+  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Panneau de réglage Hero */
+.hero {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hero-position-panel {
+  display: none;
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 8;
+  width: min(360px, calc(100% - 28px));
+  padding: 10px;
+  border: 1px solid rgba(127,215,255,.36);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.48), rgba(6,18,26,.30));
+  backdrop-filter: blur(5px) saturate(1.10);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+body.show-hero-focus .hero-position-panel {
+  display: block;
+}
+
+.hero-position-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.hero-position-head strong {
+  color: #fff8e9;
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+.hero-position-head span {
+  color: rgba(255,248,233,.62);
+  font-size: 9px;
+}
+
+.hero-position-panel label {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 0;
+  color: rgba(255,248,233,.84);
+  font-size: 10px;
+}
+
+.hero-position-panel input[type="range"] {
+  width: 100%;
+  accent-color: #7fd7ff;
+}
+
+.hero-position-panel output {
+  text-align: right;
+  color: rgba(225,246,255,.92);
+  font-size: 10px;
+}
+
+.hero-position-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.hero-position-actions button {
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 1px solid rgba(127,215,255,.34) !important;
+  color: rgba(225,246,255,.92) !important;
+  font-size: 10px !important;
+  box-shadow: none !important;
+}
+
+.hero-position-actions button:hover,
+.hero-position-actions button:focus {
+  background: rgba(127,215,255,.10) !important;
+  border-color: rgba(127,215,255,.72) !important;
+}
+
+/* Bouton Hero dans la barre : transparent tant qu’il n’est pas ouvert */
+#heroFocusBtn:not(.active):not(:hover):not(:focus) {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: none !important;
+}
+
+#heroFocusBtn.active,
+#heroFocusBtn:hover,
+#heroFocusBtn:focus {
+  background: rgba(127,215,255,.12) !important;
+  border-color: rgba(127,215,255,.64) !important;
+}
+
+/* Sur Transformer Book, le panneau reste compact */
+@media (max-width: 860px) {
+  .hero-position-panel {
+    right: 10px;
+    bottom: 10px;
+    width: min(330px, calc(100% - 20px));
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.6 — Transparent Help Button Fix
+   Fichier modifié uniquement : style.css
+
+   Règle :
+   - le bouton ? reste utile ;
+   - il ne crée pas de ligne/espace ;
+   - il est transparent ;
+   - il est fixé proprement en bas à droite du terminal.
+------------------------------------------------------- */
+
+button.help-launcher,
+.help-launcher,
+.terminal > .help-launcher,
+body .help-launcher {
+  position: fixed !important;
+
+  /* Aligné sur le bord droit du terminal centré : width min(1220px, 100vw - 24px) */
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  z-index: 9999 !important;
+
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.34) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.72) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+button.help-launcher::before,
+button.help-launcher::after,
+.help-launcher::before,
+.help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+button.help-launcher:hover,
+button.help-launcher:focus,
+.help-launcher:hover,
+.help-launcher:focus {
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le footer ne réserve plus d'espace artificiel pour le ? */
+footer {
+  padding-right: 14px !important;
+}
+
+/* Sécurité : le ? ne doit jamais pousser la mise en page */
+.help-launcher + footer,
+footer + .help-launcher {
+  margin-top: 0 !important;
+}
+
+/* Transformer Book / écran étroit */
+@media (max-width: 1244px) {
+  button.help-launcher,
+  .help-launcher,
+  .terminal > .help-launcher,
+  body .help-launcher {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+
+  button.help-launcher:hover,
+  button.help-launcher:focus,
+  .help-launcher:hover,
+  .help-launcher:focus {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.8 — Footer Help Button Fix
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? n’est plus une ligne séparée ;
+   - il est dans le footer ;
+   - il reste transparent ;
+   - il ne pousse plus la mise en page.
+------------------------------------------------------- */
+
+/* Sécurité : tout ancien ? flottant direct sous terminal disparaît */
+main > .help-launcher,
+.terminal > .help-launcher:not(.footer-help-launcher) {
+  display: none !important;
+}
+
+/* Footer stable : aucune ligne parasite */
+footer {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding-right: 14px !important;
+  min-height: 34px !important;
+  overflow: visible !important;
+}
+
+/* Le ? vit dans le footer, pas en position flottante */
+footer .help-launcher,
+footer .footer-help-launcher,
+button.footer-help-launcher {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 0 0 2px !important;
+
+  border: 1px solid rgba(255,216,121,.28) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.68) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.42) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+}
+
+/* Aucun pseudo-fond parasite */
+footer .help-launcher::before,
+footer .help-launcher::after,
+footer .footer-help-launcher::before,
+footer .footer-help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+footer .help-launcher:hover,
+footer .help-launcher:focus,
+footer .footer-help-launcher:hover,
+footer .footer-help-launcher:focus,
+button.footer-help-launcher:hover,
+button.footer-help-launcher:focus {
+  position: static !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(255,216,121,.64) !important;
+  color: rgba(255,248,233,.96) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.26),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.9 — Inline Help Button
+   Fichiers modifiés : index.html + style.css
+
+   Correction définitive :
+   - aucun bouton ? flottant ;
+   - aucun ? dans le footer ;
+   - aucune ligne vide en bas ;
+   - le ? est dans le ruban haut, transparent.
+------------------------------------------------------- */
+
+/* On neutralise tous les anciens ? flottants s’ils restent en cache HTML */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  position: static !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Footer : plus aucun espace réservé au ? */
+footer {
+  padding-right: 14px !important;
+  min-height: 28px !important;
+  margin-top: 0 !important;
+}
+
+/* Le ruban devient le bon emplacement du ? */
+.aerith-memory-ribbon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+/* Nouveau bouton ? intégré, non flottant */
+.command-help-inline {
+  position: static !important;
+  inset: auto !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+.command-help-inline::before,
+.command-help-inline::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+.command-help-inline:hover,
+.command-help-inline:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le bas de page doit rester serré et propre */
+.system-footer,
+.network-footer,
+footer {
+  margin-top: 0 !important;
+}
+
+.network-footer + footer {
+  border-top: 1px solid rgba(255,216,121,.12) !important;
+}
+
+/* Plus aucune ligne parasite entre Network HUD et Footer */
+.network-footer + .help-launcher,
+.help-launcher + footer,
+footer + .help-launcher {
+  display: none !important;
+  margin: 0 !important;
+  height: 0 !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.10 — Command Palette Dot
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? revient ;
+   - il est dans la barre des mini-boutons ;
+   - il reste transparent ;
+   - il ne crée aucune ligne en bas.
+------------------------------------------------------- */
+
+/* Les anciennes versions du ? restent supprimées */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Nouveau ? visible, dans la barre de contrôle */
+.command-palette-dot,
+#commandPaletteDotBtn,
+button.command-palette-dot,
+.mini-control.command-palette-dot {
+  position: static !important;
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+  transform: none !important;
+}
+
+/* Hover/focus discret, toujours transparent */
+.command-palette-dot:hover,
+.command-palette-dot:focus,
+#commandPaletteDotBtn:hover,
+#commandPaletteDotBtn:focus,
+button.command-palette-dot:hover,
+button.command-palette-dot:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Pas de pseudo-fond */
+.command-palette-dot::before,
+.command-palette-dot::after,
+#commandPaletteDotBtn::before,
+#commandPaletteDotBtn::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Le footer ne réserve rien pour le ? */
+footer {
+  padding-right: 14px !important;
+  margin-top: 0 !important;
+  min-height: 28px !important;
+}
+
