@@ -950,3 +950,365 @@ footer {
     opacity: .46;
   }
 }
+
+
+/* -------------------------------------------------------
+   Solid Menus refinement
+   Menus et panneaux un peu moins transparents.
+   Le background reste visible, mais l'UI gagne en lisibilité.
+------------------------------------------------------- */
+
+:root {
+  --glass-alpha: .28;
+  --panel-alpha: .38;
+  --tile-alpha: .34;
+  --tile-border: rgba(255,255,255,.30);
+}
+
+body.deep-glass {
+  --glass-alpha: .18;
+  --panel-alpha: .28;
+  --tile-alpha: .24;
+}
+
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(3,10,16,var(--glass-alpha)), rgba(3,10,16,.38)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 42%) !important;
+  backdrop-filter: blur(5px) saturate(1.10) !important;
+}
+
+.topnav {
+  background: rgba(0,0,0,.32) !important;
+}
+
+.tab {
+  background: rgba(0,0,0,.38) !important;
+  border-color: rgba(255,255,255,.24) !important;
+}
+
+.tab:not(.active) {
+  opacity: .88;
+}
+
+.tab.active,
+.tab:hover,
+.tab:focus {
+  background: rgba(255,216,121,.20) !important;
+}
+
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.18)),
+    radial-gradient(circle at 40% 0%, rgba(255,216,121,.14), transparent 48%) !important;
+}
+
+.page {
+  background: rgba(0,0,0,.12) !important;
+}
+
+.section-title,
+.sky-control-strip {
+  background: rgba(0,0,0,.24) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+.tile,
+.net-card {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,var(--tile-alpha)), rgba(7,18,24,calc(var(--tile-alpha) + .12))),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 62%) !important;
+  border-color: var(--tile-border) !important;
+}
+
+.tile:not(.gold):not(.selected) {
+  opacity: .90;
+}
+
+.tile::before {
+  opacity: .28;
+}
+
+.tile:hover::before,
+.tile:focus::before,
+.tile.selected::before,
+.tile.gold::before {
+  opacity: .46;
+}
+
+.tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.44) 55%, rgba(0,0,0,.58)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.10), transparent 45%) !important;
+}
+
+.tile:hover::after,
+.tile:focus::after,
+.tile.selected::after,
+.tile.gold::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 58%, rgba(0,0,0,.46)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.24), transparent 46%) !important;
+}
+
+.mini-control {
+  background: rgba(0,0,0,.34) !important;
+  border-color: rgba(255,255,255,.24) !important;
+}
+
+.mini-control.active,
+.mini-control:hover,
+.mini-control:focus,
+.mini-control.selected {
+  background: rgba(255,216,121,.22) !important;
+}
+
+.network-footer,
+footer {
+  background: rgba(0,0,0,.30) !important;
+}
+
+
+/* -------------------------------------------------------
+   Interactive HUD Menus
+   Survol explicatif, panel d'aide, palette de commandes.
+------------------------------------------------------- */
+
+.intel-panel {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(127,215,255,.24);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.34), rgba(5,22,32,.28)),
+    radial-gradient(circle at 0% 0%, rgba(127,215,255,.14), transparent 42%),
+    radial-gradient(circle at 100% 0%, rgba(255,216,121,.10), transparent 42%);
+  backdrop-filter: blur(4px) saturate(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 10px 24px rgba(0,0,0,.20);
+}
+
+.intel-topline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.intel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 99px;
+  background: #d7ffc4;
+  box-shadow:
+    0 0 0 4px rgba(215,255,196,.10),
+    0 0 18px rgba(215,255,196,.42);
+}
+
+.intel-title {
+  color: #fff8e9;
+  font-size: 14px;
+  letter-spacing: .04em;
+}
+
+.intel-mode {
+  margin-left: auto;
+  padding: 3px 8px;
+  border: 1px solid rgba(255,216,121,.26);
+  border-radius: 999px;
+  color: rgba(255,248,233,.78);
+  background: rgba(0,0,0,.24);
+  font-size: 10px;
+}
+
+.intel-text {
+  margin: 0;
+  color: rgba(255,248,233,.82);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.intel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.intel-tags span {
+  padding: 3px 7px;
+  border: 1px solid rgba(127,215,255,.20);
+  border-radius: 999px;
+  background: rgba(0,0,0,.20);
+  color: rgba(255,248,233,.70);
+  font-size: 10px;
+}
+
+.tile[data-help],
+.tab[data-help],
+.mini-control[data-help] {
+  cursor: pointer;
+}
+
+.tile[data-help]:hover,
+.tile[data-help]:focus {
+  border-color: rgba(127,215,255,.56) !important;
+}
+
+.tile[data-intent="safety"]:hover,
+.tile[data-intent="safety"]:focus,
+.tile[data-intent="remote"]:hover,
+.tile[data-intent="remote"]:focus,
+.tile[data-intent="network"]:hover,
+.tile[data-intent="network"]:focus {
+  border-color: rgba(255,216,121,.92) !important;
+}
+
+.command-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  place-items: center;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(127,215,255,.16), transparent 42%),
+    rgba(0,0,0,.48);
+  backdrop-filter: blur(5px);
+}
+
+.command-palette.open {
+  display: grid;
+}
+
+.palette-card {
+  width: min(760px, 96vw);
+  border: 1px solid rgba(255,216,121,.48);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(4,12,18,.82), rgba(0,0,0,.72)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.13), transparent 44%);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.55),
+    0 0 48px rgba(255,216,121,.18);
+  overflow: hidden;
+}
+
+.palette-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,216,121,.20);
+}
+
+.palette-head strong {
+  color: #fff8e9;
+  font-size: 18px;
+}
+
+.palette-head button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255,255,255,.20);
+  border-radius: 99px;
+  background: rgba(255,255,255,.08);
+  color: #fff8e9;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 14px;
+}
+
+.palette-grid button {
+  min-height: 42px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 14px;
+  background: rgba(255,255,255,.07);
+  color: #fff8e9;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .16s ease;
+}
+
+.palette-grid button:hover,
+.palette-grid button:focus {
+  border-color: rgba(255,216,121,.70);
+  background: rgba(255,216,121,.12);
+  outline: none;
+}
+
+.palette-help {
+  margin: 0;
+  padding: 0 16px 16px;
+  color: rgba(255,248,233,.68);
+  font-size: 11px;
+  text-align: center;
+}
+
+.help-launcher {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 20;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255,216,121,.48);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255,216,121,.24), rgba(0,0,0,.38));
+  color: #fff8e9;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.38),
+    0 0 22px rgba(255,216,121,.16);
+}
+
+.help-launcher:hover,
+.help-launcher:focus {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,121,.90);
+  outline: none;
+}
+
+@media (max-width: 860px) {
+  .intel-panel {
+    padding: 8px 9px;
+    margin-bottom: 9px;
+  }
+
+  .intel-title {
+    font-size: 12px;
+  }
+
+  .intel-text {
+    font-size: 11px;
+  }
+
+  .intel-tags span,
+  .intel-mode {
+    font-size: 9px;
+  }
+
+  .palette-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .help-launcher {
+    width: 34px;
+    height: 34px;
+    right: 10px;
+    bottom: 10px;
+  }
+}
