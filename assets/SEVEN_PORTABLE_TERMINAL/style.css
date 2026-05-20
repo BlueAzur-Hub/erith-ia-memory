@@ -4339,356 +4339,404 @@ footer span,
 
 
 /* -------------------------------------------------------
-   Celestial Atlas 2.9.15 — Golden Glass + Home Trace
+   Celestial Atlas 2.9.20 — Ambiance Visible Repair
    Fichiers modifiés : index.html + style.css
 
-   Règle validée :
-   - garder l’apparence dorée des menus ;
-   - fonds de menus transparents ;
+   Vérification :
+   - cycleAmbiance() fonctionnait encore ;
+   - les derniers overrides transparents rendaient l’effet presque invisible.
+
+   Règle :
    - boutons transparents au repos ;
-   - boutons opaques seulement au hover / sélection ;
-   - Hero Focus restauré en panneau propre ;
-   - Advanced System Trace visible sur l’accueil.
+   - ambiance visible par couleur des bordures / liserés / glow ;
+   - opacité seulement au survol.
 ------------------------------------------------------- */
 
-/* Base lisibilité ON */
-body:not(.readability-off) {
-  --gold-line: rgba(255,216,121,.42);
-  --gold-line-soft: rgba(255,216,121,.22);
-  --gold-fill-hover: rgba(255,216,121,.20);
-  --button-solid: rgba(2,8,13,.72);
-  --button-solid-hover: rgba(0,0,0,.74);
+/* Variables d’ambiance */
+body[data-ambiance="sky"] {
+  --ambiance-line: rgba(127,215,255,.52);
+  --ambiance-line-soft: rgba(127,215,255,.28);
+  --ambiance-glow: rgba(127,215,255,.18);
+  --ambiance-text: rgba(225,246,255,.96);
 }
 
-/* Les grands fonds restent transparents, mais bordures visibles */
-body:not(.readability-off) .terminal,
+body[data-ambiance="crystal"] {
+  --ambiance-line: rgba(154,235,255,.62);
+  --ambiance-line-soft: rgba(154,235,255,.34);
+  --ambiance-glow: rgba(154,235,255,.22);
+  --ambiance-text: rgba(232,250,255,.98);
+}
+
+body[data-ambiance="ruins"] {
+  --ambiance-line: rgba(255,216,121,.66);
+  --ambiance-line-soft: rgba(255,216,121,.36);
+  --ambiance-glow: rgba(255,216,121,.20);
+  --ambiance-text: rgba(255,248,233,.98);
+}
+
+body[data-ambiance="night"] {
+  --ambiance-line: rgba(177,154,255,.60);
+  --ambiance-line-soft: rgba(177,154,255,.34);
+  --ambiance-glow: rgba(177,154,255,.20);
+  --ambiance-text: rgba(239,234,255,.98);
+}
+
+body[data-ambiance="gold"] {
+  --ambiance-line: rgba(255,216,121,.78);
+  --ambiance-line-soft: rgba(255,216,121,.44);
+  --ambiance-glow: rgba(255,216,121,.26);
+  --ambiance-text: rgba(255,248,233,1);
+}
+
+body[data-ambiance="minimal"] {
+  --ambiance-line: rgba(255,255,255,.42);
+  --ambiance-line-soft: rgba(255,255,255,.22);
+  --ambiance-glow: rgba(255,255,255,.10);
+  --ambiance-text: rgba(255,255,255,.92);
+}
+
+/* Appliquer l’ambiance à la structure sans remplir les fonds */
+body:not(.readability-off) .terminal {
+  border-color: var(--ambiance-line, rgba(255,216,121,.46)) !important;
+  box-shadow:
+    0 0 0 1px var(--ambiance-line-soft, rgba(255,216,121,.14)),
+    0 0 24px var(--ambiance-glow, rgba(255,216,121,.08)) !important;
+}
+
+body:not(.readability-off) .hero {
+  border-color: var(--ambiance-line, rgba(255,216,121,.76)) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,248,210,.18),
+    0 0 24px var(--ambiance-glow, rgba(255,216,121,.24)),
+    0 0 52px var(--ambiance-glow, rgba(255,216,121,.12)),
+    inset 0 0 0 1px rgba(255,248,210,.14),
+    inset 0 0 30px var(--ambiance-glow, rgba(255,216,121,.08)) !important;
+}
+
 body:not(.readability-off) .topnav,
 body:not(.readability-off) .sky-control-strip,
 body:not(.readability-off) .aerith-memory-ribbon,
 body:not(.readability-off) .section-title,
-body:not(.readability-off) .page,
-body:not(.readability-off) .intel-panel,
-body:not(.readability-off) .advanced-dashboard-panel,
-body:not(.readability-off) .celestial-atlas-panel,
-body:not(.readability-off) .network-panel,
-body:not(.readability-off) .device-panel,
-body:not(.readability-off) .system-trace-pro,
 body:not(.readability-off) .home-system-trace,
+body:not(.readability-off) .system-trace-pro,
 body:not(.readability-off) .network-footer,
 body:not(.readability-off) .system-footer,
 body:not(.readability-off) footer,
 body:not(.readability-off) .status {
+  border-color: var(--ambiance-line-soft, rgba(255,216,121,.26)) !important;
+}
+
+/* Boutons au repos : transparents, mais couleur d’ambiance visible */
+body:not(.readability-off) button:not(:hover),
+body:not(.readability-off) .tab:not(:hover),
+body:not(.readability-off) .mini-control:not(:hover),
+body:not(.readability-off) .atlas-chip:not(:hover),
+body:not(.readability-off) .tile:not(:hover),
+body:not(.readability-off) .trace-card:not(:hover),
+body:not(.readability-off) .net-card:not(:hover),
+body:not(.readability-off) .device-card:not(:hover),
+body:not(.readability-off) .advanced-box:not(:hover) {
+  border-color: var(--ambiance-line-soft, rgba(255,216,121,.30)) !important;
+}
+
+/* Le bouton Ambiance lui-même devient l’indicateur du mode */
+body:not(.readability-off) #ambianceBtn,
+body:not(.readability-off) #ambianceBtn:not(:hover),
+body:not(.readability-off) #ambianceBtn.active,
+body:not(.readability-off) #ambianceBtn.selected,
+body:not(.readability-off) #ambianceBtn:focus {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-/* Terminal : bord doré conservé */
-body:not(.readability-off) .terminal {
-  border-color: rgba(255,216,121,.46) !important;
+  border-color: var(--ambiance-line, rgba(255,216,121,.60)) !important;
+  color: var(--ambiance-text, rgba(255,248,233,.96)) !important;
   box-shadow:
-    0 0 0 1px rgba(255,216,121,.18),
-    0 0 24px rgba(255,216,121,.08) !important;
-}
-
-/* Barres / menus : seulement lignes dorées, pas de fond opaque */
-body:not(.readability-off) .topnav,
-body:not(.readability-off) .sky-control-strip,
-body:not(.readability-off) .aerith-memory-ribbon,
-body:not(.readability-off) .section-title,
-body:not(.readability-off) .network-footer,
-body:not(.readability-off) .system-footer,
-body:not(.readability-off) footer,
-body:not(.readability-off) .status,
-body:not(.readability-off) .home-system-trace,
-body:not(.readability-off) .system-trace-pro {
-  border-color: var(--gold-line-soft) !important;
-}
-
-/* Suppression des voiles qui font rectangle sombre */
-body:not(.readability-off)::before,
-body:not(.readability-off)::after,
-body:not(.readability-off) .terminal::before,
-body:not(.readability-off) .terminal::after,
-body:not(.readability-off) .page::before,
-body:not(.readability-off) .page::after,
-body:not(.readability-off) .hero::before,
-body:not(.readability-off) .hero::after {
-  display: none !important;
-  content: none !important;
-  opacity: 0 !important;
-  background: transparent !important;
-  background-image: none !important;
-}
-
-/* Hero conserve son image, avec voile quasi nul */
-body:not(.readability-off) .hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.00) 48%, rgba(0,0,0,.06)),
-    url("./aerith_7_memory_cards_avatar_master.png") !important;
-  background-size: var(--hero-size, cover) !important;
-  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
-  background-repeat: no-repeat !important;
-  border-bottom: 1px solid rgba(255,216,121,.20) !important;
-}
-
-/* Boutons au repos : transparents, bord doré/bleu visible */
-body:not(.readability-off) .tab,
-body:not(.readability-off) .mini-control,
-body:not(.readability-off) .atlas-chip,
-body:not(.readability-off) .advanced-actions button,
-body:not(.readability-off) .advanced-dashboard-head button,
-body:not(.readability-off) .trace-head-actions button,
-body:not(.readability-off) .hero-position-actions button,
-body:not(.readability-off) .command-palette button:not(.command-close),
-body:not(.readability-off) .tile {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  border-color: rgba(255,216,121,.30) !important;
-  box-shadow: none !important;
-  color: rgba(255,248,233,.90) !important;
+    0 0 10px var(--ambiance-glow, rgba(255,216,121,.10)) !important;
   text-shadow:
-    0 1px 2px rgba(0,0,0,.86),
-    0 0 8px rgba(0,0,0,.42) !important;
+    0 1px 2px rgba(0,0,0,.88),
+    0 0 10px var(--ambiance-glow, rgba(255,216,121,.18)) !important;
 }
 
-/* Previews visuelles des tuiles : très discrètes au repos */
-body:not(.readability-off) .tile::before {
-  opacity: .18 !important;
-  filter: saturate(1.02) brightness(.90) !important;
-}
-
-body:not(.readability-off) .tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.02) 60%, rgba(0,0,0,.08)) !important;
-}
-
-/* Hover / focus / actif : le bouton devient opaque */
-body:not(.readability-off) .tab.active,
+/* Survol : opacité magique, avec la couleur d’ambiance */
+body:not(.readability-off) button:hover,
 body:not(.readability-off) .tab:hover,
-body:not(.readability-off) .tab:focus,
-body:not(.readability-off) .mini-control.active,
-body:not(.readability-off) .mini-control.selected,
 body:not(.readability-off) .mini-control:hover,
-body:not(.readability-off) .mini-control:focus,
-body:not(.readability-off) .atlas-chip.selected,
 body:not(.readability-off) .atlas-chip:hover,
-body:not(.readability-off) .atlas-chip:focus,
-body:not(.readability-off) .advanced-actions button:hover,
-body:not(.readability-off) .advanced-actions button:focus,
-body:not(.readability-off) .advanced-dashboard-head button:hover,
-body:not(.readability-off) .advanced-dashboard-head button:focus,
-body:not(.readability-off) .trace-head-actions button:hover,
-body:not(.readability-off) .trace-head-actions button:focus,
-body:not(.readability-off) .hero-position-actions button:hover,
-body:not(.readability-off) .hero-position-actions button:focus,
-body:not(.readability-off) .command-palette button:not(.command-close):hover,
-body:not(.readability-off) .command-palette button:not(.command-close):focus,
 body:not(.readability-off) .tile:hover,
-body:not(.readability-off) .tile:focus,
-body:not(.readability-off) .tile.selected,
-body:not(.readability-off) .tile.gold {
-  background:
-    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.72)) !important;
-  background-color: rgba(0,0,0,.72) !important;
-  border-color: rgba(255,216,121,.78) !important;
-  color: #fff8e9 !important;
-  box-shadow:
-    0 0 16px rgba(255,216,121,.15),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-/* Hover / actif des tuiles : preview plus visible mais fond opaque */
-body:not(.readability-off) .tile:hover::before,
-body:not(.readability-off) .tile:focus::before,
-body:not(.readability-off) .tile.selected::before,
-body:not(.readability-off) .tile.gold::before {
-  opacity: .44 !important;
-}
-
-body:not(.readability-off) .tile:hover::after,
-body:not(.readability-off) .tile:focus::after,
-body:not(.readability-off) .tile.selected::after,
-body:not(.readability-off) .tile.gold::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 60%, rgba(0,0,0,.42)) !important;
-}
-
-/* Lisibilité et ? restent transparents, même actifs */
-body:not(.readability-off) #readabilityShieldBtn,
-body:not(.readability-off) #readabilityShieldBtn.active,
-body:not(.readability-off) #readabilityShieldBtn.selected,
-body:not(.readability-off) #readabilityShieldBtn:hover,
-body:not(.readability-off) #readabilityShieldBtn:focus,
-body:not(.readability-off) #commandDotTopBtn,
-body:not(.readability-off) #commandDotTopBtn:hover,
-body:not(.readability-off) #commandDotTopBtn:focus,
-body:not(.readability-off) .command-dot-top,
-body:not(.readability-off) .command-dot-top:hover,
-body:not(.readability-off) .command-dot-top:focus {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-
-body:not(.readability-off) #readabilityShieldBtn {
-  border-color: rgba(127,215,255,.62) !important;
-  color: rgba(225,246,255,.96) !important;
-}
-
-body:not(.readability-off) #commandDotTopBtn {
-  border-color: rgba(255,216,121,.38) !important;
-  color: rgba(255,248,233,.92) !important;
-}
-
-/* Advanced System Trace sur accueil */
-.home-system-trace {
-  display: block !important;
-  margin: 12px 14px 0 14px !important;
-  padding: 0 !important;
-  border: 1px solid rgba(127,215,255,.26) !important;
-  border-radius: 18px !important;
-  overflow: hidden !important;
-}
-
-.home-system-trace .advanced-head {
-  border-bottom: 1px solid rgba(127,215,255,.18) !important;
-}
-
-/* Cartes du trace : transparentes au repos, opaques au survol */
-body:not(.readability-off) .trace-card,
-body:not(.readability-off) .net-card,
-body:not(.readability-off) .device-card,
-body:not(.readability-off) .advanced-box {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  border-color: rgba(255,216,121,.22) !important;
-  box-shadow: none !important;
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.86),
-    0 0 8px rgba(0,0,0,.42) !important;
-}
-
 body:not(.readability-off) .trace-card:hover,
 body:not(.readability-off) .net-card:hover,
 body:not(.readability-off) .device-card:hover,
 body:not(.readability-off) .advanced-box:hover {
   background:
-    linear-gradient(145deg, rgba(0,0,0,.72), rgba(7,20,28,.58)) !important;
-  border-color: rgba(255,216,121,.52) !important;
-}
-
-/* Command Palette reste lisible quand elle est ouverte */
-.command-palette {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
-  border-color: rgba(255,216,121,.42) !important;
-  backdrop-filter: blur(8px) saturate(1.10) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.10) !important;
-  box-shadow: 0 18px 44px rgba(0,0,0,.38) !important;
-}
-
-/* Hero Focus : restauré en vrai panneau propre, pas brut dans le bandeau */
-.hero {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.hero-position-panel,
-#heroPositionPanel {
-  display: none !important;
-  position: absolute !important;
-  right: 16px !important;
-  bottom: 12px !important;
-  z-index: 60 !important;
-
-  width: min(360px, calc(100% - 32px)) !important;
-  max-width: 360px !important;
-
-  padding: 10px !important;
-  margin: 0 !important;
-
-  border: 1px solid rgba(127,215,255,.42) !important;
-  border-radius: 16px !important;
-
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
-  backdrop-filter: blur(8px) saturate(1.12) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
-
+    linear-gradient(180deg, var(--ambiance-glow, rgba(255,216,121,.24)), rgba(0,0,0,.76)) !important;
+  background-color: rgba(0,0,0,.76) !important;
+  border-color: var(--ambiance-line, rgba(255,216,121,.78)) !important;
+  color: #fff8e9 !important;
   box-shadow:
-    0 16px 34px rgba(0,0,0,.34),
-    0 0 18px rgba(127,215,255,.10),
+    0 0 16px var(--ambiance-glow, rgba(255,216,121,.16)),
     inset 0 1px 0 rgba(255,255,255,.10) !important;
-
-  color: rgba(255,248,233,.92) !important;
 }
 
-body.show-hero-focus .hero-position-panel,
-body.show-hero-focus #heroPositionPanel {
-  display: block !important;
+/* Minimal : mode plus discret */
+body[data-ambiance="minimal"]:not(.readability-off) .hero,
+body[data-ambiance="minimal"]:not(.readability-off) .terminal {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.12),
+    0 0 16px rgba(255,255,255,.06) !important;
 }
 
-.hero-position-head {
-  display: flex !important;
-  align-items: baseline !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-  margin: 0 0 8px 0 !important;
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.21 — Genie Background Theme
+   Fichiers modifiés : index.html + style.css + images JPG
+
+   Thème :
+   - Génie / Seven Gate / lampe / bibliothèque holographique ;
+   - fonds plein écran Transformer Book ;
+   - menus transparents conservés ;
+   - bordures bleu-or renforcées quand le thème Génie est actif.
+------------------------------------------------------- */
+
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) {
+  --ambiance-line: rgba(94, 194, 255, .70);
+  --ambiance-line-soft: rgba(255, 216, 121, .34);
+  --ambiance-glow: rgba(82, 184, 255, .25);
+  --ambiance-text: rgba(232, 250, 255, .98);
 }
 
-.hero-position-panel label {
-  display: grid !important;
-  grid-template-columns: 36px 1fr 42px !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin: 7px 0 !important;
-  padding: 0 !important;
-  font-size: 10px !important;
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .terminal {
+  border-color: rgba(255,216,121,.52) !important;
+  box-shadow:
+    0 0 0 1px rgba(94,194,255,.18),
+    0 0 30px rgba(94,194,255,.14),
+    0 0 50px rgba(255,216,121,.08) !important;
 }
 
-.hero-position-panel input[type="range"] {
-  width: 100% !important;
-  accent-color: #7fd7ff !important;
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .hero {
+  border-color: rgba(255,216,121,.78) !important;
+  box-shadow:
+    0 0 0 1px rgba(94,194,255,.22),
+    0 0 26px rgba(94,194,255,.22),
+    0 0 54px rgba(255,216,121,.12),
+    inset 0 0 0 1px rgba(255,248,210,.16),
+    inset 0 0 34px rgba(94,194,255,.10) !important;
 }
 
-.hero-position-panel output {
-  text-align: right !important;
-  color: rgba(225,246,255,.92) !important;
-  font-size: 10px !important;
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .aerith-memory-ribbon,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .sky-control-strip,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .section-title,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .home-system-trace,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .system-trace-pro,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) footer,
+body[data-atlas-family="Genie Invocation"]:not(.readability-off) .network-footer {
+  border-color: rgba(255,216,121,.28) !important;
 }
 
-.hero-position-actions {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-  margin-top: 8px !important;
+/* Le bouton Génie dans l’Atlas devient un repère magique au survol uniquement */
+body:not(.readability-off) .atlas-chip[data-family-filter="Genie Invocation"]:not(:hover) {
+  border-color: rgba(94,194,255,.38) !important;
+  color: rgba(232,250,255,.96) !important;
 }
 
-/* Sécurité : le footer ne réserve aucun ancien ? */
-footer {
-  padding-right: 14px !important;
-  margin-top: 0 !important;
-  min-height: 28px !important;
+body:not(.readability-off) .atlas-chip[data-family-filter="Genie Invocation"]:hover {
+  background:
+    linear-gradient(180deg, rgba(94,194,255,.25), rgba(0,0,0,.76)) !important;
+  border-color: rgba(255,216,121,.82) !important;
+  box-shadow:
+    0 0 16px rgba(94,194,255,.20),
+    0 0 24px rgba(255,216,121,.12),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
 }
 
-/* Petits écrans */
-@media (max-width: 860px) {
-  .home-system-trace {
-    margin: 10px 10px 0 10px !important;
-  }
+/* Les cartes preview Génie restent transparentes au repos */
+body:not(.readability-off) .atlas-preview-card:not(:hover) {
+  background: transparent !important;
+}
 
-  .hero-position-panel,
-  #heroPositionPanel {
-    right: 10px !important;
-    bottom: 10px !important;
-    width: min(330px, calc(100% - 20px)) !important;
-  }
+/* Optionnel : tile Thème Génie */
+.tile[aria-label="Thème Génie"] .ico {
+  filter:
+    drop-shadow(0 0 8px rgba(94,194,255,.42))
+    drop-shadow(0 0 10px rgba(255,216,121,.18));
+}
+
+
+/* =======================================================
+   SEVEN GLASS LOCK — FINAL OVERRIDE
+   Objectif : fond visible, cockpit lisible, zéro coque béton.
+   À placer TOUT EN BAS de style.css.
+   ======================================================= */
+
+/* 1. Désactive les blocs trop opaques sans supprimer les fonctions */
+html body,
+html body:not(.readability-off),
+html body[data-atlas-family],
+html body[data-atlas-family]:not(.readability-off) {
+  --glass-alpha: .08 !important;
+  --panel-alpha: .10 !important;
+  --tile-alpha: .12 !important;
+  --tile-border: rgba(255,255,255,.18) !important;
+}
+
+/* 2. Coque principale transparente */
+html body .terminal,
+html body:not(.readability-off) .terminal,
+html body[data-atlas-family] .terminal,
+html body[data-atlas-family]:not(.readability-off) .terminal,
+html body.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(2, 8, 12, .16), rgba(2, 8, 12, .22)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.055), transparent 48%) !important;
+  border-color: rgba(255,216,121,.58) !important;
+  backdrop-filter: blur(2px) saturate(1.05) !important;
+  box-shadow:
+    0 22px 58px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,248,214,.26),
+    0 0 34px rgba(255,216,121,.18),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+/* 3. Le grand Hero redevient une vraie image, pas un mur noir */
+html body .hero,
+html body:not(.readability-off) .hero,
+html body[data-atlas-family] .hero,
+html body[data-atlas-family]:not(.readability-off) .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.035) 52%, rgba(0,0,0,.16)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.08), transparent 38%),
+    var(--hero-bg, url("./aerith_7_memory_cards_avatar_master.png")) !important;
+  background-size: var(--hero-size, cover) !important;
+  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
+  background-repeat: no-repeat !important;
+}
+
+html body .hero::before {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.20), rgba(0,0,0,.04) 58%, rgba(0,0,0,.16)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.010) 0 1px, transparent 1px 8px) !important;
+}
+
+/* 4. Menus / barres : verre léger */
+html body .topnav,
+html body:not(.readability-off) .topnav,
+html body .sky-control-strip,
+html body .section-title,
+html body .intel-panel,
+html body .advanced-dashboard-panel,
+html body .celestial-atlas-panel,
+html body .network-footer,
+html body .system-footer,
+html body footer,
+html body .status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.16), rgba(5,14,20,.10)) !important;
+  border-color: rgba(255,255,255,.14) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+}
+
+/* 5. Onglets haut plus transparents */
+html body .tab,
+html body:not(.readability-off) .tab {
+  background: rgba(0,0,0,.18) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  opacity: .88 !important;
+}
+
+html body .tab.active,
+html body .tab:hover,
+html body .tab:focus {
+  background: rgba(255,216,121,.13) !important;
+  border-color: rgba(255,216,121,.72) !important;
+  opacity: 1 !important;
+}
+
+/* 6. Boutons : lisibles mais fond visible */
+html body .tile,
+html body:not(.readability-off) .tile,
+html body .net-card,
+html body .advanced-box {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.22), rgba(7,18,24,.14)),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.04), transparent 62%) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+  opacity: .96 !important;
+}
+
+html body .tile.gold,
+html body .tile.selected,
+html body .tile:hover,
+html body .tile:focus {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.26), rgba(42,31,8,.18)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.13), transparent 62%) !important;
+  border-color: rgba(255,216,121,.72) !important;
+  opacity: 1 !important;
+}
+
+/* 7. Les previews ne doivent plus noircir les boutons */
+html body .tile::before {
+  opacity: .18 !important;
+  filter: saturate(1.02) brightness(.98) contrast(1.02) !important;
+}
+
+html body .tile.gold::before,
+html body .tile:hover::before,
+html body .tile:focus::before,
+html body .tile.selected::before {
+  opacity: .30 !important;
+}
+
+/* 8. Coupable majeur : voile noir interne des boutons */
+html body .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.10) 55%, rgba(0,0,0,.24)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.06), transparent 45%) !important;
+}
+
+html body .tile.gold::after,
+html body .tile:hover::after,
+html body .tile:focus::after,
+html body .tile.selected::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.30), rgba(0,0,0,.08) 58%, rgba(0,0,0,.20)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.13), transparent 46%) !important;
+}
+
+/* 9. Mini contrôles */
+html body .mini-control {
+  background: rgba(0,0,0,.14) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+html body .mini-control.active,
+html body .mini-control:hover,
+html body .mini-control:focus,
+html body .mini-control.selected {
+  background: rgba(255,216,121,.12) !important;
+  border-color: rgba(255,216,121,.62) !important;
+}
+
+/* 10. Overlay global : fini l’écran fumé */
+html body::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.00) 45%, rgba(0,0,0,.045)) !important;
+  opacity: .42 !important;
+  filter: blur(1px) !important;
+}
+
+/* 11. Mode lisibilité : il ne doit plus transformer l’UI en coffre-fort noir */
+html body:not(.readability-off) .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.12) 55%, rgba(0,0,0,.27)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.06), transparent 45%) !important;
+}
+
+/* 12. Si Hero Focus est stocké ouvert, il peut envahir l’écran.
+   On le garde utilisable, mais moins opaque. */
+html body .hero-position-panel {
+  background: rgba(0,0,0,.24) !important;
+  border-color: rgba(255,216,121,.26) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
 }
 
