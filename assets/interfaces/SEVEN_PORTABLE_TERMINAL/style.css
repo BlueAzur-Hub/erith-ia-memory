@@ -1,16 +1,13 @@
-/* Seven Portable Terminal — Compact Plus
-   Version équilibrée : plus détaillée que True Micro,
-   mais beaucoup plus compacte que les grosses cartes initiales.
+/* Seven Portable Terminal — Comfort Compact
+   Version cible : plus grande que micro, plus petite que les grosses cartes initiales.
 */
 
 :root {
   --text: #fff8e9;
-  --muted: rgba(255,248,233,.74);
+  --muted: rgba(255,248,233,.78);
   --gold: #ffd879;
   --gold2: rgba(255,216,121,.82);
-  --blue: #7fd7ff;
   --panel: rgba(0,0,0,.48);
-  --panel2: rgba(0,0,0,.62);
   --line: rgba(255,216,121,.36);
 }
 
@@ -26,7 +23,7 @@ body {
 
 body {
   min-height: 100vh;
-  padding: 8px;
+  padding: 10px;
   color: var(--text);
   font-family: "Segoe UI", Arial, sans-serif;
   background:
@@ -63,17 +60,17 @@ body::after {
 .terminal {
   position: relative;
   z-index: 1;
-  width: min(1080px, calc(100vw - 18px));
+  width: min(1160px, calc(100vw - 24px));
   margin: 10px auto 0;
   border: 2px solid rgba(255,216,121,.86);
-  border-radius: 22px;
+  border-radius: 26px;
   background: rgba(2,10,16,.34);
   overflow: hidden;
   backdrop-filter: blur(4px) saturate(1.08);
   box-shadow:
     0 22px 60px rgba(0,0,0,.46),
     0 0 0 1px rgba(255,248,214,.42),
-    0 0 36px rgba(255,216,121,.34),
+    0 0 42px rgba(255,216,121,.34),
     0 0 90px rgba(135,216,255,.18),
     inset 0 1px 0 rgba(255,255,255,.16);
 }
@@ -81,28 +78,28 @@ body::after {
 .topnav {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 5px;
-  padding: 6px;
+  gap: 6px;
+  padding: 7px;
   background: rgba(0,0,0,.35);
   border-bottom: 1px solid rgba(255,216,121,.28);
 }
 
 .tab {
-  height: 32px;
-  min-height: 32px;
+  height: 38px;
+  min-height: 38px;
   border: 1px solid rgba(255,216,121,.28);
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgba(0,0,0,.54);
   color: var(--text);
   font: inherit;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
   cursor: pointer;
-  padding: 0 6px;
+  padding: 0 8px;
 }
 
 .tab span {
-  margin-right: 4px;
+  margin-right: 5px;
 }
 
 .tab.active,
@@ -115,8 +112,8 @@ body::after {
 
 .hero {
   position: relative;
-  min-height: 108px;
-  padding: 12px 120px 10px 16px;
+  min-height: 126px;
+  padding: 14px 132px 12px 18px;
   border-bottom: 1px solid rgba(255,216,121,.28);
   background:
     radial-gradient(circle at 40% 0%, rgba(255,216,121,.10), transparent 42%),
@@ -124,55 +121,55 @@ body::after {
 }
 
 .kicker {
-  margin: 0 0 5px;
+  margin: 0 0 6px;
   color: var(--gold);
-  font-size: 9px;
-  letter-spacing: .22em;
+  font-size: 10px;
+  letter-spacing: .23em;
   text-transform: uppercase;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(25px, 3.4vw, 38px);
+  font-size: clamp(30px, 3.7vw, 44px);
   line-height: 1;
-  letter-spacing: .11em;
+  letter-spacing: .10em;
   text-shadow: 0 3px 14px rgba(0,0,0,.90);
 }
 
 .hero p {
-  margin: 7px 0 0;
+  margin: 8px 0 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .chips span {
   border: 1px solid rgba(255,216,121,.24);
   border-radius: 99px;
   background: rgba(0,0,0,.38);
-  padding: 4px 8px;
+  padding: 5px 9px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
 }
 
 .portrait {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  width: 84px;
-  height: 88px;
+  top: 14px;
+  right: 18px;
+  width: 92px;
+  height: 98px;
   border: 1px solid rgba(255,216,121,.62);
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   background: rgba(0,0,0,.40);
-  box-shadow: 0 0 20px rgba(255,216,121,.20);
+  box-shadow: 0 0 22px rgba(255,216,121,.20);
 }
 
 .portrait img {
@@ -188,12 +185,12 @@ h1 {
   place-items: center;
   color: #ffd0e8;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .page {
   display: none;
-  padding: 10px 12px 12px;
+  padding: 13px 14px 15px;
   background: rgba(0,0,0,.08);
 }
 
@@ -206,30 +203,30 @@ h1 {
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 9px;
+  margin-bottom: 11px;
 }
 
 .section-title strong {
   color: var(--text);
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: .04em;
 }
 
 .section-title span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .tile-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 
 .tile {
-  min-height: 54px;
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 14px;
+  min-height: 70px;
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 17px;
   background:
     linear-gradient(145deg, rgba(0,0,0,.70), rgba(8,16,22,.62)),
     radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 60%);
@@ -239,70 +236,70 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 9px;
+  gap: 11px;
   text-align: left;
-  padding: 8px 10px;
+  padding: 10px 12px;
   cursor: pointer;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.10),
-    0 8px 18px rgba(0,0,0,.28);
+    0 9px 20px rgba(0,0,0,.30);
 }
 
 .tile.gold {
-  border-color: rgba(255,216,121,.82);
+  border-color: rgba(255,216,121,.86);
   background:
     linear-gradient(145deg, rgba(0,0,0,.78), rgba(34,25,7,.70)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.22), transparent 62%);
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.24), transparent 62%);
 }
 
 .tile:hover,
 .tile:focus {
-  border-color: rgba(255,216,121,.94);
+  border-color: rgba(255,216,121,.96);
   transform: translateY(-1px);
   outline: none;
 }
 
 .ico {
-  width: 28px;
-  min-width: 28px;
+  width: 32px;
+  min-width: 32px;
   text-align: center;
-  font-size: 22px;
+  font-size: 25px;
   line-height: 1;
 }
 
 .txt {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
 .txt strong {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.05;
 }
 
 .txt em {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   font-style: normal;
-  line-height: 1.05;
+  line-height: 1.1;
 }
 
 .status {
-  min-height: 20px;
-  padding: 6px 10px 7px;
+  min-height: 24px;
+  padding: 7px 10px 8px;
   color: #d7ffc4;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
   background: rgba(0,0,0,.10);
 }
 
 .drawer {
   display: none;
-  margin: 0 12px 9px;
+  margin: 0 14px 11px;
   border: 1px solid rgba(255,216,121,.30);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -312,14 +309,14 @@ h1 {
 
 .drawer textarea {
   width: 100%;
-  min-height: 120px;
+  min-height: 140px;
   display: block;
   border: 0;
   background: rgba(0,0,0,.62);
   color: var(--text);
-  padding: 8px;
+  padding: 9px;
   font-family: Consolas, "Courier New", monospace;
-  font-size: 10px;
+  font-size: 11px;
   resize: vertical;
 }
 
@@ -327,8 +324,8 @@ footer {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 5px;
-  padding: 7px 10px 9px;
+  gap: 6px;
+  padding: 8px 10px 10px;
   border-top: 1px solid rgba(255,216,121,.24);
   background: rgba(0,0,0,.32);
 }
@@ -337,9 +334,9 @@ footer span {
   border: 1px solid rgba(255,216,121,.28);
   border-radius: 99px;
   background: rgba(0,0,0,.25);
-  padding: 3px 8px;
+  padding: 4px 9px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 @media (max-width: 860px) {
@@ -350,24 +347,26 @@ footer span {
   .terminal {
     margin-top: 4px;
     width: calc(100vw - 10px);
+    border-radius: 20px;
   }
 
   .topnav {
     grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
   }
 
   .tab {
-    height: 30px;
+    height: 34px;
     font-size: 10px;
   }
 
   .hero {
-    min-height: 92px;
-    padding: 10px 88px 8px 12px;
+    min-height: 104px;
+    padding: 12px 98px 10px 12px;
   }
 
   h1 {
-    font-size: 22px;
+    font-size: 25px;
   }
 
   .hero p {
@@ -379,8 +378,8 @@ footer span {
   }
 
   .portrait {
-    width: 64px;
-    height: 68px;
+    width: 70px;
+    height: 76px;
   }
 
   .section-title {
@@ -396,7 +395,7 @@ footer span {
   }
 
   .tile {
-    min-height: 48px;
+    min-height: 60px;
   }
 }
 
