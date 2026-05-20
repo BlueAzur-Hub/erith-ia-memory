@@ -1,4 +1,4 @@
-/* Seven Portable Terminal — V5 Clean */
+/* Seven Portable Terminal — V5 Targeted Final JS */
 
 const TERMINAL_LINK = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
 const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
@@ -68,16 +68,18 @@ Arrêt.`,
 Sélectionne uniquement les modules utiles.
 Puissance maximale.
 Chargement minimal.
-Choix précis.`
-};
+Choix précis.`,
 
-const NOTION_TEXT = `# 🌸 Seven Portable Terminal
+  notion: `# 🌸 Seven Portable Terminal
 
 Lien cockpit :
-${TERMINAL_LINK}
+https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html
 
 ERITH.IA Auto-Agent :
 https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba
+
+ERITH Memory :
+https://sustaining-boar-5c6.notion.site/erith-ia-memory
 
 @7Heaven Memory Core :
 https://sustaining-boar-5c6.notion.site/7heaven-memory-core
@@ -86,23 +88,26 @@ Le Chat GPT Memory Core :
 https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8
 
 Blue Azur :
-${BLUE_AZUR_CHANNEL_LINK}`;
+https://www.youtube.com/@blueazur`
+};
 
 const BACKGROUNDS = [
-  { name: "Jardin du Grand Arbre", url: "./background_historique_lr.png" },
-  { name: "Génie holographique", url: "./genie_bg_01_holographic_invocation_full.jpg" },
-  { name: "Lampe oraculaire", url: "./genie_bg_02_ai_librarian_lamp_full.jpg" },
-  { name: "Visage bleu", url: "./genie_bg_03_hologram_face_focus.jpg" },
-  { name: "Cercle de lampe", url: "./genie_bg_04_lamp_oracle_focus.jpg" },
-  { name: "Bibliothèque bleue", url: "./genie_bg_05_blue_library_flight.jpg" },
-  { name: "Oracle doré", url: "./genie_bg_06_golden_arcane_floor.jpg" }
+  { name: "Jardin du Grand Arbre", url: "./background_historique_lr.png", ambiance: "sky" },
+  { name: "Génie holographique", url: "./genie_bg_01_holographic_invocation_full.jpg", ambiance: "crystal" },
+  { name: "Lampe oraculaire", url: "./genie_bg_02_ai_librarian_lamp_full.jpg", ambiance: "gold" },
+  { name: "Visage bleu", url: "./genie_bg_03_hologram_face_focus.jpg", ambiance: "night" },
+  { name: "Cercle de lampe", url: "./genie_bg_04_lamp_oracle_focus.jpg", ambiance: "crystal" },
+  { name: "Bibliothèque bleue", url: "./genie_bg_05_blue_library_flight.jpg", ambiance: "sky" },
+  { name: "Oracle doré", url: "./genie_bg_06_golden_arcane_floor.jpg", ambiance: "gold" }
 ];
 
 const state = {
   backgroundIndex: 0,
-  visibility: "transparent",
+  theme: "transparent",
   ambiance: "sky",
-  hero: { x: 50, y: 34, zoom: 100 }
+  hero: { x: 50, y: 34, zoom: 100 },
+  heroOpen: true,
+  advancedOpen: false
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -113,10 +118,10 @@ function setStatus(message) {
   if (status) status.textContent = message;
 }
 
-async function copyText(text, successMessage) {
+async function copyText(text, successMessage = "Copié.") {
   try {
     await navigator.clipboard.writeText(text);
-    setStatus(successMessage || "Copié.");
+    setStatus(successMessage);
   } catch {
     const drawer = $("#promptDrawer");
     const promptText = $("#promptText");
@@ -137,17 +142,45 @@ function openPage(pageName) {
   setStatus("Page : " + pageName);
 }
 
-function setVisibilityMode(mode) {
-  state.visibility = mode === "dark" ? "dark" : "transparent";
-  document.body.classList.toggle("mode-dark", state.visibility === "dark");
-  document.body.classList.toggle("mode-transparent", state.visibility === "transparent");
+function setTheme(theme) {
+  state.theme = theme === "readability" ? "readability" : "transparent";
+  document.body.dataset.theme = state.theme;
 
-  $("#transparentBtn")?.classList.toggle("active", state.visibility === "transparent");
-  $("#darkBtn")?.classList.toggle("active", state.visibility === "dark");
+  $("#transparentBtn")?.classList.toggle("active", state.theme === "transparent");
+  $("#readabilityBtn")?.classList.toggle("active", state.theme === "readability");
 
-  localStorage.setItem("seven-v5-visibility", state.visibility);
-  applyHeroFocus(state.hero.x, state.hero.y, state.hero.zoom, false);
-  setStatus(state.visibility === "dark" ? "Mode sombre actif. Hero toujours réglable." : "Mode transparent actif. Hero toujours réglable.");
+  saveState();
+  setStatus(state.theme === "transparent" ? "Mode transparent actif." : "Mode lisibilité actif.");
+}
+
+function setAmbiance(ambiance) {
+  state.ambiance = ambiance;
+  document.body.dataset.ambiance = ambiance;
+  saveState();
+  setStatus("Ambiance : " + ambiance);
+}
+
+function cycleAmbiance() {
+  const list = ["sky", "crystal", "ruins", "night", "gold"];
+  const index = list.indexOf(state.ambiance);
+  setAmbiance(list[(index + 1 + list.length) % list.length]);
+}
+
+function applyBackground(index) {
+  state.backgroundIndex = ((index % BACKGROUNDS.length) + BACKGROUNDS.length) % BACKGROUNDS.length;
+  const bg = BACKGROUNDS[state.backgroundIndex];
+  document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
+  if (bg.ambiance) setAmbiance(bg.ambiance);
+  saveState();
+  setStatus("Fond actif : " + bg.name);
+}
+
+function nextBackground() {
+  applyBackground(state.backgroundIndex + 1);
+}
+
+function randomBackground() {
+  applyBackground(Math.floor(Math.random() * BACKGROUNDS.length));
 }
 
 function clamp(value, min, max) {
@@ -169,109 +202,82 @@ function applyHeroFocus(x, y, zoom, save = true) {
     img.style.transformOrigin = `${x}% ${y}%`;
   }
 
-  $("#heroX").value = x;
-  $("#heroY").value = y;
-  $("#heroZoom").value = zoom;
-  $("#heroXOut").textContent = `${x}%`;
-  $("#heroYOut").textContent = `${y}%`;
-  $("#heroZoomOut").textContent = `${zoom}%`;
+  if ($("#heroFocusX")) $("#heroFocusX").value = x;
+  if ($("#heroFocusY")) $("#heroFocusY").value = y;
+  if ($("#heroFocusZoom")) $("#heroFocusZoom").value = zoom;
+  if ($("#heroFocusXValue")) $("#heroFocusXValue").textContent = `${x}%`;
+  if ($("#heroFocusYValue")) $("#heroFocusYValue").textContent = `${y}%`;
+  if ($("#heroFocusZoomValue")) $("#heroFocusZoomValue").textContent = `${zoom}%`;
 
-  if (save) {
-    localStorage.setItem("seven-v5-hero", JSON.stringify(state.hero));
-  }
+  if (save) saveState();
 }
 
 function setHeroFocusFromInputs() {
-  applyHeroFocus($("#heroX").value, $("#heroY").value, $("#heroZoom").value, true);
+  applyHeroFocus($("#heroFocusX")?.value, $("#heroFocusY")?.value, $("#heroFocusZoom")?.value);
 }
 
 function nudgeHero(direction) {
   const step = 2;
   let { x, y, zoom } = state.hero;
-
   if (direction === "up") y -= step;
   if (direction === "down") y += step;
   if (direction === "left") x -= step;
   if (direction === "right") x += step;
-
-  applyHeroFocus(x, y, zoom, true);
+  applyHeroFocus(x, y, zoom);
 }
 
 function resetHeroFocus() {
-  applyHeroFocus(50, 34, 100, true);
+  applyHeroFocus(50, 34, 100);
   setStatus("Hero Focus réinitialisé.");
 }
 
-function toggleHeroPanel(force) {
-  const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-hero");
-  document.body.classList.toggle("show-hero", open);
-  $("#heroBtn")?.classList.toggle("active", open);
-  localStorage.setItem("seven-v5-hero-panel", open ? "1" : "0");
-  setStatus(open ? "Hero Focus ouvert." : "Hero Focus fermé.");
-}
-
-function applyBackground(index) {
-  state.backgroundIndex = ((index % BACKGROUNDS.length) + BACKGROUNDS.length) % BACKGROUNDS.length;
-  const bg = BACKGROUNDS[state.backgroundIndex];
-  document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
-  localStorage.setItem("seven-v5-bg", String(state.backgroundIndex));
-  setStatus("Fond actif : " + bg.name);
-}
-
-function nextBackground() {
-  applyBackground(state.backgroundIndex + 1);
-}
-
-function randomBackground() {
-  applyBackground(Math.floor(Math.random() * BACKGROUNDS.length));
-}
-
-function setAmbiance(mode) {
-  state.ambiance = mode;
-  document.body.dataset.ambiance = mode;
-  localStorage.setItem("seven-v5-ambiance", mode);
-  setStatus("Ambiance : " + mode);
-}
-
-function cycleAmbiance() {
-  const list = ["sky", "crystal", "night", "gold", "minimal"];
-  const index = list.indexOf(state.ambiance);
-  setAmbiance(list[(index + 1 + list.length) % list.length]);
+function toggleHeroFocusPanel(force) {
+  state.heroOpen = typeof force === "boolean" ? force : !state.heroOpen;
+  document.body.classList.toggle("show-hero-focus", state.heroOpen);
+  $("#heroFocusBtn")?.classList.toggle("active", state.heroOpen);
+  saveState();
+  setStatus(state.heroOpen ? "Hero Focus ouvert." : "Hero Focus fermé.");
 }
 
 function toggleAdvanced(force) {
-  const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-advanced");
-  document.body.classList.toggle("show-advanced", open);
-  $("#advancedBtn")?.classList.toggle("active", open);
-  localStorage.setItem("seven-v5-advanced", open ? "1" : "0");
-  setStatus(open ? "Advanced Panels ouverts." : "Advanced Panels réduits.");
+  state.advancedOpen = typeof force === "boolean" ? force : !state.advancedOpen;
+  document.body.classList.toggle("show-advanced", state.advancedOpen);
+  $("#advancedBtn")?.classList.toggle("active", state.advancedOpen);
+  saveState();
+  setStatus(state.advancedOpen ? "Advanced Panels ouverts." : "Advanced Panels réduits.");
+}
+
+function resetVisualState() {
+  state.theme = "transparent";
+  state.ambiance = "sky";
+  applyBackground(0);
+  setTheme("transparent");
+  applyHeroFocus(50, 34, 100);
+  toggleHeroFocusPanel(true);
+  toggleAdvanced(false);
+  setStatus("État visuel validé restauré.");
 }
 
 function saveFavoriteState() {
-  const payload = {
-    backgroundIndex: state.backgroundIndex,
-    visibility: state.visibility,
-    ambiance: state.ambiance,
-    hero: state.hero,
-    savedAt: new Date().toISOString()
-  };
-  localStorage.setItem("seven-v5-favorite", JSON.stringify(payload));
+  localStorage.setItem("seven-v5-targeted-favorite", JSON.stringify(state));
   setStatus("Favori Seven enregistré.");
 }
 
 function loadFavoriteState() {
-  const raw = localStorage.getItem("seven-v5-favorite");
-  if (!raw) {
-    setStatus("Aucun favori enregistré.");
-    return;
-  }
-
   try {
-    const payload = JSON.parse(raw);
-    applyBackground(Number(payload.backgroundIndex || 0));
-    setVisibilityMode(payload.visibility || "transparent");
-    setAmbiance(payload.ambiance || "sky");
-    if (payload.hero) applyHeroFocus(payload.hero.x, payload.hero.y, payload.hero.zoom, true);
+    const favorite = JSON.parse(localStorage.getItem("seven-v5-targeted-favorite") || "null");
+    if (!favorite) {
+      setStatus("Aucun favori Seven enregistré.");
+      return;
+    }
+
+    Object.assign(state, favorite);
+    applyBackground(state.backgroundIndex);
+    setTheme(state.theme);
+    setAmbiance(state.ambiance);
+    applyHeroFocus(state.hero.x, state.hero.y, state.hero.zoom, false);
+    toggleHeroFocusPanel(Boolean(state.heroOpen));
+    toggleAdvanced(Boolean(state.advancedOpen));
     setStatus("Favori Seven rechargé.");
   } catch {
     setStatus("Favori illisible.");
@@ -279,225 +285,257 @@ function loadFavoriteState() {
 }
 
 function clearFavoriteState() {
-  localStorage.removeItem("seven-v5-favorite");
+  localStorage.removeItem("seven-v5-targeted-favorite");
   setStatus("Favori Seven effacé.");
 }
 
-function resetVisualState() {
-  setVisibilityMode("transparent");
-  setAmbiance("sky");
-  applyBackground(0);
-  resetHeroFocus();
-  toggleAdvanced(false);
-  setStatus("État visuel réinitialisé.");
+function saveState() {
+  localStorage.setItem("seven-v5-targeted-state", JSON.stringify(state));
 }
 
-function resetUiStorage() {
-  [
-    "seven-v5-bg",
-    "seven-v5-visibility",
-    "seven-v5-ambiance",
-    "seven-v5-hero",
-    "seven-v5-hero-panel",
-    "seven-v5-advanced",
-    "seven-v5-favorite"
-  ].forEach(key => localStorage.removeItem(key));
-  location.reload();
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("seven-v5-targeted-state") || "null");
+    if (saved) Object.assign(state, saved);
+  } catch {}
 }
 
-function togglePalette(force) {
+function togglePrompt() {
+  const drawer = $("#promptDrawer");
+  const promptText = $("#promptText");
+  if (!drawer || !promptText) return;
+  promptText.value = PROMPTS.seven;
+  drawer.classList.toggle("open");
+  setStatus(drawer.classList.contains("open") ? "Prompt affiché." : "Prompt masqué.");
+}
+
+function toggleCommandPalette(force) {
   const palette = $("#commandPalette");
   if (!palette) return;
   const open = typeof force === "boolean" ? force : !palette.classList.contains("open");
   palette.classList.toggle("open", open);
   palette.setAttribute("aria-hidden", open ? "false" : "true");
+  setStatus(open ? "Palette de commandes ouverte." : "Palette de commandes fermée.");
 }
 
-function togglePrompt(kind = "seven") {
-  const drawer = $("#promptDrawer");
-  const promptText = $("#promptText");
-  if (!drawer || !promptText) return;
-  promptText.value = PROMPTS[kind] || PROMPTS.seven;
-  drawer.classList.toggle("open");
-  setStatus("Prompt affiché / masqué.");
-}
-
-function detectOsName() {
+function getBrowserName() {
   const ua = navigator.userAgent || "";
-  if (/Windows NT 10\.0/.test(ua)) return "Windows 10 / 11";
-  if (/Windows/.test(ua)) return "Windows";
-  if (/Mac OS X/.test(ua)) return "macOS";
-  if (/Android/.test(ua)) return "Android";
-  if (/iPhone|iPad|iPod/.test(ua)) return "iOS / iPadOS";
-  if (/Linux/.test(ua)) return "Linux";
-  return navigator.platform || "inconnu";
+  if (ua.includes("Firefox/")) return "Firefox " + (ua.match(/Firefox\/([\d.]+)/)?.[1] || "");
+  if (ua.includes("Edg/")) return "Microsoft Edge";
+  if (ua.includes("Chrome/")) return "Chrome";
+  if (ua.includes("Safari/")) return "Safari";
+  return "Navigateur";
 }
 
-function detectBrowserName() {
+function getOsName() {
   const ua = navigator.userAgent || "";
-  if (/Edg\//.test(ua)) return "Microsoft Edge";
-  if (/Firefox\//.test(ua)) return "Firefox " + (ua.match(/Firefox\/([\d.]+)/)?.[1] || "");
-  if (/Chrome\//.test(ua)) return "Chrome " + (ua.match(/Chrome\/([\d.]+)/)?.[1] || "");
-  if (/Safari\//.test(ua)) return "Safari";
-  return "navigateur inconnu";
+  if (ua.includes("Windows NT 10.0")) return "Windows 10 / 11";
+  if (ua.includes("Windows")) return "Windows";
+  if (ua.includes("Mac OS")) return "macOS";
+  if (ua.includes("Android")) return "Android";
+  if (ua.includes("Linux")) return "Linux";
+  return "OS inconnu";
 }
 
-function shortUserAgent() {
-  const ua = navigator.userAgent || "indisponible";
-  return ua.length > 92 ? ua.slice(0, 92) + "…" : ua;
+function getTrace() {
+  return {
+    stamp: new Date().toLocaleString("fr-FR"),
+    os: getOsName(),
+    platform: navigator.platform || "plateforme inconnue",
+    browser: getBrowserName(),
+    agent: (navigator.userAgent || "indisponible").slice(0, 92),
+    screen: `${screen.width}×${screen.height} · DPR ${window.devicePixelRatio || 1}`,
+    viewport: `viewport ${window.innerWidth}×${window.innerHeight}`,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu",
+    language: navigator.languages ? navigator.languages.join(", ") : (navigator.language || "inconnu")
+  };
 }
 
-function refreshSystemDetails() {
-  const trace = [
-    ["🖥️", "Système", detectOsName(), navigator.platform || "plateforme inconnue"],
-    ["🌐", "Navigateur", detectBrowserName(), shortUserAgent()],
-    ["📐", "Affichage", `${screen.width}×${screen.height}`, `viewport ${window.innerWidth}×${window.innerHeight}`],
-    ["🌍", "Fuseau", Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu", navigator.language || "langue inconnue"]
-  ];
+function refreshTrace() {
+  const trace = getTrace();
+  const grid = $("#traceGrid");
+  if (grid) {
+    const cards = [
+      ["🖥️", "Système", trace.os, trace.platform],
+      ["🌐", "Navigateur", trace.browser, trace.agent],
+      ["📐", "Affichage", trace.screen, trace.viewport],
+      ["🌍", "Langue / Fuseau", trace.timezone, trace.language]
+    ];
 
-  $("#traceStamp").textContent = new Date().toLocaleString("fr-FR");
+    grid.innerHTML = cards.map(([icon, label, value, detail]) => `
+      <article class="trace-card">
+        <span class="trace-icon">${icon}</span>
+        <div>
+          <small>${label}</small>
+          <strong>${value}</strong>
+          <em>${detail}</em>
+        </div>
+      </article>
+    `).join("");
+  }
 
-  $("#traceGrid").innerHTML = trace.map(([icon, label, value, detail]) => `
-    <article class="trace-card">
-      <span class="trace-icon">${icon}</span>
-      <div>
-        <small>${label}</small>
-        <strong>${value}</strong>
-        <em>${detail}</em>
-      </div>
-    </article>
-  `).join("");
+  const networkPanel = $("#networkPanel");
+  if (networkPanel) {
+    const cards = [
+      ["🛡️", "IP", "masquée", "aucune IP personnelle affichée"],
+      ["🌐", "Réseau", "Ethernet / inconnu", "détection navigateur limitée"],
+      ["🕒", "Heure locale", new Date().toLocaleTimeString("fr-FR"), trace.timezone],
+      ["🖥️", "Remote", "RustDesk", "ID et mot de passe non affichés"]
+    ];
+
+    networkPanel.innerHTML = cards.map(([icon, label, value, detail]) => `
+      <article class="net-card">
+        <span class="net-icon">${icon}</span>
+        <div>
+          <small>${label}</small>
+          <strong>${value}</strong>
+          <em>${detail}</em>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  if ($("#homeTraceStamp")) $("#homeTraceStamp").textContent = trace.stamp;
+  if ($("#traceOsMini")) $("#traceOsMini").textContent = trace.os;
+  if ($("#traceBrowserMini")) $("#traceBrowserMini").textContent = trace.browser;
+  if ($("#traceScreenMini")) $("#traceScreenMini").textContent = trace.screen;
+  if ($("#traceTzMini")) $("#traceTzMini").textContent = trace.timezone;
 }
 
-function buildDiagnosticText() {
-  return `# Seven System Details HUD
-
-Système détecté :
-${detectOsName()}
-
-Plateforme navigateur :
-${navigator.platform || "inconnue"}
-
-Navigateur :
-${detectBrowserName()}
-
-User Agent :
-${navigator.userAgent || "indisponible"}
-
-Écran :
-${screen.width}×${screen.height}
-
-Viewport :
-${window.innerWidth}×${window.innerHeight}
-
-Langue :
-${navigator.language || "inconnue"}
-
-Fuseau horaire :
-${Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu"}`;
+function traceText() {
+  const trace = getTrace();
+  return `SAFE TRACE
+Date : ${trace.stamp}
+Système : ${trace.os}
+Plateforme : ${trace.platform}
+Navigateur : ${trace.browser}
+Écran : ${trace.screen}
+Viewport : ${trace.viewport}
+Fuseau : ${trace.timezone}
+Langue : ${trace.language}
+IP : masquée
+RustDesk : ID et mot de passe non affichés`;
 }
 
 function handleAction(action) {
   if (action === "start-seven") {
-    copyText(PROMPTS.seven, "Seven Boost copié. Ouverture de ChatGPT.");
-    setTimeout(() => window.open("https://chatgpt.com/", "_blank", "noopener"), 500);
+    copyText(PROMPTS.seven, "Prompt Seven copié. Ouverture ChatGPT.");
+    setTimeout(() => window.open("https://chatgpt.com/", "_blank"), 250);
   }
-  if (action === "copy-seven") copyText(PROMPTS.seven, "Prompt Seven copié.");
-  if (action === "video-cards") copyText(PROMPTS.video, "Video Cards Boost copié.");
-  if (action === "wan") copyText(PROMPTS.wan, "Checklist Wan copiée.");
-  if (action === "modules") copyText(PROMPTS.modules, "Prompt Modules copié.");
-  if (action === "blackout") copyText(PROMPTS.blackout, "Mode Blackout copié.");
-  if (action === "copy-link") copyText(TERMINAL_LINK, "Lien cockpit copié.");
-  if (action === "notion-text") copyText(NOTION_TEXT, "Texte Notion copié.");
-  if (action === "prompt") togglePrompt("seven");
+  if (action === "show-prompt") togglePrompt();
   if (action === "next-bg") nextBackground();
   if (action === "random-bg") randomBackground();
-  if (action === "refresh-trace") {
-    refreshSystemDetails();
-    setStatus("Trace actualisée.");
-  }
-  if (action === "transparent") setVisibilityMode("transparent");
-  if (action === "dark") setVisibilityMode("dark");
+  if (action === "open-hero") toggleHeroFocusPanel(true);
 }
 
 function bindEvents() {
   $$(".tab").forEach(tab => tab.addEventListener("click", () => openPage(tab.dataset.page)));
-  $$("[data-page-jump]").forEach(btn => btn.addEventListener("click", () => openPage(btn.dataset.pageJump)));
-  $$("[data-action]").forEach(el => el.addEventListener("click", () => handleAction(el.dataset.action)));
+  $$("[data-page]").forEach(button => button.addEventListener("click", () => {
+    openPage(button.dataset.page);
+    toggleCommandPalette(false);
+  }));
 
-  $("#advancedBtn").addEventListener("click", () => toggleAdvanced());
-  $("#advancedCloseBtn").addEventListener("click", () => toggleAdvanced(false));
-  $("#ambianceBtn").addEventListener("click", cycleAmbiance);
-  $("#saveBtn").addEventListener("click", saveFavoriteState);
-  $("#saveBtn2").addEventListener("click", saveFavoriteState);
-  $("#loadBtn").addEventListener("click", loadFavoriteState);
-  $("#loadBtn2").addEventListener("click", loadFavoriteState);
-  $("#clearBtn").addEventListener("click", clearFavoriteState);
-  $("#nextBgBtn").addEventListener("click", nextBackground);
-  $("#randomBgBtn").addEventListener("click", randomBackground);
-  $("#heroBtn").addEventListener("click", () => toggleHeroPanel());
-  $("#heroOpenBtn").addEventListener("click", () => toggleHeroPanel(true));
-  $("#heroCloseBtn").addEventListener("click", () => toggleHeroPanel(false));
-  $("#transparentBtn").addEventListener("click", () => setVisibilityMode("transparent"));
-  $("#transparentBtn2").addEventListener("click", () => setVisibilityMode("transparent"));
-  $("#darkBtn").addEventListener("click", () => setVisibilityMode("dark"));
-  $("#darkBtn2").addEventListener("click", () => setVisibilityMode("dark"));
-  $("#paletteBtn").addEventListener("click", () => togglePalette());
-  $("#paletteCloseBtn").addEventListener("click", () => togglePalette(false));
-  $("#refreshTraceBtn").addEventListener("click", refreshSystemDetails);
-  $("#copyTraceBtn").addEventListener("click", () => copyText(buildDiagnosticText(), "Diagnostic système copié."));
-  $("#heroResetBtn").addEventListener("click", resetHeroFocus);
-  $("#heroResetBtn2").addEventListener("click", resetHeroFocus);
-  $("#resetVisualBtn").addEventListener("click", resetVisualState);
-  $("#resetStorageBtn").addEventListener("click", resetUiStorage);
+  $$("[data-copy]").forEach(button => button.addEventListener("click", () => {
+    const key = button.dataset.copy;
+    if (key === "terminal-link") copyText(TERMINAL_LINK, "Lien cockpit copié.");
+    else if (key === "trace") copyText(traceText(), "Diagnostic copié.");
+    else copyText(PROMPTS[key] || PROMPTS.seven, "Texte copié.");
+    toggleCommandPalette(false);
+  }));
 
-  ["heroX", "heroY", "heroZoom"].forEach(id => {
-    document.getElementById(id).addEventListener("input", setHeroFocusFromInputs);
+  $$("[data-action]").forEach(button => button.addEventListener("click", () => {
+    handleAction(button.dataset.action);
+    if (button.closest(".command-palette") && button.dataset.action !== "open-hero") {
+      toggleCommandPalette(false);
+    }
+  }));
+
+  $$("[data-open='chatgpt']").forEach(button => button.addEventListener("click", () => window.open("https://chatgpt.com/", "_blank")));
+  $$("[data-mode]").forEach(button => button.addEventListener("click", () => {
+    setTheme(button.dataset.mode);
+    toggleCommandPalette(false);
+  }));
+
+  $$("[data-ambiance]").forEach(button => button.addEventListener("click", () => setAmbiance(button.dataset.ambiance)));
+  $$("[data-nudge]").forEach(button => button.addEventListener("click", () => nudgeHero(button.dataset.nudge)));
+
+  ["heroFocusX", "heroFocusY", "heroFocusZoom"].forEach(id => {
+    const input = $("#" + id);
+    if (input) input.addEventListener("input", setHeroFocusFromInputs);
   });
 
-  $$("[data-nudge]").forEach(btn => btn.addEventListener("click", () => nudgeHero(btn.dataset.nudge)));
-  $$("[data-ambiance]").forEach(btn => btn.addEventListener("click", () => setAmbiance(btn.dataset.ambiance)));
+  $("#advancedBtn")?.addEventListener("click", () => toggleAdvanced());
+  $("#advancedCloseBtn")?.addEventListener("click", () => toggleAdvanced(false));
+  $("#ambianceBtn")?.addEventListener("click", cycleAmbiance);
+  $("#saveBtn")?.addEventListener("click", saveFavoriteState);
+  $("#loadBtn")?.addEventListener("click", loadFavoriteState);
+  $("#nextBgBtn")?.addEventListener("click", nextBackground);
+  $("#randomBgBtn")?.addEventListener("click", randomBackground);
+  $("#heroFocusBtn")?.addEventListener("click", () => toggleHeroFocusPanel());
+  $("#transparentBtn")?.addEventListener("click", () => setTheme("transparent"));
+  $("#readabilityBtn")?.addEventListener("click", () => setTheme("readability"));
+  $("#commandPaletteBtn")?.addEventListener("click", () => toggleCommandPalette());
+  $("#paletteCloseBtn")?.addEventListener("click", () => toggleCommandPalette(false));
+  $("#heroCloseBtn")?.addEventListener("click", () => toggleHeroFocusPanel(false));
+  $("#heroResetBtn")?.addEventListener("click", resetHeroFocus);
+  $("#openHeroAdvancedBtn")?.addEventListener("click", () => toggleHeroFocusPanel(true));
+  $("#resetHeroAdvancedBtn")?.addEventListener("click", resetHeroFocus);
+  $("#saveFavoriteBtn")?.addEventListener("click", saveFavoriteState);
+  $("#loadFavoriteBtn")?.addEventListener("click", loadFavoriteState);
+  $("#clearFavoriteBtn")?.addEventListener("click", clearFavoriteState);
+  $("#resetVisualBtn")?.addEventListener("click", resetVisualState);
+  $("#resetAllBtn")?.addEventListener("click", () => {
+    localStorage.removeItem("seven-v5-targeted-state");
+    localStorage.removeItem("seven-v5-targeted-favorite");
+    location.reload();
+  });
+  $("#refreshTraceBtn")?.addEventListener("click", refreshTrace);
+  $("#copyTraceBtn")?.addEventListener("click", () => copyText(traceText(), "Diagnostic copié."));
+  $("#refreshSystemTile")?.addEventListener("click", refreshTrace);
+  $("#systemTransparentTile")?.addEventListener("click", () => setTheme("transparent"));
+  $("#systemReadabilityTile")?.addEventListener("click", () => setTheme("readability"));
 
-  document.addEventListener("keydown", (event) => {
-    if (event.target && ["TEXTAREA", "INPUT"].includes(event.target.tagName)) return;
-
+  document.addEventListener("keydown", event => {
+    if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
     const pages = { "1": "home", "2": "llm", "3": "notion", "4": "github", "5": "production", "6": "system" };
     if (pages[event.key]) openPage(pages[event.key]);
-    if (event.key === "?" || event.key === "/") togglePalette();
+    if (event.key === "?") toggleCommandPalette();
     if (event.key === "Escape") {
-      togglePalette(false);
-      toggleHeroPanel(false);
+      toggleCommandPalette(false);
+      $("#promptDrawer")?.classList.remove("open");
     }
   });
 }
 
 function boot() {
+  loadState();
   bindEvents();
 
-  state.backgroundIndex = Number(localStorage.getItem("seven-v5-bg") || "0");
-  state.visibility = localStorage.getItem("seven-v5-visibility") || "transparent";
-  state.ambiance = localStorage.getItem("seven-v5-ambiance") || "sky";
-
-  try {
-    state.hero = { ...state.hero, ...JSON.parse(localStorage.getItem("seven-v5-hero") || "{}") };
-  } catch {}
-
   applyBackground(state.backgroundIndex);
-  setVisibilityMode(state.visibility);
+  setTheme(state.theme);
   setAmbiance(state.ambiance);
   applyHeroFocus(state.hero.x, state.hero.y, state.hero.zoom, false);
+  toggleHeroFocusPanel(Boolean(state.heroOpen));
+  toggleAdvanced(Boolean(state.advancedOpen));
+  refreshTrace();
 
-  const heroOpen = localStorage.getItem("seven-v5-hero-panel") || "0";
-  toggleHeroPanel(heroOpen === "1");
+  const hero = $("#heroBgImg");
+  if (hero) {
+    hero.addEventListener("error", () => {
+      hero.src = "./background_historique_lr.png";
+      setStatus("Hero fallback : background_historique_lr.png");
+    }, { once: true });
+  }
 
-  const advancedOpen = localStorage.getItem("seven-v5-advanced") || "0";
-  toggleAdvanced(advancedOpen === "1");
+  const portrait = $(".portrait img");
+  if (portrait) {
+    portrait.addEventListener("error", () => {
+      portrait.classList.add("hide");
+    }, { once: true });
+  }
 
-  $("#promptText").value = PROMPTS.seven;
-  refreshSystemDetails();
-  openPage("home");
-  setStatus("V5 clean prête · mode " + state.visibility + " actif.");
+  setStatus("Seven Terminal V5 Targeted Final prêt.");
 }
 
 boot();
-window.addEventListener("resize", refreshSystemDetails);
+window.addEventListener("resize", refreshTrace);
