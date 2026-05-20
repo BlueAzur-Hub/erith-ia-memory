@@ -4764,3 +4764,129 @@ body.show-hero-focus .hero-position-panel {
   }
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.6 — Transparent Help Button Fix
+   Fichier modifié uniquement : style.css
+
+   Règle :
+   - le bouton ? reste utile ;
+   - il ne crée pas de ligne/espace ;
+   - il est transparent ;
+   - il est fixé proprement en bas à droite du terminal.
+------------------------------------------------------- */
+
+button.help-launcher,
+.help-launcher,
+.terminal > .help-launcher,
+body .help-launcher {
+  position: fixed !important;
+
+  /* Aligné sur le bord droit du terminal centré : width min(1220px, 100vw - 24px) */
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  z-index: 9999 !important;
+
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.34) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.72) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+button.help-launcher::before,
+button.help-launcher::after,
+.help-launcher::before,
+.help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+button.help-launcher:hover,
+button.help-launcher:focus,
+.help-launcher:hover,
+.help-launcher:focus {
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le footer ne réserve plus d'espace artificiel pour le ? */
+footer {
+  padding-right: 14px !important;
+}
+
+/* Sécurité : le ? ne doit jamais pousser la mise en page */
+.help-launcher + footer,
+footer + .help-launcher {
+  margin-top: 0 !important;
+}
+
+/* Transformer Book / écran étroit */
+@media (max-width: 1244px) {
+  button.help-launcher,
+  .help-launcher,
+  .terminal > .help-launcher,
+  body .help-launcher {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+
+  button.help-launcher:hover,
+  button.help-launcher:focus,
+  .help-launcher:hover,
+  .help-launcher:focus {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+}
+
