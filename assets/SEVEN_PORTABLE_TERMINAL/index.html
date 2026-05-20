@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Command Dot</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-10-command-dot">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Default Glass</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-11-default-glass-command-dot">
 </head>
 
 <body>
@@ -101,8 +101,8 @@
         <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
         <button class="mini-control" id="heroFocusBtn" onclick="toggleHeroFocusPanel()">🎯 Hero</button>
         <button class="mini-control active" id="readabilityShieldBtn" onclick="toggleReadabilityShield()">🛡️ Lisibilité</button>
-      
-        <button class="mini-control command-palette-dot" id="commandPaletteDotBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
+
+        <button class="mini-control command-dot-top" id="commandDotTopBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
 </div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
@@ -2339,6 +2339,23 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     }
 
     bootHeroManualFocus();
+
+  
+    function bootDefaultCleanAppearance29() {
+      document.body.classList.remove("show-command-palette");
+      document.body.classList.remove("palette-open");
+      document.body.classList.remove("command-open");
+
+      const palette = document.getElementById("commandPalette");
+      if (palette && !palette.classList.contains("open")) {
+        palette.setAttribute("aria-hidden", "true");
+      }
+
+      const dot = document.getElementById("commandDotTopBtn");
+      if (dot) dot.classList.remove("active");
+    }
+
+    bootDefaultCleanAppearance29();
 
   </script>
 </body>
