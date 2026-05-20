@@ -1643,3 +1643,97 @@ body[data-ui-mode="crystal"] .tile:hover {
     padding: 3px 7px;
   }
 }
+
+
+/* -------------------------------------------------------
+   Aerith Gears Blossom refinement
+   Icônes secondaires = roues / engrenages.
+   Image Blossom District intégrée comme décor personnel.
+------------------------------------------------------- */
+
+body.blossom-gear .terminal,
+.terminal {
+  box-shadow:
+    0 28px 78px rgba(0,0,0,.40),
+    0 0 0 1px rgba(255,230,170,.44),
+    0 0 46px rgba(255,216,121,.30),
+    0 0 118px rgba(120,210,255,.16),
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 0 44px rgba(255,216,121,.10) !important;
+}
+
+.gear-ico {
+  color: #ffe5a1;
+  text-shadow:
+    0 0 8px rgba(255,216,121,.72),
+    0 0 18px rgba(127,215,255,.18) !important;
+}
+
+.tile[data-gear="true"] {
+  border-color: rgba(255,216,121,.34) !important;
+}
+
+.tile[data-gear="true"] .ico {
+  animation: gearIdle 8s linear infinite;
+  transform-origin: center center;
+}
+
+.tile[data-gear="true"]:hover .ico,
+.tile[data-gear="true"]:focus .ico,
+.tile[data-gear="true"].touched .ico {
+  animation-duration: 1.8s;
+  filter:
+    drop-shadow(0 0 7px rgba(255,216,121,.72))
+    drop-shadow(0 0 14px rgba(127,215,255,.28));
+}
+
+@keyframes gearIdle {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tile[data-gear="true"]::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.74), rgba(24,18,8,.42) 58%, rgba(0,0,0,.56)),
+    radial-gradient(circle at 88% 0%, rgba(255,216,121,.16), transparent 46%) !important;
+}
+
+.mini-control[onclick="setBlossomDecor()"] {
+  border-color: rgba(255,216,121,.52) !important;
+  background: rgba(255,216,121,.12) !important;
+}
+
+.mini-control[onclick="setBlossomDecor()"]:hover,
+.mini-control[onclick="setBlossomDecor()"]:focus {
+  border-color: rgba(255,216,121,.95) !important;
+  box-shadow: 0 0 20px rgba(255,216,121,.24);
+}
+
+/* Destination previews: some technical buttons get a mechanism preview */
+.tile[data-gear="true"] {
+  --preview-image: url("./preview_blossom_district.jpg");
+}
+
+.tile[data-preview="visual"],
+.tile[data-preview="clipboard"],
+.tile[data-preview="cockpit"] {
+  --preview-image: url("./preview_blossom_district.jpg") !important;
+}
+
+.portrait {
+  border-color: rgba(255,216,121,.68) !important;
+  box-shadow:
+    0 0 24px rgba(255,216,121,.28),
+    0 0 40px rgba(120,210,255,.14),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+.aerith-memory-ribbon span {
+  border-color: rgba(255,216,121,.30) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile[data-gear="true"] .ico {
+    animation: none !important;
+  }
+}
