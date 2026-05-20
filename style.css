@@ -4619,3 +4619,383 @@ button#readabilityShieldBtn:focus {
   text-shadow: 0 0 10px rgba(127,215,255,.35) !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.5 — Hero Manual Focus
+   Fichiers modifiés : index.html + style.css
+
+   Système façon Notion :
+   - X / Y / Zoom réglables manuellement ;
+   - sauvegarde localStorage ;
+   - ne touche pas aux backgrounds généraux.
+------------------------------------------------------- */
+
+:root {
+  --hero-x: 50%;
+  --hero-y: 34%;
+  --hero-zoom: 100%;
+  --hero-size: cover;
+}
+
+/* Force toutes les versions Hero à utiliser les variables de centrage. */
+.hero,
+.no-hero-face .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.46), rgba(0,0,0,.08) 48%, rgba(0,0,0,.30)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.13), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: var(--hero-size, cover) !important;
+  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Panneau de réglage Hero */
+.hero {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hero-position-panel {
+  display: none;
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 8;
+  width: min(360px, calc(100% - 28px));
+  padding: 10px;
+  border: 1px solid rgba(127,215,255,.36);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.48), rgba(6,18,26,.30));
+  backdrop-filter: blur(5px) saturate(1.10);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+body.show-hero-focus .hero-position-panel {
+  display: block;
+}
+
+.hero-position-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.hero-position-head strong {
+  color: #fff8e9;
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+.hero-position-head span {
+  color: rgba(255,248,233,.62);
+  font-size: 9px;
+}
+
+.hero-position-panel label {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 0;
+  color: rgba(255,248,233,.84);
+  font-size: 10px;
+}
+
+.hero-position-panel input[type="range"] {
+  width: 100%;
+  accent-color: #7fd7ff;
+}
+
+.hero-position-panel output {
+  text-align: right;
+  color: rgba(225,246,255,.92);
+  font-size: 10px;
+}
+
+.hero-position-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.hero-position-actions button {
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 1px solid rgba(127,215,255,.34) !important;
+  color: rgba(225,246,255,.92) !important;
+  font-size: 10px !important;
+  box-shadow: none !important;
+}
+
+.hero-position-actions button:hover,
+.hero-position-actions button:focus {
+  background: rgba(127,215,255,.10) !important;
+  border-color: rgba(127,215,255,.72) !important;
+}
+
+/* Bouton Hero dans la barre : transparent tant qu’il n’est pas ouvert */
+#heroFocusBtn:not(.active):not(:hover):not(:focus) {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: none !important;
+}
+
+#heroFocusBtn.active,
+#heroFocusBtn:hover,
+#heroFocusBtn:focus {
+  background: rgba(127,215,255,.12) !important;
+  border-color: rgba(127,215,255,.64) !important;
+}
+
+/* Sur Transformer Book, le panneau reste compact */
+@media (max-width: 860px) {
+  .hero-position-panel {
+    right: 10px;
+    bottom: 10px;
+    width: min(330px, calc(100% - 20px));
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.6 — Transparent Help Button Fix
+   Fichier modifié uniquement : style.css
+
+   Règle :
+   - le bouton ? reste utile ;
+   - il ne crée pas de ligne/espace ;
+   - il est transparent ;
+   - il est fixé proprement en bas à droite du terminal.
+------------------------------------------------------- */
+
+button.help-launcher,
+.help-launcher,
+.terminal > .help-launcher,
+body .help-launcher {
+  position: fixed !important;
+
+  /* Aligné sur le bord droit du terminal centré : width min(1220px, 100vw - 24px) */
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  z-index: 9999 !important;
+
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.34) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.72) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+button.help-launcher::before,
+button.help-launcher::after,
+.help-launcher::before,
+.help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+button.help-launcher:hover,
+button.help-launcher:focus,
+.help-launcher:hover,
+.help-launcher:focus {
+  right: max(14px, calc((100vw - 1220px) / 2 + 14px)) !important;
+  bottom: 14px !important;
+  left: auto !important;
+  top: auto !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le footer ne réserve plus d'espace artificiel pour le ? */
+footer {
+  padding-right: 14px !important;
+}
+
+/* Sécurité : le ? ne doit jamais pousser la mise en page */
+.help-launcher + footer,
+footer + .help-launcher {
+  margin-top: 0 !important;
+}
+
+/* Transformer Book / écran étroit */
+@media (max-width: 1244px) {
+  button.help-launcher,
+  .help-launcher,
+  .terminal > .help-launcher,
+  body .help-launcher {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+
+  button.help-launcher:hover,
+  button.help-launcher:focus,
+  .help-launcher:hover,
+  .help-launcher:focus {
+    right: 16px !important;
+    bottom: 12px !important;
+  }
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.8 — Footer Help Button Fix
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? n’est plus une ligne séparée ;
+   - il est dans le footer ;
+   - il reste transparent ;
+   - il ne pousse plus la mise en page.
+------------------------------------------------------- */
+
+/* Sécurité : tout ancien ? flottant direct sous terminal disparaît */
+main > .help-launcher,
+.terminal > .help-launcher:not(.footer-help-launcher) {
+  display: none !important;
+}
+
+/* Footer stable : aucune ligne parasite */
+footer {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding-right: 14px !important;
+  min-height: 34px !important;
+  overflow: visible !important;
+}
+
+/* Le ? vit dans le footer, pas en position flottante */
+footer .help-launcher,
+footer .footer-help-launcher,
+button.footer-help-launcher {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 0 0 2px !important;
+
+  border: 1px solid rgba(255,216,121,.28) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.68) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.42) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+}
+
+/* Aucun pseudo-fond parasite */
+footer .help-launcher::before,
+footer .help-launcher::after,
+footer .footer-help-launcher::before,
+footer .footer-help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+footer .help-launcher:hover,
+footer .help-launcher:focus,
+footer .footer-help-launcher:hover,
+footer .footer-help-launcher:focus,
+button.footer-help-launcher:hover,
+button.footer-help-launcher:focus {
+  position: static !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(255,216,121,.64) !important;
+  color: rgba(255,248,233,.96) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.26),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
