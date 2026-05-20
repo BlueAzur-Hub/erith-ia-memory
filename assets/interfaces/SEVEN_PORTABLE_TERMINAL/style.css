@@ -2304,3 +2304,107 @@ body {
     background-position: 62% center !important;
   }
 }
+
+
+/* -------------------------------------------------------
+   Hero Avatar Locked
+   Correction :
+   - avatar verrouillé en haut à droite du cadre Hero
+   - Hero recadré sur visage / casque
+------------------------------------------------------- */
+
+.hero {
+  position: relative !important;
+  display: block !important;
+  min-height: 172px !important;
+  padding: 16px 132px 16px 18px !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.32) 52%, rgba(0,0,0,.40)),
+    radial-gradient(circle at 64% 42%, rgba(0,210,255,.20), transparent 36%),
+    radial-gradient(circle at 16% 0%, rgba(255,80,60,.14), transparent 42%),
+    url("./hero_face_vr_background.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+.hero::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.58), rgba(0,0,0,.14) 58%, rgba(0,0,0,.30)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
+}
+
+.hero > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.hero .hero-main {
+  max-width: calc(100% - 120px) !important;
+}
+
+/* Avatar stable : ne descend plus dans le flux du Hero. */
+.hero .portrait {
+  position: absolute !important;
+  top: 16px !important;
+  right: 18px !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 92px !important;
+  height: 92px !important;
+  margin: 0 !important;
+  display: block !important;
+  z-index: 8 !important;
+  transform: none !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: rgba(0,0,0,.42) !important;
+  border: 1px solid rgba(255,216,121,.72) !important;
+  box-shadow:
+    0 0 20px rgba(255,216,121,.24),
+    0 0 34px rgba(0,210,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+.hero .portrait img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block;
+}
+
+.no-hero-face .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.18)),
+    radial-gradient(circle at 40% 0%, rgba(255,216,121,.14), transparent 48%) !important;
+}
+
+.no-hero-face .hero::before {
+  display: none !important;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    min-height: 148px !important;
+    padding: 12px 96px 12px 12px !important;
+    background-position: 56% center !important;
+  }
+
+  .hero .hero-main {
+    max-width: calc(100% - 84px) !important;
+  }
+
+  .hero .portrait {
+    top: 12px !important;
+    right: 12px !important;
+    width: 76px !important;
+    height: 76px !important;
+    border-radius: 15px !important;
+  }
+}
