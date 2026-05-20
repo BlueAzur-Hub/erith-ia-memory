@@ -1,0 +1,255 @@
+/* Seven Portable Terminal — V5.6 Additive UI
+   Ajoute de la valeur sans supprimer les fonctions existantes.
+*/
+
+:root {
+  --seven-glass: rgba(5, 10, 16, .48);
+  --seven-glass-soft: rgba(5, 10, 16, .30);
+  --seven-glass-strong: rgba(5, 10, 16, .64);
+  --seven-gold: rgba(255,216,121,.78);
+  --seven-blue: rgba(127,215,255,.62);
+  --seven-text: #fff8e9;
+}
+
+.mission-panel,
+.operator-panel,
+.page-intro,
+.quick-value-grid,
+.system-trace,
+.advanced-boxes,
+.duplicate-trace {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid rgba(255,216,121,.28);
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--seven-glass), var(--seven-glass-soft));
+  backdrop-filter: blur(5px) saturate(1.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 24px rgba(0,0,0,.18);
+}
+
+.panel-head,
+.trace-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.panel-head strong,
+.trace-head strong,
+.page-intro strong {
+  color: var(--seven-text);
+  font-size: 15px;
+}
+
+.panel-head span,
+.trace-head span,
+.page-intro p,
+.note,
+.operator-steps {
+  color: rgba(255,248,233,.76);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.mission-grid,
+.mini-actions,
+.trace-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.launch-grid {
+  margin-bottom: 12px;
+}
+
+.launch-card {
+  min-height: 126px !important;
+  border-color: rgba(255,216,121,.84) !important;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.66), rgba(40,28,8,.42)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.22), transparent 62%) !important;
+}
+
+.quick-value-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.operator-steps {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.operator-steps li {
+  margin: 4px 0;
+}
+
+.note {
+  margin: 8px 0 0;
+  color: rgba(127,215,255,.84);
+}
+
+.page-intro {
+  margin-bottom: 12px;
+}
+
+.page-intro p {
+  margin: 6px 0 0;
+}
+
+.trace-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.trace-card {
+  border: 1px solid rgba(255,216,121,.22);
+  border-radius: 15px;
+  background: linear-gradient(145deg, rgba(0,0,0,.50), rgba(8,24,34,.36));
+  padding: 10px;
+}
+
+.trace-card small,
+.trace-card em {
+  display: block;
+  color: rgba(255,248,233,.64);
+  font-size: 10px;
+  font-style: normal;
+}
+
+.trace-card strong {
+  display: block;
+  color: var(--seven-text);
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.trace-pill {
+  border: 1px solid rgba(255,216,121,.24);
+  border-radius: 999px;
+  background: rgba(0,0,0,.24);
+  padding: 4px 9px;
+  color: rgba(255,248,233,.78);
+  font-size: 10px;
+}
+
+.trace-pill.safe {
+  border-color: rgba(137,255,188,.34);
+  color: rgba(190,255,218,.94);
+}
+
+.trace-console {
+  margin-top: 10px;
+  border: 1px solid rgba(255,216,121,.18);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,.24);
+}
+
+.trace-console summary {
+  cursor: pointer;
+  padding: 9px 10px;
+  color: rgba(255,248,233,.82);
+  font-size: 11px;
+}
+
+#traceRaw,
+#promptText {
+  width: 100%;
+  min-height: 160px;
+  border: 0;
+  background: rgba(0,0,0,.62);
+  color: var(--seven-text);
+  padding: 10px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.42;
+  resize: vertical;
+}
+
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 10px;
+  border-bottom: 1px solid rgba(255,216,121,.20);
+  background: rgba(0,0,0,.36);
+}
+
+.drawer-head strong {
+  color: var(--seven-text);
+}
+
+.advanced-boxes {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+body.show-advanced .advanced-boxes {
+  display: grid;
+}
+
+.advanced-box {
+  border: 1px solid rgba(255,216,121,.22);
+  border-radius: 15px;
+  background: rgba(0,0,0,.28);
+  padding: 10px;
+}
+
+.advanced-box strong {
+  color: var(--seven-text);
+  font-size: 13px;
+}
+
+.advanced-box p {
+  color: rgba(255,248,233,.68);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.tile .txt em {
+  line-height: 1.24;
+}
+
+body.mode-readability .terminal,
+body[data-theme="readability"] .terminal {
+  background: linear-gradient(180deg, rgba(2,6,9,.82), rgba(3,8,12,.90)) !important;
+}
+
+body.mode-readability .mission-panel,
+body.mode-readability .operator-panel,
+body.mode-readability .page-intro,
+body.mode-readability .system-trace,
+body.mode-readability .quick-value-grid {
+  background: linear-gradient(145deg, rgba(0,0,0,.76), rgba(7,18,24,.62));
+}
+
+@media (max-width: 980px) {
+  .quick-value-grid,
+  .trace-grid,
+  body.show-advanced .advanced-boxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .quick-value-grid,
+  .trace-grid,
+  body.show-advanced .advanced-boxes {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head,
+  .trace-head {
+    display: block;
+  }
+}
