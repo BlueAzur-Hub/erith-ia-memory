@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Comfort Social Backgrounds</title>
-  <link rel="stylesheet" href="./style.css?v=comfort-social-bg-1">
+  <title>Seven Portable Terminal — Network HUD</title>
+  <link rel="stylesheet" href="./style.css?v=network-hud-1">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">COMFORT SOCIAL · MULTI BACKGROUNDS · GOLDEN CLOUDS</div>
+        <div class="kicker">NETWORK HUD · ETHERNET · GOLDEN CLOUDS</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -166,24 +166,59 @@
 
     <section class="page" id="page-system">
       <div class="section-title">
-        <strong>🖥️ Système</strong>
-        <span>Transformer Book, Ryzen 7, cockpit et prise en main RustDesk.</span>
+        <strong>🖥️ Système / Network HUD</strong>
+        <span>Ethernet, IP, RustDesk, sécurité et cockpit nomade.</span>
+      </div>
+
+      <div class="network-panel">
+        <div class="net-card">
+          <span class="net-label">IP publique</span>
+          <strong id="publicIp">chargement…</strong>
+        </div>
+        <div class="net-card">
+          <span class="net-label">Connexion</span>
+          <strong id="connectionType">détection…</strong>
+        </div>
+        <div class="net-card">
+          <span class="net-label">Statut</span>
+          <strong id="onlineStatus">détection…</strong>
+        </div>
+        <div class="net-card">
+          <span class="net-label">Heure locale</span>
+          <strong id="localClock">--:--:--</strong>
+        </div>
       </div>
 
       <div class="tile-grid">
-        <a class="tile gold remote-main" href="https://rustdesk.com/web/" target="_self" rel="noopener">
+        <button class="tile gold remote-main" onclick="openRustDeskWeb()">
           <span class="ico">🏰</span>
           <span class="txt">
             <strong>Ryzen 7 Remote</strong>
-            <em>Ouvre RustDesk Web pour se connecter au Ryzen 7</em>
+            <em>Ouvre RustDesk Web pour accès coffee shop / extérieur</em>
           </span>
-        </a>
+        </button>
 
         <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')">
           <span class="ico">✅</span>
           <span class="txt">
             <strong>Rôle validé</strong>
-            <em>Transformer Book = pupitre, Ryzen 7 = moteur</em>
+            <em>Transformer Book = cockpit, Ryzen 7 = moteur</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="refreshNetworkHud()">
+          <span class="ico">📡</span>
+          <span class="txt">
+            <strong>Refresh réseau</strong>
+            <em>Recharge IP, statut et informations navigateur</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="copyNetworkStatus()">
+          <span class="ico">📋</span>
+          <span class="txt">
+            <strong>Copier état réseau</strong>
+            <em>Copie IP publique, statut, heure et terminal</em>
           </span>
         </button>
 
@@ -194,6 +229,14 @@
             <em>Site officiel pour installation ou mise à jour</em>
           </span>
         </a>
+
+        <button class="tile" onclick="setStatus('Sécurité : ne jamais afficher ID + mot de passe RustDesk en capture publique.')">
+          <span class="ico">🔐</span>
+          <span class="txt">
+            <strong>Sécurité Remote</strong>
+            <em>ID + mot de passe RustDesk restent privés</em>
+          </span>
+        </button>
 
         <button class="tile" onclick="copyTerminalLink()">
           <span class="ico">🔗</span>
@@ -211,11 +254,11 @@
           </span>
         </button>
 
-        <button class="tile" onclick="setStatus('Sécurité : ne jamais afficher ID + mot de passe RustDesk en capture publique.')">
-          <span class="ico">🔐</span>
+        <button class="tile" onclick="nextBackground()">
+          <span class="ico">🖼️</span>
           <span class="txt">
-            <strong>Sécurité Remote</strong>
-            <em>Ne jamais partager ID + mot de passe</em>
+            <strong>Fond suivant</strong>
+            <em>Change l’arrière-plan du cockpit Seven</em>
           </span>
         </button>
       </div>
@@ -226,6 +269,13 @@
     <section class="drawer" id="promptDrawer">
       <textarea id="promptText" readonly></textarea>
     </section>
+
+    <div class="network-footer">
+      <span>🌐 IP : <strong id="footerIp">chargement…</strong></span>
+      <span>🔌 Réseau : <strong id="footerNet">détection…</strong></span>
+      <span>🕒 <strong id="footerClock">--:--:--</strong></span>
+      <span>🏰 Remote : RustDesk</span>
+    </div>
 
     <footer>
       <span>Transformer Book = pupitre Seven</span>
@@ -483,7 +533,107 @@ Ryzen 7 = moteur de production.`;
       document.getElementById("promptDrawer").classList.toggle("open");
       setStatus("Prompt affiché / masqué.");
     }
+
+    function openRustDeskWeb() {
+      setStatus("Ouverture RustDesk Web. Utilise l’ID privé du Ryzen 7.");
+      window.location.href = "https://rustdesk.com/web/";
+    }
+
+    async function fetchPublicIp() {
+      const targets = [
+        "https://api64.ipify.org?format=json",
+        "https://api.ipify.org?format=json"
+      ];
+
+      for (const url of targets) {
+        try {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (data && data.ip) return data.ip;
+        } catch (e) {}
+      }
+
+      return "indisponible";
+    }
+
+    function detectConnectionType() {
+      const nav = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (!nav) return "Ethernet / inconnu";
+      const type = nav.type || nav.effectiveType || "inconnu";
+      const downlink = nav.downlink ? ` · ${nav.downlink} Mbps` : "";
+      return `${type}${downlink}`;
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const text = now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      const localClock = document.getElementById("localClock");
+      const footerClock = document.getElementById("footerClock");
+      if (localClock) localClock.textContent = text;
+      if (footerClock) footerClock.textContent = text;
+    }
+
+    async function refreshNetworkHud() {
+      const online = navigator.onLine ? "en ligne" : "hors ligne";
+      const connection = detectConnectionType();
+      const ip = await fetchPublicIp();
+
+      const publicIp = document.getElementById("publicIp");
+      const connectionType = document.getElementById("connectionType");
+      const onlineStatus = document.getElementById("onlineStatus");
+      const footerIp = document.getElementById("footerIp");
+      const footerNet = document.getElementById("footerNet");
+
+      if (publicIp) publicIp.textContent = ip;
+      if (connectionType) connectionType.textContent = connection;
+      if (onlineStatus) onlineStatus.textContent = online;
+      if (footerIp) footerIp.textContent = ip;
+      if (footerNet) footerNet.textContent = connection;
+
+      setStatus("Network HUD actualisé : IP publique + statut réseau.");
+    }
+
+    async function copyNetworkStatus() {
+      const ip = document.getElementById("publicIp")?.textContent || "inconnue";
+      const connection = document.getElementById("connectionType")?.textContent || "inconnue";
+      const online = document.getElementById("onlineStatus")?.textContent || "inconnu";
+      const time = document.getElementById("localClock")?.textContent || "--:--:--";
+
+      const text = `# Seven Network HUD
+
+Machine :
+Transformer Book / cockpit Seven
+
+IP publique :
+${ip}
+
+Connexion :
+${connection}
+
+Statut :
+${online}
+
+Heure locale :
+${time}
+
+Remote :
+RustDesk vers Ryzen 7
+
+Note :
+Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour des raisons de confidentialité.`;
+
+      await copyText(text);
+      setStatus("État réseau copié.");
+    }
+
+    window.addEventListener("online", refreshNetworkHud);
+    window.addEventListener("offline", refreshNetworkHud);
+    setInterval(updateClock, 1000);
+
     bootBackground();
+    refreshNetworkHud();
+    updateClock();
   </script>
 </body>
 </html>

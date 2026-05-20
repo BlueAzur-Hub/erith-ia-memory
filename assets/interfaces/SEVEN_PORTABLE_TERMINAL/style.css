@@ -1,4 +1,4 @@
-/* Seven Portable Terminal — Comfort Social Backgrounds
+/* Seven Portable Terminal — Network HUD
    Version cible : un peu plus grande que Comfort Compact, avec textes de boutons plus détaillés.
 */
 
@@ -28,7 +28,7 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(3,8,14,.03), rgba(3,8,14,.18)),
-    var(--active-bg, url("./background_historique_lr.png"));
+    var(--active-bg, var(--active-bg, url("./background_historique_lr.png")));
   background-size: cover;
   background-position: center;
   overflow-x: hidden;
@@ -444,7 +444,7 @@ footer span {
 
 /* Comfort Social Backgrounds refinement */
 :root {
-  --active-bg: url("./background_historique_lr.png");
+  --active-bg: var(--active-bg, url("./background_historique_lr.png"));
 }
 
 body {
@@ -462,5 +462,93 @@ body {
 @media (min-width: 1100px) {
   .tile-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+/* Network HUD additions */
+.network-panel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.net-card {
+  border: 1px solid rgba(255,216,121,.34);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.58), rgba(4,16,24,.50)),
+    radial-gradient(circle at 50% 0%, rgba(127,215,255,.10), transparent 62%);
+  padding: 10px 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 8px 18px rgba(0,0,0,.22);
+}
+
+.net-label {
+  display: block;
+  color: rgba(255,248,233,.66);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.net-card strong {
+  color: #fff8e9;
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.network-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 10px;
+  border-top: 1px solid rgba(255,216,121,.20);
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.30), rgba(10,26,34,.28), rgba(0,0,0,.30));
+}
+
+.network-footer span {
+  border: 1px solid rgba(127,215,255,.24);
+  border-radius: 999px;
+  background: rgba(0,0,0,.24);
+  padding: 4px 9px;
+  color: rgba(255,248,233,.78);
+  font-size: 10px;
+}
+
+.network-footer strong {
+  color: #fff8e9;
+}
+
+.remote-main {
+  border-color: rgba(255,216,121,.96) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 24px rgba(255,216,121,.18),
+    0 10px 24px rgba(0,0,0,.34) !important;
+}
+
+@media (max-width: 860px) {
+  .network-panel {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+  }
+
+  .net-card {
+    padding: 8px 9px;
+  }
+
+  .net-card strong {
+    font-size: 12px;
+  }
+
+  .network-footer span {
+    font-size: 9px;
+    padding: 3px 7px;
   }
 }
