@@ -5595,3 +5595,82 @@ footer span,
     grid-template-columns: 1fr;
   }
 }
+
+
+
+/* =======================================================
+   HERO HEADER LOCK FIX — V5.2
+   Fixe le vrai bug : les sliders doivent piloter à la fois
+   l'image HTML du Hero et les anciennes règles background.
+======================================================= */
+
+:root {
+  --hero-x: 50%;
+  --hero-y: 34%;
+  --hero-scale: 1;
+  --hero-bg-size: cover;
+}
+
+.hero {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hero-bg-img,
+#heroImage {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: var(--hero-x) var(--hero-y) !important;
+  transform: scale(var(--hero-scale)) !important;
+  transform-origin: var(--hero-x) var(--hero-y) !important;
+  will-change: transform, object-position !important;
+}
+
+.hero-veil {
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+.hero-main,
+.hero .hero-main,
+.hero .portrait,
+.portrait,
+.hero-position-panel,
+#heroPositionPanel {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.hero-position-panel,
+#heroPositionPanel {
+  z-index: 20 !important;
+}
+
+body.show-hero-focus .hero-position-panel,
+body.show-hero-focus #heroPositionPanel,
+body.show-hero .hero-position-panel,
+body.show-hero #heroPositionPanel {
+  display: block !important;
+}
+
+.hero-position-actions button {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  color: rgba(255,248,233,.96) !important;
+}
+
+.hero-position-actions button:not(:hover):not(:focus) {
+  background: transparent !important;
+}
+
+/* Anciennes versions : si un background-image reste attaché au header,
+   il suit aussi les mêmes variables. */
+.hero {
+  background-position: var(--hero-x) var(--hero-y) !important;
+  background-size: var(--hero-bg-size) !important;
+}

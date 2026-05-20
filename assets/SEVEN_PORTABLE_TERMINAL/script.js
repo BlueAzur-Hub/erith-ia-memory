@@ -890,4 +890,133 @@ setTimeout(v52BindExtraEvents, 0);
 setInterval(refreshHomeSystemTrace, 1000);
 
 
+
+
+/* =======================================================
+   HERO HEADER LOCK FIX — V5.2
+   The Hero sliders now drive:
+   1) CSS variables used by the old header background logic
+   2) the true HTML hero image
+   3) localStorage persistence
+======================================================= */
+
+function heroClampV52(value, min, max) {
+  value = Number(value);
+  if (Number.isNaN(value)) return min;
+  return Math.max(min, Math.min(max, value));
+}
+
+function updateHeroFocus() {
+  const xInput = document.getElementById("heroX");
+  const yInput = document.getElementById("heroY");
+  const zInput = document.getElementById("heroZoom");
+
+  const x = heroClampV52(xInput ? xInput.value : (state.hero?.x ?? 50), 0, 100);
+  const y = heroClampV52(yInput ? yInput.value : (state.hero?.y ?? 34), 0, 100);
+  const zoom = heroClampV52(zInput ? zInput.value : (state.hero?.zoom ?? 100), 100, 180);
+  const scale = zoom / 100;
+
+  state.hero = { x, y, zoom };
+
+  const root = document.documentElement;
+  root.style.setProperty("--hero-x", `${x}%`);
+  root.style.setProperty("--hero-y", `${y}%`);
+  root.style.setProperty("--hero-scale", String(scale));
+  root.style.setProperty("--hero-zoom", `${zoom}%`);
+  root.style.setProperty("--hero-bg-size", `${zoom}% auto`);
+
+  const hero = document.querySelector(".hero");
+  if (hero) {
+    hero.style.backgroundPosition = `${x}% ${y}%`;
+    hero.style.backgroundSize = `${zoom}% auto`;
+  }
+
+  const img = document.getElementById("heroImage") || document.querySelector(".hero-bg-img");
+  if (img) {
+    img.style.objectPosition = `${x}% ${y}%`;
+    img.style.transform = `scale(${scale})`;
+    img.style.transformOrigin = `${x}% ${y}%`;
+  }
+
+  if (xInput) xInput.value = x;
+  if (yInput) yInput.value = y;
+  if (zInput) zInput.value = zoom;
+
+  const xOut = document.getElementById("heroXOut");
+  const yOut = document.getElementById("heroYOut");
+  const zOut = document.getElementById("heroZoomOut");
+
+  if (xOut) xOut.textContent = `${x}%`;
+  if (yOut) yOut.textContent = `${y}%`;
+  if (zOut) zOut.textContent = `${zoom}%`;
+
+  try {
+    localStorage.setItem("seven-v52-hero-focus", JSON.stringify(state.hero));
+  } catch(e) {}
+
+  const status = document.getElementById("statusLine") || document.getElementById("status");
+  if (status) status.textContent = `Hero Focus ajusté : X ${x}% / Y ${y}% / Zoom ${zoom}%`;
+}
+
+function setHeroFocusFromInputs() {
+  updateHeroFocus();
+}
+
+function nudgeHeroFocus(dx, dy) {
+  const xInput = document.getElementById("heroX");
+  const yInput = document.getElementById("heroY");
+  if (!xInput || !yInput) return;
+
+  xInput.value = heroClampV52(Number(xInput.value) + dx, 0, 100);
+  yInput.value = heroClampV52(Number(yInput.value) + dy, 0, 100);
+  updateHeroFocus();
+}
+
+function nudgeHero(direction) {
+  if (direction === "up") nudgeHeroFocus(0, -2);
+  if (direction === "down") nudgeHeroFocus(0, 2);
+  if (direction === "left") nudgeHeroFocus(-2, 0);
+  if (direction === "right") nudgeHeroFocus(2, 0);
+}
+
+function resetHeroFocus() {
+  const xInput = document.getElementById("heroX");
+  const yInput = document.getElementById("heroY");
+  const zInput = document.getElementById("heroZoom");
+
+  if (xInput) xInput.value = 50;
+  if (yInput) yInput.value = 34;
+  if (zInput) zInput.value = 100;
+
+  updateHeroFocus();
+}
+
+function toggleHeroFocusPanel(force) {
+  const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-hero-focus");
+  document.body.classList.toggle("show-hero-focus", open);
+  document.body.classList.toggle("show-hero", open);
+
+  const btn = document.getElementById("heroBtn");
+  if (btn) btn.classList.toggle("active", open);
+
+  const status = document.getElementById("statusLine") || document.getElementById("status");
+  if (status) status.textContent = open ? "Hero Focus ouvert." : "Hero Focus fermé.";
+}
+
+function restoreHeroFocusV52() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("seven-v52-hero-focus") || "null");
+    if (saved) {
+      if (document.getElementById("heroX")) document.getElementById("heroX").value = saved.x ?? 50;
+      if (document.getElementById("heroY")) document.getElementById("heroY").value = saved.y ?? 34;
+      if (document.getElementById("heroZoom")) document.getElementById("heroZoom").value = saved.zoom ?? 100;
+    }
+  } catch(e) {}
+
+  updateHeroFocus();
+}
+
+
 boot();
+setTimeout(restoreHeroFocusV52, 0);
+setTimeout(restoreHeroFocusV52, 250);
