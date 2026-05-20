@@ -5319,3 +5319,214 @@ body:not(.readability-off) .palette-card {
   -webkit-backdrop-filter: none !important;
 }
 
+/* =========================================================
+   V5.2 READABILITY BOOST
+   Garde le fond global transparent
+   Renforce seulement les blocs internes utiles
+   ========================================================= */
+
+:root {
+  --glass-strong: rgba(10, 14, 20, 0.46);
+  --glass-stronger: rgba(10, 14, 20, 0.58);
+  --glass-soft: rgba(10, 14, 20, 0.34);
+  --gold-line: rgba(232, 201, 120, 0.55);
+  --gold-line-strong: rgba(232, 201, 120, 0.80);
+  --text-main: rgba(255,255,255,0.96);
+  --text-soft: rgba(245,240,225,0.86);
+  --shadow-soft: 0 10px 26px rgba(0,0,0,0.24);
+}
+
+/* fond global inchangé */
+body,
+.page-shell,
+.terminal,
+main.terminal {
+  background-color: transparent !important;
+}
+
+/* =========================================================
+   ZONES À RENDRE PLUS LISIBLES
+   ========================================================= */
+
+/* rubans / toolbar / bandeaux */
+.memory-ribbon,
+.hero-ribbon,
+.subnav,
+.toolbar,
+.page-toolbar,
+.section-header,
+.section-titlebar,
+.trace-header,
+.trace-toolbar,
+.quick-actions-header {
+  background: var(--glass-strong) !important;
+  border: 1px solid var(--gold-line) !important;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px) saturate(1.05);
+  -webkit-backdrop-filter: blur(10px) saturate(1.05);
+}
+
+/* zone principale des tuiles */
+.cards-grid,
+.tiles-grid,
+.action-grid,
+.quick-grid,
+.section-panel,
+.home-panel,
+.trace-panel {
+  background: var(--glass-soft) !important;
+  border: 1px solid rgba(232, 201, 120, 0.22) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* cartes / tuiles */
+.card,
+.tile,
+.action-card,
+.feature-card,
+.info-card,
+.trace-card,
+.stat-card,
+.system-card {
+  background: var(--glass-strong) !important;
+  border: 1px solid rgba(232, 201, 120, 0.30) !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* petits badges / pills */
+.pill,
+.badge,
+.meta-pill,
+.trace-pill,
+.status-pill,
+.hud-pill,
+.chip,
+.footer-chip {
+  background: var(--glass-stronger) !important;
+  border: 1px solid rgba(232, 201, 120, 0.35) !important;
+  color: var(--text-main) !important;
+}
+
+/* ligne SAFE TRACE et mini infos */
+.trace-strip,
+.trace-meta,
+.trace-flags,
+.trace-badges {
+  background: rgba(10,14,20,0.36) !important;
+  border-radius: 12px;
+}
+
+/* =========================================================
+   TEXTE PLUS LISIBLE
+   ========================================================= */
+
+.section-header,
+.section-header *,
+.section-titlebar,
+.section-titlebar *,
+.card,
+.card *,
+.tile,
+.tile *,
+.action-card,
+.action-card *,
+.info-card,
+.info-card *,
+.trace-card,
+.trace-card *,
+.system-card,
+.system-card *,
+.badge,
+.pill,
+.chip,
+.meta-pill,
+.trace-pill {
+  color: var(--text-main) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.42);
+}
+
+.card p,
+.tile p,
+.action-card p,
+.info-card p,
+.trace-card p,
+.system-card p,
+.meta,
+.subtitle,
+.small,
+.muted {
+  color: var(--text-soft) !important;
+}
+
+/* =========================================================
+   BOUTONS : transparents au repos, lisibles, plus opaques au hover
+   ========================================================= */
+
+button,
+.btn,
+.toolbar button,
+.toolbar .btn,
+.topnav button,
+.topnav .btn,
+.subnav button,
+.subnav .btn {
+  background: rgba(10,14,20,0.18) !important;
+  border: 1px solid rgba(232, 201, 120, 0.34) !important;
+  color: var(--text-main) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+button:hover,
+.btn:hover,
+.toolbar button:hover,
+.toolbar .btn:hover,
+.topnav button:hover,
+.topnav .btn:hover,
+.subnav button:hover,
+.subnav .btn:hover {
+  background: rgba(10,14,20,0.52) !important;
+  border-color: var(--gold-line-strong) !important;
+  box-shadow: 0 0 0 1px rgba(232,201,120,0.22), 0 8px 18px rgba(0,0,0,0.22);
+}
+
+button.active,
+.btn.active,
+button[aria-current="page"],
+.btn[aria-current="page"],
+.is-active {
+  background: rgba(10,14,20,0.42) !important;
+  border-color: var(--gold-line-strong) !important;
+  box-shadow: 0 0 12px rgba(232,201,120,0.18);
+}
+
+/* =========================================================
+   TRACE : un peu plus dense pour lecture
+   ========================================================= */
+
+.trace-panel,
+.advanced-trace,
+#advancedTrace,
+.system-trace {
+  background: rgba(8, 12, 18, 0.48) !important;
+  border: 1px solid rgba(232,201,120,0.30) !important;
+}
+
+/* =========================================================
+   si le mode lisibilité existe déjà, on renforce un peu encore
+   ========================================================= */
+
+body.readability-on .card,
+body.readability-on .tile,
+body.readability-on .action-card,
+body.readability-on .trace-card,
+body.readability-on .system-card,
+body.readability-on .section-header,
+body.readability-on .toolbar,
+body.readability-on .memory-ribbon {
+  background: rgba(8, 12, 18, 0.62) !important;
+}
