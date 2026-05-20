@@ -3497,3 +3497,168 @@ body.show-advanced .celestial-atlas-panel.open {
     padding: 0 8px !important;
   }
 }
+
+
+/* -------------------------------------------------------
+   Celestial Atlas v3 — READABLE HERO FIX
+   - Hero recadré pour visage/casque visible.
+   - Certains fonds trop lumineux ne cassent plus la lisibilité.
+------------------------------------------------------- */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(0,0,0,.10), transparent 42%),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.04) 45%, rgba(0,0,0,.22));
+}
+
+body.readability-off::after {
+  display: none;
+}
+
+.terminal {
+  position: relative;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.88), rgba(3,8,12,.92)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.09), transparent 48%) !important;
+  backdrop-filter: blur(9px) saturate(1.10) !important;
+}
+
+/* Strong internal shield below content, keeps UI readable over bright backgrounds. */
+.terminal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.12)),
+    radial-gradient(circle at 50% 30%, rgba(0,0,0,.18), transparent 58%);
+}
+
+.terminal > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero: use fixed readable face crop */
+.hero {
+  min-height: 172px !important;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.30) 52%, rgba(0,0,0,.42)),
+    radial-gradient(circle at 62% 42%, rgba(0,210,255,.20), transparent 36%),
+    var(--hero-bg, url("./hero_face_vr_background.jpg")) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.18) 58%, rgba(0,0,0,.34)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
+}
+
+/* In case Hero Gallery switches to other frames, keep title protected. */
+.hero .hero-main,
+.hero h1,
+.hero p,
+.hero .badges {
+  text-shadow:
+    0 2px 10px rgba(0,0,0,.82),
+    0 0 18px rgba(0,0,0,.50) !important;
+}
+
+/* UI panels: stronger black layer for bright backgrounds */
+.page,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.sky-control-strip,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.88), rgba(5,12,18,.80)) !important;
+  border-color: rgba(255,216,121,.38) !important;
+}
+
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.88), rgba(7,18,24,.78)) !important;
+  border-color: rgba(255,255,255,.28) !important;
+}
+
+.tile::before {
+  opacity: .14 !important;
+  filter: blur(.4px) saturate(.95) brightness(.82) !important;
+}
+
+.tile.selected::before,
+.tile.gold::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .28 !important;
+}
+
+.tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.90), rgba(0,0,0,.72) 58%, rgba(0,0,0,.78)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.07), transparent 45%) !important;
+}
+
+/* More readable footer chips over light backgrounds */
+.network-footer span,
+.system-footer span,
+footer span,
+.badge,
+.chip {
+  background: rgba(0,0,0,.60) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+/* Readability OFF returns closer to visual mode */
+body.readability-off .terminal {
+  background:
+    linear-gradient(180deg, rgba(3,8,12,.60), rgba(3,8,12,.72)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 48%) !important;
+}
+
+body.readability-off .terminal::before {
+  display: none;
+}
+
+body.readability-off .tile::before {
+  opacity: .34 !important;
+}
+
+#readabilityShieldBtn {
+  border-color: rgba(127,215,255,.56) !important;
+  background: rgba(127,215,255,.13) !important;
+}
+
+#readabilityShieldBtn.active,
+#readabilityShieldBtn:hover,
+#readabilityShieldBtn:focus {
+  border-color: rgba(127,215,255,.92) !important;
+  box-shadow: 0 0 18px rgba(127,215,255,.18);
+}
+
+
+/* Clean home priority */
+body:not(.show-advanced) .intel-panel,
+body:not(.show-advanced) .celestial-atlas-panel,
+body:not(.show-advanced) .advanced-dashboard-panel,
+body:not(.show-advanced) .hero-gallery,
+body:not(.show-advanced) .atlas-preview-grid,
+body:not(.show-advanced) .atlas-toolbar,
+body:not(.show-advanced) .atlas-current {
+  display: none !important;
+}
