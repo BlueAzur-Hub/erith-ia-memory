@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Genie Theme</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-21-genie-background-theme">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Golden Glass</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-15-golden-glass-home-trace">
 </head>
 
 <body>
@@ -101,7 +101,9 @@
         <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
         <button class="mini-control" id="heroFocusBtn" onclick="toggleHeroFocusPanel()">🎯 Hero</button>
         <button class="mini-control active" id="readabilityShieldBtn" onclick="toggleReadabilityShield()">🛡️ Lisibilité</button>
-      </div>
+      
+        <button class="mini-control command-dot-top" id="commandDotTopBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
+</div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
           <span class="intel-dot"></span>
@@ -157,7 +159,6 @@
               <button onclick="nextAtlasInFamily('Grand Tree Garden')">🌳 Tree +</button>
               <button onclick="nextAtlasInFamily('Historic Ruins')">🏛️ Ruins +</button>
               <button onclick="nextAtlasInFamily('Suspended City')">🏰 City +</button>
-              <button onclick="nextAtlasInFamily('Genie Invocation')">🧞 Génie +</button>
             </div>
           </div>
 
@@ -193,7 +194,6 @@
           <button class="atlas-chip" data-family-filter="Grand Tree Garden" onclick="renderAtlasGrid('Grand Tree Garden')">🌳 Tree</button>
           <button class="atlas-chip" data-family-filter="Historic Ruins" onclick="renderAtlasGrid('Historic Ruins')">🏛️ Ruins</button>
           <button class="atlas-chip" data-family-filter="Suspended City" onclick="renderAtlasGrid('Suspended City')">🏰 City</button>
-          <button class="atlas-chip" data-family-filter="Genie Invocation" onclick="renderAtlasGrid('Genie Invocation')">🧞 Génie</button>
         </div>
 
         <div class="atlas-current">
@@ -262,12 +262,66 @@
           <span class="ico gear-ico">⚙️</span>
           <span class="txt"><strong>Fond aléatoire</strong><em>Recharge une ambiance visuelle différente</em></span>
         </button>
-        <button class="tile" onclick="activateGenieBackgroundTheme()" data-help="Active directement le set Background Génie : bibliothèque holographique, lampe, oracle bleu et présence magique." data-intent="visual" aria-label="Thème Génie" data-preview="visual">
-          <span class="ico">🧞</span>
-          <span class="txt"><strong>Thème Génie</strong><em>Active le set Génie : lampe, hologrammes, bibliothèque magique</em></span>
-        </button>
-
       </div>
+
+      <section class="home-system-trace system-trace-pro home-trace-open" id="homeSystemTracePanel" aria-label="Advanced System Trace accueil">
+        <div class="advanced-head pro-trace-head">
+          <div>
+            <strong>⚙️ Advanced System Trace</strong>
+            <span>accueil cockpit — diagnostic local propre</span>
+          </div>
+          <div class="trace-head-actions">
+            <button onclick="refreshHomeSystemTrace()">Refresh</button>
+            <button onclick="copyHomeSystemDiagnostics()">Copier</button>
+          </div>
+        </div>
+
+        <div class="trace-status-line">
+          <span class="trace-pill safe">SAFE TRACE</span>
+          <span class="trace-pill" id="homeTraceStamp">horodatage…</span>
+          <span class="trace-pill">no RustDesk ID</span>
+          <span class="trace-pill">no password</span>
+        </div>
+
+        <div class="trace-pro-grid home-trace-grid">
+          <article class="trace-card">
+            <span class="trace-icon">🖥️</span>
+            <div>
+              <small>Système</small>
+              <strong id="homeTraceOs">détection…</strong>
+              <em id="homeTracePlatform">plateforme…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">🌐</span>
+            <div>
+              <small>Navigateur</small>
+              <strong id="homeTraceBrowser">détection…</strong>
+              <em id="homeTraceAgent">user agent court…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">📐</span>
+            <div>
+              <small>Affichage</small>
+              <strong id="homeTraceScreen">--</strong>
+              <em id="homeTraceViewport">viewport…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">🌍</span>
+            <div>
+              <small>Langue / Fuseau</small>
+              <strong id="homeTraceTimezone">--</strong>
+              <em id="homeTraceLanguage">langue…</em>
+            </div>
+          </article>
+        </div>
+      </section>
+
     </section>
 
     <section class="page" id="page-llm">
@@ -386,12 +440,12 @@
 
       <div class="tile-grid">
         <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener" data-help="Ouvre la chaîne YouTube Blue Azur." data-intent="youtube" aria-label="Blue Azur" data-preview="youtube"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur</em></span></a>
-        <a class="tile" href="https://www.facebook.com/BlueAzur07/" target="_self" rel="noopener" data-help="Ouvre le profil Facebook Blue Azur." data-intent="social" aria-label="Facebook" data-preview="facebook">
+        <a class="tile" href="https://www.facebook.com/BlueAzur07/" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur Facebook. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="Facebook" data-preview="youtube">
           <span class="ico">📘</span>
           <span class="txt"><strong>Facebook</strong><em>Profil officiel Blue Azur</em></span>
         </a>
 
-        <a class="tile" href="https://x.com/BlueAzur7" target="_self" rel="noopener" data-help="Ouvre le profil X / Twitter Blue Azur." data-intent="social" aria-label="X / Twitter" data-preview="x">
+        <a class="tile" href="https://x.com/BlueAzur7" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur X. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="X / Twitter" data-preview="youtube">
           <span class="ico">𝕏</span>
           <span class="txt"><strong>X / Twitter</strong><em>Profil officiel Blue Azur</em></span>
         </a>
@@ -400,7 +454,7 @@
         <a class="tile" href="https://www.runninghub.ai/" target="_self" rel="noopener" data-help="Ouvre RunningHub pour les workflows Wan / I2V cloud." data-intent="production" aria-label="RunningHub / Wan" data-preview="runninghub"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub / Wan</strong><em>Animation image-to-video Wan / cloud</em></span></a>
         <a class="tile" href="https://civitai.com/" target="_self" rel="noopener" data-help="Ouvre Civitai pour modèles, LoRA, styles et références." data-intent="production" aria-label="Civitai" data-preview="civitai"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, styles et références</em></span></a>
         <a class="tile" href="https://elevenlabs.io/" target="_self" rel="noopener" data-help="Ouvre ElevenLabs pour voix off, narration et essais sonores." data-intent="audio" aria-label="ElevenLabs" data-preview="elevenlabs"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix off, narration et essais sonores</em></span></a>
-        <button class="tile" onclick="copyChannelLink()" data-help="Copie le lien de la chaîne Blue Azur." data-intent="copy" aria-label="Copier chaîne" data-preview="clipboard" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Copier chaîne</strong><em>Copie le lien de la chaîne Blue Azur</em></span></button>
+        <button class="tile" onclick="copyChannelLink()" data-help="Copie le lien de la chaîne Blue Azur." data-intent="copy" aria-label="Copier chaîne" data-preview="youtube" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Copier chaîne</strong><em>Copie le lien de la chaîne Blue Azur</em></span></button>
         <button class="tile" onclick="copyWan()" data-help="Copie les réglages vidéo verticaux validés pour Wan." data-intent="video" aria-label="Checklist Wan" data-preview="chatgpt_prompt" data-gear="true"><span class="ico gear-ico">🛞</span><span class="txt"><strong>Checklist Wan</strong><em>Réglages vidéo verticaux validés</em></span></button>
         <button class="tile" onclick="setStatus('DaVinci : montage final sur Ryzen 7. Terminal = pilotage seulement.')" data-help="Rappel : montage final et finition sur le Ryzen 7." data-intent="editing" aria-label="DaVinci" data-preview="davinci" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>DaVinci</strong><em>Montage final et finition sur Ryzen 7</em></span></button>
       </div>
@@ -742,7 +796,6 @@
       <span>Transformer Book = pupitre Seven</span>
       <span>Ryzen 7 = moteur de production</span>
       <span>Large Language Personality [Model - The Flower Girl] v.5</span>
-      <button class="help-launcher footer-help-launcher" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
     </footer>
   </main>
 
@@ -831,36 +884,6 @@
             "name": "Historic Ruins · hall",
             "family": "Historic Ruins",
             "url": "./atlas_29_historic_ruins_hall.jpg"
-      },
-      {
-            "name": "Genie Invocation · vol holographique",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_01_holographic_invocation_full.jpg"
-      },
-      {
-            "name": "Genie Invocation · lampe oraculaire",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_02_ai_librarian_lamp_full.jpg"
-      },
-      {
-            "name": "Genie Invocation · visage bleu",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_03_hologram_face_focus.jpg"
-      },
-      {
-            "name": "Genie Invocation · cercle de lampe",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_04_lamp_oracle_focus.jpg"
-      },
-      {
-            "name": "Genie Invocation · bibliothèque bleue",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_05_blue_library_flight.jpg"
-      },
-      {
-            "name": "Genie Invocation · oracle doré",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_06_golden_arcane_floor.jpg"
       }
 ];
 
@@ -1328,48 +1351,6 @@ Ryzen 7 = moteur de production.`;
         "variant": "hall",
         "url": "./atlas_29_historic_ruins_hall.jpg",
         "thumb": "./preview_reset_atlas_29_historic_ruins_hall.jpg"
-    },
-    {
-        "name": "Genie Invocation · vol holographique",
-        "family": "Genie Invocation",
-        "variant": "vol holographique",
-        "url": "./genie_bg_01_holographic_invocation_full.jpg",
-        "thumb": "./preview_genie_bg_01_holographic_invocation_full.jpg"
-    },
-    {
-        "name": "Genie Invocation · lampe oraculaire",
-        "family": "Genie Invocation",
-        "variant": "lampe oraculaire",
-        "url": "./genie_bg_02_ai_librarian_lamp_full.jpg",
-        "thumb": "./preview_genie_bg_02_ai_librarian_lamp_full.jpg"
-    },
-    {
-        "name": "Genie Invocation · visage bleu",
-        "family": "Genie Invocation",
-        "variant": "visage bleu",
-        "url": "./genie_bg_03_hologram_face_focus.jpg",
-        "thumb": "./preview_genie_bg_03_hologram_face_focus.jpg"
-    },
-    {
-        "name": "Genie Invocation · cercle de lampe",
-        "family": "Genie Invocation",
-        "variant": "cercle de lampe",
-        "url": "./genie_bg_04_lamp_oracle_focus.jpg",
-        "thumb": "./preview_genie_bg_04_lamp_oracle_focus.jpg"
-    },
-    {
-        "name": "Genie Invocation · bibliothèque bleue",
-        "family": "Genie Invocation",
-        "variant": "bibliothèque bleue",
-        "url": "./genie_bg_05_blue_library_flight.jpg",
-        "thumb": "./preview_genie_bg_05_blue_library_flight.jpg"
-    },
-    {
-        "name": "Genie Invocation · oracle doré",
-        "family": "Genie Invocation",
-        "variant": "oracle doré",
-        "url": "./genie_bg_06_golden_arcane_floor.jpg",
-        "thumb": "./preview_genie_bg_06_golden_arcane_floor.jpg"
     }
 ];
     const HERO_FRAMES = [];
@@ -1465,7 +1446,7 @@ Ryzen 7 = moteur de production.`;
       });
     }
 
-    const ATLAS_FAMILIES = ["Crystal Sanctuary","Grand Tree Garden","Historic Ruins","City Ruins","Suspended City","Genie Invocation"];
+    const ATLAS_FAMILIES = ["Crystal Sanctuary","Grand Tree Garden","Historic Ruins","City Ruins","Suspended City"];
 
     function openCelestialAtlas() {
       const panel = document.getElementById("celestialAtlasPanel");
@@ -1524,17 +1505,6 @@ Ryzen 7 = moteur de production.`;
       document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
       try { localStorage.setItem("seven-terminal-bg-index", String(backgroundIndex)); } catch (e) {}
       setStatus("Fond actif : " + bg.name);
-    }
-
-
-    function activateGenieBackgroundTheme() {
-      const index = BACKGROUNDS.findIndex(bg => bg.family === "Genie Invocation");
-      if (index >= 0) {
-        applyBackground(index);
-        document.body.dataset.atlasFamily = "Genie Invocation";
-        if (typeof renderAtlasGrid === "function") renderAtlasGrid("Genie Invocation");
-        setStatus("Thème Génie activé.");
-      }
     }
 
     function nextBackground() {
@@ -2428,6 +2398,51 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     }
 
     bootHeroManualFocus();
+
+  
+    function syncHomeSystemTrace() {
+      const pairs = [
+        ["homeTraceStamp", "traceStamp"],
+        ["homeTraceOs", "traceOs"],
+        ["homeTracePlatform", "tracePlatform"],
+        ["homeTraceBrowser", "traceBrowser"],
+        ["homeTraceAgent", "traceAgent"],
+        ["homeTraceScreen", "traceScreen"],
+        ["homeTraceViewport", "traceViewport"],
+        ["homeTraceTimezone", "traceTimezone"],
+        ["homeTraceLanguage", "traceLanguage"]
+      ];
+
+      pairs.forEach(([homeId, sourceId]) => {
+        const home = document.getElementById(homeId);
+        const source = document.getElementById(sourceId);
+        if (home && source) home.textContent = source.textContent;
+      });
+    }
+
+    function refreshHomeSystemTrace() {
+      try {
+        if (typeof refreshSystemDetails === "function") refreshSystemDetails();
+        if (typeof updateTraceProCards === "function") updateTraceProCards();
+      } catch (e) {}
+      setTimeout(syncHomeSystemTrace, 80);
+      setTimeout(syncHomeSystemTrace, 700);
+      if (typeof setStatus === "function") setStatus("Advanced System Trace accueil actualisé.");
+    }
+
+    async function copyHomeSystemDiagnostics() {
+      if (typeof buildSystemDiagnosticText === "function" && typeof copyText === "function") {
+        await copyText(buildSystemDiagnosticText());
+        if (typeof setStatus === "function") setStatus("Diagnostic système copié.");
+      }
+    }
+
+    function bootHomeSystemTrace() {
+      refreshHomeSystemTrace();
+      setTimeout(refreshHomeSystemTrace, 900);
+    }
+
+    bootHomeSystemTrace();
 
   </script>
 </body>
