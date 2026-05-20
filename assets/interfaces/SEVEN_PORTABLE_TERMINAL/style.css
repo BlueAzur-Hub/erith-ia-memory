@@ -525,3 +525,20 @@ footer {
   .label, .desc { text-align: left; }
   .text { display: flex; flex-direction: column; }
 }
+
+
+/* Compact stylus refinement */
+.card .desc {
+  max-width: 92%;
+}
+
+@media (min-width: 821px) {
+  .grid.compact-grid,
+  .grid {
+    align-items: stretch;
+  }
+
+  a.card, button.card {
+    justify-content: center;
+  }
+}
