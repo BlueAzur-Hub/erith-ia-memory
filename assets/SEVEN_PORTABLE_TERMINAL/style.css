@@ -5322,11 +5322,10 @@ body:not(.readability-off) .palette-card {
 
 
 /* =======================================================
-   V5.2 CALQUE FINAL LOCK
-   Calqué sur les fichiers fournis par Christophe.
-   Objectif : conserver le cockpit Celestial Atlas / Golden Glass,
-   mais rétablir la transparence propre, le Hero image HTML,
-   les boutons transparents au repos, et le mode sombre stable.
+   V5.2 CALQUE SCRIPT FINAL LOCK
+   Base: style(6).css + script(3).js.
+   Preserve Celestial Atlas / Golden Glass, but force the
+   validated transparent cockpit behavior.
 ======================================================= */
 
 body.mode-transparent,
@@ -5336,10 +5335,10 @@ body.readability-off {
   --tile-alpha: .06;
 }
 
-body.readability-on,
-body.mode-dark {
-  --glass-alpha: .18;
-  --panel-alpha: .24;
+body.mode-readability,
+body.readability-on {
+  --glass-alpha: .20;
+  --panel-alpha: .28;
   --tile-alpha: .18;
 }
 
@@ -5350,32 +5349,31 @@ body.readability-off .terminal {
     radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 42%) !important;
 }
 
-body.readability-on .terminal,
-body.mode-dark .terminal {
+body.mode-readability .terminal,
+body.readability-on .terminal {
   background:
-    linear-gradient(180deg, rgba(0,0,0,.26), rgba(0,0,0,.34)),
+    linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.36)),
     radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 42%) !important;
 }
 
 .hero {
-  overflow: hidden;
-  min-height: 152px;
-  border-bottom: 1px solid rgba(255,216,121,.28);
+  overflow: hidden !important;
+  min-height: 152px !important;
   background: transparent !important;
   box-shadow:
     inset 0 0 0 1px rgba(255,216,121,.16),
-    0 0 20px rgba(255,216,121,.14);
+    0 0 20px rgba(255,216,121,.14) !important;
 }
 
 .hero-bg-img,
 #heroImage {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
   object-position: 50% 34%;
   transform: scale(1);
   transform-origin: 50% 34%;
@@ -5383,27 +5381,27 @@ body.mode-dark .terminal {
 }
 
 .hero-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
   background:
     linear-gradient(90deg, rgba(0,0,0,.58), rgba(0,0,0,.14) 58%, rgba(0,0,0,.30)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px);
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
 }
 
-body.readability-on .hero-veil,
-body.mode-dark .hero-veil {
+body.mode-readability .hero-veil,
+body.readability-on .hero-veil {
   background:
     linear-gradient(90deg, rgba(0,0,0,.76), rgba(0,0,0,.36) 58%, rgba(0,0,0,.52)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px);
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
 }
 
 .hero-main,
 .portrait,
 .hero-position-panel {
-  position: relative;
-  z-index: 2;
+  position: relative !important;
+  z-index: 2 !important;
 }
 
 .topnav,
@@ -5457,12 +5455,12 @@ footer {
 }
 
 .command-dot-top,
-#commandDotTopBtn {
-  width: 31px;
-  min-width: 31px;
+#paletteBtn {
+  width: 31px !important;
+  min-width: 31px !important;
   padding: 0 !important;
-  text-align: center;
-  line-height: 1;
+  text-align: center !important;
+  line-height: 1 !important;
 }
 
 .help-launcher {
@@ -5476,6 +5474,7 @@ footer {
   backdrop-filter: blur(3px) saturate(1.06);
 }
 
+body.show-hero .hero-position-panel,
 body.show-hero-focus .hero-position-panel {
   display: block !important;
 }
