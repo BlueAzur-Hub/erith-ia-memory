@@ -5530,3 +5530,97 @@ body.readability-on .toolbar,
 body.readability-on .memory-ribbon {
   background: rgba(8, 12, 18, 0.62) !important;
 }
+
+
+/* =========================================================
+   SEVEN V5.2 — READABILITY LEVEL 2 FINAL OVERRIDE
+   Cartes + toolbar + trace plus lisibles
+   Fond général conservé transparent
+========================================================= */
+
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .home-sober-toolbar,
+body:not(.readability-off) .section-title {
+  background: rgba(8, 12, 18, 0.34) !important;
+  border-color: rgba(232, 201, 120, 0.50) !important;
+  backdrop-filter: blur(5px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(5px) saturate(1.05) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18) !important;
+}
+
+body:not(.readability-off) .tile {
+  background: rgba(8, 12, 18, 0.42) !important;
+  border-color: rgba(232, 201, 120, 0.36) !important;
+  backdrop-filter: blur(6px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.05) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18) !important;
+}
+
+body:not(.readability-off) .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.50), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.07), transparent 45%) !important;
+}
+
+body:not(.readability-off) .tile::before {
+  opacity: .30 !important;
+  filter: saturate(1.02) brightness(.92) !important;
+}
+
+body:not(.readability-off) .tile:hover,
+body:not(.readability-off) .tile:focus,
+body:not(.readability-off) .tile.selected,
+body:not(.readability-off) .tile.gold {
+  background: rgba(8, 12, 18, 0.62) !important;
+  border-color: rgba(232, 201, 120, 0.80) !important;
+  box-shadow:
+    0 0 18px rgba(232,201,120,0.16),
+    0 10px 24px rgba(0,0,0,0.24) !important;
+}
+
+body:not(.readability-off) .tab,
+body:not(.readability-off) .mini-control,
+body:not(.readability-off) button {
+  background: rgba(8, 12, 18, 0.20) !important;
+  border-color: rgba(232, 201, 120, 0.34) !important;
+  color: rgba(255,255,255,0.96) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.75) !important;
+}
+
+body:not(.readability-off) .tab:hover,
+body:not(.readability-off) .mini-control:hover,
+body:not(.readability-off) button:hover {
+  background: rgba(8, 12, 18, 0.58) !important;
+  border-color: rgba(232, 201, 120, 0.82) !important;
+  box-shadow: 0 0 16px rgba(232,201,120,0.16) !important;
+}
+
+body:not(.readability-off) .home-system-trace,
+body:not(.readability-off) .system-trace-pro {
+  background: rgba(8, 12, 18, 0.46) !important;
+  border-color: rgba(127, 215, 255, 0.36) !important;
+  backdrop-filter: blur(6px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.05) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.22) !important;
+}
+
+body:not(.readability-off) .trace-card,
+body:not(.readability-off) .net-card,
+body:not(.readability-off) .device-card,
+body:not(.readability-off) .advanced-box {
+  background: rgba(8, 12, 18, 0.44) !important;
+  border-color: rgba(232, 201, 120, 0.30) !important;
+  backdrop-filter: blur(6px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.05) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18) !important;
+}
+
+body:not(.readability-off) .trace-pill,
+body:not(.readability-off) .badge,
+body:not(.readability-off) .chip,
+body:not(.readability-off) footer span {
+  background: rgba(8, 12, 18, 0.48) !important;
+  border-color: rgba(232, 201, 120, 0.34) !important;
+  color: rgba(255,255,255,0.94) !important;
+}
