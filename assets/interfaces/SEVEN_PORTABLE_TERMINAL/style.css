@@ -1,5 +1,5 @@
-/* Seven Portable Terminal — Comfort Compact
-   Version cible : plus grande que micro, plus petite que les grosses cartes initiales.
+/* Seven Portable Terminal — Comfort Detail
+   Version cible : un peu plus grande que Comfort Compact, avec textes de boutons plus détaillés.
 */
 
 :root {
@@ -60,7 +60,7 @@ body::after {
 .terminal {
   position: relative;
   z-index: 1;
-  width: min(1160px, calc(100vw - 24px));
+  width: min(1220px, calc(100vw - 24px));
   margin: 10px auto 0;
   border: 2px solid rgba(255,216,121,.86);
   border-radius: 26px;
@@ -112,7 +112,7 @@ body::after {
 
 .hero {
   position: relative;
-  min-height: 126px;
+  min-height: 136px;
   padding: 14px 132px 12px 18px;
   border-bottom: 1px solid rgba(255,216,121,.28);
   background:
@@ -130,7 +130,7 @@ body::after {
 
 h1 {
   margin: 0;
-  font-size: clamp(30px, 3.7vw, 44px);
+  font-size: clamp(32px, 3.9vw, 46px);
   line-height: 1;
   letter-spacing: .10em;
   text-shadow: 0 3px 14px rgba(0,0,0,.90);
@@ -163,8 +163,8 @@ h1 {
   position: absolute;
   top: 14px;
   right: 18px;
-  width: 92px;
-  height: 98px;
+  width: 98px;
+  height: 104px;
   border: 1px solid rgba(255,216,121,.62);
   border-radius: 20px;
   overflow: hidden;
@@ -190,7 +190,7 @@ h1 {
 
 .page {
   display: none;
-  padding: 13px 14px 15px;
+  padding: 14px 16px 16px;
   background: rgba(0,0,0,.08);
 }
 
@@ -220,11 +220,11 @@ h1 {
 .tile-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .tile {
-  min-height: 70px;
+  min-height: 82px;
   border: 1px solid rgba(255,255,255,.24);
   border-radius: 17px;
   background:
@@ -236,9 +236,9 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 11px;
+  gap: 12px;
   text-align: left;
-  padding: 10px 12px;
+  padding: 12px 14px;
   cursor: pointer;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.10),
@@ -260,10 +260,10 @@ h1 {
 }
 
 .ico {
-  width: 32px;
-  min-width: 32px;
+  width: 36px;
+  min-width: 36px;
   text-align: center;
-  font-size: 25px;
+  font-size: 27px;
   line-height: 1;
 }
 
@@ -275,19 +275,19 @@ h1 {
 }
 
 .txt strong {
-  font-size: 15px;
-  line-height: 1.05;
+  font-size: 16px;
+  line-height: 1.08;
 }
 
 .txt em {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-style: normal;
-  line-height: 1.1;
+  line-height: 1.16;
 }
 
 .status {
-  min-height: 24px;
+  min-height: 26px;
   padding: 7px 10px 8px;
   color: #d7ffc4;
   font-size: 12px;
@@ -309,7 +309,7 @@ h1 {
 
 .drawer textarea {
   width: 100%;
-  min-height: 140px;
+  min-height: 150px;
   display: block;
   border: 0;
   background: rgba(0,0,0,.62);
@@ -361,7 +361,7 @@ footer span {
   }
 
   .hero {
-    min-height: 104px;
+    min-height: 112px;
     padding: 12px 98px 10px 12px;
   }
 
@@ -378,8 +378,8 @@ footer span {
   }
 
   .portrait {
-    width: 70px;
-    height: 76px;
+    width: 78px;
+    height: 82px;
   }
 
   .section-title {
@@ -395,12 +395,38 @@ footer span {
   }
 
   .tile {
-    min-height: 60px;
+    min-height: 68px;
   }
 }
 
 @media (max-width: 460px) {
   .tile-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+
+/* Comfort Detail refinement */
+.txt em {
+  max-width: 100%;
+}
+
+.tile {
+  overflow: hidden;
+}
+
+@media (min-width: 861px) {
+  .tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .txt strong {
+    font-size: 14px;
+  }
+
+  .txt em {
+    font-size: 10.5px;
   }
 }
