@@ -3,279 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Micro Real v2</title>
-  <link rel="stylesheet" href="./style.css?v=micro-real-v2">
-
-  <style id="micro-real-v2-force">
-    /* Force Micro Real v2 — cache-proof */
-    body {
-      padding: 4px !important;
-      align-items: flex-start !important;
-    }
-
-    .terminal {
-      width: min(980px, calc(100% - 10px)) !important;
-      border-radius: 18px !important;
-      border: 2px solid rgba(255,216,121,.88) !important;
-    }
-
-    .topnav {
-      gap: 3px !important;
-      padding: 4px !important;
-    }
-
-    .navbtn {
-      min-height: 26px !important;
-      height: 26px !important;
-      border-radius: 8px !important;
-      padding: 0 4px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 4px !important;
-    }
-
-    .navicon {
-      display: inline !important;
-      font-size: 12px !important;
-      line-height: 1 !important;
-    }
-
-    .navlabel {
-      display: inline !important;
-      font-size: 8px !important;
-      margin: 0 !important;
-      line-height: 1 !important;
-    }
-
-    .hero {
-      min-height: 82px !important;
-      padding: 7px 10px 6px !important;
-    }
-
-    .aerith-panel {
-      top: 7px !important;
-      right: 10px !important;
-      width: 54px !important;
-      height: 62px !important;
-      border-radius: 12px !important;
-    }
-
-    .aerith-fallback {
-      font-size: 8px !important;
-      padding: 4px !important;
-    }
-
-    .aerith-fallback strong {
-      font-size: 22px !important;
-      margin-bottom: 2px !important;
-    }
-
-    .hero-text {
-      padding-right: 70px !important;
-    }
-
-    .kicker {
-      font-size: 7px !important;
-      letter-spacing: .18em !important;
-      margin: 0 0 2px !important;
-    }
-
-    .title {
-      font-size: 22px !important;
-      line-height: 1 !important;
-      letter-spacing: .10em !important;
-    }
-
-    .subtitle {
-      display: none !important;
-    }
-
-    .status-row {
-      margin-top: 5px !important;
-      gap: 3px !important;
-    }
-
-    .chip {
-      padding: 2px 5px !important;
-      font-size: 8px !important;
-      line-height: 1 !important;
-      gap: 2px !important;
-    }
-
-    .timeline {
-      display: none !important;
-    }
-
-    .page {
-      padding: 6px 8px 8px !important;
-    }
-
-    .page-title {
-      margin: 0 0 5px !important;
-    }
-
-    .page-title h2 {
-      font-size: 13px !important;
-      line-height: 1.1 !important;
-    }
-
-    .page-title p {
-      display: none !important;
-    }
-
-    .group {
-      margin-bottom: 6px !important;
-      border-radius: 12px !important;
-    }
-
-    .group-head {
-      padding: 4px 7px !important;
-      font-size: 10px !important;
-      line-height: 1.1 !important;
-    }
-
-    .grid {
-      grid-template-columns: repeat(6, 1fr) !important;
-      gap: 4px !important;
-      padding: 5px !important;
-    }
-
-    a.card,
-    button.card {
-      min-height: 34px !important;
-      height: 34px !important;
-      padding: 3px 5px !important;
-      border-radius: 9px !important;
-      flex-direction: row !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 4px !important;
-    }
-
-    a.card::before,
-    button.card::before {
-      height: 1px !important;
-      left: 24% !important;
-      right: 24% !important;
-    }
-
-    .icon {
-      width: auto !important;
-      min-width: 0 !important;
-      font-size: 14px !important;
-      margin: 0 !important;
-      line-height: 1 !important;
-    }
-
-    .text {
-      display: block !important;
-      min-width: 0 !important;
-    }
-
-    .label {
-      font-size: 9px !important;
-      line-height: 1 !important;
-      text-align: center !important;
-      white-space: normal !important;
-      letter-spacing: 0 !important;
-    }
-
-    .desc {
-      display: none !important;
-    }
-
-    .status {
-      min-height: 14px !important;
-      padding: 0 8px 5px !important;
-      font-size: 9px !important;
-    }
-
-    .drawer {
-      margin: 0 8px 6px !important;
-      border-radius: 10px !important;
-    }
-
-    .drawer-head {
-      padding: 5px 7px !important;
-      font-size: 10px !important;
-    }
-
-    .drawer-body {
-      padding: 6px !important;
-      font-size: 9px !important;
-    }
-
-    .drawer-body p {
-      display: none !important;
-    }
-
-    .drawer textarea {
-      min-height: 92px !important;
-      border-radius: 8px !important;
-      padding: 6px !important;
-      font-size: 9px !important;
-    }
-
-    footer {
-      padding: 4px 8px 5px !important;
-      font-size: 8px !important;
-    }
-
-    .pill {
-      padding: 2px 6px !important;
-      margin: 1px !important;
-      font-size: 8px !important;
-    }
-
-    @media (max-width: 1100px) {
-      .terminal {
-        width: min(900px, calc(100% - 8px)) !important;
-      }
-
-      .grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-      }
-
-      a.card,
-      button.card {
-        justify-content: flex-start !important;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .topnav {
-        grid-template-columns: repeat(3, 1fr) !important;
-      }
-
-      .navbtn {
-        height: 28px !important;
-      }
-
-      .hero {
-        min-height: 70px !important;
-      }
-
-      .title {
-        font-size: 17px !important;
-      }
-
-      .status-row {
-        display: none !important;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-      }
-
-      a.card,
-      button.card {
-        min-height: 32px !important;
-        height: 32px !important;
-      }
-    }
-  </style>
-
+  <title>Seven Portable Terminal — Micro Stylus</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -296,7 +25,7 @@
       </div>
 
       <div class="hero-text">
-        <p class="kicker">Sky Cockpit · Micro Real v2 · Golden Clouds</p>
+        <p class="kicker">Sky Cockpit · Micro Stylus · Golden Clouds</p>
         <h1 class="title">✦ Seven Portable Terminal</h1>
         <p class="subtitle">Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -337,7 +66,7 @@
           <button class="card boost" onclick="copyVideoCardsBoost()">
             <div class="icon">🎴</div>
             <div class="text">
-              <div class="label">Video Cards</div>
+              <div class="label">Seven Heaven Video Cards Boost</div>
               <div class="desc">Copie le mode production vidéo : phase, risque, cartes utiles, action, arrêt.</div>
             </div>
           </button>
@@ -345,7 +74,7 @@
           <button class="card" onclick="copyWan()">
             <div class="icon">📱</div>
             <div class="text">
-              <div class="label">Wan 1080</div>
+              <div class="label">Wan 1080×1920</div>
               <div class="desc">Copie la checklist I2V verticale validée.</div>
             </div>
           </button>
@@ -358,7 +87,7 @@
           <button class="card" onclick="togglePrompt()">
             <div class="icon">📋</div>
             <div class="text">
-              <div class="label">Prompt</div>
+              <div class="label">Voir le prompt</div>
               <div class="desc">Affiche le prompt Seven intégré.</div>
             </div>
           </button>
@@ -366,7 +95,7 @@
           <button class="card" onclick="copyTerminalLink()">
             <div class="icon">🔗</div>
             <div class="text">
-              <div class="label">Lien</div>
+              <div class="label">Copier le lien</div>
               <div class="desc">Copie l’URL publique du cockpit.</div>
             </div>
           </button>
@@ -374,7 +103,7 @@
           <button class="card" onclick="copyBlackout()">
             <div class="icon">🌑</div>
             <div class="text">
-              <div class="label">Blackout</div>
+              <div class="label">Mode Blackout</div>
               <div class="desc">Texte uniquement, aucun outil image.</div>
             </div>
           </button>
@@ -410,7 +139,7 @@
             <div class="icon">🎴</div><div class="text"><div class="label">Video Cards Boost</div><div class="desc">Copie le prompt court production vidéo.</div></div>
           </button>
           <button class="card" onclick="copyBlackout()">
-            <div class="icon">🌑</div><div class="text"><div class="label">Blackout</div><div class="desc">Texte uniquement, aucun outil image.</div></div>
+            <div class="icon">🌑</div><div class="text"><div class="label">Mode Blackout</div><div class="desc">Texte uniquement, aucun outil image.</div></div>
           </button>
           <button class="card" onclick="copyModules()">
             <div class="icon">🧩</div><div class="text"><div class="label">Modules Mémoire</div><div class="desc">Sélectionner les modules utiles seulement.</div></div>
@@ -432,7 +161,7 @@
             <div class="icon">📚</div><div class="text"><div class="label">Notion</div><div class="desc">Accueil Notion.</div></div>
           </a>
           <a class="card boost" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener">
-            <div class="icon">🌐</div><div class="text"><div class="label">Auto-Agent</div><div class="desc">Interface publique, Pack+, prompts et modules.</div></div>
+            <div class="icon">🌐</div><div class="text"><div class="label">ERITH.IA Auto-Agent</div><div class="desc">Interface publique, Pack+, prompts et modules.</div></div>
           </a>
           <a class="card" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_self" rel="noopener">
             <div class="icon">🌸</div><div class="text"><div class="label">ERITH Memory</div><div class="desc">Page mémoire principale si accessible.</div></div>
@@ -444,10 +173,10 @@
         <div class="group-head">Memory Cores</div>
         <div class="grid">
           <a class="card boost" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener">
-            <div class="icon">💠</div><div class="text"><div class="label">@7Heaven Core</div><div class="desc">Cœur mémoire Seven / 7Heaven.</div></div>
+            <div class="icon">💠</div><div class="text"><div class="label">@7Heaven Memory Core</div><div class="desc">Cœur mémoire Seven / 7Heaven.</div></div>
           </a>
           <a class="card" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener">
-            <div class="icon">🤖</div><div class="text"><div class="label">ChatGPT Core</div><div class="desc">Cœur mémoire du Chat et règles actives.</div></div>
+            <div class="icon">🤖</div><div class="text"><div class="label">Le Chat GPT Memory Core</div><div class="desc">Cœur mémoire du Chat et règles actives.</div></div>
           </a>
           <button class="card" onclick="copyNotionText()">
             <div class="icon">✍️</div><div class="text"><div class="label">Texte présentation</div><div class="desc">Copie le mini texte Notion du cockpit.</div></div>
@@ -518,7 +247,7 @@
         <div class="group-head">Diffusion</div>
         <div class="grid">
           <a class="card boost" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener">
-            <div class="icon">🔵</div><div class="text"><div class="label">Blue Azur</div><div class="desc">Ouvre ta chaîne YouTube.</div></div>
+            <div class="icon">🔵</div><div class="text"><div class="label">Blue Azur [Bleu d'Azur]</div><div class="desc">Ouvre ta chaîne YouTube.</div></div>
           </a>
           <a class="card" href="https://studio.youtube.com/" target="_self" rel="noopener">
             <div class="icon">📺</div><div class="text"><div class="label">YouTube Studio</div><div class="desc">Diffusion, titres, miniatures.</div></div>
