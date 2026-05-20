@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Selected Gears Only</title>
-  <link rel="stylesheet" href="./style.css?v=selected-gears-only-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">FULLSCREEN SKY · SELECTED GEARS ONLY · SEVEN COCKPIT</div>
+        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -57,6 +57,11 @@
 
     <section class="page active" id="page-home">
       <div class="sky-control-strip">
+        <button class="mini-control atlas-control active" onclick="openCelestialAtlas()">🗺️ Celestial Atlas</button>
+        <button class="mini-control atlas-family" onclick="setAtlasFamily('Sky Bridge Ruins')">🌉 Bridge</button>
+        <button class="mini-control atlas-family" onclick="setAtlasFamily('Crystal Sanctuary')">💠 Crystal</button>
+        <button class="mini-control atlas-family" onclick="setAtlasFamily('Grand Tree Garden')">🌳 Tree</button>
+        <button class="mini-control atlas-family" onclick="setAtlasFamily('Historic Ruins')">🏛️ Ruins</button>
         <button class="mini-control active" data-ui-mode="sky" onclick="setUiMode('sky')" data-help="Mode clair et céleste : interface douce, nuages, transparence modérée." data-intent="visual" aria-label="☁️ Sky">☁️ Sky</button>
         <button class="mini-control" data-ui-mode="crystal" onclick="setUiMode('crystal')" data-help="Mode cristal : accent bleu, HUD plus cybernétique et lumineux." data-intent="visual" aria-label="💠 Crystal">💠 Crystal</button>
         <button class="mini-control" data-ui-mode="night" onclick="setUiMode('night')" data-help="Mode nuit : interface plus profonde, contraste plus fort, ambiance lunaire." data-intent="visual" aria-label="🌙 Night">🌙 Night</button>
@@ -78,6 +83,24 @@
           <span>🖱️ hover / focus</span>
         </div>
       </aside>
+      <section class="celestial-atlas-panel" id="celestialAtlasPanel">
+        <div class="atlas-head">
+          <div>
+            <strong>🗺️ Celestial Atlas</strong>
+            <span>fonds classés par familles — Aerith reste uniquement l’avatar</span>
+          </div>
+          <button onclick="randomAtlasBackground()">🎲 Atlas random</button>
+        </div>
+        <div class="atlas-family-grid" id="atlasFamilyGrid">
+          <button onclick="setAtlasFamily('Sky Bridge Ruins')"><strong>🌉 Sky Bridge</strong><em>Ponts, nuages, ruines flottantes</em></button>
+          <button onclick="setAtlasFamily('Crystal Sanctuary')"><strong>💠 Crystal Sanctuary</strong><em>Temple intérieur, cristal, arche</em></button>
+          <button onclick="setAtlasFamily('Grand Tree Garden')"><strong>🌳 Grand Tree</strong><em>Jardin suspendu, arbre ancien</em></button>
+          <button onclick="setAtlasFamily('Historic Ruins')"><strong>🏛️ Historic Ruins</strong><em>Ruines panoramiques, cockpit large</em></button>
+          <button onclick="setAtlasFamily('Suspended City')"><strong>🏰 Suspended City</strong><em>Cité céleste et seuils lumineux</em></button>
+        </div>
+      </section>
+
+
 
 
       <div class="section-title">
@@ -524,6 +547,38 @@
     const X_SEARCH_LINK = "https://x.com/BlueAzur7";
 
     const BACKGROUNDS = [
+      { name: "Sky Bridge Ruins · plein écran", family: "Sky Bridge Ruins", url: "./atlas_01_sky_bridge_ruins_cover.jpg" },
+      { name: "Sky Bridge Ruins · centré", family: "Sky Bridge Ruins", url: "./atlas_01_sky_bridge_ruins_center.jpg" },
+      { name: "Sky Bridge Ruins · fenêtre", family: "Sky Bridge Ruins", url: "./atlas_01_sky_bridge_ruins_window.jpg" },
+      { name: "Sky Bridge Ruins · lumineux", family: "Sky Bridge Ruins", url: "./atlas_01_sky_bridge_ruins_luminous.jpg" },
+      { name: "Sky Bridge Ruins · plein écran", family: "Sky Bridge Ruins", url: "./atlas_02_sky_bridge_ruins_cover.jpg" },
+      { name: "Sky Bridge Ruins · centré", family: "Sky Bridge Ruins", url: "./atlas_02_sky_bridge_ruins_center.jpg" },
+      { name: "Sky Bridge Ruins · fenêtre", family: "Sky Bridge Ruins", url: "./atlas_02_sky_bridge_ruins_window.jpg" },
+      { name: "Sky Bridge Ruins · lumineux", family: "Sky Bridge Ruins", url: "./atlas_02_sky_bridge_ruins_luminous.jpg" },
+      { name: "Sky Bridge Ruins · plein écran", family: "Sky Bridge Ruins", url: "./atlas_03_sky_bridge_ruins_cover.jpg" },
+      { name: "Sky Bridge Ruins · centré", family: "Sky Bridge Ruins", url: "./atlas_03_sky_bridge_ruins_center.jpg" },
+      { name: "Sky Bridge Ruins · fenêtre", family: "Sky Bridge Ruins", url: "./atlas_03_sky_bridge_ruins_window.jpg" },
+      { name: "Sky Bridge Ruins · lumineux", family: "Sky Bridge Ruins", url: "./atlas_03_sky_bridge_ruins_luminous.jpg" },
+      { name: "Crystal Sanctuary · plein écran", family: "Crystal Sanctuary", url: "./atlas_04_crystal_sanctuary_cover.jpg" },
+      { name: "Crystal Sanctuary · centré", family: "Crystal Sanctuary", url: "./atlas_04_crystal_sanctuary_center.jpg" },
+      { name: "Crystal Sanctuary · fenêtre", family: "Crystal Sanctuary", url: "./atlas_04_crystal_sanctuary_window.jpg" },
+      { name: "Crystal Sanctuary · lumineux", family: "Crystal Sanctuary", url: "./atlas_04_crystal_sanctuary_luminous.jpg" },
+      { name: "Grand Tree Garden · plein écran", family: "Grand Tree Garden", url: "./atlas_05_grand_tree_garden_cover.jpg" },
+      { name: "Grand Tree Garden · centré", family: "Grand Tree Garden", url: "./atlas_05_grand_tree_garden_center.jpg" },
+      { name: "Grand Tree Garden · fenêtre", family: "Grand Tree Garden", url: "./atlas_05_grand_tree_garden_window.jpg" },
+      { name: "Grand Tree Garden · lumineux", family: "Grand Tree Garden", url: "./atlas_05_grand_tree_garden_luminous.jpg" },
+      { name: "Historic Ruins · plein écran", family: "Historic Ruins", url: "./atlas_06_historic_ruins_cover.jpg" },
+      { name: "Historic Ruins · centré", family: "Historic Ruins", url: "./atlas_06_historic_ruins_center.jpg" },
+      { name: "Historic Ruins · fenêtre", family: "Historic Ruins", url: "./atlas_06_historic_ruins_window.jpg" },
+      { name: "Historic Ruins · lumineux", family: "Historic Ruins", url: "./atlas_06_historic_ruins_luminous.jpg" },
+      { name: "Suspended City · plein écran", family: "Suspended City", url: "./atlas_07_suspended_city_cover.jpg" },
+      { name: "Suspended City · centré", family: "Suspended City", url: "./atlas_07_suspended_city_center.jpg" },
+      { name: "Suspended City · fenêtre", family: "Suspended City", url: "./atlas_07_suspended_city_window.jpg" },
+      { name: "Suspended City · lumineux", family: "Suspended City", url: "./atlas_07_suspended_city_luminous.jpg" },
+      { name: "Suspended City · plein écran", family: "Suspended City", url: "./atlas_08_suspended_city_cover.jpg" },
+      { name: "Suspended City · centré", family: "Suspended City", url: "./atlas_08_suspended_city_center.jpg" },
+      { name: "Suspended City · fenêtre", family: "Suspended City", url: "./atlas_08_suspended_city_window.jpg" },
+      { name: "Suspended City · lumineux", family: "Suspended City", url: "./atlas_08_suspended_city_luminous.jpg" },
       { name: "Pont vers ruines plein écran", url: "./fullscreen_bg_1_cover.jpg" },
       { name: "Pont vers ruines centré", url: "./fullscreen_bg_1_center_close.jpg" },
       { name: "Pont vers ruines fenêtre", url: "./fullscreen_bg_1_window.jpg" },
@@ -536,12 +591,6 @@
       { name: "Cité suspendue centré", url: "./fullscreen_bg_3_center_close.jpg" },
       { name: "Cité suspendue fenêtre", url: "./fullscreen_bg_3_window.jpg" },
       { name: "Cité suspendue doux", url: "./fullscreen_bg_3_soft.jpg" },
-      { name: "Blossom District Window", url: "./background_blossom_district_window.jpg" },
-      { name: "Blossom District Center", url: "./background_blossom_district_center.jpg" },
-      { name: "Blossom District Close", url: "./background_blossom_district_close.jpg" },
-      { name: "Aerith.7 Memory Cards", url: "./background_aerith_memory_window.jpg" },
-      { name: "Aerith.7 Portrait Center", url: "./background_aerith_center_close.jpg" },
-      { name: "Aerith.7 Cards Orbit", url: "./background_aerith_cards_orbit.jpg" },
       { name: "Fenêtre ancienne dorée", url: "./background_ancient_window_gold.jpg" },
       { name: "Fenêtre ancienne bleue", url: "./background_ancient_window_blue.jpg" },
       { name: "Vue ancienne centrée", url: "./background_ancient_close_jade.jpg" },
@@ -713,24 +762,58 @@ Ryzen 7 = moteur de production.`;
 
 
 
+
+    const ATLAS_FAMILIES = ["Crystal Sanctuary","Grand Tree Garden","Historic Ruins","Sky Bridge Ruins","Suspended City"];
+
+    function openCelestialAtlas() {
+      const panel = document.getElementById("celestialAtlasPanel");
+      if (panel) {
+        panel.classList.toggle("open");
+        setStatus(panel.classList.contains("open") ? "Celestial Atlas ouvert." : "Celestial Atlas replié.");
+      } else {
+        setStatus("Celestial Atlas actif.");
+      }
+    }
+
+    function setAtlasFamily(family) {
+      const matches = BACKGROUNDS
+        .map((bg, index) => ({ bg, index }))
+        .filter(item => item.bg.family === family || (item.bg.name && item.bg.name.includes(family)));
+
+      if (!matches.length) {
+        setStatus("Famille Atlas introuvable : " + family);
+        return;
+      }
+
+      const chosen = matches[0];
+      applyBackground(chosen.index);
+      document.body.dataset.atlasFamily = family;
+      document.querySelectorAll(".atlas-family").forEach(btn => {
+        btn.classList.toggle("selected", btn.textContent.includes(family.split(" ")[0]));
+      });
+      setStatus("Atlas : " + family);
+    }
+
+    function randomAtlasBackground() {
+      const atlasItems = BACKGROUNDS
+        .map((bg, index) => ({ bg, index }))
+        .filter(item => item.bg.url && item.bg.url.includes("atlas_"));
+
+      if (!atlasItems.length) {
+        randomBackground();
+        return;
+      }
+
+      const chosen = atlasItems[Math.floor(Math.random() * atlasItems.length)];
+      applyBackground(chosen.index);
+      document.body.dataset.atlasFamily = chosen.bg.family || "Atlas";
+      setStatus("Atlas random : " + chosen.bg.name);
+    }
+
     function setFullscreenSky() {
       const index = BACKGROUNDS.findIndex(bg => bg.url && bg.url.includes("fullscreen_bg_1_cover.jpg"));
       applyBackground(index >= 0 ? index : 0);
       setStatus("Fullscreen Sky : fonds plein écran actifs.");
-    }
-
-    function setBlossomDecor() {
-      const index = BACKGROUNDS.findIndex(bg => bg.name && bg.name.includes("Blossom District Window"));
-      applyBackground(index >= 0 ? index : 0);
-      document.body.classList.add("blossom-gear");
-      setStatus("Blossom Gear : décor floral mécanique actif.");
-    }
-
-    function setAerithDecor() {
-      const index = BACKGROUNDS.findIndex(bg => bg.name && bg.name.includes("Aerith.7 Memory Cards"));
-      applyBackground(index >= 0 ? index : 0);
-      document.body.classList.add("aerith-decor");
-      setStatus("Aerith Decor : Blossom District · Gear UI.");
     }
 
     function applyBackground(index) {
