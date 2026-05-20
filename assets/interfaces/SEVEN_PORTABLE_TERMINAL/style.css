@@ -833,3 +833,120 @@ footer {
     padding: 0 9px;
   }
 }
+
+
+/* -------------------------------------------------------
+   Site Preview Buttons
+   Chaque bouton peut recevoir une mini-preview personnalisée.
+------------------------------------------------------- */
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--preview-image);
+  background-size: cover;
+  background-position: center;
+  opacity: .34;
+  transform: scale(1.03);
+  transition: opacity .18s ease, transform .18s ease, filter .18s ease;
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.30) 55%, rgba(0,0,0,.48)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.12), transparent 45%);
+  transition: background .18s ease;
+}
+
+.tile:hover::before,
+.tile:focus::before,
+.tile.selected::before,
+.tile.gold::before {
+  opacity: .56;
+  transform: scale(1.07);
+}
+
+.tile:hover::after,
+.tile:focus::after,
+.tile.selected::after,
+.tile.gold::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.52), rgba(0,0,0,.22) 58%, rgba(0,0,0,.38)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.20), transparent 46%);
+}
+
+.no-previews .tile::before {
+  opacity: 0 !important;
+}
+
+.no-previews .tile::after {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.46), rgba(7,18,24,.28)),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 62%) !important;
+}
+
+.tile .ico,
+.tile .txt {
+  position: relative;
+  z-index: 2;
+}
+
+.tile .ico {
+  text-shadow: 0 2px 10px rgba(0,0,0,.88);
+}
+
+.tile .txt strong {
+  text-shadow: 0 2px 11px rgba(0,0,0,.94);
+}
+
+.tile .txt em {
+  text-shadow: 0 2px 9px rgba(0,0,0,.94);
+}
+
+/* Preview asset mapping */
+.tile[data-preview="seven"] { --preview-image: url("./preview_seven_boost.jpg"); }
+.tile[data-preview="videocards"] { --preview-image: url("./preview_video_cards.jpg"); }
+.tile[data-preview="wan"] { --preview-image: url("./preview_wan.jpg"); }
+.tile[data-preview="prompt"] { --preview-image: url("./preview_prompt.jpg"); }
+.tile[data-preview="link"] { --preview-image: url("./preview_link.jpg"); }
+.tile[data-preview="blackout"] { --preview-image: url("./preview_blackout.jpg"); }
+.tile[data-preview="chatgpt"] { --preview-image: url("./preview_chatgpt.jpg"); }
+.tile[data-preview="notion"] { --preview-image: url("./preview_notion.jpg"); }
+.tile[data-preview="autoagent"] { --preview-image: url("./preview_auto_agent.jpg"); }
+.tile[data-preview="memory"] { --preview-image: url("./preview_memory.jpg"); }
+.tile[data-preview="github"] { --preview-image: url("./preview_github.jpg"); }
+.tile[data-preview="rustdesk"] { --preview-image: url("./preview_rustdesk.jpg"); }
+.tile[data-preview="network"] { --preview-image: url("./preview_network.jpg"); }
+.tile[data-preview="youtube"] { --preview-image: url("./preview_youtube.jpg"); }
+.tile[data-preview="blueazur"] { --preview-image: url("./preview_blue_azur.jpg"); }
+.tile[data-preview="runninghub"] { --preview-image: url("./preview_runninghub.jpg"); }
+.tile[data-preview="civitai"] { --preview-image: url("./preview_civitai.jpg"); }
+.tile[data-preview="elevenlabs"] { --preview-image: url("./preview_elevenlabs.jpg"); }
+.tile[data-preview="facebook"] { --preview-image: url("./preview_facebook.jpg"); }
+.tile[data-preview="x"] { --preview-image: url("./preview_x.jpg"); }
+
+@media (max-width: 860px) {
+  .tile::before {
+    opacity: .28;
+  }
+
+  .tile:hover::before,
+  .tile:focus::before,
+  .tile.selected::before,
+  .tile.gold::before {
+    opacity: .46;
+  }
+}

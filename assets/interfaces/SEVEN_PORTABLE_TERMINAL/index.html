@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Seven Heaven Sky UI</title>
-  <link rel="stylesheet" href="./style.css?v=seven-heaven-sky-ui-1">
+  <title>Seven Portable Terminal — Site Preview UI</title>
+  <link rel="stylesheet" href="./style.css?v=site-preview-ui-1">
 </head>
 
 <body>
@@ -27,7 +27,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN · SKY UI · CLOUD COCKPIT</div>
+        <div class="kicker">SITE PREVIEW UI · SEVEN HEAVEN · CLOUD COCKPIT</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -53,6 +53,7 @@
         <button class="mini-control" data-ui-mode="crystal" onclick="setUiMode('crystal')">💠 Crystal</button>
         <button class="mini-control" data-ui-mode="night" onclick="setUiMode('night')">🌙 Night</button>
         <button class="mini-control" onclick="toggleGlass()">🫧 Glass</button>
+        <button class="mini-control active" id="previewModeBtn" onclick="togglePreviewMode()">🪟 Previews</button>
         <button class="mini-control" onclick="nextBackground()">🖼️ Background</button>
         <button class="mini-control" onclick="randomBackground()">🎲 Random</button>
       </div>
@@ -62,32 +63,32 @@
       </div>
 
       <div class="tile-grid">
-        <button class="tile gold" onclick="startSeven()">
+        <button class="tile gold" onclick="startSeven()" data-preview="seven">
           <span class="ico">💠</span>
           <span class="txt"><strong>Seven Boost</strong><em>Copie le prompt complet Seven Heaven puis ouvre ChatGPT</em></span>
         </button>
 
-        <button class="tile gold" onclick="copyVideoCards()">
+        <button class="tile gold" onclick="copyVideoCards()" data-preview="videocards">
           <span class="ico">🎴</span>
           <span class="txt"><strong>Video Cards Boost</strong><em>Production vidéo : phase, risque, cartes utiles, action, arrêt</em></span>
         </button>
 
-        <button class="tile" onclick="copyWan()">
+        <button class="tile" onclick="copyWan()" data-preview="wan">
           <span class="ico">📱</span>
           <span class="txt"><strong>Wan 1080×1920</strong><em>Réglages validés : 1080×1920, 16 fps, length 81</em></span>
         </button>
 
-        <button class="tile" onclick="togglePrompt()">
+        <button class="tile" onclick="togglePrompt()" data-preview="prompt">
           <span class="ico">📋</span>
           <span class="txt"><strong>Voir le prompt</strong><em>Affiche le prompt intégré pour vérification ou copie manuelle</em></span>
         </button>
 
-        <button class="tile" onclick="copyTerminalLink()">
+        <button class="tile" onclick="copyTerminalLink()" data-preview="link">
           <span class="ico">🔗</span>
           <span class="txt"><strong>Copier le lien</strong><em>Copie l’adresse publique du terminal Seven</em></span>
         </button>
 
-        <button class="tile" onclick="copyBlackout()">
+        <button class="tile" onclick="copyBlackout()" data-preview="blackout">
           <span class="ico">🌑</span>
           <span class="txt"><strong>Mode Blackout</strong><em>Mode sécurité : texte seul, aucun outil image</em></span>
         </button>
@@ -110,12 +111,12 @@
       </div>
 
       <div class="tile-grid">
-        <button class="tile gold" onclick="startSeven()"><span class="ico">🌸</span><span class="txt"><strong>Aerith / ChatGPT</strong><em>Copie Seven Heaven puis ouvre ChatGPT</em></span></button>
-        <a class="tile" href="https://chatgpt.com/" target="_self" rel="noopener"><span class="ico">💬</span><span class="txt"><strong>ChatGPT</strong><em>Ouvre ChatGPT sans copier de prompt</em></span></a>
-        <button class="tile" onclick="copySevenOnly()"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven</strong><em>Copie le prompt Seven sans ouvrir de page</em></span></button>
-        <button class="tile" onclick="copyModules()"><span class="ico">🧩</span><span class="txt"><strong>Modules Mémoire</strong><em>Sélectionne uniquement les modules utiles</em></span></button>
-        <button class="tile" onclick="copyVideoCards()"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Cartes vidéo, Cartes vidéo, Wan, DaVinci, Shorts</em></span></button>
-        <button class="tile" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Aucun outil image, aucune génération</em></span></button>
+        <button class="tile gold" onclick="startSeven()" data-preview="chatgpt"><span class="ico">🌸</span><span class="txt"><strong>Aerith / ChatGPT</strong><em>Copie Seven Heaven puis ouvre ChatGPT</em></span></button>
+        <a class="tile" href="https://chatgpt.com/" target="_self" rel="noopener" data-preview="chatgpt"><span class="ico">💬</span><span class="txt"><strong>ChatGPT</strong><em>Ouvre ChatGPT sans copier de prompt</em></span></a>
+        <button class="tile" onclick="copySevenOnly()" data-preview="seven"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven</strong><em>Copie le prompt Seven sans ouvrir de page</em></span></button>
+        <button class="tile" onclick="copyModules()" data-preview="memory"><span class="ico">🧩</span><span class="txt"><strong>Modules Mémoire</strong><em>Sélectionne uniquement les modules utiles</em></span></button>
+        <button class="tile" onclick="copyVideoCards()" data-preview="videocards"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Cartes vidéo, Cartes vidéo, Wan, DaVinci, Shorts</em></span></button>
+        <button class="tile" onclick="copyBlackout()" data-preview="blackout"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Aucun outil image, aucune génération</em></span></button>
       </div>
     </section>
 
@@ -126,12 +127,12 @@
       </div>
 
       <div class="tile-grid">
-        <a class="tile" href="https://www.notion.so/" target="_self" rel="noopener"><span class="ico">📚</span><span class="txt"><strong>Notion</strong><em>Accueil Notion</em></span></a>
-        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>ERITH.IA Auto-Agent</strong><em>Auto-Agent public, Pack+, prompts, modules</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale du projet</em></span></a>
-        <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener"><span class="ico">💠</span><span class="txt"><strong>@7Heaven Core</strong><em>Cœur mémoire Seven / 7Heaven</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener"><span class="ico">🤖</span><span class="txt"><strong>ChatGPT Core</strong><em>Règles actives et mémoire du Chat</em></span></a>
-        <button class="tile" onclick="copyNotionText()"><span class="ico">✍️</span><span class="txt"><strong>Texte Notion</strong><em>Copie le bloc Notion avec tous les liens</em></span></button>
+        <a class="tile" href="https://www.notion.so/" target="_self" rel="noopener" data-preview="notion"><span class="ico">📚</span><span class="txt"><strong>Notion</strong><em>Accueil Notion</em></span></a>
+        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener" data-preview="autoagent"><span class="ico">🌐</span><span class="txt"><strong>ERITH.IA Auto-Agent</strong><em>Auto-Agent public, Pack+, prompts, modules</em></span></a>
+        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener" data-preview="memory"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale du projet</em></span></a>
+        <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener" data-preview="seven"><span class="ico">💠</span><span class="txt"><strong>@7Heaven Core</strong><em>Cœur mémoire Seven / 7Heaven</em></span></a>
+        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener" data-preview="chatgpt"><span class="ico">🤖</span><span class="txt"><strong>ChatGPT Core</strong><em>Règles actives et mémoire du Chat</em></span></a>
+        <button class="tile" onclick="copyNotionText()" data-preview="notion"><span class="ico">✍️</span><span class="txt"><strong>Texte Notion</strong><em>Copie le bloc Notion avec tous les liens</em></span></button>
       </div>
     </section>
 
@@ -142,12 +143,12 @@
       </div>
 
       <div class="tile-grid">
-        <a class="tile" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener"><span class="ico">🧭</span><span class="txt"><strong>BlueAzur-Hub</strong><em>Accueil du compte BlueAzur-Hub</em></span></a>
-        <a class="tile gold" href="https://github.com/BlueAzur-Hub/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>GitHub public</strong><em>Dépôt public ERITH.IA / terminal</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_self" rel="noopener"><span class="ico">🔐</span><span class="txt"><strong>GitHub privé</strong><em>Mémoire machine privée si connecté</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Porte d’entrée RAW pour réveiller Seven</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener"><span class="ico">💠</span><span class="txt"><strong>Full Modules Boost</strong><em>Full Modules Boost sans tout charger</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_VIDEO_CARDS_BOOST.md" target="_self" rel="noopener"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Cartes vidéo, Wan, DaVinci, Shorts</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener" data-preview="github"><span class="ico">🧭</span><span class="txt"><strong>BlueAzur-Hub</strong><em>Accueil du compte BlueAzur-Hub</em></span></a>
+        <a class="tile gold" href="https://github.com/BlueAzur-Hub/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener" data-preview="github"><span class="ico">🌐</span><span class="txt"><strong>GitHub public</strong><em>Dépôt public ERITH.IA / terminal</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_self" rel="noopener" data-preview="github"><span class="ico">🔐</span><span class="txt"><strong>GitHub privé</strong><em>Mémoire machine privée si connecté</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener" data-preview="seven"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Porte d’entrée RAW pour réveiller Seven</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener" data-preview="seven"><span class="ico">💠</span><span class="txt"><strong>Full Modules Boost</strong><em>Full Modules Boost sans tout charger</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_VIDEO_CARDS_BOOST.md" target="_self" rel="noopener" data-preview="videocards"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Cartes vidéo, Wan, DaVinci, Shorts</em></span></a>
       </div>
     </section>
 
@@ -158,24 +159,24 @@
       </div>
 
       <div class="tile-grid">
-        <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur</em></span></a>
-        <a class="tile" href="https://www.facebook.com/search/top?q=Blue%20Azur" target="_self" rel="noopener">
+        <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener" data-preview="blueazur"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur</em></span></a>
+        <a class="tile" href="https://www.facebook.com/search/top?q=Blue%20Azur" target="_self" rel="noopener" data-preview="blueazur">
           <span class="ico">📘</span>
           <span class="txt"><strong>Facebook</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
         </a>
 
-        <a class="tile" href="https://x.com/search?q=%22Blue%20Azur%22&src=typed_query" target="_self" rel="noopener">
+        <a class="tile" href="https://x.com/search?q=%22Blue%20Azur%22&src=typed_query" target="_self" rel="noopener" data-preview="blueazur">
           <span class="ico">𝕏</span>
           <span class="txt"><strong>X / Twitter</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
         </a>
 
-        <a class="tile" href="https://studio.youtube.com/" target="_self" rel="noopener"><span class="ico">📺</span><span class="txt"><strong>YouTube Studio</strong><em>Gestion des vidéos, titres et miniatures</em></span></a>
-        <a class="tile" href="https://www.runninghub.ai/" target="_self" rel="noopener"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub / Wan</strong><em>Animation image-to-video Wan / cloud</em></span></a>
-        <a class="tile" href="https://civitai.com/" target="_self" rel="noopener"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, styles et références</em></span></a>
-        <a class="tile" href="https://elevenlabs.io/" target="_self" rel="noopener"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix off, narration et essais sonores</em></span></a>
-        <button class="tile" onclick="copyChannelLink()"><span class="ico">🔗</span><span class="txt"><strong>Copier chaîne</strong><em>Copie le lien de la chaîne Blue Azur</em></span></button>
-        <button class="tile" onclick="copyWan()"><span class="ico">📱</span><span class="txt"><strong>Checklist Wan</strong><em>Réglages vidéo verticaux validés</em></span></button>
-        <button class="tile" onclick="setStatus('DaVinci : montage final sur Ryzen 7. Terminal = pilotage seulement.')"><span class="ico">🎛️</span><span class="txt"><strong>DaVinci</strong><em>Montage final et finition sur Ryzen 7</em></span></button>
+        <a class="tile" href="https://studio.youtube.com/" target="_self" rel="noopener" data-preview="youtube"><span class="ico">📺</span><span class="txt"><strong>YouTube Studio</strong><em>Gestion des vidéos, titres et miniatures</em></span></a>
+        <a class="tile" href="https://www.runninghub.ai/" target="_self" rel="noopener" data-preview="runninghub"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub / Wan</strong><em>Animation image-to-video Wan / cloud</em></span></a>
+        <a class="tile" href="https://civitai.com/" target="_self" rel="noopener" data-preview="civitai"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, styles et références</em></span></a>
+        <a class="tile" href="https://elevenlabs.io/" target="_self" rel="noopener" data-preview="elevenlabs"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix off, narration et essais sonores</em></span></a>
+        <button class="tile" onclick="copyChannelLink()" data-preview="blueazur"><span class="ico">🔗</span><span class="txt"><strong>Copier chaîne</strong><em>Copie le lien de la chaîne Blue Azur</em></span></button>
+        <button class="tile" onclick="copyWan()" data-preview="wan"><span class="ico">📱</span><span class="txt"><strong>Checklist Wan</strong><em>Réglages vidéo verticaux validés</em></span></button>
+        <button class="tile" onclick="setStatus('DaVinci : montage final sur Ryzen 7. Terminal = pilotage seulement.')" data-preview="videocards"><span class="ico">🎛️</span><span class="txt"><strong>DaVinci</strong><em>Montage final et finition sur Ryzen 7</em></span></button>
       </div>
     </section>
 
@@ -205,7 +206,7 @@
       </div>
 
       <div class="tile-grid">
-        <button class="tile gold remote-main" onclick="openRustDeskWeb()">
+        <button class="tile gold remote-main" onclick="openRustDeskWeb()" data-preview="rustdesk">
           <span class="ico">🏰</span>
           <span class="txt">
             <strong>Ryzen 7 Remote</strong>
@@ -213,7 +214,7 @@
           </span>
         </button>
 
-        <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')">
+        <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')" data-preview="seven">
           <span class="ico">✅</span>
           <span class="txt">
             <strong>Rôle validé</strong>
@@ -221,7 +222,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="refreshNetworkHud()">
+        <button class="tile" onclick="refreshNetworkHud()" data-preview="network">
           <span class="ico">📡</span>
           <span class="txt">
             <strong>Refresh réseau</strong>
@@ -229,7 +230,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="copyNetworkStatus()">
+        <button class="tile" onclick="copyNetworkStatus()" data-preview="network">
           <span class="ico">📋</span>
           <span class="txt">
             <strong>Copier état réseau</strong>
@@ -237,7 +238,7 @@
           </span>
         </button>
 
-        <a class="tile" href="https://rustdesk.com/" target="_self" rel="noopener">
+        <a class="tile" href="https://rustdesk.com/" target="_self" rel="noopener" data-preview="rustdesk">
           <span class="ico">🛠️</span>
           <span class="txt">
             <strong>RustDesk</strong>
@@ -245,7 +246,7 @@
           </span>
         </a>
 
-        <button class="tile" onclick="setStatus('Sécurité : ne jamais afficher ID + mot de passe RustDesk en capture publique.')">
+        <button class="tile" onclick="setStatus('Sécurité : ne jamais afficher ID + mot de passe RustDesk en capture publique.')" data-preview="rustdesk">
           <span class="ico">🔐</span>
           <span class="txt">
             <strong>Sécurité Remote</strong>
@@ -253,7 +254,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="copyTerminalLink()">
+        <button class="tile" onclick="copyTerminalLink()" data-preview="link">
           <span class="ico">🔗</span>
           <span class="txt">
             <strong>Lien cockpit</strong>
@@ -261,7 +262,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="copyBlackout()">
+        <button class="tile" onclick="copyBlackout()" data-preview="blackout">
           <span class="ico">🌑</span>
           <span class="txt">
             <strong>Blackout</strong>
@@ -667,6 +668,24 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
       setStatus(document.body.classList.contains("deep-glass") ? "Fond plus transparent : ON" : "Fond plus transparent : OFF");
     }
 
+
+    function togglePreviewMode() {
+      document.body.classList.toggle("no-previews");
+      const on = !document.body.classList.contains("no-previews");
+      const btn = document.getElementById("previewModeBtn");
+      if (btn) btn.classList.toggle("active", on);
+      try { localStorage.setItem("seven-previews", on ? "1" : "0"); } catch (e) {}
+      setStatus(on ? "Previews de boutons : ON" : "Previews de boutons : OFF");
+    }
+
+    function bootPreviewMode() {
+      let enabled = "1";
+      try { enabled = localStorage.getItem("seven-previews") || "1"; } catch (e) {}
+      if (enabled !== "1") document.body.classList.add("no-previews");
+      const btn = document.getElementById("previewModeBtn");
+      if (btn) btn.classList.toggle("active", enabled === "1");
+    }
+
     function bootSkyUi() {
       let mode = "sky";
       try { mode = localStorage.getItem("seven-ui-mode") || "sky"; } catch (e) {}
@@ -683,6 +702,7 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
 
     bootBackground();
     bootSkyUi();
+    bootPreviewMode();
     refreshNetworkHud();
     updateClock();
   </script>
