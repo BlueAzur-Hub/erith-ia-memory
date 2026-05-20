@@ -4890,3 +4890,500 @@ footer + .help-launcher {
   }
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.8 — Footer Help Button Fix
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? n’est plus une ligne séparée ;
+   - il est dans le footer ;
+   - il reste transparent ;
+   - il ne pousse plus la mise en page.
+------------------------------------------------------- */
+
+/* Sécurité : tout ancien ? flottant direct sous terminal disparaît */
+main > .help-launcher,
+.terminal > .help-launcher:not(.footer-help-launcher) {
+  display: none !important;
+}
+
+/* Footer stable : aucune ligne parasite */
+footer {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding-right: 14px !important;
+  min-height: 34px !important;
+  overflow: visible !important;
+}
+
+/* Le ? vit dans le footer, pas en position flottante */
+footer .help-launcher,
+footer .footer-help-launcher,
+button.footer-help-launcher {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  padding: 0 !important;
+  margin: 0 0 0 2px !important;
+
+  border: 1px solid rgba(255,216,121,.28) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.68) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.42) !important;
+
+  transform: none !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+}
+
+/* Aucun pseudo-fond parasite */
+footer .help-launcher::before,
+footer .help-launcher::after,
+footer .footer-help-launcher::before,
+footer .footer-help-launcher::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+footer .help-launcher:hover,
+footer .help-launcher:focus,
+footer .footer-help-launcher:hover,
+footer .footer-help-launcher:focus,
+button.footer-help-launcher:hover,
+button.footer-help-launcher:focus {
+  position: static !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(255,216,121,.64) !important;
+  color: rgba(255,248,233,.96) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.26),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.9 — Inline Help Button
+   Fichiers modifiés : index.html + style.css
+
+   Correction définitive :
+   - aucun bouton ? flottant ;
+   - aucun ? dans le footer ;
+   - aucune ligne vide en bas ;
+   - le ? est dans le ruban haut, transparent.
+------------------------------------------------------- */
+
+/* On neutralise tous les anciens ? flottants s’ils restent en cache HTML */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  position: static !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Footer : plus aucun espace réservé au ? */
+footer {
+  padding-right: 14px !important;
+  min-height: 28px !important;
+  margin-top: 0 !important;
+}
+
+/* Le ruban devient le bon emplacement du ? */
+.aerith-memory-ribbon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+/* Nouveau bouton ? intégré, non flottant */
+.command-help-inline {
+  position: static !important;
+  inset: auto !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+.command-help-inline::before,
+.command-help-inline::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+.command-help-inline:hover,
+.command-help-inline:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le bas de page doit rester serré et propre */
+.system-footer,
+.network-footer,
+footer {
+  margin-top: 0 !important;
+}
+
+.network-footer + footer {
+  border-top: 1px solid rgba(255,216,121,.12) !important;
+}
+
+/* Plus aucune ligne parasite entre Network HUD et Footer */
+.network-footer + .help-launcher,
+.help-launcher + footer,
+footer + .help-launcher {
+  display: none !important;
+  margin: 0 !important;
+  height: 0 !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.10 — Command Palette Dot
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? revient ;
+   - il est dans la barre des mini-boutons ;
+   - il reste transparent ;
+   - il ne crée aucune ligne en bas.
+------------------------------------------------------- */
+
+/* Les anciennes versions du ? restent supprimées */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Nouveau ? visible, dans la barre de contrôle */
+.command-palette-dot,
+#commandPaletteDotBtn,
+button.command-palette-dot,
+.mini-control.command-palette-dot {
+  position: static !important;
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+  transform: none !important;
+}
+
+/* Hover/focus discret, toujours transparent */
+.command-palette-dot:hover,
+.command-palette-dot:focus,
+#commandPaletteDotBtn:hover,
+#commandPaletteDotBtn:focus,
+button.command-palette-dot:hover,
+button.command-palette-dot:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Pas de pseudo-fond */
+.command-palette-dot::before,
+.command-palette-dot::after,
+#commandPaletteDotBtn::before,
+#commandPaletteDotBtn::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Le footer ne réserve rien pour le ? */
+footer {
+  padding-right: 14px !important;
+  margin-top: 0 !important;
+  min-height: 28px !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.11 — Default Glass + Fixed Command Dot
+   Fichiers modifiés : index.html + style.css
+
+   Référence par défaut validée :
+   - apparence glass actuelle ;
+   - footer propre ;
+   - aucun ? flottant ;
+   - un seul ? dans la rangée des mini-boutons, après Lisibilité.
+------------------------------------------------------- */
+
+/* Tous les anciens points d’interrogation sont neutralisés */
+.help-launcher,
+.footer-help-launcher,
+.command-help-inline,
+.command-palette-dot,
+#commandPaletteDotBtn,
+button.help-launcher,
+button.footer-help-launcher,
+button.command-help-inline,
+button.command-palette-dot,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  position: static !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+/* Nouveau ? unique, au bon endroit */
+.command-dot-top,
+#commandDotTopBtn,
+button.command-dot-top,
+.mini-control.command-dot-top {
+  position: static !important;
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.32) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.82) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+  transform: none !important;
+  cursor: pointer !important;
+}
+
+/* Hover discret, toujours transparent */
+.command-dot-top:hover,
+.command-dot-top:focus,
+#commandDotTopBtn:hover,
+#commandDotTopBtn:focus,
+button.command-dot-top:hover,
+button.command-dot-top:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.70) !important;
+  color: rgba(255,248,233,.98) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Aucun pseudo-fond */
+.command-dot-top::before,
+.command-dot-top::after,
+#commandDotTopBtn::before,
+#commandDotTopBtn::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Footer : serré, propre, aucun espace prévu pour un ancien ? */
+footer {
+  padding-right: 14px !important;
+  margin-top: 0 !important;
+  min-height: 28px !important;
+}
+
+.system-footer,
+.network-footer,
+footer {
+  margin-top: 0 !important;
+}
+
+/* Apparence par défaut validée : glass lisible */
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.24), rgba(3,8,12,.34)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.035), transparent 48%) !important;
+}
+
+.page,
+.sky-control-strip,
+.aerith-memory-ribbon,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-panel,
+.device-panel,
+.system-trace-pro,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.20), rgba(5,14,20,.14)) !important;
+}
+
