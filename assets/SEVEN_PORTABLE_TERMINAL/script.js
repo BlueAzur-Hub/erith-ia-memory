@@ -126,7 +126,31 @@ async function copyText(text, label) {
     openPromptDrawer(text);
     return false;
   }
-}
+function copyAndOpenChat(text, label) {
+  const chatWindow = window.open(CHATGPT_URL, "seven_heaven_chatgpt");
+
+  copyText(text, label).then((copied) => {
+    if (chatWindow) {
+      try {
+        chatWindow.focus();
+      } catch (error) {}
+    }
+
+    if (chatWindow && copied) {
+      setStatus(label + " ChatGPT appelé. Colle avec Ctrl+V, puis Entrée.");
+      return;
+    }
+
+    if (chatWindow && !copied) {
+      setStatus("ChatGPT appelé. Copie manuelle affichée dans le terminal.");
+      return;
+    }
+
+    if (!chatWindow && copied) {
+      setStatus(label + " Popup bloquée : ouvre ChatGPT puis Ctrl+V.");
+      return;
+    }
+
     setStatus("Popup bloquée. Copie manuelle affichée.");
   });
 }
