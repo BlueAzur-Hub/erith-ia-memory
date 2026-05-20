@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Comfort Detail</title>
-  <link rel="stylesheet" href="./style.css?v=comfort-detail-1">
+  <title>Seven Portable Terminal — Comfort Remote</title>
+  <link rel="stylesheet" href="./style.css?v=comfort-remote-1">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">COMFORT DETAIL · STYLET · GOLDEN CLOUDS</div>
+        <div class="kicker">COMFORT REMOTE · STYLET · GOLDEN CLOUDS</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -148,14 +148,57 @@
     <section class="page" id="page-system">
       <div class="section-title">
         <strong>🖥️ Système</strong>
-        <span>Transformer Book, Ryzen 7, cockpit et prise en main.</span>
+        <span>Transformer Book, Ryzen 7, cockpit et prise en main RustDesk.</span>
       </div>
 
       <div class="tile-grid">
-        <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')"><span class="ico">✅</span><span class="txt"><strong>Rôle validé</strong><em>Transformer Book = pupitre, Ryzen 7 = moteur</em></span></button>
-        <button class="tile" onclick="setStatus('Remote : à configurer plus tard avec RustDesk, AnyDesk ou Bureau à distance.')"><span class="ico">🏰</span><span class="txt"><strong>Ryzen 7 Remote</strong><em>RustDesk / AnyDesk / Bureau à distance</em></span></button>
-        <button class="tile" onclick="copyTerminalLink()"><span class="ico">🔗</span><span class="txt"><strong>Lien cockpit</strong><em>Copie l’URL publique</em></span></button>
-        <button class="tile" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Retour strict au texte uniquement</em></span></button>
+        <button class="tile gold remote-main" onclick="copyRemoteGuide()">
+          <span class="ico">🏰</span>
+          <span class="txt">
+            <strong>Ryzen 7 Remote</strong>
+            <em>Copie la procédure Book → Ryzen 7 via RustDesk</em>
+          </span>
+        </button>
+
+        <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')">
+          <span class="ico">✅</span>
+          <span class="txt">
+            <strong>Rôle validé</strong>
+            <em>Transformer Book = pupitre, Ryzen 7 = moteur</em>
+          </span>
+        </button>
+
+        <a class="tile" href="https://rustdesk.com/" target="_self" rel="noopener">
+          <span class="ico">🛠️</span>
+          <span class="txt">
+            <strong>RustDesk</strong>
+            <em>Site officiel si réinstallation nécessaire</em>
+          </span>
+        </a>
+
+        <button class="tile" onclick="copyTerminalLink()">
+          <span class="ico">🔗</span>
+          <span class="txt">
+            <strong>Lien cockpit</strong>
+            <em>Copie l’adresse publique du terminal Seven</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="copyBlackout()">
+          <span class="ico">🌑</span>
+          <span class="txt">
+            <strong>Blackout</strong>
+            <em>Retour strict au texte uniquement</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="setStatus('Sécurité : ne jamais afficher ID + mot de passe RustDesk en capture publique.')">
+          <span class="ico">🔐</span>
+          <span class="txt">
+            <strong>Sécurité Remote</strong>
+            <em>Ne jamais partager ID + mot de passe</em>
+          </span>
+        </button>
       </div>
     </section>
 
@@ -178,6 +221,33 @@
     const SEVEN_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/7heaven-memory-core";
     const CHATGPT_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8";
     const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
+
+    const REMOTE_GUIDE = `# 🏰 Ryzen 7 Remote — Procédure Seven
+
+Rôle des machines :
+Transformer Book = pupitre tactile Seven.
+Ryzen 7 = moteur de production.
+RustDesk = pont de contrôle.
+
+Depuis le Transformer Book :
+1. Ouvrir RustDesk.
+2. Entrer l’ID privé du Ryzen 7.
+3. Cliquer sur Se connecter.
+4. Entrer le mot de passe permanent RustDesk du Ryzen 7.
+5. Vérifier souris, clavier, copier-coller et affichage.
+
+Sur le Ryzen 7 :
+- Garder RustDesk installé.
+- Garder un mot de passe permanent fort.
+- Ne pas afficher ID + mot de passe en capture publique.
+- Ne pas partager l’accès avec quelqu’un d’autre.
+
+Usage :
+Book → Ryzen 7 → DaVinci / ComfyUI / dossiers projet / production.
+
+Règle sécurité :
+ID + mot de passe = privé.
+Si doute, changer le mot de passe permanent.`; 
 
     const AERITH_PROMPT = `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
 
@@ -362,6 +432,11 @@ Ryzen 7 = moteur de production.`;
     async function copyTerminalLink() {
       await copyText(TERMINAL_LINK);
       setStatus("Lien cockpit copié.");
+    }
+
+    async function copyRemoteGuide() {
+      await copyText(REMOTE_GUIDE);
+      setStatus("Procédure Ryzen 7 Remote copiée. Book → Ryzen 7 via RustDesk.");
     }
 
     async function copyChannelLink() {
