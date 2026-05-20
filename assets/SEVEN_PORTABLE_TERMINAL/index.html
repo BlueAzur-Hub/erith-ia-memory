@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Recovery Hero</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-recovery-hero-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Golden Glass</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-15-golden-glass-home-trace">
 </head>
 
 <body>
@@ -47,6 +47,41 @@
         <img src="./aerith_7_memory_cards_avatar_master.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
         <div class="portrait-fallback">🌸<br>Seven</div>
       </div>
+
+      <div class="hero-position-panel" id="heroPositionPanel" aria-label="Réglage manuel de la Hero">
+        <div class="hero-position-head">
+          <strong>🎯 Hero Focus</strong>
+          <span>centrage manuel façon Notion</span>
+        </div>
+
+        <label>
+          <span>X</span>
+          <input id="heroFocusX" type="range" min="0" max="100" step="1" value="50" oninput="setHeroFocusFromInputs()">
+          <output id="heroFocusXValue">50%</output>
+        </label>
+
+        <label>
+          <span>Y</span>
+          <input id="heroFocusY" type="range" min="0" max="100" step="1" value="34" oninput="setHeroFocusFromInputs()">
+          <output id="heroFocusYValue">34%</output>
+        </label>
+
+        <label>
+          <span>Zoom</span>
+          <input id="heroFocusZoom" type="range" min="100" max="180" step="1" value="100" oninput="setHeroFocusFromInputs()">
+          <output id="heroFocusZoomValue">100%</output>
+        </label>
+
+        <div class="hero-position-actions">
+          <button onclick="nudgeHeroFocus(0,-2)">↑</button>
+          <button onclick="nudgeHeroFocus(-2,0)">←</button>
+          <button onclick="nudgeHeroFocus(2,0)">→</button>
+          <button onclick="nudgeHeroFocus(0,2)">↓</button>
+          <button onclick="resetHeroFocus()">Reset</button>
+          <button onclick="toggleHeroFocusPanel()">Fermer</button>
+        </div>
+      </div>
+
     </header>
 
     <div class="aerith-memory-ribbon" aria-hidden="true">
@@ -64,8 +99,11 @@
         <button class="mini-control" onclick="loadFavoriteState()">↩ Favori</button>
         <button class="mini-control" onclick="nextBackground()">🛞 Fond</button>
         <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
+        <button class="mini-control" id="heroFocusBtn" onclick="toggleHeroFocusPanel()">🎯 Hero</button>
         <button class="mini-control active" id="readabilityShieldBtn" onclick="toggleReadabilityShield()">🛡️ Lisibilité</button>
-      </div>
+      
+        <button class="mini-control command-dot-top" id="commandDotTopBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
+</div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
           <span class="intel-dot"></span>
@@ -225,6 +263,65 @@
           <span class="txt"><strong>Fond aléatoire</strong><em>Recharge une ambiance visuelle différente</em></span>
         </button>
       </div>
+
+      <section class="home-system-trace system-trace-pro home-trace-open" id="homeSystemTracePanel" aria-label="Advanced System Trace accueil">
+        <div class="advanced-head pro-trace-head">
+          <div>
+            <strong>⚙️ Advanced System Trace</strong>
+            <span>accueil cockpit — diagnostic local propre</span>
+          </div>
+          <div class="trace-head-actions">
+            <button onclick="refreshHomeSystemTrace()">Refresh</button>
+            <button onclick="copyHomeSystemDiagnostics()">Copier</button>
+          </div>
+        </div>
+
+        <div class="trace-status-line">
+          <span class="trace-pill safe">SAFE TRACE</span>
+          <span class="trace-pill" id="homeTraceStamp">horodatage…</span>
+          <span class="trace-pill">no RustDesk ID</span>
+          <span class="trace-pill">no password</span>
+        </div>
+
+        <div class="trace-pro-grid home-trace-grid">
+          <article class="trace-card">
+            <span class="trace-icon">🖥️</span>
+            <div>
+              <small>Système</small>
+              <strong id="homeTraceOs">détection…</strong>
+              <em id="homeTracePlatform">plateforme…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">🌐</span>
+            <div>
+              <small>Navigateur</small>
+              <strong id="homeTraceBrowser">détection…</strong>
+              <em id="homeTraceAgent">user agent court…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">📐</span>
+            <div>
+              <small>Affichage</small>
+              <strong id="homeTraceScreen">--</strong>
+              <em id="homeTraceViewport">viewport…</em>
+            </div>
+          </article>
+
+          <article class="trace-card">
+            <span class="trace-icon">🌍</span>
+            <div>
+              <small>Langue / Fuseau</small>
+              <strong id="homeTraceTimezone">--</strong>
+              <em id="homeTraceLanguage">langue…</em>
+            </div>
+          </article>
+        </div>
+      </section>
+
     </section>
 
     <section class="page" id="page-llm">
@@ -695,10 +792,7 @@
       <span>🕒 <strong id="footerClock">--:--:--</strong></span>
       <span>🏰 Remote : RustDesk</span>
     </div>
-
-    <button class="help-launcher" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
-
-    <footer>
+<footer>
       <span>Transformer Book = pupitre Seven</span>
       <span>Ryzen 7 = moteur de production</span>
       <span>Large Language Personality [Model - The Flower Girl] v.5</span>
@@ -2220,6 +2314,136 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     }
 
     bootAtlas29RecoveryHero();
+  
+    function clampHeroFocus(value, min, max) {
+      value = Number(value);
+      if (Number.isNaN(value)) return min;
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function applyHeroFocus(x, y, zoom, save = true) {
+      x = clampHeroFocus(x, 0, 100);
+      y = clampHeroFocus(y, 0, 100);
+      zoom = clampHeroFocus(zoom, 100, 180);
+
+      document.documentElement.style.setProperty("--hero-x", x + "%");
+      document.documentElement.style.setProperty("--hero-y", y + "%");
+      document.documentElement.style.setProperty("--hero-zoom", zoom + "%");
+      document.documentElement.style.setProperty("--hero-size", zoom <= 100 ? "cover" : zoom + "% auto");
+
+      const xInput = document.getElementById("heroFocusX");
+      const yInput = document.getElementById("heroFocusY");
+      const zoomInput = document.getElementById("heroFocusZoom");
+      const xValue = document.getElementById("heroFocusXValue");
+      const yValue = document.getElementById("heroFocusYValue");
+      const zoomValue = document.getElementById("heroFocusZoomValue");
+
+      if (xInput) xInput.value = x;
+      if (yInput) yInput.value = y;
+      if (zoomInput) zoomInput.value = zoom;
+      if (xValue) xValue.textContent = x + "%";
+      if (yValue) yValue.textContent = y + "%";
+      if (zoomValue) zoomValue.textContent = zoom + "%";
+
+      if (save) {
+        try {
+          localStorage.setItem("seven-hero-focus", JSON.stringify({ x, y, zoom }));
+        } catch (e) {}
+      }
+    }
+
+    function setHeroFocusFromInputs() {
+      const x = document.getElementById("heroFocusX")?.value || 50;
+      const y = document.getElementById("heroFocusY")?.value || 34;
+      const zoom = document.getElementById("heroFocusZoom")?.value || 100;
+      applyHeroFocus(x, y, zoom, true);
+      if (typeof setStatus === "function") setStatus("Hero Focus ajusté : X " + x + "% / Y " + y + "% / Zoom " + zoom + "%");
+    }
+
+    function nudgeHeroFocus(dx, dy) {
+      const x = Number(document.getElementById("heroFocusX")?.value || 50) + dx;
+      const y = Number(document.getElementById("heroFocusY")?.value || 34) + dy;
+      const zoom = Number(document.getElementById("heroFocusZoom")?.value || 100);
+      applyHeroFocus(x, y, zoom, true);
+    }
+
+    function resetHeroFocus() {
+      applyHeroFocus(50, 34, 100, true);
+      if (typeof setStatus === "function") setStatus("Hero Focus réinitialisé.");
+    }
+
+    function toggleHeroFocusPanel() {
+      document.body.classList.toggle("show-hero-focus");
+      const open = document.body.classList.contains("show-hero-focus");
+      const btn = document.getElementById("heroFocusBtn");
+      if (btn) btn.classList.toggle("active", open);
+      try { localStorage.setItem("seven-hero-focus-panel", open ? "1" : "0"); } catch (e) {}
+      if (typeof setStatus === "function") setStatus(open ? "Hero Focus ouvert." : "Hero Focus fermé.");
+    }
+
+    function bootHeroManualFocus() {
+      let state = { x: 50, y: 34, zoom: 100 };
+      try {
+        const saved = JSON.parse(localStorage.getItem("seven-hero-focus") || "null");
+        if (saved) state = { ...state, ...saved };
+      } catch (e) {}
+
+      applyHeroFocus(state.x, state.y, state.zoom, false);
+
+      let open = "0";
+      try { open = localStorage.getItem("seven-hero-focus-panel") || "0"; } catch (e) {}
+      document.body.classList.toggle("show-hero-focus", open === "1");
+      const btn = document.getElementById("heroFocusBtn");
+      if (btn) btn.classList.toggle("active", open === "1");
+    }
+
+    bootHeroManualFocus();
+
+  
+    function syncHomeSystemTrace() {
+      const pairs = [
+        ["homeTraceStamp", "traceStamp"],
+        ["homeTraceOs", "traceOs"],
+        ["homeTracePlatform", "tracePlatform"],
+        ["homeTraceBrowser", "traceBrowser"],
+        ["homeTraceAgent", "traceAgent"],
+        ["homeTraceScreen", "traceScreen"],
+        ["homeTraceViewport", "traceViewport"],
+        ["homeTraceTimezone", "traceTimezone"],
+        ["homeTraceLanguage", "traceLanguage"]
+      ];
+
+      pairs.forEach(([homeId, sourceId]) => {
+        const home = document.getElementById(homeId);
+        const source = document.getElementById(sourceId);
+        if (home && source) home.textContent = source.textContent;
+      });
+    }
+
+    function refreshHomeSystemTrace() {
+      try {
+        if (typeof refreshSystemDetails === "function") refreshSystemDetails();
+        if (typeof updateTraceProCards === "function") updateTraceProCards();
+      } catch (e) {}
+      setTimeout(syncHomeSystemTrace, 80);
+      setTimeout(syncHomeSystemTrace, 700);
+      if (typeof setStatus === "function") setStatus("Advanced System Trace accueil actualisé.");
+    }
+
+    async function copyHomeSystemDiagnostics() {
+      if (typeof buildSystemDiagnosticText === "function" && typeof copyText === "function") {
+        await copyText(buildSystemDiagnosticText());
+        if (typeof setStatus === "function") setStatus("Diagnostic système copié.");
+      }
+    }
+
+    function bootHomeSystemTrace() {
+      refreshHomeSystemTrace();
+      setTimeout(refreshHomeSystemTrace, 900);
+    }
+
+    bootHomeSystemTrace();
+
   </script>
 </body>
 </html>
