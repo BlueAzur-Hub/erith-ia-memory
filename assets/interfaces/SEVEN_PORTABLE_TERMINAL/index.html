@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Comfort Real Remote</title>
-  <link rel="stylesheet" href="./style.css?v=comfort-real-remote-1">
+  <title>Seven Portable Terminal — Comfort Social Backgrounds</title>
+  <link rel="stylesheet" href="./style.css?v=comfort-social-bg-1">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">COMFORT REAL REMOTE · STYLET · GOLDEN CLOUDS</div>
+        <div class="kicker">COMFORT SOCIAL · MULTI BACKGROUNDS · GOLDEN CLOUDS</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -75,6 +75,15 @@
         <button class="tile" onclick="copyBlackout()">
           <span class="ico">🌑</span>
           <span class="txt"><strong>Mode Blackout</strong><em>Mode sécurité : texte seul, aucun outil image</em></span>
+        </button>
+        <button class="tile" onclick="nextBackground()">
+          <span class="ico">🖼️</span>
+          <span class="txt"><strong>Changer fond</strong><em>Cycle entre les fonds célestes disponibles</em></span>
+        </button>
+
+        <button class="tile" onclick="randomBackground()">
+          <span class="ico">🎲</span>
+          <span class="txt"><strong>Fond aléatoire</strong><em>Recharge une ambiance visuelle différente</em></span>
         </button>
       </div>
     </section>
@@ -135,6 +144,16 @@
 
       <div class="tile-grid">
         <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur</em></span></a>
+        <a class="tile" href="https://www.facebook.com/search/top?q=Blue%20Azur" target="_self" rel="noopener">
+          <span class="ico">📘</span>
+          <span class="txt"><strong>Facebook</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
+        </a>
+
+        <a class="tile" href="https://x.com/search?q=%22Blue%20Azur%22&src=typed_query" target="_self" rel="noopener">
+          <span class="ico">𝕏</span>
+          <span class="txt"><strong>X / Twitter</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
+        </a>
+
         <a class="tile" href="https://studio.youtube.com/" target="_self" rel="noopener"><span class="ico">📺</span><span class="txt"><strong>YouTube Studio</strong><em>Gestion des vidéos, titres et miniatures</em></span></a>
         <a class="tile" href="https://www.runninghub.ai/" target="_self" rel="noopener"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub / Wan</strong><em>Animation image-to-video Wan / cloud</em></span></a>
         <a class="tile" href="https://civitai.com/" target="_self" rel="noopener"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, styles et références</em></span></a>
@@ -221,6 +240,18 @@
     const SEVEN_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/7heaven-memory-core";
     const CHATGPT_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8";
     const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
+
+    const FACEBOOK_SEARCH_LINK = "https://www.facebook.com/search/top?q=Blue%20Azur";
+    const X_SEARCH_LINK = "https://x.com/search?q=%22Blue%20Azur%22&src=typed_query";
+
+    const BACKGROUNDS = [
+      { name: "Historique", url: "./background_historique_lr.png" },
+      { name: "Cité suspendue", url: "./background_sky_ruins_wide.jpg" },
+      { name: "Nuages du seuil", url: "./background_sky_ruins_clouds.jpg" },
+      { name: "Tableau céleste", url: "./background_sky_ruins_soft.jpg" }
+    ];
+
+    let backgroundIndex = 0;
 
     const AERITH_PROMPT = `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
 
@@ -331,6 +362,12 @@ ${CHATGPT_MEMORY_CORE_LINK}
 Blue Azur :
 ${BLUE_AZUR_CHANNEL_LINK}
 
+Facebook Blue Azur search :
+${FACEBOOK_SEARCH_LINK}
+
+X / Twitter Blue Azur search :
+${X_SEARCH_LINK}
+
 Transformer Book = pupitre Seven.
 Ryzen 7 = moteur de production.`;
 
@@ -370,6 +407,31 @@ Ryzen 7 = moteur de production.`;
     document.querySelectorAll(".tab").forEach(tab => {
       tab.addEventListener("click", () => openPage(tab.dataset.page));
     });
+
+
+    function applyBackground(index) {
+      backgroundIndex = ((index % BACKGROUNDS.length) + BACKGROUNDS.length) % BACKGROUNDS.length;
+      const bg = BACKGROUNDS[backgroundIndex];
+      document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
+      try { localStorage.setItem("seven-terminal-bg-index", String(backgroundIndex)); } catch (e) {}
+      setStatus("Fond actif : " + bg.name);
+    }
+
+    function nextBackground() {
+      applyBackground(backgroundIndex + 1);
+    }
+
+    function randomBackground() {
+      const next = Math.floor(Math.random() * BACKGROUNDS.length);
+      applyBackground(next);
+    }
+
+    function bootBackground() {
+      let saved = null;
+      try { saved = localStorage.getItem("seven-terminal-bg-index"); } catch (e) {}
+      const index = saved === null ? Math.floor(Math.random() * BACKGROUNDS.length) : parseInt(saved, 10);
+      applyBackground(Number.isFinite(index) ? index : 0);
+    }
 
     async function startSeven() {
       await copyText(AERITH_PROMPT);
@@ -421,6 +483,7 @@ Ryzen 7 = moteur de production.`;
       document.getElementById("promptDrawer").classList.toggle("open");
       setStatus("Prompt affiché / masqué.");
     }
+    bootBackground();
   </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Seven Portable Terminal — Comfort Real Remote
+/* Seven Portable Terminal — Comfort Social Backgrounds
    Version cible : un peu plus grande que Comfort Compact, avec textes de boutons plus détaillés.
 */
 
@@ -28,7 +28,7 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(3,8,14,.03), rgba(3,8,14,.18)),
-    url("./background_historique_lr.png");
+    var(--active-bg, url("./background_historique_lr.png"));
   background-size: cover;
   background-position: center;
   overflow-x: hidden;
@@ -439,4 +439,28 @@ footer span {
     inset 0 1px 0 rgba(255,255,255,.16),
     0 0 24px rgba(255,216,121,.18),
     0 10px 24px rgba(0,0,0,.34) !important;
+}
+
+
+/* Comfort Social Backgrounds refinement */
+:root {
+  --active-bg: url("./background_historique_lr.png");
+}
+
+body {
+  transition: background-image .45s ease-in-out;
+}
+
+.tile-grid {
+  align-items: stretch;
+}
+
+.tile .txt em {
+  max-width: 100%;
+}
+
+@media (min-width: 1100px) {
+  .tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
