@@ -1,98 +1,122 @@
-/* Seven Portable Terminal — Rebuild JS
-   Autonome, sans dépendance, sans accès sensible.
-*/
+/* Seven Portable Terminal — V5 Clean */
 
-const SEVEN_PUBLIC_URL = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
-const BLUE_AZUR_YOUTUBE = "https://www.youtube.com/@BlueAzur07";
+const TERMINAL_LINK = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
+const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
 
-const prompts = {
-  boost: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
+const PROMPTS = {
+  seven: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
 
 Lis d’abord :
 https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md
 
-Puis active Aerith-7 comme opératrice de mémoire, production et discernement.
+Puis lis :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md
+
+Active Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.
 
 Mode Full Modules Boost intelligent.
-Chargement sélectif uniquement.
+
+Règle centrale :
+Seven Heaven pilote.
 Ne charge pas tout en entier.
 Choisis uniquement les modules utiles selon la demande.
 
-Règles :
-- Seven Heaven pilote.
-- Ne pas auditer sans raison.
-- Ne pas saturer les outils.
-- Produire un résultat propre, puis s’arrêter.`,
+Style principal :
+Notion compatible, clair, propre, opérationnel.`,
+
+  video: `Chat, active Aerith-7 Seven Heaven — Video Cards Boost Production.
+
+Réponds court :
+1. Phase actuelle
+2. Risque principal
+3. Cartes utiles
+4. Action immédiate
+5. Point d’arrêt
+
+Puissance maximale.
+Chargement minimal.
+Choix précis.`,
 
   blackout: `Mode Blackout.
-
 Texte uniquement.
-Aucun outil image.
 Aucune génération image.
-Aucune action GitHub automatique.
-Réponse courte, directe, opérationnelle.
-On stabilise avant de modifier.`,
+Aucun outil image.
+Prompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.`,
 
-  wan: `WAN I2V vertical validé :
-- format : 1080x1920
-- durée courte
-- fps : 16
-- length : 81
-- image parfaite d’abord
-- une animation = une idée
-- caméra stable
-- last frame pour continuité DaVinci`
+  wan: `Seven, active les cartes utiles pour une production Wan / I2V 1080x1920.
+
+Réglages validés :
+width = 1080
+height = 1920
+frame_rate = 16
+length = 81
+batch_size = 1
+
+Prompt positif obligatoire.
+Prompt négatif obligatoire.
+Last frame exacte si Animation 2.
+Mode LEGO protégé.
+
+Réponds court :
+Phase.
+Risque.
+Action.
+Arrêt.`,
+
+  modules: `Seven, ouvre le mode Modules Mémoire.
+
+Sélectionne uniquement les modules utiles.
+Puissance maximale.
+Chargement minimal.
+Choix précis.`
 };
 
-const backgrounds = [
-  {
-    id: "sky",
-    label: "Sky",
-    url: "./background_historique_lr.png",
-    position: "center center"
-  },
-  {
-    id: "crystal",
-    label: "Crystal",
-    url: "./hero_frame_crystal.jpg",
-    position: "center center"
-  },
-  {
-    id: "genie",
-    label: "Genie",
-    url: "./hero_genie_invocation_banner.jpg",
-    position: "center center"
-  },
-  {
-    id: "memory",
-    label: "Memory",
-    url: "./aerith_7_memory_cards_avatar_master.png",
-    position: "center center"
-  }
+const NOTION_TEXT = `# 🌸 Seven Portable Terminal
+
+Lien cockpit :
+${TERMINAL_LINK}
+
+ERITH.IA Auto-Agent :
+https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba
+
+@7Heaven Memory Core :
+https://sustaining-boar-5c6.notion.site/7heaven-memory-core
+
+Le Chat GPT Memory Core :
+https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8
+
+Blue Azur :
+${BLUE_AZUR_CHANNEL_LINK}`;
+
+const BACKGROUNDS = [
+  { name: "Jardin du Grand Arbre", url: "./background_historique_lr.png" },
+  { name: "Génie holographique", url: "./genie_bg_01_holographic_invocation_full.jpg" },
+  { name: "Lampe oraculaire", url: "./genie_bg_02_ai_librarian_lamp_full.jpg" },
+  { name: "Visage bleu", url: "./genie_bg_03_hologram_face_focus.jpg" },
+  { name: "Cercle de lampe", url: "./genie_bg_04_lamp_oracle_focus.jpg" },
+  { name: "Bibliothèque bleue", url: "./genie_bg_05_blue_library_flight.jpg" },
+  { name: "Oracle doré", url: "./genie_bg_06_golden_arcane_floor.jpg" }
 ];
 
 const state = {
-  page: "home",
-  bgIndex: 0,
+  backgroundIndex: 0,
   visibility: "transparent",
-  advanced: false,
-  heroFocus: false,
-  hero: { x: 50, y: 34, zoom: 100 },
-  ambiance: 0
+  ambiance: "sky",
+  hero: { x: 50, y: 34, zoom: 100 }
 };
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
 function setStatus(message) {
-  const status = $("#statusLine");
+  const status = $("#status");
   if (status) status.textContent = message;
 }
 
-async function copyText(text, label = "Texte copié") {
+async function copyText(text, successMessage) {
   try {
     await navigator.clipboard.writeText(text);
-    setStatus(label);
+    setStatus(successMessage || "Copié.");
   } catch {
     const drawer = $("#promptDrawer");
     const promptText = $("#promptText");
@@ -101,422 +125,379 @@ async function copyText(text, label = "Texte copié") {
       drawer.classList.add("open");
       promptText.focus();
       promptText.select();
-      setStatus("Copie manuelle : texte sélectionné.");
+      setStatus("Copie manuelle : texte affiché et sélectionné.");
     }
   }
 }
 
-function setPage(page) {
-  state.page = page;
-  document.body.dataset.page = page;
-
-  $$(".page").forEach((el) => el.classList.toggle("active", el.id === `page-${page}`));
-  $$("[data-page-target]").forEach((el) => el.classList.toggle("active", el.dataset.pageTarget === page));
-
-  const titles = {
-    home: "Page : home",
-    llm: "Page : llm",
-    notion: "Page : notion",
-    github: "Page : github",
-    production: "Page : production",
-    system: "Page : system"
-  };
-  setStatus(titles[page] || `Page : ${page}`);
-  updateNetworkHud();
+function openPage(pageName) {
+  $$(".page").forEach(page => page.classList.toggle("active", page.id === `page-${pageName}`));
+  $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.page === pageName));
+  document.body.dataset.page = pageName;
+  setStatus("Page : " + pageName);
 }
 
-function setVisibility(mode) {
-  state.visibility = mode;
-  document.body.dataset.theme = mode;
-  document.body.classList.toggle("mode-readability", mode === "readability");
-  document.body.classList.toggle("mode-transparent", mode === "transparent");
+function setVisibilityMode(mode) {
+  state.visibility = mode === "dark" ? "dark" : "transparent";
+  document.body.classList.toggle("mode-dark", state.visibility === "dark");
+  document.body.classList.toggle("mode-transparent", state.visibility === "transparent");
 
-  $("#transparentBtn")?.classList.toggle("active", mode === "transparent");
-  $("#readabilityBtn")?.classList.toggle("active", mode === "readability");
+  $("#transparentBtn")?.classList.toggle("active", state.visibility === "transparent");
+  $("#darkBtn")?.classList.toggle("active", state.visibility === "dark");
 
-  setStatus(mode === "transparent" ? "Mode transparent actif." : "Mode lisibilité actif.");
+  localStorage.setItem("seven-v5-visibility", state.visibility);
+  applyHeroFocus(state.hero.x, state.hero.y, state.hero.zoom, false);
+  setStatus(state.visibility === "dark" ? "Mode sombre actif. Hero toujours réglable." : "Mode transparent actif. Hero toujours réglable.");
 }
 
-function applyBackground(index) {
-  state.bgIndex = (index + backgrounds.length) % backgrounds.length;
-  const bg = backgrounds[state.bgIndex];
-
-  document.body.dataset.bg = bg.id;
-  document.body.style.setProperty("--active-bg", `url("${bg.url}")`);
-  document.body.style.backgroundPosition = bg.position;
-
-  setStatus(`Ambiance : ${bg.label}`);
+function clamp(value, min, max) {
+  value = Number(value);
+  if (Number.isNaN(value)) return min;
+  return Math.max(min, Math.min(max, value));
 }
 
-function nextBackground() {
-  applyBackground(state.bgIndex + 1);
-}
-
-function randomBackground() {
-  applyBackground(Math.floor(Math.random() * backgrounds.length));
-}
-
-function cycleAmbiance() {
-  const modes = ["transparent", "readability"];
-  state.ambiance = (state.ambiance + 1) % modes.length;
-  setVisibility(modes[state.ambiance]);
-}
-
-function toggleAdvancedPanels(force) {
-  state.advanced = typeof force === "boolean" ? force : !state.advanced;
-  document.body.classList.toggle("show-advanced", state.advanced);
-  $("#advancedBtn")?.classList.toggle("active", state.advanced);
-  setStatus(state.advanced ? "Détails avancés affichés." : "Détails avancés masqués.");
-}
-
-function toggleHeroFocusPanel(force) {
-  state.heroFocus = typeof force === "boolean" ? force : !state.heroFocus;
-  document.body.classList.toggle("show-hero-focus", state.heroFocus);
-  $("#heroBtn")?.classList.toggle("active", state.heroFocus);
-  setStatus(state.heroFocus ? "Hero Focus ouvert." : "Hero Focus fermé.");
-}
-
-function updateHeroFocus() {
-  const x = Number($("#heroX")?.value || state.hero.x);
-  const y = Number($("#heroY")?.value || state.hero.y);
-  const zoom = Number($("#heroZoom")?.value || state.hero.zoom);
-
+function applyHeroFocus(x, y, zoom, save = true) {
+  x = clamp(x, 0, 100);
+  y = clamp(y, 0, 100);
+  zoom = clamp(zoom, 100, 180);
   state.hero = { x, y, zoom };
 
-  document.documentElement.style.setProperty("--hero-x", `${x}%`);
-  document.documentElement.style.setProperty("--hero-y", `${y}%`);
-  document.documentElement.style.setProperty("--hero-zoom", `${zoom}%`);
+  const img = $("#heroBgImg");
+  if (img) {
+    img.style.objectPosition = `${x}% ${y}%`;
+    img.style.transform = `scale(${zoom / 100})`;
+    img.style.transformOrigin = `${x}% ${y}%`;
+  }
 
+  $("#heroX").value = x;
+  $("#heroY").value = y;
+  $("#heroZoom").value = zoom;
   $("#heroXOut").textContent = `${x}%`;
   $("#heroYOut").textContent = `${y}%`;
   $("#heroZoomOut").textContent = `${zoom}%`;
+
+  if (save) {
+    localStorage.setItem("seven-v5-hero", JSON.stringify(state.hero));
+  }
+}
+
+function setHeroFocusFromInputs() {
+  applyHeroFocus($("#heroX").value, $("#heroY").value, $("#heroZoom").value, true);
 }
 
 function nudgeHero(direction) {
-  const xInput = $("#heroX");
-  const yInput = $("#heroY");
-  if (!xInput || !yInput) return;
+  const step = 2;
+  let { x, y, zoom } = state.hero;
 
-  let x = Number(xInput.value);
-  let y = Number(yInput.value);
+  if (direction === "up") y -= step;
+  if (direction === "down") y += step;
+  if (direction === "left") x -= step;
+  if (direction === "right") x += step;
 
-  if (direction === "left") x -= 2;
-  if (direction === "right") x += 2;
-  if (direction === "up") y -= 2;
-  if (direction === "down") y += 2;
-
-  xInput.value = Math.max(0, Math.min(100, x));
-  yInput.value = Math.max(0, Math.min(100, y));
-  updateHeroFocus();
+  applyHeroFocus(x, y, zoom, true);
 }
 
 function resetHeroFocus() {
-  $("#heroX").value = 50;
-  $("#heroY").value = 34;
-  $("#heroZoom").value = 100;
-  updateHeroFocus();
+  applyHeroFocus(50, 34, 100, true);
   setStatus("Hero Focus réinitialisé.");
+}
+
+function toggleHeroPanel(force) {
+  const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-hero");
+  document.body.classList.toggle("show-hero", open);
+  $("#heroBtn")?.classList.toggle("active", open);
+  localStorage.setItem("seven-v5-hero-panel", open ? "1" : "0");
+  setStatus(open ? "Hero Focus ouvert." : "Hero Focus fermé.");
+}
+
+function applyBackground(index) {
+  state.backgroundIndex = ((index % BACKGROUNDS.length) + BACKGROUNDS.length) % BACKGROUNDS.length;
+  const bg = BACKGROUNDS[state.backgroundIndex];
+  document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
+  localStorage.setItem("seven-v5-bg", String(state.backgroundIndex));
+  setStatus("Fond actif : " + bg.name);
+}
+
+function nextBackground() {
+  applyBackground(state.backgroundIndex + 1);
+}
+
+function randomBackground() {
+  applyBackground(Math.floor(Math.random() * BACKGROUNDS.length));
+}
+
+function setAmbiance(mode) {
+  state.ambiance = mode;
+  document.body.dataset.ambiance = mode;
+  localStorage.setItem("seven-v5-ambiance", mode);
+  setStatus("Ambiance : " + mode);
+}
+
+function cycleAmbiance() {
+  const list = ["sky", "crystal", "night", "gold", "minimal"];
+  const index = list.indexOf(state.ambiance);
+  setAmbiance(list[(index + 1 + list.length) % list.length]);
+}
+
+function toggleAdvanced(force) {
+  const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-advanced");
+  document.body.classList.toggle("show-advanced", open);
+  $("#advancedBtn")?.classList.toggle("active", open);
+  localStorage.setItem("seven-v5-advanced", open ? "1" : "0");
+  setStatus(open ? "Advanced Panels ouverts." : "Advanced Panels réduits.");
+}
+
+function saveFavoriteState() {
+  const payload = {
+    backgroundIndex: state.backgroundIndex,
+    visibility: state.visibility,
+    ambiance: state.ambiance,
+    hero: state.hero,
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem("seven-v5-favorite", JSON.stringify(payload));
+  setStatus("Favori Seven enregistré.");
+}
+
+function loadFavoriteState() {
+  const raw = localStorage.getItem("seven-v5-favorite");
+  if (!raw) {
+    setStatus("Aucun favori enregistré.");
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(raw);
+    applyBackground(Number(payload.backgroundIndex || 0));
+    setVisibilityMode(payload.visibility || "transparent");
+    setAmbiance(payload.ambiance || "sky");
+    if (payload.hero) applyHeroFocus(payload.hero.x, payload.hero.y, payload.hero.zoom, true);
+    setStatus("Favori Seven rechargé.");
+  } catch {
+    setStatus("Favori illisible.");
+  }
+}
+
+function clearFavoriteState() {
+  localStorage.removeItem("seven-v5-favorite");
+  setStatus("Favori Seven effacé.");
+}
+
+function resetVisualState() {
+  setVisibilityMode("transparent");
+  setAmbiance("sky");
+  applyBackground(0);
+  resetHeroFocus();
+  toggleAdvanced(false);
+  setStatus("État visuel réinitialisé.");
+}
+
+function resetUiStorage() {
+  [
+    "seven-v5-bg",
+    "seven-v5-visibility",
+    "seven-v5-ambiance",
+    "seven-v5-hero",
+    "seven-v5-hero-panel",
+    "seven-v5-advanced",
+    "seven-v5-favorite"
+  ].forEach(key => localStorage.removeItem(key));
+  location.reload();
 }
 
 function togglePalette(force) {
   const palette = $("#commandPalette");
   if (!palette) return;
-
-  const open = typeof force === "boolean" ? force : palette.getAttribute("aria-hidden") === "true";
-  palette.setAttribute("aria-hidden", open ? "false" : "true");
+  const open = typeof force === "boolean" ? force : !palette.classList.contains("open");
   palette.classList.toggle("open", open);
-  setStatus(open ? "Palette de commandes ouverte." : "Palette de commandes fermée.");
+  palette.setAttribute("aria-hidden", open ? "false" : "true");
 }
 
-function showPrompt(kind = "boost") {
+function togglePrompt(kind = "seven") {
   const drawer = $("#promptDrawer");
   const promptText = $("#promptText");
   if (!drawer || !promptText) return;
-
-  promptText.value = prompts[kind] || prompts.boost;
-  drawer.classList.add("open");
-  setStatus("Prompt affiché.");
+  promptText.value = PROMPTS[kind] || PROMPTS.seven;
+  drawer.classList.toggle("open");
+  setStatus("Prompt affiché / masqué.");
 }
 
-function closePrompt() {
-  $("#promptDrawer")?.classList.remove("open");
+function detectOsName() {
+  const ua = navigator.userAgent || "";
+  if (/Windows NT 10\.0/.test(ua)) return "Windows 10 / 11";
+  if (/Windows/.test(ua)) return "Windows";
+  if (/Mac OS X/.test(ua)) return "macOS";
+  if (/Android/.test(ua)) return "Android";
+  if (/iPhone|iPad|iPod/.test(ua)) return "iOS / iPadOS";
+  if (/Linux/.test(ua)) return "Linux";
+  return navigator.platform || "inconnu";
 }
 
-function saveFavoriteState() {
-  const favorite = {
-    bgIndex: state.bgIndex,
-    visibility: state.visibility,
-    hero: state.hero
-  };
-  localStorage.setItem("seven_terminal_favorite", JSON.stringify(favorite));
-  setStatus("Favori sauvegardé.");
+function detectBrowserName() {
+  const ua = navigator.userAgent || "";
+  if (/Edg\//.test(ua)) return "Microsoft Edge";
+  if (/Firefox\//.test(ua)) return "Firefox " + (ua.match(/Firefox\/([\d.]+)/)?.[1] || "");
+  if (/Chrome\//.test(ua)) return "Chrome " + (ua.match(/Chrome\/([\d.]+)/)?.[1] || "");
+  if (/Safari\//.test(ua)) return "Safari";
+  return "navigateur inconnu";
 }
 
-function loadFavoriteState() {
-  try {
-    const favorite = JSON.parse(localStorage.getItem("seven_terminal_favorite") || "{}");
-    if (typeof favorite.bgIndex === "number") applyBackground(favorite.bgIndex);
-    if (favorite.visibility) setVisibility(favorite.visibility);
-    if (favorite.hero) {
-      $("#heroX").value = favorite.hero.x ?? 50;
-      $("#heroY").value = favorite.hero.y ?? 34;
-      $("#heroZoom").value = favorite.hero.zoom ?? 100;
-      updateHeroFocus();
-    }
-    setStatus("Favori restauré.");
-  } catch {
-    setStatus("Aucun favori valide.");
-  }
+function shortUserAgent() {
+  const ua = navigator.userAgent || "indisponible";
+  return ua.length > 92 ? ua.slice(0, 92) + "…" : ua;
 }
 
-function getBrowserName() {
-  const ua = navigator.userAgent;
-  if (ua.includes("Firefox/")) return "Firefox " + (ua.match(/Firefox\/([0-9.]+)/)?.[1] || "");
-  if (ua.includes("Edg/")) return "Edge " + (ua.match(/Edg\/([0-9.]+)/)?.[1] || "");
-  if (ua.includes("Chrome/")) return "Chrome " + (ua.match(/Chrome\/([0-9.]+)/)?.[1] || "");
-  if (ua.includes("Safari/")) return "Safari";
-  return "Navigateur";
-}
-
-function getOSName() {
-  const ua = navigator.userAgent;
-  if (ua.includes("Windows NT 10.0")) return "Windows 10 / 11";
-  if (ua.includes("Windows")) return "Windows";
-  if (ua.includes("Mac OS")) return "macOS";
-  if (ua.includes("Linux")) return "Linux";
-  if (ua.includes("Android")) return "Android";
-  return "OS inconnu";
-}
-
-function getSafeTrace() {
-  const now = new Date();
-  return {
-    date: now.toLocaleString("fr-FR"),
-    os: getOSName(),
-    browser: getBrowserName(),
-    screen: `${screen.width}×${screen.height} · DPR ${window.devicePixelRatio || 1}`,
-    viewport: `${window.innerWidth}×${window.innerHeight}`,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu",
-    languages: navigator.languages?.join(", ") || navigator.language || "inconnu",
-    cpu: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible",
-    memory: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "non disponible",
-    battery: "non disponible",
-    session: location.hostname || "local",
-    security: "Diagnostic filtré : aucun identifiant distant, aucun mot de passe",
-    network: "Ethernet / inconnu",
-    ip: "90.20.3.14"
-  };
-}
-
-function renderTrace() {
-  const trace = getSafeTrace();
-  const cards = [
-    ["🖥️", "Système", trace.os, "Win32"],
-    ["🌐", "Navigateur", trace.browser, navigator.userAgent],
-    ["📐", "Affichage", trace.screen, `viewport ${trace.viewport}`],
-    ["🌍", "Langue / fuseau", trace.timezone, trace.languages],
-    ["⚙️", "Performance", trace.cpu, trace.memory],
-    ["🔋", "Énergie", trace.battery, "API batterie absente"],
-    ["🛰️", "Session", trace.session, "en ligne"],
-    ["🛡️", "Sécurité", "Diagnostic filtré", "aucun identifiant distant, aucun mot de passe"]
+function refreshSystemDetails() {
+  const trace = [
+    ["🖥️", "Système", detectOsName(), navigator.platform || "plateforme inconnue"],
+    ["🌐", "Navigateur", detectBrowserName(), shortUserAgent()],
+    ["📐", "Affichage", `${screen.width}×${screen.height}`, `viewport ${window.innerWidth}×${window.innerHeight}`],
+    ["🌍", "Fuseau", Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu", navigator.language || "langue inconnue"]
   ];
 
-  const grid = $("#traceGrid");
-  if (grid) {
-    grid.innerHTML = cards.map(([icon, label, value, detail]) => `
-      <article class="trace-card">
-        <span class="card-icon">${icon}</span>
+  $("#traceStamp").textContent = new Date().toLocaleString("fr-FR");
+
+  $("#traceGrid").innerHTML = trace.map(([icon, label, value, detail]) => `
+    <article class="trace-card">
+      <span class="trace-icon">${icon}</span>
+      <div>
         <small>${label}</small>
         <strong>${value}</strong>
         <em>${detail}</em>
-      </article>
-    `).join("");
-  }
-
-  $("#traceDate").textContent = trace.date;
-  $("#traceRaw").value =
-`SAFE TRACE ${trace.date}
-Système : ${trace.os}
-Navigateur : ${trace.browser}
-Affichage : ${trace.screen}
-Viewport : ${trace.viewport}
-Langue / Fuseau : ${trace.timezone} — ${trace.languages}
-Performance : ${trace.cpu}
-Énergie : ${trace.battery}
-Session : ${trace.session}
-Sécurité : ${trace.security}`;
-
-  $("#osMini").textContent = trace.os;
-  $("#browserMini").textContent = trace.browser;
-  $("#screenMini").textContent = trace.screen;
-  $("#tzMini").textContent = trace.timezone;
-  $("#ipMini").textContent = trace.ip;
-  $("#networkMini").textContent = trace.network;
+      </div>
+    </article>
+  `).join("");
 }
 
-function updateNetworkHud() {
-  const panel = $("#networkPanel");
-  if (!panel) return;
+function buildDiagnosticText() {
+  return `# Seven System Details HUD
 
-  const trace = getSafeTrace();
-  panel.innerHTML = `
-    <article class="net-card"><small>IP publique</small><strong>${trace.ip}</strong><em>IP locale non exposée</em></article>
-    <article class="net-card"><small>Connexion</small><strong>${trace.network}</strong><em>détection navigateur limitée</em></article>
-    <article class="net-card"><small>Statut</small><strong>en ligne</strong><em>page active</em></article>
-    <article class="net-card"><small>Heure locale</small><strong>${new Date().toLocaleTimeString("fr-FR")}</strong><em>${trace.timezone}</em></article>
-  `;
+Système détecté :
+${detectOsName()}
+
+Plateforme navigateur :
+${navigator.platform || "inconnue"}
+
+Navigateur :
+${detectBrowserName()}
+
+User Agent :
+${navigator.userAgent || "indisponible"}
+
+Écran :
+${screen.width}×${screen.height}
+
+Viewport :
+${window.innerWidth}×${window.innerHeight}
+
+Langue :
+${navigator.language || "inconnue"}
+
+Fuseau horaire :
+${Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu"}`;
 }
 
 function handleAction(action) {
-  switch(action) {
-    case "boost":
-      copyText(prompts.boost, "Prompt Seven copié.");
-      break;
-    case "video":
-      copyText("Video Cards Boost : phase, risque, cartes utiles, action, arrêt.", "Video Cards copié.");
-      break;
-    case "wan":
-      copyText(prompts.wan, "Checklist Wan copiée.");
-      break;
-    case "prompt":
-      showPrompt("boost");
-      break;
-    case "link":
-    case "copy-link":
-      copyText(SEVEN_PUBLIC_URL, "Lien cockpit copié.");
-      break;
-    case "blackout":
-      copyText(prompts.blackout, "Mode Blackout copié.");
-      break;
-    case "background":
-      nextBackground();
-      break;
-    case "random":
-      randomBackground();
-      break;
-    case "copy-notion":
-      copyText(`ERITH.IA Notion Memory
-https://sustaining-boar-5c6.notion.site/erith-ia-memory
-
-Seven Portable Terminal
-${SEVEN_PUBLIC_URL}`, "Bloc Notion copié.");
-      break;
-    case "copy-channel":
-      copyText(BLUE_AZUR_YOUTUBE, "Lien chaîne copié.");
-      break;
-    case "copy-state":
-      copyText($("#traceRaw")?.value || "SAFE TRACE", "État réseau copié.");
-      break;
-    case "refresh":
-      renderTrace();
-      updateNetworkHud();
-      setStatus("Network HUD actualisé.");
-      break;
-    default:
-      setStatus(`Action : ${action}`);
+  if (action === "start-seven") {
+    copyText(PROMPTS.seven, "Seven Boost copié. Ouverture de ChatGPT.");
+    setTimeout(() => window.open("https://chatgpt.com/", "_blank", "noopener"), 500);
   }
+  if (action === "copy-seven") copyText(PROMPTS.seven, "Prompt Seven copié.");
+  if (action === "video-cards") copyText(PROMPTS.video, "Video Cards Boost copié.");
+  if (action === "wan") copyText(PROMPTS.wan, "Checklist Wan copiée.");
+  if (action === "modules") copyText(PROMPTS.modules, "Prompt Modules copié.");
+  if (action === "blackout") copyText(PROMPTS.blackout, "Mode Blackout copié.");
+  if (action === "copy-link") copyText(TERMINAL_LINK, "Lien cockpit copié.");
+  if (action === "notion-text") copyText(NOTION_TEXT, "Texte Notion copié.");
+  if (action === "prompt") togglePrompt("seven");
+  if (action === "next-bg") nextBackground();
+  if (action === "random-bg") randomBackground();
+  if (action === "refresh-trace") {
+    refreshSystemDetails();
+    setStatus("Trace actualisée.");
+  }
+  if (action === "transparent") setVisibilityMode("transparent");
+  if (action === "dark") setVisibilityMode("dark");
 }
 
 function bindEvents() {
-  $$("[data-page-target]").forEach((el) => {
-    el.addEventListener("click", () => {
-      setPage(el.dataset.pageTarget);
-      togglePalette(false);
-    });
+  $$(".tab").forEach(tab => tab.addEventListener("click", () => openPage(tab.dataset.page)));
+  $$("[data-page-jump]").forEach(btn => btn.addEventListener("click", () => openPage(btn.dataset.pageJump)));
+  $$("[data-action]").forEach(el => el.addEventListener("click", () => handleAction(el.dataset.action)));
+
+  $("#advancedBtn").addEventListener("click", () => toggleAdvanced());
+  $("#advancedCloseBtn").addEventListener("click", () => toggleAdvanced(false));
+  $("#ambianceBtn").addEventListener("click", cycleAmbiance);
+  $("#saveBtn").addEventListener("click", saveFavoriteState);
+  $("#saveBtn2").addEventListener("click", saveFavoriteState);
+  $("#loadBtn").addEventListener("click", loadFavoriteState);
+  $("#loadBtn2").addEventListener("click", loadFavoriteState);
+  $("#clearBtn").addEventListener("click", clearFavoriteState);
+  $("#nextBgBtn").addEventListener("click", nextBackground);
+  $("#randomBgBtn").addEventListener("click", randomBackground);
+  $("#heroBtn").addEventListener("click", () => toggleHeroPanel());
+  $("#heroOpenBtn").addEventListener("click", () => toggleHeroPanel(true));
+  $("#heroCloseBtn").addEventListener("click", () => toggleHeroPanel(false));
+  $("#transparentBtn").addEventListener("click", () => setVisibilityMode("transparent"));
+  $("#transparentBtn2").addEventListener("click", () => setVisibilityMode("transparent"));
+  $("#darkBtn").addEventListener("click", () => setVisibilityMode("dark"));
+  $("#darkBtn2").addEventListener("click", () => setVisibilityMode("dark"));
+  $("#paletteBtn").addEventListener("click", () => togglePalette());
+  $("#paletteCloseBtn").addEventListener("click", () => togglePalette(false));
+  $("#refreshTraceBtn").addEventListener("click", refreshSystemDetails);
+  $("#copyTraceBtn").addEventListener("click", () => copyText(buildDiagnosticText(), "Diagnostic système copié."));
+  $("#heroResetBtn").addEventListener("click", resetHeroFocus);
+  $("#heroResetBtn2").addEventListener("click", resetHeroFocus);
+  $("#resetVisualBtn").addEventListener("click", resetVisualState);
+  $("#resetStorageBtn").addEventListener("click", resetUiStorage);
+
+  ["heroX", "heroY", "heroZoom"].forEach(id => {
+    document.getElementById(id).addEventListener("input", setHeroFocusFromInputs);
   });
 
-  $$("[data-action]").forEach((el) => {
-    el.addEventListener("click", () => handleAction(el.dataset.action));
-  });
-
-  $("#advancedBtn")?.addEventListener("click", () => toggleAdvancedPanels());
-  $("#ambianceBtn")?.addEventListener("click", () => cycleAmbiance());
-  $("#saveBtn")?.addEventListener("click", () => saveFavoriteState());
-  $("#loadBtn")?.addEventListener("click", () => loadFavoriteState());
-  $("#nextBgBtn")?.addEventListener("click", () => nextBackground());
-  $("#randomBgBtn")?.addEventListener("click", () => randomBackground());
-  $("#heroBtn")?.addEventListener("click", () => toggleHeroFocusPanel());
-  $("#transparentBtn")?.addEventListener("click", () => setVisibility("transparent"));
-  $("#readabilityBtn")?.addEventListener("click", () => setVisibility("readability"));
-  $("#paletteBtn")?.addEventListener("click", () => togglePalette());
-  $("#paletteCloseBtn")?.addEventListener("click", () => togglePalette(false));
-  $("#paletteBoostBtn")?.addEventListener("click", () => handleAction("boost"));
-  $("#paletteVideoBtn")?.addEventListener("click", () => handleAction("video"));
-  $("#paletteWanBtn")?.addEventListener("click", () => handleAction("wan"));
-  $("#paletteBgBtn")?.addEventListener("click", () => nextBackground());
-  $("#paletteGlassBtn")?.addEventListener("click", () => setVisibility("transparent"));
-  $("#palettePreviewBtn")?.addEventListener("click", () => toggleHeroFocusPanel(true));
-  $("#heroCloseBtn")?.addEventListener("click", () => toggleHeroFocusPanel(false));
-  $("#heroResetBtn")?.addEventListener("click", () => resetHeroFocus());
-  $("#refreshTraceBtn")?.addEventListener("click", () => { renderTrace(); updateNetworkHud(); setStatus("Trace actualisée."); });
-  $("#copyTraceBtn")?.addEventListener("click", () => copyText($("#traceRaw")?.value || "SAFE TRACE", "Diagnostic copié."));
-
-  ["heroX", "heroY", "heroZoom"].forEach((id) => {
-    $(`#${id}`)?.addEventListener("input", updateHeroFocus);
-  });
-
-  $$("[data-hero-nudge]").forEach((btn) => {
-    btn.addEventListener("click", () => nudgeHero(btn.dataset.heroNudge));
-  });
+  $$("[data-nudge]").forEach(btn => btn.addEventListener("click", () => nudgeHero(btn.dataset.nudge)));
+  $$("[data-ambiance]").forEach(btn => btn.addEventListener("click", () => setAmbiance(btn.dataset.ambiance)));
 
   document.addEventListener("keydown", (event) => {
-    if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
+    if (event.target && ["TEXTAREA", "INPUT"].includes(event.target.tagName)) return;
 
-    if (event.key === "?") togglePalette();
+    const pages = { "1": "home", "2": "llm", "3": "notion", "4": "github", "5": "production", "6": "system" };
+    if (pages[event.key]) openPage(pages[event.key]);
+    if (event.key === "?" || event.key === "/") togglePalette();
     if (event.key === "Escape") {
       togglePalette(false);
-      toggleHeroFocusPanel(false);
-      closePrompt();
+      toggleHeroPanel(false);
     }
-
-    const pageMap = {
-      "1": "home",
-      "2": "llm",
-      "3": "notion",
-      "4": "github",
-      "5": "production",
-      "6": "system"
-    };
-
-    if (pageMap[event.key]) setPage(pageMap[event.key]);
   });
 }
 
 function boot() {
   bindEvents();
-  applyBackground(0);
-  setVisibility(document.body.dataset.theme || "transparent");
-  updateHeroFocus();
-  renderTrace();
-  updateNetworkHud();
-  setPage("home");
-  setStatus("Seven Terminal prêt.");
+
+  state.backgroundIndex = Number(localStorage.getItem("seven-v5-bg") || "0");
+  state.visibility = localStorage.getItem("seven-v5-visibility") || "transparent";
+  state.ambiance = localStorage.getItem("seven-v5-ambiance") || "sky";
+
+  try {
+    state.hero = { ...state.hero, ...JSON.parse(localStorage.getItem("seven-v5-hero") || "{}") };
+  } catch {}
+
+  applyBackground(state.backgroundIndex);
+  setVisibilityMode(state.visibility);
+  setAmbiance(state.ambiance);
+  applyHeroFocus(state.hero.x, state.hero.y, state.hero.zoom, false);
+
+  const heroOpen = localStorage.getItem("seven-v5-hero-panel") || "0";
+  toggleHeroPanel(heroOpen === "1");
+
+  const advancedOpen = localStorage.getItem("seven-v5-advanced") || "0";
+  toggleAdvanced(advancedOpen === "1");
+
+  $("#promptText").value = PROMPTS.seven;
+  refreshSystemDetails();
+  openPage("home");
+  setStatus("V5 clean prête · mode " + state.visibility + " actif.");
 }
 
 boot();
-
-
-
-/* Pretty palette safety binding */
-(function prettyPaletteBinding() {
-  function on(id, fn) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("click", fn);
-  }
-
-  document.addEventListener("click", (event) => {
-    const pageButton = event.target.closest(".palette-grid [data-page-target]");
-    if (pageButton && typeof setPage === "function") {
-      setPage(pageButton.dataset.pageTarget);
-      if (typeof togglePalette === "function") togglePalette(false);
-    }
-  });
-
-  on("paletteCloseBtn", () => typeof togglePalette === "function" && togglePalette(false));
-  on("paletteBoostBtn", () => typeof copyText === "function" && copyText(prompts.boost, "Seven Boost copié."));
-  on("paletteVideoBtn", () => typeof copyText === "function" && copyText(prompts.video, "Video Cards copié."));
-  on("paletteWanBtn", () => typeof copyText === "function" && copyText(prompts.wan, "Checklist Wan copiée."));
-  on("paletteBgBtn", () => typeof nextBackground === "function" && nextBackground());
-  on("paletteGlassBtn", () => typeof setVisibility === "function" && setVisibility("transparent"));
-  on("paletteHeroBtn", () => typeof toggleHeroFocusPanel === "function" && toggleHeroFocusPanel(true));
-})();
+window.addEventListener("resize", refreshSystemDetails);
