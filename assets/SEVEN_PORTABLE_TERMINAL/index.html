@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Genie Theme</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-21-genie-background-theme">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Ambiance Visible</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-20-ambiance-visible">
 </head>
 
 <body>
@@ -88,13 +88,14 @@
       <span>✦ AERITH.7</span>
       <span>Blossom District · Gear UI</span>
       <span>Seven Petal Mechanical Core</span>
+      <button class="command-help-inline" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
     </div>
 
     <section class="page active" id="page-home">
             <div class="sky-control-strip home-sober-toolbar">
         <button class="mini-control primary-control" id="advancedPanelsBtn" onclick="toggleAdvancedPanels()">⚙️ Advanced</button>
         <button class="mini-control atlas-control" onclick="openCelestialAtlas()">🗺️ Atlas</button>
-        <button class="mini-control" onclick="cycleAmbiance()">🎛️ Ambiance</button>
+        <button class="mini-control" id="ambianceBtn" onclick="cycleAmbiance()" title="Cycle Ambiance">🎛️ Ambiance</button>
         <button class="mini-control" onclick="saveFavoriteState()">⭐ Save</button>
         <button class="mini-control" onclick="loadFavoriteState()">↩ Favori</button>
         <button class="mini-control" onclick="nextBackground()">🛞 Fond</button>
@@ -157,7 +158,6 @@
               <button onclick="nextAtlasInFamily('Grand Tree Garden')">🌳 Tree +</button>
               <button onclick="nextAtlasInFamily('Historic Ruins')">🏛️ Ruins +</button>
               <button onclick="nextAtlasInFamily('Suspended City')">🏰 City +</button>
-              <button onclick="nextAtlasInFamily('Genie Invocation')">🧞 Génie +</button>
             </div>
           </div>
 
@@ -193,7 +193,6 @@
           <button class="atlas-chip" data-family-filter="Grand Tree Garden" onclick="renderAtlasGrid('Grand Tree Garden')">🌳 Tree</button>
           <button class="atlas-chip" data-family-filter="Historic Ruins" onclick="renderAtlasGrid('Historic Ruins')">🏛️ Ruins</button>
           <button class="atlas-chip" data-family-filter="Suspended City" onclick="renderAtlasGrid('Suspended City')">🏰 City</button>
-          <button class="atlas-chip" data-family-filter="Genie Invocation" onclick="renderAtlasGrid('Genie Invocation')">🧞 Génie</button>
         </div>
 
         <div class="atlas-current">
@@ -262,11 +261,6 @@
           <span class="ico gear-ico">⚙️</span>
           <span class="txt"><strong>Fond aléatoire</strong><em>Recharge une ambiance visuelle différente</em></span>
         </button>
-        <button class="tile" onclick="activateGenieBackgroundTheme()" data-help="Active directement le set Background Génie : bibliothèque holographique, lampe, oracle bleu et présence magique." data-intent="visual" aria-label="Thème Génie" data-preview="visual">
-          <span class="ico">🧞</span>
-          <span class="txt"><strong>Thème Génie</strong><em>Active le set Génie : lampe, hologrammes, bibliothèque magique</em></span>
-        </button>
-
       </div>
     </section>
 
@@ -742,7 +736,6 @@
       <span>Transformer Book = pupitre Seven</span>
       <span>Ryzen 7 = moteur de production</span>
       <span>Large Language Personality [Model - The Flower Girl] v.5</span>
-      <button class="help-launcher footer-help-launcher" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
     </footer>
   </main>
 
@@ -831,36 +824,6 @@
             "name": "Historic Ruins · hall",
             "family": "Historic Ruins",
             "url": "./atlas_29_historic_ruins_hall.jpg"
-      },
-      {
-            "name": "Genie Invocation · vol holographique",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_01_holographic_invocation_full.jpg"
-      },
-      {
-            "name": "Genie Invocation · lampe oraculaire",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_02_ai_librarian_lamp_full.jpg"
-      },
-      {
-            "name": "Genie Invocation · visage bleu",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_03_hologram_face_focus.jpg"
-      },
-      {
-            "name": "Genie Invocation · cercle de lampe",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_04_lamp_oracle_focus.jpg"
-      },
-      {
-            "name": "Genie Invocation · bibliothèque bleue",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_05_blue_library_flight.jpg"
-      },
-      {
-            "name": "Genie Invocation · oracle doré",
-            "family": "Genie Invocation",
-            "url": "./genie_bg_06_golden_arcane_floor.jpg"
       }
 ];
 
@@ -1067,15 +1030,34 @@ Ryzen 7 = moteur de production.`;
     }
 
     function setAmbiance(mode) {
+      if (!AMBIANCE_SEQUENCE.includes(mode)) mode = "sky";
+
       document.body.dataset.ambiance = mode;
       currentAmbianceIndex = Math.max(0, AMBIANCE_SEQUENCE.indexOf(mode));
+
+      const labels = {
+        sky: "☁️ Sky",
+        crystal: "💠 Crystal",
+        ruins: "🏛️ Ruins",
+        night: "🌙 Night",
+        gold: "✨ Gold",
+        minimal: "◻ Minimal"
+      };
+
+      const btn = document.getElementById("ambianceBtn");
+      if (btn) {
+        btn.dataset.currentAmbiance = mode;
+        btn.textContent = "🎛️ " + (labels[mode] || mode);
+        btn.title = "Ambiance actuelle : " + (labels[mode] || mode) + " — clic = suivante";
+        btn.setAttribute("aria-label", "Ambiance actuelle : " + (labels[mode] || mode));
+      }
 
       if (mode === "sky" && typeof setUiMode === "function") setUiMode("sky");
       if (mode === "crystal" && typeof setUiMode === "function") setUiMode("crystal");
       if (mode === "night" && typeof setUiMode === "function") setUiMode("night");
 
       try { localStorage.setItem("seven-ambiance", mode); } catch (e) {}
-      setStatus("Ambiance : " + mode);
+      setStatus("Ambiance : " + (labels[mode] || mode));
     }
 
     function cycleAmbiance() {
@@ -1328,48 +1310,6 @@ Ryzen 7 = moteur de production.`;
         "variant": "hall",
         "url": "./atlas_29_historic_ruins_hall.jpg",
         "thumb": "./preview_reset_atlas_29_historic_ruins_hall.jpg"
-    },
-    {
-        "name": "Genie Invocation · vol holographique",
-        "family": "Genie Invocation",
-        "variant": "vol holographique",
-        "url": "./genie_bg_01_holographic_invocation_full.jpg",
-        "thumb": "./preview_genie_bg_01_holographic_invocation_full.jpg"
-    },
-    {
-        "name": "Genie Invocation · lampe oraculaire",
-        "family": "Genie Invocation",
-        "variant": "lampe oraculaire",
-        "url": "./genie_bg_02_ai_librarian_lamp_full.jpg",
-        "thumb": "./preview_genie_bg_02_ai_librarian_lamp_full.jpg"
-    },
-    {
-        "name": "Genie Invocation · visage bleu",
-        "family": "Genie Invocation",
-        "variant": "visage bleu",
-        "url": "./genie_bg_03_hologram_face_focus.jpg",
-        "thumb": "./preview_genie_bg_03_hologram_face_focus.jpg"
-    },
-    {
-        "name": "Genie Invocation · cercle de lampe",
-        "family": "Genie Invocation",
-        "variant": "cercle de lampe",
-        "url": "./genie_bg_04_lamp_oracle_focus.jpg",
-        "thumb": "./preview_genie_bg_04_lamp_oracle_focus.jpg"
-    },
-    {
-        "name": "Genie Invocation · bibliothèque bleue",
-        "family": "Genie Invocation",
-        "variant": "bibliothèque bleue",
-        "url": "./genie_bg_05_blue_library_flight.jpg",
-        "thumb": "./preview_genie_bg_05_blue_library_flight.jpg"
-    },
-    {
-        "name": "Genie Invocation · oracle doré",
-        "family": "Genie Invocation",
-        "variant": "oracle doré",
-        "url": "./genie_bg_06_golden_arcane_floor.jpg",
-        "thumb": "./preview_genie_bg_06_golden_arcane_floor.jpg"
     }
 ];
     const HERO_FRAMES = [];
@@ -1465,7 +1405,7 @@ Ryzen 7 = moteur de production.`;
       });
     }
 
-    const ATLAS_FAMILIES = ["Crystal Sanctuary","Grand Tree Garden","Historic Ruins","City Ruins","Suspended City","Genie Invocation"];
+    const ATLAS_FAMILIES = ["Crystal Sanctuary","Grand Tree Garden","Historic Ruins","City Ruins","Suspended City"];
 
     function openCelestialAtlas() {
       const panel = document.getElementById("celestialAtlasPanel");
@@ -1524,17 +1464,6 @@ Ryzen 7 = moteur de production.`;
       document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
       try { localStorage.setItem("seven-terminal-bg-index", String(backgroundIndex)); } catch (e) {}
       setStatus("Fond actif : " + bg.name);
-    }
-
-
-    function activateGenieBackgroundTheme() {
-      const index = BACKGROUNDS.findIndex(bg => bg.family === "Genie Invocation");
-      if (index >= 0) {
-        applyBackground(index);
-        document.body.dataset.atlasFamily = "Genie Invocation";
-        if (typeof renderAtlasGrid === "function") renderAtlasGrid("Genie Invocation");
-        setStatus("Thème Génie activé.");
-      }
     }
 
     function nextBackground() {
