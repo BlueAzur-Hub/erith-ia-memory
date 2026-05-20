@@ -4571,3 +4571,196 @@ footer span,
     linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.06) 58%, rgba(0,0,0,.10)) !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.4 — Readability Button Transparent
+   Fichier modifié uniquement : style.css
+
+   Règle demandée :
+   - le bouton Lisibilité reste transparent, point.
+   - même actif, même hover, même focus.
+------------------------------------------------------- */
+
+#readabilityShieldBtn,
+#readabilityShieldBtn.active,
+#readabilityShieldBtn.selected,
+#readabilityShieldBtn:hover,
+#readabilityShieldBtn:focus,
+.mini-control#readabilityShieldBtn,
+.mini-control#readabilityShieldBtn.active,
+.mini-control#readabilityShieldBtn.selected,
+.mini-control#readabilityShieldBtn:hover,
+.mini-control#readabilityShieldBtn:focus,
+button#readabilityShieldBtn,
+button#readabilityShieldBtn.active,
+button#readabilityShieldBtn.selected,
+button#readabilityShieldBtn:hover,
+button#readabilityShieldBtn:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(127,215,255,.46) !important;
+  box-shadow: none !important;
+  color: rgba(225,246,255,.92) !important;
+}
+
+#readabilityShieldBtn::before,
+#readabilityShieldBtn::after {
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+#readabilityShieldBtn:hover,
+#readabilityShieldBtn:focus {
+  border-color: rgba(127,215,255,.72) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  text-shadow: 0 0 10px rgba(127,215,255,.35) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.5 — Hero Manual Focus
+   Fichiers modifiés : index.html + style.css
+
+   Système façon Notion :
+   - X / Y / Zoom réglables manuellement ;
+   - sauvegarde localStorage ;
+   - ne touche pas aux backgrounds généraux.
+------------------------------------------------------- */
+
+:root {
+  --hero-x: 50%;
+  --hero-y: 34%;
+  --hero-zoom: 100%;
+  --hero-size: cover;
+}
+
+/* Force toutes les versions Hero à utiliser les variables de centrage. */
+.hero,
+.no-hero-face .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.46), rgba(0,0,0,.08) 48%, rgba(0,0,0,.30)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.13), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: var(--hero-size, cover) !important;
+  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Panneau de réglage Hero */
+.hero {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hero-position-panel {
+  display: none;
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 8;
+  width: min(360px, calc(100% - 28px));
+  padding: 10px;
+  border: 1px solid rgba(127,215,255,.36);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.48), rgba(6,18,26,.30));
+  backdrop-filter: blur(5px) saturate(1.10);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+body.show-hero-focus .hero-position-panel {
+  display: block;
+}
+
+.hero-position-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.hero-position-head strong {
+  color: #fff8e9;
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+.hero-position-head span {
+  color: rgba(255,248,233,.62);
+  font-size: 9px;
+}
+
+.hero-position-panel label {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 0;
+  color: rgba(255,248,233,.84);
+  font-size: 10px;
+}
+
+.hero-position-panel input[type="range"] {
+  width: 100%;
+  accent-color: #7fd7ff;
+}
+
+.hero-position-panel output {
+  text-align: right;
+  color: rgba(225,246,255,.92);
+  font-size: 10px;
+}
+
+.hero-position-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.hero-position-actions button {
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 1px solid rgba(127,215,255,.34) !important;
+  color: rgba(225,246,255,.92) !important;
+  font-size: 10px !important;
+  box-shadow: none !important;
+}
+
+.hero-position-actions button:hover,
+.hero-position-actions button:focus {
+  background: rgba(127,215,255,.10) !important;
+  border-color: rgba(127,215,255,.72) !important;
+}
+
+/* Bouton Hero dans la barre : transparent tant qu’il n’est pas ouvert */
+#heroFocusBtn:not(.active):not(:hover):not(:focus) {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: none !important;
+}
+
+#heroFocusBtn.active,
+#heroFocusBtn:hover,
+#heroFocusBtn:focus {
+  background: rgba(127,215,255,.12) !important;
+  border-color: rgba(127,215,255,.64) !important;
+}
+
+/* Sur Transformer Book, le panneau reste compact */
+@media (max-width: 860px) {
+  .hero-position-panel {
+    right: 10px;
+    bottom: 10px;
+    width: min(330px, calc(100% - 20px));
+  }
+}
+
