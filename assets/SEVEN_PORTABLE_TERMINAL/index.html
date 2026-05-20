@@ -3,449 +3,313 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Golden Glass Stable</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-golden-glass-stable-complete">
+  <title>Seven Portable Terminal — V7.7 Remaniement UI</title>
+  <link rel="stylesheet" href="./style.css?v=v77-remaniement-ui">
 </head>
 
-<body class="mode-transparent visibility-transparent readability-off" data-theme="transparent" data-ambiance="sky">
-  <div id="touchLayer" aria-hidden="true"></div>
+<body class="mode-transparent" data-page="home">
+  <main class="terminal" aria-label="Seven Portable Terminal">
 
-  <main class="terminal">
-    <div class="sky-ambient" aria-hidden="true">
-      <span class="cloud-orb cloud-a"></span>
-      <span class="cloud-orb cloud-b"></span>
-      <span class="cloud-orb cloud-c"></span>
-      <span class="cloud-orb cloud-d"></span>
-      <span class="cloud-orb cloud-e"></span>
-    </div>
-
-    <nav class="topnav" aria-label="Navigation Seven">
-      <button class="tab active" data-page="home" data-help="Centre de démarrage rapide du cockpit Seven : activation, vidéo, fonds, prompt et modes de sécurité." data-intent="hub" aria-label="Accueil"><span>🌸</span><strong>Accueil</strong></button>
-      <button class="tab" data-page="llm" data-help="Commandes IA pour ChatGPT : démarrer Seven, copier les prompts, activer les modules et modes de production." data-intent="ai" aria-label="LLM"><span>🧠</span><strong>LLM</strong></button>
-      <button class="tab" data-page="notion" data-help="Ouvre Notion, l’espace humain et éditorial du projet." data-intent="memory" aria-label="Notion"><span>📚</span><strong>Notion</strong></button>
-      <button class="tab" data-page="github" data-help="Mémoire machine : dépôts publics/privés, Seven Gate, Full Modules Boost et fichiers de production." data-intent="code" aria-label="GitHub"><span>🧬</span><strong>GitHub</strong></button>
-      <button class="tab" data-page="production" data-help="Atelier de production : YouTube, RunningHub, Civitai, ElevenLabs, Wan et diffusion." data-intent="production" aria-label="Production"><span>🎬</span><strong>Production</strong></button>
-      <button class="tab" data-page="system" data-help="Pont technique : Network HUD, RustDesk, IP publique, sécurité remote et rôle Book/Ryzen." data-intent="system" aria-label="Système"><span>🖥️</span><strong>Système</strong></button>
+    <nav class="topnav" aria-label="Navigation principale">
+      <button class="tab active" type="button" data-page="home" onclick="openPage('home')">🌸 <strong>Accueil</strong></button>
+      <button class="tab" type="button" data-page="llm" onclick="openPage('llm')">🧠 <strong>LLM</strong></button>
+      <button class="tab" type="button" data-page="notion" onclick="openPage('notion')">📚 <strong>Notion</strong></button>
+      <button class="tab" type="button" data-page="github" onclick="openPage('github')">🧬 <strong>GitHub</strong></button>
+      <button class="tab" type="button" data-page="production" onclick="openPage('production')">🎬 <strong>Production</strong></button>
+      <button class="tab" type="button" data-page="system" onclick="openPage('system')">🖥️ <strong>Système</strong></button>
     </nav>
 
     <header class="hero">
-      <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS 2.9 · GOLDEN GLASS · TRANSPARENT / READABILITY · STABLE COMPLETE</div>
+      <div class="hero-bg" aria-hidden="true"></div>
+      <section class="hero-main">
+        <p class="kicker">SEVEN HEAVEN COCKPIT · V7.7 · GOLDEN GLASS · UI REMANIÉE</p>
         <h1>✦ Seven Portable Terminal</h1>
-        <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
-
+        <p class="hero-subtitle">Pupitre lisible : fond visible, commandes solides, Advanced Panels détaillés, production et mémoire réunies.</p>
         <div class="chips">
           <span>🌸 Seven ready</span>
-          <span>💠 Boost active</span>
+          <span>💠 Boost</span>
           <span>🎴 Video Cards</span>
-          <span>📚 Notion Cores</span>
-          <span>🧬 GitHub machine</span>
-          <span>🔵 Blue Azur</span>
+          <span>📚 Notion</span>
+          <span>🧬 GitHub</span>
+          <span>🎬 Production</span>
+          <span>🛡️ Safe Trace</span>
         </div>
-      </div>
+      </section>
+      <figure class="portrait">
+        <img src="./aerith_7_memory_cards_avatar_master.png" onerror="this.src='./aerith_avatar_memory_cards_framed.png'" alt="Avatar Seven">
+      </figure>
 
-      <div class="portrait">
-        <img src="./aerith_7_memory_cards_avatar_master.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
-        <div class="portrait-fallback">🌸<br>Seven</div>
-      </div>
-
-      <div class="hero-position-panel" id="heroPositionPanel" aria-label="Réglage manuel de la Hero">
-        <div class="hero-position-head">
+      <section class="hero-focus" id="heroFocusPanel">
+        <div class="panel-head">
           <strong>🎯 Hero Focus</strong>
-          <span>centrage manuel façon Notion</span>
+          <span>Cadrage du bandeau, sans toucher au fond principal.</span>
         </div>
-
-        <label>
-          <span>X</span>
-          <input id="heroFocusX" type="range" min="0" max="100" step="1" value="50" oninput="setHeroFocusFromInputs()">
-          <output id="heroFocusXValue">50%</output>
-        </label>
-
-        <label>
-          <span>Y</span>
-          <input id="heroFocusY" type="range" min="0" max="100" step="1" value="34" oninput="setHeroFocusFromInputs()">
-          <output id="heroFocusYValue">34%</output>
-        </label>
-
-        <label>
-          <span>Zoom</span>
-          <input id="heroFocusZoom" type="range" min="100" max="180" step="1" value="100" oninput="setHeroFocusFromInputs()">
-          <output id="heroFocusZoomValue">100%</output>
-        </label>
-
-        <div class="hero-position-actions">
-          <button onclick="nudgeHeroFocus(0,-2)">↑</button>
-          <button onclick="nudgeHeroFocus(-2,0)">←</button>
-          <button onclick="nudgeHeroFocus(2,0)">→</button>
-          <button onclick="nudgeHeroFocus(0,2)">↓</button>
-          <button onclick="resetHeroFocus()">Reset</button>
-          <button onclick="toggleHeroFocusPanel()">Fermer</button>
+        <label><span>X</span><input id="heroX" type="range" min="0" max="100" value="50" oninput="updateHeroFocus()"><output id="heroXOut">50%</output></label>
+        <label><span>Y</span><input id="heroY" type="range" min="0" max="100" value="34" oninput="updateHeroFocus()"><output id="heroYOut">34%</output></label>
+        <label><span>Zoom</span><input id="heroZoom" type="range" min="100" max="180" value="100" oninput="updateHeroFocus()"><output id="heroZoomOut">100%</output></label>
+        <div class="mini-actions">
+          <button type="button" onclick="nudgeHero(0,-3)">↑</button>
+          <button type="button" onclick="nudgeHero(-3,0)">←</button>
+          <button type="button" onclick="nudgeHero(3,0)">→</button>
+          <button type="button" onclick="nudgeHero(0,3)">↓</button>
+          <button type="button" onclick="resetHero()">Reset</button>
+          <button type="button" onclick="toggleHeroFocus(false)">Fermer</button>
         </div>
-      </div>
+      </section>
     </header>
 
-    <div class="aerith-memory-ribbon" aria-hidden="true">
+    <div class="memory-ribbon">
       <span>✦ AERITH.7</span>
-      <span>Blossom District · Gear UI</span>
-      <span>Seven Petal Mechanical Core</span>
+      <span>Golden Glass</span>
+      <span>Advanced Panels conservés</span>
+      <span>Transparent contrôlé</span>
+      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
     </div>
 
-    <section class="page active" id="page-home">
-      <div class="sky-control-strip home-sober-toolbar">
-        <button class="mini-control primary-control" id="advancedPanelsBtn" onclick="toggleAdvancedPanels()">⚙️ Advanced</button>
-        <button class="mini-control atlas-control" onclick="openCelestialAtlas()">🗺️ Atlas</button>
-        <button class="mini-control" onclick="cycleAmbiance()">🎛️ Ambiance</button>
-        <button class="mini-control" onclick="saveFavoriteState()">⭐ Save</button>
-        <button class="mini-control" onclick="loadFavoriteState()">↩ Favori</button>
-        <button class="mini-control" onclick="nextBackground()">🛞 Fond</button>
-        <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
-        <button class="mini-control" id="heroFocusBtn" onclick="toggleHeroFocusPanel()">🎯 Hero</button>
-        <button class="mini-control active" id="transparentModeBtn" onclick="setSevenVisibilityMode('transparent')">🫧 Transparent</button>
-        <button class="mini-control" id="readabilityShieldBtn" onclick="setSevenVisibilityMode('dark')">🛡️ Lisibilité</button>
-        <button class="mini-control command-dot-top" id="commandDotTopBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
+    <section class="toolbar" aria-label="Commandes rapides">
+      <button class="mini-control" id="advancedBtn" type="button" onclick="toggleAdvanced()">⚙️ Advanced</button>
+      <button class="mini-control" type="button" onclick="toggleAtlas()">🗺️ Atlas</button>
+      <button class="mini-control" type="button" onclick="cycleAmbiance()">🎛️ Ambiance</button>
+      <button class="mini-control" type="button" onclick="saveFavorite()">⭐ Save</button>
+      <button class="mini-control" type="button" onclick="loadFavorite()">↩ Favori</button>
+      <button class="mini-control" type="button" onclick="nextBackground()">🛞 Fond</button>
+      <button class="mini-control" type="button" onclick="randomBackground()">🎲 Random</button>
+      <button class="mini-control" id="heroBtn" type="button" onclick="toggleHeroFocus()">🎯 Hero</button>
+      <button class="mini-control active" id="transparentBtn" type="button" onclick="setMode('transparent')">🫧 Transparent</button>
+      <button class="mini-control" id="darkBtn" type="button" onclick="setMode('dark')">🛡️ Sombre</button>
+      <button class="mini-control command-dot" type="button" onclick="togglePalette()">?</button>
+    </section>
+
+    <aside class="guidance-panel" id="guidancePanel">
+      <strong>Seven Heaven Guidance</strong>
+      <p id="guidanceText">Interface stabilisée : les informations restent nombreuses, mais les commandes sont opaques et lisibles.</p>
+      <div class="guidance-tags">
+        <span>fond visible</span>
+        <span>boutons solides</span>
+        <span>Advanced détaillé</span>
+      </div>
+    </aside>
+
+    <section class="advanced-panel" id="advancedPanel">
+      <div class="panel-head">
+        <div>
+          <strong>⚙️ Advanced Panels</strong>
+          <span>Le charme de la page : beaucoup d’informations, mais rangées en zones lisibles.</span>
+        </div>
+        <button type="button" onclick="toggleAdvanced(false)">Réduire</button>
       </div>
 
-      <aside class="intel-panel" aria-live="polite">
-        <div class="intel-topline">
-          <span class="intel-dot"></span>
-          <strong class="intel-title">Seven Heaven Guidance</strong>
-          <span class="intel-mode">survol interactif</span>
-        </div>
-        <p class="intel-text">Survole un bouton pour afficher son rôle, son usage et son niveau de risque.</p>
-        <div class="intel-tags">
-          <span>☁️ Sky UI</span>
-          <span>💠 aide active</span>
-          <span>🖱️ hover / focus</span>
-        </div>
-      </aside>
-
-      <section class="advanced-dashboard-panel" id="advancedDashboardPanel">
-        <div class="advanced-dashboard-head">
-          <div>
-            <strong>⚙️ Advanced Panels</strong>
-            <span>options avancées cachées pour garder l’accueil sobre</span>
+      <div class="advanced-grid">
+        <article class="info-box">
+          <strong>🎛️ Ambiance</strong>
+          <p>Change l’énergie visuelle sans casser l’interface.</p>
+          <div class="mini-actions">
+            <button onclick="setAmbiance('sky')">☁️ Sky</button>
+            <button onclick="setAmbiance('crystal')">💠 Crystal</button>
+            <button onclick="setAmbiance('ruins')">🏛️ Ruins</button>
+            <button onclick="setAmbiance('night')">🌙 Night</button>
+            <button onclick="setAmbiance('gold')">✨ Gold</button>
           </div>
-          <button onclick="toggleAdvancedPanels()">Réduire</button>
+        </article>
+
+        <article class="info-box">
+          <strong>⭐ Favoris locaux</strong>
+          <p>Sauvegarde fond, mode, ambiance et Hero Focus dans ton navigateur.</p>
+          <div class="mini-actions">
+            <button onclick="saveFavorite()">Sauver</button>
+            <button onclick="loadFavorite()">Charger</button>
+            <button onclick="clearFavorite()">Effacer</button>
+          </div>
+        </article>
+
+        <article class="info-box">
+          <strong>🗺️ Atlas rapide</strong>
+          <p>Fonds célestes, ruines, arbres, cités suspendues et Génie.</p>
+          <div class="mini-actions">
+            <button onclick="nextFamily('Sky Bridge Ruins')">🌉 Bridge</button>
+            <button onclick="nextFamily('Suspended City')">🏰 City</button>
+            <button onclick="nextFamily('Grand Tree Garden')">🌳 Tree</button>
+            <button onclick="nextFamily('Crystal Sanctuary')">💠 Crystal</button>
+            <button onclick="nextFamily('Génie')">🧞 Génie</button>
+          </div>
+        </article>
+
+        <article class="info-box">
+          <strong>🛡️ Sécurité UI</strong>
+          <p>Remet l’affichage dans un état propre sans toucher au code.</p>
+          <div class="mini-actions">
+            <button onclick="resetVisual()">Reset visuel</button>
+            <button onclick="setMode('transparent')">Transparent</button>
+            <button onclick="setMode('dark')">Lisibilité</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="atlas-panel" id="atlasPanel">
+      <div class="panel-head">
+        <div>
+          <strong>🗺️ Celestial Atlas</strong>
+          <span>Choix rapide du fond. Les boutons restent opaques, le décor reste visible.</span>
         </div>
+        <button type="button" onclick="toggleAtlas(false)">Fermer</button>
+      </div>
+      <div class="atlas-grid" id="atlasGrid"></div>
+    </section>
 
-        <div class="advanced-dashboard-grid">
-          <div class="advanced-box">
-            <strong>🎛️ Ambiance</strong>
-            <p>Change l’énergie visuelle sans changer les fonctions.</p>
-            <div class="advanced-actions">
-              <button onclick="setAmbiance('sky')">☁️ Sky</button>
-              <button onclick="setAmbiance('crystal')">💠 Crystal</button>
-              <button onclick="setAmbiance('ruins')">🏛️ Ruins</button>
-              <button onclick="setAmbiance('night')">🌙 Night</button>
-              <button onclick="setAmbiance('gold')">✨ Gold</button>
-              <button onclick="setAmbiance('minimal')">◻ Minimal</button>
-            </div>
-          </div>
-
-          <div class="advanced-box">
-            <strong>⭐ Favoris locaux</strong>
-            <p>Enregistre ton fond, ton Hero, ton ambiance et ta coque.</p>
-            <div class="advanced-actions">
-              <button onclick="saveFavoriteState()">⭐ Sauver</button>
-              <button onclick="loadFavoriteState()">↩ Recharger</button>
-              <button onclick="clearFavoriteState()">🧹 Effacer</button>
-            </div>
-          </div>
-
-          <div class="advanced-box">
-            <strong>🗺️ Atlas rapide</strong>
-            <p>Change de famille sans ouvrir toute la grille.</p>
-            <div class="advanced-actions">
-              <button onclick="nextAtlasInFamily('Sky Bridge Ruins')">🌉 Bridge +</button>
-              <button onclick="nextAtlasInFamily('Crystal Sanctuary')">💠 Crystal +</button>
-              <button onclick="nextAtlasInFamily('Grand Tree Garden')">🌳 Tree +</button>
-              <button onclick="nextAtlasInFamily('Historic Ruins')">🏛️ Ruins +</button>
-              <button onclick="nextAtlasInFamily('Suspended City')">🏰 City +</button>
-              <button onclick="nextAtlasInFamily('Génie')">🧞 Génie +</button>
-            </div>
-          </div>
-
-          <div class="advanced-box">
-            <strong>🛡️ Sécurité UI</strong>
-            <p>Remet l’interface en état propre si un réglage devient gênant.</p>
-            <div class="advanced-actions">
-              <button onclick="resetVisualState()">Reset visuel</button>
-              <button onclick="resetUiStorage()">Reset complet</button>
-              <button onclick="openPage('system')">🖥️ Système</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="celestial-atlas-panel" id="celestialAtlasPanel">
-        <div class="atlas-head">
-          <div>
-            <strong>🗺️ Celestial Atlas v3</strong>
-            <span>mini-previews, familles, variantes, favoris — Aerith reste uniquement l’avatar</span>
-          </div>
-          <div class="atlas-head-actions">
-            <button onclick="renderAtlasGrid('All')">Tout</button>
-            <button onclick="randomAtlasBackground()">🎲 Atlas random</button>
-          </div>
-        </div>
-
-        <div class="atlas-toolbar">
-          <button class="atlas-chip selected" data-family-filter="All" onclick="renderAtlasGrid('All')">✦ Tout</button>
-          <button class="atlas-chip" data-family-filter="Sky Bridge Ruins" onclick="renderAtlasGrid('Sky Bridge Ruins')">🌉 Bridge</button>
-          <button class="atlas-chip" data-family-filter="Suspended City" onclick="renderAtlasGrid('Suspended City')">🏰 City</button>
-          <button class="atlas-chip" data-family-filter="Grand Tree Garden" onclick="renderAtlasGrid('Grand Tree Garden')">🌳 Tree</button>
-          <button class="atlas-chip" data-family-filter="Crystal Sanctuary" onclick="renderAtlasGrid('Crystal Sanctuary')">💠 Crystal</button>
-          <button class="atlas-chip" data-family-filter="Historic Ruins" onclick="renderAtlasGrid('Historic Ruins')">🏛️ Ruins</button>
-          <button class="atlas-chip" data-family-filter="Génie" onclick="renderAtlasGrid('Génie')">🧞 Génie</button>
-        </div>
-
-        <div class="atlas-current">
-          <span>Fond actif</span>
-          <strong id="currentAtlasName">chargement…</strong>
-          <em id="currentAtlasMeta">Celestial Atlas</em>
-        </div>
-
-        <div class="atlas-preview-grid" id="atlasPreviewGrid"></div>
-
-        <div class="hero-gallery">
-          <div class="hero-gallery-head">
-            <strong>🎞️ Hero Gallery</strong>
-            <span>change uniquement le cadre du haut</span>
-          </div>
-          <div class="hero-gallery-grid" id="heroGalleryGrid"></div>
-        </div>
-      </section>
-
+    <section class="page active" id="page-home">
       <div class="section-title">
         <strong>🌸 Accueil Seven</strong>
-        <span>Démarrage rapide : mémoire, production et cartes vidéo.</span>
+        <span>Démarrage rapide, production vidéo, sécurité et diagnostic.</span>
+      </div>
+
+      <div class="launch-grid">
+        <button class="tile gold" type="button" onclick="startSeven()" data-help="Copie le prompt Seven Boost puis ouvre ou rappelle ChatGPT dans un onglet nommé.">
+          <span class="ico">💠</span>
+          <span class="txt"><strong>Seven Boost</strong><em>Copie le prompt Seven Heaven, ouvre ChatGPT, puis Ctrl+V manuel.</em></span>
+        </button>
+        <button class="tile gold" type="button" onclick="copyVideoCards()" data-help="Copie le mode Video Cards Boost pour la production vidéo.">
+          <span class="ico">🎴</span>
+          <span class="txt"><strong>Video Cards Boost</strong><em>Phase, risque, cartes utiles, action immédiate, point d’arrêt.</em></span>
+        </button>
       </div>
 
       <div class="tile-grid">
-        <button class="tile gold" onclick="startSeven()" data-preview="chatgpt" data-help="Copie le prompt complet Seven Heaven puis ouvre ChatGPT." data-intent="boost"><span class="ico">💠</span><span class="txt"><strong>Seven Boost</strong><em>Copie le prompt complet Seven Heaven puis ouvre ChatGPT.</em></span></button>
-        <button class="tile" onclick="copyVideoCards()" data-preview="chatgpt" data-help="Copie le prompt Video Cards Boost pour la production vidéo." data-intent="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Production vidéo : phase, risque, cartes utiles, action.</em></span></button>
-        <button class="tile" onclick="copyWan()" data-preview="wan" data-help="Copie la checklist Wan I2V verticale." data-intent="production"><span class="ico">📱</span><span class="txt"><strong>Wan 1080×1920</strong><em>Réglages validés : 1080×1920, 16 fps, length 81.</em></span></button>
-        <button class="tile" onclick="togglePrompt()" data-preview="clipboard" data-help="Affiche le prompt intégré dans un tiroir." data-intent="prompt"><span class="ico">⚙️</span><span class="txt"><strong>Voir le prompt</strong><em>Affiche le prompt intégré pour vérification ou copie manuelle.</em></span></button>
-        <button class="tile" onclick="copyTerminalLink()" data-preview="link" data-help="Copie l’adresse publique du terminal." data-intent="link"><span class="ico">🔗</span><span class="txt"><strong>Copier le lien</strong><em>Copie l’adresse publique du terminal Seven.</em></span></button>
-        <button class="tile" onclick="copyBlackout()" data-preview="blackout" data-help="Copie le Mode Blackout : texte seul, pas d’image." data-intent="safety"><span class="ico">🌑</span><span class="txt"><strong>Mode Blackout</strong><em>Mode sécurité : texte seul, aucun outil image.</em></span></button>
-        <button class="tile" onclick="nextBackground()" data-preview="visual" data-help="Passe au fond suivant dans l’Atlas." data-intent="visual"><span class="ico">🛞</span><span class="txt"><strong>Changer fond</strong><em>Cycle entre les fonds célestes disponibles.</em></span></button>
-        <button class="tile" onclick="randomAtlasBackground()" data-preview="visual" data-help="Choisit un fond aléatoire dans l’Atlas." data-intent="visual"><span class="ico">🎲</span><span class="txt"><strong>Fond aléatoire</strong><em>Recharge une ambiance visuelle différente.</em></span></button>
+        <button class="tile" type="button" onclick="copyWan()"><span class="ico">📱</span><span class="txt"><strong>Wan 1080×1920</strong><em>Checklist I2V verticale validée.</em></span></button>
+        <button class="tile" type="button" onclick="togglePrompt()"><span class="ico">🧾</span><span class="txt"><strong>Voir prompt</strong><em>Tiroir de secours pour copie manuelle.</em></span></button>
+        <button class="tile" type="button" onclick="copyTerminalLink()"><span class="ico">🔗</span><span class="txt"><strong>Copier le lien</strong><em>URL publique du cockpit.</em></span></button>
+        <button class="tile" type="button" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Mode Blackout</strong><em>Texte uniquement, zéro outil image.</em></span></button>
+        <button class="tile" type="button" onclick="nextBackground()"><span class="ico">🛞</span><span class="txt"><strong>Changer fond</strong><em>Cycle dans l’Atlas.</em></span></button>
+        <button class="tile" type="button" onclick="randomBackground()"><span class="ico">🎲</span><span class="txt"><strong>Fond aléatoire</strong><em>Recharge un décor différent.</em></span></button>
       </div>
 
-      <section class="home-system-trace" id="homeSystemTrace">
+      <section class="system-trace">
         <div class="trace-head">
           <div>
             <strong>⚙️ Advanced System Trace</strong>
-            <span>accueil cockpit — diagnostic local propre, sans ID ni mot de passe</span>
+            <span>Diagnostic local filtré, visible même en mode transparent.</span>
           </div>
-          <div class="trace-head-actions">
-            <button onclick="refreshHomeSystemTrace()">Refresh</button>
-            <button onclick="copyHomeSystemDiagnostics()">Copier</button>
+          <div class="mini-actions">
+            <button onclick="refreshSystem()">Refresh</button>
+            <button onclick="copySystemDiagnostics()">Copier</button>
           </div>
         </div>
-
-        <div class="trace-status-line">
+        <div class="trace-pills">
           <span class="trace-pill safe">SAFE TRACE</span>
-          <span class="trace-pill">No RustDesk ID</span>
-          <span class="trace-pill">No password</span>
-          <span class="trace-pill">Local browser only</span>
+          <span class="trace-pill">NO RUSTDESK ID</span>
+          <span class="trace-pill">NO PASSWORD</span>
+          <span class="trace-pill" id="traceDate">--</span>
         </div>
-
-        <div class="trace-pro-grid">
-          <div class="trace-card"><small>Horodatage</small><strong id="homeTraceStamp">--</strong><em>actualisation locale</em></div>
-          <div class="trace-card"><small>Système</small><strong id="homeTraceOs">détection…</strong><em id="homeTracePlatform">plateforme</em></div>
-          <div class="trace-card"><small>Navigateur</small><strong id="homeTraceBrowser">détection…</strong><em id="homeTraceAgent">user agent filtré</em></div>
-          <div class="trace-card"><small>Affichage</small><strong id="homeTraceScreen">--</strong><em id="homeTraceViewport">viewport</em></div>
-          <div class="trace-card"><small>Fuseau</small><strong id="homeTraceTimezone">--</strong><em id="homeTraceLanguage">langue</em></div>
-        </div>
+        <div class="trace-grid" id="traceGrid"></div>
       </section>
     </section>
 
     <section class="page" id="page-llm">
-      <div class="section-title">
-        <strong>🧠 LLM / ChatGPT</strong>
-        <span>Commandes IA, modes et démarrage Seven.</span>
-      </div>
+      <div class="section-title"><strong>🧠 LLM / ChatGPT</strong><span>Prompts et démarrage Seven.</span></div>
       <div class="tile-grid">
-        <button class="tile gold" onclick="startSeven()" data-preview="chatgpt" data-help="Copie Seven Heaven puis ouvre ChatGPT." data-intent="boost"><span class="ico">🌸</span><span class="txt"><strong>Aerith / ChatGPT</strong><em>Copie Seven Heaven puis ouvre ChatGPT.</em></span></button>
-        <a class="tile" href="https://chatgpt.com/" target="_blank" rel="noopener" data-preview="chatgpt" data-help="Ouvre ChatGPT sans copier de prompt." data-intent="ai"><span class="ico">💬</span><span class="txt"><strong>ChatGPT</strong><em>Ouvre ChatGPT directement.</em></span></a>
-        <button class="tile" onclick="copySevenOnly()" data-preview="clipboard" data-help="Copie le prompt Seven sans ouvrir de page." data-intent="copy"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven</strong><em>Copie le prompt complet sans ouvrir de page.</em></span></button>
-        <button class="tile" onclick="copyModules()" data-preview="chatgpt" data-help="Active le mode Modules Mémoire." data-intent="memory"><span class="ico">🧩</span><span class="txt"><strong>Modules Mémoire</strong><em>Sélectionne uniquement les modules utiles.</em></span></button>
-        <button class="tile" onclick="copyVideoCards()" data-preview="chatgpt" data-help="Copie le mode Video Cards." data-intent="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Cartes vidéo, Wan, DaVinci, Shorts.</em></span></button>
-        <button class="tile" onclick="copyBlackout()" data-preview="blackout" data-help="Copie le mode sécurité texte seul." data-intent="safety"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Aucun outil image, aucune génération.</em></span></button>
+        <a class="tile gold" href="https://chatgpt.com/" target="seven_heaven_chatgpt" rel="noopener"><span class="ico">💬</span><span class="txt"><strong>Ouvrir ChatGPT</strong><em>Onglet nommé Seven.</em></span></a>
+        <button class="tile gold" onclick="startSeven()"><span class="ico">🌸</span><span class="txt"><strong>Seven Boost</strong><em>Prompt complet + ChatGPT.</em></span></button>
+        <button class="tile" onclick="copySevenOnly()"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven seul</strong><em>Sans ouvrir ChatGPT.</em></span></button>
+        <button class="tile" onclick="copyVideoCards()"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Mode production court.</em></span></button>
+        <button class="tile" onclick="copyModules()"><span class="ico">🧩</span><span class="txt"><strong>Modules Mémoire</strong><em>Sélection intelligente.</em></span></button>
+        <button class="tile" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Texte seul.</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-notion">
-      <div class="section-title">
-        <strong>📚 Notion</strong>
-        <span>Mémoire humaine, Auto-Agent et Memory Cores.</span>
-      </div>
+      <div class="section-title"><strong>📚 Notion</strong><span>Mémoire humaine et pages utiles.</span></div>
       <div class="tile-grid">
-        <a class="tile" href="https://www.notion.so/" target="_blank" rel="noopener" data-preview="notion" data-help="Ouvre Notion." data-intent="memory"><span class="ico">📚</span><span class="txt"><strong>Notion</strong><em>Accueil Notion.</em></span></a>
-        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba" target="_blank" rel="noopener" data-preview="notion" data-help="Page publique ERITH.IA Auto-Agent." data-intent="public"><span class="ico">🌐</span><span class="txt"><strong>ERITH.IA Auto-Agent</strong><em>Auto-Agent public, Pack+, prompts, modules.</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_blank" rel="noopener" data-preview="notion" data-help="Mémoire humaine principale ERITH.IA." data-intent="memory"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale du projet.</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_blank" rel="noopener" data-preview="notion" data-help="Cœur mémoire Seven / 7Heaven." data-intent="core"><span class="ico">💠</span><span class="txt"><strong>@7Heaven Core</strong><em>Cœur mémoire Seven / 7Heaven.</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_blank" rel="noopener" data-preview="chatgpt" data-help="Règles actives et mémoire ChatGPT." data-intent="core"><span class="ico">🤖</span><span class="txt"><strong>ChatGPT Core</strong><em>Règles actives et mémoire du Chat.</em></span></a>
-        <button class="tile" onclick="copyNotionText()" data-preview="clipboard" data-help="Copie un bloc Notion avec tous les liens utiles." data-intent="copy"><span class="ico">⚙️</span><span class="txt"><strong>Texte Notion</strong><em>Copie le bloc Notion avec les liens.</em></span></button>
+        <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📚</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale.</em></span></a>
+        <a class="tile" href="https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba" target="_blank" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>Auto-Agent Public FR</strong><em>Interface publique ERITH.IA.</em></span></a>
+        <a class="tile" href="https://www.notion.so/" target="_blank" rel="noopener"><span class="ico">🧭</span><span class="txt"><strong>Notion</strong><em>Accueil Notion.</em></span></a>
+        <button class="tile" onclick="copyNotionText()"><span class="ico">🧾</span><span class="txt"><strong>Copier bloc Notion</strong><em>Bloc propre avec liens utiles.</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-github">
-      <div class="section-title">
-        <strong>🧬 GitHub</strong>
-        <span>Mémoire machine, dépôt public et fichiers core.</span>
-      </div>
+      <div class="section-title"><strong>🧬 GitHub</strong><span>Mémoire machine et fichiers du terminal.</span></div>
       <div class="tile-grid">
-        <a class="tile" href="https://github.com/BlueAzur-Hub" target="_blank" rel="noopener" data-preview="github" data-help="Accueil du compte GitHub BlueAzur-Hub." data-intent="github"><span class="ico">🧭</span><span class="txt"><strong>BlueAzur-Hub</strong><em>Accueil du compte BlueAzur-Hub.</em></span></a>
-        <a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener" data-preview="github" data-help="Dépôt public ERITH.IA." data-intent="github"><span class="ico">🌐</span><span class="txt"><strong>GitHub public</strong><em>Dépôt public ERITH.IA / terminal.</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noopener" data-preview="github" data-help="Dossier terminal public." data-intent="github"><span class="ico">📁</span><span class="txt"><strong>Dossier terminal</strong><em>index.html, style.css, script.js, images.</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_blank" rel="noopener" data-preview="github" data-help="Dépôt privé si connecté." data-intent="github"><span class="ico">🔐</span><span class="txt"><strong>GitHub privé</strong><em>Mémoire machine privée si connecté.</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_blank" rel="noopener" data-preview="github" data-help="Seven Gate." data-intent="github"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Porte d’entrée pour réveiller Seven.</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_blank" rel="noopener" data-preview="github" data-help="Full Modules Boost." data-intent="github"><span class="ico">💠</span><span class="txt"><strong>Full Modules Boost</strong><em>Full Modules Boost sans tout charger.</em></span></a>
+        <a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📁</span><span class="txt"><strong>Dépôt public</strong><em>BlueAzur-Hub / erith-ia-memory.</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noopener"><span class="ico">🖥️</span><span class="txt"><strong>Dossier terminal</strong><em>index.html, style.css, script.js.</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_blank" rel="noopener"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Core privé si connecté.</em></span></a>
+        <button class="tile" onclick="copyTerminalLink()"><span class="ico">🔗</span><span class="txt"><strong>Copier URL cockpit</strong><em>Lien GitHub Pages.</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-production">
-      <div class="section-title">
-        <strong>🎬 Production</strong>
-        <span>Vidéo, voix, modèles, diffusion et chaîne Blue Azur.</span>
-      </div>
+      <div class="section-title"><strong>🎬 Production</strong><span>Vidéo, voix, modèles, diffusion.</span></div>
       <div class="tile-grid">
-        <a class="tile gold" href="https://www.youtube.com/@BlueAzur07" target="_blank" rel="noopener" data-preview="youtube" data-help="Chaîne principale Blue Azur." data-intent="youtube"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur.</em></span></a>
-        <a class="tile" href="https://studio.youtube.com/" target="_blank" rel="noopener" data-preview="youtube" data-help="YouTube Studio." data-intent="youtube"><span class="ico">📺</span><span class="txt"><strong>YouTube Studio</strong><em>Upload, titres, miniatures.</em></span></a>
-        <a class="tile" href="https://www.runninghub.ai/" target="_blank" rel="noopener" data-preview="visual" data-help="RunningHub / Wan I2V." data-intent="production"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub / Wan</strong><em>Animation I2V et tests vidéo.</em></span></a>
-        <a class="tile" href="https://civitai.com/" target="_blank" rel="noopener" data-preview="visual" data-help="Civitai, modèles, LoRA." data-intent="production"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, styles et références.</em></span></a>
-        <a class="tile" href="https://elevenlabs.io/" target="_blank" rel="noopener" data-preview="audio" data-help="ElevenLabs, voix et narration." data-intent="audio"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix, narration et essais sonores.</em></span></a>
-        <a class="tile" href="https://www.facebook.com/BlueAzur07/" target="_blank" rel="noopener" data-preview="visual" data-help="Profil officiel Blue Azur." data-intent="social"><span class="ico">📘</span><span class="txt"><strong>Facebook</strong><em>Profil officiel Blue Azur.</em></span></a>
-        <a class="tile" href="https://x.com/BlueAzur7" target="_blank" rel="noopener" data-preview="visual" data-help="Profil X / Twitter Blue Azur." data-intent="social"><span class="ico">𝕏</span><span class="txt"><strong>X / Twitter</strong><em>Profil officiel Blue Azur.</em></span></a>
-        <button class="tile" onclick="copyWan()" data-preview="wan" data-help="Copie la checklist Wan." data-intent="production"><span class="ico">🎛️</span><span class="txt"><strong>Checklist Wan</strong><em>Réglages vidéo verticaux validés.</em></span></button>
-        <button class="tile" onclick="copyChannelLink()" data-preview="link" data-help="Copie le lien de chaîne Blue Azur." data-intent="copy"><span class="ico">🔗</span><span class="txt"><strong>Copier chaîne</strong><em>Copie le lien de la chaîne Blue Azur.</em></span></button>
+        <button class="tile gold" onclick="copyVideoCards()"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Diagnostic production rapide.</em></span></button>
+        <button class="tile gold" onclick="copyWan()"><span class="ico">📱</span><span class="txt"><strong>Wan Prompt</strong><em>Checklist I2V.</em></span></button>
+        <a class="tile" href="https://www.runninghub.ai/" target="_blank" rel="noopener"><span class="ico">☁️</span><span class="txt"><strong>RunningHub</strong><em>Wan cloud.</em></span></a>
+        <a class="tile" href="https://civitai.com/" target="_blank" rel="noopener"><span class="ico">🧬</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA.</em></span></a>
+        <a class="tile" href="https://elevenlabs.io/" target="_blank" rel="noopener"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix et narration.</em></span></a>
+        <a class="tile" href="https://studio.youtube.com/" target="_blank" rel="noopener"><span class="ico">🎛️</span><span class="txt"><strong>YouTube Studio</strong><em>Publication.</em></span></a>
+        <a class="tile" href="https://www.youtube.com/@BlueAzur07" target="_blank" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale.</em></span></a>
+        <button class="tile" onclick="copyBlackout()"><span class="ico">🛑</span><span class="txt"><strong>Blackout</strong><em>Stop image.</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-system">
-      <div class="section-title">
-        <strong>🖥️ Système / Network HUD</strong>
-        <span>Ethernet, IP, RustDesk, sécurité et cockpit nomade.</span>
-      </div>
+      <div class="section-title"><strong>🖥️ Système / Network HUD</strong><span>Diagnostic local filtré, jamais vide.</span></div>
 
-      <div class="network-panel" id="networkPanel">
-        <div class="net-card"><span class="net-label">IP publique</span><strong id="publicIp">chargement…</strong></div>
-        <div class="net-card"><span class="net-label">Connexion</span><strong id="connectionType">détection…</strong></div>
-        <div class="net-card"><span class="net-label">Statut</span><strong id="onlineStatus">détection…</strong></div>
-        <div class="net-card"><span class="net-label">Heure locale</span><strong id="localClock">--:--:--</strong></div>
-      </div>
-
-      <div class="device-panel">
-        <div class="device-card"><small>OS</small><strong id="osName">détection…</strong><em id="platformName">plateforme</em></div>
-        <div class="device-card"><small>Navigateur</small><strong id="browserName">détection…</strong><em id="userAgentShort">agent</em></div>
-        <div class="device-card"><small>Écran</small><strong id="screenInfo">--</strong><em id="viewportInfo">viewport</em></div>
-        <div class="device-card"><small>Fuseau</small><strong id="timezoneInfo">--</strong><em id="languageInfo">langue</em></div>
-        <div class="device-card"><small>CPU</small><strong id="cpuInfo">--</strong><em>détection navigateur</em></div>
-        <div class="device-card"><small>Mémoire</small><strong id="memoryInfo">--</strong><em>si disponible</em></div>
-        <div class="device-card"><small>Batterie</small><strong id="batteryInfo">--</strong><em id="batteryMode">détection…</em></div>
-        <div class="device-card"><small>Session</small><strong id="sessionInfo">--</strong><em id="pageInfo">page</em></div>
-      </div>
-
-      <div class="tile-grid">
-        <a class="tile gold" href="https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html" target="_blank" rel="noopener" data-preview="cockpit"><span class="ico">🛸</span><span class="txt"><strong>Ouvrir cockpit</strong><em>Lien public officiel.</em></span></a>
-        <button class="tile" onclick="copyTerminalLink()" data-preview="link"><span class="ico">🔗</span><span class="txt"><strong>Copier cockpit</strong><em>Copie le lien public.</em></span></button>
-        <a class="tile" href="https://rustdesk.com/" target="_blank" rel="noopener" data-preview="visual"><span class="ico">🖥️</span><span class="txt"><strong>RustDesk</strong><em>Remote Ryzen 7 plus tard.</em></span></a>
-        <button class="tile" onclick="refreshSystemDetails()" data-preview="visual"><span class="ico">📡</span><span class="txt"><strong>Trace locale</strong><em>Actualise le diagnostic.</em></span></button>
-        <button class="tile" onclick="setSevenVisibilityMode('transparent')" data-preview="visual"><span class="ico">🫧</span><span class="txt"><strong>Transparent</strong><em>Mode vitre par défaut.</em></span></button>
-        <button class="tile" onclick="setSevenVisibilityMode('dark')" data-preview="blackout"><span class="ico">🛡️</span><span class="txt"><strong>Lisibilité noire</strong><em>Mode lecture sombre.</em></span></button>
-        <button class="tile" onclick="copyNetworkStatus()" data-preview="clipboard"><span class="ico">🧾</span><span class="txt"><strong>Copier réseau</strong><em>Copie le diagnostic réseau filtré.</em></span></button>
-        <button class="tile" onclick="copySystemDiagnostics()" data-preview="clipboard"><span class="ico">⚙️</span><span class="txt"><strong>Copier système</strong><em>Copie le diagnostic système filtré.</em></span></button>
-      </div>
-
-      <section class="system-trace-pro">
+      <section class="system-trace">
         <div class="trace-head">
           <div>
-            <strong>⚙️ System Details HUD</strong>
-            <span>diagnostic local complet, sans ID RustDesk ni mot de passe</span>
+            <strong>SAFE TRACE</strong>
+            <span>Aucun RustDesk ID. Aucun mot de passe. Aucun secret.</span>
           </div>
-          <div class="trace-head-actions">
-            <button onclick="refreshSystemDetails()">Refresh</button>
+          <div class="mini-actions">
+            <button onclick="refreshSystem()">Refresh</button>
             <button onclick="copySystemDiagnostics()">Copier</button>
-            <button onclick="toggleAdvancedSystem()">Raw</button>
           </div>
         </div>
-
-        <div class="trace-status-line">
-          <span class="trace-pill safe">SAFE TRACE</span>
-          <span class="trace-pill">No RustDesk ID</span>
-          <span class="trace-pill">No password</span>
-          <span class="trace-pill" id="traceStamp">--</span>
-        </div>
-
-        <div class="trace-pro-grid">
-          <div class="trace-card"><small>Système</small><strong id="traceOs">détection…</strong><em id="tracePlatform">plateforme</em></div>
-          <div class="trace-card"><small>Navigateur</small><strong id="traceBrowser">détection…</strong><em id="traceAgent">agent</em></div>
-          <div class="trace-card"><small>Écran</small><strong id="traceScreen">--</strong><em id="traceViewport">viewport</em></div>
-          <div class="trace-card"><small>Fuseau</small><strong id="traceTimezone">--</strong><em id="traceLanguage">langue</em></div>
-          <div class="trace-card"><small>CPU</small><strong id="traceCpu">--</strong><em id="traceMemory">mémoire</em></div>
-          <div class="trace-card"><small>Batterie</small><strong id="traceBattery">--</strong><em id="traceBatteryMode">mode</em></div>
-          <div class="trace-card"><small>Session</small><strong id="traceSession">--</strong><em id="traceOnline">online</em></div>
-        </div>
-
-        <div class="advanced-system-panel" id="advancedSystemPanel">
-          <textarea id="advancedSystemText" readonly></textarea>
-        </div>
+        <div class="trace-grid" id="systemGrid"></div>
+        <textarea id="systemRaw" readonly></textarea>
       </section>
     </section>
 
-    <section class="command-palette" id="commandPalette" aria-hidden="true">
+    <section class="palette" id="palette" aria-hidden="true">
       <div class="palette-card">
-        <div class="palette-head">
+        <div class="panel-head">
           <strong>✦ Seven Command Palette</strong>
-          <button onclick="toggleCommandPalette()">Fermer</button>
+          <button onclick="togglePalette(false)">Fermer</button>
         </div>
         <div class="palette-grid">
-          <button onclick="openPage('home'); toggleCommandPalette();">🌸 Accueil</button>
-          <button onclick="openPage('llm'); toggleCommandPalette();">🧠 LLM</button>
-          <button onclick="openPage('notion'); toggleCommandPalette();">📚 Notion</button>
-          <button onclick="openPage('github'); toggleCommandPalette();">🧬 GitHub</button>
-          <button onclick="openPage('production'); toggleCommandPalette();">🎬 Production</button>
-          <button onclick="openPage('system'); toggleCommandPalette();">🖥️ Système</button>
-          <button onclick="startSeven(); toggleCommandPalette();">💠 Seven Boost</button>
-          <button onclick="copyVideoCards(); toggleCommandPalette();">🎴 Video Cards</button>
-          <button onclick="copyWan(); toggleCommandPalette();">📱 Wan 1080</button>
-          <button onclick="nextBackground();">🛞 Fond suivant</button>
-          <button onclick="toggleGlass();">⚙️ Glass</button>
-          <button onclick="togglePreviewMode();">🖼️ Previews</button>
+          <button onclick="openPage('home'); togglePalette(false)">🌸 Accueil</button>
+          <button onclick="openPage('llm'); togglePalette(false)">🧠 LLM</button>
+          <button onclick="openPage('notion'); togglePalette(false)">📚 Notion</button>
+          <button onclick="openPage('github'); togglePalette(false)">🧬 GitHub</button>
+          <button onclick="openPage('production'); togglePalette(false)">🎬 Production</button>
+          <button onclick="openPage('system'); togglePalette(false)">🖥️ Système</button>
+          <button onclick="startSeven()">💠 Seven Boost</button>
+          <button onclick="copyVideoCards()">🎴 Video Cards</button>
+          <button onclick="copyWan()">📱 Wan</button>
+          <button onclick="nextBackground()">🛞 Fond</button>
+          <button onclick="setMode('transparent')">🫧 Transparent</button>
+          <button onclick="setMode('dark')">🛡️ Sombre</button>
         </div>
-        <p class="palette-help">Raccourcis : 1 Accueil · 2 LLM · 3 Notion · 4 GitHub · 5 Production · 6 Système · ? Palette · Escape ferme.</p>
+        <p class="note">Raccourcis : 1 Accueil · 2 LLM · 3 Notion · 4 GitHub · 5 Production · 6 Système · ? Palette · Escape ferme.</p>
       </div>
     </section>
 
     <section class="drawer" id="promptDrawer">
+      <div class="drawer-head">
+        <strong>Prompt</strong>
+        <button onclick="togglePrompt(false)">Fermer</button>
+      </div>
       <textarea id="promptText" readonly></textarea>
     </section>
 
-    <div class="status" id="status">Seven ready.</div>
+    <p class="status" id="status">Seven Terminal prêt.</p>
 
-    <div class="system-footer">
-      <span>🖥️ OS : <strong id="footerOs">détection…</strong></span>
-      <span>🌐 Browser : <strong id="footerBrowser">détection…</strong></span>
-      <span>📐 Screen : <strong id="footerScreen">--</strong></span>
-      <span>🌍 TZ : <strong id="footerTimezone">--</strong></span>
-    </div>
-
-    <div class="network-footer">
-      <span>🌐 IP : <strong id="footerIp">chargement…</strong></span>
-      <span>🔌 Réseau : <strong id="footerNet">détection…</strong></span>
-      <span>🕒 <strong id="footerClock">--:--:--</strong></span>
-      <span>🏰 Remote : RustDesk</span>
-    </div>
-
-    <footer>
+    <footer class="footer">
       <span>Transformer Book = pupitre Seven</span>
       <span>Ryzen 7 = moteur de production</span>
       <span>Large Language Personality [Model - The Flower Girl] v.5</span>
     </footer>
   </main>
 
-  <script src="./script.js?v=celestial-atlas-2-9-golden-glass-stable-complete"></script>
+  <script src="./script.js?v=v77-remaniement-ui"></script>
 </body>
 </html>
