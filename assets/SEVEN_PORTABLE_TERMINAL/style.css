@@ -1016,3 +1016,100 @@ body.mode-readability .topnav {
 .tile[data-preview="notion"] { --preview-image: url("./preview_notion.jpg"); }
 .tile[data-preview="github"] { --preview-image: url("./preview_github.jpg"); }
 .tile[data-preview="runninghub"] { --preview-image: url("./preview_runninghub.jpg"); }
+
+
+/* =========================================================
+   SEVEN V5.3 — NO IMAGE DEPENDENCY PATCH
+   Objectif :
+   - plus aucune dépendance au background supprimé
+   - plus d’avatar cassé
+   - fond céleste généré en CSS
+   - cockpit lisible et transparent
+========================================================= */
+
+:root {
+  --active-bg: none !important;
+}
+
+/* Fond autonome sans image */
+body {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(170,220,255,.42), transparent 34%),
+    radial-gradient(circle at 78% 22%, rgba(255,232,170,.28), transparent 32%),
+    radial-gradient(circle at 52% 72%, rgba(120,180,210,.30), transparent 38%),
+    linear-gradient(180deg, #8fc7e8 0%, #c9d8c2 46%, #607b72 100%) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+}
+
+/* Stoppe les anciennes images manquantes */
+.hero-image,
+.portrait img {
+  display: none !important;
+}
+
+/* Hero autonome, sans image */
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.32), rgba(0,0,0,.08) 54%, rgba(0,0,0,.22)),
+    radial-gradient(circle at 72% 32%, rgba(255,216,121,.18), transparent 34%),
+    radial-gradient(circle at 38% 12%, rgba(127,215,255,.22), transparent 38%),
+    linear-gradient(135deg, rgba(58,92,102,.68), rgba(184,190,166,.34)) !important;
+}
+
+/* Avatar texte propre à la place de l’image supprimée */
+.portrait {
+  display: grid !important;
+  place-items: center !important;
+}
+
+.portrait::before {
+  content: "✿";
+  display: block;
+  color: #ffd879;
+  font-size: 20px;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.55),
+    0 2px 8px rgba(0,0,0,.8);
+}
+
+.portrait::after {
+  content: "Seven";
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,248,233,.88);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-shadow: 0 2px 8px rgba(0,0,0,.8);
+}
+
+/* Coupe les previews image manquantes */
+.tile::before {
+  background-image: none !important;
+  opacity: 0 !important;
+}
+
+/* Renforce seulement les zones utiles */
+.tile,
+.trace-card,
+.net-card,
+.system-trace,
+.section-title,
+.toolbar,
+.topnav {
+  background:
+    linear-gradient(145deg, rgba(7,15,22,.42), rgba(7,18,26,.30)) !important;
+  backdrop-filter: blur(5px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(5px) saturate(1.05) !important;
+}
+
+/* Hover propre, sans dépendance image */
+.tile:hover,
+.tile:focus,
+.trace-card:hover,
+.net-card:hover {
+  background:
+    linear-gradient(145deg, rgba(5,10,15,.66), rgba(8,18,26,.48)) !important;
+  border-color: rgba(255,216,121,.78) !important;
+}
