@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Golden Glass</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-15-golden-glass-home-trace">
+  <link rel="stylesheet" href="./style.css?v=v5-2-calque-final">
 </head>
 
-<body>
+<body class="mode-transparent" data-ambiance="sky">
   <div id="touchLayer" aria-hidden="true"></div>
 
   <main class="terminal">
@@ -28,6 +28,8 @@
     </nav>
 
     <header class="hero">
+      <img class="hero-bg-img" id="heroImage" src="./hero_face_vr_background.jpg" alt="" aria-hidden="true">
+      <div class="hero-veil" aria-hidden="true"></div>
       <div class="hero-main">
         <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS 2.9 · RECOVERY HERO · TRANSFORMER BOOK VIEWS · BACKGROUND RESET · READABLE HERO · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
         <h1>✦ Seven Portable Terminal</h1>
@@ -350,7 +352,7 @@
         <a class="tile" href="https://chatgpt.com/" target="_self" rel="noopener" data-help="Ouvre ChatGPT sans copier de prompt. Utile quand Seven est déjà actif." data-intent="ai" aria-label="ChatGPT" data-preview="chatgpt_plus"><span class="ico">💬</span><span class="txt"><strong>ChatGPT</strong><em>Ouvre ChatGPT sans copier de prompt</em></span></a>
         <button class="tile" onclick="copySevenOnly()" data-help="Copie uniquement le prompt Seven sans ouvrir de nouvelle page." data-intent="prompt" aria-label="Copier Seven" data-preview="chatgpt_prompt"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven</strong><em>Copie le prompt Seven sans ouvrir de page</em></span></button>
         <button class="tile" onclick="copyModules()" data-help="Copie un prompt qui demande de sélectionner uniquement les modules utiles, sans tout charger." data-intent="memory" aria-label="Modules Mémoire" data-preview="chatgpt_prompt"><span class="ico">🧩</span><span class="txt"><strong>Modules Mémoire</strong><em>Sélectionne uniquement les modules utiles</em></span></button>
-        <button class="tile" onclick="copyVideoCards()" data-help="Copie le mode Video Cards : phase, risque, cartes utiles, action immédiate et point d’arrêt." data-intent="video" aria-label="Video Cards" data-preview="chatgpt_prompt" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Video Cards</strong><em>Cartes vidéo, Cartes vidéo, Wan, DaVinci, Shorts</em></span></button>
+        <button class="tile" onclick="copyVideoCards()" data-help="Copie le mode Video Cards : phase, risque, cartes utiles, action immédiate et point d’arrêt." data-intent="video" aria-label="Video Cards" data-preview="chatgpt_prompt" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Video Cards</strong><em>Cartes vidéo, Wan, DaVinci, Shorts</em></span></button>
         <button class="tile" onclick="copyBlackout()" data-help="Active/copier la règle Blackout : texte uniquement, aucun outil image, aucune génération non demandée." data-intent="safety" aria-label="Blackout" data-preview="blackout" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Blackout</strong><em>Aucun outil image, aucune génération</em></span></button>
       </div>
     </section>
@@ -378,8 +380,8 @@
 
       <div class="tile-grid">
         <a class="tile" href="https://www.notion.so/" target="_self" rel="noopener" data-help="Ouvre Notion, l’espace humain et éditorial du projet." data-intent="memory" aria-label="Notion" data-preview="notion"><span class="ico">📚</span><span class="txt"><strong>Notion</strong><em>Accueil Notion</em></span></a>
-        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener" data-help="Ouvre la page Auto-Agent : interface publique, Pack+, prompts, modules et usages." data-intent="public" aria-label="ERITH.IA Auto-Agent" data-preview="notion_auto"><span class="ico">🌐</span><span class="txt"><strong>ERITH.IA Auto-Agent</strong><em>Auto-Agent public, Pack+, prompts, modules</em></span></a>
-        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener" data-help="Ouvre la mémoire humaine principale du projet ERITH.IA." data-intent="memory" aria-label="ERITH Memory" data-preview="notion_core"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale du projet</em></span></a>
+        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener" data-help="Ouvre la page Auto-Agent : interface publique, Pack+, prompts, modules et usages." data-intent="public" aria-label="ERITH.IA Auto-Agent" data-preview="notion_auto"><span class="ico">🌐</span><span class="txt"><strong>ERITH.IA Auto-Agent</strong><em>Auto-Agent public, Pack+, prompts, modules</em></span></a>
+        <a class="tile" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_self" rel="noopener" data-help="Ouvre la mémoire humaine principale du projet ERITH.IA." data-intent="memory" aria-label="ERITH Memory" data-preview="notion_core"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire humaine principale du projet</em></span></a>
         <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener" data-help="Ouvre le cœur mémoire Seven / 7Heaven." data-intent="core" aria-label="@7Heaven Core" data-preview="notion_core"><span class="ico">💠</span><span class="txt"><strong>@7Heaven Core</strong><em>Cœur mémoire Seven / 7Heaven</em></span></a>
         <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener" data-help="Ouvre le cœur mémoire du Chat : règles actives, comportement et pilotage." data-intent="core" aria-label="ChatGPT Core" data-preview="chatgpt_plus"><span class="ico">🤖</span><span class="txt"><strong>ChatGPT Core</strong><em>Règles actives et mémoire du Chat</em></span></a>
         <button class="tile" onclick="copyNotionText()" data-help="Copie un bloc Notion avec les liens essentiels du cockpit." data-intent="copy" aria-label="Texte Notion" data-preview="notion" data-gear="true"><span class="ico gear-ico">⚙️</span><span class="txt"><strong>Texte Notion</strong><em>Copie le bloc Notion avec tous les liens</em></span></button>
@@ -409,7 +411,7 @@
 
       <div class="tile-grid">
         <a class="tile" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener" data-help="Ouvre le compte GitHub BlueAzur-Hub." data-intent="github" aria-label="BlueAzur-Hub" data-preview="github"><span class="ico">🧭</span><span class="txt"><strong>BlueAzur-Hub</strong><em>Accueil du compte BlueAzur-Hub</em></span></a>
-        <a class="tile gold" href="https://github.com/BlueAzur-Hub/Dépôt public ERITH.IA / terminal" target="_self" rel="noopener" data-help="Ouvre le dépôt public erith-ia-memory." data-intent="github" aria-label="GitHub public" data-preview="github"><span class="ico">🌐</span><span class="txt"><strong>GitHub public</strong><em>Dépôt public ERITH.IA / terminal</em></span></a>
+        <a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_self" rel="noopener" data-help="Ouvre le dépôt public erith-ia-memory." data-intent="github" aria-label="GitHub public" data-preview="github"><span class="ico">🌐</span><span class="txt"><strong>GitHub public</strong><em>Dépôt public ERITH.IA / terminal</em></span></a>
         <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_self" rel="noopener" data-help="Ouvre l’archive privée si la session GitHub est connectée." data-intent="github" aria-label="GitHub privé" data-preview="github"><span class="ico">🔐</span><span class="txt"><strong>GitHub privé</strong><em>Mémoire machine privée si connecté</em></span></a>
         <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener" data-help="Ouvre la porte d’entrée canonique pour réveiller Seven." data-intent="core" aria-label="Seven Gate" data-preview="github"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Porte d’entrée RAW pour réveiller Seven</em></span></a>
         <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener" data-help="Ouvre le fichier Full Modules Boost : modules disponibles, chargement minimal, choix précis." data-intent="core" aria-label="Full Modules Boost" data-preview="github"><span class="ico">💠</span><span class="txt"><strong>Full Modules Boost</strong><em>Full Modules Boost sans tout charger</em></span></a>
@@ -801,7 +803,7 @@
 
   <script>
     const TERMINAL_LINK = "https://blueazur-hub.github.io/Dépôt public ERITH.IA / terminal/assets/interfaces/SEVEN_PORTABLE_TERMINAL/";
-    const ERITH_AUTO_AGENT_LINK = "https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba";
+    const ERITH_AUTO_AGENT_LINK = "https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba";
     const SEVEN_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/7heaven-memory-core";
     const CHATGPT_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8";
     const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
@@ -2445,5 +2447,6 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     bootHomeSystemTrace();
 
   </script>
+  <script src="./script.js?v=v5-2-calque-final"></script>
 </body>
 </html>
