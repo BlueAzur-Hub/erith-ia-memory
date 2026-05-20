@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Aerith Gears Blossom</title>
-  <link rel="stylesheet" href="./style.css?v=aerith-gears-blossom-1">
+  <title>Seven Portable Terminal — System Details HUD</title>
+  <link rel="stylesheet" href="./style.css?v=system-details-hud-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">AERITH.7 BLOSSOM · MECHANICAL SKY COCKPIT</div>
+        <div class="kicker">SYSTEM DETAILS HUD · AERITH.7 BLOSSOM COCKPIT</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -303,7 +303,58 @@
         </div>
       </div>
 
-      <div class="tile-grid">
+            <div class="device-panel">
+        <div class="device-card wide">
+          <span class="device-label">Système détecté</span>
+          <strong id="osName">détection…</strong>
+          <em id="platformName">plateforme…</em>
+        </div>
+
+        <div class="device-card wide">
+          <span class="device-label">Navigateur</span>
+          <strong id="browserName">détection…</strong>
+          <em id="userAgentShort">user agent…</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">Écran</span>
+          <strong id="screenInfo">--</strong>
+          <em id="viewportInfo">viewport…</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">Fuseau</span>
+          <strong id="timezoneInfo">--</strong>
+          <em id="languageInfo">langue…</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">CPU logique</span>
+          <strong id="cpuInfo">--</strong>
+          <em>navigator.hardwareConcurrency</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">Mémoire</span>
+          <strong id="memoryInfo">--</strong>
+          <em>si navigateur compatible</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">Batterie</span>
+          <strong id="batteryInfo">--</strong>
+          <em id="batteryMode">détection…</em>
+        </div>
+
+        <div class="device-card">
+          <span class="device-label">Session</span>
+          <strong id="sessionInfo">--</strong>
+          <em id="pageInfo">GitHub Pages</em>
+        </div>
+      </div>
+
+
+<div class="tile-grid">
         <button class="tile gold remote-main" onclick="openRustDeskWeb()" data-help="Ouvre RustDesk Web pour accès extérieur. En local, utiliser aussi l’application RustDesk installée." data-intent="remote" aria-label="Ryzen 7 Remote" data-preview="rustdesk">
           <span class="ico">🏰</span>
           <span class="txt">
@@ -375,8 +426,39 @@
             <em>Change l’arrière-plan du cockpit Seven</em>
           </span>
         </button>
+              <button class="tile" onclick="refreshSystemDetails()">
+          <span class="ico gear-ico">🛞</span>
+          <span class="txt">
+            <strong>Refresh système</strong>
+            <em>Recharge OS, navigateur, écran, batterie et session</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="copySystemDiagnostics()">
+          <span class="ico gear-ico">⚙️</span>
+          <span class="txt">
+            <strong>Copier diagnostic</strong>
+            <em>Copie un rapport système propre sans mot de passe</em>
+          </span>
+        </button>
+
+        <button class="tile" onclick="toggleAdvancedSystem()">
+          <span class="ico gear-ico">⚙️</span>
+          <span class="txt">
+            <strong>Détails avancés</strong>
+            <em>Affiche / masque les informations techniques longues</em>
+          </span>
+        </button>
+</div>
+          <div class="advanced-system-panel" id="advancedSystemPanel">
+        <div class="advanced-head">
+          <strong>⚙️ Advanced System Trace</strong>
+          <span>informations navigateur — aucune donnée RustDesk sensible</span>
+        </div>
+        <textarea id="advancedSystemText" readonly></textarea>
       </div>
-    </section>
+
+</section>
 
     <section class="command-palette" id="commandPalette" aria-hidden="true">
       <div class="palette-card">
@@ -407,6 +489,13 @@
     <section class="drawer" id="promptDrawer">
       <textarea id="promptText" readonly></textarea>
     </section>
+
+    <div class="system-footer">
+      <span>🖥️ OS : <strong id="footerOs">détection…</strong></span>
+      <span>🌐 Browser : <strong id="footerBrowser">détection…</strong></span>
+      <span>📐 Screen : <strong id="footerScreen">--</strong></span>
+      <span>🌍 TZ : <strong id="footerTimezone">--</strong></span>
+    </div>
 
     <div class="network-footer">
       <span>🌐 IP : <strong id="footerIp">chargement…</strong></span>
@@ -945,6 +1034,224 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     });
 
 
+
+    function detectOsName() {
+      const ua = navigator.userAgent || "";
+      const platform = navigator.platform || "";
+
+      if (/Windows NT 10\.0/.test(ua)) return "Windows 10 / 11";
+      if (/Windows NT 6\.3/.test(ua)) return "Windows 8.1";
+      if (/Windows NT 6\.2/.test(ua)) return "Windows 8";
+      if (/Windows NT 6\.1/.test(ua)) return "Windows 7";
+      if (/Mac OS X/.test(ua)) return "macOS";
+      if (/Android/.test(ua)) return "Android";
+      if (/iPhone|iPad|iPod/.test(ua)) return "iOS / iPadOS";
+      if (/Linux/.test(ua)) return "Linux";
+      return platform || "inconnu";
+    }
+
+    function detectBrowserName() {
+      const ua = navigator.userAgent || "";
+
+      if (/Edg\//.test(ua)) return "Microsoft Edge";
+      if (/Firefox\//.test(ua)) {
+        const v = ua.match(/Firefox\/([\d.]+)/);
+        return "Firefox" + (v ? " " + v[1] : "");
+      }
+      if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) {
+        const v = ua.match(/Chrome\/([\d.]+)/);
+        return "Chrome" + (v ? " " + v[1] : "");
+      }
+      if (/Safari\//.test(ua) && /Version\//.test(ua)) {
+        const v = ua.match(/Version\/([\d.]+)/);
+        return "Safari" + (v ? " " + v[1] : "");
+      }
+      return "navigateur inconnu";
+    }
+
+    function shortUserAgent() {
+      const ua = navigator.userAgent || "indisponible";
+      return ua.length > 92 ? ua.slice(0, 92) + "…" : ua;
+    }
+
+    function getScreenInfo() {
+      const dpr = window.devicePixelRatio || 1;
+      return `${screen.width}×${screen.height} · DPR ${dpr}`;
+    }
+
+    function getViewportInfo() {
+      return `viewport ${window.innerWidth}×${window.innerHeight}`;
+    }
+
+    function getTimezoneInfo() {
+      try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu";
+      } catch (e) {
+        return "inconnu";
+      }
+    }
+
+    function getLanguageInfo() {
+      const langs = navigator.languages && navigator.languages.length ? navigator.languages.join(", ") : navigator.language;
+      return langs || "inconnu";
+    }
+
+    function getCpuInfo() {
+      return navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible";
+    }
+
+    function getMemoryInfo() {
+      return navigator.deviceMemory ? `${navigator.deviceMemory} GB approx.` : "non disponible";
+    }
+
+    function getSessionInfo() {
+      const protocol = location.protocol.replace(":", "");
+      const host = location.host || "local";
+      return `${protocol} · ${host}`;
+    }
+
+    async function refreshBatteryInfo() {
+      const batteryInfo = document.getElementById("batteryInfo");
+      const batteryMode = document.getElementById("batteryMode");
+
+      if (!batteryInfo || !batteryMode) return;
+
+      if (!navigator.getBattery) {
+        batteryInfo.textContent = "non disponible";
+        batteryMode.textContent = "API batterie absente";
+        return;
+      }
+
+      try {
+        const battery = await navigator.getBattery();
+        const level = Math.round(battery.level * 100);
+        batteryInfo.textContent = `${level}%`;
+        batteryMode.textContent = battery.charging ? "en charge" : "sur batterie";
+      } catch (e) {
+        batteryInfo.textContent = "indisponible";
+        batteryMode.textContent = "permission / navigateur";
+      }
+    }
+
+    function buildSystemDiagnosticText() {
+      const lines = [
+        "# Seven System Details HUD",
+        "",
+        "Machine :",
+        "Transformer Book / Seven Portable Terminal",
+        "",
+        "Système détecté :",
+        detectOsName(),
+        "",
+        "Plateforme navigateur :",
+        navigator.platform || "inconnue",
+        "",
+        "Navigateur :",
+        detectBrowserName(),
+        "",
+        "User Agent :",
+        navigator.userAgent || "indisponible",
+        "",
+        "Écran :",
+        getScreenInfo(),
+        "",
+        "Viewport :",
+        getViewportInfo(),
+        "",
+        "Langue :",
+        getLanguageInfo(),
+        "",
+        "Fuseau horaire :",
+        getTimezoneInfo(),
+        "",
+        "CPU logique :",
+        getCpuInfo(),
+        "",
+        "Mémoire navigateur :",
+        getMemoryInfo(),
+        "",
+        "Connexion :",
+        typeof detectConnectionType === "function" ? detectConnectionType() : "non disponible",
+        "",
+        "Statut online :",
+        navigator.onLine ? "en ligne" : "hors ligne",
+        "",
+        "Session :",
+        getSessionInfo(),
+        "",
+        "URL cockpit :",
+        location.href,
+        "",
+        "Sécurité :",
+        "Ce diagnostic ne contient ni ID RustDesk ni mot de passe."
+      ];
+
+      return lines.join("\\n");
+    }
+
+    async function refreshSystemDetails() {
+      const os = detectOsName();
+      const browser = detectBrowserName();
+      const screenText = getScreenInfo();
+      const viewportText = getViewportInfo();
+      const timezone = getTimezoneInfo();
+
+      const set = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      set("osName", os);
+      set("platformName", navigator.platform || "plateforme inconnue");
+      set("browserName", browser);
+      set("userAgentShort", shortUserAgent());
+      set("screenInfo", screenText);
+      set("viewportInfo", viewportText);
+      set("timezoneInfo", timezone);
+      set("languageInfo", getLanguageInfo());
+      set("cpuInfo", getCpuInfo());
+      set("memoryInfo", getMemoryInfo());
+      set("sessionInfo", getSessionInfo());
+      set("pageInfo", location.hostname || "local");
+
+      set("footerOs", os);
+      set("footerBrowser", browser);
+      set("footerScreen", `${screen.width}×${screen.height}`);
+      set("footerTimezone", timezone);
+
+      const advanced = document.getElementById("advancedSystemText");
+      if (advanced) advanced.value = buildSystemDiagnosticText();
+
+      await refreshBatteryInfo();
+
+      setStatus("System Details HUD actualisé.");
+    }
+
+    async function copySystemDiagnostics() {
+      await refreshSystemDetails();
+      await copyText(buildSystemDiagnosticText());
+      setStatus("Diagnostic système copié. Aucun identifiant RustDesk inclus.");
+    }
+
+    function toggleAdvancedSystem() {
+      const panel = document.getElementById("advancedSystemPanel");
+      if (!panel) return;
+      panel.classList.toggle("open");
+      const advanced = document.getElementById("advancedSystemText");
+      if (advanced) advanced.value = buildSystemDiagnosticText();
+      setStatus(panel.classList.contains("open") ? "Détails avancés affichés." : "Détails avancés masqués.");
+    }
+
+    window.addEventListener("resize", () => {
+      const set = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      set("screenInfo", getScreenInfo());
+      set("viewportInfo", getViewportInfo());
+      set("footerScreen", `${screen.width}×${screen.height}`);
+    });
+
     function spawnTouchGlow(event) {
       if (document.body.classList.contains("no-touch-glow")) return;
       const layer = document.getElementById("touchLayer");
@@ -1019,6 +1326,7 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     bootPreviewMode();
     bootInteractiveHelp();
     bootTouchGlow();
+    refreshSystemDetails();
     refreshNetworkHud();
     updateClock();
   </script>
