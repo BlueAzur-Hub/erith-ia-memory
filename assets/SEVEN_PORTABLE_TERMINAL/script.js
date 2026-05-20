@@ -1,16 +1,14 @@
-/* Seven Portable Terminal — RECOVERY JS SIMPLE
-   Objectif : remettre les fonctions utiles en marche.
-   - navigation pages
-   - Seven Boost
-   - Video Cards Boost
-   - Wan
-   - Blackout
-   - lien cockpit
-   - fond suivant
-   - trace système
+/* Seven Portable Terminal — Stable Actions V5.4
+   Objectif : actions simples, fiables, sans patchs en cascade.
+   - Seven Boost : copie le prompt + ouvre ChatGPT
+   - Video Cards Boost : copie le prompt + ouvre ChatGPT
+   - Wan / Blackout : copie le prompt
+   - Fond / Random : change le background si les assets existent
+   - Trace système : diagnostic local filtré
 */
 
 const SEVEN_PUBLIC_URL = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
+const CHATGPT_URL = "https://chatgpt.com/";
 
 const prompts = {
   boost: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
@@ -18,7 +16,7 @@ const prompts = {
 Lis d’abord :
 https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md
 
-Puis active Aerith-7 comme opératrice de mémoire, production et discernement.
+Active Aerith-7 comme opératrice de mémoire, production et discernement.
 
 Mode Full Modules Boost intelligent.
 Chargement sélectif uniquement.
@@ -87,6 +85,7 @@ const backgrounds = [
 ];
 
 let bgIndex = 0;
+let alreadyBooted = false;
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -104,9 +103,10 @@ function openPromptDrawer(text) {
   if (drawer && area) {
     area.value = text;
     drawer.classList.add("open");
+    drawer.style.display = "block";
     area.focus();
     area.select();
-    setStatus("Copie manuelle : texte affiché.");
+    setStatus("Texte affiché pour copie manuelle.");
     return;
   }
 
@@ -115,11 +115,40 @@ function openPromptDrawer(text) {
 
 async function copyText(text, label) {
   try {
+    if (!navigator.clipboard || !window.isSecureContext) {
+      throw new Error("Clipboard unavailable");
+    }
+
     await navigator.clipboard.writeText(text);
     setStatus(label || "Texte copié.");
+    return true;
   } catch (error) {
     openPromptDrawer(text);
+    return false;
   }
+}
+
+function copyAndOpenChat(text, label) {
+  const chatTab = window.open(CHATGPT_URL, "_blank");
+
+  copyText(text, label).then((copied) => {
+    if (chatTab && copied) {
+      setStatus(label + " ChatGPT ouvert : colle avec Ctrl+V.");
+      return;
+    }
+
+    if (chatTab && !copied) {
+      setStatus("ChatGPT ouvert. Copie manuelle affichée.");
+      return;
+    }
+
+    if (!chatTab && copied) {
+      setStatus(label + " Popup bloquée : ouvre ChatGPT puis Ctrl+V.");
+      return;
+    }
+
+    setStatus("Popup bloquée. Copie manuelle affichée.");
+  });
 }
 
 function setPage(pageName) {
@@ -141,12 +170,16 @@ function applyBackground(index) {
   const url = backgrounds[bgIndex];
 
   document.documentElement.style.setProperty("--active-bg", `url("${url}")`);
-  document.body.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.12)), url("${url}")`;
+  document.body.style.backgroundImage =
+    `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.12)), url("${url}")`;
   document.body.style.backgroundSize = "cover";
   document.body.style.backgroundPosition = "center center";
   document.body.style.backgroundAttachment = "fixed";
 
-  localStorage.setItem("seven_bg_index", String(bgIndex));
+  try {
+    localStorage.setItem("seven_bg_index", String(bgIndex));
+  } catch (error) {}
+
   setStatus(`Fond actif : ${url}`);
 }
 
@@ -158,14 +191,74 @@ function randomBackground() {
   applyBackground(Math.floor(Math.random() * backgrounds.length));
 }
 
-function toggleReadability() {
-  document.body.classList.toggle("mode-readability");
-  setStatus(document.body.classList.contains("mode-readability") ? "Mode sombre actif." : "Mode transparent actif.");
+function setTransparent() {
+  document.body.classList.remove("mode-readability");
+  document.body.dataset.theme = "transparent";
+
+  $("#transparentBtn")?.classList.add("active");
+  $("#readabilityBtn")?.classList.remove("active");
+
+  setStatus("Mode transparent actif.");
+}
+
+function setReadability() {
+  document.body.classList.add("mode-readability");
+  document.body.dataset.theme = "readability";
+
+  $("#transparentBtn")?.classList.remove("active");
+  $("#readabilityBtn")?.classList.add("active");
+
+  setStatus("Mode sombre lisible actif.");
 }
 
 function toggleAdvanced() {
   document.body.classList.toggle("show-advanced");
-  setStatus(document.body.classList.contains("show-advanced") ? "Advanced affiché." : "Advanced masqué.");
+
+  $("#advancedBtn")?.classList.toggle(
+    "active",
+    document.body.classList.contains("show-advanced")
+  );
+
+  setStatus(
+    document.body.classList.contains("show-advanced")
+      ? "Advanced affiché."
+      : "Advanced masqué."
+  );
+}
+
+function togglePalette(force) {
+  const palette = $("#commandPalette");
+  if (!palette) return;
+
+  const open =
+    typeof force === "boolean"
+      ? force
+      : !palette.classList.contains("open");
+
+  palette.classList.toggle("open", open);
+  palette.setAttribute("aria-hidden", open ? "false" : "true");
+
+  setStatus(open ? "Palette ouverte." : "Palette fermée.");
+}
+
+function closePromptDrawer() {
+  const drawer = $("#promptDrawer");
+
+  if (drawer) {
+    drawer.classList.remove("open");
+    drawer.style.display = "none";
+  }
+}
+
+function getBrowserName() {
+  const ua = navigator.userAgent || "";
+
+  if (ua.includes("Firefox/")) return "Firefox";
+  if (ua.includes("Edg/")) return "Edge";
+  if (ua.includes("Chrome/")) return "Chrome";
+  if (ua.includes("Safari/")) return "Safari";
+
+  return "Navigateur";
 }
 
 function renderTrace() {
@@ -174,72 +267,155 @@ function renderTrace() {
   const trace = {
     date: now.toLocaleString("fr-FR"),
     os: navigator.platform || "OS inconnu",
-    browser: navigator.userAgent.includes("Firefox") ? "Firefox" : navigator.userAgent.includes("Chrome") ? "Chrome" : "Navigateur",
+    browser: getBrowserName(),
     screen: `${screen.width}×${screen.height} · DPR ${window.devicePixelRatio || 1}`,
+    viewport: `${window.innerWidth}×${window.innerHeight}`,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Fuseau inconnu",
     languages: navigator.languages ? navigator.languages.join(", ") : navigator.language,
-    cpu: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible",
-    security: "Diagnostic filtré : aucun RustDesk ID, aucun mot de passe"
+    cpu: navigator.hardwareConcurrency
+      ? `${navigator.hardwareConcurrency} threads`
+      : "non disponible"
   };
 
   const grid = $("#traceGrid");
+
   if (grid) {
     grid.innerHTML = `
-      <article class="trace-card"><span class="card-icon">🖥️</span><small>Système</small><strong>${trace.os}</strong><em>${trace.date}</em></article>
-      <article class="trace-card"><span class="card-icon">🌐</span><small>Navigateur</small><strong>${trace.browser}</strong><em>${trace.languages}</em></article>
-      <article class="trace-card"><span class="card-icon">📐</span><small>Affichage</small><strong>${trace.screen}</strong><em>viewport ${window.innerWidth}×${window.innerHeight}</em></article>
-      <article class="trace-card"><span class="card-icon">🌍</span><small>Fuseau</small><strong>${trace.timezone}</strong><em>local</em></article>
-      <article class="trace-card"><span class="card-icon">⚙️</span><small>Performance</small><strong>${trace.cpu}</strong><em>navigateur</em></article>
-      <article class="trace-card"><span class="card-icon">🛡️</span><small>Sécurité</small><strong>Diagnostic filtré</strong><em>aucun identifiant sensible</em></article>
+      <article class="trace-card">
+        <span class="card-icon">🖥️</span>
+        <small>Système</small>
+        <strong>${trace.os}</strong>
+        <em>${trace.date}</em>
+      </article>
+
+      <article class="trace-card">
+        <span class="card-icon">🌐</span>
+        <small>Navigateur</small>
+        <strong>${trace.browser}</strong>
+        <em>${trace.languages}</em>
+      </article>
+
+      <article class="trace-card">
+        <span class="card-icon">📐</span>
+        <small>Affichage</small>
+        <strong>${trace.screen}</strong>
+        <em>viewport ${trace.viewport}</em>
+      </article>
+
+      <article class="trace-card">
+        <span class="card-icon">🌍</span>
+        <small>Fuseau</small>
+        <strong>${trace.timezone}</strong>
+        <em>local</em>
+      </article>
+
+      <article class="trace-card">
+        <span class="card-icon">⚙️</span>
+        <small>Performance</small>
+        <strong>${trace.cpu}</strong>
+        <em>navigateur</em>
+      </article>
+
+      <article class="trace-card">
+        <span class="card-icon">🛡️</span>
+        <small>Sécurité</small>
+        <strong>SAFE TRACE</strong>
+        <em>données sensibles filtrées</em>
+      </article>
     `;
   }
 
   const raw = $("#traceRaw");
+
   if (raw) {
-    raw.value = `SAFE TRACE ${trace.date}
+    raw.value =
+`SAFE TRACE ${trace.date}
 Système : ${trace.os}
 Navigateur : ${trace.browser}
 Affichage : ${trace.screen}
+Viewport : ${trace.viewport}
 Fuseau : ${trace.timezone}
 Langues : ${trace.languages}
 Performance : ${trace.cpu}
-Sécurité : ${trace.security}`;
+Sécurité : données sensibles filtrées`;
   }
 
-  const date = $("#traceDate");
-  if (date) date.textContent = trace.date;
+  const traceDate = $("#traceDate");
+  if (traceDate) traceDate.textContent = trace.date;
 }
 
 function handleAction(action) {
-  if (action === "boost") return copyText(prompts.boost, "Seven Boost copié.");
-  if (action === "video") return copyText(prompts.video, "Video Cards Boost copié.");
-  if (action === "wan") return copyText(prompts.wan, "Wan copié.");
-  if (action === "blackout") return copyText(prompts.blackout, "Mode Blackout copié.");
-  if (action === "copy-link" || action === "link") return copyText(SEVEN_PUBLIC_URL, "Lien cockpit copié.");
-  if (action === "background") return nextBackground();
-  if (action === "random") return randomBackground();
-  if (action === "prompt") return openPromptDrawer(prompts.boost);
+  if (action === "boost") {
+    copyAndOpenChat(prompts.boost, "Seven Boost copié.");
+    return;
+  }
+
+  if (action === "video") {
+    copyAndOpenChat(prompts.video, "Video Cards Boost copié.");
+    return;
+  }
+
+  if (action === "wan") {
+    copyText(prompts.wan, "Wan copié.");
+    return;
+  }
+
+  if (action === "blackout") {
+    copyText(prompts.blackout, "Mode Blackout copié.");
+    return;
+  }
+
+  if (action === "copy-link" || action === "link") {
+    copyText(SEVEN_PUBLIC_URL, "Lien cockpit copié.");
+    return;
+  }
+
+  if (action === "background") {
+    nextBackground();
+    return;
+  }
+
+  if (action === "random") {
+    randomBackground();
+    return;
+  }
+
+  if (action === "prompt") {
+    openPromptDrawer(prompts.boost);
+    return;
+  }
 
   setStatus(`Action non configurée : ${action}`);
 }
 
 function bindEvents() {
   $$("[data-page-target]").forEach((button) => {
-    button.addEventListener("click", () => setPage(button.dataset.pageTarget));
+    button.addEventListener("click", () => {
+      setPage(button.dataset.pageTarget);
+      togglePalette(false);
+    });
   });
 
   $$("[data-action]").forEach((button) => {
-    button.addEventListener("click", () => handleAction(button.dataset.action));
+    button.addEventListener("click", () => {
+      handleAction(button.dataset.action);
+    });
   });
 
   $("#advancedBtn")?.addEventListener("click", toggleAdvanced);
   $("#nextBgBtn")?.addEventListener("click", nextBackground);
   $("#randomBgBtn")?.addEventListener("click", randomBackground);
-  $("#readabilityBtn")?.addEventListener("click", toggleReadability);
-  $("#transparentBtn")?.addEventListener("click", () => {
-    document.body.classList.remove("mode-readability");
-    setStatus("Mode transparent actif.");
-  });
+  $("#transparentBtn")?.addEventListener("click", setTransparent);
+  $("#readabilityBtn")?.addEventListener("click", setReadability);
+
+  $("#paletteBtn")?.addEventListener("click", () => togglePalette());
+  $("#paletteCloseBtn")?.addEventListener("click", () => togglePalette(false));
+
+  $("#paletteBoostBtn")?.addEventListener("click", () => handleAction("boost"));
+  $("#paletteVideoBtn")?.addEventListener("click", () => handleAction("video"));
+  $("#paletteWanBtn")?.addEventListener("click", () => handleAction("wan"));
+  $("#paletteBgBtn")?.addEventListener("click", nextBackground);
+  $("#paletteGlassBtn")?.addEventListener("click", setTransparent);
 
   $("#copyTraceBtn")?.addEventListener("click", () => {
     copyText($("#traceRaw")?.value || "SAFE TRACE", "Diagnostic copié.");
@@ -250,9 +426,7 @@ function bindEvents() {
     setStatus("Trace actualisée.");
   });
 
-  $("#promptCloseBtn")?.addEventListener("click", () => {
-    $("#promptDrawer")?.classList.remove("open");
-  });
+  $("#promptCloseBtn")?.addEventListener("click", closePromptDrawer);
 
   document.addEventListener("keydown", (event) => {
     if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
@@ -268,21 +442,36 @@ function bindEvents() {
 
     if (pages[event.key]) setPage(pages[event.key]);
 
+    if (event.key === "?") togglePalette();
+
     if (event.key === "Escape") {
-      $("#promptDrawer")?.classList.remove("open");
+      togglePalette(false);
+      closePromptDrawer();
     }
   });
 }
 
 function boot() {
-  const savedBg = Number(localStorage.getItem("seven_bg_index") || "0");
-  bgIndex = Number.isFinite(savedBg) ? savedBg : 0;
+  if (alreadyBooted) return;
+  alreadyBooted = true;
+
+  try {
+    const savedBg = Number(localStorage.getItem("seven_bg_index") || "0");
+    bgIndex = Number.isFinite(savedBg) ? savedBg : 0;
+  } catch (error) {
+    bgIndex = 0;
+  }
 
   bindEvents();
   applyBackground(bgIndex);
   renderTrace();
+  setTransparent();
   setPage("home");
   setStatus("Seven Terminal prêt.");
 }
 
-document.addEventListener("DOMContentLoaded", boot);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
