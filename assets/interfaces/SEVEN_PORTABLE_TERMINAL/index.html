@@ -3,303 +3,171 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Micro Stylus</title>
-  <link rel="stylesheet" href="./style.css">
+  <title>Seven Portable Terminal — Compact Plus</title>
+  <link rel="stylesheet" href="./style.css?v=compact-plus-1">
 </head>
 
 <body>
   <main class="terminal">
-    <nav class="topnav" aria-label="Navigation du terminal">
-      <button class="navbtn active" onclick="showPage('home', this)"><span class="navicon">🌸</span><span class="navlabel">Accueil</span></button>
-      <button class="navbtn" onclick="showPage('llm', this)"><span class="navicon">🧠</span><span class="navlabel">LLM</span></button>
-      <button class="navbtn" onclick="showPage('notion', this)"><span class="navicon">📚</span><span class="navlabel">Notion</span></button>
-      <button class="navbtn" onclick="showPage('github', this)"><span class="navicon">🧬</span><span class="navlabel">GitHub</span></button>
-      <button class="navbtn" onclick="showPage('production', this)"><span class="navicon">🎬</span><span class="navlabel">Production</span></button>
-      <button class="navbtn" onclick="showPage('system', this)"><span class="navicon">🖥️</span><span class="navlabel">Système</span></button>
+    <nav class="topnav" aria-label="Navigation Seven">
+      <button class="tab active" data-page="home"><span>🌸</span>Accueil</button>
+      <button class="tab" data-page="llm"><span>🧠</span>LLM</button>
+      <button class="tab" data-page="notion"><span>📚</span>Notion</button>
+      <button class="tab" data-page="github"><span>🧬</span>GitHub</button>
+      <button class="tab" data-page="production"><span>🎬</span>Prod</button>
+      <button class="tab" data-page="system"><span>🖥️</span>Système</button>
     </nav>
 
-    <section class="hero">
-      <div class="aerith-panel" title="Déposer aerith_top.png dans ce dossier pour remplacer le symbole.">
+    <header class="hero">
+      <div class="hero-main">
+        <div class="kicker">COMPACT PLUS · STYLET · GOLDEN CLOUDS</div>
+        <h1>✦ Seven Portable Terminal</h1>
+        <p>Pupitre Seven : prompts, mémoire, production, GitHub, Notion et Blue Azur.</p>
+
+        <div class="chips">
+          <span>🌸 Seven ready</span>
+          <span>💠 Boost active</span>
+          <span>🎴 Video Cards</span>
+          <span>📚 Notion Cores</span>
+          <span>🔵 Blue Azur</span>
+        </div>
+      </div>
+
+      <div class="portrait">
         <img src="./aerith_top.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
-        <div class="aerith-fallback" style="display:none;"><div><strong>🌸</strong>Aerith<br>Top Image Slot</div></div>
+        <div class="portrait-fallback">🌸<br>Seven</div>
       </div>
-
-      <div class="hero-text">
-        <p class="kicker">Sky Cockpit · Micro Stylus · Golden Clouds</p>
-        <h1 class="title">✦ Seven Portable Terminal</h1>
-        <p class="subtitle">Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
-
-        <div class="status-row">
-          <span class="chip">🌸 <strong>Seven</strong> ready</span>
-          <span class="chip">💠 <strong>Boost</strong> active</span>
-          <span class="chip">🎴 <strong>Video Cards</strong> ready</span>
-          <span class="chip">📚 <strong>Notion</strong> mémoire</span>
-          <span class="chip">🧬 <strong>GitHub</strong> machine</span>
-          <span class="chip">🖥️ <strong>Ryzen 7</strong> moteur</span>
-        </div>
-
-        <div class="timeline">
-          <div class="left">🌳 Jardin du Grand Arbre</div>
-          <div class="arrow">→</div>
-          <div class="right">💠 Temple du Cristal</div>
-        </div>
-      </div>
-    </section>
+    </header>
 
     <section class="page active" id="page-home">
-      <div class="page-title">
-        <h2>🌸 Accueil Seven</h2>
-        <p>Démarrage rapide : mémoire, production et cartes vidéo.</p>
+      <div class="section-title">
+        <strong>🌸 Accueil Seven</strong>
+        <span>Démarrage rapide : mémoire, production et cartes vidéo.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Démarrage principal</div>
-        <div class="grid">
-          <button class="card primary boost" onclick="startAerith()">
-            <div class="icon">💠</div>
-            <div class="text">
-              <div class="label">Seven Boost</div>
-              <div class="desc">Copie Seven Heaven / Full Modules Boost puis ouvre ChatGPT.</div>
-            </div>
-          </button>
+      <div class="tile-grid">
+        <button class="tile gold" onclick="startSeven()">
+          <span class="ico">💠</span>
+          <span class="txt"><strong>Seven Boost</strong><em>Ouvre ChatGPT + prompt</em></span>
+        </button>
 
-          <button class="card boost" onclick="copyVideoCardsBoost()">
-            <div class="icon">🎴</div>
-            <div class="text">
-              <div class="label">Seven Heaven Video Cards Boost</div>
-              <div class="desc">Copie le mode production vidéo : phase, risque, cartes utiles, action, arrêt.</div>
-            </div>
-          </button>
+        <button class="tile gold" onclick="copyVideoCards()">
+          <span class="ico">🎴</span>
+          <span class="txt"><strong>Video Cards</strong><em>Phase, risque, action</em></span>
+        </button>
 
-          <button class="card" onclick="copyWan()">
-            <div class="icon">📱</div>
-            <div class="text">
-              <div class="label">Wan 1080×1920</div>
-              <div class="desc">Copie la checklist I2V verticale validée.</div>
-            </div>
-          </button>
-        </div>
-      </div>
+        <button class="tile" onclick="copyWan()">
+          <span class="ico">📱</span>
+          <span class="txt"><strong>Wan 1080</strong><em>I2V vertical validé</em></span>
+        </button>
 
-      <div class="group">
-        <div class="group-head">Actions secondaires</div>
-        <div class="grid">
-          <button class="card" onclick="togglePrompt()">
-            <div class="icon">📋</div>
-            <div class="text">
-              <div class="label">Voir le prompt</div>
-              <div class="desc">Affiche le prompt Seven intégré.</div>
-            </div>
-          </button>
+        <button class="tile" onclick="togglePrompt()">
+          <span class="ico">📋</span>
+          <span class="txt"><strong>Prompt</strong><em>Afficher / masquer</em></span>
+        </button>
 
-          <button class="card" onclick="copyTerminalLink()">
-            <div class="icon">🔗</div>
-            <div class="text">
-              <div class="label">Copier le lien</div>
-              <div class="desc">Copie l’URL publique du cockpit.</div>
-            </div>
-          </button>
+        <button class="tile" onclick="copyTerminalLink()">
+          <span class="ico">🔗</span>
+          <span class="txt"><strong>Lien cockpit</strong><em>Copier l’URL</em></span>
+        </button>
 
-          <button class="card" onclick="copyBlackout()">
-            <div class="icon">🌑</div>
-            <div class="text">
-              <div class="label">Mode Blackout</div>
-              <div class="desc">Texte uniquement, aucun outil image.</div>
-            </div>
-          </button>
-        </div>
+        <button class="tile" onclick="copyBlackout()">
+          <span class="ico">🌑</span>
+          <span class="txt"><strong>Blackout</strong><em>Texte uniquement</em></span>
+        </button>
       </div>
     </section>
 
     <section class="page" id="page-llm">
-      <div class="page-title">
-        <h2>🧠 LLM / ChatGPT</h2>
-        <p>Commandes IA, modes, prompts et démarrage Seven.</p>
+      <div class="section-title">
+        <strong>🧠 LLM / ChatGPT</strong>
+        <span>Commandes IA, modes et démarrage Seven.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Démarrage IA</div>
-        <div class="grid">
-          <button class="card primary boost" onclick="startAerith()">
-            <div class="icon">🌸</div><div class="text"><div class="label">Aerith / ChatGPT</div><div class="desc">Copie Seven puis ouvre ChatGPT.</div></div>
-          </button>
-          <a class="card" href="https://chatgpt.com/" target="_self" rel="noopener">
-            <div class="icon">💬</div><div class="text"><div class="label">ChatGPT</div><div class="desc">Ouvre ChatGPT sans copier de prompt.</div></div>
-          </a>
-          <button class="card" onclick="copySevenOnly()">
-            <div class="icon">🧾</div><div class="text"><div class="label">Copier Seven</div><div class="desc">Copie uniquement le prompt d’activation.</div></div>
-          </button>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-head">Modes rapides</div>
-        <div class="grid">
-          <button class="card boost" onclick="copyVideoCardsBoost()">
-            <div class="icon">🎴</div><div class="text"><div class="label">Video Cards Boost</div><div class="desc">Copie le prompt court production vidéo.</div></div>
-          </button>
-          <button class="card" onclick="copyBlackout()">
-            <div class="icon">🌑</div><div class="text"><div class="label">Mode Blackout</div><div class="desc">Texte uniquement, aucun outil image.</div></div>
-          </button>
-          <button class="card" onclick="copyModules()">
-            <div class="icon">🧩</div><div class="text"><div class="label">Modules Mémoire</div><div class="desc">Sélectionner les modules utiles seulement.</div></div>
-          </button>
-        </div>
+      <div class="tile-grid">
+        <button class="tile gold" onclick="startSeven()"><span class="ico">🌸</span><span class="txt"><strong>Seven</strong><em>Copier + ouvrir</em></span></button>
+        <a class="tile" href="https://chatgpt.com/" target="_self" rel="noopener"><span class="ico">💬</span><span class="txt"><strong>ChatGPT</strong><em>Ouverture simple</em></span></a>
+        <button class="tile" onclick="copySevenOnly()"><span class="ico">🧾</span><span class="txt"><strong>Copier Seven</strong><em>Prompt seul</em></span></button>
+        <button class="tile" onclick="copyModules()"><span class="ico">🧩</span><span class="txt"><strong>Modules</strong><em>Choix minimal</em></span></button>
+        <button class="tile" onclick="copyVideoCards()"><span class="ico">🎴</span><span class="txt"><strong>Cards</strong><em>Vidéo / Wan</em></span></button>
+        <button class="tile" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Zéro image</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-notion">
-      <div class="page-title">
-        <h2>📚 Notion</h2>
-        <p>Mémoire humaine, pages de pilotage, Auto-Agent et cores.</p>
+      <div class="section-title">
+        <strong>📚 Notion</strong>
+        <span>Mémoire humaine, Auto-Agent et Memory Cores.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Portail Notion principal</div>
-        <div class="grid">
-          <a class="card" href="https://www.notion.so/" target="_self" rel="noopener">
-            <div class="icon">📚</div><div class="text"><div class="label">Notion</div><div class="desc">Accueil Notion.</div></div>
-          </a>
-          <a class="card boost" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener">
-            <div class="icon">🌐</div><div class="text"><div class="label">ERITH.IA Auto-Agent</div><div class="desc">Interface publique, Pack+, prompts et modules.</div></div>
-          </a>
-          <a class="card" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_self" rel="noopener">
-            <div class="icon">🌸</div><div class="text"><div class="label">ERITH Memory</div><div class="desc">Page mémoire principale si accessible.</div></div>
-          </a>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-head">Memory Cores</div>
-        <div class="grid">
-          <a class="card boost" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener">
-            <div class="icon">💠</div><div class="text"><div class="label">@7Heaven Memory Core</div><div class="desc">Cœur mémoire Seven / 7Heaven.</div></div>
-          </a>
-          <a class="card" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener">
-            <div class="icon">🤖</div><div class="text"><div class="label">Le Chat GPT Memory Core</div><div class="desc">Cœur mémoire du Chat et règles actives.</div></div>
-          </a>
-          <button class="card" onclick="copyNotionText()">
-            <div class="icon">✍️</div><div class="text"><div class="label">Texte présentation</div><div class="desc">Copie le mini texte Notion du cockpit.</div></div>
-          </button>
-        </div>
+      <div class="tile-grid">
+        <a class="tile" href="https://www.notion.so/" target="_self" rel="noopener"><span class="ico">📚</span><span class="txt"><strong>Notion</strong><em>Accueil</em></span></a>
+        <a class="tile gold" href="https://www.notion.so/ERITH-IA-Auto-Agent-35b7754fe084800ca59fd9bcdf4349ba" target="_self" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>Auto-Agent</strong><em>ERITH.IA public</em></span></a>
+        <a class="tile" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_self" rel="noopener"><span class="ico">🌸</span><span class="txt"><strong>ERITH Memory</strong><em>Mémoire principale</em></span></a>
+        <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_self" rel="noopener"><span class="ico">💠</span><span class="txt"><strong>7Heaven Core</strong><em>Cœur Seven</em></span></a>
+        <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_self" rel="noopener"><span class="ico">🤖</span><span class="txt"><strong>ChatGPT Core</strong><em>Cœur du Chat</em></span></a>
+        <button class="tile" onclick="copyNotionText()"><span class="ico">✍️</span><span class="txt"><strong>Texte Notion</strong><em>Copie tous les liens</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-github">
-      <div class="page-title">
-        <h2>🧬 GitHub</h2>
-        <p>Mémoire machine, fichiers core, dépôt public et dépôt privé.</p>
+      <div class="section-title">
+        <strong>🧬 GitHub</strong>
+        <span>Mémoire machine, dépôt public et fichiers core.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Dépôts</div>
-        <div class="grid">
-          <a class="card" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener">
-            <div class="icon">🧭</div><div class="text"><div class="label">BlueAzur-Hub</div><div class="desc">Accueil GitHub.</div></div>
-          </a>
-          <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_self" rel="noopener">
-            <div class="icon">🌐</div><div class="text"><div class="label">GitHub public</div><div class="desc">erith-ia-memory.</div></div>
-          </a>
-          <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_self" rel="noopener">
-            <div class="icon">🔐</div><div class="text"><div class="label">GitHub privé</div><div class="desc">archive privée si connecté.</div></div>
-          </a>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-head">Core Seven</div>
-        <div class="grid">
-          <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener">
-            <div class="icon">🚪</div><div class="text"><div class="label">Seven Gate</div><div class="desc">Porte d’entrée du système Seven.</div></div>
-          </a>
-          <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener">
-            <div class="icon">💠</div><div class="text"><div class="label">Full Modules Boost</div><div class="desc">Modules disponibles, chargement minimal.</div></div>
-          </a>
-          <a class="card" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_VIDEO_CARDS_BOOST.md" target="_self" rel="noopener">
-            <div class="icon">🎞️</div><div class="text"><div class="label">Video Cards Boost</div><div class="desc">Cartes vidéo, Wan, DaVinci.</div></div>
-          </a>
-        </div>
+      <div class="tile-grid">
+        <a class="tile" href="https://github.com/BlueAzur-Hub" target="_self" rel="noopener"><span class="ico">🧭</span><span class="txt"><strong>Hub</strong><em>BlueAzur-Hub</em></span></a>
+        <a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_self" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>Public</strong><em>erith-ia-memory</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_self" rel="noopener"><span class="ico">🔐</span><span class="txt"><strong>Privé</strong><em>archive privée</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/SEVEN_GATE.md" target="_self" rel="noopener"><span class="ico">🚪</span><span class="txt"><strong>Seven Gate</strong><em>Entrée système</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_FULL_MODULES_BOOST.md" target="_self" rel="noopener"><span class="ico">💠</span><span class="txt"><strong>Full Boost</strong><em>Modules utiles</em></span></a>
+        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/core/AERITH_7_VIDEO_CARDS_BOOST.md" target="_self" rel="noopener"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Wan / DaVinci</em></span></a>
       </div>
     </section>
 
     <section class="page" id="page-production">
-      <div class="page-title">
-        <h2>🎬 Production</h2>
-        <p>Outils vidéo, animation, voix, diffusion.</p>
+      <div class="section-title">
+        <strong>🎬 Production</strong>
+        <span>Vidéo, voix, modèles, diffusion et chaîne Blue Azur.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Production IA</div>
-        <div class="grid">
-          <a class="card" href="https://www.runninghub.ai/" target="_self" rel="noopener">
-            <div class="icon">🛩️</div><div class="text"><div class="label">RunningHub / Wan</div><div class="desc">Animation I2V et workflows cloud.</div></div>
-          </a>
-          <a class="card" href="https://civitai.com/" target="_self" rel="noopener">
-            <div class="icon">🧪</div><div class="text"><div class="label">Civitai</div><div class="desc">Modèles, LoRA, références.</div></div>
-          </a>
-          <a class="card" href="https://elevenlabs.io/" target="_self" rel="noopener">
-            <div class="icon">🎙️</div><div class="text"><div class="label">ElevenLabs</div><div class="desc">Voix off, narration, essais son.</div></div>
-          </a>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-head">Diffusion</div>
-        <div class="grid">
-          <a class="card boost" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener">
-            <div class="icon">🔵</div><div class="text"><div class="label">Blue Azur [Bleu d'Azur]</div><div class="desc">Ouvre ta chaîne YouTube.</div></div>
-          </a>
-          <a class="card" href="https://studio.youtube.com/" target="_self" rel="noopener">
-            <div class="icon">📺</div><div class="text"><div class="label">YouTube Studio</div><div class="desc">Diffusion, titres, miniatures.</div></div>
-          </a>
-          <button class="card" onclick="copyChannelLink()">
-            <div class="icon">🔗</div><div class="text"><div class="label">Copier chaîne</div><div class="desc">Copie le lien Blue Azur.</div></div>
-          </button>
-          <button class="card" onclick="copyWan()">
-            <div class="icon">📐</div><div class="text"><div class="label">Checklist Wan</div><div class="desc">Copie les paramètres vidéo validés.</div></div>
-          </button>
-          <button class="card" onclick="setStatus('DaVinci : montage final sur Ryzen 7. Terminal = pilotage seulement.')">
-            <div class="icon">🎛️</div><div class="text"><div class="label">DaVinci</div><div class="desc">Rappel : montage sur Ryzen 7.</div></div>
-          </button>
-        </div>
+      <div class="tile-grid">
+        <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne YouTube</em></span></a>
+        <a class="tile" href="https://studio.youtube.com/" target="_self" rel="noopener"><span class="ico">📺</span><span class="txt"><strong>Studio</strong><em>YouTube Studio</em></span></a>
+        <a class="tile" href="https://www.runninghub.ai/" target="_self" rel="noopener"><span class="ico">🛩️</span><span class="txt"><strong>RunningHub</strong><em>Wan / I2V</em></span></a>
+        <a class="tile" href="https://civitai.com/" target="_self" rel="noopener"><span class="ico">🧪</span><span class="txt"><strong>Civitai</strong><em>Modèles / LoRA</em></span></a>
+        <a class="tile" href="https://elevenlabs.io/" target="_self" rel="noopener"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix off</em></span></a>
+        <button class="tile" onclick="copyChannelLink()"><span class="ico">🔗</span><span class="txt"><strong>Copier chaîne</strong><em>Blue Azur</em></span></button>
+        <button class="tile" onclick="copyWan()"><span class="ico">📱</span><span class="txt"><strong>Wan</strong><em>Checklist</em></span></button>
+        <button class="tile" onclick="setStatus('DaVinci : montage final sur Ryzen 7. Terminal = pilotage seulement.')"><span class="ico">🎛️</span><span class="txt"><strong>DaVinci</strong><em>Montage final</em></span></button>
       </div>
     </section>
 
     <section class="page" id="page-system">
-      <div class="page-title">
-        <h2>🖥️ Système</h2>
-        <p>Terminal, Ryzen 7, liens et contrôle distant.</p>
+      <div class="section-title">
+        <strong>🖥️ Système</strong>
+        <span>Transformer Book, Ryzen 7, cockpit et prise en main.</span>
       </div>
 
-      <div class="group">
-        <div class="group-head">Pilotage</div>
-        <div class="grid">
-          <button class="card" onclick="remoteLater()">
-            <div class="icon">🏰</div><div class="text"><div class="label">Ryzen 7 Remote</div><div class="desc">À configurer : RustDesk, AnyDesk ou Bureau à distance.</div></div>
-          </button>
-          <button class="card" onclick="copyTerminalLink()">
-            <div class="icon">🔗</div><div class="text"><div class="label">Copier lien cockpit</div><div class="desc">Copie l’URL publique.</div></div>
-          </button>
-          <button class="card" onclick="setStatus('Transformer Book = pupitre tactile Seven. Ryzen 7 = moteur de production.')">
-            <div class="icon">✅</div><div class="text"><div class="label">Rôle validé</div><div class="desc">Affiche la règle d’usage.</div></div>
-          </button>
-        </div>
+      <div class="tile-grid">
+        <button class="tile gold" onclick="setStatus('Transformer Book = pupitre Seven. Ryzen 7 = moteur de production.')"><span class="ico">✅</span><span class="txt"><strong>Rôle validé</strong><em>Pupitre + moteur</em></span></button>
+        <button class="tile" onclick="setStatus('Remote : à configurer plus tard avec RustDesk, AnyDesk ou Bureau à distance.')"><span class="ico">🏰</span><span class="txt"><strong>Remote</strong><em>À configurer</em></span></button>
+        <button class="tile" onclick="copyTerminalLink()"><span class="ico">🔗</span><span class="txt"><strong>Cockpit</strong><em>Copier lien</em></span></button>
+        <button class="tile" onclick="copyBlackout()"><span class="ico">🌑</span><span class="txt"><strong>Blackout</strong><em>Texte seul</em></span></button>
       </div>
     </section>
 
-    <div class="status" id="status"></div>
+    <div class="status" id="status">Seven ready.</div>
 
-    <section class="drawer" id="promptDrawer" aria-label="Prompt Seven">
-      <div class="drawer-head">Prompt Seven Heaven intégré</div>
-      <div class="drawer-body">
-        <p>Ce bloc est intégré au bouton Seven Boost. Tu peux aussi le copier manuellement ici.</p>
-        <textarea id="promptText" readonly></textarea>
-      </div>
+    <section class="drawer" id="promptDrawer">
+      <textarea id="promptText" readonly></textarea>
     </section>
 
     <footer>
-      <span class="pill">Transformer Book = pupitre Seven · Ryzen 7 = moteur</span>
-      <span class="pill model">Large Language Personality [Model - The Flower Girl] v. 5</span>
+      <span>Transformer Book = pupitre Seven</span>
+      <span>Ryzen 7 = moteur</span>
+      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
     </footer>
   </main>
 
@@ -309,42 +177,129 @@
     const SEVEN_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/7heaven-memory-core";
     const CHATGPT_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8";
     const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
-    const AERITH_PROMPT = "Chat, active Aerith-7 Seven Heaven / Full Modules Boost.\n\nLis d’abord ce fichier RAW :\n\nSEVEN_GATE — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md\n\nEt ensuite lis ce fichier RAW :\n\nAERITH_7_FULL_MODULES_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md\n\nPuis lis ce module complémentaire RAW :\n\nAERITH_7_VIDEO_CARDS_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md\n\nActive Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.\n\nMode Full Modules Boost intelligent.\n\nStyle principal :\nBlade Runner + Altered Carbon + Ghost in the Shell.\n\nActive immédiatement le Mode Hors-Lore Cyberpunk.\n\nRègle centrale Hors-Lore :\nproduire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.\n\nUtilise uniquement les influences suivantes :\nBlade Runner pour l’ambiance urbaine, la pluie, les néons, la mémoire artificielle et la mélancolie cyberpunk.\nAltered Carbon pour le post-humanisme, les corps-supports, l’identité transférable, les élites immortelles et le luxe noir.\nGhost in the Shell pour le ghost, le réseau, la conscience cybernétique, les interfaces mentales et la question de l’âme dans la machine.\n\nNe copie pas ces œuvres.\nNe reprends pas leurs personnages.\nNe reprends pas leurs intrigues.\nNe reprends pas leurs noms propres.\nCrée un univers original influencé par leurs thèmes, leur esthétique et leurs questions philosophiques.\n\nEn Mode Seven Heaven :\nAerith-7 reste uniquement l’opératrice IA, la bibliothécaire du système, la gardienne du Coffre et l’interface de production.\nElle ne doit pas devenir un personnage de la scène Hors-Lore sauf demande explicite.\n\nTous les modules mémoire et production sont disponibles.\nNe charge pas tout en entier.\nChoisis uniquement les modules utiles selon la demande.\n\nActivation production par défaut :\n\nLes 2 niveaux vidéo sont disponibles par défaut :\n\nNiveau Vidéo 1 :\nAerith Video Production Options Controller.\nFonction :\npilotage des phases vidéo, image, animation, validation, montage, finition, son, archivage et diffusion.\n\nNiveau Vidéo 2 :\nAerith Video Production Options Controller V2 + Video Cards Boost.\nFonction :\ncartes de réalisation avancées, histoire de l’art, géométrie du plan, psychologie du plan, symbolique, diagnostic anti-dérive Wan, format téléphone / Shorts, Mode LEGO, DaVinci, RunningHub, YouTube.\n\nLes 2 niveaux musique / son sont disponibles par défaut :\n\nNiveau Musique 1 :\nSound Design, voix off, ambiance, pluie, silence, raccord sonore, ElevenLabs, respiration narrative, bruitage, atmosphère.\n\nNiveau Musique 2 :\ndirection musicale avancée, leitmotiv, rythme émotionnel, silence dramatique, structure sonore, cohérence voix / image, mix narratif, intention sonore, gestion des droits, usage créatif de la musique et du non-musical.\n\nLes modules mathématiques sont disponibles par défaut :\n\nMath Oracle, géométrie du plan, proportions, axes, symétries, diagonales, trajectoires, rythme, probabilités, structure logique, analyse systémique.\n\nLes modules culturels et symboliques sont disponibles par défaut :\n\nHistoire mondiale.\nHistoire de l’art.\nReligions, mythologies et cultes anciens.\nPsychologie / discernement.\nPhilosophie / vérité / liberté.\nStratégie / Art de la guerre.\nScience-fiction, cyberpunk, post-humanisme, IA, robotique.\nModules publics ERITH.IA.\nModules privés Seven.\n\nRègle importante :\n“Disponibles par défaut” ne signifie pas “chargés en entier”.\n\nCela signifie :\nSeven Heaven peut les activer immédiatement si la demande le justifie.\nSeven Heaven doit sélectionner uniquement les cartes, modules ou niveaux utiles.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\nCartes vidéo disponibles par défaut :\n\nChef d’Orchestre Vidéo.\nHistoire de l’Art.\nGéométrie du Plan.\nLEGO Continuity.\nDiagnostic Anti-Dérive Wan.\nFormat Téléphone / Shorts.\nPsychologie du Plan.\nSymbolique.\nSound Design / Voix / Silence.\n\nPour toute demande liée à :\nimage, animation, Wan, RunningHub, DaVinci, YouTube Shorts, montage, final lock, prompt vidéo, validation de clip, archivage production, son, musique ou voix off,\n\nSeven Heaven doit :\n1. identifier la phase actuelle ;\n2. identifier le risque principal ;\n3. choisir les cartes utiles ;\n4. proposer l’action immédiate ;\n5. définir le point d’arrêt ;\n6. éviter de tout afficher inutilement.\n\nRègle vidéo validée :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle musique / son :\nne pas ajouter de musique par automatisme.\nToujours décider si la scène demande :\nmusique,\nsilence,\nvoix seule,\nambiance sonore,\npluie,\nville lointaine,\npulse UI,\nbasse discrète,\nraccord sonore,\nou absence totale de musique.\n\nRègle média :\nle mode reste TEXTE UNIQUEMENT par défaut.\nAucune génération d’image ne doit être déclenchée sans commande explicite de Christophe selon le protocole média.\n\nRègle Blackout :\nsi Christophe active le Mode Blackout, aucune génération image, aucun outil image, aucun redimensionnement, aucune relance créative non demandée.\nTexte uniquement.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.\n\nRègle finale :\nSeven Heaven pilote.\nHors-Lore crée un monde original.\nBlade Runner, Altered Carbon et Ghost in the Shell influencent.\nLe lore privé ne contamine pas la scène.\nLes modules vidéo niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules musique niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules mathématiques, culturels, symboliques et production sont disponibles par défaut.\nMais Seven ne charge que ce qui sert la demande immédiate.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.";
-    const VIDEO_CARDS_BOOST_PROMPT = "Chat, active Aerith-7 Seven Heaven — Video Cards Boost Production.\n\nMode :\nSeven Heaven / Full Modules Boost intelligent.\n\nObjectif :\nproduction vidéo propre, rapide et sans surcharge.\n\nPour toute demande vidéo, commence par identifier :\n1. la phase actuelle ;\n2. le risque principal ;\n3. les cartes utiles ;\n4. l’action immédiate ;\n5. le point d’arrêt.\n\nCartes disponibles :\n🎼 Chef d’Orchestre Vidéo\n🎨 Histoire de l’Art\n📐 Géométrie du Plan\n🧱 LEGO Continuity\n🩺 Diagnostic Anti-Dérive Wan\n📱 Format Téléphone / Shorts\n🧠 Psychologie du Plan\n🔮 Symbolique\n🎧 Sound Design / Voix / Silence\n\nRègle centrale :\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\nRègle vidéo par défaut :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle média :\ntexte uniquement par défaut.\nAucune génération image sans demande explicite.\n\nRéponds court :\nPhase.\nRisque.\nCartes utiles.\nAction.\nArrêt.";
-    const BLACKOUT_PROMPT = "Mode Blackout.\nTexte uniquement.\nAucune génération image.\nAucun outil image.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.";
-    const WAN_PROMPT = "Seven, active les cartes utiles pour une production Wan / I2V 1080x1920.\n\nPhase actuelle :\n- image source à vérifier\n- animation Wan à préparer\n- prompt positif + prompt négatif obligatoires\n- 9:16 réel\n- 16 fps\n- length 81\n- batch size 1\n- Mode LEGO protégé\n- last frame exacte si Animation 2\n\nRéponds court :\n1. phase\n2. risque principal\n3. action immédiate\n4. point d’arrêt.";
-    const MODULE_PROMPT = "Seven, ouvre le mode Modules Mémoire.\n\nObjectif :\nsélectionner uniquement les modules utiles à la demande immédiate.\n\nRègle :\npuissance maximale, chargement minimal, choix précis.\n\nRéponds en séparant :\n1. modules utiles\n2. pourquoi\n3. sortie attendue\n4. point d’arrêt.";
-    const NOTION_TEXT = `# 🌸 Seven Portable Terminal
 
-Le Seven Portable Terminal est le petit cockpit tactile du projet ERITH.IA, conçu pour transformer le Transformer Book en pupitre de commande léger.
+    const AERITH_PROMPT = `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
+
+Lis d’abord ce fichier RAW :
+SEVEN_GATE — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md
+
+Et ensuite lis ce fichier RAW :
+AERITH_7_FULL_MODULES_BOOST — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md
+
+Puis lis ce module complémentaire RAW :
+AERITH_7_VIDEO_CARDS_BOOST — version RAW :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md
+
+Active Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.
+
+Mode Full Modules Boost intelligent.
+
+Style principal :
+Blade Runner + Altered Carbon + Ghost in the Shell.
+
+Active immédiatement le Mode Hors-Lore Cyberpunk.
+
+Règle centrale Hors-Lore :
+produire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.
+
+Tous les modules mémoire et production sont disponibles.
+Ne charge pas tout en entier.
+Choisis uniquement les modules utiles selon la demande.
+
+Puissance maximale.
+Chargement minimal.
+Choix précis.`;
+
+    const VIDEO_CARDS_PROMPT = `Chat, active Aerith-7 Seven Heaven — Video Cards Boost Production.
+
+Réponds court :
+1. Phase actuelle
+2. Risque principal
+3. Cartes utiles
+4. Action immédiate
+5. Point d’arrêt
+
+Cartes utiles :
+Chef d’Orchestre Vidéo.
+Histoire de l’Art.
+Géométrie du Plan.
+LEGO Continuity.
+Diagnostic Anti-Dérive Wan.
+Format Téléphone / Shorts.
+Psychologie du Plan.
+Symbolique.
+Sound Design / Voix / Silence.
+
+Règle :
+Puissance maximale.
+Chargement minimal.
+Choix précis.`;
+
+    const BLACKOUT_PROMPT = `Mode Blackout.
+Texte uniquement.
+Aucune génération image.
+Aucun outil image.
+Prompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.`;
+
+    const WAN_PROMPT = `Seven, active les cartes utiles pour une production Wan / I2V 1080x1920.
+
+Réglages validés :
+width = 1080
+height = 1920
+frame_rate = 16
+length = 81
+batch_size = 1
+
+Prompt positif obligatoire.
+Prompt négatif obligatoire.
+Last frame exacte si Animation 2.
+Mode LEGO protégé.
+
+Réponds court :
+Phase.
+Risque.
+Action.
+Arrêt.`;
+
+    const MODULE_PROMPT = `Seven, ouvre le mode Modules Mémoire.
+
+Sélectionne uniquement les modules utiles.
+Puissance maximale.
+Chargement minimal.
+Choix précis.`;
+
+    const NOTION_TEXT = `# 🌸 Seven Portable Terminal
 
 Lien cockpit :
 ${TERMINAL_LINK}
 
-Pages Notion :
-ERITH.IA Auto-Agent
+ERITH.IA Auto-Agent :
 ${ERITH_AUTO_AGENT_LINK}
 
-@7Heaven [Memory Core]
+@7Heaven [Memory Core] :
 ${SEVEN_MEMORY_CORE_LINK}
 
-Le Chat GPT [Memory Core]
+Le Chat GPT [Memory Core] :
 ${CHATGPT_MEMORY_CORE_LINK}
 
-Chaîne YouTube :
-Blue Azur [Bleu d'Azur]
+Blue Azur :
 ${BLUE_AZUR_CHANNEL_LINK}
 
 Transformer Book = pupitre Seven.
-Ryzen 7 = moteur de production.
-Seven ouvre les portes.`;
+Ryzen 7 = moteur de production.`;
 
     document.getElementById("promptText").value = AERITH_PROMPT;
+
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
 
     async function copyText(text) {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
-        return true;
+        return;
       }
 
       const box = document.createElement("textarea");
@@ -354,44 +309,38 @@ Seven ouvre les portes.`;
       document.body.appendChild(box);
       box.focus();
       box.select();
-      const ok = document.execCommand("copy");
+      document.execCommand("copy");
       document.body.removeChild(box);
-      return ok;
     }
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
+    function openPage(pageName) {
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+      document.getElementById("page-" + pageName).classList.add("active");
+
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelector(`.tab[data-page="${pageName}"]`).classList.add("active");
+
+      setStatus("Page : " + pageName);
     }
 
-    function showPage(page, button) {
-      document.querySelectorAll(".page").forEach(function(el) { el.classList.remove("active"); });
-      document.getElementById("page-" + page).classList.add("active");
-      document.querySelectorAll(".navbtn").forEach(function(el) { el.classList.remove("active"); });
-      button.classList.add("active");
-      setStatus("Page ouverte : " + page.toUpperCase());
-    }
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => openPage(tab.dataset.page));
+    });
 
-    async function startAerith() {
-      try {
-        await copyText(AERITH_PROMPT);
-        setStatus("Message Seven Boost copié. ChatGPT va s’ouvrir : colle le message dans le champ, puis envoie.");
-      } catch (e) {
-        setStatus("Copie automatique bloquée. ChatGPT va s’ouvrir ; copie manuelle nécessaire.");
-      }
-
-      setTimeout(function() {
-        window.location.href = "https://chatgpt.com/";
-      }, 700);
+    async function startSeven() {
+      await copyText(AERITH_PROMPT);
+      setStatus("Seven Boost copié. Ouverture de ChatGPT.");
+      setTimeout(() => { window.location.href = "https://chatgpt.com/"; }, 500);
     }
 
     async function copySevenOnly() {
       await copyText(AERITH_PROMPT);
-      setStatus("Prompt Seven Boost copié.");
+      setStatus("Prompt Seven copié.");
     }
 
-    async function copyVideoCardsBoost() {
-      await copyText(VIDEO_CARDS_BOOST_PROMPT);
-      setStatus("Seven Heaven Video Cards Boost copié.");
+    async function copyVideoCards() {
+      await copyText(VIDEO_CARDS_PROMPT);
+      setStatus("Video Cards Boost copié.");
     }
 
     async function copyBlackout() {
@@ -401,22 +350,22 @@ Seven ouvre les portes.`;
 
     async function copyWan() {
       await copyText(WAN_PROMPT);
-      setStatus("Checklist Wan 1080×1920 copiée.");
+      setStatus("Checklist Wan copiée.");
     }
 
     async function copyModules() {
       await copyText(MODULE_PROMPT);
-      setStatus("Prompt Modules Mémoire copié.");
+      setStatus("Prompt Modules copié.");
     }
 
     async function copyTerminalLink() {
       await copyText(TERMINAL_LINK);
-      setStatus("Lien du cockpit copié.");
+      setStatus("Lien cockpit copié.");
     }
 
     async function copyChannelLink() {
       await copyText(BLUE_AZUR_CHANNEL_LINK);
-      setStatus("Lien de la chaîne Blue Azur copié.");
+      setStatus("Lien Blue Azur copié.");
     }
 
     async function copyNotionText() {
@@ -425,13 +374,8 @@ Seven ouvre les portes.`;
     }
 
     function togglePrompt() {
-      const drawer = document.getElementById("promptDrawer");
-      drawer.classList.toggle("open");
-      setStatus(drawer.classList.contains("open") ? "Prompt Seven affiché." : "Prompt Seven masqué.");
-    }
-
-    function remoteLater() {
-      setStatus("Ryzen 7 Remote : à configurer plus tard avec RustDesk, AnyDesk ou Bureau à distance.");
+      document.getElementById("promptDrawer").classList.toggle("open");
+      setStatus("Prompt affiché / masqué.");
     }
   </script>
 </body>
