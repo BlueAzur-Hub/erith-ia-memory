@@ -5319,3 +5319,104 @@ body:not(.readability-off) .palette-card {
   -webkit-backdrop-filter: none !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.19 — Golden Hero Presence Frame
+   Fichier modifié uniquement : style.css
+
+   Objectif :
+   - entourer grassement la Hero Aerith ;
+   - bordure dorée lumineuse ;
+   - ombre douce pour surligner sa présence ;
+   - ne pas casser la transparence des menus.
+------------------------------------------------------- */
+
+.hero {
+  position: relative !important;
+  border: 2px solid rgba(255,216,121,.72) !important;
+  border-radius: 0 0 18px 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,248,210,.22),
+    0 0 22px rgba(255,216,121,.22),
+    0 0 46px rgba(255,216,121,.10),
+    inset 0 0 0 1px rgba(255,248,210,.18),
+    inset 0 0 28px rgba(255,216,121,.08) !important;
+  overflow: hidden !important;
+}
+
+/* Liseré intérieur lumineux, sans fond opaque */
+.hero::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 4px !important;
+  pointer-events: none !important;
+
+  border: 1px solid rgba(255,248,210,.34) !important;
+  border-radius: 0 0 14px 14px !important;
+
+  background: transparent !important;
+  background-image: none !important;
+
+  opacity: 1 !important;
+  box-shadow:
+    inset 0 0 18px rgba(255,216,121,.16),
+    0 0 14px rgba(255,216,121,.12) !important;
+}
+
+/* Petite ligne d'or en haut de la Hero */
+.hero::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 2px !important;
+  pointer-events: none !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,216,121,.82),
+      rgba(255,248,210,.96),
+      rgba(255,216,121,.82),
+      transparent
+    ) !important;
+
+  opacity: .92 !important;
+  box-shadow:
+    0 0 12px rgba(255,216,121,.54),
+    0 0 26px rgba(255,216,121,.24) !important;
+}
+
+/* En mode Lisibilité transparent : conserver le cadre doré */
+body:not(.readability-off) .hero {
+  border: 2px solid rgba(255,216,121,.76) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,248,210,.22),
+    0 0 24px rgba(255,216,121,.24),
+    0 0 52px rgba(255,216,121,.12),
+    inset 0 0 0 1px rgba(255,248,210,.18),
+    inset 0 0 30px rgba(255,216,121,.08) !important;
+}
+
+body:not(.readability-off) .hero::before,
+body:not(.readability-off) .hero::after {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* Sur petit écran : cadre toujours présent mais pas trop épais */
+@media (max-width: 860px) {
+  .hero,
+  body:not(.readability-off) .hero {
+    border-width: 1px !important;
+    box-shadow:
+      0 0 0 1px rgba(255,248,210,.18),
+      0 0 18px rgba(255,216,121,.18),
+      inset 0 0 0 1px rgba(255,248,210,.12) !important;
+  }
+}
+
