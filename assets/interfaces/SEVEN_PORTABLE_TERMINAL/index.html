@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas v2 Solid Shell</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-v2-solid-shell-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas v3 Clean Home</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-v3-clean-home-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS V2 · SOLID SHELL · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
+        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS V3 · CLEAN HOME · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -56,21 +56,15 @@
     </div>
 
     <section class="page active" id="page-home">
-      <div class="sky-control-strip">
-        <button class="mini-control atlas-control active" onclick="openCelestialAtlas()">🗺️ Celestial Atlas</button>
-        <button class="mini-control active" id="heroFrameBtn" onclick="toggleHeroFrame()">🧿 Hero Face</button>
-        <button class="mini-control" onclick="cycleHeroFrame()">🎞️ Hero next</button>
-        <button class="mini-control atlas-family" onclick="setAtlasFamily('Sky Bridge Ruins')">🌉 Bridge</button>
-        <button class="mini-control atlas-family" onclick="setAtlasFamily('Crystal Sanctuary')">💠 Crystal</button>
-        <button class="mini-control atlas-family" onclick="setAtlasFamily('Grand Tree Garden')">🌳 Tree</button>
-        <button class="mini-control atlas-family" onclick="setAtlasFamily('Historic Ruins')">🏛️ Ruins</button>
-        <button class="mini-control active" data-ui-mode="sky" onclick="setUiMode('sky')" data-help="Mode clair et céleste : interface douce, nuages, transparence modérée." data-intent="visual" aria-label="☁️ Sky">☁️ Sky</button>
-        <button class="mini-control" data-ui-mode="crystal" onclick="setUiMode('crystal')" data-help="Mode cristal : accent bleu, HUD plus cybernétique et lumineux." data-intent="visual" aria-label="💠 Crystal">💠 Crystal</button>
-        <button class="mini-control" data-ui-mode="night" onclick="setUiMode('night')" data-help="Mode nuit : interface plus profonde, contraste plus fort, ambiance lunaire." data-intent="visual" aria-label="🌙 Night">🌙 Night</button>
-        <button class="mini-control" onclick="toggleGlass()" data-help="Bascule la transparence : plus de fond visible ou plus de lisibilité." data-intent="visual" aria-label="⚙️ Glass">⚙️ Glass</button>
-        <button class="mini-control active" id="previewModeBtn" onclick="togglePreviewMode()" data-help="Active ou masque les previews de destination dans les boutons." data-intent="visual" aria-label="🛞 Destination previews">🛞 Destination previews</button>
-        <button class="mini-control" onclick="nextBackground()" data-help="Passe au fond suivant." data-intent="visual" aria-label="🛞 Background">🛞 Background</button>
-        <button class="mini-control" onclick="randomBackground()" data-help="Choisit un fond aléatoire." data-intent="visual" aria-label="⚙️ Random">⚙️ Random</button>
+            <div class="sky-control-strip home-sober-toolbar">
+        <button class="mini-control primary-control" id="advancedPanelsBtn" onclick="toggleAdvancedPanels()">⚙️ Advanced</button>
+        <button class="mini-control atlas-control" onclick="openCelestialAtlas()">🗺️ Atlas</button>
+        <button class="mini-control" onclick="cycleAmbiance()">🎛️ Ambiance</button>
+        <button class="mini-control" onclick="saveFavoriteState()">⭐ Save</button>
+        <button class="mini-control" onclick="loadFavoriteState()">↩ Favori</button>
+        <button class="mini-control" onclick="cycleHeroFrame()">🎞️ Hero</button>
+        <button class="mini-control" onclick="nextBackground()">🛞 Fond</button>
+        <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
       </div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
@@ -85,11 +79,69 @@
           <span>🖱️ hover / focus</span>
         </div>
       </aside>
-            <section class="celestial-atlas-panel open" id="celestialAtlasPanel">
+      <section class="advanced-dashboard-panel" id="advancedDashboardPanel">
+        <div class="advanced-dashboard-head">
+          <div>
+            <strong>⚙️ Advanced Panels</strong>
+            <span>options avancées cachées pour garder l’accueil sobre</span>
+          </div>
+          <button onclick="toggleAdvancedPanels()">Réduire</button>
+        </div>
+
+        <div class="advanced-dashboard-grid">
+          <div class="advanced-box">
+            <strong>🎛️ Ambiance</strong>
+            <p>Change l’énergie visuelle sans changer les fonctions.</p>
+            <div class="advanced-actions">
+              <button onclick="setAmbiance('sky')">☁️ Sky</button>
+              <button onclick="setAmbiance('crystal')">💠 Crystal</button>
+              <button onclick="setAmbiance('ruins')">🏛️ Ruins</button>
+              <button onclick="setAmbiance('night')">🌙 Night</button>
+              <button onclick="setAmbiance('gold')">✨ Gold</button>
+              <button onclick="setAmbiance('minimal')">◻ Minimal</button>
+            </div>
+          </div>
+
+          <div class="advanced-box">
+            <strong>⭐ Favoris locaux</strong>
+            <p>Enregistre ton fond, ton Hero, ton ambiance et ta coque.</p>
+            <div class="advanced-actions">
+              <button onclick="saveFavoriteState()">⭐ Sauver</button>
+              <button onclick="loadFavoriteState()">↩ Recharger</button>
+              <button onclick="clearFavoriteState()">🧹 Effacer</button>
+            </div>
+          </div>
+
+          <div class="advanced-box">
+            <strong>🗺️ Atlas rapide</strong>
+            <p>Change de famille sans ouvrir toute la grille.</p>
+            <div class="advanced-actions">
+              <button onclick="nextAtlasInFamily('Sky Bridge Ruins')">🌉 Bridge +</button>
+              <button onclick="nextAtlasInFamily('Crystal Sanctuary')">💠 Crystal +</button>
+              <button onclick="nextAtlasInFamily('Grand Tree Garden')">🌳 Tree +</button>
+              <button onclick="nextAtlasInFamily('Historic Ruins')">🏛️ Ruins +</button>
+              <button onclick="nextAtlasInFamily('Suspended City')">🏰 City +</button>
+            </div>
+          </div>
+
+          <div class="advanced-box">
+            <strong>🛡️ Sécurité UI</strong>
+            <p>Remet l’interface en état propre si un réglage devient gênant.</p>
+            <div class="advanced-actions">
+              <button onclick="resetVisualState()">Reset visuel</button>
+              <button onclick="resetUiStorage()">Reset complet</button>
+              <button onclick="openPage('system')">🖥️ Système</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+            <section class="celestial-atlas-panel" id="celestialAtlasPanel">
         <div class="atlas-head">
           <div>
-            <strong>🗺️ Celestial Atlas v2</strong>
-            <span>mini-previews, familles, variantes — Aerith reste uniquement l’avatar</span>
+            <strong>🗺️ Celestial Atlas v3</strong>
+            <span>mini-previews, familles, variantes, favoris — Aerith reste uniquement l’avatar</span>
           </div>
           <div class="atlas-head-actions">
             <button onclick="renderAtlasGrid('All')">Tout</button>
@@ -805,6 +857,184 @@ Ryzen 7 = moteur de production.`;
       if (enabled !== "1") document.body.classList.add("soft-shell");
       const btn = document.getElementById("solidShellBtn");
       if (btn) btn.classList.toggle("active", enabled === "1");
+    }
+
+
+    const AMBIANCE_SEQUENCE = ["sky", "crystal", "ruins", "night", "gold", "minimal"];
+    let currentAmbianceIndex = 0;
+
+    function toggleAdvancedPanels() {
+      document.body.classList.toggle("show-advanced");
+      const open = document.body.classList.contains("show-advanced");
+      const btn = document.getElementById("advancedPanelsBtn");
+      if (btn) btn.classList.toggle("active", open);
+      try { localStorage.setItem("seven-advanced-panels", open ? "1" : "0"); } catch (e) {}
+      setStatus(open ? "Advanced Panels ouverts." : "Accueil sobre rétabli.");
+    }
+
+    function bootAdvancedPanels() {
+      let open = "0";
+      try { open = localStorage.getItem("seven-advanced-panels") || "0"; } catch (e) {}
+      document.body.classList.toggle("show-advanced", open === "1");
+      const btn = document.getElementById("advancedPanelsBtn");
+      if (btn) btn.classList.toggle("active", open === "1");
+    }
+
+    function setAmbiance(mode) {
+      document.body.dataset.ambiance = mode;
+      currentAmbianceIndex = Math.max(0, AMBIANCE_SEQUENCE.indexOf(mode));
+
+      if (mode === "sky" && typeof setUiMode === "function") setUiMode("sky");
+      if (mode === "crystal" && typeof setUiMode === "function") setUiMode("crystal");
+      if (mode === "night" && typeof setUiMode === "function") setUiMode("night");
+
+      try { localStorage.setItem("seven-ambiance", mode); } catch (e) {}
+      setStatus("Ambiance : " + mode);
+    }
+
+    function cycleAmbiance() {
+      currentAmbianceIndex = (currentAmbianceIndex + 1) % AMBIANCE_SEQUENCE.length;
+      setAmbiance(AMBIANCE_SEQUENCE[currentAmbianceIndex]);
+    }
+
+    function bootAmbiance() {
+      let mode = "sky";
+      try { mode = localStorage.getItem("seven-ambiance") || "sky"; } catch (e) {}
+      setAmbiance(mode);
+    }
+
+    function getCurrentBackgroundPayload() {
+      const bg = typeof BACKGROUNDS !== "undefined" ? BACKGROUNDS[backgroundIndex] : null;
+      return {
+        index: typeof backgroundIndex === "number" ? backgroundIndex : 0,
+        name: bg && bg.name ? bg.name : "fond inconnu",
+        url: bg && bg.url ? bg.url : "",
+        family: bg && bg.family ? bg.family : ""
+      };
+    }
+
+    function saveFavoriteState() {
+      const payload = {
+        background: getCurrentBackgroundPayload(),
+        heroFrameIndex: typeof heroFrameIndex === "number" ? heroFrameIndex : 0,
+        ambiance: document.body.dataset.ambiance || "sky",
+        solidShell: !document.body.classList.contains("soft-shell"),
+        previewMode: !document.body.classList.contains("no-previews"),
+        heroEnabled: !document.body.classList.contains("no-hero-face"),
+        savedAt: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem("seven-favorite-state-v3", JSON.stringify(payload));
+        setStatus("Favori Seven enregistré.");
+      } catch (e) {
+        setStatus("Impossible d’enregistrer le favori.");
+      }
+    }
+
+    function loadFavoriteState() {
+      let payload = null;
+      try {
+        payload = JSON.parse(localStorage.getItem("seven-favorite-state-v3") || "null");
+      } catch (e) {}
+
+      if (!payload) {
+        setStatus("Aucun favori Seven enregistré.");
+        return;
+      }
+
+      if (payload.background && typeof payload.background.index === "number" && typeof applyBackground === "function") {
+        applyBackground(payload.background.index);
+      }
+
+      if (typeof applyHeroFrame === "function") {
+        applyHeroFrame(payload.heroFrameIndex || 0);
+      }
+
+      setAmbiance(payload.ambiance || "sky");
+
+      document.body.classList.toggle("soft-shell", payload.solidShell === false);
+      document.body.classList.toggle("no-previews", payload.previewMode === false);
+      document.body.classList.toggle("no-hero-face", payload.heroEnabled === false);
+
+      setStatus("Favori Seven rechargé.");
+    }
+
+    function clearFavoriteState() {
+      try { localStorage.removeItem("seven-favorite-state-v3"); } catch (e) {}
+      setStatus("Favori Seven effacé.");
+    }
+
+    function resetVisualState() {
+      document.body.classList.remove("show-advanced", "soft-shell", "deep-glass", "no-previews", "no-hero-face");
+      document.body.dataset.ambiance = "sky";
+
+      try {
+        localStorage.removeItem("seven-advanced-panels");
+        localStorage.removeItem("seven-ambiance");
+        localStorage.setItem("seven-solid-shell", "1");
+        localStorage.setItem("seven-previews", "1");
+        localStorage.setItem("seven-hero-face", "1");
+      } catch (e) {}
+
+      if (typeof setUiMode === "function") setUiMode("sky");
+      if (typeof applyHeroFrame === "function") applyHeroFrame(0);
+      setStatus("État visuel réinitialisé.");
+    }
+
+    function resetUiStorage() {
+      const keys = [
+        "seven-advanced-panels",
+        "seven-ambiance",
+        "seven-favorite-state-v3",
+        "seven-hero-frame-index",
+        "seven-terminal-bg-index",
+        "seven-ui-mode",
+        "seven-deep-glass",
+        "seven-solid-shell",
+        "seven-previews",
+        "seven-hero-face",
+        "seven-touch-glow"
+      ];
+
+      try { keys.forEach(key => localStorage.removeItem(key)); } catch (e) {}
+      setStatus("Reset complet effectué. Rechargement…");
+      setTimeout(() => location.reload(), 450);
+    }
+
+    function atlasItemsForFamily(family) {
+      if (typeof CELESTIAL_ATLAS_ITEMS === "undefined") return [];
+      return CELESTIAL_ATLAS_ITEMS.filter(item => item.family === family);
+    }
+
+    function nextAtlasInFamily(family) {
+      const items = atlasItemsForFamily(family);
+      if (!items.length) {
+        setStatus("Famille Atlas introuvable : " + family);
+        return;
+      }
+
+      const currentUrl = getCurrentBackgroundPayload().url;
+      let idx = items.findIndex(item => item.url === currentUrl);
+      idx = (idx + 1) % items.length;
+      const item = items[idx];
+
+      if (typeof applyAtlasItem === "function") {
+        applyAtlasItem(item.url, item.name, item.family, item.variant);
+      } else {
+        document.documentElement.style.setProperty("--active-bg", `url("${item.url}")`);
+      }
+
+      setStatus("Atlas famille : " + item.name);
+    }
+
+    function bootCelestialAtlasV3() {
+      bootAdvancedPanels();
+      bootAmbiance();
+
+      // Accueil sobre par défaut : le panneau Atlas existe mais reste caché tant que Advanced n’est pas ouvert.
+      const atlas = document.getElementById("celestialAtlasPanel");
+      if (atlas) atlas.classList.add("open");
     }
 
     const CELESTIAL_ATLAS_ITEMS = [{"name": "Sky Bridge Ruins · Centré", "family": "Sky Bridge Ruins", "variant": "Centré", "url": "./atlas_01_sky_bridge_ruins_center.jpg", "thumb": "./thumb_atlas_01_sky_bridge_ruins_center.jpg"}, {"name": "Sky Bridge Ruins · Plein écran", "family": "Sky Bridge Ruins", "variant": "Plein écran", "url": "./atlas_01_sky_bridge_ruins_cover.jpg", "thumb": "./thumb_atlas_01_sky_bridge_ruins_cover.jpg"}, {"name": "Sky Bridge Ruins · Lumineux", "family": "Sky Bridge Ruins", "variant": "Lumineux", "url": "./atlas_01_sky_bridge_ruins_luminous.jpg", "thumb": "./thumb_atlas_01_sky_bridge_ruins_luminous.jpg"}, {"name": "Sky Bridge Ruins · Fenêtre", "family": "Sky Bridge Ruins", "variant": "Fenêtre", "url": "./atlas_01_sky_bridge_ruins_window.jpg", "thumb": "./thumb_atlas_01_sky_bridge_ruins_window.jpg"}, {"name": "Sky Bridge Ruins · Centré", "family": "Sky Bridge Ruins", "variant": "Centré", "url": "./atlas_02_sky_bridge_ruins_center.jpg", "thumb": "./thumb_atlas_02_sky_bridge_ruins_center.jpg"}, {"name": "Sky Bridge Ruins · Plein écran", "family": "Sky Bridge Ruins", "variant": "Plein écran", "url": "./atlas_02_sky_bridge_ruins_cover.jpg", "thumb": "./thumb_atlas_02_sky_bridge_ruins_cover.jpg"}, {"name": "Sky Bridge Ruins · Lumineux", "family": "Sky Bridge Ruins", "variant": "Lumineux", "url": "./atlas_02_sky_bridge_ruins_luminous.jpg", "thumb": "./thumb_atlas_02_sky_bridge_ruins_luminous.jpg"}, {"name": "Sky Bridge Ruins · Fenêtre", "family": "Sky Bridge Ruins", "variant": "Fenêtre", "url": "./atlas_02_sky_bridge_ruins_window.jpg", "thumb": "./thumb_atlas_02_sky_bridge_ruins_window.jpg"}, {"name": "Sky Bridge Ruins · Centré", "family": "Sky Bridge Ruins", "variant": "Centré", "url": "./atlas_03_sky_bridge_ruins_center.jpg", "thumb": "./thumb_atlas_03_sky_bridge_ruins_center.jpg"}, {"name": "Sky Bridge Ruins · Plein écran", "family": "Sky Bridge Ruins", "variant": "Plein écran", "url": "./atlas_03_sky_bridge_ruins_cover.jpg", "thumb": "./thumb_atlas_03_sky_bridge_ruins_cover.jpg"}, {"name": "Sky Bridge Ruins · Lumineux", "family": "Sky Bridge Ruins", "variant": "Lumineux", "url": "./atlas_03_sky_bridge_ruins_luminous.jpg", "thumb": "./thumb_atlas_03_sky_bridge_ruins_luminous.jpg"}, {"name": "Sky Bridge Ruins · Fenêtre", "family": "Sky Bridge Ruins", "variant": "Fenêtre", "url": "./atlas_03_sky_bridge_ruins_window.jpg", "thumb": "./thumb_atlas_03_sky_bridge_ruins_window.jpg"}, {"name": "Crystal Sanctuary · Centré", "family": "Crystal Sanctuary", "variant": "Centré", "url": "./atlas_04_crystal_sanctuary_center.jpg", "thumb": "./thumb_atlas_04_crystal_sanctuary_center.jpg"}, {"name": "Crystal Sanctuary · Plein écran", "family": "Crystal Sanctuary", "variant": "Plein écran", "url": "./atlas_04_crystal_sanctuary_cover.jpg", "thumb": "./thumb_atlas_04_crystal_sanctuary_cover.jpg"}, {"name": "Crystal Sanctuary · Lumineux", "family": "Crystal Sanctuary", "variant": "Lumineux", "url": "./atlas_04_crystal_sanctuary_luminous.jpg", "thumb": "./thumb_atlas_04_crystal_sanctuary_luminous.jpg"}, {"name": "Crystal Sanctuary · Fenêtre", "family": "Crystal Sanctuary", "variant": "Fenêtre", "url": "./atlas_04_crystal_sanctuary_window.jpg", "thumb": "./thumb_atlas_04_crystal_sanctuary_window.jpg"}, {"name": "Grand Tree Garden · Centré", "family": "Grand Tree Garden", "variant": "Centré", "url": "./atlas_05_grand_tree_garden_center.jpg", "thumb": "./thumb_atlas_05_grand_tree_garden_center.jpg"}, {"name": "Grand Tree Garden · Plein écran", "family": "Grand Tree Garden", "variant": "Plein écran", "url": "./atlas_05_grand_tree_garden_cover.jpg", "thumb": "./thumb_atlas_05_grand_tree_garden_cover.jpg"}, {"name": "Grand Tree Garden · Lumineux", "family": "Grand Tree Garden", "variant": "Lumineux", "url": "./atlas_05_grand_tree_garden_luminous.jpg", "thumb": "./thumb_atlas_05_grand_tree_garden_luminous.jpg"}, {"name": "Grand Tree Garden · Fenêtre", "family": "Grand Tree Garden", "variant": "Fenêtre", "url": "./atlas_05_grand_tree_garden_window.jpg", "thumb": "./thumb_atlas_05_grand_tree_garden_window.jpg"}, {"name": "Historic Ruins · Centré", "family": "Historic Ruins", "variant": "Centré", "url": "./atlas_06_historic_ruins_center.jpg", "thumb": "./thumb_atlas_06_historic_ruins_center.jpg"}, {"name": "Historic Ruins · Plein écran", "family": "Historic Ruins", "variant": "Plein écran", "url": "./atlas_06_historic_ruins_cover.jpg", "thumb": "./thumb_atlas_06_historic_ruins_cover.jpg"}, {"name": "Historic Ruins · Lumineux", "family": "Historic Ruins", "variant": "Lumineux", "url": "./atlas_06_historic_ruins_luminous.jpg", "thumb": "./thumb_atlas_06_historic_ruins_luminous.jpg"}, {"name": "Historic Ruins · Fenêtre", "family": "Historic Ruins", "variant": "Fenêtre", "url": "./atlas_06_historic_ruins_window.jpg", "thumb": "./thumb_atlas_06_historic_ruins_window.jpg"}, {"name": "Suspended City · Centré", "family": "Suspended City", "variant": "Centré", "url": "./atlas_07_suspended_city_center.jpg", "thumb": "./thumb_atlas_07_suspended_city_center.jpg"}, {"name": "Suspended City · Plein écran", "family": "Suspended City", "variant": "Plein écran", "url": "./atlas_07_suspended_city_cover.jpg", "thumb": "./thumb_atlas_07_suspended_city_cover.jpg"}, {"name": "Suspended City · Lumineux", "family": "Suspended City", "variant": "Lumineux", "url": "./atlas_07_suspended_city_luminous.jpg", "thumb": "./thumb_atlas_07_suspended_city_luminous.jpg"}, {"name": "Suspended City · Fenêtre", "family": "Suspended City", "variant": "Fenêtre", "url": "./atlas_07_suspended_city_window.jpg", "thumb": "./thumb_atlas_07_suspended_city_window.jpg"}, {"name": "Suspended City · Centré", "family": "Suspended City", "variant": "Centré", "url": "./atlas_08_suspended_city_center.jpg", "thumb": "./thumb_atlas_08_suspended_city_center.jpg"}, {"name": "Suspended City · Plein écran", "family": "Suspended City", "variant": "Plein écran", "url": "./atlas_08_suspended_city_cover.jpg", "thumb": "./thumb_atlas_08_suspended_city_cover.jpg"}, {"name": "Suspended City · Lumineux", "family": "Suspended City", "variant": "Lumineux", "url": "./atlas_08_suspended_city_luminous.jpg", "thumb": "./thumb_atlas_08_suspended_city_luminous.jpg"}, {"name": "Suspended City · Fenêtre", "family": "Suspended City", "variant": "Fenêtre", "url": "./atlas_08_suspended_city_window.jpg", "thumb": "./thumb_atlas_08_suspended_city_window.jpg"}];
@@ -1586,6 +1816,7 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     bootTouchGlow();
     bootHeroFrame();
     bootCelestialAtlasV2();
+    bootCelestialAtlasV3();
     bootSolidShell();
     refreshSystemDetails();
     refreshNetworkHud();
@@ -1603,6 +1834,45 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     }
 
     bootSelectedGearsOnly();
+  
+    function forceCleanHomeBoot() {
+      // v3 clean rule: home loads sober, always.
+      document.body.classList.remove("show-advanced");
+      const advancedBtn = document.getElementById("advancedPanelsBtn");
+      if (advancedBtn) advancedBtn.classList.remove("active");
+
+      const atlas = document.getElementById("celestialAtlasPanel");
+      if (atlas) atlas.classList.remove("open");
+
+      try {
+        localStorage.setItem("seven-advanced-panels", "0");
+      } catch (e) {}
+
+      setStatus("Clean Home : accueil sobre actif.");
+    }
+
+    function toggleAdvancedPanels() {
+      document.body.classList.toggle("show-advanced");
+      const open = document.body.classList.contains("show-advanced");
+      const btn = document.getElementById("advancedPanelsBtn");
+      if (btn) btn.classList.toggle("active", open);
+      try { localStorage.setItem("seven-advanced-panels", open ? "1" : "0"); } catch (e) {}
+      setStatus(open ? "Advanced Panels ouverts." : "Accueil sobre rétabli.");
+    }
+
+    function openCelestialAtlas() {
+      document.body.classList.add("show-advanced");
+      const advancedBtn = document.getElementById("advancedPanelsBtn");
+      if (advancedBtn) advancedBtn.classList.add("active");
+
+      const panel = document.getElementById("celestialAtlasPanel");
+      if (panel) {
+        panel.classList.add("open");
+        setStatus("Celestial Atlas ouvert.");
+      }
+    }
+
+    forceCleanHomeBoot();
   </script>
 </body>
 </html>
