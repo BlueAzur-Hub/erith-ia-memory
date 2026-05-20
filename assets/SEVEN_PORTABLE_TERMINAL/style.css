@@ -1113,3 +1113,24 @@ body {
     linear-gradient(145deg, rgba(5,10,15,.66), rgba(8,18,26,.48)) !important;
   border-color: rgba(255,216,121,.78) !important;
 }
+
+/* =========================================================
+   SEVEN — RESTORE EXISTING AVATAR
+   Fichier réel :
+   aerith_avatar_memory_cards_framed.png
+========================================================= */
+
+.portrait img {
+  display: block !important;
+  content: url("./aerith_avatar_memory_cards_framed.png") !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+.portrait::before,
+.portrait::after {
+  display: none !important;
+  content: none !important;
+}
