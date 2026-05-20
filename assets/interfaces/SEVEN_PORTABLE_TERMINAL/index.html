@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Destination Previews</title>
-  <link rel="stylesheet" href="./style.css?v=destination-previews-1">
+  <title>Seven Portable Terminal — Aerith Decor UI</title>
+  <link rel="stylesheet" href="./style.css?v=aerith-decor-1">
 </head>
 
 <body>
+  <div id="touchLayer" aria-hidden="true"></div>
+
   <main class="terminal">
     <div class="sky-ambient" aria-hidden="true">
       <span class="cloud-orb cloud-a"></span>
@@ -27,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">DESTINATION PREVIEWS · SEVEN HEAVEN · SKY COCKPIT</div>
+        <div class="kicker">AERITH.7 DECOR · LIBRARY OF MEMORY CARDS</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -42,10 +44,16 @@
       </div>
 
       <div class="portrait">
-        <img src="./aerith_top.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+        <img src="./aerith_memory_portrait.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
         <div class="portrait-fallback">🌸<br>Seven</div>
       </div>
     </header>
+
+    <div class="aerith-memory-ribbon" aria-hidden="true">
+      <span>✦ AERITH.7</span>
+      <span>Library of Memory Cards</span>
+      <span>Seven Petal Memory Core</span>
+    </div>
 
     <section class="page active" id="page-home">
       <div class="sky-control-strip">
@@ -427,6 +435,13 @@
     const X_SEARCH_LINK = "https://x.com/search?q=%22Blue%20Azur%22&src=typed_query";
 
     const BACKGROUNDS = [
+      { name: "Aerith.7 Memory Cards", url: "./background_aerith_memory_window.jpg" },
+      { name: "Aerith.7 Portrait Center", url: "./background_aerith_center_close.jpg" },
+      { name: "Aerith.7 Cards Orbit", url: "./background_aerith_cards_orbit.jpg" },
+      { name: "Fenêtre ancienne dorée", url: "./background_ancient_window_gold.jpg" },
+      { name: "Fenêtre ancienne bleue", url: "./background_ancient_window_blue.jpg" },
+      { name: "Vue ancienne centrée", url: "./background_ancient_close_jade.jpg" },
+      { name: "Fenêtre lunaire ancienne", url: "./background_ancient_lunar_violet.jpg" },
       { name: "Historique", url: "./background_historique_lr.png" },
       { name: "Cité suspendue", url: "./background_sky_ruins_wide.jpg" },
       { name: "Nuages du seuil", url: "./background_sky_ruins_clouds.jpg" },
@@ -590,6 +605,14 @@ Ryzen 7 = moteur de production.`;
       tab.addEventListener("click", () => openPage(tab.dataset.page));
     });
 
+
+
+    function setAerithDecor() {
+      const index = BACKGROUNDS.findIndex(bg => bg.name && bg.name.includes("Aerith.7 Memory Cards"));
+      applyBackground(index >= 0 ? index : 0);
+      document.body.classList.add("aerith-decor");
+      setStatus("Aerith Decor : Library of Memory Cards.");
+    }
 
     function applyBackground(index) {
       backgroundIndex = ((index % BACKGROUNDS.length) + BACKGROUNDS.length) % BACKGROUNDS.length;
@@ -910,6 +933,45 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
       }
     });
 
+
+    function spawnTouchGlow(event) {
+      if (document.body.classList.contains("no-touch-glow")) return;
+      const layer = document.getElementById("touchLayer");
+      if (!layer) return;
+
+      const dot = document.createElement("span");
+      dot.className = "touch-ripple";
+      dot.style.left = (event.clientX || 0) + "px";
+      dot.style.top = (event.clientY || 0) + "px";
+      layer.appendChild(dot);
+      setTimeout(() => dot.remove(), 850);
+    }
+
+    function toggleTouchGlow() {
+      document.body.classList.toggle("no-touch-glow");
+      const on = !document.body.classList.contains("no-touch-glow");
+      const btn = document.getElementById("touchGlowBtn");
+      if (btn) btn.classList.toggle("active", on);
+      try { localStorage.setItem("seven-touch-glow", on ? "1" : "0"); } catch (e) {}
+      setStatus(on ? "Touch glow : ON" : "Touch glow : OFF");
+    }
+
+    function bootTouchGlow() {
+      let enabled = "1";
+      try { enabled = localStorage.getItem("seven-touch-glow") || "1"; } catch (e) {}
+      if (enabled !== "1") document.body.classList.add("no-touch-glow");
+      const btn = document.getElementById("touchGlowBtn");
+      if (btn) btn.classList.toggle("active", enabled === "1");
+
+      document.addEventListener("pointerdown", spawnTouchGlow, { passive: true });
+      document.querySelectorAll(".tile, .tab, .mini-control").forEach(el => {
+        el.addEventListener("pointerdown", (event) => {
+          el.classList.add("touched");
+          setTimeout(() => el.classList.remove("touched"), 420);
+        }, { passive: true });
+      });
+    }
+
     function togglePreviewMode() {
       document.body.classList.toggle("no-previews");
       const on = !document.body.classList.contains("no-previews");
@@ -945,6 +1007,7 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     bootSkyUi();
     bootPreviewMode();
     bootInteractiveHelp();
+    bootTouchGlow();
     refreshNetworkHud();
     updateClock();
   </script>
