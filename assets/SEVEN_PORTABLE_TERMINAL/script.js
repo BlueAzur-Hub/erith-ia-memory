@@ -134,6 +134,9 @@ function setVisibility(mode) {
   $("#transparentBtn")?.classList.toggle("active", mode === "transparent");
   $("#readabilityBtn")?.classList.toggle("active", mode === "readability");
 
+  try { localStorage.setItem("seven-terminal-theme", mode); } catch (e) {}
+
+  updateHeroFocus();
   setStatus(mode === "transparent" ? "Mode transparent actif." : "Mode lisibilité actif.");
 }
 
@@ -144,6 +147,8 @@ function applyBackground(index) {
   document.body.dataset.bg = bg.id;
   document.body.style.setProperty("--active-bg", `url("${bg.url}")`);
   document.body.style.backgroundPosition = bg.position;
+
+  try { localStorage.setItem("seven-terminal-bg-index", String(state.bgIndex)); } catch (e) {}
 
   setStatus(`Ambiance : ${bg.label}`);
 }
@@ -182,6 +187,8 @@ function updateHeroFocus() {
   const zoom = Number($("#heroZoom")?.value || state.hero.zoom);
 
   state.hero = { x, y, zoom };
+
+  try { localStorage.setItem("seven-terminal-hero", JSON.stringify(state.hero)); } catch (e) {}
 
   document.documentElement.style.setProperty("--hero-x", `${x}%`);
   document.documentElement.style.setProperty("--hero-y", `${y}%`);
@@ -304,7 +311,7 @@ function getSafeTrace() {
     session: location.hostname || "local",
     security: "Diagnostic filtré : aucun identifiant distant, aucun mot de passe",
     network: "Ethernet / inconnu",
-    ip: "90.20.3.14"
+    ip: "non exposée"
   };
 }
 
@@ -326,9 +333,11 @@ function renderTrace() {
     grid.innerHTML = cards.map(([icon, label, value, detail]) => `
       <article class="trace-card">
         <span class="card-icon">${icon}</span>
-        <small>${label}</small>
-        <strong>${value}</strong>
-        <em>${detail}</em>
+        <div>
+          <small>${label}</small>
+          <strong>${value}</strong>
+          <em>${detail}</em>
+        </div>
       </article>
     `).join("");
   }
@@ -484,8 +493,24 @@ function bindEvents() {
 
 function boot() {
   bindEvents();
-  applyBackground(0);
-  setVisibility(document.body.dataset.theme || "transparent");
+
+  let savedBg = 0;
+  let savedTheme = document.body.dataset.theme || "transparent";
+  let savedHero = null;
+
+  try { savedBg = Number(localStorage.getItem("seven-terminal-bg-index") || "0"); } catch (e) {}
+  try { savedTheme = localStorage.getItem("seven-terminal-theme") || savedTheme; } catch (e) {}
+  try { savedHero = JSON.parse(localStorage.getItem("seven-terminal-hero") || "null"); } catch (e) {}
+
+  applyBackground(savedBg);
+  setVisibility(savedTheme);
+
+  if (savedHero) {
+    if ($("#heroX")) $("#heroX").value = savedHero.x ?? 50;
+    if ($("#heroY")) $("#heroY").value = savedHero.y ?? 34;
+    if ($("#heroZoom")) $("#heroZoom").value = savedHero.zoom ?? 100;
+  }
+
   updateHeroFocus();
   renderTrace();
   updateNetworkHud();
