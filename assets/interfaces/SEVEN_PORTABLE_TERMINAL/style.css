@@ -1904,3 +1904,68 @@ body.blossom-gear .terminal,
     margin-top: 4px;
   }
 }
+
+
+/* -------------------------------------------------------
+   Fullscreen backgrounds + fixed gear icons
+   Les engrenages ne tournent plus en permanence.
+------------------------------------------------------- */
+
+body {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed;
+}
+
+/* Fullscreen background should be visible, no heavy crop frame effect */
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(3,10,16,.25), rgba(3,10,16,.36)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 45%) !important;
+}
+
+/* Fixed gears by default */
+.tile[data-gear="true"] .ico,
+.tile[data-gear="true"] .gear-ico,
+.gear-ico {
+  animation: none !important;
+  transform: none;
+}
+
+/* Small touch/survol reaction only, no endless spin */
+.tile[data-gear="true"]:hover .ico,
+.tile[data-gear="true"]:focus .ico,
+.tile[data-gear="true"].touched .ico,
+.tile[data-gear="true"]:active .ico {
+  animation: gearNudge .42s ease-out 1 !important;
+}
+
+@keyframes gearNudge {
+  0% { transform: rotate(0deg) scale(1); }
+  45% { transform: rotate(18deg) scale(1.08); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+/* More background, less obstruction */
+.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(3,10,16,.12), rgba(3,10,16,.22)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 45%) !important;
+}
+
+.mini-control[onclick="setFullscreenSky()"] {
+  border-color: rgba(127,215,255,.52) !important;
+  background: rgba(127,215,255,.12) !important;
+}
+
+.mini-control[onclick="setFullscreenSky()"]:hover,
+.mini-control[onclick="setFullscreenSky()"]:focus {
+  border-color: rgba(127,215,255,.95) !important;
+  box-shadow: 0 0 20px rgba(127,215,255,.24);
+}
+
+@media (max-width: 860px) {
+  body {
+    background-attachment: scroll;
+  }
+}

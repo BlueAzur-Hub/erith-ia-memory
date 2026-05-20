@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — System Details HUD</title>
-  <link rel="stylesheet" href="./style.css?v=system-details-hud-1">
+  <title>Seven Portable Terminal — Fullscreen Backgrounds</title>
+  <link rel="stylesheet" href="./style.css?v=fullscreen-bg-fixed-gears-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SYSTEM DETAILS HUD · AERITH.7 BLOSSOM COCKPIT</div>
+        <div class="kicker">FULLSCREEN SKY BACKGROUNDS · FIXED GEARS · SEVEN COCKPIT</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -243,14 +243,14 @@
 
       <div class="tile-grid">
         <a class="tile gold" href="https://www.youtube.com/@blueazur" target="_self" rel="noopener" data-help="Ouvre la chaîne YouTube Blue Azur." data-intent="youtube" aria-label="Blue Azur" data-preview="youtube"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale Blue Azur</em></span></a>
-        <a class="tile" href="https://www.facebook.com/search/top?q=Blue%20Azur" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur Facebook. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="Facebook" data-preview="youtube">
+        <a class="tile" href="https://www.facebook.com/BlueAzur07/" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur Facebook. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="Facebook" data-preview="youtube">
           <span class="ico">📘</span>
-          <span class="txt"><strong>Facebook</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
+          <span class="txt"><strong>Facebook</strong><em>Profil officiel Blue Azur</em></span>
         </a>
 
-        <a class="tile" href="https://x.com/search?q=%22Blue%20Azur%22&src=typed_query" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur X. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="X / Twitter" data-preview="youtube">
+        <a class="tile" href="https://x.com/BlueAzur7" target="_self" rel="noopener" data-help="Ouvre une recherche Blue Azur sur X. À remplacer plus tard par le vrai lien direct." data-intent="social" aria-label="X / Twitter" data-preview="youtube">
           <span class="ico">𝕏</span>
-          <span class="txt"><strong>X / Twitter</strong><em>Recherche Blue Azur, lien direct à fixer plus tard</em></span>
+          <span class="txt"><strong>X / Twitter</strong><em>Profil officiel Blue Azur</em></span>
         </a>
 
         <a class="tile" href="https://studio.youtube.com/" target="_self" rel="noopener" data-help="Ouvre YouTube Studio pour diffusion, titres, miniatures et gestion vidéo." data-intent="youtube" aria-label="YouTube Studio" data-preview="youtube"><span class="ico">📺</span><span class="txt"><strong>YouTube Studio</strong><em>Gestion des vidéos, titres et miniatures</em></span></a>
@@ -520,10 +520,22 @@
     const CHATGPT_MEMORY_CORE_LINK = "https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8";
     const BLUE_AZUR_CHANNEL_LINK = "https://www.youtube.com/@blueazur";
 
-    const FACEBOOK_SEARCH_LINK = "https://www.facebook.com/search/top?q=Blue%20Azur";
-    const X_SEARCH_LINK = "https://x.com/search?q=%22Blue%20Azur%22&src=typed_query";
+    const FACEBOOK_SEARCH_LINK = "https://www.facebook.com/BlueAzur07/";
+    const X_SEARCH_LINK = "https://x.com/BlueAzur7";
 
     const BACKGROUNDS = [
+      { name: "Pont vers ruines plein écran", url: "./fullscreen_bg_1_cover.jpg" },
+      { name: "Pont vers ruines centré", url: "./fullscreen_bg_1_center_close.jpg" },
+      { name: "Pont vers ruines fenêtre", url: "./fullscreen_bg_1_window.jpg" },
+      { name: "Pont vers ruines doux", url: "./fullscreen_bg_1_soft.jpg" },
+      { name: "Ruines historiques plein écran", url: "./fullscreen_bg_2_cover.jpg" },
+      { name: "Ruines historiques centré", url: "./fullscreen_bg_2_center_close.jpg" },
+      { name: "Ruines historiques fenêtre", url: "./fullscreen_bg_2_window.jpg" },
+      { name: "Ruines historiques doux", url: "./fullscreen_bg_2_soft.jpg" },
+      { name: "Cité suspendue plein écran", url: "./fullscreen_bg_3_cover.jpg" },
+      { name: "Cité suspendue centré", url: "./fullscreen_bg_3_center_close.jpg" },
+      { name: "Cité suspendue fenêtre", url: "./fullscreen_bg_3_window.jpg" },
+      { name: "Cité suspendue doux", url: "./fullscreen_bg_3_soft.jpg" },
       { name: "Blossom District Window", url: "./background_blossom_district_window.jpg" },
       { name: "Blossom District Center", url: "./background_blossom_district_center.jpg" },
       { name: "Blossom District Close", url: "./background_blossom_district_close.jpg" },
@@ -651,10 +663,10 @@ ${CHATGPT_MEMORY_CORE_LINK}
 Blue Azur :
 ${BLUE_AZUR_CHANNEL_LINK}
 
-Facebook Blue Azur search :
+Facebook Blue Azur :
 ${FACEBOOK_SEARCH_LINK}
 
-X / Twitter Blue Azur search :
+X / Twitter Blue Azur :
 ${X_SEARCH_LINK}
 
 Transformer Book = pupitre Seven.
@@ -699,6 +711,13 @@ Ryzen 7 = moteur de production.`;
 
 
 
+
+
+    function setFullscreenSky() {
+      const index = BACKGROUNDS.findIndex(bg => bg.url && bg.url.includes("fullscreen_bg_1_cover.jpg"));
+      applyBackground(index >= 0 ? index : 0);
+      setStatus("Fullscreen Sky : fonds plein écran actifs.");
+    }
 
     function setBlossomDecor() {
       const index = BACKGROUNDS.findIndex(bg => bg.name && bg.name.includes("Blossom District Window"));
