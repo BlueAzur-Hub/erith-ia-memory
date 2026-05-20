@@ -4999,3 +4999,241 @@ button.footer-help-launcher:focus {
     0 0 8px rgba(0,0,0,.55) !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.9 — Inline Help Button
+   Fichiers modifiés : index.html + style.css
+
+   Correction définitive :
+   - aucun bouton ? flottant ;
+   - aucun ? dans le footer ;
+   - aucune ligne vide en bas ;
+   - le ? est dans le ruban haut, transparent.
+------------------------------------------------------- */
+
+/* On neutralise tous les anciens ? flottants s’ils restent en cache HTML */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  position: static !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Footer : plus aucun espace réservé au ? */
+footer {
+  padding-right: 14px !important;
+  min-height: 28px !important;
+  margin-top: 0 !important;
+}
+
+/* Le ruban devient le bon emplacement du ? */
+.aerith-memory-ribbon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+/* Nouveau bouton ? intégré, non flottant */
+.command-help-inline {
+  position: static !important;
+  inset: auto !important;
+
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  font-family: inherit !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+
+  transform: none !important;
+  cursor: pointer !important;
+}
+
+/* Aucun pseudo-fond parasite */
+.command-help-inline::before,
+.command-help-inline::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Hover discret, toujours transparent */
+.command-help-inline:hover,
+.command-help-inline:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Le bas de page doit rester serré et propre */
+.system-footer,
+.network-footer,
+footer {
+  margin-top: 0 !important;
+}
+
+.network-footer + footer {
+  border-top: 1px solid rgba(255,216,121,.12) !important;
+}
+
+/* Plus aucune ligne parasite entre Network HUD et Footer */
+.network-footer + .help-launcher,
+.help-launcher + footer,
+footer + .help-launcher {
+  display: none !important;
+  margin: 0 !important;
+  height: 0 !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.10 — Command Palette Dot
+   Fichiers modifiés : index.html + style.css
+
+   Correction :
+   - le ? revient ;
+   - il est dans la barre des mini-boutons ;
+   - il reste transparent ;
+   - il ne crée aucune ligne en bas.
+------------------------------------------------------- */
+
+/* Les anciennes versions du ? restent supprimées */
+.help-launcher,
+.footer-help-launcher,
+button.help-launcher,
+button.footer-help-launcher,
+main > .help-launcher,
+.terminal > .help-launcher,
+footer .help-launcher {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Nouveau ? visible, dans la barre de contrôle */
+.command-palette-dot,
+#commandPaletteDotBtn,
+button.command-palette-dot,
+.mini-control.command-palette-dot {
+  position: static !important;
+  display: inline-grid !important;
+  place-items: center !important;
+
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(255,216,121,.30) !important;
+  border-radius: 999px !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  color: rgba(255,248,233,.78) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(0,0,0,.45) !important;
+  transform: none !important;
+}
+
+/* Hover/focus discret, toujours transparent */
+.command-palette-dot:hover,
+.command-palette-dot:focus,
+#commandPaletteDotBtn:hover,
+#commandPaletteDotBtn:focus,
+button.command-palette-dot:hover,
+button.command-palette-dot:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.68) !important;
+  color: rgba(255,248,233,.96) !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  text-shadow:
+    0 0 10px rgba(255,216,121,.28),
+    0 0 8px rgba(0,0,0,.55) !important;
+}
+
+/* Pas de pseudo-fond */
+.command-palette-dot::before,
+.command-palette-dot::after,
+#commandPaletteDotBtn::before,
+#commandPaletteDotBtn::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Le footer ne réserve rien pour le ? */
+footer {
+  padding-right: 14px !important;
+  margin-top: 0 !important;
+  min-height: 28px !important;
+}
+

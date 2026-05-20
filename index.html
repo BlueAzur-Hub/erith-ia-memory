@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Footer Help</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-8-footer-help">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Command Dot</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-10-command-dot">
 </head>
 
 <body>
@@ -88,7 +88,7 @@
       <span>✦ AERITH.7</span>
       <span>Blossom District · Gear UI</span>
       <span>Seven Petal Mechanical Core</span>
-    </div>
+</div>
 
     <section class="page active" id="page-home">
             <div class="sky-control-strip home-sober-toolbar">
@@ -101,7 +101,9 @@
         <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
         <button class="mini-control" id="heroFocusBtn" onclick="toggleHeroFocusPanel()">🎯 Hero</button>
         <button class="mini-control active" id="readabilityShieldBtn" onclick="toggleReadabilityShield()">🛡️ Lisibilité</button>
-      </div>
+      
+        <button class="mini-control command-palette-dot" id="commandPaletteDotBtn" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
+</div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
           <span class="intel-dot"></span>
@@ -735,7 +737,6 @@
       <span>Transformer Book = pupitre Seven</span>
       <span>Ryzen 7 = moteur de production</span>
       <span>Large Language Personality [Model - The Flower Girl] v.5</span>
-      <button class="help-launcher footer-help-launcher" onclick="toggleCommandPalette()" aria-label="Ouvrir la palette de commandes">?</button>
     </footer>
   </main>
 
