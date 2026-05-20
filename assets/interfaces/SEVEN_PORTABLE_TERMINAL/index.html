@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas Hero Fixed</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-hero-face-fixed-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS</div>
+        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS · HERO FACE FIXED</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -58,6 +58,7 @@
     <section class="page active" id="page-home">
       <div class="sky-control-strip">
         <button class="mini-control atlas-control active" onclick="openCelestialAtlas()">🗺️ Celestial Atlas</button>
+        <button class="mini-control active" id="heroFrameBtn" onclick="toggleHeroFrame()">🧿 Hero Face</button>
         <button class="mini-control atlas-family" onclick="setAtlasFamily('Sky Bridge Ruins')">🌉 Bridge</button>
         <button class="mini-control atlas-family" onclick="setAtlasFamily('Crystal Sanctuary')">💠 Crystal</button>
         <button class="mini-control atlas-family" onclick="setAtlasFamily('Grand Tree Garden')">🌳 Tree</button>
@@ -1354,6 +1355,24 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
       set("footerScreen", `${screen.width}×${screen.height}`);
     });
 
+
+    function toggleHeroFrame() {
+      document.body.classList.toggle("no-hero-face");
+      const on = !document.body.classList.contains("no-hero-face");
+      const btn = document.getElementById("heroFrameBtn");
+      if (btn) btn.classList.toggle("active", on);
+      try { localStorage.setItem("seven-hero-face", on ? "1" : "0"); } catch (e) {}
+      setStatus(on ? "Hero Face : ON" : "Hero Face : OFF");
+    }
+
+    function bootHeroFrame() {
+      let enabled = "1";
+      try { enabled = localStorage.getItem("seven-hero-face") || "1"; } catch (e) {}
+      if (enabled !== "1") document.body.classList.add("no-hero-face");
+      const btn = document.getElementById("heroFrameBtn");
+      if (btn) btn.classList.toggle("active", enabled === "1");
+    }
+
     function spawnTouchGlow(event) {
       if (document.body.classList.contains("no-touch-glow")) return;
       const layer = document.getElementById("touchLayer");
@@ -1428,6 +1447,7 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     bootPreviewMode();
     bootInteractiveHelp();
     bootTouchGlow();
+    bootHeroFrame();
     refreshSystemDetails();
     refreshNetworkHud();
     updateClock();
