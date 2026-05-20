@@ -4497,3 +4497,240 @@ body:not(.readability-off) .trace-pill {
   border-color: rgba(255,255,255,.13) !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.13 — TRUE FULL TRANSPARENT READABILITY
+   Fichier modifié uniquement : style.css
+
+   Règle finale :
+   - Lisibilité ON = fonds des menus transparents.
+   - Seuls les boutons / tuiles / cartes utiles restent opaques.
+   - Aucun grand rectangle sombre derrière les menus.
+------------------------------------------------------- */
+
+/* Mode Lisibilité actif = body sans .readability-off */
+body:not(.readability-off) {
+  --menu-bg-transparent: transparent;
+  --menu-border-soft: rgba(255,216,121,.18);
+  --button-bg-solid: rgba(2,8,13,.68);
+  --button-bg-solid-hover: rgba(255,216,121,.20);
+}
+
+/* Supprime les voiles globaux qui assombrissent toute l’interface */
+body:not(.readability-off)::before,
+body:not(.readability-off)::after,
+body:not(.readability-off) .terminal::before,
+body:not(.readability-off) .terminal::after,
+body:not(.readability-off) .page::before,
+body:not(.readability-off) .page::after {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Grande coque : plus de plaque sombre */
+body:not(.readability-off) .terminal {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow:
+    0 0 0 1px rgba(255,216,121,.28),
+    0 0 22px rgba(255,216,121,.10) !important;
+}
+
+/* Tous les fonds de menu / panneaux deviennent transparents */
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .hero,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .aerith-memory-ribbon,
+body:not(.readability-off) .section-title,
+body:not(.readability-off) .page,
+body:not(.readability-off) .intel-panel,
+body:not(.readability-off) .advanced-dashboard-panel,
+body:not(.readability-off) .celestial-atlas-panel,
+body:not(.readability-off) .network-panel,
+body:not(.readability-off) .device-panel,
+body:not(.readability-off) .system-trace-pro,
+body:not(.readability-off) .network-footer,
+body:not(.readability-off) .system-footer,
+body:not(.readability-off) footer,
+body:not(.readability-off) .status,
+body:not(.readability-off) .atlas-toolbar,
+body:not(.readability-off) .atlas-current,
+body:not(.readability-off) .atlas-preview-grid,
+body:not(.readability-off) .hero-gallery,
+body:not(.readability-off) .hero-position-panel {
+  background-color: transparent !important;
+  background-image: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* On garde seulement des séparateurs fins pour lire la structure */
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .aerith-memory-ribbon,
+body:not(.readability-off) .section-title,
+body:not(.readability-off) .network-footer,
+body:not(.readability-off) .system-footer,
+body:not(.readability-off) footer,
+body:not(.readability-off) .status {
+  border-color: rgba(255,216,121,.16) !important;
+}
+
+/* Hero : garder l'image Aerith, mais enlever le voile sombre de menu */
+body:not(.readability-off) .hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.16), rgba(0,0,0,.00) 48%, rgba(0,0,0,.10)),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
+  background-size: var(--hero-size, cover) !important;
+  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
+  background-repeat: no-repeat !important;
+  border-bottom: 1px solid rgba(255,216,121,.16) !important;
+}
+
+body:not(.readability-off) .hero::before,
+body:not(.readability-off) .hero::after {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Les boutons de navigation restent opaques */
+body:not(.readability-off) .tab,
+body:not(.readability-off) .tab:not(.active):not(:hover):not(:focus),
+body:not(.readability-off) .mini-control:not(#readabilityShieldBtn):not(#commandDotTopBtn):not(.command-dot-top),
+body:not(.readability-off) .atlas-chip,
+body:not(.readability-off) .hero-position-actions button,
+body:not(.readability-off) .advanced-actions button,
+body:not(.readability-off) .advanced-dashboard-head button,
+body:not(.readability-off) .trace-head-actions button,
+body:not(.readability-off) .command-palette button:not(.command-close) {
+  background:
+    linear-gradient(180deg, rgba(2,8,13,.74), rgba(0,0,0,.62)) !important;
+  background-color: rgba(2,8,13,.70) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 4px 12px rgba(0,0,0,.18) !important;
+}
+
+/* Boutons actifs / hover : opaques aussi, mais lumineux */
+body:not(.readability-off) .tab.active,
+body:not(.readability-off) .tab:hover,
+body:not(.readability-off) .tab:focus,
+body:not(.readability-off) .mini-control:not(#readabilityShieldBtn):not(#commandDotTopBtn):not(.command-dot-top).active,
+body:not(.readability-off) .mini-control:not(#readabilityShieldBtn):not(#commandDotTopBtn):not(.command-dot-top):hover,
+body:not(.readability-off) .mini-control:not(#readabilityShieldBtn):not(#commandDotTopBtn):not(.command-dot-top):focus,
+body:not(.readability-off) .atlas-chip.selected,
+body:not(.readability-off) .atlas-chip:hover,
+body:not(.readability-off) .atlas-chip:focus {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.26), rgba(0,0,0,.64)) !important;
+  background-color: rgba(72,54,18,.68) !important;
+  border-color: rgba(255,216,121,.76) !important;
+  color: #fff8e9 !important;
+}
+
+/* Les tuiles principales sont considérées comme boutons : elles restent opaques */
+body:not(.readability-off) .tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.62), rgba(7,18,24,.50)) !important;
+  background-color: rgba(0,0,0,.58) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 8px 18px rgba(0,0,0,.22) !important;
+}
+
+body:not(.readability-off) .tile::before {
+  opacity: .42 !important;
+  filter: saturate(1.02) brightness(.96) !important;
+}
+
+body:not(.readability-off) .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.50), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)) !important;
+}
+
+/* Cartes système / Advanced : opaques car ce sont des zones de lecture */
+body:not(.readability-off) .trace-card,
+body:not(.readability-off) .net-card,
+body:not(.readability-off) .device-card,
+body:not(.readability-off) .advanced-box,
+body:not(.readability-off) .command-palette {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.68), rgba(7,20,28,.54)) !important;
+  background-color: rgba(0,0,0,.62) !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 24px rgba(0,0,0,.24) !important;
+}
+
+/* Bouton Lisibilité : transparent, point */
+body:not(.readability-off) #readabilityShieldBtn,
+body:not(.readability-off) #readabilityShieldBtn.active,
+body:not(.readability-off) #readabilityShieldBtn.selected,
+body:not(.readability-off) #readabilityShieldBtn:hover,
+body:not(.readability-off) #readabilityShieldBtn:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(127,215,255,.60) !important;
+  box-shadow: none !important;
+  color: rgba(225,246,255,.96) !important;
+}
+
+/* Bouton ? : transparent aussi */
+body:not(.readability-off) #commandDotTopBtn,
+body:not(.readability-off) .command-dot-top,
+body:not(.readability-off) #commandDotTopBtn:hover,
+body:not(.readability-off) .command-dot-top:hover,
+body:not(.readability-off) #commandDotTopBtn:focus,
+body:not(.readability-off) .command-dot-top:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Footer : transparent, seuls les badges restent lisibles */
+body:not(.readability-off) footer span,
+body:not(.readability-off) .network-footer span,
+body:not(.readability-off) .system-footer span,
+body:not(.readability-off) .badge,
+body:not(.readability-off) .chip,
+body:not(.readability-off) .trace-pill {
+  background: rgba(0,0,0,.46) !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+/* Variante Deep Glass : encore plus nu, mais boutons opaques conservés */
+body:not(.readability-off).deep-glass .terminal,
+body:not(.readability-off).deep-glass .topnav,
+body:not(.readability-off).deep-glass .sky-control-strip,
+body:not(.readability-off).deep-glass .aerith-memory-ribbon,
+body:not(.readability-off).deep-glass .section-title,
+body:not(.readability-off).deep-glass .page,
+body:not(.readability-off).deep-glass .network-footer,
+body:not(.readability-off).deep-glass .system-footer,
+body:not(.readability-off).deep-glass footer,
+body:not(.readability-off).deep-glass .status {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
