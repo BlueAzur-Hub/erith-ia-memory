@@ -148,15 +148,21 @@ function openChatGPTNamed() {
 }
 
 async function startSeven() {
+  const opened = openChatGPTNamed();
   await copyText(AERITH_PROMPT);
-  openChatGPTNamed();
-  setStatus("Seven Boost copié. ChatGPT appelé. Colle avec Ctrl+V, puis Entrée.");
+  setStatus(opened
+    ? "Seven Boost copié. ChatGPT appelé. Colle avec Ctrl+V, puis Entrée."
+    : "Seven Boost copié. Popup bloquée : ouvre ChatGPT puis Ctrl+V."
+  );
 }
 
 async function copyVideoCards() {
+  const opened = openChatGPTNamed();
   await copyText(VIDEO_CARDS_PROMPT);
-  openChatGPTNamed();
-  setStatus("Video Cards Boost copié. ChatGPT appelé. Colle avec Ctrl+V, puis Entrée.");
+  setStatus(opened
+    ? "Video Cards Boost copié. ChatGPT appelé. Colle avec Ctrl+V, puis Entrée."
+    : "Video Cards Boost copié. Popup bloquée : ouvre ChatGPT puis Ctrl+V."
+  );
 }
 
 async function copySevenOnly() {
