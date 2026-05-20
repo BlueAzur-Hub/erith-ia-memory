@@ -1312,3 +1312,75 @@ footer {
     bottom: 10px;
   }
 }
+
+
+/* -------------------------------------------------------
+   Destination Previews
+   Les boutons montrent ce qu'ils ouvrent réellement.
+   Exemple : Seven Boost → ChatGPT+.
+------------------------------------------------------- */
+
+.tile::before {
+  opacity: .38 !important;
+  filter: saturate(1.10) contrast(1.06) brightness(1.02) !important;
+}
+
+.tile.gold::before,
+.tile.selected::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .62 !important;
+}
+
+.tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.42) 58%, rgba(0,0,0,.58)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.10), transparent 45%) !important;
+}
+
+.tile.gold::after,
+.tile.selected::after,
+.tile:hover::after,
+.tile:focus::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.60), rgba(0,0,0,.28) 58%, rgba(0,0,0,.42)),
+    radial-gradient(circle at 92% 0%, rgba(255,216,121,.22), transparent 46%) !important;
+}
+
+/* Destination preview mapping */
+.tile[data-preview="chatgpt_plus"] { --preview-image: url("./preview_dest_chatgpt_plus.jpg"); }
+.tile[data-preview="chatgpt_prompt"] { --preview-image: url("./preview_dest_chatgpt_prompt.jpg"); }
+.tile[data-preview="notion"] { --preview-image: url("./preview_dest_notion.jpg"); }
+.tile[data-preview="notion_auto"] { --preview-image: url("./preview_dest_auto_agent.jpg"); }
+.tile[data-preview="notion_core"] { --preview-image: url("./preview_dest_notion_core.jpg"); }
+.tile[data-preview="github"] { --preview-image: url("./preview_dest_github.jpg"); }
+.tile[data-preview="youtube"] { --preview-image: url("./preview_dest_youtube.jpg"); }
+.tile[data-preview="runninghub"] { --preview-image: url("./preview_dest_runninghub.jpg"); }
+.tile[data-preview="civitai"] { --preview-image: url("./preview_dest_civitai.jpg"); }
+.tile[data-preview="elevenlabs"] { --preview-image: url("./preview_dest_elevenlabs.jpg"); }
+.tile[data-preview="rustdesk"] { --preview-image: url("./preview_dest_rustdesk.jpg"); }
+.tile[data-preview="network"] { --preview-image: url("./preview_dest_network.jpg"); }
+.tile[data-preview="cockpit"] { --preview-image: url("./preview_dest_cockpit.jpg"); }
+.tile[data-preview="clipboard"] { --preview-image: url("./preview_dest_clipboard.jpg"); }
+.tile[data-preview="blackout"] { --preview-image: url("./preview_dest_blackout.jpg"); }
+.tile[data-preview="facebook"] { --preview-image: url("./preview_dest_facebook.jpg"); }
+.tile[data-preview="x"] { --preview-image: url("./preview_dest_x.jpg"); }
+.tile[data-preview="visual"] { --preview-image: url("./preview_dest_visual.jpg"); }
+.tile[data-preview="davinci"] { --preview-image: url("./preview_dest_davinci.jpg"); }
+
+.mini-control#previewModeBtn {
+  min-width: 150px;
+}
+
+@media (max-width: 860px) {
+  .tile::before {
+    opacity: .32 !important;
+  }
+
+  .tile.gold::before,
+  .tile.selected::before,
+  .tile:hover::before,
+  .tile:focus::before {
+    opacity: .50 !important;
+  }
+}
