@@ -1,12 +1,33 @@
-/* Seven Heaven Cockpit — Celestial Atlas v2 */
+/* Seven Portable Terminal — V5.2 Full Transparent Hero Lock
+
+Fichiers complets.
+Aucun patch séparé.
+
+Principe :
+- Le fond principal reste visible.
+- Les menus et boutons sont transparents au repos.
+- Les boutons deviennent opaques seulement au survol / sélection.
+- Le Hero est une vraie image HTML (#heroBgImg), pas un background CSS fragile.
+- Le mode transparent et le mode lisibilité noire ne modifient que le voile, jamais le cadrage Hero.
+*/
 
 :root {
   --text: #fff8e9;
-  --muted: rgba(255,248,233,.78);
+  --muted: rgba(255, 248, 233, .78);
   --gold: #ffd879;
-  --gold2: rgba(255,216,121,.82);
-  --panel: rgba(0,0,0,.48);
-  --line: rgba(255,216,121,.36);
+  --gold-soft: rgba(255, 216, 121, .42);
+  --blue: #7fd7ff;
+  --blue-soft: rgba(127, 215, 255, .32);
+  --shadow: 0 2px 12px rgba(0,0,0,.88), 0 0 18px rgba(0,0,0,.45);
+  --active-bg: url("./background_historique_lr.png");
+
+  --shell-bg: rgba(4, 12, 18, .10);
+  --panel-bg: rgba(0, 0, 0, .07);
+  --button-bg: rgba(0, 0, 0, .08);
+  --button-hover: rgba(0, 0, 0, .48);
+  --hero-veil-left: rgba(0, 0, 0, .08);
+  --hero-veil-mid: rgba(0, 0, 0, .02);
+  --hero-veil-right: rgba(0, 0, 0, .10);
 }
 
 * {
@@ -15,8 +36,8 @@
 
 html,
 body {
-  margin: 0;
   min-height: 100%;
+  margin: 0;
 }
 
 body {
@@ -24,621 +45,80 @@ body {
   padding: 10px;
   color: var(--text);
   font-family: "Segoe UI", Arial, sans-serif;
-  background:
-    linear-gradient(180deg, rgba(3,8,14,.03), rgba(3,8,14,.18)),
-    var(--active-bg, var(--active-bg, var(--active-bg, url("./background_historique_lr.png"))));
-  background-size: cover;
-  background-position: center;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 34%),
+    var(--active-bg),
+    linear-gradient(135deg, #173141, #7db9dd 44%, #d9edf5);
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat;
   overflow-x: hidden;
 }
 
 body::after {
   content: "";
   position: fixed;
-  left: -18%;
-  right: -18%;
-  bottom: -14%;
-  height: 38vh;
+  left: -12%;
+  right: -12%;
+  bottom: -16%;
+  height: 34vh;
   z-index: 0;
   pointer-events: none;
+  opacity: .70;
+  filter: blur(10px);
   background:
-    radial-gradient(ellipse at 4% 72%, rgba(255,255,255,.76) 0 13%, transparent 13.6%),
-    radial-gradient(ellipse at 13% 62%, rgba(255,255,255,.66) 0 18%, transparent 18.8%),
-    radial-gradient(ellipse at 24% 80%, rgba(255,255,255,.82) 0 16%, transparent 16.8%),
-    radial-gradient(ellipse at 34% 66%, rgba(255,255,255,.62) 0 21%, transparent 21.8%),
-    radial-gradient(ellipse at 47% 82%, rgba(255,255,255,.86) 0 17%, transparent 17.8%),
-    radial-gradient(ellipse at 58% 68%, rgba(255,255,255,.68) 0 22%, transparent 22.8%),
-    radial-gradient(ellipse at 70% 84%, rgba(255,255,255,.82) 0 18%, transparent 18.8%),
-    radial-gradient(ellipse at 83% 67%, rgba(255,255,255,.66) 0 23%, transparent 23.8%),
-    radial-gradient(ellipse at 97% 78%, rgba(255,255,255,.78) 0 19%, transparent 19.8%),
-    linear-gradient(180deg, transparent 0%, rgba(255,255,255,.20) 36%, rgba(255,255,255,.46) 74%, rgba(255,255,255,.72) 100%);
-  filter: blur(14px);
+    radial-gradient(ellipse at 8% 78%, rgba(255,255,255,.42) 0 16%, transparent 17%),
+    radial-gradient(ellipse at 28% 86%, rgba(255,255,255,.50) 0 18%, transparent 19%),
+    radial-gradient(ellipse at 54% 82%, rgba(255,255,255,.54) 0 20%, transparent 21%),
+    radial-gradient(ellipse at 82% 84%, rgba(255,255,255,.44) 0 19%, transparent 20%),
+    linear-gradient(180deg, transparent, rgba(255,255,255,.45));
+}
+
+body.mode-readability {
+  --shell-bg: rgba(0, 0, 0, .34);
+  --panel-bg: rgba(0, 0, 0, .28);
+  --button-bg: rgba(0, 0, 0, .24);
+  --button-hover: rgba(0, 0, 0, .72);
+  --hero-veil-left: rgba(0, 0, 0, .48);
+  --hero-veil-mid: rgba(0, 0, 0, .24);
+  --hero-veil-right: rgba(0, 0, 0, .40);
+}
+
+body[data-ambiance="crystal"] {
+  --gold-soft: rgba(127, 215, 255, .42);
+  --blue-soft: rgba(255, 216, 121, .22);
+}
+
+body[data-ambiance="night"] {
+  --shell-bg: rgba(0,0,0,.26);
+  --panel-bg: rgba(0,0,0,.18);
+}
+
+body[data-ambiance="gold"] {
+  --gold-soft: rgba(255, 216, 121, .66);
+}
+
+body[data-ambiance="minimal"] {
+  --shell-bg: rgba(0,0,0,.06);
+  --panel-bg: rgba(0,0,0,.04);
+  --button-bg: rgba(0,0,0,.04);
 }
 
 .terminal {
   position: relative;
   z-index: 1;
   width: min(1220px, calc(100vw - 24px));
-  margin: 10px auto 0;
-  border: 2px solid rgba(255,216,121,.86);
-  border-radius: 26px;
-  background: rgba(2,10,16,.34);
+  margin: 8px auto 0;
   overflow: hidden;
-  backdrop-filter: blur(4px) saturate(1.08);
+  border: 2px solid rgba(255,216,121,.58);
+  border-radius: 25px;
+  background: linear-gradient(180deg, var(--shell-bg), rgba(4,12,18,.08));
+  backdrop-filter: blur(2px) saturate(1.04);
+  -webkit-backdrop-filter: blur(2px) saturate(1.04);
   box-shadow:
-    0 22px 60px rgba(0,0,0,.46),
-    0 0 0 1px rgba(255,248,214,.42),
-    0 0 42px rgba(255,216,121,.34),
-    0 0 90px rgba(135,216,255,.18),
-    inset 0 1px 0 rgba(255,255,255,.16);
-}
-
-.topnav {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 6px;
-  padding: 7px;
-  background: rgba(0,0,0,.35);
-  border-bottom: 1px solid rgba(255,216,121,.28);
-}
-
-.tab {
-  height: 38px;
-  min-height: 38px;
-  border: 1px solid rgba(255,216,121,.28);
-  border-radius: 12px;
-  background: rgba(0,0,0,.54);
-  color: var(--text);
-  font: inherit;
-  font-size: 11px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0 8px;
-}
-
-.tab span {
-  margin-right: 5px;
-}
-
-.tab.active,
-.tab:hover,
-.tab:focus {
-  border-color: rgba(255,216,121,.88);
-  background: rgba(28,22,8,.74);
-  outline: none;
-}
-
-.hero {
-  position: relative;
-  min-height: 136px;
-  padding: 14px 132px 12px 18px;
-  border-bottom: 1px solid rgba(255,216,121,.28);
-  background:
-    radial-gradient(circle at 40% 0%, rgba(255,216,121,.10), transparent 42%),
-    rgba(0,0,0,.16);
-}
-
-.kicker {
-  margin: 0 0 6px;
-  color: var(--gold);
-  font-size: 10px;
-  letter-spacing: .23em;
-  text-transform: uppercase;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(32px, 3.9vw, 46px);
-  line-height: 1;
-  letter-spacing: .10em;
-  text-shadow: 0 3px 14px rgba(0,0,0,.90);
-}
-
-.hero p {
-  margin: 8px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.chips span {
-  border: 1px solid rgba(255,216,121,.24);
-  border-radius: 99px;
-  background: rgba(0,0,0,.38);
-  padding: 5px 9px;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.portrait {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  width: 98px;
-  height: 104px;
-  border: 1px solid rgba(255,216,121,.62);
-  border-radius: 20px;
-  overflow: hidden;
-  background: rgba(0,0,0,.40);
-  box-shadow: 0 0 22px rgba(255,216,121,.20);
-}
-
-.portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.portrait-fallback {
-  display: none;
-  width: 100%;
-  height: 100%;
-  place-items: center;
-  color: #ffd0e8;
-  text-align: center;
-  font-size: 12px;
-}
-
-.page {
-  display: none;
-  padding: 14px 16px 16px;
-  background: rgba(0,0,0,.08);
-}
-
-.page.active {
-  display: block;
-}
-
-.section-title {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 11px;
-}
-
-.section-title strong {
-  color: var(--text);
-  font-size: 18px;
-  letter-spacing: .04em;
-}
-
-.section-title span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.tile-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.tile {
-  min-height: 82px;
-  border: 1px solid rgba(255,255,255,.24);
-  border-radius: 17px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.70), rgba(8,16,22,.62)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 60%);
-  color: var(--text);
-  text-decoration: none;
-  font: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  text-align: left;
-  padding: 12px 14px;
-  cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 9px 20px rgba(0,0,0,.30);
-}
-
-.tile.gold {
-  border-color: rgba(255,216,121,.86);
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.78), rgba(34,25,7,.70)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.24), transparent 62%);
-}
-
-.tile:hover,
-.tile:focus {
-  border-color: rgba(255,216,121,.96);
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.ico {
-  width: 36px;
-  min-width: 36px;
-  text-align: center;
-  font-size: 27px;
-  line-height: 1;
-}
-
-.txt {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.txt strong {
-  font-size: 16px;
-  line-height: 1.08;
-}
-
-.txt em {
-  color: var(--muted);
-  font-size: 12px;
-  font-style: normal;
-  line-height: 1.16;
-}
-
-.status {
-  min-height: 26px;
-  padding: 7px 10px 8px;
-  color: #d7ffc4;
-  font-size: 12px;
-  text-align: center;
-  background: rgba(0,0,0,.10);
-}
-
-.drawer {
-  display: none;
-  margin: 0 14px 11px;
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.drawer.open {
-  display: block;
-}
-
-.drawer textarea {
-  width: 100%;
-  min-height: 150px;
-  display: block;
-  border: 0;
-  background: rgba(0,0,0,.62);
-  color: var(--text);
-  padding: 9px;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 11px;
-  resize: vertical;
-}
-
-footer {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 8px 10px 10px;
-  border-top: 1px solid rgba(255,216,121,.24);
-  background: rgba(0,0,0,.32);
-}
-
-footer span {
-  border: 1px solid rgba(255,216,121,.28);
-  border-radius: 99px;
-  background: rgba(0,0,0,.25);
-  padding: 4px 9px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-@media (max-width: 860px) {
-  body {
-    padding: 5px;
-  }
-
-  .terminal {
-    margin-top: 4px;
-    width: calc(100vw - 10px);
-    border-radius: 20px;
-  }
-
-  .topnav {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-  }
-
-  .tab {
-    height: 34px;
-    font-size: 10px;
-  }
-
-  .hero {
-    min-height: 112px;
-    padding: 12px 98px 10px 12px;
-  }
-
-  h1 {
-    font-size: 25px;
-  }
-
-  .hero p {
-    display: none;
-  }
-
-  .chips {
-    display: none;
-  }
-
-  .portrait {
-    width: 78px;
-    height: 82px;
-  }
-
-  .section-title {
-    display: block;
-  }
-
-  .section-title span {
-    display: none;
-  }
-
-  .tile-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .tile {
-    min-height: 68px;
-  }
-}
-
-@media (max-width: 460px) {
-  .tile-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Comfort Detail refinement */
-.txt em {
-  max-width: 100%;
-}
-
-.tile {
-  overflow: hidden;
-}
-
-@media (min-width: 861px) {
-  .tile-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 860px) {
-  .txt strong {
-    font-size: 14px;
-  }
-
-  .txt em {
-    font-size: 10.5px;
-  }
-}
-
-
-/* Comfort Real Remote refinement */
-.remote-main {
-  border-color: rgba(255,216,121,.96) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 0 24px rgba(255,216,121,.18),
-    0 10px 24px rgba(0,0,0,.34) !important;
-}
-
-
-/* Comfort Social Backgrounds refinement */
-:root {
-  --active-bg: var(--active-bg, var(--active-bg, url("./background_historique_lr.png")));
-}
-
-body {
-  transition: background-image .45s ease-in-out;
-}
-
-.tile-grid {
-  align-items: stretch;
-}
-
-.tile .txt em {
-  max-width: 100%;
-}
-
-@media (min-width: 1100px) {
-  .tile-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-
-/* Network HUD additions */
-.network-panel {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.net-card {
-  border: 1px solid rgba(255,216,121,.34);
-  border-radius: 16px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.58), rgba(4,16,24,.50)),
-    radial-gradient(circle at 50% 0%, rgba(127,215,255,.10), transparent 62%);
-  padding: 10px 12px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 8px 18px rgba(0,0,0,.22);
-}
-
-.net-label {
-  display: block;
-  color: rgba(255,248,233,.66);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-
-.net-card strong {
-  color: #fff8e9;
-  font-size: 15px;
-  line-height: 1.1;
-}
-
-.network-footer {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px 10px;
-  border-top: 1px solid rgba(255,216,121,.20);
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.30), rgba(10,26,34,.28), rgba(0,0,0,.30));
-}
-
-.network-footer span {
-  border: 1px solid rgba(127,215,255,.24);
-  border-radius: 999px;
-  background: rgba(0,0,0,.24);
-  padding: 4px 9px;
-  color: rgba(255,248,233,.78);
-  font-size: 10px;
-}
-
-.network-footer strong {
-  color: #fff8e9;
-}
-
-.remote-main {
-  border-color: rgba(255,216,121,.96) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 0 24px rgba(255,216,121,.18),
-    0 10px 24px rgba(0,0,0,.34) !important;
-}
-
-@media (max-width: 860px) {
-  .network-panel {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 7px;
-  }
-
-  .net-card {
-    padding: 8px 9px;
-  }
-
-  .net-card strong {
-    font-size: 12px;
-  }
-
-  .network-footer span {
-    font-size: 9px;
-    padding: 3px 7px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Seven Heaven Sky UI
-   Fond plus visible, verre transparent, nuages coton,
-   boutons inactifs translucides, actifs dorés.
-------------------------------------------------------- */
-
-:root {
-  --active-bg: url("./background_historique_lr.png");
-  --glass-alpha: .18;
-  --panel-alpha: .28;
-  --tile-alpha: .22;
-  --tile-border: rgba(255,255,255,.24);
-  --sky-blue: rgba(127,215,255,.72);
-  --sky-gold: rgba(255,216,121,.88);
-}
-
-body {
-  background:
-    linear-gradient(180deg, rgba(5, 18, 28, .10), rgba(5, 18, 28, .18)),
-    var(--active-bg, url("./background_historique_lr.png")) !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  transition: background-image .55s ease, filter .35s ease;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    url("./sky_hud_lines.png"),
-    radial-gradient(circle at 18% 12%, rgba(255,255,255,.15), transparent 30%),
-    radial-gradient(circle at 82% 18%, rgba(127,215,255,.12), transparent 32%),
-    linear-gradient(90deg, rgba(0,0,0,.10), rgba(255,255,255,.02), rgba(0,0,0,.12));
-  background-size: cover;
-  mix-blend-mode: screen;
-  opacity: .78;
-}
-
-body::after {
-  height: 48vh !important;
-  left: -12% !important;
-  right: -12% !important;
-  bottom: -16% !important;
-  background:
-    url("./clouds_cotton_overlay.png"),
-    radial-gradient(ellipse at 10% 70%, rgba(255,255,255,.50) 0 15%, transparent 15.8%),
-    radial-gradient(ellipse at 52% 82%, rgba(255,255,255,.62) 0 22%, transparent 22.8%),
-    radial-gradient(ellipse at 92% 72%, rgba(255,255,255,.52) 0 18%, transparent 18.8%),
-    linear-gradient(180deg, transparent 0%, rgba(255,255,255,.26) 45%, rgba(255,255,255,.78) 100%) !important;
-  background-size: cover, auto, auto, auto, auto !important;
-  filter: blur(8px) !important;
-  opacity: .98 !important;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,var(--glass-alpha)), rgba(3,10,16,.26)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 42%) !important;
-  border-color: rgba(255,216,121,.72) !important;
-  backdrop-filter: blur(3px) saturate(1.08) !important;
-  box-shadow:
-    0 26px 72px rgba(0,0,0,.36),
-    0 0 0 1px rgba(255,248,214,.36),
-    0 0 46px rgba(255,216,121,.24),
-    0 0 110px rgba(127,215,255,.16),
-    inset 0 1px 0 rgba(255,255,255,.18) !important;
-}
-
-.deep-glass {
-  --glass-alpha: .08;
-  --panel-alpha: .16;
-  --tile-alpha: .12;
-}
-
-body[data-ui-mode="crystal"] {
-  --sky-gold: rgba(127,215,255,.90);
-  --tile-border: rgba(127,215,255,.38);
-}
-
-body[data-ui-mode="night"] {
-  --glass-alpha: .24;
-  --panel-alpha: .34;
-  --tile-alpha: .25;
-  --sky-gold: rgba(185,170,255,.90);
+    0 24px 65px rgba(0,0,0,.24),
+    0 0 38px rgba(255,216,121,.16),
+    inset 0 1px 0 rgba(255,255,255,.14);
 }
 
 .sky-ambient {
@@ -655,193 +135,523 @@ body[data-ui-mode="night"] {
   width: 180px;
   height: 48px;
   border-radius: 999px;
-  background: rgba(255,255,255,.15);
-  filter: blur(16px);
-  animation: driftCloud 18s ease-in-out infinite alternate;
+  background: rgba(255,255,255,.10);
+  filter: blur(18px);
+  animation: driftCloud 24s ease-in-out infinite alternate;
 }
 
-.cloud-a { left: 3%; top: 16%; animation-duration: 24s; }
+.cloud-a { left: 3%; top: 16%; }
 .cloud-b { left: 30%; top: 8%; width: 240px; animation-duration: 28s; }
 .cloud-c { right: 8%; top: 28%; animation-duration: 20s; }
 .cloud-d { left: 14%; bottom: 14%; width: 260px; animation-duration: 32s; }
 .cloud-e { right: 18%; bottom: 8%; width: 220px; animation-duration: 26s; }
 
 @keyframes driftCloud {
-  from { transform: translate3d(-14px, -3px, 0) scale(1); opacity: .20; }
-  to { transform: translate3d(18px, 5px, 0) scale(1.08); opacity: .36; }
+  from { transform: translate3d(-14px,-3px,0) scale(1); opacity:.16; }
+  to { transform: translate3d(18px,5px,0) scale(1.08); opacity:.30; }
 }
 
 .topnav,
 .hero,
+.aerith-memory-ribbon,
 .page,
-.network-footer,
-footer {
+.toolbar,
+.intel-panel,
+.advanced-dashboard-panel,
+.section-title,
+.home-system-trace,
+.status,
+footer,
+.drawer,
+.command-palette {
   position: relative;
   z-index: 2;
 }
 
 .topnav {
-  background: rgba(0,0,0,.18) !important;
-  border-bottom-color: rgba(255,216,121,.22) !important;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  padding: 7px;
+  border-bottom: 1px solid var(--gold-soft);
+  background: var(--panel-bg);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+.tab,
+.mini-control,
+.tile,
+.advanced-actions button,
+.advanced-dashboard-head button,
+.trace-head-actions button,
+.hero-position-actions button,
+.palette-head button {
+  border: 1px solid var(--gold-soft);
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255,248,233,.94);
+  font: inherit;
+  cursor: pointer;
+  text-shadow: var(--shadow);
+  box-shadow: none;
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+button:hover,
+.tab:hover,
+.mini-control:hover,
+.tile:hover,
+.advanced-actions button:hover,
+.advanced-dashboard-head button:hover,
+.trace-head-actions button:hover,
+.hero-position-actions button:hover,
+.palette-head button:hover {
+  background: linear-gradient(180deg, rgba(255,216,121,.22), var(--button-hover));
+  border-color: rgba(255,216,121,.84);
+  box-shadow:
+    0 0 16px rgba(255,216,121,.18),
+    inset 0 1px 0 rgba(255,255,255,.10);
+  color: #fff8e9;
+}
+
+button:focus,
+.tab:focus,
+.mini-control:focus,
+.tile:focus {
+  outline: 1px solid rgba(127,215,255,.60);
+  outline-offset: 2px;
 }
 
 .tab {
-  background: rgba(0,0,0,.16) !important;
-  border-color: rgba(255,255,255,.18) !important;
-  color: rgba(255,248,233,.82) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-  transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+  height: 38px;
+  min-height: 38px;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0 8px;
 }
 
-.tab:not(.active) {
-  opacity: .74;
+.tab span {
+  margin-right: 5px;
 }
 
 .tab.active,
-.tab:hover,
-.tab:focus {
-  opacity: 1;
-  background: rgba(255,216,121,.14) !important;
-  border-color: var(--sky-gold) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 0 18px rgba(255,216,121,.18);
+.tile.gold,
+.tile.selected,
+.mini-control.active {
+  border-color: rgba(255,216,121,.78);
+  background: rgba(0,0,0,.32);
 }
 
 .hero {
+  position: relative;
+  min-height: 136px;
+  padding: 14px 132px 12px 18px;
+  border: 2px solid rgba(255,216,121,.72);
+  border-radius: 0 0 18px 18px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,248,210,.18),
+    0 0 24px rgba(255,216,121,.22),
+    0 0 52px rgba(255,216,121,.10),
+    inset 0 0 0 1px rgba(255,248,210,.14);
+}
+
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 34%;
+  transform: scale(1);
+  transform-origin: 50% 34%;
+  transition: transform .12s ease, object-position .12s ease, transform-origin .12s ease;
+}
+
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.06)),
-    radial-gradient(circle at 40% 0%, rgba(255,216,121,.12), transparent 48%) !important;
+    linear-gradient(90deg, var(--hero-veil-left), var(--hero-veil-mid) 52%, var(--hero-veil-right));
+}
+
+.hero-main,
+.portrait,
+.hero-position-panel {
+  position: relative;
+  z-index: 2;
+}
+
+.kicker {
+  margin: 0 0 6px;
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: .23em;
+  text-transform: uppercase;
+  text-shadow: var(--shadow);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(32px, 3.9vw, 46px);
+  line-height: 1;
+  letter-spacing: .10em;
+  text-shadow: var(--shadow);
+}
+
+.hero p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-shadow: var(--shadow);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.chips span,
+footer span,
+.aerith-memory-ribbon span {
+  border: 1px solid rgba(255,216,121,.24);
+  border-radius: 99px;
+  background: transparent;
+  padding: 5px 9px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1;
+  text-shadow: var(--shadow);
+}
+
+.portrait {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 98px;
+  height: 104px;
+  margin: 0;
+  border: 2px solid rgba(255,216,121,.86);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(0,0,0,.10);
+  box-shadow:
+    0 0 20px rgba(255,216,121,.42),
+    0 0 40px rgba(127,215,255,.18);
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.portrait-fallback {
+  display: none;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #ffd0e8;
+  text-align: center;
+  font-size: 12px;
+}
+
+.hero-position-panel {
+  display: none;
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  z-index: 8;
+  width: min(360px, calc(100% - 32px));
+  max-width: 360px;
+  padding: 10px;
+  border: 1px solid rgba(127,215,255,.42);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(0,0,0,.58), rgba(6,18,26,.42));
+  box-shadow:
+    0 0 18px rgba(127,215,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(2px) saturate(1.04);
+  -webkit-backdrop-filter: blur(2px) saturate(1.04);
+}
+
+body.show-hero-focus .hero-position-panel {
+  display: block;
+}
+
+.hero-position-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 8px;
+}
+
+.hero-position-head span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hero-position-panel label {
+  display: grid;
+  grid-template-columns: 36px 1fr 42px;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 0;
+  font-size: 10px;
+}
+
+.hero-position-panel input[type="range"] {
+  width: 100%;
+  accent-color: #7fd7ff;
+}
+
+.hero-position-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.hero-position-actions button {
+  min-height: 26px;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+.aerith-memory-ribbon {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--gold-soft);
+  background: var(--panel-bg);
+}
+
+.aerith-memory-ribbon span {
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .page {
-  background: rgba(0,0,0,.03) !important;
+  display: none;
+  padding: 14px 16px 16px;
+  background: rgba(0,0,0,.025);
 }
 
-.section-title {
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 14px;
-  background: rgba(0,0,0,.12);
-  backdrop-filter: blur(2px);
+.page.active {
+  display: block;
 }
 
-.tile,
-.net-card {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,var(--tile-alpha)), rgba(7,18,24,calc(var(--tile-alpha) + .08))),
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 62%) !important;
-  border-color: var(--tile-border) !important;
-  backdrop-filter: blur(3px) saturate(1.06);
-  transition:
-    transform .16s ease,
-    background .16s ease,
-    border-color .16s ease,
-    box-shadow .16s ease,
-    opacity .16s ease;
-}
-
-.tile:not(.gold):not(.selected) {
-  opacity: .76;
-}
-
-.tile.gold,
-.tile.selected,
-.tile:hover,
-.tile:focus {
-  opacity: 1 !important;
-  border-color: var(--sky-gold) !important;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.30), rgba(42,31,8,.26)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.22), transparent 62%) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 0 22px rgba(255,216,121,.18),
-    0 12px 24px rgba(0,0,0,.24) !important;
-}
-
-.tile:hover,
-.tile:focus {
-  transform: translateY(-2px) scale(1.01);
-}
-
-.tile.selected {
-  outline: 1px solid rgba(255,255,255,.22);
-}
-
-.mini-control {
-  min-height: 31px;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 999px;
-  padding: 0 12px;
-  background: rgba(0,0,0,.16);
-  color: rgba(255,248,233,.84);
-  font: inherit;
-  font-size: 11px;
-  cursor: pointer;
-  backdrop-filter: blur(3px);
-  transition: all .16s ease;
-}
-
-.mini-control.active,
-.mini-control:hover,
-.mini-control:focus,
-.mini-control.selected {
-  border-color: var(--sky-gold);
-  background: rgba(255,216,121,.14);
-  box-shadow: 0 0 18px rgba(255,216,121,.16);
-  outline: none;
-}
-
-.sky-control-strip {
+.toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin: 0 0 10px;
   padding: 7px;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid var(--gold-soft);
   border-radius: 16px;
-  background: rgba(0,0,0,.10);
-  backdrop-filter: blur(2px);
+  background: var(--panel-bg);
 }
 
-.network-panel {
-  position: relative;
-  z-index: 2;
+.mini-control {
+  min-height: 31px;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 11px;
 }
 
-.network-footer {
-  background: rgba(0,0,0,.14) !important;
-  backdrop-filter: blur(2px);
+.command-dot {
+  width: 31px;
+  min-width: 31px;
+  padding: 0;
+  text-align: center;
 }
 
-footer {
-  background: rgba(0,0,0,.18) !important;
+.intel-panel {
+  padding: 10px 12px;
+  margin: 0 0 12px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 16px;
+  background: var(--panel-bg);
 }
 
-@media (max-width: 860px) {
-  .sky-control-strip {
-    gap: 5px;
-    padding: 6px;
-  }
-
-  .mini-control {
-    min-height: 28px;
-    font-size: 10px;
-    padding: 0 9px;
-  }
+.intel-topline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.intel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7fd7ff;
+  box-shadow: 0 0 12px rgba(127,215,255,.8);
+}
 
-/* -------------------------------------------------------
-   Site Preview Buttons
-   Chaque bouton peut recevoir une mini-preview personnalisée.
-------------------------------------------------------- */
+.intel-title {
+  text-shadow: var(--shadow);
+}
+
+.intel-mode {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.intel-text {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-shadow: var(--shadow);
+}
+
+.intel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.intel-tags span,
+.trace-pill {
+  border: 1px solid var(--blue-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--muted);
+  font-size: 10px;
+  text-shadow: var(--shadow);
+}
+
+.advanced-dashboard-panel {
+  display: none;
+  margin: 0 0 12px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--panel-bg);
+}
+
+body.show-advanced .advanced-dashboard-panel {
+  display: block;
+}
+
+.advanced-dashboard-head,
+.advanced-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--gold-soft);
+}
+
+.advanced-dashboard-head span,
+.advanced-head span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.advanced-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.advanced-box {
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 15px;
+  padding: 10px;
+  min-height: 118px;
+  background: rgba(0,0,0,.06);
+}
+
+.advanced-box p {
+  color: var(--muted);
+  font-size: 12px;
+  text-shadow: var(--shadow);
+}
+
+.advanced-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.advanced-actions button,
+.advanced-dashboard-head button,
+.trace-head-actions button {
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 10px;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 11px;
+  padding: 6px 10px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 14px;
+  background: var(--panel-bg);
+}
+
+.section-title strong {
+  font-size: 18px;
+  letter-spacing: .04em;
+  text-shadow: var(--shadow);
+}
+
+.section-title span {
+  color: var(--muted);
+  font-size: 12px;
+  text-shadow: var(--shadow);
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  align-items: stretch;
+}
 
 .tile {
   position: relative;
-  overflow: hidden;
   isolation: isolate;
+  overflow: hidden;
+  min-height: 82px;
+  border-radius: 17px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  text-align: left;
+  padding: 12px 14px;
+  background: var(--button-bg);
+}
+
+.tile:hover {
+  transform: translateY(-2px) scale(1.01);
 }
 
 .tile::before {
@@ -852,10 +662,10 @@ footer {
   background-image: var(--preview-image);
   background-size: cover;
   background-position: center;
-  opacity: .34;
+  opacity: .10;
+  filter: saturate(.95) brightness(.90);
   transform: scale(1.03);
-  transition: opacity .18s ease, transform .18s ease, filter .18s ease;
-  filter: saturate(1.08) contrast(1.04);
+  transition: .18s ease;
 }
 
 .tile::after {
@@ -863,3832 +673,297 @@ footer {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.30) 55%, rgba(0,0,0,.48)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.12), transparent 45%);
-  transition: background .18s ease;
+  background: linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.02) 60%, rgba(0,0,0,.05));
 }
 
-.tile:hover::before,
-.tile:focus::before,
-.tile.selected::before,
-.tile.gold::before {
-  opacity: .56;
+.tile:hover::before {
+  opacity: .42;
+  filter: saturate(1.05) brightness(.96);
   transform: scale(1.07);
 }
 
-.tile:hover::after,
-.tile:focus::after,
-.tile.selected::after,
-.tile.gold::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.52), rgba(0,0,0,.22) 58%, rgba(0,0,0,.38)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.20), transparent 46%);
-}
-
-.no-previews .tile::before {
-  opacity: 0 !important;
-}
-
-.no-previews .tile::after {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.46), rgba(7,18,24,.28)),
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 62%) !important;
-}
-
-.tile .ico,
-.tile .txt {
-  position: relative;
-  z-index: 2;
-}
-
-.tile .ico {
-  text-shadow: 0 2px 10px rgba(0,0,0,.88);
-}
-
-.tile .txt strong {
-  text-shadow: 0 2px 11px rgba(0,0,0,.94);
-}
-
-.tile .txt em {
-  text-shadow: 0 2px 9px rgba(0,0,0,.94);
-}
-
-/* Preview asset mapping */
-.tile[data-preview="seven"] { --preview-image: url("./preview_seven_boost.jpg"); }
-.tile[data-preview="videocards"] { --preview-image: url("./preview_video_cards.jpg"); }
-.tile[data-preview="wan"] { --preview-image: url("./preview_wan.jpg"); }
-.tile[data-preview="prompt"] { --preview-image: url("./preview_prompt.jpg"); }
-.tile[data-preview="link"] { --preview-image: url("./preview_link.jpg"); }
-.tile[data-preview="blackout"] { --preview-image: url("./preview_blackout.jpg"); }
-.tile[data-preview="chatgpt"] { --preview-image: url("./preview_chatgpt.jpg"); }
-.tile[data-preview="notion"] { --preview-image: url("./preview_notion.jpg"); }
-.tile[data-preview="autoagent"] { --preview-image: url("./preview_auto_agent.jpg"); }
-.tile[data-preview="memory"] { --preview-image: url("./preview_memory.jpg"); }
-.tile[data-preview="github"] { --preview-image: url("./preview_github.jpg"); }
-.tile[data-preview="rustdesk"] { --preview-image: url("./preview_rustdesk.jpg"); }
-.tile[data-preview="network"] { --preview-image: url("./preview_network.jpg"); }
-.tile[data-preview="youtube"] { --preview-image: url("./preview_youtube.jpg"); }
-.tile[data-preview="blueazur"] { --preview-image: url("./preview_blue_azur.jpg"); }
-.tile[data-preview="runninghub"] { --preview-image: url("./preview_runninghub.jpg"); }
-.tile[data-preview="civitai"] { --preview-image: url("./preview_civitai.jpg"); }
-.tile[data-preview="elevenlabs"] { --preview-image: url("./preview_elevenlabs.jpg"); }
-.tile[data-preview="facebook"] { --preview-image: url("./preview_facebook.jpg"); }
-.tile[data-preview="x"] { --preview-image: url("./preview_x.jpg"); }
-
-@media (max-width: 860px) {
-  .tile::before {
-    opacity: .28;
-  }
-
-  .tile:hover::before,
-  .tile:focus::before,
-  .tile.selected::before,
-  .tile.gold::before {
-    opacity: .46;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Solid Menus refinement
-   Menus et panneaux un peu moins transparents.
-   Le background reste visible, mais l'UI gagne en lisibilité.
-------------------------------------------------------- */
-
-:root {
-  --glass-alpha: .28;
-  --panel-alpha: .38;
-  --tile-alpha: .34;
-  --tile-border: rgba(255,255,255,.30);
-}
-
-body.deep-glass {
-  --glass-alpha: .18;
-  --panel-alpha: .28;
-  --tile-alpha: .24;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,var(--glass-alpha)), rgba(3,10,16,.38)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 42%) !important;
-  backdrop-filter: blur(5px) saturate(1.10) !important;
-}
-
-.topnav {
-  background: rgba(0,0,0,.32) !important;
-}
-
-.tab {
-  background: rgba(0,0,0,.38) !important;
-  border-color: rgba(255,255,255,.24) !important;
-}
-
-.tab:not(.active) {
-  opacity: .88;
-}
-
-.tab.active,
-.tab:hover,
-.tab:focus {
-  background: rgba(255,216,121,.20) !important;
-}
-
-.hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.18)),
-    radial-gradient(circle at 40% 0%, rgba(255,216,121,.14), transparent 48%) !important;
-}
-
-.page {
-  background: rgba(0,0,0,.12) !important;
-}
-
-.section-title,
-.sky-control-strip {
-  background: rgba(0,0,0,.24) !important;
-  border-color: rgba(255,255,255,.18) !important;
-}
-
-.tile,
-.net-card {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,var(--tile-alpha)), rgba(7,18,24,calc(var(--tile-alpha) + .12))),
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 62%) !important;
-  border-color: var(--tile-border) !important;
-}
-
-.tile:not(.gold):not(.selected) {
-  opacity: .90;
-}
-
-.tile::before {
-  opacity: .28;
-}
-
-.tile:hover::before,
-.tile:focus::before,
-.tile.selected::before,
-.tile.gold::before {
-  opacity: .46;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.44) 55%, rgba(0,0,0,.58)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.10), transparent 45%) !important;
-}
-
-.tile:hover::after,
-.tile:focus::after,
-.tile.selected::after,
-.tile.gold::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 58%, rgba(0,0,0,.46)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.24), transparent 46%) !important;
-}
-
-.mini-control {
-  background: rgba(0,0,0,.34) !important;
-  border-color: rgba(255,255,255,.24) !important;
-}
-
-.mini-control.active,
-.mini-control:hover,
-.mini-control:focus,
-.mini-control.selected {
-  background: rgba(255,216,121,.22) !important;
-}
-
-.network-footer,
-footer {
-  background: rgba(0,0,0,.30) !important;
-}
-
-
-/* -------------------------------------------------------
-   Interactive HUD Menus
-   Survol explicatif, panel d'aide, palette de commandes.
-------------------------------------------------------- */
-
-.intel-panel {
-  position: relative;
-  z-index: 2;
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  border: 1px solid rgba(127,215,255,.24);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.34), rgba(5,22,32,.28)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.14), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.10), transparent 42%);
-  backdrop-filter: blur(4px) saturate(1.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 24px rgba(0,0,0,.20);
-}
-
-.intel-topline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.intel-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 99px;
-  background: #d7ffc4;
-  box-shadow:
-    0 0 0 4px rgba(215,255,196,.10),
-    0 0 18px rgba(215,255,196,.42);
-}
-
-.intel-title {
-  color: #fff8e9;
-  font-size: 14px;
-  letter-spacing: .04em;
-}
-
-.intel-mode {
-  margin-left: auto;
-  padding: 3px 8px;
-  border: 1px solid rgba(255,216,121,.26);
-  border-radius: 999px;
-  color: rgba(255,248,233,.78);
-  background: rgba(0,0,0,.24);
-  font-size: 10px;
-}
-
-.intel-text {
-  margin: 0;
-  color: rgba(255,248,233,.82);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
-.intel-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
-}
-
-.intel-tags span {
-  padding: 3px 7px;
-  border: 1px solid rgba(127,215,255,.20);
-  border-radius: 999px;
-  background: rgba(0,0,0,.20);
-  color: rgba(255,248,233,.70);
-  font-size: 10px;
-}
-
-.tile[data-help],
-.tab[data-help],
-.mini-control[data-help] {
-  cursor: pointer;
-}
-
-.tile[data-help]:hover,
-.tile[data-help]:focus {
-  border-color: rgba(127,215,255,.56) !important;
-}
-
-.tile[data-intent="safety"]:hover,
-.tile[data-intent="safety"]:focus,
-.tile[data-intent="remote"]:hover,
-.tile[data-intent="remote"]:focus,
-.tile[data-intent="network"]:hover,
-.tile[data-intent="network"]:focus {
-  border-color: rgba(255,216,121,.92) !important;
-}
-
-.command-palette {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: none;
-  place-items: center;
-  padding: 18px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(127,215,255,.16), transparent 42%),
-    rgba(0,0,0,.48);
-  backdrop-filter: blur(5px);
-}
-
-.command-palette.open {
-  display: grid;
-}
-
-.palette-card {
-  width: min(760px, 96vw);
-  border: 1px solid rgba(255,216,121,.48);
-  border-radius: 24px;
-  background:
-    linear-gradient(145deg, rgba(4,12,18,.82), rgba(0,0,0,.72)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.13), transparent 44%);
-  box-shadow:
-    0 28px 80px rgba(0,0,0,.55),
-    0 0 48px rgba(255,216,121,.18);
-  overflow: hidden;
-}
-
-.palette-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(255,216,121,.20);
-}
-
-.palette-head strong {
-  color: #fff8e9;
-  font-size: 18px;
-}
-
-.palette-head button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(255,255,255,.20);
-  border-radius: 99px;
-  background: rgba(255,255,255,.08);
-  color: #fff8e9;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.palette-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 14px;
-}
-
-.palette-grid button {
-  min-height: 42px;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 14px;
-  background: rgba(255,255,255,.07);
-  color: #fff8e9;
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all .16s ease;
-}
-
-.palette-grid button:hover,
-.palette-grid button:focus {
-  border-color: rgba(255,216,121,.70);
-  background: rgba(255,216,121,.12);
-  outline: none;
-}
-
-.palette-help {
-  margin: 0;
-  padding: 0 16px 16px;
-  color: rgba(255,248,233,.68);
-  font-size: 11px;
-  text-align: center;
-}
-
-.help-launcher {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 20;
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(255,216,121,.48);
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(255,216,121,.24), rgba(0,0,0,.38));
-  color: #fff8e9;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.38),
-    0 0 22px rgba(255,216,121,.16);
-}
-
-.help-launcher:hover,
-.help-launcher:focus {
-  transform: translateY(-2px);
-  border-color: rgba(255,216,121,.90);
-  outline: none;
-}
-
-@media (max-width: 860px) {
-  .intel-panel {
-    padding: 8px 9px;
-    margin-bottom: 9px;
-  }
-
-  .intel-title {
-    font-size: 12px;
-  }
-
-  .intel-text {
-    font-size: 11px;
-  }
-
-  .intel-tags span,
-  .intel-mode {
-    font-size: 9px;
-  }
-
-  .palette-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .help-launcher {
-    width: 34px;
-    height: 34px;
-    right: 10px;
-    bottom: 10px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Destination Previews
-   Les boutons montrent ce qu'ils ouvrent réellement.
-   Exemple : Seven Boost → ChatGPT+.
-------------------------------------------------------- */
-
-.tile::before {
-  opacity: .38 !important;
-  filter: saturate(1.10) contrast(1.06) brightness(1.02) !important;
-}
-
-.tile.gold::before,
-.tile.selected::before,
-.tile:hover::before,
-.tile:focus::before {
-  opacity: .62 !important;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.42) 58%, rgba(0,0,0,.58)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.10), transparent 45%) !important;
-}
-
-.tile.gold::after,
-.tile.selected::after,
-.tile:hover::after,
-.tile:focus::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.60), rgba(0,0,0,.28) 58%, rgba(0,0,0,.42)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.22), transparent 46%) !important;
-}
-
-/* Destination preview mapping */
-.tile[data-preview="chatgpt_plus"] { --preview-image: url("./preview_dest_chatgpt_plus.jpg"); }
-.tile[data-preview="chatgpt_prompt"] { --preview-image: url("./preview_dest_chatgpt_prompt.jpg"); }
-.tile[data-preview="notion"] { --preview-image: url("./preview_dest_notion.jpg"); }
-.tile[data-preview="notion_auto"] { --preview-image: url("./preview_dest_auto_agent.jpg"); }
-.tile[data-preview="notion_core"] { --preview-image: url("./preview_dest_notion_core.jpg"); }
-.tile[data-preview="github"] { --preview-image: url("./preview_dest_github.jpg"); }
-.tile[data-preview="youtube"] { --preview-image: url("./preview_dest_youtube.jpg"); }
-.tile[data-preview="runninghub"] { --preview-image: url("./preview_dest_runninghub.jpg"); }
-.tile[data-preview="civitai"] { --preview-image: url("./preview_dest_civitai.jpg"); }
-.tile[data-preview="elevenlabs"] { --preview-image: url("./preview_dest_elevenlabs.jpg"); }
-.tile[data-preview="rustdesk"] { --preview-image: url("./preview_dest_rustdesk.jpg"); }
-.tile[data-preview="network"] { --preview-image: url("./preview_dest_network.jpg"); }
-.tile[data-preview="cockpit"] { --preview-image: url("./preview_dest_cockpit.jpg"); }
-.tile[data-preview="clipboard"] { --preview-image: url("./preview_dest_clipboard.jpg"); }
-.tile[data-preview="blackout"] { --preview-image: url("./preview_dest_blackout.jpg"); }
-.tile[data-preview="facebook"] { --preview-image: url("./preview_dest_facebook.jpg"); }
-.tile[data-preview="x"] { --preview-image: url("./preview_dest_x.jpg"); }
-.tile[data-preview="visual"] { --preview-image: url("./preview_dest_visual.jpg"); }
-.tile[data-preview="davinci"] { --preview-image: url("./preview_dest_davinci.jpg"); }
-
-.mini-control#previewModeBtn {
-  min-width: 150px;
-}
-
-@media (max-width: 860px) {
-  .tile::before {
-    opacity: .32 !important;
-  }
-
-  .tile.gold::before,
-  .tile.selected::before,
-  .tile:hover::before,
-  .tile:focus::before {
-    opacity: .50 !important;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Ancient Touch UI
-   Fonds plus anciens, personnages centrés, fenêtre personnelle,
-   UI technologique lumineuse au toucher.
-------------------------------------------------------- */
-
-body {
-  background-position: center center !important;
-}
-
-body::before {
-  opacity: .62 !important;
-}
-
-.terminal {
-  border-color: rgba(255,216,121,.78) !important;
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.42),
-    0 0 0 1px rgba(255,248,214,.42),
-    0 0 48px rgba(255,216,121,.30),
-    0 0 118px rgba(127,215,255,.16),
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 0 44px rgba(255,216,121,.08) !important;
-}
-
-.hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.18)),
-    radial-gradient(circle at 35% 0%, rgba(255,216,121,.18), transparent 48%),
-    radial-gradient(circle at 80% 10%, rgba(127,215,255,.12), transparent 40%) !important;
-}
-
-.section-title,
-.intel-panel,
-.sky-control-strip {
-  border-color: rgba(255,216,121,.28) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 8px 24px rgba(0,0,0,.18);
-}
-
-.tile {
-  border-color: rgba(255,216,121,.28) !important;
-}
-
-.tile.touched,
-.tab.touched,
-.mini-control.touched {
-  animation: sevenTouchPulse .42s ease-out;
-}
-
-@keyframes sevenTouchPulse {
-  0% {
-    transform: translateY(0) scale(1);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.18),
-      0 0 0 rgba(255,216,121,0),
-      0 10px 22px rgba(0,0,0,.28);
-  }
-  45% {
-    transform: translateY(-2px) scale(1.018);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.28),
-      0 0 30px rgba(255,216,121,.42),
-      0 0 60px rgba(127,215,255,.18),
-      0 14px 28px rgba(0,0,0,.32);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-  }
-}
-
-#touchLayer {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.touch-ripple {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  margin-left: -9px;
-  margin-top: -9px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle, rgba(255,255,255,.92) 0 10%, rgba(255,216,121,.62) 18%, rgba(127,215,255,.22) 42%, transparent 68%),
-    url("./touch_luminous_ring.png");
-  background-size: cover;
-  animation: touchRipple .85s ease-out forwards;
-  mix-blend-mode: screen;
-}
-
-@keyframes touchRipple {
-  0% {
-    transform: scale(.18);
-    opacity: .95;
-    filter: blur(0px);
-  }
-  55% {
-    opacity: .58;
-    filter: blur(.5px);
-  }
-  100% {
-    transform: scale(9.5);
-    opacity: 0;
-    filter: blur(2px);
-  }
-}
-
-.no-touch-glow .touch-ripple {
-  display: none !important;
-}
-
-.mini-control#touchGlowBtn {
-  min-width: 112px;
-}
-
-/* More ancient / personal-window background behavior */
-body[data-ui-mode="sky"] .terminal {
-  background:
-    linear-gradient(180deg, rgba(10,16,18,.26), rgba(22,18,10,.32)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.13), transparent 45%) !important;
-}
-
-body[data-ui-mode="crystal"] .terminal {
-  background:
-    linear-gradient(180deg, rgba(5,16,24,.28), rgba(3,10,18,.36)),
-    radial-gradient(circle at 50% 0%, rgba(127,215,255,.16), transparent 45%) !important;
-}
-
-body[data-ui-mode="night"] .terminal {
-  background:
-    linear-gradient(180deg, rgba(8,8,22,.36), rgba(5,5,16,.44)),
-    radial-gradient(circle at 50% 0%, rgba(185,170,255,.16), transparent 45%) !important;
-}
-
-.tile::before {
-  background-position: center center !important;
-}
-
-.tile:hover .ico,
-.tile:focus .ico,
-.tile.selected .ico,
-.tile.touched .ico {
-  filter:
-    drop-shadow(0 0 6px rgba(255,216,121,.58))
-    drop-shadow(0 0 12px rgba(127,215,255,.22));
+.tile:hover::after {
+  background: linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 60%, rgba(0,0,0,.42));
 }
 
 .ico {
-  transition: filter .18s ease, transform .18s ease;
+  width: 36px;
+  min-width: 36px;
+  text-align: center;
+  font-size: 27px;
+  line-height: 1;
+  text-shadow: var(--shadow);
 }
 
-.tile.touched .ico {
-  transform: scale(1.08);
-}
-
-
-/* -------------------------------------------------------
-   Aerith Decor UI
-   Image fournie par Christophe : Library of Memory Cards.
-   Décor privé, non public.
-------------------------------------------------------- */
-
-:root {
-  --aerith-blue: rgba(120,145,255,.88);
-  --aerith-soft: rgba(255,255,255,.82);
-}
-
-body.aerith-decor .terminal,
-.terminal {
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.38),
-    0 0 0 1px rgba(210,218,255,.52),
-    0 0 46px rgba(120,145,255,.32),
-    0 0 118px rgba(255,255,255,.18),
-    inset 0 1px 0 rgba(255,255,255,.22),
-    inset 0 0 44px rgba(120,145,255,.10) !important;
-}
-
-.portrait {
-  border-color: rgba(160,175,255,.72) !important;
-  box-shadow:
-    0 0 22px rgba(120,145,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.25) !important;
-}
-
-.portrait img {
-  object-position: center top;
-}
-
-.aerith-memory-ribbon {
-  position: relative;
-  z-index: 3;
+.txt {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 7px;
-  padding: 7px 10px;
-  border-bottom: 1px solid rgba(160,175,255,.22);
-  background:
-    linear-gradient(90deg, rgba(255,255,255,.10), rgba(120,145,255,.14), rgba(255,255,255,.10));
-  backdrop-filter: blur(3px);
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.aerith-memory-ribbon span {
-  padding: 4px 10px;
-  border: 1px solid rgba(160,175,255,.28);
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.88);
-  font-size: 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  text-shadow: 0 2px 10px rgba(30,40,120,.55);
+.txt strong {
+  font-size: 16px;
+  line-height: 1.08;
+  text-shadow: var(--shadow);
 }
 
-
-
-body[data-ui-mode="crystal"] .tile.gold,
-body[data-ui-mode="crystal"] .tile.selected,
-body[data-ui-mode="crystal"] .tile:hover {
-  border-color: rgba(160,175,255,.95) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.20),
-    0 0 24px rgba(120,145,255,.28),
-    0 12px 24px rgba(0,0,0,.24) !important;
-}
-
-.mini-control[onclick="setAerithDecor()"] {
-  border-color: rgba(160,175,255,.44) !important;
-}
-
-.mini-control[onclick="setAerithDecor()"]:hover,
-.mini-control[onclick="setAerithDecor()"]:focus {
-  border-color: rgba(160,175,255,.95) !important;
-  background: rgba(120,145,255,.18) !important;
-}
-
-@media (max-width: 860px) {
-  .aerith-memory-ribbon {
-    padding: 5px 7px;
-    gap: 5px;
-  }
-
-  .aerith-memory-ribbon span {
-    font-size: 8px;
-    padding: 3px 7px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Aerith Gears Blossom refinement
-   Icônes secondaires = roues / engrenages.
-   Image Blossom District intégrée comme décor personnel.
-------------------------------------------------------- */
-
-body.blossom-gear .terminal,
-.terminal {
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.40),
-    0 0 0 1px rgba(255,230,170,.44),
-    0 0 46px rgba(255,216,121,.30),
-    0 0 118px rgba(120,210,255,.16),
-    inset 0 1px 0 rgba(255,255,255,.22),
-    inset 0 0 44px rgba(255,216,121,.10) !important;
-}
-
-.gear-ico {
-  color: #ffe5a1;
-  text-shadow:
-    0 0 8px rgba(255,216,121,.72),
-    0 0 18px rgba(127,215,255,.18) !important;
-}
-
-.tile[data-gear="true"] {
-  border-color: rgba(255,216,121,.34) !important;
-}
-
-.tile[data-gear="true"] .ico {
-  animation: gearIdle 8s linear infinite;
-  transform-origin: center center;
-}
-
-.tile[data-gear="true"]:hover .ico,
-.tile[data-gear="true"]:focus .ico,
-.tile[data-gear="true"].touched .ico {
-  animation-duration: 1.8s;
-  filter:
-    drop-shadow(0 0 7px rgba(255,216,121,.72))
-    drop-shadow(0 0 14px rgba(127,215,255,.28));
-}
-
-@keyframes gearIdle {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.tile[data-gear="true"]::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.74), rgba(24,18,8,.42) 58%, rgba(0,0,0,.56)),
-    radial-gradient(circle at 88% 0%, rgba(255,216,121,.16), transparent 46%) !important;
-}
-
-.mini-control[onclick="setBlossomDecor()"] {
-  border-color: rgba(255,216,121,.52) !important;
-  background: rgba(255,216,121,.12) !important;
-}
-
-.mini-control[onclick="setBlossomDecor()"]:hover,
-.mini-control[onclick="setBlossomDecor()"]:focus {
-  border-color: rgba(255,216,121,.95) !important;
-  box-shadow: 0 0 20px rgba(255,216,121,.24);
-}
-
-/* Destination previews: some technical buttons get a mechanism preview */
-.tile[data-gear="true"] {
-  --preview-image: url("./preview_blossom_district.jpg");
-}
-
-
-
-.portrait {
-  border-color: rgba(255,216,121,.68) !important;
-  box-shadow:
-    0 0 24px rgba(255,216,121,.28),
-    0 0 40px rgba(120,210,255,.14),
-    inset 0 1px 0 rgba(255,255,255,.22) !important;
-}
-
-.aerith-memory-ribbon span {
-  border-color: rgba(255,216,121,.30) !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tile[data-gear="true"] .ico {
-    animation: none !important;
-  }
-}
-
-
-/* -------------------------------------------------------
-   System Details HUD
-   OS, heure, navigateur, écran, batterie, session.
-------------------------------------------------------- */
-
-.device-panel {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin: 0 0 12px;
-}
-
-.device-card {
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 16px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.38), rgba(20,18,10,.26)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 64%);
-  padding: 10px 12px;
-  backdrop-filter: blur(4px) saturate(1.06);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 8px 18px rgba(0,0,0,.20);
-}
-
-.device-card.wide {
-  grid-column: span 2;
-}
-
-.device-label {
-  display: block;
-  color: rgba(255,248,233,.66);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-
-.device-card strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 15px;
-  line-height: 1.15;
-}
-
-.device-card em {
-  display: block;
-  color: rgba(255,248,233,.62);
-  font-size: 10px;
+.txt em {
+  color: var(--muted);
+  font-size: 12px;
   font-style: normal;
-  line-height: 1.2;
-  margin-top: 4px;
-  overflow-wrap: anywhere;
+  line-height: 1.16;
+  text-shadow: var(--shadow);
 }
 
-.system-footer {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px 10px;
-  border-top: 1px solid rgba(255,216,121,.20);
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.28), rgba(26,20,8,.24), rgba(0,0,0,.28));
-  backdrop-filter: blur(3px);
-}
-
-.system-footer span {
-  border: 1px solid rgba(255,216,121,.24);
-  border-radius: 999px;
-  background: rgba(0,0,0,.24);
-  padding: 4px 9px;
-  color: rgba(255,248,233,.78);
-  font-size: 10px;
-}
-
-.system-footer strong {
-  color: #fff8e9;
-}
-
-.advanced-system-panel {
-  display: none;
-  margin-top: 12px;
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(0,0,0,.28);
-  backdrop-filter: blur(4px);
-}
-
-.advanced-system-panel.open {
-  display: block;
-}
-
-.advanced-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 12px;
-  border-bottom: 1px solid rgba(255,216,121,.20);
-  color: #fff8e9;
-  font-size: 12px;
-}
-
-.advanced-head span {
-  color: rgba(255,248,233,.62);
-  font-size: 10px;
-}
-
-#advancedSystemText {
-  width: 100%;
-  min-height: 190px;
-  display: block;
-  border: 0;
-  background: rgba(0,0,0,.58);
-  color: #fff8e9;
-  padding: 10px;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 10px;
-  resize: vertical;
-}
-
-.tile strong:has(+ em),
-.device-card strong,
-.net-card strong {
-  text-shadow: 0 2px 10px rgba(0,0,0,.72);
-}
-
-@media (max-width: 980px) {
-  .device-panel {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .device-card.wide {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 560px) {
-  .device-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .device-card.wide {
-    grid-column: span 1;
-  }
-
-  .system-footer span {
-    font-size: 9px;
-    padding: 3px 7px;
-  }
-
-  .advanced-head {
-    display: block;
-  }
-
-  .advanced-head span {
-    display: block;
-    margin-top: 4px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Fullscreen backgrounds + fixed gear icons
-   Les engrenages ne tournent plus en permanence.
-------------------------------------------------------- */
-
-body {
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed;
-}
-
-/* Fullscreen background should be visible, no heavy crop frame effect */
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.25), rgba(3,10,16,.36)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 45%) !important;
-}
-
-/* Fixed gears by default */
-.tile[data-gear="true"] .ico,
-.tile[data-gear="true"] .gear-ico,
-.gear-ico {
-  animation: none !important;
-  transform: none;
-}
-
-/* Small touch/survol reaction only, no endless spin */
-.tile[data-gear="true"]:hover .ico,
-.tile[data-gear="true"]:focus .ico,
-.tile[data-gear="true"].touched .ico,
-.tile[data-gear="true"]:active .ico {
-  animation: gearNudge .42s ease-out 1 !important;
-}
-
-@keyframes gearNudge {
-  0% { transform: rotate(0deg) scale(1); }
-  45% { transform: rotate(18deg) scale(1.08); }
-  100% { transform: rotate(0deg) scale(1); }
-}
-
-/* More background, less obstruction */
-.deep-glass .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.12), rgba(3,10,16,.22)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 45%) !important;
-}
-
-.mini-control[onclick="setFullscreenSky()"] {
-  border-color: rgba(127,215,255,.52) !important;
-  background: rgba(127,215,255,.12) !important;
-}
-
-.mini-control[onclick="setFullscreenSky()"]:hover,
-.mini-control[onclick="setFullscreenSky()"]:focus {
-  border-color: rgba(127,215,255,.95) !important;
-  box-shadow: 0 0 20px rgba(127,215,255,.24);
-}
-
-@media (max-width: 860px) {
-  body {
-    background-attachment: scroll;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Selected Gears Only
-   Règle finale :
-   - Aucune roue / engrenage ne tourne par défaut.
-   - Aucun hover ne lance une rotation permanente.
-   - Seul le bouton .selected peut animer son engrenage.
-------------------------------------------------------- */
-
-/* Kill every inherited gear animation first. */
-.gear-ico,
-.tile[data-gear="true"] .ico,
-.tile[data-gear="true"] .gear-ico,
-.tile[data-gear="true"]:hover .ico,
-.tile[data-gear="true"]:focus .ico,
-.tile[data-gear="true"]:active .ico,
-.tile[data-gear="true"].touched .ico,
-.tile[data-gear="true"]:hover .gear-ico,
-.tile[data-gear="true"]:focus .gear-ico,
-.tile[data-gear="true"]:active .gear-ico,
-.tile[data-gear="true"].touched .gear-ico {
-  animation: none !important;
-  transform: rotate(0deg) scale(1) !important;
-}
-
-/* Only the selected technical tile animates. */
-.tile[data-gear="true"].selected .ico,
-.tile[data-gear="true"].selected .gear-ico {
-  animation: selectedGearTurn 2.4s linear infinite !important;
-  transform-origin: center center !important;
-  filter:
-    drop-shadow(0 0 6px rgba(255,216,121,.72))
-    drop-shadow(0 0 14px rgba(127,215,255,.28));
-}
-
-/* Non-selected gears stay visibly technical, but fixed. */
-.tile[data-gear="true"]:not(.selected) .ico,
-.tile[data-gear="true"]:not(.selected) .gear-ico {
-  filter:
-    drop-shadow(0 0 4px rgba(255,216,121,.34))
-    drop-shadow(0 0 8px rgba(127,215,255,.10));
-}
-
-/* Selected gear rotation is slower and calmer. */
-@keyframes selectedGearTurn {
-  from { transform: rotate(0deg) scale(1.04); }
-  to { transform: rotate(360deg) scale(1.04); }
-}
-
-/* Touch feedback without rotation for non-selected items. */
-.tile[data-gear="true"]:not(.selected).touched {
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    0 0 18px rgba(255,216,121,.22),
-    0 10px 22px rgba(0,0,0,.28) !important;
-}
-
-/* Disable the older gearNudge / gearIdle definitions by overriding all animation names. */
-@media (prefers-reduced-motion: reduce) {
-  .tile[data-gear="true"].selected .ico,
-  .tile[data-gear="true"].selected .gear-ico {
-    animation: none !important;
-  }
-}
-
-
-/* Clean Sky No Mature
-   Mature Safe backgrounds removed.
-   Gear icons remain fixed unless selected.
-*/
-
-
-/* -------------------------------------------------------
-   Seven Heaven Cockpit — Celestial Atlas
-   Backgrounds: ruins / sky / crystal / tree only.
-   Aerith is avatar only, not a background.
-------------------------------------------------------- */
-
-:root {
-  --atlas-gold: rgba(255,216,121,.88);
-  --atlas-blue: rgba(127,215,255,.80);
-  --atlas-green: rgba(170,230,190,.72);
-}
-
-body {
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.23), rgba(3,10,16,.35)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 45%) !important;
-}
-
-.deep-glass .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.12), rgba(3,10,16,.22)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 45%) !important;
-}
-
-/* Atlas panel */
-.celestial-atlas-panel {
-  display: none;
-  position: relative;
-  z-index: 3;
-  margin: 0 0 12px;
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.36), rgba(7,18,24,.26)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.10), transparent 42%);
-  backdrop-filter: blur(4px) saturate(1.08);
-  overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 24px rgba(0,0,0,.22);
-}
-
-.celestial-atlas-panel.open {
-  display: block;
-}
-
-.atlas-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 13px;
-  border-bottom: 1px solid rgba(255,216,121,.18);
-}
-
-.atlas-head strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 15px;
-}
-
-.atlas-head span {
-  display: block;
-  margin-top: 3px;
-  color: rgba(255,248,233,.66);
-  font-size: 11px;
-}
-
-.atlas-head button {
-  min-height: 32px;
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 999px;
-  background: rgba(0,0,0,.28);
-  color: #fff8e9;
-  padding: 0 12px;
-  font: inherit;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.atlas-head button:hover,
-.atlas-head button:focus {
-  border-color: rgba(255,216,121,.86);
-  background: rgba(255,216,121,.14);
-  outline: none;
-}
-
-.atlas-family-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  padding: 10px;
-}
-
-.atlas-family-grid button {
-  min-height: 72px;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 15px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.38), rgba(8,24,34,.24));
-  color: #fff8e9;
-  padding: 9px;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-  transition: all .16s ease;
-}
-
-.atlas-family-grid button:hover,
-.atlas-family-grid button:focus,
-.atlas-family-grid button.selected {
-  border-color: rgba(255,216,121,.82);
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.42), rgba(34,25,7,.28)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.16), transparent 58%);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.atlas-family-grid strong {
-  display: block;
-  font-size: 12px;
-  line-height: 1.1;
-}
-
-.atlas-family-grid em {
-  display: block;
-  margin-top: 5px;
-  color: rgba(255,248,233,.66);
-  font-size: 10px;
-  line-height: 1.15;
-  font-style: normal;
-}
-
-.atlas-control {
-  border-color: rgba(255,216,121,.55) !important;
-  background: rgba(255,216,121,.16) !important;
-}
-
-/* Gear final rule remains: fixed unless selected */
-.gear-ico,
-.tile[data-gear="true"] .ico,
-.tile[data-gear="true"] .gear-ico,
-.tile[data-gear="true"]:hover .ico,
-.tile[data-gear="true"]:focus .ico,
-.tile[data-gear="true"]:active .ico,
-.tile[data-gear="true"].touched .ico,
-.tile[data-gear="true"]:hover .gear-ico,
-.tile[data-gear="true"]:focus .gear-ico,
-.tile[data-gear="true"]:active .gear-ico,
-.tile[data-gear="true"].touched .gear-ico {
-  animation: none !important;
-  transform: rotate(0deg) scale(1) !important;
-}
-
-.tile[data-gear="true"].selected .ico,
-.tile[data-gear="true"].selected .gear-ico {
-  animation: selectedGearTurn 2.4s linear infinite !important;
-  transform-origin: center center !important;
-  filter:
-    drop-shadow(0 0 6px rgba(255,216,121,.72))
-    drop-shadow(0 0 14px rgba(127,215,255,.28));
-}
-
-@keyframes selectedGearTurn {
-  from { transform: rotate(0deg) scale(1.04); }
-  to { transform: rotate(360deg) scale(1.04); }
-}
-
-@media (max-width: 980px) {
-  .atlas-family-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 560px) {
-  .atlas-family-grid {
-    grid-template-columns: 1fr;
-  }
-
-  body {
-    background-attachment: scroll;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Hero Face Frame
-   Image intégrée uniquement dans le cadre Hero du haut,
-   centrée sur visage/casque, pas en fond général.
-------------------------------------------------------- */
-
-.hero {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.38) 50%, rgba(0,0,0,.48)),
-    radial-gradient(circle at 78% 30%, rgba(0,210,255,.20), transparent 34%),
-    radial-gradient(circle at 18% 0%, rgba(255,80,60,.16), transparent 42%),
-    url("./hero_face_vr_background.jpg") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  border-bottom: 1px solid rgba(255,216,121,.28) !important;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.20) 55%, rgba(0,0,0,.38)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 8px);
-  mix-blend-mode: normal;
-}
-
-.hero > * {
-  position: relative;
-  z-index: 2;
-}
-
-.no-hero-face .hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.18)),
-    radial-gradient(circle at 40% 0%, rgba(255,216,121,.14), transparent 48%) !important;
-}
-
-.no-hero-face .hero::before {
-  display: none;
-}
-
-#heroFrameBtn {
-  border-color: rgba(0,210,255,.48) !important;
-  background: rgba(0,210,255,.12) !important;
-}
-
-#heroFrameBtn.active,
-#heroFrameBtn:hover,
-#heroFrameBtn:focus {
-  border-color: rgba(0,210,255,.92) !important;
-  box-shadow:
-    0 0 18px rgba(0,210,255,.20),
-    0 0 24px rgba(255,80,60,.10);
-}
-
-@media (max-width: 860px) {
-  .hero {
-    background-position: 58% center !important;
-  }
-}
-
-
-/* Hero Face Fixed
-   Crop corrigé : visage / casque visible dans le cadre du haut.
-*/
-.hero {
-  background-position: center center !important;
-}
-
-@media (max-width: 860px) {
-  .hero {
-    background-position: 62% center !important;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Hero Avatar Locked
-   Correction :
-   - avatar verrouillé en haut à droite du cadre Hero
-   - Hero recadré sur visage / casque
-------------------------------------------------------- */
-
-.hero {
-  position: relative !important;
-  display: block !important;
-  min-height: 172px !important;
-  padding: 16px 132px 16px 18px !important;
-  overflow: hidden !important;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.32) 52%, rgba(0,0,0,.40)),
-    radial-gradient(circle at 64% 42%, rgba(0,210,255,.20), transparent 36%),
-    radial-gradient(circle at 16% 0%, rgba(255,80,60,.14), transparent 42%),
-    url("./hero_face_vr_background.jpg") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-.hero::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.58), rgba(0,0,0,.14) 58%, rgba(0,0,0,.30)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
-}
-
-.hero > * {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.hero .hero-main {
-  max-width: calc(100% - 120px) !important;
-}
-
-/* Avatar stable : ne descend plus dans le flux du Hero. */
-.hero .portrait {
-  position: absolute !important;
-  top: 16px !important;
-  right: 18px !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: 92px !important;
-  height: 92px !important;
-  margin: 0 !important;
-  display: block !important;
-  z-index: 8 !important;
-  transform: none !important;
-  border-radius: 18px !important;
-  overflow: hidden !important;
-  background: rgba(0,0,0,.42) !important;
-  border: 1px solid rgba(255,216,121,.72) !important;
-  box-shadow:
-    0 0 20px rgba(255,216,121,.24),
-    0 0 34px rgba(0,210,255,.12),
-    inset 0 1px 0 rgba(255,255,255,.20) !important;
-}
-
-.hero .portrait img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center top !important;
-  display: block;
-}
-
-.no-hero-face .hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.18)),
-    radial-gradient(circle at 40% 0%, rgba(255,216,121,.14), transparent 48%) !important;
-}
-
-.no-hero-face .hero::before {
-  display: none !important;
-}
-
-@media (max-width: 860px) {
-  .hero {
-    min-height: 148px !important;
-    padding: 12px 96px 12px 12px !important;
-    background-position: 56% center !important;
-  }
-
-  .hero .hero-main {
-    max-width: calc(100% - 84px) !important;
-  }
-
-  .hero .portrait {
-    top: 12px !important;
-    right: 12px !important;
-    width: 76px !important;
-    height: 76px !important;
-    border-radius: 15px !important;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v2
-   Mini-previews de fonds + Hero Gallery.
-   Aerith reste avatar uniquement.
-------------------------------------------------------- */
-
-.hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.32) 52%, rgba(0,0,0,.40)),
-    radial-gradient(circle at 64% 42%, rgba(0,210,255,.20), transparent 36%),
-    radial-gradient(circle at 16% 0%, rgba(255,80,60,.14), transparent 42%),
-    var(--hero-bg, url("./hero_face_vr_background.jpg")) !important;
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-.celestial-atlas-panel {
-  display: block !important;
-  max-height: none;
-  position: relative;
-  z-index: 3;
-  margin: 0 0 12px;
-  border: 1px solid rgba(255,216,121,.30);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.40), rgba(7,18,24,.28)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.13), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.11), transparent 42%);
-  backdrop-filter: blur(4px) saturate(1.08);
-  overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 24px rgba(0,0,0,.22);
-}
-
-.atlas-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 13px;
-  border-bottom: 1px solid rgba(255,216,121,.18);
-}
-
-.atlas-head strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 15px;
-}
-
-.atlas-head span {
-  display: block;
-  margin-top: 3px;
-  color: rgba(255,248,233,.66);
-  font-size: 11px;
-}
-
-.atlas-head-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.atlas-head-actions button,
-.atlas-toolbar button,
-.hero-frame-chip {
-  min-height: 30px;
-  border: 1px solid rgba(255,216,121,.28);
-  border-radius: 999px;
-  background: rgba(0,0,0,.28);
-  color: #fff8e9;
-  padding: 0 10px;
-  font: inherit;
-  font-size: 10px;
-  cursor: pointer;
-  transition: all .16s ease;
-}
-
-.atlas-head-actions button:hover,
-.atlas-head-actions button:focus,
-.atlas-toolbar button:hover,
-.atlas-toolbar button:focus,
-.atlas-toolbar button.selected,
-.hero-frame-chip:hover,
-.hero-frame-chip:focus,
-.hero-frame-chip.selected {
-  border-color: rgba(255,216,121,.86);
-  background: rgba(255,216,121,.14);
-  box-shadow: 0 0 16px rgba(255,216,121,.16);
-  outline: none;
-}
-
-.atlas-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 9px 10px 0;
-}
-
-.atlas-current {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 9px 10px 0;
-  padding: 7px 9px;
-  border: 1px solid rgba(127,215,255,.20);
-  border-radius: 13px;
-  background: rgba(0,0,0,.22);
-}
-
-.atlas-current span {
-  color: rgba(255,248,233,.58);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: .10em;
-}
-
-.atlas-current strong {
-  color: #fff8e9;
-  font-size: 12px;
-}
-
-.atlas-current em {
-  margin-left: auto;
-  color: rgba(255,248,233,.62);
-  font-size: 10px;
-  font-style: normal;
-}
-
-.atlas-preview-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  max-height: 330px;
-  overflow: auto;
-  scrollbar-width: thin;
-}
-
-.atlas-preview-card {
-  position: relative;
-  min-height: 94px;
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 15px;
-  background: rgba(0,0,0,.28);
-  overflow: hidden;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-  color: #fff8e9;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 8px 18px rgba(0,0,0,.18);
-  transition: all .16s ease;
-}
-
-.atlas-preview-card img {
-  width: 100%;
-  height: 82px;
-  object-fit: cover;
-  display: block;
-  filter: saturate(1.04) contrast(1.02);
-  transition: transform .18s ease, filter .18s ease;
-}
-
-.atlas-preview-card:hover,
-.atlas-preview-card:focus {
-  border-color: rgba(255,216,121,.80);
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.atlas-preview-card:hover img,
-.atlas-preview-card:focus img {
-  transform: scale(1.04);
-  filter: saturate(1.10) contrast(1.06);
-}
-
-.atlas-preview-title {
-  display: block;
-  padding: 6px 7px 1px;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.atlas-preview-meta {
-  display: block;
-  padding: 0 7px 7px;
-  color: rgba(255,248,233,.62);
-  font-size: 9px;
-  line-height: 1.1;
-}
-
-.hero-gallery {
-  margin: 0 10px 10px;
-  border: 1px solid rgba(127,215,255,.18);
-  border-radius: 15px;
-  background: rgba(0,0,0,.18);
-  overflow: hidden;
-}
-
-.hero-gallery-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(127,215,255,.14);
-}
-
-.hero-gallery-head strong {
-  color: #fff8e9;
-  font-size: 12px;
-}
-
-.hero-gallery-head span {
-  color: rgba(255,248,233,.58);
-  font-size: 10px;
-}
-
-.hero-gallery-grid {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 8px;
-}
-
-.hero-frame-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 30px;
-}
-
-.hero-frame-chip strong {
-  font-size: 10px;
-}
-
-/* Final gear rule: no movement unless selected */
-.gear-ico,
-.tile[data-gear="true"] .ico,
-.tile[data-gear="true"] .gear-ico,
-.tile[data-gear="true"]:hover .ico,
-.tile[data-gear="true"]:focus .ico,
-.tile[data-gear="true"]:active .ico,
-.tile[data-gear="true"].touched .ico,
-.tile[data-gear="true"]:hover .gear-ico,
-.tile[data-gear="true"]:focus .gear-ico,
-.tile[data-gear="true"]:active .gear-ico,
-.tile[data-gear="true"].touched .gear-ico {
-  animation: none !important;
-  transform: rotate(0deg) scale(1) !important;
-}
-
-.tile[data-gear="true"].selected .ico,
-.tile[data-gear="true"].selected .gear-ico {
-  animation: selectedGearTurn 2.4s linear infinite !important;
-  transform-origin: center center !important;
-}
-
-@keyframes selectedGearTurn {
-  from { transform: rotate(0deg) scale(1.04); }
-  to { transform: rotate(360deg) scale(1.04); }
-}
-
-@media (max-width: 1050px) {
-  .atlas-preview-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 760px) {
-  .atlas-head {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .atlas-preview-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-height: 300px;
-  }
-
-  .atlas-current {
-    display: block;
-  }
-
-  .atlas-current em {
-    display: block;
-    margin-left: 0;
-    margin-top: 3px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v2 — Solid Outer Menus
-   Menus extérieurs moins transparents.
-   Objectif : meilleure lisibilité sans tuer le fond.
-------------------------------------------------------- */
-
-:root {
-  --outer-menu-bg: rgba(3, 8, 12, .62);
-  --outer-menu-bg-strong: rgba(3, 8, 12, .76);
-  --outer-menu-border: rgba(255,216,121,.38);
-  --outer-menu-blue-border: rgba(127,215,255,.30);
-}
-
-/* Grande coque principale un peu plus lisible */
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.34), rgba(3,10,16,.48)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.11), transparent 45%) !important;
-  backdrop-filter: blur(6px) saturate(1.10) !important;
-}
-
-/* Barre d’onglets extérieure */
-.topnav {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.72), rgba(4,12,18,.62)) !important;
-  border-bottom: 1px solid var(--outer-menu-border) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 8px 20px rgba(0,0,0,.22) !important;
-}
-
-.tab {
-  background: rgba(0,0,0,.56) !important;
-  border-color: rgba(255,255,255,.22) !important;
-  opacity: .96 !important;
-}
-
-.tab.active,
-.tab:hover,
-.tab:focus {
-  background: rgba(255,216,121,.22) !important;
-  border-color: rgba(255,216,121,.82) !important;
-}
-
-/* Bande de contrôles Atlas / UI sous le Hero */
-.sky-control-strip {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.66), rgba(7,18,24,.56)) !important;
-  border-color: var(--outer-menu-border) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 22px rgba(0,0,0,.24) !important;
-}
-
-.mini-control {
-  background: rgba(0,0,0,.58) !important;
-  border-color: rgba(255,255,255,.28) !important;
-  opacity: .98 !important;
-}
-
-.mini-control.active,
-.mini-control:hover,
-.mini-control:focus,
-.mini-control.selected {
-  background: rgba(255,216,121,.24) !important;
-  border-color: rgba(255,216,121,.88) !important;
-}
-
-/* Panneau Atlas v2 */
-.celestial-atlas-panel {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.68), rgba(7,18,24,.58)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.12), transparent 42%) !important;
-  border-color: var(--outer-menu-border) !important;
-  backdrop-filter: blur(7px) saturate(1.12) !important;
-}
-
-.atlas-head,
-.hero-gallery-head {
-  background: rgba(0,0,0,.36) !important;
-  border-bottom-color: rgba(255,216,121,.24) !important;
-}
-
-.atlas-toolbar,
-.hero-gallery,
-.atlas-current {
-  background: rgba(0,0,0,.34) !important;
-}
-
-.atlas-preview-card {
-  background: rgba(0,0,0,.54) !important;
-  border-color: rgba(255,255,255,.22) !important;
-}
-
-.atlas-preview-title,
-.atlas-preview-meta {
-  background: rgba(0,0,0,.18);
-}
-
-/* Panneaux d’aide / sections extérieures */
-.intel-panel,
-.section-title,
-.network-panel,
-.device-panel,
-.status,
-.network-footer,
-.system-footer,
-footer,
-.aerith-memory-ribbon {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.58), rgba(7,18,24,.46)) !important;
-  border-color: rgba(255,216,121,.26) !important;
-  backdrop-filter: blur(5px) saturate(1.08) !important;
-}
-
-/* Cartes système / réseau : plus lisibles */
-.net-card,
-.device-card {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.62), rgba(7,18,24,.50)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 62%) !important;
-  border-color: rgba(255,216,121,.28) !important;
-}
-
-/* Les tuiles restent un peu transparentes, mais plus lisibles */
-.tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.58), rgba(7,18,24,.46)),
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 62%) !important;
-  border-color: rgba(255,255,255,.24) !important;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.78), rgba(0,0,0,.50) 58%, rgba(0,0,0,.62)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.10), transparent 45%) !important;
-}
-
-.tile:hover::after,
-.tile:focus::after,
-.tile.selected::after,
-.tile.gold::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.38) 58%, rgba(0,0,0,.50)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.24), transparent 46%) !important;
-}
-
-/* Mode Glass garde son rôle : plus transparent si tu veux revoir plus le fond */
-.deep-glass .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,10,16,.18), rgba(3,10,16,.30)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 45%) !important;
-}
-
-.deep-glass .sky-control-strip,
-.deep-glass .celestial-atlas-panel,
-.deep-glass .topnav {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.40), rgba(7,18,24,.34)) !important;
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v2 — SOLID SHELL
-   Correction forte : les menus/panneaux ne se noient plus dans le fond.
-   Le fond reste visible autour du terminal et dans le Hero/Atlas previews.
-------------------------------------------------------- */
-
-:root {
-  --solid-black: rgba(2, 6, 9, .88);
-  --solid-black-2: rgba(4, 10, 14, .82);
-  --solid-black-3: rgba(5, 12, 18, .76);
-  --solid-border-gold: rgba(255,216,121,.46);
-  --solid-border-blue: rgba(127,215,255,.30);
-}
-
-/* Coque principale : vraie coque sombre */
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(3,8,12,.78), rgba(3,8,12,.86)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.10), transparent 48%) !important;
-  backdrop-filter: blur(8px) saturate(1.12) !important;
-  border-color: rgba(255,216,121,.72) !important;
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.52),
-    0 0 0 1px rgba(255,248,214,.36),
-    0 0 46px rgba(255,216,121,.24),
-    inset 0 1px 0 rgba(255,255,255,.13) !important;
-}
-
-/* Onglets du haut */
-.topnav {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.90), rgba(4,10,14,.84)) !important;
-  border-bottom: 1px solid var(--solid-border-gold) !important;
-}
-
-.tab {
-  background: rgba(0,0,0,.78) !important;
-  border-color: rgba(255,255,255,.24) !important;
-  opacity: 1 !important;
-}
-
-.tab.active,
-.tab:hover,
-.tab:focus {
-  background: rgba(255,216,121,.26) !important;
-  border-color: rgba(255,216,121,.90) !important;
-}
-
-/* Le Hero garde son image, mais le texte reste sur zone sombre */
-.hero {
-  border-bottom-color: rgba(255,216,121,.34) !important;
-}
-
-/* Bande entre Hero et pages */
-.aerith-memory-ribbon {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.74), rgba(14,20,28,.70), rgba(0,0,0,.74)) !important;
-  border-top: 1px solid rgba(255,216,121,.22) !important;
-  border-bottom: 1px solid rgba(255,216,121,.26) !important;
-}
-
-/* Barre de contrôles : vraie console */
-.sky-control-strip {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.86), rgba(5,14,20,.80)) !important;
-  border-color: rgba(255,216,121,.44) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 22px rgba(0,0,0,.32) !important;
-}
-
-.mini-control {
-  background: rgba(0,0,0,.76) !important;
-  border-color: rgba(255,255,255,.28) !important;
-  color: rgba(255,248,233,.92) !important;
-  opacity: 1 !important;
-}
-
-.mini-control.active,
-.mini-control:hover,
-.mini-control:focus,
-.mini-control.selected {
-  background: rgba(255,216,121,.24) !important;
-  border-color: rgba(255,216,121,.92) !important;
-}
-
-/* Pages / panneaux extérieurs : moins de transparence */
-.page {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.62), rgba(5,12,18,.58)) !important;
-  border-top: 1px solid rgba(255,216,121,.14) !important;
-}
-
-.section-title,
-.intel-panel,
-.celestial-atlas-panel,
-.hero-gallery,
-.atlas-current,
-.network-footer,
-.system-footer,
-footer,
-.status {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.82), rgba(6,16,22,.74)) !important;
-  border-color: rgba(255,216,121,.34) !important;
-  backdrop-filter: blur(7px) saturate(1.10) !important;
-}
-
-/* Atlas v2 encore lisible */
-.atlas-head,
-.hero-gallery-head {
-  background: rgba(0,0,0,.58) !important;
-  border-bottom-color: rgba(255,216,121,.28) !important;
-}
-
-.atlas-toolbar {
-  background: rgba(0,0,0,.30) !important;
-}
-
-.atlas-preview-grid {
-  background: rgba(0,0,0,.28) !important;
-}
-
-.atlas-preview-card {
-  background: rgba(0,0,0,.72) !important;
-  border-color: rgba(255,255,255,.24) !important;
-}
-
-.atlas-preview-title,
-.atlas-preview-meta {
-  background: rgba(0,0,0,.22) !important;
-}
-
-/* HUD système et réseau */
-.network-panel,
-.device-panel {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.64), rgba(6,16,22,.56)) !important;
-  border: 1px solid rgba(255,216,121,.24) !important;
-  border-radius: 18px !important;
-  padding: 10px !important;
-}
-
-.net-card,
-.device-card {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.82), rgba(7,18,24,.72)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 62%) !important;
-  border-color: rgba(255,216,121,.32) !important;
-}
-
-/* Tuiles principales : beaucoup moins transparentes */
-.tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.82), rgba(7,18,24,.72)),
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 62%) !important;
-  border-color: rgba(255,255,255,.26) !important;
-}
-
-.tile::before {
-  opacity: .22 !important;
-}
-
-.tile.gold::before,
-.tile.selected::before,
-.tile:hover::before,
-.tile:focus::before {
-  opacity: .38 !important;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.84), rgba(0,0,0,.62) 58%, rgba(0,0,0,.72)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.08), transparent 45%) !important;
-}
-
-.tile.gold::after,
-.tile.selected::after,
-.tile:hover::after,
-.tile:focus::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.48) 58%, rgba(0,0,0,.58)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.24), transparent 46%) !important;
-}
-
-/* Soft Shell = option de retour à plus de transparence si besoin */
-.soft-shell .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,8,12,.44), rgba(3,8,12,.58)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 48%) !important;
-}
-
-.soft-shell .sky-control-strip,
-.soft-shell .celestial-atlas-panel,
-.soft-shell .section-title,
-.soft-shell .intel-panel,
-.soft-shell .page {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.44), rgba(7,18,24,.36)) !important;
-}
-
-.soft-shell .tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.54), rgba(7,18,24,.44)) !important;
-}
-
-.soft-shell .tile::before {
-  opacity: .36 !important;
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v3
-   Accueil sobre + options avancées repliables.
-------------------------------------------------------- */
-
-.home-sober-toolbar {
-  display: flex !important;
-  align-items: center;
-  gap: 7px;
-  padding: 8px !important;
-  min-height: 42px;
-}
-
-.home-sober-toolbar .mini-control {
-  min-height: 30px;
-  padding: 0 11px;
-  font-size: 10px;
-}
-
-.home-sober-toolbar .primary-control {
-  border-color: rgba(255,216,121,.72) !important;
-  background: rgba(255,216,121,.18) !important;
-}
-
-/* Accueil sobre par défaut */
-body:not(.show-advanced) #page-home .intel-panel,
-body:not(.show-advanced) #page-home .celestial-atlas-panel,
-body:not(.show-advanced) #page-home .advanced-dashboard-panel {
-  display: none !important;
-}
-
-/* Quand Advanced est ouvert */
-body.show-advanced #page-home .intel-panel {
-  display: block !important;
-}
-
-body.show-advanced #page-home .celestial-atlas-panel.open,
-body.show-advanced #page-home .celestial-atlas-panel,
-body.show-advanced #page-home .advanced-dashboard-panel {
-  display: block !important;
-}
-
-.advanced-dashboard-panel {
-  display: none;
-  position: relative;
-  z-index: 3;
-  margin: 0 0 12px;
-  border: 1px solid rgba(255,216,121,.34);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.82), rgba(6,16,22,.74)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.11), transparent 42%) !important;
-  overflow: hidden;
-  backdrop-filter: blur(7px) saturate(1.10);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 10px 24px rgba(0,0,0,.24);
-}
-
-.advanced-dashboard-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  padding: 11px 13px;
-  border-bottom: 1px solid rgba(255,216,121,.22);
-  background: rgba(0,0,0,.42);
-}
-
-.advanced-dashboard-head strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 15px;
-}
-
-.advanced-dashboard-head span {
-  display: block;
-  color: rgba(255,248,233,.64);
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.advanced-dashboard-head button,
-.advanced-actions button {
-  min-height: 30px;
-  border: 1px solid rgba(255,216,121,.28);
-  border-radius: 999px;
-  background: rgba(0,0,0,.42);
-  color: #fff8e9;
-  padding: 0 10px;
-  font: inherit;
-  font-size: 10px;
-  cursor: pointer;
-  transition: all .16s ease;
-}
-
-.advanced-dashboard-head button:hover,
-.advanced-dashboard-head button:focus,
-.advanced-actions button:hover,
-.advanced-actions button:focus {
-  border-color: rgba(255,216,121,.86);
-  background: rgba(255,216,121,.14);
-  outline: none;
-}
-
-.advanced-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-}
-
-.advanced-box {
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 15px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.64), rgba(7,18,24,.52));
-  padding: 10px;
-  min-height: 118px;
-}
-
-.advanced-box strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 12px;
-}
-
-.advanced-box p {
-  margin: 6px 0 8px;
-  color: rgba(255,248,233,.64);
-  font-size: 10px;
-  line-height: 1.25;
-}
-
-.advanced-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-/* Ambiances v3 */
-body[data-ambiance="sky"] {
-  --atlas-accent: rgba(127,215,255,.82);
-}
-
-body[data-ambiance="crystal"] .terminal {
-  border-color: rgba(127,215,255,.70) !important;
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.52),
-    0 0 0 1px rgba(210,245,255,.30),
-    0 0 46px rgba(127,215,255,.26),
-    inset 0 1px 0 rgba(255,255,255,.13) !important;
-}
-
-body[data-ambiance="ruins"] .terminal {
-  border-color: rgba(255,216,121,.78) !important;
-}
-
-body[data-ambiance="night"] .terminal {
-  border-color: rgba(185,170,255,.64) !important;
-  background:
-    linear-gradient(180deg, rgba(4,4,14,.82), rgba(5,6,18,.90)),
-    radial-gradient(circle at 50% 0%, rgba(185,170,255,.12), transparent 48%) !important;
-}
-
-body[data-ambiance="gold"] .terminal {
-  border-color: rgba(255,216,121,.92) !important;
-  box-shadow:
-    0 28px 78px rgba(0,0,0,.52),
-    0 0 0 1px rgba(255,248,214,.42),
-    0 0 60px rgba(255,216,121,.28),
-    inset 0 1px 0 rgba(255,255,255,.14) !important;
-}
-
-body[data-ambiance="minimal"] .terminal {
-  border-color: rgba(255,255,255,.36) !important;
-  box-shadow:
-    0 24px 64px rgba(0,0,0,.48),
-    0 0 0 1px rgba(255,255,255,.16),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-body[data-ambiance="minimal"] .hero::before {
-  opacity: .75;
-}
-
-body[data-ambiance="minimal"] .tile::before {
-  opacity: .12 !important;
-}
-
-/* Accueil : garde la grille simple et respirante */
-body:not(.show-advanced) #page-home .section-title {
-  margin-top: 10px;
-}
-
-body:not(.show-advanced) #page-home .tile-grid {
-  margin-top: 8px;
-}
-
-/* Panneaux avancés : un peu plus compacts */
-body.show-advanced #page-home .celestial-atlas-panel {
-  margin-top: 10px;
-}
-
-/* Le bouton Advanced doit indiquer son état */
-#advancedPanelsBtn.active {
-  border-color: rgba(127,215,255,.90) !important;
-  background: rgba(127,215,255,.18) !important;
-  box-shadow: 0 0 18px rgba(127,215,255,.18);
-}
-
-@media (max-width: 1050px) {
-  .advanced-dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 620px) {
-  .advanced-dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .advanced-dashboard-head {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .home-sober-toolbar .mini-control {
-    min-height: 28px;
-    padding: 0 8px;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v3 — CLEAN HOME FIX
-   Accueil vraiment sobre.
-   Par défaut : aucun gros panneau avancé visible.
-------------------------------------------------------- */
-
-/* Toolbar sobre : seulement 4 boutons */
-.home-sober-toolbar {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-  padding: 8px !important;
-  min-height: 42px !important;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.86), rgba(5,14,20,.80)) !important;
-  border-color: rgba(255,216,121,.44) !important;
-}
-
-.home-sober-toolbar .mini-control {
-  min-width: 0 !important;
-  min-height: 30px !important;
-  padding: 0 12px !important;
-  font-size: 10px !important;
-}
-
-.home-sober-toolbar .primary-control {
-  border-color: rgba(255,216,121,.78) !important;
-  background: rgba(255,216,121,.18) !important;
-}
-
-/* ACCUEIL SOBRE PAR DÉFAUT */
-body:not(.show-advanced) .intel-panel,
-body:not(.show-advanced) .celestial-atlas-panel,
-body:not(.show-advanced) .advanced-dashboard-panel,
-body:not(.show-advanced) .hero-gallery,
-body:not(.show-advanced) .atlas-preview-grid,
-body:not(.show-advanced) .atlas-toolbar,
-body:not(.show-advanced) .atlas-current {
-  display: none !important;
-}
-
-/* Quand Advanced est activé */
-body.show-advanced .advanced-dashboard-panel {
-  display: block !important;
-}
-
-body.show-advanced .intel-panel {
-  display: block !important;
-}
-
-/* Atlas n’apparaît que si openCelestialAtlas l’ouvre */
-body.show-advanced .celestial-atlas-panel.open {
-  display: block !important;
-}
-
-body.show-advanced .celestial-atlas-panel:not(.open) {
-  display: none !important;
-}
-
-/* Dashboard compact et lisible */
-.advanced-dashboard-panel {
-  position: relative;
-  z-index: 3;
-  margin: 0 0 12px;
-  border: 1px solid rgba(255,216,121,.34);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.84), rgba(6,16,22,.76)) !important;
-  overflow: hidden;
-  backdrop-filter: blur(7px) saturate(1.10);
-}
-
-.advanced-dashboard-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  padding: 11px 13px;
-  border-bottom: 1px solid rgba(255,216,121,.22);
-  background: rgba(0,0,0,.46);
-}
-
-.advanced-dashboard-head strong {
-  color: #fff8e9;
-  font-size: 15px;
-}
-
-.advanced-dashboard-head span {
-  display: block;
-  margin-top: 3px;
-  color: rgba(255,248,233,.64);
-  font-size: 11px;
-}
-
-.advanced-dashboard-head button,
-.advanced-actions button {
-  min-height: 30px;
-  border: 1px solid rgba(255,216,121,.28);
-  border-radius: 999px;
-  background: rgba(0,0,0,.46);
-  color: #fff8e9;
-  padding: 0 10px;
-  font: inherit;
-  font-size: 10px;
-  cursor: pointer;
-}
-
-.advanced-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-}
-
-.advanced-box {
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 15px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.66), rgba(7,18,24,.54));
-  padding: 10px;
-}
-
-.advanced-box strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 12px;
-}
-
-.advanced-box p {
-  margin: 6px 0 8px;
-  color: rgba(255,248,233,.64);
-  font-size: 10px;
-  line-height: 1.25;
-}
-
-.advanced-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-/* Home cards remain only the action cards */
-body:not(.show-advanced) #page-home .section-title {
-  margin-top: 10px;
-}
-
-body:not(.show-advanced) #page-home .tile-grid {
-  margin-top: 8px;
-}
-
-/* Fix if old v2 forced atlas panel to display:block */
-.celestial-atlas-panel {
-  display: none !important;
-}
-
-body.show-advanced .celestial-atlas-panel.open {
-  display: block !important;
-}
-
-/* Advanced active visual */
-#advancedPanelsBtn.active {
-  border-color: rgba(127,215,255,.90) !important;
-  background: rgba(127,215,255,.18) !important;
-  box-shadow: 0 0 18px rgba(127,215,255,.18);
-}
-
-@media (max-width: 1050px) {
-  .advanced-dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 620px) {
-  .advanced-dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .home-sober-toolbar .mini-control {
-    min-height: 28px !important;
-    padding: 0 8px !important;
-  }
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas v3 — READABLE HERO FIX
-   - Hero recadré pour visage/casque visible.
-   - Certains fonds trop lumineux ne cassent plus la lisibilité.
-------------------------------------------------------- */
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 15%, rgba(0,0,0,.10), transparent 42%),
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.04) 45%, rgba(0,0,0,.22));
-}
-
-body.readability-off::after {
-  display: none;
-}
-
-.terminal {
-  position: relative;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.88), rgba(3,8,12,.92)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.09), transparent 48%) !important;
-  backdrop-filter: blur(9px) saturate(1.10) !important;
-}
-
-/* Strong internal shield below content, keeps UI readable over bright backgrounds. */
-.terminal::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.12)),
-    radial-gradient(circle at 50% 30%, rgba(0,0,0,.18), transparent 58%);
-}
-
-.terminal > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Hero: use fixed readable face crop */
-.hero {
-  min-height: 172px !important;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.30) 52%, rgba(0,0,0,.42)),
-    radial-gradient(circle at 62% 42%, rgba(0,210,255,.20), transparent 36%),
-    var(--hero-bg, url("./hero_face_vr_background.jpg")) !important;
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-.hero::before {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.18) 58%, rgba(0,0,0,.34)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 8px) !important;
-}
-
-/* In case Hero Gallery switches to other frames, keep title protected. */
-.hero .hero-main,
-.hero h1,
-.hero p,
-.hero .badges {
-  text-shadow:
-    0 2px 10px rgba(0,0,0,.82),
-    0 0 18px rgba(0,0,0,.50) !important;
-}
-
-/* UI panels: stronger black layer for bright backgrounds */
-.page,
-.section-title,
-.intel-panel,
-.advanced-dashboard-panel,
-.celestial-atlas-panel,
-.sky-control-strip,
-.network-footer,
-.system-footer,
-footer,
-.status {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.88), rgba(5,12,18,.80)) !important;
-  border-color: rgba(255,216,121,.38) !important;
-}
-
-.tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.88), rgba(7,18,24,.78)) !important;
-  border-color: rgba(255,255,255,.28) !important;
-}
-
-.tile::before {
-  opacity: .14 !important;
-  filter: blur(.4px) saturate(.95) brightness(.82) !important;
-}
-
-.tile.selected::before,
-.tile.gold::before,
-.tile:hover::before,
-.tile:focus::before {
-  opacity: .28 !important;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.90), rgba(0,0,0,.72) 58%, rgba(0,0,0,.78)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.07), transparent 45%) !important;
-}
-
-/* More readable footer chips over light backgrounds */
-.network-footer span,
-.system-footer span,
-footer span,
-.badge,
-.chip {
-  background: rgba(0,0,0,.60) !important;
-  border-color: rgba(255,255,255,.18) !important;
-}
-
-/* Readability OFF returns closer to visual mode */
-body.readability-off .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,8,12,.60), rgba(3,8,12,.72)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 48%) !important;
-}
-
-body.readability-off .terminal::before {
-  display: none;
-}
-
-body.readability-off .tile::before {
-  opacity: .34 !important;
-}
-
-#readabilityShieldBtn {
-  border-color: rgba(127,215,255,.56) !important;
-  background: rgba(127,215,255,.13) !important;
-}
-
-#readabilityShieldBtn.active,
-#readabilityShieldBtn:hover,
-#readabilityShieldBtn:focus {
-  border-color: rgba(127,215,255,.92) !important;
-  box-shadow: 0 0 18px rgba(127,215,255,.18);
-}
-
-
-/* Clean home priority */
-body:not(.show-advanced) .intel-panel,
-body:not(.show-advanced) .celestial-atlas-panel,
-body:not(.show-advanced) .advanced-dashboard-panel,
-body:not(.show-advanced) .hero-gallery,
-body:not(.show-advanced) .atlas-preview-grid,
-body:not(.show-advanced) .atlas-toolbar,
-body:not(.show-advanced) .atlas-current {
-  display: none !important;
-}
-
-
-/* -------------------------------------------------------
-   Background Reset
-   Atlas images regenerated without added cloud/fog layer.
-   The readability shield remains optional and subtle.
-------------------------------------------------------- */
-
-body::after {
-  background:
-    radial-gradient(circle at 50% 15%, rgba(0,0,0,.08), transparent 42%),
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.02) 45%, rgba(0,0,0,.14)) !important;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.84), rgba(3,8,12,.88)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.07), transparent 48%) !important;
-}
-
-/* No artificial mist feeling in the UI itself */
-.page,
-.sky-control-strip,
-.section-title,
-.intel-panel,
-.advanced-dashboard-panel,
-.celestial-atlas-panel,
-.network-footer,
-.system-footer,
-footer,
-.status {
-  backdrop-filter: blur(5px) saturate(1.06) !important;
-}
-
-/* When readability is off, backgrounds are almost raw */
-body.readability-off::after {
-  display: none !important;
-}
-
-body.readability-off .terminal {
-  background:
-    linear-gradient(180deg, rgba(3,8,12,.58), rgba(3,8,12,.66)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.05), transparent 48%) !important;
-}
-
-
-/* -------------------------------------------------------
-   Transformer Book Views
-   Fonds basés uniquement sur les 2 images choisies.
-   Pas d’ajout de nuages, pas de brume décorative.
-------------------------------------------------------- */
-
-body {
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-body::after {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.02) 45%, rgba(0,0,0,.10)) !important;
-}
-
-body.readability-off::after {
-  display: none !important;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.82), rgba(3,8,12,.88)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
-}
-
-/* Atlas grid now has only selected Transformer Book shots */
-.atlas-preview-grid {
-  max-height: 260px !important;
-}
-
-.atlas-preview-card img {
-  height: 90px !important;
-}
-
-/* Full-height shots use source side fill; keep the UI readable. */
-.tile::before {
-  filter: saturate(1.00) brightness(.86) !important;
-}
-
-
-/* -------------------------------------------------------
-   System Trace Pro
-   Advanced System Trace plus classe, lisible et cockpit.
-------------------------------------------------------- */
-
+.home-system-trace,
 .system-trace-pro {
-  display: none;
-  margin-top: 12px;
-  border: 1px solid rgba(127,215,255,.26);
+  display: block;
+  margin: 12px 0;
+  padding: 0;
+  border: 1px solid var(--blue-soft);
   border-radius: 18px;
   overflow: hidden;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.86), rgba(6,18,26,.76)),
-    radial-gradient(circle at 0% 0%, rgba(127,215,255,.12), transparent 42%),
-    radial-gradient(circle at 100% 0%, rgba(255,216,121,.10), transparent 42%) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 12px 28px rgba(0,0,0,.28);
-  backdrop-filter: blur(7px) saturate(1.10);
-}
-
-.system-trace-pro.open {
-  display: block;
+  background: var(--panel-bg);
 }
 
 .pro-trace-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(8,26,36,.46)) !important;
-  border-bottom: 1px solid rgba(127,215,255,.20) !important;
-  padding: 11px 13px !important;
-}
-
-.pro-trace-head strong {
-  display: block;
-  color: #fff8e9;
-  font-size: 15px;
-  letter-spacing: .02em;
-}
-
-.pro-trace-head span {
-  display: block;
-  margin-top: 3px;
-  color: rgba(255,248,233,.62);
-  font-size: 11px;
-}
-
-.trace-head-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.trace-head-actions button {
-  min-height: 30px;
-  border: 1px solid rgba(127,215,255,.28);
-  border-radius: 999px;
-  background: rgba(0,0,0,.40);
-  color: #fff8e9;
-  padding: 0 10px;
-  font: inherit;
-  font-size: 10px;
-  cursor: pointer;
-  transition: all .16s ease;
-}
-
-.trace-head-actions button:hover,
-.trace-head-actions button:focus {
-  border-color: rgba(127,215,255,.88);
-  background: rgba(127,215,255,.14);
-  outline: none;
-  box-shadow: 0 0 16px rgba(127,215,255,.16);
+  border-bottom: 1px solid rgba(127,215,255,.18);
 }
 
 .trace-status-line {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding: 9px 10px 0;
-}
-
-.trace-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 9px;
-  border: 1px solid rgba(255,255,255,.14);
-  border-radius: 999px;
-  background: rgba(0,0,0,.42);
-  color: rgba(255,248,233,.72);
-  font-size: 9px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  padding: 8px 12px;
 }
 
 .trace-pill.safe {
-  border-color: rgba(137,255,188,.30);
-  background: rgba(32,120,72,.20);
-  color: rgba(190,255,218,.92);
+  color: #c9ffcf;
+  border-color: rgba(128,255,160,.34);
 }
 
 .trace-pro-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(4,1fr);
+  gap: 10px;
   padding: 10px;
 }
 
 .trace-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  gap: 9px;
-  min-height: 86px;
-  border: 1px solid rgba(255,255,255,.14);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border: 1px solid var(--blue-soft);
   border-radius: 16px;
-  padding: 10px;
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.62), rgba(7,20,28,.52)),
-    radial-gradient(circle at 50% 0%, rgba(127,215,255,.08), transparent 64%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 8px 18px rgba(0,0,0,.18);
-}
-
-.trace-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background:
-    linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
-  opacity: .7;
-}
-
-.trace-card-secure {
-  border-color: rgba(137,255,188,.24);
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.62), rgba(8,38,24,.45)),
-    radial-gradient(circle at 50% 0%, rgba(137,255,188,.10), transparent 64%);
-}
-
-.trace-icon {
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid rgba(127,215,255,.22);
-  border-radius: 12px;
-  background: rgba(0,0,0,.36);
-  box-shadow: 0 0 14px rgba(127,215,255,.10);
-  font-size: 15px;
+  padding: 10px 12px;
+  background: rgba(0,0,0,.08);
 }
 
 .trace-card small {
   display: block;
-  margin-bottom: 4px;
-  color: rgba(255,248,233,.56);
-  font-size: 9px;
-  letter-spacing: .12em;
+  color: rgba(255,248,233,.62);
+  font-size: 10px;
   text-transform: uppercase;
+  letter-spacing: .12em;
 }
 
 .trace-card strong {
   display: block;
-  color: #fff8e9;
   font-size: 13px;
-  line-height: 1.15;
-  text-shadow: 0 2px 10px rgba(0,0,0,.72);
+  text-shadow: var(--shadow);
 }
 
 .trace-card em {
   display: block;
-  margin-top: 4px;
-  color: rgba(255,248,233,.58);
-  font-size: 9px;
+  color: var(--muted);
+  font-size: 10px;
   font-style: normal;
-  line-height: 1.18;
-  overflow-wrap: anywhere;
-}
-
-.trace-console-details {
-  margin: 0 10px 10px;
-  border: 1px solid rgba(255,216,121,.18);
-  border-radius: 15px;
-  background: rgba(0,0,0,.32);
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.trace-console-details summary {
-  cursor: pointer;
-  padding: 9px 10px;
-  color: rgba(255,248,233,.78);
-  font-size: 11px;
-  letter-spacing: .04em;
-  list-style: none;
+.status {
+  min-height: 26px;
+  padding: 7px 10px 8px;
+  color: #d7ffc4;
+  font-size: 12px;
+  text-align: center;
+  text-shadow: var(--shadow);
 }
 
-.trace-console-details summary::-webkit-details-marker {
+.drawer {
   display: none;
+  margin: 0 14px 11px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,.18);
 }
 
-.trace-console-details summary::before {
-  content: "▸ ";
-  color: rgba(255,216,121,.88);
+.drawer.open {
+  display: block;
 }
 
-.trace-console-details[open] summary::before {
-  content: "▾ ";
+.drawer textarea {
+  width: 100%;
+  min-height: 150px;
+  display: block;
+  border: 0;
+  background: rgba(0,0,0,.34);
+  color: var(--text);
+  padding: 9px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  resize: vertical;
 }
 
-#advancedSystemText {
-  min-height: 170px !important;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.64)) !important;
-  color: rgba(235,245,255,.92) !important;
-  border-top: 1px solid rgba(255,216,121,.14) !important;
-  font-size: 10px !important;
-  line-height: 1.42 !important;
+.command-palette {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.24);
 }
+
+.command-palette.open {
+  display: flex;
+}
+
+.palette-card {
+  width: min(460px, calc(100vw - 40px));
+  border: 1px solid var(--gold-soft);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0,0,0,.72);
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.palette-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--gold-soft);
+}
+
+.palette-help {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  text-shadow: var(--shadow);
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--gold-soft);
+  background: var(--panel-bg);
+}
+
+.tile[data-preview="chatgpt"] { --preview-image: url("./preview_chatgpt.jpg"); }
+.tile[data-preview="notion"] { --preview-image: url("./preview_notion.jpg"); }
+.tile[data-preview="github"] { --preview-image: url("./preview_github.jpg"); }
+.tile[data-preview="youtube"] { --preview-image: url("./preview_youtube.jpg"); }
+.tile[data-preview="clipboard"] { --preview-image: url("./preview_clipboard.jpg"); }
+.tile[data-preview="cockpit"],
+.tile[data-preview="visual"] { --preview-image: url("./background_historique_lr.png"); }
+.tile[data-preview="audio"] { --preview-image: url("./preview_dest_elevenlabs.jpg"); }
+.tile[data-preview="blackout"] { --preview-image: linear-gradient(135deg, #05070a, #111827); }
 
 @media (max-width: 1050px) {
+  .advanced-dashboard-grid,
   .trace-pro-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
   }
 }
 
-@media (max-width: 620px) {
-  .pro-trace-head {
-    align-items: flex-start;
-    flex-direction: column;
+@media (max-width: 860px) {
+  body {
+    padding: 5px;
   }
 
+  .terminal {
+    margin-top: 4px;
+    width: calc(100vw - 10px);
+    border-radius: 20px;
+  }
+
+  .topnav {
+    grid-template-columns: repeat(3,1fr);
+    gap: 5px;
+  }
+
+  .tab {
+    height: 34px;
+    font-size: 10px;
+  }
+
+  .hero {
+    min-height: 116px;
+    padding: 12px 98px 10px 12px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .hero p,
+  .chips {
+    display: none;
+  }
+
+  .portrait {
+    width: 78px;
+    height: 82px;
+  }
+
+  .hero-position-panel {
+    right: 10px;
+    top: 8px;
+    width: min(330px, calc(100% - 20px));
+  }
+
+  .section-title {
+    display: block;
+  }
+
+  .section-title span {
+    display: none;
+  }
+
+  .tile-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .tile {
+    min-height: 68px;
+  }
+
+  .advanced-dashboard-grid,
   .trace-pro-grid {
     grid-template-columns: 1fr;
   }
 }
 
-
-/* -------------------------------------------------------
-   Celestial Atlas 2.9 — Recovery Hero
-   Hero = aerith_7_memory_cards_avatar_master.png
-   Backgrounds = sharp Transformer Book crops, no blur/fog/cloud.
-------------------------------------------------------- */
-
-body {
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-body::after {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.00) 45%, rgba(0,0,0,.08)) !important;
-}
-
-.hero {
-  min-height: 172px !important;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
-    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
-    url("./aerith_7_memory_cards_avatar_master.png") !important;
-  background-size: cover !important;
-  background-position: center 34% !important;
-  background-repeat: no-repeat !important;
-  border-bottom: 1px solid rgba(124,140,255,.34) !important;
-}
-
-.hero::before {
-  display: block !important;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.18) 58%, rgba(0,0,0,.36)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px) !important;
-}
-
-.no-hero-face .hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
-    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
-    url("./aerith_7_memory_cards_avatar_master.png") !important;
-}
-
-/* Avatar = same canonical image */
-.hero .portrait img,
-.portrait img,
-.avatar img,
-.top-avatar img {
-  content: url("./aerith_7_memory_cards_avatar_master.png");
-  object-fit: cover !important;
-  object-position: 52% 34% !important;
-}
-
-/* Transparency recovery: readable but not concrete */
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.58), rgba(3,8,12,.68)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
-  backdrop-filter: blur(4px) saturate(1.08) !important;
-}
-
-.topnav,
-.sky-control-strip,
-.section-title,
-.intel-panel,
-.advanced-dashboard-panel,
-.celestial-atlas-panel,
-.network-footer,
-.system-footer,
-footer,
-.status {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.56), rgba(5,14,20,.46)) !important;
-  backdrop-filter: blur(4px) saturate(1.06) !important;
-}
-
-.tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.54), rgba(7,18,24,.44)) !important;
-}
-
-.tile::before {
-  opacity: .32 !important;
-  filter: saturate(1.02) brightness(.92) !important;
-}
-
-.tile.selected::before,
-.tile.gold::before,
-.tile:hover::before,
-.tile:focus::before {
-  opacity: .46 !important;
-}
-
-.deep-glass .terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.28), rgba(3,8,12,.40)) !important;
-}
-
-.deep-glass .topnav,
-.deep-glass .sky-control-strip,
-.deep-glass .section-title,
-.deep-glass .intel-panel,
-.deep-glass .advanced-dashboard-panel,
-.deep-glass .celestial-atlas-panel {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.32), rgba(5,14,20,.26)) !important;
-}
-
-/* Hero parasite cleanup */
-.hero-gallery,
-#heroGalleryGrid,
-.hero-frame-chip,
-#heroFrameBtn,
-button[onclick="cycleHeroFrame()"],
-button[onclick="randomHeroFrame()"] {
-  display: none !important;
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas 2.9.1 — Transparency Recovery Patch
-   Fichier modifié uniquement : style.css
-
-   Objectif :
-   - menu de base plus transparent ;
-   - boutons non sélectionnés sans fond plein ;
-   - boutons sélectionnés/hover restent colorés ;
-   - Hero Aerith et fonds nets conservés.
-------------------------------------------------------- */
-
-:root {
-  --seven-panel-alpha: .42;
-  --seven-panel-alpha-soft: .34;
-  --seven-panel-alpha-strong: .54;
-  --seven-border-soft: rgba(255,216,121,.28);
-  --seven-border-blue-soft: rgba(127,215,255,.24);
-}
-
-/* Coque globale : plus transparente, mais encore lisible */
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.36), rgba(3,8,12,.50)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.045), transparent 48%) !important;
-  backdrop-filter: blur(3px) saturate(1.06) !important;
-}
-
-/* Menu supérieur moins opaque */
-.topnav {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.46), rgba(4,10,14,.36)) !important;
-  border-bottom: 1px solid rgba(255,216,121,.26) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 8px 18px rgba(0,0,0,.16) !important;
-}
-
-/* Boutons non sélectionnés : presque sans fond */
-.tab,
-.mini-control,
-.atlas-chip,
-.hero-frame-chip,
-.advanced-actions button,
-.advanced-dashboard-head button,
-.trace-head-actions button,
-button:not(.active):not(.selected) {
-  background: rgba(0,0,0,.08) !important;
-  border-color: rgba(255,255,255,.18) !important;
-  box-shadow: none !important;
-}
-
-/* Onglets / mini boutons non sélectionnés : lisibles mais transparents */
-.tab:not(.active):not(:hover):not(:focus),
-.mini-control:not(.active):not(.selected):not(:hover):not(:focus),
-.atlas-chip:not(.selected):not(:hover):not(:focus) {
-  background: rgba(0,0,0,.06) !important;
-  color: rgba(255,248,233,.82) !important;
-}
-
-/* Sélection / survol : là seulement, le bouton prend une couleur */
-.tab.active,
-.tab:hover,
-.tab:focus,
-.mini-control.active,
-.mini-control.selected,
-.mini-control:hover,
-.mini-control:focus,
-.atlas-chip.selected,
-.atlas-chip:hover,
-.atlas-chip:focus,
-button.active,
-button.selected,
-button:hover,
-button:focus {
-  background: rgba(255,216,121,.18) !important;
-  border-color: rgba(255,216,121,.74) !important;
-  color: #fff8e9 !important;
-  box-shadow:
-    0 0 14px rgba(255,216,121,.12),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-/* Boutons bleus / système au hover si accent bleu */
-#advancedPanelsBtn.active,
-#readabilityShieldBtn.active,
-.trace-head-actions button:hover,
-.trace-head-actions button:focus {
-  background: rgba(127,215,255,.14) !important;
-  border-color: rgba(127,215,255,.72) !important;
-  box-shadow:
-    0 0 14px rgba(127,215,255,.14),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-/* Barre de contrôles et rubans : plus transparents */
-.sky-control-strip,
-.aerith-memory-ribbon,
-.section-title,
-.intel-panel,
-.advanced-dashboard-panel,
-.celestial-atlas-panel,
-.network-panel,
-.device-panel,
-.network-footer,
-.system-footer,
-footer,
-.status {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.36), rgba(5,14,20,.28)) !important;
-  border-color: rgba(255,216,121,.24) !important;
-  backdrop-filter: blur(3px) saturate(1.05) !important;
-}
-
-/* Page / corps des sections : ne plus faire un gros bloc noir */
-.page {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.30), rgba(5,12,18,.22)) !important;
-}
-
-/* Tuiles : fond plus transparent, preview visible */
-.tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.34), rgba(7,18,24,.26)) !important;
-  border-color: rgba(255,255,255,.18) !important;
-}
-
-.tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)),
-    radial-gradient(circle at 90% 0%, rgba(255,255,255,.06), transparent 45%) !important;
-}
-
-.tile::before {
-  opacity: .44 !important;
-  filter: saturate(1.02) brightness(.96) !important;
-}
-
-.tile.gold,
-.tile.selected,
-.tile:hover,
-.tile:focus {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.42), rgba(7,18,24,.32)) !important;
-  border-color: rgba(255,216,121,.58) !important;
-}
-
-.tile.gold::before,
-.tile.selected::before,
-.tile:hover::before,
-.tile:focus::before {
-  opacity: .56 !important;
-}
-
-.tile.gold::after,
-.tile.selected::after,
-.tile:hover::after,
-.tile:focus::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.54), rgba(0,0,0,.24) 58%, rgba(0,0,0,.34)),
-    radial-gradient(circle at 92% 0%, rgba(255,216,121,.18), transparent 46%) !important;
-}
-
-/* Cartes système : plus transparentes, mais lecture conservée */
-.trace-card,
-.net-card,
-.device-card,
-.advanced-box {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.38), rgba(7,20,28,.28)),
-    radial-gradient(circle at 50% 0%, rgba(127,215,255,.045), transparent 64%) !important;
-  border-color: rgba(255,255,255,.14) !important;
-}
-
-/* Mode Deep Glass encore plus aérien */
-.deep-glass .terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.20), rgba(3,8,12,.30)) !important;
-}
-
-.deep-glass .topnav,
-.deep-glass .sky-control-strip,
-.deep-glass .section-title,
-.deep-glass .intel-panel,
-.deep-glass .advanced-dashboard-panel,
-.deep-glass .celestial-atlas-panel,
-.deep-glass .page {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.20), rgba(5,14,20,.16)) !important;
-}
-
-.deep-glass .tile {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.24), rgba(7,18,24,.18)) !important;
-}
-
-.deep-glass .tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.14) 58%, rgba(0,0,0,.22)) !important;
-}
-
-/* Hero Aerith : conserver la lecture, mais moins de voile noir */
-.hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.24) 48%, rgba(0,0,0,.50)),
-    radial-gradient(circle at 62% 38%, rgba(124,140,255,.16), transparent 38%),
-    url("./aerith_7_memory_cards_avatar_master.png") !important;
-  background-size: cover !important;
-  background-position: center 34% !important;
-}
-
-.hero::before {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.10) 58%, rgba(0,0,0,.24)),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.020) 0 1px, transparent 1px 8px) !important;
-}
-
-/* Les boutons du footer restent très discrets */
-footer span,
-.network-footer span,
-.system-footer span,
-.badge,
-.chip {
-  background: rgba(0,0,0,.18) !important;
-  border-color: rgba(255,255,255,.13) !important;
-}
-
-
-/* -------------------------------------------------------
-   Celestial Atlas 2.9.15 — Golden Glass + Home Trace
-   Fichiers modifiés : index.html + style.css
-
-   Règle validée :
-   - garder l’apparence dorée des menus ;
-   - fonds de menus transparents ;
-   - boutons transparents au repos ;
-   - boutons opaques seulement au hover / sélection ;
-   - Hero Focus restauré en panneau propre ;
-   - Advanced System Trace visible sur l’accueil.
-------------------------------------------------------- */
-
-/* Base lisibilité ON */
-body:not(.readability-off) {
-  --gold-line: rgba(255,216,121,.42);
-  --gold-line-soft: rgba(255,216,121,.22);
-  --gold-fill-hover: rgba(255,216,121,.20);
-  --button-solid: rgba(2,8,13,.72);
-  --button-solid-hover: rgba(0,0,0,.74);
-}
-
-/* Les grands fonds restent transparents, mais bordures visibles */
-body:not(.readability-off) .terminal,
-body:not(.readability-off) .topnav,
-body:not(.readability-off) .sky-control-strip,
-body:not(.readability-off) .aerith-memory-ribbon,
-body:not(.readability-off) .section-title,
-body:not(.readability-off) .page,
-body:not(.readability-off) .intel-panel,
-body:not(.readability-off) .advanced-dashboard-panel,
-body:not(.readability-off) .celestial-atlas-panel,
-body:not(.readability-off) .network-panel,
-body:not(.readability-off) .device-panel,
-body:not(.readability-off) .system-trace-pro,
-body:not(.readability-off) .home-system-trace,
-body:not(.readability-off) .network-footer,
-body:not(.readability-off) .system-footer,
-body:not(.readability-off) footer,
-body:not(.readability-off) .status {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-/* Terminal : bord doré conservé */
-body:not(.readability-off) .terminal {
-  border-color: rgba(255,216,121,.46) !important;
-  box-shadow:
-    0 0 0 1px rgba(255,216,121,.18),
-    0 0 24px rgba(255,216,121,.08) !important;
-}
-
-/* Barres / menus : seulement lignes dorées, pas de fond opaque */
-body:not(.readability-off) .topnav,
-body:not(.readability-off) .sky-control-strip,
-body:not(.readability-off) .aerith-memory-ribbon,
-body:not(.readability-off) .section-title,
-body:not(.readability-off) .network-footer,
-body:not(.readability-off) .system-footer,
-body:not(.readability-off) footer,
-body:not(.readability-off) .status,
-body:not(.readability-off) .home-system-trace,
-body:not(.readability-off) .system-trace-pro {
-  border-color: var(--gold-line-soft) !important;
-}
-
-/* Suppression des voiles qui font rectangle sombre */
-body:not(.readability-off)::before,
-body:not(.readability-off)::after,
-body:not(.readability-off) .terminal::before,
-body:not(.readability-off) .terminal::after,
-body:not(.readability-off) .page::before,
-body:not(.readability-off) .page::after,
-body:not(.readability-off) .hero::before,
-body:not(.readability-off) .hero::after {
-  display: none !important;
-  content: none !important;
-  opacity: 0 !important;
-  background: transparent !important;
-  background-image: none !important;
-}
-
-/* Hero conserve son image, avec voile quasi nul */
-body:not(.readability-off) .hero {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.00) 48%, rgba(0,0,0,.06)),
-    url("./aerith_7_memory_cards_avatar_master.png") !important;
-  background-size: var(--hero-size, cover) !important;
-  background-position: var(--hero-x, 50%) var(--hero-y, 34%) !important;
-  background-repeat: no-repeat !important;
-  border-bottom: 1px solid rgba(255,216,121,.20) !important;
-}
-
-/* Boutons au repos : transparents, bord doré/bleu visible */
-body:not(.readability-off) .tab,
-body:not(.readability-off) .mini-control,
-body:not(.readability-off) .atlas-chip,
-body:not(.readability-off) .advanced-actions button,
-body:not(.readability-off) .advanced-dashboard-head button,
-body:not(.readability-off) .trace-head-actions button,
-body:not(.readability-off) .hero-position-actions button,
-body:not(.readability-off) .command-palette button:not(.command-close),
-body:not(.readability-off) .tile {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  border-color: rgba(255,216,121,.30) !important;
-  box-shadow: none !important;
-  color: rgba(255,248,233,.90) !important;
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.86),
-    0 0 8px rgba(0,0,0,.42) !important;
-}
-
-/* Previews visuelles des tuiles : très discrètes au repos */
-body:not(.readability-off) .tile::before {
-  opacity: .18 !important;
-  filter: saturate(1.02) brightness(.90) !important;
-}
-
-body:not(.readability-off) .tile::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.02) 60%, rgba(0,0,0,.08)) !important;
-}
-
-/* Hover / focus / actif : le bouton devient opaque */
-body:not(.readability-off) .tab.active,
-body:not(.readability-off) .tab:hover,
-body:not(.readability-off) .tab:focus,
-body:not(.readability-off) .mini-control.active,
-body:not(.readability-off) .mini-control.selected,
-body:not(.readability-off) .mini-control:hover,
-body:not(.readability-off) .mini-control:focus,
-body:not(.readability-off) .atlas-chip.selected,
-body:not(.readability-off) .atlas-chip:hover,
-body:not(.readability-off) .atlas-chip:focus,
-body:not(.readability-off) .advanced-actions button:hover,
-body:not(.readability-off) .advanced-actions button:focus,
-body:not(.readability-off) .advanced-dashboard-head button:hover,
-body:not(.readability-off) .advanced-dashboard-head button:focus,
-body:not(.readability-off) .trace-head-actions button:hover,
-body:not(.readability-off) .trace-head-actions button:focus,
-body:not(.readability-off) .hero-position-actions button:hover,
-body:not(.readability-off) .hero-position-actions button:focus,
-body:not(.readability-off) .command-palette button:not(.command-close):hover,
-body:not(.readability-off) .command-palette button:not(.command-close):focus,
-body:not(.readability-off) .tile:hover,
-body:not(.readability-off) .tile:focus,
-body:not(.readability-off) .tile.selected,
-body:not(.readability-off) .tile.gold {
-  background:
-    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.72)) !important;
-  background-color: rgba(0,0,0,.72) !important;
-  border-color: rgba(255,216,121,.78) !important;
-  color: #fff8e9 !important;
-  box-shadow:
-    0 0 16px rgba(255,216,121,.15),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-/* Hover / actif des tuiles : preview plus visible mais fond opaque */
-body:not(.readability-off) .tile:hover::before,
-body:not(.readability-off) .tile:focus::before,
-body:not(.readability-off) .tile.selected::before,
-body:not(.readability-off) .tile.gold::before {
-  opacity: .44 !important;
-}
-
-body:not(.readability-off) .tile:hover::after,
-body:not(.readability-off) .tile:focus::after,
-body:not(.readability-off) .tile.selected::after,
-body:not(.readability-off) .tile.gold::after {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 60%, rgba(0,0,0,.42)) !important;
-}
-
-/* Lisibilité et ? restent transparents, même actifs */
-body:not(.readability-off) #readabilityShieldBtn,
-body:not(.readability-off) #readabilityShieldBtn.active,
-body:not(.readability-off) #readabilityShieldBtn.selected,
-body:not(.readability-off) #readabilityShieldBtn:hover,
-body:not(.readability-off) #readabilityShieldBtn:focus,
-body:not(.readability-off) #commandDotTopBtn,
-body:not(.readability-off) #commandDotTopBtn:hover,
-body:not(.readability-off) #commandDotTopBtn:focus,
-body:not(.readability-off) .command-dot-top,
-body:not(.readability-off) .command-dot-top:hover,
-body:not(.readability-off) .command-dot-top:focus {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-
-body:not(.readability-off) #readabilityShieldBtn {
-  border-color: rgba(127,215,255,.62) !important;
-  color: rgba(225,246,255,.96) !important;
-}
-
-body:not(.readability-off) #commandDotTopBtn {
-  border-color: rgba(255,216,121,.38) !important;
-  color: rgba(255,248,233,.92) !important;
-}
-
-/* Advanced System Trace sur accueil */
-.home-system-trace {
-  display: block !important;
-  margin: 12px 14px 0 14px !important;
-  padding: 0 !important;
-  border: 1px solid rgba(127,215,255,.26) !important;
-  border-radius: 18px !important;
-  overflow: hidden !important;
-}
-
-.home-system-trace .advanced-head {
-  border-bottom: 1px solid rgba(127,215,255,.18) !important;
-}
-
-/* Cartes du trace : transparentes au repos, opaques au survol */
-body:not(.readability-off) .trace-card,
-body:not(.readability-off) .net-card,
-body:not(.readability-off) .device-card,
-body:not(.readability-off) .advanced-box {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  border-color: rgba(255,216,121,.22) !important;
-  box-shadow: none !important;
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.86),
-    0 0 8px rgba(0,0,0,.42) !important;
-}
-
-body:not(.readability-off) .trace-card:hover,
-body:not(.readability-off) .net-card:hover,
-body:not(.readability-off) .device-card:hover,
-body:not(.readability-off) .advanced-box:hover {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.72), rgba(7,20,28,.58)) !important;
-  border-color: rgba(255,216,121,.52) !important;
-}
-
-/* Command Palette reste lisible quand elle est ouverte */
-.command-palette {
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
-  border-color: rgba(255,216,121,.42) !important;
-  backdrop-filter: blur(8px) saturate(1.10) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.10) !important;
-  box-shadow: 0 18px 44px rgba(0,0,0,.38) !important;
-}
-
-/* Hero Focus : restauré en vrai panneau propre, pas brut dans le bandeau */
-.hero {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.hero-position-panel,
-#heroPositionPanel {
-  display: none !important;
-  position: absolute !important;
-  right: 16px !important;
-  bottom: 12px !important;
-  z-index: 60 !important;
-
-  width: min(360px, calc(100% - 32px)) !important;
-  max-width: 360px !important;
-
-  padding: 10px !important;
-  margin: 0 !important;
-
-  border: 1px solid rgba(127,215,255,.42) !important;
-  border-radius: 16px !important;
-
-  background:
-    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
-  backdrop-filter: blur(8px) saturate(1.12) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
-
-  box-shadow:
-    0 16px 34px rgba(0,0,0,.34),
-    0 0 18px rgba(127,215,255,.10),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-
-  color: rgba(255,248,233,.92) !important;
-}
-
-body.show-hero-focus .hero-position-panel,
-body.show-hero-focus #heroPositionPanel {
-  display: block !important;
-}
-
-.hero-position-head {
-  display: flex !important;
-  align-items: baseline !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-  margin: 0 0 8px 0 !important;
-}
-
-.hero-position-panel label {
-  display: grid !important;
-  grid-template-columns: 36px 1fr 42px !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin: 7px 0 !important;
-  padding: 0 !important;
-  font-size: 10px !important;
-}
-
-.hero-position-panel input[type="range"] {
-  width: 100% !important;
-  accent-color: #7fd7ff !important;
-}
-
-.hero-position-panel output {
-  text-align: right !important;
-  color: rgba(225,246,255,.92) !important;
-  font-size: 10px !important;
-}
-
-.hero-position-actions {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-  margin-top: 8px !important;
-}
-
-/* Sécurité : le footer ne réserve aucun ancien ? */
-footer {
-  padding-right: 14px !important;
-  margin-top: 0 !important;
-  min-height: 28px !important;
-}
-
-/* Petits écrans */
-@media (max-width: 860px) {
-  .home-system-trace {
-    margin: 10px 10px 0 10px !important;
+@media (max-width: 460px) {
+  .tile-grid {
+    grid-template-columns: 1fr;
   }
 
-  .hero-position-panel,
-  #heroPositionPanel {
-    right: 10px !important;
-    bottom: 10px !important;
-    width: min(330px, calc(100% - 20px)) !important;
+  .hero-position-panel {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+    margin-top: 10px;
   }
 }
-
