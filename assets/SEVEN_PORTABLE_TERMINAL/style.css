@@ -1135,5 +1135,41 @@ body {
   content: none !important;
 }
 
---active-bg: url("./background_historique_lr.png");
+/* RESTORE REAL BACKGROUND + AVATAR */
+
+:root {
+  --active-bg: url("./background_historique_lr.png") !important;
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.12)),
+    url("./background_historique_lr.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+}
+
+.hero-image {
+  display: block !important;
+}
+
+.portrait img {
+  display: block !important;
+  content: url("./aerith_avatar_memory_cards_framed.png") !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+.portrait::before,
+.portrait::after {
+  display: none !important;
+  content: none !important;
+}
+
+.tile::before {
+  background-image: var(--preview-image) !important;
+}
 
