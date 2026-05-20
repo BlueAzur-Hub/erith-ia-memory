@@ -4692,3 +4692,200 @@ footer {
   }
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.16 — Final Transparent Idle Buttons
+   Fichier modifié uniquement : style.css
+
+   Correction forte en fin de fichier :
+   - boutons transparents au repos ;
+   - boutons opaques uniquement au survol / focus / sélection ;
+   - menus dorés transparents ;
+   - tuiles idem ;
+   - exceptions : panneaux ouverts et boutons internes techniques.
+------------------------------------------------------- */
+
+/* Menus / zones structurelles : pas de plaque sombre */
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .aerith-memory-ribbon,
+body:not(.readability-off) .section-title,
+body:not(.readability-off) .page,
+body:not(.readability-off) .intel-panel,
+body:not(.readability-off) .advanced-dashboard-panel,
+body:not(.readability-off) .celestial-atlas-panel,
+body:not(.readability-off) .network-panel,
+body:not(.readability-off) .device-panel,
+body:not(.readability-off) .network-footer,
+body:not(.readability-off) .system-footer,
+body:not(.readability-off) footer,
+body:not(.readability-off) .status {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Tous les boutons principaux au repos : transparents */
+body:not(.readability-off) .tab:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .mini-control:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .atlas-chip:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .hero-position-actions button:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .advanced-actions button:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .advanced-dashboard-head button:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .trace-head-actions button:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .command-palette button:not(.command-close):not(:hover):not(:focus):not(.active):not(.selected) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border-color: rgba(255,216,121,.30) !important;
+  color: rgba(255,248,233,.90) !important;
+}
+
+/* Boutons actifs / sélectionnés / survolés : opaques */
+body:not(.readability-off) .tab:hover,
+body:not(.readability-off) .tab:focus,
+body:not(.readability-off) .tab.active,
+body:not(.readability-off) .tab.selected,
+body:not(.readability-off) .mini-control:hover,
+body:not(.readability-off) .mini-control:focus,
+body:not(.readability-off) .mini-control.active,
+body:not(.readability-off) .mini-control.selected,
+body:not(.readability-off) .atlas-chip:hover,
+body:not(.readability-off) .atlas-chip:focus,
+body:not(.readability-off) .atlas-chip.active,
+body:not(.readability-off) .atlas-chip.selected,
+body:not(.readability-off) .hero-position-actions button:hover,
+body:not(.readability-off) .hero-position-actions button:focus,
+body:not(.readability-off) .hero-position-actions button.active,
+body:not(.readability-off) .hero-position-actions button.selected,
+body:not(.readability-off) .advanced-actions button:hover,
+body:not(.readability-off) .advanced-actions button:focus,
+body:not(.readability-off) .advanced-actions button.active,
+body:not(.readability-off) .advanced-actions button.selected,
+body:not(.readability-off) .advanced-dashboard-head button:hover,
+body:not(.readability-off) .advanced-dashboard-head button:focus,
+body:not(.readability-off) .advanced-dashboard-head button.active,
+body:not(.readability-off) .advanced-dashboard-head button.selected,
+body:not(.readability-off) .trace-head-actions button:hover,
+body:not(.readability-off) .trace-head-actions button:focus,
+body:not(.readability-off) .trace-head-actions button.active,
+body:not(.readability-off) .trace-head-actions button.selected {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.72)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+  border-color: rgba(255,216,121,.78) !important;
+  color: #fff8e9 !important;
+  box-shadow:
+    0 0 16px rgba(255,216,121,.15),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Les boutons du menu supérieur sélectionnés gardent le doré opaque seulement si actifs */
+body:not(.readability-off) .topnav .tab.active,
+body:not(.readability-off) .topnav .tab[aria-selected="true"] {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.72)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+}
+
+/* Lisibilité et ? restent transparents même actifs / hover */
+body:not(.readability-off) #readabilityShieldBtn,
+body:not(.readability-off) #readabilityShieldBtn:hover,
+body:not(.readability-off) #readabilityShieldBtn:focus,
+body:not(.readability-off) #readabilityShieldBtn.active,
+body:not(.readability-off) #readabilityShieldBtn.selected,
+body:not(.readability-off) #commandDotTopBtn,
+body:not(.readability-off) #commandDotTopBtn:hover,
+body:not(.readability-off) #commandDotTopBtn:focus,
+body:not(.readability-off) #commandDotTopBtn.active,
+body:not(.readability-off) #commandDotTopBtn.selected,
+body:not(.readability-off) .command-dot-top,
+body:not(.readability-off) .command-dot-top:hover,
+body:not(.readability-off) .command-dot-top:focus,
+body:not(.readability-off) .command-dot-top.active,
+body:not(.readability-off) .command-dot-top.selected {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Tuiles principales au repos : transparentes mais lisibles */
+body:not(.readability-off) .tile:not(:hover):not(:focus):not(.active):not(.selected):not(.gold) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: rgba(255,216,121,.26) !important;
+  box-shadow: none !important;
+}
+
+body:not(.readability-off) .tile:not(:hover):not(:focus):not(.active):not(.selected):not(.gold)::before {
+  opacity: .14 !important;
+  filter: saturate(1.00) brightness(.88) !important;
+}
+
+body:not(.readability-off) .tile:not(:hover):not(:focus):not(.active):not(.selected):not(.gold)::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.12), rgba(0,0,0,.02) 60%, rgba(0,0,0,.06)) !important;
+}
+
+/* Tuiles au survol / sélection : opaques */
+body:not(.readability-off) .tile:hover,
+body:not(.readability-off) .tile:focus,
+body:not(.readability-off) .tile.active,
+body:not(.readability-off) .tile.selected,
+body:not(.readability-off) .tile.gold {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.22), rgba(0,0,0,.76)) !important;
+  background-color: rgba(0,0,0,.76) !important;
+  border-color: rgba(255,216,121,.78) !important;
+  box-shadow:
+    0 0 16px rgba(255,216,121,.14),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Cartes du System Trace accueil : transparentes au repos, opaques au survol */
+body:not(.readability-off) .home-system-trace .trace-card:not(:hover):not(:focus),
+body:not(.readability-off) .home-system-trace .net-card:not(:hover):not(:focus),
+body:not(.readability-off) .home-system-trace .device-card:not(:hover):not(:focus) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body:not(.readability-off) .home-system-trace .trace-card:hover,
+body:not(.readability-off) .home-system-trace .trace-card:focus,
+body:not(.readability-off) .home-system-trace .net-card:hover,
+body:not(.readability-off) .home-system-trace .net-card:focus,
+body:not(.readability-off) .home-system-trace .device-card:hover,
+body:not(.readability-off) .home-system-trace .device-card:focus {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.72), rgba(7,20,28,.58)) !important;
+  background-color: rgba(0,0,0,.70) !important;
+  border-color: rgba(255,216,121,.52) !important;
+}
+
+/* Le panneau Hero Focus ouvert reste opaque : c’est une fenêtre de réglage */
+body:not(.readability-off) .hero-position-panel,
+body:not(.readability-off) #heroPositionPanel {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+  backdrop-filter: blur(8px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
+}
+
+/* La Command Palette ouverte reste opaque : fenêtre de commandes */
+body:not(.readability-off) .command-palette {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+  backdrop-filter: blur(8px) saturate(1.10) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.10) !important;
+}
+
