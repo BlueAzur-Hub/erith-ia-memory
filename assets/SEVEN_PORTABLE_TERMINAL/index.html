@@ -3,311 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — V5 Clean</title>
-  <link rel="stylesheet" href="./style.css?v=v5-clean-final-1">
-  <link rel="stylesheet" href="./style_v56_additive.css?v=1">
+  <title>Seven Portable Terminal — V5.6 Full Options</title>
+  <link rel="stylesheet" href="./style.css?v=v56-full-options-4">
 </head>
-
 <body data-theme="transparent">
-  <main class="terminal" aria-label="Seven Portable Terminal">
-    <nav class="topnav" aria-label="Navigation principale">
-      <button class="tab active" type="button" data-page-target="home"><span>🌸</span><strong>Accueil</strong></button>
-      <button class="tab" type="button" data-page-target="llm"><span>🧠</span><strong>LLM</strong></button>
-      <button class="tab" type="button" data-page-target="notion"><span>📚</span><strong>Notion</strong></button>
-      <button class="tab" type="button" data-page-target="github"><span>🧬</span><strong>GitHub</strong></button>
-      <button class="tab" type="button" data-page-target="production"><span>🎬</span><strong>Production</strong></button>
-      <button class="tab" type="button" data-page-target="system"><span>🖥️</span><strong>Système</strong></button>
-    </nav>
-
-    <header class="hero">
-      <img class="hero-image" src="./aerith_7_memory_cards_avatar_master.png" alt="" aria-hidden="true">
-      <div class="hero-veil" aria-hidden="true"></div>
-
-      <section class="hero-main">
-        <p class="kicker">SEVEN HEAVEN COCKPIT · V5 CLEAN · TRANSPARENT STABLE</p>
-        <h1>✦ Seven Portable Terminal</h1>
-        <p class="hero-subtitle">Pupitre tactile aérien — Seven Boost, Video Cards, Notion, GitHub, Production et Blue Azur.</p>
-        <div class="chips" aria-label="État">
-          <span>🌸 Seven ready</span>
-          <span>💠 Boost active</span>
-          <span>🎴 Video Cards</span>
-          <span>📚 Notion Cores</span>
-          <span>🧬 GitHub machine</span>
-          <span>🔵 Blue Azur</span>
-        </div>
-      </section>
-
-      <figure class="portrait">
-        <img src="./aerith_7_memory_cards_avatar_master.png" alt="Avatar Seven">
-      </figure>
-
-      <section class="hero-position-panel" id="heroPositionPanel" aria-label="Hero Focus">
-        <div class="panel-head compact">
-          <strong>🎯 Hero Focus</strong>
-          <span>centrage manuel</span>
-        </div>
-
-        <label class="range-row">
-          <span>X</span>
-          <input id="heroX" type="range" min="0" max="100" step="1" value="50">
-          <output id="heroXOut">50%</output>
-        </label>
-
-        <label class="range-row">
-          <span>Y</span>
-          <input id="heroY" type="range" min="0" max="100" step="1" value="34">
-          <output id="heroYOut">34%</output>
-        </label>
-
-        <label class="range-row">
-          <span>Zoom</span>
-          <input id="heroZoom" type="range" min="100" max="180" step="1" value="100">
-          <output id="heroZoomOut">100%</output>
-        </label>
-
-        <div class="mini-actions">
-          <button type="button" data-hero-nudge="up">↑</button>
-          <button type="button" data-hero-nudge="left">←</button>
-          <button type="button" data-hero-nudge="right">→</button>
-          <button type="button" data-hero-nudge="down">↓</button>
-          <button type="button" id="heroResetBtn">Reset</button>
-          <button type="button" id="heroCloseBtn">Fermer</button>
-        </div>
-      </section>
-    </header>
-
-    <div class="memory-ribbon">
-      <span>✦ AERITH.7</span>
-      <span>Golden Glass</span>
-      <span>Transparent cockpit</span>
-      <span>Safe trace</span>
-    </div>
-
-    <section class="toolbar" aria-label="Commandes rapides">
-      <button class="mini-control" type="button" id="advancedBtn">⚙️ Advanced</button>
-      <button class="mini-control" type="button" id="ambianceBtn">🎛️ Ambiance</button>
-      <button class="mini-control" type="button" id="saveBtn">⭐ Save</button>
-      <button class="mini-control" type="button" id="loadBtn">↩ Favori</button>
-      <button class="mini-control" type="button" id="nextBgBtn">🛞 Fond</button>
-      <button class="mini-control" type="button" id="randomBgBtn">🎲 Random</button>
-      <button class="mini-control" type="button" id="heroBtn">🎯 Hero</button>
-      <button class="mini-control active" type="button" id="transparentBtn">🫧 Transparent</button>
-      <button class="mini-control" type="button" id="readabilityBtn">🛡️ Sombre</button>
-      <button class="mini-control command-dot" type="button" id="paletteBtn" aria-label="Palette de commandes">?</button>
-    </section>
-
-    <section class="page active" id="page-home">
-      <div class="section-title">
-        <strong>🌸 Accueil Seven</strong>
-        <span>Démarrage rapide, cartes vidéo et cockpit stable.</span>
-      </div>
-
-      <div class="tile-grid">
-        <button class="tile gold" type="button" data-action="boost" data-preview="chatgpt">
-          <span class="ico">💠</span>
-          <span class="txt"><strong>Seven Boost</strong><em>Copie le prompt Seven complet.</em></span>
-        </button>
-
-        <button class="tile gold" type="button" data-action="video">
-          <span class="ico">🎴</span>
-          <span class="txt"><strong>Video Cards Boost</strong><em>Phase, risque, cartes utiles, action, arrêt.</em></span>
-        </button>
-
-        <button class="tile" type="button" data-action="wan">
-          <span class="ico">📱</span>
-          <span class="txt"><strong>Wan 1080×1920</strong><em>Réglages I2V validés.</em></span>
-        </button>
-
-        <button class="tile" type="button" data-action="prompt">
-          <span class="ico">🧾</span>
-          <span class="txt"><strong>Voir prompt</strong><em>Affiche le prompt intégré.</em></span>
-        </button>
-
-        <button class="tile" type="button" data-action="copy-link">
-          <span class="ico">🔗</span>
-          <span class="txt"><strong>Copier le lien</strong><em>URL publique du cockpit.</em></span>
-        </button>
-
-        <button class="tile" type="button" data-action="blackout">
-          <span class="ico">🛑</span>
-          <span class="txt"><strong>Mode Blackout</strong><em>Texte seul, zéro génération image.</em></span>
-        </button>
-      </div>
-
-      <section class="advanced-boxes" id="advancedPanel" aria-label="Panneaux avancés">
-        <article class="advanced-box">
-          <strong>🎛️ Ambiance</strong>
-          <p>Change le fond et l’énergie visuelle sans toucher à la structure.</p>
-          <div class="mini-actions">
-            <button type="button" data-action="background">Fond +</button>
-            <button type="button" data-action="random">Random</button>
-          </div>
-        </article>
-
-        <article class="advanced-box">
-          <strong>⭐ Favori local</strong>
-          <p>Sauvegarde fond, mode et cadrage Hero dans le navigateur.</p>
-          <div class="mini-actions">
-            <button type="button" id="saveBtnAdvanced">Sauver</button>
-            <button type="button" id="loadBtnAdvanced">Charger</button>
-          </div>
-        </article>
-
-        <article class="advanced-box">
-          <strong>🧹 Nettoyage</strong>
-          <p>Interface sans liens inutiles, sans doublons visibles, sans vieux bouton flottant.</p>
-          <div class="mini-actions">
-            <button type="button" data-page-target="system">Système</button>
-          </div>
-        </article>
-      </section>
-
-      <section class="system-trace" aria-label="Advanced System Trace">
-        <div class="trace-head">
-          <div>
-            <strong>⚙️ Advanced System Trace</strong>
-            <span>SAFE TRACE · aucun RustDesk ID · aucun mot de passe</span>
-          </div>
-          <div class="mini-actions">
-            <button type="button" id="refreshTraceBtn">Refresh</button>
-            <button type="button" id="copyTraceBtn">Copier</button>
-          </div>
-        </div>
-
-        <div class="trace-pills">
-          <span class="trace-pill safe">SAFE TRACE</span>
-          <span class="trace-pill" id="traceDate">--</span>
-          <span class="trace-pill">NO RUSTDESK ID</span>
-          <span class="trace-pill">NO PASSWORD</span>
-        </div>
-
-        <div class="trace-grid" id="traceGrid"></div>
-
-        <details class="trace-console">
-          <summary>Console diagnostic</summary>
-          <textarea id="traceRaw" readonly></textarea>
-        </details>
-      </section>
-    </section>
-
-    <section class="page" id="page-llm">
-      <div class="section-title">
-        <strong>🧠 LLM / ChatGPT</strong>
-        <span>Commandes utiles uniquement.</span>
-      </div>
-
-      <div class="tile-grid">
-        <a class="tile gold" href="https://chatgpt.com/" target="_blank" rel="noopener">
-          <span class="ico">💬</span>
-          <span class="txt"><strong>ChatGPT</strong><em>Ouvrir ChatGPT.</em></span>
-        </a>
-        <button class="tile" type="button" data-action="boost"><span class="ico">🌸</span><span class="txt"><strong>Copier Seven</strong><em>Prompt Seven Heaven.</em></span></button>
-        <button class="tile" type="button" data-action="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards</strong><em>Mode production vidéo.</em></span></button>
-        <button class="tile" type="button" data-action="wan"><span class="ico">📱</span><span class="txt"><strong>Wan</strong><em>Checklist I2V.</em></span></button>
-        <button class="tile" type="button" data-action="blackout"><span class="ico">🛑</span><span class="txt"><strong>Blackout</strong><em>Texte uniquement.</em></span></button>
-      </div>
-    </section>
-
-    <section class="page" id="page-notion">
-      <div class="section-title">
-        <strong>📚 Notion</strong>
-        <span>Mémoire humaine et pages utiles.</span>
-      </div>
-
-      <div class="tile-grid">
-        <a class="tile gold" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📚</span><span class="txt"><strong>ERITH Memory</strong><em>Page mémoire principale.</em></span></a>
-        <a class="tile" href="https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba" target="_blank" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>Auto-Agent Public FR</strong><em>Interface publique ERITH.IA.</em></span></a>
-        <a class="tile" href="https://www.notion.so/" target="_blank" rel="noopener"><span class="ico">🧭</span><span class="txt"><strong>Notion</strong><em>Accueil Notion.</em></span></a>
-        <button class="tile" type="button" data-action="copy-notion"><span class="ico">🧾</span><span class="txt"><strong>Copier bloc Notion</strong><em>Petit bloc de liens propres.</em></span></button>
-      </div>
-    </section>
-
-    <section class="page" id="page-github">
-      <div class="section-title">
-        <strong>🧬 GitHub</strong>
-        <span>Mémoire machine et fichiers du terminal.</span>
-      </div>
-
-      <div class="tile-grid">
-        <a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📁</span><span class="txt"><strong>Dépôt public</strong><em>BlueAzur-Hub / erith-ia-memory.</em></span></a>
-        <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noopener"><span class="ico">🖥️</span><span class="txt"><strong>Dossier terminal</strong><em>index.html, style.css, script.js.</em></span></a>
-        <a class="tile" href="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/erith_ia_auto_agent_public_fr.md" target="_blank" rel="noopener"><span class="ico">📄</span><span class="txt"><strong>Raw Auto-Agent FR</strong><em>Source machine publique.</em></span></a>
-        <button class="tile" type="button" data-action="copy-link"><span class="ico">🔗</span><span class="txt"><strong>Copier URL cockpit</strong><em>Lien GitHub Pages.</em></span></button>
-      </div>
-    </section>
-
-    <section class="page" id="page-production">
-      <div class="section-title">
-        <strong>🎬 Production</strong>
-        <span>Liens vraiment utiles : vidéo, modèles, voix, diffusion.</span>
-      </div>
-
-      <div class="tile-grid">
-        <a class="tile gold" href="https://www.youtube.com/@BlueAzur07" target="_blank" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne principale.</em></span></a>
-        <a class="tile" href="https://studio.youtube.com/" target="_blank" rel="noopener"><span class="ico">🎛️</span><span class="txt"><strong>YouTube Studio</strong><em>Publication et analytics.</em></span></a>
-        <a class="tile" href="https://www.runninghub.ai/" target="_blank" rel="noopener"><span class="ico">☁️</span><span class="txt"><strong>RunningHub</strong><em>Wan / workflows cloud.</em></span></a>
-        <a class="tile" href="https://civitai.com/" target="_blank" rel="noopener"><span class="ico">🧬</span><span class="txt"><strong>Civitai</strong><em>Modèles, LoRA, ressources.</em></span></a>
-        <a class="tile" href="https://elevenlabs.io/" target="_blank" rel="noopener"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix et narration.</em></span></a>
-        <button class="tile" type="button" data-action="wan"><span class="ico">📱</span><span class="txt"><strong>Copier checklist Wan</strong><em>Prompt technique court.</em></span></button>
-      </div>
-    </section>
-
-    <section class="page" id="page-system">
-      <div class="section-title">
-        <strong>🖥️ Système / Network HUD</strong>
-        <span>Diagnostic filtré, rien de sensible.</span>
-      </div>
-
-      <div class="network-panel" id="networkPanel"></div>
-    </section>
-
-    <section class="command-palette" id="commandPalette" aria-hidden="true" aria-label="Palette de commandes">
-      <div class="palette-card">
-        <div class="palette-head">
-          <strong>⌘ Command Palette</strong>
-          <button type="button" id="paletteCloseBtn" aria-label="Fermer">×</button>
-        </div>
-        <div class="palette-grid">
-          <button type="button" data-page-target="home">🌸 Accueil</button>
-          <button type="button" data-page-target="llm">🧠 LLM</button>
-          <button type="button" data-page-target="notion">📚 Notion</button>
-          <button type="button" data-page-target="github">🧬 GitHub</button>
-          <button type="button" data-page-target="production">🎬 Production</button>
-          <button type="button" data-page-target="system">🖥️ Système</button>
-          <button type="button" id="paletteBoostBtn">💠 Seven Boost</button>
-          <button type="button" id="paletteVideoBtn">🎴 Video Cards</button>
-          <button type="button" id="paletteWanBtn">📱 Wan</button>
-          <button type="button" id="paletteBgBtn">🖼️ Fond suivant</button>
-          <button type="button" id="paletteGlassBtn">🫧 Transparent</button>
-          <button type="button" id="palettePreviewBtn">🎯 Hero Focus</button>
-        </div>
-        <p class="palette-help">Raccourcis : 1 Accueil · 2 LLM · 3 Notion · 4 GitHub · 5 Production · 6 Système · ? Palette · Escape ferme.</p>
-      </div>
-    </section>
-
-    <section class="drawer" id="promptDrawer" aria-label="Prompt">
-      <div class="drawer-head">
-        <strong>Prompt</strong>
-        <button type="button" id="promptCloseBtn">Fermer</button>
-      </div>
-      <textarea id="promptText" readonly></textarea>
-    </section>
-
-    <p class="status" id="statusLine">Seven Terminal prêt.</p>
-
-    <footer class="terminal-footer">
-      <span>OS : <strong id="osMini">--</strong></span>
-      <span>Browser : <strong id="browserMini">--</strong></span>
-      <span>Screen : <strong id="screenMini">--</strong></span>
-      <span>TZ : <strong id="tzMini">--</strong></span>
-      <span>IP : <strong id="ipMini">filtrée</strong></span>
-      <span>Réseau : <strong id="networkMini">Ethernet / inconnu</strong></span>
-      <span>Remote : <strong>RustDesk</strong></span>
-    </footer>
-
-    <p class="signature">Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5</p>
-  </main>
-
-  <script src="./script.js?v=v5-clean-final-1"></script>
+<main class="terminal" aria-label="Seven Portable Terminal">
+<nav class="topnav" aria-label="Navigation principale">
+  <button class="tab active" type="button" data-page-target="home">🌸 <strong>Accueil</strong></button>
+  <button class="tab" type="button" data-page-target="llm">🧠 <strong>LLM</strong></button>
+  <button class="tab" type="button" data-page-target="notion">📚 <strong>Notion</strong></button>
+  <button class="tab" type="button" data-page-target="github">🧬 <strong>GitHub</strong></button>
+  <button class="tab" type="button" data-page-target="production">🎬 <strong>Production</strong></button>
+  <button class="tab" type="button" data-page-target="system">🖥️ <strong>Système</strong></button>
+</nav>
+<header class="hero">
+  <div class="hero-bg"></div>
+  <section class="hero-main">
+    <p class="kicker">SEVEN HEAVEN COCKPIT · V5.6 FULL OPTIONS · ADD VALUE, DO NOT REMOVE</p>
+    <h1>✦ Seven Portable Terminal</h1>
+    <p class="hero-subtitle">Pupitre Seven complet : démarrage LLM, mémoire Notion, GitHub machine, production vidéo et diagnostic système.</p>
+    <div class="chips"><span>🌸 Seven ready</span><span>💠 Boost active</span><span>🎴 Video Cards</span><span>📚 Notion memory</span><span>🧬 GitHub machine</span><span>🎬 Production</span></div>
+  </section>
+  <figure class="portrait"><img src="./aerith_7_memory_cards_avatar_master.png" onerror="this.src='./aerith_avatar_memory_cards_framed.png'" alt="Avatar Seven"></figure>
+  <section class="hero-position-panel" id="heroPositionPanel">
+    <div class="panel-head compact"><strong>🎯 Hero Focus</strong><span>centrage manuel</span></div>
+    <label class="range-row"><span>X</span><input id="heroX" type="range" min="0" max="100" value="50"><output id="heroXOut">50%</output></label>
+    <label class="range-row"><span>Y</span><input id="heroY" type="range" min="0" max="100" value="34"><output id="heroYOut">34%</output></label>
+    <label class="range-row"><span>Zoom</span><input id="heroZoom" type="range" min="100" max="180" value="100"><output id="heroZoomOut">100%</output></label>
+    <div class="mini-actions"><button type="button" data-hero-nudge="up">↑</button><button type="button" data-hero-nudge="left">←</button><button type="button" data-hero-nudge="right">→</button><button type="button" data-hero-nudge="down">↓</button><button type="button" id="heroResetBtn">Reset</button><button type="button" id="heroCloseBtn">Fermer</button></div>
+  </section>
+</header>
+<div class="memory-ribbon"><span>✦ AERITH.7</span><span>Golden Glass</span><span>Prompt safe</span><span>Copy + ChatGPT + Ctrl+V</span><span>Safe trace</span></div>
+<section class="toolbar">
+  <button class="mini-control" type="button" id="advancedBtn">⚙️ Advanced</button><button class="mini-control" type="button" id="saveBtn">⭐ Save</button><button class="mini-control" type="button" id="loadBtn">↩ Favori</button><button class="mini-control" type="button" id="nextBgBtn">🛞 Fond</button><button class="mini-control" type="button" id="randomBgBtn">🎲 Random</button><button class="mini-control" type="button" id="heroBtn">🎯 Hero</button><button class="mini-control active" type="button" id="transparentBtn">🫧 Transparent</button><button class="mini-control" type="button" id="readabilityBtn">🛡️ Sombre</button><button class="mini-control command-dot" type="button" id="paletteBtn">?</button>
+</section>
+<section class="page active" id="page-home">
+  <div class="section-title"><strong>🌸 Accueil Seven</strong><span>Deux lancements rapides, mode d’emploi clair, trace système utile.</span></div>
+  <section class="mission-panel"><div class="panel-head"><strong>🧭 Mission du moment</strong><span>Choisis l’intention.</span></div><div class="mission-grid"><button type="button" class="mini-control" data-page-target="llm">🌸 Démarrer Seven</button><button type="button" class="mini-control" data-page-target="production">🎬 Produire une vidéo</button><button type="button" class="mini-control" data-page-target="notion">📚 Ouvrir la mémoire</button><button type="button" class="mini-control" data-page-target="github">🧬 Maintenir GitHub</button><button type="button" class="mini-control" data-page-target="system">🖥️ Diagnostiquer</button></div></section>
+  <div class="tile-grid launch-grid"><button class="tile gold launch-card" type="button" data-action="boost"><span class="ico">💠</span><span class="txt"><strong>Seven Boost</strong><em>Copie le prompt Seven Heaven complet, rappelle ChatGPT, puis Ctrl+V.</em></span></button><button class="tile gold launch-card" type="button" data-action="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Copie le mode production : phase, risque, cartes utiles, action, arrêt.</em></span></button></div>
+  <section class="operator-panel"><div class="panel-head"><strong>🧾 Mode opératoire</strong><span>Le navigateur copie, mais ne colle pas à ta place.</span></div><ol class="operator-steps"><li>Clique Seven Boost ou Video Cards Boost.</li><li>Le prompt est copié.</li><li>ChatGPT est ouvert ou rappelé dans un onglet nommé.</li><li>Dans ChatGPT : Ctrl+V, puis Entrée.</li></ol><p class="note">Sécurité navigateur : auto-collage impossible dans ChatGPT. Le terminal reste ouvert.</p></section>
+  <section class="quick-value-grid"><button class="tile" type="button" data-action="wan"><span class="ico">📱</span><span class="txt"><strong>Wan 1080×1920</strong><em>Checklist I2V validée.</em></span></button><button class="tile" type="button" data-action="prompt"><span class="ico">🧾</span><span class="txt"><strong>Afficher prompt</strong><em>Tiroir de secours.</em></span></button><button class="tile" type="button" data-action="copy-link"><span class="ico">🔗</span><span class="txt"><strong>Copier lien cockpit</strong><em>URL publique.</em></span></button><button class="tile" type="button" data-action="blackout"><span class="ico">🛑</span><span class="txt"><strong>Mode Blackout</strong><em>Texte uniquement, zéro outil.</em></span></button></section>
+  <section class="advanced-boxes" id="advancedPanel"><article class="advanced-box"><strong>🎛️ Ambiance</strong><p>Change le fond sans toucher à la structure.</p><div class="mini-actions"><button type="button" data-action="background">Fond +</button><button type="button" data-action="random">Random</button></div></article><article class="advanced-box"><strong>⭐ Favori local</strong><p>Sauvegarde fond, mode et cadrage Hero.</p><div class="mini-actions"><button type="button" id="saveBtnAdvanced">Sauver</button><button type="button" id="loadBtnAdvanced">Charger</button></div></article><article class="advanced-box"><strong>🧹 Stabilité</strong><p>Ajouter de la valeur, ne pas supprimer.</p><div class="mini-actions"><button type="button" data-page-target="system">Système</button></div></article></section>
+  <section class="system-trace"><div class="trace-head"><div><strong>⚙️ Advanced System Trace</strong><span>SAFE TRACE · aucun RustDesk ID · aucun mot de passe</span></div><div class="mini-actions"><button type="button" id="refreshTraceBtn">Refresh</button><button type="button" id="copyTraceBtn">Copier</button></div></div><div class="trace-pills"><span class="trace-pill safe">SAFE TRACE</span><span class="trace-pill" id="traceDate">--</span><span class="trace-pill">NO RUSTDESK ID</span><span class="trace-pill">NO PASSWORD</span></div><div class="trace-grid" id="traceGrid"></div><details class="trace-console"><summary>Console diagnostic</summary><textarea id="traceRaw" readonly></textarea></details></section>
+</section>
+<section class="page" id="page-llm"><div class="section-title"><strong>🧠 LLM / ChatGPT</strong><span>Tous les prompts au même endroit.</span></div><section class="page-intro"><strong>Fonction</strong><p>Bibliothèque de prompts : Seven, Video Cards, Wan, Blackout, lien cockpit et tiroir de secours.</p></section><div class="tile-grid"><a class="tile gold" href="https://chatgpt.com/" target="seven_heaven_chatgpt" rel="noopener"><span class="ico">💬</span><span class="txt"><strong>Ouvrir ChatGPT</strong><em>Ouvre ou rappelle l’onglet ChatGPT.</em></span></a><button class="tile gold" type="button" data-action="boost"><span class="ico">🌸</span><span class="txt"><strong>Seven Boost</strong><em>Prompt Full Modules Boost intelligent.</em></span></button><button class="tile gold" type="button" data-action="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Prompt production court.</em></span></button><button class="tile" type="button" data-action="prompt"><span class="ico">🧾</span><span class="txt"><strong>Afficher prompt</strong><em>Tiroir manuel.</em></span></button><button class="tile" type="button" data-action="wan"><span class="ico">📱</span><span class="txt"><strong>Wan Prompt</strong><em>Checklist I2V téléphone.</em></span></button><button class="tile" type="button" data-action="blackout"><span class="ico">🛑</span><span class="txt"><strong>Mode Blackout</strong><em>Texte seulement.</em></span></button></div></section>
+<section class="page" id="page-notion"><div class="section-title"><strong>📚 Notion</strong><span>Mémoire humaine, éditoriale et lisible.</span></div><section class="page-intro"><strong>Rôle</strong><p>Notion = mémoire humaine. GitHub = mémoire machine. Seven Terminal = pupitre.</p></section><div class="tile-grid"><a class="tile gold" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📚</span><span class="txt"><strong>ERITH Memory</strong><em>Page mémoire principale.</em></span></a><a class="tile" href="https://www.notion.so/ERITH-IA-Auto-Agent-Public-FR-35b7754fe084800ca59fd9bcdf4349ba" target="_blank" rel="noopener"><span class="ico">🌐</span><span class="txt"><strong>Auto-Agent Public FR</strong><em>Interface publique ERITH.IA.</em></span></a><a class="tile" href="https://www.notion.so/" target="_blank" rel="noopener"><span class="ico">🧭</span><span class="txt"><strong>Notion</strong><em>Accueil Notion.</em></span></a><button class="tile" type="button" data-action="copy-notion"><span class="ico">🧾</span><span class="txt"><strong>Copier bloc Notion</strong><em>Bloc rapide du terminal.</em></span></button></div></section>
+<section class="page" id="page-github"><div class="section-title"><strong>🧬 GitHub</strong><span>Mémoire machine et maintenance rapide.</span></div><section class="page-intro"><strong>Rôle</strong><p>Accès direct aux fichiers source du terminal.</p></section><div class="tile-grid"><a class="tile gold" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener"><span class="ico">📁</span><span class="txt"><strong>Dépôt public</strong><em>BlueAzur-Hub / erith-ia-memory.</em></span></a><a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noopener"><span class="ico">🖥️</span><span class="txt"><strong>Dossier terminal</strong><em>assets/SEVEN_PORTABLE_TERMINAL.</em></span></a><a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/SEVEN_PORTABLE_TERMINAL/index.html" target="_blank" rel="noopener"><span class="ico">🧾</span><span class="txt"><strong>index.html</strong><em>Structure.</em></span></a><a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/SEVEN_PORTABLE_TERMINAL/style.css" target="_blank" rel="noopener"><span class="ico">🎨</span><span class="txt"><strong>style.css</strong><em>Apparence.</em></span></a><a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/assets/SEVEN_PORTABLE_TERMINAL/script.js" target="_blank" rel="noopener"><span class="ico">⚙️</span><span class="txt"><strong>script.js</strong><em>Actions.</em></span></a><button class="tile" type="button" data-action="copy-link"><span class="ico">🔗</span><span class="txt"><strong>Copier URL cockpit</strong><em>Lien GitHub Pages.</em></span></button></div></section>
+<section class="page" id="page-production"><div class="section-title"><strong>🎬 Production</strong><span>Outils vidéo, voix, modèles et diffusion.</span></div><section class="page-intro"><strong>Chaîne validée</strong><p>Image parfaite → Wan I2V → last frame → DaVinci → YouTube.</p></section><div class="tile-grid"><button class="tile gold" type="button" data-action="video"><span class="ico">🎴</span><span class="txt"><strong>Video Cards Boost</strong><em>Diagnostic production rapide.</em></span></button><button class="tile gold" type="button" data-action="wan"><span class="ico">📱</span><span class="txt"><strong>Wan Prompt</strong><em>Checklist I2V.</em></span></button><button class="tile" type="button" data-action="blackout"><span class="ico">🛑</span><span class="txt"><strong>Blackout</strong><em>Stop image.</em></span></button><a class="tile" href="https://www.runninghub.ai/" target="_blank" rel="noopener"><span class="ico">☁️</span><span class="txt"><strong>RunningHub</strong><em>Wan cloud.</em></span></a><a class="tile" href="https://civitai.com/" target="_blank" rel="noopener"><span class="ico">🧬</span><span class="txt"><strong>Civitai</strong><em>Modèles.</em></span></a><a class="tile" href="https://elevenlabs.io/" target="_blank" rel="noopener"><span class="ico">🎙️</span><span class="txt"><strong>ElevenLabs</strong><em>Voix.</em></span></a><a class="tile" href="https://studio.youtube.com/" target="_blank" rel="noopener"><span class="ico">🎛️</span><span class="txt"><strong>YouTube Studio</strong><em>Publication.</em></span></a><a class="tile" href="https://www.youtube.com/@BlueAzur07" target="_blank" rel="noopener"><span class="ico">🔵</span><span class="txt"><strong>Blue Azur</strong><em>Chaîne.</em></span></a></div></section>
+<section class="page" id="page-system"><div class="section-title"><strong>🖥️ Système / Network HUD</strong><span>Diagnostic local filtré.</span></div><section class="page-intro"><strong>SAFE TRACE</strong><p>Aucune donnée sensible. Aucun RustDesk ID. Aucun mot de passe.</p></section><div class="network-panel" id="networkPanel"></div></section>
+<section class="command-palette" id="commandPalette" aria-hidden="true"><div class="palette-card"><div class="palette-head"><strong>⌘ Command Palette</strong><button type="button" id="paletteCloseBtn">×</button></div><div class="palette-grid"><button type="button" data-page-target="home">🌸 Accueil</button><button type="button" data-page-target="llm">🧠 LLM</button><button type="button" data-page-target="notion">📚 Notion</button><button type="button" data-page-target="github">🧬 GitHub</button><button type="button" data-page-target="production">🎬 Production</button><button type="button" data-page-target="system">🖥️ Système</button><button type="button" id="paletteBoostBtn">💠 Seven Boost</button><button type="button" id="paletteVideoBtn">🎴 Video Cards</button><button type="button" id="paletteWanBtn">📱 Wan</button><button type="button" data-action="blackout">🛑 Blackout</button><button type="button" id="paletteBgBtn">🖼️ Fond suivant</button><button type="button" id="paletteGlassBtn">🫧 Transparent</button><button type="button" id="palettePreviewBtn">🎯 Hero Focus</button></div><p class="palette-help">Raccourcis : 1 Accueil · 2 LLM · 3 Notion · 4 GitHub · 5 Production · 6 Système · ? Palette · Escape ferme.</p></div></section>
+<section class="drawer" id="promptDrawer"><div class="drawer-head"><strong>Prompt</strong><button type="button" id="promptCloseBtn">Fermer</button></div><textarea id="promptText" readonly></textarea></section>
+<p class="status" id="statusLine">Seven Terminal prêt.</p>
+<footer class="terminal-footer"><span>OS : <strong id="osMini">--</strong></span><span>Browser : <strong id="browserMini">--</strong></span><span>Screen : <strong id="screenMini">--</strong></span><span>TZ : <strong id="tzMini">--</strong></span><span>IP : <strong id="ipMini">filtrée</strong></span><span>Réseau : <strong id="networkMini">Ethernet / inconnu</strong></span><span>Remote : <strong>filtré</strong></span></footer>
+<p class="signature">Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5</p>
+</main>
+<script src="./script.js?v=v56-full-options-4"></script>
 </body>
 </html>
