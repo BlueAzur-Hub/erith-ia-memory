@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Celestial Atlas v3 Clean Home</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-v3-clean-home-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas v3 Readable Hero</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-v3-readable-hero-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS V3 · CLEAN HOME · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
+        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS V3 · READABLE HERO · READABLE HERO · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -65,6 +65,7 @@
         <button class="mini-control" onclick="cycleHeroFrame()">🎞️ Hero</button>
         <button class="mini-control" onclick="nextBackground()">🛞 Fond</button>
         <button class="mini-control" onclick="randomAtlasBackground()">🎲 Random</button>
+        <button class="mini-control active" id="readabilityShieldBtn" onclick="toggleReadabilityShield()">🛡️ Lisibilité</button>
       </div>
       <aside class="intel-panel" aria-live="polite">
         <div class="intel-topline">
@@ -1873,6 +1874,25 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     }
 
     forceCleanHomeBoot();
+  
+    function toggleReadabilityShield() {
+      document.body.classList.toggle("readability-off");
+      const on = !document.body.classList.contains("readability-off");
+      const btn = document.getElementById("readabilityShieldBtn");
+      if (btn) btn.classList.toggle("active", on);
+      try { localStorage.setItem("seven-readability-shield", on ? "1" : "0"); } catch (e) {}
+      setStatus(on ? "Bouclier lisibilité : ON" : "Bouclier lisibilité : OFF");
+    }
+
+    function bootReadabilityShield() {
+      let enabled = "1";
+      try { enabled = localStorage.getItem("seven-readability-shield") || "1"; } catch (e) {}
+      document.body.classList.toggle("readability-off", enabled !== "1");
+      const btn = document.getElementById("readabilityShieldBtn");
+      if (btn) btn.classList.toggle("active", enabled === "1");
+    }
+
+    bootReadabilityShield();
   </script>
 </body>
 </html>
