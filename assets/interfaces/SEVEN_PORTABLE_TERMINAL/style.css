@@ -28,7 +28,7 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(3,8,14,.03), rgba(3,8,14,.18)),
-    var(--active-bg, var(--active-bg, url("./background_historique_lr.png")));
+    var(--active-bg, var(--active-bg, var(--active-bg, url("./background_historique_lr.png"))));
   background-size: cover;
   background-position: center;
   overflow-x: hidden;
@@ -444,7 +444,7 @@ footer span {
 
 /* Comfort Social Backgrounds refinement */
 :root {
-  --active-bg: var(--active-bg, url("./background_historique_lr.png"));
+  --active-bg: var(--active-bg, var(--active-bg, url("./background_historique_lr.png")));
 }
 
 body {
@@ -550,5 +550,286 @@ body {
   .network-footer span {
     font-size: 9px;
     padding: 3px 7px;
+  }
+}
+
+
+/* -------------------------------------------------------
+   Seven Heaven Sky UI
+   Fond plus visible, verre transparent, nuages coton,
+   boutons inactifs translucides, actifs dorés.
+------------------------------------------------------- */
+
+:root {
+  --active-bg: url("./background_historique_lr.png");
+  --glass-alpha: .18;
+  --panel-alpha: .28;
+  --tile-alpha: .22;
+  --tile-border: rgba(255,255,255,.24);
+  --sky-blue: rgba(127,215,255,.72);
+  --sky-gold: rgba(255,216,121,.88);
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgba(5, 18, 28, .10), rgba(5, 18, 28, .18)),
+    var(--active-bg, url("./background_historique_lr.png")) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  transition: background-image .55s ease, filter .35s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    url("./sky_hud_lines.png"),
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,.15), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(127,215,255,.12), transparent 32%),
+    linear-gradient(90deg, rgba(0,0,0,.10), rgba(255,255,255,.02), rgba(0,0,0,.12));
+  background-size: cover;
+  mix-blend-mode: screen;
+  opacity: .78;
+}
+
+body::after {
+  height: 48vh !important;
+  left: -12% !important;
+  right: -12% !important;
+  bottom: -16% !important;
+  background:
+    url("./clouds_cotton_overlay.png"),
+    radial-gradient(ellipse at 10% 70%, rgba(255,255,255,.50) 0 15%, transparent 15.8%),
+    radial-gradient(ellipse at 52% 82%, rgba(255,255,255,.62) 0 22%, transparent 22.8%),
+    radial-gradient(ellipse at 92% 72%, rgba(255,255,255,.52) 0 18%, transparent 18.8%),
+    linear-gradient(180deg, transparent 0%, rgba(255,255,255,.26) 45%, rgba(255,255,255,.78) 100%) !important;
+  background-size: cover, auto, auto, auto, auto !important;
+  filter: blur(8px) !important;
+  opacity: .98 !important;
+}
+
+.terminal {
+  background:
+    linear-gradient(180deg, rgba(3,10,16,var(--glass-alpha)), rgba(3,10,16,.26)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.08), transparent 42%) !important;
+  border-color: rgba(255,216,121,.72) !important;
+  backdrop-filter: blur(3px) saturate(1.08) !important;
+  box-shadow:
+    0 26px 72px rgba(0,0,0,.36),
+    0 0 0 1px rgba(255,248,214,.36),
+    0 0 46px rgba(255,216,121,.24),
+    0 0 110px rgba(127,215,255,.16),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.deep-glass {
+  --glass-alpha: .08;
+  --panel-alpha: .16;
+  --tile-alpha: .12;
+}
+
+body[data-ui-mode="crystal"] {
+  --sky-gold: rgba(127,215,255,.90);
+  --tile-border: rgba(127,215,255,.38);
+}
+
+body[data-ui-mode="night"] {
+  --glass-alpha: .24;
+  --panel-alpha: .34;
+  --tile-alpha: .25;
+  --sky-gold: rgba(185,170,255,.90);
+}
+
+.sky-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cloud-orb {
+  position: absolute;
+  display: block;
+  width: 180px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.15);
+  filter: blur(16px);
+  animation: driftCloud 18s ease-in-out infinite alternate;
+}
+
+.cloud-a { left: 3%; top: 16%; animation-duration: 24s; }
+.cloud-b { left: 30%; top: 8%; width: 240px; animation-duration: 28s; }
+.cloud-c { right: 8%; top: 28%; animation-duration: 20s; }
+.cloud-d { left: 14%; bottom: 14%; width: 260px; animation-duration: 32s; }
+.cloud-e { right: 18%; bottom: 8%; width: 220px; animation-duration: 26s; }
+
+@keyframes driftCloud {
+  from { transform: translate3d(-14px, -3px, 0) scale(1); opacity: .20; }
+  to { transform: translate3d(18px, 5px, 0) scale(1.08); opacity: .36; }
+}
+
+.topnav,
+.hero,
+.page,
+.network-footer,
+footer {
+  position: relative;
+  z-index: 2;
+}
+
+.topnav {
+  background: rgba(0,0,0,.18) !important;
+  border-bottom-color: rgba(255,216,121,.22) !important;
+}
+
+.tab {
+  background: rgba(0,0,0,.16) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: rgba(255,248,233,.82) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.tab:not(.active) {
+  opacity: .74;
+}
+
+.tab.active,
+.tab:hover,
+.tab:focus {
+  opacity: 1;
+  background: rgba(255,216,121,.14) !important;
+  border-color: var(--sky-gold) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 18px rgba(255,216,121,.18);
+}
+
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.06)),
+    radial-gradient(circle at 40% 0%, rgba(255,216,121,.12), transparent 48%) !important;
+}
+
+.page {
+  background: rgba(0,0,0,.03) !important;
+}
+
+.section-title {
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  background: rgba(0,0,0,.12);
+  backdrop-filter: blur(2px);
+}
+
+.tile,
+.net-card {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,var(--tile-alpha)), rgba(7,18,24,calc(var(--tile-alpha) + .08))),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.07), transparent 62%) !important;
+  border-color: var(--tile-border) !important;
+  backdrop-filter: blur(3px) saturate(1.06);
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    opacity .16s ease;
+}
+
+.tile:not(.gold):not(.selected) {
+  opacity: .76;
+}
+
+.tile.gold,
+.tile.selected,
+.tile:hover,
+.tile:focus {
+  opacity: 1 !important;
+  border-color: var(--sky-gold) !important;
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.30), rgba(42,31,8,.26)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.22), transparent 62%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 22px rgba(255,216,121,.18),
+    0 12px 24px rgba(0,0,0,.24) !important;
+}
+
+.tile:hover,
+.tile:focus {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.tile.selected {
+  outline: 1px solid rgba(255,255,255,.22);
+}
+
+.mini-control {
+  min-height: 31px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(0,0,0,.16);
+  color: rgba(255,248,233,.84);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition: all .16s ease;
+}
+
+.mini-control.active,
+.mini-control:hover,
+.mini-control:focus,
+.mini-control.selected {
+  border-color: var(--sky-gold);
+  background: rgba(255,216,121,.14);
+  box-shadow: 0 0 18px rgba(255,216,121,.16);
+  outline: none;
+}
+
+.sky-control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 7px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  background: rgba(0,0,0,.10);
+  backdrop-filter: blur(2px);
+}
+
+.network-panel {
+  position: relative;
+  z-index: 2;
+}
+
+.network-footer {
+  background: rgba(0,0,0,.14) !important;
+  backdrop-filter: blur(2px);
+}
+
+footer {
+  background: rgba(0,0,0,.18) !important;
+}
+
+@media (max-width: 860px) {
+  .sky-control-strip {
+    gap: 5px;
+    padding: 6px;
+  }
+
+  .mini-control {
+    min-height: 28px;
+    font-size: 10px;
+    padding: 0 9px;
   }
 }

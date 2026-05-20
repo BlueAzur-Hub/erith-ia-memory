@@ -3,12 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Network HUD</title>
-  <link rel="stylesheet" href="./style.css?v=network-hud-1">
+  <title>Seven Portable Terminal — Seven Heaven Sky UI</title>
+  <link rel="stylesheet" href="./style.css?v=seven-heaven-sky-ui-1">
 </head>
 
 <body>
   <main class="terminal">
+    <div class="sky-ambient" aria-hidden="true">
+      <span class="cloud-orb cloud-a"></span>
+      <span class="cloud-orb cloud-b"></span>
+      <span class="cloud-orb cloud-c"></span>
+      <span class="cloud-orb cloud-d"></span>
+      <span class="cloud-orb cloud-e"></span>
+    </div>
     <nav class="topnav" aria-label="Navigation Seven">
       <button class="tab active" data-page="home"><span>🌸</span><strong>Accueil</strong></button>
       <button class="tab" data-page="llm"><span>🧠</span><strong>LLM</strong></button>
@@ -20,7 +27,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">NETWORK HUD · ETHERNET · GOLDEN CLOUDS</div>
+        <div class="kicker">SEVEN HEAVEN · SKY UI · CLOUD COCKPIT</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -41,6 +48,14 @@
     </header>
 
     <section class="page active" id="page-home">
+      <div class="sky-control-strip">
+        <button class="mini-control active" data-ui-mode="sky" onclick="setUiMode('sky')">☁️ Sky</button>
+        <button class="mini-control" data-ui-mode="crystal" onclick="setUiMode('crystal')">💠 Crystal</button>
+        <button class="mini-control" data-ui-mode="night" onclick="setUiMode('night')">🌙 Night</button>
+        <button class="mini-control" onclick="toggleGlass()">🫧 Glass</button>
+        <button class="mini-control" onclick="nextBackground()">🖼️ Background</button>
+        <button class="mini-control" onclick="randomBackground()">🎲 Random</button>
+      </div>
       <div class="section-title">
         <strong>🌸 Accueil Seven</strong>
         <span>Démarrage rapide : mémoire, production et cartes vidéo.</span>
@@ -631,7 +646,43 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     window.addEventListener("offline", refreshNetworkHud);
     setInterval(updateClock, 1000);
 
+
+    function markSelectedButton(button) {
+      document.querySelectorAll(".tile.selected, .mini-control.selected").forEach(el => el.classList.remove("selected"));
+      if (button) button.classList.add("selected");
+    }
+
+    function setUiMode(mode) {
+      document.body.dataset.uiMode = mode;
+      document.querySelectorAll("[data-ui-mode]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.uiMode === mode);
+      });
+      try { localStorage.setItem("seven-ui-mode", mode); } catch (e) {}
+      setStatus("Mode UI : " + mode);
+    }
+
+    function toggleGlass() {
+      document.body.classList.toggle("deep-glass");
+      try { localStorage.setItem("seven-deep-glass", document.body.classList.contains("deep-glass") ? "1" : "0"); } catch (e) {}
+      setStatus(document.body.classList.contains("deep-glass") ? "Fond plus transparent : ON" : "Fond plus transparent : OFF");
+    }
+
+    function bootSkyUi() {
+      let mode = "sky";
+      try { mode = localStorage.getItem("seven-ui-mode") || "sky"; } catch (e) {}
+      setUiMode(mode);
+
+      try {
+        if (localStorage.getItem("seven-deep-glass") === "1") document.body.classList.add("deep-glass");
+      } catch (e) {}
+
+      document.querySelectorAll(".tile, .mini-control").forEach(el => {
+        el.addEventListener("click", () => markSelectedButton(el));
+      });
+    }
+
     bootBackground();
+    bootSkyUi();
     refreshNetworkHud();
     updateClock();
   </script>
