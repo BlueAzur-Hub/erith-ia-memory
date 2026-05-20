@@ -5624,3 +5624,119 @@ body:not(.readability-off) footer span {
   border-color: rgba(232, 201, 120, 0.34) !important;
   color: rgba(255,255,255,0.94) !important;
 }
+
+/* =========================================================
+   SEVEN — MINI PATCH CSS
+   Cibles : cartes + toolbar + trace
+   À coller tout en bas de style.css
+========================================================= */
+
+body:not(.readability-off) .tile,
+body:not(.readability-off) button.tile,
+body:not(.readability-off) .tile.old,
+body:not(.readability-off) .tile.selected,
+body:not(.readability-off) .tile.gold {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.28), rgba(8,18,26,.20)) !important;
+  border-color: rgba(255,216,121,.34) !important;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(4px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(1.04) !important;
+}
+
+body:not(.readability-off) .tile::before {
+  opacity: .34 !important;
+  filter: saturate(1.02) brightness(.94) contrast(1.02) !important;
+}
+
+body:not(.readability-off) .tile::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.38), rgba(0,0,0,.16) 58%, rgba(0,0,0,.26)),
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.08), transparent 45%) !important;
+}
+
+body:not(.readability-off) .tile:hover,
+body:not(.readability-off) button.tile:hover,
+body:not(.readability-off) .tile:focus {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.48), rgba(8,18,26,.38)) !important;
+  border-color: rgba(255,216,121,.78) !important;
+  box-shadow:
+    0 0 16px rgba(255,216,121,.14),
+    0 8px 20px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .section-title {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.24), rgba(8,18,26,.16)) !important;
+  border-color: rgba(255,216,121,.40) !important;
+  box-shadow:
+    0 5px 14px rgba(0,0,0,.10),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+body:not(.readability-off) .home-system-trace,
+body:not(.readability-off) .system-trace-pro {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.30), rgba(8,18,26,.22)) !important;
+  border-color: rgba(127,215,255,.32) !important;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.15),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(4px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(1.04) !important;
+}
+
+body:not(.readability-off) .trace-pro-grid,
+body:not(.readability-off) .device-panel,
+body:not(.readability-off) .network-panel {
+  background: transparent !important;
+  border-color: rgba(255,216,121,.18) !important;
+  box-shadow: none !important;
+}
+
+body:not(.readability-off) .trace-card,
+body:not(.readability-off) .device-card,
+body:not(.readability-off) .net-card,
+body:not(.readability-off) .advanced-box {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.26), rgba(7,20,28,.18)) !important;
+  border-color: rgba(255,216,121,.24) !important;
+  box-shadow:
+    0 5px 14px rgba(0,0,0,.11),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(4px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(1.04) !important;
+}
+
+body:not(.readability-off) .trace-card:hover,
+body:not(.readability-off) .device-card:hover,
+body:not(.readability-off) .net-card:hover,
+body:not(.readability-off) .advanced-box:hover {
+  background:
+    linear-gradient(145deg, rgba(8,12,18,.46), rgba(7,20,28,.34)) !important;
+  border-color: rgba(255,216,121,.52) !important;
+}
+
+body:not(.readability-off) .trace-pill,
+body:not(.readability-off) .badge,
+body:not(.readability-off) .chip,
+body:not(.readability-off) footer span,
+body:not(.readability-off) .system-footer span,
+body:not(.readability-off) .network-footer span {
+  background: rgba(8,12,18,.24) !important;
+  border-color: rgba(255,216,121,.24) !important;
+  color: rgba(255,248,233,.92) !important;
+  box-shadow: none !important;
+}
+
+body:not(.readability-off) .trace-pill.safe {
+  background: rgba(32,120,72,.20) !important;
+  border-color: rgba(137,255,188,.34) !important;
+  color: rgba(200,255,224,.95) !important;
+}
