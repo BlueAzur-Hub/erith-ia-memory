@@ -127,26 +127,6 @@ async function copyText(text, label) {
     return false;
   }
 }
-
-function copyAndOpenChat(text, label) {
-  const chatTab = window.open(CHATGPT_URL, "_blank");
-
-  copyText(text, label).then((copied) => {
-    if (chatTab && copied) {
-      setStatus(label + " ChatGPT ouvert : colle avec Ctrl+V.");
-      return;
-    }
-
-    if (chatTab && !copied) {
-      setStatus("ChatGPT ouvert. Copie manuelle affichée.");
-      return;
-    }
-
-    if (!chatTab && copied) {
-      setStatus(label + " Popup bloquée : ouvre ChatGPT puis Ctrl+V.");
-      return;
-    }
-
     setStatus("Popup bloquée. Copie manuelle affichée.");
   });
 }
