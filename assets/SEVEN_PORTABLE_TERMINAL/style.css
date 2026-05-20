@@ -4889,3 +4889,433 @@ body:not(.readability-off) .command-palette {
   -webkit-backdrop-filter: blur(8px) saturate(1.10) !important;
 }
 
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.17 — Magic Transparent Command Palette
+   Fichier modifié uniquement : style.css
+
+   Correction ciblée :
+   - la Command Palette ne doit plus poser un gros voile noir ;
+   - son cadre devient transparent avec bordure dorée ;
+   - ses boutons sont transparents au repos ;
+   - ses boutons deviennent opaques uniquement au hover / focus / sélection.
+------------------------------------------------------- */
+
+/* La couche plein écran de la palette ne doit plus noircir la page */
+body:not(.readability-off) .command-palette,
+body:not(.readability-off) .command-palette.open,
+.command-palette,
+.command-palette.open {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* La carte centrale devient un cadre doré transparent */
+body:not(.readability-off) .palette-card,
+.command-palette .palette-card,
+.palette-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border: 1px solid rgba(255,216,121,.48) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,216,121,.10),
+    0 0 22px rgba(255,216,121,.08) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* La tête de palette reste structurée, sans fond */
+body:not(.readability-off) .palette-head,
+.command-palette .palette-head,
+.palette-head {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-bottom: 1px solid rgba(255,216,121,.22) !important;
+  box-shadow: none !important;
+}
+
+/* Le texte garde une ombre pour rester lisible sur fond clair */
+.palette-head strong,
+.palette-help,
+.palette-grid button,
+.command-palette button {
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.88),
+    0 0 8px rgba(0,0,0,.46) !important;
+}
+
+/* Grille de boutons : aucun fond général */
+body:not(.readability-off) .palette-grid,
+.command-palette .palette-grid,
+.palette-grid {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Boutons de la palette au repos : transparents */
+body:not(.readability-off) .palette-grid button:not(:hover):not(:focus):not(.active):not(.selected),
+body:not(.readability-off) .palette-head button:not(:hover):not(:focus),
+.command-palette .palette-grid button:not(:hover):not(:focus):not(.active):not(.selected),
+.command-palette .palette-head button:not(:hover):not(:focus),
+.palette-grid button:not(:hover):not(:focus):not(.active):not(.selected),
+.palette-head button:not(:hover):not(:focus) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+
+  border-color: rgba(255,216,121,.32) !important;
+  box-shadow: none !important;
+
+  color: rgba(255,248,233,.92) !important;
+}
+
+/* Boutons de la palette au survol / focus / sélection : opaques */
+body:not(.readability-off) .palette-grid button:hover,
+body:not(.readability-off) .palette-grid button:focus,
+body:not(.readability-off) .palette-grid button.active,
+body:not(.readability-off) .palette-grid button.selected,
+body:not(.readability-off) .palette-head button:hover,
+body:not(.readability-off) .palette-head button:focus,
+.command-palette .palette-grid button:hover,
+.command-palette .palette-grid button:focus,
+.command-palette .palette-grid button.active,
+.command-palette .palette-grid button.selected,
+.command-palette .palette-head button:hover,
+.command-palette .palette-head button:focus,
+.palette-grid button:hover,
+.palette-grid button:focus,
+.palette-grid button.active,
+.palette-grid button.selected,
+.palette-head button:hover,
+.palette-head button:focus {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.74)) !important;
+  background-color: rgba(0,0,0,.74) !important;
+
+  border-color: rgba(255,216,121,.78) !important;
+  color: #fff8e9 !important;
+
+  box-shadow:
+    0 0 16px rgba(255,216,121,.15),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Ligne d’aide de la palette : transparente aussi */
+body:not(.readability-off) .palette-help,
+.command-palette .palette-help,
+.palette-help {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-top: 1px solid rgba(255,216,121,.14) !important;
+  box-shadow: none !important;
+  color: rgba(255,248,233,.74) !important;
+}
+
+/* Les grosses zones noires accidentelles sous la palette doivent disparaître */
+body:not(.readability-off) .command-palette::before,
+body:not(.readability-off) .command-palette::after,
+body:not(.readability-off) .palette-card::before,
+body:not(.readability-off) .palette-card::after,
+.command-palette::before,
+.command-palette::after,
+.palette-card::before,
+.palette-card::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Sécurité : rien dans la palette ne doit recréer un fond plein au repos */
+body:not(.readability-off) .command-palette *:not(button):not(.active):not(.selected):not(:hover):not(:focus),
+.command-palette *:not(button):not(.active):not(.selected):not(:hover):not(:focus) {
+  box-shadow: none !important;
+}
+
+/* Mais les fenêtres utiles ouvertes restent propres si nécessaire */
+body.show-hero-focus .hero-position-panel,
+body.show-hero-focus #heroPositionPanel {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+  border-color: rgba(127,215,255,.42) !important;
+  box-shadow:
+    0 16px 34px rgba(0,0,0,.34),
+    0 0 18px rgba(127,215,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+
+/* -------------------------------------------------------
+   Celestial Atlas 2.9.18 — TRUE IDLE TRANSPARENT BUTTONS
+   Fichier modifié uniquement : style.css
+
+   Règle finale demandée :
+   - TOUS les boutons sont transparents au repos ;
+   - même active / selected / gold / focus ;
+   - un bouton devient opaque uniquement au survol souris ;
+   - les bordures dorées restent visibles ;
+   - Command Palette transparente aussi.
+------------------------------------------------------- */
+
+/* Menus, panneaux, rubans : structure dorée sans plaque de fond */
+body:not(.readability-off) .terminal,
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .aerith-memory-ribbon,
+body:not(.readability-off) .section-title,
+body:not(.readability-off) .page,
+body:not(.readability-off) .intel-panel,
+body:not(.readability-off) .advanced-dashboard-panel,
+body:not(.readability-off) .celestial-atlas-panel,
+body:not(.readability-off) .network-panel,
+body:not(.readability-off) .device-panel,
+body:not(.readability-off) .system-trace-pro,
+body:not(.readability-off) .home-system-trace,
+body:not(.readability-off) .network-footer,
+body:not(.readability-off) .system-footer,
+body:not(.readability-off) footer,
+body:not(.readability-off) .status,
+body:not(.readability-off) .command-palette,
+body:not(.readability-off) .palette-card,
+body:not(.readability-off) .palette-head,
+body:not(.readability-off) .palette-grid,
+body:not(.readability-off) .palette-help {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Command Palette : aucun voile noir global */
+.command-palette,
+.command-palette.open,
+.command-palette[aria-hidden="false"],
+.command-palette .palette-card,
+.palette-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Garder les cadres dorés / bleutés */
+body:not(.readability-off) .terminal {
+  border-color: rgba(255,216,121,.46) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,216,121,.14),
+    0 0 22px rgba(255,216,121,.06) !important;
+}
+
+body:not(.readability-off) .topnav,
+body:not(.readability-off) .sky-control-strip,
+body:not(.readability-off) .aerith-memory-ribbon,
+body:not(.readability-off) .section-title,
+body:not(.readability-off) .home-system-trace,
+body:not(.readability-off) .system-trace-pro,
+body:not(.readability-off) .network-footer,
+body:not(.readability-off) .system-footer,
+body:not(.readability-off) footer,
+.command-palette .palette-card,
+.palette-card {
+  border-color: rgba(255,216,121,.26) !important;
+}
+
+/* Sécurité : aucun pseudo-voile */
+body:not(.readability-off)::before,
+body:not(.readability-off)::after,
+body:not(.readability-off) .terminal::before,
+body:not(.readability-off) .terminal::after,
+body:not(.readability-off) .page::before,
+body:not(.readability-off) .page::after,
+body:not(.readability-off) .command-palette::before,
+body:not(.readability-off) .command-palette::after,
+body:not(.readability-off) .palette-card::before,
+body:not(.readability-off) .palette-card::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------
+   BOUTONS : état repos absolument transparent
+   Ici on ne met PAS :not(.active), PAS :not(.selected), PAS :not(.gold)
+   Donc même les boutons actifs restent transparents au repos.
+------------------------------------------------------- */
+
+body:not(.readability-off) button:not(:hover),
+body:not(.readability-off) .tab:not(:hover),
+body:not(.readability-off) .mini-control:not(:hover),
+body:not(.readability-off) .atlas-chip:not(:hover),
+body:not(.readability-off) .tile:not(:hover),
+body:not(.readability-off) .palette-grid button:not(:hover),
+body:not(.readability-off) .palette-head button:not(:hover),
+body:not(.readability-off) .trace-head-actions button:not(:hover),
+body:not(.readability-off) .advanced-actions button:not(:hover),
+body:not(.readability-off) .advanced-dashboard-head button:not(:hover),
+body:not(.readability-off) .hero-position-actions button:not(:hover),
+body:not(.readability-off) .trace-card:not(:hover),
+body:not(.readability-off) .net-card:not(:hover),
+body:not(.readability-off) .device-card:not(:hover),
+body:not(.readability-off) .advanced-box:not(:hover),
+body:not(.readability-off) .hero-frame-chip:not(:hover),
+body:not(.readability-off) .atlas-preview-card:not(:hover) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Bordures et texte au repos */
+body:not(.readability-off) button:not(:hover),
+body:not(.readability-off) .tab:not(:hover),
+body:not(.readability-off) .mini-control:not(:hover),
+body:not(.readability-off) .atlas-chip:not(:hover),
+body:not(.readability-off) .tile:not(:hover),
+body:not(.readability-off) .palette-grid button:not(:hover),
+body:not(.readability-off) .palette-head button:not(:hover),
+body:not(.readability-off) .trace-card:not(:hover),
+body:not(.readability-off) .net-card:not(:hover),
+body:not(.readability-off) .device-card:not(:hover),
+body:not(.readability-off) .advanced-box:not(:hover),
+body:not(.readability-off) .atlas-preview-card:not(:hover) {
+  border-color: rgba(255,216,121,.30) !important;
+  color: rgba(255,248,233,.92) !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.88),
+    0 0 8px rgba(0,0,0,.46) !important;
+}
+
+/* Exceptions de bordures bleues */
+body:not(.readability-off) #readabilityShieldBtn:not(:hover),
+body:not(.readability-off) .trace-card:not(:hover),
+body:not(.readability-off) .net-card:not(:hover),
+body:not(.readability-off) .device-card:not(:hover) {
+  border-color: rgba(127,215,255,.30) !important;
+}
+
+/* Les previews internes des tuiles doivent aussi rester très légères au repos */
+body:not(.readability-off) .tile:not(:hover)::before,
+body:not(.readability-off) .atlas-preview-card:not(:hover)::before {
+  opacity: .10 !important;
+  filter: saturate(.95) brightness(.86) !important;
+}
+
+body:not(.readability-off) .tile:not(:hover)::after,
+body:not(.readability-off) .atlas-preview-card:not(:hover)::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.02) 60%, rgba(0,0,0,.05)) !important;
+}
+
+/* -------------------------------------------------------
+   SURVOL SOURIS : opaque magique
+   Pas focus, pas selected, pas active : seulement hover.
+------------------------------------------------------- */
+
+body:not(.readability-off) button:hover,
+body:not(.readability-off) .tab:hover,
+body:not(.readability-off) .mini-control:hover,
+body:not(.readability-off) .atlas-chip:hover,
+body:not(.readability-off) .tile:hover,
+body:not(.readability-off) .palette-grid button:hover,
+body:not(.readability-off) .palette-head button:hover,
+body:not(.readability-off) .trace-head-actions button:hover,
+body:not(.readability-off) .advanced-actions button:hover,
+body:not(.readability-off) .advanced-dashboard-head button:hover,
+body:not(.readability-off) .hero-position-actions button:hover,
+body:not(.readability-off) .trace-card:hover,
+body:not(.readability-off) .net-card:hover,
+body:not(.readability-off) .device-card:hover,
+body:not(.readability-off) .advanced-box:hover,
+body:not(.readability-off) .hero-frame-chip:hover,
+body:not(.readability-off) .atlas-preview-card:hover {
+  background:
+    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.76)) !important;
+  background-color: rgba(0,0,0,.76) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,216,121,.24), rgba(0,0,0,.76)) !important;
+
+  border-color: rgba(255,216,121,.78) !important;
+  color: #fff8e9 !important;
+
+  box-shadow:
+    0 0 16px rgba(255,216,121,.16),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Hover des tuiles : preview visible sous le voile opaque */
+body:not(.readability-off) .tile:hover::before,
+body:not(.readability-off) .atlas-preview-card:hover::before {
+  opacity: .42 !important;
+  filter: saturate(1.05) brightness(.95) !important;
+}
+
+body:not(.readability-off) .tile:hover::after,
+body:not(.readability-off) .atlas-preview-card:hover::after {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.34) 60%, rgba(0,0,0,.42)) !important;
+}
+
+/* Bouton Lisibilité et ? : transparents même au hover si tu veux un contrôle discret */
+body:not(.readability-off) #readabilityShieldBtn,
+body:not(.readability-off) #readabilityShieldBtn:hover,
+body:not(.readability-off) #commandDotTopBtn,
+body:not(.readability-off) #commandDotTopBtn:hover,
+body:not(.readability-off) .command-dot-top,
+body:not(.readability-off) .command-dot-top:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Fenêtres ouvertes utiles : garder opaques, sinon elles deviennent inutilisables */
+body.show-hero-focus .hero-position-panel,
+body.show-hero-focus #heroPositionPanel {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.78), rgba(6,18,26,.62)) !important;
+  background-color: rgba(0,0,0,.72) !important;
+  backdrop-filter: blur(8px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.12) !important;
+  box-shadow:
+    0 16px 34px rgba(0,0,0,.34),
+    0 0 18px rgba(127,215,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Mais la palette de commande reste bien transparente, même ouverte */
+body:not(.readability-off) .command-palette,
+body:not(.readability-off) .command-palette.open,
+body:not(.readability-off) .command-palette[aria-hidden="false"],
+body:not(.readability-off) .command-palette .palette-card,
+body:not(.readability-off) .palette-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
