@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal — Fullscreen Backgrounds</title>
-  <link rel="stylesheet" href="./style.css?v=fullscreen-bg-fixed-gears-1">
+  <title>Seven Portable Terminal — Selected Gears Only</title>
+  <link rel="stylesheet" href="./style.css?v=selected-gears-only-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">FULLSCREEN SKY BACKGROUNDS · FIXED GEARS · SEVEN COCKPIT</div>
+        <div class="kicker">FULLSCREEN SKY · SELECTED GEARS ONLY · SEVEN COCKPIT</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -426,7 +426,7 @@
             <em>Change l’arrière-plan du cockpit Seven</em>
           </span>
         </button>
-              <button class="tile" onclick="refreshSystemDetails()">
+              <button class="tile" onclick="refreshSystemDetails()" data-gear="true">
           <span class="ico gear-ico">🛞</span>
           <span class="txt">
             <strong>Refresh système</strong>
@@ -434,7 +434,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="copySystemDiagnostics()">
+        <button class="tile" onclick="copySystemDiagnostics()" data-gear="true">
           <span class="ico gear-ico">⚙️</span>
           <span class="txt">
             <strong>Copier diagnostic</strong>
@@ -442,7 +442,7 @@
           </span>
         </button>
 
-        <button class="tile" onclick="toggleAdvancedSystem()">
+        <button class="tile" onclick="toggleAdvancedSystem()" data-gear="true">
           <span class="ico gear-ico">⚙️</span>
           <span class="txt">
             <strong>Détails avancés</strong>
@@ -1348,6 +1348,19 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
     refreshSystemDetails();
     refreshNetworkHud();
     updateClock();
+  
+    function bootSelectedGearsOnly() {
+      document.querySelectorAll(".tile, .mini-control").forEach(el => {
+        el.addEventListener("click", () => {
+          document.querySelectorAll(".tile.selected, .mini-control.selected").forEach(item => {
+            if (item !== el) item.classList.remove("selected");
+          });
+          el.classList.add("selected");
+        });
+      });
+    }
+
+    bootSelectedGearsOnly();
   </script>
 </body>
 </html>
