@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Heaven Cockpit — Aerith Avatar</title>
-  <link rel="stylesheet" href="./style.css?v=celestial-atlas-v3-aerith-avatar-1">
+  <title>Seven Heaven Cockpit — Celestial Atlas 2.9 Recovery Hero</title>
+  <link rel="stylesheet" href="./style.css?v=celestial-atlas-2-9-recovery-hero-1">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
     <header class="hero">
       <div class="hero-main">
-        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS V3 · AERITH AVATAR · TRANSFORMER BOOK VIEWS · BACKGROUND RESET · READABLE HERO · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
+        <div class="kicker">SEVEN HEAVEN COCKPIT · CELESTIAL ATLAS 2.9 · RECOVERY HERO · TRANSFORMER BOOK VIEWS · BACKGROUND RESET · READABLE HERO · SOLID SHELL V2 · HERO AVATAR LOCKED</div>
         <h1>✦ Seven Portable Terminal</h1>
         <p>Pupitre tactile aérien — Seven Boost, Video Cards, Notion Cores, GitHub, Production et Blue Azur.</p>
 
@@ -44,7 +44,7 @@
       </div>
 
       <div class="portrait">
-        <img src="./aerith_avatar_memory_cards_framed.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+        <img src="./aerith_7_memory_cards_avatar_master.png" alt="Aerith" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
         <div class="portrait-fallback">🌸<br>Seven</div>
       </div>
     </header>
@@ -151,11 +151,11 @@
 
         <div class="atlas-toolbar">
           <button class="atlas-chip selected" data-family-filter="All" onclick="renderAtlasGrid('All')">✦ Tout</button>
-          <button class="atlas-chip" data-family-filter="Sky Bridge Ruins" onclick="renderAtlasGrid('Sky Bridge Ruins')">🌉 Bridge</button>
-          <button class="atlas-chip" data-family-filter="Suspended City" onclick="renderAtlasGrid('Suspended City')">🏰 City</button>
-          <button class="atlas-chip" data-family-filter="Grand Tree Garden" onclick="renderAtlasGrid('Grand Tree Garden')">🌳 Tree</button>
+          <button class="atlas-chip" data-family-filter="City Ruins" onclick="renderAtlasGrid('City Ruins')">🌉 City</button>
           <button class="atlas-chip" data-family-filter="Crystal Sanctuary" onclick="renderAtlasGrid('Crystal Sanctuary')">💠 Crystal</button>
+          <button class="atlas-chip" data-family-filter="Grand Tree Garden" onclick="renderAtlasGrid('Grand Tree Garden')">🌳 Tree</button>
           <button class="atlas-chip" data-family-filter="Historic Ruins" onclick="renderAtlasGrid('Historic Ruins')">🏛️ Ruins</button>
+          <button class="atlas-chip" data-family-filter="Suspended City" onclick="renderAtlasGrid('Suspended City')">🏰 City</button>
         </div>
 
         <div class="atlas-current">
@@ -164,7 +164,16 @@
           <em id="currentAtlasMeta">Celestial Atlas</em>
         </div>
 
-        <div class="atlas-preview-grid" id="atlasPreviewGrid"></div></section>
+        <div class="atlas-preview-grid" id="atlasPreviewGrid"></div>
+
+        <div class="hero-gallery">
+          <div class="hero-gallery-head">
+            <strong>🎞️ Hero Gallery</strong>
+            <span>change uniquement le cadre du haut</span>
+          </div>
+          <div class="hero-gallery-grid" id="heroGalleryGrid"></div>
+        </div>
+      </section>
 
 
 
@@ -708,99 +717,79 @@
 
     const BACKGROUNDS = [
       {
-            "name": "Sky Bridge Ruins · pleine hauteur",
-            "family": "Sky Bridge Ruins",
-            "url": "./atlas_reset_sky_bridge_ruins_full_height.jpg"
-      },
-      {
             "name": "Sky Bridge Ruins · temple",
             "family": "Sky Bridge Ruins",
-            "url": "./atlas_reset_sky_bridge_ruins_temple.jpg"
+            "url": "./atlas_29_sky_bridge_ruins_temple.jpg"
       },
       {
             "name": "Sky Bridge Ruins · pont",
             "family": "Sky Bridge Ruins",
-            "url": "./atlas_reset_sky_bridge_ruins_bridge.jpg"
+            "url": "./atlas_29_sky_bridge_ruins_pont.jpg"
       },
       {
             "name": "Sky Bridge Ruins · profondeur",
             "family": "Sky Bridge Ruins",
-            "url": "./atlas_reset_sky_bridge_ruins_depth.jpg"
-      },
-      {
-            "name": "Historic Ruins · large",
-            "family": "Historic Ruins",
-            "url": "./atlas_reset_historic_ruins_wide.jpg"
-      },
-      {
-            "name": "Historic Ruins · jardin gauche",
-            "family": "Historic Ruins",
-            "url": "./atlas_reset_historic_ruins_left_garden.jpg"
-      },
-      {
-            "name": "Historic Ruins · hall cristal",
-            "family": "Historic Ruins",
-            "url": "./atlas_reset_historic_ruins_crystal_hall.jpg"
-      },
-      {
-            "name": "Historic Ruins · ruines hautes",
-            "family": "Historic Ruins",
-            "url": "./atlas_reset_historic_ruins_upper_ruins.jpg"
-      },
-      {
-            "name": "Suspended City · pleine hauteur",
-            "family": "Suspended City",
-            "url": "./atlas_reset_suspended_city_full_height.jpg"
+            "url": "./atlas_29_sky_bridge_ruins_profondeur.jpg"
       },
       {
             "name": "Suspended City · temple",
             "family": "Suspended City",
-            "url": "./atlas_reset_suspended_city_temple.jpg"
+            "url": "./atlas_29_suspended_city_temple.jpg"
       },
       {
             "name": "Suspended City · pont",
             "family": "Suspended City",
-            "url": "./atlas_reset_suspended_city_bridge.jpg"
+            "url": "./atlas_29_suspended_city_pont.jpg"
       },
       {
-            "name": "Grand Tree Garden · pleine hauteur",
-            "family": "Grand Tree Garden",
-            "url": "./atlas_reset_grand_tree_garden_full_height.jpg"
+            "name": "Suspended City · profondeur",
+            "family": "Suspended City",
+            "url": "./atlas_29_suspended_city_profondeur.jpg"
       },
       {
             "name": "Grand Tree Garden · arbre",
             "family": "Grand Tree Garden",
-            "url": "./atlas_reset_grand_tree_garden_canopy.jpg"
+            "url": "./atlas_29_grand_tree_garden_arbre.jpg"
       },
       {
             "name": "Grand Tree Garden · jardin",
             "family": "Grand Tree Garden",
-            "url": "./atlas_reset_grand_tree_garden_garden.jpg"
+            "url": "./atlas_29_grand_tree_garden_jardin.jpg"
       },
       {
             "name": "Grand Tree Garden · personnages",
             "family": "Grand Tree Garden",
-            "url": "./atlas_reset_grand_tree_garden_characters.jpg"
-      },
-      {
-            "name": "Crystal Sanctuary · pleine hauteur",
-            "family": "Crystal Sanctuary",
-            "url": "./atlas_reset_crystal_sanctuary_full_height.jpg"
+            "url": "./atlas_29_grand_tree_garden_personnages.jpg"
       },
       {
             "name": "Crystal Sanctuary · cristal",
             "family": "Crystal Sanctuary",
-            "url": "./atlas_reset_crystal_sanctuary_crystal.jpg"
+            "url": "./atlas_29_crystal_sanctuary_cristal.jpg"
       },
       {
             "name": "Crystal Sanctuary · arche",
             "family": "Crystal Sanctuary",
-            "url": "./atlas_reset_crystal_sanctuary_arch.jpg"
+            "url": "./atlas_29_crystal_sanctuary_arche.jpg"
       },
       {
             "name": "Crystal Sanctuary · seuil",
             "family": "Crystal Sanctuary",
-            "url": "./atlas_reset_crystal_sanctuary_floor.jpg"
+            "url": "./atlas_29_crystal_sanctuary_seuil.jpg"
+      },
+      {
+            "name": "Historic Ruins · large",
+            "family": "Historic Ruins",
+            "url": "./atlas_29_historic_ruins_large.jpg"
+      },
+      {
+            "name": "Historic Ruins · jardin",
+            "family": "Historic Ruins",
+            "url": "./atlas_29_historic_ruins_jardin.jpg"
+      },
+      {
+            "name": "Historic Ruins · hall",
+            "family": "Historic Ruins",
+            "url": "./atlas_29_historic_ruins_hall.jpg"
       }
 ];
 
@@ -1165,137 +1154,109 @@ Ryzen 7 = moteur de production.`;
 
     const CELESTIAL_ATLAS_ITEMS = [
     {
-        "name": "Sky Bridge Ruins · pleine hauteur",
-        "family": "Sky Bridge Ruins",
-        "variant": "pleine hauteur",
-        "url": "./atlas_reset_sky_bridge_ruins_full_height.jpg",
-        "thumb": "./atlas_reset_sky_bridge_ruins_full_height.jpg"
-    },
-    {
         "name": "Sky Bridge Ruins · temple",
         "family": "Sky Bridge Ruins",
         "variant": "temple",
-        "url": "./atlas_reset_sky_bridge_ruins_temple.jpg",
-        "thumb": "./atlas_reset_sky_bridge_ruins_temple.jpg"
+        "url": "./atlas_29_sky_bridge_ruins_temple.jpg",
+        "thumb": "./preview_reset_atlas_29_sky_bridge_ruins_temple.jpg"
     },
     {
         "name": "Sky Bridge Ruins · pont",
         "family": "Sky Bridge Ruins",
         "variant": "pont",
-        "url": "./atlas_reset_sky_bridge_ruins_bridge.jpg",
-        "thumb": "./atlas_reset_sky_bridge_ruins_bridge.jpg"
+        "url": "./atlas_29_sky_bridge_ruins_pont.jpg",
+        "thumb": "./preview_reset_atlas_29_sky_bridge_ruins_pont.jpg"
     },
     {
         "name": "Sky Bridge Ruins · profondeur",
         "family": "Sky Bridge Ruins",
         "variant": "profondeur",
-        "url": "./atlas_reset_sky_bridge_ruins_depth.jpg",
-        "thumb": "./atlas_reset_sky_bridge_ruins_depth.jpg"
-    },
-    {
-        "name": "Historic Ruins · large",
-        "family": "Historic Ruins",
-        "variant": "large",
-        "url": "./atlas_reset_historic_ruins_wide.jpg",
-        "thumb": "./atlas_reset_historic_ruins_wide.jpg"
-    },
-    {
-        "name": "Historic Ruins · jardin gauche",
-        "family": "Historic Ruins",
-        "variant": "jardin gauche",
-        "url": "./atlas_reset_historic_ruins_left_garden.jpg",
-        "thumb": "./atlas_reset_historic_ruins_left_garden.jpg"
-    },
-    {
-        "name": "Historic Ruins · hall cristal",
-        "family": "Historic Ruins",
-        "variant": "hall cristal",
-        "url": "./atlas_reset_historic_ruins_crystal_hall.jpg",
-        "thumb": "./atlas_reset_historic_ruins_crystal_hall.jpg"
-    },
-    {
-        "name": "Historic Ruins · ruines hautes",
-        "family": "Historic Ruins",
-        "variant": "ruines hautes",
-        "url": "./atlas_reset_historic_ruins_upper_ruins.jpg",
-        "thumb": "./atlas_reset_historic_ruins_upper_ruins.jpg"
-    },
-    {
-        "name": "Suspended City · pleine hauteur",
-        "family": "Suspended City",
-        "variant": "pleine hauteur",
-        "url": "./atlas_reset_suspended_city_full_height.jpg",
-        "thumb": "./atlas_reset_suspended_city_full_height.jpg"
+        "url": "./atlas_29_sky_bridge_ruins_profondeur.jpg",
+        "thumb": "./preview_reset_atlas_29_sky_bridge_ruins_profondeur.jpg"
     },
     {
         "name": "Suspended City · temple",
         "family": "Suspended City",
         "variant": "temple",
-        "url": "./atlas_reset_suspended_city_temple.jpg",
-        "thumb": "./atlas_reset_suspended_city_temple.jpg"
+        "url": "./atlas_29_suspended_city_temple.jpg",
+        "thumb": "./preview_reset_atlas_29_suspended_city_temple.jpg"
     },
     {
         "name": "Suspended City · pont",
         "family": "Suspended City",
         "variant": "pont",
-        "url": "./atlas_reset_suspended_city_bridge.jpg",
-        "thumb": "./atlas_reset_suspended_city_bridge.jpg"
+        "url": "./atlas_29_suspended_city_pont.jpg",
+        "thumb": "./preview_reset_atlas_29_suspended_city_pont.jpg"
     },
     {
-        "name": "Grand Tree Garden · pleine hauteur",
-        "family": "Grand Tree Garden",
-        "variant": "pleine hauteur",
-        "url": "./atlas_reset_grand_tree_garden_full_height.jpg",
-        "thumb": "./atlas_reset_grand_tree_garden_full_height.jpg"
+        "name": "Suspended City · profondeur",
+        "family": "Suspended City",
+        "variant": "profondeur",
+        "url": "./atlas_29_suspended_city_profondeur.jpg",
+        "thumb": "./preview_reset_atlas_29_suspended_city_profondeur.jpg"
     },
     {
         "name": "Grand Tree Garden · arbre",
         "family": "Grand Tree Garden",
         "variant": "arbre",
-        "url": "./atlas_reset_grand_tree_garden_canopy.jpg",
-        "thumb": "./atlas_reset_grand_tree_garden_canopy.jpg"
+        "url": "./atlas_29_grand_tree_garden_arbre.jpg",
+        "thumb": "./preview_reset_atlas_29_grand_tree_garden_arbre.jpg"
     },
     {
         "name": "Grand Tree Garden · jardin",
         "family": "Grand Tree Garden",
         "variant": "jardin",
-        "url": "./atlas_reset_grand_tree_garden_garden.jpg",
-        "thumb": "./atlas_reset_grand_tree_garden_garden.jpg"
+        "url": "./atlas_29_grand_tree_garden_jardin.jpg",
+        "thumb": "./preview_reset_atlas_29_grand_tree_garden_jardin.jpg"
     },
     {
         "name": "Grand Tree Garden · personnages",
         "family": "Grand Tree Garden",
         "variant": "personnages",
-        "url": "./atlas_reset_grand_tree_garden_characters.jpg",
-        "thumb": "./atlas_reset_grand_tree_garden_characters.jpg"
-    },
-    {
-        "name": "Crystal Sanctuary · pleine hauteur",
-        "family": "Crystal Sanctuary",
-        "variant": "pleine hauteur",
-        "url": "./atlas_reset_crystal_sanctuary_full_height.jpg",
-        "thumb": "./atlas_reset_crystal_sanctuary_full_height.jpg"
+        "url": "./atlas_29_grand_tree_garden_personnages.jpg",
+        "thumb": "./preview_reset_atlas_29_grand_tree_garden_personnages.jpg"
     },
     {
         "name": "Crystal Sanctuary · cristal",
         "family": "Crystal Sanctuary",
         "variant": "cristal",
-        "url": "./atlas_reset_crystal_sanctuary_crystal.jpg",
-        "thumb": "./atlas_reset_crystal_sanctuary_crystal.jpg"
+        "url": "./atlas_29_crystal_sanctuary_cristal.jpg",
+        "thumb": "./preview_reset_atlas_29_crystal_sanctuary_cristal.jpg"
     },
     {
         "name": "Crystal Sanctuary · arche",
         "family": "Crystal Sanctuary",
         "variant": "arche",
-        "url": "./atlas_reset_crystal_sanctuary_arch.jpg",
-        "thumb": "./atlas_reset_crystal_sanctuary_arch.jpg"
+        "url": "./atlas_29_crystal_sanctuary_arche.jpg",
+        "thumb": "./preview_reset_atlas_29_crystal_sanctuary_arche.jpg"
     },
     {
         "name": "Crystal Sanctuary · seuil",
         "family": "Crystal Sanctuary",
         "variant": "seuil",
-        "url": "./atlas_reset_crystal_sanctuary_floor.jpg",
-        "thumb": "./atlas_reset_crystal_sanctuary_floor.jpg"
+        "url": "./atlas_29_crystal_sanctuary_seuil.jpg",
+        "thumb": "./preview_reset_atlas_29_crystal_sanctuary_seuil.jpg"
+    },
+    {
+        "name": "Historic Ruins · large",
+        "family": "Historic Ruins",
+        "variant": "large",
+        "url": "./atlas_29_historic_ruins_large.jpg",
+        "thumb": "./preview_reset_atlas_29_historic_ruins_large.jpg"
+    },
+    {
+        "name": "Historic Ruins · jardin",
+        "family": "Historic Ruins",
+        "variant": "jardin",
+        "url": "./atlas_29_historic_ruins_jardin.jpg",
+        "thumb": "./preview_reset_atlas_29_historic_ruins_jardin.jpg"
+    },
+    {
+        "name": "Historic Ruins · hall",
+        "family": "Historic Ruins",
+        "variant": "hall",
+        "url": "./atlas_29_historic_ruins_hall.jpg",
+        "thumb": "./preview_reset_atlas_29_historic_ruins_hall.jpg"
     }
 ];
     const HERO_FRAMES = [];
@@ -1333,7 +1294,7 @@ Ryzen 7 = moteur de production.`;
       const items = CELESTIAL_ATLAS_ITEMS.filter(item => family === "All" || item.family === family);
       grid.innerHTML = items.map(item => `
         <button class="atlas-preview-card" onclick="applyAtlasItem('${item.url}', '${item.name.replace(/'/g, "\\'")}', '${item.family.replace(/'/g, "\\'")}', '${item.variant.replace(/'/g, "\\'")}')">
-          <img src="${item.thumb || item.url}" alt="">
+          <img src="${item.thumb}" alt="">
           <span class="atlas-preview-title">${item.name}</span>
           <span class="atlas-preview-meta">${item.family} · ${item.variant}</span>
         </button>
@@ -2234,65 +2195,31 @@ Le navigateur ne peut pas afficher de façon fiable l’IP locale Ethernet pour 
 
     bootSystemTracePro();
   
-    function bootFullBackgroundReset() {
-      try { localStorage.setItem("seven-terminal-bg-index", "0"); } catch (e) {}
+    function bootAtlas29RecoveryHero() {
+      try {
+        localStorage.setItem("seven-terminal-bg-index", "0");
+        localStorage.removeItem("seven-hero-frame-index");
+      } catch (e) {}
+      document.body.classList.remove("no-hero-face");
+      document.documentElement.style.setProperty("--hero-bg", 'url("./aerith_7_memory_cards_avatar_master.png")');
       if (typeof applyBackground === "function") applyBackground(0);
       if (typeof renderAtlasGrid === "function") renderAtlasGrid("All");
-      setStatus("Background Reset : nouveau jeu d’images chargé.");
-    }
-
-    bootFullBackgroundReset();
-  
-    function bootCleanHeroReset() {
-      document.body.classList.add("no-hero-face");
-      document.documentElement.style.removeProperty("--hero-bg");
-      try {
-        localStorage.removeItem("seven-hero-face");
-        localStorage.removeItem("seven-hero-frame-index");
-      } catch (e) {}
-      setStatus("Clean Hero Reset : Hero neutre actif.");
+      setStatus("Celestial Atlas 2.9 : Recovery Hero actif.");
     }
 
     function cycleHeroFrame() {
-      bootCleanHeroReset();
+      bootAtlas29RecoveryHero();
     }
 
     function randomHeroFrame() {
-      bootCleanHeroReset();
+      bootAtlas29RecoveryHero();
     }
 
     function applyHeroFrame() {
-      bootCleanHeroReset();
+      bootAtlas29RecoveryHero();
     }
 
-    bootCleanHeroReset();
-  
-    function bootPurgeLeftovers() {
-      document.body.classList.add("no-hero-face");
-      document.documentElement.style.removeProperty("--hero-bg");
-
-      try {
-        localStorage.removeItem("seven-hero-face");
-        localStorage.removeItem("seven-hero-frame-index");
-      } catch (e) {}
-
-      if (typeof renderAtlasGrid === "function") renderAtlasGrid("All");
-      setStatus("Purge Leftovers : anciens fonds et Hero frames supprimés.");
-    }
-
-    function cycleHeroFrame() {
-      bootPurgeLeftovers();
-    }
-
-    function randomHeroFrame() {
-      bootPurgeLeftovers();
-    }
-
-    function applyHeroFrame() {
-      bootPurgeLeftovers();
-    }
-
-    bootPurgeLeftovers();
+    bootAtlas29RecoveryHero();
   </script>
 </body>
 </html>

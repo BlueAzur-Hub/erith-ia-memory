@@ -2238,7 +2238,7 @@ body {
     linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.38) 50%, rgba(0,0,0,.48)),
     radial-gradient(circle at 78% 30%, rgba(0,210,255,.20), transparent 34%),
     radial-gradient(circle at 18% 0%, rgba(255,80,60,.16), transparent 42%),
-    url("") !important;
+    url("./hero_face_vr_background.jpg") !important;
   background-size: cover !important;
   background-position: center center !important;
   border-bottom: 1px solid rgba(255,216,121,.28) !important;
@@ -2323,7 +2323,7 @@ body {
     linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.32) 52%, rgba(0,0,0,.40)),
     radial-gradient(circle at 64% 42%, rgba(0,210,255,.20), transparent 36%),
     radial-gradient(circle at 16% 0%, rgba(255,80,60,.14), transparent 42%),
-    url("") !important;
+    url("./hero_face_vr_background.jpg") !important;
   background-size: cover !important;
   background-position: center center !important;
 }
@@ -2421,7 +2421,7 @@ body {
     linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.32) 52%, rgba(0,0,0,.40)),
     radial-gradient(circle at 64% 42%, rgba(0,210,255,.20), transparent 36%),
     radial-gradient(circle at 16% 0%, rgba(255,80,60,.14), transparent 42%),
-    var(--hero-bg, url("")) !important;
+    var(--hero-bg, url("./hero_face_vr_background.jpg")) !important;
   background-size: cover !important;
   background-position: center center !important;
 }
@@ -3553,7 +3553,7 @@ body.readability-off::after {
   background:
     linear-gradient(90deg, rgba(0,0,0,.74), rgba(0,0,0,.30) 52%, rgba(0,0,0,.42)),
     radial-gradient(circle at 62% 42%, rgba(0,210,255,.20), transparent 36%),
-    var(--hero-bg, url("")) !important;
+    var(--hero-bg, url("./hero_face_vr_background.jpg")) !important;
   background-size: cover !important;
   background-position: center center !important;
 }
@@ -3994,9 +3994,9 @@ body.readability-off::after {
 
 
 /* -------------------------------------------------------
-   Full Background Reset
-   Nouveau jeu d’images uniquement.
-   Pas de nuage ajouté, pas de brume ajoutée, pas de filtre lourd.
+   Celestial Atlas 2.9 — Recovery Hero
+   Hero = aerith_7_memory_cards_avatar_master.png
+   Backgrounds = sharp Transformer Book crops, no blur/fog/cloud.
 ------------------------------------------------------- */
 
 body {
@@ -4006,139 +4006,101 @@ body {
 
 body::after {
   background:
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.02) 45%, rgba(0,0,0,.10)) !important;
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.00) 45%, rgba(0,0,0,.08)) !important;
 }
-
-body.readability-off::after {
-  display: none !important;
-}
-
-.terminal {
-  background:
-    linear-gradient(180deg, rgba(2,6,9,.82), rgba(3,8,12,.88)),
-    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
-}
-
-/* Les previews affichent les prises de vue Reset. */
-.atlas-preview-grid {
-  max-height: 300px !important;
-}
-
-.atlas-preview-card img {
-  height: 92px !important;
-  object-fit: cover !important;
-}
-
-/* Lire d’abord, admirer ensuite : les tuiles restent protégées. */
-.tile::before {
-  filter: saturate(1.00) brightness(.88) !important;
-}
-
-
-/* -------------------------------------------------------
-   Clean Hero Reset
-   On dégage le Hero rouge/cyber et les Hero frames parasites.
-   Le bandeau du haut redevient sobre et lisible.
-------------------------------------------------------- */
 
 .hero {
+  min-height: 172px !important;
   background:
-    linear-gradient(90deg, rgba(0,0,0,.88), rgba(5,16,22,.78) 52%, rgba(0,0,0,.84)),
-    radial-gradient(circle at 68% 35%, rgba(127,215,255,.13), transparent 38%),
-    radial-gradient(circle at 18% 0%, rgba(255,216,121,.10), transparent 42%) !important;
+    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
   background-size: cover !important;
-  background-position: center center !important;
-  min-height: 150px !important;
+  background-position: center 34% !important;
+  background-repeat: no-repeat !important;
+  border-bottom: 1px solid rgba(124,140,255,.34) !important;
 }
 
 .hero::before {
+  display: block !important;
   background:
-    linear-gradient(90deg, rgba(0,0,0,.54), rgba(0,0,0,.14) 58%, rgba(0,0,0,.30)),
+    linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.18) 58%, rgba(0,0,0,.36)),
     repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px) !important;
 }
 
-/* Avatar conservé, mais aucun fond Hero image derrière */
 .no-hero-face .hero {
   background:
-    linear-gradient(90deg, rgba(0,0,0,.88), rgba(5,16,22,.78) 52%, rgba(0,0,0,.84)),
-    radial-gradient(circle at 68% 35%, rgba(127,215,255,.13), transparent 38%),
-    radial-gradient(circle at 18% 0%, rgba(255,216,121,.10), transparent 42%) !important;
+    linear-gradient(90deg, rgba(0,0,0,.80), rgba(0,0,0,.42) 48%, rgba(0,0,0,.68)),
+    radial-gradient(circle at 62% 38%, rgba(124,140,255,.18), transparent 38%),
+    url("./aerith_7_memory_cards_avatar_master.png") !important;
 }
 
-.no-hero-face .hero::before {
-  display: block !important;
-}
-
-/* Suppression visuelle de toute galerie Hero si un ancien bloc survit */
-.hero-gallery,
-#heroGalleryGrid,
-.hero-frame-chip {
-  display: none !important;
-}
-
-/* Les miniatures background restent validées */
-.atlas-preview-grid,
-.atlas-preview-card,
-.atlas-preview-card img {
-  visibility: visible !important;
-}
-
-/* Le bouton Hero, s’il reste dans un ancien cache, disparaît */
-#heroFrameBtn,
-button[onclick="cycleHeroFrame()"],
-button[onclick="randomHeroFrame()"] {
-  display: none !important;
-}
-
-/* Accueil sobre prioritaire */
-body:not(.show-advanced) .intel-panel,
-body:not(.show-advanced) .celestial-atlas-panel,
-body:not(.show-advanced) .advanced-dashboard-panel,
-body:not(.show-advanced) .hero-gallery,
-body:not(.show-advanced) .atlas-preview-grid,
-body:not(.show-advanced) .atlas-toolbar,
-body:not(.show-advanced) .atlas-current {
-  display: none !important;
-}
-
-
-/* -------------------------------------------------------
-   No Atlas Thumbs
-   Les fichiers thumb_atlas_* et preview_atlas_* sont supprimés.
-   L’Atlas affiche directement les vraies images de fond.
-------------------------------------------------------- */
-
-.atlas-preview-card img {
+/* Avatar = same canonical image */
+.hero .portrait img,
+.portrait img,
+.avatar img,
+.top-avatar img {
+  content: url("./aerith_7_memory_cards_avatar_master.png");
   object-fit: cover !important;
-  filter: saturate(1.02) contrast(1.02) brightness(.90) !important;
+  object-position: 52% 34% !important;
 }
 
-.atlas-preview-card:hover img,
-.atlas-preview-card:focus img {
-  filter: saturate(1.06) contrast(1.04) brightness(.96) !important;
-}
-
-/* On garde les previews destination validées. */
-.tile::before {
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-
-/* -------------------------------------------------------
-   Purge Leftovers
-   Suppression complète des anciens fonds parasites :
-   full_screen_bg_*, hero_face_*, hero_frame_*, preview_atlas_*,
-   thumb_atlas_* et preview_aerith_memory_cards.
-------------------------------------------------------- */
-
-.hero {
+/* Transparency recovery: readable but not concrete */
+.terminal {
   background:
-    linear-gradient(90deg, rgba(0,0,0,.88), rgba(5,16,22,.78) 52%, rgba(0,0,0,.84)),
-    radial-gradient(circle at 68% 35%, rgba(127,215,255,.13), transparent 38%),
-    radial-gradient(circle at 18% 0%, rgba(255,216,121,.10), transparent 42%) !important;
+    linear-gradient(180deg, rgba(2,6,9,.58), rgba(3,8,12,.68)),
+    radial-gradient(circle at 50% 0%, rgba(255,216,121,.06), transparent 48%) !important;
+  backdrop-filter: blur(4px) saturate(1.08) !important;
 }
 
+.topnav,
+.sky-control-strip,
+.section-title,
+.intel-panel,
+.advanced-dashboard-panel,
+.celestial-atlas-panel,
+.network-footer,
+.system-footer,
+footer,
+.status {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.56), rgba(5,14,20,.46)) !important;
+  backdrop-filter: blur(4px) saturate(1.06) !important;
+}
+
+.tile {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.54), rgba(7,18,24,.44)) !important;
+}
+
+.tile::before {
+  opacity: .32 !important;
+  filter: saturate(1.02) brightness(.92) !important;
+}
+
+.tile.selected::before,
+.tile.gold::before,
+.tile:hover::before,
+.tile:focus::before {
+  opacity: .46 !important;
+}
+
+.deep-glass .terminal {
+  background:
+    linear-gradient(180deg, rgba(2,6,9,.28), rgba(3,8,12,.40)) !important;
+}
+
+.deep-glass .topnav,
+.deep-glass .sky-control-strip,
+.deep-glass .section-title,
+.deep-glass .intel-panel,
+.deep-glass .advanced-dashboard-panel,
+.deep-glass .celestial-atlas-panel {
+  background:
+    linear-gradient(145deg, rgba(0,0,0,.32), rgba(5,14,20,.26)) !important;
+}
+
+/* Hero parasite cleanup */
 .hero-gallery,
 #heroGalleryGrid,
 .hero-frame-chip,
@@ -4146,68 +4108,4 @@ body:not(.show-advanced) .atlas-current {
 button[onclick="cycleHeroFrame()"],
 button[onclick="randomHeroFrame()"] {
   display: none !important;
-}
-
-.atlas-preview-card img {
-  object-fit: cover !important;
-}
-
-/* On garde les preview_dest_* validées. */
-.tile::before {
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-
-/* -------------------------------------------------------
-   Aerith Avatar — Memory Cards
-   Nouvelle image utilisée uniquement comme avatar.
-   Aucun usage en background général.
-------------------------------------------------------- */
-
-.hero .portrait,
-.portrait,
-.avatar,
-.top-avatar {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,.14), rgba(124,140,255,.12)),
-    radial-gradient(circle at 50% 18%, rgba(255,255,255,.34), transparent 54%) !important;
-  border: 1px solid rgba(124,140,255,.80) !important;
-  box-shadow:
-    0 0 18px rgba(124,140,255,.28),
-    0 0 30px rgba(255,216,121,.10),
-    inset 0 1px 0 rgba(255,255,255,.36) !important;
-}
-
-.hero .portrait img,
-.portrait img,
-.avatar img,
-.top-avatar img {
-  content: url("./aerith_avatar_memory_cards_framed.png");
-  object-fit: cover !important;
-  object-position: center center !important;
-  filter:
-    saturate(1.04)
-    contrast(1.02)
-    brightness(1.02) !important;
-}
-
-/* Avatar must stay as avatar, never background. */
-body,
-.hero,
-.terminal,
-.page,
-.tile {
-  --aerith-avatar-only: "aerith_avatar_memory_cards_framed.png";
-}
-
-/* If an old avatar slot is only a background div */
-.portrait:not(:has(img)),
-.avatar:not(:has(img)),
-.top-avatar:not(:has(img)) {
-  background-image:
-    linear-gradient(145deg, rgba(0,0,0,.16), rgba(124,140,255,.10)),
-    url("./aerith_avatar_memory_cards_framed.png") !important;
-  background-size: cover !important;
-  background-position: center center !important;
 }
