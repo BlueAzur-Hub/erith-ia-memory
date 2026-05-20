@@ -1,9 +1,12 @@
-/* Seven Portable Terminal — V7.9 Elegant Detailed */
+/* Seven Portable Terminal V8 — Golden Glass Sky Castle Dashboard */
 
 const TERMINAL_LINK = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
 const CHATGPT_URL = "https://chatgpt.com/";
 
 const BACKGROUNDS = [
+  { name: "Sky Castle Hero", family: "Sky Castle", url: "./assets/sky_castle_hero_banner.png" },
+  { name: "AAA Dashboard Reference", family: "Sky Castle", url: "./assets/sky_castle_template.png" },
+  { name: "Dashboard Reference", family: "Sky Castle", url: "./assets/sky_castle_dashboard_reference.png" },
   { name: "Historique original", family: "Historic Ruins", url: "./background_historique_lr.png" },
   { name: "Sky Bridge Ruins · temple", family: "Sky Bridge Ruins", url: "./atlas_29_sky_bridge_ruins_temple.jpg" },
   { name: "Sky Bridge Ruins · pont", family: "Sky Bridge Ruins", url: "./atlas_29_sky_bridge_ruins_pont.jpg" },
@@ -69,7 +72,8 @@ une animation = une idée.
 caméra stable.
 prompt positif obligatoire.
 prompt négatif obligatoire.
-last frame exacte pour continuité LEGO.`;
+last frame exacte pour continuité LEGO.
+DaVinci pour le montage final.`;
 
 const BLACKOUT_PROMPT = `Mode Blackout.
 Texte uniquement.
@@ -84,7 +88,7 @@ Puissance maximale.
 Chargement minimal.
 Choix précis.`;
 
-const NOTION_TEXT = `Seven Portable Terminal
+const NOTION_TEXT = `Seven Portable Terminal V8
 
 Terminal public :
 ${TERMINAL_LINK}
@@ -93,17 +97,96 @@ Usage :
 1. Cliquer Seven Boost ou Video Cards.
 2. ChatGPT s’ouvre ou revient.
 3. Coller avec Ctrl+V.
-4. Envoyer.`;
+4. Envoyer.
+
+Architecture :
+Focus / Extended / Full Cockpit.
+Menu, profil, widgets, Advanced Panels et sous-menus optionnels.`;
+
+const SUBMENUS = {
+  dashboard: [
+    ["🌸 Accueil", "Dashboard principal", () => openPage("home")],
+    ["💠 Seven Boost", "Prompt complet", () => startSeven()],
+    ["🎴 Video Cards", "Mode production", () => copyVideoCards()],
+    ["🖥️ Système", "Safe Trace", () => openPage("system")]
+  ],
+  modules: [
+    ["🧩 Modules Mémoire", "Influences créatives", () => copyModules()],
+    ["🎬 Modules Production", "Wan / DaVinci", () => openPage("production")],
+    ["🎨 Modules Visuels", "DA / Atlas", () => toggleAtlas(true)],
+    ["🛡️ Modules Système", "Safe Trace", () => openPage("system")],
+    ["🌐 Modules Publics", "ERITH public", () => openPage("notion")]
+  ],
+  workflows: [
+    ["🧊 ComfyUI", "Images", () => copyWan()],
+    ["📱 Wan / I2V", "Animation verticale", () => copyWan()],
+    ["🎞️ DaVinci", "Montage", () => openPage("production")],
+    ["📺 YouTube", "Publication", () => openPage("production")],
+    ["🎙️ Narration", "Voix", () => openPage("production")]
+  ],
+  llm: [
+    ["💬 ChatGPT", "Ouvrir", () => openChatGPTNamed()],
+    ["🌸 Seven Boost", "Copier + ouvrir", () => startSeven()],
+    ["🎴 Video Cards", "Production", () => copyVideoCards()],
+    ["🧩 Modules", "Prompt modules", () => copyModules()],
+    ["🌑 Blackout", "Texte seul", () => copyBlackout()]
+  ],
+  notion: [
+    ["📚 ERITH Memory", "Mémoire humaine", () => openPage("notion")],
+    ["🌐 Auto-Agent", "Page publique", () => openPage("notion")],
+    ["🧾 Bloc Notion", "Copier", () => copyNotionText()]
+  ],
+  github: [
+    ["📁 Repo public", "GitHub", () => openPage("github")],
+    ["🖥️ Terminal folder", "Assets", () => openPage("github")],
+    ["🚪 Seven Gate", "Core", () => openPage("github")],
+    ["🔗 URL cockpit", "Copier", () => copyTerminalLink()]
+  ],
+  production: [
+    ["🎴 Video Cards", "Diagnostic", () => copyVideoCards()],
+    ["📱 Wan", "Checklist I2V", () => copyWan()],
+    ["☁️ RunningHub", "Cloud", () => openPage("production")],
+    ["🧬 Civitai", "Modèles", () => openPage("production")],
+    ["🎙️ ElevenLabs", "Voix", () => openPage("production")]
+  ],
+  data: [
+    ["🗄️ Données", "Index local", () => setStatus("Données : module placeholder V8.")],
+    ["📚 Notion", "Mémoire humaine", () => openPage("notion")],
+    ["🧬 GitHub", "Mémoire machine", () => openPage("github")]
+  ],
+  agents: [
+    ["🤖 Agents IA", "À connecter", () => setStatus("Agents IA : placeholder V8.")],
+    ["🌸 Seven", "Opératrice principale", () => startSeven()],
+    ["🧩 Modules", "Sélection", () => copyModules()]
+  ],
+  automations: [
+    ["⚙️ Automatisations", "À connecter", () => setStatus("Automatisations : placeholder V8.")],
+    ["💾 Sauvegarde", "LocalStorage", () => saveFavorite()]
+  ],
+  integrations: [
+    ["🧬 GitHub", "Repo", () => openPage("github")],
+    ["📚 Notion", "Mémoire", () => openPage("notion")],
+    ["🎬 Production", "Outils", () => openPage("production")]
+  ],
+  settings: [
+    ["🛡️ Lisibilité", "Mode sombre", () => setVisualMode("readability")],
+    ["🫧 Transparent", "Mode vitré", () => setVisualMode("transparent")],
+    ["🎯 Focus", "Mode concentré", () => setViewMode("focus")],
+    ["🧩 Extended", "Mode quotidien", () => setViewMode("extended")],
+    ["⚙️ Full", "Mode cockpit", () => setViewMode("full")]
+  ]
+};
 
 let bgIndex = 0;
+let batteryState = { level: null, charging: null, supported: false };
 
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => Array.from(document.querySelectorAll(s));
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
 function setStatus(message) {
-  const el = $("#status");
-  if (el) el.textContent = message;
-  console.log("[Seven]", message);
+  const status = $("#status");
+  if (status) status.textContent = message;
+  console.log("[Seven V8]", message);
 }
 
 async function copyText(text) {
@@ -117,7 +200,10 @@ async function copyText(text) {
     if (drawer && area) {
       area.value = text;
       drawer.classList.add("open");
-      setTimeout(() => { area.focus(); area.select(); }, 30);
+      setTimeout(() => {
+        area.focus();
+        area.select();
+      }, 40);
     } else {
       window.prompt("Copie ce texte :", text);
     }
@@ -126,11 +212,11 @@ async function copyText(text) {
 }
 
 function openChatGPTNamed() {
-  const chat = window.open(CHATGPT_URL, "seven_heaven_chatgpt");
-  if (chat) {
-    try { chat.focus(); } catch {}
+  const tab = window.open(CHATGPT_URL, "seven_heaven_chatgpt");
+  if (tab) {
+    try { tab.focus(); } catch {}
   }
-  return !!chat;
+  return !!tab;
 }
 
 async function startSeven() {
@@ -152,59 +238,92 @@ async function copyModules() { await copyText(MODULE_PROMPT); setStatus("Prompt 
 async function copyTerminalLink() { await copyText(TERMINAL_LINK); setStatus("Lien cockpit copié."); }
 async function copyNotionText() { await copyText(NOTION_TEXT); setStatus("Bloc Notion copié."); }
 
+function togglePrompt(force) {
+  const drawer = $("#promptDrawer");
+  const area = $("#promptText");
+  if (!drawer) return;
+  const open = typeof force === "boolean" ? force : !drawer.classList.contains("open");
+  if (area && open) area.value = AERITH_PROMPT;
+  drawer.classList.toggle("open", open);
+}
+
 function openPage(name) {
-  $$(".page").forEach(p => p.classList.toggle("active", p.id === `page-${name}`));
-  $$(".tab").forEach(t => t.classList.toggle("active", t.dataset.page === name));
+  $$(".page").forEach(page => page.classList.toggle("active", page.id === `page-${name}`));
+  $$(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.page === name));
   document.body.dataset.page = name;
+  localStorage.setItem("seven_v8_page", name);
   setStatus("Page : " + name);
   if (name === "system") refreshSystem();
 }
 
-function setMode(mode) {
-  const dark = mode === "dark";
-  document.body.classList.toggle("mode-dark", dark);
-  document.body.classList.toggle("mode-transparent", !dark);
-  $("#transparentBtn")?.classList.toggle("active", !dark);
-  $("#darkBtn")?.classList.toggle("active", dark);
-  localStorage.setItem("seven_v79_mode", dark ? "dark" : "transparent");
-  setStatus(dark ? "Mode lisibilité actif." : "Mode transparent contrôlé actif.");
+function setVisualMode(mode) {
+  const readability = mode === "readability";
+  document.body.classList.toggle("visual-readability", readability);
+  document.body.classList.toggle("visual-transparent", !readability);
+  $("#transparentBtn")?.classList.toggle("active", !readability);
+  $("#readabilityBtn")?.classList.toggle("active", readability);
+  localStorage.setItem("seven_v8_visual", readability ? "readability" : "transparent");
+  setStatus(readability ? "Mode lisibilité actif." : "Mode transparent contrôlé actif.");
 }
+
+function setViewMode(mode) {
+  document.body.classList.remove("view-focus", "view-extended", "view-full");
+  document.body.classList.add(`view-${mode}`);
+  localStorage.setItem("seven_v8_view", mode);
+  setStatus("Mode affichage : " + mode);
+}
+
+function toggleClassOnBody(className, storeKey, statusOn, statusOff) {
+  const enabled = document.body.classList.toggle(className);
+  localStorage.setItem(storeKey, enabled ? "1" : "0");
+  setStatus(enabled ? statusOn : statusOff);
+}
+
+function toggleMenu() { toggleClassOnBody("hide-menu", "seven_v8_hide_menu", "Menu gauche masqué.", "Menu gauche visible."); }
+function toggleProfile() { toggleClassOnBody("hide-profile", "seven_v8_hide_profile", "Profil masqué.", "Profil visible."); }
+function toggleWidgets() { toggleClassOnBody("hide-widgets", "seven_v8_hide_widgets", "Widgets masqués.", "Widgets visibles."); }
+function toggleQuickAccess() { toggleClassOnBody("hide-quick", "seven_v8_hide_quick", "Accès rapide masqué.", "Accès rapide visible."); }
+function toggleActivity() { toggleClassOnBody("hide-activity", "seven_v8_hide_activity", "Activité masquée.", "Activité visible."); }
 
 function toggleAdvanced(force) {
   const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-advanced");
   document.body.classList.toggle("show-advanced", open);
-  localStorage.setItem("seven_v79_advanced", open ? "1" : "0");
-  setStatus(open ? "Advanced ouvert." : "Advanced réduit.");
+  $("#advancedBtn")?.classList.toggle("active", open);
+  localStorage.setItem("seven_v8_advanced", open ? "1" : "0");
+  setStatus(open ? "Advanced Panels ouverts." : "Advanced Panels réduits.");
 }
 
 function toggleAtlas(force) {
   const open = typeof force === "boolean" ? force : !document.body.classList.contains("show-atlas");
   document.body.classList.toggle("show-atlas", open);
+  $("#atlasBtn")?.classList.toggle("active", open);
   if (open) renderAtlas();
+  localStorage.setItem("seven_v8_atlas", open ? "1" : "0");
+  setStatus(open ? "Atlas ouvert." : "Atlas fermé.");
+}
+
+function toggleSystemDetails(force) {
+  const drawer = $("#systemDrawer");
+  if (!drawer) return;
+  const open = typeof force === "boolean" ? force : !drawer.classList.contains("open");
+  drawer.classList.toggle("open", open);
+  if (open) refreshSystem();
+  setStatus(open ? "System Details HUD ouvert." : "System Details HUD fermé.");
 }
 
 function togglePalette(force) {
-  const p = $("#palette");
-  if (!p) return;
-  const open = typeof force === "boolean" ? force : !p.classList.contains("open");
-  p.classList.toggle("open", open);
-  p.setAttribute("aria-hidden", open ? "false" : "true");
+  const palette = $("#palette");
+  if (!palette) return;
+  const open = typeof force === "boolean" ? force : !palette.classList.contains("open");
+  palette.classList.toggle("open", open);
+  palette.setAttribute("aria-hidden", open ? "false" : "true");
 }
 
-function togglePrompt(force) {
-  const d = $("#promptDrawer");
-  const a = $("#promptText");
-  if (!d) return;
-  const open = typeof force === "boolean" ? force : !d.classList.contains("open");
-  if (a) a.value = AERITH_PROMPT;
-  d.classList.toggle("open", open);
-}
-
-function applyBackground(i) {
-  bgIndex = (i + BACKGROUNDS.length) % BACKGROUNDS.length;
+function applyBackground(index) {
+  bgIndex = (index + BACKGROUNDS.length) % BACKGROUNDS.length;
   const bg = BACKGROUNDS[bgIndex];
-  document.documentElement.style.setProperty("--active-bg", `url("${bg.url}")`);
-  localStorage.setItem("seven_v79_bg", String(bgIndex));
+  document.documentElement.style.setProperty("--bg-active", `url("${bg.url}")`);
+  localStorage.setItem("seven_v8_bg", String(bgIndex));
   setStatus("Fond actif : " + bg.name);
 }
 
@@ -223,113 +342,267 @@ function renderAtlas() {
   const grid = $("#atlasGrid");
   if (!grid) return;
   grid.innerHTML = "";
-  BACKGROUNDS.forEach((bg, i) => {
-    const btn = document.createElement("button");
-    btn.className = "atlas-card";
-    btn.type = "button";
-    btn.style.setProperty("--thumb", `url("${bg.url}")`);
-    btn.innerHTML = `<strong>${bg.name}</strong><br><small>${bg.family}</small>`;
-    btn.addEventListener("click", () => applyBackground(i));
-    grid.appendChild(btn);
+  BACKGROUNDS.forEach((bg, index) => {
+    const card = document.createElement("button");
+    card.className = "atlas-card";
+    card.type = "button";
+    card.style.setProperty("--thumb", `url("${bg.url}")`);
+    card.innerHTML = `<strong>${bg.name}</strong><br><small>${bg.family}</small>`;
+    card.addEventListener("click", () => applyBackground(index));
+    grid.appendChild(card);
   });
 }
 
 function setAmbiance(name) {
   document.body.dataset.ambiance = name;
-  localStorage.setItem("seven_v79_ambiance", name);
+  localStorage.setItem("seven_v8_ambiance", name);
   setStatus("Ambiance : " + name);
 }
 
 function saveFavorite() {
-  localStorage.setItem("seven_v79_favorite", JSON.stringify({
+  const payload = {
     bgIndex,
-    mode: document.body.classList.contains("mode-dark") ? "dark" : "transparent",
+    visual: document.body.classList.contains("visual-readability") ? "readability" : "transparent",
+    view: ["focus", "extended", "full"].find(v => document.body.classList.contains(`view-${v}`)) || "extended",
     ambiance: document.body.dataset.ambiance || "sky",
-    advanced: document.body.classList.contains("show-advanced")
-  }));
-  setStatus("Favori sauvegardé.");
+    advanced: document.body.classList.contains("show-advanced"),
+    atlas: document.body.classList.contains("show-atlas"),
+    hideMenu: document.body.classList.contains("hide-menu"),
+    hideProfile: document.body.classList.contains("hide-profile"),
+    hideWidgets: document.body.classList.contains("hide-widgets"),
+    hideQuick: document.body.classList.contains("hide-quick"),
+    hideActivity: document.body.classList.contains("hide-activity")
+  };
+  localStorage.setItem("seven_v8_favorite", JSON.stringify(payload));
+  setStatus("Favori V8 sauvegardé.");
 }
 
 function loadFavorite() {
   try {
-    const f = JSON.parse(localStorage.getItem("seven_v79_favorite") || "null");
-    if (!f) throw new Error("none");
-    applyBackground(Number(f.bgIndex || 0));
-    setMode(f.mode || "transparent");
-    setAmbiance(f.ambiance || "sky");
-    toggleAdvanced(!!f.advanced);
-    setStatus("Favori chargé.");
+    const payload = JSON.parse(localStorage.getItem("seven_v8_favorite") || "null");
+    if (!payload) throw new Error("no favorite");
+    applyBackground(Number(payload.bgIndex || 0));
+    setVisualMode(payload.visual || "transparent");
+    setViewMode(payload.view || "extended");
+    setAmbiance(payload.ambiance || "sky");
+    toggleAdvanced(!!payload.advanced);
+    toggleAtlas(!!payload.atlas);
+    document.body.classList.toggle("hide-menu", !!payload.hideMenu);
+    document.body.classList.toggle("hide-profile", !!payload.hideProfile);
+    document.body.classList.toggle("hide-widgets", !!payload.hideWidgets);
+    document.body.classList.toggle("hide-quick", !!payload.hideQuick);
+    document.body.classList.toggle("hide-activity", !!payload.hideActivity);
+    setStatus("Favori V8 chargé.");
   } catch {
-    setStatus("Aucun favori local.");
+    setStatus("Aucun favori V8 trouvé.");
   }
 }
 
 function clearFavorite() {
-  localStorage.removeItem("seven_v79_favorite");
-  setStatus("Favori effacé.");
+  localStorage.removeItem("seven_v8_favorite");
+  setStatus("Favori V8 effacé.");
 }
 
 function resetVisual() {
   applyBackground(0);
-  setMode("transparent");
+  setVisualMode("transparent");
+  setViewMode("extended");
   setAmbiance("sky");
   toggleAdvanced(false);
   toggleAtlas(false);
-  setStatus("Reset visuel effectué.");
+  ["hide-menu", "hide-profile", "hide-widgets", "hide-quick", "hide-activity"].forEach(cls => document.body.classList.remove(cls));
+  setStatus("Reset visuel V8 effectué.");
+}
+
+function openSubmenu(name) {
+  const menu = $("#miniSubmenu");
+  const title = $("#submenuTitle");
+  const grid = $("#submenuGrid");
+  if (!menu || !grid || !title) return;
+
+  const items = SUBMENUS[name] || SUBMENUS.dashboard;
+  title.textContent = "Sous-menu · " + name;
+  grid.innerHTML = "";
+  items.forEach(([label, desc, fn]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.innerHTML = `<strong>${label}</strong><span>${desc}</span>`;
+    btn.addEventListener("click", fn);
+    grid.appendChild(btn);
+  });
+  menu.classList.add("open");
+  localStorage.setItem("seven_v8_submenu", name);
+  setStatus("Sous-menu : " + name);
+}
+
+function closeSubmenu() {
+  $("#miniSubmenu")?.classList.remove("open");
+  localStorage.removeItem("seven_v8_submenu");
+}
+
+function detectBrowser() {
+  const ua = navigator.userAgent || "";
+  if (ua.includes("Firefox/")) return "Firefox";
+  if (ua.includes("Edg/")) return "Edge";
+  if (ua.includes("Chrome/")) return "Chrome";
+  if (ua.includes("Safari/")) return "Safari";
+  return "Navigateur";
+}
+
+async function updateBattery() {
+  try {
+    if (!navigator.getBattery) throw new Error("Battery API unavailable");
+    const battery = await navigator.getBattery();
+    batteryState = {
+      supported: true,
+      level: Math.round(battery.level * 100),
+      charging: battery.charging
+    };
+
+    const onChange = () => {
+      batteryState.level = Math.round(battery.level * 100);
+      batteryState.charging = battery.charging;
+      refreshSystem(false);
+    };
+    battery.addEventListener("levelchange", onChange);
+    battery.addEventListener("chargingchange", onChange);
+  } catch {
+    batteryState = { supported: false, level: null, charging: null };
+  }
+}
+
+async function fetchPublicIp() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2500);
+  try {
+    const response = await fetch("https://api.ipify.org?format=json", { signal: controller.signal });
+    const data = await response.json();
+    localStorage.setItem("seven_v8_public_ip", data.ip || "non disponible");
+  } catch {
+    if (!localStorage.getItem("seven_v8_public_ip")) {
+      localStorage.setItem("seven_v8_public_ip", "non disponible");
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function getConnectionInfo() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (!conn) return { type: "n/a", downlink: "n/a", rtt: "n/a" };
+  return {
+    type: conn.effectiveType || conn.type || "n/a",
+    downlink: conn.downlink ? `${conn.downlink} Mbps` : "n/a",
+    rtt: conn.rtt ? `${conn.rtt} ms` : "n/a"
+  };
 }
 
 function getTrace() {
-  const ua = navigator.userAgent || "";
-  const browser = ua.includes("Firefox/") ? "Firefox" : ua.includes("Edg/") ? "Edge" : ua.includes("Chrome/") ? "Chrome" : "Navigateur";
   const now = new Date();
+  const conn = getConnectionInfo();
+  const ip = localStorage.getItem("seven_v8_public_ip") || "détection...";
+  const memory = navigator.deviceMemory ? `${navigator.deviceMemory} GB approx.` : "non disponible";
+  const battery = batteryState.supported
+    ? `${batteryState.level}% · ${batteryState.charging ? "en charge" : "sur batterie"}`
+    : "non disponible";
+
   return {
     date: now.toLocaleString("fr-FR"),
+    time: now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
     os: navigator.platform || "OS inconnu",
-    browser,
+    browser: detectBrowser(),
     screen: `${screen.width}×${screen.height} · DPR ${window.devicePixelRatio || 1}`,
     viewport: `${window.innerWidth}×${window.innerHeight}`,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Fuseau inconnu",
-    lang: navigator.languages ? navigator.languages.join(", ") : navigator.language,
-    cpu: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible"
+    languages: navigator.languages ? navigator.languages.join(", ") : navigator.language,
+    cpu: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible",
+    memory,
+    battery,
+    ip,
+    network: `${conn.downlink} · ${conn.rtt}`,
+    connection: conn.type,
+    session: location.hostname || "local",
+    security: "SAFE TRACE · aucun RustDesk ID · aucun mot de passe"
   };
 }
 
 function card(icon, label, value, note) {
-  return `<article class="trace-card"><span>${icon}</span><small>${label}</small><strong>${value}</strong><em>${note}</em></article>`;
+  return `<article class="system-card"><span class="icon">${icon}</span><small>${label}</small><strong>${value}</strong><em>${note}</em></article>`;
 }
 
-function refreshSystem() {
-  const t = getTrace();
-  const summary = [
-    card("🖥️", "Système", t.os, "local"),
-    card("🌐", "Navigateur", t.browser, t.lang),
-    card("📐", "Affichage", t.screen, `viewport ${t.viewport}`),
-    card("🌍", "Fuseau", t.timezone, t.date),
-    card("⚙️", "Performance", t.cpu, "navigateur"),
-    card("🛡️", "Sécurité", "SAFE TRACE", "aucun ID, aucun mot de passe")
+function renderSystemCards(trace) {
+  return [
+    card("🌐", "IP publique", trace.ip, "détection réseau"),
+    card("🔋", "Batterie", trace.battery, batteryState.supported ? "API batterie" : "API absente"),
+    card("💾", "Mémoire", trace.memory, "si navigateur compatible"),
+    card("⚙️", "CPU", trace.cpu, "threads navigateur"),
+    card("🖥️", "Affichage", trace.screen, `viewport ${trace.viewport}`),
+    card("🌍", "Fuseau", trace.timezone, trace.date),
+    card("⏳", "Session", trace.session, "en ligne"),
+    card("📡", "Réseau", trace.network, trace.connection),
+    card("🧭", "Navigateur", trace.browser, trace.languages),
+    card("🕰️", "Horodatage", trace.time, trace.date),
+    card("🛡️", "Safe Trace", "Actif", "aucun identifiant sensible"),
+    card("✦", "Mode", currentModeLabel(), "V8 cockpit")
   ].join("");
+}
 
-  if ($("#systemSummary")) $("#systemSummary").innerHTML = summary;
-  if ($("#systemDetails")) $("#systemDetails").innerHTML = summary;
-  if ($("#homeTrace")) $("#homeTrace").textContent = `${t.os} · ${t.browser} · ${t.screen}`;
-  if ($("#systemRaw")) {
-    $("#systemRaw").value =
-`SAFE TRACE ${t.date}
-Système : ${t.os}
-Navigateur : ${t.browser}
-Affichage : ${t.screen}
-Viewport : ${t.viewport}
-Fuseau : ${t.timezone}
-Langues : ${t.lang}
-Performance : ${t.cpu}
-Sécurité : aucun RustDesk ID, aucun mot de passe`;
-  }
+function currentModeLabel() {
+  const view = ["focus", "extended", "full"].find(v => document.body.classList.contains(`view-${v}`)) || "extended";
+  const visual = document.body.classList.contains("visual-readability") ? "lisibilité" : "transparent";
+  return `${view} · ${visual}`;
+}
+
+function renderRawTrace(trace) {
+  return `SAFE TRACE ${trace.date}
+IP publique : ${trace.ip}
+Batterie : ${trace.battery}
+Mémoire : ${trace.memory}
+Système : ${trace.os}
+Navigateur : ${trace.browser}
+Affichage : ${trace.screen}
+Viewport : ${trace.viewport}
+Fuseau : ${trace.timezone}
+Langues : ${trace.languages}
+CPU : ${trace.cpu}
+Réseau : ${trace.network}
+Connexion : ${trace.connection}
+Session : ${trace.session}
+Sécurité : ${trace.security}`;
+}
+
+function refreshSystem(updateStatus = true) {
+  const trace = getTrace();
+  const html = renderSystemCards(trace);
+  ["#stripGrid", "#systemGrid", "#systemDrawerGrid"].forEach(selector => {
+    const el = $(selector);
+    if (el) el.innerHTML = html;
+  });
+
+  const raw = renderRawTrace(trace);
+  if ($("#systemRaw")) $("#systemRaw").value = raw;
+  if ($("#systemDrawerRaw")) $("#systemDrawerRaw").value = raw;
+
+  $("#netDown") && ($("#netDown").textContent = getConnectionInfo().downlink);
+  $("#netUp") && ($("#netUp").textContent = "local");
+  $("#netPing") && ($("#netPing").textContent = getConnectionInfo().rtt);
+
+  if (updateStatus) setStatus("Diagnostic système actualisé.");
 }
 
 async function copySystemDiagnostics() {
-  refreshSystem();
-  await copyText($("#systemRaw")?.value || "SAFE TRACE");
+  refreshSystem(false);
+  const text = $("#systemRaw")?.value || $("#systemDrawerRaw")?.value || "SAFE TRACE";
+  await copyText(text);
   setStatus("Diagnostic système copié.");
+}
+
+function updateClock() {
+  const now = new Date();
+  const clock = $("#localClock");
+  const date = $("#localDate");
+  if (clock) clock.textContent = now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  if (date) date.textContent = now.toLocaleDateString("fr-FR", { weekday: "long", day: "2-digit", month: "long" });
 }
 
 function bindHelp() {
@@ -341,27 +614,58 @@ function bindHelp() {
   });
 }
 
-function boot() {
-  const savedBg = Number(localStorage.getItem("seven_v79_bg") || "0");
+function restoreState() {
+  const savedBg = Number(localStorage.getItem("seven_v8_bg") || "0");
   applyBackground(Number.isFinite(savedBg) ? savedBg : 0);
-  setMode(localStorage.getItem("seven_v79_mode") || "transparent");
-  setAmbiance(localStorage.getItem("seven_v79_ambiance") || "sky");
-  if (localStorage.getItem("seven_v79_advanced") === "1") toggleAdvanced(true);
-  renderAtlas();
-  refreshSystem();
-  bindHelp();
+  setVisualMode(localStorage.getItem("seven_v8_visual") || "transparent");
+  setViewMode(localStorage.getItem("seven_v8_view") || "extended");
+  setAmbiance(localStorage.getItem("seven_v8_ambiance") || "sky");
+  toggleAdvanced(localStorage.getItem("seven_v8_advanced") === "1");
+  toggleAtlas(localStorage.getItem("seven_v8_atlas") === "1");
 
-  document.addEventListener("keydown", e => {
-    if (e.target && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-    const pages = { "1": "home", "2": "llm", "3": "notion", "4": "github", "5": "production", "6": "system" };
-    if (pages[e.key]) openPage(pages[e.key]);
-    if (e.key === "?") togglePalette();
-    if (e.key === "Escape") { togglePalette(false); togglePrompt(false); }
+  ["hide_menu", "hide_profile", "hide_widgets", "hide_quick", "hide_activity"].forEach(key => {
+    if (localStorage.getItem(`seven_v8_${key}`) === "1") {
+      document.body.classList.add(key.replace("_", "-"));
+    }
   });
 
-  window.addEventListener("resize", refreshSystem);
-  setStatus("Seven Terminal V7.9 prêt.");
+  const page = localStorage.getItem("seven_v8_page");
+  if (page) openPage(page);
+
+  const submenu = localStorage.getItem("seven_v8_submenu");
+  if (submenu) openSubmenu(submenu);
 }
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-else boot();
+async function boot() {
+  restoreState();
+  renderAtlas();
+  bindHelp();
+  await updateBattery();
+  refreshSystem(false);
+  fetchPublicIp().then(() => refreshSystem(false));
+  updateClock();
+  setInterval(updateClock, 15000);
+  setInterval(() => refreshSystem(false), 60000);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
+    const pages = { "1": "home", "2": "llm", "3": "notion", "4": "github", "5": "production", "6": "system" };
+    if (pages[event.key]) openPage(pages[event.key]);
+    if (event.key === "?") togglePalette();
+    if (event.key === "Escape") {
+      togglePalette(false);
+      togglePrompt(false);
+      closeSubmenu();
+      toggleSystemDetails(false);
+    }
+  });
+
+  window.addEventListener("resize", () => refreshSystem(false));
+  setStatus("Seven Terminal V8 prêt.");
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
