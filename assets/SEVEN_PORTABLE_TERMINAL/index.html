@@ -1,168 +1,296 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal V8.1 — Template Sliced Modules</title>
-  <link rel="stylesheet" href="./style.css?v=v81-template-sliced-modules">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07131a" />
+  <title>Seven Portable Terminal — Transformer Book Sky Cockpit</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
+<body class="mode-readable mode-gold">
+  <div class="sky-background" aria-hidden="true">
+    <img id="bgImage" src="./assets/sky_castle_template.png" alt="" />
+    <div class="sky-veil"></div>
+    <div class="cloud-floor"></div>
+  </div>
 
-<body class="view-full" data-page="home">
-  <main class="shell">
-    <header class="operator-bar">
-      <div>
-        <strong>Seven Portable Terminal V8.1</strong>
-        <span>Template découpé en modules · apparence sauvegardable · panneaux masquables</span>
-      </div>
-      <div class="operator-actions">
-        <button onclick="setPreset('full')">Full AAA</button>
-        <button onclick="setPreset('clean')">Clean</button>
-        <button onclick="setPreset('focus')">Focus</button>
-        <button onclick="saveAppearance()">💾 Save défaut</button>
-        <button onclick="loadAppearance()">↩ Charger</button>
-        <button onclick="resetAppearance()">Reset</button>
+  <main class="terminal" id="terminal">
+    <nav class="topbar glass-line" aria-label="Navigation principale">
+      <button class="nav-btn active" data-page="home">⌂ Accueil</button>
+      <button class="nav-btn" data-page="llm">✺ LLM</button>
+      <button class="nav-btn" data-page="notion">▣ Notion</button>
+      <button class="nav-btn" data-page="github">◉ GitHub</button>
+      <button class="nav-btn" data-page="production">↗ Production</button>
+      <button class="nav-btn" data-page="system">⚙ Système</button>
+      <button class="nav-btn utility" id="themeBtn">◐ Lisibilité</button>
+      <button class="nav-btn utility" id="transparentBtn">◇ Transparent</button>
+      <button class="nav-btn utility" id="nextBgBtn">☁ Fond</button>
+      <button class="nav-btn utility" id="randomBgBtn">✦ Random</button>
+      <button class="nav-btn utility" id="saveBtn">▣ Save</button>
+      <button class="nav-btn utility" id="favBtn">♥ Favori</button>
+      <button class="nav-btn utility" id="paletteBtn">?</button>
+    </nav>
+
+    <header class="hero glass hero-panel">
+      <div class="hero-ornament">✦</div>
+      <p class="hero-kicker">TRANSFORMER BOOK · SKY CASTLE COCKPIT</p>
+      <h1>Seven Portable Terminal</h1>
+      <p class="hero-subtitle">Maisons vivantes · Ruines célestes · Cockpit aérien · Mémoire opérative</p>
+      <div class="hero-ribbon">
+        <span>Golden Glass</span>
+        <span>Sky Ruins</span>
+        <span>Living Interface</span>
+        <span>Text-first mode</span>
       </div>
     </header>
 
-    <section class="control-deck">
-      <button data-toggle="chrome" onclick="toggleGroup('chrome')">Haut / Hero</button>
-      <button data-toggle="menu" onclick="toggleGroup('menu')">Menu gauche</button>
-      <button data-toggle="profile" onclick="toggleGroup('profile')">Profil</button>
-      <button data-toggle="core" onclick="toggleGroup('core')">Modules centre</button>
-      <button data-toggle="advanced" onclick="toggleGroup('advanced')">Advanced / HUD</button>
-      <button data-toggle="system" onclick="toggleGroup('system')">Infos système</button>
-      <button data-toggle="quick" onclick="toggleGroup('quick')">Accès rapides</button>
-      <button data-toggle="widgets" onclick="toggleGroup('widgets')">Widgets extérieurs</button>
-      <button onclick="toggleOptions()">⚙️ Options</button>
-    </section>
+    <section class="layout">
+      <aside class="left-column">
+        <section class="card glass menu-card">
+          <h2>Menu Principal</h2>
+          <button class="side-link active" data-page="home">⌂ Tableau de bord</button>
+          <button class="side-link" data-page="llm">✺ Modules LLM</button>
+          <button class="side-link" data-page="production">✧ Production</button>
+          <button class="side-link" data-page="system">⚙ Diagnostic</button>
+        </section>
 
-    <section class="stage-wrap">
-      <section class="stage" id="stage" aria-label="Dashboard Sky Castle template sliced modules">
-        <img class="stage-bg" src="./assets/sky_castle_background.png" alt="" draggable="false">
-        <div class="stage-vignette"></div>
-
-        <div class="slice group-chrome" data-module="top_nav" style="--x:8.37321%;--y:3.61318%;--w:39.95215%;--h:5.73858%;" title="Navigation principale">
-      <img src="./assets/modules/top_nav.png" alt="Navigation principale" draggable="false">
-    </div>
-<div class="slice group-chrome" data-module="hero_title" style="--x:34.09091%;--y:8.92667%;--w:31.69856%;--h:8.07651%;" title="Titre central">
-      <img src="./assets/modules/hero_title.png" alt="Titre central" draggable="false">
-    </div>
-<div class="slice group-chrome" data-module="identity_ribbon" style="--x:27.21292%;--y:18.17216%;--w:46.05263%;--h:4.03826%;" title="Ruban identité">
-      <img src="./assets/modules/identity_ribbon.png" alt="Ruban identité" draggable="false">
-    </div>
-<div class="slice group-chrome" data-module="tool_ribbon" style="--x:20.03589%;--y:23.59192%;--w:58.61244%;--h:5.52604%;" title="Outils cockpit">
-      <img src="./assets/modules/tool_ribbon.png" alt="Outils cockpit" draggable="false">
-    </div>
-<div class="slice group-widgets" data-module="compass_left" style="--x:0.00000%;--y:0.00000%;--w:8.49282%;--h:15.94049%;" title="Boussole / Atlas">
-      <img src="./assets/modules/compass_left.png" alt="Boussole / Atlas" draggable="false">
-    </div>
-<div class="slice group-menu" data-module="left_menu" style="--x:1.31579%;--y:34.21892%;--w:14.05502%;--h:32.09352%;" title="Menu principal">
-      <img src="./assets/modules/left_menu.png" alt="Menu principal" draggable="false">
-    </div>
-<div class="slice group-widgets" data-module="weather" style="--x:0.71770%;--y:67.48140%;--w:14.65311%;--h:15.09033%;" title="Météo locale">
-      <img src="./assets/modules/weather.png" alt="Météo locale" draggable="false">
-    </div>
-<div class="slice group-widgets" data-module="clock" style="--x:2.15311%;--y:83.10308%;--w:12.85885%;--h:14.45271%;" title="Horloge locale">
-      <img src="./assets/modules/clock.png" alt="Horloge locale" draggable="false">
-    </div>
-<div class="slice group-profile" data-module="profile" style="--x:85.82536%;--y:0.00000%;--w:13.75598%;--h:40.59511%;" title="Carte profil Seven">
-      <img src="./assets/modules/profile.png" alt="Carte profil Seven" draggable="false">
-    </div>
-<div class="slice group-core" data-module="seven_boost" style="--x:16.44737%;--y:33.58130%;--w:18.30144%;--h:20.40383%;" title="Seven Boost">
-      <img src="./assets/modules/seven_boost.png" alt="Seven Boost" draggable="false">
-    </div>
-<div class="slice group-core" data-module="video_cards" style="--x:35.28708%;--y:33.58130%;--w:19.13876%;--h:20.40383%;" title="Video Cards">
-      <img src="./assets/modules/video_cards.png" alt="Video Cards" draggable="false">
-    </div>
-<div class="slice group-core" data-module="actions_wan_blackout_link" style="--x:55.02392%;--y:33.58130%;--w:29.90431%;--h:20.19129%;" title="Wan / Blackout / Copier lien">
-      <img src="./assets/modules/actions_wan_blackout_link.png" alt="Wan / Blackout / Copier lien" draggable="false">
-    </div>
-<div class="slice group-advanced" data-module="advanced_panels" style="--x:16.56699%;--y:55.04782%;--w:15.55024%;--h:14.02763%;" title="Advanced Panels">
-      <img src="./assets/modules/advanced_panels.png" alt="Advanced Panels" draggable="false">
-    </div>
-<div class="slice group-advanced" data-module="network_hud" style="--x:32.29665%;--y:55.04782%;--w:21.53110%;--h:14.02763%;" title="Network HUD">
-      <img src="./assets/modules/network_hud.png" alt="Network HUD" draggable="false">
-    </div>
-<div class="slice group-advanced" data-module="system_details" style="--x:54.30622%;--y:55.04782%;--w:13.63636%;--h:14.02763%;" title="System Details HUD">
-      <img src="./assets/modules/system_details.png" alt="System Details HUD" draggable="false">
-    </div>
-<div class="slice group-advanced" data-module="activity" style="--x:68.66029%;--y:55.04782%;--w:16.98565%;--h:14.02763%;" title="Activité récente">
-      <img src="./assets/modules/activity.png" alt="Activité récente" draggable="false">
-    </div>
-<div class="slice group-system" data-module="system_info" style="--x:15.90909%;--y:70.56323%;--w:70.09569%;--h:11.90223%;" title="Informations système">
-      <img src="./assets/modules/system_info.png" alt="Informations système" draggable="false">
-    </div>
-<div class="slice group-quick" data-module="quick_access" style="--x:23.44498%;--y:83.31562%;--w:50.23923%;--h:12.96493%;" title="Accès rapide">
-      <img src="./assets/modules/quick_access.png" alt="Accès rapide" draggable="false">
-    </div>
-<div class="slice group-widgets" data-module="notifications_save" style="--x:74.52153%;--y:84.16578%;--w:23.62440%;--h:11.68969%;" title="Notifications / Sauvegarde">
-      <img src="./assets/modules/notifications_save.png" alt="Notifications / Sauvegarde" draggable="false">
-    </div>
-
-        <button class="hotspot" data-hotspot="nav-home" style="--x:10.16746%;--y:4.46334%;--w:7.17703%;--h:4.25080%;" onclick="openPage('home')" title="Accueil"><span>Accueil</span></button>
-<button class="hotspot" data-hotspot="nav-llm" style="--x:17.64354%;--y:4.46334%;--w:5.38278%;--h:4.25080%;" onclick="openPage('llm')" title="LLM"><span>LLM</span></button>
-<button class="hotspot" data-hotspot="nav-notion" style="--x:23.92344%;--y:4.46334%;--w:5.68182%;--h:4.25080%;" onclick="openPage('notion')" title="Notion"><span>Notion</span></button>
-<button class="hotspot" data-hotspot="nav-github" style="--x:30.20335%;--y:4.46334%;--w:6.57895%;--h:4.25080%;" onclick="openPage('github')" title="GitHub"><span>GitHub</span></button>
-<button class="hotspot" data-hotspot="nav-production" style="--x:37.08134%;--y:4.46334%;--w:6.57895%;--h:4.25080%;" onclick="openPage('production')" title="Production"><span>Production</span></button>
-<button class="hotspot" data-hotspot="nav-system" style="--x:43.95933%;--y:4.46334%;--w:4.48565%;--h:4.25080%;" onclick="openPage('system')" title="Système"><span>Système</span></button>
-<button class="hotspot" data-hotspot="seven-boost" style="--x:16.62679%;--y:33.79384%;--w:18.24163%;--h:20.19129%;" onclick="startSeven()" title="Seven Boost"><span>Seven Boost</span></button>
-<button class="hotspot" data-hotspot="video-cards" style="--x:35.40670%;--y:33.79384%;--w:19.01914%;--h:20.19129%;" onclick="copyVideoCards()" title="Video Cards"><span>Video Cards</span></button>
-<button class="hotspot" data-hotspot="wan" style="--x:55.14354%;--y:34.00638%;--w:10.58612%;--h:19.76621%;" onclick="copyWan()" title="Wan 1080×1920"><span>Wan 1080×1920</span></button>
-<button class="hotspot" data-hotspot="blackout" style="--x:65.90909%;--y:34.00638%;--w:9.15072%;--h:19.76621%;" onclick="copyBlackout()" title="Blackout"><span>Blackout</span></button>
-<button class="hotspot" data-hotspot="copy-link" style="--x:75.23923%;--y:34.00638%;--w:9.56938%;--h:19.76621%;" onclick="copyTerminalLink()" title="Copier lien"><span>Copier lien</span></button>
-<button class="hotspot" data-hotspot="advanced" style="--x:16.68660%;--y:55.26036%;--w:15.43062%;--h:13.81509%;" onclick="toggleGroup('advanced')" title="Advanced Panels"><span>Advanced Panels</span></button>
-<button class="hotspot" data-hotspot="network" style="--x:32.41627%;--y:55.26036%;--w:21.41148%;--h:13.81509%;" onclick="refreshSystem()" title="Network HUD"><span>Network HUD</span></button>
-<button class="hotspot" data-hotspot="system-details" style="--x:54.42584%;--y:55.26036%;--w:13.51675%;--h:13.81509%;" onclick="toggleSystemDrawer()" title="System Details"><span>System Details</span></button>
-<button class="hotspot" data-hotspot="activity" style="--x:68.77990%;--y:55.26036%;--w:16.86603%;--h:13.81509%;" onclick="toggleGroup('advanced')" title="Activité"><span>Activité</span></button>
-<button class="hotspot" data-hotspot="quick-llm" style="--x:25.11962%;--y:85.54729%;--w:5.08373%;--h:9.56429%;" onclick="openSubmenu('llm')" title="LLM"><span>LLM</span></button>
-<button class="hotspot" data-hotspot="quick-notion" style="--x:30.50239%;--y:85.54729%;--w:5.08373%;--h:9.56429%;" onclick="openSubmenu('notion')" title="Notion"><span>Notion</span></button>
-<button class="hotspot" data-hotspot="quick-github" style="--x:35.88517%;--y:85.54729%;--w:5.38278%;--h:9.56429%;" onclick="openSubmenu('github')" title="GitHub"><span>GitHub</span></button>
-<button class="hotspot" data-hotspot="quick-production" style="--x:41.26794%;--y:85.54729%;--w:5.68182%;--h:9.56429%;" onclick="openSubmenu('production')" title="Production"><span>Production</span></button>
-<button class="hotspot" data-hotspot="quick-settings" style="--x:66.98565%;--y:85.54729%;--w:5.38278%;--h:9.56429%;" onclick="openSubmenu('settings')" title="Settings"><span>Settings</span></button>
-
-        <aside class="live-panel live-status" id="livePanel">
-          <strong>SAFE TRACE</strong>
-          <span id="liveIp">IP : détection…</span>
-          <span id="liveBattery">Batterie : détection…</span>
-          <span id="liveMode">Mode : Full AAA</span>
-        </aside>
-
-        <aside class="system-drawer" id="systemDrawer">
-          <div class="drawer-head">
-            <strong>System Details HUD</strong>
-            <button onclick="toggleSystemDrawer(false)">×</button>
+        <section class="card glass weather-card">
+          <h2>Météo Locale</h2>
+          <div class="big-number">24°C</div>
+          <p>Éclaircies · cockpit aérien</p>
+          <div class="mini-grid">
+            <span>↔ Vent 12 km/h</span>
+            <span>◌ Humidité 46%</span>
           </div>
-          <div class="system-grid" id="systemGrid"></div>
-          <textarea id="systemRaw" readonly></textarea>
-        </aside>
+        </section>
 
-        <aside class="mini-submenu" id="miniSubmenu">
-          <div class="drawer-head">
-            <strong id="submenuTitle">Sous-menu</strong>
-            <button onclick="closeSubmenu()">×</button>
-          </div>
-          <div class="submenu-grid" id="submenuGrid"></div>
-        </aside>
+        <section class="card glass time-card">
+          <h2>Horloge</h2>
+          <div class="big-number" id="clock">09:47</div>
+          <p id="dateLine">Transformer Book prêt</p>
+        </section>
+      </aside>
 
-        <aside class="options-panel" id="optionsPanel">
-          <div class="drawer-head">
-            <strong>Options d’apparence</strong>
-            <button onclick="toggleOptions(false)">×</button>
+      <section class="center-stage">
+        <section class="page active" id="page-home">
+          <div class="module-title glass">
+            <span>✦</span>
+            <div>
+              <strong>Hero Modules</strong>
+              <p>Pilotez. Connectez. Créez sans casser le cockpit.</p>
+            </div>
           </div>
-          <label>Opacité des modules <input type="range" min="70" max="100" value="96" id="opacityRange" oninput="setModuleOpacity(this.value)"></label>
-          <label>Échelle UI <input type="range" min="92" max="104" value="100" id="scaleRange" oninput="setStageScale(this.value)"></label>
-          <label>Fond <select id="bgSelect" onchange="setBackground(this.value)">
-            <option value="sky_castle_background.png">Hero Sky Castle</option>
-            <option value="sky_castle_template_master.png">Template complet</option>
-          </select></label>
-          <button onclick="saveAppearance()">Sauvegarder apparence par défaut</button>
-        </aside>
+
+          <div class="hero-modules">
+            <button class="module-button" data-action="start-seven">
+              <span>✺</span>
+              <strong>Démarrer Seven</strong>
+              <small>Copie le prompt + ouvre ChatGPT</small>
+            </button>
+            <button class="module-button" data-action="copy-seven">
+              <span>✧</span>
+              <strong>Seven Boost</strong>
+              <small>Prompt mémoire opératrice</small>
+            </button>
+            <button class="module-button" data-action="copy-video">
+              <span>🎬</span>
+              <strong>Video Cards</strong>
+              <small>Wan · DaVinci · LEGO</small>
+            </button>
+            <button class="module-button" data-action="copy-blackout">
+              <span>⚫</span>
+              <strong>Blackout</strong>
+              <small>Texte uniquement</small>
+            </button>
+            <button class="module-button" data-action="copy-link">
+              <span>🔗</span>
+              <strong>Copier lien</strong>
+              <small>Cockpit GitHub Pages</small>
+            </button>
+            <button class="module-button" data-page="system">
+              <span>⚙</span>
+              <strong>Système</strong>
+              <small>SAFE TRACE local</small>
+            </button>
+          </div>
+
+          <section class="card glass trace-panel">
+            <div class="section-head">
+              <div>
+                <h2>⚙ Advanced System Trace</h2>
+                <p>Diagnostic local filtré. Aucun RustDesk ID. Aucun mot de passe.</p>
+              </div>
+              <button class="small-action" id="refreshTraceBtn">Refresh</button>
+            </div>
+            <div class="trace-grid" id="traceGrid"></div>
+          </section>
+        </section>
+
+        <section class="page" id="page-llm">
+          <div class="module-title glass">
+            <span>✺</span>
+            <div>
+              <strong>LLM Console</strong>
+              <p>Activation Seven Heaven, modules mémoire et prompts copiables.</p>
+            </div>
+          </div>
+          <div class="cards-grid">
+            <article class="card glass">
+              <h2>Seven Heaven</h2>
+              <p>Opératrice de mémoire, production et discernement.</p>
+              <button class="small-action" data-action="start-seven">Copier + ouvrir ChatGPT</button>
+            </article>
+            <article class="card glass">
+              <h2>Prompt Boost</h2>
+              <p>Mode Full Modules Boost intelligent, chargement minimal.</p>
+              <button class="small-action" data-action="copy-seven">Copier Seven Boost</button>
+            </article>
+            <article class="card glass">
+              <h2>Mode Blackout</h2>
+              <p>Zéro outil, zéro image, texte pur, une action.</p>
+              <button class="small-action" data-action="copy-blackout">Copier Blackout</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-notion">
+          <div class="module-title glass">
+            <span>▣</span>
+            <div>
+              <strong>Notion Memory</strong>
+              <p>Mémoire humaine, éditoriale, visuelle et confortable.</p>
+            </div>
+          </div>
+          <div class="cards-grid">
+            <a class="card glass link-card" href="https://www.notion.so/" target="_blank" rel="noopener">Notion</a>
+            <a class="card glass link-card" href="https://sustaining-boar-5c6.notion.site/erith-ia-memory" target="_blank" rel="noopener">ERITH Memory Notion</a>
+            <button class="card glass link-card" data-action="copy-notion">Copier bloc Notion</button>
+          </div>
+        </section>
+
+        <section class="page" id="page-github">
+          <div class="module-title glass">
+            <span>◉</span>
+            <div>
+              <strong>GitHub Dock</strong>
+              <p>Accès public, terminal, dossiers et liens de production.</p>
+            </div>
+          </div>
+          <div class="cards-grid">
+            <a class="card glass link-card" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener">GitHub public</a>
+            <a class="card glass link-card" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noopener">Dossier terminal</a>
+            <a class="card glass link-card" href="https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html" target="_blank" rel="noopener">Cockpit public</a>
+          </div>
+        </section>
+
+        <section class="page" id="page-production">
+          <div class="module-title glass">
+            <span>↗</span>
+            <div>
+              <strong>Production Bay</strong>
+              <p>Wan, DaVinci, YouTube, son et LEGO continuity.</p>
+            </div>
+          </div>
+          <div class="cards-grid">
+            <article class="card glass">
+              <h2>Wan / I2V</h2>
+              <p>Image parfaite → animation stable → last frame exacte.</p>
+              <button class="small-action" data-action="copy-wan">Copier prompt Wan</button>
+            </article>
+            <article class="card glass">
+              <h2>YouTube</h2>
+              <p>Shorts 1080x1920, thumbnail 1280x720, bannière 2048x1152.</p>
+              <a class="small-action" href="https://studio.youtube.com/" target="_blank" rel="noopener">Ouvrir Studio</a>
+            </article>
+            <article class="card glass">
+              <h2>Sound Design</h2>
+              <p>Musique seulement si nécessaire. Silence et ambiance restent des choix.</p>
+              <a class="small-action" href="https://elevenlabs.io/" target="_blank" rel="noopener">ElevenLabs</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="page-system">
+          <div class="module-title glass">
+            <span>⚙</span>
+            <div>
+              <strong>Système / Network HUD</strong>
+              <p>SAFE TRACE visible même si le JavaScript échoue.</p>
+            </div>
+          </div>
+          <section class="card glass">
+            <h2>SAFE TRACE</h2>
+            <p>Aucun RustDesk ID. Aucun mot de passe. Diagnostic navigateur local uniquement.</p>
+            <div class="trace-grid" id="systemTraceGrid">
+              <article><span>🖥️</span><small>OS</small><strong>Détection navigateur</strong><em>local</em></article>
+              <article><span>🌐</span><small>Navigateur</small><strong>Browser</strong><em>filtré</em></article>
+              <article><span>📐</span><small>Écran</small><strong>Viewport</strong><em>local</em></article>
+              <article><span>🌍</span><small>Fuseau</small><strong>Europe/Paris</strong><em>local</em></article>
+              <article><span>🛡️</span><small>Sécurité</small><strong>SAFE TRACE</strong><em>aucun secret</em></article>
+              <article><span>🔋</span><small>Batterie</small><strong>si disponible</strong><em>navigator API</em></article>
+            </div>
+          </section>
+        </section>
       </section>
+
+      <aside class="right-column">
+        <section class="profile-card glass">
+          <div class="portrait-ring">
+            <div class="portrait-glow">✿</div>
+          </div>
+          <h2>AERITH-7</h2>
+          <p>The Flower Girl</p>
+          <div class="status-row"><span>✦ Niveau</span><strong>7</strong></div>
+          <div class="status-row"><span>◌ État</span><strong>En ligne</strong></div>
+          <div class="status-row"><span>☁ Mode</span><strong>Sky Cockpit</strong></div>
+        </section>
+
+        <section class="card glass">
+          <h2>Activité récente</h2>
+          <ul class="activity">
+            <li><span class="dot green"></span> Cockpit chargé</li>
+            <li><span class="dot blue"></span> Background aléatoire</li>
+            <li><span class="dot gold"></span> Transparence contrôlée</li>
+            <li><span class="dot violet"></span> Top-of-Mind actif</li>
+          </ul>
+        </section>
+
+        <section class="card glass">
+          <h2>Image Rule</h2>
+          <p><strong>Opaque</strong> = fond assumé.<br><strong>Transparent</strong> = alpha réel.<br><strong>Damier</strong> = refus.</p>
+        </section>
+      </aside>
     </section>
 
-    <footer class="status-line" id="status">V8.1 prête · modules découpés depuis le template Sky Castle.</footer>
+    <section class="bottom-dock glass-line">
+      <button class="dock-btn" data-page="llm">✺ LLM</button>
+      <button class="dock-btn" data-page="notion">▣ Notion</button>
+      <button class="dock-btn" data-page="github">◉ GitHub</button>
+      <button class="dock-btn" data-page="production">↗ Production</button>
+      <button class="dock-btn" data-action="start-seven">✦ Seven</button>
+      <button class="dock-btn" data-action="copy-video">🎬 Video Cards</button>
+      <button class="dock-btn" data-action="copy-blackout">⚫ Blackout</button>
+      <button class="dock-btn" data-page="system">⚙ System</button>
+    </section>
+
+    <footer class="terminal-footer glass-line">
+      <span>Transformer Book = pupitre Seven</span>
+      <span>Sky Castle Cockpit V1</span>
+      <span>Large Language Personality [Model - The Flower Girl] v. 5</span>
+    </footer>
   </main>
 
-  <script src="./script.js?v=v81-template-sliced-modules"></script>
+  <dialog id="promptDrawer" class="prompt-drawer">
+    <form method="dialog">
+      <h2>Prompt prêt à copier</h2>
+      <p>Si le presse-papier est bloqué, sélectionne le texte puis Ctrl+C.</p>
+      <textarea id="promptText"></textarea>
+      <menu>
+        <button value="close">Fermer</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="./script.js"></script>
 </body>
 </html>

@@ -1,24 +1,33 @@
-# Seven Portable Terminal V8.1 — Template Sliced Modules
+# SEVEN TRANSFORMER BOOK SKY COCKPIT V1
 
-Cette version repart du vrai tableau de bord AAA `sky_castle_template.png`.
+Interface HTML/CSS/JS autonome pour le Transformer Book.
 
-Principe:
-- l'image maître a été découpée en modules PNG;
-- les modules sont ré-agencés sur une scène 16:9;
-- chaque groupe peut être masqué/affiché;
-- l'apparence peut être sauvegardée comme défaut local;
-- les hotspots gardent les actions utiles: Seven Boost, Video Cards, Wan, Blackout, copier lien, sous-menus.
+## Installation
 
-Fichiers:
+Uploader tout le dossier dans :
+
+assets/SEVEN_PORTABLE_TERMINAL/
+
+Fichiers nécessaires :
+
 - index.html
 - style.css
 - script.js
-- assets/
-  - sky_castle_template_master.png
-  - sky_castle_background.png
-  - seven_avatar.png
-  - icon_sheet.png
-  - modules/*.png
+- assets/sky_castle_template.png
+- assets/sky_castle_dashboard_reference.png
 
-Commit recommandé:
-Build Seven terminal V8.1 sliced template modules
+## Règles
+
+- Texte uniquement par défaut.
+- Le bouton Démarrer Seven copie le prompt puis ouvre ChatGPT dans un nouvel onglet.
+- Le terminal n’est pas remplacé par ChatGPT.
+- Les fonds changent à chaque chargement, sauf si un favori est sauvegardé.
+- Le mode Lisibilité ajoute un voile sombre.
+- Le mode Transparent garde l’interface légère.
+- Aucun damier imprimé.
+- Aucun faux transparent.
+- Les boutons et panneaux sont faits en CSS RGBA, pas en PNG découpé.
+
+## Commit recommandé
+
+Add Transformer Book sky cockpit interface
