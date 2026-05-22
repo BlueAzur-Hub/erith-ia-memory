@@ -86,31 +86,42 @@ body.transparent .terminal-footer{
 }
 
 
-/* Seven fix — Advanced System Trace transparent */
+/* Seven fix — Transparent button also affects Advanced System Trace */
 .advanced-panel{
-  background:rgba(9,15,29,.24) !important;
-  backdrop-filter:blur(2px) !important;
-  border-color:rgba(245,213,141,.48) !important;
+  background:rgba(4,8,18,.74);
+  backdrop-filter:blur(7px);
 }
 
 .trace-card{
-  background:rgba(9,15,29,.20) !important;
-  backdrop-filter:blur(2px) !important;
+  background:rgba(4,8,18,.66);
+  backdrop-filter:blur(6px);
 }
 
+/* Quand on clique sur Transp. */
 body.transparent .advanced-panel{
-  background:rgba(9,15,29,.12) !important;
-  backdrop-filter:blur(.6px) !important;
+  background:rgba(9,15,29,.16) !important;
+  backdrop-filter:blur(1px) !important;
 }
 
 body.transparent .trace-card{
-  background:rgba(9,15,29,.10) !important;
-  backdrop-filter:blur(.6px) !important;
+  background:rgba(9,15,29,.12) !important;
+  backdrop-filter:blur(.8px) !important;
 }
 
-body.transparent .advanced-panel strong,
-body.transparent .trace-card strong,
-body.transparent .trace-card small,
-body.transparent .trace-card em{
-  text-shadow:0 1px 3px rgba(0,0,0,.75);
+/* Lisibilité doit gagner sur Transparent si les deux sont actifs */
+body.readable .advanced-panel,
+body.readable.transparent .advanced-panel{
+  background:rgba(4,8,18,.88) !important;
+  backdrop-filter:blur(8px) !important;
+}
+
+body.readable .trace-card,
+body.readable.transparent .trace-card{
+  background:rgba(4,8,18,.78) !important;
+  backdrop-filter:blur(7px) !important;
+}
+
+body.transparent .advanced-panel,
+body.transparent .trace-card{
+  text-shadow:0 1px 3px rgba(0,0,0,.72);
 }

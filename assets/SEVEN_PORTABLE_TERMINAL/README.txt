@@ -1,7 +1,7 @@
-SEVEN_TERMINAL_FINAL_TRACE_TRANSPARENT_FIX
+SEVEN_TERMINAL_FINAL_TRANSPARENT_BUTTON_TRACE_FIX
 
 Commit conseillé :
-Make advanced system trace transparent
+Make transparent mode affect advanced trace
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
@@ -12,8 +12,8 @@ Fichiers à remplacer :
 - script.js
 
 Correction :
-- Advanced System Trace devient plus transparent
-- Trace cards plus transparentes
-- texte protégé par une ombre légère pour rester lisible
+- le bouton Transp. rend aussi Advanced System Trace transparent
+- les trace cards suivent le mode transparent
+- le bouton Lisibilité reprend la priorité si activé
+- aucun changement sur les images
 - aucun changement sur la rotation 01-20
-- aucun changement image
