@@ -1,39 +1,8 @@
-body{
-margin:0;
-font-family:Arial;
-background:#0b1b2a;
-color:#e6f1ff;
-}
-
-header, footer{
-display:flex;
-justify-content:space-between;
-padding:12px;
-background:rgba(0,0,0,0.4);
-}
-
-main{
-height:80vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-gap:20px;
-}
-
-.core{
-padding:20px;
-border:1px solid rgba(255,255,255,0.2);
-border-radius:10px;
-background:rgba(0,0,0,0.3);
-text-align:center;
-}
-
-.menu button{
-margin:5px;
-padding:10px;
-background:rgba(255,255,255,0.1);
-border:1px solid rgba(255,255,255,0.2);
-color:white;
-cursor:pointer;
-}
+body{margin:0;font-family:Arial,sans-serif;color:white;overflow:hidden;}
+.bg{position:fixed;inset:0;background:#0b1b2a;}
+.ui{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.45));}
+.top{display:flex;justify-content:space-between;padding:12px 20px;}
+.center{display:flex;justify-content:center;align-items:center;flex:1;}
+.panel{text-align:center;padding:20px;background:rgba(0,0,0,0.35);border-radius:12px;}
+.controls button{margin:5px;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;}
+.bottom{text-align:center;padding:10px;}
