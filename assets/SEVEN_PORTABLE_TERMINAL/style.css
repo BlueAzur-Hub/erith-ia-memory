@@ -125,3 +125,55 @@ body.transparent .advanced-panel,
 body.transparent .trace-card{
   text-shadow:0 1px 3px rgba(0,0,0,.72);
 }
+
+
+/* Seven fix — Advanced Trace compact cards */
+.advanced-panel{
+  padding:10px 12px !important;
+}
+
+.advanced-head{
+  margin-bottom:4px;
+}
+
+.advanced-head strong{
+  font-size:15px !important;
+}
+
+.advanced-head span{
+  font-size:11px !important;
+  margin-top:1px !important;
+}
+
+.advanced-head button{
+  padding:5px 10px !important;
+  font-size:12px !important;
+}
+
+.trace-grid{
+  margin-top:7px !important;
+  grid-template-columns:repeat(auto-fit,minmax(135px,1fr)) !important;
+  gap:6px !important;
+}
+
+.trace-card{
+  min-height:58px !important;
+  padding:8px 10px !important;
+  border-radius:11px !important;
+}
+
+.trace-card small{
+  font-size:10px !important;
+  margin-bottom:2px !important;
+}
+
+.trace-card strong{
+  font-size:15px !important;
+  line-height:1.05 !important;
+}
+
+.trace-card em{
+  font-size:10px !important;
+  margin-top:2px !important;
+  line-height:1.2 !important;
+}
