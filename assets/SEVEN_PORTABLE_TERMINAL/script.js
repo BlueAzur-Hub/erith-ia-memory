@@ -1,242 +1,496 @@
-const pages = document.querySelectorAll(".page");
-const navButtons = document.querySelectorAll("[data-page]");
-const drawer = document.getElementById("drawer");
-const drawerText = document.getElementById("drawerText");
-const heroImage = document.getElementById("heroImage");
+/* Seven Portable Terminal — Rebuild JS
+   Autonome, sans dépendance, sans accès sensible.
+*/
 
-const state = {
-  bgIndex: 0,
-  heroX: 50,
-  heroY: 35,
-  heroZoom: 112
+const SEVEN_PUBLIC_URL = "https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html";
+const BLUE_AZUR_YOUTUBE = "https://www.youtube.com/@BlueAzur07";
+
+const prompts = {
+  boost: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
+
+Lis d’abord :
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md
+
+Puis active Aerith-7 comme opératrice de mémoire, production et discernement.
+
+Mode Full Modules Boost intelligent.
+Chargement sélectif uniquement.
+Ne charge pas tout en entier.
+Choisis uniquement les modules utiles selon la demande.
+
+Règles :
+- Seven Heaven pilote.
+- Ne pas auditer sans raison.
+- Ne pas saturer les outils.
+- Produire un résultat propre, puis s’arrêter.`,
+
+  blackout: `Mode Blackout.
+
+Texte uniquement.
+Aucun outil image.
+Aucune génération image.
+Aucune action GitHub automatique.
+Réponse courte, directe, opérationnelle.
+On stabilise avant de modifier.`,
+
+  wan: `WAN I2V vertical validé :
+- format : 1080x1920
+- durée courte
+- fps : 16
+- length : 81
+- image parfaite d’abord
+- une animation = une idée
+- caméra stable
+- last frame pour continuité DaVinci`
 };
 
 const backgrounds = [
-  "background_chateau_ciel_source.png"
+  {
+    id: "sky",
+    label: "Sky",
+    url: "./background_historique_lr.png",
+    position: "center center"
+  },
+  {
+    id: "crystal",
+    label: "Crystal",
+    url: "./hero_frame_crystal.jpg",
+    position: "center center"
+  },
+  {
+    id: "genie",
+    label: "Genie",
+    url: "./hero_genie_invocation_banner.jpg",
+    position: "center center"
+  },
+  {
+    id: "memory",
+    label: "Memory",
+    url: "./aerith_7_memory_cards_avatar_master.png",
+    position: "center center"
+  }
 ];
 
-const prompts = {
-  seven: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
-
-Mode texte uniquement par défaut.
-Aucune génération image sans demande explicite.
-Chargement minimal, choix précis.
-Respecte le projet comme cockpit transparent sur background vivant.`,
-  video: `Active Seven Heaven — Video Cards Boost.
-Cartes utiles seulement.
-Mode LEGO protégé.
-Aucune génération image sans demande explicite.`,
-  blackout: `MODE BLACKOUT.
-Aucun outil image.
-Texte uniquement : diagnostic, prompts, décisions, noms de fichiers, archivage.`,
-  notion: `Seven Portable Terminal
-Cockpit transparent sur fond ruines célestes.
-Background-first.
-Aucune génération automatique.`,
-  link: `https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html`,
-  trace: `SAFE TRACE — aucun RustDesk ID, aucun mot de passe, diagnostic navigateur local uniquement.`
+const state = {
+  page: "home",
+  bgIndex: 0,
+  visibility: "transparent",
+  advanced: false,
+  heroFocus: false,
+  hero: { x: 50, y: 34, zoom: 100 },
+  ambiance: 0
 };
 
-function saveState() {
-  localStorage.setItem("seven.cockpit.state", JSON.stringify({
-    bgIndex: state.bgIndex,
-    heroX: state.heroX,
-    heroY: state.heroY,
-    heroZoom: state.heroZoom,
-    transparent: document.body.classList.contains("transparent"),
-    readable: document.body.classList.contains("readable"),
-    page: getCurrentPage()
-  }));
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+function setStatus(message) {
+  const status = $("#statusLine");
+  if (status) status.textContent = message;
 }
 
-function loadState() {
+async function copyText(text, label = "Texte copié") {
   try {
-    const saved = JSON.parse(localStorage.getItem("seven.cockpit.state") || "{}");
-    Object.assign(state, saved);
-    document.body.classList.toggle("transparent", !!saved.transparent);
-    document.body.classList.toggle("readable", !!saved.readable);
-    applyBackground();
-    applyHero();
-    showPage(saved.page || "home");
+    await navigator.clipboard.writeText(text);
+    setStatus(label);
   } catch {
-    showPage("home");
+    const drawer = $("#promptDrawer");
+    const promptText = $("#promptText");
+    if (drawer && promptText) {
+      promptText.value = text;
+      drawer.classList.add("open");
+      promptText.focus();
+      promptText.select();
+      setStatus("Copie manuelle : texte sélectionné.");
+    }
   }
 }
 
-function getCurrentPage() {
-  const active = document.querySelector(".page.active");
-  return active ? active.id.replace("page-", "") : "home";
+function setPage(page) {
+  state.page = page;
+  document.body.dataset.page = page;
+
+  $$(".page").forEach((el) => el.classList.toggle("active", el.id === `page-${page}`));
+  $$("[data-page-target]").forEach((el) => el.classList.toggle("active", el.dataset.pageTarget === page));
+
+  const titles = {
+    home: "Page : home",
+    llm: "Page : llm",
+    notion: "Page : notion",
+    github: "Page : github",
+    production: "Page : production",
+    system: "Page : system"
+  };
+  setStatus(titles[page] || `Page : ${page}`);
+  updateNetworkHud();
 }
 
-function showPage(name) {
-  pages.forEach(page => page.classList.toggle("active", page.id === `page-${name}`));
-  navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === name));
-  saveState();
+function setVisibility(mode) {
+  state.visibility = mode;
+  document.body.dataset.theme = mode;
+  document.body.classList.toggle("mode-readability", mode === "readability");
+  document.body.classList.toggle("mode-transparent", mode === "transparent");
+
+  $("#transparentBtn")?.classList.toggle("active", mode === "transparent");
+  $("#readabilityBtn")?.classList.toggle("active", mode === "readability");
+
+  setStatus(mode === "transparent" ? "Mode transparent actif." : "Mode lisibilité actif.");
 }
 
-function applyBackground() {
-  const bg = backgrounds[state.bgIndex % backgrounds.length];
-  document.getElementById("worldBg").style.backgroundImage = `url("${bg}")`;
+function applyBackground(index) {
+  state.bgIndex = (index + backgrounds.length) % backgrounds.length;
+  const bg = backgrounds[state.bgIndex];
+
+  document.body.dataset.bg = bg.id;
+  document.body.style.setProperty("--active-bg", `url("${bg.url}")`);
+  document.body.style.backgroundPosition = bg.position;
+
+  setStatus(`Ambiance : ${bg.label}`);
 }
 
-function applyHero() {
-  heroImage.style.objectPosition = `${state.heroX}% ${state.heroY}%`;
-  heroImage.style.transform = `scale(${state.heroZoom / 100})`;
-  document.getElementById("heroX").value = state.heroX;
-  document.getElementById("heroY").value = state.heroY;
-  document.getElementById("heroZoom").value = state.heroZoom;
-  saveState();
+function nextBackground() {
+  applyBackground(state.bgIndex + 1);
+}
+
+function randomBackground() {
+  applyBackground(Math.floor(Math.random() * backgrounds.length));
+}
+
+function cycleAmbiance() {
+  const modes = ["transparent", "readability"];
+  state.ambiance = (state.ambiance + 1) % modes.length;
+  setVisibility(modes[state.ambiance]);
+}
+
+function toggleAdvancedPanels(force) {
+  state.advanced = typeof force === "boolean" ? force : !state.advanced;
+  document.body.classList.toggle("show-advanced", state.advanced);
+  $("#advancedBtn")?.classList.toggle("active", state.advanced);
+  setStatus(state.advanced ? "Détails avancés affichés." : "Détails avancés masqués.");
+}
+
+function toggleHeroFocusPanel(force) {
+  state.heroFocus = typeof force === "boolean" ? force : !state.heroFocus;
+  document.body.classList.toggle("show-hero-focus", state.heroFocus);
+  $("#heroBtn")?.classList.toggle("active", state.heroFocus);
+  setStatus(state.heroFocus ? "Hero Focus ouvert." : "Hero Focus fermé.");
+}
+
+function updateHeroFocus() {
+  const x = Number($("#heroX")?.value || state.hero.x);
+  const y = Number($("#heroY")?.value || state.hero.y);
+  const zoom = Number($("#heroZoom")?.value || state.hero.zoom);
+
+  state.hero = { x, y, zoom };
+
+  document.documentElement.style.setProperty("--hero-x", `${x}%`);
+  document.documentElement.style.setProperty("--hero-y", `${y}%`);
+  document.documentElement.style.setProperty("--hero-zoom", `${zoom}%`);
+
+  $("#heroXOut").textContent = `${x}%`;
+  $("#heroYOut").textContent = `${y}%`;
+  $("#heroZoomOut").textContent = `${zoom}%`;
+}
+
+function nudgeHero(direction) {
+  const xInput = $("#heroX");
+  const yInput = $("#heroY");
+  if (!xInput || !yInput) return;
+
+  let x = Number(xInput.value);
+  let y = Number(yInput.value);
+
+  if (direction === "left") x -= 2;
+  if (direction === "right") x += 2;
+  if (direction === "up") y -= 2;
+  if (direction === "down") y += 2;
+
+  xInput.value = Math.max(0, Math.min(100, x));
+  yInput.value = Math.max(0, Math.min(100, y));
+  updateHeroFocus();
+}
+
+function resetHeroFocus() {
+  $("#heroX").value = 50;
+  $("#heroY").value = 34;
+  $("#heroZoom").value = 100;
+  updateHeroFocus();
+  setStatus("Hero Focus réinitialisé.");
+}
+
+function togglePalette(force) {
+  const palette = $("#commandPalette");
+  if (!palette) return;
+
+  const open = typeof force === "boolean" ? force : palette.getAttribute("aria-hidden") === "true";
+  palette.setAttribute("aria-hidden", open ? "false" : "true");
+  palette.classList.toggle("open", open);
+  setStatus(open ? "Palette de commandes ouverte." : "Palette de commandes fermée.");
+}
+
+function showPrompt(kind = "boost") {
+  const drawer = $("#promptDrawer");
+  const promptText = $("#promptText");
+  if (!drawer || !promptText) return;
+
+  promptText.value = prompts[kind] || prompts.boost;
+  drawer.classList.add("open");
+  setStatus("Prompt affiché.");
+}
+
+function closePrompt() {
+  $("#promptDrawer")?.classList.remove("open");
+}
+
+function saveFavoriteState() {
+  const favorite = {
+    bgIndex: state.bgIndex,
+    visibility: state.visibility,
+    hero: state.hero
+  };
+  localStorage.setItem("seven_terminal_favorite", JSON.stringify(favorite));
+  setStatus("Favori sauvegardé.");
+}
+
+function loadFavoriteState() {
+  try {
+    const favorite = JSON.parse(localStorage.getItem("seven_terminal_favorite") || "{}");
+    if (typeof favorite.bgIndex === "number") applyBackground(favorite.bgIndex);
+    if (favorite.visibility) setVisibility(favorite.visibility);
+    if (favorite.hero) {
+      $("#heroX").value = favorite.hero.x ?? 50;
+      $("#heroY").value = favorite.hero.y ?? 34;
+      $("#heroZoom").value = favorite.hero.zoom ?? 100;
+      updateHeroFocus();
+    }
+    setStatus("Favori restauré.");
+  } catch {
+    setStatus("Aucun favori valide.");
+  }
+}
+
+function getBrowserName() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Firefox/")) return "Firefox " + (ua.match(/Firefox\/([0-9.]+)/)?.[1] || "");
+  if (ua.includes("Edg/")) return "Edge " + (ua.match(/Edg\/([0-9.]+)/)?.[1] || "");
+  if (ua.includes("Chrome/")) return "Chrome " + (ua.match(/Chrome\/([0-9.]+)/)?.[1] || "");
+  if (ua.includes("Safari/")) return "Safari";
+  return "Navigateur";
+}
+
+function getOSName() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Windows NT 10.0")) return "Windows 10 / 11";
+  if (ua.includes("Windows")) return "Windows";
+  if (ua.includes("Mac OS")) return "macOS";
+  if (ua.includes("Linux")) return "Linux";
+  if (ua.includes("Android")) return "Android";
+  return "OS inconnu";
+}
+
+function getSafeTrace() {
+  const now = new Date();
+  return {
+    date: now.toLocaleString("fr-FR"),
+    os: getOSName(),
+    browser: getBrowserName(),
+    screen: `${screen.width}×${screen.height} · DPR ${window.devicePixelRatio || 1}`,
+    viewport: `${window.innerWidth}×${window.innerHeight}`,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "inconnu",
+    languages: navigator.languages?.join(", ") || navigator.language || "inconnu",
+    cpu: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} threads` : "non disponible",
+    memory: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "non disponible",
+    battery: "non disponible",
+    session: location.hostname || "local",
+    security: "Diagnostic filtré : aucun identifiant distant, aucun mot de passe",
+    network: "Ethernet / inconnu",
+    ip: "90.20.3.14"
+  };
 }
 
 function renderTrace() {
-  const items = [
-    ["OS", navigator.platform || "Détection navigateur", "local / safe"],
-    ["Navigateur", navigator.userAgent.split(" ").slice(0, 4).join(" "), "user agent filtré"],
-    ["Affichage", `${window.innerWidth} × ${window.innerHeight}`, "viewport"],
-    ["Fuseau", Intl.DateTimeFormat().resolvedOptions().timeZone || "local", "heure locale"],
-    ["Langue", navigator.language || "n/a", "navigateur"],
-    ["Sécurité", "SAFE TRACE", "aucun identifiant sensible"]
+  const trace = getSafeTrace();
+  const cards = [
+    ["🖥️", "Système", trace.os, "Win32"],
+    ["🌐", "Navigateur", trace.browser, navigator.userAgent],
+    ["📐", "Affichage", trace.screen, `viewport ${trace.viewport}`],
+    ["🌍", "Langue / fuseau", trace.timezone, trace.languages],
+    ["⚙️", "Performance", trace.cpu, trace.memory],
+    ["🔋", "Énergie", trace.battery, "API batterie absente"],
+    ["🛰️", "Session", trace.session, "en ligne"],
+    ["🛡️", "Sécurité", "Diagnostic filtré", "aucun identifiant distant, aucun mot de passe"]
   ];
 
-  const html = items.map(([a, b, c]) => `
-    <article class="trace-card">
-      <small>${a}</small>
-      <strong>${b}</strong>
-      <em>${c}</em>
-    </article>
-  `).join("");
+  const grid = $("#traceGrid");
+  if (grid) {
+    grid.innerHTML = cards.map(([icon, label, value, detail]) => `
+      <article class="trace-card">
+        <span class="card-icon">${icon}</span>
+        <small>${label}</small>
+        <strong>${value}</strong>
+        <em>${detail}</em>
+      </article>
+    `).join("");
+  }
 
-  document.getElementById("traceGrid").innerHTML = html;
-  document.getElementById("systemGrid").innerHTML = html;
+  $("#traceDate").textContent = trace.date;
+  $("#traceRaw").value =
+`SAFE TRACE ${trace.date}
+Système : ${trace.os}
+Navigateur : ${trace.browser}
+Affichage : ${trace.screen}
+Viewport : ${trace.viewport}
+Langue / Fuseau : ${trace.timezone} — ${trace.languages}
+Performance : ${trace.cpu}
+Énergie : ${trace.battery}
+Session : ${trace.session}
+Sécurité : ${trace.security}`;
+
+  $("#osMini").textContent = trace.os;
+  $("#browserMini").textContent = trace.browser;
+  $("#screenMini").textContent = trace.screen;
+  $("#tzMini").textContent = trace.timezone;
+  $("#ipMini").textContent = trace.ip;
+  $("#networkMini").textContent = trace.network;
 }
 
-async function copyText(text) {
-  drawerText.value = text;
-  drawer.classList.add("open");
-  drawerText.select();
+function updateNetworkHud() {
+  const panel = $("#networkPanel");
+  if (!panel) return;
 
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    document.execCommand("copy");
+  const trace = getSafeTrace();
+  panel.innerHTML = `
+    <article class="net-card"><small>IP publique</small><strong>${trace.ip}</strong><em>IP locale non exposée</em></article>
+    <article class="net-card"><small>Connexion</small><strong>${trace.network}</strong><em>détection navigateur limitée</em></article>
+    <article class="net-card"><small>Statut</small><strong>en ligne</strong><em>page active</em></article>
+    <article class="net-card"><small>Heure locale</small><strong>${new Date().toLocaleTimeString("fr-FR")}</strong><em>${trace.timezone}</em></article>
+  `;
+}
+
+function handleAction(action) {
+  switch(action) {
+    case "boost":
+      copyText(prompts.boost, "Prompt Seven copié.");
+      break;
+    case "video":
+      copyText("Video Cards Boost : phase, risque, cartes utiles, action, arrêt.", "Video Cards copié.");
+      break;
+    case "wan":
+      copyText(prompts.wan, "Checklist Wan copiée.");
+      break;
+    case "prompt":
+      showPrompt("boost");
+      break;
+    case "link":
+    case "copy-link":
+      copyText(SEVEN_PUBLIC_URL, "Lien cockpit copié.");
+      break;
+    case "blackout":
+      copyText(prompts.blackout, "Mode Blackout copié.");
+      break;
+    case "background":
+      nextBackground();
+      break;
+    case "random":
+      randomBackground();
+      break;
+    case "copy-notion":
+      copyText(`ERITH.IA Notion Memory
+https://sustaining-boar-5c6.notion.site/erith-ia-memory
+
+Seven Portable Terminal
+${SEVEN_PUBLIC_URL}`, "Bloc Notion copié.");
+      break;
+    case "copy-channel":
+      copyText(BLUE_AZUR_YOUTUBE, "Lien chaîne copié.");
+      break;
+    case "copy-state":
+      copyText($("#traceRaw")?.value || "SAFE TRACE", "État réseau copié.");
+      break;
+    case "refresh":
+      renderTrace();
+      updateNetworkHud();
+      setStatus("Network HUD actualisé.");
+      break;
+    default:
+      setStatus(`Action : ${action}`);
   }
 }
 
-navButtons.forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
-document.querySelectorAll("[data-copy]").forEach(button => {
-  button.addEventListener("click", () => copyText(prompts[button.dataset.copy] || ""));
-});
-
-document.getElementById("advancedBtn").addEventListener("click", () => {
-  document.getElementById("advancedPanel").scrollIntoView({ behavior: "smooth", block: "center" });
-});
-
-document.getElementById("ambianceBtn").addEventListener("click", () => {
-  document.body.classList.toggle("readable");
-  saveState();
-});
-
-document.getElementById("saveBtn").addEventListener("click", saveState);
-document.getElementById("favoriteBtn").addEventListener("click", loadState);
-
-document.getElementById("nextBgBtn").addEventListener("click", () => {
-  state.bgIndex = (state.bgIndex + 1) % backgrounds.length;
-  applyBackground();
-  saveState();
-});
-
-document.getElementById("randomBgBtn").addEventListener("click", () => {
-  state.bgIndex = Math.floor(Math.random() * backgrounds.length);
-  applyBackground();
-  saveState();
-});
-
-document.getElementById("transparentBtn").addEventListener("click", () => {
-  document.body.classList.toggle("transparent");
-  saveState();
-});
-
-document.getElementById("readabilityBtn").addEventListener("click", () => {
-  document.body.classList.toggle("readable");
-  saveState();
-});
-
-document.getElementById("heroFocusBtn").addEventListener("click", () => {
-  document.getElementById("heroFocus").classList.add("open");
-});
-
-document.getElementById("closeHeroFocusBtn").addEventListener("click", () => {
-  document.getElementById("heroFocus").classList.remove("open");
-});
-
-document.getElementById("paletteBtn").addEventListener("click", () => {
-  document.getElementById("palette").classList.add("open");
-});
-
-document.getElementById("closePaletteBtn").addEventListener("click", () => {
-  document.getElementById("palette").classList.remove("open");
-});
-
-document.getElementById("closeDrawerBtn").addEventListener("click", () => drawer.classList.remove("open"));
-document.getElementById("refreshTraceBtn").addEventListener("click", renderTrace);
-
-document.getElementById("openRepoBtn").addEventListener("click", () => {
-  window.open("https://github.com/BlueAzur-Hub/erith-ia-memory", "seven_repo");
-});
-
-document.getElementById("openTerminalFolderBtn").addEventListener("click", () => {
-  window.open("https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL", "seven_terminal_folder");
-});
-
-["heroX", "heroY", "heroZoom"].forEach(id => {
-  document.getElementById(id).addEventListener("input", event => {
-    const key = id === "heroX" ? "heroX" : id === "heroY" ? "heroY" : "heroZoom";
-    state[key] = Number(event.target.value);
-    applyHero();
+function bindEvents() {
+  $$("[data-page-target]").forEach((el) => {
+    el.addEventListener("click", () => {
+      setPage(el.dataset.pageTarget);
+      togglePalette(false);
+    });
   });
-});
 
-document.querySelectorAll("[data-nudge]").forEach(button => {
-  button.addEventListener("click", () => {
-    const step = 3;
-    if (button.dataset.nudge === "up") state.heroY = Math.max(0, state.heroY - step);
-    if (button.dataset.nudge === "down") state.heroY = Math.min(100, state.heroY + step);
-    if (button.dataset.nudge === "left") state.heroX = Math.max(0, state.heroX - step);
-    if (button.dataset.nudge === "right") state.heroX = Math.min(100, state.heroX + step);
-    applyHero();
+  $$("[data-action]").forEach((el) => {
+    el.addEventListener("click", () => handleAction(el.dataset.action));
   });
-});
 
-document.getElementById("resetHeroBtn").addEventListener("click", () => {
-  state.heroX = 50;
-  state.heroY = 35;
-  state.heroZoom = 112;
-  applyHero();
-});
+  $("#advancedBtn")?.addEventListener("click", () => toggleAdvancedPanels());
+  $("#ambianceBtn")?.addEventListener("click", () => cycleAmbiance());
+  $("#saveBtn")?.addEventListener("click", () => saveFavoriteState());
+  $("#loadBtn")?.addEventListener("click", () => loadFavoriteState());
+  $("#nextBgBtn")?.addEventListener("click", () => nextBackground());
+  $("#randomBgBtn")?.addEventListener("click", () => randomBackground());
+  $("#heroBtn")?.addEventListener("click", () => toggleHeroFocusPanel());
+  $("#transparentBtn")?.addEventListener("click", () => setVisibility("transparent"));
+  $("#readabilityBtn")?.addEventListener("click", () => setVisibility("readability"));
+  $("#paletteBtn")?.addEventListener("click", () => togglePalette());
+  $("#paletteCloseBtn")?.addEventListener("click", () => togglePalette(false));
+  $("#paletteBoostBtn")?.addEventListener("click", () => handleAction("boost"));
+  $("#paletteVideoBtn")?.addEventListener("click", () => handleAction("video"));
+  $("#paletteWanBtn")?.addEventListener("click", () => handleAction("wan"));
+  $("#paletteBgBtn")?.addEventListener("click", () => nextBackground());
+  $("#paletteGlassBtn")?.addEventListener("click", () => setVisibility("transparent"));
+  $("#palettePreviewBtn")?.addEventListener("click", () => toggleHeroFocusPanel(true));
+  $("#heroCloseBtn")?.addEventListener("click", () => toggleHeroFocusPanel(false));
+  $("#heroResetBtn")?.addEventListener("click", () => resetHeroFocus());
+  $("#refreshTraceBtn")?.addEventListener("click", () => { renderTrace(); updateNetworkHud(); setStatus("Trace actualisée."); });
+  $("#copyTraceBtn")?.addEventListener("click", () => copyText($("#traceRaw")?.value || "SAFE TRACE", "Diagnostic copié."));
 
-document.querySelectorAll("[data-page-jump]").forEach(button => {
-  button.addEventListener("click", () => {
-    showPage(button.dataset.pageJump);
-    document.getElementById("palette").classList.remove("open");
+  ["heroX", "heroY", "heroZoom"].forEach((id) => {
+    $(`#${id}`)?.addEventListener("input", updateHeroFocus);
   });
-});
 
-document.addEventListener("keydown", event => {
-  const order = ["home", "llm", "notion", "github", "production", "system"];
-  const n = Number(event.key) - 1;
+  $$("[data-hero-nudge]").forEach((btn) => {
+    btn.addEventListener("click", () => nudgeHero(btn.dataset.heroNudge));
+  });
 
-  if (order[n]) showPage(order[n]);
-  if (event.key === "?") document.getElementById("palette").classList.add("open");
-  if (event.key === "Escape") {
-    drawer.classList.remove("open");
-    document.getElementById("palette").classList.remove("open");
-    document.getElementById("heroFocus").classList.remove("open");
-  }
-});
+  document.addEventListener("keydown", (event) => {
+    if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
 
-window.addEventListener("resize", renderTrace);
+    if (event.key === "?") togglePalette();
+    if (event.key === "Escape") {
+      togglePalette(false);
+      toggleHeroFocusPanel(false);
+      closePrompt();
+    }
 
-loadState();
-applyBackground();
-applyHero();
-renderTrace();
+    const pageMap = {
+      "1": "home",
+      "2": "llm",
+      "3": "notion",
+      "4": "github",
+      "5": "production",
+      "6": "system"
+    };
+
+    if (pageMap[event.key]) setPage(pageMap[event.key]);
+  });
+}
+
+function boot() {
+  bindEvents();
+  applyBackground(0);
+  setVisibility(document.body.dataset.theme || "transparent");
+  updateHeroFocus();
+  renderTrace();
+  updateNetworkHud();
+  setPage("home");
+  setStatus("Seven Terminal prêt.");
+}
+
+boot();
