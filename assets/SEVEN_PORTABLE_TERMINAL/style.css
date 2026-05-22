@@ -314,3 +314,18 @@ body.transparent #advancedPanel,
 body.transparent #advancedPanel .trace-card{
   text-shadow:0 1px 4px rgba(0,0,0,.86) !important;
 }
+
+/* Seven final micro-fix — trace cards only in Transparent mode */
+body.transparent .trace-card{
+  background:rgba(9,15,29,.055) !important;
+  backdrop-filter:blur(.2px) !important;
+  box-shadow:none !important;
+  border-color:rgba(245,213,141,.24) !important;
+}
+
+body.readable .trace-card,
+body.readable.transparent .trace-card{
+  background:rgba(4,8,18,.78) !important;
+  backdrop-filter:blur(7px) !important;
+  border-color:rgba(245,213,141,.58) !important;
+}

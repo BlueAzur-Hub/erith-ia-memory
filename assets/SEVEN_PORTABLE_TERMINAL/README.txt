@@ -1,10 +1,11 @@
-SEVEN PORTABLE TERMINAL — PRODUCTION LINKS FIX
+SEVEN TERMINAL — TRACE CARD ONLY FIX
 
-Modification ciblée :
-- section Production nettoyée ;
-- anciens boutons Wan / Sécurité image retirés ;
-- liens ajoutés : Running Hub, Eleven Labs, CivitAI, CivitAI Red ;
-- aucun changement sur backgrounds, CSS global, JS, Advanced Trace ou transparence.
+Correction ciblée :
+- modifie uniquement les .trace-card en mode Transparent ;
+- ne modifie pas les panels principaux ;
+- ne modifie pas les boutons ;
+- ne modifie pas les backgrounds ;
+- conserve le mode Readable prioritaire.
 
 Commit conseillé :
-Update production section links
+Tune trace cards only in transparent mode
