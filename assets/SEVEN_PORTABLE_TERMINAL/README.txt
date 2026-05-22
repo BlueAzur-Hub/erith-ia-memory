@@ -1,0 +1,1 @@
+Seven Simple Interface V0\n\nFichiers : index.html, style.css, script.js, background_historique_lr.png\nOuvre index.html dans ton navigateur.\n
