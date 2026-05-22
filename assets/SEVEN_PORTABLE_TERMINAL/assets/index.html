@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Seven Portable Terminal — Final 01-20</title>
+  <link rel="stylesheet" href="style.css?v=20260523-0082">
+</head>
+<body>
+  <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
+  <div class="atmosphere-layer" aria-hidden="true"></div>
+
+  <main class="terminal">
+    <header class="terminal-header">
+      <div>
+        <p class="kicker">SEVEN HEAVEN COCKPIT</p>
+        <h1>Seven Portable Terminal</h1>
+        <p class="subtitle">Pupitre Aerith · prise en main à distance · mémoire · production</p>
+      </div>
+      <div class="avatar-lock">
+        <img src="aerith_7_memory_cards_avatar_master.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+        <div class="avatar-fallback">✦<br>Seven</div>
+      </div>
+    </header>
+
+    <nav class="topnav">
+      <button class="tab active" data-page="home">Accueil</button>
+      <button class="tab" data-page="llm">LLM</button>
+      <button class="tab" data-page="github">GitHub</button>
+      <button class="tab" data-page="production">Production</button>
+      <button class="tab" data-page="remote">Remote</button>
+    </nav>
+
+    <section class="control-strip">
+      <button id="copySevenBtn">Seven</button>
+      <button id="copyVideoBtn">Cards</button>
+      <button id="copyBlackoutBtn">Blackout</button>
+      <button id="nextBackgroundBtn">Fond</button>
+      <button id="randomBackgroundBtn">Random</button>
+      <button id="toggleTransparentBtn">Transp.</button>
+      <button id="toggleReadableBtn">Lisibilité</button>
+      <button id="toggleTraceBtn">Trace</button>
+      <button id="openPaletteBtn">?</button>
+    </section>
+
+    <section class="workspace">
+      <article class="page active" id="page-home">
+        <div class="section-title">
+          <strong>Accueil Seven</strong>
+          <span id="backgroundLabel">Background : source</span>
+        </div>
+
+        <div class="hero-card">
+          <div>
+            <p class="small-label">État</p>
+            <h2>Cockpit prêt</h2>
+            <p>Interface lisible, panneaux allégés, backgrounds validés 01–20, accès Remote centralisé.</p>
+          </div>
+          <button id="copyTerminalLinkBtn">Copier lien</button>
+        </div>
+
+        <div class="tile-grid">
+          <button class="tile primary" id="homeSevenBtn">
+            <strong>Seven Heaven</strong>
+            <span>Copier prompt + ouvrir ChatGPT</span>
+          </button>
+          <button class="tile" id="homeVideoCardsBtn">
+            <strong>Video Cards Boost</strong>
+            <span>Copier le prompt production vidéo</span>
+          </button>
+          <button class="tile" data-jump="remote">
+            <strong>Remote</strong>
+            <span>Prise en main à distance</span>
+          </button>
+        </div>
+
+        <section class="advanced-panel" id="advancedPanel" hidden>
+          <div class="advanced-head">
+            <div>
+              <strong>Advanced System Trace</strong>
+              <span>SAFE TRACE · no RustDesk ID · no password</span>
+            </div>
+            <button id="refreshTraceBtn">Refresh</button>
+          </div>
+          <div class="trace-grid" id="homeTraceGrid"></div>
+        </section>
+      </article>
+
+      <article class="page" id="page-llm">
+        <div class="section-title">
+          <strong>LLM</strong>
+          <span>Cœurs mémoire et interfaces IA.</span>
+        </div>
+
+        <div class="tile-grid llm-links-only">
+          <a class="tile primary" href="https://sustaining-boar-5c6.notion.site/erith-IA-Notion-Memory-for-LLM-3417754fe0848078a310f3bc3fb962bf" target="_blank" rel="noreferrer">
+            <strong>ERITH.IA Notion Memory</strong>
+            <span>Mémoire Notion pour LLM</span>
+          </a>
+
+          <a class="tile" href="https://sustaining-boar-5c6.notion.site/auto-agent-erith-ia" target="_blank" rel="noreferrer">
+            <strong>ERITH.IA Auto-Agent</strong>
+            <span>Interface créative publique</span>
+          </a>
+
+          <a class="tile" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_blank" rel="noreferrer">
+            <strong>7Heaven Memory Core</strong>
+            <span>Cœur mémoire Seven</span>
+          </a>
+
+          <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-5-5-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_blank" rel="noreferrer">
+            <strong>ChatGPT 5.5 Memory Core</strong>
+            <span>Cœur mémoire ChatGPT</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="page" id="page-github">
+        <div class="section-title">
+          <strong>GitHub</strong>
+          <span>Mémoire machine publique et privée.</span>
+        </div>
+
+        <div class="tile-grid github-links-only">
+          <a class="tile primary" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer">
+            <strong>GitHub Public</strong>
+            <span>erith-ia-memory</span>
+          </a>
+
+          <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_blank" rel="noreferrer">
+            <strong>GitHub Privé</strong>
+            <span>erith-ia-notion-archive-private</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="page" id="page-production">
+        <div class="section-title">
+          <strong>Production</strong>
+          <span>Image, vidéo, montage, publication.</span>
+        </div>
+
+        <div class="tile-grid production-links-only">
+          <a class="tile primary" href="https://www.runninghub.ai/workspace" target="_blank" rel="noreferrer">
+            <strong>Running Hub</strong>
+            <span>Workspace vidéo / image</span>
+          </a>
+
+          <a class="tile" href="https://elevenlabs.io/app/home" target="_blank" rel="noreferrer">
+            <strong>Eleven Labs</strong>
+            <span>Voix off et sound design</span>
+          </a>
+
+          <a class="tile" href="https://civitai.com/" target="_blank" rel="noreferrer">
+            <strong>CivitAI</strong>
+            <span>Modèles, LoRA, références</span>
+          </a>
+
+          <a class="tile" href="https://civitai.red/" target="_blank" rel="noreferrer">
+            <strong>CivitAI Red</strong>
+            <span>Accès alternatif CivitAI</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="page" id="page-remote">
+        <div class="section-title">
+          <strong>Remote</strong>
+          <span>Prise en main à distance, sans exposer de secret.</span>
+        </div>
+
+        <div class="remote-status">
+          <div>
+            <p class="small-label">Remote status</p>
+            <h2>Mode sécurité</h2>
+            <p>Le terminal prépare la prise en main. Aucun ID, mot de passe ou IP sensible n’est publié dans la page.</p>
+          </div>
+          <div class="remote-status-actions">
+            <button data-copy="remote">Copier procédure</button>
+            <button id="openRustDeskBtn">Ouvrir RustDesk</button>
+          </div>
+        </div>
+
+        <div class="remote-grid">
+          <section class="remote-card">
+            <strong>1 · Ouvrir RustDesk</strong>
+            <span>Bouton local. Selon le navigateur, confirmation possible.</span>
+          </section>
+          <section class="remote-card">
+            <strong>2 · Lire l’ID localement</strong>
+            <span>Ne jamais coller l’ID dans le HTML public.</span>
+          </section>
+          <section class="remote-card">
+            <strong>3 · Connexion distante</strong>
+            <span>Entrer l’ID dans RustDesk côté poste de contrôle.</span>
+          </section>
+          <section class="remote-card">
+            <strong>4 · Piloter Seven</strong>
+            <span>ChatGPT · GitHub · Production · Remote.</span>
+          </section>
+        </div>
+
+        <div class="trace-grid" id="systemTraceGrid"></div>
+      </article>
+    </section>
+
+    <footer class="terminal-footer">
+      <span>Transformer Book = pupitre Seven</span>
+      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
+    </footer>
+  </main>
+
+  <section class="drawer" id="drawer">
+    <div class="drawer-head">
+      <strong id="drawerTitle">Bloc copiable</strong>
+      <button id="closeDrawerBtn">×</button>
+    </div>
+    <textarea id="drawerText" readonly></textarea>
+  </section>
+
+  <section class="palette" id="palette">
+    <div class="palette-card">
+      <div class="drawer-head">
+        <strong>Command Palette</strong>
+        <button id="closePaletteBtn">Fermer</button>
+      </div>
+      <button data-jump="home">1 — Accueil</button>
+      <button data-jump="llm">2 — LLM</button>
+      <button data-jump="github">3 — GitHub</button>
+      <button data-jump="production">4 — Production</button>
+      <button data-jump="remote">5 — Remote</button>
+    </div>
+  </section>
+
+  <script src="script.js?v=20260523-0081"></script>
+</body>
+</html>
