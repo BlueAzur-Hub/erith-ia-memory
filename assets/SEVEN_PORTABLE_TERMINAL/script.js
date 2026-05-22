@@ -87,6 +87,6 @@ document.getElementById("refreshTraceBtnSystem").addEventListener("click",render
 document.getElementById("closeDrawerBtn").addEventListener("click",()=>drawer.classList.remove("open"));
 document.getElementById("openPaletteBtn").addEventListener("click",()=>palette.classList.add("open"));
 document.getElementById("closePaletteBtn").addEventListener("click",()=>palette.classList.remove("open"));
-document.addEventListener("keydown",e=>{const order=["home","llm","notion","github","production","system"];const i=Number(e.key)-1;if(order[i])showPage(order[i]);if(e.key==="?")palette.classList.add("open");if(e.key==="Escape"){drawer.classList.remove("open");palette.classList.remove("open")}});
+document.addEventListener("keydown",e=>{const order=["home","llm","github","production","system"];const i=Number(e.key)-1;if(order[i])showPage(order[i]);if(e.key==="?")palette.classList.add("open");if(e.key==="Escape"){drawer.classList.remove("open");palette.classList.remove("open")}});
 window.addEventListener("resize",renderTrace);
 loadUiState();applyBackground();renderTrace();
