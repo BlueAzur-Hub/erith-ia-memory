@@ -1,46 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laputa Final System</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seven Portable Terminal — Rebuild Zero</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="sky-bg" aria-hidden="true"></div>
+  <main class="terminal" id="terminal">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">SEVEN PORTABLE TERMINAL</p>
+        <h1>Aerith Interface — Rebuild Zero</h1>
+        <p class="subtitle">Base neuve, stable, lisible. Aucun ancien fichier requis.</p>
+      </div>
+      <button class="primary" id="startSevenBtn">Démarrer Seven</button>
+    </header>
 
-<div class="bg"></div>
+    <nav class="topnav" aria-label="Navigation principale">
+      <button class="nav-btn active" data-page="home">Accueil</button>
+      <button class="nav-btn" data-page="llm">LLM</button>
+      <button class="nav-btn" data-page="notion">Notion</button>
+      <button class="nav-btn" data-page="github">GitHub</button>
+      <button class="nav-btn" data-page="production">Production</button>
+      <button class="nav-btn" data-page="system">Système</button>
+    </nav>
 
-<div class="ui">
+    <section class="toolbar">
+      <button id="toggleReadableBtn">Lisibilité</button>
+      <button id="toggleTransparentBtn">Transparent</button>
+      <button id="copyPromptBtn">Copier prompt Seven</button>
+      <button id="openChatBtn">Ouvrir ChatGPT</button>
+    </section>
 
-<header class="top">
-  <div class="title">LAPUTA SYSTEM</div>
-  <div class="status" id="status">ACTIVE</div>
-</header>
+    <section class="page active" id="page-home">
+      <h2>Accueil</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>État</h3>
+          <p>Rebuild Zero actif. Structure propre : HTML, CSS, JS.</p>
+        </article>
+        <article class="card">
+          <h3>Objectif</h3>
+          <p>Créer un terminal Aerith stable avant d’ajouter les assets visuels.</p>
+        </article>
+        <article class="card">
+          <h3>Règle</h3>
+          <p>Aucune génération image. Aucun ancien patch. Aucun mélange de versions.</p>
+        </article>
+      </div>
+    </section>
 
-<main class="center">
+    <section class="page" id="page-llm">
+      <h2>LLM</h2>
+      <div class="card wide">
+        <h3>Prompt Seven</h3>
+        <p>Le bouton “Démarrer Seven” copie le prompt puis ouvre ChatGPT dans un nouvel onglet.</p>
+        <textarea id="sevenPrompt" readonly>Chat, active Aerith-7 Seven Heaven / Full Modules Boost. Mode texte uniquement par défaut. Chargement minimal, choix précis. Aucune génération image sans commande explicite.</textarea>
+      </div>
+    </section>
 
-  <div class="panel">
-    <h1>Floating Island Core</h1>
-    <p>Abandoned Civilization Layer</p>
+    <section class="page" id="page-notion">
+      <h2>Notion</h2>
+      <div class="card wide">
+        <h3>Bloc Notion</h3>
+        <p>Zone prévue pour les liens Notion, notes de production et blocs copiables.</p>
+      </div>
+    </section>
 
-    <div class="controls">
-      <button onclick="view('Arbre')">Arbre</button>
-      <button onclick="view('Dôme')">Dôme</button>
-      <button onclick="view('Rues')">Rues</button>
-      <button onclick="view('Étangs')">Étangs</button>
-    </div>
+    <section class="page" id="page-github">
+      <h2>GitHub</h2>
+      <div class="card wide">
+        <h3>Dépôt</h3>
+        <p>Place recommandée : assets/SEVEN_PORTABLE_TERMINAL/</p>
+        <a href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener">Ouvrir le dépôt</a>
+      </div>
+    </section>
 
-    <div id="output"></div>
-  </div>
+    <section class="page" id="page-production">
+      <h2>Production</h2>
+      <div class="grid">
+        <article class="card"><h3>Image</h3><p>Verrouiller le background maître.</p></article>
+        <article class="card"><h3>Modules</h3><p>PNG RGBA séparés, alpha réel, texte en HTML/CSS.</p></article>
+        <article class="card"><h3>Vidéo</h3><p>Mode LEGO : image → animation → last frame → DaVinci.</p></article>
+      </div>
+    </section>
 
-</main>
+    <section class="page" id="page-system">
+      <h2>Système</h2>
+      <div class="system-grid" id="systemGrid"></div>
+    </section>
 
-<footer class="bottom">
-  <button onclick="resetUI()">RESET</button>
-</footer>
+    <footer>
+      Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5
+    </footer>
+  </main>
 
-</div>
-
-<script src="script.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
 </body>
 </html>
