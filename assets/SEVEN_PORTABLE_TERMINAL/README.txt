@@ -1,7 +1,10 @@
-SEVEN_PORTABLE_TERMINAL_REBUILT_FINAL
+SEVEN_TERMINAL_BACKGROUND_VISIBILITY_FIX
 
 Uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
+
+Commit conseillé :
+Refine Seven terminal background visibility
 
 Fichiers inclus :
 - index.html
@@ -9,12 +12,12 @@ Fichiers inclus :
 - script.js
 - README.txt
 
-Assets attendus :
+Asset requis :
 - background_chateau_ciel_source.png
-- aerith_7_memory_cards_avatar_master.png (optionnel)
 
-Aucune génération image.
-Mode par défaut lisible.
-Transparence en option.
-Advanced replié par défaut.
-ZIP complet prêt à uploader.
+Changement principal :
+- background moins assombri
+- panneaux moins opaques
+- lisibilité conservée
+- transparence optionnelle
+- aucune génération image
