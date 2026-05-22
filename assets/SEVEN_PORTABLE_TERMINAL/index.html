@@ -3,101 +3,121 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven Portable Terminal — Rebuild Zero</title>
+  <title>Seven Portable Terminal — Sky Sanctuary V9</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="sky-bg" aria-hidden="true"></div>
+  <div class="world" aria-hidden="true">
+    <div class="sky sky-a"></div>
+    <div class="sky sky-b"></div>
+    <div class="sun-vault"></div>
+    <div class="ruin ruin-left"></div>
+    <div class="ruin ruin-right"></div>
+    <div class="clouds cloud-back"></div>
+    <div class="clouds cloud-front"></div>
+    <div class="particles"></div>
+    <div class="vignette"></div>
+  </div>
+
   <main class="terminal" id="terminal">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">SEVEN PORTABLE TERMINAL</p>
-        <h1>Aerith Interface — Rebuild Zero</h1>
-        <p class="subtitle">Base neuve, stable, lisible. Aucun ancien fichier requis.</p>
-      </div>
-      <button class="primary" id="startSevenBtn">Démarrer Seven</button>
-    </header>
+    <aside class="dock left-dock" aria-label="Navigation principale">
+      <div class="sigil">✦</div>
+      <button class="nav active" data-page="home">Accueil</button>
+      <button class="nav" data-page="llm">LLM</button>
+      <button class="nav" data-page="notion">Notion</button>
+      <button class="nav" data-page="github">GitHub</button>
+      <button class="nav" data-page="production">Production</button>
+      <button class="nav" data-page="system">Système</button>
+    </aside>
 
-    <nav class="topnav" aria-label="Navigation principale">
-      <button class="nav-btn active" data-page="home">Accueil</button>
-      <button class="nav-btn" data-page="llm">LLM</button>
-      <button class="nav-btn" data-page="notion">Notion</button>
-      <button class="nav-btn" data-page="github">GitHub</button>
-      <button class="nav-btn" data-page="production">Production</button>
-      <button class="nav-btn" data-page="system">Système</button>
-    </nav>
+    <section class="sanctuary">
+      <header class="hero glass-panel">
+        <div>
+          <p class="eyebrow">SEVEN PORTABLE TERMINAL</p>
+          <h1>Aerith Sky Sanctuary</h1>
+          <p class="subtitle">Cockpit céleste · mémoire vivante · interface de production</p>
+        </div>
+        <div class="status-orb"><span></span><strong>V9</strong></div>
+      </header>
 
-    <section class="toolbar">
-      <button id="toggleReadableBtn">Lisibilité</button>
-      <button id="toggleTransparentBtn">Transparent</button>
-      <button id="copyPromptBtn">Copier prompt Seven</button>
-      <button id="openChatBtn">Ouvrir ChatGPT</button>
-    </section>
+      <section class="core-stage">
+        <div class="wing wing-left glass-panel">
+          <p class="panel-kicker">Modules</p>
+          <button data-copy="seven">Seven Heaven Boost</button>
+          <button data-copy="video">Video Cards Boost</button>
+          <button data-copy="blackout">Mode Blackout</button>
+        </div>
 
-    <section class="page active" id="page-home">
-      <h2>Accueil</h2>
-      <div class="grid">
-        <article class="card">
-          <h3>État</h3>
-          <p>Rebuild Zero actif. Structure propre : HTML, CSS, JS.</p>
+        <div class="crystal-core" role="img" aria-label="Cristal central du terminal Seven">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+          <div class="crystal"></div>
+          <div class="core-label">SEVEN</div>
+        </div>
+
+        <div class="wing wing-right glass-panel">
+          <p class="panel-kicker">Actions</p>
+          <button id="openChat">Ouvrir ChatGPT</button>
+          <button id="toggleFocus">Mode sanctuaire</button>
+          <button id="copyLink">Copier adresse</button>
+        </div>
+      </section>
+
+      <section class="page-stack glass-panel">
+        <article class="page active" id="page-home">
+          <h2>Accueil</h2>
+          <p>Terminal reconstruit comme un lieu : horizon céleste, cristal central, panneaux de verre et navigation suspendue.</p>
+          <div class="cards">
+            <div><strong>Phase</strong><span>Rebuild V9</span></div>
+            <div><strong>DA</strong><span>Sky Sanctuary</span></div>
+            <div><strong>But</strong><span>âme visuelle d’abord</span></div>
+          </div>
         </article>
-        <article class="card">
-          <h3>Objectif</h3>
-          <p>Créer un terminal Aerith stable avant d’ajouter les assets visuels.</p>
+        <article class="page" id="page-llm">
+          <h2>LLM</h2>
+          <p>Prompts et blocs d’activation. Le texte reste copiable depuis le tiroir.</p>
         </article>
-        <article class="card">
-          <h3>Règle</h3>
-          <p>Aucune génération image. Aucun ancien patch. Aucun mélange de versions.</p>
+        <article class="page" id="page-notion">
+          <h2>Notion</h2>
+          <p>Zone de mémoire éditoriale humaine : modules, notes, DA, production et archivage.</p>
         </article>
-      </div>
+        <article class="page" id="page-github">
+          <h2>GitHub</h2>
+          <p>Mémoire machine : fichiers versionnés, terminal public, assets, workflows et modules.</p>
+        </article>
+        <article class="page" id="page-production">
+          <h2>Production</h2>
+          <p>Image parfaite → animation stable → last frame → DaVinci → publication.</p>
+        </article>
+        <article class="page" id="page-system">
+          <h2>Système</h2>
+          <div class="cards" id="systemCards">
+            <div><strong>Viewport</strong><span id="viewSize">—</span></div>
+            <div><strong>Fuseau</strong><span id="tz">—</span></div>
+            <div><strong>Mode</strong><span>Safe trace</span></div>
+          </div>
+        </article>
+      </section>
     </section>
 
-    <section class="page" id="page-llm">
-      <h2>LLM</h2>
-      <div class="card wide">
-        <h3>Prompt Seven</h3>
-        <p>Le bouton “Démarrer Seven” copie le prompt puis ouvre ChatGPT dans un nouvel onglet.</p>
-        <textarea id="sevenPrompt" readonly>Chat, active Aerith-7 Seven Heaven / Full Modules Boost. Mode texte uniquement par défaut. Chargement minimal, choix précis. Aucune génération image sans commande explicite.</textarea>
-      </div>
-    </section>
-
-    <section class="page" id="page-notion">
-      <h2>Notion</h2>
-      <div class="card wide">
-        <h3>Bloc Notion</h3>
-        <p>Zone prévue pour les liens Notion, notes de production et blocs copiables.</p>
-      </div>
-    </section>
-
-    <section class="page" id="page-github">
-      <h2>GitHub</h2>
-      <div class="card wide">
-        <h3>Dépôt</h3>
-        <p>Place recommandée : assets/SEVEN_PORTABLE_TERMINAL/</p>
-        <a href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noopener">Ouvrir le dépôt</a>
-      </div>
-    </section>
-
-    <section class="page" id="page-production">
-      <h2>Production</h2>
-      <div class="grid">
-        <article class="card"><h3>Image</h3><p>Verrouiller le background maître.</p></article>
-        <article class="card"><h3>Modules</h3><p>PNG RGBA séparés, alpha réel, texte en HTML/CSS.</p></article>
-        <article class="card"><h3>Vidéo</h3><p>Mode LEGO : image → animation → last frame → DaVinci.</p></article>
-      </div>
-    </section>
-
-    <section class="page" id="page-system">
-      <h2>Système</h2>
-      <div class="system-grid" id="systemGrid"></div>
-    </section>
-
-    <footer>
-      Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5
-    </footer>
+    <aside class="dock right-dock" aria-label="Accès rapides">
+      <a href="https://chatgpt.com/" target="_blank" rel="noreferrer">ChatGPT</a>
+      <a href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://www.notion.so/" target="_blank" rel="noreferrer">Notion</a>
+      <a href="https://www.youtube.com/" target="_blank" rel="noreferrer">YouTube</a>
+    </aside>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <section class="drawer" id="drawer" aria-live="polite">
+    <div class="drawer-head"><strong>Bloc copié</strong><button id="closeDrawer">×</button></div>
+    <textarea id="drawerText" readonly></textarea>
+  </section>
+
+  <footer>
+    Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

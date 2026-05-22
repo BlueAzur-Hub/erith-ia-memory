@@ -1,90 +1,35 @@
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => Array.from(document.querySelectorAll(selector));
-
-const CHATGPT_URL = "https://chatgpt.com/";
-
-function showToast(message) {
-  const toast = $("#toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+const pages = document.querySelectorAll('.page');
+const navs = document.querySelectorAll('.nav');
+const drawer = document.getElementById('drawer');
+const drawerText = document.getElementById('drawerText');
+const prompts = {
+  seven: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost. Mode texte uniquement par défaut. Chargement minimal, choix précis.`,
+  video: `Active Seven Heaven — Video Cards Boost. Cartes utiles seulement : Chef d’Orchestre, LEGO Continuity, Anti-Dérive Wan, Format Shorts, Sound Design.`,
+  blackout: `MODE BLACKOUT. Aucun outil image. Aucun redimensionnement. Texte uniquement : diagnostic, prompts, décisions, noms de fichiers, archivage.`
+};
+function showPage(name){
+  pages.forEach(p=>p.classList.toggle('active', p.id === `page-${name}`));
+  navs.forEach(n=>n.classList.toggle('active', n.dataset.page === name));
+  localStorage.setItem('seven-page', name);
 }
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast("Copié dans le presse-papiers.");
-    return true;
-  } catch (error) {
-    const area = $("#sevenPrompt");
-    area.focus();
-    area.select();
-    showToast("Copie bloquée : texte sélectionné manuellement.");
-    return false;
-  }
+navs.forEach(btn=>btn.addEventListener('click',()=>showPage(btn.dataset.page)));
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',()=>copyText(prompts[btn.dataset.copy]||'')));
+async function copyText(text){
+  drawerText.value = text;
+  try{ await navigator.clipboard.writeText(text); } catch(e){}
+  drawer.classList.add('open'); drawerText.select();
 }
-
-function openPage(name) {
-  $$(".page").forEach((page) => page.classList.remove("active"));
-  $$(".nav-btn").forEach((button) => button.classList.remove("active"));
-  $(`#page-${name}`)?.classList.add("active");
-  $(`.nav-btn[data-page='${name}']`)?.classList.add("active");
-  localStorage.setItem("seven.currentPage", name);
+document.getElementById('closeDrawer').addEventListener('click',()=>drawer.classList.remove('open'));
+document.getElementById('openChat').addEventListener('click',()=>window.open('https://chatgpt.com/','seven_heaven_chatgpt'));
+document.getElementById('toggleFocus').addEventListener('click',()=>document.body.classList.toggle('focus'));
+document.getElementById('copyLink').addEventListener('click',()=>copyText('https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html'));
+function updateSystem(){
+  const vs = document.getElementById('viewSize'); if(vs) vs.textContent = `${innerWidth} × ${innerHeight}`;
+  const tz = document.getElementById('tz'); if(tz) tz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
 }
-
-function applySavedState() {
-  const mode = localStorage.getItem("seven.mode") || "";
-  document.body.classList.toggle("readable", mode === "readable");
-  document.body.classList.toggle("transparent", mode === "transparent");
-  openPage(localStorage.getItem("seven.currentPage") || "home");
-}
-
-function setMode(mode) {
-  document.body.classList.remove("readable", "transparent");
-  if (mode) document.body.classList.add(mode);
-  localStorage.setItem("seven.mode", mode);
-}
-
-function renderSystem() {
-  const grid = $("#systemGrid");
-  const data = [
-    ["OS", navigator.platform || "Non disponible"],
-    ["Navigateur", navigator.userAgent.split(") ").pop() || "Navigateur"],
-    ["Écran", `${window.innerWidth}×${window.innerHeight}`],
-    ["Fuseau", Intl.DateTimeFormat().resolvedOptions().timeZone || "Local"],
-    ["Langue", navigator.language || "fr-FR"],
-    ["SAFE TRACE", "Aucun RustDesk ID · Aucun mot de passe"]
-  ];
-  grid.innerHTML = data.map(([label, value]) => `
-    <article class="card">
-      <h3>${label}</h3>
-      <p>${value}</p>
-    </article>
-  `).join("");
-}
-
-function bindEvents() {
-  $$(".nav-btn").forEach((button) => {
-    button.addEventListener("click", () => openPage(button.dataset.page));
-  });
-
-  $("#toggleReadableBtn").addEventListener("click", () => setMode(document.body.classList.contains("readable") ? "" : "readable"));
-  $("#toggleTransparentBtn").addEventListener("click", () => setMode(document.body.classList.contains("transparent") ? "" : "transparent"));
-  $("#copyPromptBtn").addEventListener("click", () => copyText($("#sevenPrompt").value));
-  $("#openChatBtn").addEventListener("click", () => window.open(CHATGPT_URL, "seven_heaven_chatgpt"));
-  $("#startSevenBtn").addEventListener("click", async () => {
-    await copyText($("#sevenPrompt").value);
-    window.open(CHATGPT_URL, "seven_heaven_chatgpt");
-  });
-
-  document.addEventListener("keydown", (event) => {
-    const map = { "1": "home", "2": "llm", "3": "notion", "4": "github", "5": "production", "6": "system" };
-    if (map[event.key]) openPage(map[event.key]);
-  });
-}
-
-bindEvents();
-applySavedState();
-renderSystem();
-window.addEventListener("resize", renderSystem);
+addEventListener('resize',updateSystem); updateSystem();
+showPage(localStorage.getItem('seven-page') || 'home');
+document.addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='6'){ showPage(['home','llm','notion','github','production','system'][Number(e.key)-1]); }
+  if(e.key==='Escape'){ drawer.classList.remove('open'); document.body.classList.remove('focus'); }
+});
