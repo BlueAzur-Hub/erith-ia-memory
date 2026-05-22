@@ -1,29 +1,20 @@
-SEVEN_COCKPIT_TRANSPARENT_FUNCTIONAL
+SEVEN_PORTABLE_TERMINAL_REBUILT_FINAL
 
-À uploader dans :
+Uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
 
-Fichiers :
+Fichiers inclus :
 - index.html
 - style.css
 - script.js
 - README.txt
 
-Image requise dans le même dossier :
+Assets attendus :
 - background_chateau_ciel_source.png
-
-Fonctions :
-- background visible
-- cockpit transparent
-- boutons transparents au repos / opaques au survol
-- pages Accueil / LLM / Notion / GitHub / Production / Système
-- Advanced System Trace
-- Hero Focus X/Y/Zoom
-- Fond / Random
-- Transparent / Sombre-Lisibilité
-- Drawer de copie
-- localStorage
-- raccourcis 1-6, ?, Escape
+- aerith_7_memory_cards_avatar_master.png (optionnel)
 
 Aucune génération image.
-Aucune action GitHub automatique.
+Mode par défaut lisible.
+Transparence en option.
+Advanced replié par défaut.
+ZIP complet prêt à uploader.
