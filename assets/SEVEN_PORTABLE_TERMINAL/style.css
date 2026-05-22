@@ -1,17 +1,39 @@
-html,body{margin:0;height:100%;overflow:hidden;font-family:sans-serif;}
-.bg{
-position:fixed;inset:0;
-background:url('assets/laputa.png') center/cover no-repeat;
-filter:contrast(1.05) saturate(1.1);
+body{
+margin:0;
+font-family:Arial;
+background:#0b1b2a;
+color:#e6f1ff;
 }
-.ui{
-position:relative;height:100vh;display:flex;align-items:center;justify-content:center;
-background:rgba(0,0,0,0.25);
+
+header, footer{
+display:flex;
+justify-content:space-between;
+padding:12px;
+background:rgba(0,0,0,0.4);
 }
-.panel{
-padding:20px;border-radius:12px;
-background:rgba(0,0,0,0.35);
+
+main{
+height:80vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:20px;
+}
+
+.core{
+padding:20px;
+border:1px solid rgba(255,255,255,0.2);
+border-radius:10px;
+background:rgba(0,0,0,0.3);
+text-align:center;
+}
+
+.menu button{
+margin:5px;
+padding:10px;
+background:rgba(255,255,255,0.1);
+border:1px solid rgba(255,255,255,0.2);
 color:white;
-backdrop-filter:blur(6px);
+cursor:pointer;
 }
-button{margin:5px;padding:10px}

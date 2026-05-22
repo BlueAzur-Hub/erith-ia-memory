@@ -1,22 +1,38 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Laputa Interface</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laputa UI</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg"></div>
-
 <div class="ui">
-  <div class="panel">
-    <h1>LAPUTA CORE</h1>
-    <button onclick="status()">STATUS</button>
-    <button onclick="reset()">RESET</button>
-    <div id="out"></div>
+
+<header>
+  <div class="title">LAPUTA SYSTEM</div>
+  <div class="status">ACTIVE</div>
+</header>
+
+<main>
+  <div class="core">
+    <h2>Floating Island Core</h2>
+    <p>Abandoned Civilization Layer</p>
   </div>
+
+  <div class="menu">
+    <button>Arbre</button>
+    <button>Dôme</button>
+    <button>Rues</button>
+    <button>Étangs</button>
+  </div>
+</main>
+
+<footer>
+  <button onclick="resetUI()">Reset</button>
+</footer>
+
 </div>
 
 <script src="script.js"></script>
