@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Seven Portable Terminal — Background Remote Fix</title>
+  <title>Seven Portable Terminal — Remote Cockpit</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
       <button class="tab" data-page="notion">Notion</button>
       <button class="tab" data-page="github">GitHub</button>
       <button class="tab" data-page="production">Production</button>
-      <button class="tab" data-page="system">Système</button>
+      <button class="tab" data-page="system">Remote</button>
     </nav>
 
     <section class="control-strip">
@@ -48,14 +48,14 @@
       <article class="page active" id="page-home">
         <div class="section-title">
           <strong>Accueil Seven</strong>
-          <span>Background restauré. Interface lisible par défaut.</span>
+          <span>Background visible · cockpit opératif · remote prêt.</span>
         </div>
 
         <div class="hero-card">
           <div>
             <p class="small-label">État</p>
             <h2>Cockpit prêt</h2>
-            <p>Le background Château du Ciel est la couche monde. Les panneaux restent utilisables sans l’écraser.</p>
+            <p>Interface lisible, panneaux allégés, transparence optionnelle, accès Remote centralisé.</p>
           </div>
           <button id="copyTerminalLinkBtn">Copier lien terminal</button>
         </div>
@@ -63,8 +63,7 @@
         <div class="tile-grid">
           <button class="tile primary" id="homeSevenBtn"><strong>Seven Heaven</strong><span>Copier le prompt et ouvrir ChatGPT</span></button>
           <button class="tile" id="homePromptBtn"><strong>Voir prompt</strong><span>Ouvrir le tiroir de copie</span></button>
-          <button class="tile" id="homeTraceBtn"><strong>Advanced Trace</strong><span>Afficher le diagnostic local</span></button>
-          <button class="tile" data-jump="system"><strong>Prise en main</strong><span>Ouvrir le panneau Système / Remote</span></button>
+          <button class="tile" data-jump="system"><strong>Remote Cockpit</strong><span>Prise en main à distance</span></button>
         </div>
 
         <section class="advanced-panel" id="advancedPanel" hidden>
@@ -112,12 +111,38 @@
       </article>
 
       <article class="page" id="page-system">
-        <div class="section-title"><strong>Système / Remote</strong><span>Prise en main à distance et diagnostic local filtré.</span></div>
+        <div class="section-title"><strong>Remote Cockpit</strong><span>Prise en main à distance, sans exposer de secret.</span></div>
 
-        <div class="safe-note">SAFE TRACE · aucun RustDesk ID affiché · aucun mot de passe affiché · aucune donnée sensible</div>
+        <div class="remote-status">
+          <div>
+            <p class="small-label">Remote status</p>
+            <h2>Mode sécurité</h2>
+            <p>Le terminal guide la prise en main, mais ne publie jamais ton RustDesk ID, ton mot de passe ou une IP sensible.</p>
+          </div>
+          <button data-copy="remote">Copier procédure sûre</button>
+        </div>
 
-        <div class="tile-grid remote-grid">
-          <button class="tile primary" data-copy="remote"><strong>Bloc prise en main</strong><span>Copier la procédure Remote sûre</span></button>
+        <div class="remote-grid">
+          <section class="remote-card">
+            <strong>1 · Poste source</strong>
+            <span>Transformer Book ouvert sur Seven Portable Terminal.</span>
+          </section>
+          <section class="remote-card">
+            <strong>2 · RustDesk local</strong>
+            <span>Identifiants visibles uniquement sur ton écran, jamais dans le HTML public.</span>
+          </section>
+          <section class="remote-card">
+            <strong>3 · Contrôle</strong>
+            <span>ChatGPT, GitHub, Notion et Production deviennent les docks opératifs.</span>
+          </section>
+          <section class="remote-card">
+            <strong>4 · SAFE TRACE</strong>
+            <span>Diagnostic navigateur local filtré uniquement.</span>
+          </section>
+        </div>
+
+        <div class="tile-grid remote-actions">
+          <button class="tile primary" data-copy="remote"><strong>Procédure Remote</strong><span>Copier la procédure sûre</span></button>
           <button class="tile" id="refreshTraceBtnSystem"><strong>Refresh Trace</strong><span>Actualiser le diagnostic local</span></button>
           <button class="tile" data-copy="link"><strong>Lien terminal</strong><span>Copier l’adresse du cockpit</span></button>
         </div>
@@ -145,7 +170,7 @@
       <button data-jump="notion">3 — Notion</button>
       <button data-jump="github">4 — GitHub</button>
       <button data-jump="production">5 — Production</button>
-      <button data-jump="system">6 — Système / Remote</button>
+      <button data-jump="system">6 — Remote Cockpit</button>
     </div>
   </section>
 

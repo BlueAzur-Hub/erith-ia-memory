@@ -1,20 +1,16 @@
-SEVEN_TERMINAL_BACKGROUND_REMOTE_FIX
+SEVEN_TRANSPARENCY_REMOTE_COCKPIT
 
 Commit conseillé :
-Fix Seven terminal background layer and remote panel
+Improve Seven terminal transparency and remote cockpit
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
 
-Fichiers inclus :
-- index.html
-- style.css
-- script.js
-- README.txt
-
-Correction :
-- background-layer passe en z-index positif sous l’interface
-- html/body transparents pour ne plus masquer le background
-- prise en main à distance restaurée dans Système / Remote
-- aucune donnée sensible affichée
+Corrections :
+- transparence réelle améliorée via variables CSS
+- mode Transparent nettement plus léger
+- mode Lisibilité conservé
+- Remote Cockpit devient une vraie page opérative
+- aucun RustDesk ID / mot de passe dans le HTML public
+- background source conservé
 - aucune génération image
