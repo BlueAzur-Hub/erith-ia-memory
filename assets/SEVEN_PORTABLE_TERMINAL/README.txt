@@ -1,14 +1,10 @@
-SEVEN_TERMINAL_FINAL_ADVANCED_TRACE_OPACITY_FIX
+SEVEN PORTABLE TERMINAL — PRODUCTION LINKS FIX
 
-Correction ciblée :
-- HTML conservé avec cache bump v=20260523-0081.
-- JS conservé.
-- CSS corrigé pour harmoniser Advanced System Trace.
-
-Effet attendu :
-- Mode normal : Advanced Trace lisible mais léger.
-- Mode Transparent : panel, cards et Refresh partagent la même transparence.
-- Mode Lisibilité : priorité opaque/lisible.
+Modification ciblée :
+- section Production nettoyée ;
+- anciens boutons Wan / Sécurité image retirés ;
+- liens ajoutés : Running Hub, Eleven Labs, CivitAI, CivitAI Red ;
+- aucun changement sur backgrounds, CSS global, JS, Advanced Trace ou transparence.
 
 Commit conseillé :
-Harmonize advanced trace opacity states
+Update production section links
