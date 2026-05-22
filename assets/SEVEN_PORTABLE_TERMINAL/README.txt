@@ -1,10 +1,16 @@
-Base saine HTML/CSS/JS uniquement.
+SEVEN_PORTABLE_TERMINAL_UPLOAD_READY
 
-À placer dans :
+À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
 
-Requiert dans le même dossier :
-background_chateau_ciel_source.png
+Fichiers inclus :
+- index.html
+- style.css
+- script.js
+- README.txt
+
+Fichier requis déjà présent dans le dossier GitHub :
+- background_chateau_ciel_source.png
 
 Aucune génération image.
-Aucune action GitHub.
+HTML + CSS + JavaScript uniquement.
