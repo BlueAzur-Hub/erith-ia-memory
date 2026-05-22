@@ -7,7 +7,6 @@ const palette=document.getElementById("palette");
 const backgroundLabel=document.getElementById("backgroundLabel");
 
 const backgrounds=[
-  {file:"background_chateau_ciel_source.png", label:"source"},
   {file:"seven_bg_01_citadelle_celeste.png", label:"01 · Citadelle Céleste"},
   {file:"seven_bg_02_aqueduc_du_ciel.png", label:"02 · Aqueduc du Ciel"},
   {file:"seven_bg_03_tour_celeste.png", label:"03 · Tour Céleste"},
