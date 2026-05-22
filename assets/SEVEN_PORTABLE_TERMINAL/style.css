@@ -55,178 +55,35 @@ body.readable{--panel:rgba(4,8,18,.88);--panel-soft:rgba(4,8,18,.78);--panel-str
 body.readable .terminal{background:rgba(4,8,18,.60);backdrop-filter:blur(8px)}
 @media (max-width:760px){.terminal{width:calc(100vw - 16px);min-height:calc(100vh - 16px);margin:8px auto;padding:8px}.terminal-header{min-height:120px;padding:16px}.avatar-lock{width:64px;height:64px}.hero-card,.remote-status,.section-title,.terminal-footer{flex-direction:column;align-items:flex-start}.remote-status-actions{justify-content:flex-start}}
 
+/* Seven final clean — Advanced Trace compact + opacity states
+   Single source of truth. Replaces old stacked trace fixes. */
 
-/* Seven fix — crop + Advanced Trace readability */
 .advanced-panel{
-  background:rgba(4,8,18,.78);
-  backdrop-filter:blur(8px);
-  border-color:rgba(245,213,141,.72);
-}
-
-.trace-card{
-  background:rgba(4,8,18,.72);
-  backdrop-filter:blur(6px);
-}
-
-body.transparent .advanced-panel{
-  background:rgba(4,8,18,.76);
-  backdrop-filter:blur(8px);
-}
-
-body.transparent .trace-card{
-  background:rgba(4,8,18,.68);
-}
-
-body.transparent .page,
-body.transparent .terminal-header,
-body.transparent .topnav,
-body.transparent .control-strip,
-body.transparent .terminal-footer{
-  background:rgba(9,15,29,.30);
-}
-
-
-/* Seven fix — Transparent button also affects Advanced System Trace */
-.advanced-panel{
-  background:rgba(4,8,18,.74);
-  backdrop-filter:blur(7px);
-}
-
-.trace-card{
-  background:rgba(4,8,18,.66);
-  backdrop-filter:blur(6px);
-}
-
-/* Quand on clique sur Transp. */
-body.transparent .advanced-panel{
-  background:rgba(9,15,29,.16) !important;
-  backdrop-filter:blur(1px) !important;
-}
-
-body.transparent .trace-card{
-  background:rgba(9,15,29,.12) !important;
-  backdrop-filter:blur(.8px) !important;
-}
-
-/* Lisibilité doit gagner sur Transparent si les deux sont actifs */
-body.readable .advanced-panel,
-body.readable.transparent .advanced-panel{
-  background:rgba(4,8,18,.88) !important;
-  backdrop-filter:blur(8px) !important;
-}
-
-body.readable .trace-card,
-body.readable.transparent .trace-card{
-  background:rgba(4,8,18,.78) !important;
-  backdrop-filter:blur(7px) !important;
-}
-
-body.transparent .advanced-panel,
-body.transparent .trace-card{
-  text-shadow:0 1px 3px rgba(0,0,0,.72);
-}
-
-
-/* Seven fix — Advanced Trace compact cards */
-.advanced-panel{
-  padding:10px 12px !important;
-}
-
-.advanced-head{
-  margin-bottom:4px;
-}
-
-.advanced-head strong{
-  font-size:15px !important;
-}
-
-.advanced-head span{
-  font-size:11px !important;
-  margin-top:1px !important;
-}
-
-.advanced-head button{
-  padding:5px 10px !important;
-  font-size:12px !important;
-}
-
-.trace-grid{
-  margin-top:7px !important;
-  grid-template-columns:repeat(auto-fit,minmax(135px,1fr)) !important;
-  gap:6px !important;
-}
-
-.trace-card{
-  min-height:58px !important;
-  padding:8px 10px !important;
-  border-radius:11px !important;
-}
-
-.trace-card small{
-  font-size:10px !important;
-  margin-bottom:2px !important;
-}
-
-.trace-card strong{
-  font-size:15px !important;
-  line-height:1.05 !important;
-}
-
-.trace-card em{
-  font-size:10px !important;
-  margin-top:2px !important;
-  line-height:1.2 !important;
-}
-
-
-/* Seven fix — Advanced Trace more transparent in Transp mode */
-body.transparent .advanced-panel{
-  background:rgba(9,15,29,.055) !important;
-  backdrop-filter:blur(.2px) !important;
-  box-shadow:none !important;
-}
-
-body.transparent .trace-card{
-  background:rgba(9,15,29,.045) !important;
-  backdrop-filter:blur(.2px) !important;
-  box-shadow:none !important;
-}
-
-body.transparent .advanced-panel,
-body.transparent .trace-card{
-  border-color:rgba(245,213,141,.34) !important;
-}
-
-body.transparent .advanced-head strong,
-body.transparent .advanced-head span,
-body.transparent .trace-card small,
-body.transparent .trace-card strong,
-body.transparent .trace-card em{
-  text-shadow:0 1px 4px rgba(0,0,0,.9) !important;
-}
-
-/* Lisibilité reste prioritaire */
-body.readable .advanced-panel,
-body.readable.transparent .advanced-panel{
-  background:rgba(4,8,18,.88) !important;
-  backdrop-filter:blur(8px) !important;
-  box-shadow:inset 0 0 28px rgba(255,255,255,.02),0 10px 26px rgba(0,0,0,.16) !important;
-}
-
-body.readable .trace-card,
-body.readable.transparent .trace-card{
-  background:rgba(4,8,18,.78) !important;
-  backdrop-filter:blur(7px) !important;
-}
-
-
-/* Seven fix — Advanced Trace tiny visual cards */
-.advanced-panel{
+  margin-top:14px;
   padding:7px 9px !important;
+  border:1px solid rgba(245,213,141,.34) !important;
+  border-radius:18px;
+  background:rgba(9,15,29,.14) !important;
+  backdrop-filter:blur(2px) !important;
+  box-shadow:none !important;
 }
 
 .advanced-head{
   min-height:0 !important;
+  margin-bottom:4px !important;
+}
+
+.advanced-head strong{
+  color:var(--gold);
+  display:block;
+  font-size:15px !important;
+}
+
+.advanced-head span{
+  color:var(--muted);
+  display:block;
+  font-size:11px !important;
+  margin-top:1px !important;
 }
 
 .advanced-head button,
@@ -236,22 +93,47 @@ body.readable.transparent .trace-card{
   line-height:1 !important;
   font-size:11px !important;
   border-radius:999px !important;
+  background:rgba(9,15,29,.16) !important;
+  backdrop-filter:blur(2px) !important;
+  border-color:rgba(245,213,141,.30) !important;
+  box-shadow:none !important;
 }
 
 .trace-grid{
+  margin-top:5px !important;
+  display:grid;
   grid-template-columns:repeat(auto-fit,minmax(104px,1fr)) !important;
   gap:5px !important;
-  margin-top:5px !important;
+  background:transparent !important;
+}
+
+.remote-status + .remote-grid + .trace-grid{
+  padding:7px 9px !important;
+  border:1px solid rgba(245,213,141,.34) !important;
+  border-radius:18px !important;
+  background:rgba(9,15,29,.14) !important;
+  backdrop-filter:blur(2px) !important;
+  box-shadow:none !important;
 }
 
 .trace-card{
   min-height:42px !important;
   padding:5px 7px !important;
+  border:1px solid rgba(245,213,141,.30) !important;
   border-radius:9px !important;
-  border-width:1px !important;
+  background:rgba(9,15,29,.16) !important;
+  backdrop-filter:blur(2px) !important;
+  box-shadow:none !important;
+}
+
+.trace-card small,
+.trace-card strong,
+.trace-card em{
+  display:block;
 }
 
 .trace-card small{
+  color:var(--cyan);
   font-size:9px !important;
   line-height:1 !important;
   margin-bottom:1px !important;
@@ -263,54 +145,119 @@ body.readable.transparent .trace-card{
 }
 
 .trace-card em{
+  color:var(--muted);
   font-size:9px !important;
   line-height:1.05 !important;
   margin-top:1px !important;
 }
 
-#advancedPanel .trace-card{
-  flex:0 1 auto !important;
-}
-
-
-/* Seven final fix — Advanced Trace opacity harmonized */
-#advancedPanel{
-  padding:7px 9px !important;
-  background:rgba(9,15,29,.22) !important;
-  backdrop-filter:blur(3px) !important;
-  box-shadow:inset 0 0 18px rgba(255,255,255,.012),0 6px 18px rgba(0,0,0,.10) !important;
-  border-color:rgba(245,213,141,.34) !important;
-}
-
-#advancedPanel .trace-card,
-#refreshTraceBtn{
-  background:rgba(9,15,29,.20) !important;
-  backdrop-filter:blur(3px) !important;
-  border-color:rgba(245,213,141,.34) !important;
-  box-shadow:none !important;
-}
-
-body.transparent #advancedPanel,
-body.transparent #advancedPanel .trace-card,
-body.transparent #refreshTraceBtn{
-  background:rgba(9,15,29,.06) !important;
+body.transparent .advanced-panel,
+body.transparent .trace-card,
+body.transparent #refreshTraceBtn,
+body.transparent .remote-status + .remote-grid + .trace-grid{
+  background:rgba(9,15,29,.055) !important;
   backdrop-filter:blur(.2px) !important;
   box-shadow:none !important;
   border-color:rgba(245,213,141,.24) !important;
 }
 
-body.readable #advancedPanel,
-body.readable #advancedPanel .trace-card,
+body.transparent .advanced-panel,
+body.transparent .trace-card,
+body.transparent #refreshTraceBtn{
+  text-shadow:0 1px 4px rgba(0,0,0,.86) !important;
+}
+
+body.readable .advanced-panel,
+body.readable .trace-card,
 body.readable #refreshTraceBtn,
-body.readable.transparent #advancedPanel,
-body.readable.transparent #advancedPanel .trace-card,
-body.readable.transparent #refreshTraceBtn{
-  background:rgba(4,8,18,.82) !important;
-  backdrop-filter:blur(8px) !important;
+body.readable .remote-status + .remote-grid + .trace-grid,
+body.readable.transparent .advanced-panel,
+body.readable.transparent .trace-card,
+body.readable.transparent #refreshTraceBtn,
+body.readable.transparent .remote-status + .remote-grid + .trace-grid{
+  background:rgba(4,8,18,.78) !important;
+  backdrop-filter:blur(7px) !important;
   border-color:rgba(245,213,141,.58) !important;
 }
 
-body.transparent #advancedPanel,
-body.transparent #advancedPanel .trace-card{
-  text-shadow:0 1px 4px rgba(0,0,0,.86) !important;
+/* Seven final fix — Transparent mode visual harmony */
+body.transparent .terminal-header,
+body.transparent .topnav,
+body.transparent .control-strip,
+body.transparent .page,
+body.transparent .terminal-footer,
+body.transparent .hero-card,
+body.transparent .remote-status,
+body.transparent .remote-card,
+body.transparent .tile,
+body.transparent .advanced-panel,
+body.transparent .trace-card,
+body.transparent #refreshTraceBtn,
+body.transparent .remote-status + .remote-grid + .trace-grid{
+  background:rgba(9,15,29,.050) !important;
+  border-color:rgba(245,213,141,.18) !important;
+  box-shadow:none !important;
+  backdrop-filter:blur(.2px) !important;
+}
+
+body.transparent button,
+body.transparent .tab,
+body.transparent .tile,
+body.transparent #refreshTraceBtn{
+  background:rgba(9,15,29,.060) !important;
+  border-color:rgba(245,213,141,.22) !important;
+  box-shadow:none !important;
+}
+
+body.transparent .trace-grid{
+  background:transparent !important;
+  border-color:rgba(245,213,141,.18) !important;
+  box-shadow:none !important;
+}
+
+body.transparent .trace-card{
+  background:rgba(9,15,29,.060) !important;
+  border-color:rgba(245,213,141,.20) !important;
+}
+
+body.transparent .remote-status + .remote-grid + .trace-grid{
+  background:rgba(9,15,29,.040) !important;
+  border-color:rgba(245,213,141,.16) !important;
+}
+
+body.transparent .terminal,
+body.transparent .workspace{
+  box-shadow:none !important;
+}
+
+/* Lisibilité remains priority */
+body.readable .terminal-header,
+body.readable .topnav,
+body.readable .control-strip,
+body.readable .page,
+body.readable .terminal-footer,
+body.readable .hero-card,
+body.readable .remote-status,
+body.readable .remote-card,
+body.readable .tile,
+body.readable .advanced-panel,
+body.readable .trace-card,
+body.readable #refreshTraceBtn,
+body.readable .remote-status + .remote-grid + .trace-grid,
+body.readable.transparent .terminal-header,
+body.readable.transparent .topnav,
+body.readable.transparent .control-strip,
+body.readable.transparent .page,
+body.readable.transparent .terminal-footer,
+body.readable.transparent .hero-card,
+body.readable.transparent .remote-status,
+body.readable.transparent .remote-card,
+body.readable.transparent .tile,
+body.readable.transparent .advanced-panel,
+body.readable.transparent .trace-card,
+body.readable.transparent #refreshTraceBtn,
+body.readable.transparent .remote-status + .remote-grid + .trace-grid{
+  background:rgba(4,8,18,.78) !important;
+  border-color:rgba(245,213,141,.58) !important;
+  backdrop-filter:blur(7px) !important;
 }
