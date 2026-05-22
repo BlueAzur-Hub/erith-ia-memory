@@ -40,20 +40,35 @@ animation Wan/I2V ensuite
 last frame protégée
 DaVinci final
 aucune génération non demandée`,
+remote:`PRISE EN MAIN À DISTANCE — SAFE MODE
+
+Objectif : utiliser le Transformer Book comme pupitre Seven.
+Ne jamais afficher publiquement :
+- RustDesk ID
+- mot de passe
+- IP sensible
+- identifiants
+
+Procédure :
+1. Ouvrir le terminal Seven sur le Transformer Book.
+2. Ouvrir l’outil de prise en main à distance localement.
+3. Garder les identifiants hors capture / hors chat.
+4. Utiliser Seven comme cockpit de navigation : ChatGPT, GitHub, Notion, Production, Système.`,
 link:`https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html`
 };
 let bgIndex=0;
 function currentPage(){const a=document.querySelector(".page.active");return a?a.id.replace("page-",""):"home"}
 function saveUiState(){localStorage.setItem("seven.rebuilt.state",JSON.stringify({page:currentPage(),bgIndex,transparent:document.body.classList.contains("transparent"),readable:document.body.classList.contains("readable")}))}
 function showPage(name,persist=true){pages.forEach(p=>p.classList.toggle("active",p.id===`page-${name}`));navButtons.forEach(b=>b.classList.toggle("active",b.dataset.page===name));if(persist)saveUiState()}
-function applyBackground(){const current=backgrounds[bgIndex%backgrounds.length];document.getElementById("backgroundLayer").style.backgroundImage=`linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.04), rgba(0,0,0,.24)),linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.24)),url("${current}")`}
+function applyBackground(){const current=backgrounds[bgIndex%backgrounds.length];document.getElementById("backgroundLayer").style.backgroundImage=`linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.02), rgba(0,0,0,.20)),linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.20)),url("${current}")`}
 function nextBackground(){bgIndex=(bgIndex+1)%backgrounds.length;applyBackground();saveUiState()}
 function randomBackground(){bgIndex=Math.floor(Math.random()*backgrounds.length);applyBackground();saveUiState()}
-function renderTrace(){const entries=[["OS",navigator.platform||"n/a","local / safe"],["Navigateur",navigator.userAgent.split(" ").slice(0,4).join(" "),"user agent filtré"],["Viewport",`${window.innerWidth} × ${window.innerHeight}`,"affichage local"],["Fuseau",Intl.DateTimeFormat().resolvedOptions().timeZone||"local","heure locale"],["Langue",navigator.language||"n/a","navigateur"],["Sécurité","SAFE TRACE","aucun identifiant sensible"]];const html=entries.map(([l,v,n])=>`<article class="trace-card"><small>${l}</small><strong>${v}</strong><em>${n}</em></article>`).join("");const h=document.getElementById("homeTraceGrid");const s=document.getElementById("systemTraceGrid");if(h)h.innerHTML=html;if(s)s.innerHTML=html}
+function renderTrace(){const entries=[["OS",navigator.platform||"n/a","local / safe"],["Navigateur",navigator.userAgent.split(" ").slice(0,4).join(" "),"user agent filtré"],["Viewport",`${window.innerWidth} × ${window.innerHeight}`,"affichage local"],["Fuseau",Intl.DateTimeFormat().resolvedOptions().timeZone||"local","heure locale"],["Langue",navigator.language||"n/a","navigateur"],["Remote","SAFE MODE","no RustDesk ID / no password"]];const html=entries.map(([l,v,n])=>`<article class="trace-card"><small>${l}</small><strong>${v}</strong><em>${n}</em></article>`).join("");const h=document.getElementById("homeTraceGrid");const s=document.getElementById("systemTraceGrid");if(h)h.innerHTML=html;if(s)s.innerHTML=html}
 async function copyText(key,title="Bloc copiable"){const text=prompts[key]||key||"";drawerTitle.textContent=title;drawerText.value=text;drawer.classList.add("open");drawerText.select();try{await navigator.clipboard.writeText(text)}catch{document.execCommand("copy")}}
 function loadUiState(){try{const saved=JSON.parse(localStorage.getItem("seven.rebuilt.state")||"{}");bgIndex=Number(saved.bgIndex||0);document.body.classList.toggle("transparent",!!saved.transparent);document.body.classList.toggle("readable",!!saved.readable);applyBackground();showPage(saved.page||"home",false)}catch{showPage("home",false)}}
 navButtons.forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>copyText(b.dataset.copy,b.textContent.trim())));
+document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{showPage(b.dataset.jump);palette.classList.remove("open")}));
 document.getElementById("startSevenBtn").addEventListener("click",async()=>{await copyText("seven","Seven Heaven");window.open("https://chatgpt.com/","seven_chatgpt")});
 document.getElementById("homeSevenBtn").addEventListener("click",async()=>{await copyText("seven","Seven Heaven");window.open("https://chatgpt.com/","seven_chatgpt")});
 document.getElementById("homePromptBtn").addEventListener("click",()=>copyText("seven","Seven Heaven"));
@@ -67,10 +82,10 @@ document.getElementById("toggleReadableBtn").addEventListener("click",()=>{docum
 document.getElementById("toggleAdvancedBtn").addEventListener("click",()=>{const p=document.getElementById("advancedPanel");p.hidden=!p.hidden;renderTrace()});
 document.getElementById("homeTraceBtn").addEventListener("click",()=>{const p=document.getElementById("advancedPanel");p.hidden=false;p.scrollIntoView({behavior:"smooth",block:"center"});renderTrace()});
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);
+document.getElementById("refreshTraceBtnSystem").addEventListener("click",renderTrace);
 document.getElementById("closeDrawerBtn").addEventListener("click",()=>drawer.classList.remove("open"));
 document.getElementById("openPaletteBtn").addEventListener("click",()=>palette.classList.add("open"));
 document.getElementById("closePaletteBtn").addEventListener("click",()=>palette.classList.remove("open"));
-document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{showPage(b.dataset.jump);palette.classList.remove("open")}));
 document.addEventListener("keydown",e=>{const order=["home","llm","notion","github","production","system"];const i=Number(e.key)-1;if(order[i])showPage(order[i]);if(e.key==="?")palette.classList.add("open");if(e.key==="Escape"){drawer.classList.remove("open");palette.classList.remove("open")}});
 window.addEventListener("resize",renderTrace);
 loadUiState();applyBackground();renderTrace();

@@ -1,10 +1,10 @@
-SEVEN_TERMINAL_BACKGROUND_VISIBILITY_FIX
-
-Uploader dans :
-assets/SEVEN_PORTABLE_TERMINAL/
+SEVEN_TERMINAL_BACKGROUND_REMOTE_FIX
 
 Commit conseillé :
-Refine Seven terminal background visibility
+Fix Seven terminal background layer and remote panel
+
+À uploader dans :
+assets/SEVEN_PORTABLE_TERMINAL/
 
 Fichiers inclus :
 - index.html
@@ -12,12 +12,9 @@ Fichiers inclus :
 - script.js
 - README.txt
 
-Asset requis :
-- background_chateau_ciel_source.png
-
-Changement principal :
-- background moins assombri
-- panneaux moins opaques
-- lisibilité conservée
-- transparence optionnelle
+Correction :
+- background-layer passe en z-index positif sous l’interface
+- html/body transparents pour ne plus masquer le background
+- prise en main à distance restaurée dans Système / Remote
+- aucune donnée sensible affichée
 - aucune génération image
