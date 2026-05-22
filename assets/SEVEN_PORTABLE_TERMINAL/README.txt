@@ -1,11 +1,18 @@
-SEVEN TERMINAL — TRACE CARD ONLY FIX
+SEVEN TERMINAL — CLEAN TRACE CSS FIX
 
-Correction ciblée :
-- modifie uniquement les .trace-card en mode Transparent ;
-- ne modifie pas les panels principaux ;
-- ne modifie pas les boutons ;
-- ne modifie pas les backgrounds ;
-- conserve le mode Readable prioritaire.
+Contenu :
+- index.html
+- style.css
+- script.js
+- README.txt
+
+Modification :
+- Nettoyage du CSS Advanced System Trace.
+- Suppression des anciens blocs contradictoires empilés.
+- Conservation du comportement actuel : normal, transparent, lisibilité.
+- Aucun changement HTML.
+- Aucun changement JS.
+- Aucune image incluse ni modifiée.
 
 Commit conseillé :
-Tune trace cards only in transparent mode
+Clean advanced trace CSS conflicts
