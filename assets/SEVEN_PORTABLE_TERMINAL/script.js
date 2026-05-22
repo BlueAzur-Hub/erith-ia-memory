@@ -17,7 +17,17 @@ const backgrounds=[
   {file:"seven_bg_07_coeur_de_pierre.png", label:"07 · Cœur de Pierre"},
   {file:"seven_bg_08_ponts_ancestraux.png", label:"08 · Ponts Ancestraux"},
   {file:"seven_bg_09_arbre_du_ciel.png", label:"09 · Arbre du Ciel"},
-  {file:"seven_bg_10_terrasse_etoile.png", label:"10 · Terrasse Étoile"}
+  {file:"seven_bg_10_terrasse_etoile.png", label:"10 · Terrasse Étoile"},
+  {file:"seven_bg_11_plateforme_du_vent.png", label:"11 · Plateforme du Vent"},
+  {file:"seven_bg_12_falaises_de_memoire.png", label:"12 · Falaises de Mémoire"},
+  {file:"seven_bg_13_sentinelle_ancienne.png", label:"13 · Sentinelle Ancienne"},
+  {file:"seven_bg_14_spheres_de_laputa.png", label:"14 · Sphères de Laputa"},
+  {file:"seven_bg_15_porte_du_royaume.png", label:"15 · Porte du Royaume"},
+  {file:"seven_bg_16_vue_sur_linfini.png", label:"16 · Vue sur l’Infini"},
+  {file:"seven_bg_17_chutes_celestes.png", label:"17 · Chutes Célestes"},
+  {file:"seven_bg_18_visage_de_pierre.png", label:"18 · Visage de Pierre"},
+  {file:"seven_bg_19_jardin_de_lumiere.png", label:"19 · Jardin de Lumière"},
+  {file:"seven_bg_20_forteresse_des_nuages.png", label:"20 · Forteresse des Nuages"}
 ];
 
 const prompts={
