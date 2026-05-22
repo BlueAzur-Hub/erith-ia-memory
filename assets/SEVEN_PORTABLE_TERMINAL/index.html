@@ -3,66 +3,196 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seven Portable Terminal</title>
+  <title>Seven Portable Terminal — Cockpit Transparent</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="ui">
-    <header class="topbar">
-      <div class="brand">
-        <span class="sigil">✦</span>
-        <strong>Seven Portable Terminal</strong>
-      </div>
+  <div class="world-bg" id="worldBg" aria-hidden="true"></div>
+  <div class="world-veil" aria-hidden="true"></div>
+  <div class="cloud-floor" aria-hidden="true"></div>
 
-      <nav>
-        <button class="active" data-page="home">Accueil</button>
-        <button data-page="llm">LLM</button>
-        <button data-page="notion">Notion</button>
-        <button data-page="github">GitHub</button>
-        <button data-page="production">Production</button>
-        <button data-page="system">Système</button>
-      </nav>
+  <main class="terminal">
+    <header class="hero">
+      <img id="heroImage" class="hero-bg-img" src="background_chateau_ciel_source.png" alt="">
+      <div class="hero-veil"></div>
+
+      <section class="hero-content">
+        <p class="kicker">ERITH.IA // SEVEN PORTABLE TERMINAL</p>
+        <h1>Seven Portable Terminal</h1>
+        <p class="subtitle">Cockpit transparent · fond vivant · pupitre Aerith</p>
+      </section>
+
+      <aside class="portrait" aria-label="Aerith operator">
+        <span>✦</span>
+        <strong>Seven</strong>
+      </aside>
     </header>
 
-    <section class="side-panel">
-      <p class="label">SEVEN</p>
-      <button id="copyPrompt">Copier prompt</button>
-      <button id="openChat">ChatGPT</button>
-      <button id="readability">Lisibilité</button>
+    <div class="memory-ribbon">
+      <span>Transformer Book = pupitre Seven</span>
+      <span>Ryzen 7 = moteur de production</span>
+      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
+    </div>
+
+    <nav class="topnav" aria-label="Navigation principale">
+      <button class="active" data-page="home">Accueil</button>
+      <button data-page="llm">LLM</button>
+      <button data-page="notion">Notion</button>
+      <button data-page="github">GitHub</button>
+      <button data-page="production">Production</button>
+      <button data-page="system">Système</button>
+    </nav>
+
+    <section class="toolbar" aria-label="Actions">
+      <button id="advancedBtn">Advanced</button>
+      <button id="ambianceBtn">Ambiance</button>
+      <button id="saveBtn">Save</button>
+      <button id="favoriteBtn">Favori</button>
+      <button id="nextBgBtn">Fond</button>
+      <button id="randomBgBtn">Random</button>
+      <button id="heroFocusBtn">Hero</button>
+      <button id="transparentBtn">Transparent</button>
+      <button id="readabilityBtn">Sombre / Lisibilité</button>
+      <button id="paletteBtn">?</button>
     </section>
 
-    <section class="page active" id="home">
-      <h1>Sky Castle Console</h1>
-      <p>Interface légère. Le décor reste visible.</p>
+    <section class="pages">
+      <article class="page active" id="page-home">
+        <div class="section-title">
+          <strong>Accueil</strong>
+          <span>Cockpit transparent sur background existant.</span>
+        </div>
+
+        <section class="page-intro">
+          <strong>Mode média</strong>
+          <p>Texte uniquement. Aucune génération image automatique. Le background reste la couche principale.</p>
+        </section>
+
+        <section class="system-trace" id="advancedPanel">
+          <div class="trace-head">
+            <div>
+              <strong>⚙️ Advanced System Trace</strong>
+              <span>Diagnostic local filtré. SAFE TRACE.</span>
+            </div>
+            <div class="mini-actions">
+              <button id="refreshTraceBtn">Refresh</button>
+              <button data-copy="trace">Copier</button>
+            </div>
+          </div>
+          <div class="trace-pills">
+            <span class="trace-pill safe">SAFE TRACE</span>
+            <span class="trace-pill">NO RUSTDESK ID</span>
+            <span class="trace-pill">NO PASSWORD</span>
+            <span class="trace-pill">LOCAL ONLY</span>
+          </div>
+          <div class="trace-grid" id="traceGrid"></div>
+        </section>
+      </article>
+
+      <article class="page" id="page-llm">
+        <div class="section-title">
+          <strong>LLM</strong>
+          <span>Prompts et activation.</span>
+        </div>
+        <div class="tile-grid">
+          <button data-copy="seven">Seven Heaven</button>
+          <button data-copy="video">Video Cards Boost</button>
+          <button data-copy="blackout">Mode Blackout</button>
+          <button data-copy="notion">Bloc Notion</button>
+        </div>
+      </article>
+
+      <article class="page" id="page-notion">
+        <div class="section-title">
+          <strong>Notion</strong>
+          <span>Mémoire éditoriale humaine.</span>
+        </div>
+        <p class="note">Espace prévu pour les liens Notion, modules mémoire, blocs de production et notes DA.</p>
+      </article>
+
+      <article class="page" id="page-github">
+        <div class="section-title">
+          <strong>GitHub</strong>
+          <span>Mémoire machine.</span>
+        </div>
+        <div class="tile-grid">
+          <button id="openRepoBtn">Repo public</button>
+          <button id="openTerminalFolderBtn">Dossier terminal</button>
+          <button data-copy="link">Copier lien cockpit</button>
+        </div>
+      </article>
+
+      <article class="page" id="page-production">
+        <div class="section-title">
+          <strong>Production</strong>
+          <span>Image → animation → montage.</span>
+        </div>
+        <p class="note">Phase actuelle : HTML/CSS/JS uniquement. Aucun outil image.</p>
+      </article>
+
+      <article class="page" id="page-system">
+        <div class="section-title">
+          <strong>🖥️ Système / Network HUD</strong>
+          <span>Diagnostic local filtré.</span>
+        </div>
+        <section class="page-intro">
+          <strong>SAFE TRACE</strong>
+          <p>Aucun RustDesk ID. Aucun mot de passe. Diagnostic navigateur local uniquement.</p>
+        </section>
+        <div class="trace-grid" id="systemGrid"></div>
+      </article>
     </section>
 
-    <section class="page" id="llm">
-      <h1>LLM</h1>
-      <p>Prompts et activation Seven.</p>
-    </section>
-
-    <section class="page" id="notion">
-      <h1>Notion</h1>
-      <p>Mémoire éditoriale.</p>
-    </section>
-
-    <section class="page" id="github">
-      <h1>GitHub</h1>
-      <p>assets/SEVEN_PORTABLE_TERMINAL/</p>
-    </section>
-
-    <section class="page" id="production">
-      <h1>Production</h1>
-      <p>Image, animation, DaVinci, YouTube.</p>
-    </section>
-
-    <section class="page" id="system">
-      <h1>Système</h1>
-      <p id="trace"></p>
-    </section>
+    <footer>
+      <span>Seven Portable Terminal</span>
+      <span>Background-first · Transparent cockpit · No image generation</span>
+    </footer>
   </main>
 
-  <textarea id="drawer" readonly></textarea>
+  <section class="hero-focus" id="heroFocus" aria-hidden="true">
+    <div class="focus-card">
+      <div class="focus-head">
+        <strong>Hero Focus</strong>
+        <button id="closeHeroFocusBtn">Fermer</button>
+      </div>
+
+      <label>X <input id="heroX" type="range" min="0" max="100" value="50"></label>
+      <label>Y <input id="heroY" type="range" min="0" max="100" value="35"></label>
+      <label>Zoom <input id="heroZoom" type="range" min="100" max="180" value="112"></label>
+
+      <div class="focus-arrows">
+        <button data-nudge="up">↑</button>
+        <button data-nudge="left">←</button>
+        <button data-nudge="right">→</button>
+        <button data-nudge="down">↓</button>
+        <button id="resetHeroBtn">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="palette" id="palette" aria-hidden="true">
+    <div class="palette-card">
+      <div class="focus-head">
+        <strong>Command Palette</strong>
+        <button id="closePaletteBtn">Fermer</button>
+      </div>
+      <button data-page-jump="home">1 — Accueil</button>
+      <button data-page-jump="llm">2 — LLM</button>
+      <button data-page-jump="notion">3 — Notion</button>
+      <button data-page-jump="github">4 — GitHub</button>
+      <button data-page-jump="production">5 — Production</button>
+      <button data-page-jump="system">6 — Système</button>
+    </div>
+  </section>
+
+  <section class="drawer" id="drawer">
+    <div class="drawer-head">
+      <strong>Bloc copiable</strong>
+      <button id="closeDrawerBtn">×</button>
+    </div>
+    <textarea id="drawerText" readonly></textarea>
+  </section>
+
   <script src="script.js"></script>
 </body>
 </html>
