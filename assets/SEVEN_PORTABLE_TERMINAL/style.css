@@ -271,3 +271,46 @@ body.readable.transparent .trace-card{
 #advancedPanel .trace-card{
   flex:0 1 auto !important;
 }
+
+
+/* Seven final fix — Advanced Trace opacity harmonized */
+#advancedPanel{
+  padding:7px 9px !important;
+  background:rgba(9,15,29,.22) !important;
+  backdrop-filter:blur(3px) !important;
+  box-shadow:inset 0 0 18px rgba(255,255,255,.012),0 6px 18px rgba(0,0,0,.10) !important;
+  border-color:rgba(245,213,141,.34) !important;
+}
+
+#advancedPanel .trace-card,
+#refreshTraceBtn{
+  background:rgba(9,15,29,.20) !important;
+  backdrop-filter:blur(3px) !important;
+  border-color:rgba(245,213,141,.34) !important;
+  box-shadow:none !important;
+}
+
+body.transparent #advancedPanel,
+body.transparent #advancedPanel .trace-card,
+body.transparent #refreshTraceBtn{
+  background:rgba(9,15,29,.06) !important;
+  backdrop-filter:blur(.2px) !important;
+  box-shadow:none !important;
+  border-color:rgba(245,213,141,.24) !important;
+}
+
+body.readable #advancedPanel,
+body.readable #advancedPanel .trace-card,
+body.readable #refreshTraceBtn,
+body.readable.transparent #advancedPanel,
+body.readable.transparent #advancedPanel .trace-card,
+body.readable.transparent #refreshTraceBtn{
+  background:rgba(4,8,18,.82) !important;
+  backdrop-filter:blur(8px) !important;
+  border-color:rgba(245,213,141,.58) !important;
+}
+
+body.transparent #advancedPanel,
+body.transparent #advancedPanel .trace-card{
+  text-shadow:0 1px 4px rgba(0,0,0,.86) !important;
+}

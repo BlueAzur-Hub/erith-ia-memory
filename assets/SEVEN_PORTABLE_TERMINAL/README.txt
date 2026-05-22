@@ -1,17 +1,14 @@
-SEVEN_TERMINAL_FINAL_BG09_TOP_FINAL
+SEVEN_TERMINAL_FINAL_ADVANCED_TRACE_OPACITY_FIX
+
+Correction ciblée :
+- HTML conservé avec cache bump v=20260523-0081.
+- JS conservé.
+- CSS corrigé pour harmoniser Advanced System Trace.
+
+Effet attendu :
+- Mode normal : Advanced Trace lisible mais léger.
+- Mode Transparent : panel, cards et Refresh partagent la même transparence.
+- Mode Lisibilité : priorité opaque/lisible.
 
 Commit conseillé :
-Adjust background 09 crop upward
-
-À uploader dans :
-assets/SEVEN_PORTABLE_TERMINAL/
-
-Fichiers à remplacer :
-- index.html
-- style.css
-- script.js
-
-Correction finale :
-- recadrage de seven_bg_09_arbre_du_ciel.png vers le haut
-- meilleure visibilité de la canopée et des arches hautes
-- aucune autre modification
+Harmonize advanced trace opacity states
