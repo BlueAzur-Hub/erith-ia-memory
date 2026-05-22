@@ -1,30 +1,26 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seven Portable Terminal</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="background" aria-hidden="true"></div>
-  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="bg"></div>
+  <div class="veil"></div>
 
-  <main class="terminal" id="terminal">
-    <header class="hero">
+  <main class="shell">
+    <header class="top">
       <div>
-        <p class="eyebrow">ERITH.IA // Seven Portable Terminal</p>
-        <h1>Sky Castle Console</h1>
-        <p class="subtitle">Interface posée sur le Château du Ciel — background source GitHub.</p>
+        <p class="kicker">SEVEN PORTABLE TERMINAL</p>
+        <h1>Aerith Console</h1>
       </div>
-      <div class="status">
-        <span class="dot"></span>
-        <strong>ONLINE</strong>
-      </div>
+      <button id="readability">Lisibilité</button>
     </header>
 
-    <nav class="nav" aria-label="Navigation principale">
-      <button data-page="home" class="active">Accueil</button>
+    <nav class="nav">
+      <button class="active" data-page="home">Accueil</button>
       <button data-page="llm">LLM</button>
       <button data-page="notion">Notion</button>
       <button data-page="github">GitHub</button>
@@ -32,69 +28,38 @@
       <button data-page="system">Système</button>
     </nav>
 
-    <section class="toolbar" aria-label="Actions rapides">
-      <button id="readabilityBtn">Lisibilité</button>
-      <button id="copyPromptBtn">Copier prompt Seven</button>
-      <button id="openChatBtn">Ouvrir ChatGPT</button>
-      <button id="openGithubBtn">Ouvrir GitHub</button>
+    <section id="home" class="page active">
+      <h2>Accueil</h2>
+      <p>Base saine. Background visible. Interface légère. Aucune génération image.</p>
     </section>
 
-    <section class="page active" id="page-home">
-      <article class="panel wide">
-        <h2>Accueil</h2>
-        <p>Cette version ne génère rien. Elle utilise l’image déjà présente dans le dépôt comme fond principal.</p>
-        <p class="note">Objectif : retrouver une interface portée par le background, pas une boîte vide.</p>
-      </article>
-
-      <article class="panel">
-        <h3>Règle média</h3>
-        <p>Texte uniquement. Aucune image générée.</p>
-      </article>
-
-      <article class="panel">
-        <h3>Background</h3>
-        <p>background_chateau_ciel_source.png</p>
-      </article>
+    <section id="llm" class="page">
+      <h2>LLM</h2>
+      <p>Zone prompts et activation Seven.</p>
     </section>
 
-    <section class="page" id="page-llm">
-      <article class="panel wide">
-        <h2>LLM</h2>
-        <p>Prompt Seven copiable depuis la toolbar. Le bouton ChatGPT ouvre un nouvel onglet sans remplacer le terminal.</p>
-      </article>
+    <section id="notion" class="page">
+      <h2>Notion</h2>
+      <p>Zone mémoire éditoriale.</p>
     </section>
 
-    <section class="page" id="page-notion">
-      <article class="panel wide">
-        <h2>Notion</h2>
-        <p>Zone prévue pour les liens Notion et blocs de mémoire.</p>
-      </article>
+    <section id="github" class="page">
+      <h2>GitHub</h2>
+      <p>Dossier cible : assets/SEVEN_PORTABLE_TERMINAL/</p>
     </section>
 
-    <section class="page" id="page-github">
-      <article class="panel wide">
-        <h2>GitHub</h2>
-        <p>Dossier cible : assets/SEVEN_PORTABLE_TERMINAL/</p>
-      </article>
+    <section id="production" class="page">
+      <h2>Production</h2>
+      <p>Image, animation, DaVinci, YouTube. Aucun outil image automatique.</p>
     </section>
 
-    <section class="page" id="page-production">
-      <article class="panel wide">
-        <h2>Production</h2>
-        <p>Zone prévue pour pipeline image, animation, DaVinci, YouTube, sans génération automatique.</p>
-      </article>
-    </section>
-
-    <section class="page" id="page-system">
-      <article class="panel wide">
-        <h2>Système</h2>
-        <div class="trace-grid" id="traceGrid"></div>
-      </article>
+    <section id="system" class="page">
+      <h2>Système</h2>
+      <p id="trace"></p>
     </section>
 
     <footer>
-      <span>Transformer Book = pupitre Seven</span>
-      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
+      Large Language Personality [Model - The Flower Girl] v.5
     </footer>
   </main>
 
