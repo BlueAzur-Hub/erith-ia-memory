@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Seven Portable Terminal — Remote Controls</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Seven Portable Terminal — Final 01-10</title>
+  <link rel="stylesheet" href="style.css?v=20260522-2310">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -28,18 +28,18 @@
       <button class="tab" data-page="llm">LLM</button>
       <button class="tab" data-page="github">GitHub</button>
       <button class="tab" data-page="production">Production</button>
-      <button class="tab" data-page="system">Remote</button>
+      <button class="tab" data-page="remote">Remote</button>
     </nav>
 
     <section class="control-strip">
-      <button id="startSevenBtn">Seven</button>
+      <button id="copySevenBtn">Seven</button>
       <button id="copyVideoBtn">Cards</button>
       <button id="copyBlackoutBtn">Blackout</button>
       <button id="nextBackgroundBtn">Fond</button>
       <button id="randomBackgroundBtn">Random</button>
       <button id="toggleTransparentBtn">Transp.</button>
       <button id="toggleReadableBtn">Lisibilité</button>
-      <button id="toggleAdvancedBtn">Trace</button>
+      <button id="toggleTraceBtn">Trace</button>
       <button id="openPaletteBtn">?</button>
     </section>
 
@@ -47,27 +47,39 @@
       <article class="page active" id="page-home">
         <div class="section-title">
           <strong>Accueil Seven</strong>
-          <span>Background visible · cockpit opératif · remote prêt.</span>
+          <span id="backgroundLabel">Background : source</span>
         </div>
 
         <div class="hero-card">
           <div>
             <p class="small-label">État</p>
             <h2>Cockpit prêt</h2>
-            <p>Interface lisible, panneaux allégés, accès Remote centralisé.</p>
+            <p>Interface lisible, panneaux allégés, backgrounds validés 01–10, accès Remote centralisé.</p>
           </div>
           <button id="copyTerminalLinkBtn">Copier lien</button>
         </div>
 
         <div class="tile-grid">
-          <button class="tile primary" id="homeSevenBtn"><strong>Seven Heaven</strong><span>Copier prompt + ouvrir ChatGPT</span></button>
-          <button class="tile" id="homePromptBtn"><strong>Voir prompt</strong><span>Tiroir de copie</span></button>
-          <button class="tile" data-jump="system"><strong>Remote</strong><span>Prise en main à distance</span></button>
+          <button class="tile primary" id="homeSevenBtn">
+            <strong>Seven Heaven</strong>
+            <span>Copier prompt + ouvrir ChatGPT</span>
+          </button>
+          <button class="tile" id="homeVideoCardsBtn">
+            <strong>Video Cards Boost</strong>
+            <span>Copier le prompt production vidéo</span>
+          </button>
+          <button class="tile" data-jump="remote">
+            <strong>Remote</strong>
+            <span>Prise en main à distance</span>
+          </button>
         </div>
 
         <section class="advanced-panel" id="advancedPanel" hidden>
           <div class="advanced-head">
-            <div><strong>Advanced System Trace</strong><span>SAFE TRACE · no RustDesk ID · no password</span></div>
+            <div>
+              <strong>Advanced System Trace</strong>
+              <span>SAFE TRACE · no RustDesk ID · no password</span>
+            </div>
             <button id="refreshTraceBtn">Refresh</button>
           </div>
           <div class="trace-grid" id="homeTraceGrid"></div>
@@ -75,7 +87,10 @@
       </article>
 
       <article class="page" id="page-llm">
-        <div class="section-title"><strong>LLM</strong><span>Cœurs mémoire et interfaces IA.</span></div>
+        <div class="section-title">
+          <strong>LLM</strong>
+          <span>Cœurs mémoire et interfaces IA.</span>
+        </div>
 
         <div class="tile-grid llm-links-only">
           <a class="tile primary" href="https://sustaining-boar-5c6.notion.site/erith-IA-Notion-Memory-for-LLM-3417754fe0848078a310f3bc3fb962bf" target="_blank" rel="noreferrer">
@@ -101,7 +116,10 @@
       </article>
 
       <article class="page" id="page-github">
-        <div class="section-title"><strong>GitHub</strong><span>Mémoire machine publique et privée.</span></div>
+        <div class="section-title">
+          <strong>GitHub</strong>
+          <span>Mémoire machine publique et privée.</span>
+        </div>
 
         <div class="tile-grid github-links-only">
           <a class="tile primary" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer">
@@ -117,15 +135,28 @@
       </article>
 
       <article class="page" id="page-production">
-        <div class="section-title"><strong>Production</strong><span>Image, vidéo, montage, publication.</span></div>
+        <div class="section-title">
+          <strong>Production</strong>
+          <span>Image, vidéo, montage, publication.</span>
+        </div>
+
         <div class="tile-grid">
-          <button class="tile" data-copy="wan"><strong>Wan / I2V</strong><span>Checklist vidéo</span></button>
-          <button class="tile" data-copy="blackout"><strong>Sécurité image</strong><span>Aucune génération non demandée</span></button>
+          <button class="tile" data-copy="wan">
+            <strong>Wan / I2V</strong>
+            <span>Checklist vidéo</span>
+          </button>
+          <button class="tile" data-copy="blackout">
+            <strong>Sécurité image</strong>
+            <span>Aucune génération non demandée</span>
+          </button>
         </div>
       </article>
 
-      <article class="page" id="page-system">
-        <div class="section-title"><strong>Remote Cockpit</strong><span>Prise en main à distance, sans exposer de secret.</span></div>
+      <article class="page" id="page-remote">
+        <div class="section-title">
+          <strong>Remote</strong>
+          <span>Prise en main à distance, sans exposer de secret.</span>
+        </div>
 
         <div class="remote-status">
           <div>
@@ -146,7 +177,7 @@
           </section>
           <section class="remote-card">
             <strong>2 · Lire l’ID localement</strong>
-            <span>Ne pas coller l’ID dans une page publique ou une capture.</span>
+            <span>Ne jamais coller l’ID dans le HTML public.</span>
           </section>
           <section class="remote-card">
             <strong>3 · Connexion distante</strong>
@@ -154,14 +185,8 @@
           </section>
           <section class="remote-card">
             <strong>4 · Piloter Seven</strong>
-            <span>ChatGPT · GitHub · Notion · Production · Remote.</span>
+            <span>ChatGPT · GitHub · Production · Remote.</span>
           </section>
-        </div>
-
-        <div class="tile-grid remote-actions">
-          <button class="tile primary" data-copy="remote"><strong>Procédure Remote</strong><span>Copier le guide sûr</span></button>
-          <button class="tile" id="refreshTraceBtnSystem"><strong>Refresh Trace</strong><span>Diagnostic local</span></button>
-          <button class="tile" data-copy="link"><strong>Lien terminal</strong><span>Copier l’adresse</span></button>
         </div>
 
         <div class="trace-grid" id="systemTraceGrid"></div>
@@ -175,21 +200,27 @@
   </main>
 
   <section class="drawer" id="drawer">
-    <div class="drawer-head"><strong id="drawerTitle">Bloc copiable</strong><button id="closeDrawerBtn">×</button></div>
+    <div class="drawer-head">
+      <strong id="drawerTitle">Bloc copiable</strong>
+      <button id="closeDrawerBtn">×</button>
+    </div>
     <textarea id="drawerText" readonly></textarea>
   </section>
 
   <section class="palette" id="palette">
     <div class="palette-card">
-      <div class="drawer-head"><strong>Command Palette</strong><button id="closePaletteBtn">Fermer</button></div>
+      <div class="drawer-head">
+        <strong>Command Palette</strong>
+        <button id="closePaletteBtn">Fermer</button>
+      </div>
       <button data-jump="home">1 — Accueil</button>
       <button data-jump="llm">2 — LLM</button>
       <button data-jump="github">3 — GitHub</button>
       <button data-jump="production">4 — Production</button>
-      <button data-jump="system">5 — Remote</button>
+      <button data-jump="remote">5 — Remote</button>
     </div>
   </section>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260522-2310"></script>
 </body>
 </html>
