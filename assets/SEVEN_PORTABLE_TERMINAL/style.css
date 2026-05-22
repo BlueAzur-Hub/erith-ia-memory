@@ -54,3 +54,33 @@ body.transparent .terminal{background:rgba(5,10,22,.04);backdrop-filter:blur(.3p
 body.readable{--panel:rgba(4,8,18,.88);--panel-soft:rgba(4,8,18,.78);--panel-strong:rgba(4,8,18,.92)}
 body.readable .terminal{background:rgba(4,8,18,.60);backdrop-filter:blur(8px)}
 @media (max-width:760px){.terminal{width:calc(100vw - 16px);min-height:calc(100vh - 16px);margin:8px auto;padding:8px}.terminal-header{min-height:120px;padding:16px}.avatar-lock{width:64px;height:64px}.hero-card,.remote-status,.section-title,.terminal-footer{flex-direction:column;align-items:flex-start}.remote-status-actions{justify-content:flex-start}}
+
+
+/* Seven fix — crop + Advanced Trace readability */
+.advanced-panel{
+  background:rgba(4,8,18,.78);
+  backdrop-filter:blur(8px);
+  border-color:rgba(245,213,141,.72);
+}
+
+.trace-card{
+  background:rgba(4,8,18,.72);
+  backdrop-filter:blur(6px);
+}
+
+body.transparent .advanced-panel{
+  background:rgba(4,8,18,.76);
+  backdrop-filter:blur(8px);
+}
+
+body.transparent .trace-card{
+  background:rgba(4,8,18,.68);
+}
+
+body.transparent .page,
+body.transparent .terminal-header,
+body.transparent .topnav,
+body.transparent .control-strip,
+body.transparent .terminal-footer{
+  background:rgba(9,15,29,.30);
+}

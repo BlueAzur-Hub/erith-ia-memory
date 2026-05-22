@@ -95,12 +95,37 @@ function showPage(name, persist=true){
   if(persist) saveUiState();
 }
 
+const backgroundPositions={
+  "seven_bg_01_citadelle_celeste.png":"center center",
+  "seven_bg_02_aqueduc_du_ciel.png":"center center",
+  "seven_bg_03_tour_celeste.png":"center center",
+  "seven_bg_04_sanctuaire_des_nuages.png":"center center",
+  "seven_bg_05_archipels_suspendus.png":"center center",
+  "seven_bg_06_jardin_du_cristal.png":"center 38%",
+  "seven_bg_07_coeur_de_pierre.png":"center 42%",
+  "seven_bg_08_ponts_ancestraux.png":"center 32%",
+  "seven_bg_09_arbre_du_ciel.png":"center 32%",
+  "seven_bg_10_terrasse_etoile.png":"center 34%",
+  "seven_bg_11_plateforme_du_vent.png":"center center",
+  "seven_bg_12_falaises_de_memoire.png":"center 35%",
+  "seven_bg_13_sentinelle_ancienne.png":"center 38%",
+  "seven_bg_14_spheres_de_laputa.png":"center center",
+  "seven_bg_15_porte_du_royaume.png":"center 22%",
+  "seven_bg_16_vue_sur_linfini.png":"center center",
+  "seven_bg_17_chutes_celestes.png":"center 36%",
+  "seven_bg_18_visage_de_pierre.png":"center 28%",
+  "seven_bg_19_jardin_de_lumiere.png":"center center",
+  "seven_bg_20_forteresse_des_nuages.png":"center center"
+};
+
 function applyBackground(){
   const current=backgrounds[bgIndex % backgrounds.length];
   const layer=document.getElementById("backgroundLayer");
   if(!layer || !current) return;
 
   layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${current.file}")`;
+  layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
+  layer.style.backgroundSize="cover";
 
   if(backgroundLabel){
     backgroundLabel.textContent=`Background : ${current.label}`;

@@ -1,7 +1,7 @@
-SEVEN_TERMINAL_FINAL_20_ONLY_BACKGROUNDS
+SEVEN_TERMINAL_FINAL_01_20_CROP_TRACE_FIX
 
 Commit conseillé :
-Remove legacy source background from terminal rotation
+Fix background crop positions and advanced trace readability
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
@@ -11,13 +11,11 @@ Fichiers à remplacer :
 - style.css
 - script.js
 
-Effet :
-- l’ancien background background_chateau_ciel_source.png n’est plus utilisé
-- la rotation commence directement à 01 · Citadelle Céleste
-- seuls les 20 backgrounds générés sont utilisés
+Corrections :
+- l’ancien background reste supprimé
+- rotation uniquement sur les 20 backgrounds générés
+- cadrage par image via backgroundPositions
+- image 15 remontée pour voir le haut de la Porte du Royaume
+- Advanced System Trace renforcé en lisibilité
+- mode transparent garde une transparence visuelle mais le diagnostic reste lisible
 - cache bust mis à jour
-
-Images requises :
-seven_bg_01_citadelle_celeste.png
-...
-seven_bg_20_forteresse_des_nuages.png
