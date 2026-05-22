@@ -1,9 +1,10 @@
-SEVEN PORTABLE TERMINAL — CLEAN TRACE AUDIT
+SEVEN PORTABLE TERMINAL — PRODUCTION LINKS FIX
 
-Fichiers vérifiés : index.html, style.css, script.js.
+Modification ciblée :
+- section Production nettoyée ;
+- anciens boutons Wan / Sécurité image retirés ;
+- liens ajoutés : Running Hub, Eleven Labs, CivitAI, CivitAI Red ;
+- aucun changement sur backgrounds, CSS global, JS, Advanced Trace ou transparence.
 
-Correction : nettoyage des blocs CSS Advanced Trace empilés.
-Un seul bloc final gère maintenant : normal, transparent, lisibilité, Remote trace et bouton Refresh.
-
-Images non modifiées.
-Commit conseillé : Clean advanced trace opacity conflicts
+Commit conseillé :
+Update production section links
