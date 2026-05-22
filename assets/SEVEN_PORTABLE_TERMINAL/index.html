@@ -1,36 +1,24 @@
 <!doctype html>
-<html lang="fr">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven Portable Terminal — Laputa Core</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laputa Interface</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="terminal" aria-label="Seven Portable Terminal">
-    <section class="hero-panel">
-      <div class="sigil">✦</div>
-      <p class="kicker">ERITH.IA · SEVEN HEAVEN</p>
-      <h1>Seven Portable<br />Terminal</h1>
-      <p class="subtitle">Cité céleste · Mémoire opérative · Interface privée</p>
 
-      <div class="actions">
-        <button id="copyPrompt">Copier le prompt</button>
-        <button id="startSeven">Démarrer Seven</button>
-      </div>
+<div class="bg"></div>
 
-      <p id="status" class="status">Prêt.</p>
-    </section>
+<div class="ui">
+  <div class="panel">
+    <h1>LAPUTA CORE</h1>
+    <button onclick="status()">STATUS</button>
+    <button onclick="reset()">RESET</button>
+    <div id="out"></div>
+  </div>
+</div>
 
-    <nav class="dock" aria-label="Modules rapides">
-      <button>LLM</button>
-      <button>Notion</button>
-      <button>GitHub</button>
-      <button>Production</button>
-      <button>Système</button>
-    </nav>
-  </main>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
