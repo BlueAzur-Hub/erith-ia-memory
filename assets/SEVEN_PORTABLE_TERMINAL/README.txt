@@ -1,7 +1,7 @@
-SEVEN_TERMINAL_FINAL_TRACE_TINY_CARDS
+SEVEN_TERMINAL_FINAL_BG09_TOP_FINAL
 
 Commit conseillé :
-Shrink advanced trace cards
+Adjust background 09 crop upward
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
@@ -11,11 +11,7 @@ Fichiers à remplacer :
 - style.css
 - script.js
 
-Correction :
-- cartes Advanced Trace visuellement plus petites
-- hauteur réduite
-- padding réduit
-- grille plus compacte
-- bouton Refresh réduit
-- transparence conservée
-- cadrage background 08 conservé
+Correction finale :
+- recadrage de seven_bg_09_arbre_du_ciel.png vers le haut
+- meilleure visibilité de la canopée et des arches hautes
+- aucune autre modification

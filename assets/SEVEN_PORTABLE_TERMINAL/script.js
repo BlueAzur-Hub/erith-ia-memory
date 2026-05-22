@@ -104,7 +104,7 @@ const backgroundPositions={
   "seven_bg_06_jardin_du_cristal.png":"center 38%",
   "seven_bg_07_coeur_de_pierre.png":"center 42%",
   "seven_bg_08_ponts_ancestraux.png":"center 14%",
-  "seven_bg_09_arbre_du_ciel.png":"center 32%",
+  "seven_bg_09_arbre_du_ciel.png":"center 12%",
   "seven_bg_10_terrasse_etoile.png":"center 34%",
   "seven_bg_11_plateforme_du_vent.png":"center center",
   "seven_bg_12_falaises_de_memoire.png":"center 35%",
