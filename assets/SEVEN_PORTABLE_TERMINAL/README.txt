@@ -1,7 +1,7 @@
-SEVEN_TERMINAL_FINAL_01_20_CROP_TRACE_FIX
+SEVEN_TERMINAL_FINAL_TRACE_TRANSPARENT_FIX
 
 Commit conseillé :
-Fix background crop positions and advanced trace readability
+Make advanced system trace transparent
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
@@ -11,11 +11,9 @@ Fichiers à remplacer :
 - style.css
 - script.js
 
-Corrections :
-- l’ancien background reste supprimé
-- rotation uniquement sur les 20 backgrounds générés
-- cadrage par image via backgroundPositions
-- image 15 remontée pour voir le haut de la Porte du Royaume
-- Advanced System Trace renforcé en lisibilité
-- mode transparent garde une transparence visuelle mais le diagnostic reste lisible
-- cache bust mis à jour
+Correction :
+- Advanced System Trace devient plus transparent
+- Trace cards plus transparentes
+- texte protégé par une ombre légère pour rester lisible
+- aucun changement sur la rotation 01-20
+- aucun changement image

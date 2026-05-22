@@ -84,3 +84,33 @@ body.transparent .control-strip,
 body.transparent .terminal-footer{
   background:rgba(9,15,29,.30);
 }
+
+
+/* Seven fix — Advanced System Trace transparent */
+.advanced-panel{
+  background:rgba(9,15,29,.24) !important;
+  backdrop-filter:blur(2px) !important;
+  border-color:rgba(245,213,141,.48) !important;
+}
+
+.trace-card{
+  background:rgba(9,15,29,.20) !important;
+  backdrop-filter:blur(2px) !important;
+}
+
+body.transparent .advanced-panel{
+  background:rgba(9,15,29,.12) !important;
+  backdrop-filter:blur(.6px) !important;
+}
+
+body.transparent .trace-card{
+  background:rgba(9,15,29,.10) !important;
+  backdrop-filter:blur(.6px) !important;
+}
+
+body.transparent .advanced-panel strong,
+body.transparent .trace-card strong,
+body.transparent .trace-card small,
+body.transparent .trace-card em{
+  text-shadow:0 1px 3px rgba(0,0,0,.75);
+}
