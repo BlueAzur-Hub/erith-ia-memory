@@ -3,120 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven Portable Terminal — Sky Sanctuary V9</title>
+  <title>Seven Portable Terminal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="world" aria-hidden="true">
-    <div class="sky sky-a"></div>
-    <div class="sky sky-b"></div>
-    <div class="sun-vault"></div>
-    <div class="ruin ruin-left"></div>
-    <div class="ruin ruin-right"></div>
-    <div class="clouds cloud-back"></div>
-    <div class="clouds cloud-front"></div>
-    <div class="particles"></div>
-    <div class="vignette"></div>
-  </div>
+  <div class="background" aria-hidden="true"></div>
+  <div class="atmosphere" aria-hidden="true"></div>
 
   <main class="terminal" id="terminal">
-    <aside class="dock left-dock" aria-label="Navigation principale">
-      <div class="sigil">✦</div>
-      <button class="nav active" data-page="home">Accueil</button>
-      <button class="nav" data-page="llm">LLM</button>
-      <button class="nav" data-page="notion">Notion</button>
-      <button class="nav" data-page="github">GitHub</button>
-      <button class="nav" data-page="production">Production</button>
-      <button class="nav" data-page="system">Système</button>
-    </aside>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">ERITH.IA // Seven Portable Terminal</p>
+        <h1>Sky Castle Console</h1>
+        <p class="subtitle">Interface posée sur le Château du Ciel — background source GitHub.</p>
+      </div>
+      <div class="status">
+        <span class="dot"></span>
+        <strong>ONLINE</strong>
+      </div>
+    </header>
 
-    <section class="sanctuary">
-      <header class="hero glass-panel">
-        <div>
-          <p class="eyebrow">SEVEN PORTABLE TERMINAL</p>
-          <h1>Aerith Sky Sanctuary</h1>
-          <p class="subtitle">Cockpit céleste · mémoire vivante · interface de production</p>
-        </div>
-        <div class="status-orb"><span></span><strong>V9</strong></div>
-      </header>
+    <nav class="nav" aria-label="Navigation principale">
+      <button data-page="home" class="active">Accueil</button>
+      <button data-page="llm">LLM</button>
+      <button data-page="notion">Notion</button>
+      <button data-page="github">GitHub</button>
+      <button data-page="production">Production</button>
+      <button data-page="system">Système</button>
+    </nav>
 
-      <section class="core-stage">
-        <div class="wing wing-left glass-panel">
-          <p class="panel-kicker">Modules</p>
-          <button data-copy="seven">Seven Heaven Boost</button>
-          <button data-copy="video">Video Cards Boost</button>
-          <button data-copy="blackout">Mode Blackout</button>
-        </div>
-
-        <div class="crystal-core" role="img" aria-label="Cristal central du terminal Seven">
-          <div class="ring ring-1"></div>
-          <div class="ring ring-2"></div>
-          <div class="ring ring-3"></div>
-          <div class="crystal"></div>
-          <div class="core-label">SEVEN</div>
-        </div>
-
-        <div class="wing wing-right glass-panel">
-          <p class="panel-kicker">Actions</p>
-          <button id="openChat">Ouvrir ChatGPT</button>
-          <button id="toggleFocus">Mode sanctuaire</button>
-          <button id="copyLink">Copier adresse</button>
-        </div>
-      </section>
-
-      <section class="page-stack glass-panel">
-        <article class="page active" id="page-home">
-          <h2>Accueil</h2>
-          <p>Terminal reconstruit comme un lieu : horizon céleste, cristal central, panneaux de verre et navigation suspendue.</p>
-          <div class="cards">
-            <div><strong>Phase</strong><span>Rebuild V9</span></div>
-            <div><strong>DA</strong><span>Sky Sanctuary</span></div>
-            <div><strong>But</strong><span>âme visuelle d’abord</span></div>
-          </div>
-        </article>
-        <article class="page" id="page-llm">
-          <h2>LLM</h2>
-          <p>Prompts et blocs d’activation. Le texte reste copiable depuis le tiroir.</p>
-        </article>
-        <article class="page" id="page-notion">
-          <h2>Notion</h2>
-          <p>Zone de mémoire éditoriale humaine : modules, notes, DA, production et archivage.</p>
-        </article>
-        <article class="page" id="page-github">
-          <h2>GitHub</h2>
-          <p>Mémoire machine : fichiers versionnés, terminal public, assets, workflows et modules.</p>
-        </article>
-        <article class="page" id="page-production">
-          <h2>Production</h2>
-          <p>Image parfaite → animation stable → last frame → DaVinci → publication.</p>
-        </article>
-        <article class="page" id="page-system">
-          <h2>Système</h2>
-          <div class="cards" id="systemCards">
-            <div><strong>Viewport</strong><span id="viewSize">—</span></div>
-            <div><strong>Fuseau</strong><span id="tz">—</span></div>
-            <div><strong>Mode</strong><span>Safe trace</span></div>
-          </div>
-        </article>
-      </section>
+    <section class="toolbar" aria-label="Actions rapides">
+      <button id="readabilityBtn">Lisibilité</button>
+      <button id="copyPromptBtn">Copier prompt Seven</button>
+      <button id="openChatBtn">Ouvrir ChatGPT</button>
+      <button id="openGithubBtn">Ouvrir GitHub</button>
     </section>
 
-    <aside class="dock right-dock" aria-label="Accès rapides">
-      <a href="https://chatgpt.com/" target="_blank" rel="noreferrer">ChatGPT</a>
-      <a href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer">GitHub</a>
-      <a href="https://www.notion.so/" target="_blank" rel="noreferrer">Notion</a>
-      <a href="https://www.youtube.com/" target="_blank" rel="noreferrer">YouTube</a>
-    </aside>
+    <section class="page active" id="page-home">
+      <article class="panel wide">
+        <h2>Accueil</h2>
+        <p>Cette version ne génère rien. Elle utilise l’image déjà présente dans le dépôt comme fond principal.</p>
+        <p class="note">Objectif : retrouver une interface portée par le background, pas une boîte vide.</p>
+      </article>
+
+      <article class="panel">
+        <h3>Règle média</h3>
+        <p>Texte uniquement. Aucune image générée.</p>
+      </article>
+
+      <article class="panel">
+        <h3>Background</h3>
+        <p>background_chateau_ciel_source.png</p>
+      </article>
+    </section>
+
+    <section class="page" id="page-llm">
+      <article class="panel wide">
+        <h2>LLM</h2>
+        <p>Prompt Seven copiable depuis la toolbar. Le bouton ChatGPT ouvre un nouvel onglet sans remplacer le terminal.</p>
+      </article>
+    </section>
+
+    <section class="page" id="page-notion">
+      <article class="panel wide">
+        <h2>Notion</h2>
+        <p>Zone prévue pour les liens Notion et blocs de mémoire.</p>
+      </article>
+    </section>
+
+    <section class="page" id="page-github">
+      <article class="panel wide">
+        <h2>GitHub</h2>
+        <p>Dossier cible : assets/SEVEN_PORTABLE_TERMINAL/</p>
+      </article>
+    </section>
+
+    <section class="page" id="page-production">
+      <article class="panel wide">
+        <h2>Production</h2>
+        <p>Zone prévue pour pipeline image, animation, DaVinci, YouTube, sans génération automatique.</p>
+      </article>
+    </section>
+
+    <section class="page" id="page-system">
+      <article class="panel wide">
+        <h2>Système</h2>
+        <div class="trace-grid" id="traceGrid"></div>
+      </article>
+    </section>
+
+    <footer>
+      <span>Transformer Book = pupitre Seven</span>
+      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
+    </footer>
   </main>
-
-  <section class="drawer" id="drawer" aria-live="polite">
-    <div class="drawer-head"><strong>Bloc copié</strong><button id="closeDrawer">×</button></div>
-    <textarea id="drawerText" readonly></textarea>
-  </section>
-
-  <footer>
-    Transformer Book = pupitre Seven · Ryzen 7 = moteur de production · Large Language Personality [Model - The Flower Girl] v.5
-  </footer>
 
   <script src="script.js"></script>
 </body>

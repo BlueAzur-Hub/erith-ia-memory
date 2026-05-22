@@ -1,35 +1,80 @@
-const pages = document.querySelectorAll('.page');
-const navs = document.querySelectorAll('.nav');
-const drawer = document.getElementById('drawer');
-const drawerText = document.getElementById('drawerText');
-const prompts = {
-  seven: `Chat, active Aerith-7 Seven Heaven / Full Modules Boost. Mode texte uniquement par défaut. Chargement minimal, choix précis.`,
-  video: `Active Seven Heaven — Video Cards Boost. Cartes utiles seulement : Chef d’Orchestre, LEGO Continuity, Anti-Dérive Wan, Format Shorts, Sound Design.`,
-  blackout: `MODE BLACKOUT. Aucun outil image. Aucun redimensionnement. Texte uniquement : diagnostic, prompts, décisions, noms de fichiers, archivage.`
-};
-function showPage(name){
-  pages.forEach(p=>p.classList.toggle('active', p.id === `page-${name}`));
-  navs.forEach(n=>n.classList.toggle('active', n.dataset.page === name));
-  localStorage.setItem('seven-page', name);
+const pages = document.querySelectorAll(".page");
+const navButtons = document.querySelectorAll("[data-page]");
+
+const promptSeven = `Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
+
+Mode texte uniquement.
+Aucune génération image sans demande explicite.
+Utilise le Seven Portable Terminal comme pupitre de travail.
+Respecte le pipeline : observer, diagnostiquer, agir seulement sur demande.`;
+
+function showPage(name) {
+  pages.forEach(page => page.classList.toggle("active", page.id === `page-${name}`));
+  navButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.page === name));
+  localStorage.setItem("seven.page", name);
 }
-navs.forEach(btn=>btn.addEventListener('click',()=>showPage(btn.dataset.page)));
-document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',()=>copyText(prompts[btn.dataset.copy]||'')));
-async function copyText(text){
-  drawerText.value = text;
-  try{ await navigator.clipboard.writeText(text); } catch(e){}
-  drawer.classList.add('open'); drawerText.select();
-}
-document.getElementById('closeDrawer').addEventListener('click',()=>drawer.classList.remove('open'));
-document.getElementById('openChat').addEventListener('click',()=>window.open('https://chatgpt.com/','seven_heaven_chatgpt'));
-document.getElementById('toggleFocus').addEventListener('click',()=>document.body.classList.toggle('focus'));
-document.getElementById('copyLink').addEventListener('click',()=>copyText('https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/index.html'));
-function updateSystem(){
-  const vs = document.getElementById('viewSize'); if(vs) vs.textContent = `${innerWidth} × ${innerHeight}`;
-  const tz = document.getElementById('tz'); if(tz) tz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
-}
-addEventListener('resize',updateSystem); updateSystem();
-showPage(localStorage.getItem('seven-page') || 'home');
-document.addEventListener('keydown',e=>{
-  if(e.key>='1'&&e.key<='6'){ showPage(['home','llm','notion','github','production','system'][Number(e.key)-1]); }
-  if(e.key==='Escape'){ drawer.classList.remove('open'); document.body.classList.remove('focus'); }
+
+navButtons.forEach(btn => {
+  btn.addEventListener("click", () => showPage(btn.dataset.page));
 });
+
+document.getElementById("readabilityBtn").addEventListener("click", () => {
+  document.body.classList.toggle("readability");
+  localStorage.setItem("seven.readability", document.body.classList.contains("readability") ? "1" : "0");
+});
+
+document.getElementById("copyPromptBtn").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(promptSeven);
+    alert("Prompt Seven copié.");
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = promptSeven;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    alert("Prompt Seven copié.");
+  }
+});
+
+document.getElementById("openChatBtn").addEventListener("click", () => {
+  window.open("https://chatgpt.com/", "seven_heaven_chatgpt");
+});
+
+document.getElementById("openGithubBtn").addEventListener("click", () => {
+  window.open("https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL", "seven_github");
+});
+
+function renderTrace() {
+  const grid = document.getElementById("traceGrid");
+  const data = [
+    ["OS", navigator.platform || "Non disponible"],
+    ["Navigateur", navigator.userAgent.split(" ").slice(0, 4).join(" ")],
+    ["Écran", `${window.innerWidth} × ${window.innerHeight}`],
+    ["Fuseau", Intl.DateTimeFormat().resolvedOptions().timeZone || "Non disponible"],
+    ["Langue", navigator.language || "Non disponible"],
+    ["SAFE TRACE", "Aucun RustDesk ID / aucun mot de passe"]
+  ];
+
+  grid.innerHTML = data.map(([label, value]) => `
+    <article class="trace-card">
+      <small>${label}</small>
+      <strong>${value}</strong>
+    </article>
+  `).join("");
+}
+
+document.addEventListener("keydown", (event) => {
+  const keys = ["home", "llm", "notion", "github", "production", "system"];
+  const index = Number(event.key) - 1;
+  if (keys[index]) showPage(keys[index]);
+});
+
+if (localStorage.getItem("seven.readability") === "1") {
+  document.body.classList.add("readability");
+}
+
+showPage(localStorage.getItem("seven.page") || "home");
+renderTrace();
+window.addEventListener("resize", renderTrace);
