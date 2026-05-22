@@ -1,16 +1,16 @@
-SEVEN_TRANSPARENCY_REMOTE_COCKPIT
+SEVEN_REMOTE_SMALL_CONTROLS
 
 Commit conseillé :
-Improve Seven terminal transparency and remote cockpit
+Tune Seven remote cockpit controls
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
 
 Corrections :
-- transparence réelle améliorée via variables CSS
-- mode Transparent nettement plus léger
-- mode Lisibilité conservé
-- Remote Cockpit devient une vraie page opérative
-- aucun RustDesk ID / mot de passe dans le HTML public
-- background source conservé
+- boutons plus petits
+- page Remote plus opérative
+- bouton Ouvrir RustDesk via rustdesk://
+- procédure Remote copiable
+- transparence déjà active / conservée
+- aucun ID ni mot de passe dans le HTML public
 - aucune génération image

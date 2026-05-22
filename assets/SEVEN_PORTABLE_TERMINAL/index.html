@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Seven Portable Terminal — Remote Cockpit</title>
+  <title>Seven Portable Terminal — Remote Controls</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,14 +33,14 @@
     </nav>
 
     <section class="control-strip">
-      <button id="startSevenBtn">Seven Boost</button>
-      <button id="copyVideoBtn">Video Cards</button>
+      <button id="startSevenBtn">Seven</button>
+      <button id="copyVideoBtn">Cards</button>
       <button id="copyBlackoutBtn">Blackout</button>
       <button id="nextBackgroundBtn">Fond</button>
       <button id="randomBackgroundBtn">Random</button>
-      <button id="toggleTransparentBtn">Transparent</button>
+      <button id="toggleTransparentBtn">Transp.</button>
       <button id="toggleReadableBtn">Lisibilité</button>
-      <button id="toggleAdvancedBtn">Advanced</button>
+      <button id="toggleAdvancedBtn">Trace</button>
       <button id="openPaletteBtn">?</button>
     </section>
 
@@ -55,15 +55,15 @@
           <div>
             <p class="small-label">État</p>
             <h2>Cockpit prêt</h2>
-            <p>Interface lisible, panneaux allégés, transparence optionnelle, accès Remote centralisé.</p>
+            <p>Interface lisible, panneaux allégés, accès Remote centralisé.</p>
           </div>
-          <button id="copyTerminalLinkBtn">Copier lien terminal</button>
+          <button id="copyTerminalLinkBtn">Copier lien</button>
         </div>
 
         <div class="tile-grid">
-          <button class="tile primary" id="homeSevenBtn"><strong>Seven Heaven</strong><span>Copier le prompt et ouvrir ChatGPT</span></button>
-          <button class="tile" id="homePromptBtn"><strong>Voir prompt</strong><span>Ouvrir le tiroir de copie</span></button>
-          <button class="tile" data-jump="system"><strong>Remote Cockpit</strong><span>Prise en main à distance</span></button>
+          <button class="tile primary" id="homeSevenBtn"><strong>Seven Heaven</strong><span>Copier prompt + ouvrir ChatGPT</span></button>
+          <button class="tile" id="homePromptBtn"><strong>Voir prompt</strong><span>Tiroir de copie</span></button>
+          <button class="tile" data-jump="system"><strong>Remote</strong><span>Prise en main à distance</span></button>
         </div>
 
         <section class="advanced-panel" id="advancedPanel" hidden>
@@ -80,8 +80,8 @@
         <div class="tile-grid">
           <button class="tile primary" data-copy="seven"><strong>Seven Heaven</strong><span>Activation principale</span></button>
           <button class="tile" data-copy="video"><strong>Video Cards</strong><span>Production vidéo guidée</span></button>
-          <button class="tile" data-copy="blackout"><strong>Blackout</strong><span>Texte uniquement, aucun outil image</span></button>
-          <button class="tile" data-copy="modules"><strong>Modules</strong><span>Chargement minimal, choix précis</span></button>
+          <button class="tile" data-copy="blackout"><strong>Blackout</strong><span>Texte uniquement</span></button>
+          <button class="tile" data-copy="modules"><strong>Modules</strong><span>Chargement minimal</span></button>
         </div>
       </article>
 
@@ -89,7 +89,7 @@
         <div class="section-title"><strong>Notion</strong><span>Mémoire éditoriale humaine.</span></div>
         <div class="tile-grid">
           <a class="tile" href="https://www.notion.so/" target="_blank" rel="noreferrer"><strong>Notion</strong><span>Accueil Notion</span></a>
-          <button class="tile" data-copy="notion"><strong>Bloc Notion</strong><span>Copier le bloc de liens</span></button>
+          <button class="tile" data-copy="notion"><strong>Bloc Notion</strong><span>Copier bloc de liens</span></button>
         </div>
       </article>
 
@@ -97,16 +97,16 @@
         <div class="section-title"><strong>GitHub</strong><span>Mémoire machine et fichiers.</span></div>
         <div class="tile-grid">
           <a class="tile primary" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer"><strong>Repo public</strong><span>erith-ia-memory</span></a>
-          <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noreferrer"><strong>Dossier terminal</strong><span>assets/SEVEN_PORTABLE_TERMINAL</span></a>
-          <button class="tile" data-copy="link"><strong>Lien public</strong><span>Copier l’URL GitHub Pages</span></button>
+          <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/assets/SEVEN_PORTABLE_TERMINAL" target="_blank" rel="noreferrer"><strong>Dossier terminal</strong><span>SEVEN_PORTABLE_TERMINAL</span></a>
+          <button class="tile" data-copy="link"><strong>Lien public</strong><span>Copier GitHub Pages</span></button>
         </div>
       </article>
 
       <article class="page" id="page-production">
         <div class="section-title"><strong>Production</strong><span>Image, vidéo, montage, publication.</span></div>
         <div class="tile-grid">
-          <button class="tile" data-copy="wan"><strong>Wan / I2V</strong><span>Checklist production vidéo</span></button>
-          <button class="tile" data-copy="blackout"><strong>Sécurité image</strong><span>Aucune génération sans demande explicite</span></button>
+          <button class="tile" data-copy="wan"><strong>Wan / I2V</strong><span>Checklist vidéo</span></button>
+          <button class="tile" data-copy="blackout"><strong>Sécurité image</strong><span>Aucune génération non demandée</span></button>
         </div>
       </article>
 
@@ -117,34 +117,37 @@
           <div>
             <p class="small-label">Remote status</p>
             <h2>Mode sécurité</h2>
-            <p>Le terminal guide la prise en main, mais ne publie jamais ton RustDesk ID, ton mot de passe ou une IP sensible.</p>
+            <p>Le terminal prépare la prise en main. Aucun ID, mot de passe ou IP sensible n’est publié dans la page.</p>
           </div>
-          <button data-copy="remote">Copier procédure sûre</button>
+          <div class="remote-status-actions">
+            <button data-copy="remote">Copier procédure</button>
+            <button id="openRustDeskBtn">Ouvrir RustDesk</button>
+          </div>
         </div>
 
         <div class="remote-grid">
           <section class="remote-card">
-            <strong>1 · Poste source</strong>
-            <span>Transformer Book ouvert sur Seven Portable Terminal.</span>
+            <strong>1 · Ouvrir RustDesk</strong>
+            <span>Bouton local. Selon le navigateur, confirmation possible.</span>
           </section>
           <section class="remote-card">
-            <strong>2 · RustDesk local</strong>
-            <span>Identifiants visibles uniquement sur ton écran, jamais dans le HTML public.</span>
+            <strong>2 · Lire l’ID localement</strong>
+            <span>Ne pas coller l’ID dans une page publique ou une capture.</span>
           </section>
           <section class="remote-card">
-            <strong>3 · Contrôle</strong>
-            <span>ChatGPT, GitHub, Notion et Production deviennent les docks opératifs.</span>
+            <strong>3 · Connexion distante</strong>
+            <span>Entrer l’ID dans RustDesk côté poste de contrôle.</span>
           </section>
           <section class="remote-card">
-            <strong>4 · SAFE TRACE</strong>
-            <span>Diagnostic navigateur local filtré uniquement.</span>
+            <strong>4 · Piloter Seven</strong>
+            <span>ChatGPT · GitHub · Notion · Production · Remote.</span>
           </section>
         </div>
 
         <div class="tile-grid remote-actions">
-          <button class="tile primary" data-copy="remote"><strong>Procédure Remote</strong><span>Copier la procédure sûre</span></button>
-          <button class="tile" id="refreshTraceBtnSystem"><strong>Refresh Trace</strong><span>Actualiser le diagnostic local</span></button>
-          <button class="tile" data-copy="link"><strong>Lien terminal</strong><span>Copier l’adresse du cockpit</span></button>
+          <button class="tile primary" data-copy="remote"><strong>Procédure Remote</strong><span>Copier le guide sûr</span></button>
+          <button class="tile" id="refreshTraceBtnSystem"><strong>Refresh Trace</strong><span>Diagnostic local</span></button>
+          <button class="tile" data-copy="link"><strong>Lien terminal</strong><span>Copier l’adresse</span></button>
         </div>
 
         <div class="trace-grid" id="systemTraceGrid"></div>
@@ -170,7 +173,7 @@
       <button data-jump="notion">3 — Notion</button>
       <button data-jump="github">4 — GitHub</button>
       <button data-jump="production">5 — Production</button>
-      <button data-jump="system">6 — Remote Cockpit</button>
+      <button data-jump="system">6 — Remote</button>
     </div>
   </section>
 
