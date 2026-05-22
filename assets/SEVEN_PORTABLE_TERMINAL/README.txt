@@ -1,7 +1,7 @@
-SEVEN_TERMINAL_FINAL_ADVANCED_TRACE_COMPACT
+SEVEN_TERMINAL_FINAL_TRACE_MORE_TRANSPARENT_BG08_TOP
 
 Commit conseillé :
-Compact advanced trace cards
+Refine transparent trace and background 08 crop
 
 À uploader dans :
 assets/SEVEN_PORTABLE_TERMINAL/
@@ -11,9 +11,8 @@ Fichiers à remplacer :
 - style.css
 - script.js
 
-Correction :
-- cartes Advanced System Trace plus petites
-- grille plus compacte
-- padding réduit
-- textes réduits
-- transparence et rotation 01-20 conservées
+Corrections :
+- Advanced System Trace plus transparent quand le bouton Transp. est actif
+- Lisibilité reste prioritaire si activée
+- cadrage de seven_bg_08_ponts_ancestraux.png remonté pour voir le haut
+- aucun changement sur les autres backgrounds
