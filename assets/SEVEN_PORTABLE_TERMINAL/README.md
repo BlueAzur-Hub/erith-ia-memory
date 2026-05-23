@@ -1,33 +1,53 @@
-# SEVEN TRANSFORMER BOOK SKY COCKPIT V1
+# SEVEN_PORTABLE_TERMINAL
 
-Interface HTML/CSS/JS autonome pour le Transformer Book.
+État : interface finale stabilisée  
+Thème actif : Château dans le Ciel  
+Personnalité active : The Flower Girl  
+Usage : pupitre local / accès rapide / cockpit Seven / remote control  
+Statut : version stable
 
-## Installation
+---
 
-Uploader tout le dossier dans :
+## Rôle du terminal
 
-assets/SEVEN_PORTABLE_TERMINAL/
+Ce dossier contient le terminal portable Seven : une interface locale légère servant de pupitre d’accès rapide pour le travail avec ERITH.IA / Seven.
 
-Fichiers nécessaires :
+Le terminal centralise les accès utiles sans exposer de secrets : ChatGPT, Notion, GitHub, production, remote control et blocs copiables.
 
-- index.html
-- style.css
-- script.js
-- assets/sky_castle_template.png
-- assets/sky_castle_dashboard_reference.png
+---
 
-## Règles
+## Fichiers principaux
 
-- Texte uniquement par défaut.
-- Le bouton Démarrer Seven copie le prompt puis ouvre ChatGPT dans un nouvel onglet.
-- Le terminal n’est pas remplacé par ChatGPT.
-- Les fonds changent à chaque chargement, sauf si un favori est sauvegardé.
-- Le mode Lisibilité ajoute un voile sombre.
-- Le mode Transparent garde l’interface légère.
-- Aucun damier imprimé.
-- Aucun faux transparent.
-- Les boutons et panneaux sont faits en CSS RGBA, pas en PNG découpé.
+- `index.html` : structure principale de l’interface.
+- `style.css` : direction visuelle, transparence, lisibilité et intégration des backgrounds.
+- `script.js` : navigation, boutons, copie des prompts, rotation des backgrounds et traces système sûres.
+- `background_*` : backgrounds validés pour l’ambiance Château dans le Ciel.
 
-## Commit recommandé
+---
 
-Add Transformer Book sky cockpit interface
+## Règles de stabilité
+
+- Ne pas transformer cette interface en dashboard générique.
+- Préserver la logique cockpit / sanctuaire / terminal aérien.
+- Préserver la lisibilité des panneaux sur les backgrounds.
+- Ne jamais intégrer d’ID RustDesk, mot de passe, IP ou secret dans le HTML public.
+- Ne pas déclencher de génération d’image depuis ce terminal.
+- Garder les actions simples : copier, ouvrir, naviguer, vérifier.
+
+---
+
+## Règles mémoire
+
+- GitHub sert d’archive machine structurée et versionnée.
+- Notion sert de mémoire éditoriale humaine.
+- ChatGPT / Seven sert d’opératrice temporaire : lecture, synthèse, production, décision.
+
+---
+
+## État validé
+
+Interface finale stabilisée.  
+Thème actif : Château dans le Ciel.  
+Personnalité active : The Flower Girl.
+
+Cette version doit être considérée comme une base stable avant toute nouvelle évolution.
