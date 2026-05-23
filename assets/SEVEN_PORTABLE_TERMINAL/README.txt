@@ -1,10 +1,6 @@
-SEVEN_TERMINAL_FINAL_BG03_TOP_FIX
+SEVEN_TERMINAL_FINAL_TOP_CROPS_FIX
 
-Correction ciblée BLACK OUT :
-- aucune image générée
-- aucun asset modifié
-- HTML/CSS conservés
-- script.js : background 03 / Tour Céleste recadré vers le haut via backgroundPositions = center 8%
-- cache version bumped to 20260523-0083
+Correction uniquement dans script.js : recadrage vers le haut des backgrounds 01, 06, 12, 14, 17, 20.
+Aucune image modifiee. Aucun CSS modifie. Aucun HTML structurel modifie. Cache version 0082.
 
-Commit conseillé : Adjust background 03 crop upward
+Commit conseille : Adjust selected background crops upward
