@@ -1,18 +1,10 @@
-SEVEN TERMINAL — CLEAN TRACE CSS FIX
+SEVEN_TERMINAL_FINAL_BG03_TOP_FIX
 
-Contenu :
-- index.html
-- style.css
-- script.js
-- README.txt
+Correction ciblée BLACK OUT :
+- aucune image générée
+- aucun asset modifié
+- HTML/CSS conservés
+- script.js : background 03 / Tour Céleste recadré vers le haut via backgroundPositions = center 8%
+- cache version bumped to 20260523-0083
 
-Modification :
-- Nettoyage du CSS Advanced System Trace.
-- Suppression des anciens blocs contradictoires empilés.
-- Conservation du comportement actuel : normal, transparent, lisibilité.
-- Aucun changement HTML.
-- Aucun changement JS.
-- Aucune image incluse ni modifiée.
-
-Commit conseillé :
-Clean advanced trace CSS conflicts
+Commit conseillé : Adjust background 03 crop upward

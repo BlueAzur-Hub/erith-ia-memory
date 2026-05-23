@@ -98,7 +98,7 @@ function showPage(name, persist=true){
 const backgroundPositions={
   "seven_bg_01_citadelle_celeste.png":"center center",
   "seven_bg_02_aqueduc_du_ciel.png":"center center",
-  "seven_bg_03_tour_celeste.png":"center center",
+  "seven_bg_03_tour_celeste.png":"center 8%",
   "seven_bg_04_sanctuaire_des_nuages.png":"center center",
   "seven_bg_05_archipels_suspendus.png":"center center",
   "seven_bg_06_jardin_du_cristal.png":"center 38%",
