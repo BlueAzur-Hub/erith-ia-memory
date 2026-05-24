@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-0003">
+  <link rel="stylesheet" href="style.css?v=20260524-JSON-FINAL">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -178,57 +178,49 @@
       <article class="page" id="page-youtube">
         <div class="section-title">
           <strong>YouTube Memory</strong>
-          <span>Blue Azur · données API · familles mémoire · décisions Aerith.</span>
+          <span>GitHub Pages · JSON publics · cockpit portable.</span>
         </div>
 
         <div class="hero-card">
           <div>
-            <p class="small-label">YouTube Memory Reader V6</p>
-            <h2>Lecture locale des rapports API</h2>
-            <p>Charge les fichiers JSON / MD générés dans <strong>output</strong> ou <strong>latest</strong>. Aucun secret OAuth n’est lu par cette interface.</p>
+            <p class="small-label">État YouTube</p>
+            <h2 id="ytStatusTitle">Lecture des données publiques</h2>
+            <p id="ytStatus">Chargement de data/top_videos.json, data/memory_families.json et data/brief.json…</p>
           </div>
-          <label class="tile primary" style="max-width:220px;cursor:pointer;">
-            <strong>Charger fichiers</strong>
-            <span>JSON / MD</span>
-            <input id="youtubeFilesInput" type="file" multiple accept=".json,.md,.txt" style="display:none;">
-          </label>
-          <button class="tile primary" id="syncYoutubeBtn" type="button" style="max-width:220px;">
-            <strong>Synchroniser YouTube</strong>
-            <span>Backend automatique</span>
-          </button>
+          <button id="refreshYoutubeDataBtn">Rafraîchir</button>
         </div>
 
         <div class="tile-grid">
-          <section class="tile">
+          <section class="tile primary">
             <strong>Top vidéos</strong>
-            <span id="ytMetricVideos">Aucune donnée</span>
+            <span id="ytMetricVideos">Chargement…</span>
           </section>
           <section class="tile">
             <strong>Familles mémoire</strong>
-            <span id="ytMetricFamilies">Aucune donnée</span>
+            <span id="ytMetricFamilies">Chargement…</span>
           </section>
           <section class="tile">
-            <strong>État</strong>
-            <span id="ytStatus">En attente de fichiers</span>
+            <strong>Action Aerith</strong>
+            <span id="ytAction">En attente des données.</span>
           </section>
         </div>
 
         <div class="remote-grid" style="margin-top:16px;">
           <section class="remote-card">
             <strong>Vidéo locomotive</strong>
-            <span id="ytTopVideo">Charge les top vidéos enrichies.</span>
+            <span id="ytTopVideo">Aucune donnée chargée.</span>
           </section>
           <section class="remote-card">
             <strong>Famille dominante</strong>
-            <span id="ytTopFamily">Charge le rapport familles mémoire.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Action Aerith</strong>
-            <span id="ytAction">En attente de données.</span>
+            <span id="ytTopFamily">Aucune donnée chargée.</span>
           </section>
           <section class="remote-card">
             <strong>Brief chargé</strong>
             <span id="ytBriefStatus">Aucun brief.</span>
+          </section>
+          <section class="remote-card">
+            <strong>Mode</strong>
+            <span>GitHub Pages · zéro backend local · zéro .bat</span>
           </section>
         </div>
 
@@ -236,9 +228,9 @@
           <div class="advanced-head">
             <div>
               <strong>YouTube Memory Brief</strong>
-              <span>lecture locale · pas de clé API · pas de token</span>
+              <span>lecture automatique depuis /data</span>
             </div>
-            <button id="ytClearBtn">Clear</button>
+            <button id="copyYoutubeBriefBtn">Copier brief</button>
           </div>
           <textarea id="ytBriefText" readonly style="width:100%;min-height:260px;margin-top:12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.32);color:inherit;padding:14px;font:13px/1.45 Consolas,monospace;"></textarea>
         </section>
@@ -314,7 +306,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-0003"></script>
+  <script src="script.js?v=20260524-JSON-FINAL"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -382,143 +374,165 @@
     })();
   </script>
   <script>
-    /* Seven Portable Terminal — YouTube Memory Panel 20260524-0001
-       Lecture locale des exports YouTube Reader V6/V3.
-       Ne lit aucun secret OAuth, aucun token, aucune clé API. */
+    /* Seven Portable Terminal — YouTube JSON Loader Final
+       GitHub Pages only. No local backend. No .bat. No localhost. */
     (function () {
-      const ytState = { videos: null, families: null, briefs: [] };
+      const DATA_FILES = {
+        videos: './data/top_videos.json',
+        families: './data/memory_families.json',
+        brief: './data/brief.json'
+      };
 
       function byId(id) { return document.getElementById(id); }
-      function num(value) {
-        const n = Number(value || 0);
-        return Number.isFinite(n) ? n : 0;
-      }
-      function fmt(value) { return Math.round(num(value)).toLocaleString('fr-FR'); }
-      function metric(video, key) { return num(video && video.analytics ? video.analytics[key] : 0); }
-      function esc(value) {
-        return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+      function setText(id, value) { const el = byId(id); if (el) el.textContent = value; }
+      function safeNumber(value) { const n = Number(value || 0); return Number.isFinite(n) ? n : 0; }
+      function formatNumber(value) { return Math.round(safeNumber(value)).toLocaleString('fr-FR'); }
+      function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
           '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-        }[c]));
+        }[char]));
       }
 
-      function renderYoutubeMemory() {
-        const videos = Array.isArray(ytState.videos) ? ytState.videos : [];
-        const families = ytState.families && typeof ytState.families === 'object' ? ytState.families : null;
-        const familyEntries = families ? Object.entries(families).sort((a,b) => num((b[1]||{}).views) - num((a[1]||{}).views)) : [];
-
-        const metricVideos = byId('ytMetricVideos');
-        const metricFamilies = byId('ytMetricFamilies');
-        const status = byId('ytStatus');
-        const topVideo = byId('ytTopVideo');
-        const topFamily = byId('ytTopFamily');
-        const action = byId('ytAction');
-        const briefStatus = byId('ytBriefStatus');
-        const briefText = byId('ytBriefText');
-
-        if (metricVideos) metricVideos.textContent = videos.length ? `${videos.length} vidéos chargées` : 'Aucune donnée';
-        if (metricFamilies) metricFamilies.textContent = familyEntries.length ? `${familyEntries.length} familles` : 'Aucune donnée';
-        if (status) status.textContent = (videos.length || familyEntries.length || ytState.briefs.length) ? 'Données chargées' : 'En attente de fichiers';
-
-        if (videos.length && topVideo) {
-          const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
-          const v = sorted[0];
-          const title = v.title || 'Titre non récupéré';
-          const url = v.url || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : '');
-          topVideo.innerHTML =
-            `<b>${esc(title)}</b><br>` +
-            `<em>${esc(v.memoryFamily || 'Autre / à classifier')}</em><br>` +
-            `${fmt(metric(v,'views'))} vues · ${fmt(metric(v,'estimatedMinutesWatched'))} min watchtime<br>` +
-            (url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)}</a>` : '');
-        } else if (topVideo) {
-          topVideo.textContent = 'Charge les top vidéos enrichies.';
+      function normalizeFamilies(raw) {
+        if (Array.isArray(raw)) return raw;
+        if (raw && typeof raw === 'object') {
+          return Object.entries(raw).map(([name, value]) => ({
+            name,
+            views: safeNumber(value && value.views),
+            watchtime: safeNumber(value && (value.estimatedMinutesWatched || value.watchtime)),
+            videos: value && Array.isArray(value.videos) ? value.videos : []
+          }));
         }
+        return [];
+      }
 
-        if (familyEntries.length && topFamily) {
-          const [name, data] = familyEntries[0];
-          topFamily.innerHTML = `<b>${esc(name)}</b><br>${fmt(data.views)} vues · ${fmt(data.watchtime || data.estimatedMinutesWatched)} min watchtime`;
-        } else if (topFamily) {
-          topFamily.textContent = 'Charge le rapport familles mémoire.';
-        }
+      function getViews(video) {
+        if (!video || typeof video !== 'object') return 0;
+        if (video.analytics && video.analytics.views != null) return safeNumber(video.analytics.views);
+        if (video.publicStats && video.publicStats.views != null) return safeNumber(video.publicStats.views);
+        return safeNumber(video.views);
+      }
 
-        if (action) {
+      function getWatchtime(video) {
+        if (!video || typeof video !== 'object') return 0;
+        if (video.analytics && video.analytics.estimatedMinutesWatched != null) return safeNumber(video.analytics.estimatedMinutesWatched);
+        return safeNumber(video.estimatedMinutesWatched || video.watchtime);
+      }
+
+      async function fetchJson(path) {
+        const response = await fetch(path + '?v=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok) throw new Error(path + ' HTTP ' + response.status);
+        return response.json();
+      }
+
+      async function loadYoutubeData() {
+        setText('ytStatusTitle', 'Lecture des données publiques');
+        setText('ytStatus', 'Chargement JSON depuis GitHub Pages…');
+
+        try {
+          const [videosRaw, familiesRaw, briefRaw] = await Promise.all([
+            fetchJson(DATA_FILES.videos),
+            fetchJson(DATA_FILES.families),
+            fetchJson(DATA_FILES.brief)
+          ]);
+
+          const videos = Array.isArray(videosRaw) ? videosRaw.slice() : [];
+          const families = normalizeFamilies(familiesRaw).sort((a, b) => safeNumber(b.views) - safeNumber(a.views));
+          videos.sort((a, b) => getViews(b) - getViews(a));
+
+          setText('ytMetricVideos', videos.length ? videos.length + ' vidéo(s)' : 'Aucune donnée');
+          setText('ytMetricFamilies', families.length ? families.length + ' famille(s)' : 'Aucune donnée');
+
           if (videos.length) {
-            const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
-            const v = sorted[0];
-            action.textContent = `Étudier et reproduire intelligemment le signal : ${v.memoryFamily || 'famille dominante'} · ${v.title || 'titre non récupéré'}`;
+            const top = videos[0];
+            const title = top.title || 'Titre non renseigné';
+            const url = top.url || (top.videoId ? 'https://www.youtube.com/watch?v=' + top.videoId : '');
+            const family = top.memoryFamily || top.family || 'Non classé';
+            const views = formatNumber(getViews(top));
+            const watch = formatNumber(getWatchtime(top));
+            const target = byId('ytTopVideo');
+
+            if (target) {
+              target.innerHTML =
+                '<b>' + escapeHtml(title) + '</b><br>' +
+                escapeHtml(family) + '<br>' +
+                views + ' vues · ' + watch + ' min watchtime' +
+                (url ? '<br><a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '');
+            }
+
+            setText('ytAction', 'Étudier le signal fort : ' + family + ' · ' + title);
           } else {
-            action.textContent = 'En attente de données.';
+            setText('ytTopVideo', 'Aucune donnée vidéo.');
+            setText('ytAction', 'En attente de données YouTube.');
           }
-        }
 
-        if (briefStatus) briefStatus.textContent = ytState.briefs.length ? `${ytState.briefs.length} brief(s) chargé(s)` : 'Aucun brief.';
-        if (briefText) briefText.value = ytState.briefs.join('\n\n---\n\n');
-      }
-
-      async function loadYoutubeFiles(files) {
-        for (const file of files) {
-          const text = await file.text();
-          const name = file.name.toLowerCase();
-
-          if (name.endsWith('.json')) {
-            try {
-              const data = JSON.parse(text);
-              if (Array.isArray(data) && data.some(item => item && item.analytics && item.title)) {
-                ytState.videos = data;
-              } else if (data && typeof data === 'object' && !Array.isArray(data)) {
-                const looksLikeFamilies = Object.keys(data).some(key => {
-                  const item = data[key];
-                  return item && typeof item === 'object' && Array.isArray(item.videos);
-                });
-                if (looksLikeFamilies) ytState.families = data;
-              }
-            } catch (error) {
-              ytState.briefs.push(`# ${file.name}\n\nJSON non lisible : ${error.message}`);
+          if (families.length) {
+            const topFamily = families[0];
+            const target = byId('ytTopFamily');
+            if (target) {
+              target.innerHTML =
+                '<b>' + escapeHtml(topFamily.name || 'Famille') + '</b><br>' +
+                formatNumber(topFamily.views) + ' vues · ' +
+                formatNumber(topFamily.watchtime) + ' min watchtime';
             }
           } else {
-            ytState.briefs.push(`# ${file.name}\n\n${text}`);
+            setText('ytTopFamily', 'Aucune famille mémoire.');
           }
+
+          let briefText = '';
+          if (briefRaw && typeof briefRaw === 'object') {
+            briefText = briefRaw.brief || briefRaw.text || JSON.stringify(briefRaw, null, 2);
+          } else {
+            briefText = String(briefRaw || '');
+          }
+
+          setText('ytBriefStatus', briefText ? 'Brief chargé' : 'Aucun brief.');
+          const briefBox = byId('ytBriefText');
+          if (briefBox) briefBox.value = briefText || 'Seven Heaven online.';
+
+          setText('ytStatusTitle', 'Données chargées');
+          setText('ytStatus', 'Mode GitHub Pages actif : lecture automatique des JSON publics.');
+
+        } catch (error) {
+          setText('ytStatusTitle', 'Erreur chargement JSON');
+          setText('ytStatus', String(error.message || error));
+          setText('ytMetricVideos', 'Erreur');
+          setText('ytMetricFamilies', 'Erreur');
+          setText('ytAction', 'Vérifier le dossier data et les noms JSON.');
+          const briefBox = byId('ytBriefText');
+          if (briefBox) briefBox.value =
+            'Erreur de chargement JSON.\n\nChemins attendus :\n- data/top_videos.json\n- data/memory_families.json\n- data/brief.json\n\n' +
+            String(error.message || error);
         }
-        renderYoutubeMemory();
       }
 
-      function installYoutubeMemoryPanel() {
-        const input = byId('youtubeFilesInput');
-        const clear = byId('ytClearBtn');
+      function installYoutubeJsonLoader() {
+        const refresh = byId('refreshYoutubeDataBtn');
+        if (refresh) refresh.addEventListener('click', loadYoutubeData);
 
-        if (input) {
-          input.addEventListener('change', event => {
-            loadYoutubeFiles(event.target.files || []);
+        const copy = byId('copyYoutubeBriefBtn');
+        if (copy) {
+          copy.addEventListener('click', async () => {
+            const box = byId('ytBriefText');
+            const text = box ? box.value : '';
+            try { await navigator.clipboard.writeText(text); }
+            catch (error) {
+              if (box) { box.focus(); box.select(); document.execCommand('copy'); }
+            }
           });
         }
 
-        if (clear) {
-          clear.addEventListener('click', () => {
-            ytState.videos = null;
-            ytState.families = null;
-            ytState.briefs = [];
-            if (input) input.value = '';
-            renderYoutubeMemory();
-          });
-        }
-
-        const syncBtn = byId('syncYoutubeBtn');
-        if (syncBtn) {
-          syncBtn.addEventListener('click', () => {
-            window.location.href = 'sync_youtube.bat';
-          });
-        }
-
-        renderYoutubeMemory();
+        loadYoutubeData();
+        window.setInterval(loadYoutubeData, 60000);
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installYoutubeMemoryPanel);
+        document.addEventListener('DOMContentLoaded', installYoutubeJsonLoader);
       } else {
-        installYoutubeMemoryPanel();
+        installYoutubeJsonLoader();
       }
     })();
   </script>
 
-  <script src="seven_local_bridge.js?v=20260524-0010"></script>
 </body>
 </html>
