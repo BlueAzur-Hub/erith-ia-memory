@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-SPACING-FINAL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-NO-LOCOMOTIVE">
 
   <style>
     #page-youtube .youtube-lines-list {
@@ -311,7 +311,7 @@
 
         <div class="remote-grid" style="margin-top:16px;">
           <section class="remote-card">
-            <strong>Vidéo locomotive</strong>
+            <strong>Top vidéo</strong>
             <span id="ytTopVideo">Aucune donnée chargée.</span>
           </section>
           <section class="remote-card">
@@ -431,7 +431,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-SPACING-FINAL"></script>
+  <script src="script.js?v=20260524-YT-NO-LOCOMOTIVE"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -784,6 +784,38 @@
 
       window.addEventListener('load', forceYoutubeTextSpacing);
       window.setInterval(forceYoutubeTextSpacing, 800);
+    })();
+  </script>
+
+  <script>
+    /* Seven Portable Terminal — YouTube Deduplicate Top Score */
+    (function () {
+      function dedupeYoutubeTopScore() {
+        const top = document.getElementById('ytTopVideo');
+        const score = document.getElementById('ytBestScore');
+        if (!top || !score) return;
+
+        const topText = (top.textContent || '').trim();
+        const scoreText = (score.textContent || '').trim();
+        const scoreCard = score.closest('.remote-card');
+
+        if (topText && scoreText && topText === scoreText && scoreCard) {
+          scoreCard.style.display = 'none';
+        } else if (scoreCard) {
+          scoreCard.style.display = '';
+          const label = scoreCard.querySelector('strong');
+          if (label) label.textContent = 'Signal stratégique';
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', dedupeYoutubeTopScore);
+      } else {
+        dedupeYoutubeTopScore();
+      }
+
+      window.addEventListener('load', dedupeYoutubeTopScore);
+      window.setInterval(dedupeYoutubeTopScore, 800);
     })();
   </script>
 
