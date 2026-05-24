@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-NOCONFLICT-FINAL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-TOP10-COLLAPSIBLE">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -171,6 +171,48 @@
       }
     }
   </style>
+
+  <style id="yt-collapsible-top10-css">
+    #page-youtube details.yt-top10-details {
+      border: 1px solid rgba(255,232,160,.42);
+      border-radius: 18px;
+      padding: 0;
+      margin: 0;
+      background: rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+    #page-youtube details.yt-top10-details > summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 12px 16px;
+      font-weight: 800;
+      color: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,232,160,.22);
+    }
+    #page-youtube details.yt-top10-details > summary::-webkit-details-marker {
+      display: none;
+    }
+    #page-youtube details.yt-top10-details > summary::after {
+      content: "ouvrir";
+      font-size: .85em;
+      opacity: .8;
+      border: 1px solid rgba(255,232,160,.5);
+      border-radius: 999px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+    #page-youtube details.yt-top10-details[open] > summary::after {
+      content: "replier";
+    }
+    #page-youtube .yt-top10-inner {
+      padding: 10px;
+    }
+  </style>
+
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -493,7 +535,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-NOCONFLICT-FINAL"></script>
+  <script src="script.js?v=20260524-YT-TOP10-COLLAPSIBLE"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1138,7 +1180,14 @@
           }
         }
 
-        if (id('ytTopList')) id('ytTopList').innerHTML = top.slice(0,10).map(videoRow).join('');
+        if (id('ytTopList')) {
+          const rows = top.slice(0,10).map(videoRow).join('');
+          id('ytTopList').innerHTML =
+            '<details class="yt-top10-details">' +
+              '<summary>Afficher / masquer le Top 10 vidéos — vues publiques</summary>' +
+              '<div class="yt-top10-inner">' + rows + '</div>' +
+            '</details>';
+        }
         if (id('ytFamiliesList')) id('ytFamiliesList').innerHTML = families.slice(0,10).map(familyRow).join('');
 
         if (id('ytBriefText')) {
