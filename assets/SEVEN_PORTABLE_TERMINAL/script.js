@@ -219,56 +219,74 @@ function applyBackground(){
   const layer=document.getElementById("backgroundLayer");
   if(!layer || !current) return;
 
+  window.sevenBackgroundRequestId=(window.sevenBackgroundRequestId || 0) + 1;
+  const requestId=window.sevenBackgroundRequestId;
+
   const isCastle=current.file.indexOf("ERITH_IA_BACKGROUND_CHATEAU_CIEL_")===0;
-  const cacheTag="v=20260525-castle-fix8";
-  const candidates=isCastle ? [
-    `./${current.file}?${cacheTag}`,
-    `/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
-    `https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
-    `/erith-ia-memory/assets/images/${current.file}?${cacheTag}`
-  ] : [
-    current.file
-  ];
+  const cacheTag="v=20260525-castle-fix10";
+  document.body.classList.toggle("castle-theme-active", isCastle);
 
-  function paint(url){
-    if(isCastle){
-      layer.style.backgroundImage=`url("${url}")`;
-    }else{
-      layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${url}")`;
-    }
+  function isCurrentRequest(){
+    return requestId === window.sevenBackgroundRequestId;
+  }
 
+  if(isCastle){
+    const candidates=[
+      `./${current.file}?${cacheTag}`,
+      `${current.file}?${cacheTag}`,
+      `/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
+      `https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`
+    ];
+
+    layer.style.backgroundImage="none";
     layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
     layer.style.backgroundSize="cover";
     layer.style.backgroundRepeat="no-repeat";
-    layer.style.opacity="1";
-    layer.dataset.currentBackground=url;
-  }
 
-  function tryCandidate(index){
-    const url=candidates[index];
-    if(!url) {
-      console.warn("[Seven] Aucun chemin valide pour le background :", current.file);
-      return;
+    let img=layer.querySelector("img.castle-background-img");
+    if(!img){
+      img=document.createElement("img");
+      img.className="castle-background-img";
+      img.alt="";
+      img.decoding="async";
+      layer.replaceChildren(img);
     }
 
-    if(!isCastle){
-      paint(url);
-      return;
-    }
+    let candidateIndex=0;
 
-    const probe=new Image();
-    probe.onload=function(){
-      paint(url);
+    img.onload=function(){
+      if(!isCurrentRequest()) return;
+      layer.dataset.currentBackgroundFile=current.file;
+      layer.dataset.currentBackgroundUrl=img.currentSrc || img.src;
+      img.dataset.file=current.file;
+      img.style.objectPosition=backgroundPositions[current.file] || "center center";
+      img.style.opacity="1";
     };
-    probe.onerror=function(){
-      console.warn("[Seven] Background introuvable, essai suivant :", url);
-      tryCandidate(index+1);
+
+    img.onerror=function(){
+      if(!isCurrentRequest()) return;
+      candidateIndex += 1;
+      if(candidateIndex < candidates.length){
+        img.src=candidates[candidateIndex];
+      }else{
+        console.error("[Seven] Background Château impossible à charger :", current.file, candidates);
+        img.style.opacity="0";
+      }
     };
-    probe.src=url;
+
+    img.style.opacity="0";
+    img.style.objectPosition=backgroundPositions[current.file] || "center center";
+    img.dataset.file=current.file;
+    img.src=candidates[0];
+  }else{
+    layer.replaceChildren();
+    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${current.file}")`;
+    layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
+    layer.style.backgroundSize="cover";
+    layer.style.backgroundRepeat="no-repeat";
+    layer.dataset.currentBackgroundFile=current.file;
+    layer.dataset.currentBackgroundUrl=current.file;
   }
-
-  tryCandidate(0);
-  document.body.classList.toggle("castle-theme-active", isCastle);
 
   if(backgroundLabel){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
