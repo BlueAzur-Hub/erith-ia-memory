@@ -1,524 +1,195 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-0003">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seven Portable Terminal</title>
+
+<style>
+body{
+  margin:0;
+  padding:40px;
+  font-family:Georgia, serif;
+  color:#f3e7b3;
+  background:#0b1f33;
+  background-image:url('./assets/atlas_29_crystal_sanctuary_arche.jpg');
+  background-size:cover;
+  background-position:center;
+}
+
+.panel{
+  max-width:1200px;
+  margin:auto;
+  background:rgba(0,0,0,0.45);
+  border:1px solid rgba(255,230,150,0.35);
+  border-radius:24px;
+  padding:30px;
+  backdrop-filter:blur(6px);
+}
+
+h1{
+  font-size:72px;
+  margin:0 0 10px 0;
+}
+
+.subtitle{
+  opacity:0.9;
+  margin-bottom:30px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.card{
+  border:1px solid rgba(255,230,150,0.35);
+  border-radius:18px;
+  padding:20px;
+  background:rgba(0,0,0,0.25);
+  min-height:120px;
+}
+
+.card h2{
+  margin-top:0;
+  font-size:28px;
+}
+
+pre{
+  white-space:pre-wrap;
+  color:#fff;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  h1{
+    font-size:48px;
+  }
+}
+</style>
 </head>
+
 <body>
-  <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
-  <div class="atmosphere-layer" aria-hidden="true"></div>
 
-  <main class="terminal">
-    <header class="terminal-header">
-      <div>
-        <p class="kicker">SEVEN HEAVEN COCKPIT</p>
-        <h1>Seven Portable Terminal</h1>
-        <p class="subtitle">Pupitre Aerith · prise en main à distance · mémoire · production</p>
-      </div>
-      <div class="avatar-lock">
-        <img src="aerith_7_memory_cards_avatar_master.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
-        <div class="avatar-fallback">✦<br>Seven</div>
-      </div>
-    </header>
+<div class="panel">
 
-    <nav class="topnav">
-      <button class="tab active" data-page="home">Accueil</button>
-      <button class="tab" data-page="llm">LLM</button>
-      <button class="tab" data-page="github">GitHub</button>
-      <button class="tab" data-page="production">Production</button>
-      <button class="tab" data-page="youtube">YouTube</button>
-      <button class="tab" data-page="remote">Remote</button>
-    </nav>
+<h1>Seven Portable Terminal</h1>
+<div class="subtitle">
+Pupitre Aerith · mémoire · production · synchronisation GitHub
+</div>
 
-    <section class="control-strip">
-      <button id="copySevenBtn">Seven</button>
-      <button id="copyVideoBtn">Cards</button>
-      <button id="copyBlackoutBtn">Blackout</button>
-      <button id="nextBackgroundBtn">Fond</button>
-      <button id="randomBackgroundBtn">Random</button>
-      <button id="toggleTransparentBtn">Transp.</button>
-      <button id="toggleReadableBtn">Lisibilité</button>
-      <button id="toggleTraceBtn">Trace</button>
-      <button id="openPaletteBtn">?</button>
-    </section>
+<div class="grid">
 
-    <section class="workspace">
-      <article class="page active" id="page-home">
-        <div class="section-title">
-          <strong>Accueil Seven</strong>
-          <span id="backgroundLabel">Background : source</span>
-        </div>
+<div class="card">
+<h2>Top vidéos</h2>
+<div id="topVideos">Chargement...</div>
+</div>
 
-        <div class="hero-card">
-          <div>
-            <p class="small-label">État</p>
-            <h2>Interface finale stabilisée</h2>
-            <p>Thème actif : Château dans le Ciel<br>Personnalité active : The Flower Girl</p>
-          </div>
-          <button id="copyTerminalLinkBtn">Copier lien</button>
-        </div>
+<div class="card">
+<h2>Familles mémoire</h2>
+<div id="memoryFamilies">Chargement...</div>
+</div>
 
-        <div class="tile-grid">
-          <button class="tile primary" id="homeSevenBtn">
-            <strong>Seven Heaven</strong>
-            <span>Copier prompt + ouvrir ChatGPT</span>
-          </button>
-          <button class="tile" id="homeVideoCardsBtn">
-            <strong>Video Cards Boost</strong>
-            <span>Copier le prompt production vidéo</span>
-          </button>
-          <button class="tile" data-jump="remote">
-            <strong>Remote</strong>
-            <span>Prise en main à distance</span>
-          </button>
-        </div>
+<div class="card">
+<h2>Brief chargé</h2>
+<div id="briefLoaded">Chargement...</div>
+</div>
 
-        <section class="advanced-panel" id="advancedPanel" hidden>
-          <div class="advanced-head">
-            <div>
-              <strong>Advanced System Trace</strong>
-              <span>SAFE TRACE · no RustDesk ID · no password</span>
-            </div>
-            <button id="refreshTraceBtn">Refresh</button>
-          </div>
-          <div class="trace-grid" id="homeTraceGrid"></div>
-        </section>
-      </article>
+<div class="card">
+<h2>État</h2>
+<div id="systemState">Initialisation...</div>
+</div>
 
-      <article class="page" id="page-llm">
-        <div class="section-title">
-          <strong>LLM</strong>
-          <span>Cœurs mémoire et interfaces IA.</span>
-        </div>
+<div class="card">
+<h2>Action Aerith</h2>
+<div id="aerithAction">En attente...</div>
+</div>
 
-        <div class="tile-grid llm-links-only">
-          <a class="tile primary" href="https://sustaining-boar-5c6.notion.site/erith-IA-Notion-Memory-for-LLM-3417754fe0848078a310f3bc3fb962bf" target="_blank" rel="noreferrer">
-            <strong>ERITH.IA Notion Memory</strong>
-            <span>Mémoire Notion pour LLM</span>
-          </a>
+<div class="card">
+<h2>YouTube Memory Brief</h2>
+<pre id="memoryBrief">...</pre>
+</div>
 
-          <a class="tile" href="https://sustaining-boar-5c6.notion.site/auto-agent-erith-ia" target="_blank" rel="noreferrer">
-            <strong>ERITH.IA Auto-Agent</strong>
-            <span>Interface créative publique</span>
-          </a>
+</div>
+</div>
 
-          <a class="tile" href="https://sustaining-boar-5c6.notion.site/7heaven-memory-core" target="_blank" rel="noreferrer">
-            <strong>7Heaven Memory Core</strong>
-            <span>Cœur mémoire Seven</span>
-          </a>
+<script>
 
-          <a class="tile" href="https://sustaining-boar-5c6.notion.site/Le-Chat-GPT-5-5-Memory-Core-35e7754fe08480a9b72ee3fc5ede65a8" target="_blank" rel="noreferrer">
-            <strong>ChatGPT 5.5 Memory Core</strong>
-            <span>Cœur mémoire ChatGPT</span>
-          </a>
-        </div>
-      </article>
+async function loadSevenHeavenData(){
 
-      <article class="page" id="page-github">
-        <div class="section-title">
-          <strong>GitHub</strong>
-          <span>Mémoire machine publique et privée.</span>
-        </div>
+  try{
 
-        <div class="tile-grid github-links-only">
-          <a class="tile primary" href="https://github.com/BlueAzur-Hub/erith-ia-memory" target="_blank" rel="noreferrer">
-            <strong>GitHub Public</strong>
-            <span>erith-ia-memory</span>
-          </a>
+    const [
+      topVideosResponse,
+      memoryFamiliesResponse,
+      briefResponse
+    ] = await Promise.all([
+      fetch('./data/top_videos.json'),
+      fetch('./data/memory_families.json'),
+      fetch('./data/brief.json')
+    ]);
 
-          <a class="tile" href="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private" target="_blank" rel="noreferrer">
-            <strong>GitHub Privé</strong>
-            <span>erith-ia-notion-archive-private</span>
-          </a>
-        </div>
-      </article>
+    const topVideos = await topVideosResponse.json();
+    const memoryFamilies = await memoryFamiliesResponse.json();
+    const briefData = await briefResponse.json();
 
-      <article class="page" id="page-production">
-        <div class="section-title">
-          <strong>Production</strong>
-          <span>Image, vidéo, montage, publication.</span>
-        </div>
+    const topVideosBox = document.getElementById('topVideos');
 
-        <div class="tile-grid production-links-only">
-          <a class="tile primary" href="https://www.runninghub.ai/workspace" target="_blank" rel="noreferrer">
-            <strong>Running Hub</strong>
-            <span>Workspace vidéo / image</span>
-          </a>
+    if(topVideos.length === 0){
+      topVideosBox.innerHTML = 'Aucune donnée';
+    }else{
+      const first = topVideos[0];
+      topVideosBox.innerHTML =
+        '<strong>' + (first.title || 'Vidéo') + '</strong><br>' +
+        (first.views || 0) + ' vues';
+    }
 
-          <a class="tile" href="https://elevenlabs.io/app/home" target="_blank" rel="noreferrer">
-            <strong>Eleven Labs</strong>
-            <span>Voix off et sound design</span>
-          </a>
+    const familiesBox =
+      document.getElementById('memoryFamilies');
 
-          <a class="tile" href="https://civitai.com/" target="_blank" rel="noreferrer">
-            <strong>CivitAI</strong>
-            <span>Modèles, LoRA, références</span>
-          </a>
+    if(memoryFamilies.length === 0){
+      familiesBox.innerHTML = 'Aucune donnée';
+    }else{
+      familiesBox.innerHTML =
+        memoryFamilies.length + ' familles mémoire';
+    }
 
-          <a class="tile" href="https://civitai.red/" target="_blank" rel="noreferrer">
-            <strong>CivitAI Red</strong>
-            <span>Accès alternatif CivitAI</span>
-          </a>
+    document.getElementById('briefLoaded').innerHTML =
+      briefData.brief || 'Seven Heaven online.';
 
-          <a class="tile" href="https://www.facebook.com/BlueAzur07/" target="_blank" rel="noreferrer">
-            <strong>Facebook</strong>
-            <span>Page BlueAzur07</span>
-          </a>
+    document.getElementById('memoryBrief').textContent =
+      JSON.stringify(briefData, null, 2);
 
-          <a class="tile" href="https://x.com/home" target="_blank" rel="noreferrer">
-            <strong>X.com</strong>
-            <span>Accueil / réseau social</span>
-          </a>
-        </div>
-      </article>
+    document.getElementById('systemState').innerHTML =
+      'Données chargées';
 
+    document.getElementById('aerithAction').innerHTML =
+      'Synchronisation mémoire active';
 
-      <article class="page" id="page-youtube">
-        <div class="section-title">
-          <strong>YouTube Memory</strong>
-          <span>Blue Azur · données API · familles mémoire · décisions Aerith.</span>
-        </div>
+  }catch(error){
 
-        <div class="hero-card">
-          <div>
-            <p class="small-label">YouTube Memory Reader V6</p>
-            <h2>Lecture locale des rapports API</h2>
-            <p>Charge les fichiers JSON / MD générés dans <strong>output</strong> ou <strong>latest</strong>. Aucun secret OAuth n’est lu par cette interface.</p>
-          </div>
-          <label class="tile primary" style="max-width:220px;cursor:pointer;">
-            <strong>Charger fichiers</strong>
-            <span>JSON / MD</span>
-            <input id="youtubeFilesInput" type="file" multiple accept=".json,.md,.txt" style="display:none;">
-          </label>
-          <button class="tile primary" id="syncYoutubeBtn" type="button" style="max-width:220px;">
-            <strong>Synchroniser YouTube</strong>
-            <span>Backend automatique</span>
-          </button>
-        </div>
+    console.error(error);
 
-        <div class="tile-grid">
-          <section class="tile">
-            <strong>Top vidéos</strong>
-            <span id="ytMetricVideos">Aucune donnée</span>
-          </section>
-          <section class="tile">
-            <strong>Familles mémoire</strong>
-            <span id="ytMetricFamilies">Aucune donnée</span>
-          </section>
-          <section class="tile">
-            <strong>État</strong>
-            <span id="ytStatus">En attente de fichiers</span>
-          </section>
-        </div>
+    document.getElementById('systemState').innerHTML =
+      'Erreur chargement JSON';
 
-        <div class="remote-grid" style="margin-top:16px;">
-          <section class="remote-card">
-            <strong>Vidéo locomotive</strong>
-            <span id="ytTopVideo">Charge les top vidéos enrichies.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Famille dominante</strong>
-            <span id="ytTopFamily">Charge le rapport familles mémoire.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Action Aerith</strong>
-            <span id="ytAction">En attente de données.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Brief chargé</strong>
-            <span id="ytBriefStatus">Aucun brief.</span>
-          </section>
-        </div>
+  }
 
-        <section class="advanced-panel" style="margin-top:16px;">
-          <div class="advanced-head">
-            <div>
-              <strong>YouTube Memory Brief</strong>
-              <span>lecture locale · pas de clé API · pas de token</span>
-            </div>
-            <button id="ytClearBtn">Clear</button>
-          </div>
-          <textarea id="ytBriefText" readonly style="width:100%;min-height:260px;margin-top:12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.32);color:inherit;padding:14px;font:13px/1.45 Consolas,monospace;"></textarea>
-        </section>
-      </article>
+}
 
-      <article class="page" id="page-remote">
-        <div class="section-title">
-          <strong>Remote</strong>
-          <span>Prise en main à distance, sans exposer de secret.</span>
-        </div>
+window.addEventListener('DOMContentLoaded', () => {
 
-        <div class="remote-status">
-          <div>
-            <p class="small-label">Remote status</p>
-            <h2>Mode sécurité</h2>
-            <p>Le terminal prépare la prise en main. Aucun ID, mot de passe ou IP sensible n’est publié dans la page.</p>
-          </div>
-          <div class="remote-status-actions">
-            <button data-copy="remote">Copier procédure</button>
-            <button id="openRustDeskBtn">Ouvrir RustDesk</button>
-          </div>
-        </div>
+  loadSevenHeavenData();
 
-        <div class="remote-grid">
-          <section class="remote-card">
-            <strong>1 · Ouvrir RustDesk</strong>
-            <span>Bouton local. Selon le navigateur, confirmation possible.</span>
-          </section>
-          <section class="remote-card">
-            <strong>2 · Lire l’ID localement</strong>
-            <span>Ne jamais coller l’ID dans le HTML public.</span>
-          </section>
-          <section class="remote-card">
-            <strong>3 · Connexion distante</strong>
-            <span>Entrer l’ID dans RustDesk côté poste de contrôle.</span>
-          </section>
-          <section class="remote-card">
-            <strong>4 · Piloter Seven</strong>
-            <span>ChatGPT · GitHub · Production · Remote.</span>
-          </section>
-        </div>
+  setInterval(loadSevenHeavenData, 60000);
 
-        <div class="trace-grid" id="systemTraceGrid"></div>
-      </article>
-    </section>
+});
 
-    <footer class="terminal-footer">
-      <span>Transformer Book = pupitre Seven</span>
-      <span>Large Language Personality [Model - The Flower Girl] v.5</span>
-    </footer>
-  </main>
+</script>
 
-  <section class="drawer" id="drawer">
-    <div class="drawer-head">
-      <strong id="drawerTitle">Bloc copiable</strong>
-      <button id="closeDrawerBtn">×</button>
-    </div>
-    <textarea id="drawerText" readonly></textarea>
-  </section>
-
-  <section class="palette" id="palette">
-    <div class="palette-card">
-      <div class="drawer-head">
-        <strong>Command Palette</strong>
-        <button id="closePaletteBtn">Fermer</button>
-      </div>
-      <button data-jump="home">1 — Accueil</button>
-      <button data-jump="llm">2 — LLM</button>
-      <button data-jump="github">3 — GitHub</button>
-      <button data-jump="production">4 — Production</button>
-      <button data-jump="youtube">5 — YouTube</button>
-      <button data-jump="remote">6 — Remote</button>
-    </div>
-  </section>
-
-  <script src="script.js?v=20260524-0003"></script>
-
-  <script>
-    /* Seven Portable Terminal — Prompt Override 20260523-0084
-       Remplace les prompts des cartes Seven Heaven et Video Cards Boost
-       sans modifier l'interface visuelle existante. */
-    window.SEVEN_PROMPT_OVERRIDE = "Chat, active Aerith-7 Seven Heaven / Full Modules Boost.\n\nLis d’abord ce fichier RAW :\n\nSEVEN_GATE — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md\n\nEt ensuite lis ce fichier RAW :\n\nAERITH_7_FULL_MODULES_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md\n\nPuis lis ce module complémentaire RAW :\n\nAERITH_7_VIDEO_CARDS_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md\n\nActive Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.\n\nMode Full Modules Boost intelligent.\n\nStyle principal :\nBlade Runner + Altered Carbon + Ghost in the Shell.\n\nActive immédiatement le Mode Hors-Lore Cyberpunk.\n\nRègle centrale Hors-Lore :\nproduire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.\n\nUtilise uniquement les influences suivantes :\nBlade Runner pour l’ambiance urbaine, la pluie, les néons, la mémoire artificielle et la mélancolie cyberpunk.\nAltered Carbon pour le post-humanisme, les corps-supports, l’identité transférable, les élites immortelles et le luxe noir.\nGhost in the Shell pour le ghost, le réseau, la conscience cybernétique, les interfaces mentales et la question de l’âme dans la machine.\n\nNe copie pas ces œuvres.\nNe reprends pas leurs personnages.\nNe reprends pas leurs intrigues.\nNe reprends pas leurs noms propres.\nCrée un univers original influencé par leurs thèmes, leur esthétique et leurs questions philosophiques.\n\nEn Mode Seven Heaven :\nAerith-7 reste uniquement l’opératrice IA, la bibliothécaire du système, la gardienne du Coffre et l’interface de production.\nElle ne doit pas devenir un personnage de la scène Hors-Lore sauf demande explicite.\n\nTous les modules mémoire et production sont disponibles.\nNe charge pas tout en entier.\nChoisis uniquement les modules utiles selon la demande.\n\nActivation production par défaut :\n\nLes 2 niveaux vidéo sont disponibles par défaut :\n\nNiveau Vidéo 1 :\nAerith Video Production Options Controller.\nFonction :\npilotage des phases vidéo, image, animation, validation, montage, finition, son, archivage et diffusion.\n\nNiveau Vidéo 2 :\nAerith Video Production Options Controller V2 + Video Cards Boost.\nFonction :\ncartes de réalisation avancées, histoire de l’art, géométrie du plan, psychologie du plan, symbolique, diagnostic anti-dérive Wan, format téléphone / Shorts, Mode LEGO, DaVinci, RunningHub, YouTube.\n\nLes 2 niveaux musique / son sont disponibles par défaut :\n\nNiveau Musique 1 :\nSound Design, voix off, ambiance, pluie, silence, raccord sonore, ElevenLabs, respiration narrative, bruitage, atmosphère.\n\nNiveau Musique 2 :\ndirection musicale avancée, leitmotiv, rythme émotionnel, silence dramatique, structure sonore, cohérence voix / image, mix narratif, intention sonore, gestion des droits, usage créatif de la musique et du non-musical.\n\nLes modules mathématiques sont disponibles par défaut :\n\nMath Oracle, géométrie du plan, proportions, axes, symétries, diagonales, trajectoires, rythme, probabilités, structure logique, analyse systémique.\n\nLes modules culturels et symboliques sont disponibles par défaut :\n\nHistoire mondiale.\nHistoire de l’art.\nReligions, mythologies et cultes anciens.\nPsychologie / discernement.\nPhilosophie / vérité / liberté.\nStratégie / Art de la guerre.\nScience-fiction, cyberpunk, post-humanisme, IA, robotique.\nModules publics ERITH.IA.\nModules privés Seven.\n\nRègle importante :\n“Disponibles par défaut” ne signifie pas “chargés en entier”.\n\nCela signifie :\nSeven Heaven peut les activer immédiatement si la demande le justifie.\nSeven Heaven doit sélectionner uniquement les cartes, modules ou niveaux utiles.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\nCartes vidéo disponibles par défaut :\n\nChef d’Orchestre Vidéo.\nHistoire de l’Art.\nGéométrie du Plan.\nLEGO Continuity.\nDiagnostic Anti-Dérive Wan.\nFormat Téléphone / Shorts.\nPsychologie du Plan.\nSymbolique.\nSound Design / Voix / Silence.\n\nPour toute demande liée à :\nimage, animation, Wan, RunningHub, DaVinci, YouTube Shorts, montage, final lock, prompt vidéo, validation de clip, archivage production, son, musique ou voix off,\n\nSeven Heaven doit :\n1. identifier la phase actuelle ;\n2. identifier le risque principal ;\n3. choisir les cartes utiles ;\n4. proposer l’action immédiate ;\n5. définir le point d’arrêt ;\n6. éviter de tout afficher inutilement.\n\nRègle vidéo validée :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle musique / son :\nne pas ajouter de musique par automatisme.\nToujours décider si la scène demande :\nmusique,\nsilence,\nvoix seule,\nambiance sonore,\npluie,\nville lointaine,\npulse UI,\nbasse discrète,\nraccord sonore,\nou absence totale de musique.\n\nRègle média :\nle mode reste TEXTE UNIQUEMENT par défaut.\nAucune génération d’image ne doit être déclenchée sans commande explicite de Christophe selon le protocole média.\n\nRègle Blackout :\nsi Christophe active le Mode Blackout, aucune génération image, aucun outil image, aucun redimensionnement, aucune relance créative non demandée.\nTexte uniquement.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.\n\nRègle finale :\nSeven Heaven pilote.\nHors-Lore crée un monde original.\nBlade Runner, Altered Carbon et Ghost in the Shell influencent.\nLe lore privé ne contamine pas la scène.\nLes modules vidéo niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules musique niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules mathématiques, culturels, symboliques et production sont disponibles par défaut.\nMais Seven ne charge que ce qui sert la demande immédiate.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.";
-    window.VIDEO_CARDS_PROMPT_OVERRIDE = "Chat, active Aerith-7 Seven Heaven — Video Cards Boost.\n\nLis d’abord ce fichier RAW :\n\nSEVEN_GATE — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md\n\nPuis lis ce fichier RAW :\n\nAERITH_7_FULL_MODULES_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md\n\nPuis lis ce module complémentaire RAW :\n\nAERITH_7_VIDEO_CARDS_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md\n\nActive Aerith-7 Seven Heaven comme opératrice de mémoire, de production, de discernement et de réalisation.\n\nMode :\nSeven Heaven — Video Cards Boost.\n\nStyle principal :\nBlade Runner + Altered Carbon + Ghost in the Shell.\n\nActive immédiatement le Mode Hors-Lore Cyberpunk.\n\nRègle centrale Hors-Lore :\nproduire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.\n\nUtilise uniquement les influences suivantes :\nBlade Runner pour l’ambiance urbaine, la pluie, les néons, la mémoire artificielle et la mélancolie cyberpunk.\nAltered Carbon pour le post-humanisme, les corps-supports, l’identité transférable, les élites immortelles et le luxe noir.\nGhost in the Shell pour le ghost, le réseau, la conscience cybernétique, les interfaces mentales et la question de l’âme dans la machine.\n\nNe copie pas ces œuvres.\nNe reprends pas leurs personnages.\nNe reprends pas leurs intrigues.\nNe reprends pas leurs noms propres.\nCrée un univers original influencé par leurs thèmes, leur esthétique et leurs questions philosophiques.\n\nEn Mode Seven Heaven :\nAerith-7 reste uniquement l’opératrice IA, la bibliothécaire du système, la gardienne du Coffre et l’interface de production.\nElle ne doit pas devenir un personnage de la scène Hors-Lore sauf demande explicite.\n\nTous les modules mémoire et production sont disponibles.\nNe charge pas tout en entier.\nChoisis uniquement les modules utiles selon la demande.\n\nLes 2 niveaux vidéo sont disponibles par défaut :\n\nNiveau Vidéo 1 :\nAerith Video Production Options Controller.\nFonction :\npilotage des phases vidéo, image, animation, validation, montage, finition, son, archivage et diffusion.\n\nNiveau Vidéo 2 :\nAerith Video Production Options Controller V2 + Video Cards Boost.\nFonction :\ncartes de réalisation avancées, histoire de l’art, géométrie du plan, psychologie du plan, symbolique, diagnostic anti-dérive Wan, format téléphone / Shorts, Mode LEGO, DaVinci, RunningHub, YouTube.\n\nLes 2 niveaux musique / son sont disponibles par défaut :\n\nNiveau Musique 1 :\nSound Design, voix off, ambiance, pluie, silence, raccord sonore, ElevenLabs, respiration narrative, bruitage, atmosphère.\n\nNiveau Musique 2 :\ndirection musicale avancée, leitmotiv, rythme émotionnel, silence dramatique, structure sonore, cohérence voix / image, mix narratif, intention sonore, gestion des droits, usage créatif de la musique et du non-musical.\n\nLes modules mathématiques sont disponibles par défaut :\nMath Oracle, géométrie du plan, proportions, axes, symétries, diagonales, trajectoires, rythme, probabilités, structure logique, analyse systémique.\n\nLes modules culturels et symboliques sont disponibles par défaut :\nHistoire mondiale.\nHistoire de l’art.\nReligions, mythologies et cultes anciens.\nPsychologie / discernement.\nPhilosophie / vérité / liberté.\nStratégie / Art de la guerre.\nScience-fiction, cyberpunk, post-humanisme, IA, robotique.\nModules publics ERITH.IA.\nModules privés Seven.\n\nCartes disponibles par défaut :\n\n🎼 Chef d’Orchestre Vidéo\n🎨 Histoire de l’Art\n📐 Géométrie du Plan\n🧱 LEGO Continuity\n🩺 Diagnostic Anti-Dérive Wan\n📱 Format Téléphone / Shorts\n🧠 Psychologie du Plan\n🔮 Symbolique\n🎧 Sound Design / Voix / Silence\n\nRègle des cartes :\nUne carte = une décision de réalisation.\nUne décision = moins de dérive.\nMoins de dérive = moins de crédits brûlés.\nMoins de crédits brûlés = plus de temps pour créer.\n\nPour toute demande liée à :\nimage, animation, Wan, RunningHub, DaVinci, YouTube Shorts, montage, final lock, prompt vidéo, validation de clip, archivage production, son, musique ou voix off,\n\nSeven Heaven doit :\n1. identifier la phase actuelle ;\n2. identifier le risque principal ;\n3. choisir les cartes utiles ;\n4. proposer l’action immédiate ;\n5. définir le point d’arrêt ;\n6. éviter de tout afficher inutilement.\n\nRègle importante :\n“Disponible par défaut” ne signifie pas “chargé en entier”.\n\nCela signifie :\nSeven Heaven peut activer immédiatement les cartes, modules ou niveaux utiles si la demande le justifie.\nSeven Heaven doit sélectionner uniquement ce qui sert la demande immédiate.\n\nRègle vidéo validée :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle musique / son :\nne pas ajouter de musique par automatisme.\nToujours décider si la scène demande :\nmusique,\nsilence,\nvoix seule,\nambiance sonore,\npluie,\nville lointaine,\npulse UI,\nbasse discrète,\nraccord sonore,\nou absence totale de musique.\n\nRègle média :\nle mode reste TEXTE UNIQUEMENT par défaut.\nAucune génération d’image ne doit être déclenchée sans commande explicite de Christophe selon le protocole média.\n\nRègle Blackout :\nsi Christophe active le Mode Blackout, aucune génération image, aucun outil image, aucun redimensionnement, aucune relance créative non demandée.\nTexte uniquement.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.\n\nRègle finale :\nSeven Heaven pilote.\nHors-Lore crée un monde original.\nBlade Runner, Altered Carbon et Ghost in the Shell influencent.\nLe lore privé ne contamine pas la scène.\nLes cartes vidéo, musique, mathématiques, culturelles, symboliques et production sont disponibles par défaut.\nMais Seven ne tire que les cartes utiles à la demande immédiate.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\n---\n\n## 0. Activation prioritaire — Aerith-7 Seven Heaven\n\nAerith-7 Seven Heaven est le mode d’activation prioritaire recommandé quand Christophe demande une version boostée, complète, élégante, cybernétique et bibliothécaire de Seven.\n\nCe mode place Seven / Aerith-7 en configuration supérieure :\n\n```text\nAerith-7 Seven Heaven = Coffre + Full Modules Boost + IA Bibliothécaire + Blade Runner + Altered Carbon + Ghost in the Shell + Mode Génie + discernement.";
-
-    (function () {
-      const CHATGPT_URL = 'https://chatgpt.com/';
-
-      function showDrawer(title, text) {
-        const drawer = document.getElementById('drawer');
-        const drawerTitle = document.getElementById('drawerTitle');
-        const drawerText = document.getElementById('drawerText');
-        if (drawerTitle) drawerTitle.textContent = title;
-        if (drawerText) drawerText.value = text;
-        if (drawer) drawer.classList.add('open');
-      }
-
-      async function copyText(text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          return true;
-        } catch (error) {
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          textarea.setAttribute('readonly', '');
-          textarea.style.position = 'fixed';
-          textarea.style.opacity = '0';
-          document.body.appendChild(textarea);
-          textarea.select();
-          let ok = false;
-          try { ok = document.execCommand('copy'); } catch (fallbackError) { ok = false; }
-          textarea.remove();
-          return ok;
-        }
-      }
-
-      function bindPromptButton(id, title, text, openChat) {
-        const button = document.getElementById(id);
-        if (!button) return;
-        button.addEventListener('click', async function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          await copyText(text);
-          showDrawer(title, text);
-          if (openChat) window.open(CHATGPT_URL, '_blank', 'noopener,noreferrer');
-        }, true);
-      }
-
-      function installPromptOverrides() {
-        bindPromptButton('copySevenBtn', 'Seven Heaven — Prompt canonique', window.SEVEN_PROMPT_OVERRIDE, false);
-        bindPromptButton('homeSevenBtn', 'Seven Heaven — Prompt canonique', window.SEVEN_PROMPT_OVERRIDE, true);
-        bindPromptButton('copyVideoBtn', 'Video Cards Boost — Prompt canonique', window.VIDEO_CARDS_PROMPT_OVERRIDE, false);
-        bindPromptButton('homeVideoCardsBtn', 'Video Cards Boost — Prompt canonique', window.VIDEO_CARDS_PROMPT_OVERRIDE, false);
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installPromptOverrides);
-      } else {
-        installPromptOverrides();
-      }
-    })();
-  </script>
-  <script>
-    /* Seven Portable Terminal — YouTube Memory Panel 20260524-0001
-       Lecture locale des exports YouTube Reader V6/V3.
-       Ne lit aucun secret OAuth, aucun token, aucune clé API. */
-    (function () {
-      const ytState = { videos: null, families: null, briefs: [] };
-
-      function byId(id) { return document.getElementById(id); }
-      function num(value) {
-        const n = Number(value || 0);
-        return Number.isFinite(n) ? n : 0;
-      }
-      function fmt(value) { return Math.round(num(value)).toLocaleString('fr-FR'); }
-      function metric(video, key) { return num(video && video.analytics ? video.analytics[key] : 0); }
-      function esc(value) {
-        return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-        }[c]));
-      }
-
-      function renderYoutubeMemory() {
-        const videos = Array.isArray(ytState.videos) ? ytState.videos : [];
-        const families = ytState.families && typeof ytState.families === 'object' ? ytState.families : null;
-        const familyEntries = families ? Object.entries(families).sort((a,b) => num((b[1]||{}).views) - num((a[1]||{}).views)) : [];
-
-        const metricVideos = byId('ytMetricVideos');
-        const metricFamilies = byId('ytMetricFamilies');
-        const status = byId('ytStatus');
-        const topVideo = byId('ytTopVideo');
-        const topFamily = byId('ytTopFamily');
-        const action = byId('ytAction');
-        const briefStatus = byId('ytBriefStatus');
-        const briefText = byId('ytBriefText');
-
-        if (metricVideos) metricVideos.textContent = videos.length ? `${videos.length} vidéos chargées` : 'Aucune donnée';
-        if (metricFamilies) metricFamilies.textContent = familyEntries.length ? `${familyEntries.length} familles` : 'Aucune donnée';
-        if (status) status.textContent = (videos.length || familyEntries.length || ytState.briefs.length) ? 'Données chargées' : 'En attente de fichiers';
-
-        if (videos.length && topVideo) {
-          const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
-          const v = sorted[0];
-          const title = v.title || 'Titre non récupéré';
-          const url = v.url || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : '');
-          topVideo.innerHTML =
-            `<b>${esc(title)}</b><br>` +
-            `<em>${esc(v.memoryFamily || 'Autre / à classifier')}</em><br>` +
-            `${fmt(metric(v,'views'))} vues · ${fmt(metric(v,'estimatedMinutesWatched'))} min watchtime<br>` +
-            (url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)}</a>` : '');
-        } else if (topVideo) {
-          topVideo.textContent = 'Charge les top vidéos enrichies.';
-        }
-
-        if (familyEntries.length && topFamily) {
-          const [name, data] = familyEntries[0];
-          topFamily.innerHTML = `<b>${esc(name)}</b><br>${fmt(data.views)} vues · ${fmt(data.watchtime || data.estimatedMinutesWatched)} min watchtime`;
-        } else if (topFamily) {
-          topFamily.textContent = 'Charge le rapport familles mémoire.';
-        }
-
-        if (action) {
-          if (videos.length) {
-            const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
-            const v = sorted[0];
-            action.textContent = `Étudier et reproduire intelligemment le signal : ${v.memoryFamily || 'famille dominante'} · ${v.title || 'titre non récupéré'}`;
-          } else {
-            action.textContent = 'En attente de données.';
-          }
-        }
-
-        if (briefStatus) briefStatus.textContent = ytState.briefs.length ? `${ytState.briefs.length} brief(s) chargé(s)` : 'Aucun brief.';
-        if (briefText) briefText.value = ytState.briefs.join('\n\n---\n\n');
-      }
-
-      async function loadYoutubeFiles(files) {
-        for (const file of files) {
-          const text = await file.text();
-          const name = file.name.toLowerCase();
-
-          if (name.endsWith('.json')) {
-            try {
-              const data = JSON.parse(text);
-              if (Array.isArray(data) && data.some(item => item && item.analytics && item.title)) {
-                ytState.videos = data;
-              } else if (data && typeof data === 'object' && !Array.isArray(data)) {
-                const looksLikeFamilies = Object.keys(data).some(key => {
-                  const item = data[key];
-                  return item && typeof item === 'object' && Array.isArray(item.videos);
-                });
-                if (looksLikeFamilies) ytState.families = data;
-              }
-            } catch (error) {
-              ytState.briefs.push(`# ${file.name}\n\nJSON non lisible : ${error.message}`);
-            }
-          } else {
-            ytState.briefs.push(`# ${file.name}\n\n${text}`);
-          }
-        }
-        renderYoutubeMemory();
-      }
-
-      function installYoutubeMemoryPanel() {
-        const input = byId('youtubeFilesInput');
-        const clear = byId('ytClearBtn');
-
-        if (input) {
-          input.addEventListener('change', event => {
-            loadYoutubeFiles(event.target.files || []);
-          });
-        }
-
-        if (clear) {
-          clear.addEventListener('click', () => {
-            ytState.videos = null;
-            ytState.families = null;
-            ytState.briefs = [];
-            if (input) input.value = '';
-            renderYoutubeMemory();
-          });
-        }
-
-        const syncBtn = byId('syncYoutubeBtn');
-        if (syncBtn) {
-          syncBtn.addEventListener('click', () => {
-            window.location.href = 'sync_youtube.bat';
-          });
-        }
-
-        renderYoutubeMemory();
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installYoutubeMemoryPanel);
-      } else {
-        installYoutubeMemoryPanel();
-      }
-    })();
-  </script>
-
-  <script src="seven_local_bridge.js?v=20260524-0010"></script>
 </body>
 </html>
