@@ -215,78 +215,34 @@ const backgroundPositions={
 function applyBackground(){
   const list=activeBackgrounds();
   if(bgIndex<0 || bgIndex>=list.length) bgIndex=0;
+
   const current=list[bgIndex % list.length];
   const layer=document.getElementById("backgroundLayer");
   if(!layer || !current) return;
 
-  window.sevenBackgroundRequestId=(window.sevenBackgroundRequestId || 0) + 1;
-  const requestId=window.sevenBackgroundRequestId;
-
   const isCastle=current.file.indexOf("ERITH_IA_BACKGROUND_CHATEAU_CIEL_")===0;
-  const cacheTag="v=20260525-castle-fix10";
-  document.body.classList.toggle("castle-theme-active", isCastle);
+  const cacheTag="v=20260525-fix11";
+  const imageUrl=isCastle ? `./${current.file}?${cacheTag}` : current.file;
 
-  function isCurrentRequest(){
-    return requestId === window.sevenBackgroundRequestId;
-  }
+  layer.replaceChildren();
+  layer.style.opacity="1";
+  layer.style.visibility="visible";
+  layer.style.display="block";
+  layer.style.filter="none";
 
   if(isCastle){
-    const candidates=[
-      `./${current.file}?${cacheTag}`,
-      `${current.file}?${cacheTag}`,
-      `/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
-      `https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`
-    ];
-
-    layer.style.backgroundImage="none";
-    layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
-    layer.style.backgroundSize="cover";
-    layer.style.backgroundRepeat="no-repeat";
-
-    let img=layer.querySelector("img.castle-background-img");
-    if(!img){
-      img=document.createElement("img");
-      img.className="castle-background-img";
-      img.alt="";
-      img.decoding="async";
-      layer.replaceChildren(img);
-    }
-
-    let candidateIndex=0;
-
-    img.onload=function(){
-      if(!isCurrentRequest()) return;
-      layer.dataset.currentBackgroundFile=current.file;
-      layer.dataset.currentBackgroundUrl=img.currentSrc || img.src;
-      img.dataset.file=current.file;
-      img.style.objectPosition=backgroundPositions[current.file] || "center center";
-      img.style.opacity="1";
-    };
-
-    img.onerror=function(){
-      if(!isCurrentRequest()) return;
-      candidateIndex += 1;
-      if(candidateIndex < candidates.length){
-        img.src=candidates[candidateIndex];
-      }else{
-        console.error("[Seven] Background Château impossible à charger :", current.file, candidates);
-        img.style.opacity="0";
-      }
-    };
-
-    img.style.opacity="0";
-    img.style.objectPosition=backgroundPositions[current.file] || "center center";
-    img.dataset.file=current.file;
-    img.src=candidates[0];
+    layer.style.backgroundImage=`url("${imageUrl}")`;
   }else{
-    layer.replaceChildren();
-    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${current.file}")`;
-    layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
-    layer.style.backgroundSize="cover";
-    layer.style.backgroundRepeat="no-repeat";
-    layer.dataset.currentBackgroundFile=current.file;
-    layer.dataset.currentBackgroundUrl=current.file;
+    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
   }
+
+  layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
+  layer.style.backgroundSize="cover";
+  layer.style.backgroundRepeat="no-repeat";
+
+  layer.dataset.currentBackgroundFile=current.file;
+  layer.dataset.currentBackgroundUrl=imageUrl;
+  document.body.classList.toggle("castle-theme-active", isCastle);
 
   if(backgroundLabel){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
