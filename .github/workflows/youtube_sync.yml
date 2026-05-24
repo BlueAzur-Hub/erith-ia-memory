@@ -26,7 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
 
-      - name: Generate Seven Heaven advanced YouTube data
+      - name: Generate Blue Azur YouTube data
         env:
           YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
@@ -432,14 +432,438 @@ jobs:
 
           print("Generated advanced Seven Heaven YouTube JSON data.")
           PY
+          cp assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_full.json assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_blueazur.json
+
+
+      - name: Generate Aerith IA YouTube data
+        env:
+          YOUTUBE_CLIENT_SECRET_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRET_JSON_AERITH }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON_AERITH }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timedelta, timezone
+          import json
+          import os
+          import re
+
+          from google.oauth2.credentials import Credentials
+          from google.auth.transport.requests import Request
+          from googleapiclient.discovery import build
+
+          OUT = Path("assets/SEVEN_PORTABLE_TERMINAL/data")
+          OUT.mkdir(parents=True, exist_ok=True)
+
+          SCOPES = [
+              "https://www.googleapis.com/auth/youtube.readonly",
+              "https://www.googleapis.com/auth/yt-analytics.readonly",
+          ]
+
+          token_raw = os.environ.get("YOUTUBE_TOKEN_JSON", "").strip()
+          client_raw = os.environ.get("YOUTUBE_CLIENT_SECRET_JSON", "").strip()
+
+          if not client_raw:
+              raise RuntimeError("Missing secret: YOUTUBE_CLIENT_SECRET_JSON")
+          if not token_raw:
+              raise RuntimeError("Missing secret: YOUTUBE_TOKEN_JSON")
+
+          creds = Credentials.from_authorized_user_info(json.loads(token_raw), SCOPES)
+
+          if creds.expired and creds.refresh_token:
+              creds.refresh(Request())
+
+          youtube = build("youtube", "v3", credentials=creds)
+          analytics = build("youtubeAnalytics", "v2", credentials=creds)
+
+          def safe_int(value):
+              try:
+                  return int(float(value or 0))
+              except Exception:
+                  return 0
+
+          def safe_float(value):
+              try:
+                  return float(value or 0)
+              except Exception:
+                  return 0.0
+
+          def iso_duration_to_seconds(duration):
+              if not duration:
+                  return 0
+              pattern = r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?"
+              match = re.match(pattern, duration)
+              if not match:
+                  return 0
+              hours = safe_int(match.group(1))
+              minutes = safe_int(match.group(2))
+              seconds = safe_int(match.group(3))
+              return hours * 3600 + minutes * 60 + seconds
+
+          def format_duration(seconds):
+              seconds = safe_int(seconds)
+              h = seconds // 3600
+              m = (seconds % 3600) // 60
+              s = seconds % 60
+              if h:
+                  return f"{h}:{m:02d}:{s:02d}"
+              return f"{m}:{s:02d}"
+
+          def classify_family(title):
+              t = (title or "").lower()
+              rules = [
+                  ("Zelda", ["zelda", "link", "hyrule", "breath of the wild", "tears of the kingdom", "botw", "totk", "linkle", "gleeok", "gibdo", "queen gibdo"]),
+                  ("Final Fantasy", ["final fantasy", "ff7", "ff vii", "remake", "rebirth", "cloud", "tifa", "aerith", "rochey", "avalanche"]),
+                  ("ERITH.IA", ["erith", "seven heaven", "seven portable", "aerith ia", "ia", "comfyui", "wan", "runninghub", "stable diffusion", "prompt"]),
+                  ("GTA", ["gta", "grand theft auto"]),
+              ]
+              for name, keys in rules:
+                  if any(k in t for k in keys):
+                      return name
+              return "Autre"
+
+          def fetch_channel():
+              res = youtube.channels().list(
+                  part="snippet,statistics,contentDetails",
+                  mine=True
+              ).execute()
+
+              items = res.get("items", [])
+              if not items:
+                  raise RuntimeError("No YouTube channel found for this token")
+
+              item = items[0]
+              return {
+                  "id": item.get("id"),
+                  "title": item.get("snippet", {}).get("title"),
+                  "customUrl": item.get("snippet", {}).get("customUrl"),
+                  "statistics": item.get("statistics", {}),
+                  "uploadsPlaylistId": item.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads"),
+              }
+
+          def fetch_all_upload_ids(playlist_id, max_videos=500):
+              ids = []
+              page_token = None
+
+              while len(ids) < max_videos:
+                  res = youtube.playlistItems().list(
+                      part="contentDetails",
+                      playlistId=playlist_id,
+                      maxResults=50,
+                      pageToken=page_token
+                  ).execute()
+
+                  for item in res.get("items", []):
+                      vid = item.get("contentDetails", {}).get("videoId")
+                      if vid and vid not in ids:
+                          ids.append(vid)
+
+                  page_token = res.get("nextPageToken")
+                  if not page_token:
+                      break
+
+              return ids[:max_videos]
+
+          def fetch_video_details(video_ids):
+              videos = []
+
+              for i in range(0, len(video_ids), 50):
+                  batch = video_ids[i:i+50]
+                  res = youtube.videos().list(
+                      part="snippet,statistics,contentDetails",
+                      id=",".join(batch)
+                  ).execute()
+
+                  for item in res.get("items", []):
+                      snippet = item.get("snippet", {})
+                      stats = item.get("statistics", {})
+                      content = item.get("contentDetails", {})
+                      thumbs = snippet.get("thumbnails", {})
+                      thumb = thumbs.get("maxres") or thumbs.get("high") or thumbs.get("medium") or thumbs.get("default") or {}
+                      vid = item.get("id")
+                      title = snippet.get("title", "")
+                      duration_iso = content.get("duration")
+                      duration_seconds = iso_duration_to_seconds(duration_iso)
+                      views = safe_int(stats.get("viewCount"))
+                      likes = safe_int(stats.get("likeCount"))
+                      comments = safe_int(stats.get("commentCount"))
+
+                      like_rate = round((likes / views) * 100, 3) if views else 0
+                      comment_rate = round((comments / views) * 100, 3) if views else 0
+
+                      videos.append({
+                          "videoId": vid,
+                          "title": title,
+                          "description": snippet.get("description", ""),
+                          "publishedAt": snippet.get("publishedAt"),
+                          "thumbnail": thumb.get("url"),
+                          "url": "https://www.youtube.com/watch?v=" + vid,
+                          "memoryFamily": classify_family(title),
+                          "duration": duration_iso,
+                          "durationSeconds": duration_seconds,
+                          "durationLabel": format_duration(duration_seconds),
+                          "publicStats": {
+                              "views": views,
+                              "likes": likes,
+                              "comments": comments,
+                              "likeRatePercent": like_rate,
+                              "commentRatePercent": comment_rate
+                          },
+                          "analytics28d": {
+                              "views": 0,
+                              "estimatedMinutesWatched": 0,
+                              "averageViewDuration": 0,
+                              "shares": 0,
+                              "subscribersGained": 0
+                          },
+                          "score": 0
+                      })
+
+              return videos
+
+          def enrich_analytics_28d(videos):
+              if not videos:
+                  return videos
+
+              end = datetime.now(timezone.utc).date() - timedelta(days=1)
+              start = end - timedelta(days=27)
+              by_id = {v["videoId"]: v for v in videos}
+
+              # Analytics API filters can be long. Process in chunks.
+              ids = list(by_id.keys())
+              for i in range(0, len(ids), 50):
+                  chunk = ids[i:i+50]
+                  filters = ",".join("video==" + vid for vid in chunk)
+
+                  try:
+                      res = analytics.reports().query(
+                          ids="channel==MINE",
+                          startDate=str(start),
+                          endDate=str(end),
+                          metrics="views,estimatedMinutesWatched,averageViewDuration,shares,subscribersGained",
+                          dimensions="video",
+                          filters=filters,
+                          maxResults=200,
+                          sort="-views"
+                      ).execute()
+
+                      headers = [h["name"] for h in res.get("columnHeaders", [])]
+                      for row in res.get("rows", []):
+                          data = dict(zip(headers, row))
+                          video = by_id.get(data.get("video"))
+                          if not video:
+                              continue
+
+                          video["analytics28d"] = {
+                              "views": safe_int(data.get("views")),
+                              "estimatedMinutesWatched": safe_int(data.get("estimatedMinutesWatched")),
+                              "averageViewDuration": safe_int(data.get("averageViewDuration")),
+                              "shares": safe_int(data.get("shares")),
+                              "subscribersGained": safe_int(data.get("subscribersGained")),
+                          }
+
+                  except Exception as exc:
+                      print("Analytics 28d unavailable for chunk:", exc)
+
+              return videos
+
+          def compute_scores(videos):
+              # Simple readable score:
+              # historical views dominate, then engagement and recent analytics.
+              for v in videos:
+                  public = v.get("publicStats", {})
+                  a28 = v.get("analytics28d", {})
+                  views = safe_int(public.get("views"))
+                  likes = safe_int(public.get("likes"))
+                  comments = safe_int(public.get("comments"))
+                  recent_views = safe_int(a28.get("views"))
+                  watch = safe_int(a28.get("estimatedMinutesWatched"))
+                  subs = safe_int(a28.get("subscribersGained"))
+
+                  score = (
+                      views
+                      + likes * 20
+                      + comments * 80
+                      + recent_views * 5
+                      + watch * 2
+                      + subs * 500
+                  )
+                  v["score"] = safe_int(score)
+
+              return sorted(videos, key=lambda v: safe_int(v.get("score")), reverse=True)
+
+          def build_families(videos):
+              fams = {}
+
+              for video in videos:
+                  family = video.get("memoryFamily") or "Autre"
+                  public = video.get("publicStats", {})
+                  a28 = video.get("analytics28d", {})
+
+                  bucket = fams.setdefault(family, {
+                      "views": 0,
+                      "likes": 0,
+                      "comments": 0,
+                      "views28d": 0,
+                      "estimatedMinutesWatched28d": 0,
+                      "shares28d": 0,
+                      "subscribersGained28d": 0,
+                      "score": 0,
+                      "videos": [],
+                  })
+
+                  bucket["views"] += safe_int(public.get("views"))
+                  bucket["likes"] += safe_int(public.get("likes"))
+                  bucket["comments"] += safe_int(public.get("comments"))
+                  bucket["views28d"] += safe_int(a28.get("views"))
+                  bucket["estimatedMinutesWatched28d"] += safe_int(a28.get("estimatedMinutesWatched"))
+                  bucket["shares28d"] += safe_int(a28.get("shares"))
+                  bucket["subscribersGained28d"] += safe_int(a28.get("subscribersGained"))
+                  bucket["score"] += safe_int(video.get("score"))
+
+                  bucket["videos"].append({
+                      "videoId": video.get("videoId"),
+                      "title": video.get("title"),
+                      "url": video.get("url"),
+                      "views": safe_int(public.get("views")),
+                      "views28d": safe_int(a28.get("views")),
+                      "estimatedMinutesWatched28d": safe_int(a28.get("estimatedMinutesWatched")),
+                      "score": safe_int(video.get("score")),
+                  })
+
+              return dict(sorted(fams.items(), key=lambda x: x[1]["score"], reverse=True))
+
+          def make_brief(channel, top_by_views, top_by_score, fams):
+              locomotive = top_by_views[0] if top_by_views else None
+              best_score = top_by_score[0] if top_by_score else None
+              top_family = next(iter(fams.keys()), "Aucune")
+
+              lines = [
+                  "# Seven Heaven — YouTube Memory Brief",
+                  "",
+                  "Generated: " + datetime.now(timezone.utc).isoformat(),
+                  "Channel: " + str(channel.get("title") or "Unknown"),
+                  "Mode: full uploads playlist + public statistics + 28d analytics when available",
+                  "",
+                  "## Signal principal",
+                  "",
+                  "- Famille dominante : " + top_family,
+              ]
+
+              if locomotive:
+                  p = locomotive.get("publicStats", {})
+                  a = locomotive.get("analytics28d", {})
+                  lines += [
+                      "- Vidéo locomotive historique : " + str(locomotive.get("title")),
+                      "- URL : " + str(locomotive.get("url")),
+                      "- Vues publiques : " + str(safe_int(p.get("views"))),
+                      "- Watchtime 28 jours : " + str(safe_int(a.get("estimatedMinutesWatched"))) + " minutes",
+                  ]
+
+              if best_score and (not locomotive or best_score.get("videoId") != locomotive.get("videoId")):
+                  p = best_score.get("publicStats", {})
+                  a = best_score.get("analytics28d", {})
+                  lines += [
+                      "",
+                      "## Meilleur score stratégique",
+                      "",
+                      "- Vidéo : " + str(best_score.get("title")),
+                      "- URL : " + str(best_score.get("url")),
+                      "- Vues publiques : " + str(safe_int(p.get("views"))),
+                      "- Vues 28 jours : " + str(safe_int(a.get("views"))),
+                      "- Watchtime 28 jours : " + str(safe_int(a.get("estimatedMinutesWatched"))) + " minutes",
+                  ]
+
+              lines += [
+                  "",
+                  "## Top 10 par vues publiques",
+                  "",
+              ]
+
+              for index, video in enumerate(top_by_views[:10], start=1):
+                  p = video.get("publicStats", {})
+                  lines.append(f"{index}. {video.get('title')} — {safe_int(p.get('views'))} vues — {video.get('memoryFamily')}")
+
+              lines += [
+                  "",
+                  "## Action Aerith",
+                  "",
+                  "Utiliser les vidéos historiques les plus fortes comme signaux principaux, puis produire des vidéos satellites autour des familles mémoire dominantes.",
+              ]
+
+              return "\n".join(lines)
+
+          channel = fetch_channel()
+          upload_ids = fetch_all_upload_ids(channel["uploadsPlaylistId"], max_videos=500)
+          videos = fetch_video_details(upload_ids)
+          videos = enrich_analytics_28d(videos)
+          videos = compute_scores(videos)
+
+          top_by_views = sorted(videos, key=lambda v: safe_int(v.get("publicStats", {}).get("views")), reverse=True)[:25]
+          top_by_score = sorted(videos, key=lambda v: safe_int(v.get("score")), reverse=True)[:25]
+          families = build_families(top_by_views)
+          brief = make_brief(channel, top_by_views, top_by_score, families)
+
+          payload = {
+              "generatedAt": datetime.now(timezone.utc).isoformat(),
+              "channel": channel,
+              "mode": "advanced_full_uploads_public_stats_plus_28d_analytics",
+              "topByViews": top_by_views,
+              "topByScore": top_by_score,
+              "families": families,
+              "brief": brief
+          }
+
+          (OUT / "top_videos.json").write_text(
+              json.dumps(top_by_views, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+
+          (OUT / "memory_families.json").write_text(
+              json.dumps(families, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+
+          (OUT / "brief.json").write_text(
+              json.dumps({
+                  "brief": brief,
+                  "generatedAt": payload["generatedAt"],
+                  "channel": channel,
+                  "mode": payload["mode"],
+                  "topByScore": top_by_score[:10]
+              }, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+
+          (OUT / "youtube_memory_full.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2),
+              encoding="utf-8"
+          )
+
+          print("Generated advanced Seven Heaven YouTube JSON data.")
+          PY
+          cp assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_full.json assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_aerithia.json
+          cp assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_blueazur.json assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_full.json
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          out = Path("assets/SEVEN_PORTABLE_TERMINAL/data")
+          (out / "youtube_channels.json").write_text(json.dumps({
+              "schema": "seven_heaven_youtube_channels.v1",
+              "generatedAt": datetime.now(timezone.utc).isoformat(),
+              "default": "blueazur",
+              "channels": [
+                  {"key": "blueazur", "label": "Blue Azur", "file": "youtube_memory_blueazur.json"},
+                  {"key": "aerithia", "label": "Aerith IA", "file": "youtube_memory_aerithia.json"}
+              ]
+          }, ensure_ascii=False, indent=2), encoding="utf-8")
+          PY
+
 
       - name: Commit generated data
         run: |
           git config user.name "Seven Heaven Bot"
           git config user.email "actions@github.com"
-          git add assets/SEVEN_PORTABLE_TERMINAL/data/top_videos.json
-          git add assets/SEVEN_PORTABLE_TERMINAL/data/memory_families.json
-          git add assets/SEVEN_PORTABLE_TERMINAL/data/brief.json
-          git add assets/SEVEN_PORTABLE_TERMINAL/data/youtube_memory_full.json
-          git diff --cached --quiet && echo "No data changes" || git commit -m "Update Seven Heaven advanced YouTube data"
+          git add assets/SEVEN_PORTABLE_TERMINAL/data/*.json
+          git diff --cached --quiet && echo "No data changes" || git commit -m "Update Seven Heaven dual YouTube data"
           git push
