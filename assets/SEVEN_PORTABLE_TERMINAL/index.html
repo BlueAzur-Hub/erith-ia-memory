@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-STABLE-NO-JUMP">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-FINAL-UNIQUE-TOP10">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -172,32 +172,50 @@
     }
   </style>
 
-  <style id="yt-stable-toggle-css">
-    #page-youtube .yt-toggle-top10 {
-      border: 1px solid rgba(255,232,160,.42);
+  <style id="yt-top10-final-css">
+    #page-youtube #ytTopListStable {
+      display: block !important;
+      width: 100% !important;
+      margin-top: 12px !important;
+    }
+
+    #page-youtube .yt-final-toggle {
+      border: 1px solid rgba(255,232,160,.45);
       border-radius: 18px;
       padding: 12px 16px;
       margin: 0 0 10px 0;
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.22);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      box-sizing: border-box;
     }
-    #page-youtube .yt-toggle-top10-title { font-weight: 800; }
-    #page-youtube .yt-toggle-top10-btn {
-      cursor: pointer;
-      border: 1px solid rgba(255,232,160,.5);
-      border-radius: 999px;
-      padding: 5px 12px;
-      background: rgba(0,0,0,.25);
-      color: inherit;
+
+    #page-youtube .yt-final-toggle-title {
       font-weight: 800;
-      font-family: inherit;
-      min-width: 76px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
     }
-    #page-youtube .yt-top10-inner[hidden] { display: none !important; }
-    #page-youtube .yt-video-row {
+
+    #page-youtube .yt-final-toggle-btn {
+      cursor: pointer;
+      border: 1px solid rgba(255,232,160,.6);
+      border-radius: 999px;
+      padding: 5px 13px;
+      background: rgba(0,0,0,.32);
+      color: inherit;
+      font-family: inherit;
+      font-weight: 800;
+      min-width: 76px;
+      flex: 0 0 auto;
+    }
+
+    #page-youtube #ytTop10StableRows[hidden] {
+      display: none !important;
+    }
+
+    #page-youtube .yt-final-row {
       display: grid !important;
       grid-template-columns: minmax(0, 1fr) max-content !important;
       grid-template-areas:
@@ -205,11 +223,57 @@
         "stats link" !important;
       gap: 6px 18px !important;
       align-items: baseline !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 10px 14px !important;
+      margin: 0 0 8px 0 !important;
+      overflow: hidden !important;
     }
-    #page-youtube .yt-video-title { grid-area: title !important; overflow-wrap: anywhere !important; }
-    #page-youtube .yt-video-meta { grid-area: meta !important; text-align: right !important; white-space: nowrap !important; }
-    #page-youtube .yt-video-stats { grid-area: stats !important; overflow-wrap: anywhere !important; }
-    #page-youtube .yt-video-link { grid-area: link !important; text-align: right !important; white-space: nowrap !important; }
+
+    #page-youtube .yt-final-title {
+      grid-area: title !important;
+      font-weight: 800 !important;
+      line-height: 1.25 !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+    }
+
+    #page-youtube .yt-final-meta {
+      grid-area: meta !important;
+      text-align: right !important;
+      white-space: nowrap !important;
+      opacity: .92 !important;
+    }
+
+    #page-youtube .yt-final-stats {
+      grid-area: stats !important;
+      line-height: 1.25 !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    #page-youtube .yt-final-link {
+      grid-area: link !important;
+      text-align: right !important;
+      white-space: nowrap !important;
+    }
+
+    @media (max-width: 900px) {
+      #page-youtube .yt-final-row {
+        grid-template-columns: 1fr !important;
+        grid-template-areas:
+          "title"
+          "meta"
+          "stats"
+          "link" !important;
+      }
+      #page-youtube .yt-final-meta,
+      #page-youtube .yt-final-link {
+        text-align: left !important;
+        white-space: normal !important;
+      }
+    }
   </style>
 
 </head>
@@ -438,7 +502,7 @@
               <span>classement automatique depuis YouTube API</span>
             </div>
           </div>
-          <div id="ytTopList" class="youtube-lines-list" style="display:block;width:100%;margin-top:12px;"></div>
+          <div id="ytTopListStable" class="youtube-lines-list" style="display:block;width:100%;margin-top:12px;"></div>
         </section>
 
         <section class="advanced-panel" style="margin-top:16px;">
@@ -534,7 +598,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-STABLE-NO-JUMP"></script>
+  <script src="script.js?v=20260524-YT-FINAL-UNIQUE-TOP10"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1062,174 +1126,213 @@
     })();
   </script>
 
-  <script id="yt-stable-channel-controller">
+  <script id="yt-top10-final-controller">
     (function () {
       const FILES = {
         blueazur: './data/youtube_memory_blueazur.json',
         aerithia: './data/youtube_memory_aerithia.json'
       };
+
       const LABELS = {
         blueazur: 'Blue Azur',
         aerithia: 'Aerith IA'
       };
 
-      function id(x) { return document.getElementById(x); }
-      function n(v) { const x = Number(v || 0); return Number.isFinite(x) ? x : 0; }
-      function fmt(v) { return Math.round(n(v)).toLocaleString('fr-FR'); }
+      function el(id) { return document.getElementById(id); }
+      function num(v) { const n = Number(v || 0); return Number.isFinite(n) ? n : 0; }
+      function fmt(v) { return Math.round(num(v)).toLocaleString('fr-FR'); }
       function esc(v) {
-        return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-        }[c]));
+        return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];
+        });
       }
 
-      function key() {
-        const select = id('youtubeChannelSelect');
+      function selectedChannel() {
+        const select = el('youtubeChannelSelect');
         return select && FILES[select.value] ? select.value : 'blueazur';
       }
 
-      function metric(v) {
-        const p = v.publicStats || {};
-        const a = v.analytics28d || {};
-        const out = [fmt(p.views || 0) + ' vues publiques'];
-        if (a.views) out.push(fmt(a.views) + ' vues 28j');
-        if (a.estimatedMinutesWatched) out.push(fmt(a.estimatedMinutesWatched) + ' min watchtime 28j');
-        out.push('score ' + fmt(v.score || 0));
+      function metric(video) {
+        const publicStats = video.publicStats || {};
+        const analytics = video.analytics28d || {};
+        const out = [fmt(publicStats.views || 0) + ' vues publiques'];
+
+        if (analytics.views) {
+          out.push(fmt(analytics.views) + ' vues 28j');
+        }
+
+        if (analytics.estimatedMinutesWatched) {
+          out.push(fmt(analytics.estimatedMinutesWatched) + ' min watchtime 28j');
+        }
+
+        out.push('score ' + fmt(video.score || 0));
         return out.join(' · ');
       }
 
-      function videoRow(v, i) {
-        const url = v.url || (v.videoId ? 'https://www.youtube.com/watch?v=' + v.videoId : '');
-        const meta = (v.memoryFamily || 'Non classé') + (v.durationLabel ? ' · ' + v.durationLabel : '');
-        return '<section class="remote-card yt-video-row">' +
-          '<div class="yt-video-title"><strong>' + (i + 1) + '. ' + esc(v.title || 'Vidéo') + '</strong></div>' +
-          '<div class="yt-video-meta">' + esc(meta) + '</div>' +
-          '<div class="yt-video-stats">' + esc(metric(v)) + '</div>' +
-          '<div class="yt-video-link">' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noreferrer">' + esc(url) + '</a>' : '') + '</div>' +
+      function videoRow(video, index) {
+        const url = video.url || (video.videoId ? 'https://www.youtube.com/watch?v=' + video.videoId : '');
+        const meta = (video.memoryFamily || 'Non classé') + (video.durationLabel ? ' · ' + video.durationLabel : '');
+
+        return '<section class="remote-card yt-final-row">' +
+          '<div class="yt-final-title">' + esc(index + 1) + '. ' + esc(video.title || 'Vidéo') + '</div>' +
+          '<div class="yt-final-meta">' + esc(meta) + '</div>' +
+          '<div class="yt-final-stats">' + esc(metric(video)) + '</div>' +
+          '<div class="yt-final-link">' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noreferrer">' + esc(url) + '</a>' : '') + '</div>' +
         '</section>';
       }
 
-      function familyRow(entry, i) {
+      function familyRow(entry, index) {
         const name = entry[0];
-        const d = entry[1] || {};
+        const data = entry[1] || {};
+        const count = Array.isArray(data.videos) ? data.videos.length : 0;
+
         return '<section class="remote-card" style="display:block;width:100%;box-sizing:border-box;margin:0 0 8px 0;padding:10px 14px;">' +
-          '<strong style="display:block;margin-bottom:5px;">' + (i + 1) + '. ' + esc(name) + '</strong>' +
-          '<span>' + esc(fmt(d.views || 0) + ' vues · ' + fmt(d.likes || 0) + ' likes · score ' + fmt(d.score || 0) + ' · ' + (Array.isArray(d.videos) ? d.videos.length : 0) + ' vidéo(s)') + '</span>' +
+          '<strong style="display:block;margin-bottom:5px;">' + esc(index + 1) + '. ' + esc(name) + '</strong>' +
+          '<span>' + esc(fmt(data.views || 0) + ' vues · ' + fmt(data.likes || 0) + ' likes · score ' + fmt(data.score || 0) + ' · ' + count + ' vidéo(s)') + '</span>' +
         '</section>';
       }
 
-      async function loadChannel() {
-        const k = key();
-        const label = LABELS[k] || k;
-        const response = await fetch(FILES[k] + '?v=' + Date.now(), { cache: 'no-store' });
-        if (!response.ok) throw new Error(FILES[k] + ' HTTP ' + response.status);
-        const data = await response.json();
+      function renderTop10(top) {
+        const host = el('ytTopListStable');
+        if (!host) return;
 
+        const rows = top.slice(0, 10).map(videoRow).join('');
+
+        host.innerHTML =
+          '<div class="yt-final-toggle">' +
+            '<span class="yt-final-toggle-title">Top 10 vidéos — vues publiques</span>' +
+            '<button type="button" id="ytTop10StableBtn" class="yt-final-toggle-btn" aria-expanded="false" aria-controls="ytTop10StableRows">ouvrir</button>' +
+          '</div>' +
+          '<div id="ytTop10StableRows" hidden>' + rows + '</div>';
+
+        const btn = el('ytTop10StableBtn');
+        const rowsBox = el('ytTop10StableRows');
+
+        if (!btn || !rowsBox) return;
+
+        btn.addEventListener('click', function () {
+          const closed = rowsBox.hasAttribute('hidden');
+
+          if (closed) {
+            rowsBox.removeAttribute('hidden');
+            btn.textContent = 'replier';
+            btn.setAttribute('aria-expanded', 'true');
+          } else {
+            rowsBox.setAttribute('hidden', '');
+            btn.textContent = 'ouvrir';
+            btn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      async function loadYouTube() {
+        const key = selectedChannel();
+        const label = LABELS[key] || key;
+        const response = await fetch(FILES[key] + '?v=' + Date.now(), { cache: 'no-store' });
+
+        if (!response.ok) {
+          throw new Error(FILES[key] + ' HTTP ' + response.status);
+        }
+
+        const data = await response.json();
         const top = Array.isArray(data.topByViews) ? data.topByViews : [];
         const byScore = Array.isArray(data.topByScore) ? data.topByScore : top;
         const topVideo = top[0] || null;
         const signal = byScore[0] || topVideo;
-        const families = Object.entries(data.families || {}).sort((a, b) => n(b[1].score || b[1].views) - n(a[1].score || a[1].views));
+        const families = Object.entries(data.families || {}).sort(function (a, b) {
+          return num(b[1].score || b[1].views) - num(a[1].score || a[1].views);
+        });
         const topFamily = families[0] || null;
 
-        const oldBest = id('ytBestScore');
-        if (oldBest) {
-          const card = oldBest.closest('.remote-card, .tile, section');
+        const bestScore = el('ytBestScore');
+        if (bestScore) {
+          const card = bestScore.closest('.remote-card, .tile, section');
           if (card) card.remove();
         }
 
-        if (id('ytStatusTitle')) id('ytStatusTitle').textContent = 'Données avancées chargées';
-        if (id('ytStatus')) id('ytStatus').textContent = 'Chaîne active : ' + label + ' · avancé · vues publiques · analytics 28j';
-        if (id('ytMetricVideos')) id('ytMetricVideos').textContent = top.length + ' vidéo(s)';
-        if (id('ytMetricFamilies')) id('ytMetricFamilies').textContent = families.length + ' famille(s)';
-        if (id('ytMode')) id('ytMode').textContent = label + ' · analytics 28j';
+        if (el('ytStatusTitle')) el('ytStatusTitle').textContent = 'Données avancées chargées';
+        if (el('ytStatus')) el('ytStatus').textContent = 'Chaîne active : ' + label + ' · avancé · vues publiques · analytics 28j';
+        if (el('ytMetricVideos')) el('ytMetricVideos').textContent = top.length + ' vidéo(s)';
+        if (el('ytMetricFamilies')) el('ytMetricFamilies').textContent = families.length + ' famille(s)';
+        if (el('ytMode')) el('ytMode').textContent = label + ' · analytics 28j';
 
-        if (id('ytAction')) {
-          id('ytAction').textContent = signal
+        if (el('ytAction')) {
+          el('ytAction').textContent = signal
             ? 'Étudier le signal fort : ' + (signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')
             : 'Aucune donnée.';
         }
 
-        if (id('ytTopVideo')) {
+        if (el('ytTopVideo')) {
           if (topVideo) {
             const url = topVideo.url || (topVideo.videoId ? 'https://www.youtube.com/watch?v=' + topVideo.videoId : '');
-            id('ytTopVideo').innerHTML =
+            el('ytTopVideo').innerHTML =
               '<b>' + esc(topVideo.title || 'Vidéo') + '</b><br>' +
               esc(topVideo.memoryFamily || 'Non classé') + '<br>' +
               esc(metric(topVideo)) +
               (url ? '<br><a href="' + esc(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '');
           } else {
-            id('ytTopVideo').textContent = 'Aucune donnée.';
+            el('ytTopVideo').textContent = 'Aucune donnée.';
           }
         }
 
-        if (id('ytTopFamily')) {
+        if (el('ytTopFamily')) {
           if (topFamily) {
-            id('ytTopFamily').innerHTML =
+            el('ytTopFamily').innerHTML =
               '<b>' + esc(topFamily[0]) + '</b><br>' +
               esc(fmt(topFamily[1].views || 0) + ' vues · score ' + fmt(topFamily[1].score || 0));
           } else {
-            id('ytTopFamily').textContent = 'Aucune donnée.';
+            el('ytTopFamily').textContent = 'Aucune donnée.';
           }
         }
 
-        if (id('ytTopList')) {
-          const rows = top.slice(0, 10).map(videoRow).join('');
-          id('ytTopList').innerHTML =
-            '<div class="yt-toggle-top10">' +
-              '<span class="yt-toggle-top10-title">Top 10 vidéos — vues publiques</span>' +
-              '<button type="button" id="ytTop10ToggleBtn" class="yt-toggle-top10-btn">ouvrir</button>' +
-            '</div>' +
-            '<div id="ytTop10Inner" class="yt-top10-inner" hidden>' + rows + '</div>';
+        renderTop10(top);
 
-          const btn = id('ytTop10ToggleBtn');
-          const box = id('ytTop10Inner');
-          if (btn && box) {
-            btn.onclick = function () {
-              const isHidden = box.hasAttribute('hidden');
-              if (isHidden) {
-                box.removeAttribute('hidden');
-                btn.textContent = 'replier';
-              } else {
-                box.setAttribute('hidden', '');
-                btn.textContent = 'ouvrir';
-              }
-            };
-          }
+        if (el('ytFamiliesList')) {
+          el('ytFamiliesList').innerHTML = families.slice(0, 10).map(familyRow).join('');
         }
 
-        if (id('ytFamiliesList')) id('ytFamiliesList').innerHTML = families.slice(0, 10).map(familyRow).join('');
-
-        if (id('ytBriefText')) {
+        if (el('ytBriefText')) {
           let brief = data.brief || '';
           brief = brief.replace(/Vidéo locomotive historique/g, 'Top vidéo historique');
           brief = brief.replace(/vidéos historiques les plus fortes comme signaux principaux/g, 'vidéos les plus fortes comme signaux principaux');
-          id('ytBriefText').value = brief;
+          el('ytBriefText').value = brief;
         }
       }
 
-      function boot() {
-        const select = id('youtubeChannelSelect');
+      function bootYouTube() {
+        const select = el('youtubeChannelSelect');
+
         if (select) {
           const saved = localStorage.getItem('seven_youtube_channel');
           if (saved && FILES[saved]) select.value = saved;
-          select.onchange = function () {
+
+          select.addEventListener('change', function () {
             localStorage.setItem('seven_youtube_channel', select.value);
-            loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
-          };
+            loadYouTube().catch(function (err) {
+              if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
+            });
+          });
         }
 
-        const refresh = id('refreshYoutubeDataBtn');
+        const refresh = el('refreshYoutubeDataBtn');
         if (refresh) {
-          refresh.onclick = function () {
-            loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
-          };
+          refresh.addEventListener('click', function () {
+            loadYouTube().catch(function (err) {
+              if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
+            });
+          });
         }
 
-        loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
+        loadYouTube().catch(function (err) {
+          if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
+        });
       }
 
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-      else boot();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootYouTube);
+      } else {
+        bootYouTube();
+      }
     })();
   </script>
 
