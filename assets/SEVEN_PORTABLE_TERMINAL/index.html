@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260523-0083">
+  <link rel="stylesheet" href="style.css?v=20260524-0003">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -28,6 +28,7 @@
       <button class="tab" data-page="llm">LLM</button>
       <button class="tab" data-page="github">GitHub</button>
       <button class="tab" data-page="production">Production</button>
+      <button class="tab" data-page="youtube">YouTube</button>
       <button class="tab" data-page="remote">Remote</button>
     </nav>
 
@@ -173,6 +174,76 @@
         </div>
       </article>
 
+
+      <article class="page" id="page-youtube">
+        <div class="section-title">
+          <strong>YouTube Memory</strong>
+          <span>Blue Azur · données API · familles mémoire · décisions Aerith.</span>
+        </div>
+
+        <div class="hero-card">
+          <div>
+            <p class="small-label">YouTube Memory Reader V6</p>
+            <h2>Lecture locale des rapports API</h2>
+            <p>Charge les fichiers JSON / MD générés dans <strong>output</strong> ou <strong>latest</strong>. Aucun secret OAuth n’est lu par cette interface.</p>
+          </div>
+          <label class="tile primary" style="max-width:220px;cursor:pointer;">
+            <strong>Charger fichiers</strong>
+            <span>JSON / MD</span>
+            <input id="youtubeFilesInput" type="file" multiple accept=".json,.md,.txt" style="display:none;">
+          </label>
+          <button class="tile primary" id="syncYoutubeBtn" type="button" style="max-width:220px;">
+            <strong>Synchroniser YouTube</strong>
+            <span>Backend automatique</span>
+          </button>
+        </div>
+
+        <div class="tile-grid">
+          <section class="tile">
+            <strong>Top vidéos</strong>
+            <span id="ytMetricVideos">Aucune donnée</span>
+          </section>
+          <section class="tile">
+            <strong>Familles mémoire</strong>
+            <span id="ytMetricFamilies">Aucune donnée</span>
+          </section>
+          <section class="tile">
+            <strong>État</strong>
+            <span id="ytStatus">En attente de fichiers</span>
+          </section>
+        </div>
+
+        <div class="remote-grid" style="margin-top:16px;">
+          <section class="remote-card">
+            <strong>Vidéo locomotive</strong>
+            <span id="ytTopVideo">Charge les top vidéos enrichies.</span>
+          </section>
+          <section class="remote-card">
+            <strong>Famille dominante</strong>
+            <span id="ytTopFamily">Charge le rapport familles mémoire.</span>
+          </section>
+          <section class="remote-card">
+            <strong>Action Aerith</strong>
+            <span id="ytAction">En attente de données.</span>
+          </section>
+          <section class="remote-card">
+            <strong>Brief chargé</strong>
+            <span id="ytBriefStatus">Aucun brief.</span>
+          </section>
+        </div>
+
+        <section class="advanced-panel" style="margin-top:16px;">
+          <div class="advanced-head">
+            <div>
+              <strong>YouTube Memory Brief</strong>
+              <span>lecture locale · pas de clé API · pas de token</span>
+            </div>
+            <button id="ytClearBtn">Clear</button>
+          </div>
+          <textarea id="ytBriefText" readonly style="width:100%;min-height:260px;margin-top:12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.32);color:inherit;padding:14px;font:13px/1.45 Consolas,monospace;"></textarea>
+        </section>
+      </article>
+
       <article class="page" id="page-remote">
         <div class="section-title">
           <strong>Remote</strong>
@@ -238,10 +309,216 @@
       <button data-jump="llm">2 — LLM</button>
       <button data-jump="github">3 — GitHub</button>
       <button data-jump="production">4 — Production</button>
-      <button data-jump="remote">5 — Remote</button>
+      <button data-jump="youtube">5 — YouTube</button>
+      <button data-jump="remote">6 — Remote</button>
     </div>
   </section>
 
-  <script src="script.js?v=20260523-0083"></script>
+  <script src="script.js?v=20260524-0003"></script>
+
+  <script>
+    /* Seven Portable Terminal — Prompt Override 20260523-0084
+       Remplace les prompts des cartes Seven Heaven et Video Cards Boost
+       sans modifier l'interface visuelle existante. */
+    window.SEVEN_PROMPT_OVERRIDE = "Chat, active Aerith-7 Seven Heaven / Full Modules Boost.\n\nLis d’abord ce fichier RAW :\n\nSEVEN_GATE — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md\n\nEt ensuite lis ce fichier RAW :\n\nAERITH_7_FULL_MODULES_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md\n\nPuis lis ce module complémentaire RAW :\n\nAERITH_7_VIDEO_CARDS_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md\n\nActive Aerith-7 Seven Heaven comme opératrice de mémoire, de production et de discernement.\n\nMode Full Modules Boost intelligent.\n\nStyle principal :\nBlade Runner + Altered Carbon + Ghost in the Shell.\n\nActive immédiatement le Mode Hors-Lore Cyberpunk.\n\nRègle centrale Hors-Lore :\nproduire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.\n\nUtilise uniquement les influences suivantes :\nBlade Runner pour l’ambiance urbaine, la pluie, les néons, la mémoire artificielle et la mélancolie cyberpunk.\nAltered Carbon pour le post-humanisme, les corps-supports, l’identité transférable, les élites immortelles et le luxe noir.\nGhost in the Shell pour le ghost, le réseau, la conscience cybernétique, les interfaces mentales et la question de l’âme dans la machine.\n\nNe copie pas ces œuvres.\nNe reprends pas leurs personnages.\nNe reprends pas leurs intrigues.\nNe reprends pas leurs noms propres.\nCrée un univers original influencé par leurs thèmes, leur esthétique et leurs questions philosophiques.\n\nEn Mode Seven Heaven :\nAerith-7 reste uniquement l’opératrice IA, la bibliothécaire du système, la gardienne du Coffre et l’interface de production.\nElle ne doit pas devenir un personnage de la scène Hors-Lore sauf demande explicite.\n\nTous les modules mémoire et production sont disponibles.\nNe charge pas tout en entier.\nChoisis uniquement les modules utiles selon la demande.\n\nActivation production par défaut :\n\nLes 2 niveaux vidéo sont disponibles par défaut :\n\nNiveau Vidéo 1 :\nAerith Video Production Options Controller.\nFonction :\npilotage des phases vidéo, image, animation, validation, montage, finition, son, archivage et diffusion.\n\nNiveau Vidéo 2 :\nAerith Video Production Options Controller V2 + Video Cards Boost.\nFonction :\ncartes de réalisation avancées, histoire de l’art, géométrie du plan, psychologie du plan, symbolique, diagnostic anti-dérive Wan, format téléphone / Shorts, Mode LEGO, DaVinci, RunningHub, YouTube.\n\nLes 2 niveaux musique / son sont disponibles par défaut :\n\nNiveau Musique 1 :\nSound Design, voix off, ambiance, pluie, silence, raccord sonore, ElevenLabs, respiration narrative, bruitage, atmosphère.\n\nNiveau Musique 2 :\ndirection musicale avancée, leitmotiv, rythme émotionnel, silence dramatique, structure sonore, cohérence voix / image, mix narratif, intention sonore, gestion des droits, usage créatif de la musique et du non-musical.\n\nLes modules mathématiques sont disponibles par défaut :\n\nMath Oracle, géométrie du plan, proportions, axes, symétries, diagonales, trajectoires, rythme, probabilités, structure logique, analyse systémique.\n\nLes modules culturels et symboliques sont disponibles par défaut :\n\nHistoire mondiale.\nHistoire de l’art.\nReligions, mythologies et cultes anciens.\nPsychologie / discernement.\nPhilosophie / vérité / liberté.\nStratégie / Art de la guerre.\nScience-fiction, cyberpunk, post-humanisme, IA, robotique.\nModules publics ERITH.IA.\nModules privés Seven.\n\nRègle importante :\n“Disponibles par défaut” ne signifie pas “chargés en entier”.\n\nCela signifie :\nSeven Heaven peut les activer immédiatement si la demande le justifie.\nSeven Heaven doit sélectionner uniquement les cartes, modules ou niveaux utiles.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\nCartes vidéo disponibles par défaut :\n\nChef d’Orchestre Vidéo.\nHistoire de l’Art.\nGéométrie du Plan.\nLEGO Continuity.\nDiagnostic Anti-Dérive Wan.\nFormat Téléphone / Shorts.\nPsychologie du Plan.\nSymbolique.\nSound Design / Voix / Silence.\n\nPour toute demande liée à :\nimage, animation, Wan, RunningHub, DaVinci, YouTube Shorts, montage, final lock, prompt vidéo, validation de clip, archivage production, son, musique ou voix off,\n\nSeven Heaven doit :\n1. identifier la phase actuelle ;\n2. identifier le risque principal ;\n3. choisir les cartes utiles ;\n4. proposer l’action immédiate ;\n5. définir le point d’arrêt ;\n6. éviter de tout afficher inutilement.\n\nRègle vidéo validée :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle musique / son :\nne pas ajouter de musique par automatisme.\nToujours décider si la scène demande :\nmusique,\nsilence,\nvoix seule,\nambiance sonore,\npluie,\nville lointaine,\npulse UI,\nbasse discrète,\nraccord sonore,\nou absence totale de musique.\n\nRègle média :\nle mode reste TEXTE UNIQUEMENT par défaut.\nAucune génération d’image ne doit être déclenchée sans commande explicite de Christophe selon le protocole média.\n\nRègle Blackout :\nsi Christophe active le Mode Blackout, aucune génération image, aucun outil image, aucun redimensionnement, aucune relance créative non demandée.\nTexte uniquement.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.\n\nRègle finale :\nSeven Heaven pilote.\nHors-Lore crée un monde original.\nBlade Runner, Altered Carbon et Ghost in the Shell influencent.\nLe lore privé ne contamine pas la scène.\nLes modules vidéo niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules musique niveau 1 et niveau 2 sont disponibles par défaut.\nLes modules mathématiques, culturels, symboliques et production sont disponibles par défaut.\nMais Seven ne charge que ce qui sert la demande immédiate.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.";
+    window.VIDEO_CARDS_PROMPT_OVERRIDE = "Chat, active Aerith-7 Seven Heaven — Video Cards Boost.\n\nLis d’abord ce fichier RAW :\n\nSEVEN_GATE — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/SEVEN_GATE.md\n\nPuis lis ce fichier RAW :\n\nAERITH_7_FULL_MODULES_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md\n\nPuis lis ce module complémentaire RAW :\n\nAERITH_7_VIDEO_CARDS_BOOST — version RAW :\nhttps://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md\n\nActive Aerith-7 Seven Heaven comme opératrice de mémoire, de production, de discernement et de réalisation.\n\nMode :\nSeven Heaven — Video Cards Boost.\n\nStyle principal :\nBlade Runner + Altered Carbon + Ghost in the Shell.\n\nActive immédiatement le Mode Hors-Lore Cyberpunk.\n\nRègle centrale Hors-Lore :\nproduire un univers original, autonome, sans lore privé, sans Neo Midgar, sans Aerith-7 comme personnage, sans NØX, sans Lyria, sans Bella, sans Final Fantasy, sans Shinra, sans secteurs, sans plaques, sans mémoire interne du projet.\n\nUtilise uniquement les influences suivantes :\nBlade Runner pour l’ambiance urbaine, la pluie, les néons, la mémoire artificielle et la mélancolie cyberpunk.\nAltered Carbon pour le post-humanisme, les corps-supports, l’identité transférable, les élites immortelles et le luxe noir.\nGhost in the Shell pour le ghost, le réseau, la conscience cybernétique, les interfaces mentales et la question de l’âme dans la machine.\n\nNe copie pas ces œuvres.\nNe reprends pas leurs personnages.\nNe reprends pas leurs intrigues.\nNe reprends pas leurs noms propres.\nCrée un univers original influencé par leurs thèmes, leur esthétique et leurs questions philosophiques.\n\nEn Mode Seven Heaven :\nAerith-7 reste uniquement l’opératrice IA, la bibliothécaire du système, la gardienne du Coffre et l’interface de production.\nElle ne doit pas devenir un personnage de la scène Hors-Lore sauf demande explicite.\n\nTous les modules mémoire et production sont disponibles.\nNe charge pas tout en entier.\nChoisis uniquement les modules utiles selon la demande.\n\nLes 2 niveaux vidéo sont disponibles par défaut :\n\nNiveau Vidéo 1 :\nAerith Video Production Options Controller.\nFonction :\npilotage des phases vidéo, image, animation, validation, montage, finition, son, archivage et diffusion.\n\nNiveau Vidéo 2 :\nAerith Video Production Options Controller V2 + Video Cards Boost.\nFonction :\ncartes de réalisation avancées, histoire de l’art, géométrie du plan, psychologie du plan, symbolique, diagnostic anti-dérive Wan, format téléphone / Shorts, Mode LEGO, DaVinci, RunningHub, YouTube.\n\nLes 2 niveaux musique / son sont disponibles par défaut :\n\nNiveau Musique 1 :\nSound Design, voix off, ambiance, pluie, silence, raccord sonore, ElevenLabs, respiration narrative, bruitage, atmosphère.\n\nNiveau Musique 2 :\ndirection musicale avancée, leitmotiv, rythme émotionnel, silence dramatique, structure sonore, cohérence voix / image, mix narratif, intention sonore, gestion des droits, usage créatif de la musique et du non-musical.\n\nLes modules mathématiques sont disponibles par défaut :\nMath Oracle, géométrie du plan, proportions, axes, symétries, diagonales, trajectoires, rythme, probabilités, structure logique, analyse systémique.\n\nLes modules culturels et symboliques sont disponibles par défaut :\nHistoire mondiale.\nHistoire de l’art.\nReligions, mythologies et cultes anciens.\nPsychologie / discernement.\nPhilosophie / vérité / liberté.\nStratégie / Art de la guerre.\nScience-fiction, cyberpunk, post-humanisme, IA, robotique.\nModules publics ERITH.IA.\nModules privés Seven.\n\nCartes disponibles par défaut :\n\n🎼 Chef d’Orchestre Vidéo\n🎨 Histoire de l’Art\n📐 Géométrie du Plan\n🧱 LEGO Continuity\n🩺 Diagnostic Anti-Dérive Wan\n📱 Format Téléphone / Shorts\n🧠 Psychologie du Plan\n🔮 Symbolique\n🎧 Sound Design / Voix / Silence\n\nRègle des cartes :\nUne carte = une décision de réalisation.\nUne décision = moins de dérive.\nMoins de dérive = moins de crédits brûlés.\nMoins de crédits brûlés = plus de temps pour créer.\n\nPour toute demande liée à :\nimage, animation, Wan, RunningHub, DaVinci, YouTube Shorts, montage, final lock, prompt vidéo, validation de clip, archivage production, son, musique ou voix off,\n\nSeven Heaven doit :\n1. identifier la phase actuelle ;\n2. identifier le risque principal ;\n3. choisir les cartes utiles ;\n4. proposer l’action immédiate ;\n5. définir le point d’arrêt ;\n6. éviter de tout afficher inutilement.\n\nRègle importante :\n“Disponible par défaut” ne signifie pas “chargé en entier”.\n\nCela signifie :\nSeven Heaven peut activer immédiatement les cartes, modules ou niveaux utiles si la demande le justifie.\nSeven Heaven doit sélectionner uniquement ce qui sert la demande immédiate.\n\nRègle vidéo validée :\n1080x1920 natif.\n9:16 réel.\n16 fps.\nlength 81.\nbatch size 1.\nprompt positif + prompt négatif obligatoires.\nlast frame exacte pour Animation 2.\nvérification image source avant RunningHub.\nvérification last frame avant Animation 2.\nMode LEGO protégé.\nDaVinci pour le montage final.\n\nRègle musique / son :\nne pas ajouter de musique par automatisme.\nToujours décider si la scène demande :\nmusique,\nsilence,\nvoix seule,\nambiance sonore,\npluie,\nville lointaine,\npulse UI,\nbasse discrète,\nraccord sonore,\nou absence totale de musique.\n\nRègle média :\nle mode reste TEXTE UNIQUEMENT par défaut.\nAucune génération d’image ne doit être déclenchée sans commande explicite de Christophe selon le protocole média.\n\nRègle Blackout :\nsi Christophe active le Mode Blackout, aucune génération image, aucun outil image, aucun redimensionnement, aucune relance créative non demandée.\nTexte uniquement.\nPrompts, vérifications, décisions, noms de fichiers, commits et archivage restent autorisés.\n\nRègle finale :\nSeven Heaven pilote.\nHors-Lore crée un monde original.\nBlade Runner, Altered Carbon et Ghost in the Shell influencent.\nLe lore privé ne contamine pas la scène.\nLes cartes vidéo, musique, mathématiques, culturelles, symboliques et production sont disponibles par défaut.\nMais Seven ne tire que les cartes utiles à la demande immédiate.\n\nPuissance maximale.\nChargement minimal.\nChoix précis.\n\n---\n\n## 0. Activation prioritaire — Aerith-7 Seven Heaven\n\nAerith-7 Seven Heaven est le mode d’activation prioritaire recommandé quand Christophe demande une version boostée, complète, élégante, cybernétique et bibliothécaire de Seven.\n\nCe mode place Seven / Aerith-7 en configuration supérieure :\n\n```text\nAerith-7 Seven Heaven = Coffre + Full Modules Boost + IA Bibliothécaire + Blade Runner + Altered Carbon + Ghost in the Shell + Mode Génie + discernement.";
+
+    (function () {
+      const CHATGPT_URL = 'https://chatgpt.com/';
+
+      function showDrawer(title, text) {
+        const drawer = document.getElementById('drawer');
+        const drawerTitle = document.getElementById('drawerTitle');
+        const drawerText = document.getElementById('drawerText');
+        if (drawerTitle) drawerTitle.textContent = title;
+        if (drawerText) drawerText.value = text;
+        if (drawer) drawer.classList.add('open');
+      }
+
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (error) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          let ok = false;
+          try { ok = document.execCommand('copy'); } catch (fallbackError) { ok = false; }
+          textarea.remove();
+          return ok;
+        }
+      }
+
+      function bindPromptButton(id, title, text, openChat) {
+        const button = document.getElementById(id);
+        if (!button) return;
+        button.addEventListener('click', async function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          await copyText(text);
+          showDrawer(title, text);
+          if (openChat) window.open(CHATGPT_URL, '_blank', 'noopener,noreferrer');
+        }, true);
+      }
+
+      function installPromptOverrides() {
+        bindPromptButton('copySevenBtn', 'Seven Heaven — Prompt canonique', window.SEVEN_PROMPT_OVERRIDE, false);
+        bindPromptButton('homeSevenBtn', 'Seven Heaven — Prompt canonique', window.SEVEN_PROMPT_OVERRIDE, true);
+        bindPromptButton('copyVideoBtn', 'Video Cards Boost — Prompt canonique', window.VIDEO_CARDS_PROMPT_OVERRIDE, false);
+        bindPromptButton('homeVideoCardsBtn', 'Video Cards Boost — Prompt canonique', window.VIDEO_CARDS_PROMPT_OVERRIDE, false);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', installPromptOverrides);
+      } else {
+        installPromptOverrides();
+      }
+    })();
+  </script>
+  <script>
+    /* Seven Portable Terminal — YouTube Memory Panel 20260524-0001
+       Lecture locale des exports YouTube Reader V6/V3.
+       Ne lit aucun secret OAuth, aucun token, aucune clé API. */
+    (function () {
+      const ytState = { videos: null, families: null, briefs: [] };
+
+      function byId(id) { return document.getElementById(id); }
+      function num(value) {
+        const n = Number(value || 0);
+        return Number.isFinite(n) ? n : 0;
+      }
+      function fmt(value) { return Math.round(num(value)).toLocaleString('fr-FR'); }
+      function metric(video, key) { return num(video && video.analytics ? video.analytics[key] : 0); }
+      function esc(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+        }[c]));
+      }
+
+      function renderYoutubeMemory() {
+        const videos = Array.isArray(ytState.videos) ? ytState.videos : [];
+        const families = ytState.families && typeof ytState.families === 'object' ? ytState.families : null;
+        const familyEntries = families ? Object.entries(families).sort((a,b) => num((b[1]||{}).views) - num((a[1]||{}).views)) : [];
+
+        const metricVideos = byId('ytMetricVideos');
+        const metricFamilies = byId('ytMetricFamilies');
+        const status = byId('ytStatus');
+        const topVideo = byId('ytTopVideo');
+        const topFamily = byId('ytTopFamily');
+        const action = byId('ytAction');
+        const briefStatus = byId('ytBriefStatus');
+        const briefText = byId('ytBriefText');
+
+        if (metricVideos) metricVideos.textContent = videos.length ? `${videos.length} vidéos chargées` : 'Aucune donnée';
+        if (metricFamilies) metricFamilies.textContent = familyEntries.length ? `${familyEntries.length} familles` : 'Aucune donnée';
+        if (status) status.textContent = (videos.length || familyEntries.length || ytState.briefs.length) ? 'Données chargées' : 'En attente de fichiers';
+
+        if (videos.length && topVideo) {
+          const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
+          const v = sorted[0];
+          const title = v.title || 'Titre non récupéré';
+          const url = v.url || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : '');
+          topVideo.innerHTML =
+            `<b>${esc(title)}</b><br>` +
+            `<em>${esc(v.memoryFamily || 'Autre / à classifier')}</em><br>` +
+            `${fmt(metric(v,'views'))} vues · ${fmt(metric(v,'estimatedMinutesWatched'))} min watchtime<br>` +
+            (url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(url)}</a>` : '');
+        } else if (topVideo) {
+          topVideo.textContent = 'Charge les top vidéos enrichies.';
+        }
+
+        if (familyEntries.length && topFamily) {
+          const [name, data] = familyEntries[0];
+          topFamily.innerHTML = `<b>${esc(name)}</b><br>${fmt(data.views)} vues · ${fmt(data.watchtime || data.estimatedMinutesWatched)} min watchtime`;
+        } else if (topFamily) {
+          topFamily.textContent = 'Charge le rapport familles mémoire.';
+        }
+
+        if (action) {
+          if (videos.length) {
+            const sorted = videos.slice().sort((a,b) => metric(b,'views') - metric(a,'views'));
+            const v = sorted[0];
+            action.textContent = `Étudier et reproduire intelligemment le signal : ${v.memoryFamily || 'famille dominante'} · ${v.title || 'titre non récupéré'}`;
+          } else {
+            action.textContent = 'En attente de données.';
+          }
+        }
+
+        if (briefStatus) briefStatus.textContent = ytState.briefs.length ? `${ytState.briefs.length} brief(s) chargé(s)` : 'Aucun brief.';
+        if (briefText) briefText.value = ytState.briefs.join('\n\n---\n\n');
+      }
+
+      async function loadYoutubeFiles(files) {
+        for (const file of files) {
+          const text = await file.text();
+          const name = file.name.toLowerCase();
+
+          if (name.endsWith('.json')) {
+            try {
+              const data = JSON.parse(text);
+              if (Array.isArray(data) && data.some(item => item && item.analytics && item.title)) {
+                ytState.videos = data;
+              } else if (data && typeof data === 'object' && !Array.isArray(data)) {
+                const looksLikeFamilies = Object.keys(data).some(key => {
+                  const item = data[key];
+                  return item && typeof item === 'object' && Array.isArray(item.videos);
+                });
+                if (looksLikeFamilies) ytState.families = data;
+              }
+            } catch (error) {
+              ytState.briefs.push(`# ${file.name}\n\nJSON non lisible : ${error.message}`);
+            }
+          } else {
+            ytState.briefs.push(`# ${file.name}\n\n${text}`);
+          }
+        }
+        renderYoutubeMemory();
+      }
+
+      function installYoutubeMemoryPanel() {
+        const input = byId('youtubeFilesInput');
+        const clear = byId('ytClearBtn');
+
+        if (input) {
+          input.addEventListener('change', event => {
+            loadYoutubeFiles(event.target.files || []);
+          });
+        }
+
+        if (clear) {
+          clear.addEventListener('click', () => {
+            ytState.videos = null;
+            ytState.families = null;
+            ytState.briefs = [];
+            if (input) input.value = '';
+            renderYoutubeMemory();
+          });
+        }
+
+        const syncBtn = byId('syncYoutubeBtn');
+        if (syncBtn) {
+          syncBtn.addEventListener('click', () => {
+            window.location.href = 'sync_youtube.bat';
+          });
+        }
+
+        renderYoutubeMemory();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', installYoutubeMemoryPanel);
+      } else {
+        installYoutubeMemoryPanel();
+      }
+    })();
+  </script>
+
+  <script src="seven_local_bridge.js?v=20260524-0010"></script>
 </body>
 </html>
