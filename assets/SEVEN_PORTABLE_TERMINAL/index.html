@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-DUAL-CHANNEL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-DUAL-CHANNEL-FIX2">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -169,6 +169,34 @@
         text-align: left !important;
         white-space: normal !important;
       }
+    }
+  </style>
+
+
+  <style id="yt-dual-channel-final-fix-css">
+    #page-youtube #ytBestScore {
+      display: none !important;
+    }
+    #page-youtube #ytBestScore.closest-card {
+      display: none !important;
+    }
+    #page-youtube .yt-video-row {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) max-content !important;
+      grid-template-areas:
+        "title meta"
+        "stats link" !important;
+      gap: 6px 18px !important;
+      align-items: baseline !important;
+    }
+    #page-youtube .yt-video-title { grid-area: title !important; }
+    #page-youtube .yt-video-meta { grid-area: meta !important; text-align: right !important; white-space: nowrap !important; }
+    #page-youtube .yt-video-stats { grid-area: stats !important; }
+    #page-youtube .yt-video-link { grid-area: link !important; text-align: right !important; white-space: nowrap !important; }
+    #page-youtube .yt-video-title,
+    #page-youtube .yt-video-stats {
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
     }
   </style>
 
@@ -498,7 +526,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-DUAL-CHANNEL"></script>
+  <script src="script.js?v=20260524-YT-DUAL-CHANNEL-FIX2"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1058,6 +1086,156 @@
       }
       function install(){ const select=$('youtubeChannelSelect'); if(select){ const saved=localStorage.getItem('seven_youtube_channel'); if(saved&&files[saved]) select.value=saved; select.addEventListener('change',()=>{localStorage.setItem('seven_youtube_channel',select.value); loadSelectedChannel().catch(()=>{});}); } const refresh=$('refreshYoutubeDataBtn'); if(refresh) refresh.addEventListener('click',()=>loadSelectedChannel().catch(()=>{})); loadSelectedChannel().catch(e=>{ if($('ytStatus')) $('ytStatus').textContent=String(e.message||e); }); setInterval(()=>loadSelectedChannel().catch(()=>{}),60000); }
       if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+    })();
+  </script>
+
+  <script id="yt-dual-channel-final-fix">
+    (function () {
+      const FILES = {
+        blueazur: './data/youtube_memory_blueazur.json',
+        aerithia: './data/youtube_memory_aerithia.json'
+      };
+
+      function byId(id) { return document.getElementById(id); }
+      function num(v) { const n = Number(v || 0); return Number.isFinite(n) ? n : 0; }
+      function fmt(v) { return Math.round(num(v)).toLocaleString('fr-FR'); }
+      function esc(v) {
+        return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+        }[c]));
+      }
+
+      function metric(video) {
+        const p = video.publicStats || {};
+        const a = video.analytics28d || video.analytics || {};
+        const parts = [];
+        if (p.views) parts.push(fmt(p.views) + ' vues publiques');
+        if (a.views) parts.push(fmt(a.views) + ' vues 28j');
+        if (a.estimatedMinutesWatched) parts.push(fmt(a.estimatedMinutesWatched) + ' min watchtime 28j');
+        if (video.score) parts.push('score ' + fmt(video.score));
+        return parts.join(' · ');
+      }
+
+      function renderVideoRow(video, index) {
+        const url = video.url || (video.videoId ? 'https://www.youtube.com/watch?v=' + video.videoId : '');
+        const title = index + '. ' + (video.title || 'Vidéo');
+        const meta = (video.memoryFamily || 'Non classé') + (video.durationLabel ? ' · ' + video.durationLabel : '');
+        return '<section class="remote-card yt-video-row">' +
+          '<div class="yt-video-title"><strong>' + esc(title) + '</strong></div>' +
+          '<div class="yt-video-meta">' + esc(meta) + '</div>' +
+          '<div class="yt-video-stats">' + esc(metric(video) || 'Aucune statistique') + '</div>' +
+          '<div class="yt-video-link">' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noreferrer">' + esc(url) + '</a>' : '') + '</div>' +
+          '</section>';
+      }
+
+      function renderFamilyRow(entry, index) {
+        const name = entry[0];
+        const data = entry[1] || {};
+        const parts = [];
+        if (data.views) parts.push(fmt(data.views) + ' vues');
+        if (data.views28d) parts.push(fmt(data.views28d) + ' vues 28j');
+        if (data.estimatedMinutesWatched28d) parts.push(fmt(data.estimatedMinutesWatched28d) + ' min watchtime 28j');
+        if (data.likes) parts.push(fmt(data.likes) + ' likes');
+        if (data.comments) parts.push(fmt(data.comments) + ' commentaires');
+        if (data.score) parts.push('score ' + fmt(data.score));
+        if (Array.isArray(data.videos)) parts.push(data.videos.length + ' vidéo(s)');
+        return '<section class="remote-card" style="display:block;width:100%;box-sizing:border-box;margin:0 0 8px 0;padding:10px 14px;">' +
+          '<strong style="display:block;margin-bottom:5px;">' + index + '. ' + esc(name) + '</strong>' +
+          '<span>' + esc(parts.join(' · ') || 'Aucune donnée') + '</span>' +
+          '</section>';
+      }
+
+      async function loadChannel(forceKey) {
+        const select = byId('youtubeChannelSelect');
+        const key = forceKey || (select ? select.value : 'blueazur');
+        const file = FILES[key] || FILES.blueazur;
+
+        const response = await fetch(file + '?v=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok) throw new Error(file + ' HTTP ' + response.status);
+        const data = await response.json();
+
+        const top = Array.isArray(data.topByViews) ? data.topByViews : [];
+        const families = Object.entries(data.families || {}).sort((a, b) => num(b[1].score || b[1].views) - num(a[1].score || a[1].views));
+        const topVideo = top[0];
+        const topFamily = families[0];
+
+        const bestScore = byId('ytBestScore');
+        if (bestScore) {
+          const card = bestScore.closest('.remote-card, .tile, section');
+          if (card) card.style.display = 'none';
+        }
+
+        if (byId('ytStatusTitle')) byId('ytStatusTitle').textContent = 'Données avancées chargées';
+        if (byId('ytStatus')) byId('ytStatus').textContent = 'Chaîne active : ' + (data.channelLabel || key) + ' · ' + (data.mode || 'YouTube Memory');
+        if (byId('ytMetricVideos')) byId('ytMetricVideos').textContent = top.length + ' vidéo(s)';
+        if (byId('ytMetricFamilies')) byId('ytMetricFamilies').textContent = families.length + ' famille(s)';
+        if (byId('ytMode')) byId('ytMode').textContent = (data.channelLabel || key) + ' · analytics 28j';
+
+        if (byId('ytAction')) {
+          byId('ytAction').textContent = topVideo
+            ? 'Étudier le signal fort : ' + (topVideo.memoryFamily || 'Non classé') + ' · ' + (topVideo.title || 'Vidéo')
+            : 'Aucune donnée YouTube.';
+        }
+
+        if (byId('ytTopVideo') && topVideo) {
+          const url = topVideo.url || (topVideo.videoId ? 'https://www.youtube.com/watch?v=' + topVideo.videoId : '');
+          byId('ytTopVideo').innerHTML =
+            '<b>' + esc(topVideo.title || 'Vidéo') + '</b><br>' +
+            esc(topVideo.memoryFamily || 'Non classé') + '<br>' +
+            esc(metric(topVideo)) +
+            (url ? '<br><a href="' + esc(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '');
+        }
+
+        if (byId('ytTopFamily') && topFamily) {
+          const d = topFamily[1] || {};
+          byId('ytTopFamily').innerHTML =
+            '<b>' + esc(topFamily[0]) + '</b><br>' +
+            esc(fmt(d.views || 0) + ' vues · score ' + fmt(d.score || 0));
+        }
+
+        const topList = byId('ytTopList');
+        if (topList) topList.innerHTML = top.slice(0, 10).map(renderVideoRow).join('');
+
+        const famList = byId('ytFamiliesList');
+        if (famList) famList.innerHTML = families.slice(0, 10).map(renderFamilyRow).join('');
+
+        const brief = byId('ytBriefText');
+        if (brief) brief.value = data.brief || '';
+      }
+
+      function boot() {
+        const select = byId('youtubeChannelSelect');
+        if (select) {
+          const saved = localStorage.getItem('seven_youtube_channel');
+          if (saved && FILES[saved]) select.value = saved;
+          select.onchange = function () {
+            localStorage.setItem('seven_youtube_channel', select.value);
+            loadChannel(select.value).catch(err => {
+              if (byId('ytStatus')) byId('ytStatus').textContent = String(err.message || err);
+            });
+          };
+        }
+
+        const refresh = byId('refreshYoutubeDataBtn');
+        if (refresh) {
+          refresh.onclick = function () {
+            loadChannel().catch(err => {
+              if (byId('ytStatus')) byId('ytStatus').textContent = String(err.message || err);
+            });
+          };
+        }
+
+        loadChannel().catch(err => {
+          if (byId('ytStatus')) byId('ytStatus').textContent = String(err.message || err);
+        });
+
+        // Protection contre l'ancien script externe qui peut réécrire les blocs après coup.
+        setTimeout(() => loadChannel().catch(() => {}), 500);
+        setTimeout(() => loadChannel().catch(() => {}), 1500);
+      }
+
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+      else boot();
     })();
   </script>
 
