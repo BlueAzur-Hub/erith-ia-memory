@@ -176,3 +176,31 @@ body.readable.transparent #refreshTraceBtn{
   backdrop-filter:blur(7px) !important;
   border-color:rgba(245,213,141,.58) !important;
 }
+
+/* Seven final clean — link colors
+   Scope: cockpit links only.
+   Goal: replace browser blue/purple with gold/white states. */
+.terminal a,
+.terminal a:link {
+  color: var(--gold) !important;
+  text-decoration-color: rgba(245,213,141,.58) !important;
+  text-underline-offset: 3px;
+}
+
+.terminal a:visited {
+  color: var(--text) !important;
+  text-decoration-color: rgba(255,247,223,.54) !important;
+}
+
+.terminal a:hover,
+.terminal a:focus-visible {
+  color: #fffdf2 !important;
+  text-decoration-color: #fffdf2 !important;
+}
+
+.terminal a:focus-visible {
+  outline: 1px solid rgba(245,213,141,.75);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+

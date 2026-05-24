@@ -29,6 +29,32 @@ const backgrounds=[
   {file:"seven_bg_20_forteresse_des_nuages.png", label:"20 · Forteresse des Nuages"}
 ];
 
+
+const castleBackgrounds=[
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_AIRSHIP_DOCKING_SKY_RUINS_1920x1080.png", label:"Château · Airship Docking Sky Ruins"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_TREASURE_MECHANICAL_RELICS_1920x1080.png", label:"Château · Treasure Mechanical Relics"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_ROOTS_CRYSTAL_CORE_1920x1080.png", label:"Château · Roots Crystal Core"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_AIRSHIP_FIRE_BLAST_1920x1080.png", label:"Château · Airship Fire Blast"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_HEIR_WATCHING_AIRSHIP_1920x1080.png", label:"Château · Heir Watching Airship"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_CRYSTAL_SELF_DESTRUCTION_SPELL_1920x1080.png", label:"Château · Crystal Self Destruction Spell"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_CRUMBLING_ROOT_TOWER_1920x1080.png", label:"Château · Crumbling Root Tower"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FLOATING_ISLAND_ROOTS_OVERVIEW_1920x1080.png", label:"Château · Floating Island Roots Overview"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_GLIDER_OVER_SACRED_GARDENS_1920x1080.png", label:"Château · Glider Over Sacred Gardens"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_PIRATES_TREASURE_JOY_1920x1080.png", label:"Château · Pirates Treasure Joy"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_SKY_PIRATES_ESCAPE_1920x1080.png", label:"Château · Sky Pirates Escape"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FINAL_ASCENSION_NIGHT_1920x1080.png", label:"Château · Final Ascension Night"},
+  {file:"../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FINAL_RETURN_SUNSET_1920x1080.png", label:"Château · Final Return Sunset"}
+];
+
+function activeBackgrounds(){
+  return bgSeries==="castle" ? castleBackgrounds : backgrounds;
+}
+
+function activeBackgroundSeriesLabel(){
+  return bgSeries==="castle" ? "Château dans le Ciel" : "Seven Heaven";
+}
+
+
 const prompts={
 seven:`Chat, active Aerith-7 Seven Heaven / Full Modules Boost.
 
@@ -74,6 +100,7 @@ link:`https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMI
 };
 
 let bgIndex=0;
+let bgSeries="seven";
 
 function currentPage(){
   const active=document.querySelector(".page.active");
@@ -84,6 +111,7 @@ function saveUiState(){
   localStorage.setItem("seven.final.01.10.state", JSON.stringify({
     page:currentPage(),
     bgIndex,
+    bgSeries,
     transparent:document.body.classList.contains("transparent"),
     readable:document.body.classList.contains("readable")
   }));
@@ -115,11 +143,26 @@ const backgroundPositions={
   "seven_bg_17_chutes_celestes.png":"center 10%",
   "seven_bg_18_visage_de_pierre.png":"center 28%",
   "seven_bg_19_jardin_de_lumiere.png":"center center",
-  "seven_bg_20_forteresse_des_nuages.png":"center 10%"
+  "seven_bg_20_forteresse_des_nuages.png":"center 10%",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_AIRSHIP_DOCKING_SKY_RUINS_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_TREASURE_MECHANICAL_RELICS_1920x1080.png":"center 44%",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_ROOTS_CRYSTAL_CORE_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_AIRSHIP_FIRE_BLAST_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_HEIR_WATCHING_AIRSHIP_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_CRYSTAL_SELF_DESTRUCTION_SPELL_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_CRUMBLING_ROOT_TOWER_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FLOATING_ISLAND_ROOTS_OVERVIEW_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_GLIDER_OVER_SACRED_GARDENS_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_PIRATES_TREASURE_JOY_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_SKY_PIRATES_ESCAPE_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FINAL_ASCENSION_NIGHT_1920x1080.png":"center center",
+  "../images/ERITH_IA_BACKGROUND_CHATEAU_CIEL_FINAL_RETURN_SUNSET_1920x1080.png":"center center"
 };
 
 function applyBackground(){
-  const current=backgrounds[bgIndex % backgrounds.length];
+  const list=activeBackgrounds();
+  if(bgIndex<0 || bgIndex>=list.length) bgIndex=0;
+  const current=list[bgIndex % list.length];
   const layer=document.getElementById("backgroundLayer");
   if(!layer || !current) return;
 
@@ -128,18 +171,32 @@ function applyBackground(){
   layer.style.backgroundSize="cover";
 
   if(backgroundLabel){
-    backgroundLabel.textContent=`Background : ${current.label}`;
+    backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
+  }
+
+  const themeBtn=document.getElementById("toggleBackgroundSeriesBtn");
+  if(themeBtn){
+    themeBtn.textContent=bgSeries==="castle" ? "Thème : Château" : "Thème : Seven";
   }
 }
 
 function nextBackground(){
-  bgIndex=(bgIndex+1)%backgrounds.length;
+  const list=activeBackgrounds();
+  bgIndex=(bgIndex+1)%list.length;
   applyBackground();
   saveUiState();
 }
 
 function randomBackground(){
-  bgIndex=Math.floor(Math.random()*backgrounds.length);
+  const list=activeBackgrounds();
+  bgIndex=Math.floor(Math.random()*list.length);
+  applyBackground();
+  saveUiState();
+}
+
+function toggleBackgroundSeries(){
+  bgSeries=bgSeries==="castle" ? "seven" : "castle";
+  bgIndex=0;
   applyBackground();
   saveUiState();
 }
@@ -176,7 +233,8 @@ function loadUiState(){
   try{
     const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
     bgIndex=Number.isInteger(saved.bgIndex) ? saved.bgIndex : Number(saved.bgIndex||0);
-    if(bgIndex<0 || bgIndex>=backgrounds.length) bgIndex=0;
+    bgSeries=saved.bgSeries==="castle" ? "castle" : "seven";
+    if(bgIndex<0 || bgIndex>=activeBackgrounds().length) bgIndex=0;
     document.body.classList.toggle("transparent", !!saved.transparent);
     document.body.classList.toggle("readable", !!saved.readable);
     showPage(saved.page||"home", false);
