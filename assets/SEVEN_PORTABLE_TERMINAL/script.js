@@ -220,12 +220,19 @@ function applyBackground(){
   if(!layer || !current) return;
 
   const isCastle=current.file.indexOf("ERITH_IA_BACKGROUND_CHATEAU_CIEL_")===0;
-  const imageUrl=isCastle ? `./${current.file}?v=20260525-castle` : current.file;
+  const imageUrl=isCastle ? `./${current.file}?v=20260525-castle-clean` : current.file;
 
-  layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
+  if(isCastle){
+    layer.style.backgroundImage=`url("${imageUrl}")`;
+  }else{
+    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
+  }
+
   layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
   layer.style.backgroundSize="cover";
   layer.style.backgroundRepeat="no-repeat";
+
+  document.body.classList.toggle("castle-theme-active", isCastle);
 
   if(backgroundLabel){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
@@ -550,18 +557,3 @@ renderTrace();
 
 
 
-/* Seven final clean — Castle theme visibility activation */
-(function(){
-  function syncCastleThemeClass(){
-    const btn = document.getElementById("themeToggleBtn");
-    const active = btn && btn.textContent.includes("Château");
-    document.body.classList.toggle("castle-theme-active", !!active);
-  }
-
-  document.addEventListener("click", function(){
-    setTimeout(syncCastleThemeClass, 60);
-  });
-
-  window.addEventListener("load", syncCastleThemeClass);
-  document.addEventListener("DOMContentLoaded", syncCastleThemeClass);
-})();

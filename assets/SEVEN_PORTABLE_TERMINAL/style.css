@@ -248,26 +248,69 @@ body {
   display: none !important;
 }
 
+/* Seven final clean — Castle backgrounds without blue veil
+   Scope: active only when a Château image is displayed.
+   Goal: remove the dark/blue overlay from the background image while keeping UI readable. */
+body.castle-theme-active {
+  background: #07111f;
+}
 
+body.castle-theme-active .background-layer {
+  filter: none !important;
+  opacity: 1 !important;
+}
 
-/* Seven final clean — Castle background visibility fix */
-body.castle-theme-active::before {
-  opacity: 0.18 !important;
+body.castle-theme-active .atmosphere-layer {
+  opacity: .18 !important;
   background:
-    radial-gradient(circle at top, rgba(18,34,60,0.12), rgba(3,8,18,0.18));
+    radial-gradient(circle at 48% 18%, rgba(255,229,166,.06), transparent 30%),
+    radial-gradient(circle at 72% 36%, rgba(128,218,255,.035), transparent 36%) !important;
 }
 
-body.castle-theme-active .shell,
-body.castle-theme-active .panel,
-body.castle-theme-active .advanced-panel,
-body.castle-theme-active .top-card,
-body.castle-theme-active .memory-card {
-  background: rgba(5, 12, 24, 0.42) !important;
-  backdrop-filter: blur(3px);
+body.castle-theme-active .terminal {
+  background: rgba(5,10,22,.045) !important;
+  backdrop-filter: blur(.35px) !important;
 }
 
-body.castle-theme-active .shell {
-  box-shadow:
-    0 0 0 1px rgba(245,213,141,.22),
-    0 12px 60px rgba(0,0,0,.28);
+body.castle-theme-active .terminal-header,
+body.castle-theme-active .topnav,
+body.castle-theme-active .control-strip,
+body.castle-theme-active .page,
+body.castle-theme-active .terminal-footer,
+body.castle-theme-active .drawer,
+body.castle-theme-active .palette-card {
+  background: rgba(5,10,22,.30) !important;
+  backdrop-filter: blur(2px) !important;
 }
+
+body.castle-theme-active .hero-card,
+body.castle-theme-active .remote-status,
+body.castle-theme-active .tile,
+body.castle-theme-active .remote-card,
+body.castle-theme-active .advanced-panel {
+  background: rgba(5,10,22,.28) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+body.castle-theme-active.transparent .terminal-header,
+body.castle-theme-active.transparent .topnav,
+body.castle-theme-active.transparent .control-strip,
+body.castle-theme-active.transparent .page,
+body.castle-theme-active.transparent .terminal-footer {
+  background: rgba(5,10,22,.18) !important;
+  backdrop-filter: blur(.75px) !important;
+}
+
+body.castle-theme-active.readable .terminal-header,
+body.castle-theme-active.readable .topnav,
+body.castle-theme-active.readable .control-strip,
+body.castle-theme-active.readable .page,
+body.castle-theme-active.readable .terminal-footer,
+body.castle-theme-active.readable .hero-card,
+body.castle-theme-active.readable .remote-card,
+body.castle-theme-active.readable .tile,
+body.castle-theme-active.readable .advanced-panel {
+  background: rgba(4,8,18,.82) !important;
+  backdrop-filter: blur(7px) !important;
+}
+
