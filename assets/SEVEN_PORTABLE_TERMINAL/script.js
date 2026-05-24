@@ -220,18 +220,54 @@ function applyBackground(){
   if(!layer || !current) return;
 
   const isCastle=current.file.indexOf("ERITH_IA_BACKGROUND_CHATEAU_CIEL_")===0;
-  const imageUrl=isCastle ? `./${current.file}?v=20260525-castle-clean` : current.file;
+  const cacheTag="v=20260525-castle-fix8";
+  const candidates=isCastle ? [
+    `./${current.file}?${cacheTag}`,
+    `/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
+    `https://blueazur-hub.github.io/erith-ia-memory/assets/SEVEN_PORTABLE_TERMINAL/${current.file}?${cacheTag}`,
+    `/erith-ia-memory/assets/images/${current.file}?${cacheTag}`
+  ] : [
+    current.file
+  ];
 
-  if(isCastle){
-    layer.style.backgroundImage=`url("${imageUrl}")`;
-  }else{
-    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
+  function paint(url){
+    if(isCastle){
+      layer.style.backgroundImage=`url("${url}")`;
+    }else{
+      layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${url}")`;
+    }
+
+    layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
+    layer.style.backgroundSize="cover";
+    layer.style.backgroundRepeat="no-repeat";
+    layer.style.opacity="1";
+    layer.dataset.currentBackground=url;
   }
 
-  layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
-  layer.style.backgroundSize="cover";
-  layer.style.backgroundRepeat="no-repeat";
+  function tryCandidate(index){
+    const url=candidates[index];
+    if(!url) {
+      console.warn("[Seven] Aucun chemin valide pour le background :", current.file);
+      return;
+    }
 
+    if(!isCastle){
+      paint(url);
+      return;
+    }
+
+    const probe=new Image();
+    probe.onload=function(){
+      paint(url);
+    };
+    probe.onerror=function(){
+      console.warn("[Seven] Background introuvable, essai suivant :", url);
+      tryCandidate(index+1);
+    };
+    probe.src=url;
+  }
+
+  tryCandidate(0);
   document.body.classList.toggle("castle-theme-active", isCastle);
 
   if(backgroundLabel){
@@ -390,28 +426,6 @@ renderTrace();
 })();
 
 
-/* Seven final clean — castle background load diagnostic
-   Scope: castle backgrounds only.
-   Logs missing files in console without changing the UI. */
-(function(){
-  function checkCastleBackgroundsOnce(){
-    if(typeof castleBackgrounds === "undefined" || !Array.isArray(castleBackgrounds)) return;
-    castleBackgrounds.forEach(item => {
-      const img = new Image();
-      img.onload = function(){};
-      img.onerror = function(){
-        console.warn("[Seven] Image Château introuvable ou non publiée :", item.file);
-      };
-      img.src = "./" + item.file + "?v=20260525-castle";
-    });
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", checkCastleBackgroundsOnce);
-  }else{
-    checkCastleBackgroundsOnce();
-  }
-})();
 
 /* Seven final clean — YouTube Top 10 clean accordion
    Scope: Top 10 vidéos section only.

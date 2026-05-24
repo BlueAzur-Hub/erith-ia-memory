@@ -314,3 +314,41 @@ body.castle-theme-active.readable .advanced-panel {
   backdrop-filter: blur(7px) !important;
 }
 
+
+
+/* Seven final clean — FIX8 hard visibility for castle backgrounds
+   Scope: castle theme only. */
+body.castle-theme-active .background-layer {
+  z-index: 0 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+body.castle-theme-active .atmosphere-layer {
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+body.castle-theme-active .terminal {
+  background: rgba(5,10,22,.02) !important;
+}
+
+body.castle-theme-active .terminal-header,
+body.castle-theme-active .topnav,
+body.castle-theme-active .control-strip,
+body.castle-theme-active .page,
+body.castle-theme-active .terminal-footer {
+  background: rgba(5,10,22,.24) !important;
+  backdrop-filter: blur(1.5px) !important;
+}
+
+body.castle-theme-active .hero-card,
+body.castle-theme-active .remote-status,
+body.castle-theme-active .tile,
+body.castle-theme-active .remote-card,
+body.castle-theme-active .advanced-panel {
+  background: rgba(5,10,22,.24) !important;
+  backdrop-filter: blur(1.5px) !important;
+}
