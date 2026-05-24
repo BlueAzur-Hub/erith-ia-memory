@@ -382,89 +382,6 @@ renderTrace();
   window.addEventListener("load", sevenBgInstallThemeButton);
 })();
 
-/* Seven final clean — YouTube Top 10 full-header toggle
-   Scope: Top 10 vidéos section only.
-   Behavior: click header zone to open/reclose the list; no separate button required. */
-(function(){
-  function findTop10Section(){
-    const stable = document.getElementById("ytTopListStable");
-    if(!stable) return null;
-    return stable.closest(".advanced-panel");
-  }
-
-  function findRows(){
-    return document.getElementById("ytTop10StableRows") ||
-           document.querySelector("#ytTopListStable [id='ytTop10StableRows']");
-  }
-
-  function isCollapsed(){
-    const rows = findRows();
-    if(rows) return !!rows.hidden;
-    const stable = document.getElementById("ytTopListStable");
-    return stable ? stable.dataset.collapsed === "1" : false;
-  }
-
-  function setCollapsed(nextCollapsed){
-    const stable = document.getElementById("ytTopListStable");
-    const rows = findRows();
-
-    if(rows){
-      rows.hidden = !!nextCollapsed;
-    }else if(stable){
-      Array.from(stable.children).forEach((child, index) => {
-        if(index > 0) child.hidden = !!nextCollapsed;
-      });
-    }
-
-    if(stable) stable.dataset.collapsed = nextCollapsed ? "1" : "0";
-
-    const header = findTop10Section()?.querySelector(".advanced-head");
-    if(header){
-      header.setAttribute("aria-expanded", nextCollapsed ? "false" : "true");
-      header.title = nextCollapsed ? "Cliquer pour ouvrir le Top 10" : "Cliquer pour replier le Top 10";
-    }
-  }
-
-  function toggleTop10(){
-    setCollapsed(!isCollapsed());
-  }
-
-  function installTop10HeaderToggle(){
-    const section = findTop10Section();
-    if(!section) return;
-
-    const header = section.querySelector(".advanced-head");
-    if(!header || header.dataset.top10HeaderBound === "1") return;
-
-    header.dataset.top10HeaderBound = "1";
-    header.classList.add("yt-top10-click-zone");
-    header.setAttribute("role", "button");
-    header.setAttribute("tabindex", "0");
-    header.setAttribute("aria-expanded", "true");
-    header.title = "Cliquer pour ouvrir/replier le Top 10";
-
-    header.addEventListener("click", function(event){
-      event.preventDefault();
-      toggleTop10();
-    });
-
-    header.addEventListener("keydown", function(event){
-      if(event.key === "Enter" || event.key === " "){
-        event.preventDefault();
-        toggleTop10();
-      }
-    });
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", installTop10HeaderToggle);
-  }else{
-    installTop10HeaderToggle();
-  }
-
-  window.addEventListener("load", installTop10HeaderToggle);
-  window.setInterval(installTop10HeaderToggle, 1000);
-})();
 
 /* Seven final clean — castle background load diagnostic
    Scope: castle backgrounds only.
@@ -487,5 +404,147 @@ renderTrace();
   }else{
     checkCastleBackgroundsOnce();
   }
+})();
+
+/* Seven final clean — YouTube Top 10 clean accordion
+   Scope: Top 10 vidéos section only.
+   Removes legacy open/replier button and lets the full section header toggle the list. */
+(function(){
+  const STORAGE_KEY = "seven.youtube.top10.collapsed";
+
+  function top10Panel(){
+    const stable = document.getElementById("ytTopListStable");
+    return stable ? stable.closest(".advanced-panel") : null;
+  }
+
+  function top10Header(){
+    const panel = top10Panel();
+    return panel ? panel.querySelector(".advanced-head") : null;
+  }
+
+  function top10Stable(){
+    return document.getElementById("ytTopListStable");
+  }
+
+  function top10Rows(){
+    return document.getElementById("ytTop10StableRows");
+  }
+
+  function removeLegacyToggle(){
+    const stable = top10Stable();
+    if(!stable) return;
+
+    stable.querySelectorAll(".yt-final-toggle, .yt-final-toggle-btn").forEach(el => {
+      el.remove();
+    });
+  }
+
+  function ensureHeader(){
+    const header = top10Header();
+    if(!header) return null;
+
+    header.id = "ytTop10ClickHeader";
+    header.setAttribute("role", "button");
+    header.setAttribute("tabindex", "0");
+
+    const strong = header.querySelector("strong");
+    if(strong && !strong.querySelector(".yt-top10-hint")){
+      strong.insertAdjacentHTML("beforeend", ' <span class="yt-top10-hint">— cliquer pour ouvrir/replier</span>');
+    }
+
+    return header;
+  }
+
+  function setCollapsed(collapsed){
+    const rows = top10Rows();
+    const stable = top10Stable();
+
+    if(rows){
+      rows.hidden = !!collapsed;
+    }else if(stable){
+      Array.from(stable.children).forEach(child => {
+        child.hidden = !!collapsed;
+      });
+    }
+
+    const header = ensureHeader();
+    if(header){
+      header.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      header.title = collapsed ? "Cliquer pour ouvrir le Top 10" : "Cliquer pour replier le Top 10";
+    }
+
+    try{
+      localStorage.setItem(STORAGE_KEY, collapsed ? "1" : "0");
+    }catch{}
+  }
+
+  function isCollapsed(){
+    const rows = top10Rows();
+    if(rows) return !!rows.hidden;
+
+    try{
+      return localStorage.getItem(STORAGE_KEY) === "1";
+    }catch{
+      return false;
+    }
+  }
+
+  function toggle(){
+    removeLegacyToggle();
+    setCollapsed(!isCollapsed());
+  }
+
+  function install(){
+    removeLegacyToggle();
+    const header = ensureHeader();
+    if(!header || header.dataset.cleanAccordionBound === "1") return;
+
+    header.dataset.cleanAccordionBound = "1";
+    header.addEventListener("click", function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      toggle();
+    }, true);
+
+    header.addEventListener("keydown", function(event){
+      if(event.key === "Enter" || event.key === " "){
+        event.preventDefault();
+        event.stopPropagation();
+        toggle();
+      }
+    }, true);
+
+    setCollapsed(isCollapsed());
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", install);
+  }else{
+    install();
+  }
+
+  window.addEventListener("load", install);
+
+  const observer = new MutationObserver(() => {
+    removeLegacyToggle();
+    ensureHeader();
+    setCollapsed(isCollapsed());
+    install();
+  });
+
+  function observe(){
+    const stable = top10Stable();
+    if(stable && !stable.dataset.cleanAccordionObserved){
+      stable.dataset.cleanAccordionObserved = "1";
+      observer.observe(stable, { childList:true, subtree:true });
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", observe);
+  }else{
+    observe();
+  }
+  window.addEventListener("load", observe);
 })();
 

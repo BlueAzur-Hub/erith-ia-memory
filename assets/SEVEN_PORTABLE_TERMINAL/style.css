@@ -212,35 +212,39 @@ body {
   background: #07111f;
 }
 
-/* Seven final clean — YouTube Top 10 header toggle
+/* Seven final clean — YouTube Top 10 clean accordion
    Scope: YouTube Top 10 block only.
-   Goal: click the header zone to open/reclose, no separate open/replier button. */
-#page-youtube #ytTopListStable {
-  margin-top: 10px !important;
-}
-
-#page-youtube .yt-top10-click-zone {
+   Goal: full title bar click, no legacy ouvrir/replier button. */
+#page-youtube #ytTop10ClickHeader {
   cursor: pointer;
   user-select: none;
+  pointer-events: auto;
   border-radius: 14px;
   padding: 8px 12px;
   margin: -6px -8px 8px -8px;
   transition: background .18s ease, border-color .18s ease;
 }
 
-#page-youtube .yt-top10-click-zone:hover {
+#page-youtube #ytTop10ClickHeader:hover {
   background: rgba(245,213,141,.08);
 }
 
-#page-youtube .yt-top10-click-zone strong::after {
-  content: "  — cliquer pour ouvrir/replier";
+#page-youtube #ytTop10ClickHeader * {
+  pointer-events: none;
+}
+
+#page-youtube #ytTop10ClickHeader .yt-top10-hint {
   color: rgba(255,247,223,.62);
   font-size: 11px;
   font-weight: 400;
 }
 
-#page-youtube .yt-top10-click-zone .yt-final-toggle-btn,
-#page-youtube .yt-top10-click-zone button {
+#page-youtube #ytTopListStable .yt-final-toggle,
+#page-youtube #ytTopListStable .yt-final-toggle-btn {
+  display: none !important;
+}
+
+#page-youtube #ytTop10StableRows[hidden] {
   display: none !important;
 }
 
