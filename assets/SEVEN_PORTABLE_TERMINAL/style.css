@@ -248,3 +248,26 @@ body {
   display: none !important;
 }
 
+
+
+/* Seven final clean — Castle background visibility fix */
+body.castle-theme-active::before {
+  opacity: 0.18 !important;
+  background:
+    radial-gradient(circle at top, rgba(18,34,60,0.12), rgba(3,8,18,0.18));
+}
+
+body.castle-theme-active .shell,
+body.castle-theme-active .panel,
+body.castle-theme-active .advanced-panel,
+body.castle-theme-active .top-card,
+body.castle-theme-active .memory-card {
+  background: rgba(5, 12, 24, 0.42) !important;
+  backdrop-filter: blur(3px);
+}
+
+body.castle-theme-active .shell {
+  box-shadow:
+    0 0 0 1px rgba(245,213,141,.22),
+    0 12px 60px rgba(0,0,0,.28);
+}

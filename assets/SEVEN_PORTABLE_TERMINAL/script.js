@@ -548,3 +548,20 @@ renderTrace();
   window.addEventListener("load", observe);
 })();
 
+
+
+/* Seven final clean — Castle theme visibility activation */
+(function(){
+  function syncCastleThemeClass(){
+    const btn = document.getElementById("themeToggleBtn");
+    const active = btn && btn.textContent.includes("Château");
+    document.body.classList.toggle("castle-theme-active", !!active);
+  }
+
+  document.addEventListener("click", function(){
+    setTimeout(syncCastleThemeClass, 60);
+  });
+
+  window.addEventListener("load", syncCastleThemeClass);
+  document.addEventListener("DOMContentLoaded", syncCastleThemeClass);
+})();
