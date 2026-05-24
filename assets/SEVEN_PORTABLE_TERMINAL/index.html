@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-CHANNEL-GUARD-FINAL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-STABLE-NO-JUMP">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -172,7 +172,7 @@
     }
   </style>
 
-  <style id="yt-toggle-top10-css">
+  <style id="yt-stable-toggle-css">
     #page-youtube .yt-toggle-top10 {
       border: 1px solid rgba(255,232,160,.42);
       border-radius: 18px;
@@ -184,9 +184,7 @@
       align-items: center;
       gap: 12px;
     }
-    #page-youtube .yt-toggle-top10-title {
-      font-weight: 800;
-    }
+    #page-youtube .yt-toggle-top10-title { font-weight: 800; }
     #page-youtube .yt-toggle-top10-btn {
       cursor: pointer;
       border: 1px solid rgba(255,232,160,.5);
@@ -196,10 +194,9 @@
       color: inherit;
       font-weight: 800;
       font-family: inherit;
+      min-width: 76px;
     }
-    #page-youtube .yt-top10-inner.is-hidden {
-      display: none !important;
-    }
+    #page-youtube .yt-top10-inner[hidden] { display: none !important; }
     #page-youtube .yt-video-row {
       display: grid !important;
       grid-template-columns: minmax(0, 1fr) max-content !important;
@@ -537,7 +534,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-CHANNEL-GUARD-FINAL"></script>
+  <script src="script.js?v=20260524-YT-STABLE-NO-JUMP"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1065,7 +1062,7 @@
     })();
   </script>
 
-  <script id="yt-channel-controller-final">
+  <script id="yt-stable-channel-controller">
     (function () {
       const FILES = {
         blueazur: './data/youtube_memory_blueazur.json',
@@ -1076,11 +1073,6 @@
         aerithia: 'Aerith IA'
       };
 
-      let lastKey = null;
-      let lastData = null;
-      let top10Open = false;
-      let rendering = false;
-
       function id(x) { return document.getElementById(x); }
       function n(v) { const x = Number(v || 0); return Number.isFinite(x) ? x : 0; }
       function fmt(v) { return Math.round(n(v)).toLocaleString('fr-FR'); }
@@ -1090,7 +1082,7 @@
         }[c]));
       }
 
-      function selectedKey() {
+      function key() {
         const select = id('youtubeChannelSelect');
         return select && FILES[select.value] ? select.value : 'blueazur';
       }
@@ -1098,8 +1090,7 @@
       function metric(v) {
         const p = v.publicStats || {};
         const a = v.analytics28d || {};
-        const out = [];
-        out.push(fmt(p.views || 0) + ' vues publiques');
+        const out = [fmt(p.views || 0) + ' vues publiques'];
         if (a.views) out.push(fmt(a.views) + ' vues 28j');
         if (a.estimatedMinutesWatched) out.push(fmt(a.estimatedMinutesWatched) + ' min watchtime 28j');
         out.push('score ' + fmt(v.score || 0));
@@ -1108,10 +1099,9 @@
 
       function videoRow(v, i) {
         const url = v.url || (v.videoId ? 'https://www.youtube.com/watch?v=' + v.videoId : '');
-        const title = (i + 1) + '. ' + (v.title || 'Vidéo');
         const meta = (v.memoryFamily || 'Non classé') + (v.durationLabel ? ' · ' + v.durationLabel : '');
-        return '<section class="remote-card yt-video-row" data-channel-row="1">' +
-          '<div class="yt-video-title"><strong>' + esc(title) + '</strong></div>' +
+        return '<section class="remote-card yt-video-row">' +
+          '<div class="yt-video-title"><strong>' + (i + 1) + '. ' + esc(v.title || 'Vidéo') + '</strong></div>' +
           '<div class="yt-video-meta">' + esc(meta) + '</div>' +
           '<div class="yt-video-stats">' + esc(metric(v)) + '</div>' +
           '<div class="yt-video-link">' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noreferrer">' + esc(url) + '</a>' : '') + '</div>' +
@@ -1121,27 +1111,23 @@
       function familyRow(entry, i) {
         const name = entry[0];
         const d = entry[1] || {};
-        const parts = [
-          fmt(d.views || 0) + ' vues',
-          fmt(d.likes || 0) + ' likes',
-          'score ' + fmt(d.score || 0),
-          (Array.isArray(d.videos) ? d.videos.length : 0) + ' vidéo(s)'
-        ];
         return '<section class="remote-card" style="display:block;width:100%;box-sizing:border-box;margin:0 0 8px 0;padding:10px 14px;">' +
           '<strong style="display:block;margin-bottom:5px;">' + (i + 1) + '. ' + esc(name) + '</strong>' +
-          '<span>' + esc(parts.join(' · ')) + '</span>' +
+          '<span>' + esc(fmt(d.views || 0) + ' vues · ' + fmt(d.likes || 0) + ' likes · score ' + fmt(d.score || 0) + ' · ' + (Array.isArray(d.videos) ? d.videos.length : 0) + ' vidéo(s)') + '</span>' +
         '</section>';
       }
 
-      function render(data, key) {
-        if (!data || rendering) return;
-        rendering = true;
+      async function loadChannel() {
+        const k = key();
+        const label = LABELS[k] || k;
+        const response = await fetch(FILES[k] + '?v=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok) throw new Error(FILES[k] + ' HTTP ' + response.status);
+        const data = await response.json();
 
-        const label = LABELS[key] || data.channelLabel || key;
         const top = Array.isArray(data.topByViews) ? data.topByViews : [];
-        const score = Array.isArray(data.topByScore) ? data.topByScore : top;
+        const byScore = Array.isArray(data.topByScore) ? data.topByScore : top;
         const topVideo = top[0] || null;
-        const strategic = score[0] || topVideo;
+        const signal = byScore[0] || topVideo;
         const families = Object.entries(data.families || {}).sort((a, b) => n(b[1].score || b[1].views) - n(a[1].score || a[1].views));
         const topFamily = families[0] || null;
 
@@ -1158,8 +1144,8 @@
         if (id('ytMode')) id('ytMode').textContent = label + ' · analytics 28j';
 
         if (id('ytAction')) {
-          id('ytAction').textContent = strategic
-            ? 'Étudier le signal fort : ' + (strategic.memoryFamily || 'Non classé') + ' · ' + (strategic.title || 'Vidéo')
+          id('ytAction').textContent = signal
+            ? 'Étudier le signal fort : ' + (signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')
             : 'Aucune donnée.';
         }
 
@@ -1191,16 +1177,22 @@
           id('ytTopList').innerHTML =
             '<div class="yt-toggle-top10">' +
               '<span class="yt-toggle-top10-title">Top 10 vidéos — vues publiques</span>' +
-              '<button type="button" id="ytTop10ToggleBtn" class="yt-toggle-top10-btn">' + (top10Open ? 'replier' : 'ouvrir') + '</button>' +
+              '<button type="button" id="ytTop10ToggleBtn" class="yt-toggle-top10-btn">ouvrir</button>' +
             '</div>' +
-            '<div id="ytTop10Inner" class="yt-top10-inner' + (top10Open ? '' : ' is-hidden') + '">' + rows + '</div>';
+            '<div id="ytTop10Inner" class="yt-top10-inner" hidden>' + rows + '</div>';
 
           const btn = id('ytTop10ToggleBtn');
           const box = id('ytTop10Inner');
           if (btn && box) {
             btn.onclick = function () {
-              top10Open = box.classList.toggle('is-hidden') === false;
-              btn.textContent = top10Open ? 'replier' : 'ouvrir';
+              const isHidden = box.hasAttribute('hidden');
+              if (isHidden) {
+                box.removeAttribute('hidden');
+                btn.textContent = 'replier';
+              } else {
+                box.setAttribute('hidden', '');
+                btn.textContent = 'ouvrir';
+              }
             };
           }
         }
@@ -1213,24 +1205,6 @@
           brief = brief.replace(/vidéos historiques les plus fortes comme signaux principaux/g, 'vidéos les plus fortes comme signaux principaux');
           id('ytBriefText').value = brief;
         }
-
-        rendering = false;
-      }
-
-      async function load(force) {
-        const key = selectedKey();
-        if (!force && key === lastKey && lastData) {
-          render(lastData, key);
-          return;
-        }
-
-        const response = await fetch(FILES[key] + '?v=' + Date.now(), { cache: 'no-store' });
-        if (!response.ok) throw new Error(FILES[key] + ' HTTP ' + response.status);
-        const data = await response.json();
-
-        lastKey = key;
-        lastData = data;
-        render(data, key);
       }
 
       function boot() {
@@ -1240,36 +1214,18 @@
           if (saved && FILES[saved]) select.value = saved;
           select.onchange = function () {
             localStorage.setItem('seven_youtube_channel', select.value);
-            top10Open = false;
-            lastKey = null;
-            load(true).catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
+            loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
           };
         }
 
         const refresh = id('refreshYoutubeDataBtn');
         if (refresh) {
           refresh.onclick = function () {
-            load(true).catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
+            loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
           };
         }
 
-        load(true).catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
-
-        // Force final render after legacy external scripts finish.
-        setTimeout(() => load(false).catch(() => {}), 400);
-        setTimeout(() => load(false).catch(() => {}), 1200);
-        setTimeout(() => load(false).catch(() => {}), 2500);
-
-        // Guard: if old script rewrites Blue Azur rows while Aerith IA selected, immediately restore selected channel.
-        const list = id('ytTopList');
-        if (list && 'MutationObserver' in window) {
-          const observer = new MutationObserver(() => {
-            if (rendering || !lastData) return;
-            window.clearTimeout(window.__ytTopListGuardTimer);
-            window.__ytTopListGuardTimer = window.setTimeout(() => render(lastData, selectedKey()), 80);
-          });
-          observer.observe(list, { childList: true, subtree: true });
-        }
+        loadChannel().catch(e => { if (id('ytStatus')) id('ytStatus').textContent = String(e.message || e); });
       }
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
