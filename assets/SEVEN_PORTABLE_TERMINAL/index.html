@@ -497,6 +497,15 @@
           });
         }
 
+
+      const syncBtn = byId('syncYoutubeBtn');
+      if (syncBtn) {
+        syncBtn.addEventListener('click', () => {
+          window.location.href = 'sync_youtube.bat';
+        });
+      }
+
+
         renderYoutubeMemory();
       }
 
