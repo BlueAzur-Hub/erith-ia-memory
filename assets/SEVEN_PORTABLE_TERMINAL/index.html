@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-TABLE-POLISH">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-DUAL-CHANNEL">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -352,7 +352,13 @@
             <h2 id="ytStatusTitle">Lecture des données avancées</h2>
             <p id="ytStatus">Chargement de data/youtube_memory_full.json…</p>
           </div>
-          <button id="refreshYoutubeDataBtn">Rafraîchir</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select id="youtubeChannelSelect" title="Chaîne YouTube" style="border-radius:999px;border:1px solid rgba(255,232,160,.65);background:rgba(0,0,0,.32);color:inherit;padding:8px 12px;font-weight:700;">
+              <option value="blueazur">Blue Azur</option>
+              <option value="aerithia">Aerith IA</option>
+            </select>
+            <button id="refreshYoutubeDataBtn">Rafraîchir</button>
+          </div>
         </div>
 
         <div class="tile-grid">
@@ -492,7 +498,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-TABLE-POLISH"></script>
+  <script src="script.js?v=20260524-YT-DUAL-CHANNEL"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1017,6 +1023,41 @@
 
       window.addEventListener('load', polishYoutubeTableRows);
       window.setInterval(polishYoutubeTableRows, 1000);
+    })();
+  </script>
+
+  <script>
+    /* Seven Portable Terminal — Dual YouTube Channel Selector */
+    (function () {
+      const files = { blueazur: './data/youtube_memory_blueazur.json', aerithia: './data/youtube_memory_aerithia.json' };
+      const $ = id => document.getElementById(id);
+      const n = v => { const x = Number(v || 0); return Number.isFinite(x) ? x : 0; };
+      const fmt = v => Math.round(n(v)).toLocaleString('fr-FR');
+      const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+      async function getJson(path){ const r=await fetch(path+'?v='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error(path+' HTTP '+r.status); return r.json(); }
+      function metric(v){ const p=v.publicStats||{}, a=v.analytics28d||v.analytics||{}; const parts=[]; if(p.views) parts.push(fmt(p.views)+' vues publiques'); if(a.views) parts.push(fmt(a.views)+' vues 28j'); if(a.estimatedMinutesWatched) parts.push(fmt(a.estimatedMinutesWatched)+' min watchtime 28j'); if(v.score) parts.push('score '+fmt(v.score)); return parts.join(' · '); }
+      function videoRow(v,i){ const url=v.url||(v.videoId?'https://www.youtube.com/watch?v='+v.videoId:''); const title=i+'. '+(v.title||'Vidéo'); const meta=(v.memoryFamily||'Non classé')+(v.durationLabel?' · '+v.durationLabel:''); return '<section class="remote-card yt-video-row"><div class="yt-video-title">'+esc(title)+'</div><div class="yt-video-meta">'+esc(meta)+'</div><div class="yt-video-stats">'+esc(metric(v)||'Aucune statistique')+'</div><div class="yt-video-link">'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noreferrer">'+esc(url)+'</a>':'')+'</div></section>'; }
+      function familyRow(name,d,i){ d=d||{}; const p=[]; if(d.views) p.push(fmt(d.views)+' vues'); if(d.likes) p.push(fmt(d.likes)+' likes'); if(d.comments) p.push(fmt(d.comments)+' commentaires'); if(d.score) p.push('score '+fmt(d.score)); if(Array.isArray(d.videos)) p.push(d.videos.length+' vidéo(s)'); return '<section class="remote-card" style="display:block;width:100%;box-sizing:border-box;margin:0 0 8px 0;padding:10px 14px;"><strong style="display:block;margin-bottom:5px;">'+i+'. '+esc(name)+'</strong><span>'+esc(p.join(' · ')||'Aucune donnée')+'</span></section>'; }
+      async function loadSelectedChannel(){
+        const select=$('youtubeChannelSelect'); const key=select?select.value:'blueazur'; const data=await getJson(files[key]||files.blueazur);
+        const top=Array.isArray(data.topByViews)?data.topByViews:[], score=Array.isArray(data.topByScore)?data.topByScore:top.slice();
+        const fam=Object.entries(data.families||{}).sort((a,b)=>n(b[1].score||b[1].views)-n(a[1].score||a[1].views));
+        const topVideo=top[0], topFam=fam[0];
+        if($('ytStatusTitle')) $('ytStatusTitle').textContent='Données avancées chargées';
+        if($('ytStatus')) $('ytStatus').textContent='Chaîne active : '+(data.channel?.title||data.channelLabel||key)+' · '+(data.mode||'YouTube Memory');
+        if($('ytMetricVideos')) $('ytMetricVideos').textContent=top.length+' vidéo(s)';
+        if($('ytMetricFamilies')) $('ytMetricFamilies').textContent=fam.length+' famille(s)';
+        if($('ytMode')) $('ytMode').textContent=(data.channel?.title||key)+' · analytics 28j';
+        if($('ytAction')) $('ytAction').textContent=topVideo?'Étudier le signal fort : '+(topVideo.memoryFamily||'Non classé')+' · '+(topVideo.title||'Vidéo'):'Aucune donnée YouTube.';
+        if($('ytTopVideo')&&topVideo){ const url=topVideo.url||(topVideo.videoId?'https://www.youtube.com/watch?v='+topVideo.videoId:''); $('ytTopVideo').innerHTML='<b>'+esc(topVideo.title||'Vidéo')+'</b><br>'+esc(topVideo.memoryFamily||'Non classé')+'<br>'+esc(metric(topVideo))+(url?'<br><a href="'+esc(url)+'" target="_blank" rel="noreferrer">ouvrir YouTube</a>':''); }
+        if($('ytBestScore')){ const best=score[0], card=$('ytBestScore').closest('.remote-card'); if(best&&topVideo&&best.videoId===topVideo.videoId&&card){card.style.display='none';} else if(best){ if(card) card.style.display=''; $('ytBestScore').innerHTML='<b>'+esc(best.title||'Vidéo')+'</b><br>'+esc(metric(best)); } }
+        if($('ytTopFamily')&&topFam){ const d=topFam[1]||{}; $('ytTopFamily').innerHTML='<b>'+esc(topFam[0])+'</b><br>'+esc(fmt(d.views||0)+' vues · score '+fmt(d.score||0)); }
+        if($('ytTopList')) $('ytTopList').innerHTML=top.slice(0,10).map(videoRow).join('');
+        if($('ytFamiliesList')) $('ytFamiliesList').innerHTML=fam.slice(0,10).map(([name,d],i)=>familyRow(name,d,i+1)).join('');
+        if($('ytBriefText')) $('ytBriefText').value=data.brief||'Aucun brief.';
+      }
+      function install(){ const select=$('youtubeChannelSelect'); if(select){ const saved=localStorage.getItem('seven_youtube_channel'); if(saved&&files[saved]) select.value=saved; select.addEventListener('change',()=>{localStorage.setItem('seven_youtube_channel',select.value); loadSelectedChannel().catch(()=>{});}); } const refresh=$('refreshYoutubeDataBtn'); if(refresh) refresh.addEventListener('click',()=>loadSelectedChannel().catch(()=>{})); loadSelectedChannel().catch(e=>{ if($('ytStatus')) $('ytStatus').textContent=String(e.message||e); }); setInterval(()=>loadSelectedChannel().catch(()=>{}),60000); }
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
     })();
   </script>
 
