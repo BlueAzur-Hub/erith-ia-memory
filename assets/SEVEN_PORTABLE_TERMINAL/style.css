@@ -211,3 +211,36 @@ body.readable.transparent #refreshTraceBtn{
 body {
   background: #07111f;
 }
+
+/* Seven final clean — YouTube Top 10 header toggle
+   Scope: YouTube Top 10 block only.
+   Goal: click the header zone to open/reclose, no separate open/replier button. */
+#page-youtube #ytTopListStable {
+  margin-top: 10px !important;
+}
+
+#page-youtube .yt-top10-click-zone {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin: -6px -8px 8px -8px;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+#page-youtube .yt-top10-click-zone:hover {
+  background: rgba(245,213,141,.08);
+}
+
+#page-youtube .yt-top10-click-zone strong::after {
+  content: "  — cliquer pour ouvrir/replier";
+  color: rgba(255,247,223,.62);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+#page-youtube .yt-top10-click-zone .yt-final-toggle-btn,
+#page-youtube .yt-top10-click-zone button {
+  display: none !important;
+}
+

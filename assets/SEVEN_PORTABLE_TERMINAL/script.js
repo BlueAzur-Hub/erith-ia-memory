@@ -378,3 +378,87 @@ renderTrace();
   window.addEventListener("load", sevenBgInstallThemeButton);
 })();
 
+/* Seven final clean — YouTube Top 10 full-header toggle
+   Scope: Top 10 vidéos section only.
+   Behavior: click header zone to open/reclose the list; no separate button required. */
+(function(){
+  function findTop10Section(){
+    const stable = document.getElementById("ytTopListStable");
+    if(!stable) return null;
+    return stable.closest(".advanced-panel");
+  }
+
+  function findRows(){
+    return document.getElementById("ytTop10StableRows") ||
+           document.querySelector("#ytTopListStable [id='ytTop10StableRows']");
+  }
+
+  function isCollapsed(){
+    const rows = findRows();
+    if(rows) return !!rows.hidden;
+    const stable = document.getElementById("ytTopListStable");
+    return stable ? stable.dataset.collapsed === "1" : false;
+  }
+
+  function setCollapsed(nextCollapsed){
+    const stable = document.getElementById("ytTopListStable");
+    const rows = findRows();
+
+    if(rows){
+      rows.hidden = !!nextCollapsed;
+    }else if(stable){
+      Array.from(stable.children).forEach((child, index) => {
+        if(index > 0) child.hidden = !!nextCollapsed;
+      });
+    }
+
+    if(stable) stable.dataset.collapsed = nextCollapsed ? "1" : "0";
+
+    const header = findTop10Section()?.querySelector(".advanced-head");
+    if(header){
+      header.setAttribute("aria-expanded", nextCollapsed ? "false" : "true");
+      header.title = nextCollapsed ? "Cliquer pour ouvrir le Top 10" : "Cliquer pour replier le Top 10";
+    }
+  }
+
+  function toggleTop10(){
+    setCollapsed(!isCollapsed());
+  }
+
+  function installTop10HeaderToggle(){
+    const section = findTop10Section();
+    if(!section) return;
+
+    const header = section.querySelector(".advanced-head");
+    if(!header || header.dataset.top10HeaderBound === "1") return;
+
+    header.dataset.top10HeaderBound = "1";
+    header.classList.add("yt-top10-click-zone");
+    header.setAttribute("role", "button");
+    header.setAttribute("tabindex", "0");
+    header.setAttribute("aria-expanded", "true");
+    header.title = "Cliquer pour ouvrir/replier le Top 10";
+
+    header.addEventListener("click", function(event){
+      event.preventDefault();
+      toggleTop10();
+    });
+
+    header.addEventListener("keydown", function(event){
+      if(event.key === "Enter" || event.key === " "){
+        event.preventDefault();
+        toggleTop10();
+      }
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", installTop10HeaderToggle);
+  }else{
+    installTop10HeaderToggle();
+  }
+
+  window.addEventListener("load", installTop10HeaderToggle);
+  window.setInterval(installTop10HeaderToggle, 1000);
+})();
+
