@@ -33,8 +33,9 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          from datetime import datetime, timedelta, timezone
-          import json, os
+          from datetime import datetime, timezone
+          import json
+          import os
 
           from google.oauth2.credentials import Credentials
           from google.auth.transport.requests import Request
@@ -56,14 +57,12 @@ jobs:
           if not token_raw:
               raise RuntimeError("Missing secret: YOUTUBE_TOKEN_JSON")
 
-          token_info = json.loads(token_raw)
-          creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+          creds = Credentials.from_authorized_user_info(json.loads(token_raw), SCOPES)
 
           if creds.expired and creds.refresh_token:
               creds.refresh(Request())
 
           youtube = build("youtube", "v3", credentials=creds)
-          analytics = build("youtubeAnalytics", "v2", credentials=creds)
 
           def safe_int(value):
               try:
@@ -74,7 +73,7 @@ jobs:
           def classify_family(title):
               t = (title or "").lower()
               rules = [
-                  ("Zelda", ["zelda", "link", "hyrule", "breath of the wild", "tears of the kingdom", "botw", "totk", "linkle"]),
+                  ("Zelda", ["zelda", "link", "hyrule", "breath of the wild", "tears of the kingdom", "botw", "totk", "linkle", "gleeok", "gibdo"]),
                   ("Final Fantasy", ["final fantasy", "ff7", "ff vii", "remake", "rebirth", "cloud", "tifa", "aerith", "rochey"]),
                   ("ERITH.IA", ["erith", "seven heaven", "seven portable", "aerith ia", "ia"]),
                   ("GTA", ["gta", "grand theft auto"]),
@@ -104,22 +103,20 @@ jobs:
                   "uploadsPlaylistId": item.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads"),
               }
 
-          def fetch_popular_video_ids(channel_id, limit=50):
+          def fetch_all_upload_ids(playlist_id, max_videos=500):
               ids = []
               page_token = None
 
-              while len(ids) < limit:
-                  res = youtube.search().list(
-                      part="id",
-                      channelId=channel_id,
-                      type="video",
-                      order="viewCount",
-                      maxResults=min(50, limit - len(ids)),
+              while len(ids) < max_videos:
+                  res = youtube.playlistItems().list(
+                      part="contentDetails",
+                      playlistId=playlist_id,
+                      maxResults=50,
                       pageToken=page_token
                   ).execute()
 
                   for item in res.get("items", []):
-                      vid = item.get("id", {}).get("videoId")
+                      vid = item.get("contentDetails", {}).get("videoId")
                       if vid and vid not in ids:
                           ids.append(vid)
 
@@ -127,15 +124,16 @@ jobs:
                   if not page_token:
                       break
 
-              return ids
+              return ids[:max_videos]
 
           def fetch_video_details(video_ids):
               videos = []
 
               for i in range(0, len(video_ids), 50):
+                  batch = video_ids[i:i+50]
                   res = youtube.videos().list(
                       part="snippet,statistics,contentDetails",
-                      id=",".join(video_ids[i:i+50])
+                      id=",".join(batch)
                   ).execute()
 
                   for item in res.get("items", []):
@@ -159,62 +157,18 @@ jobs:
                               "likes": safe_int(stats.get("likeCount")),
                               "comments": safe_int(stats.get("commentCount")),
                           },
+                          "analytics": {
+                              "views": safe_int(stats.get("viewCount")),
+                              "estimatedMinutesWatched": 0,
+                              "averageViewDuration": 0,
+                              "likes": safe_int(stats.get("likeCount")),
+                              "comments": safe_int(stats.get("commentCount")),
+                              "shares": 0,
+                          },
                           "duration": item.get("contentDetails", {}).get("duration"),
                       })
 
               return sorted(videos, key=lambda v: safe_int(v.get("publicStats", {}).get("views")), reverse=True)
-
-          def enrich_analytics(videos):
-              if not videos:
-                  return videos
-
-              end = datetime.now(timezone.utc).date() - timedelta(days=1)
-              start = end - timedelta(days=27)
-              filters = ",".join("video==" + v["videoId"] for v in videos)
-              by_id = {v["videoId"]: v for v in videos}
-
-              try:
-                  res = analytics.reports().query(
-                      ids="channel==MINE",
-                      startDate=str(start),
-                      endDate=str(end),
-                      metrics="views,estimatedMinutesWatched,averageViewDuration,likes,comments,shares",
-                      dimensions="video",
-                      filters=filters,
-                      maxResults=200,
-                      sort="-views"
-                  ).execute()
-
-                  headers = [h["name"] for h in res.get("columnHeaders", [])]
-                  for row in res.get("rows", []):
-                      data = dict(zip(headers, row))
-                      video = by_id.get(data.get("video"))
-                      if not video:
-                          continue
-                      video["analytics"] = {
-                          "views": safe_int(data.get("views")),
-                          "estimatedMinutesWatched": safe_int(data.get("estimatedMinutesWatched")),
-                          "averageViewDuration": safe_int(data.get("averageViewDuration")),
-                          "likes": safe_int(data.get("likes")),
-                          "comments": safe_int(data.get("comments")),
-                          "shares": safe_int(data.get("shares")),
-                      }
-
-              except Exception as exc:
-                  print("Analytics unavailable, fallback to public stats:", exc)
-
-              for video in videos:
-                  public = video.get("publicStats", {})
-                  video.setdefault("analytics", {
-                      "views": safe_int(public.get("views")),
-                      "estimatedMinutesWatched": 0,
-                      "averageViewDuration": 0,
-                      "likes": safe_int(public.get("likes")),
-                      "comments": safe_int(public.get("comments")),
-                      "shares": 0,
-                  })
-
-              return videos
 
           def build_families(videos):
               fams = {}
@@ -222,13 +176,9 @@ jobs:
               for video in videos:
                   family = video.get("memoryFamily") or "Autre"
                   public = video.get("publicStats", {})
-                  analytics_data = video.get("analytics", {})
-
                   views = safe_int(public.get("views"))
-                  watch = safe_int(analytics_data.get("estimatedMinutesWatched"))
                   likes = safe_int(public.get("likes"))
                   comments = safe_int(public.get("comments"))
-                  shares = safe_int(analytics_data.get("shares"))
 
                   bucket = fams.setdefault(family, {
                       "views": 0,
@@ -240,16 +190,14 @@ jobs:
                   })
 
                   bucket["views"] += views
-                  bucket["estimatedMinutesWatched"] += watch
                   bucket["likes"] += likes
                   bucket["comments"] += comments
-                  bucket["shares"] += shares
                   bucket["videos"].append({
                       "videoId": video.get("videoId"),
                       "title": video.get("title"),
                       "url": video.get("url"),
                       "views": views,
-                      "estimatedMinutesWatched": watch,
+                      "estimatedMinutesWatched": 0,
                   })
 
               return dict(sorted(fams.items(), key=lambda x: x[1]["views"], reverse=True))
@@ -263,7 +211,7 @@ jobs:
                   "",
                   "Generated: " + datetime.now(timezone.utc).isoformat(),
                   "Channel: " + str(channel.get("title") or "Unknown"),
-                  "Mode: popular videos by global view count",
+                  "Mode: full uploads playlist sorted by public view count",
                   "",
                   "## Signal principal",
                   "",
@@ -272,12 +220,10 @@ jobs:
 
               if top:
                   public = top.get("publicStats", {})
-                  analytics_data = top.get("analytics", {})
                   lines += [
                       "- Vidéo locomotive : " + str(top.get("title")),
                       "- URL : " + str(top.get("url")),
                       "- Vues publiques : " + str(safe_int(public.get("views"))),
-                      "- Watchtime 28 jours : " + str(safe_int(analytics_data.get("estimatedMinutesWatched"))) + " minutes",
                   ]
               else:
                   lines.append("- Aucune vidéo trouvée.")
@@ -286,15 +232,14 @@ jobs:
                   "",
                   "## Action Aerith",
                   "",
-                  "Étudier les vidéos populaires historiques de la chaîne, puis proposer une suite ou une vidéo satellite reliée à la famille dominante.",
+                  "Étudier les vraies vidéos locomotives historiques de la chaîne, puis proposer des suites ou satellites reliés à la famille dominante.",
               ]
 
               return "\n".join(lines)
 
           channel = fetch_channel()
-          video_ids = fetch_popular_video_ids(channel["id"], limit=50)
-          videos = fetch_video_details(video_ids)
-          videos = enrich_analytics(videos)
+          upload_ids = fetch_all_upload_ids(channel["uploadsPlaylistId"], max_videos=500)
+          videos = fetch_video_details(upload_ids)
 
           top_videos = videos[:25]
           families = build_families(top_videos)
@@ -315,12 +260,12 @@ jobs:
                   "brief": brief,
                   "generatedAt": datetime.now(timezone.utc).isoformat(),
                   "channel": channel,
-                  "mode": "popular_videos_by_view_count"
+                  "mode": "full_uploads_playlist_sorted_by_public_view_count"
               }, ensure_ascii=False, indent=2),
               encoding="utf-8"
           )
 
-          print("Generated Seven Heaven YouTube JSON data from popular videos.")
+          print("Generated Seven Heaven YouTube JSON data from full uploads playlist.")
           PY
 
       - name: Commit generated data
@@ -330,5 +275,5 @@ jobs:
           git add assets/SEVEN_PORTABLE_TERMINAL/data/top_videos.json
           git add assets/SEVEN_PORTABLE_TERMINAL/data/memory_families.json
           git add assets/SEVEN_PORTABLE_TERMINAL/data/brief.json
-          git diff --cached --quiet && echo "No data changes" || git commit -m "Update Seven Heaven YouTube popular data"
+          git diff --cached --quiet && echo "No data changes" || git commit -m "Update Seven Heaven YouTube full data"
           git push
