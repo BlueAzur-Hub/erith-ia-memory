@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-ADVANCED-UI-FIX2">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-LINES-FINAL">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -229,7 +229,7 @@
               <span>classement automatique depuis YouTube API</span>
             </div>
           </div>
-          <div id="ytTopList" class="trace-grid" style="margin-top:12px;"></div>
+          <div id="ytTopList" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
         </section>
 
         <section class="advanced-panel" style="margin-top:16px;">
@@ -239,7 +239,7 @@
               <span>agrégation vues · likes · commentaires · score</span>
             </div>
           </div>
-          <div id="ytFamiliesList" class="trace-grid" style="margin-top:12px;"></div>
+          <div id="ytFamiliesList" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
         </section>
 
         <section class="advanced-panel" style="margin-top:16px;">
@@ -325,7 +325,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-ADVANCED-UI-FIX2"></script>
+  <script src="script.js?v=20260524-YT-LINES-FINAL"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -580,6 +580,45 @@
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installYoutubeJsonLoader);
       else installYoutubeJsonLoader();
+    })();
+  </script>
+
+  <script>
+    /* Seven Portable Terminal — YouTube Lines Layout Patch */
+    (function () {
+      function forceYoutubeLines() {
+        const top = document.getElementById('ytTopList');
+        const fam = document.getElementById('ytFamiliesList');
+
+        [top, fam].forEach(container => {
+          if (!container) return;
+          container.style.display = 'flex';
+          container.style.flexDirection = 'column';
+          container.style.gap = '10px';
+          container.style.gridTemplateColumns = 'none';
+
+          container.querySelectorAll('.remote-card, .tile, section').forEach(card => {
+            card.style.display = 'block';
+            card.style.width = '100%';
+            card.style.maxWidth = '100%';
+            card.style.boxSizing = 'border-box';
+            card.style.minHeight = 'auto';
+          });
+
+          container.querySelectorAll('span').forEach(span => {
+            span.style.display = 'block';
+            span.style.marginTop = '4px';
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', forceYoutubeLines);
+      } else {
+        forceYoutubeLines();
+      }
+
+      window.setInterval(forceYoutubeLines, 1200);
     })();
   </script>
 
