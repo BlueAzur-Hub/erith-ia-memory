@@ -4,7 +4,51 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-LINES-FINAL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-VERTICAL-FINAL2">
+
+  <style>
+    #page-youtube .youtube-lines-list {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      column-count: 1 !important;
+      grid-template-columns: none !important;
+    }
+
+    #page-youtube .youtube-lines-list > section,
+    #page-youtube .youtube-lines-list > .remote-card,
+    #page-youtube .youtube-lines-list > .tile {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: auto !important;
+      box-sizing: border-box !important;
+      margin: 0 0 10px 0 !important;
+      padding: 12px 14px !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    #page-youtube .youtube-lines-list strong {
+      display: block !important;
+      width: 100% !important;
+      font-size: 15px !important;
+      line-height: 1.25 !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    #page-youtube .youtube-lines-list span {
+      display: block !important;
+      width: 100% !important;
+      margin-top: 5px !important;
+      font-size: 13px !important;
+      line-height: 1.35 !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+  </style>
+
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -229,7 +273,7 @@
               <span>classement automatique depuis YouTube API</span>
             </div>
           </div>
-          <div id="ytTopList" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
+          <div id="ytTopList" class="youtube-lines-list" style="display:block;width:100%;margin-top:12px;"></div>
         </section>
 
         <section class="advanced-panel" style="margin-top:16px;">
@@ -239,7 +283,7 @@
               <span>agrégation vues · likes · commentaires · score</span>
             </div>
           </div>
-          <div id="ytFamiliesList" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
+          <div id="ytFamiliesList" class="youtube-lines-list" style="display:block;width:100%;margin-top:12px;"></div>
         </section>
 
         <section class="advanced-panel" style="margin-top:16px;">
@@ -325,7 +369,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-LINES-FINAL"></script>
+  <script src="script.js?v=20260524-YT-VERTICAL-FINAL2"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -584,41 +628,43 @@
   </script>
 
   <script>
-    /* Seven Portable Terminal — YouTube Lines Layout Patch */
+    /* Seven Portable Terminal — Final YouTube Vertical Lines Patch */
     (function () {
-      function forceYoutubeLines() {
-        const top = document.getElementById('ytTopList');
-        const fam = document.getElementById('ytFamiliesList');
-
-        [top, fam].forEach(container => {
+      function forceYoutubeVerticalLines() {
+        const ids = ['ytTopList', 'ytFamiliesList'];
+        ids.forEach(id => {
+          const container = document.getElementById(id);
           if (!container) return;
-          container.style.display = 'flex';
-          container.style.flexDirection = 'column';
-          container.style.gap = '10px';
-          container.style.gridTemplateColumns = 'none';
 
-          container.querySelectorAll('.remote-card, .tile, section').forEach(card => {
+          container.classList.remove('trace-grid');
+          container.classList.add('youtube-lines-list');
+          container.style.display = 'block';
+          container.style.width = '100%';
+          container.style.maxWidth = '100%';
+          container.style.gridTemplateColumns = 'none';
+          container.style.columnCount = '1';
+
+          Array.from(container.children).forEach(card => {
             card.style.display = 'block';
             card.style.width = '100%';
             card.style.maxWidth = '100%';
-            card.style.boxSizing = 'border-box';
             card.style.minHeight = 'auto';
-          });
-
-          container.querySelectorAll('span').forEach(span => {
-            span.style.display = 'block';
-            span.style.marginTop = '4px';
+            card.style.boxSizing = 'border-box';
+            card.style.margin = '0 0 10px 0';
+            card.style.whiteSpace = 'normal';
+            card.style.overflowWrap = 'anywhere';
           });
         });
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', forceYoutubeLines);
+        document.addEventListener('DOMContentLoaded', forceYoutubeVerticalLines);
       } else {
-        forceYoutubeLines();
+        forceYoutubeVerticalLines();
       }
 
-      window.setInterval(forceYoutubeLines, 1200);
+      window.addEventListener('load', forceYoutubeVerticalLines);
+      window.setInterval(forceYoutubeVerticalLines, 800);
     })();
   </script>
 
