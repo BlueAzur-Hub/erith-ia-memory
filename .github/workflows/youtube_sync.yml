@@ -366,11 +366,11 @@ jobs:
 
               lines += [
                   "",
-                  "## Top 5 par vues publiques",
+                  "## Top 10 par vues publiques",
                   "",
               ]
 
-              for index, video in enumerate(top_by_views[:5], start=1):
+              for index, video in enumerate(top_by_views[:10], start=1):
                   p = video.get("publicStats", {})
                   lines.append(f"{index}. {video.get('title')} — {safe_int(p.get('views'))} vues — {video.get('memoryFamily')}")
 
@@ -378,7 +378,7 @@ jobs:
                   "",
                   "## Action Aerith",
                   "",
-                  "Utiliser les vidéos historiques les plus fortes comme locomotives, puis produire des vidéos satellites autour des familles mémoire dominantes.",
+                  "Utiliser les vidéos historiques les plus fortes comme signaux principaux, puis produire des vidéos satellites autour des familles mémoire dominantes.",
               ]
 
               return "\n".join(lines)
