@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-JSON-FINAL">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-ADVANCED-UI">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -173,70 +173,7 @@
           </a>
         </div>
       </article>
-
-
-      <article class="page" id="page-youtube">
-        <div class="section-title">
-          <strong>YouTube Memory</strong>
-          <span>GitHub Pages · JSON publics · cockpit portable.</span>
-        </div>
-
-        <div class="hero-card">
-          <div>
-            <p class="small-label">État YouTube</p>
-            <h2 id="ytStatusTitle">Lecture des données publiques</h2>
-            <p id="ytStatus">Chargement de data/top_videos.json, data/memory_families.json et data/brief.json…</p>
-          </div>
-          <button id="refreshYoutubeDataBtn">Rafraîchir</button>
-        </div>
-
-        <div class="tile-grid">
-          <section class="tile primary">
-            <strong>Top vidéos</strong>
-            <span id="ytMetricVideos">Chargement…</span>
-          </section>
-          <section class="tile">
-            <strong>Familles mémoire</strong>
-            <span id="ytMetricFamilies">Chargement…</span>
-          </section>
-          <section class="tile">
-            <strong>Action Aerith</strong>
-            <span id="ytAction">En attente des données.</span>
-          </section>
-        </div>
-
-        <div class="remote-grid" style="margin-top:16px;">
-          <section class="remote-card">
-            <strong>Vidéo locomotive</strong>
-            <span id="ytTopVideo">Aucune donnée chargée.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Famille dominante</strong>
-            <span id="ytTopFamily">Aucune donnée chargée.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Brief chargé</strong>
-            <span id="ytBriefStatus">Aucun brief.</span>
-          </section>
-          <section class="remote-card">
-            <strong>Mode</strong>
-            <span>GitHub Pages · zéro backend local · zéro .bat</span>
-          </section>
-        </div>
-
-        <section class="advanced-panel" style="margin-top:16px;">
-          <div class="advanced-head">
-            <div>
-              <strong>YouTube Memory Brief</strong>
-              <span>lecture automatique depuis /data</span>
-            </div>
-            <button id="copyYoutubeBriefBtn">Copier brief</button>
-          </div>
-          <textarea id="ytBriefText" readonly style="width:100%;min-height:260px;margin-top:12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.32);color:inherit;padding:14px;font:13px/1.45 Consolas,monospace;"></textarea>
-        </section>
-      </article>
-
-      <article class="page" id="page-remote">
+<article class="page" id="page-remote">
         <div class="section-title">
           <strong>Remote</strong>
           <span>Prise en main à distance, sans exposer de secret.</span>
@@ -306,7 +243,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-JSON-FINAL"></script>
+  <script src="script.js?v=20260524-YT-ADVANCED-UI"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -374,49 +311,49 @@
     })();
   </script>
   <script>
-    /* Seven Portable Terminal — YouTube JSON Loader Final
-       GitHub Pages only. No local backend. No .bat. No localhost. */
+    /* Seven Portable Terminal — Advanced YouTube Memory UI
+       Reads data/youtube_memory_full.json first.
+       Fallbacks: top_videos.json, memory_families.json, brief.json.
+       No local backend. No .bat. No localhost. */
     (function () {
       const DATA_FILES = {
+        full: './data/youtube_memory_full.json',
         videos: './data/top_videos.json',
         families: './data/memory_families.json',
         brief: './data/brief.json'
       };
 
-      function byId(id) { return document.getElementById(id); }
-      function setText(id, value) { const el = byId(id); if (el) el.textContent = value; }
-      function safeNumber(value) { const n = Number(value || 0); return Number.isFinite(n) ? n : 0; }
-      function formatNumber(value) { return Math.round(safeNumber(value)).toLocaleString('fr-FR'); }
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function setText(id, value) {
+        const el = byId(id);
+        if (el) el.textContent = value == null ? '' : String(value);
+      }
+
+      function safeNumber(value) {
+        const n = Number(value || 0);
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function formatNumber(value) {
+        return Math.round(safeNumber(value)).toLocaleString('fr-FR');
+      }
+
       function escapeHtml(value) {
         return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
         }[char]));
       }
 
-      function normalizeFamilies(raw) {
-        if (Array.isArray(raw)) return raw;
-        if (raw && typeof raw === 'object') {
-          return Object.entries(raw).map(([name, value]) => ({
-            name,
-            views: safeNumber(value && value.views),
-            watchtime: safeNumber(value && (value.estimatedMinutesWatched || value.watchtime)),
-            videos: value && Array.isArray(value.videos) ? value.videos : []
-          }));
-        }
-        return [];
-      }
-
-      function getViews(video) {
-        if (!video || typeof video !== 'object') return 0;
-        if (video.analytics && video.analytics.views != null) return safeNumber(video.analytics.views);
-        if (video.publicStats && video.publicStats.views != null) return safeNumber(video.publicStats.views);
-        return safeNumber(video.views);
-      }
-
-      function getWatchtime(video) {
-        if (!video || typeof video !== 'object') return 0;
-        if (video.analytics && video.analytics.estimatedMinutesWatched != null) return safeNumber(video.analytics.estimatedMinutesWatched);
-        return safeNumber(video.estimatedMinutesWatched || video.watchtime);
+      function htmlLine(label, value) {
+        if (value == null || value === '') return '';
+        return '<br><span>' + escapeHtml(label) + ' : ' + escapeHtml(value) + '</span>';
       }
 
       async function fetchJson(path) {
@@ -425,83 +362,236 @@
         return response.json();
       }
 
+      function normalizeFamilies(raw) {
+        if (!raw) return {};
+        if (raw.families && typeof raw.families === 'object') return raw.families;
+        if (typeof raw === 'object' && !Array.isArray(raw)) return raw;
+        return {};
+      }
+
+      function getPublic(video) {
+        return video && video.publicStats ? video.publicStats : {};
+      }
+
+      function getAnalytics(video) {
+        return video && (video.analytics28d || video.analytics) ? (video.analytics28d || video.analytics) : {};
+      }
+
+      function getViews(video) {
+        const publicStats = getPublic(video);
+        return safeNumber(publicStats.views != null ? publicStats.views : video && video.views);
+      }
+
+      function getWatch(video) {
+        const analytics = getAnalytics(video);
+        return safeNumber(analytics.estimatedMinutesWatched || 0);
+      }
+
+      function getRecentViews(video) {
+        const analytics = getAnalytics(video);
+        return safeNumber(analytics.views || 0);
+      }
+
+      function metricLine(video) {
+        const views = getViews(video);
+        const watch = getWatch(video);
+        const recent = getRecentViews(video);
+        const score = safeNumber(video && video.score);
+        const parts = [];
+
+        if (views) parts.push(formatNumber(views) + ' vues publiques');
+        if (recent) parts.push(formatNumber(recent) + ' vues 28j');
+        if (watch) parts.push(formatNumber(watch) + ' min watchtime 28j');
+        if (score) parts.push('score ' + formatNumber(score));
+
+        return parts.join(' · ');
+      }
+
+      function renderVideoCard(video, index) {
+        if (!video) return '';
+        const title = video.title || 'Titre non renseigné';
+        const family = video.memoryFamily || 'Non classé';
+        const url = video.url || (video.videoId ? 'https://www.youtube.com/watch?v=' + video.videoId : '');
+        const duration = video.durationLabel || '';
+        const line = metricLine(video) || 'Aucune statistique exploitable';
+
+        return (
+          '<section class="remote-card">' +
+            '<strong>' + index + '. ' + escapeHtml(title) + '</strong>' +
+            '<span>' +
+              escapeHtml(family) +
+              (duration ? ' · ' + escapeHtml(duration) : '') +
+              '<br>' + escapeHtml(line) +
+              (url ? '<br><a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '') +
+            '</span>' +
+          '</section>'
+        );
+      }
+
+      function renderFamilyCard(name, data, index) {
+        data = data || {};
+        const views = safeNumber(data.views);
+        const likes = safeNumber(data.likes);
+        const comments = safeNumber(data.comments);
+        const views28 = safeNumber(data.views28d);
+        const watch28 = safeNumber(data.estimatedMinutesWatched28d);
+        const score = safeNumber(data.score);
+        const videos = Array.isArray(data.videos) ? data.videos.length : 0;
+
+        const parts = [];
+        if (views) parts.push(formatNumber(views) + ' vues');
+        if (views28) parts.push(formatNumber(views28) + ' vues 28j');
+        if (watch28) parts.push(formatNumber(watch28) + ' min watchtime 28j');
+        if (likes) parts.push(formatNumber(likes) + ' likes');
+        if (comments) parts.push(formatNumber(comments) + ' commentaires');
+        if (score) parts.push('score ' + formatNumber(score));
+        if (videos) parts.push(videos + ' vidéo(s)');
+
+        return (
+          '<section class="remote-card">' +
+            '<strong>' + index + '. ' + escapeHtml(name) + '</strong>' +
+            '<span>' + escapeHtml(parts.join(' · ') || 'Aucune donnée') + '</span>' +
+          '</section>'
+        );
+      }
+
+      function setHtml(id, html) {
+        const el = byId(id);
+        if (el) el.innerHTML = html;
+      }
+
+      function extractPayload(full, videosFallback, familiesFallback, briefFallback) {
+        const topByViews = Array.isArray(full && full.topByViews)
+          ? full.topByViews
+          : (Array.isArray(videosFallback) ? videosFallback : []);
+
+        const topByScore = Array.isArray(full && full.topByScore)
+          ? full.topByScore
+          : topByViews.slice();
+
+        const families = normalizeFamilies(full && full.families ? full.families : familiesFallback);
+
+        let brief = '';
+        if (full && typeof full.brief === 'string') brief = full.brief;
+        else if (briefFallback && typeof briefFallback.brief === 'string') brief = briefFallback.brief;
+        else if (briefFallback) brief = JSON.stringify(briefFallback, null, 2);
+
+        return {
+          topByViews,
+          topByScore,
+          families,
+          brief,
+          mode: (full && full.mode) || 'fallback_public_json',
+          generatedAt: (full && full.generatedAt) || ''
+        };
+      }
+
       async function loadYoutubeData() {
-        setText('ytStatusTitle', 'Lecture des données publiques');
+        setText('ytStatusTitle', 'Lecture des données avancées');
         setText('ytStatus', 'Chargement JSON depuis GitHub Pages…');
 
         try {
-          const [videosRaw, familiesRaw, briefRaw] = await Promise.all([
-            fetchJson(DATA_FILES.videos),
-            fetchJson(DATA_FILES.families),
-            fetchJson(DATA_FILES.brief)
-          ]);
-
-          const videos = Array.isArray(videosRaw) ? videosRaw.slice() : [];
-          const families = normalizeFamilies(familiesRaw).sort((a, b) => safeNumber(b.views) - safeNumber(a.views));
-          videos.sort((a, b) => getViews(b) - getViews(a));
-
-          setText('ytMetricVideos', videos.length ? videos.length + ' vidéo(s)' : 'Aucune donnée');
-          setText('ytMetricFamilies', families.length ? families.length + ' famille(s)' : 'Aucune donnée');
-
-          if (videos.length) {
-            const top = videos[0];
-            const title = top.title || 'Titre non renseigné';
-            const url = top.url || (top.videoId ? 'https://www.youtube.com/watch?v=' + top.videoId : '');
-            const family = top.memoryFamily || top.family || 'Non classé';
-            const views = formatNumber(getViews(top));
-            const watch = formatNumber(getWatchtime(top));
-            const target = byId('ytTopVideo');
-
-            if (target) {
-              target.innerHTML =
-                '<b>' + escapeHtml(title) + '</b><br>' +
-                escapeHtml(family) + '<br>' +
-                views + ' vues · ' + watch + ' min watchtime' +
-                (url ? '<br><a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '');
-            }
-
-            setText('ytAction', 'Étudier le signal fort : ' + family + ' · ' + title);
-          } else {
-            setText('ytTopVideo', 'Aucune donnée vidéo.');
-            setText('ytAction', 'En attente de données YouTube.');
+          let full = null;
+          try {
+            full = await fetchJson(DATA_FILES.full);
+          } catch (error) {
+            console.warn('youtube_memory_full.json unavailable, fallback mode.', error);
           }
 
-          if (families.length) {
-            const topFamily = families[0];
-            const target = byId('ytTopFamily');
-            if (target) {
-              target.innerHTML =
-                '<b>' + escapeHtml(topFamily.name || 'Famille') + '</b><br>' +
-                formatNumber(topFamily.views) + ' vues · ' +
-                formatNumber(topFamily.watchtime) + ' min watchtime';
-            }
+          const [videosRaw, familiesRaw, briefRaw] = await Promise.all([
+            full ? Promise.resolve([]) : fetchJson(DATA_FILES.videos),
+            full ? Promise.resolve({}) : fetchJson(DATA_FILES.families),
+            full ? Promise.resolve({}) : fetchJson(DATA_FILES.brief)
+          ]);
+
+          const payload = extractPayload(full, videosRaw, familiesRaw, briefRaw);
+          const topByViews = payload.topByViews || [];
+          const topByScore = payload.topByScore || [];
+          const familiesEntries = Object.entries(payload.families || {})
+            .sort((a, b) => safeNumber(b[1].score || b[1].views) - safeNumber(a[1].score || a[1].views));
+
+          const topVideo = topByViews[0];
+          const bestScore = topByScore[0];
+          const topFamily = familiesEntries[0];
+
+          setText('ytMetricVideos', topByViews.length ? topByViews.length + ' vidéo(s)' : 'Aucune donnée');
+          setText('ytMetricFamilies', familiesEntries.length ? familiesEntries.length + ' famille(s)' : 'Aucune donnée');
+          setText('ytMode', payload.mode || 'GitHub Pages');
+
+          if (topVideo) {
+            const url = topVideo.url || (topVideo.videoId ? 'https://www.youtube.com/watch?v=' + topVideo.videoId : '');
+            setHtml(
+              'ytTopVideo',
+              '<b>' + escapeHtml(topVideo.title || 'Vidéo') + '</b><br>' +
+              escapeHtml(topVideo.memoryFamily || 'Non classé') + '<br>' +
+              escapeHtml(metricLine(topVideo) || formatNumber(getViews(topVideo)) + ' vues publiques') +
+              (url ? '<br><a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '')
+            );
+          } else {
+            setText('ytTopVideo', 'Aucune vidéo.');
+          }
+
+          if (bestScore) {
+            const url = bestScore.url || (bestScore.videoId ? 'https://www.youtube.com/watch?v=' + bestScore.videoId : '');
+            setHtml(
+              'ytBestScore',
+              '<b>' + escapeHtml(bestScore.title || 'Vidéo') + '</b><br>' +
+              escapeHtml(bestScore.memoryFamily || 'Non classé') + '<br>' +
+              escapeHtml(metricLine(bestScore) || 'Score indisponible') +
+              (url ? '<br><a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '')
+            );
+          } else {
+            setText('ytBestScore', 'Aucun score.');
+          }
+
+          if (topFamily) {
+            const name = topFamily[0];
+            const data = topFamily[1] || {};
+            const parts = [];
+            if (data.views) parts.push(formatNumber(data.views) + ' vues');
+            if (data.views28d) parts.push(formatNumber(data.views28d) + ' vues 28j');
+            if (data.estimatedMinutesWatched28d) parts.push(formatNumber(data.estimatedMinutesWatched28d) + ' min watchtime 28j');
+            if (data.score) parts.push('score ' + formatNumber(data.score));
+            setHtml('ytTopFamily', '<b>' + escapeHtml(name) + '</b><br>' + escapeHtml(parts.join(' · ') || 'Données faibles'));
           } else {
             setText('ytTopFamily', 'Aucune famille mémoire.');
           }
 
-          let briefText = '';
-          if (briefRaw && typeof briefRaw === 'object') {
-            briefText = briefRaw.brief || briefRaw.text || JSON.stringify(briefRaw, null, 2);
-          } else {
-            briefText = String(briefRaw || '');
-          }
+          setText(
+            'ytAction',
+            topVideo
+              ? 'Étudier le signal fort : ' + (topVideo.memoryFamily || 'Non classé') + ' · ' + (topVideo.title || 'Vidéo')
+              : 'En attente de données YouTube.'
+          );
 
-          setText('ytBriefStatus', briefText ? 'Brief chargé' : 'Aucun brief.');
+          setHtml(
+            'ytTopList',
+            topByViews.slice(0, 10).map((video, i) => renderVideoCard(video, i + 1)).join('') ||
+            '<section class="remote-card"><strong>Aucune donnée</strong><span>Top vidéos vide.</span></section>'
+          );
+
+          setHtml(
+            'ytFamiliesList',
+            familiesEntries.slice(0, 8).map(([name, data], i) => renderFamilyCard(name, data, i + 1)).join('') ||
+            '<section class="remote-card"><strong>Aucune donnée</strong><span>Familles mémoire vides.</span></section>'
+          );
+
+          setText('ytBriefStatus', payload.brief ? 'Brief chargé' : 'Aucun brief.');
           const briefBox = byId('ytBriefText');
-          if (briefBox) briefBox.value = briefText || 'Seven Heaven online.';
+          if (briefBox) briefBox.value = payload.brief || 'Seven Heaven online.';
 
-          setText('ytStatusTitle', 'Données chargées');
-          setText('ytStatus', 'Mode GitHub Pages actif : lecture automatique des JSON publics.');
+          setText('ytStatusTitle', 'Données avancées chargées');
+          setText('ytStatus', 'Mode GitHub Pages actif : YouTube Memory Full chargé.');
 
         } catch (error) {
           setText('ytStatusTitle', 'Erreur chargement JSON');
           setText('ytStatus', String(error.message || error));
           setText('ytMetricVideos', 'Erreur');
           setText('ytMetricFamilies', 'Erreur');
-          setText('ytAction', 'Vérifier le dossier data et les noms JSON.');
+          setText('ytAction', 'Vérifier data/youtube_memory_full.json et le workflow.');
           const briefBox = byId('ytBriefText');
           if (briefBox) briefBox.value =
-            'Erreur de chargement JSON.\n\nChemins attendus :\n- data/top_videos.json\n- data/memory_families.json\n- data/brief.json\n\n' +
+            'Erreur de chargement YouTube Memory Full.\\n\\nChemins attendus :\\n- data/youtube_memory_full.json\\n- data/top_videos.json\\n- data/memory_families.json\\n- data/brief.json\\n\\n' +
             String(error.message || error);
         }
       }
@@ -515,9 +605,14 @@
           copy.addEventListener('click', async () => {
             const box = byId('ytBriefText');
             const text = box ? box.value : '';
-            try { await navigator.clipboard.writeText(text); }
-            catch (error) {
-              if (box) { box.focus(); box.select(); document.execCommand('copy'); }
+            try {
+              await navigator.clipboard.writeText(text);
+            } catch (error) {
+              if (box) {
+                box.focus();
+                box.select();
+                document.execCommand('copy');
+              }
             }
           });
         }
