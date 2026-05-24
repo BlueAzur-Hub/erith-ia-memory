@@ -219,9 +219,13 @@ function applyBackground(){
   const layer=document.getElementById("backgroundLayer");
   if(!layer || !current) return;
 
-  layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${current.file}")`;
+  const isCastle=current.file.indexOf("ERITH_IA_BACKGROUND_CHATEAU_CIEL_")===0;
+  const imageUrl=isCastle ? `./${current.file}?v=20260525-castle` : current.file;
+
+  layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
   layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
   layer.style.backgroundSize="cover";
+  layer.style.backgroundRepeat="no-repeat";
 
   if(backgroundLabel){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
@@ -460,5 +464,28 @@ renderTrace();
 
   window.addEventListener("load", installTop10HeaderToggle);
   window.setInterval(installTop10HeaderToggle, 1000);
+})();
+
+/* Seven final clean — castle background load diagnostic
+   Scope: castle backgrounds only.
+   Logs missing files in console without changing the UI. */
+(function(){
+  function checkCastleBackgroundsOnce(){
+    if(typeof castleBackgrounds === "undefined" || !Array.isArray(castleBackgrounds)) return;
+    castleBackgrounds.forEach(item => {
+      const img = new Image();
+      img.onload = function(){};
+      img.onerror = function(){
+        console.warn("[Seven] Image Château introuvable ou non publiée :", item.file);
+      };
+      img.src = "./" + item.file + "?v=20260525-castle";
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", checkCastleBackgroundsOnce);
+  }else{
+    checkCastleBackgroundsOnce();
+  }
 })();
 
