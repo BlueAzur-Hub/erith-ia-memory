@@ -282,3 +282,46 @@ document.addEventListener("keydown",event=>{
 window.addEventListener("resize",renderTrace);
 loadUiState();
 renderTrace();
+
+/* Seven final clean — robust background theme toggle
+   Scope: background series button only.
+   Safe late binding: works even if earlier listeners failed or DOM order changed. */
+(function(){
+  function sevenBgSafeList(){
+    if(typeof activeBackgrounds === "function") return activeBackgrounds();
+    if(Array.isArray(window.backgrounds)) return window.backgrounds;
+    return [];
+  }
+
+  function sevenBgSetThemeButtonLabel(){
+    const button=document.getElementById("toggleBackgroundSeriesBtn");
+    if(!button) return;
+    const current=(typeof bgSeries !== "undefined" && bgSeries==="castle") ? "castle" : "seven";
+    button.textContent=current==="castle" ? "Thème : Château" : "Thème : Seven";
+  }
+
+  function sevenBgToggleTheme(){
+    if(typeof bgSeries === "undefined") return;
+    bgSeries=bgSeries==="castle" ? "seven" : "castle";
+    if(typeof bgIndex !== "undefined") bgIndex=0;
+    if(typeof applyBackground === "function") applyBackground();
+    if(typeof saveUiState === "function") saveUiState();
+    sevenBgSetThemeButtonLabel();
+  }
+
+  function sevenBgInstallThemeButton(){
+    const button=document.getElementById("toggleBackgroundSeriesBtn");
+    if(!button || button.dataset.seriesBound==="1") return;
+    button.dataset.seriesBound="1";
+    button.addEventListener("click", sevenBgToggleTheme);
+    sevenBgSetThemeButtonLabel();
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", sevenBgInstallThemeButton);
+  }else{
+    sevenBgInstallThemeButton();
+  }
+  window.addEventListener("load", sevenBgInstallThemeButton);
+})();
+
