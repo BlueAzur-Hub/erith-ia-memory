@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260523-0084">
+  <link rel="stylesheet" href="style.css?v=20260524-0003">
 </head>
 <body>
   <div class="background-layer" id="backgroundLayer" aria-hidden="true"></div>
@@ -192,6 +192,10 @@
             <span>JSON / MD</span>
             <input id="youtubeFilesInput" type="file" multiple accept=".json,.md,.txt" style="display:none;">
           </label>
+          <button class="tile primary" id="syncYoutubeBtn" type="button" style="max-width:220px;">
+            <strong>Synchroniser YouTube</strong>
+            <span>Backend automatique</span>
+          </button>
         </div>
 
         <div class="tile-grid">
@@ -310,7 +314,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260523-0084"></script>
+  <script src="script.js?v=20260524-0003"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -497,14 +501,12 @@
           });
         }
 
-
-      const syncBtn = byId('syncYoutubeBtn');
-      if (syncBtn) {
-        syncBtn.addEventListener('click', () => {
-          window.location.href = 'sync_youtube.bat';
-        });
-      }
-
+        const syncBtn = byId('syncYoutubeBtn');
+        if (syncBtn) {
+          syncBtn.addEventListener('click', () => {
+            window.location.href = 'sync_youtube.bat';
+          });
+        }
 
         renderYoutubeMemory();
       }
