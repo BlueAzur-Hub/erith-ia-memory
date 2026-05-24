@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260524-YT-TABLE-LINES">
+  <link rel="stylesheet" href="style.css?v=20260524-YT-TABLE-POLISH">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -98,22 +98,26 @@
     }
   </style>
 
-
   <style>
     #page-youtube .yt-video-row {
       display: grid !important;
-      grid-template-columns: minmax(0, 1fr) auto !important;
-      gap: 4px 16px !important;
+      grid-template-columns: minmax(0, 1fr) max-content !important;
+      grid-template-areas:
+        "title meta"
+        "stats link" !important;
+      gap: 6px 18px !important;
       align-items: baseline !important;
       width: 100% !important;
       box-sizing: border-box !important;
-      padding: 9px 12px !important;
-      margin: 0 0 7px 0 !important;
+      padding: 10px 14px !important;
+      margin: 0 0 8px 0 !important;
       overflow: hidden !important;
     }
 
     #page-youtube .yt-video-title {
+      grid-area: title !important;
       font-weight: 700 !important;
+      font-size: 14px !important;
       line-height: 1.25 !important;
       white-space: normal !important;
       overflow-wrap: anywhere !important;
@@ -121,37 +125,49 @@
     }
 
     #page-youtube .yt-video-meta {
+      grid-area: meta !important;
       text-align: right !important;
       white-space: nowrap !important;
-      opacity: .92 !important;
       font-size: 12px !important;
+      opacity: .92 !important;
     }
 
     #page-youtube .yt-video-stats {
+      grid-area: stats !important;
+      font-size: 12px !important;
+      line-height: 1.25 !important;
       white-space: normal !important;
       overflow-wrap: anywhere !important;
-      font-size: 12px !important;
-      opacity: .95 !important;
+      opacity: .96 !important;
     }
 
     #page-youtube .yt-video-link {
+      grid-area: link !important;
       text-align: right !important;
       white-space: nowrap !important;
       font-size: 12px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 520px !important;
     }
 
-    @media (max-width: 760px) {
+    #page-youtube .yt-video-link a {
+      display: inline !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+    }
+
+    @media (max-width: 900px) {
       #page-youtube .yt-video-row {
         grid-template-columns: 1fr !important;
+        grid-template-areas:
+          "title"
+          "meta"
+          "stats"
+          "link" !important;
       }
+
       #page-youtube .yt-video-meta,
       #page-youtube .yt-video-link {
         text-align: left !important;
         white-space: normal !important;
-        max-width: 100% !important;
       }
     }
   </style>
@@ -476,7 +492,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260524-YT-TABLE-LINES"></script>
+  <script src="script.js?v=20260524-YT-TABLE-POLISH"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -959,6 +975,48 @@
 
       window.addEventListener('load', renderYoutubeTableLines);
       window.setInterval(renderYoutubeTableLines, 5000);
+    })();
+  </script>
+
+  <script>
+    /* Seven Portable Terminal — YouTube Table Layout Polish */
+    (function () {
+      function polishYoutubeTableRows() {
+        const rows = document.querySelectorAll('#page-youtube .yt-video-row');
+        rows.forEach(row => {
+          row.style.display = 'grid';
+          row.style.gridTemplateColumns = 'minmax(0, 1fr) max-content';
+          row.style.gridTemplateAreas = '"title meta" "stats link"';
+          row.style.gap = '6px 18px';
+
+          const title = row.querySelector('.yt-video-title');
+          const meta = row.querySelector('.yt-video-meta');
+          const stats = row.querySelector('.yt-video-stats');
+          const link = row.querySelector('.yt-video-link');
+
+          if (title) title.style.gridArea = 'title';
+          if (meta) {
+            meta.style.gridArea = 'meta';
+            meta.style.textAlign = 'right';
+            meta.style.whiteSpace = 'nowrap';
+          }
+          if (stats) stats.style.gridArea = 'stats';
+          if (link) {
+            link.style.gridArea = 'link';
+            link.style.textAlign = 'right';
+            link.style.whiteSpace = 'nowrap';
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', polishYoutubeTableRows);
+      } else {
+        polishYoutubeTableRows();
+      }
+
+      window.addEventListener('load', polishYoutubeTableRows);
+      window.setInterval(polishYoutubeTableRows, 1000);
     })();
   </script>
 
