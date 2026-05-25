@@ -345,7 +345,13 @@ document.getElementById("toggleTransparentBtn").addEventListener("click",()=>{do
 document.getElementById("toggleReadableBtn").addEventListener("click",()=>{document.body.classList.toggle("readable");saveUiState();});
 document.getElementById("toggleTraceBtn").addEventListener("click",()=>{const panel=document.getElementById("advancedPanel"); panel.hidden=!panel.hidden; renderTrace();});
 
-document.getElementById("openRustDeskBtn").addEventListener("click",()=>{window.location.href="rustdesk://";});
+const openRustDeskBtn = document.getElementById("openRustDeskBtn");
+
+if (openRustDeskBtn) {
+  openRustDeskBtn.addEventListener("click", () => {
+    window.open("rustdesk://", "_self");
+  });
+}
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);
 
 document.getElementById("closeDrawerBtn").addEventListener("click",()=>drawer.classList.remove("open"));
@@ -846,11 +852,3 @@ function toggleFinalLock(){
   window.addEventListener("load",install);
 })();
 
-/* Seven Remote Fix — RustDesk launcher */
-const openRustDeskBtn = document.getElementById("openRustDeskBtn");
-
-if (openRustDeskBtn) {
-  openRustDeskBtn.addEventListener("click", () => {
-    window.location.href = "rustdesk://";
-  });
-}
