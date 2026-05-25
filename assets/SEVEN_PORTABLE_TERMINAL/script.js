@@ -253,6 +253,10 @@ function applyBackground(){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
   }
 
+  if(typeof applyLaputaModeText==="function"){
+    applyLaputaModeText();
+  }
+
   const themeBtn=document.getElementById("toggleBackgroundSeriesBtn");
   if(themeBtn){
     themeBtn.textContent=bgSeries==="castle" ? "Thème : Château" : "Thème : Seven";
@@ -618,6 +622,101 @@ function toggleFinalLock(){
       }
     }catch{}
   }
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", install);
+  }else{
+    install();
+  }
+  window.addEventListener("load", install);
+})();
+
+/* Seven final polish — Ancient Laputa mode
+   Aesthetic glyph layer inspired by the limited known Laputian material.
+   Not an official translation. */
+const laputaGlyphMap=[
+  {
+    selector:".subtitle",
+    glyph:"Leete · Latobarita · Memoria · Artifex · Netoreel"
+  },
+  {
+    selector:"#backgroundLabel",
+    glyph:"Laputul · Aria-Roth · Bal Netoreel"
+  },
+  {
+    selector:"#page-home .section-title strong",
+    glyph:"Ul Seven · Toelle Laputul"
+  },
+  {
+    selector:"#page-home .hero-card h2",
+    glyph:"Bal Netoreel · Interface Toelle"
+  },
+  {
+    selector:"#page-home .hero-card p:not(.small-label)",
+    glyph:"Thème actif : Laputul Ariaroth\nPersonnalité active : Flower Girl Toelle"
+  },
+  {
+    selector:".terminal-footer span:first-child",
+    glyph:"Transformer Book · Pupitre Seven"
+  },
+  {
+    selector:".terminal-footer span:last-child",
+    glyph:"Model · The Flower Girl v.5 · Toelle"
+  }
+];
+
+function setLaputaTextForElement(el,glyph,on){
+  if(!el) return;
+  if(!el.dataset.frText){
+    el.dataset.frText=el.textContent;
+  }
+  if(on){
+    el.textContent=glyph;
+    el.classList.add("laputa-glyph");
+  }else{
+    el.textContent=el.dataset.frText || el.textContent;
+    el.classList.remove("laputa-glyph");
+  }
+}
+
+function applyLaputaModeText(){
+  const on=document.body.classList.contains("laputa-mode");
+  laputaGlyphMap.forEach(item=>{
+    document.querySelectorAll(item.selector).forEach(el=>{
+      setLaputaTextForElement(el,item.glyph,on);
+    });
+  });
+  const btn=document.getElementById("toggleLaputaBtn");
+  if(btn){
+    btn.textContent=on ? "Français" : "Ancien";
+    btn.classList.toggle("active", on);
+  }
+}
+
+function toggleLaputaMode(){
+  document.body.classList.toggle("laputa-mode");
+  applyLaputaModeText();
+  try{
+    const state=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+    state.laputaMode=document.body.classList.contains("laputa-mode");
+    localStorage.setItem("seven.final.01.10.state", JSON.stringify(state));
+  }catch{}
+}
+
+(function installLaputaMode(){
+  function install(){
+    const btn=document.getElementById("toggleLaputaBtn");
+    if(!btn || btn.dataset.laputaBound==="1") return;
+    btn.dataset.laputaBound="1";
+    btn.addEventListener("click", toggleLaputaMode);
+    try{
+      const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+      if(saved.laputaMode){
+        document.body.classList.add("laputa-mode");
+      }
+    }catch{}
+    applyLaputaModeText();
+  }
+
   if(document.readyState==="loading"){
     document.addEventListener("DOMContentLoaded", install);
   }else{
