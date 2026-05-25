@@ -630,13 +630,13 @@ function toggleFinalLock(){
    Aesthetic glyph layer. Not an official translation. */
 (function(){
   const glyphs=[
-    [".subtitle","Leete · Latobarita · Memoria · Artifex · Netoreel"],
-    ["#backgroundLabel","Laputul · Aria-Roth · Bal Netoreel"],
-    ["#page-home .section-title strong","Ul Seven · Toelle Laputul"],
-    ["#page-home .hero-card h2","Bal Netoreel · Interface Toelle"],
-    ["#page-home .hero-card p:not(.small-label)","Thème actif : Laputul Ariaroth\nPersonnalité active : Flower Girl Toelle"],
-    [".terminal-footer span:first-child","Transformer Book · Pupitre Seven"],
-    [".terminal-footer span:last-child","Model · The Flower Girl v.5 · Toelle"]
+    [".subtitle","ᛚᛖᛖᛏᛖ · ᛚᚨᛏᛟᛒᚨᚱᛁᛏᚨ · ᛗᛖᛗᛟᚱᛁᚨ · ᚨᚱᛏᛁᚠᛖᛪ · ᚾᛖᛏᛟᚱᛖᛖᛚ"],
+    ["#backgroundLabel","ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ · ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ"],
+    ["#page-home .section-title strong","ᚢᛚ · ᛊᛖᚡᛖᚾ · ᛏᛟᛖᛚᛚᛖ · ᛚᚨᛈᚢᛏᚢᛚ"],
+    ["#page-home .hero-card h2","ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ · ᛁᚾᛏᛖᚱᚠᚨᚲᛖ · ᛏᛟᛖᛚᛚᛖ"],
+    ["#page-home .hero-card p:not(.small-label)","ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ\nᚠᛚᛟᚹᛖᚱ · ᚷᛁᚱᛚ · ᛏᛟᛖᛚᛚᛖ"],
+    [".terminal-footer span:first-child","ᛏᚱᚨᚾᛊᚠᛟᚱᛗᛖᚱ · ᛒᛟᛟᚲ · ᛊᛖᚡᛖᚾ"],
+    [".terminal-footer span:last-child","ᛗᛟᛞᛖᛚ · ᚠᛚᛟᚹᛖᚱ · ᚷᛁᚱᛚ · ᚡ·ᛟ"]
   ];
 
   function setGlyphMode(on){
@@ -686,7 +686,7 @@ function toggleFinalLock(){
       const obs=new MutationObserver(()=>{
         if(document.body.classList.contains("laputa-mode") && label.textContent.indexOf("Laputul")===-1){
           label.dataset.frText=label.textContent;
-          label.textContent="Laputul · Aria-Roth · Bal Netoreel";
+          label.textContent="ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ · ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ";
           label.classList.add("laputa-glyph");
         }
       });

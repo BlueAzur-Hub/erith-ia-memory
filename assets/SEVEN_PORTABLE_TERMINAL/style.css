@@ -1039,3 +1039,29 @@ body.laputa-mode #toggleLaputaBtn {
   box-shadow: 0 0 18px rgba(245,213,141,.18);
 }
 
+/* Seven final polish — Laputa rune/glyph visual layer */
+body.laputa-mode .laputa-glyph {
+  font-family: "Segoe UI Symbol", "Noto Sans Runic", "Noto Sans Symbols", "Junicode", Georgia, serif !important;
+  letter-spacing: .09em !important;
+  word-spacing: .16em !important;
+  color: rgba(255,232,160,.98) !important;
+  text-shadow:
+    0 0 6px rgba(245,213,141,.34),
+    0 0 16px rgba(120,210,255,.10),
+    0 1px 0 rgba(0,0,0,.55) !important;
+}
+
+body.laputa-mode .subtitle.laputa-glyph,
+body.laputa-mode #backgroundLabel.laputa-glyph,
+body.laputa-mode .terminal-footer span.laputa-glyph {
+  font-style: normal !important;
+}
+
+body.laputa-mode #backgroundLabel.laputa-glyph {
+  font-size: .92em;
+}
+
+body.laputa-mode .hero-card p.laputa-glyph {
+  line-height: 1.55;
+}
+
