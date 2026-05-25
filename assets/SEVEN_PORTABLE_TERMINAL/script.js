@@ -710,3 +710,148 @@ function toggleFinalLock(){
   window.addEventListener("load",install);
 })();
 
+/* Seven repair — translate dynamic background label in ancient language modes */
+(function(){
+  const STATE_KEY="seven.ancient.language.state";
+  const runeMap={"A":"ᛉ","B":"ᛒ","C":"ᚲ","D":"ᛞ","E":"ᛖ","F":"ᚠ","G":"ᚷ","H":"ᚺ","I":"ᛁ","J":"ᛃ","K":"ᚲ","L":"ᛚ","M":"ᛗ","N":"ᚾ","O":"ᛟ","P":"ᛈ","Q":"ᚲ","R":"ᚱ","S":"ᛊ","T":"ᛏ","U":"ᚢ","V":"ᚹ","W":"ᚹ","X":"ᚲᛊ","Y":"ᛃ","Z":"ᛉ"};
+
+  const labelFrMap={
+    "source":"source",
+    "crystal self destruction spell":"sort de destruction du cristal",
+    "storybook floating city":"cite flottante de conte",
+    "underground crystal mine":"mine de cristal souterraine",
+    "tree crown castle":"chateau couronne arbre",
+    "memorial stone plaque":"plaque de pierre memoire",
+    "airship docking sky ruins":"amarrage aeronef ruines du ciel",
+    "airship fire blast":"explosion de feu aeronef",
+    "crumbling root tower":"tour racine effondree",
+    "final ascension night":"ascension finale nuit",
+    "final return sunset":"retour final crepuscule",
+    "floating island roots overview":"racines ile flottante",
+    "glider over sacred gardens":"planeur sur jardins sacres",
+    "heir watching airship":"heritier observant aeronef",
+    "pirates treasure joy":"joie du tresor pirate",
+    "roots crystal core":"coeur cristal racines",
+    "sky pirates escape":"fuite pirates du ciel",
+    "treasure mechanical relics":"tresors reliques mecaniques",
+    "airship approach":"approche aeronef",
+    "airship command room":"salle de commande aeronef",
+    "ancient forest path":"sentier foret ancienne",
+    "ancient robot relic":"relique robot ancienne",
+    "ancient sanctuary gate":"porte sanctuaire ancien",
+    "burning fortress airship":"forteresse en feu aeronef",
+    "carriage street chaos":"chaos rue carrosse",
+    "castle close view":"vue proche chateau",
+    "childhood memory hearth":"foyer memoire enfance",
+    "cliffside industrial city":"cite industrielle falaise",
+    "floating city":"cite flottante",
+    "guardian tree memory":"memoire arbre gardien",
+    "grandparents playing chess":"grands parents jouant echecs",
+    "mining town sunrise":"village minier aube",
+    "mountain stone house":"maison pierre montagne",
+    "overgrown greenhouse dome":"dome serre envahie",
+    "princess and pirate grandmother":"princesse et grand mere pirate",
+    "protective pendant awakening":"eveil pendentif protecteur",
+    "sacred gardens":"jardins sacres",
+    "sky pirate family table":"table famille pirate du ciel",
+    "steam train trestle canyon":"train vapeur pont canyon",
+    "town street fight":"combat rue ville"
+  };
+
+  function currentState(){
+    try{
+      const saved=localStorage.getItem(STATE_KEY);
+      if(saved==="latin" || saved==="runes" || saved==="fr") return saved;
+    }catch{}
+    const btn=document.getElementById("cycleAncientLangBtn");
+    const t=(btn?.textContent||"").trim().toLowerCase();
+    return t==="latin" ? "latin" : t==="runes" ? "runes" : "fr";
+  }
+
+  function normalizeText(text){
+    return String(text||"")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .replace(/[’']/g," ")
+      .replace(/[·:;,.!?()\/\-]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function toRunes(text){
+    let out="";
+    const src=normalizeText(text).toUpperCase();
+    for(const ch of src){
+      out += ch===" " ? " " : (runeMap[ch] || ch);
+    }
+    return out;
+  }
+
+  function titleToFrench(raw){
+    let clean=String(raw||"").replace(/^Château dans le Ciel\s*[:·-]\s*/i,"").replace(/^Chateau dans le Ciel\s*[:·-]\s*/i,"");
+    clean=clean.replace(/^Château\s*[·:-]\s*/i,"").replace(/^Chateau\s*[·:-]\s*/i,"");
+    const key=normalizeText(clean).toLowerCase();
+    const fr=labelFrMap[key] || clean;
+    return "Château dans le Ciel · " + fr;
+  }
+
+  function titleToLatin(raw){
+    const fr=titleToFrench(raw).replace(/^Château dans le Ciel\s*·\s*/i,"");
+    return "Laputul · " + normalizeText(fr).replace(/\s+/g," · ");
+  }
+
+  function translateBackgroundLabel(){
+    const label=document.getElementById("backgroundLabel");
+    if(!label) return;
+
+    const state=currentState();
+
+    if(label.dataset.locking==="1") return;
+
+    if(!label.dataset.bgFrSource || state==="fr"){
+      if(!label.classList.contains("ancient-text")){
+        label.dataset.bgFrSource=label.textContent;
+      }
+    }
+
+    const source=label.dataset.bgFrSource || label.textContent;
+    let next=source;
+
+    if(state==="latin"){
+      next=titleToLatin(source);
+    }else if(state==="runes"){
+      next=toRunes(titleToFrench(source));
+    }
+
+    label.dataset.locking="1";
+    label.textContent=next;
+    label.classList.toggle("ancient-text", state!=="fr");
+    window.setTimeout(()=>{ label.dataset.locking="0"; },0);
+  }
+
+  function install(){
+    const label=document.getElementById("backgroundLabel");
+    const langBtn=document.getElementById("cycleAncientLangBtn");
+
+    if(langBtn && langBtn.dataset.bgLabelTranslateBound!=="1"){
+      langBtn.dataset.bgLabelTranslateBound="1";
+      langBtn.addEventListener("click",()=>window.setTimeout(translateBackgroundLabel,20));
+    }
+
+    if(label && window.MutationObserver && label.dataset.bgLabelObserverBound!=="1"){
+      label.dataset.bgLabelObserverBound="1";
+      const obs=new MutationObserver(()=>window.setTimeout(translateBackgroundLabel,0));
+      obs.observe(label,{childList:true,characterData:true,subtree:true});
+    }
+
+    translateBackgroundLabel();
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",install);
+  }else{
+    install();
+  }
+  window.addEventListener("load",install);
+})();
+
