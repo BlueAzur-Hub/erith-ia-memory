@@ -1024,7 +1024,7 @@ body #toggleFinalLockBtn.active {
   }
 }
 
-/* Seven final polish — Ancient Laputa glyph mode */
+/* Seven safe patch — Ancient Laputa glyph mode, non-destructive */
 body.laputa-mode .laputa-glyph {
   font-family: Georgia, "Times New Roman", serif;
   letter-spacing: .055em;
@@ -1034,20 +1034,8 @@ body.laputa-mode .laputa-glyph {
     0 0 18px rgba(120,210,255,.08);
 }
 
-body.laputa-mode .subtitle.laputa-glyph,
-body.laputa-mode #backgroundLabel.laputa-glyph,
-body.laputa-mode .terminal-footer span.laputa-glyph {
-  font-style: italic;
-}
-
 body.laputa-mode #toggleLaputaBtn {
   border-color: rgba(245,213,141,.88);
   box-shadow: 0 0 18px rgba(245,213,141,.18);
-}
-
-body.laputa-mode .hero-card {
-  box-shadow:
-    inset 0 0 30px rgba(245,213,141,.045),
-    0 0 24px rgba(120,210,255,.035);
 }
 
