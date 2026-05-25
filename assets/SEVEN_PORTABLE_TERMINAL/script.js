@@ -346,7 +346,7 @@ document.getElementById("toggleReadableBtn").addEventListener("click",()=>{docum
 document.getElementById("toggleTraceBtn").addEventListener("click",()=>{const panel=document.getElementById("advancedPanel"); panel.hidden=!panel.hidden; renderTrace();});
 
 const openRustDeskBtn = document.getElementById("openRustDeskBtn");
-const RYZEN7_RUSTDESK_LINK = "rustdesk://48841137";
+const RYZEN7_RUSTDESK_LINK = "seven-ryzen://open";
 
 if (openRustDeskBtn) {
   openRustDeskBtn.setAttribute("href", RYZEN7_RUSTDESK_LINK);
