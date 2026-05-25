@@ -224,24 +224,29 @@ function applyBackground(){
   const cacheTag="v=20260525-fix11";
   const imageUrl=isCastle ? `./${current.file}?${cacheTag}` : current.file;
 
-  layer.replaceChildren();
-  layer.style.opacity="1";
-  layer.style.visibility="visible";
-  layer.style.display="block";
-  layer.style.filter="none";
+  layer.style.opacity="0";
 
-  if(isCastle){
-    layer.style.backgroundImage=`url("${imageUrl}")`;
-  }else{
-    layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
-  }
+  window.setTimeout(()=>{
+    layer.replaceChildren();
+    layer.style.visibility="visible";
+    layer.style.display="block";
+    layer.style.filter="none";
 
-  layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
-  layer.style.backgroundSize="cover";
-  layer.style.backgroundRepeat="no-repeat";
+    if(isCastle){
+      layer.style.backgroundImage=`url("${imageUrl}")`;
+    }else{
+      layer.style.backgroundImage=`linear-gradient(90deg,rgba(0,0,0,.14),rgba(0,0,0,.01),rgba(0,0,0,.16)),linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.14)),url("${imageUrl}")`;
+    }
 
-  layer.dataset.currentBackgroundFile=current.file;
-  layer.dataset.currentBackgroundUrl=imageUrl;
+    layer.style.backgroundPosition=backgroundPositions[current.file] || "center center";
+    layer.style.backgroundSize="cover";
+    layer.style.backgroundRepeat="no-repeat";
+    layer.style.opacity="1";
+
+    layer.dataset.currentBackgroundFile=current.file;
+    layer.dataset.currentBackgroundUrl=imageUrl;
+  }, 110);
+
   document.body.classList.toggle("castle-theme-active", isCastle);
 
   if(backgroundLabel){
@@ -252,6 +257,8 @@ function applyBackground(){
   if(themeBtn){
     themeBtn.textContent=bgSeries==="castle" ? "Thème : Château" : "Thème : Seven";
   }
+
+  pulseSevenAvatar();
 }
 
 function nextBackground(){
@@ -543,5 +550,41 @@ renderTrace();
   window.addEventListener("load", observe);
 })();
 
+/* Seven final polish — focus mode and theme pulse */
+function pulseSevenAvatar(){
+  const avatar=document.querySelector(".avatar-lock");
+  if(!avatar) return;
+  avatar.classList.remove("theme-pulse");
+  void avatar.offsetWidth;
+  avatar.classList.add("theme-pulse");
+}
 
+function toggleFocusMode(){
+  document.body.classList.toggle("focus-mode");
+  try{
+    const state=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+    state.focus=document.body.classList.contains("focus-mode");
+    localStorage.setItem("seven.final.01.10.state", JSON.stringify(state));
+  }catch{}
+}
+
+(function installFocusMode(){
+  function install(){
+    const btn=document.getElementById("toggleFocusBtn");
+    if(!btn || btn.dataset.focusBound==="1") return;
+    btn.dataset.focusBound="1";
+    btn.addEventListener("click", toggleFocusMode);
+    try{
+      const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+      document.body.classList.toggle("focus-mode", !!saved.focus);
+    }catch{}
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", install);
+  }else{
+    install();
+  }
+  window.addEventListener("load", install);
+})();
 

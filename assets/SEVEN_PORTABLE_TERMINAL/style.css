@@ -395,3 +395,88 @@ body.castle-theme-active .advanced-panel {
   background: rgba(5,10,22,.22) !important;
   backdrop-filter: blur(.7px) !important;
 }
+
+/* Seven final polish — Château readability, transition, glow, sync badge, focus mode */
+.background-layer {
+  transition: opacity .38s ease, filter .38s ease, background-image .38s ease;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sync-badge {
+  border: 1px solid rgba(245,213,141,.46);
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,247,223,.88);
+  background: rgba(5,10,22,.26);
+  box-shadow: 0 0 16px rgba(245,213,141,.08);
+  backdrop-filter: blur(2px);
+  white-space: nowrap;
+}
+
+body.castle-theme-active:not(.readable) .page,
+body.castle-theme-active:not(.readable) .hero-card,
+body.castle-theme-active:not(.readable) .remote-status,
+body.castle-theme-active:not(.readable) .tile,
+body.castle-theme-active:not(.readable) .remote-card,
+body.castle-theme-active:not(.readable) .advanced-panel {
+  background: rgba(5,10,22,.18) !important;
+  backdrop-filter: blur(.55px) !important;
+}
+
+.avatar-lock.theme-pulse {
+  animation: sevenThemePulse 1.15s ease-out;
+}
+
+@keyframes sevenThemePulse {
+  0% { box-shadow: 0 0 0 rgba(245,213,141,0), 0 0 0 rgba(130,210,255,0); transform: scale(1); }
+  35% { box-shadow: 0 0 26px rgba(245,213,141,.52), 0 0 54px rgba(130,210,255,.22); transform: scale(1.035); }
+  100% { box-shadow: 0 0 0 rgba(245,213,141,0), 0 0 0 rgba(130,210,255,0); transform: scale(1); }
+}
+
+body.focus-mode .page {
+  background: rgba(5,10,22,.08) !important;
+  backdrop-filter: blur(.25px) !important;
+}
+
+body.focus-mode .hero-card,
+body.focus-mode .tile,
+body.focus-mode .remote-card,
+body.focus-mode .advanced-panel,
+body.focus-mode .remote-status {
+  opacity: .42;
+  transition: opacity .22s ease, background .22s ease, transform .22s ease;
+}
+
+body.focus-mode .hero-card:hover,
+body.focus-mode .tile:hover,
+body.focus-mode .remote-card:hover,
+body.focus-mode .advanced-panel:hover,
+body.focus-mode .remote-status:hover {
+  opacity: .92;
+  transform: translateY(-1px);
+}
+
+body.focus-mode .section-title,
+body.focus-mode .terminal-footer {
+  opacity: .66;
+}
+
+body.focus-mode .control-strip,
+body.focus-mode .topnav {
+  background: rgba(5,10,22,.16) !important;
+  backdrop-filter: blur(.5px) !important;
+}
+
+body.focus-mode #toggleFocusBtn {
+  border-color: rgba(245,213,141,.86);
+  box-shadow: 0 0 18px rgba(245,213,141,.18);
+}
+
