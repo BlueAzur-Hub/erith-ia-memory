@@ -557,3 +557,119 @@ body.focus-mode #toggleFocusBtn {
   }
 }
 
+/* Seven final fix — golden icons, colored on hover
+   Default: small golden icons remain visible.
+   Hover/focus/active: icon receives a soft semantic color. */
+.topnav .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.topnav .tab .nav-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0;
+  opacity: 1;
+  transform: none;
+  overflow: visible;
+  border-width: 1px;
+  color: rgba(255,232,160,.96);
+  border-color: rgba(245,213,141,.42);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,244,198,.16), transparent 42%),
+    rgba(5,10,22,.24);
+  transition:
+    color .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+.topnav .tab:hover .nav-icon,
+.topnav .tab:focus-visible .nav-icon,
+.topnav .tab.active:hover .nav-icon {
+  transform: translateY(-1px) scale(1.04);
+  border-color: rgba(255,247,223,.78);
+  box-shadow:
+    inset 0 0 10px rgba(255,232,160,.12),
+    0 0 14px rgba(245,213,141,.16);
+}
+
+/* Semantic hover colors */
+.topnav .tab:hover .icon-home,
+.topnav .tab:focus-visible .icon-home {
+  color: #f4c37a;
+  background: radial-gradient(circle at 35% 25%, rgba(244,195,122,.34), transparent 46%), rgba(54,31,12,.34);
+}
+
+.topnav .tab:hover .icon-llm,
+.topnav .tab:focus-visible .icon-llm {
+  color: #f7f7f1;
+  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.30), transparent 46%), rgba(10,10,10,.34);
+}
+
+.topnav .tab:hover .icon-github,
+.topnav .tab:focus-visible .icon-github {
+  color: #c58cff;
+  background: radial-gradient(circle at 35% 25%, rgba(197,140,255,.34), transparent 46%), rgba(22,12,34,.38);
+}
+
+.topnav .tab:hover .icon-production,
+.topnav .tab:focus-visible .icon-production {
+  color: #8fd3ff;
+  background: radial-gradient(circle at 35% 25%, rgba(143,211,255,.34), transparent 46%), rgba(8,30,48,.36);
+}
+
+.topnav .tab:hover .icon-youtube,
+.topnav .tab:focus-visible .icon-youtube {
+  color: #ff4d4d;
+  background: radial-gradient(circle at 35% 25%, rgba(255,77,77,.34), transparent 46%), rgba(55,8,8,.38);
+}
+
+.topnav .tab:hover .icon-remote,
+.topnav .tab:focus-visible .icon-remote {
+  color: #7fd7ff;
+  background: radial-gradient(circle at 35% 25%, rgba(127,215,255,.34), transparent 46%), rgba(6,34,50,.36);
+}
+
+/* Card icons: golden by default, colored when the card is hovered. */
+.card-icon {
+  color: rgba(255,232,160,.96);
+  transition: color .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.tile:hover .card-icon,
+.remote-card:hover .card-icon,
+.hero-card:hover .card-icon,
+.advanced-panel:hover .card-icon {
+  transform: translateY(-1px) scale(1.04);
+  border-color: rgba(255,247,223,.72);
+}
+
+.tile:hover .icon-video,
+.remote-card:hover .icon-video {
+  color: #ff4d4d;
+}
+
+.tile:hover .icon-family,
+.remote-card:hover .icon-family {
+  color: #ffcf70;
+}
+
+.tile:hover .icon-action,
+.remote-card:hover .icon-action {
+  color: #b6f7ff;
+}
+
+.tile:hover .icon-crown,
+.remote-card:hover .icon-crown {
+  color: #ffd76a;
+}
+
+.tile:hover .icon-mode,
+.remote-card:hover .icon-mode {
+  color: #a7e2ff;
+}
+
