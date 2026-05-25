@@ -251,6 +251,9 @@ function applyBackground(){
 
   if(backgroundLabel){
     backgroundLabel.textContent=`${activeBackgroundSeriesLabel()} : ${current.label}`;
+    if(typeof window.sevenTranslateBackgroundLabel==="function"){
+      window.sevenTranslateBackgroundLabel(backgroundLabel.textContent);
+    }
   }
 
   const themeBtn=document.getElementById("toggleBackgroundSeriesBtn");
@@ -625,13 +628,20 @@ function toggleFinalLock(){
   }
   window.addEventListener("load", install);
 })();
-/* Seven final polish — 3-state Ancient Language mode */
+
+/* Seven stable fix — 3-state language mode, no loop */
 (function(){
   const STATE_KEY="seven.ancient.language.state";
   const states=["fr","latin","runes"];
+
+  const runeMap={
+    "A":"ᛉ","B":"ᛒ","C":"ᚲ","D":"ᛞ","E":"ᛖ","F":"ᚠ","G":"ᚷ","H":"ᚺ","I":"ᛁ","J":"ᛃ",
+    "K":"ᚲ","L":"ᛚ","M":"ᛗ","N":"ᚾ","O":"ᛟ","P":"ᛈ","Q":"ᚲ","R":"ᚱ","S":"ᛊ","T":"ᛏ",
+    "U":"ᚢ","V":"ᚹ","W":"ᚹ","X":"ᚲᛊ","Y":"ᛃ","Z":"ᛉ"
+  };
+
   const latinMap={
     ".subtitle":"Leete · Latobarita · Memoria · Artifex · Netoreel",
-    "#backgroundLabel":"Laputul · Aria-Roth · Bal Netoreel",
     "#page-home .section-title strong":"Ul Seven · Toelle Laputul",
     "#page-home .hero-card h2":"Bal Netoreel · Interface Toelle",
     "#page-home .hero-card p:not(.small-label)":"Thème actif : Laputul Ariaroth\nPersonnalité active : Flower Girl Toelle",
@@ -645,77 +655,8 @@ function toggleFinalLock(){
     ".terminal-footer span:first-child":"Transformer Book · Pupitre Seven",
     ".terminal-footer span:last-child":"Model · The Flower Girl v.5 · Toelle"
   };
-  const runeMap={"A":"ᛉ","B":"ᛒ","C":"ᚲ","D":"ᛞ","E":"ᛖ","F":"ᚠ","G":"ᚷ","H":"ᚺ","I":"ᛁ","J":"ᛃ","K":"ᚲ","L":"ᛚ","M":"ᛗ","N":"ᚾ","O":"ᛟ","P":"ᛈ","Q":"ᚲ","R":"ᚱ","S":"ᛊ","T":"ᛏ","U":"ᚢ","V":"ᚹ","W":"ᚹ","X":"ᚲᛊ","Y":"ᛃ","Z":"ᛉ"};
-  const targets=[
-    ".subtitle","#backgroundLabel","#page-home .section-title strong","#page-home .hero-card h2",
-    "#page-home .hero-card p:not(.small-label)","#page-home .hero-card button",
-    "#page-home #homeSevenBtn strong","#page-home #homeSevenBtn span",
-    "#page-home #homeVideoCardsBtn strong","#page-home #homeVideoCardsBtn span",
-    "#page-home [data-jump='remote'] strong","#page-home [data-jump='remote'] span",
-    ".terminal-footer span:first-child",".terminal-footer span:last-child"
-  ];
-  function normalizeForRunes(text){
-    return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g," ").replace(/[·:;,.!?()\/\-]/g," ").replace(/\s+/g," ").trim().toUpperCase();
-  }
-  function toRunes(text){
-    let out="";
-    for(const ch of normalizeForRunes(text)){
-      out += (ch===" " || ch==="\n") ? ch : (runeMap[ch] || ch);
-    }
-    return out;
-  }
-  function stateNow(){
-    try{ const s=localStorage.getItem(STATE_KEY); if(states.includes(s)) return s; }catch{}
-    return "fr";
-  }
-  function setState(state){
-    document.body.classList.toggle("ancient-latin",state==="latin");
-    document.body.classList.toggle("ancient-runes",state==="runes");
-    targets.forEach(selector=>{
-      document.querySelectorAll(selector).forEach(el=>{
-        if(!el.dataset.frText) el.dataset.frText=el.textContent;
-        const fr=el.dataset.frText;
-        if(state==="fr"){
-          el.textContent=fr;
-          el.classList.remove("ancient-text");
-        }else if(state==="latin"){
-          el.textContent=latinMap[selector] || fr;
-          el.classList.add("ancient-text");
-        }else{
-          el.textContent=toRunes(fr);
-          el.classList.add("ancient-text");
-        }
-      });
-    });
-    const btn=document.getElementById("cycleAncientLangBtn");
-    if(btn){
-      btn.textContent=state==="fr" ? "Français" : state==="latin" ? "Latin" : "Runes";
-      btn.classList.toggle("active",state!=="fr");
-    }
-    try{localStorage.setItem(STATE_KEY,state);}catch{}
-  }
-  function cycle(){
-    const current=stateNow();
-    setState(states[(states.indexOf(current)+1)%states.length]);
-  }
-  function install(){
-    const btn=document.getElementById("cycleAncientLangBtn");
-    if(!btn || btn.dataset.ancientLangBound==="1") return;
-    btn.dataset.ancientLangBound="1";
-    btn.addEventListener("click",cycle);
-    setState(stateNow());
-  }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",install);
-  else install();
-  window.addEventListener("load",install);
-})();
 
-/* Seven repair — translate dynamic background label in ancient language modes */
-(function(){
-  const STATE_KEY="seven.ancient.language.state";
-  const runeMap={"A":"ᛉ","B":"ᛒ","C":"ᚲ","D":"ᛞ","E":"ᛖ","F":"ᚠ","G":"ᚷ","H":"ᚺ","I":"ᛁ","J":"ᛃ","K":"ᚲ","L":"ᛚ","M":"ᛗ","N":"ᚾ","O":"ᛟ","P":"ᛈ","Q":"ᚲ","R":"ᚱ","S":"ᛊ","T":"ᛏ","U":"ᚢ","V":"ᚹ","W":"ᚹ","X":"ᚲᛊ","Y":"ᛃ","Z":"ᛉ"};
-
-  const labelFrMap={
+  const bgFrMap={
     "source":"source",
     "crystal self destruction spell":"sort de destruction du cristal",
     "storybook floating city":"cite flottante de conte",
@@ -758,93 +699,143 @@ function toggleFinalLock(){
     "town street fight":"combat rue ville"
   };
 
-  function currentState(){
-    try{
-      const saved=localStorage.getItem(STATE_KEY);
-      if(saved==="latin" || saved==="runes" || saved==="fr") return saved;
-    }catch{}
-    const btn=document.getElementById("cycleAncientLangBtn");
-    const t=(btn?.textContent||"").trim().toLowerCase();
-    return t==="latin" ? "latin" : t==="runes" ? "runes" : "fr";
-  }
+  const targets=[
+    ".subtitle",
+    "#page-home .section-title strong",
+    "#page-home .hero-card h2",
+    "#page-home .hero-card p:not(.small-label)",
+    "#page-home .hero-card button",
+    "#page-home #homeSevenBtn strong",
+    "#page-home #homeSevenBtn span",
+    "#page-home #homeVideoCardsBtn strong",
+    "#page-home #homeVideoCardsBtn span",
+    "#page-home [data-jump='remote'] strong",
+    "#page-home [data-jump='remote'] span",
+    ".terminal-footer span:first-child",
+    ".terminal-footer span:last-child"
+  ];
 
-  function normalizeText(text){
+  function normalizeForRunes(text){
     return String(text||"")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g,"")
       .replace(/[’']/g," ")
       .replace(/[·:;,.!?()\/\-]/g," ")
       .replace(/\s+/g," ")
-      .trim();
+      .trim()
+      .toUpperCase();
   }
 
   function toRunes(text){
     let out="";
-    const src=normalizeText(text).toUpperCase();
-    for(const ch of src){
+    for(const ch of normalizeForRunes(text)){
       out += ch===" " ? " " : (runeMap[ch] || ch);
     }
     return out;
   }
 
-  function titleToFrench(raw){
-    let clean=String(raw||"").replace(/^Château dans le Ciel\s*[:·-]\s*/i,"").replace(/^Chateau dans le Ciel\s*[:·-]\s*/i,"");
-    clean=clean.replace(/^Château\s*[·:-]\s*/i,"").replace(/^Chateau\s*[·:-]\s*/i,"");
-    const key=normalizeText(clean).toLowerCase();
-    const fr=labelFrMap[key] || clean;
-    return "Château dans le Ciel · " + fr;
+  function cleanBgTitle(raw){
+    let clean=String(raw||"")
+      .replace(/^Château dans le Ciel\s*[:·-]\s*/i,"")
+      .replace(/^Chateau dans le Ciel\s*[:·-]\s*/i,"")
+      .replace(/^Château\s*[·:-]\s*/i,"")
+      .replace(/^Chateau\s*[·:-]\s*/i,"");
+    return clean.trim();
   }
 
-  function titleToLatin(raw){
-    const fr=titleToFrench(raw).replace(/^Château dans le Ciel\s*·\s*/i,"");
-    return "Laputul · " + normalizeText(fr).replace(/\s+/g," · ");
+  function bgTitleToFrench(raw){
+    const clean=cleanBgTitle(raw);
+    const key=clean.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[·:;,.!?()\/\-]/g," ").replace(/\s+/g," ").trim().toLowerCase();
+    return "Château dans le Ciel · " + (bgFrMap[key] || clean);
   }
 
-  function translateBackgroundLabel(){
+  function bgTitleToLatin(raw){
+    const fr=bgTitleToFrench(raw).replace(/^Château dans le Ciel\s*·\s*/i,"");
+    return "Laputul · " + fr.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[·:;,.!?()\/\-]/g," ").replace(/\s+/g," · ").trim();
+  }
+
+  function currentState(){
+    try{
+      const saved=localStorage.getItem(STATE_KEY);
+      if(states.includes(saved)) return saved;
+    }catch{}
+    return "fr";
+  }
+
+  function setState(state){
+    document.body.classList.toggle("ancient-latin", state==="latin");
+    document.body.classList.toggle("ancient-runes", state==="runes");
+
+    targets.forEach(selector=>{
+      document.querySelectorAll(selector).forEach(el=>{
+        if(!el.dataset.frText) el.dataset.frText=el.textContent;
+        const fr=el.dataset.frText;
+        if(state==="fr"){
+          el.textContent=fr;
+          el.classList.remove("ancient-text");
+        }else if(state==="latin"){
+          el.textContent=latinMap[selector] || fr;
+          el.classList.add("ancient-text");
+        }else{
+          el.textContent=toRunes(fr);
+          el.classList.add("ancient-text");
+        }
+      });
+    });
+
+    translateBackgroundLabel(state);
+
+    const btn=document.getElementById("cycleAncientLangBtn");
+    if(btn){
+      btn.textContent=state==="fr" ? "Français" : state==="latin" ? "Latin" : "Runes";
+      btn.classList.toggle("active", state!=="fr");
+    }
+
+    try{ localStorage.setItem(STATE_KEY,state); }catch{}
+  }
+
+  function translateBackgroundLabel(state=currentState()){
     const label=document.getElementById("backgroundLabel");
     if(!label) return;
 
-    const state=currentState();
-
-    if(label.dataset.locking==="1") return;
-
-    if(!label.dataset.bgFrSource || state==="fr"){
-      if(!label.classList.contains("ancient-text")){
-        label.dataset.bgFrSource=label.textContent;
-      }
+    if(!label.dataset.bgRaw || label.dataset.bgRawMode!=="raw"){
+      label.dataset.bgRaw=label.textContent;
+      label.dataset.bgRawMode="raw";
     }
 
-    const source=label.dataset.bgFrSource || label.textContent;
-    let next=source;
-
-    if(state==="latin"){
-      next=titleToLatin(source);
-    }else if(state==="runes"){
-      next=toRunes(titleToFrench(source));
+    const raw=label.dataset.bgRaw;
+    if(state==="fr"){
+      label.textContent=raw;
+      label.classList.remove("ancient-text");
+    }else if(state==="latin"){
+      label.textContent=bgTitleToLatin(raw);
+      label.classList.add("ancient-text");
+    }else{
+      label.textContent=toRunes(bgTitleToFrench(raw));
+      label.classList.add("ancient-text");
     }
+  }
 
-    label.dataset.locking="1";
-    label.textContent=next;
-    label.classList.toggle("ancient-text", state!=="fr");
-    window.setTimeout(()=>{ label.dataset.locking="0"; },0);
+  window.sevenTranslateBackgroundLabel=function(rawText){
+    const label=document.getElementById("backgroundLabel");
+    if(label && typeof rawText==="string"){
+      label.dataset.bgRaw=rawText;
+      label.dataset.bgRawMode="raw";
+    }
+    translateBackgroundLabel(currentState());
+  };
+
+  function cycleState(){
+    const current=currentState();
+    setState(states[(states.indexOf(current)+1)%states.length]);
   }
 
   function install(){
-    const label=document.getElementById("backgroundLabel");
-    const langBtn=document.getElementById("cycleAncientLangBtn");
-
-    if(langBtn && langBtn.dataset.bgLabelTranslateBound!=="1"){
-      langBtn.dataset.bgLabelTranslateBound="1";
-      langBtn.addEventListener("click",()=>window.setTimeout(translateBackgroundLabel,20));
-    }
-
-    if(label && window.MutationObserver && label.dataset.bgLabelObserverBound!=="1"){
-      label.dataset.bgLabelObserverBound="1";
-      const obs=new MutationObserver(()=>window.setTimeout(translateBackgroundLabel,0));
-      obs.observe(label,{childList:true,characterData:true,subtree:true});
-    }
-
-    translateBackgroundLabel();
+    const btn=document.getElementById("cycleAncientLangBtn");
+    if(!btn || btn.dataset.ancientLangBound==="1") return;
+    btn.dataset.ancientLangBound="1";
+    btn.addEventListener("click",cycleState);
+    setState(currentState());
   }
 
   if(document.readyState==="loading"){
