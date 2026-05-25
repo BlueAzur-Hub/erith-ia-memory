@@ -348,8 +348,15 @@ document.getElementById("toggleTraceBtn").addEventListener("click",()=>{const pa
 const openRustDeskBtn = document.getElementById("openRustDeskBtn");
 
 if (openRustDeskBtn) {
+  openRustDeskBtn.setAttribute("href", "rustdesk://");
   openRustDeskBtn.addEventListener("click", () => {
-    window.open("rustdesk://", "_self");
+    window.setTimeout(() => {
+      try {
+        window.location.href = "rustdesk://";
+      } catch (error) {
+        console.warn("RustDesk protocol launch was blocked by the browser.", error);
+      }
+    }, 0);
   });
 }
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);

@@ -1050,3 +1050,30 @@ body.ancient-runes #cycleAncientLangBtn {
   box-shadow: 0 0 18px rgba(245,213,141,.18);
 }
 
+
+/* Seven Remote Final — native RustDesk protocol link
+   The Remote launcher is a real <a href="rustdesk://"> link, styled like a cockpit button.
+   This avoids relying only on JavaScript for external protocol launch. */
+.remote-launch-btn {
+  color: var(--text);
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(0,0,0,.10);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+
+.remote-launch-btn:hover,
+.remote-launch-btn:focus-visible {
+  background: rgba(0,0,0,.62);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(245,213,141,.10);
+  outline: none;
+}
