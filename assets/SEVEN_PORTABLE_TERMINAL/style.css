@@ -887,3 +887,58 @@ body.focus-mode #toggleFocusBtn {
 .tile:hover .icon-remote,
 .remote-card:hover .icon-remote { color:#7fd7ff !important; }
 
+/* Seven final fix — real inline SVG icons */
+.nav-icon svg,
+.card-icon svg,
+.home-card-icon svg,
+.sync-icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-github svg,
+.icon-youtube svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+.nav-icon,
+.card-icon,
+.home-card-icon {
+  color: rgba(255,232,160,.96) !important;
+}
+
+.sync-icon {
+  color: #74ff9a !important;
+}
+
+.topnav .tab:hover .icon-home { color:#f4c37a !important; }
+.topnav .tab:hover .icon-llm { color:#f7f7f1 !important; }
+.topnav .tab:hover .icon-github { color:#c58cff !important; }
+.topnav .tab:hover .icon-production { color:#8fd3ff !important; }
+.topnav .tab:hover .icon-youtube { color:#ff4d4d !important; }
+.topnav .tab:hover .icon-remote { color:#7fd7ff !important; }
+
+.tile:hover .icon-seven,
+.hero-card:hover .icon-seven { color:#d7a2ff !important; }
+.tile:hover .icon-video,
+.remote-card:hover .icon-video,
+.tile:hover .icon-youtube,
+.remote-card:hover .icon-youtube { color:#ff4d4d !important; }
+.tile:hover .icon-family,
+.remote-card:hover .icon-family,
+.tile:hover .icon-crown,
+.remote-card:hover .icon-crown { color:#ffd76a !important; }
+.tile:hover .icon-action,
+.remote-card:hover .icon-action { color:#b6f7ff !important; }
+.tile:hover .icon-mode,
+.remote-card:hover .icon-mode,
+.tile:hover .icon-remote,
+.remote-card:hover .icon-remote { color:#7fd7ff !important; }
+
