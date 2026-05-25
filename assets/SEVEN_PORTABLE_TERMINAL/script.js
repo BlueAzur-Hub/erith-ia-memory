@@ -625,80 +625,88 @@ function toggleFinalLock(){
   }
   window.addEventListener("load", install);
 })();
-
-/* Seven safe patch — Ancient Laputa mode
-   Aesthetic glyph layer. Not an official translation. */
+/* Seven final polish — 3-state Ancient Language mode */
 (function(){
-  const glyphs=[
-    [".subtitle","ᛚᛖᛖᛏᛖ · ᛚᚨᛏᛟᛒᚨᚱᛁᛏᚨ · ᛗᛖᛗᛟᚱᛁᚨ · ᚨᚱᛏᛁᚠᛖᛪ · ᚾᛖᛏᛟᚱᛖᛖᛚ"],
-    ["#backgroundLabel","ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ · ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ"],
-    ["#page-home .section-title strong","ᚢᛚ · ᛊᛖᚡᛖᚾ · ᛏᛟᛖᛚᛚᛖ · ᛚᚨᛈᚢᛏᚢᛚ"],
-    ["#page-home .hero-card h2","ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ · ᛁᚾᛏᛖᚱᚠᚨᚲᛖ · ᛏᛟᛖᛚᛚᛖ"],
-    ["#page-home .hero-card p:not(.small-label)","ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ\nᚠᛚᛟᚹᛖᚱ · ᚷᛁᚱᛚ · ᛏᛟᛖᛚᛚᛖ"],
-    [".terminal-footer span:first-child","ᛏᚱᚨᚾᛊᚠᛟᚱᛗᛖᚱ · ᛒᛟᛟᚲ · ᛊᛖᚡᛖᚾ"],
-    [".terminal-footer span:last-child","ᛗᛟᛞᛖᛚ · ᚠᛚᛟᚹᛖᚱ · ᚷᛁᚱᛚ · ᚡ·ᛟ"]
+  const STATE_KEY="seven.ancient.language.state";
+  const states=["fr","latin","runes"];
+  const latinMap={
+    ".subtitle":"Leete · Latobarita · Memoria · Artifex · Netoreel",
+    "#backgroundLabel":"Laputul · Aria-Roth · Bal Netoreel",
+    "#page-home .section-title strong":"Ul Seven · Toelle Laputul",
+    "#page-home .hero-card h2":"Bal Netoreel · Interface Toelle",
+    "#page-home .hero-card p:not(.small-label)":"Thème actif : Laputul Ariaroth\nPersonnalité active : Flower Girl Toelle",
+    "#page-home .hero-card button":"Copiar · Nexus",
+    "#page-home #homeSevenBtn strong":"Seven · Toelle",
+    "#page-home #homeSevenBtn span":"Scriptum · ChatGPT",
+    "#page-home #homeVideoCardsBtn strong":"Video · Cartae",
+    "#page-home #homeVideoCardsBtn span":"Promptum · Productio",
+    "#page-home [data-jump='remote'] strong":"Remote · Porta",
+    "#page-home [data-jump='remote'] span":"Manus · Distantia",
+    ".terminal-footer span:first-child":"Transformer Book · Pupitre Seven",
+    ".terminal-footer span:last-child":"Model · The Flower Girl v.5 · Toelle"
+  };
+  const runeMap={"A":"ᛉ","B":"ᛒ","C":"ᚲ","D":"ᛞ","E":"ᛖ","F":"ᚠ","G":"ᚷ","H":"ᚺ","I":"ᛁ","J":"ᛃ","K":"ᚲ","L":"ᛚ","M":"ᛗ","N":"ᚾ","O":"ᛟ","P":"ᛈ","Q":"ᚲ","R":"ᚱ","S":"ᛊ","T":"ᛏ","U":"ᚢ","V":"ᚹ","W":"ᚹ","X":"ᚲᛊ","Y":"ᛃ","Z":"ᛉ"};
+  const targets=[
+    ".subtitle","#backgroundLabel","#page-home .section-title strong","#page-home .hero-card h2",
+    "#page-home .hero-card p:not(.small-label)","#page-home .hero-card button",
+    "#page-home #homeSevenBtn strong","#page-home #homeSevenBtn span",
+    "#page-home #homeVideoCardsBtn strong","#page-home #homeVideoCardsBtn span",
+    "#page-home [data-jump='remote'] strong","#page-home [data-jump='remote'] span",
+    ".terminal-footer span:first-child",".terminal-footer span:last-child"
   ];
-
-  function setGlyphMode(on){
-    glyphs.forEach(([selector,glyph])=>{
+  function normalizeForRunes(text){
+    return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g," ").replace(/[·:;,.!?()\/\-]/g," ").replace(/\s+/g," ").trim().toUpperCase();
+  }
+  function toRunes(text){
+    let out="";
+    for(const ch of normalizeForRunes(text)){
+      out += (ch===" " || ch==="\n") ? ch : (runeMap[ch] || ch);
+    }
+    return out;
+  }
+  function stateNow(){
+    try{ const s=localStorage.getItem(STATE_KEY); if(states.includes(s)) return s; }catch{}
+    return "fr";
+  }
+  function setState(state){
+    document.body.classList.toggle("ancient-latin",state==="latin");
+    document.body.classList.toggle("ancient-runes",state==="runes");
+    targets.forEach(selector=>{
       document.querySelectorAll(selector).forEach(el=>{
-        if(!el.dataset.frText){
-          el.dataset.frText=el.textContent;
+        if(!el.dataset.frText) el.dataset.frText=el.textContent;
+        const fr=el.dataset.frText;
+        if(state==="fr"){
+          el.textContent=fr;
+          el.classList.remove("ancient-text");
+        }else if(state==="latin"){
+          el.textContent=latinMap[selector] || fr;
+          el.classList.add("ancient-text");
+        }else{
+          el.textContent=toRunes(fr);
+          el.classList.add("ancient-text");
         }
-        el.textContent=on ? glyph : el.dataset.frText;
-        el.classList.toggle("laputa-glyph", on);
       });
     });
-
-    const btn=document.getElementById("toggleLaputaBtn");
+    const btn=document.getElementById("cycleAncientLangBtn");
     if(btn){
-      btn.textContent=on ? "Français" : "Ancien";
-      btn.classList.toggle("active", on);
+      btn.textContent=state==="fr" ? "Français" : state==="latin" ? "Latin" : "Runes";
+      btn.classList.toggle("active",state!=="fr");
     }
+    try{localStorage.setItem(STATE_KEY,state);}catch{}
   }
-
+  function cycle(){
+    const current=stateNow();
+    setState(states[(states.indexOf(current)+1)%states.length]);
+  }
   function install(){
-    const btn=document.getElementById("toggleLaputaBtn");
-    if(!btn || btn.dataset.laputaBound==="1") return;
-    btn.dataset.laputaBound="1";
-
-    try{
-      const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
-      document.body.classList.toggle("laputa-mode", !!saved.laputaMode);
-    }catch{}
-
-    setGlyphMode(document.body.classList.contains("laputa-mode"));
-
-    btn.addEventListener("click", ()=>{
-      const on=!document.body.classList.contains("laputa-mode");
-      document.body.classList.toggle("laputa-mode", on);
-      setGlyphMode(on);
-      try{
-        const state=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
-        state.laputaMode=on;
-        localStorage.setItem("seven.final.01.10.state", JSON.stringify(state));
-      }catch{}
-    });
-
-    /* Keep dynamic background label coherent without patching applyBackground. */
-    const label=document.getElementById("backgroundLabel");
-    if(label && window.MutationObserver){
-      const obs=new MutationObserver(()=>{
-        if(document.body.classList.contains("laputa-mode") && label.textContent.indexOf("Laputul")===-1){
-          label.dataset.frText=label.textContent;
-          label.textContent="ᛚᚨᛈᚢᛏᚢᛚ · ᚨᚱᛁᚨᚱᛟᛏᚺ · ᛒᚨᛚ · ᚾᛖᛏᛟᚱᛖᛖᛚ";
-          label.classList.add("laputa-glyph");
-        }
-      });
-      obs.observe(label,{childList:true,characterData:true,subtree:true});
-    }
+    const btn=document.getElementById("cycleAncientLangBtn");
+    if(!btn || btn.dataset.ancientLangBound==="1") return;
+    btn.dataset.ancientLangBound="1";
+    btn.addEventListener("click",cycle);
+    setState(stateNow());
   }
-
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded", install);
-  }else{
-    install();
-  }
-  window.addEventListener("load", install);
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",install);
+  else install();
+  window.addEventListener("load",install);
 })();
 
