@@ -346,17 +346,12 @@ document.getElementById("toggleReadableBtn").addEventListener("click",()=>{docum
 document.getElementById("toggleTraceBtn").addEventListener("click",()=>{const panel=document.getElementById("advancedPanel"); panel.hidden=!panel.hidden; renderTrace();});
 
 const openRustDeskBtn = document.getElementById("openRustDeskBtn");
+const RYZEN7_RUSTDESK_LINK = "rustdesk://48841137";
 
 if (openRustDeskBtn) {
-  openRustDeskBtn.setAttribute("href", "rustdesk://");
+  openRustDeskBtn.setAttribute("href", RYZEN7_RUSTDESK_LINK);
   openRustDeskBtn.addEventListener("click", () => {
-    window.setTimeout(() => {
-      try {
-        window.location.href = "rustdesk://";
-      } catch (error) {
-        console.warn("RustDesk protocol launch was blocked by the browser.", error);
-      }
-    }, 0);
+    window.location.href = RYZEN7_RUSTDESK_LINK;
   });
 }
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);
