@@ -349,7 +349,7 @@ const openRustDeskBtn = document.getElementById("openRustDeskBtn");
 
 if (openRustDeskBtn) {
   openRustDeskBtn.addEventListener("click", () => {
-    copyText("remote", "Procédure Remote");
+    window.location.href = "rustdesk://";
   });
 }
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);
