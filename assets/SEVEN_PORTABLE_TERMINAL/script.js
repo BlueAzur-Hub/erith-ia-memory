@@ -709,4 +709,49 @@ function toggleFinalLock(){
   else install();
   window.addEventListener("load",install);
 })();
+/* Seven final polish — Oracle mode */
+(function(){
+  const ORACLE_KEY="seven.oracle.open";
+  const oracleMessages=[
+    {fr:"Le cockpit est stable. Avance sans ajouter de complexité inutile.",latin:"Pupitre stabilis · via clara · noli addere chaos.",runes:"ᛚᛖ ᚲᛟᚲᚲᛈᛁᛏ ᛖᛊᛏ ᛊᛏᛉᛒᛁᛚᛖ ᛉᚹᛉᚾᚲᛖ ᛊᛉᚾᛊ ᚲᛟᛗᛈᛚᛖᚲᛊᛁᛏᛖ"},
+    {fr:"Si un fond disparaît, vérifie d’abord le nom du PNG et son upload.",latin:"Si imago deficit · nomen et uploadum primum inspice.",runes:"ᛊᛁ ᚢᚾ ᚠᛟᚾᛞ ᛞᛁᛊᛈᛉᚱᛉᛁᛏ ᚹᛖᚱᛁᚠᛁᛖ ᛚᛖ ᚾᛟᛗ ᛞᚢ ᛈᚾᚷ"},
+    {fr:"Une idée par action. Une correction par test. La stabilité vient du rythme.",latin:"Una idea · una actio · unum signum.",runes:"ᚢᚾᛖ ᛁᛞᛖᛖ ᛈᛉᚱ ᛉᚲᛏᛁᛟᚾ ᚢᚾᛖ ᚲᛟᚱᚱᛖᚲᛏᛁᛟᚾ ᛈᛉᚱ ᛏᛖᛊᛏ"},
+    {fr:"Le décor parle déjà. Le code doit seulement lui ouvrir le passage.",latin:"Decor iam loquitur · codex aperit portam.",runes:"ᛚᛖ ᛞᛖᚲᛟᚱ ᛈᛉᚱᛚᛖ ᛞᛖᛃᛉ ᛚᛖ ᚲᛟᛞᛖ ᛟᚢᚹᚱᛖ ᛚᛖ ᛈᛉᛊᛊᛉᚷᛖ"},
+    {fr:"Ne confonds pas le signal et le bruit. Le bon chemin reste simple.",latin:"Signum non strepitus · via recta simplex.",runes:"ᚾᛖ ᚲᛟᚾᚠᛟᚾᛞᛊ ᛈᛉᛊ ᛚᛖ ᛊᛁᚷᚾᛉᛚ ᛖᛏ ᛚᛖ ᛒᚱᚢᛁᛏ"}
+  ];
+  function currentState(){
+    const btn=document.getElementById("cycleAncientLangBtn");
+    const t=(btn?.textContent||"").trim().toLowerCase();
+    return t==="latin" ? "latin" : t==="runes" ? "runes" : "fr";
+  }
+  function setOracleText(i){
+    const el=document.getElementById("oracleText"); if(!el) return;
+    const idx=i % oracleMessages.length; const msg=oracleMessages[idx]; const state=currentState();
+    el.dataset.oracleIndex=String(idx); el.textContent=msg[state] || msg.fr;
+  }
+  function refreshOracle(){
+    const el=document.getElementById("oracleText");
+    setOracleText((Number(el?.dataset.oracleIndex || "0")+1)%oracleMessages.length);
+  }
+  function toggleOracle(){
+    const panel=document.getElementById("oraclePanel"), btn=document.getElementById("toggleOracleBtn");
+    if(!panel) return;
+    const open=panel.hasAttribute("hidden");
+    panel.toggleAttribute("hidden",!open);
+    btn?.classList.toggle("active",open);
+    try{localStorage.setItem(ORACLE_KEY,open?"1":"0");}catch{}
+    if(open) setOracleText(Number(document.getElementById("oracleText")?.dataset.oracleIndex || "0"));
+  }
+  function install(){
+    const btn=document.getElementById("toggleOracleBtn"), refresh=document.getElementById("oracleRefreshBtn"), panel=document.getElementById("oraclePanel");
+    if(btn && btn.dataset.oracleBound!=="1"){btn.dataset.oracleBound="1"; btn.addEventListener("click",toggleOracle);}
+    if(refresh && refresh.dataset.oracleRefreshBound!=="1"){refresh.dataset.oracleRefreshBound="1"; refresh.addEventListener("click",(e)=>{e.stopPropagation(); refreshOracle();});}
+    try{if(localStorage.getItem(ORACLE_KEY)==="1" && panel){panel.removeAttribute("hidden"); btn?.classList.add("active");}}catch{}
+    setOracleText(Number(document.getElementById("oracleText")?.dataset.oracleIndex || "0"));
+    const langBtn=document.getElementById("cycleAncientLangBtn");
+    if(langBtn && langBtn.dataset.oracleLangBound!=="1"){langBtn.dataset.oracleLangBound="1"; langBtn.addEventListener("click",()=>setTimeout(()=>setOracleText(Number(document.getElementById("oracleText")?.dataset.oracleIndex || "0")),0));}
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",install); else install();
+  window.addEventListener("load",install);
+})();
 

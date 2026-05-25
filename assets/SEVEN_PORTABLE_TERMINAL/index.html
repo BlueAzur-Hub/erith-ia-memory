@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260525-ANCIENT-LANG-3-STATES">
+  <link rel="stylesheet" href="style.css?v=20260525-ORACLE-MODE">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -306,7 +306,7 @@
     <section class="control-strip">
       <button id="copySevenBtn">Seven</button>
       <button id="copyVideoBtn">Cards</button>
-      <button id="copyBlackoutBtn">Blackout</button>
+      <button id="toggleOracleBtn">Oracle</button>
       <button id="nextBackgroundBtn">Fond</button>
       <button id="randomBackgroundBtn">Random</button>
       <button id="toggleBackgroundSeriesBtn">Thème</button>
@@ -349,6 +349,14 @@
             <div><span>GitHub Pages</span><strong>Synchronisé</strong></div>
           </div>
           <p class="final-lock-note">Note : conserver la logique simple des chemins d’images. Si un fond bleu/noir apparaît, vérifier d’abord l’upload du PNG et son nom exact.</p>
+        </section>
+
+        <section class="oracle-panel" id="oraclePanel" hidden>
+          <div class="oracle-head">
+            <strong>Oracle Seven</strong>
+            <button id="oracleRefreshBtn" type="button">Nouveau présage</button>
+          </div>
+          <p id="oracleText">Le cockpit est stable. Avance sans ajouter de complexité inutile.</p>
         </section>
 
         <div class="tile-grid">
@@ -633,7 +641,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260525-ANCIENT-LANG-3-STATES"></script>
+  <script src="script.js?v=20260525-ORACLE-MODE"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
