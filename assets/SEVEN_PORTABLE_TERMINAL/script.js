@@ -846,3 +846,11 @@ function toggleFinalLock(){
   window.addEventListener("load",install);
 })();
 
+/* Seven Remote Fix — RustDesk launcher */
+const openRustDeskBtn = document.getElementById("openRustDeskBtn");
+
+if (openRustDeskBtn) {
+  openRustDeskBtn.addEventListener("click", () => {
+    window.location.href = "rustdesk://";
+  });
+}
