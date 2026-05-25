@@ -588,3 +588,41 @@ function toggleFocusMode(){
   window.addEventListener("load", install);
 })();
 
+/* Seven final polish — Final Lock toggle */
+function toggleFinalLock(){
+  const panel=document.getElementById("finalLockPanel");
+  const btn=document.getElementById("toggleFinalLockBtn");
+  if(!panel) return;
+  const next=panel.hasAttribute("hidden");
+  panel.toggleAttribute("hidden", !next);
+  if(btn) btn.classList.toggle("active", next);
+  try{
+    const state=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+    state.finalLock=next;
+    localStorage.setItem("seven.final.01.10.state", JSON.stringify(state));
+  }catch{}
+}
+
+(function installFinalLock(){
+  function install(){
+    const btn=document.getElementById("toggleFinalLockBtn");
+    const panel=document.getElementById("finalLockPanel");
+    if(!btn || !panel || btn.dataset.finalLockBound==="1") return;
+    btn.dataset.finalLockBound="1";
+    btn.addEventListener("click", toggleFinalLock);
+    try{
+      const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+      if(saved.finalLock){
+        panel.removeAttribute("hidden");
+        btn.classList.add("active");
+      }
+    }catch{}
+  }
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", install);
+  }else{
+    install();
+  }
+  window.addEventListener("load", install);
+})();
+
