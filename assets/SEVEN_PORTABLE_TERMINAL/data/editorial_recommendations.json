@@ -1,23 +1,24 @@
 {
-  "version": "aerith_v6_editorial_recommendations_v1",
-  "status": "experimental",
+  "version": "aerith_v6_editorial_recommendations_v2",
+  "status": "stable_test",
   "source": "youtube_memory_full.json",
   "updated_at": "2026-05-26",
+  "display_mode": "compact_card",
   "channels": [
     {
       "channel_id": "blue_azur",
       "channel_name": "Blue Azur",
       "recommendations": [
         {
-          "id": "blue_azur_rec_001",
+          "id": "blue_azur_rec_002",
           "type": "video_satellite",
           "priority": "high",
-          "title": "Créer une vidéo satellite autour de la famille Zelda",
-          "reason": "La famille Zelda montre un signal fort dans les données YouTube actuelles.",
+          "title": "Créer une vidéo satellite Zelda",
+          "reason": "Le signal Zelda reste dominant et peut soutenir une suite éditoriale.",
           "suggested_format": "Short 9:16 ou vidéo courte",
-          "action": "Produire une suite éditoriale liée à une vidéo locomotive existante.",
-          "risk": "Ne pas refaire exactement la même vidéo ; trouver un angle neuf.",
-          "stop_point": "Valider le titre et la miniature avant montage."
+          "action": "Trouver un angle neuf autour de la vidéo locomotive actuelle.",
+          "risk": "Éviter de refaire la même promesse ou la même miniature.",
+          "stop_point": "Valider titre + miniature avant montage."
         }
       ]
     },
@@ -26,15 +27,15 @@
       "channel_name": "Aerith IA",
       "recommendations": [
         {
-          "id": "aerith_ia_rec_001",
-          "type": "positioning",
+          "id": "aerith_ia_rec_002",
+          "type": "project_showcase",
           "priority": "medium",
-          "title": "Clarifier la prochaine vidéo vitrine @erith.IA",
-          "reason": "La chaîne peut servir à montrer le projet, ses modules et ses démonstrations concrètes.",
-          "suggested_format": "Vidéo courte explicative ou démonstration cockpit",
-          "action": "Préparer une vidéo qui montre une brique validée plutôt qu’un concept trop large.",
-          "risk": "Éviter une vidéo trop abstraite ou trop technique.",
-          "stop_point": "Valider le sujet exact avant écriture du script."
+          "title": "Montrer une brique validée",
+          "reason": "La chaîne doit prouver le projet par une démonstration concrète.",
+          "suggested_format": "Vidéo courte cockpit ou démo commentée",
+          "action": "Présenter une fonction visible : YouTube Memory, cockpit ou module ERITH.IA.",
+          "risk": "Éviter une vidéo trop abstraite ou trop longue.",
+          "stop_point": "Valider le sujet exact avant script."
         }
       ]
     }
