@@ -840,7 +840,7 @@
             setHtml('ytTopFamily', '<b>' + escapeHtml(topFamily[0]) + '</b><br>' + escapeHtml(parts.join(' · ') || 'Données faibles'));
           }
 
-          // Action Aerith is rendered by the final YouTube controller below.
+          setText('ytAction', topVideo ? 'Étudier le signal fort : ' + (topVideo.memoryFamily || 'Non classé') + ' · ' + (topVideo.title || 'Vidéo') : 'En attente de données YouTube.');
 
           setHtml('ytTopList',
             topByViews.slice(0, 10).map((video, i) => renderVideoCard(video, i + 1)).join('') ||
@@ -867,11 +867,12 @@
       }
 
       function installYoutubeJsonLoader() {
-        const refresh = byId('refreshYoutubeDataBtn');
-        if (refresh) refresh.addEventListener('click', loadYoutubeData);
-
+        /* Legacy loader kept for clipboard support only.
+           YouTube rendering is owned by #yt-top10-final-controller below.
+           This prevents competing controllers from rewriting Action Aerith. */
         const copy = byId('copyYoutubeBriefBtn');
-        if (copy) {
+        if (copy && copy.dataset.youtubeCopyBound !== '1') {
+          copy.dataset.youtubeCopyBound = '1';
           copy.addEventListener('click', async () => {
             const box = byId('ytBriefText');
             const text = box ? box.value : '';
@@ -881,9 +882,6 @@
             }
           });
         }
-
-        loadYoutubeData();
-        window.setInterval(loadYoutubeData, 60000);
       }
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installYoutubeJsonLoader);
@@ -1205,25 +1203,48 @@
             (Array.isArray(data.channels) && data.channels[0]) ||
             null;
 
-          return channel && Array.isArray(channel.recommendations)
-            ? channel.recommendations[0] || null
-            : null;
+          if (!channel || !Array.isArray(channel.recommendations)) return null;
+
+          if (channel.active_recommendation) {
+            const active = channel.recommendations.find(item => item.id === channel.active_recommendation);
+            if (active) return active;
+          }
+
+          return channel.recommendations.find(item => item.status === 'active') || channel.recommendations[0] || null;
         } catch (error) {
           return null;
         }
+      }
+
+      function recommendationDisplay(recommendation) {
+        if (!recommendation) return null;
+
+        const short = recommendation.short_display && typeof recommendation.short_display === 'object'
+          ? recommendation.short_display
+          : null;
+
+        return {
+          title: short ? short.title : recommendation.title,
+          reason: short ? short.reason : recommendation.reason,
+          action: short ? short.action : recommendation.action,
+          risk: short ? short.risk : recommendation.risk,
+          stop_point: short ? short.stop_point : recommendation.stop_point
+        };
       }
 
       function renderActionAerith(recommendation, signal) {
         const target = el('ytAction');
         if (!target) return;
 
-        if (recommendation) {
+        const display = recommendationDisplay(recommendation);
+
+        if (display && (display.title || display.reason || display.action || display.stop_point)) {
           target.innerHTML =
-            '<b>' + esc(recommendation.title || 'Recommandation éditoriale') + '</b><br>' +
-            esc(recommendation.reason || '') +
-            (recommendation.action ? '<br><b>Action :</b> ' + esc(recommendation.action) : '') +
-            (recommendation.risk ? '<br><b>Risque :</b> ' + esc(recommendation.risk) : '') +
-            (recommendation.stop_point ? '<br><b>Point d’arrêt :</b> ' + esc(recommendation.stop_point) : '');
+            '<b>' + esc(display.title || 'Recommandation éditoriale') + '</b>' +
+            (display.reason ? '<br>' + esc(display.reason) : '') +
+            (display.action ? '<br><b>Action :</b> ' + esc(display.action) : '') +
+            (display.risk ? '<br><b>Risque :</b> ' + esc(display.risk) : '') +
+            (display.stop_point ? '<br><b>Point d’arrêt :</b> ' + esc(display.stop_point) : '');
           return;
         }
 
