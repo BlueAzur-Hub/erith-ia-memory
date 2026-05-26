@@ -1186,14 +1186,34 @@
       }
 
       const EDITORIAL_FILE = './data/editorial_recommendations.json';
+      let youtubeLoadSequence = 0;
+
+      function cacheBust(path, nonce) {
+        const sep = path.indexOf('?') === -1 ? '?' : '&';
+        return path + sep + 'v=' + encodeURIComponent(nonce || Date.now());
+      }
+
+      function setRefreshState(isLoading) {
+        const refresh = el('refreshYoutubeDataBtn');
+        if (!refresh) return;
+        refresh.disabled = !!isLoading;
+        refresh.textContent = isLoading ? 'Chargement…' : 'Rafraîchir';
+        refresh.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+      }
+
+      function setYoutubeStatus(title, text) {
+        if (el('ytStatusTitle') && title) el('ytStatusTitle').textContent = title;
+        if (el('ytStatus') && text) el('ytStatus').textContent = text;
+      }
+
 
       function editorialChannelId(key) {
         return key === 'aerithia' ? 'aerith_ia' : 'blue_azur';
       }
 
-      async function getEditorialRecommendation(key) {
+      async function getEditorialRecommendation(key, nonce) {
         try {
-          const response = await fetch(EDITORIAL_FILE + '?v=' + Date.now(), { cache: 'no-store' });
+          const response = await fetch(cacheBust(EDITORIAL_FILE, nonce), { cache: 'no-store' });
           if (!response.ok) return null;
 
           const data = await response.json();
@@ -1387,16 +1407,128 @@
         });
       }
 
-      async function loadYouTube() {
+      function shortText(value, max) {
+        const text = String(value == null ? '' : value).trim();
+        if (!max || text.length <= max) return text;
+        return text.slice(0, max - 1).trim() + '…';
+      }
+
+      function videoUrl(video) {
+        return video && (video.url || (video.videoId ? 'https://www.youtube.com/watch?v=' + video.videoId : ''));
+      }
+
+      function videoViews(video) {
+        const stats = video && video.publicStats ? video.publicStats : {};
+        return num(stats.views || video && video.views || 0);
+      }
+
+      function videoSignalText(video, key) {
+        if (!video) return 'En attente de données vidéo.';
+        const family = video.memoryFamily || 'Non classé';
+        if (key === 'aerithia') {
+          if (/ERITH|Corps|Cyberpunk/i.test(family + ' ' + (video.title || ''))) {
+            return 'Signal : prolonger en scène courte.';
+          }
+          return 'Signal : isoler le concept le plus lisible.';
+        }
+        if (/Zelda/i.test(family + ' ' + (video.title || ''))) {
+          return 'Signal : recycler en satellite Zelda.';
+        }
+        return 'Signal : transformer en format court ciblé.';
+      }
+
+      function renderVideoSummaryCard(topVideo, top, signal, key) {
+        const target = el('ytMetricVideos');
+        if (!target) return;
+
+        if (!topVideo) {
+          target.innerHTML =
+            '<div class="yt-summary-card yt-summary-empty">' +
+              '<div class="yt-summary-kicker">Aucune vidéo</div>' +
+              '<div class="yt-summary-line">Aucune donnée exploitable pour le moment.</div>' +
+            '</div>';
+          return;
+        }
+
+        const url = videoUrl(topVideo);
+        const title = shortText(topVideo.title || 'Vidéo locomotive', 76);
+        const family = topVideo.memoryFamily || 'Non classé';
+        const duration = topVideo.durationLabel ? ' · ' + topVideo.durationLabel : '';
+        const count = top.length + ' vidéo(s)';
+        const views = fmt(videoViews(topVideo)) + ' vues';
+        const score = topVideo.score ? ' · score ' + fmt(topVideo.score) : '';
+
+        target.innerHTML =
+          '<div class="yt-summary-card yt-summary-video">' +
+            '<div class="yt-summary-kicker">Signal vidéo · ' + esc(count) + '</div>' +
+            '<div class="yt-summary-title">Locomotive : ' + esc(title) + '</div>' +
+            '<div class="yt-summary-meta">' + esc(views + ' · ' + family + duration + score) + '</div>' +
+            '<div class="yt-summary-action">' + esc(videoSignalText(signal || topVideo, key)) + '</div>' +
+            (url ? '<a class="yt-summary-link" href="' + esc(url) + '" target="_blank" rel="noreferrer">ouvrir la vidéo</a>' : '') +
+          '</div>';
+      }
+
+      function familySignalText(name, data, key) {
+        const count = data && Array.isArray(data.videos) ? data.videos.length : 0;
+        if (!name) return 'Action : attendre plus de données.';
+        if (key === 'aerithia') {
+          if (/ERITH|Cyberpunk|Corps/i.test(name)) return 'Action : pousser cette famille en série courte.';
+          return 'Action : clarifier la promesse éditoriale.';
+        }
+        if (/Zelda/i.test(name)) return count > 3 ? 'Action : structurer la famille Zelda.' : 'Action : produire un satellite Zelda.';
+        return 'Action : surveiller avant d’investir plus.';
+      }
+
+      function renderFamilySummaryCard(topFamily, families, key) {
+        const target = el('ytMetricFamilies');
+        if (!target) return;
+
+        if (!topFamily) {
+          target.innerHTML =
+            '<div class="yt-summary-card yt-summary-empty">' +
+              '<div class="yt-summary-kicker">Aucune famille</div>' +
+              '<div class="yt-summary-line">Aucune famille mémoire détectée.</div>' +
+            '</div>';
+          return;
+        }
+
+        const name = topFamily[0] || 'Non classé';
+        const data = topFamily[1] || {};
+        const count = Array.isArray(data.videos) ? data.videos.length : 0;
+        const parts = [];
+        if (data.views) parts.push(fmt(data.views) + ' vues');
+        if (data.likes) parts.push(fmt(data.likes) + ' likes');
+        if (data.score) parts.push('score ' + fmt(data.score));
+        if (count) parts.push(count + ' vidéo(s)');
+
+        target.innerHTML =
+          '<div class="yt-summary-card yt-summary-family">' +
+            '<div class="yt-summary-kicker">Signal famille · ' + esc(families.length + ' famille(s)') + '</div>' +
+            '<div class="yt-summary-title">Dominante : ' + esc(shortText(name, 58)) + '</div>' +
+            '<div class="yt-summary-meta">' + esc(parts.join(' · ') || 'Données faibles') + '</div>' +
+            '<div class="yt-summary-action">' + esc(familySignalText(name, data, key)) + '</div>' +
+          '</div>';
+      }
+
+      async function loadYouTube(reason) {
+        const sequence = ++youtubeLoadSequence;
         const key = selectedChannel();
         const label = LABELS[key] || key;
-        const response = await fetch(FILES[key] + '?v=' + Date.now(), { cache: 'no-store' });
+        const nonce = Date.now() + '-' + Math.random().toString(36).slice(2);
+        const reasonLabel = reason === 'channel' ? 'changement de chaîne' : reason === 'refresh' ? 'rafraîchissement manuel' : 'chargement initial';
+
+        setRefreshState(true);
+        setYoutubeStatus('Lecture des données avancées', 'Chaîne active : ' + label + ' · ' + reasonLabel + ' · lecture fraîche…');
+
+        const response = await fetch(cacheBust(FILES[key], nonce), { cache: 'no-store' });
 
         if (!response.ok) {
           throw new Error(FILES[key] + ' HTTP ' + response.status);
         }
 
         const data = await response.json();
+
+        if (sequence !== youtubeLoadSequence) return;
         const top = Array.isArray(data.topByViews) ? data.topByViews : [];
         const byScore = Array.isArray(data.topByScore) ? data.topByScore : top;
         const topVideo = top[0] || null;
@@ -1413,12 +1545,12 @@
         }
 
         if (el('ytStatusTitle')) el('ytStatusTitle').textContent = 'Données avancées chargées';
-        if (el('ytStatus')) el('ytStatus').textContent = 'Chaîne active : ' + label + ' · avancé · vues publiques · analytics 28j';
-        if (el('ytMetricVideos')) el('ytMetricVideos').textContent = top.length + ' vidéo(s)';
-        if (el('ytMetricFamilies')) el('ytMetricFamilies').textContent = families.length + ' famille(s)';
+        if (el('ytStatus')) el('ytStatus').textContent = 'Chaîne active : ' + label + ' · avancé · vues publiques · analytics 28j · mis à jour ' + new Date().toLocaleTimeString('fr-FR');
+        renderVideoSummaryCard(topVideo, top, signal, key);
+        renderFamilySummaryCard(topFamily, families, key);
         if (el('ytMode')) el('ytMode').textContent = label + ' · analytics 28j';
 
-        const editorialRecommendation = await getEditorialRecommendation(key);
+        const editorialRecommendation = await getEditorialRecommendation(key, nonce);
         renderActionAerith(editorialRecommendation, signal);
 
         if (el('ytTopVideo')) {
@@ -1456,6 +1588,8 @@
           brief = brief.replace(/vidéos historiques les plus fortes comme signaux principaux/g, 'vidéos les plus fortes comme signaux principaux');
           el('ytBriefText').value = brief;
         }
+
+        setRefreshState(false);
       }
 
       function bootYouTube() {
@@ -1465,9 +1599,11 @@
           const saved = localStorage.getItem('seven_youtube_channel');
           if (saved && FILES[saved]) select.value = saved;
 
-          select.addEventListener('change', function () {
+          select.addEventListener('change', function (event) {
+            event.preventDefault();
             localStorage.setItem('seven_youtube_channel', select.value);
-            loadYouTube().catch(function (err) {
+            loadYouTube('channel').catch(function (err) {
+              setRefreshState(false);
               if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
             });
           });
@@ -1475,14 +1611,18 @@
 
         const refresh = el('refreshYoutubeDataBtn');
         if (refresh) {
-          refresh.addEventListener('click', function () {
-            loadYouTube().catch(function (err) {
+          refresh.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            loadYouTube('refresh').catch(function (err) {
+              setRefreshState(false);
               if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
             });
           });
         }
 
-        loadYouTube().catch(function (err) {
+        loadYouTube('initial').catch(function (err) {
+          setRefreshState(false);
           if (el('ytStatus')) el('ytStatus').textContent = String(err.message || err);
         });
       }

@@ -1192,3 +1192,98 @@ body.readable.transparent #page-youtube .yt-action-card {
   }
 }
 
+
+
+/* Action Aerith Advisor V4 — refresh state and card stability */
+#page-youtube #refreshYoutubeDataBtn[disabled] {
+  opacity: .68;
+  cursor: wait;
+  transform: none !important;
+}
+
+#page-youtube #ytAction {
+  display: block;
+  max-height: min(56vh, 560px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+#page-youtube .yt-action-empty {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+
+/* YouTube Summary Cards V5 — Top vidéos + Familles mémoire
+   Scope: the two summary tiles only.
+   Goal: make the left cards as useful as Action Aerith without changing the Top 10 lists. */
+#page-youtube #ytMetricVideos,
+#page-youtube #ytMetricFamilies {
+  display: block;
+  margin-top: 9px;
+}
+
+#page-youtube .yt-summary-card {
+  display: grid;
+  gap: 6px;
+  line-height: 1.28;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#page-youtube .yt-summary-kicker {
+  color: rgba(159,238,255,.94);
+  font-size: 10px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+#page-youtube .yt-summary-title {
+  color: var(--gold);
+  font-size: 15px;
+  line-height: 1.16;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(245,213,141,.12);
+}
+
+#page-youtube .yt-summary-meta {
+  color: rgba(255,247,223,.86);
+  font-size: 12.5px;
+}
+
+#page-youtube .yt-summary-action,
+#page-youtube .yt-summary-line {
+  margin-top: 1px;
+  padding: 6px 8px;
+  border: 1px solid rgba(245,213,141,.22);
+  border-radius: 10px;
+  background: rgba(0,0,0,.14);
+  color: rgba(255,247,223,.92);
+  font-size: 12.5px;
+}
+
+#page-youtube .yt-summary-link {
+  justify-self: start;
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#page-youtube .yt-summary-empty {
+  opacity: .84;
+}
+
+body.transparent #page-youtube .yt-summary-action,
+body.transparent #page-youtube .yt-summary-line {
+  background: rgba(9,15,29,.12);
+}
+
+body.readable #page-youtube .yt-summary-action,
+body.readable #page-youtube .yt-summary-line,
+body.readable.transparent #page-youtube .yt-summary-action,
+body.readable.transparent #page-youtube .yt-summary-line {
+  background: rgba(4,8,18,.72);
+}
+
