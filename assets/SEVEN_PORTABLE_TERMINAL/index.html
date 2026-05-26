@@ -840,7 +840,7 @@
             setHtml('ytTopFamily', '<b>' + escapeHtml(topFamily[0]) + '</b><br>' + escapeHtml(parts.join(' · ') || 'Données faibles'));
           }
 
-          setText('ytAction', topVideo ? 'Étudier le signal fort : ' + (topVideo.memoryFamily || 'Non classé') + ' · ' + (topVideo.title || 'Vidéo') : 'En attente de données YouTube.');
+          // Action Aerith is rendered by the final YouTube controller below.
 
           setHtml('ytTopList',
             topByViews.slice(0, 10).map((video, i) => renderVideoCard(video, i + 1)).join('') ||
@@ -1187,6 +1187,51 @@
         return select && FILES[select.value] ? select.value : 'blueazur';
       }
 
+      const EDITORIAL_FILE = './data/editorial_recommendations.json';
+
+      function editorialChannelId(key) {
+        return key === 'aerithia' ? 'aerith_ia' : 'blue_azur';
+      }
+
+      async function getEditorialRecommendation(key) {
+        try {
+          const response = await fetch(EDITORIAL_FILE + '?v=' + Date.now(), { cache: 'no-store' });
+          if (!response.ok) return null;
+
+          const data = await response.json();
+          const wanted = editorialChannelId(key);
+          const channel =
+            (Array.isArray(data.channels) && data.channels.find(item => item.channel_id === wanted)) ||
+            (Array.isArray(data.channels) && data.channels[0]) ||
+            null;
+
+          return channel && Array.isArray(channel.recommendations)
+            ? channel.recommendations[0] || null
+            : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function renderActionAerith(recommendation, signal) {
+        const target = el('ytAction');
+        if (!target) return;
+
+        if (recommendation) {
+          target.innerHTML =
+            '<b>' + esc(recommendation.title || 'Recommandation éditoriale') + '</b><br>' +
+            esc(recommendation.reason || '') +
+            (recommendation.action ? '<br><b>Action :</b> ' + esc(recommendation.action) : '') +
+            (recommendation.risk ? '<br><b>Risque :</b> ' + esc(recommendation.risk) : '') +
+            (recommendation.stop_point ? '<br><b>Point d’arrêt :</b> ' + esc(recommendation.stop_point) : '');
+          return;
+        }
+
+        target.textContent = signal
+          ? 'Étudier le signal fort : ' + (signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')
+          : 'Aucune donnée.';
+      }
+
       function metric(video) {
         const publicStats = video.publicStats || {};
         const analytics = video.analytics28d || {};
@@ -1291,11 +1336,8 @@
         if (el('ytMetricFamilies')) el('ytMetricFamilies').textContent = families.length + ' famille(s)';
         if (el('ytMode')) el('ytMode').textContent = label + ' · analytics 28j';
 
-        if (el('ytAction')) {
-          el('ytAction').textContent = signal
-            ? 'Étudier le signal fort : ' + (signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')
-            : 'Aucune donnée.';
-        }
+        const editorialRecommendation = await getEditorialRecommendation(key);
+        renderActionAerith(editorialRecommendation, signal);
 
         if (el('ytTopVideo')) {
           if (topVideo) {
