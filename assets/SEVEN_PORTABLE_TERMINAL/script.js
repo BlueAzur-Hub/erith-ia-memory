@@ -853,20 +853,95 @@ function toggleFinalLock(){
 })();
 
 
-/* Aerith V6 — Editorial Recommendations Loader — SAFE TEST */
-async function loadEditorialRecommendations() {
-  try {
-    const response = await fetch("./data/editorial_recommendations.json");
-    const data = await response.json();
-    console.log("Aerith V6 editorial recommendations loaded:", data);
-    return data;
-  } catch (error) {
-    console.warn("Aerith V6 editorial recommendations unavailable:", error);
-    return null;
-  }
-}
+/* Aerith V6 — Editorial Recommendations Display — SAFE */
+(function () {
+  "use strict";
 
-loadEditorialRecommendations();
+  const DATA_URL = "./data/editorial_recommendations.json";
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function findActionAerithTarget() {
+    return (
+      document.getElementById("ytActionText") ||
+      document.getElementById("ytAction") ||
+      document.querySelector("[data-youtube-action]") ||
+      document.querySelector("#page-youtube .action-aerith") ||
+      document.querySelector("#page-youtube [data-action='aerith']") ||
+      null
+    );
+  }
+
+  function renderEditorialRecommendation(data) {
+    const channel =
+      data?.channels?.find(item => item.channel_id === "blue_azur") ||
+      data?.channels?.[0];
+
+    const recommendation = channel?.recommendations?.[0];
+    const target = findActionAerithTarget();
+
+    if (!target || !recommendation) {
+      console.warn("Aerith V6 editorial recommendations loaded, but no visible Action Aerith target was found.", {
+        channel,
+        recommendation,
+        target
+      });
+      return;
+    }
+
+    target.innerHTML = `
+      <strong>${escapeHtml(recommendation.title)}</strong><br>
+      <span>${escapeHtml(recommendation.reason)}</span><br><br>
+      <span><strong>Action :</strong> ${escapeHtml(recommendation.action)}</span><br>
+      <span><strong>Format :</strong> ${escapeHtml(recommendation.suggested_format)}</span><br>
+      <span><strong>Risque :</strong> ${escapeHtml(recommendation.risk)}</span><br>
+      <span><strong>Point d’arrêt :</strong> ${escapeHtml(recommendation.stop_point)}</span>
+    `;
+
+    target.dataset.aerithV6Recommendation = recommendation.id || "loaded";
+    target.dataset.aerithV6Channel = channel?.channel_id || "unknown";
+
+    console.log("Aerith V6 editorial recommendation displayed:", {
+      channel,
+      recommendation
+    });
+  }
+
+  async function loadEditorialRecommendations() {
+    try {
+      const response = await fetch(DATA_URL, { cache: "no-store" });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log("Aerith V6 editorial recommendations loaded:", data);
+      renderEditorialRecommendation(data);
+
+      return data;
+    } catch (error) {
+      console.warn("Aerith V6 editorial recommendations unavailable:", error);
+      return null;
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadEditorialRecommendations);
+  } else {
+    loadEditorialRecommendations();
+  }
+
+  window.addEventListener("load", loadEditorialRecommendations);
+})();
 
 /* Seven Remote RustDesk Launcher — FINAL FIX */
 (function () {
