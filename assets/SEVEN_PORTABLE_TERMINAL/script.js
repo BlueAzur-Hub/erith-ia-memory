@@ -853,7 +853,20 @@ function toggleFinalLock(){
 })();
 
 
+/* Aerith V6 — Editorial Recommendations Loader — SAFE TEST */
+async function loadEditorialRecommendations() {
+  try {
+    const response = await fetch("./data/editorial_recommendations.json");
+    const data = await response.json();
+    console.log("Aerith V6 editorial recommendations loaded:", data);
+    return data;
+  } catch (error) {
+    console.warn("Aerith V6 editorial recommendations unavailable:", error);
+    return null;
+  }
+}
 
+loadEditorialRecommendations();
 
 /* Seven Remote RustDesk Launcher — FINAL FIX */
 (function () {
