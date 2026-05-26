@@ -1,83 +1,67 @@
 {
-  "version": "aerith_v7_editorial_system",
+  "version": "aerith_v6_editorial_recommendations_v3",
+  "status": "stable_test",
+  "source": [
+    "youtube_memory_blueazur.json",
+    "youtube_memory_aerithia.json"
+  ],
   "updated_at": "2026-05-26",
-  "display_mode": "short_display",
+  "display_mode": "compact_card",
+  "notes": "V3 enrichit les recommandations sans modifier le code. Une seule recommandation principale est affichée par chaîne.",
   "channels": [
     {
       "channel_id": "blue_azur",
       "channel_name": "Blue Azur",
-      "active_recommendation": "blue_001",
       "recommendations": [
         {
-          "id": "blue_001",
+          "id": "blue_azur_rec_003",
+          "type": "video_satellite",
           "priority": "high",
-          "status": "active",
-          "short_display": {
-            "title": "Exploiter le signal Zelda",
-            "reason": "Le contenu Zelda domine toujours la chaîne.",
-            "action": "Créer une vidéo satellite avec un angle neuf.",
-            "stop_point": "Valider miniature + titre avant montage."
-          },
-          "full_detail": {
-            "strategy": "Capitaliser sur les vidéos Zelda déjà fortes sans recopier la vidéo locomotive.",
-            "risk": "Éviter les miniatures trop similaires ou les titres clonés.",
-            "future": "Créer une famille Zelda plus lisible : boss, défis, cinématiques, mods."
-          }
+          "title": "Exploiter le signal Zelda",
+          "reason": "La vidéo Zelda locomotive domine largement la chaîne et confirme une famille éditoriale forte.",
+          "suggested_format": "Short 9:16 ou vidéo courte 2–4 min",
+          "action": "Créer une suite satellite avec un angle neuf : boss, défi, cinématique ou comparaison avant/après.",
+          "risk": "Ne pas copier la vidéo locomotive ; garder une promesse nouvelle et une miniature différente.",
+          "stop_point": "Valider titre + miniature + angle avant montage."
         },
         {
-          "id": "blue_002",
+          "id": "blue_azur_rec_004",
+          "type": "playlist_strategy",
           "priority": "medium",
-          "status": "standby",
-          "short_display": {
-            "title": "Structurer les playlists",
-            "reason": "Les familles de vidéos deviennent nombreuses.",
-            "action": "Uniformiser les titres et regroupements.",
-            "stop_point": "Tester sur 3 vidéos avant généralisation."
-          },
-          "full_detail": {
-            "strategy": "Créer une logique de lecture plus forte pour l’algorithme YouTube.",
-            "risk": "Ne pas casser les anciens liens ou habitudes de navigation.",
-            "future": "Préparer une navigation par univers et séries."
-          }
+          "title": "Structurer la famille Zelda",
+          "reason": "Plusieurs vidéos Zelda fortes peuvent devenir une mini-série lisible pour l’algorithme.",
+          "suggested_format": "Playlist + titres homogènes",
+          "action": "Regrouper les vidéos Zelda fortes en une logique claire : combats, cinématiques, mods, défis.",
+          "risk": "Ne pas rendre les titres trop longs ou trop similaires.",
+          "stop_point": "Valider 3 titres pilotes avant modification en masse."
         }
       ]
     },
     {
       "channel_id": "aerith_ia",
       "channel_name": "Aerith IA",
-      "active_recommendation": "aerith_001",
       "recommendations": [
         {
-          "id": "aerith_001",
+          "id": "aerith_ia_rec_003",
+          "type": "project_showcase",
           "priority": "high",
-          "status": "active",
-          "short_display": {
-            "title": "Pousser Les Corps de Rechange",
-            "reason": "Le cyberpunk narratif montre un bon signal relatif.",
-            "action": "Créer un épisode court centré sur une scène forte.",
-            "stop_point": "Valider narration courte avant animation."
-          },
-          "full_detail": {
-            "strategy": "Transformer le concept en mini-série identifiable.",
-            "risk": "Éviter les explications trop abstraites.",
-            "future": "Développer une identité cyberpunk originale autour de mémoire et identité."
-          }
+          "title": "Pousser Les Corps de Rechange",
+          "reason": "La vidéo cyberpunk originale montre un bon signal relatif pour une petite chaîne.",
+          "suggested_format": "Short narratif 60–90 s ou épisode 2",
+          "action": "Produire une suite courte centrée sur mémoire, corps loués et identité fracturée.",
+          "risk": "Éviter une exposition trop abstraite ; montrer une scène claire.",
+          "stop_point": "Valider concept + narration courte avant image/animation."
         },
         {
-          "id": "aerith_002",
+          "id": "aerith_ia_rec_004",
+          "type": "cockpit_demo",
           "priority": "medium",
-          "status": "standby",
-          "short_display": {
-            "title": "Montrer le cockpit ERITH.IA",
-            "reason": "Le projet doit être visible et démontré.",
-            "action": "Faire une démo courte de YouTube Memory.",
-            "stop_point": "Limiter la vidéo à une fonction claire."
-          },
-          "full_detail": {
-            "strategy": "Montrer une IA opératrice plutôt qu’un concept abstrait.",
-            "risk": "Ne pas faire une vidéo trop technique ou confuse.",
-            "future": "Créer une série de démonstrations modulaires du cockpit."
-          }
+          "title": "Montrer une brique ERITH.IA",
+          "reason": "La chaîne doit aussi prouver le projet par des démonstrations concrètes.",
+          "suggested_format": "Démo cockpit commentée",
+          "action": "Montrer YouTube Memory + Action Aerith comme preuve de l’IA opératrice.",
+          "risk": "Ne pas faire une vidéo trop technique ; rester démonstratif et visuel.",
+          "stop_point": "Valider le script en 5 phrases avant montage."
         }
       ]
     }
