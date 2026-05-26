@@ -853,11 +853,19 @@ function toggleFinalLock(){
 })();
 
 
-/* Aerith V6 — Editorial Recommendations Display — SAFE */
+/* Aerith V6.1 — Editorial Recommendations Display — SAFE PERSISTENT
+   Objectif :
+   - lire ./data/editorial_recommendations.json ;
+   - afficher une recommandation dans la carte Action Aerith ;
+   - réappliquer après les rendus YouTube qui peuvent écraser la carte ;
+   - ne rien casser si la zone cible n'existe pas.
+*/
 (function () {
   "use strict";
 
   const DATA_URL = "./data/editorial_recommendations.json";
+  let cachedEditorialData = null;
+  let applyTimer = null;
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -866,6 +874,16 @@ function toggleFinalLock(){
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  function currentChannelId() {
+    const select = document.getElementById("ytChannelSelect");
+    const value = String(select?.value || "").toLowerCase();
+
+    if (value.includes("aerith")) return "aerith_ia";
+    if (value.includes("blue")) return "blue_azur";
+
+    return "blue_azur";
   }
 
   function findActionAerithTarget() {
@@ -879,16 +897,27 @@ function toggleFinalLock(){
     );
   }
 
-  function renderEditorialRecommendation(data) {
+  function getRecommendation(data) {
+    const wanted = currentChannelId();
+
     const channel =
+      data?.channels?.find(item => item.channel_id === wanted) ||
       data?.channels?.find(item => item.channel_id === "blue_azur") ||
       data?.channels?.[0];
 
-    const recommendation = channel?.recommendations?.[0];
+    const recommendation = channel?.recommendations?.[0] || null;
+
+    return { channel, recommendation };
+  }
+
+  function renderEditorialRecommendation(data = cachedEditorialData) {
+    if (!data) return;
+
+    const { channel, recommendation } = getRecommendation(data);
     const target = findActionAerithTarget();
 
     if (!target || !recommendation) {
-      console.warn("Aerith V6 editorial recommendations loaded, but no visible Action Aerith target was found.", {
+      console.warn("Aerith V6.1 editorial recommendations loaded, but no visible Action Aerith target was found.", {
         channel,
         recommendation,
         target
@@ -908,10 +937,17 @@ function toggleFinalLock(){
     target.dataset.aerithV6Recommendation = recommendation.id || "loaded";
     target.dataset.aerithV6Channel = channel?.channel_id || "unknown";
 
-    console.log("Aerith V6 editorial recommendation displayed:", {
+    console.log("Aerith V6.1 editorial recommendation displayed:", {
       channel,
       recommendation
     });
+  }
+
+  function scheduleRender(delay = 180) {
+    window.clearTimeout(applyTimer);
+    applyTimer = window.setTimeout(() => {
+      renderEditorialRecommendation();
+    }, delay);
   }
 
   async function loadEditorialRecommendations() {
@@ -922,26 +958,87 @@ function toggleFinalLock(){
         throw new Error(`HTTP ${response.status}`);
       }
 
-      const data = await response.json();
+      cachedEditorialData = await response.json();
 
-      console.log("Aerith V6 editorial recommendations loaded:", data);
-      renderEditorialRecommendation(data);
+      console.log("Aerith V6.1 editorial recommendations loaded:", cachedEditorialData);
 
-      return data;
+      scheduleRender(80);
+      scheduleRender(300);
+      scheduleRender(900);
+
+      return cachedEditorialData;
     } catch (error) {
-      console.warn("Aerith V6 editorial recommendations unavailable:", error);
+      console.warn("Aerith V6.1 editorial recommendations unavailable:", error);
       return null;
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", loadEditorialRecommendations);
-  } else {
+  function bindPersistentRefresh() {
+    const refreshBtn = document.getElementById("ytRefreshBtn") || document.querySelector("#page-youtube button");
+    const channelSelect = document.getElementById("ytChannelSelect");
+
+    if (refreshBtn && refreshBtn.dataset.aerithV6Bound !== "1") {
+      refreshBtn.dataset.aerithV6Bound = "1";
+      refreshBtn.addEventListener("click", () => {
+        scheduleRender(250);
+        scheduleRender(800);
+        scheduleRender(1500);
+      });
+    }
+
+    if (channelSelect && channelSelect.dataset.aerithV6Bound !== "1") {
+      channelSelect.dataset.aerithV6Bound = "1";
+      channelSelect.addEventListener("change", () => {
+        scheduleRender(250);
+        scheduleRender(800);
+        scheduleRender(1500);
+      });
+    }
+  }
+
+  function observeActionCard() {
+    const youtubePage = document.getElementById("page-youtube");
+    if (!youtubePage || youtubePage.dataset.aerithV6Observed === "1") return;
+
+    youtubePage.dataset.aerithV6Observed = "1";
+
+    const observer = new MutationObserver(() => {
+      const target = findActionAerithTarget();
+      if (!target || !cachedEditorialData) return;
+
+      const hasV6 = target.dataset.aerithV6Recommendation;
+      if (!hasV6) {
+        scheduleRender(120);
+      }
+    });
+
+    observer.observe(youtubePage, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  function install() {
+    bindPersistentRefresh();
+    observeActionCard();
     loadEditorialRecommendations();
   }
 
-  window.addEventListener("load", loadEditorialRecommendations);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", install);
+  } else {
+    install();
+  }
+
+  window.addEventListener("load", () => {
+    bindPersistentRefresh();
+    observeActionCard();
+    scheduleRender(300);
+    scheduleRender(1000);
+  });
 })();
+
 
 /* Seven Remote RustDesk Launcher — FINAL FIX */
 (function () {
