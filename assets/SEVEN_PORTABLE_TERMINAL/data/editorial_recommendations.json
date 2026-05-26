@@ -1,7 +1,23 @@
 {
-  "version": "aerith_v7_editorial_system",
-  "updated_at": "2026-05-26",
-  "display_mode": "short_display",
+  "version": "action_aerith_advisor_v1",
+  "updated_at": "2026-05-27",
+  "display_mode": "stable_contract",
+  "contract": {
+    "required_fields": [
+      "title",
+      "reason",
+      "action",
+      "risk",
+      "stop_point"
+    ],
+    "optional_fields": [
+      "detail",
+      "strategy",
+      "format",
+      "next_steps",
+      "short_display"
+    ]
+  },
   "channels": [
     {
       "channel_id": "blue_azur",
@@ -12,32 +28,39 @@
           "id": "blue_001",
           "priority": "high",
           "status": "active",
-          "short_display": {
-            "title": "Exploiter le signal Zelda",
-            "reason": "Le contenu Zelda domine toujours la chaîne.",
-            "action": "Créer une vidéo satellite avec un angle neuf.",
-            "stop_point": "Valider miniature + titre avant montage."
-          },
-          "full_detail": {
-            "strategy": "Capitaliser sur les vidéos Zelda déjà fortes sans recopier la vidéo locomotive.",
-            "risk": "Éviter les miniatures trop similaires ou les titres clonés.",
-            "future": "Créer une famille Zelda plus lisible : boss, défis, cinématiques, mods."
+          "title": "Exploiter la locomotive Zelda",
+          "reason": "La famille Zelda domine nettement les signaux publics : la meilleure vidéo atteint 38 860 vues, avec un écart massif sur le reste du Top 10.",
+          "action": "Publier une vidéo satellite Zelda sous 48h : boss, scène forte, défi court ou recyclage d’un moment déjà lisible.",
+          "risk": "Ne pas cloner le même cadrage miniature ni refaire un titre trop proche de la vidéo locomotive.",
+          "stop_point": "Avant montage : valider un titre distinct, une miniature différente et un angle unique en une phrase.",
+          "detail": {
+            "strategy": "Capitaliser sur Zelda comme famille éditoriale dominante sans recopier la vidéo existante.",
+            "format": "Short 9:16 ou vidéo courte 1 à 3 minutes.",
+            "next_steps": [
+              "Choisir une scène Zelda lisible sans contexte.",
+              "Écrire 3 titres courts non clonés.",
+              "Créer une miniature avec cadrage différent.",
+              "Valider titre + miniature avant montage."
+            ]
           }
         },
         {
           "id": "blue_002",
           "priority": "medium",
           "status": "standby",
-          "short_display": {
-            "title": "Structurer les playlists",
-            "reason": "Les familles de vidéos deviennent nombreuses.",
-            "action": "Uniformiser les titres et regroupements.",
-            "stop_point": "Tester sur 3 vidéos avant généralisation."
-          },
-          "full_detail": {
-            "strategy": "Créer une logique de lecture plus forte pour l’algorithme YouTube.",
-            "risk": "Ne pas casser les anciens liens ou habitudes de navigation.",
-            "future": "Préparer une navigation par univers et séries."
+          "title": "Éviter les vidéos longues cette semaine",
+          "reason": "Les meilleurs signaux visibles sont portés par des formats courts, ciblés et immédiatement compréhensibles.",
+          "action": "Recycler une scène forte en format court plutôt que produire un long épisode complet.",
+          "risk": "Perdre l’attention avec un format trop long sans promesse claire.",
+          "stop_point": "Si le concept ne tient pas en une phrase, ne pas lancer le montage long.",
+          "detail": {
+            "strategy": "Prioriser le rendement éditorial : un sujet, une promesse, une scène.",
+            "format": "Short ou vidéo 90 à 180 secondes.",
+            "next_steps": [
+              "Repérer une scène immédiatement lisible.",
+              "Supprimer les temps morts.",
+              "Tester un titre orienté action."
+            ]
           }
         }
       ]
@@ -51,32 +74,39 @@
           "id": "aerith_001",
           "priority": "high",
           "status": "active",
-          "short_display": {
-            "title": "Pousser Les Corps de Rechange",
-            "reason": "Le cyberpunk narratif montre un bon signal relatif.",
-            "action": "Créer un épisode court centré sur une scène forte.",
-            "stop_point": "Valider narration courte avant animation."
-          },
-          "full_detail": {
-            "strategy": "Transformer le concept en mini-série identifiable.",
-            "risk": "Éviter les explications trop abstraites.",
-            "future": "Développer une identité cyberpunk originale autour de mémoire et identité."
+          "title": "Pousser Les Corps de Rechange",
+          "reason": "Le cyberpunk narratif montre le meilleur engagement relatif récent : Les Corps de Rechange atteint environ 6% de like rate sur une chaîne encore jeune.",
+          "action": "Produire un épisode court centré sur une scène forte : corps loué, mémoire manquante ou échange d’identité.",
+          "risk": "Éviter les explications abstraites : le spectateur doit comprendre le dilemme en moins de 10 secondes.",
+          "stop_point": "Avant animation : valider narration courte, dilemme central et image master unique.",
+          "detail": {
+            "strategy": "Installer Les Corps de Rechange comme famille éditoriale prioritaire : cyberpunk, identité, mémoire, corps-supports.",
+            "format": "Short narratif 20 à 60 secondes ou micro-épisode d’environ 1 minute.",
+            "next_steps": [
+              "Écrire un dilemme en une phrase.",
+              "Choisir une image master unique.",
+              "Créer une voix off courte.",
+              "Tester un Short avant un épisode long."
+            ]
           }
         },
         {
           "id": "aerith_002",
           "priority": "medium",
           "status": "standby",
-          "short_display": {
-            "title": "Montrer le cockpit ERITH.IA",
-            "reason": "Le projet doit être visible et démontré.",
-            "action": "Faire une démo courte de YouTube Memory.",
-            "stop_point": "Limiter la vidéo à une fonction claire."
-          },
-          "full_detail": {
-            "strategy": "Montrer une IA opératrice plutôt qu’un concept abstrait.",
-            "risk": "Ne pas faire une vidéo trop technique ou confuse.",
-            "future": "Créer une série de démonstrations modulaires du cockpit."
+          "title": "Transformer le cockpit en démo courte",
+          "reason": "Le terminal devient une preuve concrète du projet si une seule fonction est montrée clairement.",
+          "action": "Préparer une démo de 45 secondes : YouTube Memory lit les données, Action Aerith donne une décision.",
+          "risk": "Ne pas expliquer toute l’architecture : une fonction, un résultat, un arrêt.",
+          "stop_point": "Storyboard validé en 3 plans maximum avant capture écran.",
+          "detail": {
+            "strategy": "Montrer ERITH.IA comme outil opératif, pas comme concept abstrait.",
+            "format": "Démo courte 45 à 60 secondes, capture écran + voix off simple.",
+            "next_steps": [
+              "Plan 1 : ouvrir YouTube Memory.",
+              "Plan 2 : changer Blue Azur / Aerith IA.",
+              "Plan 3 : lire Action Aerith et décider."
+            ]
           }
         }
       ]

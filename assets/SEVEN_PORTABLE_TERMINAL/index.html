@@ -274,6 +274,38 @@
         white-space: normal !important;
       }
     }
+
+    /* Action Aerith Advisor — scoped rendering for ytAction only */
+    #page-youtube #ytAction .yt-action-advisor {
+      display: block;
+      width: 100%;
+      line-height: 1.32;
+    }
+
+    #page-youtube #ytAction .yt-action-title {
+      display: block;
+      color: var(--gold);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    #page-youtube #ytAction .yt-action-reason,
+    #page-youtube #ytAction .yt-action-line,
+    #page-youtube #ytAction .yt-action-detail {
+      display: block;
+      margin-top: 5px;
+    }
+
+    #page-youtube #ytAction .yt-action-label {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    #page-youtube #ytAction .yt-action-detail {
+      opacity: .92;
+      font-size: 12px;
+    }
+
   </style>
 
 </head>
@@ -633,7 +665,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260526-REMOTE-RUSTDESK-LAUNCH-01"></script>
+  <script src="script.js?v=20260527-ACTION-AERITH-ADVISOR-01"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -840,7 +872,7 @@
             setHtml('ytTopFamily', '<b>' + escapeHtml(topFamily[0]) + '</b><br>' + escapeHtml(parts.join(' · ') || 'Données faibles'));
           }
 
-          setText('ytAction', topVideo ? 'Étudier le signal fort : ' + (topVideo.memoryFamily || 'Non classé') + ' · ' + (topVideo.title || 'Vidéo') : 'En attente de données YouTube.');
+          /* ytAction is owned exclusively by renderActionAerith() in yt-top10-final-controller. */
 
           setHtml('ytTopList',
             topByViews.slice(0, 10).map((video, i) => renderVideoCard(video, i + 1)).join('') ||
@@ -1216,20 +1248,55 @@
         }
       }
 
+      function firstText() {
+        for (let i = 0; i < arguments.length; i += 1) {
+          const value = arguments[i];
+          if (typeof value === 'string' && value.trim()) return value.trim();
+        }
+        return '';
+      }
+
+      function listText(value) {
+        if (Array.isArray(value)) {
+          return value
+            .filter(item => typeof item === 'string' && item.trim())
+            .map(item => item.trim())
+            .join(' · ');
+        }
+        return typeof value === 'string' ? value.trim() : '';
+      }
+
       function recommendationDisplay(recommendation) {
-        if (!recommendation) return null;
+        if (!recommendation || typeof recommendation !== 'object') return null;
 
         const short = recommendation.short_display && typeof recommendation.short_display === 'object'
           ? recommendation.short_display
-          : null;
+          : {};
+
+        const detail = recommendation.detail && typeof recommendation.detail === 'object'
+          ? recommendation.detail
+          : {};
+
+        const full = recommendation.full_detail && typeof recommendation.full_detail === 'object'
+          ? recommendation.full_detail
+          : {};
 
         return {
-          title: short ? short.title : recommendation.title,
-          reason: short ? short.reason : recommendation.reason,
-          action: short ? short.action : recommendation.action,
-          risk: short ? short.risk : recommendation.risk,
-          stop_point: short ? short.stop_point : recommendation.stop_point
+          title: firstText(recommendation.title, short.title),
+          reason: firstText(recommendation.reason, short.reason),
+          action: firstText(recommendation.action, short.action),
+          risk: firstText(recommendation.risk, short.risk, detail.risk, full.risk),
+          stop_point: firstText(recommendation.stop_point, short.stop_point),
+          strategy: firstText(recommendation.strategy, detail.strategy, full.strategy),
+          format: firstText(recommendation.format, detail.format, full.format),
+          next_steps: listText(recommendation.next_steps || detail.next_steps || full.next_steps)
         };
+      }
+
+      function actionLine(label, value) {
+        return value
+          ? '<span class="yt-action-line"><span class="yt-action-label">' + esc(label) + ' :</span> ' + esc(value) + '</span>'
+          : '';
       }
 
       function renderActionAerith(recommendation, signal) {
@@ -1238,19 +1305,33 @@
 
         const display = recommendationDisplay(recommendation);
 
-        if (display && (display.title || display.reason || display.action || display.stop_point)) {
+        if (display && (display.title || display.reason || display.action || display.risk || display.stop_point)) {
           target.innerHTML =
-            '<b>' + esc(display.title || 'Recommandation éditoriale') + '</b>' +
-            (display.reason ? '<br>' + esc(display.reason) : '') +
-            (display.action ? '<br><b>Action :</b> ' + esc(display.action) : '') +
-            (display.risk ? '<br><b>Risque :</b> ' + esc(display.risk) : '') +
-            (display.stop_point ? '<br><b>Point d’arrêt :</b> ' + esc(display.stop_point) : '');
+            '<span class="yt-action-advisor">' +
+              '<span class="yt-action-title">' + esc(display.title || 'Recommandation éditoriale') + '</span>' +
+              (display.reason ? '<span class="yt-action-reason">' + esc(display.reason) + '</span>' : '') +
+              actionLine('Action', display.action) +
+              actionLine('Risque', display.risk) +
+              actionLine('Point d’arrêt', display.stop_point) +
+              actionLine('Format', display.format) +
+              (display.strategy ? '<span class="yt-action-detail"><span class="yt-action-label">Stratégie :</span> ' + esc(display.strategy) + '</span>' : '') +
+              (display.next_steps ? '<span class="yt-action-detail"><span class="yt-action-label">Étapes :</span> ' + esc(display.next_steps) + '</span>' : '') +
+            '</span>';
           return;
         }
 
-        target.textContent = signal
-          ? 'Étudier le signal fort : ' + (signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')
-          : 'Aucune donnée.';
+        if (signal) {
+          target.innerHTML =
+            '<span class="yt-action-advisor">' +
+              '<span class="yt-action-title">Signal à étudier</span>' +
+              '<span class="yt-action-reason">' + esc((signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')) + '</span>' +
+              '<span class="yt-action-line"><span class="yt-action-label">Action :</span> Identifier un angle court avant production.</span>' +
+              '<span class="yt-action-line"><span class="yt-action-label">Point d’arrêt :</span> Valider titre + miniature avant montage.</span>' +
+            '</span>';
+          return;
+        }
+
+        target.textContent = 'Aucune recommandation éditoriale disponible.';
       }
 
       function metric(video) {
