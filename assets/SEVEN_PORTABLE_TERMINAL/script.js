@@ -349,7 +349,7 @@ const openRustDeskBtn = document.getElementById("openRustDeskBtn");
 
 if (openRustDeskBtn) {
   openRustDeskBtn.addEventListener("click", () => {
-    window.location.href = "rustdesk://";
+    
   });
 }
 document.getElementById("refreshTraceBtn").addEventListener("click",renderTrace);
@@ -852,3 +852,20 @@ function toggleFinalLock(){
   window.addEventListener("load",install);
 })();
 
+
+
+
+/* Seven Remote RustDesk Launcher — FINAL FIX */
+(function () {
+  const openRustDeskBtn = document.getElementById("openRustDeskBtn");
+
+  if (openRustDeskBtn && !openRustDeskBtn.dataset.rustdeskBound) {
+    openRustDeskBtn.dataset.rustdeskBound = "1";
+
+    openRustDeskBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      window.location.href = "rustdesk://connect/48841137";
+    });
+  }
+})();
