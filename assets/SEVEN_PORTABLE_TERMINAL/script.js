@@ -869,3 +869,46 @@ function toggleFinalLock(){
     });
   }
 })();
+
+/* Action Aerith Advisor — copy rendered decision
+   Scope: optional helper only. Rendering remains owned by index.html / renderActionAerith(). */
+(function () {
+  function byId(id) { return document.getElementById(id); }
+
+  async function copyText(text) {
+    if (!text) return false;
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (error) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (fallbackError) { ok = false; }
+      area.remove();
+      return ok;
+    }
+  }
+
+  function installActionAerithCopy() {
+    const card = byId('ytAction');
+    if (!card || card.dataset.actionCopyBound === '1') return;
+    card.dataset.actionCopyBound = '1';
+    card.title = 'Double-clic : copier la recommandation Action Aerith';
+    card.addEventListener('dblclick', function () {
+      copyText((card.innerText || card.textContent || '').trim());
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installActionAerithCopy);
+  } else {
+    installActionAerithCopy();
+  }
+})();
+

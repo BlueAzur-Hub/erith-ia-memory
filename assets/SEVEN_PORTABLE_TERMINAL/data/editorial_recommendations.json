@@ -1,7 +1,7 @@
 {
-  "version": "action_aerith_advisor_v1",
+  "version": "action_aerith_editorial_advisor_v2",
   "updated_at": "2026-05-27",
-  "display_mode": "stable_contract",
+  "display_mode": "advisor",
   "contract": {
     "required_fields": [
       "title",
@@ -29,19 +29,25 @@
           "priority": "high",
           "status": "active",
           "title": "Exploiter la locomotive Zelda",
-          "reason": "La famille Zelda domine nettement les signaux publics : la meilleure vidéo atteint 38 860 vues, avec un écart massif sur le reste du Top 10.",
-          "action": "Publier une vidéo satellite Zelda sous 48h : boss, scène forte, défi court ou recyclage d’un moment déjà lisible.",
-          "risk": "Ne pas cloner le même cadrage miniature ni refaire un titre trop proche de la vidéo locomotive.",
-          "stop_point": "Avant montage : valider un titre distinct, une miniature différente et un angle unique en une phrase.",
-          "detail": {
-            "strategy": "Capitaliser sur Zelda comme famille éditoriale dominante sans recopier la vidéo existante.",
-            "format": "Short 9:16 ou vidéo courte 1 à 3 minutes.",
-            "next_steps": [
-              "Choisir une scène Zelda lisible sans contexte.",
-              "Écrire 3 titres courts non clonés.",
-              "Créer une miniature avec cadrage différent.",
-              "Valider titre + miniature avant montage."
-            ]
+          "reason": "La famille Zelda domine très nettement les signaux publics : la meilleure vidéo atteint 38 860 vues, avec un écart massif sur le reste du Top 10.",
+          "action": "Publier une vidéo satellite Zelda sous 48h : boss, scène forte, défi court, cinématique ou recyclage d’un moment déjà lisible.",
+          "risk": "Ne pas cloner la miniature, le cadrage ou le titre de la vidéo locomotive. Le satellite doit avoir une promesse différente.",
+          "stop_point": "Avant montage : valider titre + miniature + angle unique en une phrase.",
+          "detail": "Action Aerith ne conseille pas de refaire la même vidéo. Le bon mouvement est de transformer la locomotive Zelda en arbre éditorial : formats courts, scènes ciblées, promesses très lisibles.",
+          "strategy": "Capitaliser sur Zelda comme famille dominante, mais construire des satellites spécialisés au lieu d’une répétition directe.",
+          "format": "Short vertical ou vidéo courte 1–3 minutes.",
+          "next_steps": [
+            "Choisir une scène Zelda immédiatement compréhensible.",
+            "Écrire 3 titres courts non clonés.",
+            "Préparer une miniature avec cadrage différent.",
+            "Valider le point d’arrêt avant montage."
+          ],
+          "short_display": {
+            "title": "Zelda domine : produire un satellite",
+            "reason": "La vidéo Zelda locomotive reste le signal principal de Blue Azur.",
+            "action": "Publier une vidéo satellite Zelda sous 48h avec un angle neuf.",
+            "risk": "Éviter titre cloné et miniature trop proche.",
+            "stop_point": "Valider titre + miniature + angle avant montage."
           }
         },
         {
@@ -49,19 +55,18 @@
           "priority": "medium",
           "status": "standby",
           "title": "Éviter les vidéos longues cette semaine",
-          "reason": "Les meilleurs signaux visibles sont portés par des formats courts, ciblés et immédiatement compréhensibles.",
-          "action": "Recycler une scène forte en format court plutôt que produire un long épisode complet.",
-          "risk": "Perdre l’attention avec un format trop long sans promesse claire.",
+          "reason": "Les signaux forts sont portés par des vidéos ciblées, faciles à comprendre, et non par des épisodes longs sans promesse claire.",
+          "action": "Recycler une scène forte en format court plutôt que lancer un long montage généraliste.",
+          "risk": "Une vidéo longue sans angle net risque de diluer le signal et de coûter trop d’énergie de production.",
           "stop_point": "Si le concept ne tient pas en une phrase, ne pas lancer le montage long.",
-          "detail": {
-            "strategy": "Prioriser le rendement éditorial : un sujet, une promesse, une scène.",
-            "format": "Short ou vidéo 90 à 180 secondes.",
-            "next_steps": [
-              "Repérer une scène immédiatement lisible.",
-              "Supprimer les temps morts.",
-              "Tester un titre orienté action."
-            ]
-          }
+          "detail": "Cette recommandation sert de frein de sécurité : produire moins large, mais plus tranchant.",
+          "strategy": "Optimiser l’énergie de production : un sujet, une scène, une promesse.",
+          "format": "Short ou vidéo 90–180 secondes.",
+          "next_steps": [
+            "Repérer une scène autonome.",
+            "Supprimer les temps morts.",
+            "Tester un titre orienté action."
+          ]
         }
       ]
     },
@@ -75,19 +80,25 @@
           "priority": "high",
           "status": "active",
           "title": "Pousser Les Corps de Rechange",
-          "reason": "Le cyberpunk narratif montre le meilleur engagement relatif récent : Les Corps de Rechange atteint environ 6% de like rate sur une chaîne encore jeune.",
-          "action": "Produire un épisode court centré sur une scène forte : corps loué, mémoire manquante ou échange d’identité.",
-          "risk": "Éviter les explications abstraites : le spectateur doit comprendre le dilemme en moins de 10 secondes.",
-          "stop_point": "Avant animation : valider narration courte, dilemme central et image master unique.",
-          "detail": {
-            "strategy": "Installer Les Corps de Rechange comme famille éditoriale prioritaire : cyberpunk, identité, mémoire, corps-supports.",
-            "format": "Short narratif 20 à 60 secondes ou micro-épisode d’environ 1 minute.",
-            "next_steps": [
-              "Écrire un dilemme en une phrase.",
-              "Choisir une image master unique.",
-              "Créer une voix off courte.",
-              "Tester un Short avant un épisode long."
-            ]
+          "reason": "Les Corps de Rechange affiche le meilleur engagement relatif récent : 49 vues et 3 likes, soit environ 6% de like rate sur une chaîne encore jeune.",
+          "action": "Produire un épisode court centré sur une scène forte : corps loué, mémoire manquante, identité transférée ou dette impossible à payer.",
+          "risk": "Éviter le lore abstrait. Le spectateur doit comprendre le dilemme en moins de 10 secondes.",
+          "stop_point": "Avant animation : valider narration courte + dilemme central + image master unique.",
+          "detail": "Le signal n’est pas le volume brut, mais l’engagement relatif. Cette famille peut devenir une vraie ligne éditoriale originale si chaque épisode pose une situation claire et noire.",
+          "strategy": "Installer Les Corps de Rechange comme famille prioritaire : cyberpunk, identité, mémoire, corps-supports, fracture sociale.",
+          "format": "Short narratif 20–60 secondes ou micro-épisode de 1 minute.",
+          "next_steps": [
+            "Écrire un dilemme en une phrase.",
+            "Choisir une image master unique.",
+            "Créer une voix off courte.",
+            "Tester un Short avant un épisode long."
+          ],
+          "short_display": {
+            "title": "Pousser Les Corps de Rechange",
+            "reason": "Meilleur engagement relatif récent sur Aerith IA.",
+            "action": "Créer un épisode court avec une scène cyberpunk forte.",
+            "risk": "Éviter le lore abstrait et les explications longues.",
+            "stop_point": "Valider narration courte + dilemme + image master."
           }
         },
         {
@@ -95,19 +106,18 @@
           "priority": "medium",
           "status": "standby",
           "title": "Transformer le cockpit en démo courte",
-          "reason": "Le terminal devient une preuve concrète du projet si une seule fonction est montrée clairement.",
+          "reason": "Le terminal devient une preuve concrète du projet, mais il doit être montré par une seule fonction à la fois.",
           "action": "Préparer une démo de 45 secondes : YouTube Memory lit les données, Action Aerith donne une décision.",
-          "risk": "Ne pas expliquer toute l’architecture : une fonction, un résultat, un arrêt.",
+          "risk": "Ne pas expliquer toute l’architecture. Une seule fonction, un seul résultat, un arrêt.",
           "stop_point": "Storyboard validé en 3 plans maximum avant capture écran.",
-          "detail": {
-            "strategy": "Montrer ERITH.IA comme outil opératif, pas comme concept abstrait.",
-            "format": "Démo courte 45 à 60 secondes, capture écran + voix off simple.",
-            "next_steps": [
-              "Plan 1 : ouvrir YouTube Memory.",
-              "Plan 2 : changer Blue Azur / Aerith IA.",
-              "Plan 3 : lire Action Aerith et décider."
-            ]
-          }
+          "detail": "La force de la démo est la clarté : ouvrir le cockpit, changer de chaîne, lire la recommandation, décider.",
+          "strategy": "Montrer ERITH.IA comme outil opératif, pas comme concept abstrait.",
+          "format": "Démo courte 45–60 secondes, capture écran + voix off simple.",
+          "next_steps": [
+            "Plan 1 : ouvrir YouTube Memory.",
+            "Plan 2 : changer Blue Azur / Aerith IA.",
+            "Plan 3 : lire Action Aerith et décider."
+          ]
         }
       ]
     }

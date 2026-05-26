@@ -1073,3 +1073,122 @@ body.ancient-runes #cycleAncientLangBtn {
   transform: translateY(-1px);
   box-shadow: 0 0 18px rgba(245,213,141,.10);
 }
+
+/* Action Aerith Advisor — editorial decision card
+   Scope: YouTube / ytAction only.
+   Goal: turn Action Aerith into a readable local editorial advisor. */
+#page-youtube .yt-action-card {
+  grid-column: span 1;
+  border-color: rgba(245,213,141,.72);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(245,213,141,.16), transparent 34%),
+    radial-gradient(circle at 96% 18%, rgba(159,238,255,.10), transparent 34%),
+    rgba(9,15,29,.34);
+}
+
+#page-youtube .yt-action-advisor {
+  margin-top: 8px;
+  display: grid;
+  gap: 7px;
+  line-height: 1.32;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+#page-youtube .yt-action-kicker {
+  color: var(--cyan);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .92;
+}
+
+#page-youtube .yt-action-title {
+  color: var(--gold);
+  font-size: 17px;
+  line-height: 1.16;
+  font-weight: 800;
+  text-shadow: 0 0 14px rgba(245,213,141,.14);
+}
+
+#page-youtube .yt-action-reason,
+#page-youtube .yt-action-detail {
+  color: rgba(255,247,223,.86);
+  font-size: 13px;
+}
+
+#page-youtube .yt-action-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0,1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 6px 8px;
+  border: 1px solid rgba(245,213,141,.22);
+  border-radius: 11px;
+  background: rgba(0,0,0,.16);
+}
+
+#page-youtube .yt-action-label {
+  color: rgba(159,238,255,.92);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+#page-youtube .yt-action-value {
+  color: rgba(255,247,223,.92);
+  font-size: 12.5px;
+}
+
+#page-youtube .yt-action-main {
+  border-color: rgba(245,213,141,.42);
+  background: rgba(245,213,141,.08);
+}
+
+#page-youtube .yt-action-risk {
+  border-color: rgba(255,180,120,.38);
+}
+
+#page-youtube .yt-action-stop {
+  border-color: rgba(159,238,255,.34);
+}
+
+#page-youtube .yt-action-steps {
+  margin: 0;
+  padding: 7px 8px 7px 24px;
+  border-radius: 11px;
+  border: 1px solid rgba(245,213,141,.20);
+  background: rgba(0,0,0,.12);
+  color: rgba(255,247,223,.86);
+  font-size: 12px;
+}
+
+#page-youtube .yt-action-steps li {
+  margin: 2px 0;
+}
+
+#page-youtube .yt-action-empty {
+  color: rgba(255,247,223,.84);
+  font-size: 13px;
+}
+
+body.transparent #page-youtube .yt-action-card {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(245,213,141,.11), transparent 34%),
+    rgba(9,15,29,.18) !important;
+}
+
+body.readable #page-youtube .yt-action-card,
+body.readable.transparent #page-youtube .yt-action-card {
+  background: rgba(4,8,18,.86) !important;
+}
+
+@media (max-width: 760px) {
+  #page-youtube .yt-action-row {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+}
+

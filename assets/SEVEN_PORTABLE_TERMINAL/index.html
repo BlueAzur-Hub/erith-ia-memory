@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260525-RYZEN-REMOTE-ID-01">
+  <link rel="stylesheet" href="style.css?v=20260527-ACTION-AERITH-ADVISOR-01">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -274,38 +274,6 @@
         white-space: normal !important;
       }
     }
-
-    /* Action Aerith Advisor — scoped rendering for ytAction only */
-    #page-youtube #ytAction .yt-action-advisor {
-      display: block;
-      width: 100%;
-      line-height: 1.32;
-    }
-
-    #page-youtube #ytAction .yt-action-title {
-      display: block;
-      color: var(--gold);
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    #page-youtube #ytAction .yt-action-reason,
-    #page-youtube #ytAction .yt-action-line,
-    #page-youtube #ytAction .yt-action-detail {
-      display: block;
-      margin-top: 5px;
-    }
-
-    #page-youtube #ytAction .yt-action-label {
-      color: var(--gold);
-      font-weight: 800;
-    }
-
-    #page-youtube #ytAction .yt-action-detail {
-      opacity: .92;
-      font-size: 12px;
-    }
-
   </style>
 
 </head>
@@ -541,9 +509,9 @@
             <strong><span class="card-icon" aria-hidden="true">♧</span>Familles mémoire</strong>
             <span id="ytMetricFamilies">Chargement…</span>
           </section>
-          <section class="tile">
+          <section class="tile yt-action-card">
             <strong><span class="card-icon" aria-hidden="true">✦</span>Action Aerith</strong>
-            <span id="ytAction">En attente des données.</span>
+            <div id="ytAction" class="yt-action-advisor" aria-live="polite">En attente des données.</div>
           </section>
         </div>
 
@@ -872,7 +840,7 @@
             setHtml('ytTopFamily', '<b>' + escapeHtml(topFamily[0]) + '</b><br>' + escapeHtml(parts.join(' · ') || 'Données faibles'));
           }
 
-          /* ytAction is owned exclusively by renderActionAerith() in yt-top10-final-controller. */
+          /* ytAction is owned exclusively by renderActionAerith() in #yt-top10-final-controller. */
 
           setHtml('ytTopList',
             topByViews.slice(0, 10).map((video, i) => renderVideoCard(video, i + 1)).join('') ||
@@ -1248,90 +1216,102 @@
         }
       }
 
-      function firstText() {
+      function fieldFrom() {
         for (let i = 0; i < arguments.length; i += 1) {
           const value = arguments[i];
           if (typeof value === 'string' && value.trim()) return value.trim();
+          if (Array.isArray(value) && value.length) return value;
         }
         return '';
       }
 
-      function listText(value) {
-        if (Array.isArray(value)) {
-          return value
-            .filter(item => typeof item === 'string' && item.trim())
-            .map(item => item.trim())
-            .join(' · ');
-        }
-        return typeof value === 'string' ? value.trim() : '';
-      }
-
       function recommendationDisplay(recommendation) {
-        if (!recommendation || typeof recommendation !== 'object') return null;
+        if (!recommendation) return null;
 
         const short = recommendation.short_display && typeof recommendation.short_display === 'object'
           ? recommendation.short_display
           : {};
-
         const detail = recommendation.detail && typeof recommendation.detail === 'object'
           ? recommendation.detail
           : {};
-
         const full = recommendation.full_detail && typeof recommendation.full_detail === 'object'
           ? recommendation.full_detail
           : {};
 
         return {
-          title: firstText(recommendation.title, short.title),
-          reason: firstText(recommendation.reason, short.reason),
-          action: firstText(recommendation.action, short.action),
-          risk: firstText(recommendation.risk, short.risk, detail.risk, full.risk),
-          stop_point: firstText(recommendation.stop_point, short.stop_point),
-          strategy: firstText(recommendation.strategy, detail.strategy, full.strategy),
-          format: firstText(recommendation.format, detail.format, full.format),
-          next_steps: listText(recommendation.next_steps || detail.next_steps || full.next_steps)
+          title: fieldFrom(short.title, recommendation.title),
+          reason: fieldFrom(short.reason, recommendation.reason),
+          action: fieldFrom(short.action, recommendation.action),
+          risk: fieldFrom(short.risk, recommendation.risk, detail.risk, full.risk),
+          stop_point: fieldFrom(short.stop_point, recommendation.stop_point),
+          detail: fieldFrom(short.detail, recommendation.detail_text, detail.summary, full.summary),
+          strategy: fieldFrom(short.strategy, recommendation.strategy, detail.strategy, full.strategy),
+          format: fieldFrom(short.format, recommendation.format, detail.format, full.format),
+          next_steps: fieldFrom(short.next_steps, recommendation.next_steps, detail.next_steps, full.next_steps)
         };
       }
 
-      function actionLine(label, value) {
-        return value
-          ? '<span class="yt-action-line"><span class="yt-action-label">' + esc(label) + ' :</span> ' + esc(value) + '</span>'
-          : '';
+      function renderActionRow(label, value, className) {
+        if (!value) return '';
+        return '<div class="yt-action-row ' + esc(className || '') + '">' +
+          '<span class="yt-action-label">' + esc(label) + '</span>' +
+          '<span class="yt-action-value">' + esc(Array.isArray(value) ? value.join(' · ') : value) + '</span>' +
+        '</div>';
+      }
+
+      function renderActionSteps(steps) {
+        if (!Array.isArray(steps) || !steps.length) return '';
+        return '<ol class="yt-action-steps">' + steps.slice(0, 4).map(function (step) {
+          return '<li>' + esc(step) + '</li>';
+        }).join('') + '</ol>';
+      }
+
+      function fallbackRecommendation(signal) {
+        if (!signal) return null;
+        const family = signal.memoryFamily || 'Non classé';
+        const title = signal.title || 'Vidéo';
+        const publicStats = signal.publicStats || {};
+        return {
+          title: 'Signal détecté : ' + family,
+          reason: 'La vidéo “' + title + '” sert de point d’appui éditorial' + (publicStats.views ? ' avec ' + fmt(publicStats.views) + ' vues publiques.' : '.'),
+          action: 'Décider si ce signal doit devenir une vidéo satellite, un Short ou une famille à renforcer.',
+          risk: 'Ne pas produire par inertie : il faut un angle clair avant montage.',
+          stop_point: 'Valider titre + format + promesse en une phrase avant production.',
+          format: signal.durationLabel ? 'Référence actuelle : ' + signal.durationLabel : '',
+          next_steps: [
+            'Identifier ce qui rend le signal lisible.',
+            'Choisir un angle différent de la vidéo source.',
+            'Préparer un format court testable.'
+          ]
+        };
       }
 
       function renderActionAerith(recommendation, signal) {
         const target = el('ytAction');
         if (!target) return;
 
-        const display = recommendationDisplay(recommendation);
+        const display = recommendationDisplay(recommendation) || fallbackRecommendation(signal);
 
-        if (display && (display.title || display.reason || display.action || display.risk || display.stop_point)) {
+        if (!display || !(display.title || display.reason || display.action || display.stop_point)) {
           target.innerHTML =
-            '<span class="yt-action-advisor">' +
-              '<span class="yt-action-title">' + esc(display.title || 'Recommandation éditoriale') + '</span>' +
-              (display.reason ? '<span class="yt-action-reason">' + esc(display.reason) + '</span>' : '') +
-              actionLine('Action', display.action) +
-              actionLine('Risque', display.risk) +
-              actionLine('Point d’arrêt', display.stop_point) +
-              actionLine('Format', display.format) +
-              (display.strategy ? '<span class="yt-action-detail"><span class="yt-action-label">Stratégie :</span> ' + esc(display.strategy) + '</span>' : '') +
-              (display.next_steps ? '<span class="yt-action-detail"><span class="yt-action-label">Étapes :</span> ' + esc(display.next_steps) + '</span>' : '') +
-            '</span>';
+            '<div class="yt-action-empty">' +
+              '<b>Aucune recommandation active.</b><br>' +
+              'Vérifier data/editorial_recommendations.json puis rafraîchir YouTube Memory.' +
+            '</div>';
           return;
         }
 
-        if (signal) {
-          target.innerHTML =
-            '<span class="yt-action-advisor">' +
-              '<span class="yt-action-title">Signal à étudier</span>' +
-              '<span class="yt-action-reason">' + esc((signal.memoryFamily || 'Non classé') + ' · ' + (signal.title || 'Vidéo')) + '</span>' +
-              '<span class="yt-action-line"><span class="yt-action-label">Action :</span> Identifier un angle court avant production.</span>' +
-              '<span class="yt-action-line"><span class="yt-action-label">Point d’arrêt :</span> Valider titre + miniature avant montage.</span>' +
-            '</span>';
-          return;
-        }
-
-        target.textContent = 'Aucune recommandation éditoriale disponible.';
+        target.innerHTML =
+          '<div class="yt-action-kicker">Conseiller éditorial local</div>' +
+          '<div class="yt-action-title">' + esc(display.title || 'Recommandation éditoriale') + '</div>' +
+          (display.reason ? '<div class="yt-action-reason">' + esc(display.reason) + '</div>' : '') +
+          renderActionRow('Action', display.action, 'yt-action-main') +
+          renderActionRow('Format', display.format, 'yt-action-format') +
+          renderActionRow('Risque', display.risk, 'yt-action-risk') +
+          renderActionRow('Point d’arrêt', display.stop_point, 'yt-action-stop') +
+          renderActionRow('Stratégie', display.strategy, 'yt-action-strategy') +
+          (display.detail ? '<div class="yt-action-detail">' + esc(display.detail) + '</div>' : '') +
+          renderActionSteps(display.next_steps);
       }
 
       function metric(video) {
