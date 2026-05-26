@@ -1,24 +1,39 @@
 {
-  "version": "aerith_v6_editorial_recommendations_v2",
+  "version": "aerith_v6_editorial_recommendations_v3",
   "status": "stable_test",
-  "source": "youtube_memory_full.json",
+  "source": [
+    "youtube_memory_blueazur.json",
+    "youtube_memory_aerithia.json"
+  ],
   "updated_at": "2026-05-26",
   "display_mode": "compact_card",
+  "notes": "V3 enrichit les recommandations sans modifier le code. Une seule recommandation principale est affichée par chaîne.",
   "channels": [
     {
       "channel_id": "blue_azur",
       "channel_name": "Blue Azur",
       "recommendations": [
         {
-          "id": "blue_azur_rec_002",
+          "id": "blue_azur_rec_003",
           "type": "video_satellite",
           "priority": "high",
-          "title": "Créer une vidéo satellite Zelda",
-          "reason": "Le signal Zelda reste dominant et peut soutenir une suite éditoriale.",
-          "suggested_format": "Short 9:16 ou vidéo courte",
-          "action": "Trouver un angle neuf autour de la vidéo locomotive actuelle.",
-          "risk": "Éviter de refaire la même promesse ou la même miniature.",
-          "stop_point": "Valider titre + miniature avant montage."
+          "title": "Exploiter le signal Zelda",
+          "reason": "La vidéo Zelda locomotive domine largement la chaîne et confirme une famille éditoriale forte.",
+          "suggested_format": "Short 9:16 ou vidéo courte 2–4 min",
+          "action": "Créer une suite satellite avec un angle neuf : boss, défi, cinématique ou comparaison avant/après.",
+          "risk": "Ne pas copier la vidéo locomotive ; garder une promesse nouvelle et une miniature différente.",
+          "stop_point": "Valider titre + miniature + angle avant montage."
+        },
+        {
+          "id": "blue_azur_rec_004",
+          "type": "playlist_strategy",
+          "priority": "medium",
+          "title": "Structurer la famille Zelda",
+          "reason": "Plusieurs vidéos Zelda fortes peuvent devenir une mini-série lisible pour l’algorithme.",
+          "suggested_format": "Playlist + titres homogènes",
+          "action": "Regrouper les vidéos Zelda fortes en une logique claire : combats, cinématiques, mods, défis.",
+          "risk": "Ne pas rendre les titres trop longs ou trop similaires.",
+          "stop_point": "Valider 3 titres pilotes avant modification en masse."
         }
       ]
     },
@@ -27,15 +42,26 @@
       "channel_name": "Aerith IA",
       "recommendations": [
         {
-          "id": "aerith_ia_rec_002",
+          "id": "aerith_ia_rec_003",
           "type": "project_showcase",
+          "priority": "high",
+          "title": "Pousser Les Corps de Rechange",
+          "reason": "La vidéo cyberpunk originale montre un bon signal relatif pour une petite chaîne.",
+          "suggested_format": "Short narratif 60–90 s ou épisode 2",
+          "action": "Produire une suite courte centrée sur mémoire, corps loués et identité fracturée.",
+          "risk": "Éviter une exposition trop abstraite ; montrer une scène claire.",
+          "stop_point": "Valider concept + narration courte avant image/animation."
+        },
+        {
+          "id": "aerith_ia_rec_004",
+          "type": "cockpit_demo",
           "priority": "medium",
-          "title": "Montrer une brique validée",
-          "reason": "La chaîne doit prouver le projet par une démonstration concrète.",
-          "suggested_format": "Vidéo courte cockpit ou démo commentée",
-          "action": "Présenter une fonction visible : YouTube Memory, cockpit ou module ERITH.IA.",
-          "risk": "Éviter une vidéo trop abstraite ou trop longue.",
-          "stop_point": "Valider le sujet exact avant script."
+          "title": "Montrer une brique ERITH.IA",
+          "reason": "La chaîne doit aussi prouver le projet par des démonstrations concrètes.",
+          "suggested_format": "Démo cockpit commentée",
+          "action": "Montrer YouTube Memory + Action Aerith comme preuve de l’IA opératrice.",
+          "risk": "Ne pas faire une vidéo trop technique ; rester démonstratif et visuel.",
+          "stop_point": "Valider le script en 5 phrases avant montage."
         }
       ]
     }
