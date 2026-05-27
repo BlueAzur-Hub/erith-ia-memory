@@ -134,13 +134,25 @@ function currentPage(){
 }
 
 function saveUiState(){
+  let previous={};
+  try{
+    previous=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
+  }catch{}
+
+  const finalLockPanel=document.getElementById("finalLockPanel");
+
   localStorage.setItem("seven.final.01.10.state", JSON.stringify({
+    ...previous,
     page:currentPage(),
     bgIndex,
     bgSeries,
     transparent:document.body.classList.contains("transparent"),
-    readable:document.body.classList.contains("readable")
+    readable:document.body.classList.contains("readable"),
+    focus:document.body.classList.contains("focus-mode"),
+    finalLock:finalLockPanel ? !finalLockPanel.hasAttribute("hidden") : !!previous.finalLock
   }));
+
+  syncModeButtons();
 }
 
 function showPage(name, persist=true){
@@ -328,6 +340,25 @@ function loadUiState(){
   applyBackground();
 }
 
+function syncModeButtons(){
+  const modeButtons=[
+    ["toggleTransparentBtn", document.body.classList.contains("transparent")],
+    ["toggleReadableBtn", document.body.classList.contains("readable")],
+    ["toggleFocusBtn", document.body.classList.contains("focus-mode")]
+  ];
+
+  modeButtons.forEach(([id,isActive])=>{
+    const button=document.getElementById(id);
+    if(button) button.classList.toggle("active", !!isActive);
+  });
+
+  const traceButton=document.getElementById("toggleTraceBtn");
+  const tracePanel=document.getElementById("advancedPanel");
+  if(traceButton && tracePanel){
+    traceButton.classList.toggle("active", !tracePanel.hidden);
+  }
+}
+
 navButtons.forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.page)));
 document.querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>copyText(button.dataset.copy, button.textContent.trim())));
 document.querySelectorAll("[data-jump]").forEach(button=>button.addEventListener("click",()=>{showPage(button.dataset.jump); palette.classList.remove("open");}));
@@ -341,9 +372,22 @@ document.getElementById("copyTerminalLinkBtn").addEventListener("click",()=>copy
 
 document.getElementById("nextBackgroundBtn").addEventListener("click",nextBackground);
 document.getElementById("randomBackgroundBtn").addEventListener("click",randomBackground);
-document.getElementById("toggleTransparentBtn").addEventListener("click",()=>{document.body.classList.toggle("transparent");saveUiState();});
-document.getElementById("toggleReadableBtn").addEventListener("click",()=>{document.body.classList.toggle("readable");saveUiState();});
-document.getElementById("toggleTraceBtn").addEventListener("click",()=>{const panel=document.getElementById("advancedPanel"); panel.hidden=!panel.hidden; renderTrace();});
+document.getElementById("toggleTransparentBtn").addEventListener("click",()=>{
+  document.body.classList.toggle("transparent");
+  saveUiState();
+  syncModeButtons();
+});
+document.getElementById("toggleReadableBtn").addEventListener("click",()=>{
+  document.body.classList.toggle("readable");
+  saveUiState();
+  syncModeButtons();
+});
+document.getElementById("toggleTraceBtn").addEventListener("click",()=>{
+  const panel=document.getElementById("advancedPanel");
+  if(panel) panel.hidden=!panel.hidden;
+  renderTrace();
+  syncModeButtons();
+});
 
 const openRustDeskBtn = document.getElementById("openRustDeskBtn");
 
@@ -372,6 +416,7 @@ document.addEventListener("keydown",event=>{
 window.addEventListener("resize",renderTrace);
 loadUiState();
 renderTrace();
+syncModeButtons();
 
 /* Seven final clean — robust background theme toggle
    Scope: background series button only.
@@ -575,6 +620,7 @@ function toggleFocusMode(){
     state.focus=document.body.classList.contains("focus-mode");
     localStorage.setItem("seven.final.01.10.state", JSON.stringify(state));
   }catch{}
+  syncModeButtons();
 }
 
 (function installFocusMode(){
@@ -587,6 +633,7 @@ function toggleFocusMode(){
       const saved=JSON.parse(localStorage.getItem("seven.final.01.10.state")||"{}");
       document.body.classList.toggle("focus-mode", !!saved.focus);
     }catch{}
+    syncModeButtons();
   }
 
   if(document.readyState==="loading"){
