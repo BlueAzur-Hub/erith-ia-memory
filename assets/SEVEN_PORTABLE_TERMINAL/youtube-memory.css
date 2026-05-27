@@ -328,3 +328,30 @@ body.readable.transparent #page-youtube .advanced-panel {
     white-space: normal !important;
   }
 }
+/* YouTube Memory — link colors
+   Gold by default, white after visit/click.
+   Scope: YouTube page only. */
+
+#page-youtube a,
+#page-youtube a:link {
+  color: var(--yt-gold) !important;
+  text-decoration-color: rgba(245, 213, 141, .70) !important;
+  text-underline-offset: 3px;
+}
+
+#page-youtube a:visited {
+  color: #fffdf2 !important;
+  text-decoration-color: rgba(255, 253, 242, .72) !important;
+}
+
+#page-youtube a:hover,
+#page-youtube a:focus-visible {
+  color: #ffffff !important;
+  text-decoration-color: #ffffff !important;
+}
+
+#page-youtube a:focus-visible {
+  outline: 1px solid rgba(245, 213, 141, .72);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
