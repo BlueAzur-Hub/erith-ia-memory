@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seven Portable Terminal — Final 01-20</title>
-  <link rel="stylesheet" href="style.css?v=20260527-ACTION-AERITH-ADVISOR-01">
+  <link rel="stylesheet" href="style.css?v=20260527-YOUTUBE-ACTION-STUDIO-01">
+  <link rel="stylesheet" href="youtube-memory.css">
 <style>
     #page-youtube .youtube-lines-list > section {
       padding: 9px 12px !important;
@@ -517,16 +518,16 @@
 
         <div class="remote-grid" style="margin-top:16px;">
           <section class="remote-card">
-            <strong><span class="card-icon" aria-hidden="true">▶</span>Top vidéo</strong>
-            <span id="ytTopVideo">Aucune donnée chargée.</span>
+            <strong><span class="card-icon" aria-hidden="true">▶</span>Opportunité immédiate</strong>
+            <span id="ytTopVideo">Aucune décision préparée.</span>
           </section>
 <section class="remote-card">
-            <strong><span class="card-icon" aria-hidden="true">♕</span>Famille dominante</strong>
-            <span id="ytTopFamily">Aucune donnée chargée.</span>
+            <strong><span class="card-icon" aria-hidden="true">♕</span>Diagnostic audience</strong>
+            <span id="ytTopFamily">Aucun diagnostic préparé.</span>
           </section>
           <section class="remote-card">
-            <strong><span class="card-icon" aria-hidden="true">▥</span>Mode</strong>
-            <span id="ytMode">GitHub Pages · zéro backend local · zéro .bat</span>
+            <strong><span class="card-icon" aria-hidden="true">▥</span>Tâche IA suivante</strong>
+            <span id="ytMode">Aucune tâche IA préparée.</span>
           </section>
         </div>
 
@@ -633,7 +634,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=20260527-ACTION-AERITH-ADVISOR-01"></script>
+  <script src="script.js?v=20260527-YOUTUBE-ACTION-STUDIO-01"></script>
 
   <script>
     /* Seven Portable Terminal — Prompt Override 20260523-0084
@@ -1510,6 +1511,128 @@
           '</div>';
       }
 
+
+      function percent(part, total) {
+        const base = num(total);
+        if (!base) return 0;
+        return Math.round((num(part) / base) * 1000) / 10;
+      }
+
+      function videoLikes(video) {
+        const stats = video && video.publicStats ? video.publicStats : {};
+        return num(stats.likes || video && video.likes || 0);
+      }
+
+      function actionStudioOpportunity(topVideo, signal, key) {
+        const source = signal || topVideo;
+        if (!source) {
+          return {
+            label: 'Opportunité immédiate',
+            title: 'Attendre un signal exploitable',
+            meta: 'Aucune vidéo source disponible.',
+            action: 'Rafraîchir les données ou importer une mémoire YouTube plus complète.',
+            task: 'Vérifier le JSON YouTube avant toute production.'
+          };
+        }
+
+        const text = (source.memoryFamily || '') + ' ' + (source.title || '');
+        const views = videoViews(source);
+        const title = source.title || 'Vidéo signal';
+
+        if (key === 'aerithia') {
+          if (/Corps|ERITH|Cyberpunk/i.test(text)) {
+            return {
+              label: 'Opportunité immédiate',
+              title: 'Produire un micro-épisode narratif',
+              meta: shortText(title, 82) + (views ? ' · ' + fmt(views) + ' vues' : ''),
+              action: 'Transformer le signal en Short : un dilemme, une image master, une voix off courte.',
+              task: 'Générer 3 titres + 1 script voix off de 45 secondes.'
+            };
+          }
+          return {
+            label: 'Opportunité immédiate',
+            title: 'Clarifier le concept le plus lisible',
+            meta: shortText(title, 82) + (views ? ' · ' + fmt(views) + ' vues' : ''),
+            action: 'Extraire une seule promesse narrative avant d’investir dans une vidéo longue.',
+            task: 'Créer un brief Short en 5 lignes maximum.'
+          };
+        }
+
+        if (/Zelda/i.test(text)) {
+          return {
+            label: 'Opportunité immédiate',
+            title: 'Créer un satellite Zelda',
+            meta: shortText(title, 82) + (views ? ' · ' + fmt(views) + ' vues' : ''),
+            action: 'Recycler la locomotive en vidéo satellite : scène forte, titre neuf, miniature différente.',
+            task: 'Générer 3 angles satellites + 3 titres courts.'
+          };
+        }
+
+        return {
+          label: 'Opportunité immédiate',
+          title: 'Tester un format court ciblé',
+          meta: shortText(title, 82) + (views ? ' · ' + fmt(views) + ' vues' : ''),
+          action: 'Transformer le meilleur signal actuel en vidéo courte sans refaire le même angle.',
+          task: 'Préparer un plan de montage 3 actes très court.'
+        };
+      }
+
+      function audienceLevel(views, likes, score) {
+        const rate = percent(likes, views);
+        if (views >= 10000 || score >= 10000) return 'Signal massif : capitaliser rapidement.';
+        if (rate >= 4) return 'Engagement relatif fort : pousser en série courte.';
+        if (views >= 1000) return 'Audience correcte : tester une suite ciblée.';
+        return 'Signal jeune : valider par un Short avant gros montage.';
+      }
+
+      function renderActionStudioCard(targetId, card) {
+        const target = el(targetId);
+        if (!target) return;
+
+        target.innerHTML =
+          '<div class="yt-studio-card">' +
+            '<div class="yt-studio-kicker">' + esc(card.label || 'Action Studio') + '</div>' +
+            '<div class="yt-studio-title">' + esc(card.title || 'Décision à préparer') + '</div>' +
+            (card.meta ? '<div class="yt-studio-meta">' + esc(card.meta) + '</div>' : '') +
+            (card.action ? '<div class="yt-studio-action">' + esc(card.action) + '</div>' : '') +
+          '</div>';
+      }
+
+      function renderActionStudio(topVideo, topFamily, signal, key) {
+        const opportunity = actionStudioOpportunity(topVideo, signal, key);
+        renderActionStudioCard('ytTopVideo', opportunity);
+
+        if (topFamily) {
+          const name = topFamily[0] || 'Non classé';
+          const data = topFamily[1] || {};
+          const count = Array.isArray(data.videos) ? data.videos.length : 0;
+          const views = num(data.views || 0);
+          const likes = num(data.likes || 0);
+          const score = num(data.score || 0);
+          const rate = percent(likes, views);
+          renderActionStudioCard('ytTopFamily', {
+            label: 'Diagnostic audience',
+            title: shortText(name, 68),
+            meta: (views ? fmt(views) + ' vues · ' : '') + (likes ? fmt(likes) + ' likes · ' : '') + (rate ? rate + '% like rate · ' : '') + (count ? count + ' vidéo(s)' : 'famille active'),
+            action: audienceLevel(views, likes, score)
+          });
+        } else {
+          renderActionStudioCard('ytTopFamily', {
+            label: 'Diagnostic audience',
+            title: 'Aucune famille dominante',
+            meta: 'Familles mémoire non disponibles.',
+            action: 'Attendre plus de données avant de choisir une série.'
+          });
+        }
+
+        renderActionStudioCard('ytMode', {
+          label: 'Tâche IA suivante',
+          title: opportunity.task || 'Préparer une décision',
+          meta: 'Chaîne active : ' + (LABELS[key] || key) + ' · données fraîches',
+          action: 'Prochaine commande utile : demander un Pack production court basé sur cette carte.'
+        });
+      }
+
       async function loadYouTube(reason) {
         const sequence = ++youtubeLoadSequence;
         const key = selectedChannel();
@@ -1548,33 +1671,10 @@
         if (el('ytStatus')) el('ytStatus').textContent = 'Chaîne active : ' + label + ' · avancé · vues publiques · analytics 28j · mis à jour ' + new Date().toLocaleTimeString('fr-FR');
         renderVideoSummaryCard(topVideo, top, signal, key);
         renderFamilySummaryCard(topFamily, families, key);
-        if (el('ytMode')) el('ytMode').textContent = label + ' · analytics 28j';
+        renderActionStudio(topVideo, topFamily, signal, key);
 
         const editorialRecommendation = await getEditorialRecommendation(key, nonce);
         renderActionAerith(editorialRecommendation, signal);
-
-        if (el('ytTopVideo')) {
-          if (topVideo) {
-            const url = topVideo.url || (topVideo.videoId ? 'https://www.youtube.com/watch?v=' + topVideo.videoId : '');
-            el('ytTopVideo').innerHTML =
-              '<b>' + esc(topVideo.title || 'Vidéo') + '</b><br>' +
-              esc(topVideo.memoryFamily || 'Non classé') + '<br>' +
-              esc(metric(topVideo)) +
-              (url ? '<br><a href="' + esc(url) + '" target="_blank" rel="noreferrer">ouvrir YouTube</a>' : '');
-          } else {
-            el('ytTopVideo').textContent = 'Aucune donnée.';
-          }
-        }
-
-        if (el('ytTopFamily')) {
-          if (topFamily) {
-            el('ytTopFamily').innerHTML =
-              '<b>' + esc(topFamily[0]) + '</b><br>' +
-              esc(fmt(topFamily[1].views || 0) + ' vues · score ' + fmt(topFamily[1].score || 0));
-          } else {
-            el('ytTopFamily').textContent = 'Aucune donnée.';
-          }
-        }
 
         renderTop10(top);
 

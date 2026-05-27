@@ -1,0 +1,330 @@
+/* ==========================================================
+   Seven YouTube Memory — Dedicated CSS V9
+   Scope: #page-youtube only.
+   This file owns the whole YouTube Memory page.
+   Do not duplicate these rules in style.css.
+   ========================================================== */
+
+#page-youtube {
+  --yt-card-bg: rgba(5, 10, 22, .30);
+  --yt-card-bg-soft: rgba(5, 10, 22, .22);
+  --yt-card-border: rgba(245, 213, 141, .46);
+  --yt-row-border: rgba(245, 213, 141, .28);
+  --yt-cyan: rgba(159, 238, 255, .94);
+  --yt-gold: rgba(255, 232, 160, .98);
+  --yt-text: rgba(255, 247, 223, .94);
+  --yt-muted: rgba(255, 247, 223, .72);
+}
+
+#page-youtube .tile,
+#page-youtube .remote-card,
+#page-youtube .advanced-panel {
+  background: var(--yt-card-bg-soft) !important;
+  border-color: var(--yt-card-border) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+#page-youtube .tile {
+  min-height: 410px;
+}
+
+#page-youtube .tile strong,
+#page-youtube .remote-card strong {
+  color: var(--yt-text);
+}
+
+#page-youtube .tile span,
+#page-youtube .remote-card span,
+#page-youtube #ytMode,
+#page-youtube #ytAction {
+  color: var(--yt-text);
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  line-height: 1.28 !important;
+}
+
+/* Summary cards */
+
+#page-youtube #ytMetricVideos,
+#page-youtube #ytMetricFamilies {
+  display: block !important;
+  margin-top: 10px !important;
+}
+
+#page-youtube .yt-summary-card {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--yt-row-border);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+#page-youtube .yt-summary-kicker,
+#page-youtube .yt-action-kicker,
+#page-youtube .yt-studio-kicker {
+  display: block;
+  color: var(--yt-cyan);
+  font-size: 10px;
+  line-height: 1.15;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+#page-youtube .yt-summary-title,
+#page-youtube .yt-action-title,
+#page-youtube .yt-studio-title {
+  display: block;
+  color: var(--yt-gold);
+  font-size: 15px;
+  line-height: 1.18;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+#page-youtube .yt-summary-meta,
+#page-youtube .yt-summary-line,
+#page-youtube .yt-studio-meta {
+  color: var(--yt-muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+#page-youtube .yt-summary-action,
+#page-youtube .yt-studio-action {
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 8px;
+  border-left: 2px solid rgba(245, 213, 141, .72);
+  border-radius: 9px;
+  color: var(--yt-gold);
+  background: rgba(245, 213, 141, .09);
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+#page-youtube .yt-summary-link {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 1px;
+  font-size: 11px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+/* Action Aerith */
+
+#page-youtube #ytAction {
+  display: block !important;
+  max-height: min(56vh, 560px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+#page-youtube .yt-action-title {
+  margin: 3px 0 5px 0;
+}
+
+#page-youtube .yt-action-reason,
+#page-youtube .yt-action-detail {
+  display: block;
+  color: var(--yt-text);
+  font-size: 13px;
+  line-height: 1.24;
+  margin: 0 0 7px 0;
+}
+
+#page-youtube .yt-action-row {
+  display: grid !important;
+  grid-template-columns: 92px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: start !important;
+  margin: 0 0 7px 0 !important;
+  padding: 6px 8px !important;
+  border: 1px solid var(--yt-row-border) !important;
+  border-radius: 11px !important;
+  background: rgba(0, 0, 0, .18) !important;
+}
+
+#page-youtube .yt-action-label {
+  display: block !important;
+  color: var(--yt-cyan) !important;
+  font-size: 11px !important;
+  line-height: 1.12 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+}
+
+#page-youtube .yt-action-value {
+  display: block !important;
+  color: var(--yt-text) !important;
+  font-size: 12.5px !important;
+  line-height: 1.22 !important;
+}
+
+#page-youtube .yt-action-main {
+  border-color: rgba(245, 213, 141, .44) !important;
+  background: rgba(245, 213, 141, .09) !important;
+}
+
+#page-youtube .yt-action-risk {
+  border-color: rgba(255, 180, 120, .40) !important;
+}
+
+#page-youtube .yt-action-stop {
+  border-color: rgba(159, 238, 255, .36) !important;
+}
+
+#page-youtube .yt-action-strategy {
+  border-color: rgba(245, 213, 141, .30) !important;
+}
+
+#page-youtube .yt-action-steps {
+  margin: 7px 0 0 0 !important;
+  padding: 7px 8px 7px 24px !important;
+  border-radius: 11px !important;
+  border: 1px solid var(--yt-row-border) !important;
+  background: rgba(0, 0, 0, .14) !important;
+  color: var(--yt-text) !important;
+  font-size: 12px !important;
+  line-height: 1.22 !important;
+}
+
+#page-youtube .yt-action-steps li {
+  margin: 2px 0 !important;
+}
+
+/* Action Studio */
+
+#page-youtube .yt-studio-card {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+
+#page-youtube .yt-studio-card .yt-studio-body {
+  color: var(--yt-text);
+  font-size: 12.5px;
+  line-height: 1.28;
+}
+
+#page-youtube .yt-studio-list {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  color: var(--yt-text);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+#page-youtube .yt-studio-list li {
+  margin: 2px 0;
+}
+
+/* Lists */
+
+#page-youtube .youtube-lines-list {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+#page-youtube .yt-final-toggle {
+  display: none !important;
+}
+
+#page-youtube #ytTop10StableRows[hidden] {
+  display: none !important;
+}
+
+#page-youtube .yt-final-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) max-content !important;
+  grid-template-areas:
+    "title meta"
+    "stats link" !important;
+  gap: 5px 16px !important;
+  align-items: baseline !important;
+  width: 100% !important;
+  padding: 9px 11px !important;
+  margin: 0 0 7px 0 !important;
+  border-radius: 13px !important;
+  background: rgba(0, 0, 0, .14) !important;
+}
+
+#page-youtube .yt-final-title {
+  grid-area: title !important;
+  font-weight: 800 !important;
+  line-height: 1.24 !important;
+}
+
+#page-youtube .yt-final-meta {
+  grid-area: meta !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  opacity: .86 !important;
+}
+
+#page-youtube .yt-final-stats {
+  grid-area: stats !important;
+  line-height: 1.24 !important;
+}
+
+#page-youtube .yt-final-link {
+  grid-area: link !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* YouTube mode overrides */
+
+body.transparent #page-youtube .tile,
+body.transparent #page-youtube .remote-card,
+body.transparent #page-youtube .advanced-panel {
+  background: rgba(5, 10, 22, .18) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .78);
+}
+
+body.readable #page-youtube .tile,
+body.readable #page-youtube .remote-card,
+body.readable #page-youtube .advanced-panel,
+body.readable.transparent #page-youtube .tile,
+body.readable.transparent #page-youtube .remote-card,
+body.readable.transparent #page-youtube .advanced-panel {
+  background: rgba(4, 8, 18, .82) !important;
+  border-color: rgba(245, 213, 141, .58) !important;
+}
+
+@media (max-width: 900px) {
+  #page-youtube .tile {
+    min-height: auto;
+  }
+
+  #page-youtube .yt-action-row {
+    grid-template-columns: 1fr !important;
+    gap: 3px !important;
+  }
+
+  #page-youtube .yt-final-row {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "title"
+      "meta"
+      "stats"
+      "link" !important;
+  }
+
+  #page-youtube .yt-final-meta,
+  #page-youtube .yt-final-link {
+    text-align: left !important;
+    white-space: normal !important;
+  }
+}
