@@ -1,0 +1,254 @@
+[
+  {
+    "id": "V4-001",
+    "name": "Festival complet",
+    "keys": [
+      "festival",
+      "concert",
+      "événement",
+      "foule",
+      "visiteurs"
+    ],
+    "prio": 8,
+    "actions": [
+      "Limiter la jauge selon les seuils V4.",
+      "Répartir les visiteurs par districts.",
+      "Renforcer secours, eau potable et communication."
+    ]
+  },
+  {
+    "id": "V4-002",
+    "name": "Tempête majeure",
+    "keys": [
+      "tempête",
+      "cyclone",
+      "houle",
+      "vent",
+      "orage"
+    ],
+    "prio": 1,
+    "actions": [
+      "Fermer les zones exposées.",
+      "Suspendre plages, marinas et activités extérieures.",
+      "Activer refuges par district."
+    ]
+  },
+  {
+    "id": "V4-003",
+    "name": "Panne énergie",
+    "keys": [
+      "énergie",
+      "batterie",
+      "blackout",
+      "microgrid",
+      "courant"
+    ],
+    "prio": 3,
+    "actions": [
+      "Couper charges non vitales.",
+      "Prioriser hôpital, eau, communications et pompes.",
+      "Passer en mode énergie sobre."
+    ]
+  },
+  {
+    "id": "V4-004",
+    "name": "Panne eau / dessalement",
+    "keys": [
+      "eau",
+      "dessalement",
+      "potable",
+      "réservoir",
+      "fontaine"
+    ],
+    "prio": 2,
+    "actions": [
+      "Couper spas, piscines, fontaines et usages confort.",
+      "Prioriser eau potable, santé et incendie.",
+      "Limiter nouveaux visiteurs si tension."
+    ]
+  },
+  {
+    "id": "V4-005",
+    "name": "Pollution lagon",
+    "keys": [
+      "lagon",
+      "pollution",
+      "récif",
+      "eau trouble",
+      "carburant"
+    ],
+    "prio": 5,
+    "actions": [
+      "Fermer la zone lagon concernée.",
+      "Suspendre baignade et moteurs loisirs.",
+      "Prélever échantillons et isoler la source."
+    ]
+  },
+  {
+    "id": "V4-006",
+    "name": "Rupture logistique 30 jours",
+    "keys": [
+      "logistique",
+      "port fermé",
+      "ravitaillement",
+      "import",
+      "stock"
+    ],
+    "prio": 6,
+    "actions": [
+      "Passer en autonomie contrôlée.",
+      "Standardiser menus locaux.",
+      "Sécuriser médicaments et pièces critiques."
+    ]
+  },
+  {
+    "id": "V4-007",
+    "name": "Crise sanitaire",
+    "keys": [
+      "sanitaire",
+      "maladie",
+      "hôpital",
+      "blessés",
+      "symptômes"
+    ],
+    "prio": 1,
+    "actions": [
+      "Prioriser santé sur tourisme et événementiel.",
+      "Ouvrir postes médicaux temporaires.",
+      "Contrôler flux visiteurs."
+    ]
+  },
+  {
+    "id": "V4-008",
+    "name": "Incendie district",
+    "keys": [
+      "incendie",
+      "feu",
+      "fumée",
+      "flammes"
+    ],
+    "prio": 1,
+    "actions": [
+      "Évacuer l’anneau proche.",
+      "Couper énergie locale.",
+      "Ouvrir couloirs secours."
+    ]
+  },
+  {
+    "id": "V4-009",
+    "name": "Cyberattaque / perte réseau",
+    "keys": [
+      "cyberattaque",
+      "réseau",
+      "hack",
+      "automatisation",
+      "serveur"
+    ],
+    "prio": 4,
+    "actions": [
+      "Isoler segments réseau.",
+      "Basculer fonctions vitales en manuel.",
+      "Ouvrir canal officiel unique."
+    ]
+  },
+  {
+    "id": "V4-010",
+    "name": "Canicule extrême",
+    "keys": [
+      "canicule",
+      "chaleur",
+      "température",
+      "malaise",
+      "soleil"
+    ],
+    "prio": 2,
+    "actions": [
+      "Ouvrir zones fraîches.",
+      "Décaler activités extérieures hors pic chaleur.",
+      "Renforcer points d’eau potable."
+    ]
+  },
+  {
+    "id": "V4-011",
+    "name": "Évacuation partielle",
+    "keys": [
+      "évacuation",
+      "évacuer",
+      "refuge",
+      "relocaliser"
+    ],
+    "prio": 1,
+    "actions": [
+      "Évacuer par vagues.",
+      "Prioriser personnes vulnérables.",
+      "Contrôler présence avant retour."
+    ]
+  },
+  {
+    "id": "V4-012",
+    "name": "Surpopulation touristique",
+    "keys": [
+      "surpopulation",
+      "trop de visiteurs",
+      "densité",
+      "files",
+      "saturé"
+    ],
+    "prio": 4,
+    "actions": [
+      "Limiter entrées.",
+      "Répartir flux vers districts secondaires.",
+      "Fermer temporairement zones saturées."
+    ]
+  },
+  {
+    "id": "V4-013",
+    "name": "Défaillance alimentaire",
+    "keys": [
+      "nourriture",
+      "alimentaire",
+      "menus",
+      "stock alimentaire"
+    ],
+    "prio": 6,
+    "actions": [
+      "Standardiser menus sobres.",
+      "Suspendre luxe gastronomique.",
+      "Prioriser santé et vulnérables."
+    ]
+  },
+  {
+    "id": "V4-014",
+    "name": "Accident maritime",
+    "keys": [
+      "accident maritime",
+      "bateau",
+      "collision",
+      "naufrage",
+      "personne à l’eau"
+    ],
+    "prio": 1,
+    "actions": [
+      "Sauvetage prioritaire.",
+      "Fermer zone maritime concernée.",
+      "Confinement pollution si fuite."
+    ]
+  },
+  {
+    "id": "V4-015",
+    "name": "Crise réputation / panique publique",
+    "keys": [
+      "panique",
+      "rumeur",
+      "réputation",
+      "réseaux sociaux",
+      "média"
+    ],
+    "prio": 7,
+    "actions": [
+      "Publier message officiel court.",
+      "Utiliser un canal unique.",
+      "Donner prochaine mise à jour."
+    ]
+  }
+]
