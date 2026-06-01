@@ -1,6 +1,216 @@
 [
   {
-    "title": "Festival + canicule + eau",
+    "title": "V4-001 — Festival complet",
+    "text": "Festival complet prévu demain soir. 38 000 visiteurs attendus. Énergie stable. Eau correcte. Postes médicaux disponibles. Lagon normal.",
+    "m": {
+      "visitors": 38000,
+      "energy": 78,
+      "water": 30,
+      "health": 55,
+      "rescue": 6,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 30
+    }
+  },
+  {
+    "title": "V4-002 — Tempête majeure",
+    "text": "Tempête majeure prévue dans 12 heures. Vent fort annoncé. Houle dangereuse. Port touristique encore ouvert. 18 000 visiteurs présents.",
+    "m": {
+      "visitors": 18000,
+      "energy": 55,
+      "water": 30,
+      "health": 60,
+      "rescue": 8,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 25
+    }
+  },
+  {
+    "title": "V4-003 — Panne énergie",
+    "text": "Panne énergie partielle sur le microgrid Nord. Batteries à 28 %. Hôpital encore alimenté. Pompes eau sous surveillance. Activités nocturnes prévues.",
+    "m": {
+      "visitors": 12000,
+      "energy": 28,
+      "water": 25,
+      "health": 45,
+      "rescue": 7,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 30
+    }
+  },
+  {
+    "title": "V4-004 — Panne eau / dessalement",
+    "text": "Panne eau sur l’unité de dessalement principale. Réservoirs à 12 jours. Piscines et spas encore ouverts. Arrivées visiteurs prévues demain.",
+    "m": {
+      "visitors": 22000,
+      "energy": 70,
+      "water": 12,
+      "health": 48,
+      "rescue": 7,
+      "lagoon": "normal",
+      "temp": "chaud",
+      "logistics": 30
+    }
+  },
+  {
+    "title": "V4-005 — Pollution lagon",
+    "text": "Pollution lagon détectée près du récif Est. Eau trouble et odeur de carburant. Baignade encore ouverte. Activités nautiques prévues cet après-midi.",
+    "m": {
+      "visitors": 16000,
+      "energy": 80,
+      "water": 30,
+      "health": 60,
+      "rescue": 6,
+      "lagoon": "pollution confirmée",
+      "temp": "normal",
+      "logistics": 30
+    }
+  },
+  {
+    "title": "V4-006 — Rupture logistique 30 jours",
+    "text": "Rupture logistique annoncée pour 30 jours. Port fermé. Stocks alimentaires et pièces critiques sous tension. Imports suspendus.",
+    "m": {
+      "visitors": 14000,
+      "energy": 68,
+      "water": 24,
+      "health": 42,
+      "rescue": 7,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 10
+    }
+  },
+  {
+    "title": "V4-007 — Crise sanitaire",
+    "text": "Crise sanitaire locale. Plusieurs visiteurs présentent des symptômes. Hôpital et postes médicaux proches de la saturation. Un événement public reste programmé.",
+    "m": {
+      "visitors": 26000,
+      "energy": 75,
+      "water": 28,
+      "health": 12,
+      "rescue": 9,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 25
+    }
+  },
+  {
+    "title": "V4-008 — Incendie district",
+    "text": "Incendie district Ouest. Fumée visible. Plusieurs bâtiments évacués. Besoin d’eau incendie élevé. Accès secours encombrés.",
+    "m": {
+      "visitors": 9000,
+      "energy": 62,
+      "water": 18,
+      "health": 35,
+      "rescue": 13,
+      "lagoon": "normal",
+      "temp": "chaud",
+      "logistics": 25
+    }
+  },
+  {
+    "title": "V4-009 — Cyberattaque / perte réseau",
+    "text": "Cyberattaque détectée. Réseau interne instable. Automatisation incohérente sur énergie et eau. Serveur opérateur ralenti. Communications publiques perturbées.",
+    "m": {
+      "visitors": 12000,
+      "energy": 72,
+      "water": 25,
+      "health": 22,
+      "rescue": 7,
+      "lagoon": "trouble",
+      "temp": "chaud",
+      "logistics": 20
+    }
+  },
+  {
+    "title": "V4-010 — Canicule extrême",
+    "text": "Canicule extrême prévue toute la journée. Température ressentie très haute. Files d’attente au soleil. Plusieurs malaises signalés.",
+    "m": {
+      "visitors": 32000,
+      "energy": 58,
+      "water": 20,
+      "health": 28,
+      "rescue": 9,
+      "lagoon": "normal",
+      "temp": "canicule",
+      "logistics": 30
+    }
+  },
+  {
+    "title": "V4-011 — Évacuation partielle",
+    "text": "Évacuation partielle demandée pour le district Sud. Zone à vider avant la nuit. Refuges disponibles. Transport interne sous tension.",
+    "m": {
+      "visitors": 15000,
+      "energy": 55,
+      "water": 24,
+      "health": 36,
+      "rescue": 10,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 20
+    }
+  },
+  {
+    "title": "V4-012 — Surpopulation touristique",
+    "text": "Surpopulation touristique dans le centre. Trop de visiteurs, files longues, densité élevée et accès secours ralentis. Plusieurs zones saturées.",
+    "m": {
+      "visitors": 62000,
+      "energy": 63,
+      "water": 22,
+      "health": 34,
+      "rescue": 11,
+      "lagoon": "normal",
+      "temp": "chaud",
+      "logistics": 24
+    }
+  },
+  {
+    "title": "V4-013 — Défaillance alimentaire",
+    "text": "Défaillance alimentaire progressive. Stocks alimentaires faibles. Menus touristiques encore luxueux. Production locale insuffisante pour la semaine.",
+    "m": {
+      "visitors": 20000,
+      "energy": 70,
+      "water": 26,
+      "health": 45,
+      "rescue": 7,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 12
+    }
+  },
+  {
+    "title": "V4-014 — Accident maritime",
+    "text": "Accident maritime près de la marina. Bateau de loisirs en collision. Risque de fuite carburant. Personnes à l’eau. Lagon proche exposé.",
+    "m": {
+      "visitors": 13000,
+      "energy": 75,
+      "water": 30,
+      "health": 32,
+      "rescue": 12,
+      "lagoon": "trouble",
+      "temp": "normal",
+      "logistics": 28
+    }
+  },
+  {
+    "title": "V4-015 — Crise réputation / panique publique",
+    "text": "Crise réputation sur les réseaux sociaux. Rumeur de danger généralisé. Panique publique dans plusieurs files. Médias demandent une réponse immédiate.",
+    "m": {
+      "visitors": 30000,
+      "energy": 76,
+      "water": 28,
+      "health": 42,
+      "rescue": 8,
+      "lagoon": "normal",
+      "temp": "normal",
+      "logistics": 25
+    }
+  },
+  {
+    "title": "Combo 001 — Festival + canicule + eau",
     "text": "Festival demain. 50 000 visiteurs prévus. Canicule annoncée. Eau en vigilance. Énergie correcte. Postes médicaux déjà un peu chargés. Lagon normal.",
     "m": {
       "visitors": 50000,
@@ -14,7 +224,7 @@
     }
   },
   {
-    "title": "Tempête + énergie + lagon",
+    "title": "Combo 002 — Tempête + énergie + lagon",
     "text": "Tempête prévue dans 12 heures. Batteries à 35 %. Production solaire faible attendue. Lagon Est trouble. Port touristique encore ouvert. 18 000 visiteurs présents.",
     "m": {
       "visitors": 18000,
@@ -28,17 +238,45 @@
     }
   },
   {
-    "title": "Cyberattaque + hôpital",
-    "text": "Anomalies réseau détectées. Commandes automatiques incohérentes. Hôpital dépendant du réseau interne. Communications publiques perturbées.",
+    "title": "Combo 003 — Cyberattaque + hôpital + lagon",
+    "text": "Cyberattaque en cours. Hôpital en tension. Commandes automatiques incohérentes. Lagon trouble. Logistique à 20 jours. Communications publiques perturbées.",
     "m": {
       "visitors": 12000,
       "energy": 72,
-      "water": 30,
+      "water": 25,
       "health": 22,
       "rescue": 7,
+      "lagoon": "trouble",
+      "temp": "chaud",
+      "logistics": 20
+    }
+  },
+  {
+    "title": "Combo 004 — Rupture logistique + eau + alimentation",
+    "text": "Rupture logistique 30 jours. Eau potable à 13 jours. Stocks alimentaires faibles. Arrivées touristiques maintenues. Santé encore stable mais marge réduite.",
+    "m": {
+      "visitors": 24000,
+      "energy": 66,
+      "water": 13,
+      "health": 38,
+      "rescue": 8,
       "lagoon": "normal",
-      "temp": "normal",
-      "logistics": 30
+      "temp": "chaud",
+      "logistics": 9
+    }
+  },
+  {
+    "title": "Combo 005 — Surpopulation + pollution lagon + panique",
+    "text": "Surpopulation touristique au centre. Pollution lagon confirmée. Rumeur de contamination. Panique publique sur les réseaux sociaux. Accès secours ralentis.",
+    "m": {
+      "visitors": 58000,
+      "energy": 61,
+      "water": 21,
+      "health": 30,
+      "rescue": 11,
+      "lagoon": "pollution confirmée",
+      "temp": "chaud",
+      "logistics": 21
     }
   }
 ]
