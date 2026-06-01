@@ -403,7 +403,7 @@ document.getElementById("openPaletteBtn").addEventListener("click",()=>palette.c
 document.getElementById("closePaletteBtn").addEventListener("click",()=>palette.classList.remove("open"));
 
 document.addEventListener("keydown",event=>{
-  const order=["home","llm","github","production","remote"];
+  const order=["home","llm","github","production","youtube","remote","harmonia"];
   const index=Number(event.key)-1;
   if(order[index]) showPage(order[index]);
   if(event.key==="?") palette.classList.add("open");

@@ -620,3 +620,30 @@ body.focus-mode .remote-status:hover {
   opacity: .94;
   transform: translateY(-1px);
 }
+
+
+/* Harmonia Dashboard link */
+
+.icon-harmonia svg {
+  fill: none;
+  stroke: currentColor;
+}
+
+.harmonia-hero-card {
+  border-color: rgba(128, 242, 208, .58);
+  background: rgba(8, 42, 36, .24);
+}
+
+.harmonia-launch-btn {
+  border-color: rgba(128, 242, 208, .70);
+  color: rgba(232, 255, 248, .98);
+  background: rgba(12, 70, 58, .34);
+  white-space: nowrap;
+}
+
+.harmonia-launch-btn:hover,
+.harmonia-launch-btn:focus-visible {
+  border-color: rgba(128, 242, 208, .98);
+  box-shadow: 0 0 22px rgba(128, 242, 208, .16);
+}
+
