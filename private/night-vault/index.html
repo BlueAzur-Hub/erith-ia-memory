@@ -111,11 +111,11 @@
         <h1>Night Vault <span>Browser</span></h1>
         <h2>Une interface publique, des actions locales au navigateur.</h2>
         <p class="hero-lede">Écris, relis, cherche et exporte des fiches Markdown. Aucun contenu personnel n’est publié automatiquement dans GitHub.</p>
-        <div class="feature-grid">
-          <div><i>◈</i><strong>Local navigateur</strong><small>LocalStorage uniquement</small></div>
-          <div><i>📄</i><strong>Export Markdown</strong><small>Fichiers téléchargeables</small></div>
-          <div><i>⬡</i><strong>Archive JSON</strong><small>Sauvegarde manuelle</small></div>
-          <div><i>⚑</i><strong>Public limité</strong><small>Pas de synchronisation secrète</small></div>
+        <div class="feature-grid" aria-label="Raccourcis Night Vault Public">
+          <button class="feature-action" type="button" data-feature-action="create" title="Ouvrir l’éditeur de souvenir local"><i>◈</i><strong>Local navigateur</strong><small>Ouvrir l’éditeur</small></button>
+          <button class="feature-action" type="button" data-feature-action="files" title="Ouvrir les exports Markdown"><i>📄</i><strong>Export Markdown</strong><small>Voir les exports</small></button>
+          <button class="feature-action" type="button" data-feature-action="backup" title="Télécharger la sauvegarde JSON"><i>⬡</i><strong>Archive JSON</strong><small>Télécharger maintenant</small></button>
+          <button class="feature-action" type="button" data-feature-action="limits" title="Voir les limites publiques"><i>⚑</i><strong>Public limité</strong><small>Voir les limites</small></button>
         </div>
       </div>
       <figure class="castle-visual" aria-label="Château de mesures néon">

@@ -210,6 +210,30 @@
   $('#themeSelect').addEventListener('change',e=>applyTheme(e.target.value,true)); $$('#themeCards button').forEach(b=>b.addEventListener('click',()=>applyTheme(b.dataset.themeChoice,true)));
   $$('.visual-mode').forEach(b=>b.addEventListener('click',()=>applyVisual(b.dataset.visualMode,true))); $('#ambientPrev').addEventListener('click',()=>cycleEq(-1)); $('#ambientNext').addEventListener('click',()=>cycleEq(1)); $('#ambientToggle').addEventListener('click',toggleEq);
   $('#goExports').addEventListener('click',()=>switchTab('files'));
+  $$('.feature-action').forEach(button=>button.addEventListener('click',()=>{
+    const action=button.dataset.featureAction;
+    if(action==='create'){
+      switchTab('create');
+      $('#memoryText').focus();
+      toast('Éditeur local ouvert.');
+      return;
+    }
+    if(action==='files'){
+      switchTab('files');
+      toast('Exports locaux ouverts.');
+      return;
+    }
+    if(action==='backup'){
+      backup();
+      return;
+    }
+    if(action==='limits'){
+      switchTab('git');
+      const limits=$$('#panel-git .settings-block').at(-1);
+      setTimeout(()=>limits?.scrollIntoView({behavior:'smooth',block:'nearest'}),0);
+      toast('Limites publiques affichées.');
+    }
+  }));
   document.addEventListener('click',e=>{ if(!e.target.closest('.drop-wrap')&&!e.target.closest('.search-wrap')) closeMenus(); });
 
   applyTheme(localStorage.getItem(THEME)||'club'); applyVisual(localStorage.getItem(VISUAL)||'static'); applyEq(); renderActivities(); setStars(1); resetForm(); renderVaults(); renderFiles();
