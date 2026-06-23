@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Night Vault Public Browser Edition — interface statique, mémoires locales au navigateur et export Markdown.">
+  <title>Night Vault · Public Browser Edition</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="club" class="castle-static">
+  <div class="global-glow glow-a" aria-hidden="true"></div>
+  <div class="global-glow glow-b" aria-hidden="true"></div>
+
+  <aside class="side-lounge" aria-label="Navigation Night Vault Public">
+    <div class="side-brand">
+      <span class="brand-orb">〰</span>
+      <div><strong><em>Night</em> Vault</strong><small>PUBLIC BROWSER EDITION · ONE</small></div>
+    </div>
+
+    <section class="profile-card" aria-label="Profil Night">
+      <div class="profile-avatar"><img src="assets/NIGHT_AVATAR_FACE_BUST.png" alt="Portrait illustratif de Night"></div>
+      <div><small>Bienvenue dans le lounge</small><strong>Night</strong><span>PUBLIC STUDIO</span></div>
+    </section>
+
+    <p class="side-heading">Navigation</p>
+    <nav class="side-nav">
+      <button class="tab active" data-tab="create"><span>✦</span> Écrire</button>
+      <button class="tab" data-tab="read"><span>☾</span> Souvenirs</button>
+      <button class="tab" data-tab="files"><span>▤</span> Exports</button>
+      <button class="tab" data-tab="git"><span>⚙</span> Réglages</button>
+      <button class="tab" data-tab="help"><span>?</span> Aide</button>
+    </nav>
+
+    <section class="lounge-card duo-card">
+      <p class="side-heading">🗝 Public actions</p>
+      <div class="lounge-line"><span>☾</span><div><strong>Navigateur</strong><small>Mémoire locale à cet appareil</small></div></div>
+      <div class="lounge-line"><span>📄</span><div><strong>Markdown</strong><small>Export téléchargeable</small></div></div>
+      <div class="lounge-line"><span>⬡</span><div><strong>Archive JSON</strong><small>Sauvegarde manuelle</small></div></div>
+    </section>
+
+    <section class="ambient-card" aria-label="Visualiseur Castle Measure">
+      <p class="side-heading">Castle measure</p>
+      <div id="microEq" class="micro-eq eq-playing eq-preset-0" role="img" aria-label="Visualiseur décoratif Castle Measure actif"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <strong id="ambientTrack">VELVET CASTLE</strong><small id="ambientState">Visualiseur décoratif · actif</small>
+      <div class="ambient-controls">
+        <button id="ambientPrev" type="button" title="Preset précédent" aria-label="Preset précédent">◀</button>
+        <button id="ambientToggle" type="button" title="Pause du visualiseur" aria-label="Mettre le visualiseur en pause" aria-pressed="true">Ⅱ</button>
+        <button id="ambientNext" type="button" title="Preset suivant" aria-label="Preset suivant">▶</button>
+      </div>
+    </section>
+
+    <div class="side-status"><span></span> Statut : local navigateur</div>
+  </aside>
+
+  <aside class="night-stage" aria-hidden="true">
+    <img class="stage-default" src="assets/NIGHT_STUDIO_RIGHT.png" alt="">
+    <img class="stage-cafe" src="assets/NIGHT_CAFE_LOUNGE_RIGHT.png" alt="">
+    <div class="stage-sheen"></div>
+    <div class="vip-neon"><b>♛</b><strong>Night</strong><small>PUBLIC LOUNGE</small></div>
+  </aside>
+
+  <main class="club-shell">
+    <header class="topbar">
+      <div class="mode-pill"><span></span> Session navigateur active</div>
+      <div class="mode-pill private"><b>⌁</b> Édition publique</div>
+      <label class="theme-switcher" title="Choisir l’ambiance Night Vault">
+        <span>◈ Thème</span>
+        <select id="themeSelect" aria-label="Sélecteur de thème Night Vault">
+          <option value="club">Club Lounge</option>
+          <option value="cafe">Café Lounge</option>
+          <option value="velvet">Velvet Neon</option>
+          <option value="forum">Forum Privé</option>
+          <option value="castle">Château de mesures</option>
+        </select>
+      </label>
+
+      <div class="search-wrap">
+        <label class="local-search"><span>⌕</span><input id="quickSearch" type="search" placeholder="Rechercher dans Night Vault…" autocomplete="off"><button id="clearSearch" type="button" title="Effacer la recherche" hidden>×</button></label>
+        <section id="searchPanel" class="search-panel hidden" aria-live="polite">
+          <div class="search-panel-head"><strong>Recherche navigateur</strong><small>Uniquement les souvenirs de ce navigateur.</small></div>
+          <div id="searchResults" class="search-results"><p class="muted">Écris pour chercher dans tes souvenirs locaux.</p></div>
+        </section>
+      </div>
+
+      <div class="top-actions">
+        <div class="drop-wrap">
+          <button id="alertsToggle" class="icon-top" type="button" aria-haspopup="true" aria-expanded="false" title="Alertes Night"><span>♢</span><b id="alertsBadge">0</b></button>
+          <section id="alertsMenu" class="dropdown-menu hidden" aria-label="Alertes Night">
+            <div class="dropdown-head"><div><strong>Alertes Night</strong><small>Activité du navigateur</small></div><button id="clearAlerts" type="button">Tout lire</button></div>
+            <div id="alertsList" class="dropdown-list"></div>
+          </section>
+        </div>
+        <div class="drop-wrap">
+          <button id="messagesToggle" class="icon-top" type="button" aria-haspopup="true" aria-expanded="false" title="Actions rapides"><span>✉</span><b id="messagesBadge">0</b></button>
+          <section id="messagesMenu" class="dropdown-menu hidden" aria-label="Actions rapides">
+            <div class="dropdown-head"><div><strong>Actions rapides</strong><small>Écriture et sauvegarde locale</small></div></div>
+            <div class="quick-message-actions">
+              <button type="button" data-quick-recipient="night"><span>✦</span><b>Nouveau souvenir</b><small>Ouvre l’éditeur</small></button>
+              <button type="button" data-quick-recipient="backup"><span>⬡</span><b>Archive JSON</b><small>Télécharge la sauvegarde</small></button>
+              <button type="button" data-quick-recipient="import"><span>↥</span><b>Importer JSON</b><small>Restaure une sauvegarde</small></button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero castle-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Night Vault public · <span id="heroThemeLabel">Club Lounge</span></p>
+        <h1>Night Vault <span>Browser</span></h1>
+        <h2>Une interface publique, des actions locales au navigateur.</h2>
+        <p class="hero-lede">Écris, relis, cherche et exporte des fiches Markdown. Aucun contenu personnel n’est publié automatiquement dans GitHub.</p>
+        <div class="feature-grid">
+          <div><i>◈</i><strong>Local navigateur</strong><small>LocalStorage uniquement</small></div>
+          <div><i>📄</i><strong>Export Markdown</strong><small>Fichiers téléchargeables</small></div>
+          <div><i>⬡</i><strong>Archive JSON</strong><small>Sauvegarde manuelle</small></div>
+          <div><i>⚑</i><strong>Public limité</strong><small>Pas de synchronisation secrète</small></div>
+        </div>
+      </div>
+      <figure class="castle-visual" aria-label="Château de mesures néon">
+        <img src="assets/NIGHT_EQUALIZER_CASTLE.png" alt="Château de mesures néon composé de petits rectangles arrondis">
+        <figcaption>Château de mesures · <span id="castleModeLabel">statique</span></figcaption>
+      </figure>
+    </section>
+
+    <section class="status-card">
+      <div class="vault-symbol">⌑</div>
+      <div class="status-copy">
+        <div class="status-label"><span class="pulse"></span><small>Mode de déploiement</small></div>
+        <strong id="statusText">Interface statique prête · mémoire dans le navigateur.</strong>
+        <p id="repoPath">BlueAzur-Hub/erith-ia-memory/private/night-vault/</p>
+        <p id="identityLine" class="identity">Le dossier “private” organise le projet, mais ne rend pas son contenu secret sur un dépôt public.</p>
+      </div>
+      <button id="downloadBackup" class="outline icon-button"><span>⬡</span> Télécharger ma sauvegarde <b>›</b></button>
+    </section>
+
+    <div class="mobile-tabs" aria-label="Navigation mobile">
+      <button class="tab active" data-tab="create">✦ Écrire</button>
+      <button class="tab" data-tab="read">☾ Souvenirs</button>
+      <button class="tab" data-tab="files">▤ Exports</button>
+      <button class="tab" data-tab="git">⚙ Réglages</button>
+    </div>
+
+    <section id="panel-create" class="panel active">
+      <div class="card create-card">
+        <div class="card-title-row"><div><p class="eyebrow">Night · Public Browser Vault</p><h2>Écrire un souvenir local</h2></div><div class="rune-square" aria-hidden="true">ᛉᛇ</div></div>
+        <article class="forum-post compact-post" aria-label="Message de Night">
+          <aside class="forum-profile"><div class="forum-avatar"><img src="assets/NIGHT_AVATAR_FACE_BUST.png" alt="Portrait illustratif de Night"></div><strong>Night</strong><small>Public Studio</small><span class="online-dot">● Session locale</span></aside>
+          <div class="forum-body"><div class="forum-meta"><span class="role-chip">☾ Mémoire navigateur</span><span class="privacy-chip" id="modeChip">🔒 Locale</span></div><p id="modeMessage">Écris une note, une idée ou une mémoire. Elle reste dans ce navigateur jusqu’à export ou suppression.</p><div class="forum-reactions"><span>✦ Texte local</span><span>📄 Export .md</span><span>⬡ Backup JSON</span></div></div>
+        </article>
+
+        <section class="recipient-card" aria-label="Usage de la mémoire">
+          <div><p class="eyebrow">Quel usage pour cette fiche ?</p><p class="muted">La sélection reste descriptive. Cette édition publique ne transmet rien à Night, Sun, GitHub ou un service externe.</p></div>
+          <div class="recipient-switch" role="group" aria-label="Usage de la mémoire">
+            <button type="button" class="recipient active" data-recipient="night"><b>☾</b><span>Night</span><small>Réflexion</small></button>
+            <button type="button" class="recipient" data-recipient="sun"><b>☀</b><span>Sun</span><small>Création</small></button>
+            <button type="button" class="recipient duo" data-recipient="duo"><b>🗝</b><span>Duo</span><small>Partage local</small></button>
+          </div>
+          <p id="duoHint" class="duo-hint">Fiche locale de réflexion Night.</p>
+        </section>
+
+        <div class="grid create-grid">
+          <label>ID automatique<div class="inline-input"><input id="entryId" value="NV-PUB-0001" readonly autocomplete="off" spellcheck="false"><button id="refreshId" class="tiny-action" type="button" title="Préparer le prochain numéro">↻</button></div></label>
+          <label>Catégorie<select id="category"><option>note créative</option><option>souvenir personnel</option><option>idée de production</option><option>règle de travail</option><option>journal local</option><option>message Duo</option></select></label>
+          <label>Visibilité de la fiche<select id="privacy"><option>Locale au navigateur</option><option>À exporter manuellement</option><option>Démo publique</option></select></label>
+        </div>
+
+        <section class="star-card" aria-label="Note attribuée au message">
+          <div><p class="eyebrow">Note du souvenir</p><strong id="starLabel">1 / 7 · à classer</strong><small id="starHint">Cette note aide à retrouver l’importance de la fiche dans ce navigateur.</small></div>
+          <div id="starRating" class="star-rating" role="radiogroup" aria-label="Noter ce souvenir de 1 à 7 étoiles">
+            <button type="button" data-stars="1" aria-label="Donner 1 étoile" title="1 étoile">★</button><button type="button" data-stars="2" aria-label="Donner 2 étoiles" title="2 étoiles">★</button><button type="button" data-stars="3" aria-label="Donner 3 étoiles" title="3 étoiles">★</button><button type="button" data-stars="4" aria-label="Donner 4 étoiles" title="4 étoiles">★</button><button type="button" data-stars="5" aria-label="Donner 5 étoiles" title="5 étoiles">★</button><button type="button" data-stars="6" aria-label="Donner 6 étoiles" title="6 étoiles">★</button><button type="button" data-stars="7" aria-label="Donner 7 étoiles" title="7 étoiles">★</button>
+          </div>
+        </section>
+
+        <label>Texte de la fiche<textarea id="memoryText" placeholder="Écris ici. Cette édition publique enregistre la fiche dans le navigateur, pas dans GitHub."></textarea></label>
+        <div class="checks"><label><input id="useRunes" type="checkbox" checked> Ajouter une trace Futhark décorative</label><label><input id="syncAfter" type="checkbox"> Télécharger le Markdown après création</label></div>
+        <div class="action-row"><button id="createVault" class="primary"><span>✦</span> Enregistrer localement</button><p class="action-hint">Utilise l’archive JSON pour conserver tes fiches avant de vider le navigateur.</p></div>
+      </div>
+    </section>
+
+    <section id="panel-read" class="panel">
+      <div class="card">
+        <div class="section-head"><div><p class="eyebrow">Night · Public Browser Vault</p><h2>Relire des souvenirs</h2></div><button id="refreshVaults" class="outline icon-button"><span>↻</span> Actualiser</button></div>
+        <p class="muted">Les souvenirs ci-dessous sont stockés dans le navigateur courant. <b>📄 Exporter en .md</b> télécharge une fiche Markdown que tu peux ensuite ajouter manuellement dans le dépôt, par exemple sous `private/night-vault/exports/`.</p>
+        <div id="vaultList" class="vault-list"></div>
+        <article id="memoryReader" class="reader forum-post memory-post hidden">
+          <aside class="forum-profile"><div class="forum-avatar"><img src="assets/NIGHT_AVATAR_FACE_BUST.png" alt="Portrait illustratif de Night"></div><strong>Night</strong><small>Browser Vault</small><span class="online-dot">● Lecture locale</span></aside>
+          <div class="forum-body">
+            <div class="reader-title"><div><p class="eyebrow">Fiche relue</p><h3 id="readerId"></h3></div><div class="reader-actions"><button id="exportMemoryMd" class="outline mini" type="button">📄 Exporter en .md</button><button id="createDuoCopy" class="outline mini hidden" type="button">🗝 Export Duo</button><button id="deleteMemory" class="outline mini danger" type="button">Supprimer</button><button id="hideReader" class="outline mini">Masquer</button></div></div>
+            <div class="reader-meta"><span id="readerCategory"></span><span id="readerPrivacy">🔒 Locale</span><span id="readerRecipients">☾ Night</span><span id="readerStars">★ 1 / 7</span></div>
+            <p id="readerRatingHint" class="reader-rating-hint"></p>
+            <div id="readerText" class="memory-text"></div>
+            <section id="correctionBlock" class="correction"><p class="eyebrow">Modifier la fiche</p><label>Texte<textarea id="correctText"></textarea></label><button id="saveCorrection" class="outline">Enregistrer la modification locale</button></section>
+            <section id="runeBlock" class="rune-block hidden"><p>ᛉ Trace Futhark décorative</p><pre id="readerRunes"></pre></section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="panel-files" class="panel">
+      <div class="card files-card">
+        <div class="section-head"><div><p class="eyebrow">Exports publics</p><h2>Sauvegarder ou restaurer</h2></div><button id="downloadBackup2" class="outline icon-button"><span>⬡</span> Télécharger JSON</button></div>
+        <p class="muted">Cette page ne peut pas écrire dans GitHub depuis le navigateur. Les fichiers exportés sont téléchargés puis ajoutés au dépôt par une action Git explicite.</p>
+        <div class="files-layout">
+          <aside class="file-browser"><input id="fileFilter" type="search" placeholder="Filtrer les souvenirs…"><div id="projectFiles" class="project-files"></div></aside>
+          <section class="file-editor"><div class="open-file-bar"><strong id="openFilePath">Aucune fiche sélectionnée</strong></div><textarea id="fileText" spellcheck="false" placeholder="Choisis une fiche pour préparer son Markdown."></textarea><div class="editor-actions"><button id="saveFile" class="outline" disabled>Enregistrer localement</button><button id="downloadEditedMd" class="primary" disabled>Télécharger .md</button></div></section>
+        </div>
+        <section class="settings-block import-block"><p class="eyebrow">Restauration manuelle</p><h3>Importer une archive JSON locale</h3><p class="muted">Importe uniquement une archive produite par Night Vault Public Browser Edition.</p><div class="settings-actions"><label class="outline file-picker">↥ Choisir un fichier JSON<input id="importBackup" type="file" accept="application/json,.json" hidden></label><button id="clearLocalData" class="outline">Effacer mes souvenirs navigateur</button></div></section>
+      </div>
+    </section>
+
+    <section id="panel-git" class="panel">
+      <div class="card settings-card">
+        <div class="section-head"><div><p class="eyebrow">Contrôle public</p><h2>Réglages Night Vault</h2></div><span id="themeCurrent" class="theme-current">Club Lounge</span></div>
+        <section class="settings-block">
+          <p class="eyebrow">Thèmes Night</p><h3>Choisis l’ambiance du lounge</h3>
+          <div id="themeCards" class="theme-cards">
+            <button data-theme-choice="club"><b>Club Lounge</b><small>Néon dense, VIP, contraste haut</small></button>
+            <button data-theme-choice="cafe"><b>Café Lounge</b><small>Rose, bordeaux et or discret</small></button>
+            <button data-theme-choice="velvet"><b>Velvet Neon</b><small>Magenta profond et lumière vive</small></button>
+            <button data-theme-choice="forum"><b>Forum Privé</b><small>Messages, archives et lecture dense</small></button>
+            <button data-theme-choice="castle"><b>Château de mesures</b><small>Mesures néon et architecture sombre</small></button>
+          </div>
+        </section>
+        <section class="visual-mode-card"><div><p class="eyebrow">Château de mesures</p><h3>Image statique ou lueur douce</h3><p class="muted">L’animation reste décorative et ne lit aucun média externe.</p></div><div class="visual-mode-actions"><button class="visual-mode" data-visual-mode="static">Statique</button><button class="visual-mode" data-visual-mode="soft">Lueur douce</button></div></section>
+        <section class="settings-block"><p class="eyebrow">Limites publiques</p><h3>Aucune synchronisation Git intégrée</h3><p class="muted">Cette version ne contient ni token, ni compte, ni clé, ni DPAPI, ni accès à un dépôt. Le chemin `private/night-vault/` est une convention d’organisation : sur un dépôt public, son contenu reste public.</p><div class="settings-actions"><button id="downloadBackup3" class="outline">Télécharger ma sauvegarde</button><button id="goExports" class="primary">Voir mes exports</button></div></section>
+      </div>
+    </section>
+
+    <section id="panel-help" class="panel">
+      <div class="card help-card"><p class="eyebrow">Mode d’emploi</p><h2>Quatre gestes simples</h2><ol><li><strong>Écrire</strong> : crée une fiche stockée dans ce navigateur.</li><li><strong>Relire</strong> : modifie, supprime ou exporte la fiche en Markdown.</li><li><strong>Sauvegarder</strong> : télécharge une archive JSON avant de changer de navigateur ou d’effacer les données.</li><li><strong>Publier</strong> : ajoute manuellement les `.md` souhaités dans `private/night-vault/exports/`, puis commit/push avec Git.</li></ol><p class="muted">Aucune donnée de contenu n’est envoyée automatiquement à GitHub. Ne place jamais de souvenirs personnels ou de secrets dans un dépôt public.</p></div>
+    </section>
+
+    <footer><span>✦ Night Vault Public Browser Edition</span><span>Interface statique · mémoire navigateur · export manuel</span><span>♛ Ton interface. Tes choix. Tes fichiers.</span></footer>
+  </main>
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
