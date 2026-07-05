@@ -1,12 +1,12 @@
 {
-  "product": "Charlene Salon",
-  "release": "1.0.0",
-  "delivery": "static local web application",
-  "root_folder": "CHARLENE_SALON",
-  "public_target": "assets/CHARLENE_SALON/",
-  "runtime": "Browser only — no API, no token, no backend",
-  "data_storage": "localStorage in the browser",
-  "contains_private_core": false,
-  "contains_personal_data": false,
-  "generated_utc": "2026-07-05T23:26:28+00:00"
+  "application": "Charlene Salon",
+  "version": "1.0.1",
+  "release": "desktop-navigation-fix",
+  "commit_message": "Fix Charlene Salon desktop navigation",
+  "public_path": "assets/CHARLENE_SALON/",
+  "changes": [
+    "Masque la navigation mobile sur ordinateur",
+    "Préserve la navigation mobile sous 1050px",
+    "Conserve les données locales existantes"
+  ]
 }
