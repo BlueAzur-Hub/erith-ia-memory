@@ -1,27 +1,12 @@
 {
-  "application": "Charlene Salon — Atelier Champagne",
-  "delivery": "application locale HTML/CSS/JS",
-  "entrypoint": "CHARLENE_SALON/index.html",
-  "data": "localStorage + export/import JSON",
-  "network": "none",
-  "private_sources": "excluded",
-  "functional_areas": [
-    "Projet",
-    "Local",
-    "Équipe",
-    "Prestations",
-    "Budget",
-    "Planning",
-    "Produits",
-    "Obligations",
-    "Décisions",
-    "Atelier guidé",
-    "Sauvegarde"
-  ],
-  "files": [
-    "CHARLENE_SALON/index.html",
-    "CHARLENE_SALON/assets/images/CHARLENE_SALON_ASSISTANT_ACCUEIL_1080x1350.png",
-    "CHARLENE_SALON/assets/images/CHARLENE_SALON_ASSISTANT_ATELIER_1080x1350.png",
-    "CHARLENE_SALON/README_DEPLOY.md"
-  ]
+  "product": "Charlene Salon",
+  "release": "1.0.0",
+  "delivery": "static local web application",
+  "root_folder": "CHARLENE_SALON",
+  "public_target": "assets/CHARLENE_SALON/",
+  "runtime": "Browser only — no API, no token, no backend",
+  "data_storage": "localStorage in the browser",
+  "contains_private_core": false,
+  "contains_personal_data": false,
+  "generated_utc": "2026-07-05T23:26:28+00:00"
 }

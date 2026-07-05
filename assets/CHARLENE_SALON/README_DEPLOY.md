@@ -1,37 +1,45 @@
-# Charlene Salon — application locale
+# Charlene Salon — V1 métier locale
 
-Cette archive contient l’application complète prête à remplacer le dossier public :
+## Ce qui est livré
 
-`assets/CHARLENE_SALON/`
+Application HTML/CSS/JavaScript autonome destinée à être publiée sous :
 
-## Fonctions intégrées
+```text
+assets/CHARLENE_SALON/
+```
 
-- projet : identité du salon, ville, clientèle, vision et phase ;
-- local : fiches de visite, loyer indicatif, score et notes ;
-- équipe : rôles et organisation sans données RH sensibles ;
-- prestations : durée, tarif, coût produit, repère brut et état ;
-- budget : dépenses de création et charges mensuelles ;
-- planning : créneaux, tâches et rôles ;
-- produits : stock, seuils, fournisseurs et alertes locales ;
-- obligations : sujets à vérifier et interlocuteurs à solliciter ;
-- décisions : états, notes et dates ;
-- atelier guidé local : aide de cadrage intégrée, sans IA distante ;
-- sauvegarde JSON : export et import depuis le navigateur.
+Fonctions incluses :
 
-## Données
+- parcours de projet et plan d’ouverture ;
+- comparaison de locaux avec grille pondérée ;
+- carte de prestations avec durée, coût produit, marge et marge horaire ;
+- budget de démarrage et charges mensuelles ;
+- lecture du seuil de chiffre d’affaires à partir des hypothèses saisies ;
+- routines d’ouverture et fermeture ;
+- planning interne sans données clientes ;
+- suivi de stock, seuils et liste de réapprovisionnement préparatoire ;
+- registre de décisions ;
+- export/import JSON, impression et réinitialisation locale ;
+- exemple de démonstration effaçable ;
+- interface responsive ordinateur et mobile.
 
-Aucune API, aucune clé, aucun token, aucune base distante.
-Les données restent dans le navigateur de l’appareil jusqu’à l’export d’une sauvegarde JSON.
+## Règle de données
 
-## Déploiement
+L’application n’emploie aucune API, aucune clé, aucun token et aucun serveur applicatif. Les données sont stockées dans le navigateur de l’appareil via `localStorage`.
 
-Remplacer le contenu du dossier public :
+Ne pas y enregistrer de données clientes nominatives, données bancaires, données de santé, documents RH, contrats ou secrets.
 
-`assets/CHARLENE_SALON/`
+## Publication
 
-par le dossier `CHARLENE_SALON` fourni dans cette archive.
-Le point d’entrée est :
+1. Décompresser l’archive.
+2. Remplacer intégralement le dossier public existant :
+   ```text
+   assets/CHARLENE_SALON/
+   ```
+3. Utiliser le texte du fichier `COMMIT_MESSAGE.txt` comme message de commit.
+4. Attendre la publication GitHub Pages, puis ouvrir l’URL publique habituelle.
+5. Tester : ajout d’une prestation, d’une ligne de budget, export JSON, puis import JSON.
 
-`assets/CHARLENE_SALON/index.html`
+## Statut de livraison
 
-Ne pas publier les fichiers privés Core, Persona ou modules dans ce dossier.
+Cette archive a été construite hors dépôt. Elle ne correspond à aucun commit GitHub tant qu’elle n’a pas été téléversée et validée dans le dépôt public.
