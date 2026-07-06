@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#5A4033">
+  <title>Charlene Salon — Atelier Champagne</title>
+  <style>
+    :root{
+      --ivory:#F7F2EC; --paper:#FFFDF9; --sand:#D8C2AE; --taupe:#A98770;
+      --gold:#C7A06A; --rose:#D9A7A6; --brown:#5A4033; --ink:#2D211C;
+      --green:#5F7B68; --amber:#B77C27; --red:#B55050;
+      --line:rgba(169,135,112,.24); --soft:rgba(255,253,249,.88);
+      --shadow:0 18px 48px rgba(72,48,35,.10); --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--ivory)}
+    body{
+      margin:0; min-width:320px; color:var(--ink); line-height:1.45;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 96% 1%,rgba(217,167,166,.24),transparent 28rem),
+        radial-gradient(circle at 0 100%,rgba(199,160,106,.15),transparent 32rem),
+        var(--ivory);
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+      outline:3px solid rgba(199,160,106,.45); outline-offset:2px;
+    }
+    .app{
+      width:min(1530px,calc(100% - 32px)); min-height:calc(100vh - 32px); margin:16px auto;
+      display:grid; grid-template-columns:276px minmax(0,1fr); overflow:hidden;
+      border:1px solid var(--line); border-radius:30px; background:rgba(255,253,249,.78);
+      box-shadow:var(--shadow); backdrop-filter:blur(15px);
+    }
+    .sidebar{
+      display:flex; flex-direction:column; min-height:100%; padding:25px 17px 18px; color:#FFF9F3;
+      background:
+        radial-gradient(circle at 17% 6%,rgba(217,167,166,.29),transparent 18rem),
+        linear-gradient(160deg,#5A4033 0%,#382921 58%,#2D211C 100%);
+    }
+    .brand{display:flex; align-items:center; gap:12px; padding:1px 9px 23px; border-bottom:1px solid rgba(255,255,255,.13)}
+    .brand-mark{display:grid; place-items:center; width:43px; height:43px; flex:0 0 auto; border:1px solid rgba(255,240,215,.52); border-radius:15px; background:rgba(255,255,255,.08); color:#FFE7BE; font-size:1.28rem}
+    .brand b{display:block; font-size:1.04rem; letter-spacing:.01em}
+    .brand small{display:block; margin-top:2px; color:rgba(255,249,243,.63); font-size:.76rem}
+    .nav{display:grid; gap:4px; padding:20px 0}
+    .nav button{display:flex; align-items:center; gap:11px; width:100%; border:0; border-radius:13px; padding:11px 12px; color:rgba(255,249,243,.76); background:transparent; text-align:left; transition:.15s ease}
+    .nav button:hover{color:#FFF9F3; background:rgba(255,255,255,.09)}
+    .nav button.active{color:var(--ink); background:#FFF8EF; box-shadow:0 8px 19px rgba(0,0,0,.18)}
+    .nav .icon{width:22px; text-align:center; font-size:1.03rem}
+    .sidebar-footer{margin-top:auto; padding:15px 10px 4px; border-top:1px solid rgba(255,255,255,.13); color:rgba(255,249,243,.69); font-size:.79rem}
+    .sidebar-footer b{display:block; margin-bottom:3px; color:#FFE2B1}
+    main{min-width:0; padding:30px}
+    .top{display:flex; justify-content:space-between; align-items:flex-start; gap:22px; margin-bottom:28px}
+    .eyebrow{margin:0 0 7px; color:var(--taupe); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase}
+    h1,h2,h3{font-family:Georgia,"Times New Roman",serif; font-weight:500}
+    h1{max-width:780px; margin:0; font-size:clamp(2rem,4vw,3.32rem); line-height:1.04; letter-spacing:-.035em}
+    h2{margin:0; font-size:1.75rem}
+    h3{margin:0; font-size:1.2rem}
+    .lead{max-width:710px; margin:11px 0 0; color:rgba(45,33,28,.69)}
+    .portrait-orb{width:84px; height:84px; overflow:hidden; flex:0 0 auto; border:1px solid rgba(199,160,106,.56); border-radius:27px; background:#E5D1BA; box-shadow:0 12px 28px rgba(99,65,42,.12)}
+    .portrait-orb img{width:100%; height:100%; object-fit:cover; object-position:50% 25%; transform:scale(1.12)}
+    .page{display:none}
+    .page.active{display:block}
+    .card{border:1px solid var(--line); border-radius:var(--radius); background:var(--soft); box-shadow:0 11px 28px rgba(92,61,42,.052)}
+    .dashboard-grid{display:grid; gap:18px}
+    .summary{display:grid; grid-template-columns:1.35fr .83fr .83fr; gap:18px}
+    .hero{position:relative; min-height:224px; overflow:hidden; padding:27px; color:#FFFDF9; background:radial-gradient(circle at 82% 5%,rgba(255,227,196,.29),transparent 14rem),radial-gradient(circle at 3% 100%,rgba(217,167,166,.42),transparent 20rem),linear-gradient(135deg,#5A4033,#392921)}
+    .hero::after{content:""; position:absolute; right:-73px; bottom:-108px; width:205px; height:205px; border:1px solid rgba(255,245,226,.42); border-radius:44% 56% 48% 52%; transform:rotate(29deg)}
+    .hero .eyebrow,.hero h2,.hero p{position:relative; z-index:1}
+    .hero .eyebrow{color:#F9D8A2}
+    .hero h2{max-width:530px; font-size:clamp(1.47rem,2.4vw,2.02rem); line-height:1.14}
+    .hero p:last-child{max-width:570px; margin:12px 0 0; color:rgba(255,249,243,.82)}
+    .stat{padding:22px}
+    .stat label{display:block; margin-bottom:13px; color:var(--taupe); font-size:.74rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase}
+    .stat strong{font-size:1.06rem}
+    .stat p{margin:8px 0 0; color:rgba(45,33,28,.62); font-size:.89rem}
+    .dot{display:inline-block; width:9px; height:9px; margin-right:7px; border-radius:50%; background:var(--amber)}
+    .dot.rose{background:var(--rose)}.dot.green{background:var(--green)}.dot.red{background:var(--red)}
+    .section-head{display:flex; justify-content:space-between; align-items:end; gap:18px; margin-top:12px}
+    .section-head h2{font-size:1.62rem}
+    .hint{margin:0; color:rgba(45,33,28,.62); font-size:.91rem}
+    .actions{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px}
+    .action-card{display:flex; min-height:170px; flex-direction:column; align-items:flex-start; border:1px solid var(--line); border-radius:19px; padding:20px; color:var(--ink); background:var(--soft); text-align:left; transition:.16s ease}
+    .action-card:hover{transform:translateY(-3px); border-color:rgba(199,160,106,.68); box-shadow:0 14px 27px rgba(92,61,42,.10)}
+    .symbol{display:grid; place-items:center; width:43px; height:43px; margin-bottom:18px; border-radius:14px; background:#F7EEE5; font-size:1.2rem}
+    .action-card strong{font-size:1rem}.action-card span:last-child{margin-top:6px; color:rgba(45,33,28,.64); font-size:.88rem}
+    .lower{display:grid; grid-template-columns:1.22fr .78fr; gap:18px}
+    .assistant-card,.decision-card{padding:24px}
+    .row{display:flex; justify-content:space-between; align-items:center; gap:16px}
+    .row h2,.decision-card h2{font-size:1.55rem}
+    .pill{display:inline-flex; align-items:center; gap:7px; padding:7px 10px; border-radius:999px; color:#3F6249; background:#EAF2EB; font-size:.78rem; font-weight:740}
+    .pill i{width:7px; height:7px; border-radius:50%; background:var(--green)}
+    .assistant-content{display:grid; grid-template-columns:86px 1fr; gap:16px; margin-top:19px}
+    .portrait-mini{width:86px; height:112px; overflow:hidden; border-radius:16px; background:#E8D5C0}
+    .portrait-mini img{width:100%; height:100%; object-fit:cover; object-position:50% 24%}
+    .message{padding:13px 15px; border-radius:5px 16px 16px 16px; background:#F9F3EC; color:rgba(45,33,28,.84)}
+    .message p{margin:0}.message p+p{margin-top:8px}
+    .quick{display:flex; flex-wrap:wrap; gap:8px; margin-top:17px}
+    .chip,.quick button{padding:8px 11px; border:1px solid rgba(169,135,112,.28); border-radius:999px; color:var(--brown); background:transparent; font-size:.82rem}
+    .chip:hover,.quick button:hover{border-color:var(--gold); background:#FFF6E9}
+    .decision{display:flex; gap:12px; align-items:center; padding:11px 0; border-bottom:1px solid var(--line)}
+    .decision:last-child{border-bottom:0}.decision-state{width:11px; height:11px; flex:0 0 auto; border-radius:50%; background:var(--amber)}
+    .decision strong{display:block; font-size:.92rem}.decision small{display:block; margin-top:2px; color:rgba(45,33,28,.59)}
+    .workspace{display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:18px}
+    .form-card,.side-card,.view-card{padding:27px}
+    .form-card>p,.view-card>p,.side-card>p{max-width:770px; margin:8px 0 0; color:rgba(45,33,28,.69)}
+    .field-grid{display:grid; grid-template-columns:1fr 1fr; gap:13px; margin-top:22px}
+    .field{display:grid; gap:6px}.field.full{grid-column:1/-1}.field label{color:var(--brown); font-size:.82rem; font-weight:760}
+    .field input,.field textarea,.field select{width:100%; border:1px solid rgba(169,135,112,.31); border-radius:12px; padding:11px 12px; color:var(--ink); background:#FFFDF9}
+    .field textarea{min-height:98px; resize:vertical}
+    .form-footer{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:16px}
+    .primary{border:1px solid #B38B57; border-radius:12px; padding:11px 14px; color:#FFFDF9; background:linear-gradient(135deg,#C7A06A,#A97E47); box-shadow:0 7px 15px rgba(128,87,46,.18)}
+    .primary:hover{filter:brightness(1.03)}.secondary{border:1px solid rgba(169,135,112,.35); border-radius:12px; padding:10px 12px; color:var(--brown); background:#FFFDF9}
+    .danger{border:1px solid rgba(181,80,80,.35); border-radius:12px; padding:10px 12px; color:#8F3E3E; background:#FFF6F4}
+    .soft-note{color:rgba(45,33,28,.58); font-size:.82rem}
+    .list{display:grid; gap:10px; margin-top:22px}
+    .item{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; padding:15px; border:1px solid var(--line); border-radius:16px; background:#FFFDF9}
+    .item h3{font-family:inherit; font-size:.98rem; font-weight:760}
+    .item p{margin:5px 0 0; color:rgba(45,33,28,.66); font-size:.88rem; white-space:pre-wrap}
+    .item small{display:block; margin-top:5px; color:var(--taupe); font-size:.78rem}
+    .item-actions{display:flex; flex-wrap:wrap; justify-content:flex-end; gap:7px}
+    .tiny{border:1px solid rgba(169,135,112,.29); border-radius:10px; padding:7px 9px; color:var(--brown); background:transparent; font-size:.78rem}
+    .tiny:hover{border-color:var(--gold); background:#FFF6E9}.tiny.delete{color:#943D3D; border-color:rgba(181,80,80,.28); background:#FFF9F8}
+    .badge{display:inline-flex; align-items:center; border-radius:999px; padding:5px 8px; font-size:.73rem; font-weight:750}
+    .badge.neutral{color:#765a3d; background:#F4E9D7}.badge.warn{color:#875A11; background:#FFF0D4}.badge.good{color:#3F6249; background:#EAF2EB}.badge.lock{color:#633D68; background:#F1E7F0}.badge.danger{color:#8F3E3E; background:#FFF0EF}
+    .metric-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:18px}
+    .metric{padding:15px; border:1px solid var(--line); border-radius:15px; background:#FFFDF9}
+    .metric label{display:block; color:var(--taupe); font-size:.75rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase}
+    .metric strong{display:block; margin-top:7px; font-size:1.17rem}
+    .check-list{display:grid; gap:10px; margin-top:19px}
+    .check{display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line)}
+    .check:last-child{border-bottom:0}.check input{margin-top:4px; accent-color:var(--green)}.check b{font-size:.9rem}.check span{color:rgba(45,33,28,.68); font-size:.84rem}
+    .notice{display:flex; gap:12px; align-items:flex-start; padding:15px; margin-top:20px; border:1px solid rgba(199,160,106,.36); border-radius:15px; color:var(--brown); background:#FFF6E9; font-size:.9rem}
+    .notice b{color:var(--ink)}.notice.warning{border-color:rgba(181,80,80,.30); color:#7d3e3e; background:#FFF4F2}
+    .empty{padding:20px; border:1px dashed rgba(169,135,112,.42); border-radius:16px; color:rgba(45,33,28,.63); background:rgba(255,253,249,.55); text-align:center}
+    .guide-output{min-height:110px; margin-top:20px; padding:17px; border:1px solid var(--line); border-radius:16px; background:#F9F3EC; color:rgba(45,33,28,.83); white-space:pre-wrap}
+    .footer-note{margin:20px 0 0; color:rgba(45,33,28,.52); font-size:.78rem; text-align:center}
+    .toast{position:fixed; right:22px; bottom:22px; z-index:20; max-width:min(420px,calc(100% - 44px)); transform:translateY(18px); opacity:0; pointer-events:none; padding:12px 15px; border:1px solid rgba(199,160,106,.45); border-radius:14px; color:#FFFDF9; background:#392921; box-shadow:0 14px 30px rgba(45,33,28,.22); transition:.2s ease}
+    .toast.show{transform:translateY(0); opacity:1}
+    @media(max-width:1120px){.app{grid-template-columns:232px minmax(0,1fr)}.summary{grid-template-columns:1fr 1fr}.hero{grid-column:1/-1}.actions{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}}
+    @media(max-width:780px){.app{width:100%; min-height:100vh; margin:0; grid-template-columns:1fr; border:0; border-radius:0}.sidebar{min-height:auto; padding:15px}.brand{padding-bottom:13px}.nav{grid-template-columns:repeat(5,minmax(0,1fr)); overflow-x:auto; padding:13px 0 1px}.nav button{min-width:76px; justify-content:center; flex-direction:column; gap:4px; padding:9px 4px; font-size:.64rem; text-align:center}.nav .icon{width:auto; font-size:1.08rem}.sidebar-footer{display:none}main{padding:22px 16px 30px}.top{margin-bottom:21px}.portrait-orb{width:62px;height:62px;border-radius:20px}.summary,.lower,.metric-grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.assistant-content{grid-template-columns:55px 1fr}.portrait-mini{width:55px;height:76px}.field-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.item{flex-direction:column}.item-actions{justify-content:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div><b>Charlene Salon</b><small>Atelier Champagne</small></div>
+      </div>
+      <nav class="nav" aria-label="Navigation Charlene Salon">
+        <button class="active" data-route="dashboard"><span class="icon">🏠</span><span>Mon atelier</span></button>
+        <button data-route="project"><span class="icon">🌸</span><span>Mon projet</span></button>
+        <button data-route="local"><span class="icon">🏗️</span><span>Mon local</span></button>
+        <button data-route="team"><span class="icon">👥</span><span>Mon équipe</span></button>
+        <button data-route="services"><span class="icon">💇</span><span>Prestations</span></button>
+        <button data-route="budget"><span class="icon">💶</span><span>Mon budget</span></button>
+        <button data-route="planning"><span class="icon">📅</span><span>Mon planning</span></button>
+        <button data-route="products"><span class="icon">📦</span><span>Produits</span></button>
+        <button data-route="obligations"><span class="icon">🧾</span><span>Mes obligations</span></button>
+        <button data-route="decisions"><span class="icon">📚</span><span>Mes décisions</span></button>
+        <button data-route="guide"><span class="icon">💬</span><span>Atelier guidé</span></button>
+        <button data-route="backup"><span class="icon">🗂️</span><span>Sauvegarde</span></button>
+      </nav>
+      <div class="sidebar-footer"><b>Une étape à la fois.</b>Ton application garde les éléments utiles sur cet appareil.</div>
+    </aside>
+    <main>
+      <header class="top">
+        <div>
+          <p class="eyebrow" id="eyebrow">Mon atelier</p>
+          <h1 id="page-title">Bonjour Charlene.</h1>
+          <p class="lead" id="page-lead">Ton espace de travail : projet, budget, prestations, planning, produits, décisions et sauvegardes sur cet appareil.</p>
+        </div>
+        <div class="portrait-orb"><img src="assets/images/CHARLENE_SALON_ASSISTANT_ACCUEIL_1080x1350.png" alt="Assistante Charlene Salon"></div>
+      </header>
+      <div id="page-root"></div>
+      <p class="footer-note">Charlene Salon — Atelier Champagne · Les données restent dans ce navigateur jusqu’à l’export d’une sauvegarde.</p>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  "use strict";
+  const $ = (selector, scope=document) => scope.querySelector(selector);
+  const $$ = (selector, scope=document) => [...scope.querySelectorAll(selector)];
+  const STORAGE_KEY = "charlene-salon-application-local-2026";
+  const root = $("#page-root");
+  const defaults = () => ({
+    meta: { updatedAt: new Date().toISOString() },
+    profile: { salonName:"Charlene Salon", country:"", city:"", concept:"", client:"", vision:"", phase:"Cadrage" },
+    localVisits: [],
+    services: [],
+    budget: [],
+    planning: [],
+    team: [],
+    products: [],
+    obligations: [],
+    decisions: []
+  });
+  let state = load();
+  let route = "dashboard";
+  let edit = { type:null, id:null };
+
+  function load(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if(saved && typeof saved === "object") return {
+        ...defaults(), ...saved,
+        profile:{...defaults().profile, ...(saved.profile || {})},
+        localVisits:Array.isArray(saved.localVisits)?saved.localVisits:[],
+        services:Array.isArray(saved.services)?saved.services:[],
+        budget:Array.isArray(saved.budget)?saved.budget:[],
+        planning:Array.isArray(saved.planning)?saved.planning:[],
+        team:Array.isArray(saved.team)?saved.team:[],
+        products:Array.isArray(saved.products)?saved.products:[],
+        obligations:Array.isArray(saved.obligations)?saved.obligations:[],
+        decisions:Array.isArray(saved.decisions)?saved.decisions:[]
+      };
+    } catch(e) {}
+    return defaults();
+  }
+  function save(){
+    state.meta.updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function uid(){ return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
+  function esc(value=""){ return String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[char])); }
+  function attr(value=""){ return esc(value); }
+  function euro(value){ return new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2}).format(Number(value || 0)); }
+  function number(value){ return new Intl.NumberFormat("fr-FR",{maximumFractionDigits:2}).format(Number(value || 0)); }
+  function today(){ return new Date().toLocaleDateString("fr-FR"); }
+  function sum(items, fn){ return items.reduce((total,item)=>total + Number(fn(item) || 0), 0); }
+  function toast(message){
+    const node = $("#toast"); node.textContent = message; node.classList.add("show");
+    clearTimeout(window.__charleneToast);
+    window.__charleneToast = setTimeout(() => node.classList.remove("show"), 3000);
+  }
+  function statusBadge(status){
+    const map = {
+      "À définir":"neutral","À vérifier":"warn","Validé":"good","Verrouillé":"lock",
+      "À commander":"warn","En stock":"good","Rupture":"danger"
+    };
+    return `<span class="badge ${map[status] || "neutral"}">${esc(status)}</span>`;
+  }
+  function getEdit(type){
+    return edit.type === type ? (state[type] || []).find(item => item.id === edit.id) : null;
+  }
+  function setRoute(next){
+    route = next; edit = {type:null,id:null};
+    $$(".nav button").forEach(button => button.classList.toggle("active", button.dataset.route === route));
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  function nextActions(){
+    const actions = [];
+    if(!state.profile.country || !state.profile.city) actions.push({route:"project", title:"Préciser le pays et la ville", note:"Cette décision oriente le local, les vérifications et le budget."});
+    if(!state.profile.client) actions.push({route:"project", title:"Décrire la cliente principale", note:"Une cliente repère aide à choisir l’offre et l’ambiance."});
+    if(!state.services.length) actions.push({route:"services", title:"Ajouter tes premières prestations", note:"Commence par les services que tu veux vraiment assurer."});
+    if(!state.budget.length) actions.push({route:"budget", title:"Poser les premières dépenses", note:"Distingue création et charges mensuelles."});
+    const low = state.products.filter(item => Number(item.stock) <= Number(item.threshold) && item.name).length;
+    if(low) actions.push({route:"products", title:`${low} produit${low>1?"s":""} à surveiller`, note:"Le stock est au seuil d’alerte ou en dessous."});
+    if(!actions.length) actions.push({route:"decisions", title:"Relire les décisions ouvertes", note:"Un projet avance quand les choix restent clairs."});
+    return actions.slice(0,3);
+  }
+  const pageMeta = {
+    dashboard:["Mon atelier","Bonjour Charlene.","Ton espace de travail : projet, budget, prestations, planning, produits, décisions et sauvegardes sur cet appareil."],
+    project:["Mon projet","Donner une direction à ton salon.","On met les fondations à plat avant de multiplier les décisions."],
+    local:["Mon local","Comparer les lieux sans se perdre.","Une fiche par visite permet de garder les critères importants visibles."],
+    team:["Mon équipe","Préparer une organisation qui respire.","Les fiches d’équipe servent à clarifier les rôles sans stocker de données sensibles."],
+    services:["Prestations","Construire ton offre et tes tarifs.","Les calculs sont des repères de préparation : ils ne remplacent pas la validation de tes prix."],
+    budget:["Mon budget","Voir les chiffres avec calme.","Sépare ce qui sert à créer le salon de ce qui revient chaque mois."],
+    planning:["Mon planning","Organiser une journée réaliste.","Prévois les prestations, les transitions et les tâches qui protègent la qualité."],
+    products:["Produits","Garder un stock utile.","L’alerte s’allume lorsque le stock est au seuil ou en dessous."],
+    obligations:["Mes obligations","Préparer les vérifications utiles.","Cette liste organise les sujets à vérifier ; elle ne remplace jamais l’avis d’un professionnel compétent."],
+    decisions:["Mes décisions","Garder le fil de ton projet.","Conserve les choix qui doivent rester visibles et compréhensibles."],
+    guide:["Atelier guidé","Clarifier une priorité.","Un guidage local intégré : aucun message n’est envoyé, aucune IA distante n’est utilisée."],
+    backup:["Sauvegarde","Protéger ton travail.","Tes données restent sur cet appareil. Exporte régulièrement une copie JSON que tu conserves."],
+  };
+  function renderHeader(){
+    const [eyebrow,title,lead] = pageMeta[route];
+    $("#eyebrow").textContent = eyebrow;
+    $("#page-title").textContent = title;
+    $("#page-lead").textContent = lead;
+  }
+  function render(){
+    renderHeader();
+    const pages = {
+      dashboard: renderDashboard, project: renderProject, local: renderLocal, team: renderTeam,
+      services: renderServices, budget: renderBudget, planning: renderPlanning,
+      products: renderProducts, obligations: renderObligations, decisions: renderDecisions, guide: renderGuide,
+      backup: renderBackup
+    };
+    root.innerHTML = pages[route]();
+    bindPage();
+  }
+  function renderDashboard(){
+    const valid = state.decisions.filter(item => item.status === "Validé" || item.status === "Verrouillé").length;
+    const low = state.products.filter(item => Number(item.stock) <= Number(item.threshold) && item.name).length;
+    const initialBudget = sum(state.budget.filter(item => item.kind === "creation"), item => item.amount);
+    const monthlyBudget = sum(state.budget.filter(item => item.kind === "monthly"), item => item.amount);
+    const actions = nextActions();
+    return `
+      <section class="page active">
+        <div class="dashboard-grid">
+          <div class="summary">
+            <article class="hero card">
+              <p class="eyebrow">Aujourd’hui</p>
+              <h2>${esc(state.profile.salonName || "Charlene Salon")} avance à son rythme.</h2>
+              <p>${state.profile.vision ? esc(state.profile.vision) : "Commence par ton idée, la cliente que tu veux accompagner et l’expérience que tu veux offrir."}</p>
+            </article>
+            <article class="stat card">
+              <label>État du projet</label>
+              <strong><i class="dot ${valid ? "green":""}"></i>${valid ? `${valid} décision${valid>1?"s":""} validée${valid>1?"s":""}` : "À cadrer"}</strong>
+              <p>${valid ? "Les choix validés servent de fil conducteur." : "Les premières fondations restent à choisir avec toi."}</p>
+            </article>
+            <article class="stat card">
+              <label>Stock à surveiller</label>
+              <strong><i class="dot ${low ? "red":"green"}"></i>${low ? `${low} alerte${low>1?"s":""}` : "Aucune alerte"}</strong>
+              <p>${low ? "Ouvre Produits pour vérifier les seuils." : "Les produits ajoutés sont au-dessus de leur seuil."}</p>
+            </article>
+          </div>
+          <div class="section-head"><div><h2>La prochaine action utile</h2><p class="hint">Choisis un sujet. L’application garde le fil sans tout mélanger.</p></div></div>
+          <div class="actions">
+            ${actions.map(action => `
+              <button class="action-card" data-route="${action.route}">
+                <span class="symbol">✦</span><strong>${esc(action.title)}</strong><span>${esc(action.note)}</span>
+              </button>`).join("")}
+          </div>
+          <div class="lower">
+            <article class="assistant-card card">
+              <div class="row"><div><h2>Repères du salon</h2><p class="hint">Les informations utiles restent ici, sur cet appareil.</p></div><span class="pill"><i></i>Mode local</span></div>
+              <div class="assistant-content">
+                <div class="portrait-mini"><img src="assets/images/CHARLENE_SALON_ASSISTANT_ATELIER_1080x1350.png" alt="Assistante Charlene Salon"></div>
+                <div class="message">
+                  <p><b>Projet :</b> ${state.profile.country || state.profile.city ? `${esc(state.profile.country || "")}${state.profile.country && state.profile.city ? " · " : ""}${esc(state.profile.city || "")}` : "lieu à définir"}</p>
+                  <p><b>Clientèle :</b> ${state.profile.client ? esc(state.profile.client) : "à préciser"}</p>
+                  <p><b>Concept :</b> ${state.profile.concept ? esc(state.profile.concept) : "à préciser"}</p>
+                </div>
+              </div>
+              <div class="quick">
+                <button data-route="project">Mettre à jour mon projet</button>
+                <button data-route="decisions">Ajouter une décision</button>
+                <button data-route="backup">Exporter ma sauvegarde</button>
+              </div>
+            </article>
+            <article class="decision-card card">
+              <h2>Chiffres repères</h2>
+              <div class="metric-grid" style="grid-template-columns:1fr">
+                <div class="metric"><label>Création</label><strong>${euro(initialBudget)}</strong></div>
+                <div class="metric"><label>Mensuel</label><strong>${euro(monthlyBudget)}</strong></div>
+                <div class="metric"><label>Prestations</label><strong>${state.services.length}</strong></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>`;
+  }
+  function renderProject(){
+    const p = state.profile;
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mon projet</p><h2>Le socle de ton salon.</h2>
+        <p>Écris une première version. Tu pourras l’affiner sans perdre le fil.</p>
+        <form id="profile-form">
+          <div class="field-grid">
+            <div class="field"><label for="salonName">Nom du salon</label><input id="salonName" maxlength="80" value="${attr(p.salonName)}"></div>
+            <div class="field"><label for="phase">Phase actuelle</label><select id="phase">${["Cadrage","Faisabilité","Local et travaux","Offre et tarifs","Pré-ouverture","Exploitation"].map(x=>`<option ${p.phase===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field"><label for="country">Pays</label><input id="country" maxlength="80" value="${attr(p.country)}" placeholder="Ex. France ou Tunisie"></div>
+            <div class="field"><label for="city">Ville ou zone</label><input id="city" maxlength="100" value="${attr(p.city)}" placeholder="Ex. ville, quartier ou zone"></div>
+            <div class="field full"><label for="concept">Concept et ambiance</label><textarea id="concept" maxlength="900" placeholder="Comment veux-tu que le salon soit perçu ?">${esc(p.concept)}</textarea></div>
+            <div class="field full"><label for="client">Cliente ou clientèle principale</label><textarea id="client" maxlength="900" placeholder="Pour qui veux-tu créer cet endroit ?">${esc(p.client)}</textarea></div>
+            <div class="field full"><label for="vision">Ce que tu veux offrir</label><textarea id="vision" maxlength="900" placeholder="Quelle expérience la cliente doit-elle vivre ?">${esc(p.vision)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">Enregistrer mon projet</button><span class="soft-note">Enregistré dans ce navigateur uniquement.</span></div>
+        </form>
+      </article>
+      <aside class="side-card card">
+        <h3>Une base utile</h3><p>Le projet n’a pas besoin d’être parfait pour être clair.</p>
+        <div class="check-list">
+          <div class="check"><input type="checkbox" ${p.country?"checked":""} disabled><span><b>Pays et ville</b><br>Ils orientent les recherches et vérifications.</span></div>
+          <div class="check"><input type="checkbox" ${p.client?"checked":""} disabled><span><b>Cliente repère</b><br>Elle aide à garder une offre cohérente.</span></div>
+          <div class="check"><input type="checkbox" ${p.concept?"checked":""} disabled><span><b>Identité</b><br>Elle donne une direction au lieu et au service.</span></div>
+        </div>
+        <div class="notice">✦ <div><b>Repère :</b> ce qui est saisi ici peut évoluer. Verrouille seulement une décision dans l’espace Décisions lorsqu’elle est réellement stabilisée.</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function renderLocal(){
+    const item = getEdit("localVisits") || {};
+    const list = state.localVisits.slice().sort((a,b)=>Number(b.score)-Number(a.score));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mon local</p><h2>${item.id ? "Modifier une visite" : "Ajouter une visite de local"}</h2>
+        <p>Une fiche simple permet de comparer les lieux sur les éléments qui comptent vraiment.</p>
+        <form id="local-form">
+          <input type="hidden" id="local-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="local-name">Nom ou repère du lieu</label><input id="local-name" required maxlength="120" value="${attr(item.name)}" placeholder="Ex. Local centre-ville"></div>
+            <div class="field"><label for="local-zone">Ville ou quartier</label><input id="local-zone" maxlength="120" value="${attr(item.zone)}" placeholder="Ex. centre, quartier, rue"></div>
+            <div class="field"><label for="local-rent">Loyer estimé / mois</label><input id="local-rent" type="number" min="0" step="0.01" value="${attr(item.rent)}" placeholder="0"></div>
+            <div class="field"><label for="local-score">Ressenti global (1 à 5)</label><select id="local-score">${[1,2,3,4,5].map(n=>`<option value="${n}" ${String(item.score||3)===String(n)?"selected":""}>${n} / 5</option>`).join("")}</select></div>
+            <div class="field full"><label for="local-notes">Ce qui est à retenir ou à vérifier</label><textarea id="local-notes" maxlength="1400" placeholder="Visibilité, circulation, travaux, espace, accès, contraintes, ressenti…">${esc(item.notes)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour la visite" : "Ajouter cette visite"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(localItem).join("") : '<div class="empty">Aucune visite enregistrée. Ajoute la première fiche quand un lieu mérite d’être comparé.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Avant de choisir</h3><p>Un local doit aider l’exploitation réelle du salon, pas seulement faire bonne impression lors d’une visite.</p>
+        <div class="check-list">
+          <div class="check"><input type="checkbox" disabled><span><b>Flux et accueil</b><br>Entrée, attente, circulation et rangement.</span></div>
+          <div class="check"><input type="checkbox" disabled><span><b>Postes et technique</b><br>Ce qui permet de tenir les prestations prévues.</span></div>
+          <div class="check"><input type="checkbox" disabled><span><b>Coûts et travaux</b><br>Les éléments à chiffrer avant une décision.</span></div>
+        </div>
+      </aside>
+    </div></section>`;
+  }
+  function localItem(item){
+    return `<article class="item"><div><h3>${esc(item.name)}</h3><small>${esc(item.zone || "Zone non précisée")} · ${euro(item.rent || 0)} / mois · ${number(item.score || 0)} / 5</small><p>${esc(item.notes || "Aucune note ajoutée.")}</p></div><div class="item-actions"><button class="tiny" data-edit-type="localVisits" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="localVisits" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderTeam(){
+    const item = getEdit("team") || {};
+    const list = state.team.slice().sort((a,b)=>a.name.localeCompare(b.name,"fr"));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mon équipe</p><h2>${item.id ? "Modifier un rôle ou une personne" : "Ajouter un rôle ou une personne"}</h2>
+        <p>Conserve seulement ce qui aide à organiser le salon. N’enregistre pas de documents, coordonnées privées, informations de santé, contrats ou éléments RH sensibles.</p>
+        <form id="team-form">
+          <input type="hidden" id="team-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="team-name">Prénom ou repère</label><input id="team-name" required maxlength="100" value="${attr(item.name)}" placeholder="Ex. Charlene, coiffeuse couleur"></div>
+            <div class="field"><label for="team-role">Rôle principal</label><input id="team-role" required maxlength="120" value="${attr(item.role)}" placeholder="Ex. direction, accueil, technique"></div>
+            <div class="field"><label for="team-status">État</label><select id="team-status">${["À définir","À vérifier","Prévu","Actif"].map(x=>`<option ${item.status===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field"><label for="team-availability">Disponibilité ou planning</label><input id="team-availability" maxlength="140" value="${attr(item.availability)}" placeholder="Ex. à préciser, mardi à samedi"></div>
+            <div class="field full"><label for="team-note">Ce qui doit être clair</label><textarea id="team-note" maxlength="900" placeholder="Missions, transmission, besoins d’organisation ou formation.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour" : "Ajouter à l’équipe"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(teamItem).join("") : '<div class="empty">Aucun rôle ajouté. Commence par les rôles indispensables au démarrage.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Rôles avant personnes</h3><p>Le salon tient mieux quand on sait qui porte quoi, même avant d’avoir une équipe complète.</p>
+        <div class="check-list"><div class="check"><input type="checkbox" disabled><span><b>Accueil</b><br>Qui reçoit, informe et organise la journée ?</span></div><div class="check"><input type="checkbox" disabled><span><b>Technique</b><br>Quelles prestations doivent être assurées ?</span></div><div class="check"><input type="checkbox" disabled><span><b>Fermeture</b><br>Qui vérifie le lieu, le stock et la transmission ?</span></div></div>
+        <div class="notice">✦ <div><b>Limite :</b> cet espace n’est pas un dossier RH. Il sert uniquement à préparer l’organisation du salon.</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function teamItem(item){
+    const kind = item.status==="Actif" ? "good" : item.status==="À vérifier" ? "warn" : "neutral";
+    return `<article class="item"><div><h3>${esc(item.name)}</h3><small><span class="badge ${kind}">${esc(item.status || "À définir")}</span> · ${esc(item.role)} · ${esc(item.availability || "Disponibilité à préciser")}</small><p>${esc(item.note || "Aucune note ajoutée.")}</p></div><div class="item-actions"><button class="tiny" data-edit-type="team" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="team" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+
+  function renderServices(){
+    const item = getEdit("services") || {};
+    const list = state.services.slice().sort((a,b)=>a.name.localeCompare(b.name,"fr"));
+    const totalPotential = sum(state.services, item => Number(item.price)-Number(item.cost));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Prestations et tarifs</p><h2>${item.id ? "Modifier une prestation" : "Ajouter une prestation"}</h2>
+        <p>Le prix et le coût produit donnent un repère de marge brute de travail. Ils ne remplacent pas l’analyse complète de rentabilité.</p>
+        <form id="service-form">
+          <input type="hidden" id="service-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="service-name">Nom de la prestation</label><input id="service-name" required maxlength="120" value="${attr(item.name)}" placeholder="Ex. Coupe et brushing"></div>
+            <div class="field"><label for="service-type">Catégorie</label><input id="service-type" maxlength="80" value="${attr(item.type)}" placeholder="Ex. coupe, couleur, soin"></div>
+            <div class="field"><label for="service-duration">Durée estimée (minutes)</label><input id="service-duration" type="number" min="0" step="5" value="${attr(item.duration)}" placeholder="0"></div>
+            <div class="field"><label for="service-price">Tarif envisagé</label><input id="service-price" type="number" min="0" step="0.01" value="${attr(item.price)}" placeholder="0"></div>
+            <div class="field"><label for="service-cost">Coût produit estimé</label><input id="service-cost" type="number" min="0" step="0.01" value="${attr(item.cost)}" placeholder="0"></div>
+            <div class="field"><label for="service-status">État</label><select id="service-status">${["À définir","À vérifier","Validé"].map(x=>`<option ${item.status===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field full"><label for="service-note">Note de préparation</label><textarea id="service-note" maxlength="900" placeholder="Ce qui doit être inclus, la promesse cliente ou les points à vérifier.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour la prestation" : "Ajouter la prestation"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(serviceItem).join("") : '<div class="empty">Aucune prestation encore. Commence par celles que tu veux réellement proposer dès l’ouverture.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Repères de l’offre</h3>
+        <div class="metric-grid" style="grid-template-columns:1fr"><div class="metric"><label>Prestations</label><strong>${state.services.length}</strong></div><div class="metric"><label>Marge brute cumulée</label><strong>${euro(totalPotential)}</strong></div></div>
+        <div class="notice">✦ <div><b>Attention :</b> la marge brute indiquée ne déduit pas le temps, les charges, les taxes, le loyer ni l’équipe. Elle aide seulement à préparer le travail.</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function serviceItem(item){
+    const gross = Number(item.price || 0) - Number(item.cost || 0);
+    return `<article class="item"><div><h3>${esc(item.name)}</h3><small>${esc(item.type || "Catégorie non précisée")} · ${item.duration ? `${number(item.duration)} min` : "Durée non précisée"} · ${statusBadge(item.status || "À définir")}</small><p>${euro(item.price)} · coût produit ${euro(item.cost)} · <b>repère brut ${euro(gross)}</b>${item.note ? `\n${esc(item.note)}`:""}</p></div><div class="item-actions"><button class="tiny" data-edit-type="services" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="services" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderBudget(){
+    const item = getEdit("budget") || {};
+    const creation = sum(state.budget.filter(x=>x.kind==="creation"), x=>x.amount);
+    const monthly = sum(state.budget.filter(x=>x.kind==="monthly"), x=>x.amount);
+    const list = state.budget.slice().sort((a,b)=>a.kind.localeCompare(b.kind)||a.label.localeCompare(b.label,"fr"));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mon budget</p><h2>${item.id ? "Modifier une ligne de budget" : "Ajouter une ligne de budget"}</h2>
+        <p>Ajoute les chiffres dont tu as besoin pour préparer. Les montants ne quittent pas cet appareil.</p>
+        <form id="budget-form">
+          <input type="hidden" id="budget-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="budget-label">Libellé</label><input id="budget-label" required maxlength="120" value="${attr(item.label)}" placeholder="Ex. travaux, loyer, équipement"></div>
+            <div class="field"><label for="budget-category">Catégorie</label><input id="budget-category" maxlength="80" value="${attr(item.category)}" placeholder="Ex. local, équipement, lancement"></div>
+            <div class="field"><label for="budget-kind">Type</label><select id="budget-kind"><option value="creation" ${item.kind==="creation"?"selected":""}>Création / ponctuel</option><option value="monthly" ${item.kind==="monthly"?"selected":""}>Mensuel / récurrent</option></select></div>
+            <div class="field"><label for="budget-amount">Montant</label><input id="budget-amount" required type="number" min="0" step="0.01" value="${attr(item.amount)}" placeholder="0"></div>
+            <div class="field full"><label for="budget-note">Note ou source à vérifier</label><textarea id="budget-note" maxlength="900" placeholder="Ex. devis à comparer, montant estimé, date prévue…">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour cette ligne" : "Ajouter au budget"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(budgetItem).join("") : '<div class="empty">Aucune ligne ajoutée. Commence par une dépense réelle ou une hypothèse de travail importante.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Vue rapide</h3>
+        <div class="metric-grid" style="grid-template-columns:1fr"><div class="metric"><label>Création</label><strong>${euro(creation)}</strong></div><div class="metric"><label>Mensuel</label><strong>${euro(monthly)}</strong></div><div class="metric"><label>Lignes</label><strong>${state.budget.length}</strong></div></div>
+        <div class="notice">✦ <div><b>Repère :</b> garde une distinction claire entre les coûts d’ouverture et ce qui devra être couvert tous les mois.</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function budgetItem(item){
+    return `<article class="item"><div><h3>${esc(item.label)}</h3><small>${esc(item.category || "Sans catégorie")} · ${item.kind==="creation"?"Création / ponctuel":"Mensuel / récurrent"} · <b>${euro(item.amount)}</b></small><p>${esc(item.note || "Aucune note ajoutée.")}</p></div><div class="item-actions"><button class="tiny" data-edit-type="budget" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="budget" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderPlanning(){
+    const item = getEdit("planning") || {};
+    const dayOrder = {Lundi:1,Mardi:2,Mercredi:3,Jeudi:4,Vendredi:5,Samedi:6,Dimanche:7};
+    const list = state.planning.slice().sort((a,b)=>dayOrder[a.day]-dayOrder[b.day] || String(a.time).localeCompare(String(b.time)));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mon planning</p><h2>${item.id ? "Modifier un créneau" : "Ajouter un créneau"}</h2>
+        <p>Prépare les points qui structurent une journée : prestation, accueil, pause, rangement ou tâche d’équipe.</p>
+        <form id="planning-form">
+          <input type="hidden" id="planning-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="planning-day">Jour</label><select id="planning-day">${["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"].map(x=>`<option ${item.day===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field"><label for="planning-time">Heure</label><input id="planning-time" type="time" value="${attr(item.time)}"></div>
+            <div class="field"><label for="planning-task">Tâche ou créneau</label><input id="planning-task" required maxlength="140" value="${attr(item.task)}" placeholder="Ex. ouverture, rendez-vous, rangement"></div>
+            <div class="field"><label for="planning-owner">Personne ou rôle</label><input id="planning-owner" maxlength="90" value="${attr(item.owner)}" placeholder="Ex. Charlene, accueil, équipe"></div>
+            <div class="field full"><label for="planning-note">Note</label><textarea id="planning-note" maxlength="700" placeholder="Ce qui doit être prévu ou transmis.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour le créneau" : "Ajouter au planning"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(planningItem).join("") : '<div class="empty">Aucun créneau enregistré. Ajoute les éléments qui rendent une journée plus fluide.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Une journée qui tient</h3><p>Le planning ne doit pas seulement remplir les heures. Il doit préserver le service, les transitions et la fermeture.</p>
+        <div class="check-list"><div class="check"><input type="checkbox" disabled><span><b>Ouverture</b><br>Préparer le lieu et l’accueil.</span></div><div class="check"><input type="checkbox" disabled><span><b>Transitions</b><br>Laisser une marge entre les temps forts.</span></div><div class="check"><input type="checkbox" disabled><span><b>Fermeture</b><br>Rangement, stock et transmission.</span></div></div>
+      </aside>
+    </div></section>`;
+  }
+  function planningItem(item){
+    return `<article class="item"><div><h3>${esc(item.day)}${item.time?` · ${esc(item.time)}`:""}</h3><small>${esc(item.owner || "Rôle non précisé")}</small><p><b>${esc(item.task)}</b>${item.note?`\n${esc(item.note)}`:""}</p></div><div class="item-actions"><button class="tiny" data-edit-type="planning" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="planning" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderProducts(){
+    const item = getEdit("products") || {};
+    const list = state.products.slice().sort((a,b)=>(Number(a.stock)<=Number(a.threshold)?-1:1) || a.name.localeCompare(b.name,"fr"));
+    const alerts = state.products.filter(product=>Number(product.stock)<=Number(product.threshold) && product.name).length;
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Produits et fournisseurs</p><h2>${item.id ? "Modifier un produit" : "Ajouter un produit"}</h2>
+        <p>Renseigne les produits qui doivent être suivis. L’alerte est locale et apparaît dès que le seuil est atteint.</p>
+        <form id="product-form">
+          <input type="hidden" id="product-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="product-name">Produit</label><input id="product-name" required maxlength="140" value="${attr(item.name)}" placeholder="Ex. shampoing, couleur, soin"></div>
+            <div class="field"><label for="product-supplier">Fournisseur</label><input id="product-supplier" maxlength="100" value="${attr(item.supplier)}" placeholder="Ex. marque ou distributeur"></div>
+            <div class="field"><label for="product-stock">Stock actuel</label><input id="product-stock" required type="number" min="0" step="0.01" value="${attr(item.stock)}" placeholder="0"></div>
+            <div class="field"><label for="product-threshold">Seuil d’alerte</label><input id="product-threshold" required type="number" min="0" step="0.01" value="${attr(item.threshold)}" placeholder="0"></div>
+            <div class="field"><label for="product-cost">Coût unitaire</label><input id="product-cost" type="number" min="0" step="0.01" value="${attr(item.cost)}" placeholder="0"></div>
+            <div class="field"><label for="product-unit">Unité</label><input id="product-unit" maxlength="30" value="${attr(item.unit)}" placeholder="Ex. flacon, tube, pièce"></div>
+            <div class="field full"><label for="product-note">Note</label><textarea id="product-note" maxlength="700" placeholder="Référence, coloris, alternative, délai ou remarque.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour ce produit" : "Ajouter le produit"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(productItem).join("") : '<div class="empty">Aucun produit suivi. Ajoute d’abord ceux qui ne doivent pas manquer au salon.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>État du stock</h3>
+        <div class="metric-grid" style="grid-template-columns:1fr"><div class="metric"><label>Produits suivis</label><strong>${state.products.length}</strong></div><div class="metric"><label>Alertes</label><strong>${alerts}</strong></div></div>
+        <div class="notice ${alerts?"warning":""}">✦ <div><b>${alerts ? "À surveiller :" : "Rien à signaler :"}</b> ${alerts ? "un ou plusieurs produits ont atteint leur seuil. Prépare une vérification ou une commande humaine." : "les produits ajoutés sont au-dessus de leur seuil."}</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function productItem(item){
+    const low = Number(item.stock)<=Number(item.threshold);
+    const status = low ? "À commander" : "En stock";
+    return `<article class="item"><div><h3>${esc(item.name)}</h3><small>${statusBadge(status)} · ${esc(item.supplier || "Fournisseur non précisé")} · coût ${euro(item.cost)}</small><p>Stock ${number(item.stock)} ${esc(item.unit || "")} · seuil ${number(item.threshold)} ${esc(item.unit || "")}${item.note?`\n${esc(item.note)}`:""}</p></div><div class="item-actions"><button class="tiny" data-edit-type="products" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="products" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderObligations(){
+    const item = getEdit("obligations") || {};
+    const priority = {"À définir":1,"À vérifier":2,"Préparé":3,"Confirmé":4};
+    const list = state.obligations.slice().sort((a,b)=>priority[a.status]-priority[b.status] || a.topic.localeCompare(b.topic,"fr"));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mes obligations</p><h2>${item.id ? "Modifier un point à vérifier" : "Ajouter un point à vérifier"}</h2>
+        <p>Utilise cette liste pour préparer les sujets à confirmer : local, activité, sécurité, assurance, équipe ou données. Elle ne donne pas d’avis juridique, comptable ou administratif.</p>
+        <form id="obligation-form">
+          <input type="hidden" id="obligation-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="obligation-topic">Sujet</label><input id="obligation-topic" required maxlength="140" value="${attr(item.topic)}" placeholder="Ex. assurance, sécurité, statut, données"></div>
+            <div class="field"><label for="obligation-status">État</label><select id="obligation-status">${["À définir","À vérifier","Préparé","Confirmé"].map(x=>`<option ${item.status===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field"><label for="obligation-who">Qui peut confirmer ?</label><input id="obligation-who" maxlength="140" value="${attr(item.who)}" placeholder="Ex. organisme, expert, assureur"></div>
+            <div class="field"><label for="obligation-date">Échéance ou date</label><input id="obligation-date" type="date" value="${attr(item.date || "")}"></div>
+            <div class="field full"><label for="obligation-note">Ce qui doit être vérifié</label><textarea id="obligation-note" maxlength="1200" placeholder="Les faits, questions et documents à préparer.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour" : "Ajouter ce point"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(obligationItem).join("") : '<div class="empty">Aucun point ajouté. Commence seulement par les vérifications qui concernent réellement ton projet.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Une bonne vérification</h3><p>Elle part d’un fait concret, d’une question claire et du bon interlocuteur.</p>
+        <div class="check-list"><div class="check"><input type="checkbox" disabled><span><b>Le sujet</b><br>Ce qui engage le salon ou demande une preuve.</span></div><div class="check"><input type="checkbox" disabled><span><b>La question</b><br>Ce qui manque pour pouvoir décider.</span></div><div class="check"><input type="checkbox" disabled><span><b>La confirmation</b><br>Qui est légitime pour répondre ou valider.</span></div></div>
+      </aside>
+    </div></section>`;
+  }
+  function obligationItem(item){
+    const map={"À définir":"neutral","À vérifier":"warn","Préparé":"good","Confirmé":"lock"};
+    return `<article class="item"><div><h3>${esc(item.topic)}</h3><small><span class="badge ${map[item.status]||"neutral"}">${esc(item.status || "À définir")}</span> · ${esc(item.who || "Interlocuteur à préciser")}${item.date?` · ${esc(item.date)}`:""}</small><p>${esc(item.note || "Aucune note ajoutée.")}</p></div><div class="item-actions"><button class="tiny" data-edit-type="obligations" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="obligations" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+
+  function renderDecisions(){
+    const item = getEdit("decisions") || {};
+    const priority = {"À définir":1,"À vérifier":2,"Validé":3,"Verrouillé":4};
+    const list = state.decisions.slice().sort((a,b)=>priority[a.status]-priority[b.status] || String(b.date).localeCompare(String(a.date)));
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Mes décisions</p><h2>${item.id ? "Modifier une décision" : "Ajouter une décision"}</h2>
+        <p>Garde ici les choix qui doivent être retrouvés plus tard. Une décision courte est plus utile qu’une note perdue.</p>
+        <form id="decision-form">
+          <input type="hidden" id="decision-id" value="${attr(item.id || "")}">
+          <div class="field-grid">
+            <div class="field"><label for="decision-title">Sujet</label><input id="decision-title" required maxlength="130" value="${attr(item.title)}" placeholder="Ex. clientèle principale, ville, fournisseur"></div>
+            <div class="field"><label for="decision-status">État</label><select id="decision-status">${["À définir","À vérifier","Validé","Verrouillé"].map(x=>`<option ${item.status===x?"selected":""}>${x}</option>`).join("")}</select></div>
+            <div class="field"><label for="decision-date">Date</label><input id="decision-date" type="date" value="${attr(item.date || new Date().toISOString().slice(0,10))}"></div>
+            <div class="field"><label for="decision-category">Catégorie</label><input id="decision-category" maxlength="80" value="${attr(item.category)}" placeholder="Ex. projet, budget, équipe"></div>
+            <div class="field full"><label for="decision-note">Ce qu’il faut retenir</label><textarea id="decision-note" required maxlength="1300" placeholder="La décision, son raison d’être et ce qu’elle change.">${esc(item.note)}</textarea></div>
+          </div>
+          <div class="form-footer"><button class="primary" type="submit">${item.id ? "Mettre à jour la décision" : "Enregistrer la décision"}</button>${item.id?'<button class="secondary" type="button" data-cancel-edit>Annuler</button>':""}</div>
+        </form>
+        <div class="list">${list.length ? list.map(decisionItem).join("") : '<div class="empty">Aucune décision enregistrée. Commence par le point qui t’aidera le plus à avancer.</div>'}</div>
+      </article>
+      <aside class="side-card card"><h3>Les quatre états utiles</h3>
+        <div class="check-list"><div class="check"><input type="checkbox" checked disabled><span><b>À définir</b><br>Le sujet est ouvert.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>À vérifier</b><br>Une information importante manque.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Validé</b><br>La décision guide la suite.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Verrouillé</b><br>On ne le change pas sans raison claire.</span></div></div>
+      </aside>
+    </div></section>`;
+  }
+  function decisionItem(item){
+    return `<article class="item"><div><h3>${esc(item.title)}</h3><small>${statusBadge(item.status)} · ${esc(item.category || "Sans catégorie")} · ${esc(item.date || "")}</small><p>${esc(item.note)}</p></div><div class="item-actions"><button class="tiny" data-edit-type="decisions" data-edit-id="${attr(item.id)}">Modifier</button><button class="tiny delete" data-delete-type="decisions" data-delete-id="${attr(item.id)}">Retirer</button></div></article>`;
+  }
+  function renderGuide(){
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Atelier guidé</p><h2>Transformer une idée en prochaine action.</h2>
+        <p>Ce guidage est intégré à l’application. Il ne se connecte à aucune IA, ne transmet rien et ne prétend pas prendre une décision à ta place.</p>
+        <form id="guide-form">
+          <div class="field-grid"><div class="field full"><label for="guide-text">Ce qui te préoccupe aujourd’hui</label><textarea id="guide-text" required maxlength="1200" placeholder="Ex. Je ne sais pas comment commencer mon budget ou choisir la ville."></textarea></div></div>
+          <div class="form-footer"><button class="primary" type="submit">M’aider à cadrer</button></div>
+        </form>
+        <div class="guide-output" id="guide-output">Écris un point de départ. L’atelier proposera une première question et un espace de travail adapté.</div>
+        <div class="quick"><button data-guide="budget">Parler du budget</button><button data-guide="local">Parler du local</button><button data-guide="services">Parler des prestations</button><button data-guide="project">Parler de mon idée</button><button data-guide="decisions">Voir mes décisions</button></div>
+      </article>
+      <aside class="side-card card"><h3>Ce que fait cet espace</h3><p>Il aide à choisir une priorité et à ouvrir le bon écran de travail.</p>
+        <div class="notice">✦ <div><b>Limite volontaire :</b> aucune réponse ne remplace un conseil juridique, comptable, bancaire, RH ou technique. Le but est de préparer les bonnes questions.</div></div>
+      </aside>
+    </div></section>`;
+  }
+  function renderBackup(){
+    const updated = state.meta.updatedAt ? new Date(state.meta.updatedAt).toLocaleString("fr-FR") : "—";
+    return `<section class="page active"><div class="workspace">
+      <article class="form-card card">
+        <p class="eyebrow">Sauvegarde</p><h2>Garder une copie de ton salon.</h2>
+        <p>Les données sont enregistrées dans le navigateur de cet appareil. Exporte un fichier JSON lorsque tu veux conserver une copie ou la déplacer vers un autre appareil.</p>
+        <div class="metric-grid"><div class="metric"><label>Dernière modification</label><strong style="font-size:.98rem">${esc(updated)}</strong></div><div class="metric"><label>Éléments enregistrés</label><strong>${state.localVisits.length+state.team.length+state.services.length+state.budget.length+state.planning.length+state.products.length+state.obligations.length+state.decisions.length}</strong></div><div class="metric"><label>Connexion requise</label><strong>Non</strong></div></div>
+        <div class="form-footer" style="margin-top:24px"><button class="primary" type="button" data-backup="export">Exporter ma sauvegarde</button><label class="secondary" style="display:inline-flex;align-items:center;cursor:pointer">Importer une sauvegarde<input id="import-file" type="file" accept="application/json,.json" hidden></label><button class="secondary" type="button" data-backup="print">Imprimer le récapitulatif</button><button class="danger" type="button" data-backup="reset">Effacer les données locales</button></div>
+        <div class="notice">✦ <div><b>À faire :</b> conserve l’export dans un endroit que Charlene maîtrise. Une désinstallation du navigateur ou un changement d’appareil peut effacer la mémoire locale.</div></div>
+      </article>
+      <aside class="side-card card"><h3>Ce qui est exporté</h3><div class="check-list"><div class="check"><input type="checkbox" checked disabled><span><b>Projet et local</b><br>Les informations de préparation.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Équipe, offre, budget et planning</b><br>Les éléments créés dans l’application.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Produits, obligations et décisions</b><br>Les listes et états enregistrés.</span></div></div></aside>
+    </div></section>`;
+  }
+  function bindPage(){
+    $$(".nav button,[data-route]").forEach(button => button.addEventListener("click", () => {
+      if(button.dataset.route) setRoute(button.dataset.route);
+    }));
+    $$(".action-card").forEach(button=>button.addEventListener("click",()=>setRoute(button.dataset.route)));
+    $$("[data-cancel-edit]").forEach(button=>button.addEventListener("click",()=>{edit={type:null,id:null};render();}));
+    $$("[data-edit-type]").forEach(button=>button.addEventListener("click",()=>{edit={type:button.dataset.editType,id:button.dataset.editId}; render(); window.scrollTo({top:0,behavior:"smooth"});}));
+    $$("[data-delete-type]").forEach(button=>button.addEventListener("click",()=> {
+      const type=button.dataset.deleteType, id=button.dataset.deleteId;
+      if(!confirm("Retirer cet élément de cet appareil ?")) return;
+      state[type] = state[type].filter(item=>item.id!==id); save(); render(); toast("Élément retiré de cet appareil.");
+    }));
+    const profile=$("#profile-form");
+    if(profile) profile.addEventListener("submit", event => {
+      event.preventDefault();
+      state.profile = {
+        salonName:$("#salonName").value.trim() || "Charlene Salon", phase:$("#phase").value,
+        country:$("#country").value.trim(), city:$("#city").value.trim(),
+        concept:$("#concept").value.trim(), client:$("#client").value.trim(), vision:$("#vision").value.trim()
+      };
+      save(); toast("Projet enregistré sur cet appareil."); setRoute("dashboard");
+    });
+    const localForm=$("#local-form");
+    if(localForm) localForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#local-id").value || uid();
+      const value={id,name:$("#local-name").value.trim(),zone:$("#local-zone").value.trim(),rent:$("#local-rent").value,score:$("#local-score").value,notes:$("#local-notes").value.trim()};
+      upsert("localVisits",value); toast("Visite enregistrée.");
+    });
+    const teamForm=$("#team-form");
+    if(teamForm) teamForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#team-id").value || uid();
+      const value={id,name:$("#team-name").value.trim(),role:$("#team-role").value.trim(),status:$("#team-status").value,availability:$("#team-availability").value.trim(),note:$("#team-note").value.trim()};
+      upsert("team",value); toast("Rôle ou personne enregistré.");
+    });
+    const serviceForm=$("#service-form");
+    if(serviceForm) serviceForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#service-id").value || uid();
+      const value={id,name:$("#service-name").value.trim(),type:$("#service-type").value.trim(),duration:$("#service-duration").value,price:$("#service-price").value,cost:$("#service-cost").value,status:$("#service-status").value,note:$("#service-note").value.trim()};
+      upsert("services",value); toast("Prestation enregistrée.");
+    });
+    const budgetForm=$("#budget-form");
+    if(budgetForm) budgetForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#budget-id").value || uid();
+      const value={id,label:$("#budget-label").value.trim(),category:$("#budget-category").value.trim(),kind:$("#budget-kind").value,amount:$("#budget-amount").value,note:$("#budget-note").value.trim()};
+      upsert("budget",value); toast("Ligne de budget enregistrée.");
+    });
+    const planningForm=$("#planning-form");
+    if(planningForm) planningForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#planning-id").value || uid();
+      const value={id,day:$("#planning-day").value,time:$("#planning-time").value,task:$("#planning-task").value.trim(),owner:$("#planning-owner").value.trim(),note:$("#planning-note").value.trim()};
+      upsert("planning",value); toast("Créneau enregistré.");
+    });
+    const productForm=$("#product-form");
+    if(productForm) productForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#product-id").value || uid();
+      const value={id,name:$("#product-name").value.trim(),supplier:$("#product-supplier").value.trim(),stock:$("#product-stock").value,threshold:$("#product-threshold").value,cost:$("#product-cost").value,unit:$("#product-unit").value.trim(),note:$("#product-note").value.trim()};
+      upsert("products",value); toast("Produit enregistré.");
+    });
+    const obligationForm=$("#obligation-form");
+    if(obligationForm) obligationForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#obligation-id").value || uid();
+      const value={id,topic:$("#obligation-topic").value.trim(),status:$("#obligation-status").value,who:$("#obligation-who").value.trim(),date:$("#obligation-date").value,note:$("#obligation-note").value.trim()};
+      upsert("obligations",value); toast("Point à vérifier enregistré.");
+    });
+    const decisionForm=$("#decision-form");
+    if(decisionForm) decisionForm.addEventListener("submit", event => {
+      event.preventDefault(); const id=$("#decision-id").value || uid();
+      const value={id,title:$("#decision-title").value.trim(),status:$("#decision-status").value,date:$("#decision-date").value,category:$("#decision-category").value.trim(),note:$("#decision-note").value.trim()};
+      upsert("decisions",value); toast("Décision enregistrée.");
+    });
+    const guideForm=$("#guide-form");
+    if(guideForm) guideForm.addEventListener("submit", event=>{event.preventDefault(); guide($("#guide-text").value.trim());});
+    $$("[data-guide]").forEach(button=>button.addEventListener("click",()=> {
+      const type=button.dataset.guide; const map={budget:"Je veux préparer mon budget.",local:"Je veux réfléchir au local.",services:"Je veux choisir mes prestations.",project:"Je veux clarifier mon idée.",decisions:"Je veux voir ce qui est décidé."};
+      $("#guide-text").value=map[type]||""; guide($("#guide-text").value);
+    }));
+    $$("[data-backup]").forEach(button=>button.addEventListener("click",()=>backup(button.dataset.backup)));
+    const importer=$("#import-file"); if(importer) importer.addEventListener("change", importFile);
+  }
+  function upsert(type,value){
+    const index = state[type].findIndex(item=>item.id===value.id);
+    if(index>=0) state[type][index]=value; else state[type].push(value);
+    save(); edit={type:null,id:null}; render();
+  }
+  function guide(text){
+    const output=$("#guide-output");
+    const lower=text.toLowerCase();
+    let message="", target="";
+    if(/budget|argent|coût|prix|finance|loyer|peur/.test(lower)){target="budget";message="Point de départ : sépare les dépenses de création, les charges mensuelles et la réserve de sécurité.\n\nPremière question : quelle dépense doit être chiffrée en premier ?\n\nOuvre Mon budget pour la noter, même si c’est une estimation."}
+    else if(/local|ville|pays|quartier|emplacement|bail|louer/.test(lower)){target="local";message="Point de départ : le choix du local doit suivre l’expérience de salon que tu veux tenir.\n\nPremière question : dans quelle ville ou zone imagines-tu recevoir tes clientes ?\n\nEnregistre cette base dans Mon projet, puis crée une fiche pour chaque visite dans Mon local."}
+    else if(/prestation|coupe|couleur|soin|tarif|service/.test(lower)){target="services";message="Point de départ : commence avec les prestations que tu veux vraiment assurer avec qualité.\n\nPremière question : quelles sont les trois prestations que tu veux pouvoir proposer dès le début ?\n\nAjoute-les dans Prestations, avec durée, tarif de travail et coût produit estimé."}
+    else if(/équipe|recrut|planning|coiffeur|coiffeuse|employ/.test(lower)){target="planning";message="Point de départ : définis d’abord ce qui doit être fait dans une journée réelle.\n\nPremière question : qu’est-ce qui doit absolument être prêt avant la première cliente ?\n\nAjoute les temps clés dans Mon planning ; les rôles pourront être précisés ensuite."}
+    else if(/décision|choix|valider|vérifier/.test(lower)){target="decisions";message="Point de départ : transforme le sujet en une phrase courte et ajoute son état.\n\nPremière question : est-ce à définir, à vérifier, validé ou verrouillé ?\n\nEnregistre-le dans Mes décisions pour pouvoir le retrouver."}
+    else {target="project";message="Point de départ : choisis une seule priorité et donne-lui des mots simples.\n\nPremière question : pour qui veux-tu créer ce salon, et qu’aimerais-tu qu’elle ressente en repartant ?\n\nEnregistre une première réponse dans Mon projet."}
+    output.textContent=message;
+    output.dataset.target=target;
+    if(!$("#guide-open")){const button=document.createElement("button");button.id="guide-open";button.className="primary";button.type="button";button.style.marginTop="14px";button.textContent="Ouvrir l’espace utile";button.addEventListener("click",()=>setRoute(output.dataset.target));output.after(button);}
+    else $("#guide-open").onclick=()=>setRoute(output.dataset.target);
+  }
+  function backup(action){
+    if(action==="export"){
+      const stamp=new Date().toISOString().slice(0,10);
+      const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+      const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=`charlene-salon-sauvegarde-${stamp}.json`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);
+      toast("Sauvegarde téléchargée.");
+    }
+    if(action==="print"){ window.print(); }
+    if(action==="reset"){
+      if(!confirm("Effacer toutes les données locales de cette application sur cet appareil ? Cette action ne peut pas être annulée sans export préalable.")) return;
+      state=defaults(); save(); setRoute("dashboard"); toast("Données locales effacées.");
+    }
+  }
+  function importFile(event){
+    const file=event.target.files?.[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{try{
+      const imported=JSON.parse(reader.result);
+      if(!imported || typeof imported!=="object") throw new Error("Format invalide");
+      const base=defaults();
+      state={...base,...imported,profile:{...base.profile,...(imported.profile||{})},localVisits:Array.isArray(imported.localVisits)?imported.localVisits:[],services:Array.isArray(imported.services)?imported.services:[],budget:Array.isArray(imported.budget)?imported.budget:[],planning:Array.isArray(imported.planning)?imported.planning:[],team:Array.isArray(imported.team)?imported.team:[],products:Array.isArray(imported.products)?imported.products:[],obligations:Array.isArray(imported.obligations)?imported.obligations:[],decisions:Array.isArray(imported.decisions)?imported.decisions:[]};
+      save(); setRoute("dashboard"); toast("Sauvegarde importée sur cet appareil.");
+    } catch(e){toast("Ce fichier n’est pas une sauvegarde Charlene Salon valide.");} finally{event.target.value="";}};
+    reader.readAsText(file);
+  }
+  $$(".nav button").forEach(button=>button.addEventListener("click",()=>setRoute(button.dataset.route)));
+  render();
+})();
+</script>
+</body>
+</html>
