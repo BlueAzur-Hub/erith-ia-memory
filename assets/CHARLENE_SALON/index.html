@@ -667,11 +667,22 @@
       <aside class="side-card card"><h3>Ce qui est exporté</h3><div class="check-list"><div class="check"><input type="checkbox" checked disabled><span><b>Projet et local</b><br>Les informations de préparation.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Équipe, offre, budget et planning</b><br>Les éléments créés dans l’application.</span></div><div class="check"><input type="checkbox" checked disabled><span><b>Produits, obligations et décisions</b><br>Les listes et états enregistrés.</span></div></div></aside>
     </div></section>`;
   }
+  function bindStaticNavigation(){
+    const nav = $(".nav");
+    nav.addEventListener("click", event => {
+      const button = event.target.closest("button[data-route]");
+      if(!button || !nav.contains(button)) return;
+      setRoute(button.dataset.route);
+    });
+
+    root.addEventListener("click", event => {
+      const button = event.target.closest("[data-route]");
+      if(!button || !root.contains(button)) return;
+      setRoute(button.dataset.route);
+    });
+  }
+
   function bindPage(){
-    $$(".nav button,[data-route]").forEach(button => button.addEventListener("click", () => {
-      if(button.dataset.route) setRoute(button.dataset.route);
-    }));
-    $$(".action-card").forEach(button=>button.addEventListener("click",()=>setRoute(button.dataset.route)));
     $$("[data-cancel-edit]").forEach(button=>button.addEventListener("click",()=>{edit={type:null,id:null};render();}));
     $$("[data-edit-type]").forEach(button=>button.addEventListener("click",()=>{edit={type:button.dataset.editType,id:button.dataset.editId}; render(); window.scrollTo({top:0,behavior:"smooth"});}));
     $$("[data-delete-type]").forEach(button=>button.addEventListener("click",()=> {
@@ -791,7 +802,7 @@
     } catch(e){toast("Ce fichier n’est pas une sauvegarde Charlene Salon valide.");} finally{event.target.value="";}};
     reader.readAsText(file);
   }
-  $$(".nav button").forEach(button=>button.addEventListener("click",()=>setRoute(button.dataset.route)));
+  bindStaticNavigation();
   render();
 })();
 </script>
