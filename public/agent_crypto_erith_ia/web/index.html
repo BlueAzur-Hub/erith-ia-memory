@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC19</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC20</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc19" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc20" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC19</span>
+          <span class="pill ok">GitHub Pack V1.0-RC20</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -32,6 +32,7 @@
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
+        <a href="#impact">Impact</a>
         <a href="#backend">Backend</a>
         <a href="#safety">Sécurité</a>
         <a href="#simulation">Simulation</a>
@@ -183,7 +184,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC19</p>
+        <p class="eyebrow">VERROU RC20</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -407,6 +408,91 @@
 
 
 
+
+
+
+    <section class="panel glass impact-layer" id="impact">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">IMPACT CONCRET</p>
+          <h2>Ce que l’app fait vraiment maintenant</h2>
+          <p class="impact-intro">
+            Lecture simple : cette version explique le rôle de chaque bloc. Elle ne connecte aucun wallet, ne passe aucun ordre et ne manipule aucun argent réel.
+          </p>
+        </div>
+        <span class="pill">Compréhension d’abord</span>
+      </div>
+
+      <div class="impact-grid">
+        <article>
+          <b>Marché live</b>
+          <span>Observe prix, volume, capitalisation et graphiques depuis des sources publiques.</span>
+          <em>Impact : comprendre le marché sans agir.</em>
+        </article>
+        <article>
+          <b>Tests simples</b>
+          <span>Explique les plans, la sécurité, les sources et la simulation avec une carte humaine.</span>
+          <em>Impact : éviter le jargon développeur.</em>
+        </article>
+        <article>
+          <b>Simulation</b>
+          <span>Teste des achats / ventes fictifs avec un portefeuille virtuel local.</span>
+          <em>Impact : apprendre sans perdre d’argent.</em>
+        </article>
+        <article>
+          <b>Sécurité</b>
+          <span>Fige les règles : pas de clé privée, pas de retrait, pas d’ordre réel depuis la page publique.</span>
+          <em>Impact : empêcher les erreurs dangereuses.</em>
+        </article>
+      </div>
+
+      <div class="impact-status">
+        <div class="status-ok"><b>Déjà actif</b><span>Observation · graphiques · sources · commandes humaines · simulation locale.</span></div>
+        <div class="status-wait"><b>Pas encore actif</b><span>Connexion Kraken · wallet réel · accès distant · trading réel.</span></div>
+        <div class="status-lock"><b>Verrouillé</b><span>Tout passage argent réel exige backend privé, logs, validation humaine et sécurité physique.</span></div>
+      </div>
+    </section>
+
+    <section class="panel glass physical-layer" id="physical-security">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PHYSICAL SECURITY LAYER</p>
+          <h2>Ledger / clé physique / validation humaine</h2>
+          <p class="impact-intro">
+            Ledger peut servir de coffre matériel ou de validation physique future, mais ne remplace pas Kraken ni le backend sécurisé.
+          </p>
+        </div>
+        <span class="pill warn">Coffre, pas pilote IA</span>
+      </div>
+
+      <div class="physical-grid">
+        <article class="physical-card ok">
+          <b>Ledger</b>
+          <span>Wallet matériel / coffre froid / validation physique possible.</span>
+          <em>Ne doit jamais donner une liberté totale à l’IA.</em>
+        </article>
+        <article class="physical-card">
+          <b>Kraken</b>
+          <span>Exchange de référence : lecture seule d’abord, aucune clé de retrait.</span>
+          <em>Connexion réelle plus tard, via backend privé.</em>
+        </article>
+        <article class="physical-card">
+          <b>Clé physique</b>
+          <span>Peut renforcer l’accès machine ou l’autorisation humaine.</span>
+          <em>À préparer hors GitHub Pages.</em>
+        </article>
+        <article class="physical-card danger">
+          <b>Interdit</b>
+          <span>Seed phrase, clé privée, clé de retrait ou ordre réel dans le frontend public.</span>
+          <em>Blocage permanent.</em>
+        </article>
+      </div>
+
+      <div class="physical-rule">
+        <b>Règle simple :</b>
+        <span>L’IA peut observer et simuler. L’humain valide. Le matériel protège. Le réel reste verrouillé.</span>
+      </div>
+    </section>
 
 
     <section class="panel glass backend-layer" id="backend">
@@ -657,11 +743,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC19</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC20</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc19"></script>
+  <script src="./app.js?v=1.0-rc20"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC19  
+Version : V1.0-RC20  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -705,3 +705,31 @@ L’interface publique ne doit pas afficher de noms personnels.
 L’utilisateur lit uniquement la carte humaine.
 Aucun ordre réel.
 Aucune clé privée.
+
+
+---
+
+## V1.0-RC20 — Impact concret + Physical Security Layer
+
+Objectif : rendre visible l’impact réel de l’app et intégrer la piste Ledger / sécurité physique sans confusion.
+
+### Ajouts
+
+- Section `Impact concret`.
+- Section `Physical Security Layer`.
+- Explication claire :
+  - ce qui est déjà actif ;
+  - ce qui n’est pas encore actif ;
+  - ce qui reste verrouillé.
+- Clarification Ledger :
+  - Ledger = coffre matériel / wallet froid / validation physique possible ;
+  - Kraken = exchange de référence ;
+  - backend privé = future couche de connexion sécurisée ;
+  - IA = observation et simulation seulement.
+
+### Verrou
+
+Aucun wallet réel connecté.
+Aucune clé privée.
+Aucune clé de retrait.
+Aucun ordre réel.
