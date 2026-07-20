@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent-Crypto @erith.IA — Observatoire</title>
+  <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <main class="shell">
+    <header class="hero glass" id="accueil">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
+          <h1>Agent-Crypto <span>@erith.IA</span></h1>
+          <p class="subtitle">Observatoire crypto prudent · modèle mathématique · livecheck multi-sources · anti-FOMO</p>
+        </div>
+        <div class="status-stack" aria-label="Statuts">
+          <span class="pill ok">GitHub Pack V0.2</span>
+          <span class="pill warn" id="liveStatus">Livecheck requis</span>
+          <span class="sigil">⌁</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#livecheck">Livecheck</a>
+        <a href="#marche">Marché</a>
+        <a href="#watchlist">Watchlist</a>
+        <a href="#math">Math Model</a>
+        <a href="#risques">Risques</a>
+        <a href="#nofomo">No-FOMO</a>
+        <a href="#sources">Sources</a>
+      </nav>
+
+      <section class="command-bar" id="livecheck">
+        <button class="btn primary" id="btnLivecheck">Lancer Livecheck</button>
+        <button class="btn" id="btnRefresh">Rafraîchir marché</button>
+        <button class="btn ghost" id="btnNoFomo">Mode No-FOMO</button>
+        <div class="source-card">
+          <span>Source active</span>
+          <strong id="sourceName">Aucune source consultée</strong>
+        </div>
+        <div class="source-card">
+          <span>Heure données</span>
+          <strong id="sourceTime">—</strong>
+        </div>
+      </section>
+    </header>
+
+    <section class="notice glass" id="offlineNotice">
+      <strong>ACCÈS LIVE NON TESTÉ</strong>
+      <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
+    </section>
+
+    <section class="ticker glass" aria-label="Ticker marché">
+      <div class="ticker-track" id="tickerTrack">
+        <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
+        <span>Agent-Crypto @erith.IA observe, vérifie, classe, refuse l’invention · </span>
+      </div>
+    </section>
+
+    <section class="metrics" id="marche">
+      <article class="metric glass">
+        <span>Capitalisation totale</span>
+        <strong id="metricMarketCap">—</strong>
+        <small id="metricMarketCapHint">Donnée non récupérée</small>
+      </article>
+      <article class="metric glass">
+        <span>Volume 24h</span>
+        <strong id="metricVolume">—</strong>
+        <small id="metricVolumeHint">Donnée non récupérée</small>
+      </article>
+      <article class="metric glass">
+        <span>Dominance BTC</span>
+        <strong id="metricBtcDom">—</strong>
+        <small id="metricBtcDomHint">Donnée non récupérée</small>
+      </article>
+      <article class="metric glass">
+        <span>Sources OK</span>
+        <strong id="metricSources">0/7</strong>
+        <small id="metricSourcesHint">Livecheck requis</small>
+      </article>
+    </section>
+
+    <section class="layout-two">
+      <article class="panel glass wide">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">MARKET SNAPSHOT</p>
+            <h2>Prix du marché des cryptomonnaies</h2>
+          </div>
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Filtrer : bitcoin, eth, sol..." autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rang</th>
+                <th>Crypto</th>
+                <th>Prix</th>
+                <th>24h</th>
+                <th>7j</th>
+                <th>Market Cap</th>
+                <th>Volume 24h</th>
+                <th>Score</th>
+                <th>Décision</th>
+              </tr>
+            </thead>
+            <tbody id="marketRows">
+              <tr><td colspan="9" class="empty">Livecheck requis. Aucun prix inventé.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note" id="tableNote">Les données chiffrées apparaissent uniquement si une source réelle répond.</p>
+      </article>
+
+      <aside class="panel glass" id="math">
+        <p class="eyebrow">MATH ORACLE</p>
+        <h2>Score Observation Crypto</h2>
+        <div class="score-ring" id="scoreRing" style="--score:0">
+          <span id="scoreValue">—</span>
+          <small id="scoreLabel">En attente</small>
+        </div>
+        <div class="breakdown" id="scoreBreakdown">
+          <div><span>Information</span><b>—</b></div>
+          <div><span>Marché</span><b>—</b></div>
+          <div><span>Liquidité</span><b>—</b></div>
+          <div><span>Momentum</span><b>—</b></div>
+          <div><span>Risque</span><b>—</b></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout-two">
+      <article class="panel glass" id="watchlist">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">WATCHLIST</p>
+            <h2>Actifs à observer</h2>
+          </div>
+          <button class="btn small" id="btnSeedWatch">BTC · ETH · SOL</button>
+        </div>
+        <div class="watch-inputs">
+          <input id="watchInput" type="text" placeholder="Ajouter un id CoinGecko : bitcoin" />
+          <button class="btn small primary" id="btnAddWatch">Ajouter</button>
+        </div>
+        <div class="cards" id="watchCards">
+          <div class="mini-card muted">Aucune donnée watchlist chargée.</div>
+        </div>
+      </article>
+
+      <article class="panel glass" id="risques">
+        <p class="eyebrow">RISK SENTINEL</p>
+        <h2>Validation croisée</h2>
+        <div class="risk-grid" id="riskGrid">
+          <div class="risk ok"><span>Marché</span><b>En attente</b></div>
+          <div class="risk warn"><span>Sécurité</span><b>Non vérifiée</b></div>
+          <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
+          <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>
+        </div>
+        <p class="muted-line">Une validation marché ne remplace jamais la sécurité contrat.</p>
+      </article>
+    </section>
+
+    <section class="layout-two">
+      <article class="panel glass" id="nofomo">
+        <p class="eyebrow">NO-FOMO</p>
+        <h2>Refroidissement de décision</h2>
+        <blockquote>
+          Une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.
+        </blockquote>
+        <textarea id="fomoInput" placeholder="Exemple : ce token a fait +300 %, j’ai peur de rater la suite..."></textarea>
+        <button class="btn primary" id="btnAnalyzeFomo">Analyser la FOMO</button>
+        <div class="analysis-box" id="fomoOutput">Aucune analyse lancée.</div>
+      </article>
+
+      <article class="panel glass">
+        <p class="eyebrow">NEWS SENTINEL</p>
+        <h2>Analyse d’actualité</h2>
+        <textarea id="newsInput" placeholder="Colle une actualité, une annonce, un listing, une rumeur..."></textarea>
+        <button class="btn primary" id="btnAnalyzeNews">Classifier l’information</button>
+        <div class="analysis-box" id="newsOutput">Aucune actualité analysée.</div>
+      </article>
+    </section>
+
+    <section class="panel glass" id="sources">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">SOURCE STACK</p>
+          <h2>Sources live et statut</h2>
+        </div>
+        <span class="pill" id="sourceDecision">Tableau refusé avant Livecheck</span>
+      </div>
+      <div class="source-grid" id="sourceGrid"></div>
+    </section>
+
+    <footer class="footer">
+      <span>Agent-Crypto @erith.IA V0.2</span>
+      <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
