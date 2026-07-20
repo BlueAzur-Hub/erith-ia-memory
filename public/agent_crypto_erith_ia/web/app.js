@@ -912,6 +912,115 @@ function renderSimulation() {
 
 
 
+
+
+function situationPayload() {
+  return {
+    version: "RC22",
+    active_now: [
+      "public_market_observation",
+      "charts",
+      "source_diagnostic",
+      "human_readable_tests",
+      "local_paper_trading",
+      "briefing_questions"
+    ],
+    prepared_only: [
+      "private_backend",
+      "remote_access",
+      "kraken_read_only",
+      "physical_security_layer"
+    ],
+    locked: [
+      "real_wallet_connection",
+      "private_key",
+      "withdraw_key",
+      "real_order",
+      "automatic_trading"
+    ],
+    current_step: "collect_information_before_private_backend"
+  };
+}
+
+function nextStepsPayload() {
+  return {
+    next_steps: [
+      "confirm_priority_assets",
+      "define_virtual_simulation_amount",
+      "define_forbidden_risks",
+      "select_news_sources",
+      "describe_private_machine",
+      "choose_access_security_model"
+    ],
+    next_version_candidate: "RC23_session_questionnaire_or_exportable_brief"
+  };
+}
+
+function boundariesPayload() {
+  return {
+    hard_boundaries: [
+      "no_real_exchange_key_now",
+      "no_real_wallet_connection",
+      "no_seed_phrase_in_ui_or_files",
+      "no_withdraw_permission",
+      "no_real_order_from_public_frontend",
+      "no_public_remote_access",
+      "no_nominative_labels_in_public_interface"
+    ]
+  };
+}
+
+function briefingPayload() {
+  return {
+    mode: "preparation_session",
+    purpose: "collect_information_before_private_backend",
+    collect: [
+      "target_mode_observation_simulation_or_future_semi_auto",
+      "priority_assets",
+      "risk_limits",
+      "news_sources",
+      "private_machine_context",
+      "remote_access_preference",
+      "physical_security_preference"
+    ],
+    forbidden_during_session: [
+      "create_real_exchange_key",
+      "connect_real_wallet",
+      "enter_seed_phrase",
+      "enable_withdraw_permission",
+      "start_real_trading",
+      "open_public_remote_access"
+    ]
+  };
+}
+
+function questionsPayload() {
+  return {
+    questions: [
+      "Quel montant virtuel utiliser pour la simulation ?",
+      "Quelles cryptos suivre en priorité ?",
+      "Quels risques sont interdits ?",
+      "Quelles sources d'information surveiller ?",
+      "Quelle machine privée est envisagée ?",
+      "Quel accès renforcé est préféré ?",
+      "Quelle validation humaine est obligatoire ?"
+    ]
+  };
+}
+
+function doNotDoPayload() {
+  return {
+    do_not_do: [
+      "Pas de clé Kraken réelle maintenant.",
+      "Pas de wallet réel connecté maintenant.",
+      "Pas de seed phrase dans l'interface.",
+      "Pas de trading automatique.",
+      "Pas d'accès distant public.",
+      "Pas d'argent réel avant dry-run long."
+    ]
+  };
+}
+
 function backendBlueprintPayload() {
   return {
     version: "RC15",
@@ -934,7 +1043,7 @@ function backendBlueprintPayload() {
       ]
     },
     private_layer_future: {
-      host: "PC_operateur_autorise_2_or_secure_local_server",
+      host: "PC_operateur_autorise_or_secure_local_server",
       allowed: [
         "encrypted_api_secrets",
         "Kraken_read_only_client",
@@ -943,7 +1052,7 @@ function backendBlueprintPayload() {
         "kill_switch",
         "restricted_remote_access"
       ],
-      access: ["operateur_autorise_1", "operateur_autorise_2"]
+      access: ["operateur_autorise", "operateur_autorise"]
     },
     exchange_layer_future: {
       primary: "Kraken",
@@ -994,7 +1103,7 @@ function krakenReadonlyPlanPayload() {
 function remoteBlueprintPayload() {
   return {
     scope: "future_private_machine_only",
-    authorized_people: ["operateur_autorise_1", "operateur_autorise_2"],
+    authorized_people: ["operateur_autorise", "operateur_autorise"],
     rules: [
       "no_public_admin_panel",
       "no_shared_cleartext_password",
@@ -1080,7 +1189,7 @@ function killSwitchPayload() {
 function accessPlanPayload() {
   return {
     access_model: "two_people_only",
-    authorized_people: ["operateur_autorise_1", "operateur_autorise_2"],
+    authorized_people: ["operateur_autorise", "operateur_autorise"],
     public_app: "no_remote_admin_capability",
     future_backend_requirements: [
       "strong_authentication",
@@ -1372,6 +1481,13 @@ function parseCommandLine(input) {
   if (cmd === "sim_sell" || cmd === "paper_sell") return simulateOrder("sell", parts[1], parts[2]);
   if (cmd === "portfolio" || cmd === "paper_portfolio") return commandOk("portfolio", simulationPayload());
   if (cmd === "reset_sim" || cmd === "paper_reset") { resetSimulation(); return commandOk("reset_sim", simulationPayload()); }
+  if (cmd === "questionnaire_status" || cmd === "questionnaire") return commandOk("questionnaire_status", questionnaireStatusPayload());
+  if (cmd === "situation" || cmd === "status") return commandOk("situation", situationPayload());
+  if (cmd === "next_steps" || cmd === "suite") return commandOk("next_steps", nextStepsPayload());
+  if (cmd === "boundaries" || cmd === "limites") return commandOk("boundaries", boundariesPayload());
+  if (cmd === "briefing" || cmd === "session") return commandOk("briefing", briefingPayload());
+  if (cmd === "questions") return commandOk("questions", questionsPayload());
+  if (cmd === "do_not_do" || cmd === "interdits") return commandOk("do_not_do", doNotDoPayload());
   if (cmd === "backend_blueprint" || cmd === "backend") return commandOk("backend_blueprint", backendBlueprintPayload());
   if (cmd === "kraken_readonly_plan" || cmd === "kraken_readonly") return commandOk("kraken_readonly_plan", krakenReadonlyPlanPayload());
   if (cmd === "remote_blueprint" || cmd === "remote") return commandOk("remote_blueprint", remoteBlueprintPayload());
@@ -1427,13 +1543,117 @@ function humanCommandSummary(result) {
     };
   }
 
+  if (cmd === "questionnaire_status") {
+    return {
+      title: "Questionnaire : OK",
+      text: "Cette carte vérifie l’état de la fiche de session locale.",
+      bullets: [
+        "Les notes restent dans le navigateur.",
+        "Aucune clé réelle ne doit être saisie.",
+        "Aucun wallet réel ne doit être connecté.",
+        "La fiche sert à préparer la discussion."
+      ],
+      tags: ["questionnaire", "local", "aucun secret"]
+    };
+  }
+
+  if (cmd === "situation") {
+    return {
+      title: "Situation : OK",
+      text: "Cette carte résume où en est le projet maintenant.",
+      bullets: [
+        "Actif : observation, graphiques, sources, simulation locale.",
+        "Préparé : backend privé, accès renforcé, Kraken lecture seule.",
+        "Verrouillé : wallet réel, clé privée, retrait, ordre réel.",
+        "Étape actuelle : collecter les informations de session."
+      ],
+      tags: ["situation", "clair", "aucun réel"]
+    };
+  }
+
+  if (cmd === "next_steps") {
+    return {
+      title: "Prochaines étapes : OK",
+      text: "Cette carte liste ce qu’il faut clarifier avant de développer la machine privée.",
+      bullets: [
+        "Cryptos prioritaires.",
+        "Montant virtuel de simulation.",
+        "Risques interdits.",
+        "Sources d’actualité.",
+        "Machine privée et accès renforcé."
+      ],
+      tags: ["suite", "briefing", "préparation"]
+    };
+  }
+
+  if (cmd === "boundaries") {
+    return {
+      title: "Limites verrouillées : OK",
+      text: "Cette carte rappelle ce que l’app publique ne doit jamais faire.",
+      bullets: [
+        "Pas de clé réelle.",
+        "Pas de wallet réel.",
+        "Pas de seed phrase.",
+        "Pas d’ordre réel.",
+        "Pas d’accès distant public."
+      ],
+      tags: ["verrou", "sécurité", "zéro argent réel"]
+    };
+  }
+
+  if (cmd === "briefing") {
+    return {
+      title: "Briefing session : OK",
+      text: "Cette carte prépare la discussion : on collecte les informations avant toute décision technique.",
+      bullets: [
+        "Clarifier le but exact.",
+        "Lister les cryptos prioritaires.",
+        "Définir les limites de risque.",
+        "Noter les sources d’information.",
+        "Ne connecter aucun wallet réel."
+      ],
+      tags: ["préparation", "aucun réel", "sécurité"]
+    };
+  }
+
+  if (cmd === "questions") {
+    return {
+      title: "Questions à poser : OK",
+      text: "Cette carte liste les points à éclaircir avant la prochaine étape.",
+      bullets: [
+        "Montant virtuel de simulation.",
+        "Cryptos prioritaires.",
+        "Sources d’actualité.",
+        "Machine privée.",
+        "Accès renforcé.",
+        "Validation humaine."
+      ],
+      tags: ["questions", "session", "clarifier"]
+    };
+  }
+
+  if (cmd === "do_not_do") {
+    return {
+      title: "À ne pas faire : OK",
+      text: "Cette carte rappelle les actions interdites pour éviter une erreur dangereuse.",
+      bullets: [
+        "Pas de clé réelle.",
+        "Pas de wallet réel.",
+        "Pas de seed phrase.",
+        "Pas de trading automatique.",
+        "Pas d’accès public."
+      ],
+      tags: ["interdits", "sécurité", "zéro argent réel"]
+    };
+  }
+
   if (cmd === "backend_blueprint") {
     return {
       title: "Backend Blueprint : test OK",
       text: "Le bouton “Plan architecture” montre simplement où seront rangées les parties du futur système. Il ne connecte rien et ne fait aucun achat.",
       bullets: [
         "Site public : ce que tu vois ici, sans clé et sans argent réel.",
-        "Machine privée : futur PC chez operateur_autorise_2 ou serveur sécurisé.",
+        "Machine privée : futur PC chez operateur_autorise ou serveur sécurisé.",
         "Kraken : plus tard, d’abord en lecture seule.",
         "Interdit : achat réel, retrait, clé API dans GitHub."
       ],
@@ -1473,7 +1693,7 @@ function humanCommandSummary(result) {
   if (cmd === "remote_blueprint") {
     return {
       title: "Accès distant : plan OK",
-      text: "La commande décrit le futur accès réservé à operateur_autorise_1 et operateur_autorise_2 uniquement.",
+      text: "La commande décrit le futur accès réservé à operateur_autorise et operateur_autorise uniquement.",
       bullets: [
         "Pas de panneau admin public.",
         "Comptes séparés.",
@@ -1822,7 +2042,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC20</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC23</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1902,7 +2122,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC20.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC23.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2038,3 +2258,140 @@ renderColdRead(false);
 
 renderBeginnerSummary();
 requestAnimationFrame(() => renderAnalystPanel());
+
+
+
+const QUESTIONNAIRE_STORAGE_KEY = "agent_crypto_erith_ia_questionnaire_v1";
+
+function questionnaireFields() {
+  return {
+    objective: document.getElementById("qObjective"),
+    assets: document.getElementById("qAssets"),
+    virtualAmount: document.getElementById("qVirtualAmount"),
+    risks: document.getElementById("qRisks"),
+    news: document.getElementById("qNews"),
+    machine: document.getElementById("qMachine"),
+    access: document.getElementById("qAccess"),
+    physical: document.getElementById("qPhysical")
+  };
+}
+
+function getQuestionnaireData() {
+  const f = questionnaireFields();
+  return {
+    objective: f.objective?.value?.trim() || "",
+    assets: f.assets?.value?.trim() || "",
+    virtualAmount: f.virtualAmount?.value?.trim() || "",
+    risks: f.risks?.value?.trim() || "",
+    news: f.news?.value?.trim() || "",
+    machine: f.machine?.value?.trim() || "",
+    access: f.access?.value?.trim() || "",
+    physical: f.physical?.value?.trim() || "",
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function setQuestionnaireData(data = {}) {
+  const f = questionnaireFields();
+  if (f.objective) f.objective.value = data.objective || "";
+  if (f.assets) f.assets.value = data.assets || "";
+  if (f.virtualAmount) f.virtualAmount.value = data.virtualAmount || "";
+  if (f.risks) f.risks.value = data.risks || "";
+  if (f.news) f.news.value = data.news || "";
+  if (f.machine) f.machine.value = data.machine || "";
+  if (f.access) f.access.value = data.access || "";
+  if (f.physical) f.physical.value = data.physical || "";
+}
+
+function saveQuestionnaire() {
+  const data = getQuestionnaireData();
+  try {
+    localStorage.setItem(QUESTIONNAIRE_STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+  return data;
+}
+
+function loadQuestionnaire() {
+  try {
+    const raw = localStorage.getItem(QUESTIONNAIRE_STORAGE_KEY);
+    if (raw) {
+      setQuestionnaireData(JSON.parse(raw));
+    }
+  } catch {}
+}
+
+function clearQuestionnaire() {
+  try {
+    localStorage.removeItem(QUESTIONNAIRE_STORAGE_KEY);
+  } catch {}
+  setQuestionnaireData({});
+  const out = document.getElementById("questionnaireOutput");
+  if (out) out.textContent = "Fiche effacée localement.";
+}
+
+function buildSessionBrief() {
+  const data = saveQuestionnaire();
+  const lines = [
+    "NOTE DE REPRISE — Agent-Crypto @erith.IA",
+    "",
+    "Statut : préparation avant backend privé.",
+    "Règle : aucune clé réelle, aucun wallet réel, aucun trading réel.",
+    "",
+    "1. Objectif de la session",
+    data.objective || "À compléter.",
+    "",
+    "2. Cryptos prioritaires",
+    data.assets || "À compléter.",
+    "",
+    "3. Montant virtuel de simulation",
+    data.virtualAmount || "À compléter.",
+    "",
+    "4. Risques interdits",
+    data.risks || "À compléter.",
+    "",
+    "5. Sources d'information",
+    data.news || "À compléter.",
+    "",
+    "6. Machine privée envisagée",
+    data.machine || "À compléter.",
+    "",
+    "7. Accès renforcé",
+    data.access || "À compléter.",
+    "",
+    "8. Sécurité physique / wallet matériel",
+    data.physical || "À compléter.",
+    "",
+    "Interdits rappelés : pas de seed phrase, pas de clé API réelle, pas de retrait, pas d'ordre réel, pas d'accès distant public.",
+    "",
+    `Dernière mise à jour locale : ${data.updatedAt}`
+  ];
+
+  const out = document.getElementById("questionnaireOutput");
+  if (out) out.textContent = lines.join("\\n");
+  return data;
+}
+
+function questionnaireStatusPayload() {
+  const data = getQuestionnaireData();
+  const filled = Object.entries(data)
+    .filter(([key, value]) => key !== "updatedAt" && String(value || "").trim())
+    .map(([key]) => key);
+
+  return {
+    version: "RC23",
+    filled_fields: filled,
+    missing_fields: ["objective","assets","virtualAmount","risks","news","machine","access","physical"].filter(k => !filled.includes(k)),
+    rule: "local_browser_notes_only_no_secrets"
+  };
+}
+
+document.getElementById("btnSaveQuestionnaire")?.addEventListener("click", () => {
+  saveQuestionnaire();
+  const out = document.getElementById("questionnaireOutput");
+  if (out) out.textContent = "Fiche sauvegardée localement dans ce navigateur.";
+});
+
+document.getElementById("btnBuildBrief")?.addEventListener("click", buildSessionBrief);
+document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
+loadQuestionnaire();
+

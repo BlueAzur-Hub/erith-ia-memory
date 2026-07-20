@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC20 — STABILISATION
+   V1.0-RC23 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC20 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC23 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC20 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC23 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC20 — GRAPHIQUES ANALYSTE
+   V1.0-RC23 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — FIX GRAPHIQUES RÉELS
+   V1.0-RC23 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC23 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC23 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC23 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC23 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — CRYPTO COMMAND LAYER
+   V1.0-RC23 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC23 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — PAPER TRADING SANDBOX
+   V1.0-RC23 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1419,7 +1419,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — SAFETY CONTROL ROOM
+   V1.0-RC23 — SAFETY CONTROL ROOM
    ========================================================= */
 
 .safety-layer{margin-top:8px}
@@ -1532,7 +1532,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — BACKEND BLUEPRINT
+   V1.0-RC23 — BACKEND BLUEPRINT
    ========================================================= */
 
 .backend-layer{margin-top:8px}
@@ -1680,7 +1680,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — COMMAND OUTPUT HUMAIN
+   V1.0-RC23 — COMMAND OUTPUT HUMAIN
    ========================================================= */
 
 .command-human{
@@ -1750,7 +1750,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — COMMANDES HUMAINES FR
+   V1.0-RC23 — COMMANDES HUMAINES FR
    ========================================================= */
 
 .command-helper-human{
@@ -1800,7 +1800,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — MODE HUMAIN SIMPLE
+   V1.0-RC23 — MODE HUMAIN SIMPLE
    ========================================================= */
 
 .simple-command-guide{
@@ -1883,7 +1883,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — ZÉRO NOMINATIF + ZÉRO DÉTAIL TECHNIQUE BRUT VISIBLE
+   V1.0-RC23 — ZÉRO NOMINATIF + ZÉRO DÉTAIL TECHNIQUE BRUT VISIBLE
    ========================================================= */
 
 .is-hidden,
@@ -1903,7 +1903,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC20 — IMPACT CONCRET + PHYSICAL SECURITY LAYER
+   V1.0-RC23 — IMPACT CONCRET + PHYSICAL SECURITY LAYER
    ========================================================= */
 
 .impact-layer,
@@ -2039,6 +2039,403 @@ tr.asset-row.is-selected{
   .impact-grid,
   .physical-grid,
   .impact-status{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   V1.0-RC23 — BRIEFING TERRAIN / INFOS À COLLECTER
+   ========================================================= */
+
+.briefing-layer{
+  margin-top:8px;
+}
+
+.briefing-intro{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0 0;
+}
+
+.briefing-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.briefing-grid article{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:14px;
+  padding:11px;
+  min-height:110px;
+}
+
+.briefing-grid b{
+  display:block;
+  color:#fff0c8;
+  font-size:11px;
+  margin-bottom:6px;
+}
+
+.briefing-grid span{
+  display:block;
+  color:#d7e6f6;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.briefing-grid em{
+  display:block;
+  color:#9eb0c8;
+  font-style:normal;
+  font-size:9px;
+  line-height:1.35;
+  margin-top:7px;
+}
+
+.question-board{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.question-board > div{
+  border:1px solid rgba(98,236,255,.16);
+  background:rgba(98,236,255,.045);
+  border-radius:14px;
+  padding:12px;
+}
+
+.question-board h3{
+  margin:0 0 8px;
+  color:#fff0c8;
+  font-size:12px;
+}
+
+.question-board ul{
+  margin:0;
+  padding-left:18px;
+  color:#dbe8f6;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.question-board li{
+  margin:3px 0;
+}
+
+.briefing-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+@media (max-width:1200px){
+  .briefing-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (max-width:760px){
+  .briefing-grid,
+  .question-board{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   V1.0-RC23 — SITUATION & PROCHAINES ÉTAPES
+   ========================================================= */
+
+.situation-layer{
+  margin-top:8px;
+}
+
+.situation-intro{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0 0;
+}
+
+.situation-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.situation-card{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:14px;
+  padding:11px;
+  min-height:112px;
+}
+
+.situation-card.ok{
+  border-color:rgba(115,255,177,.30);
+  background:rgba(115,255,177,.055);
+}
+
+.situation-card.plan{
+  border-color:rgba(98,236,255,.26);
+  background:rgba(98,236,255,.045);
+}
+
+.situation-card.lock{
+  border-color:rgba(255,105,135,.28);
+  background:rgba(255,105,135,.045);
+}
+
+.situation-card.next{
+  border-color:rgba(255,215,130,.28);
+  background:rgba(255,215,130,.045);
+}
+
+.situation-card b{
+  display:block;
+  color:#fff0c8;
+  font-size:11px;
+  margin-bottom:6px;
+}
+
+.situation-card span{
+  display:block;
+  color:#d7e6f6;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.situation-card em{
+  display:block;
+  color:#9eb0c8;
+  font-style:normal;
+  font-size:9px;
+  line-height:1.35;
+  margin-top:7px;
+}
+
+.situation-steps{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.situation-steps .step{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:999px;
+  padding:7px 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+
+.situation-steps .step b{
+  display:inline-grid;
+  place-items:center;
+  min-width:22px;
+  height:22px;
+  border-radius:50%;
+  background:rgba(255,255,255,.10);
+  color:#fff0c8;
+  font-size:10px;
+}
+
+.situation-steps .step span{
+  color:#dbe8f6;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.situation-steps .done{border-color:rgba(115,255,177,.30)}
+.situation-steps .active{border-color:rgba(98,236,255,.48);background:rgba(98,236,255,.08)}
+.situation-steps .wait{border-color:rgba(255,215,130,.30);background:rgba(255,215,130,.045)}
+.situation-steps .locked{border-color:rgba(255,105,135,.26);background:rgba(255,105,135,.04)}
+
+.decision-board{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.decision-board > div{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:14px;
+  padding:12px;
+}
+
+.decision-board h3{
+  margin:0 0 8px;
+  color:#fff0c8;
+  font-size:12px;
+}
+
+.decision-board ul{
+  margin:0;
+  padding-left:18px;
+  color:#dbe8f6;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.decision-board li{
+  margin:3px 0;
+}
+
+.situation-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+@media (max-width:1200px){
+  .situation-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+  .situation-steps{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media (max-width:760px){
+  .situation-grid,
+  .situation-steps,
+  .decision-board{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   V1.0-RC23 — QUESTIONNAIRE SESSION
+   ========================================================= */
+
+.questionnaire-layer{
+  margin-top:8px;
+}
+
+.questionnaire-intro{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0 0;
+}
+
+.questionnaire-warning{
+  border:1px solid rgba(255,215,130,.26);
+  background:rgba(255,215,130,.055);
+  border-radius:14px;
+  padding:10px;
+  margin-top:10px;
+  display:grid;
+  gap:4px;
+}
+
+.questionnaire-warning b{
+  color:#fff0c8;
+  font-size:12px;
+}
+
+.questionnaire-warning span{
+  color:#ffe8b8;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.questionnaire-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.questionnaire-grid label{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:14px;
+  padding:10px;
+}
+
+.questionnaire-grid label span{
+  display:block;
+  color:#fff0c8;
+  font-size:10px;
+  font-weight:900;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.questionnaire-grid textarea{
+  width:100%;
+  min-height:86px;
+  resize:vertical;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(2,12,24,.42);
+  color:#e9f6ff;
+  border-radius:12px;
+  padding:9px;
+  outline:0;
+  font-size:11px;
+  line-height:1.35;
+}
+
+.questionnaire-grid textarea:focus{
+  border-color:rgba(98,236,255,.45);
+  box-shadow:0 0 0 2px rgba(98,236,255,.08);
+}
+
+.questionnaire-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.questionnaire-output{
+  margin-top:10px;
+  border:1px solid rgba(98,236,255,.16);
+  background:rgba(98,236,255,.045);
+  border-radius:14px;
+  padding:10px;
+}
+
+.questionnaire-output h3{
+  margin:0 0 8px;
+  color:#fff0c8;
+  font-size:12px;
+}
+
+.questionnaire-output pre{
+  margin:0;
+  white-space:pre-wrap;
+  min-height:120px;
+  max-height:300px;
+  overflow:auto;
+  color:#dff6ff;
+  font-size:10px;
+  line-height:1.45;
+}
+
+@media (max-width:900px){
+  .questionnaire-grid{
     grid-template-columns:1fr;
   }
 }

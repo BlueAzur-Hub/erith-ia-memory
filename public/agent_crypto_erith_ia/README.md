@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC20  
+Version : V1.0-RC23  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -733,3 +733,106 @@ Aucun wallet réel connecté.
 Aucune clé privée.
 Aucune clé de retrait.
 Aucun ordre réel.
+
+
+---
+
+## V1.0-RC21 — Briefing terrain / infos à collecter
+
+Objectif : préparer la prochaine session de clarification sans créer de risque technique.
+
+### Ajouts
+
+- Section `Briefing terrain`.
+- Questions à poser :
+  - objectif exact ;
+  - cryptos prioritaires ;
+  - risques interdits ;
+  - sources d’information ;
+  - machine privée ;
+  - accès renforcé ;
+  - validation humaine.
+- Liste `À ne pas faire`.
+- Commandes humaines :
+  - `Briefing session`
+  - `Questions à poser`
+  - `À ne pas faire`
+
+### Règle
+
+Pas de nom personnel dans l’interface.
+Pas de clé réelle.
+Pas de wallet réel.
+Pas de trading réel.
+
+
+---
+
+## V1.0-RC22 — Situation & prochaines étapes
+
+Objectif : donner une vue claire du projet après RC21.
+
+### Ajouts
+
+- Section `Situation du projet`.
+- Synthèse :
+  - actif maintenant ;
+  - préparé seulement ;
+  - verrouillé ;
+  - prochaine vraie décision.
+- Étapes visuelles :
+  - Observatoire public ;
+  - Lecture humaine ;
+  - Simulation locale ;
+  - Session infos ;
+  - Backend privé ;
+  - Kraken lecture seule ;
+  - Réel verrouillé.
+- Commandes humaines :
+  - `Situation`
+  - `Prochaines étapes`
+  - `Limites`
+
+### Règle
+
+Pas de nom personnel dans l’interface publique.
+Pas de clé réelle.
+Pas de wallet réel.
+Pas de trading réel.
+
+
+---
+
+## V1.0-RC23 — Questionnaire session
+
+Objectif : transformer le briefing en fiche remplissable pendant la discussion.
+
+### Ajouts
+
+- Section `Questionnaire session`.
+- Champs :
+  - objectif de la session ;
+  - cryptos prioritaires ;
+  - montant virtuel de simulation ;
+  - risques interdits ;
+  - sources d’information ;
+  - machine privée envisagée ;
+  - accès renforcé ;
+  - sécurité physique / wallet matériel.
+- Sauvegarde locale navigateur.
+- Génération d’une note de reprise.
+- Effacement local.
+- Commande :
+  - `Questionnaire`
+
+### Sécurité
+
+Ne jamais saisir :
+- seed phrase ;
+- clé API réelle ;
+- mot de passe ;
+- information nominative ;
+- wallet réel ;
+- donnée de retrait.
+
+Aucun trading réel.
