@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.6  
+Version : V0.7  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -143,4 +143,18 @@ Objectif : ultra-compact.
 - Tableau plus dense.
 - Score mathématique plus petit.
 - Plus de contenu exploitable visible dès le haut de page.
+- Verrou anti-hallucination inchangé.
+
+
+---
+
+## Changelog V0.7
+
+Objectif : correction réelle du titre et passage terminal compact.
+
+- Le titre est maintenant une vraie ligne HTML : `Agent-Crypto @erith.IA`.
+- Suppression de la structure visuelle qui forçait `@erith.IA` à passer dessous.
+- Échelle générale fortement réduite.
+- Header compressé.
+- Dashboard-first : plus de tableau et de contenu utile visible rapidement.
 - Verrou anti-hallucination inchangé.

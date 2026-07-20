@@ -173,7 +173,7 @@ async function runLivecheck() {
     renderColdRead();
   }
   els.metricSources.textContent = `${okCount}/${liveSources.length}`;
-  els.metricSourcesHint.textContent = state.liveOk ? "Source marché active" : "Pas de source marché exploitable";
+  els.metricSourcesHint.textContent = `${liveSources.length}/${liveSources.length} testées`;
   updateSourceMetric();
 }
 
