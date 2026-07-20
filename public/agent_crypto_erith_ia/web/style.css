@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC21 — STABILISATION
+   V1.0-RC20 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC21 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC20 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC21 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC20 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC21 — GRAPHIQUES ANALYSTE
+   V1.0-RC20 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — FIX GRAPHIQUES RÉELS
+   V1.0-RC20 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC20 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC20 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC20 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC20 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — CRYPTO COMMAND LAYER
+   V1.0-RC20 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC20 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — PAPER TRADING SANDBOX
+   V1.0-RC20 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1419,7 +1419,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — SAFETY CONTROL ROOM
+   V1.0-RC20 — SAFETY CONTROL ROOM
    ========================================================= */
 
 .safety-layer{margin-top:8px}
@@ -1532,7 +1532,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — BACKEND BLUEPRINT
+   V1.0-RC20 — BACKEND BLUEPRINT
    ========================================================= */
 
 .backend-layer{margin-top:8px}
@@ -1680,7 +1680,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — COMMAND OUTPUT HUMAIN
+   V1.0-RC20 — COMMAND OUTPUT HUMAIN
    ========================================================= */
 
 .command-human{
@@ -1750,7 +1750,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — COMMANDES HUMAINES FR
+   V1.0-RC20 — COMMANDES HUMAINES FR
    ========================================================= */
 
 .command-helper-human{
@@ -1800,7 +1800,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — MODE HUMAIN SIMPLE
+   V1.0-RC20 — MODE HUMAIN SIMPLE
    ========================================================= */
 
 .simple-command-guide{
@@ -1883,7 +1883,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — ZÉRO NOMINATIF + ZÉRO DÉTAIL TECHNIQUE BRUT VISIBLE
+   V1.0-RC20 — ZÉRO NOMINATIF + ZÉRO DÉTAIL TECHNIQUE BRUT VISIBLE
    ========================================================= */
 
 .is-hidden,
@@ -1903,7 +1903,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC21 — IMPACT CONCRET + PHYSICAL SECURITY LAYER
+   V1.0-RC20 — IMPACT CONCRET + PHYSICAL SECURITY LAYER
    ========================================================= */
 
 .impact-layer,
@@ -2039,112 +2039,6 @@ tr.asset-row.is-selected{
   .impact-grid,
   .physical-grid,
   .impact-status{
-    grid-template-columns:1fr;
-  }
-}
-
-
-/* =========================================================
-   V1.0-RC21 — BRIEFING TERRAIN / INFOS À COLLECTER
-   ========================================================= */
-
-.briefing-layer{
-  margin-top:8px;
-}
-
-.briefing-intro{
-  color:#b9c8dc;
-  font-size:11px;
-  line-height:1.35;
-  margin:4px 0 0;
-}
-
-.briefing-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-top:10px;
-}
-
-.briefing-grid article{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.055);
-  border-radius:14px;
-  padding:11px;
-  min-height:110px;
-}
-
-.briefing-grid b{
-  display:block;
-  color:#fff0c8;
-  font-size:11px;
-  margin-bottom:6px;
-}
-
-.briefing-grid span{
-  display:block;
-  color:#d7e6f6;
-  font-size:10px;
-  line-height:1.35;
-}
-
-.briefing-grid em{
-  display:block;
-  color:#9eb0c8;
-  font-style:normal;
-  font-size:9px;
-  line-height:1.35;
-  margin-top:7px;
-}
-
-.question-board{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
-
-.question-board > div{
-  border:1px solid rgba(98,236,255,.16);
-  background:rgba(98,236,255,.045);
-  border-radius:14px;
-  padding:12px;
-}
-
-.question-board h3{
-  margin:0 0 8px;
-  color:#fff0c8;
-  font-size:12px;
-}
-
-.question-board ul{
-  margin:0;
-  padding-left:18px;
-  color:#dbe8f6;
-  font-size:10px;
-  line-height:1.45;
-}
-
-.question-board li{
-  margin:3px 0;
-}
-
-.briefing-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:10px;
-}
-
-@media (max-width:1200px){
-  .briefing-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media (max-width:760px){
-  .briefing-grid,
-  .question-board{
     grid-template-columns:1fr;
   }
 }
