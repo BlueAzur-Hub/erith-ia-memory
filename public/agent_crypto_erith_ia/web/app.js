@@ -1551,7 +1551,7 @@ function humanCommandSummary(result) {
         "Les notes restent dans le navigateur.",
         "Aucune clé réelle ne doit être saisie.",
         "Aucun wallet réel ne doit être connecté.",
-        "La fiche sert à préparer la discussion."
+        "La fiche sert à préparer la discussion et peut être exportée en note Markdown."
       ],
       tags: ["questionnaire", "local", "aucun secret"]
     };
@@ -2042,7 +2042,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC25</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC26</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2122,7 +2122,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC25.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC26.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2332,43 +2332,64 @@ function clearQuestionnaire() {
 function buildSessionBrief() {
   const data = saveQuestionnaire();
   const lines = [
-    "NOTE DE REPRISE — Agent-Crypto @erith.IA",
+    "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Statut : préparation avant backend privé.",
-    "Règle : aucune clé réelle, aucun wallet réel, aucun trading réel.",
+    "## Statut",
     "",
-    "1. Objectif de la session",
+    "- Préparation avant backend privé.",
+    "- Aucune clé réelle.",
+    "- Aucun wallet réel.",
+    "- Aucun trading réel.",
+    "- Aucune information nominative.",
+    "",
+    "## 1. Objectif de la session",
+    "",
     data.objective || "À compléter.",
     "",
-    "2. Cryptos prioritaires",
+    "## 2. Cryptos prioritaires",
+    "",
     data.assets || "À compléter.",
     "",
-    "3. Montant virtuel de simulation",
+    "## 3. Montant virtuel de simulation",
+    "",
     data.virtualAmount || "À compléter.",
     "",
-    "4. Risques interdits",
+    "## 4. Risques interdits",
+    "",
     data.risks || "À compléter.",
     "",
-    "5. Sources d'information",
+    "## 5. Sources d'information",
+    "",
     data.news || "À compléter.",
     "",
-    "6. Machine privée envisagée",
+    "## 6. Machine privée envisagée",
+    "",
     data.machine || "À compléter.",
     "",
-    "7. Accès renforcé",
+    "## 7. Accès renforcé",
+    "",
     data.access || "À compléter.",
     "",
-    "8. Sécurité physique / wallet matériel",
+    "## 8. Sécurité physique / wallet matériel",
+    "",
     data.physical || "À compléter.",
     "",
-    "Interdits rappelés : pas de seed phrase, pas de clé API réelle, pas de retrait, pas d'ordre réel, pas d'accès distant public.",
+    "## Interdits rappelés",
+    "",
+    "- Pas de seed phrase.",
+    "- Pas de clé API réelle.",
+    "- Pas de retrait.",
+    "- Pas d'ordre réel.",
+    "- Pas d'accès distant public.",
+    "- Pas de nom personnel.",
     "",
     `Dernière mise à jour locale : ${data.updatedAt}`
   ];
 
+  const text = lines.join("\\n");
   const out = document.getElementById("questionnaireOutput");
-  if (out) out.textContent = lines.join("\\n");
-  return data;
+  if (out) out.textContent = text;
+  return text;
 }
 
 function questionnaireStatusPayload() {
@@ -2392,6 +2413,36 @@ document.getElementById("btnSaveQuestionnaire")?.addEventListener("click", () =>
 });
 
 document.getElementById("btnBuildBrief")?.addEventListener("click", buildSessionBrief);
+document.getElementById("btnCopyBrief")?.addEventListener("click", copySessionBrief);
+document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadSessionBrief);
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire();
+
+
+
+
+async function copySessionBrief() {
+  const text = buildSessionBrief();
+  const out = document.getElementById("questionnaireOutput");
+  try {
+    await navigator.clipboard.writeText(text);
+    if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK.";
+  } catch {
+    if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement.";
+  }
+}
+
+function downloadSessionBrief() {
+  const text = buildSessionBrief();
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `agent_crypto_note_reprise_${stamp}.md`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
 

@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC25  
+Version : V1.0-RC26  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -891,3 +891,26 @@ Aucun changement financier.
 Aucune clé réelle.
 Aucun wallet réel.
 Aucun ordre réel.
+
+
+---
+
+## V1.0-RC26 — Export note de reprise
+
+Objectif : rendre la fiche de session exploitable hors interface.
+
+### Ajouts
+
+- Bouton `Copier la note`.
+- Bouton `Télécharger .md`.
+- Note générée au format Markdown propre.
+- Rappel intégré :
+  - aucune clé réelle ;
+  - aucun wallet réel ;
+  - aucun trading réel ;
+  - aucune information nominative.
+
+### Règle
+
+La note exportée doit être relue avant partage.
+Ne jamais y inscrire de seed phrase, clé API, mot de passe ou information personnelle.
