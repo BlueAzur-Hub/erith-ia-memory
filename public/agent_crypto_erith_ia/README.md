@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC4  
+Version : V1.0-RC5  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -266,3 +266,25 @@ Objectif : garder la puissance visible et éviter les mélanges de fichiers en c
 
 Débutant crypto ne veut pas dire débutant informatique.
 La version RC4 garde le cockpit avancé visible.
+
+
+---
+
+## V1.0-RC5 — Graphiques analyste
+
+Objectif : ajouter une couche visuelle inspirée des grands tableaux crypto, sans transformer l’outil en clone de site financier.
+
+### Ajouts
+
+- Panneau `Graphique Analyste`.
+- Sélection d’un actif depuis le tableau.
+- Périodes : 24h / 7j / 30j.
+- Graphique principal sur canvas.
+- Mini-graphique par ligne du tableau.
+- Panneau détail actif :
+  prix, type, décision, ratio volume/market cap, variation 24h/7j.
+- Conservation du mode Débutant et du mode Avancé.
+
+### Règle
+
+Les graphiques aident à observer. Ils ne donnent pas de conseil d’achat.

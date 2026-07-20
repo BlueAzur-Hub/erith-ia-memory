@@ -786,3 +786,120 @@ tr[data-id]:hover{
   cursor:pointer;
   user-select:none;
 }
+
+
+/* =========================================================
+   V1.0-RC5 — GRAPHIQUES ANALYSTE
+   ========================================================= */
+
+.analyst-deck{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:8px;
+}
+
+.period-tabs{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.period-btn{
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.075);
+  color:#fff0c8;
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.period-btn.active{
+  background:rgba(98,236,255,.22);
+  border-color:rgba(98,236,255,.45);
+  color:#ffffff;
+}
+
+.chart-shell{
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015)),
+    rgba(0,0,0,.12);
+  border-radius:14px;
+  padding:10px;
+  min-height:260px;
+}
+
+#mainChart{
+  width:100%;
+  height:260px;
+  display:block;
+}
+
+.chart-caption{
+  color:#aebdd2;
+  font-size:10px;
+  margin-top:8px;
+  line-height:1.35;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:6px;
+}
+
+.detail-grid div{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:10px;
+  padding:8px;
+  min-height:58px;
+}
+
+.detail-grid b{
+  display:block;
+  color:#fff0c8;
+  font-size:10px;
+  margin-bottom:4px;
+}
+
+.detail-grid span{
+  display:block;
+  color:#d7e6f6;
+  font-size:10px;
+  line-height:1.3;
+}
+
+.spark-cell{
+  min-width:120px;
+}
+
+.sparkline{
+  width:112px;
+  height:28px;
+  display:block;
+}
+
+tr.asset-row{
+  cursor:pointer;
+}
+
+tr.asset-row:hover{
+  background:rgba(98,236,255,.06);
+}
+
+tr.asset-row.is-selected{
+  outline:1px solid rgba(98,236,255,.45);
+  background:rgba(98,236,255,.08);
+}
+
+@media (max-width:1100px){
+  .analyst-deck{grid-template-columns:1fr}
+}
+
+@media (max-width:760px){
+  .detail-grid{grid-template-columns:1fr}
+  .spark-cell{display:none}
+}

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC4</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC5</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc4" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc5" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC4</span>
+          <span class="pill ok">GitHub Pack V1.0-RC5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -31,6 +31,7 @@
         <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
+        <a href="#analyste">Analyste</a>
         <a href="#math">Math Model</a>
         <a href="#risques">Risques</a>
         <a href="#nofomo">No-FOMO</a>
@@ -120,6 +121,46 @@
           <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>
           <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>
         </div>
+      </article>
+    </section>
+
+
+
+    <section class="analyst-deck" id="analyste">
+      <article class="panel glass chart-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">GRAPHIQUE ANALYSTE</p>
+            <h2 id="selectedAssetTitle">Bitcoin — BTC</h2>
+          </div>
+          <div class="period-tabs" aria-label="Période graphique">
+            <button class="period-btn active" data-period="1">24h</button>
+            <button class="period-btn" data-period="7">7j</button>
+            <button class="period-btn" data-period="30">30j</button>
+          </div>
+        </div>
+        <div class="chart-shell">
+          <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix"></canvas>
+        </div>
+        <div class="chart-caption" id="chartCaption">
+          Sélectionne une crypto dans le tableau. Le graphique utilise l’historique CoinGecko quand il est disponible.
+        </div>
+      </article>
+
+      <article class="panel glass detail-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">DÉTAIL ACTIF</p>
+            <h2>Lecture technique</h2>
+          </div>
+        </div>
+        <div class="detail-grid" id="assetDetailGrid">
+          <div><b>Actif</b><span>En attente</span></div>
+          <div><b>Type</b><span>—</span></div>
+          <div><b>Décision</b><span>—</span></div>
+          <div><b>Ratio vol/cap</b><span>—</span></div>
+        </div>
+        <p class="why-box" id="assetDetailWhy">Livecheck requis avant lecture détaillée.</p>
       </article>
     </section>
 
@@ -263,11 +304,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC4</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC5</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc4"></script>
+  <script src="./app.js?v=1.0-rc5"></script>
 </body>
 </html>
