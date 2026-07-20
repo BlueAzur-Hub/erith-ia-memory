@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC20  
+Version : V1.0-RC21  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -733,3 +733,34 @@ Aucun wallet réel connecté.
 Aucune clé privée.
 Aucune clé de retrait.
 Aucun ordre réel.
+
+
+---
+
+## V1.0-RC21 — Briefing terrain / infos à collecter
+
+Objectif : préparer la prochaine session de clarification sans créer de risque technique.
+
+### Ajouts
+
+- Section `Briefing terrain`.
+- Questions à poser :
+  - objectif exact ;
+  - cryptos prioritaires ;
+  - risques interdits ;
+  - sources d’information ;
+  - machine privée ;
+  - accès renforcé ;
+  - validation humaine.
+- Liste `À ne pas faire`.
+- Commandes humaines :
+  - `Briefing session`
+  - `Questions à poser`
+  - `À ne pas faire`
+
+### Règle
+
+Pas de nom personnel dans l’interface.
+Pas de clé réelle.
+Pas de wallet réel.
+Pas de trading réel.
