@@ -108,6 +108,17 @@ function setLiveStatus(mode, text) {
   els.liveStatus.textContent = text;
 }
 
+function updateSourceMetric() {
+  const done = state.sourceStatus.length;
+  const ok = state.sourceStatus.filter(s => s.status === "OK").length;
+  if (els.metricSources) els.metricSources.textContent = `${ok}/${liveSources.length}`;
+  if (els.metricSourcesHint) {
+    if (!done) els.metricSourcesHint.textContent = "Livecheck requis";
+    else if (state.liveOk) els.metricSourcesHint.textContent = "Source marché active";
+    else els.metricSourcesHint.textContent = `${done}/${liveSources.length} testées`;
+  }
+}
+
 async function runLivecheck() {
   setLiveStatus("warn", "Livecheck en cours");
   els.sourceDecision.textContent = "Tests sources en cours";
@@ -118,6 +129,7 @@ async function runLivecheck() {
   state.coins = [];
   state.global = null;
   renderSourceGrid();
+  updateSourceMetric();
 
   for (const src of liveSources) {
     const started = performance.now();
@@ -135,6 +147,7 @@ async function runLivecheck() {
       state.sourceStatus.push({ ...src, status: "ÉCHEC", ms: null, detail: cleanError(error) });
     }
     renderSourceGrid();
+    updateSourceMetric();
   }
 
   const okCount = state.sourceStatus.filter(s => s.status === "OK").length;
@@ -161,6 +174,7 @@ async function runLivecheck() {
   }
   els.metricSources.textContent = `${okCount}/${liveSources.length}`;
   els.metricSourcesHint.textContent = state.liveOk ? "Source marché active" : "Pas de source marché exploitable";
+  updateSourceMetric();
 }
 
 function detailFromResult(result) {

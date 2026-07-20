@@ -1,7 +1,7 @@
 {
   "project": "Agent-Crypto @erith.IA",
-  "version": "0.3",
-  "status": "prototype public / observatoire crypto prudent / non financier",
+  "version": "0.4",
+  "status": "prototype public compact",
   "target_path": "public/agent_crypto_erith_ia/",
   "web_entry": "public/agent_crypto_erith_ia/web/index.html",
   "generated": "2026-07-20",
@@ -38,5 +38,12 @@
     "web/app.js",
     "web/index.html",
     "web/style.css"
+  ],
+  "name": "Agent-Crypto @erith.IA",
+  "updated": "2026-07-20",
+  "notes": [
+    "Correction d'échelle UI : titre, header, cards et score plus compacts.",
+    "Livecheck et verrou anti-hallucination conservés.",
+    "Aucun prix affiché sans source live réelle."
   ]
 }
