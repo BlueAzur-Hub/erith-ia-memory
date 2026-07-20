@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC13  
+Version : V1.0-RC14  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -514,3 +514,34 @@ Aucune clé API.
 Aucune clé de retrait.
 Simulation locale seulement.
 ```
+
+
+---
+
+## V1.0-RC14 — Safety Control Room
+
+Objectif : intégrer le cadrage sécurité confirmé par Yohan.
+
+### Ajouts
+
+- Section `Safety Control Room`.
+- Bac à sable obligatoire.
+- Accès renforcé : Christophe + Yohan uniquement.
+- Clés API : lecture seule d’abord, aucune clé de retrait.
+- Kill switch préparatoire.
+- Gates de progression :
+  - G1 Observatoire public ;
+  - G2 Command Layer ;
+  - G3 Paper trading ;
+  - G4 Lecture seule Kraken ;
+  - G5 Semi-auto humain ;
+  - G6 Réel micro verrouillé.
+- Commandes IA :
+  - `safety_plan`
+  - `kill_switch`
+  - `access_plan`
+  - `gates`
+
+### Verrou
+
+GitHub Pages reste observation + simulation. L’accès distant réel et les clés exchange exigent un backend sécurisé hors dépôt public.

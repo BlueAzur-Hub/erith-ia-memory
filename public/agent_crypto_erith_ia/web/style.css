@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC13 — STABILISATION
+   V1.0-RC14 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC13 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC14 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC13 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC14 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC13 — GRAPHIQUES ANALYSTE
+   V1.0-RC14 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — FIX GRAPHIQUES RÉELS
+   V1.0-RC14 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC14 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC14 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC14 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC14 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — CRYPTO COMMAND LAYER
+   V1.0-RC14 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC14 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC13 — PAPER TRADING SANDBOX
+   V1.0-RC14 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1416,3 +1416,116 @@ tr.asset-row.is-selected{
 .pnl-neg{color:#ff6f93}
 @media (max-width:1100px){.sim-grid{grid-template-columns:repeat(2,1fr)}.sim-controls{grid-template-columns:1fr 1fr}.sim-columns{grid-template-columns:1fr}}
 @media (max-width:640px){.sim-grid,.sim-controls{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   V1.0-RC14 — SAFETY CONTROL ROOM
+   ========================================================= */
+
+.safety-layer{margin-top:8px}
+.safety-intro{color:#b9c8dc;font-size:11px;line-height:1.35;margin:4px 0 0}
+
+.safety-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+
+.safety-card{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:12px;
+  padding:10px;
+  min-height:90px;
+}
+
+.safety-card.ok{
+  border-color:rgba(115,255,177,.32);
+  background:rgba(115,255,177,.06);
+}
+
+.safety-card.danger{
+  border-color:rgba(255,105,135,.32);
+  background:rgba(255,105,135,.055);
+}
+
+.safety-card b{
+  display:block;
+  color:#fff0c8;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+.safety-card span{
+  display:block;
+  color:#d7e6f6;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.safety-card em{
+  display:block;
+  color:#9eb0c8;
+  font-size:9px;
+  font-style:normal;
+  margin-top:7px;
+}
+
+.gate-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.gate{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:999px;
+  padding:7px 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+
+.gate b{
+  display:inline-grid;
+  place-items:center;
+  min-width:22px;
+  height:22px;
+  border-radius:50%;
+  background:rgba(255,255,255,.10);
+  color:#fff0c8;
+  font-size:10px;
+}
+
+.gate span{
+  color:#dbe8f6;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.gate.done{border-color:rgba(115,255,177,.30)}
+.gate.active{border-color:rgba(98,236,255,.48);background:rgba(98,236,255,.08)}
+.gate.locked{border-color:rgba(255,105,135,.26);background:rgba(255,105,135,.04)}
+
+.safety-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+@media (max-width:1200px){
+  .safety-grid{grid-template-columns:repeat(2,1fr)}
+  .gate-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media (max-width:700px){
+  .safety-grid,.gate-grid{grid-template-columns:1fr}
+}

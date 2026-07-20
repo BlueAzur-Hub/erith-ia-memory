@@ -908,6 +908,92 @@ function renderSimulation() {
   }
 }
 
+
+function safetyPlanPayload() {
+  return {
+    mode: "safety_first",
+    confirmed_context: {
+      yohan_requires_sandbox: true,
+      remote_access_for_christophe_and_yohan_only: true,
+      human_validation_required: true,
+      simulation_before_real_money: true,
+      modification_possible_if_failure: true
+    },
+    sandbox_boundaries: [
+      "public_frontend_observation_only",
+      "paper_trading_local_only",
+      "no_real_exchange_order",
+      "no_wallet_connection",
+      "no_private_api_key_in_github_pages",
+      "no_withdraw_permission"
+    ],
+    required_before_real_backend: [
+      "separate_machine_or_backend",
+      "restricted_remote_access",
+      "encrypted_secret_storage",
+      "read_only_kraken_key_first",
+      "paper_trading_logs",
+      "kill_switch",
+      "human_confirmation_flow",
+      "regular_security_review"
+    ]
+  };
+}
+
+function killSwitchPayload() {
+  return {
+    status: "planned_not_active_in_github_pages",
+    purpose: "Stop the future backend/agent if abnormal behavior appears.",
+    manual_steps_future: [
+      "disable_backend_service",
+      "revoke_exchange_api_keys",
+      "disable_remote_access_temporarily",
+      "freeze_paper_trading_state",
+      "export_logs",
+      "review_last_commands",
+      "human_restart_only"
+    ],
+    current_public_app_limits: [
+      "no_real_orders_possible",
+      "no_api_keys_present",
+      "simulation_only"
+    ]
+  };
+}
+
+function accessPlanPayload() {
+  return {
+    access_model: "two_people_only",
+    authorized_people: ["Christophe", "Yohan"],
+    public_app: "no_remote_admin_capability",
+    future_backend_requirements: [
+      "strong_authentication",
+      "unique_accounts",
+      "no_shared_cleartext_password",
+      "logs_for_admin_actions",
+      "regular_access_review",
+      "no_public_open_admin_panel",
+      "emergency_disable_path"
+    ],
+    warning: "Remote access must be configured outside GitHub Pages."
+  };
+}
+
+function gatesPayload() {
+  return {
+    current_gate: "G3_paper_trading",
+    gates: [
+      { id: "G1", name: "observatory_public", status: "done" },
+      { id: "G2", name: "crypto_command_layer", status: "done" },
+      { id: "G3", name: "paper_trading_sandbox", status: "active" },
+      { id: "G4", name: "kraken_read_only_connection", status: "locked" },
+      { id: "G5", name: "semi_auto_human_validation", status: "locked" },
+      { id: "G6", name: "real_micro_transactions", status: "locked" }
+    ],
+    unlock_rule: "No gate opens without logs, tests, explicit human validation, and security review."
+  };
+}
+
 function planningPayload() {
   return {
     project_stage: "public_observatory_to_controlled_agent",
@@ -998,7 +1084,11 @@ const CryptoCommands = {
         "sim_buy BTC 25",
         "sim_sell BTC 10",
         "portfolio",
-        "reset_sim"
+        "reset_sim",
+        "safety_plan",
+        "kill_switch",
+        "access_plan",
+        "gates"
       ],
       blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
       rule: "Observation only. No real trading from GitHub Pages."
@@ -1153,6 +1243,10 @@ function parseCommandLine(input) {
   if (cmd === "sim_sell" || cmd === "paper_sell") return simulateOrder("sell", parts[1], parts[2]);
   if (cmd === "portfolio" || cmd === "paper_portfolio") return commandOk("portfolio", simulationPayload());
   if (cmd === "reset_sim" || cmd === "paper_reset") { resetSimulation(); return commandOk("reset_sim", simulationPayload()); }
+  if (cmd === "safety_plan" || cmd === "safety") return commandOk("safety_plan", safetyPlanPayload());
+  if (cmd === "kill_switch" || cmd === "killswitch") return commandOk("kill_switch", killSwitchPayload());
+  if (cmd === "access_plan" || cmd === "remote_access") return commandOk("access_plan", accessPlanPayload());
+  if (cmd === "gates" || cmd === "gate_status") return commandOk("gates", gatesPayload());
   if (cmd === "planning" || cmd === "roadmap") return CryptoCommands.planning();
   if (cmd === "exchange_plan" || cmd === "exchanges") return CryptoCommands.exchange_plan();
   if (cmd === "news_sources" || cmd === "news" || cmd === "journaux") return CryptoCommands.news_sources();
@@ -1398,7 +1492,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC13</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC14</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1478,7 +1572,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC13.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC14.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
