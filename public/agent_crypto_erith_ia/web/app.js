@@ -934,7 +934,7 @@ function backendBlueprintPayload() {
       ]
     },
     private_layer_future: {
-      host: "PC_Yohan_or_secure_local_server",
+      host: "PC_operateur_autorise_2_or_secure_local_server",
       allowed: [
         "encrypted_api_secrets",
         "Kraken_read_only_client",
@@ -943,7 +943,7 @@ function backendBlueprintPayload() {
         "kill_switch",
         "restricted_remote_access"
       ],
-      access: ["Christophe", "Yohan"]
+      access: ["operateur_autorise_1", "operateur_autorise_2"]
     },
     exchange_layer_future: {
       primary: "Kraken",
@@ -994,7 +994,7 @@ function krakenReadonlyPlanPayload() {
 function remoteBlueprintPayload() {
   return {
     scope: "future_private_machine_only",
-    authorized_people: ["Christophe", "Yohan"],
+    authorized_people: ["operateur_autorise_1", "operateur_autorise_2"],
     rules: [
       "no_public_admin_panel",
       "no_shared_cleartext_password",
@@ -1080,7 +1080,7 @@ function killSwitchPayload() {
 function accessPlanPayload() {
   return {
     access_model: "two_people_only",
-    authorized_people: ["Christophe", "Yohan"],
+    authorized_people: ["operateur_autorise_1", "operateur_autorise_2"],
     public_app: "no_remote_admin_capability",
     future_backend_requirements: [
       "strong_authentication",
@@ -1400,7 +1400,7 @@ function renderSimpleCommandIntro() {
   els.commandHuman.classList.remove("err");
   els.commandHuman.innerHTML = `
     <b>Mode simple prêt</b>
-    <p>Clique un bouton au-dessus. Tu n’as pas besoin de lire le JSON technique.</p>
+    <p>Clique un bouton au-dessus. La carte verte suffit.</p>
     <ul>
       <li>Résumé marché : vérifie les données principales.</li>
       <li>Plan architecture : explique public / privé / Kraken.</li>
@@ -1433,7 +1433,7 @@ function humanCommandSummary(result) {
       text: "Le bouton “Plan architecture” montre simplement où seront rangées les parties du futur système. Il ne connecte rien et ne fait aucun achat.",
       bullets: [
         "Site public : ce que tu vois ici, sans clé et sans argent réel.",
-        "Machine privée : futur PC chez Yohan ou serveur sécurisé.",
+        "Machine privée : futur PC chez operateur_autorise_2 ou serveur sécurisé.",
         "Kraken : plus tard, d’abord en lecture seule.",
         "Interdit : achat réel, retrait, clé API dans GitHub."
       ],
@@ -1473,7 +1473,7 @@ function humanCommandSummary(result) {
   if (cmd === "remote_blueprint") {
     return {
       title: "Accès distant : plan OK",
-      text: "La commande décrit le futur accès réservé à Christophe et Yohan uniquement.",
+      text: "La commande décrit le futur accès réservé à operateur_autorise_1 et operateur_autorise_2 uniquement.",
       bullets: [
         "Pas de panneau admin public.",
         "Comptes séparés.",
@@ -1556,7 +1556,7 @@ function humanCommandSummary(result) {
 
   return {
     title: "Test exécuté",
-    text: "Le bouton a répondu correctement. La partie importante est cette carte, pas le JSON.",
+    text: "Le bouton a répondu correctement. La partie importante est cette carte, pas les détails techniques.",
     bullets: [
       "Résultat reçu.",
       "Aucun ordre réel.",
@@ -1586,8 +1586,9 @@ function renderHumanCommand(result) {
 
 function renderCommandOutput(result) {
   renderHumanCommand(result);
-  if (!els.commandOutput) return;
-  els.commandOutput.textContent = JSON.stringify(result, null, 2);
+  if (els.commandOutput) {
+    els.commandOutput.textContent = "";
+  }
 }
 
 function runCommandFromInput(commandText = null) {
@@ -1821,7 +1822,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC18</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC19</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1901,7 +1902,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC18.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC19.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

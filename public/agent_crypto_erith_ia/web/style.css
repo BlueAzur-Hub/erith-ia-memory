@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC18 — STABILISATION
+   V1.0-RC19 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC18 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC19 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC18 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC19 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC18 — GRAPHIQUES ANALYSTE
+   V1.0-RC19 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — FIX GRAPHIQUES RÉELS
+   V1.0-RC19 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC19 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC19 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC19 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC19 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — CRYPTO COMMAND LAYER
+   V1.0-RC19 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC19 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — PAPER TRADING SANDBOX
+   V1.0-RC19 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1419,7 +1419,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — SAFETY CONTROL ROOM
+   V1.0-RC19 — SAFETY CONTROL ROOM
    ========================================================= */
 
 .safety-layer{margin-top:8px}
@@ -1532,7 +1532,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — BACKEND BLUEPRINT
+   V1.0-RC19 — BACKEND BLUEPRINT
    ========================================================= */
 
 .backend-layer{margin-top:8px}
@@ -1680,7 +1680,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — COMMAND OUTPUT HUMAIN
+   V1.0-RC19 — COMMAND OUTPUT HUMAIN
    ========================================================= */
 
 .command-human{
@@ -1750,7 +1750,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — COMMANDES HUMAINES FR
+   V1.0-RC19 — COMMANDES HUMAINES FR
    ========================================================= */
 
 .command-helper-human{
@@ -1800,7 +1800,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC18 — MODE HUMAIN SIMPLE
+   V1.0-RC19 — MODE HUMAIN SIMPLE
    ========================================================= */
 
 .simple-command-guide{
@@ -1879,4 +1879,24 @@ tr.asset-row.is-selected{
 
 @media (max-width:640px){
   .simple-command-guide{grid-template-columns:1fr}
+}
+
+
+/* =========================================================
+   V1.0-RC19 — ZÉRO NOMINATIF + ZÉRO DÉTAIL TECHNIQUE BRUT VISIBLE
+   ========================================================= */
+
+.is-hidden,
+.technical-json,
+.command-output{
+  display:none !important;
+}
+
+.command-helper-human{
+  border-color:rgba(115,255,177,.24);
+  background:rgba(115,255,177,.055);
+}
+
+.command-human{
+  min-height:145px;
 }

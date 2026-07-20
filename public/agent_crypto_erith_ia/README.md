@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC18  
+Version : V1.0-RC19  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -447,7 +447,7 @@ Cette couche prépare une future intégration Kraken / Bybit / Binance via backe
 
 ## V1.0-RC12 — Kraken / Bybit / News / accès distant
 
-Objectif : intégrer le cadrage confirmé par Yohan sans passer au trading réel.
+Objectif : intégrer le cadrage confirmé par opérateur autorisé B sans passer au trading réel.
 
 ### Décisions ajoutées
 
@@ -457,7 +457,7 @@ Bybit = référence API trading à comparer.
 Binance = inspiration command layer / données marché.
 Mode = semi-automatique avec validation humaine.
 Simulation avant argent réel = obligatoire.
-Accès distant = réservé à Christophe + Yohan, hors GitHub Pages.
+Accès distant = réservé à 2 opérateurs autorisés, hors GitHub Pages.
 ```
 
 ### Ajouts UI
@@ -520,13 +520,13 @@ Simulation locale seulement.
 
 ## V1.0-RC14 — Safety Control Room
 
-Objectif : intégrer le cadrage sécurité confirmé par Yohan.
+Objectif : intégrer le cadrage sécurité confirmé par opérateur autorisé B.
 
 ### Ajouts
 
 - Section `Safety Control Room`.
 - Bac à sable obligatoire.
-- Accès renforcé : Christophe + Yohan uniquement.
+- Accès renforcé : 2 opérateurs autorisés uniquement.
 - Clés API : lecture seule d’abord, aucune clé de retrait.
 - Kill switch préparatoire.
 - Gates de progression :
@@ -558,13 +558,13 @@ Objectif : séparer clairement public, privé, simulation et futur Kraken.
 - Section `Backend Blueprint`.
 - Diagramme :
   - Public : GitHub Pages ;
-  - Privé : PC Yohan / backend local ;
+  - Privé : PC opérateur autorisé B / backend local ;
   - Exchange : Kraken d’abord.
 - Règles de séparation :
   - aucune clé dans GitHub Pages ;
   - aucun ordre réel depuis frontend ;
   - clés et logs seulement côté backend privé ;
-  - accès Christophe + Yohan uniquement.
+  - accès 2 opérateurs autorisés uniquement.
 - Gates backend :
   - B1 Plan public/privé ;
   - B2 Backend local ;
@@ -587,15 +587,15 @@ Objectif : séparer clairement public, privé, simulation et futur Kraken.
 
 ## V1.0-RC16 — Command Output Humain
 
-Objectif : rendre les commandes IA compréhensibles sans devoir lire le JSON brut.
+Objectif : rendre les commandes IA compréhensibles sans devoir lire le détail technique brut brut.
 
 ### Problème
 
-Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’interface affichait surtout du JSON technique. Résultat : l’utilisateur pouvait croire que rien ne s’était passé.
+Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’interface affichait surtout du détail technique brut technique. Résultat : l’utilisateur pouvait croire que rien ne s’était passé.
 
 ### Ajouts
 
-- Bloc `Lecture humaine` au-dessus du JSON.
+- Bloc `Lecture humaine` au-dessus du détail technique brut.
 - Résumé clair par commande :
   - `backend_blueprint`
   - `security_review`
@@ -606,7 +606,7 @@ Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’
   - `chart`
   - `portfolio`
   - `sources`
-- Le JSON reste affiché dessous pour Yohan / analyse technique.
+- Le détail technique brut reste affiché dessous pour opérateur autorisé B / analyse technique.
 
 ### Règle
 
@@ -634,12 +634,12 @@ Résumé marché
 Sources info
 ```
 
-Les commandes techniques restent dans `data-command` et dans le JSON pour Yohan, mais l’utilisateur n’a plus besoin de les comprendre.
+Les commandes techniques restent dans `data-command` et dans le détail technique brut pour opérateur autorisé B, mais l’utilisateur n’a plus besoin de les comprendre.
 
 ### Ajouts
 
 - Aide visible : “Clique sur un bouton en français”.
-- JSON technique replié sous `Afficher le JSON technique`.
+- détail technique brut technique replié sous `Afficher le détail technique brut technique`.
 - Résumé humain conservé au-dessus.
 - Alias français :
   - `Plan architecture`
@@ -662,7 +662,7 @@ Objectif : rendre la zone Commandes IA compréhensible pour un utilisateur non d
 
 ### Problème
 
-Même avec les boutons français, la présence d’une ligne de commande et du JSON restait trop technique.
+Même avec les boutons français, la présence d’une ligne de commande et du détail technique brut restait trop technique.
 
 ### Corrections
 
@@ -670,14 +670,38 @@ Même avec les boutons français, la présence d’une ligne de commande et du J
 - Ajout d’un guide en 4 blocs :
   - clique un bouton ;
   - lis la carte verte ;
-  - ignore le JSON ;
+  - ignore le détail technique brut ;
   - rien ne peut acheter/vendre ici.
 - L’entrée manuelle est repliée dans `Entrée manuelle avancée`.
-- Le JSON technique reste replié.
+- Le détail technique brut technique reste replié.
 - Le bloc humain s’affiche par défaut avec une aide simple.
 
 ### Règle
 
 Aucune fonction dangereuse ajoutée.
+Aucun ordre réel.
+Aucune clé privée.
+
+
+---
+
+## V1.0-RC19 — Zéro nominatif + zéro détail technique brut visible
+
+Objectif : corriger deux points :
+
+- pas de prénom dans l’interface publique ;
+- pas de détail technique brut comme lecture normale.
+
+### Corrections
+
+- Remplacement des noms par `2 opérateurs autorisés`.
+- Remplacement des mentions de machine personnelle par `machine privée`.
+- Suppression de l’affichage brut technique dans l’interface.
+- La carte humaine devient la seule lecture normale.
+
+### Règle
+
+L’interface publique ne doit pas afficher de noms personnels.
+L’utilisateur lit uniquement la carte humaine.
 Aucun ordre réel.
 Aucune clé privée.
