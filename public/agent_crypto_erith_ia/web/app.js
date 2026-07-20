@@ -909,6 +909,120 @@ function renderSimulation() {
 }
 
 
+
+function backendBlueprintPayload() {
+  return {
+    version: "RC15",
+    principle: "separate_public_frontend_from_private_backend",
+    public_layer: {
+      host: "GitHub Pages",
+      allowed: [
+        "market_observation",
+        "charts",
+        "watchlist",
+        "command_layer_observation",
+        "local_paper_trading"
+      ],
+      forbidden: [
+        "private_api_keys",
+        "withdraw_keys",
+        "real_orders",
+        "admin_remote_access",
+        "wallet_connection"
+      ]
+    },
+    private_layer_future: {
+      host: "PC_Yohan_or_secure_local_server",
+      allowed: [
+        "encrypted_api_secrets",
+        "Kraken_read_only_client",
+        "server_side_paper_trading",
+        "logs",
+        "kill_switch",
+        "restricted_remote_access"
+      ],
+      access: ["Christophe", "Yohan"]
+    },
+    exchange_layer_future: {
+      primary: "Kraken",
+      first_mode: "read_only",
+      later_modes_locked: [
+        "paper_trading_server",
+        "human_validated_order",
+        "real_micro_transaction"
+      ],
+      never_allowed_initially: [
+        "withdraw_permission",
+        "fully_autonomous_trading"
+      ]
+    }
+  };
+}
+
+function krakenReadonlyPlanPayload() {
+  return {
+    exchange: "Kraken",
+    target_stage: "read_only_only",
+    allowed_first: [
+      "account_balance_read",
+      "ticker_read",
+      "trade_history_read_if_needed",
+      "open_positions_read_if_applicable"
+    ],
+    forbidden_first: [
+      "create_order",
+      "cancel_order",
+      "withdraw",
+      "transfer",
+      "margin",
+      "leverage"
+    ],
+    required_before_connection: [
+      "backend_not_github_pages",
+      "encrypted_secret_storage",
+      "separate_user_accounts",
+      "logs",
+      "manual_disable",
+      "test_key_permissions",
+      "no_withdraw_permission"
+    ]
+  };
+}
+
+function remoteBlueprintPayload() {
+  return {
+    scope: "future_private_machine_only",
+    authorized_people: ["Christophe", "Yohan"],
+    rules: [
+      "no_public_admin_panel",
+      "no_shared_cleartext_password",
+      "unique_accounts",
+      "strong_authentication",
+      "admin_actions_logged",
+      "emergency_disable_path",
+      "regular_security_review"
+    ],
+    current_public_frontend: "no_remote_access_capability"
+  };
+}
+
+function securityReviewPayload() {
+  return {
+    review_type: "pre_backend_security_checklist",
+    checklist: [
+      { item: "GitHub Pages contains no secrets", status: "required" },
+      { item: "Kraken key read-only", status: "future_required" },
+      { item: "Withdraw permission disabled", status: "mandatory" },
+      { item: "Backend logs every command", status: "future_required" },
+      { item: "Kill switch tested", status: "future_required" },
+      { item: "Paper trading runs before real money", status: "mandatory" },
+      { item: "Human validation before any real order", status: "mandatory" },
+      { item: "Remote access reviewed regularly", status: "future_required" }
+    ],
+    conclusion: "No real-money phase without passing all mandatory items."
+  };
+}
+
 function safetyPlanPayload() {
   return {
     mode: "safety_first",
@@ -1088,7 +1202,11 @@ const CryptoCommands = {
         "safety_plan",
         "kill_switch",
         "access_plan",
-        "gates"
+        "gates",
+        "backend_blueprint",
+        "kraken_readonly_plan",
+        "remote_blueprint",
+        "security_review"
       ],
       blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
       rule: "Observation only. No real trading from GitHub Pages."
@@ -1243,6 +1361,10 @@ function parseCommandLine(input) {
   if (cmd === "sim_sell" || cmd === "paper_sell") return simulateOrder("sell", parts[1], parts[2]);
   if (cmd === "portfolio" || cmd === "paper_portfolio") return commandOk("portfolio", simulationPayload());
   if (cmd === "reset_sim" || cmd === "paper_reset") { resetSimulation(); return commandOk("reset_sim", simulationPayload()); }
+  if (cmd === "backend_blueprint" || cmd === "backend") return commandOk("backend_blueprint", backendBlueprintPayload());
+  if (cmd === "kraken_readonly_plan" || cmd === "kraken_readonly") return commandOk("kraken_readonly_plan", krakenReadonlyPlanPayload());
+  if (cmd === "remote_blueprint" || cmd === "remote") return commandOk("remote_blueprint", remoteBlueprintPayload());
+  if (cmd === "security_review" || cmd === "security_check") return commandOk("security_review", securityReviewPayload());
   if (cmd === "safety_plan" || cmd === "safety") return commandOk("safety_plan", safetyPlanPayload());
   if (cmd === "kill_switch" || cmd === "killswitch") return commandOk("kill_switch", killSwitchPayload());
   if (cmd === "access_plan" || cmd === "remote_access") return commandOk("access_plan", accessPlanPayload());
@@ -1492,7 +1614,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC14</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC15</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1572,7 +1694,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC14.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC15.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

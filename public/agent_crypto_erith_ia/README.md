@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC14  
+Version : V1.0-RC15  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -545,3 +545,39 @@ Objectif : intégrer le cadrage sécurité confirmé par Yohan.
 ### Verrou
 
 GitHub Pages reste observation + simulation. L’accès distant réel et les clés exchange exigent un backend sécurisé hors dépôt public.
+
+
+---
+
+## V1.0-RC15 — Backend Blueprint
+
+Objectif : séparer clairement public, privé, simulation et futur Kraken.
+
+### Ajouts
+
+- Section `Backend Blueprint`.
+- Diagramme :
+  - Public : GitHub Pages ;
+  - Privé : PC Yohan / backend local ;
+  - Exchange : Kraken d’abord.
+- Règles de séparation :
+  - aucune clé dans GitHub Pages ;
+  - aucun ordre réel depuis frontend ;
+  - clés et logs seulement côté backend privé ;
+  - accès Christophe + Yohan uniquement.
+- Gates backend :
+  - B1 Plan public/privé ;
+  - B2 Backend local ;
+  - B3 Kraken lecture seule ;
+  - B4 Logs + kill switch ;
+  - B5 Simulation serveur ;
+  - B6 Réel humain.
+- Commandes IA :
+  - `backend_blueprint`
+  - `kraken_readonly_plan`
+  - `remote_blueprint`
+  - `security_review`
+
+### Prochaine étape
+
+`RC16 — Kraken Read-Only Plan`, sans ordre réel.

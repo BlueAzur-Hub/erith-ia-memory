@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC14</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC15</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc14" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc15" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC14</span>
+          <span class="pill ok">GitHub Pack V1.0-RC15</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -32,6 +32,7 @@
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
+        <a href="#backend">Backend</a>
         <a href="#safety">Sécurité</a>
         <a href="#simulation">Simulation</a>
         <a href="#commandes">Commandes IA</a>
@@ -182,7 +183,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC14</p>
+        <p class="eyebrow">VERROU RC15</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -407,6 +408,80 @@
 
 
 
+
+    <section class="panel glass backend-layer" id="backend">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">BACKEND BLUEPRINT</p>
+          <h2>Architecture public / privé / Kraken</h2>
+          <p class="backend-intro">
+            Plan de séparation : le site public reste sans clé et sans ordre réel. La future machine privée portera les accès, les logs, le kill switch et la simulation avancée.
+          </p>
+        </div>
+        <span class="pill warn">Plan, pas connexion réelle</span>
+      </div>
+
+      <div class="blueprint-flow">
+        <div class="blueprint-node public">
+          <b>Public</b>
+          <span>GitHub Pages</span>
+          <em>Observation · graphiques · commandes dry-run · aucune clé</em>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="blueprint-node private">
+          <b>Privé</b>
+          <span>PC Yohan / backend local</span>
+          <em>Accès renforcé · logs · secrets chiffrés · kill switch</em>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="blueprint-node exchange">
+          <b>Exchange</b>
+          <span>Kraken d’abord</span>
+          <em>Lecture seule → simulation → validation humaine → réel verrouillé</em>
+        </div>
+      </div>
+
+      <div class="blueprint-grid">
+        <article>
+          <b>Ce qui reste public</b>
+          <span>Marché live, graphiques, watchlist, commandes IA observation, paper trading local.</span>
+        </article>
+        <article>
+          <b>Ce qui devient privé</b>
+          <span>Clés API, backend Kraken, accès distant, logs, moteur de simulation avancée.</span>
+        </article>
+        <article>
+          <b>Accès autorisés</b>
+          <span>Christophe + Yohan uniquement, comptes séparés, pas de mot de passe partagé en clair.</span>
+        </article>
+        <article>
+          <b>Interdits</b>
+          <span>Clé privée dans GitHub, clé de retrait, ordre réel depuis frontend, panneau admin public.</span>
+        </article>
+      </div>
+
+      <div class="backend-gates">
+        <div class="backend-gate done"><b>B1</b><span>Plan public/privé</span></div>
+        <div class="backend-gate active"><b>B2</b><span>Backend local</span></div>
+        <div class="backend-gate locked"><b>B3</b><span>Kraken lecture seule</span></div>
+        <div class="backend-gate locked"><b>B4</b><span>Logs + kill switch</span></div>
+        <div class="backend-gate locked"><b>B5</b><span>Simulation serveur</span></div>
+        <div class="backend-gate locked"><b>B6</b><span>Réel humain</span></div>
+      </div>
+
+      <div class="blueprint-actions">
+        <button class="cmd-preset" data-command="backend_blueprint">backend_blueprint</button>
+        <button class="cmd-preset" data-command="kraken_readonly_plan">kraken_readonly_plan</button>
+        <button class="cmd-preset" data-command="remote_blueprint">remote_blueprint</button>
+        <button class="cmd-preset" data-command="security_review">security_review</button>
+      </div>
+
+      <p class="rule-line warn-lock">
+        Prochaine étape réelle après RC15 : seulement un plan Kraken lecture seule. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
+      </p>
+    </section>
+
+
     <section class="panel glass safety-layer" id="safety">
       <div class="section-head">
         <div>
@@ -565,11 +640,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC14</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC15</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc14"></script>
+  <script src="./app.js?v=1.0-rc15"></script>
 </body>
 </html>
