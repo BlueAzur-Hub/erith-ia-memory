@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.1-alpha.5  
+Version : V1.1-alpha.6  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -944,7 +944,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.5 — Profil Solo Débutant 100 €
+## V1.1-alpha.6 — Profil Solo Débutant 100 €
 
 Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
 
@@ -976,7 +976,7 @@ Aucun retrait.
 
 ---
 
-## V1.1-alpha.5 — Refus visibles + Data Roadmap
+## V1.1-alpha.6 — Refus visibles + Data Roadmap
 
 Correction du test profil 100 € :
 
@@ -992,7 +992,7 @@ Ajout :
 
 ---
 
-## V1.1-alpha.5 — Mode École guidé
+## V1.1-alpha.6 — Mode École guidé
 
 Objectif : rendre le simulateur compréhensible par un non-technicien.
 
@@ -1017,7 +1017,7 @@ Aucun trading réel ajouté.
 
 ---
 
-## V1.1-alpha.5 — Journal pédagogique + Data Collector public
+## V1.1-alpha.6 — Journal pédagogique + Data Collector public
 
 Objectif : transformer les tests en mémoire exploitable.
 
@@ -1043,7 +1043,7 @@ Prépare la future base locale sur PC Ryzen 7.
 
 ---
 
-## V1.1-alpha.5 — Data Collector local
+## V1.1-alpha.6 — Data Collector local
 
 Objectif : commencer une mémoire qui grossit sans backend.
 
@@ -1076,7 +1076,7 @@ Prépare la future base locale Ryzen 7.
 
 ---
 
-## V1.1-alpha.5 — Explorateur de mémoire locale
+## V1.1-alpha.6 — Explorateur de mémoire locale
 
 Objectif : lire et expliquer la mémoire locale enregistrée par le Data Collector.
 
@@ -1095,6 +1095,36 @@ Objectif : lire et expliquer la mémoire locale enregistrée par le Data Collect
 - Refus de sécurité.
 - Variations BTC / ETH / SOL si plusieurs snapshots existent.
 - Conclusion pédagogique.
+
+### Sécurité
+
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun compte exchange.
+Aucun ordre réel.
+Aucune donnée personnelle.
+
+
+---
+
+## V1.1-alpha.6 — Plan de collecte guidé
+
+Objectif : guider la création d’une mémoire comparable.
+
+### Ajouts
+
+- Snapshot de référence.
+- Snapshot après test.
+- Snapshot plus tard.
+- Progression 3 snapshots.
+- Routine de collecte.
+- Export plan `.md`.
+
+### Logique
+
+- 1 snapshot : état isolé.
+- 2 snapshots : comparaison possible.
+- 3 snapshots : mini-tendance.
 
 ### Sécurité
 

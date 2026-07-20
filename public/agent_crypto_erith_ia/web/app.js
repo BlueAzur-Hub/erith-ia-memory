@@ -95,7 +95,16 @@ const els = {
   btnCompareMemory: $("btnCompareMemory"),
   btnSummarizeRefusals: $("btnSummarizeRefusals"),
   btnDownloadMemoryReport: $("btnDownloadMemoryReport"),
-  memoryExplorerOutput: $("memoryExplorerOutput")
+  memoryExplorerOutput: $("memoryExplorerOutput"),
+  btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"),
+  btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"),
+  btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"),
+  btnCollectionChecklist: $("btnCollectionChecklist"),
+  btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"),
+  collectionProgressTitle: $("collectionProgressTitle"),
+  collectionProgressText: $("collectionProgressText"),
+  collectionProgressBar: $("collectionProgressBar"),
+  collectionPlanOutput: $("collectionPlanOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -776,7 +785,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_5",
+  key: "solo_beginner_100_v1_1_alpha_6",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -785,7 +794,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_5";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_6";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1029,7 +1038,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1137,7 +1146,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2182,7 +2191,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.5</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.6</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2262,7 +2271,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.5.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.6.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2352,7 +2361,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2427,7 +2436,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.5`,
+    `Version : V1.1-alpha.6`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2529,7 +2538,7 @@ function downloadSimulationJSON() {
 
 
 
-const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_5";
+const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_6";
 const COLLECTOR_MAX_RECORDS = 500;
 
 function readCollectorMemory() {
@@ -2546,6 +2555,7 @@ function writeCollectorMemory(records) {
   const safe = Array.isArray(records) ? records.slice(-COLLECTOR_MAX_RECORDS) : [];
   localStorage.setItem(COLLECTOR_STORAGE_KEY, JSON.stringify(safe));
   renderCollectorStatus();
+  renderCollectionProgress();
   return safe;
 }
 
@@ -2567,7 +2577,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2670,7 +2680,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2688,7 +2698,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.5",
+    version: "V1.1-alpha.6",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -2704,6 +2714,7 @@ function downloadCollectorJSONL() {
 function clearCollectorMemory() {
   localStorage.removeItem(COLLECTOR_STORAGE_KEY);
   renderCollectorStatus();
+  renderCollectionProgress();
   if (els.collectorOutput) {
     els.collectorOutput.textContent = [
       "MÉMOIRE LOCALE EFFACÉE",
@@ -2984,7 +2995,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.5",
+    "Version : V1.1-alpha.6",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3037,6 +3048,187 @@ function downloadMemoryReport() {
   const report = buildMemoryReportMarkdown();
   downloadTextFile(`agent_crypto_rapport_memoire_${stamp}.md`, "text/markdown", report);
   renderMemoryExplorer(report);
+}
+
+
+
+function collectionCount() {
+  return readCollectorMemory().length;
+}
+
+function renderCollectionProgress() {
+  const count = collectionCount();
+  const target = 3;
+  const pct = Math.min(100, Math.round((count / target) * 100));
+  if (els.collectionProgressText) {
+    els.collectionProgressText.textContent = `${Math.min(count, target)}/${target}`;
+  }
+  if (els.collectionProgressBar) {
+    els.collectionProgressBar.style.width = `${pct}%`;
+  }
+  if (els.collectionProgressTitle) {
+    if (count <= 0) els.collectionProgressTitle.textContent = "Objectif : créer un premier snapshot de référence";
+    else if (count === 1) els.collectionProgressTitle.textContent = "Objectif : ajouter un deuxième snapshot pour comparer";
+    else if (count === 2) els.collectionProgressTitle.textContent = "Objectif : ajouter un troisième snapshot pour stabiliser la lecture";
+    else els.collectionProgressTitle.textContent = "Objectif atteint : mémoire comparable";
+  }
+}
+
+function collectionPlanText() {
+  const count = collectionCount();
+  const records = readCollectorMemory();
+  const lines = [
+    "PLAN DE COLLECTE GUIDÉ",
+    "",
+    `Snapshots actuels : ${count}`,
+    "",
+    "Routine simple :",
+    "1. Lancer Livecheck.",
+    "2. Enregistrer un snapshot de référence.",
+    "3. Lancer un test guidé : opération prudente ou refus.",
+    "4. Enregistrer un snapshot après test.",
+    "5. Revenir plus tard et enregistrer un troisième snapshot.",
+    "6. Utiliser l’Explorateur pour comparer.",
+    "",
+    "Pourquoi 3 snapshots ?",
+    "- 1 snapshot : on voit seulement un état.",
+    "- 2 snapshots : on peut comparer premier / dernier.",
+    "- 3 snapshots : on commence à voir une mini-tendance.",
+    "",
+    "État actuel :"
+  ];
+
+  if (!count) {
+    lines.push("- Aucun snapshot. Commence par “Snapshot de référence”.");
+  } else {
+    const last = records[records.length - 1];
+    lines.push(`- Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`);
+    lines.push(`- Tags : ${(last.learning_tags || []).join(", ") || "observation"}.`);
+    if (count === 1) lines.push("- Prochaine action : créer un snapshot après test.");
+    else if (count === 2) lines.push("- Prochaine action : créer un snapshot plus tard pour stabiliser la lecture.");
+    else lines.push("- Tu peux maintenant utiliser “Comparer premier / dernier”.");
+  }
+
+  lines.push("");
+  lines.push("Sécurité : ces snapshots restent public-compatible, sans clé, sans wallet, sans compte réel.");
+
+  return lines.join("\n");
+}
+
+function saveCollectionSnapshot(kind) {
+  const recordsBefore = collectionCount();
+  const record = makeCollectorRecord();
+  record.collection_kind = kind;
+  record.collection_note = kind === "reference"
+    ? "Snapshot de référence."
+    : kind === "after_test"
+      ? "Snapshot après test guidé."
+      : "Snapshot plus tard pour comparaison.";
+
+  const records = readCollectorMemory();
+  records.push(record);
+  const saved = writeCollectorMemory(records);
+  renderCollectionProgress();
+
+  const label = kind === "reference"
+    ? "SNAPSHOT DE RÉFÉRENCE ENREGISTRÉ"
+    : kind === "after_test"
+      ? "SNAPSHOT APRÈS TEST ENREGISTRÉ"
+      : "SNAPSHOT PLUS TARD ENREGISTRÉ";
+
+  const next = saved.length < 2
+    ? "Ajoute un snapshot après test pour pouvoir comparer."
+    : saved.length < 3
+      ? "Tu peux déjà comparer. Un troisième snapshot donnera une lecture plus solide."
+      : "Objectif 3 snapshots atteint : utilise l’Explorateur de mémoire.";
+
+  if (els.collectionPlanOutput) {
+    els.collectionPlanOutput.textContent = [
+      label,
+      "",
+      `Heure : ${new Date(record.saved_at).toLocaleString("fr-FR")}`,
+      `Mémoire locale : ${saved.length}/500 snapshots`,
+      `Progression objectif : ${Math.min(saved.length, 3)}/3`,
+      `Type : ${record.collection_note}`,
+      `Tags : ${(record.learning_tags || []).join(", ") || "observation"}`,
+      "",
+      next,
+      "",
+      "Rappel : aucun argent réel, aucune clé API, aucun wallet."
+    ].join("\n");
+  }
+
+  if (recordsBefore === 0 && kind !== "reference") {
+    if (els.collectionPlanOutput) {
+      els.collectionPlanOutput.textContent += "\n\nNote : tu n’avais pas encore de référence. Ce snapshot servira quand même de premier point.";
+    }
+  }
+}
+
+function buildCollectionPlanMarkdown() {
+  const records = readCollectorMemory();
+  const lines = [
+    "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
+    "",
+    "Version : V1.1-alpha.6",
+    `Date : ${new Date().toISOString()}`,
+    "",
+    "## Objectif",
+    "",
+    "Construire une mémoire comparable avant le futur backend local Ryzen 7.",
+    "",
+    "## Règle",
+    "",
+    "- 1 snapshot : état isolé.",
+    "- 2 snapshots : comparaison possible.",
+    "- 3 snapshots : mini-tendance exploitable.",
+    "",
+    "## Routine",
+    "",
+    "1. Lancer Livecheck.",
+    "2. Enregistrer un snapshot de référence.",
+    "3. Lancer un test guidé.",
+    "4. Enregistrer un snapshot après test.",
+    "5. Revenir plus tard.",
+    "6. Enregistrer un snapshot plus tard.",
+    "7. Comparer premier / dernier dans l’Explorateur.",
+    "",
+    "## État actuel",
+    "",
+    `Snapshots enregistrés : ${records.length}`,
+    "",
+    ...records.slice(-10).map((record, index) => {
+      const kind = record.collection_kind || "snapshot";
+      const tags = (record.learning_tags || []).join(", ") || "observation";
+      return `- ${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · ${kind} · ${tags}`;
+    }),
+    "",
+    "## Sécurité",
+    "",
+    "- Données public-compatible.",
+    "- Aucun compte réel.",
+    "- Aucune clé API.",
+    "- Aucun wallet.",
+    "- Aucun ordre réel.",
+    "",
+    "## Suite",
+    "",
+    "Quand la logique de collecte est claire, migrer vers une base locale plus solide : JSONL durable ou SQLite sur PC Ryzen 7."
+  ];
+
+  return lines.join("\n");
+}
+
+function showCollectionChecklist() {
+  renderCollectionProgress();
+  if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = collectionPlanText();
+}
+
+function downloadCollectionPlan() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  const text = buildCollectionPlanMarkdown();
+  downloadTextFile(`agent_crypto_plan_collecte_${stamp}.md`, "text/markdown", text);
+  if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = text;
 }
 
 
@@ -3198,6 +3390,14 @@ els.btnDownloadCollectorJSONL?.addEventListener("click", downloadCollectorJSONL)
 els.btnClearCollectorMemory?.addEventListener("click", clearCollectorMemory);
 renderCollectorStatus();
 
+
+
+els.btnSaveReferenceSnapshot?.addEventListener("click", () => saveCollectionSnapshot("reference"));
+els.btnSaveAfterTestSnapshot?.addEventListener("click", () => saveCollectionSnapshot("after_test"));
+els.btnSaveLaterSnapshot?.addEventListener("click", () => saveCollectionSnapshot("later"));
+els.btnCollectionChecklist?.addEventListener("click", showCollectionChecklist);
+els.btnDownloadCollectionPlan?.addEventListener("click", downloadCollectionPlan);
+renderCollectionProgress();
 
 els.btnExploreMemory?.addEventListener("click", exploreMemory);
 els.btnCompareMemory?.addEventListener("click", compareMemory);
