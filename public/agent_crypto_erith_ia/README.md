@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC11  
+Version : V1.0-RC12  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -441,3 +441,45 @@ Aucun wallet réel dans le frontend public.
 ### Rôle
 
 Cette couche prépare une future intégration Kraken / Bybit / Binance via backend sécurisé, dry-run, logs, limites et validation humaine.
+
+
+---
+
+## V1.0-RC12 — Kraken / Bybit / News / accès distant
+
+Objectif : intégrer le cadrage confirmé par Yohan sans passer au trading réel.
+
+### Décisions ajoutées
+
+```text
+Kraken = référence wallet / compte / sécurité.
+Bybit = référence API trading à comparer.
+Binance = inspiration command layer / données marché.
+Mode = semi-automatique avec validation humaine.
+Simulation avant argent réel = obligatoire.
+Accès distant = réservé à Christophe + Yohan, hors GitHub Pages.
+```
+
+### Ajouts UI
+
+- Section `Exchange & Wallet Plan`.
+- Section `Accès déporté`.
+- Section `News Sentinel — références`.
+- Phases : Observer → Commander → Simuler → Valider humain → Réel verrouillé.
+
+### Commandes IA ajoutées
+
+```text
+planning
+exchange_plan
+news_sources
+```
+
+### Sécurité
+
+```text
+Aucune clé privée dans GitHub Pages.
+Aucune clé de retrait.
+Aucun ordre réel.
+Backend sécurisé requis pour la suite.
+```

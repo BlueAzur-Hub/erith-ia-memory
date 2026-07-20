@@ -731,6 +731,80 @@ function sourceHealthPayload() {
   };
 }
 
+
+function planningPayload() {
+  return {
+    project_stage: "public_observatory_to_controlled_agent",
+    confirmed_by_yohan: {
+      micro_transactions: true,
+      main_wallet_reference: "Kraken",
+      mode: "semi_automatic_human_validation",
+      remote_access: "two_people_only",
+      simulation_before_real_money: true,
+      news_references_required: true
+    },
+    phases: [
+      "observation_dashboard",
+      "crypto_command_layer",
+      "paper_trading_simulation",
+      "read_only_exchange_connection",
+      "human_validated_orders",
+      "real_micro_transactions_locked"
+    ],
+    hard_rules: [
+      "no_private_api_key_in_github_pages",
+      "no_withdraw_key",
+      "no_real_order_from_public_frontend",
+      "dry_run_before_real_money",
+      "logs_required",
+      "emergency_stop_required"
+    ]
+  };
+}
+
+function exchangePlanPayload() {
+  return {
+    primary_reference: {
+      exchange: "Kraken",
+      role: "wallet_account_security_reference",
+      first_connection: "read_only_then_simulation"
+    },
+    secondary_reference: {
+      exchange: "Bybit",
+      role: "api_trading_reference_to_compare",
+      first_connection: "research_only"
+    },
+    inspiration: {
+      exchange: "Binance",
+      role: "command_layer_market_data_inspiration"
+    },
+    next_backend_need: [
+      "secure_local_or_server_backend",
+      "encrypted_api_keys",
+      "access_control_for_christophe_and_yohan",
+      "paper_trading_engine",
+      "logs_and_kill_switch"
+    ]
+  };
+}
+
+function newsPlanPayload() {
+  return {
+    rule: "News never triggers buy/sell automatically.",
+    global_press: ["Reuters", "AP", "AFP", "BBC", "Le Monde", "Financial Times"],
+    crypto_press: ["CoinDesk", "The Block", "Decrypt", "Cointelegraph"],
+    institutions: ["AMF", "ESMA", "BCE", "SEC", "CFTC", "central banks"],
+    exchanges: ["Kraken announcements", "Bybit announcements", "Binance announcements", "exchange status pages"],
+    classification: [
+      "source_identified",
+      "reliability_estimated",
+      "possible_market_impact",
+      "missing_verifications",
+      "action: ignore | monitor | verify | wait"
+    ]
+  };
+}
+
 const CryptoCommands = {
   help() {
     return commandOk("help", {
@@ -741,7 +815,10 @@ const CryptoCommands = {
         "compare BTC ETH",
         "sources",
         "category USDT",
-        "risk SOL"
+        "risk SOL",
+        "planning",
+        "exchange_plan",
+        "news_sources"
       ],
       blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
       rule: "Observation only. No real trading from GitHub Pages."
@@ -857,6 +934,18 @@ const CryptoCommands = {
       },
       warning: "Comparison is observational; it does not rank investment quality."
     });
+  },
+
+  planning() {
+    return commandOk("planning", planningPayload());
+  },
+
+  exchange_plan() {
+    return commandOk("exchange_plan", exchangePlanPayload());
+  },
+
+  news_sources() {
+    return commandOk("news_sources", newsPlanPayload());
   }
 };
 
@@ -880,6 +969,9 @@ function parseCommandLine(input) {
   if (cmd === "chart" || cmd === "graph") return CryptoCommands.chart(parts[1], parts[2] || "24h");
   if (cmd === "compare") return CryptoCommands.compare(parts[1], parts[2]);
   if (cmd === "sources" || cmd === "health" || cmd === "source_health") return CryptoCommands.sources();
+  if (cmd === "planning" || cmd === "roadmap") return CryptoCommands.planning();
+  if (cmd === "exchange_plan" || cmd === "exchanges") return CryptoCommands.exchange_plan();
+  if (cmd === "news_sources" || cmd === "news" || cmd === "journaux") return CryptoCommands.news_sources();
   if (cmd === "category" || cmd === "cat") return CryptoCommands.category(parts[1]);
   if (cmd === "risk" || cmd === "risk_readout") return CryptoCommands.risk(parts[1]);
 
@@ -1121,7 +1213,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC11</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC12</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1201,7 +1293,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC11.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC12.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

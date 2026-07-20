@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC11 — STABILISATION
+   V1.0-RC12 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC11 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC12 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC11 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC12 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC11 — GRAPHIQUES ANALYSTE
+   V1.0-RC12 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — FIX GRAPHIQUES RÉELS
+   V1.0-RC12 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC12 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC12 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC12 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC12 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC11 — CRYPTO COMMAND LAYER
+   V1.0-RC12 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1231,4 +1231,162 @@ tr.asset-row.is-selected{
   .command-line button{
     grid-column:1 / -1;
   }
+}
+
+
+/* =========================================================
+   V1.0-RC12 — EXCHANGE / NEWS / REMOTE PLANNING
+   ========================================================= */
+
+.planning-deck{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:8px;
+  margin-top:8px;
+}
+
+.planning-intro{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0 0;
+}
+
+.exchange-grid,
+.news-source-grid,
+.remote-checklist{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
+
+.exchange-grid{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.news-source-grid,
+.remote-checklist{
+  grid-template-columns:repeat(4,1fr);
+}
+
+.exchange-card,
+.news-source-grid div,
+.remote-checklist div{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:12px;
+  padding:10px;
+  min-height:76px;
+}
+
+.exchange-card.primary{
+  border-color:rgba(115,255,177,.32);
+  background:rgba(115,255,177,.06);
+}
+
+.exchange-card b,
+.news-source-grid b,
+.remote-checklist b{
+  display:block;
+  color:#fff0c8;
+  font-size:11px;
+  margin-bottom:4px;
+}
+
+.exchange-card span,
+.news-source-grid span,
+.remote-checklist span{
+  display:block;
+  color:#d7e6f6;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.exchange-card em{
+  display:block;
+  color:#9eb0c8;
+  font-size:9px;
+  line-height:1.35;
+  font-style:normal;
+  margin-top:6px;
+}
+
+.phase-track{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.phase{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:999px;
+  padding:7px 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+
+.phase b{
+  display:inline-grid;
+  place-items:center;
+  min-width:20px;
+  height:20px;
+  border-radius:50%;
+  background:rgba(255,255,255,.10);
+  color:#fff0c8;
+  font-size:10px;
+}
+
+.phase span{
+  color:#dbe8f6;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.phase.done{
+  border-color:rgba(115,255,177,.28);
+}
+
+.phase.active{
+  border-color:rgba(98,236,255,.45);
+  background:rgba(98,236,255,.08);
+}
+
+.phase.locked{
+  border-color:rgba(255,105,135,.28);
+  background:rgba(255,105,135,.04);
+}
+
+.news-plan{
+  margin-top:8px;
+}
+
+.news-classifier-help{
+  border:1px solid rgba(98,236,255,.16);
+  background:rgba(98,236,255,.055);
+  border-radius:12px;
+  padding:9px;
+  margin-top:8px;
+  color:#dff6ff;
+  font-size:10px;
+  line-height:1.35;
+}
+
+.news-classifier-help b{
+  color:#fff0c8;
+}
+
+@media (max-width:1200px){
+  .planning-deck{grid-template-columns:1fr}
+  .exchange-grid,.news-source-grid,.remote-checklist{grid-template-columns:repeat(2,1fr)}
+}
+
+@media (max-width:760px){
+  .exchange-grid,.news-source-grid,.remote-checklist,.phase-track{grid-template-columns:1fr}
 }

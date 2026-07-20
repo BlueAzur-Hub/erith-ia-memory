@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC11</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC12</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc11" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc12" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC11</span>
+          <span class="pill ok">GitHub Pack V1.0-RC12</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -33,6 +33,7 @@
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
         <a href="#commandes">Commandes IA</a>
+        <a href="#planning">Plan</a>
         <a href="#math">Math Model</a>
         <a href="#risques">Risques</a>
         <a href="#nofomo">No-FOMO</a>
@@ -179,7 +180,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC11</p>
+        <p class="eyebrow">VERROU RC12</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -316,6 +317,92 @@
     </section>
 
 
+
+    <section class="planning-deck" id="planning">
+      <article class="panel glass exchange-plan">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">EXCHANGE & WALLET PLAN</p>
+            <h2>Kraken d’abord · Bybit en référence API</h2>
+            <p class="planning-intro">
+              Plan validé avec Yohan : semi-automatique, simulation avant réel, accès réservé à deux personnes.
+            </p>
+          </div>
+          <span class="pill warn">Aucun ordre réel</span>
+        </div>
+
+        <div class="exchange-grid">
+          <div class="exchange-card primary">
+            <b>Kraken</b>
+            <span>Référence wallet / compte / sécurité.</span>
+            <em>Priorité : lecture seule, sandbox, paper trading.</em>
+          </div>
+          <div class="exchange-card">
+            <b>Bybit</b>
+            <span>Référence API trading à comparer.</span>
+            <em>À étudier avant intégration.</em>
+          </div>
+          <div class="exchange-card">
+            <b>Binance</b>
+            <span>Inspiration command layer / données marché.</span>
+            <em>Pas de clé privée dans le frontend.</em>
+          </div>
+        </div>
+
+        <div class="phase-track">
+          <div class="phase done"><b>1</b><span>Observer</span></div>
+          <div class="phase active"><b>2</b><span>Commander</span></div>
+          <div class="phase"><b>3</b><span>Simuler</span></div>
+          <div class="phase"><b>4</b><span>Valider humain</span></div>
+          <div class="phase locked"><b>5</b><span>Réel verrouillé</span></div>
+        </div>
+      </article>
+
+      <article class="panel glass remote-plan">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">ACCÈS DÉPORTÉ</p>
+            <h2>À préparer hors GitHub Pages</h2>
+          </div>
+        </div>
+        <div class="remote-checklist">
+          <div><b>Accès</b><span>toi + Yohan uniquement</span></div>
+          <div><b>Clés</b><span>jamais dans le dépôt public</span></div>
+          <div><b>Mode</b><span>lecture seule puis simulation</span></div>
+          <div><b>Sécurité</b><span>logs + arrêt urgence</span></div>
+        </div>
+        <p class="rule-line warn-lock">
+          L’accès distant et les clés exchange exigent un backend local ou serveur sécurisé. GitHub Pages reste public et observation-only.
+        </p>
+      </article>
+    </section>
+
+    <section class="panel glass news-plan" id="news-plan">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">NEWS SENTINEL — RÉFÉRENCES</p>
+          <h2>Sources d’information à surveiller</h2>
+          <p class="planning-intro">
+            Les nouvelles ne déclenchent aucun achat. Elles classent seulement l’information : fiable, à vérifier, risquée, rumeur.
+          </p>
+        </div>
+        <span class="pill">Analyse, pas signal achat</span>
+      </div>
+
+      <div class="news-source-grid">
+        <div><b>Monde</b><span>Reuters · AP · AFP · BBC · Le Monde · Financial Times</span></div>
+        <div><b>Crypto</b><span>CoinDesk · The Block · Decrypt · Cointelegraph avec prudence</span></div>
+        <div><b>Institutions</b><span>AMF · ESMA · BCE · SEC · CFTC · banques centrales</span></div>
+        <div><b>Exchanges</b><span>Kraken · Bybit · Binance · status pages · maintenances API</span></div>
+      </div>
+
+      <div class="news-classifier-help">
+        <b>Lecture future :</b>
+        <span>source identifiée → fiabilité → impact possible → données à vérifier → action : attendre / surveiller / ignorer.</span>
+      </div>
+    </section>
+
+
     <section class="panel glass command-layer" id="commandes">
       <div class="section-head">
         <div>
@@ -336,6 +423,9 @@
         <button class="cmd-preset" data-command="compare BTC ETH">compare BTC ETH</button>
         <button class="cmd-preset" data-command="sources">sources</button>
         <button class="cmd-preset" data-command="risk SOL">risk SOL</button>
+        <button class="cmd-preset" data-command="planning">planning</button>
+        <button class="cmd-preset" data-command="exchange_plan">exchange_plan</button>
+        <button class="cmd-preset" data-command="news_sources">news_sources</button>
       </div>
 
       <div class="command-line">
@@ -368,11 +458,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC11</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC12</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc11"></script>
+  <script src="./app.js?v=1.0-rc12"></script>
 </body>
 </html>
