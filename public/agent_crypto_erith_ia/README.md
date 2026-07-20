@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC17  
+Version : V1.0-RC18  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -646,6 +646,35 @@ Les commandes techniques restent dans `data-command` et dans le JSON pour Yohan,
   - `Contrôle sécurité`
   - `Plan Kraken`
   - `Résumé marché`
+
+### Règle
+
+Aucune fonction dangereuse ajoutée.
+Aucun ordre réel.
+Aucune clé privée.
+
+
+---
+
+## V1.0-RC18 — Mode humain simple
+
+Objectif : rendre la zone Commandes IA compréhensible pour un utilisateur non développeur.
+
+### Problème
+
+Même avec les boutons français, la présence d’une ligne de commande et du JSON restait trop technique.
+
+### Corrections
+
+- `Commandes IA contrôlées` devient `Tests simples de l’assistante`.
+- Ajout d’un guide en 4 blocs :
+  - clique un bouton ;
+  - lis la carte verte ;
+  - ignore le JSON ;
+  - rien ne peut acheter/vendre ici.
+- L’entrée manuelle est repliée dans `Entrée manuelle avancée`.
+- Le JSON technique reste replié.
+- Le bloc humain s’affiche par défaut avec une aide simple.
 
 ### Règle
 

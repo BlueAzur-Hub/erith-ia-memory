@@ -288,6 +288,7 @@ async function runLivecheck() {
   clearMarketDisplay("Livecheck en cours");
   loadSimulation();
 renderSimulation();
+renderSimpleCommandIntro();
 renderSourceGrid();
   updateSourceMetric(0);
 setTableDecision("Refusé avant Livecheck", "fail");
@@ -1392,6 +1393,24 @@ function parseCommandLine(input) {
 }
 
 
+
+function renderSimpleCommandIntro() {
+  if (!els.commandHuman) return;
+  els.commandHuman.classList.add("ok");
+  els.commandHuman.classList.remove("err");
+  els.commandHuman.innerHTML = `
+    <b>Mode simple prêt</b>
+    <p>Clique un bouton au-dessus. Tu n’as pas besoin de lire le JSON technique.</p>
+    <ul>
+      <li>Résumé marché : vérifie les données principales.</li>
+      <li>Plan architecture : explique public / privé / Kraken.</li>
+      <li>Contrôle sécurité : liste les protections obligatoires.</li>
+      <li>Portefeuille virtuel : simulation, sans argent réel.</li>
+    </ul>
+    <div class="cmd-tags"><span>aucun achat</span><span>aucune vente</span><span>simulation only</span></div>
+  `;
+}
+
 function humanCommandSummary(result) {
   const cmd = String(result?.command || "").toLowerCase();
 
@@ -1536,8 +1555,8 @@ function humanCommandSummary(result) {
   }
 
   return {
-    title: "Commande exécutée",
-    text: "La commande a produit un résultat technique. Le résumé JSON reste disponible dessous.",
+    title: "Test exécuté",
+    text: "Le bouton a répondu correctement. La partie importante est cette carte, pas le JSON.",
     bullets: [
       "Résultat reçu.",
       "Aucun ordre réel.",
@@ -1573,7 +1592,10 @@ function renderCommandOutput(result) {
 
 function runCommandFromInput(commandText = null) {
   const text = commandText ?? els.commandInput?.value ?? "";
-  if (els.commandInput && commandText !== null) els.commandInput.value = commandText;
+  if (els.commandInput && commandText !== null) {
+    const label = document.querySelector(`.cmd-preset[data-command="${CSS.escape(commandText)}"]`)?.textContent?.trim();
+    els.commandInput.value = label || commandText;
+  }
   const result = parseCommandLine(text);
   if (els.commandOutput) els.commandOutput.dataset.userRan = "1";
   renderCommandOutput(result);
@@ -1799,7 +1821,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC17</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC18</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1879,7 +1901,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC17.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC18.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

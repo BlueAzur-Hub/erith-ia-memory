@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC17 — STABILISATION
+   V1.0-RC18 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC17 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC18 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC17 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC18 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC17 — GRAPHIQUES ANALYSTE
+   V1.0-RC18 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — FIX GRAPHIQUES RÉELS
+   V1.0-RC18 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC18 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC18 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC18 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC18 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — CRYPTO COMMAND LAYER
+   V1.0-RC18 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC18 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — PAPER TRADING SANDBOX
+   V1.0-RC18 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1419,7 +1419,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — SAFETY CONTROL ROOM
+   V1.0-RC18 — SAFETY CONTROL ROOM
    ========================================================= */
 
 .safety-layer{margin-top:8px}
@@ -1532,7 +1532,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — BACKEND BLUEPRINT
+   V1.0-RC18 — BACKEND BLUEPRINT
    ========================================================= */
 
 .backend-layer{margin-top:8px}
@@ -1680,7 +1680,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — COMMAND OUTPUT HUMAIN
+   V1.0-RC18 — COMMAND OUTPUT HUMAIN
    ========================================================= */
 
 .command-human{
@@ -1750,7 +1750,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC17 — COMMANDES HUMAINES FR
+   V1.0-RC18 — COMMANDES HUMAINES FR
    ========================================================= */
 
 .command-helper-human{
@@ -1796,4 +1796,87 @@ tr.asset-row.is-selected{
 
 .cmd-preset{
   min-height:32px;
+}
+
+
+/* =========================================================
+   V1.0-RC18 — MODE HUMAIN SIMPLE
+   ========================================================= */
+
+.simple-command-guide{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:10px 0;
+}
+
+.simple-command-guide div{
+  border:1px solid rgba(115,255,177,.22);
+  background:rgba(115,255,177,.055);
+  border-radius:14px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:58px;
+}
+
+.simple-command-guide b{
+  display:inline-grid;
+  place-items:center;
+  min-width:26px;
+  height:26px;
+  border-radius:50%;
+  background:rgba(115,255,177,.16);
+  color:#fff0c8;
+  font-size:12px;
+}
+
+.simple-command-guide span{
+  color:#dff6ff;
+  font-size:11px;
+  line-height:1.35;
+  font-weight:800;
+}
+
+.manual-command-box{
+  margin-top:8px;
+}
+
+.manual-command-box summary{
+  cursor:pointer;
+  color:#fff0c8;
+  font-size:10px;
+  font-weight:1000;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  border-radius:999px;
+  padding:7px 10px;
+  display:inline-block;
+  user-select:none;
+}
+
+.manual-command-box[open] summary{
+  margin-bottom:8px;
+}
+
+.command-presets{
+  margin-top:8px;
+}
+
+.command-human{
+  margin-top:10px;
+  min-height:125px;
+}
+
+.command-layer .section-head .pill.warn::after{
+  content:" · aucun achat";
+}
+
+@media (max-width:1000px){
+  .simple-command-guide{grid-template-columns:repeat(2,1fr)}
+}
+
+@media (max-width:640px){
+  .simple-command-guide{grid-template-columns:1fr}
 }
