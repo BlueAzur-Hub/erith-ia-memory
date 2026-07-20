@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC6</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC8</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc6" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc8" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC6</span>
+          <span class="pill ok">GitHub Pack V1.0-RC8</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -74,9 +74,9 @@
         <small id="metricBtcDomHint">Donnée non récupérée</small>
       </article>
       <article class="metric glass">
-        <span>Sources OK</span>
+        <span>Sources réussies</span>
         <strong id="metricSources">0/7</strong>
-        <small id="metricSourcesHint">Livecheck requis</small>
+        <small id="metricSourcesHint">0/7 interrogées</small>
       </article>
     </section>
 
@@ -179,9 +179,9 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.2</p>
+        <p class="eyebrow">VERROU RC8</p>
         <h2>Anti-hallucination</h2>
-        <p class="rule-line">Pas de source live, pas de prix. Pas de données récupérées, pas de tableau chiffré.</p>
+        <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
     </section>
 
@@ -305,11 +305,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC6</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC8</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc6"></script>
+  <script src="./app.js?v=1.0-rc8"></script>
 </body>
 </html>

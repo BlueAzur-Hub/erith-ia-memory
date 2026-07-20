@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC1 — STABILISATION
+   V1.0-RC8 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC3 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC8 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC4 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC8 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC6 — GRAPHIQUES ANALYSTE
+   V1.0-RC8 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC6 — FIX GRAPHIQUES RÉELS
+   V1.0-RC8 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -929,4 +929,46 @@ tr.asset-row.is-selected{
 
 .asset-row.is-selected .coin-cell strong{
   color:#fff0c8;
+}
+
+
+/* =========================================================
+   V1.0-RC8 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   ========================================================= */
+
+.rule-line.ok-lock{
+  color:#dfffe8;
+  border-color:rgba(115,255,177,.24);
+  background:rgba(115,255,177,.055);
+}
+
+.rule-line.warn-lock{
+  color:#ffe7b2;
+  border-color:rgba(255,215,130,.24);
+  background:rgba(255,215,130,.055);
+}
+
+
+/* =========================================================
+   V1.0-RC8 — REDRAW 24H + SOURCES CLAIRES
+   ========================================================= */
+
+.rule-line.ok-lock{
+  color:#dfffe8;
+  border-color:rgba(115,255,177,.24);
+  background:rgba(115,255,177,.055);
+}
+
+.rule-line.warn-lock{
+  color:#ffe7b2;
+  border-color:rgba(255,215,130,.24);
+  background:rgba(255,215,130,.055);
+}
+
+#mainChart{
+  min-height:260px;
+}
+
+.chart-shell canvas{
+  background:linear-gradient(180deg,rgba(98,236,255,.035),rgba(98,236,255,.01));
 }

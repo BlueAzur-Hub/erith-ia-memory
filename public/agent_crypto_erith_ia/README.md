@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC6  
+Version : V1.0-RC8  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -305,3 +305,51 @@ Objectif : corriger RC5, où le bloc graphique existait mais le JavaScript ne pi
 - Clic sur une ligne du tableau = graphique + détail + score mis à jour.
 - Périodes 24h / 7j / 30j actives.
 - Colonne mini-graph dans le tableau.
+
+
+---
+
+## V1.0-RC7 — Libellés sources clarifiés
+
+Objectif : supprimer l’ambiguïté entre sources réussies et sources interrogées.
+
+### Correction
+
+Avant :
+
+```text
+Sources OK : 6/7
+7/7 testées
+```
+
+Après :
+
+```text
+Sources réussies : 6/7
+7/7 interrogées · 1 échec
+```
+
+### Verrou anti-hallucination
+
+Le bloc anti-hallucination devient dynamique :
+
+- si Livecheck OK : il indique la source active et les limites ;
+- si Livecheck échoue : il bloque prix, tableau et score fiable.
+
+
+---
+
+## V1.0-RC8 — Redraw graphique 24h + sources lisibles
+
+Objectif : corriger deux points d’ergonomie.
+
+### Correctifs
+
+- Le graphique 24h est redessiné automatiquement après Livecheck.
+- Le canvas est recalculé après layout avec `requestAnimationFrame`.
+- Le bouton 24h / 7j / 30j reste actif, mais n’est plus nécessaire pour déclencher le premier rendu.
+- Les sources distinguent :
+  - sources réussies ;
+  - sources interrogées ;
+  - échecs.
+- Le rouge est expliqué : il signifie source marché principale indisponible, pas erreur utilisateur.

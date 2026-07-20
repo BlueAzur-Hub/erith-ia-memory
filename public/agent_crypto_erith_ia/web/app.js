@@ -53,7 +53,8 @@ const els = {
   mainChart: $("mainChart"),
   chartCaption: $("chartCaption"),
   assetDetailGrid: $("assetDetailGrid"),
-  assetDetailWhy: $("assetDetailWhy")
+  assetDetailWhy: $("assetDetailWhy"),
+  trustLockText: $("trustLockText")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -204,12 +205,21 @@ function detailFromResult(result) {
 }
 
 function updateSourceMetric(doneOverride = null) {
+  const total = liveSources.length;
   const done = doneOverride ?? state.sourceStatus.length;
   const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-  setText(els.metricSources, `${ok}/${liveSources.length}`);
-  if (!done) setText(els.metricSourcesHint, "Livecheck requis");
-  else if (done < liveSources.length) setText(els.metricSourcesHint, `${done}/${liveSources.length} testées`);
-  else setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
+  const fail = Math.max(0, done - ok);
+  const failText = fail === 1 ? "1 échec" : `${fail} échecs`;
+
+  setText(els.metricSources, `${ok}/${total}`);
+
+  if (!done) {
+    setText(els.metricSourcesHint, `0/${total} interrogées`);
+  } else if (done < total) {
+    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${ok} réussies`);
+  } else {
+    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${failText}`);
+  }
 }
 
 
@@ -254,16 +264,7 @@ async function runLivecheck() {
 
   state.sourceStatus = [];
   clearMarketDisplay("Livecheck en cours");
-  
-document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    state.chartPeriodDays = Number(btn.dataset.period) || 1;
-    document.querySelectorAll(".period-btn[data-period]").forEach(b => b.classList.toggle("active", b === btn));
-    renderAnalystPanel();
-  });
-});
-
-renderSourceGrid();
+  renderSourceGrid();
   updateSourceMetric(0);
 setTableDecision("Refusé avant Livecheck", "fail");
 
@@ -281,6 +282,9 @@ setTableDecision("Refusé avant Livecheck", "fail");
         state.mainSource = "CoinGecko";
         state.timestamp = new Date().toISOString();
         state.liveOk = true;
+        if (!state.selectedCoinId || !state.coins.some(c => c.id === state.selectedCoinId)) {
+          state.selectedCoinId = state.coins[0]?.id || "bitcoin";
+        }
 
         // Affichage immédiat dès que la source marché est valide.
         renderAll();
@@ -314,9 +318,7 @@ setTableDecision("Refusé avant Livecheck", "fail");
     setTableDecision("Refusé · pas de source live", "fail");
     setText(els.coldRead, explainForBeginnerLiveFailure(okCount));
   }
-
-  setText(els.metricSources, `${okCount}/${liveSources.length}`);
-  setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
+  updateSourceMetric();
 }
 
 
@@ -596,10 +598,14 @@ function renderAll() {
   renderTicker();
   renderMarketTable();
   renderWatchlist();
-  renderScore(state.coins[0] || null);
+  renderScore(getSelectedCoin() || state.coins[0] || null);
   renderRiskGrid();
   renderColdRead(true);
   renderBeginnerSummary();
+
+  requestAnimationFrame(() => {
+    renderAnalystPanel();
+  });
 }
 
 function renderMetrics() {
@@ -826,7 +832,44 @@ function renderSourceGrid() {
   ).join("");
 }
 
+
+function renderTrustLock(live = false) {
+  if (!els.trustLockText) return;
+
+  els.trustLockText.classList.toggle("ok-lock", !!live);
+  els.trustLockText.classList.toggle("warn-lock", !live);
+
+  if (live) {
+    const total = liveSources.length;
+    const done = state.sourceStatus.length;
+    const ok = state.sourceStatus.filter(s => s.status === "OK").length;
+    const fail = Math.max(0, done - ok);
+    const failText = fail === 1 ? "1 source secondaire a échoué" : `${fail} sources secondaires ont échoué`;
+
+    els.trustLockText.textContent =
+      `Source marché active : ${state.mainSource || "source réelle"}. ` +
+      `Tableau autorisé parce que les prix viennent d’une source live. ` +
+      `Sources : ${ok}/${total} réussies, ${done}/${total} interrogées. ` +
+      `${fail ? failText + ". " : ""}` +
+      "Achat interdit : sécurité, social et on-chain restent à vérifier.";
+  } else {
+    const total = liveSources.length;
+    const done = state.sourceStatus.length;
+    const ok = state.sourceStatus.filter(s => s.status === "OK").length;
+
+    if (done) {
+      els.trustLockText.textContent =
+        `Source marché principale indisponible. ${ok}/${total} sources ont répondu, ${done}/${total} ont été interrogées. ` +
+        "Rouge = tableau bloqué, pas erreur utilisateur.";
+    } else {
+      els.trustLockText.textContent =
+        "Pas de source marché active : pas de prix, pas de tableau chiffré, pas de score fiable.";
+    }
+  }
+}
+
 function renderColdRead(live = false) {
+  renderTrustLock(live);
   if (!els.coldRead) return;
 
   const box = els.coldRead.closest(".cold-read");
@@ -838,10 +881,10 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette V0.8.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC8.`;
   } else {
     els.coldRead.textContent =
-      "Accès live absent ou non testé. L’observatoire refuse d’afficher un tableau chiffré. Action sûre : lancer Livecheck ou fournir un export de données.";
+      "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
   }
 }
 
@@ -897,6 +940,21 @@ $("btnLivecheck")?.addEventListener("click", runLivecheck);
 $("btnRefresh")?.addEventListener("click", runLivecheck);
 $("btnNoFomo")?.addEventListener("click", () => document.querySelector("#nofomo")?.scrollIntoView({ behavior: "smooth" }));
 $("btnAddWatch")?.addEventListener("click", addWatch);
+
+document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.chartPeriodDays = Number(btn.dataset.period) || 1;
+    document.querySelectorAll(".period-btn[data-period]").forEach(b => b.classList.toggle("active", b === btn));
+    requestAnimationFrame(() => renderAnalystPanel());
+  });
+});
+
+window.addEventListener("resize", () => {
+  if (state.liveOk && state.coins.length) {
+    requestAnimationFrame(() => renderAnalystPanel());
+  }
+});
+
 $("btnSeedWatch")?.addEventListener("click", seedWatch);
 $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
@@ -924,4 +982,4 @@ renderRiskGrid();
 renderColdRead(false);
 
 renderBeginnerSummary();
-renderAnalystPanel();
+requestAnimationFrame(() => renderAnalystPanel());
