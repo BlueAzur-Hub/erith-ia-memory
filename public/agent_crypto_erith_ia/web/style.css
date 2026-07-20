@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC12 — STABILISATION
+   V1.0-RC13 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC12 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC13 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC12 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC13 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC12 — GRAPHIQUES ANALYSTE
+   V1.0-RC13 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — FIX GRAPHIQUES RÉELS
+   V1.0-RC13 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC13 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC13 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC13 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC13 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — CRYPTO COMMAND LAYER
+   V1.0-RC13 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC12 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC13 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1390,3 +1390,29 @@ tr.asset-row.is-selected{
 @media (max-width:760px){
   .exchange-grid,.news-source-grid,.remote-checklist,.phase-track{grid-template-columns:1fr}
 }
+
+
+/* =========================================================
+   V1.0-RC13 — PAPER TRADING SANDBOX
+   ========================================================= */
+
+.sim-layer{margin-top:8px}
+.sim-intro{color:#b9c8dc;font-size:11px;line-height:1.35;margin:4px 0 0}
+.sim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.sim-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);border-radius:12px;padding:10px;min-height:66px}
+.sim-card b{display:block;color:#fff0c8;font-size:10px;margin-bottom:5px}
+.sim-card span{color:#e6f4ff;font-size:15px;font-weight:1000}
+.sim-controls{display:grid;grid-template-columns:1fr 160px auto auto auto;gap:8px;align-items:end;margin-top:10px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12);border-radius:14px;padding:10px}
+.sim-controls label span{display:block;color:#b9c8dc;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.sim-controls input{width:100%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;padding:9px;outline:0;font-weight:800}
+.btn.danger{border-color:rgba(255,105,135,.35);background:rgba(255,105,135,.09)}
+.sim-columns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sim-columns h3{margin:0 0 6px;color:#fff0c8;font-size:12px}
+.sim-positions,.sim-log{min-height:150px;max-height:260px;overflow:auto;border:1px solid rgba(255,255,255,.12);background:rgba(2,12,24,.42);border-radius:14px;padding:10px;color:#dff6ff;font-size:10px;line-height:1.45}
+.sim-position-row{display:grid;grid-template-columns:1.1fr .9fr .9fr .8fr;gap:8px;border-bottom:1px solid rgba(255,255,255,.08);padding:7px 0}
+.sim-position-row:last-child{border-bottom:0}
+.sim-position-row b{color:#fff0c8}
+.pnl-pos{color:#6cffb0}
+.pnl-neg{color:#ff6f93}
+@media (max-width:1100px){.sim-grid{grid-template-columns:repeat(2,1fr)}.sim-controls{grid-template-columns:1fr 1fr}.sim-columns{grid-template-columns:1fr}}
+@media (max-width:640px){.sim-grid,.sim-controls{grid-template-columns:1fr}}

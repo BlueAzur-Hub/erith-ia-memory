@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC12</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC13</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc12" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc13" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC12</span>
+          <span class="pill ok">GitHub Pack V1.0-RC13</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -32,6 +32,7 @@
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
+        <a href="#simulation">Simulation</a>
         <a href="#commandes">Commandes IA</a>
         <a href="#planning">Plan</a>
         <a href="#math">Math Model</a>
@@ -180,7 +181,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC12</p>
+        <p class="eyebrow">VERROU RC13</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -403,6 +404,51 @@
     </section>
 
 
+
+    <section class="panel glass sim-layer" id="simulation">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PAPER TRADING SANDBOX</p>
+          <h2>Simulation micro-transactions</h2>
+          <p class="sim-intro">
+            Portefeuille virtuel local. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à tester une logique avant toute future connexion Kraken.
+          </p>
+        </div>
+        <span class="pill warn">Simulation only</span>
+      </div>
+
+      <div class="sim-grid">
+        <div class="sim-card"><b>Capital virtuel</b><span id="simCash">—</span></div>
+        <div class="sim-card"><b>Valeur positions</b><span id="simPositionsValue">—</span></div>
+        <div class="sim-card"><b>Total simulé</b><span id="simTotalValue">—</span></div>
+        <div class="sim-card"><b>P/L virtuel</b><span id="simPnL">—</span></div>
+      </div>
+
+      <div class="sim-controls">
+        <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
+        <label><span>Montant €</span><input id="simAmount" type="number" min="1" step="1" value="25" /></label>
+        <button class="btn small primary" id="btnSimBuy">Simuler achat</button>
+        <button class="btn small" id="btnSimSell">Simuler vente</button>
+        <button class="btn small danger" id="btnSimReset">Reset simulation</button>
+      </div>
+
+      <div class="sim-columns">
+        <div>
+          <h3>Portefeuille virtuel</h3>
+          <div class="sim-positions" id="simPositions">Aucune position simulée.</div>
+        </div>
+        <div>
+          <h3>Journal simulation</h3>
+          <pre class="sim-log" id="simLog">Aucune simulation lancée.</pre>
+        </div>
+      </div>
+
+      <p class="rule-line warn-lock">
+        Verrou : la simulation ne remplace pas une stratégie. Tout passage réel devra exiger backend sécurisé, logs, limites, dry-run prolongé et validation humaine.
+      </p>
+    </section>
+
+
     <section class="panel glass command-layer" id="commandes">
       <div class="section-head">
         <div>
@@ -423,6 +469,8 @@
         <button class="cmd-preset" data-command="compare BTC ETH">compare BTC ETH</button>
         <button class="cmd-preset" data-command="sources">sources</button>
         <button class="cmd-preset" data-command="risk SOL">risk SOL</button>
+        <button class="cmd-preset" data-command="sim_buy BTC 25">sim_buy BTC 25</button>
+        <button class="cmd-preset" data-command="portfolio">portfolio</button>
         <button class="cmd-preset" data-command="planning">planning</button>
         <button class="cmd-preset" data-command="exchange_plan">exchange_plan</button>
         <button class="cmd-preset" data-command="news_sources">news_sources</button>
@@ -458,11 +506,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC12</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC13</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc12"></script>
+  <script src="./app.js?v=1.0-rc13"></script>
 </body>
 </html>

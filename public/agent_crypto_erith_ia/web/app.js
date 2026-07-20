@@ -10,7 +10,8 @@ const state = {
   chartPeriodDays: 1,
   chartCache: {},
   assetFilter: "all",
-  sortKey: "rank-asc"
+  sortKey: "rank-asc",
+  sim: null
 };
 
 const $ = (id) => document.getElementById(id);
@@ -63,7 +64,18 @@ const els = {
   sortSelect: $("sortSelect"),
   commandInput: $("commandInput"),
   commandOutput: $("commandOutput"),
-  btnRunCommand: $("btnRunCommand")
+  btnRunCommand: $("btnRunCommand"),
+  simCash: $("simCash"),
+  simPositionsValue: $("simPositionsValue"),
+  simTotalValue: $("simTotalValue"),
+  simPnL: $("simPnL"),
+  simSymbol: $("simSymbol"),
+  simAmount: $("simAmount"),
+  btnSimBuy: $("btnSimBuy"),
+  btnSimSell: $("btnSimSell"),
+  btnSimReset: $("btnSimReset"),
+  simPositions: $("simPositions"),
+  simLog: $("simLog")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -273,7 +285,9 @@ async function runLivecheck() {
 
   state.sourceStatus = [];
   clearMarketDisplay("Livecheck en cours");
-  renderSourceGrid();
+  loadSimulation();
+renderSimulation();
+renderSourceGrid();
   updateSourceMetric(0);
 setTableDecision("Refusé avant Livecheck", "fail");
 
@@ -732,6 +746,168 @@ function sourceHealthPayload() {
 }
 
 
+
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1";
+const SIM_START_CASH = 1000;
+
+function loadSimulation() {
+  try {
+    const raw = localStorage.getItem(SIM_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.cash === "number" && parsed.positions) {
+        state.sim = parsed;
+        return;
+      }
+    }
+  } catch {}
+  state.sim = { cash: SIM_START_CASH, initialCash: SIM_START_CASH, positions: {}, logs: [] };
+}
+
+function saveSimulation() {
+  try { localStorage.setItem(SIM_STORAGE_KEY, JSON.stringify(state.sim)); } catch {}
+}
+
+function resetSimulation() {
+  state.sim = {
+    cash: SIM_START_CASH,
+    initialCash: SIM_START_CASH,
+    positions: {},
+    logs: [{ time: new Date().toISOString(), type: "RESET", message: "Simulation réinitialisée." }]
+  };
+  saveSimulation();
+  renderSimulation();
+}
+
+function simLog(entry) {
+  if (!state.sim) loadSimulation();
+  state.sim.logs.unshift({ time: new Date().toISOString(), ...entry });
+  state.sim.logs = state.sim.logs.slice(0, 50);
+}
+
+function getPositionValue(symbol) {
+  if (!state.sim) loadSimulation();
+  const pos = state.sim.positions[symbol];
+  if (!pos) return 0;
+  const coin = findCoinByQuery(symbol);
+  const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice ?? 0;
+  return pos.qty * price;
+}
+
+function getSimulationTotals() {
+  if (!state.sim) loadSimulation();
+  const positionsValue = Object.keys(state.sim.positions).reduce((sum, sym) => sum + getPositionValue(sym), 0);
+  const total = state.sim.cash + positionsValue;
+  return { positionsValue, total, pnl: total - state.sim.initialCash };
+}
+
+function simulationPayload() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  const positions = Object.keys(state.sim.positions).map(sym => {
+    const pos = state.sim.positions[sym];
+    const coin = findCoinByQuery(sym);
+    const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice;
+    const value = pos.qty * price;
+    return {
+      symbol: sym,
+      name: pos.name,
+      qty: pos.qty,
+      avg_price_eur: pos.avgPrice,
+      current_price_eur: price,
+      invested_eur: pos.invested,
+      value_eur: value,
+      pnl_eur: value - pos.invested
+    };
+  });
+  return {
+    mode: "paper_trading_only",
+    cash_eur: state.sim.cash,
+    initial_cash_eur: state.sim.initialCash,
+    positions_value_eur: totals.positionsValue,
+    total_value_eur: totals.total,
+    pnl_eur: totals.pnl,
+    positions,
+    logs: state.sim.logs.slice(0, 10)
+  };
+}
+
+function simulateOrder(side, symbolInput = null, amountInput = null) {
+  if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant simulation.", sourceHealthPayload());
+
+  const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
+  const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
+  const coin = findCoinByQuery(symbol);
+
+  if (!coin) return commandError(`Actif introuvable pour simulation : ${symbol}`);
+  if (!Number.isFinite(amount) || amount <= 0) return commandError("Montant invalide.");
+  if (!state.sim) loadSimulation();
+
+  const price = coin.price;
+  if (!Number.isFinite(price) || price <= 0) return commandError("Prix indisponible pour simulation.");
+
+  const sym = coin.symbol.toUpperCase();
+  const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price };
+
+  if (side === "buy") {
+    if (amount > state.sim.cash) return commandError("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
+    const qty = amount / price;
+    const newQty = pos.qty + qty;
+    const newInvested = pos.invested + amount;
+    pos.qty = newQty;
+    pos.invested = newInvested;
+    pos.avgPrice = newInvested / newQty;
+    pos.lastPrice = price;
+    state.sim.positions[sym] = pos;
+    state.sim.cash -= amount;
+    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)}.` });
+  } else if (side === "sell") {
+    if (!pos.qty || pos.qty <= 0) return commandError(`Aucune position virtuelle à vendre pour ${sym}.`);
+    const maxValue = pos.qty * price;
+    const sellValue = Math.min(amount, maxValue);
+    const qty = sellValue / price;
+    const soldRatio = qty / pos.qty;
+    pos.qty -= qty;
+    pos.invested = Math.max(0, pos.invested * (1 - soldRatio));
+    pos.lastPrice = price;
+    state.sim.cash += sellValue;
+    if (pos.qty <= 0.00000001) delete state.sim.positions[sym];
+    else state.sim.positions[sym] = pos;
+    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)}.` });
+  }
+
+  saveSimulation();
+  renderSimulation();
+  return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, price_eur: price, portfolio: simulationPayload() });
+}
+
+function renderSimulation() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  setText(els.simCash, fmtEUR.format(state.sim.cash));
+  setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue));
+  setText(els.simTotalValue, fmtEUR.format(totals.total));
+  if (els.simPnL) {
+    els.simPnL.textContent = `${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`;
+    els.simPnL.classList.toggle("pnl-pos", totals.pnl >= 0);
+    els.simPnL.classList.toggle("pnl-neg", totals.pnl < 0);
+  }
+  const positions = Object.keys(state.sim.positions);
+  if (els.simPositions) {
+    els.simPositions.innerHTML = positions.length ? positions.map(sym => {
+      const pos = state.sim.positions[sym];
+      const coin = findCoinByQuery(sym);
+      const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice;
+      const value = pos.qty * price;
+      const pnl = value - pos.invested;
+      return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span>${pos.qty.toFixed(8)}</span><span>${fmtEUR.format(value)}</span><span class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${fmtEUR.format(pnl)}</span></div>`;
+    }).join("") : "Aucune position simulée.";
+  }
+  if (els.simLog) {
+    els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(l => `[${l.time}] ${l.type} · ${l.message || ""}`).join("\n") : "Aucune simulation lancée.";
+  }
+}
+
 function planningPayload() {
   return {
     project_stage: "public_observatory_to_controlled_agent",
@@ -818,7 +994,11 @@ const CryptoCommands = {
         "risk SOL",
         "planning",
         "exchange_plan",
-        "news_sources"
+        "news_sources",
+        "sim_buy BTC 25",
+        "sim_sell BTC 10",
+        "portfolio",
+        "reset_sim"
       ],
       blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
       rule: "Observation only. No real trading from GitHub Pages."
@@ -969,6 +1149,10 @@ function parseCommandLine(input) {
   if (cmd === "chart" || cmd === "graph") return CryptoCommands.chart(parts[1], parts[2] || "24h");
   if (cmd === "compare") return CryptoCommands.compare(parts[1], parts[2]);
   if (cmd === "sources" || cmd === "health" || cmd === "source_health") return CryptoCommands.sources();
+  if (cmd === "sim_buy" || cmd === "paper_buy") return simulateOrder("buy", parts[1], parts[2]);
+  if (cmd === "sim_sell" || cmd === "paper_sell") return simulateOrder("sell", parts[1], parts[2]);
+  if (cmd === "portfolio" || cmd === "paper_portfolio") return commandOk("portfolio", simulationPayload());
+  if (cmd === "reset_sim" || cmd === "paper_reset") { resetSimulation(); return commandOk("reset_sim", simulationPayload()); }
   if (cmd === "planning" || cmd === "roadmap") return CryptoCommands.planning();
   if (cmd === "exchange_plan" || cmd === "exchanges") return CryptoCommands.exchange_plan();
   if (cmd === "news_sources" || cmd === "news" || cmd === "journaux") return CryptoCommands.news_sources();
@@ -1003,6 +1187,7 @@ function renderAll() {
   renderRiskGrid();
   renderColdRead(true);
   renderBeginnerSummary();
+  renderSimulation();
 
   requestAnimationFrame(() => {
     renderAnalystPanel();
@@ -1213,7 +1398,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC12</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC13</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1293,7 +1478,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC12.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC13.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -1348,6 +1533,14 @@ function seedWatch() {
   renderWatchlist();
 }
 
+
+
+els.btnSimBuy?.addEventListener("click", () => renderCommandOutput(simulateOrder("buy")));
+els.btnSimSell?.addEventListener("click", () => renderCommandOutput(simulateOrder("sell")));
+els.btnSimReset?.addEventListener("click", () => {
+  resetSimulation();
+  renderCommandOutput(commandOk("reset_sim", simulationPayload()));
+});
 
 els.btnRunCommand?.addEventListener("click", () => runCommandFromInput());
 els.commandInput?.addEventListener("keydown", event => {

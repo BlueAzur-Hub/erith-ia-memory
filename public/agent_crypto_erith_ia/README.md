@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC12  
+Version : V1.0-RC13  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -482,4 +482,35 @@ Aucune clé privée dans GitHub Pages.
 Aucune clé de retrait.
 Aucun ordre réel.
 Backend sécurisé requis pour la suite.
+```
+
+
+---
+
+## V1.0-RC13 — Paper Trading Sandbox
+
+Objectif : préparer les futures micro-transactions en mode simulation uniquement.
+
+### Ajouts
+
+- Section `Paper Trading Sandbox`.
+- Capital virtuel local : 1000 €.
+- Simulation achat / vente.
+- Portefeuille virtuel stocké en localStorage.
+- Journal de simulation.
+- P/L virtuel.
+- Commandes IA :
+  - `sim_buy BTC 25`
+  - `sim_sell BTC 10`
+  - `portfolio`
+  - `reset_sim`
+
+### Verrous
+
+```text
+Aucun ordre réel.
+Aucun wallet réel.
+Aucune clé API.
+Aucune clé de retrait.
+Simulation locale seulement.
 ```
