@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC23</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC24</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc23" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc24" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC23</span>
+          <span class="pill ok">GitHub Pack V1.0-RC24</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -39,7 +39,7 @@
         <a href="#backend">Backend</a>
         <a href="#safety">Sécurité</a>
         <a href="#simulation">Simulation</a>
-        <a href="#commandes">Commandes IA</a>
+        <a href="#commandes">Tests</a>
         <a href="#planning">Plan</a>
         <a href="#math">Math Model</a>
         <a href="#risques">Risques</a>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC23</p>
+        <p class="eyebrow">VERROU RC24</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">RC22 · lecture claire</span>
+        <span class="pill">RC24 · situation claire</span>
       </div>
 
       <div class="situation-grid">
@@ -739,7 +739,7 @@
         <div class="flow-arrow">→</div>
         <div class="blueprint-node private">
           <b>Privé</b>
-          <span>PC opérateur autorisé / backend local</span>
+          <span>Machine privée / backend local</span>
           <em>Accès renforcé · logs · secrets chiffrés · kill switch</em>
         </div>
         <div class="flow-arrow">→</div>
@@ -769,7 +769,7 @@
         </article>
       </div>
 
-      <div class="backend-gates">
+      <div class="backend-Étapes sécurité">
         <div class="backend-gate done"><b>B1</b><span>Plan public/privé</span></div>
         <div class="backend-gate active"><b>B2</b><span>Backend local</span></div>
         <div class="backend-gate locked"><b>B3</b><span>Kraken lecture seule</span></div>
@@ -781,12 +781,12 @@
       <div class="blueprint-actions">
         <button class="cmd-preset" data-command="plan architecture">Plan architecture</button>
         <button class="cmd-preset" data-command="kraken_readonly_plan">Plan Kraken lecture seule</button>
-        <button class="cmd-preset" data-command="remote_blueprint">remote_blueprint</button>
+        <button class="cmd-preset" data-command="Plan accès distant">Plan accès distant</button>
         <button class="cmd-preset" data-command="security_review">Contrôle sécurité</button>
       </div>
 
       <p class="rule-line warn-lock">
-        Prochaine étape réelle après RC15 : seulement un plan Kraken lecture seule. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
+        Prochaine étape réelle : continuer la préparation sans clé réelle. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
       </p>
     </section>
 
@@ -838,8 +838,8 @@
       <div class="safety-actions">
         <button class="cmd-preset" data-command="safety_plan">Plan sécurité</button>
         <button class="cmd-preset" data-command="kill_switch">Arrêt urgence</button>
-        <button class="cmd-preset" data-command="access_plan">access_plan</button>
-        <button class="cmd-preset" data-command="gates">gates</button>
+        <button class="cmd-preset" data-command="Plan accès">Plan accès</button>
+        <button class="cmd-preset" data-command="Étapes sécurité">Étapes sécurité</button>
       </div>
 
       <p class="rule-line warn-lock">
@@ -895,7 +895,7 @@
     <section class="panel glass command-layer" id="commandes">
       <div class="section-head">
         <div>
-          <p class="eyebrow">CRYPTO COMMAND LAYER</p>
+          <p class="eyebrow">TESTS SIMPLES</p>
           <h2>Tests simples de l’assistante</h2>
           <p class="command-intro">
             Clique un bouton, lis la carte verte. Le détail technique est replié et reste masqué pour la lecture normale.
@@ -970,11 +970,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC23</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC24</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc23"></script>
+  <script src="./app.js?v=1.0-rc24"></script>
 </body>
 </html>

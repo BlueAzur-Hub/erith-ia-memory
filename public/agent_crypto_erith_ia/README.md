@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC23  
+Version : V1.0-RC24  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -73,7 +73,7 @@ public/agent_crypto_erith_ia/
 ├── agent_crypto_erith_ia_tests_fr.md
 ├── docs/
 ├── modules/
-├── archives_yohan/
+├── archives_historiques/
 └── web/
     ├── index.html
     ├── style.css
@@ -187,8 +187,8 @@ Objectif : micro-correction après validation de la V0.8.
 - Correction du champ `Décision tableau` :
   il passe maintenant bien à `Autorisé · source réelle` après Livecheck OK.
 - Le ticker garde un temps d’arrêt au départ pour éviter d’être coupé à gauche.
-- Aucun changement dans `archives_yohan/`.
-- Recommandation : ne plus mettre à jour `archives_yohan/` à chaque version.
+- Aucun changement dans `archives_historiques/`.
+- Recommandation : ne plus mettre à jour `archives_historiques/` à chaque version.
   Ce dossier doit rester une archive historique figée.
 
 
@@ -209,7 +209,7 @@ Cette version regroupe les corrections utiles sans toucher aux archives historiq
 - Ticker lisible avec couleurs distinctes.
 - Lecture froide synchronisée avec l’état live.
 - Décision tableau synchronisée entre header et panneau sources.
-- Dossier `archives_yohan/` laissé figé.
+- Dossier `archives_historiques/` laissé figé.
 
 ### Règle inchangée
 
@@ -447,7 +447,7 @@ Cette couche prépare une future intégration Kraken / Bybit / Binance via backe
 
 ## V1.0-RC12 — Kraken / Bybit / News / accès distant
 
-Objectif : intégrer le cadrage confirmé par opérateur autorisé B sans passer au trading réel.
+Objectif : intégrer le cadrage confirmé par opérateur autorisé sans passer au trading réel.
 
 ### Décisions ajoutées
 
@@ -520,7 +520,7 @@ Simulation locale seulement.
 
 ## V1.0-RC14 — Safety Control Room
 
-Objectif : intégrer le cadrage sécurité confirmé par opérateur autorisé B.
+Objectif : intégrer le cadrage sécurité confirmé par opérateur autorisé.
 
 ### Ajouts
 
@@ -558,7 +558,7 @@ Objectif : séparer clairement public, privé, simulation et futur Kraken.
 - Section `Backend Blueprint`.
 - Diagramme :
   - Public : GitHub Pages ;
-  - Privé : PC opérateur autorisé B / backend local ;
+  - Privé : machine privée / backend local ;
   - Exchange : Kraken d’abord.
 - Règles de séparation :
   - aucune clé dans GitHub Pages ;
@@ -587,11 +587,11 @@ Objectif : séparer clairement public, privé, simulation et futur Kraken.
 
 ## V1.0-RC16 — Command Output Humain
 
-Objectif : rendre les commandes IA compréhensibles sans devoir lire le détail technique brut brut.
+Objectif : rendre les commandes IA compréhensibles sans devoir lire le détail technique brut.
 
 ### Problème
 
-Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’interface affichait surtout du détail technique brut technique. Résultat : l’utilisateur pouvait croire que rien ne s’était passé.
+Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’interface affichait surtout du détail technique brut. Résultat : l’utilisateur pouvait croire que rien ne s’était passé.
 
 ### Ajouts
 
@@ -606,7 +606,7 @@ Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’
   - `chart`
   - `portfolio`
   - `sources`
-- Le détail technique brut reste affiché dessous pour opérateur autorisé B / analyse technique.
+- Le détail technique brut reste affiché dessous pour contrôle technique masqué.
 
 ### Règle
 
@@ -634,12 +634,12 @@ Résumé marché
 Sources info
 ```
 
-Les commandes techniques restent dans `data-command` et dans le détail technique brut pour opérateur autorisé B, mais l’utilisateur n’a plus besoin de les comprendre.
+Les commandes techniques restent dans `data-command` et dans le détail technique brut pour opérateur autorisé, mais l’utilisateur n’a plus besoin de les comprendre.
 
 ### Ajouts
 
 - Aide visible : “Clique sur un bouton en français”.
-- détail technique brut technique replié sous `Afficher le détail technique brut technique`.
+- détail technique brut replié sous `Afficher le détail technique brut`.
 - Résumé humain conservé au-dessus.
 - Alias français :
   - `Plan architecture`
@@ -673,7 +673,7 @@ Même avec les boutons français, la présence d’une ligne de commande et du d
   - ignore le détail technique brut ;
   - rien ne peut acheter/vendre ici.
 - L’entrée manuelle est repliée dans `Entrée manuelle avancée`.
-- Le détail technique brut technique reste replié.
+- Le détail technique brut reste replié.
 - Le bloc humain s’affiche par défaut avec une aide simple.
 
 ### Règle
@@ -836,3 +836,32 @@ Ne jamais saisir :
 - donnée de retrait.
 
 Aucun trading réel.
+
+
+---
+
+## V1.0-RC24 — Audit GitHub cleanup
+
+Objectif : corriger les traces vues après vérification du dépôt GitHub.
+
+### Corrections
+
+- Version visible portée à V1.0-RC24.
+- Boutons techniques secondaires renommés :
+  - `remote_blueprint` → `Plan accès distant`
+  - `access_plan` → `Plan accès`
+  - `gates` → `Étapes sécurité`
+- Nettoyage des références internes trop nominatives dans les fichiers publics.
+- Nettoyage des textes obsolètes :
+  - mentions RC15 / RC22 résiduelles ;
+  - `PC opérateur` remplacé par `machine privée` ;
+  - libellés techniques rendus humains.
+- Le manifeste ne liste plus les archives historiques nominatives.
+
+### Règle
+
+Aucun renommage destructif des archives historiques.
+Aucun changement de trading.
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun ordre réel.

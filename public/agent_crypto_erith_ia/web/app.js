@@ -916,7 +916,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "RC22",
+    version: "RC24",
     active_now: [
       "public_market_observation",
       "charts",
@@ -952,7 +952,7 @@ function nextStepsPayload() {
       "describe_private_machine",
       "choose_access_security_model"
     ],
-    next_version_candidate: "RC23_session_questionnaire_or_exportable_brief"
+    next_version_candidate: "RC25_exportable_brief"
   };
 }
 
@@ -1023,7 +1023,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "RC15",
+    version: "RC24",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -1043,7 +1043,7 @@ function backendBlueprintPayload() {
       ]
     },
     private_layer_future: {
-      host: "PC_operateur_autorise_or_secure_local_server",
+      host: "private_machine_or_secure_local_server",
       allowed: [
         "encrypted_api_secrets",
         "Kraken_read_only_client",
@@ -1052,7 +1052,7 @@ function backendBlueprintPayload() {
         "kill_switch",
         "restricted_remote_access"
       ],
-      access: ["operateur_autorise", "operateur_autorise"]
+      access: ["authorized_operator_1", "authorized_operator_2"]
     },
     exchange_layer_future: {
       primary: "Kraken",
@@ -1103,7 +1103,7 @@ function krakenReadonlyPlanPayload() {
 function remoteBlueprintPayload() {
   return {
     scope: "future_private_machine_only",
-    authorized_people: ["operateur_autorise", "operateur_autorise"],
+    authorized_people: ["authorized_operator_1", "authorized_operator_2"],
     rules: [
       "no_public_admin_panel",
       "no_shared_cleartext_password",
@@ -1189,7 +1189,7 @@ function killSwitchPayload() {
 function accessPlanPayload() {
   return {
     access_model: "two_people_only",
-    authorized_people: ["operateur_autorise", "operateur_autorise"],
+    authorized_people: ["authorized_operator_1", "authorized_operator_2"],
     public_app: "no_remote_admin_capability",
     future_backend_requirements: [
       "strong_authentication",
@@ -1222,7 +1222,7 @@ function gatesPayload() {
 function planningPayload() {
   return {
     project_stage: "public_observatory_to_controlled_agent",
-    confirmed_by_yohan: {
+    confirmed_project_context: {
       micro_transactions: true,
       main_wallet_reference: "Kraken",
       mode: "semi_automatic_human_validation",
@@ -1268,7 +1268,7 @@ function exchangePlanPayload() {
     next_backend_need: [
       "secure_local_or_server_backend",
       "encrypted_api_keys",
-      "access_control_for_christophe_and_yohan",
+      "access_control_for_authorized_operators",
       "paper_trading_engine",
       "logs_and_kill_switch"
     ]
@@ -1314,10 +1314,10 @@ const CryptoCommands = {
         "kill_switch",
         "access_plan",
         "gates",
-        "backend_blueprint",
-        "kraken_readonly_plan",
-        "remote_blueprint",
-        "security_review"
+        "Plan architecture",
+        "Plan Kraken lecture seule",
+        "Plan accès distant",
+        "Contrôle sécurité"
       ],
       blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
       rule: "Observation only. No real trading from GitHub Pages."
@@ -1490,7 +1490,7 @@ function parseCommandLine(input) {
   if (cmd === "do_not_do" || cmd === "interdits") return commandOk("do_not_do", doNotDoPayload());
   if (cmd === "backend_blueprint" || cmd === "backend") return commandOk("backend_blueprint", backendBlueprintPayload());
   if (cmd === "kraken_readonly_plan" || cmd === "kraken_readonly") return commandOk("kraken_readonly_plan", krakenReadonlyPlanPayload());
-  if (cmd === "remote_blueprint" || cmd === "remote") return commandOk("remote_blueprint", remoteBlueprintPayload());
+  if (cmd === "remote_access_plan" || cmd === "remote_blueprint" || cmd === "remote") return commandOk("remote_access_plan", remoteBlueprintPayload());
   if (cmd === "security_review" || cmd === "security_check") return commandOk("security_review", securityReviewPayload());
   if (cmd === "safety_plan" || cmd === "safety") return commandOk("safety_plan", safetyPlanPayload());
   if (cmd === "kill_switch" || cmd === "killswitch") return commandOk("kill_switch", killSwitchPayload());
@@ -1653,7 +1653,7 @@ function humanCommandSummary(result) {
       text: "Le bouton “Plan architecture” montre simplement où seront rangées les parties du futur système. Il ne connecte rien et ne fait aucun achat.",
       bullets: [
         "Site public : ce que tu vois ici, sans clé et sans argent réel.",
-        "Machine privée : futur PC chez operateur_autorise ou serveur sécurisé.",
+        "Machine privée : futur machine privée ou serveur sécurisé.",
         "Kraken : plus tard, d’abord en lecture seule.",
         "Interdit : achat réel, retrait, clé API dans GitHub."
       ],
@@ -1690,7 +1690,7 @@ function humanCommandSummary(result) {
     };
   }
 
-  if (cmd === "remote_blueprint") {
+  if (cmd === "remote_access_plan" || cmd === "remote_blueprint") {
     return {
       title: "Accès distant : plan OK",
       text: "La commande décrit le futur accès réservé à operateur_autorise et operateur_autorise uniquement.",
@@ -2042,7 +2042,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC23</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC24</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2122,7 +2122,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC23.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC24.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
