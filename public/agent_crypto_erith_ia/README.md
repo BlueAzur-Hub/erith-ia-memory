@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC9  
+Version : V1.0-RC10  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -387,3 +387,22 @@ Objectif : rendre visible la source exacte qui échoue et améliorer la navigati
   - hausse 24h ;
   - baisse 24h ;
   - ratio volume / market cap.
+
+
+---
+
+## V1.0-RC10 — Diagnostic sources replacé en bas
+
+Objectif : respecter l’ergonomie validée.
+
+### Changement
+
+- Suppression du bloc `Diagnostic sources` en haut.
+- Conservation du diagnostic détaillé dans le panneau `Live Sources` en bas.
+- Ajout d’une note courte en bas :
+  CoinGecko est critique pour autoriser tableau, prix et graphiques.
+- Navigation supérieure allégée : suppression du bouton `Diagnostic`.
+
+### Raison
+
+Le diagnostic existait déjà en bas et y était plus lisible. RC9 le dupliquait inutilement en haut.

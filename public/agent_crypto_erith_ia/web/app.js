@@ -605,41 +605,9 @@ function getSourceRecord(key) {
 }
 
 function renderSourceDiagnostic() {
-  if (!els.sourceDiagnosticGrid) return;
-
-  const total = liveSources.length;
-  const done = state.sourceStatus.length;
-  const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-  const coingecko = getSourceRecord("coingecko");
-
-  if (!done) {
-    setText(els.sourceDiagnosticTitle, "En attente Livecheck");
-    setText(els.sourceDiagnosticNote, "CoinGecko est critique : sans lui, le tableau marché reste bloqué même si des sources secondaires répondent.");
-  } else if (state.liveOk) {
-    setText(els.sourceDiagnosticTitle, `Source marché OK · ${ok}/${total} réussies`);
-    setText(els.sourceDiagnosticNote, "CoinGecko marché répond : tableau, prix et graphiques autorisés. Les échecs secondaires restent visibles mais ne bloquent pas le marché.");
-  } else if (coingecko && coingecko.status !== "OK") {
-    setText(els.sourceDiagnosticTitle, `Source marché critique en échec · ${ok}/${total} réussies`);
-    setText(els.sourceDiagnosticNote, "Rouge parce que CoinGecko marché n’a pas répondu : l’interface bloque volontairement le tableau, même si des sources secondaires répondent.");
-  } else {
-    setText(els.sourceDiagnosticTitle, `Tests sources en cours · ${done}/${total} interrogées`);
-    setText(els.sourceDiagnosticNote, "Le Livecheck interroge toutes les sources. Le tableau devient autorisé uniquement quand la source marché principale est exploitable.");
-  }
-
-  els.sourceDiagnosticGrid.innerHTML = liveSources.map(source => {
-    const rec = getSourceRecord(source.key);
-    const status = rec ? rec.status : "EN ATTENTE";
-    const css = rec ? (rec.status === "OK" ? "ok" : "fail") : "wait";
-    const detail = rec ? escapeHtml(rec.detail || "") : "Non interrogée";
-    const ms = rec?.ms ? `${rec.ms} ms` : "—";
-    const role = source.key === "coingecko" ? "Source marché principale" : "Source secondaire";
-    return `<div class="diagnostic-source ${css} ${source.key === "coingecko" ? "critical" : ""}">
-      <b>${escapeHtml(source.name)}</b>
-      <span>${escapeHtml(role)}</span>
-      <span>${escapeHtml(status)} · ${ms}</span>
-      <span>${detail}</span>
-    </div>`;
-  }).join("");
+  // RC10 : plus de diagnostic dupliqué en haut.
+  // Le diagnostic principal reste dans le panneau Live Sources en bas de page.
+  return;
 }
 
 function matchAssetFilter(c) {
@@ -972,7 +940,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC9.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC10.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

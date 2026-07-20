@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC9</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC10</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc9" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc10" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC9</span>
+          <span class="pill ok">GitHub Pack V1.0-RC10</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -28,7 +28,6 @@
 
       <nav class="nav" aria-label="Navigation principale">
         <a href="#livecheck">Livecheck</a>
-        <a href="#diagnostic">Diagnostic</a>
         <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
@@ -80,22 +79,6 @@
         <small id="metricSourcesHint">0/7 interrogées</small>
       </article>
     </section>
-
-
-    <section class="source-diagnostic glass" id="diagnostic">
-      <div class="section-head compact">
-        <div>
-          <p class="eyebrow">DIAGNOSTIC SOURCES</p>
-          <h2 id="sourceDiagnosticTitle">En attente Livecheck</h2>
-        </div>
-        <p class="diagnostic-note" id="sourceDiagnosticNote">
-          CoinGecko est critique : sans lui, le tableau marché reste bloqué même si des sources secondaires répondent.
-        </p>
-      </div>
-      <div class="diagnostic-grid" id="sourceDiagnosticGrid"></div>
-    </section>
-
-
     <section class="notice glass" id="offlineNotice">
       <strong>ACCÈS LIVE NON TESTÉ</strong>
       <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
@@ -336,6 +319,7 @@
         <div>
           <p class="eyebrow">LIVE SOURCES</p>
           <h2>Sources testées et statut</h2>
+        <p class="source-bottom-note">Diagnostic source principal en bas de page : CoinGecko est critique pour autoriser tableau, prix et graphiques.</p>
         </div>
         <span class="pill" id="sourceDecision">Refusé avant Livecheck</span>
       </div>
@@ -344,11 +328,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC9</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC10</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc9"></script>
+  <script src="./app.js?v=1.0-rc10"></script>
 </body>
 </html>
