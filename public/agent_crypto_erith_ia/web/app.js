@@ -200,24 +200,48 @@ function updateSourceMetric(doneOverride = null) {
   else setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
 }
 
+
+function clearMarketDisplay(reason = "Marché live indisponible.") {
+  state.liveOk = false;
+  state.mainSource = null;
+  state.timestamp = null;
+  state.coins = [];
+  state.global = null;
+
+  setText(els.metricMarketCap, "—");
+  setText(els.metricMarketCapHint, "Donnée non récupérée");
+  setText(els.metricVolume, "—");
+  setText(els.metricVolumeHint, "Donnée non récupérée");
+  setText(els.metricBtcDom, "—");
+  setText(els.metricBtcDomHint, "Donnée non récupérée");
+
+  setHTML(
+    els.tickerTrack,
+    `<span class="ticker-meta">${escapeHtml(reason)} · aucun prix affiché · pas de tableau fictif</span>`
+  );
+
+  renderEmptyMarket(`${reason.toUpperCase()} — aucun tableau chiffré.`);
+  renderScore(null);
+  renderWatchlist();
+  renderRiskGrid();
+  renderColdRead(false);
+}
+
+function explainForBeginnerLiveFailure(okCount = 0) {
+  return `Livecheck échec : ${okCount}/${liveSources.length} sources ont répondu, mais aucune source marché exploitable n’a fourni le tableau principal. ` +
+    "Ce n’est pas une erreur utilisateur. L’interface doit refuser les prix tant que le marché principal n’est pas récupéré.";
+}
+
 async function runLivecheck() {
   setLiveStatus("warn", "Livecheck en cours");
   setTableDecision("Tests sources en cours", "warn");
   setText(els.sourceName, "Recherche...");
   setText(els.sourceTime, "—");
 
-  state.liveOk = false;
-  state.mainSource = null;
-  state.timestamp = null;
   state.sourceStatus = [];
-  state.coins = [];
-  state.global = null;
-
+  clearMarketDisplay("Livecheck en cours");
   renderSourceGrid();
   updateSourceMetric(0);
-  renderEmptyMarket("Livecheck en cours. Aucun chiffre inventé.");
-  renderScore(null);
-  renderColdRead(false);
 setTableDecision("Refusé avant Livecheck", "fail");
 
   for (const src of liveSources) {
@@ -257,15 +281,15 @@ setTableDecision("Refusé avant Livecheck", "fail");
     renderAll();
   } else {
     setLiveStatus("fail", "Livecheck échec");
+    clearMarketDisplay("Recherche live échouée");
     if (els.offlineNotice) {
       els.offlineNotice.style.display = "block";
-      els.offlineNotice.innerHTML = "<strong>ACCÈS LIVE INDISPONIBLE</strong><p>Aucune source marché exploitable n’a répondu. Aucun prix ne sera affiché. Aucun tableau chiffré ne sera produit.</p>";
+      els.offlineNotice.innerHTML = `<strong>ACCÈS LIVE INDISPONIBLE</strong><p>${escapeHtml(explainForBeginnerLiveFailure(okCount))}</p>`;
     }
     setText(els.sourceName, "Aucune source marché exploitable");
     setText(els.sourceTime, "—");
     setTableDecision("Refusé · pas de source live", "fail");
-    renderEmptyMarket("RECHERCHE LIVE ÉCHOUÉE — pas de tableau fictif.");
-    renderColdRead(false);
+    setText(els.coldRead, explainForBeginnerLiveFailure(okCount));
   }
 
   setText(els.metricSources, `${okCount}/${liveSources.length}`);
