@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.4  
+Version : V0.5  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -113,3 +113,18 @@ Objectif : correction d’échelle UI.
 - Score mathématique réduit pour mieux tenir dans le premier écran.
 - Compteur `Sources OK` rendu plus robuste pendant et après Livecheck.
 - V0.4 conserve le verrou : pas de source live, pas de prix.
+
+
+---
+
+## Changelog V0.5
+
+Objectif : passage en mode cockpit dense.
+
+- Titre réduit encore fortement.
+- Interface générale descendue d’un cran typographique.
+- Header plus bas.
+- Boutons, nav, cards et ticker compactés.
+- Tableau et panneaux plus denses.
+- Premier écran conçu pour montrer immédiatement métriques + lecture froide + verrou.
+- Aucune modification du principe live : pas de source live, pas de prix.
