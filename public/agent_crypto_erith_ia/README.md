@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC16  
+Version : V1.0-RC17  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -607,6 +607,45 @@ Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’
   - `portfolio`
   - `sources`
 - Le JSON reste affiché dessous pour Yohan / analyse technique.
+
+### Règle
+
+Aucune fonction dangereuse ajoutée.
+Aucun ordre réel.
+Aucune clé privée.
+
+
+---
+
+## V1.0-RC17 — Commandes humaines FR
+
+Objectif : supprimer la confusion autour des commandes techniques comme `backend_blueprint`.
+
+### Changement principal
+
+Les boutons affichent maintenant des noms humains :
+
+```text
+Plan architecture
+Contrôle sécurité
+Plan Kraken lecture seule
+Portefeuille virtuel
+Résumé marché
+Sources info
+```
+
+Les commandes techniques restent dans `data-command` et dans le JSON pour Yohan, mais l’utilisateur n’a plus besoin de les comprendre.
+
+### Ajouts
+
+- Aide visible : “Clique sur un bouton en français”.
+- JSON technique replié sous `Afficher le JSON technique`.
+- Résumé humain conservé au-dessus.
+- Alias français :
+  - `Plan architecture`
+  - `Contrôle sécurité`
+  - `Plan Kraken`
+  - `Résumé marché`
 
 ### Règle
 

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC16</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC17</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc16" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc17" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC16</span>
+          <span class="pill ok">GitHub Pack V1.0-RC17</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -183,7 +183,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC16</p>
+        <p class="eyebrow">VERROU RC17</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -470,10 +470,10 @@
       </div>
 
       <div class="blueprint-actions">
-        <button class="cmd-preset" data-command="backend_blueprint">backend_blueprint</button>
-        <button class="cmd-preset" data-command="kraken_readonly_plan">kraken_readonly_plan</button>
+        <button class="cmd-preset" data-command="backend_blueprint">Plan architecture</button>
+        <button class="cmd-preset" data-command="kraken_readonly_plan">Plan Kraken lecture seule</button>
         <button class="cmd-preset" data-command="remote_blueprint">remote_blueprint</button>
-        <button class="cmd-preset" data-command="security_review">security_review</button>
+        <button class="cmd-preset" data-command="security_review">Contrôle sécurité</button>
       </div>
 
       <p class="rule-line warn-lock">
@@ -527,8 +527,8 @@
       </div>
 
       <div class="safety-actions">
-        <button class="cmd-preset" data-command="safety_plan">safety_plan</button>
-        <button class="cmd-preset" data-command="kill_switch">kill_switch</button>
+        <button class="cmd-preset" data-command="safety_plan">Plan sécurité</button>
+        <button class="cmd-preset" data-command="kill_switch">Arrêt urgence</button>
         <button class="cmd-preset" data-command="access_plan">access_plan</button>
         <button class="cmd-preset" data-command="gates">gates</button>
       </div>
@@ -596,23 +596,25 @@
       </div>
 
       <div class="command-presets" aria-label="Commandes rapides">
-        <button class="cmd-preset" data-command="help">help</button>
-        <button class="cmd-preset" data-command="market_snapshot">market_snapshot</button>
-        <button class="cmd-preset" data-command="asset BTC">asset BTC</button>
-        <button class="cmd-preset" data-command="chart BTC 24h">chart BTC 24h</button>
-        <button class="cmd-preset" data-command="compare BTC ETH">compare BTC ETH</button>
-        <button class="cmd-preset" data-command="sources">sources</button>
-        <button class="cmd-preset" data-command="risk SOL">risk SOL</button>
-        <button class="cmd-preset" data-command="sim_buy BTC 25">sim_buy BTC 25</button>
-        <button class="cmd-preset" data-command="portfolio">portfolio</button>
-        <button class="cmd-preset" data-command="planning">planning</button>
-        <button class="cmd-preset" data-command="exchange_plan">exchange_plan</button>
-        <button class="cmd-preset" data-command="news_sources">news_sources</button>
+        <button class="cmd-preset" data-command="help">Aide</button>
+        <button class="cmd-preset" data-command="market_snapshot">Résumé marché</button>
+        <button class="cmd-preset" data-command="asset BTC">Lire BTC</button>
+        <button class="cmd-preset" data-command="chart BTC 24h">Graphique BTC</button>
+        <button class="cmd-preset" data-command="compare BTC ETH">Comparer BTC/ETH</button>
+        <button class="cmd-preset" data-command="sources">Sources</button>
+        <button class="cmd-preset" data-command="risk SOL">Risque SOL</button>
+        <button class="cmd-preset" data-command="sim_buy BTC 25">Simuler achat BTC 25€</button>
+        <button class="cmd-preset" data-command="portfolio">Portefeuille virtuel</button>
+        <button class="cmd-preset" data-command="planning">Plan projet</button>
+        <button class="cmd-preset" data-command="exchange_plan">Plan exchanges</button>
+        <button class="cmd-preset" data-command="news_sources">Sources info</button>
       </div>
+
+      <p class="command-helper-human">Clique sur un bouton en français. Les mots techniques comme <code>backend_blueprint</code> restent seulement pour Yohan et le JSON.</p>
 
       <div class="command-line">
         <span class="prompt">&gt;</span>
-        <input id="commandInput" type="text" placeholder="Exemples : asset BTC · chart ETH 7d · compare BTC SOL · sources · risk USDT" autocomplete="off" />
+        <input id="commandInput" type="text" placeholder="Tu peux cliquer les boutons. Exemple texte possible : Lire BTC, Plan architecture, Contrôle sécurité" autocomplete="off" />
         <button class="btn small primary" id="btnRunCommand">Exécuter</button>
       </div>
 
@@ -621,7 +623,10 @@
         <p>Les commandes afficheront ici une réponse simple. Le JSON reste dessous pour Yohan / analyse technique.</p>
       </div>
 
-      <pre class="command-output" id="commandOutput">Commande prête. Lance Livecheck puis teste : help, market_snapshot, asset BTC, chart ETH 7d, compare BTC ETH.</pre>
+      <details class="technical-json">
+        <summary>Afficher le JSON technique</summary>
+        <pre class="command-output" id="commandOutput">Commande prête. Lance Livecheck puis teste : help, market_snapshot, asset BTC, chart ETH 7d, compare BTC ETH.</pre>
+      </details>
 
       <div class="command-safety">
         <span>Aucun buy/sell/order autorisé.</span>
@@ -645,11 +650,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC16</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC17</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc16"></script>
+  <script src="./app.js?v=1.0-rc17"></script>
 </body>
 </html>

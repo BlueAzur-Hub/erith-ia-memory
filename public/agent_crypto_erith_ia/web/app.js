@@ -1343,7 +1343,16 @@ function parseCommandLine(input) {
   if (!raw) return commandError("Commande vide. Tape help.");
 
   const parts = raw.split(/\s+/);
-  const cmd = parts[0].toLowerCase();
+  let cmd = parts[0].toLowerCase();
+
+  // RC17 : alias français lisibles.
+  const lowerRaw = raw.toLowerCase().trim();
+  if (lowerRaw === "plan architecture" || lowerRaw === "architecture" || lowerRaw === "plan") cmd = "backend_blueprint";
+  if (lowerRaw === "controle securite" || lowerRaw === "contrôle sécurité" || lowerRaw === "securite" || lowerRaw === "sécurité") cmd = "security_review";
+  if (lowerRaw === "plan kraken" || lowerRaw === "kraken lecture seule") cmd = "kraken_readonly_plan";
+  if (lowerRaw === "sources info" || lowerRaw === "journaux") cmd = "news_sources";
+  if (lowerRaw === "resume marche" || lowerRaw === "résumé marché") cmd = "market_snapshot";
+  if (lowerRaw === "portefeuille virtuel") cmd = "portfolio";
 
   if (["buy", "sell", "order", "trade", "withdraw", "transfer"].includes(cmd)) {
     return commandError("Commande bloquée : aucun ordre réel, retrait ou transfert depuis cette interface publique.", {
@@ -1402,12 +1411,12 @@ function humanCommandSummary(result) {
   if (cmd === "backend_blueprint") {
     return {
       title: "Backend Blueprint : test OK",
-      text: "La commande a affiché le plan public / privé / Kraken. Elle ne connecte rien : elle vérifie seulement que l’architecture future est bien décrite.",
+      text: "Le bouton “Plan architecture” montre simplement où seront rangées les parties du futur système. Il ne connecte rien et ne fait aucun achat.",
       bullets: [
-        "Public : GitHub Pages, sans clé, observation et simulation seulement.",
-        "Privé : futur PC Yohan ou backend local sécurisé.",
-        "Exchange : Kraken en lecture seule d’abord.",
-        "Interdit : ordre réel, clé de retrait, clé API dans GitHub."
+        "Site public : ce que tu vois ici, sans clé et sans argent réel.",
+        "Machine privée : futur PC chez Yohan ou serveur sécurisé.",
+        "Kraken : plus tard, d’abord en lecture seule.",
+        "Interdit : achat réel, retrait, clé API dans GitHub."
       ],
       tags: ["plan validé", "aucune connexion réelle", "Kraken plus tard"]
     };
@@ -1416,7 +1425,7 @@ function humanCommandSummary(result) {
   if (cmd === "security_review") {
     return {
       title: "Security Review : checklist OK",
-      text: "La commande affiche les sécurités obligatoires avant tout passage à une machine privée ou à Kraken.",
+      text: "Le bouton “Contrôle sécurité” affiche la liste des protections obligatoires avant toute vraie connexion.",
       bullets: [
         "Aucune clé dans GitHub Pages.",
         "Clé Kraken lecture seule au départ.",
@@ -1790,7 +1799,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC16</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC17</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1870,7 +1879,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC16.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC17.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
