@@ -2505,7 +2505,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.1.1 — PROFIL SOLO DÉBUTANT 100 €
+   V1.1-alpha.2.2.2 — PROFIL SOLO DÉBUTANT 100 €
    ========================================================= */
 
 .sim-profile-panel{
@@ -2576,7 +2576,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.1 — Refus visibles simulation
+   V1.1-alpha.2.2.2 — Refus visibles simulation
    ========================================================= */
 
 .sim-test-hint{
@@ -2592,4 +2592,128 @@ tr.asset-row.is-selected{
 .cmd-human.err{
   border-color:rgba(255,116,116,.55) !important;
   background:rgba(120,30,40,.22) !important;
+}
+
+
+/* =========================================================
+   V1.1-alpha.2 — MODE ÉCOLE GUIDÉ
+   ========================================================= */
+
+.school-panel{
+  margin:14px 0 12px;
+  padding:14px;
+  border:1px solid rgba(72,255,177,.25);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at top left, rgba(72,255,177,.10), transparent 42%),
+    rgba(13,31,43,.66);
+}
+.school-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+}
+.school-head h3{
+  margin:0 0 6px;
+  color:#fff4c2;
+}
+.school-head p{
+  margin:0;
+  color:#d8e6f2;
+  font-size:13px;
+  line-height:1.45;
+}
+.school-tests{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+}
+.school-test{
+  text-align:left;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:14px;
+  padding:12px 13px;
+  background:rgba(255,255,255,.055);
+  color:#f7f0d0;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.school-test:hover{
+  transform:translateY(-1px);
+  border-color:rgba(72,255,177,.42);
+  background:rgba(72,255,177,.09);
+}
+.school-test b{
+  display:block;
+  font-size:13px;
+  margin-bottom:5px;
+}
+.school-test span{
+  display:block;
+  color:#c9d6e2;
+  font-size:12px;
+  line-height:1.35;
+}
+.school-test.primary{
+  border-color:rgba(72,199,255,.44);
+  background:rgba(72,199,255,.12);
+}
+.school-test.reset{
+  border-color:rgba(255,214,122,.35);
+  background:rgba(255,214,122,.08);
+}
+.school-result{
+  margin-top:12px;
+  padding:13px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.055);
+  color:#eaf4ff;
+}
+.school-result b{
+  display:block;
+  color:#fff4c2;
+  margin-bottom:4px;
+}
+.school-result p{
+  margin:0 0 8px;
+  line-height:1.45;
+}
+.school-result ul{
+  margin:0;
+  padding-left:18px;
+}
+.school-result li{
+  margin:4px 0;
+}
+.school-result.ok{
+  border-color:rgba(72,255,177,.42);
+  background:rgba(72,255,177,.10);
+}
+.school-result.refusal{
+  border-color:rgba(255,214,122,.50);
+  background:rgba(255,214,122,.10);
+}
+.school-result.err{
+  border-color:rgba(255,116,116,.50);
+  background:rgba(120,30,40,.20);
+}
+.school-result.neutral{
+  border-color:rgba(72,199,255,.28);
+  background:rgba(72,199,255,.08);
+}
+.sim-manual-title{
+  margin:12px 0 8px;
+  color:#fff4c2;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-size:11px;
+}
+@media (max-width: 980px){
+  .school-tests{
+    grid-template-columns:1fr;
+  }
 }

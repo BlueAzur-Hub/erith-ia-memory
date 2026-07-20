@@ -77,7 +77,8 @@ const els = {
   btnSimReset: $("btnSimReset"),
   simPositions: $("simPositions"),
   simLog: $("simLog"),
-  simProfileStatus: $("simProfileStatus")
+  simProfileStatus: $("simProfileStatus"),
+  schoolResult: $("schoolResult")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -758,7 +759,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_1",
+  key: "solo_beginner_100_v1_1_alpha_2",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -767,7 +768,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_1";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_2";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -893,19 +894,23 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
 
   const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
   const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
-  const coin = findCoinByQuery(symbol);
 
-  if (!coin) return simulationRefusal(`Actif introuvable pour simulation : ${symbol || "—"}`);
+  if (!symbol) return simulationRefusal("Actif manquant.");
   if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.");
+
+  if (!SIM_PROFILE.allowedSymbols.includes(symbol)) {
+    return simulationRefusal(`Profil débutant : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol });
+  }
+
+  const coin = findCoinByQuery(symbol);
+  if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol });
+
   if (!state.sim) loadSimulation();
 
   const price = coin.price;
   if (!Number.isFinite(price) || price <= 0) return simulationRefusal("Prix indisponible pour simulation.");
 
   const sym = coin.symbol.toUpperCase();
-  if (!SIM_PROFILE.allowedSymbols.includes(sym)) {
-    return simulationRefusal(`Profil débutant : ${sym} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: sym });
-  }
 
   if (amount > SIM_PROFILE.maxPerOperation) {
     return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
@@ -953,6 +958,23 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
   return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, price_eur: price, portfolio: simulationPayload() });
 }
 
+
+function simLogTypeLabel(type) {
+  if (type === "SIM_BUY") return "ACHAT SIMULÉ";
+  if (type === "SIM_SELL") return "VENTE SIMULÉE";
+  if (type === "REFUS") return "REFUS";
+  if (type === "RESET") return "RESET";
+  return String(type || "INFO");
+}
+
+function simLogLine(entry) {
+  const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : "";
+  const label = simLogTypeLabel(entry?.type);
+  const msg = entry?.message || "";
+  return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
+}
+
+
 function renderSimulation() {
   if (!state.sim) loadSimulation();
   const totals = getSimulationTotals();
@@ -980,7 +1002,7 @@ function renderSimulation() {
     }).join("") : "Aucune position simulée.";
   }
   if (els.simLog) {
-    els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(l => `[${l.time}] ${l.type} · ${l.message || ""}`).join("\n") : "Aucune simulation lancée.";
+    els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée.";
   }
 }
 
@@ -990,7 +1012,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.1.1",
+    version: "V1.1-alpha.2.2.2",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1098,7 +1120,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.1.1",
+    version: "V1.1-alpha.2.2.2",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2143,7 +2165,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.1.1</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.2.2.2</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2223,7 +2245,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.1.1.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.2.2.2.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2280,11 +2302,166 @@ function seedWatch() {
 
 
 
+
+function setSimManualFields(symbol, amount) {
+  if (els.simSymbol) els.simSymbol.value = symbol;
+  if (els.simAmount) els.simAmount.value = String(amount);
+}
+
+function renderSchoolResult(kind, title, text, bullets = []) {
+  const el = els.schoolResult || document.getElementById("schoolResult");
+  if (!el) return;
+
+  el.classList.remove("ok", "refusal", "err", "neutral");
+  el.classList.add(kind || "neutral");
+
+  const items = bullets.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+  el.innerHTML = `
+    <b>${escapeHtml(title)}</b>
+    <p>${escapeHtml(text)}</p>
+    <ul>${items}</ul>
+  `;
+}
+
+function schoolNeedsLivecheck() {
+  if (state.liveOk && state.coins.length) return false;
+  renderSchoolResult("err", "Livecheck requis", "Clique d’abord sur Lancer Livecheck. Le simulateur refuse de travailler sans prix réel chargé.", [
+    "Aucun prix n’est inventé.",
+    "Aucun test n’est lancé tant que la source marché n’est pas prête.",
+    "Après Livecheck OK, recommence le test guidé."
+  ]);
+  return true;
+}
+
+function runSchoolTest(testName) {
+  if (testName === "reset_100") {
+    resetSimulation();
+    setSimManualFields("BTC", SIM_PROFILE.defaultAmount);
+    renderCommandOutput(commandOk("reset_sim", simulationPayload()));
+    renderSchoolResult("neutral", "Simulateur remis à 100 €", "Tu repars d’un portefeuille virtuel propre.", [
+      "Capital virtuel : 100 €.",
+      "Position : 0 €.",
+      "Tu peux lancer le test 1."
+    ]);
+    return;
+  }
+
+  if (schoolNeedsLivecheck()) return;
+
+  let result = null;
+
+  if (testName === "safe_btc_5") {
+    resetSimulation();
+    setSimManualFields("BTC", 5);
+    result = simulateOrder("buy", "BTC", 5);
+    renderCommandOutput(result);
+    renderSchoolResult(result?.ok ? "ok" : "err",
+      result?.ok ? "Accepté : opération prudente" : "Erreur inattendue",
+      result?.ok ? "BTC 5 € est accepté parce que le ticket conseillé est de 5 € et le maximum est de 10 €." : (result?.error || "Le test n’a pas donné le résultat attendu."),
+      result?.ok ? [
+        "Tu as investi 5 € virtuels.",
+        "Il reste 95 € virtuels.",
+        "Ce test apprend la notion de petite opération contrôlée."
+      ] : [
+        "Aucun argent réel.",
+        "Regarde le journal pour le détail."
+      ]);
+    return;
+  }
+
+  if (testName === "too_big_btc_50") {
+    resetSimulation();
+    setSimManualFields("BTC", 50);
+    result = simulateOrder("buy", "BTC", 50);
+    renderCommandOutput(result);
+    renderSchoolResult(result?.ok === false ? "refusal" : "err",
+      result?.ok === false ? "Refus normal : opération trop grosse" : "Erreur : ce test aurait dû être refusé",
+      result?.ok === false ? "Tu as demandé 50 €, mais le profil débutant limite chaque opération à 10 €." : "Le test n’a pas respecté la règle attendue.",
+      result?.ok === false ? [
+        "Le refus protège ton capital virtuel.",
+        "Aucun ordre réel n’a été envoyé.",
+        "La règle apprise : ne pas mettre trop gros d’un coup."
+      ] : [
+        "Ce test doit être revu."
+      ]);
+    return;
+  }
+
+  if (testName === "forbidden_doge_5") {
+    resetSimulation();
+    setSimManualFields("DOGE", 5);
+    result = simulateOrder("buy", "DOGE", 5);
+    renderCommandOutput(result);
+    renderSchoolResult(result?.ok === false ? "refusal" : "err",
+      result?.ok === false ? "Refus normal : crypto non autorisée" : "Erreur : DOGE aurait dû être refusé",
+      result?.ok === false ? "Le profil débutant autorise seulement BTC, ETH et SOL. DOGE est volontairement bloqué dans cette phase." : "Le test n’a pas respecté la règle attendue.",
+      result?.ok === false ? [
+        "Tu apprends à limiter le périmètre.",
+        "Moins d’actifs = moins de confusion au début.",
+        "Les autres cryptos pourront être surveillées plus tard, pas utilisées en simulation débutant."
+      ] : [
+        "Ce test doit être revu."
+      ]);
+    return;
+  }
+
+  if (testName === "fill_ceiling") {
+    resetSimulation();
+    setSimManualFields("SOL", 10);
+    const r1 = simulateOrder("buy", "BTC", 10);
+    const r2 = simulateOrder("buy", "ETH", 10);
+    const r3 = simulateOrder("buy", "SOL", 10);
+    renderCommandOutput(r3);
+    const ok = r1?.ok && r2?.ok && r3?.ok;
+    renderSchoolResult(ok ? "ok" : "err",
+      ok ? "Plafond rempli : 30 € exposés" : "Erreur pendant le remplissage du plafond",
+      ok ? "Le simulateur a placé 10 € virtuels sur BTC, 10 € sur ETH et 10 € sur SOL." : "Une des trois opérations n’a pas été acceptée.",
+      ok ? [
+        "Capital restant : environ 70 €.",
+        "Exposition virtuelle : environ 30 €.",
+        "Le profil débutant a atteint son plafond de sécurité."
+      ] : [
+        r1?.error || "BTC : état inconnu.",
+        r2?.error || "ETH : état inconnu.",
+        r3?.error || "SOL : état inconnu."
+      ]);
+    return;
+  }
+
+  if (testName === "exceed_ceiling") {
+    resetSimulation();
+    simulateOrder("buy", "BTC", 10);
+    simulateOrder("buy", "ETH", 10);
+    simulateOrder("buy", "SOL", 10);
+    setSimManualFields("BTC", 5);
+    result = simulateOrder("buy", "BTC", 5);
+    renderCommandOutput(result);
+    renderSchoolResult(result?.ok === false ? "refusal" : "err",
+      result?.ok === false ? "Refus normal : plafond déjà atteint" : "Erreur : le dépassement aurait dû être refusé",
+      result?.ok === false ? "Après 30 € virtuels exposés, l’app bloque tout nouvel achat simulé." : "Le simulateur n’a pas bloqué le dépassement.",
+      result?.ok === false ? [
+        "Exposition maximale du profil : 30 €.",
+        "Réserve minimale conservée : 70 €.",
+        "La règle apprise : ne pas tout exposer, même en simulation."
+      ] : [
+        "Ce test doit être revu."
+      ]);
+    return;
+  }
+}
+
+
+
 els.btnSimBuy?.addEventListener("click", () => renderCommandOutput(simulateOrder("buy")));
 els.btnSimSell?.addEventListener("click", () => renderCommandOutput(simulateOrder("sell")));
 els.btnSimReset?.addEventListener("click", () => {
   resetSimulation();
   renderCommandOutput(commandOk("reset_sim", simulationPayload()));
+});
+
+
+document.querySelectorAll("[data-school-test]").forEach(btn => {
+  btn.addEventListener("click", () => runSchoolTest(btn.dataset.schoolTest));
 });
 
 els.btnRunCommand?.addEventListener("click", () => runCommandFromInput());

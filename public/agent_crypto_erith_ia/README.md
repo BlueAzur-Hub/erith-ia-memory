@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.1-alpha.1.1  
+Version : V1.1-alpha.2.2.2  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -944,7 +944,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.1.1 — Profil Solo Débutant 100 €
+## V1.1-alpha.2.2.2 — Profil Solo Débutant 100 €
 
 Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
 
@@ -976,7 +976,7 @@ Aucun retrait.
 
 ---
 
-## V1.1-alpha.1 — Refus visibles + Data Roadmap
+## V1.1-alpha.2.2.2 — Refus visibles + Data Roadmap
 
 Correction du test profil 100 € :
 
@@ -988,3 +988,28 @@ Correction du test profil 100 € :
 Ajout :
 
 - `docs/DATA_ROADMAP_V1_1_ALPHA_1.md`
+
+
+---
+
+## V1.1-alpha.2 — Mode École guidé
+
+Objectif : rendre le simulateur compréhensible par un non-technicien.
+
+### Ajouts
+
+- Boutons guidés dans la section Simulation.
+- Résultat humain après chaque test.
+- Plus besoin de taper DOGE ou 50 € à la main.
+- Journal simulation plus lisible.
+- Formulaire manuel reclassé en mode avancé.
+
+### Tests guidés
+
+- BTC 5 € accepté.
+- BTC 50 € refusé.
+- DOGE 5 € refusé.
+- BTC 10 + ETH 10 + SOL 10 accepté.
+- BTC 5 € refusé après plafond 30 €.
+
+Aucun trading réel ajouté.

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.1.1</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.2.2.2</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.1" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.2" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.1.1</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.2.2.2</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.1.1</p>
+        <p class="eyebrow">VERROU V1.1-alpha.2.2.2</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.1.1 · profil 100 €</span>
+        <span class="pill">V1.1-alpha.2.2.2 · profil 100 €</span>
       </div>
 
       <div class="situation-grid">
@@ -889,6 +889,55 @@
         <div class="sim-card"><b>P/L virtuel</b><span id="simPnL">—</span></div>
       </div>
 
+      <div class="school-panel" id="schoolPanel">
+        <div class="school-head">
+          <div>
+            <p class="eyebrow">MODE ÉCOLE GUIDÉ</p>
+            <h3>Apprendre sans deviner quoi taper</h3>
+            <p>Chaque bouton lance un test complet et explique le résultat. Aucun argent réel, aucune clé API, aucun wallet.</p>
+          </div>
+          <span class="pill ok">Guidé</span>
+        </div>
+
+        <div class="school-tests" aria-label="Tests guidés du simulateur">
+          <button class="school-test primary" data-school-test="safe_btc_5">
+            <b>1 · Tester une opération prudente</b>
+            <span>BTC 5 € · doit être accepté</span>
+          </button>
+          <button class="school-test" data-school-test="too_big_btc_50">
+            <b>2 · Tester une opération trop grosse</b>
+            <span>BTC 50 € · doit être refusé</span>
+          </button>
+          <button class="school-test" data-school-test="forbidden_doge_5">
+            <b>3 · Tester une crypto interdite</b>
+            <span>DOGE 5 € · doit être refusé</span>
+          </button>
+          <button class="school-test" data-school-test="fill_ceiling">
+            <b>4 · Remplir le plafond de sécurité</b>
+            <span>BTC 10 € + ETH 10 € + SOL 10 €</span>
+          </button>
+          <button class="school-test" data-school-test="exceed_ceiling">
+            <b>5 · Dépasser le plafond</b>
+            <span>Après 30 € exposés, BTC 5 € doit être refusé</span>
+          </button>
+          <button class="school-test reset" data-school-test="reset_100">
+            <b>Remettre le simulateur à 100 €</b>
+            <span>Repartir proprement</span>
+          </button>
+        </div>
+
+        <div class="school-result neutral" id="schoolResult">
+          <b>Mode école prêt</b>
+          <p>Clique un test. L’app écrit le résultat ici en français normal.</p>
+          <ul>
+            <li>Accepté = opération virtuelle autorisée par le profil.</li>
+            <li>Refusé = protection normale du profil débutant.</li>
+            <li>Rien ici ne peut acheter ou vendre réellement.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sim-manual-title">Mode manuel avancé — utile plus tard, pas obligatoire pour apprendre</div>
       <div class="sim-controls">
         <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
         <label><span>Montant €</span><input id="simAmount" type="number" min="1" step="1" value="5" /></label>
@@ -898,7 +947,7 @@
       </div>
 
       <div class="sim-test-hint">
-        Test refus visible : 50 € doit écrire REFUS dans le journal. DOGE 5 € doit aussi écrire REFUS, car le profil autorise seulement BTC / ETH / SOL.
+        Formulaire manuel : il sert aux essais libres. Pour apprendre, utilise d’abord les boutons du Mode École guidé au-dessus.
       </div>
 
       <div class="sim-columns">
@@ -999,11 +1048,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.1.1</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.2.2.2</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.1"></script>
+  <script src="./app.js?v=1.1-alpha.2"></script>
 </body>
 </html>
