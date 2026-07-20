@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC24  
+Version : V1.0-RC25  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -862,6 +862,32 @@ Objectif : corriger les traces vues après vérification du dépôt GitHub.
 
 Aucun renommage destructif des archives historiques.
 Aucun changement de trading.
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun ordre réel.
+
+
+---
+
+## V1.0-RC25 — Fix audit cleanup regression
+
+Objectif : corriger une régression introduite par le nettoyage RC24.
+
+### Corrections
+
+- `backend-Étapes sécurité` restauré en `backend-gates`.
+- `data-command="Plan accès distant"` restauré en commande interne stable.
+- Les boutons restent lisibles :
+  - `Plan accès distant`
+  - `Plan accès`
+  - `Étapes sécurité`
+- Les titres visibles sont rendus plus humains :
+  - `ARCHITECTURE PRIVÉE`
+  - `SÉCURITÉ`
+
+### Règle
+
+Aucun changement financier.
 Aucune clé réelle.
 Aucun wallet réel.
 Aucun ordre réel.

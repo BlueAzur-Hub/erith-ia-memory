@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC24</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC25</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc24" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc25" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC24</span>
+          <span class="pill ok">GitHub Pack V1.0-RC25</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC24</p>
+        <p class="eyebrow">VERROU RC25</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -721,7 +721,7 @@
     <section class="panel glass backend-layer" id="backend">
       <div class="section-head">
         <div>
-          <p class="eyebrow">BACKEND BLUEPRINT</p>
+          <p class="eyebrow">ARCHITECTURE PRIVÉE</p>
           <h2>Architecture public / privé / Kraken</h2>
           <p class="backend-intro">
             Plan de séparation : le site public reste sans clé et sans ordre réel. La future machine privée portera les accès, les logs, le kill switch et la simulation avancée.
@@ -769,7 +769,7 @@
         </article>
       </div>
 
-      <div class="backend-Étapes sécurité">
+      <div class="backend-gates">
         <div class="backend-gate done"><b>B1</b><span>Plan public/privé</span></div>
         <div class="backend-gate active"><b>B2</b><span>Backend local</span></div>
         <div class="backend-gate locked"><b>B3</b><span>Kraken lecture seule</span></div>
@@ -781,7 +781,7 @@
       <div class="blueprint-actions">
         <button class="cmd-preset" data-command="plan architecture">Plan architecture</button>
         <button class="cmd-preset" data-command="kraken_readonly_plan">Plan Kraken lecture seule</button>
-        <button class="cmd-preset" data-command="Plan accès distant">Plan accès distant</button>
+        <button class="cmd-preset" data-command="remote_access_plan">Plan accès distant</button>
         <button class="cmd-preset" data-command="security_review">Contrôle sécurité</button>
       </div>
 
@@ -794,7 +794,7 @@
     <section class="panel glass safety-layer" id="safety">
       <div class="section-head">
         <div>
-          <p class="eyebrow">SAFETY CONTROL ROOM</p>
+          <p class="eyebrow">SÉCURITÉ</p>
           <h2>Bac à sable · accès renforcé · arrêt d’urgence</h2>
           <p class="safety-intro">
             Cadrage confirmé avec opérateur autorisé : deux accès seulement, simulation obligatoire, aucune clé de retrait, modification possible en cas de défaillance.
@@ -828,7 +828,7 @@
 
       <div class="gate-grid">
         <div class="gate done"><b>G1</b><span>Observatoire public</span></div>
-        <div class="gate done"><b>G2</b><span>Command Layer</span></div>
+        <div class="gate done"><b>G2</b><span>Tests simples</span></div>
         <div class="gate active"><b>G3</b><span>Paper trading</span></div>
         <div class="gate locked"><b>G4</b><span>Lecture seule Kraken</span></div>
         <div class="gate locked"><b>G5</b><span>Semi-auto humain</span></div>
@@ -838,8 +838,8 @@
       <div class="safety-actions">
         <button class="cmd-preset" data-command="safety_plan">Plan sécurité</button>
         <button class="cmd-preset" data-command="kill_switch">Arrêt urgence</button>
-        <button class="cmd-preset" data-command="Plan accès">Plan accès</button>
-        <button class="cmd-preset" data-command="Étapes sécurité">Étapes sécurité</button>
+        <button class="cmd-preset" data-command="access_plan">Plan accès</button>
+        <button class="cmd-preset" data-command="gates">Étapes sécurité</button>
       </div>
 
       <p class="rule-line warn-lock">
@@ -970,11 +970,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC24</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC25</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc24"></script>
+  <script src="./app.js?v=1.0-rc25"></script>
 </body>
 </html>
