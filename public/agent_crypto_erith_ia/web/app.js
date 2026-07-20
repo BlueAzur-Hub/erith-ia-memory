@@ -9,13 +9,38 @@ const state = {
 };
 
 const $ = (id) => document.getElementById(id);
+
 const els = {
-  liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), offlineNotice: $("offlineNotice"), tableDecision: $("tableDecision"),
-  tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), coldRead: $("coldRead"),
-  metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"),
-  metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"),
-  sourceGrid: $("sourceGrid"), sourceDecision: $("sourceDecision"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"),
-  watchInput: $("watchInput"), watchCards: $("watchCards"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput")
+  liveStatus: $("liveStatus"),
+  sourceName: $("sourceName"),
+  sourceTime: $("sourceTime"),
+  sourceDecision: $("sourceDecision"),
+  offlineNotice: $("offlineNotice"),
+  tickerTrack: $("tickerTrack"),
+  marketRows: $("marketRows"),
+  tableNote: $("tableNote"),
+  searchInput: $("searchInput"),
+  metricMarketCap: $("metricMarketCap"),
+  metricMarketCapHint: $("metricMarketCapHint"),
+  metricVolume: $("metricVolume"),
+  metricVolumeHint: $("metricVolumeHint"),
+  metricBtcDom: $("metricBtcDom"),
+  metricBtcDomHint: $("metricBtcDomHint"),
+  metricSources: $("metricSources"),
+  metricSourcesHint: $("metricSourcesHint"),
+  sourceGrid: $("sourceGrid"),
+  scoreRing: $("scoreRing"),
+  scoreValue: $("scoreValue"),
+  scoreLabel: $("scoreLabel"),
+  scoreBreakdown: $("scoreBreakdown"),
+  watchInput: $("watchInput"),
+  watchCards: $("watchCards"),
+  riskGrid: $("riskGrid"),
+  newsInput: $("newsInput"),
+  newsOutput: $("newsOutput"),
+  fomoInput: $("fomoInput"),
+  fomoOutput: $("fomoOutput"),
+  coldRead: $("coldRead")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -23,6 +48,28 @@ const fmtCompactEUR = new Intl.NumberFormat("fr-FR", { style: "currency", curren
 const fmtPct = (n) => typeof n === "number" ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "Donnée manquante";
 const clsPct = (n) => typeof n !== "number" ? "neutral" : n > 0 ? "pos" : n < 0 ? "neg" : "neutral";
 const clamp = (min, max, value) => Math.max(min, Math.min(max, value));
+
+function setText(el, value) {
+  if (el) el.textContent = value;
+}
+
+function setHTML(el, value) {
+  if (el) el.innerHTML = value;
+}
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>'"]/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    "'":"&#39;",
+    '"':"&quot;"
+  }[c]));
+}
+
+function num(value, formatter = fmtEUR.format.bind(fmtEUR)) {
+  return typeof value === "number" && Number.isFinite(value) ? formatter(value) : "Donnée manquante";
+}
 
 async function fetchWithTimeout(url, options = {}, timeout = 9000) {
   const controller = new AbortController();
@@ -38,7 +85,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 9000) {
 
 const SourceAdapter = {
   async coingeckoMarkets() {
-    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=60&page=1&sparkline=false&price_change_percentage=24h,7d&locale=fr";
+    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d&locale=fr";
     const data = await fetchWithTimeout(url);
     if (!Array.isArray(data) || !data.length) throw new Error("Format CoinGecko invalide");
     return data.map((coin) => ({
@@ -56,36 +103,43 @@ const SourceAdapter = {
       timestamp: new Date().toISOString()
     }));
   },
+
   async coingeckoGlobal() {
     const data = await fetchWithTimeout("https://api.coingecko.com/api/v3/global");
     if (!data || !data.data) throw new Error("Format global CoinGecko invalide");
     return data.data;
   },
+
   async dexScreenerPing() {
     const data = await fetchWithTimeout("https://api.dexscreener.com/latest/dex/search?q=bitcoin");
     if (!data || !Array.isArray(data.pairs)) throw new Error("Format DEX Screener invalide");
     return { pairs: data.pairs.length };
   },
+
   async geckoTerminalPing() {
     const data = await fetchWithTimeout("https://api.geckoterminal.com/api/v2/networks");
     if (!data || !Array.isArray(data.data)) throw new Error("Format GeckoTerminal invalide");
     return { networks: data.data.length };
   },
+
   async defiLlamaPing() {
     const data = await fetchWithTimeout("https://api.llama.fi/protocols");
     if (!Array.isArray(data)) throw new Error("Format DefiLlama invalide");
     return { protocols: data.length };
   },
+
   async binancePing() {
     const data = await fetchWithTimeout("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT");
     if (!data || !data.symbol) throw new Error("Format Binance invalide");
     return { symbol: data.symbol };
   },
+
   async krakenPing() {
     const data = await fetchWithTimeout("https://api.kraken.com/0/public/Ticker?pair=BTCEUR");
     if (!data || data.error?.length) throw new Error(data.error?.join(", ") || "Format Kraken invalide");
     return { ok: true };
   },
+
   async coinbasePing() {
     const data = await fetchWithTimeout("https://api.coinbase.com/api/v3/brokerage/market/products?limit=5");
     if (!data || (!Array.isArray(data.products) && !Array.isArray(data))) throw new Error("Format Coinbase invalide");
@@ -104,77 +158,15 @@ const liveSources = [
 ];
 
 function setLiveStatus(mode, text) {
+  if (!els.liveStatus) return;
   els.liveStatus.className = `pill ${mode}`;
   els.liveStatus.textContent = text;
 }
 
-function updateSourceMetric() {
-  const done = state.sourceStatus.length;
-  const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-  if (els.metricSources) els.metricSources.textContent = `${ok}/${liveSources.length}`;
-  if (els.metricSourcesHint) {
-    if (!done) els.metricSourcesHint.textContent = "Livecheck requis";
-    else if (state.liveOk) els.metricSourcesHint.textContent = "Source marché active";
-    else els.metricSourcesHint.textContent = `${done}/${liveSources.length} testées`;
-  }
-}
-
-async function runLivecheck() {
-  setLiveStatus("warn", "Livecheck en cours");
-  els.sourceDecision.textContent = "Tests sources en cours";
-  els.tableDecision.textContent = "Test en cours";
-  els.offlineNotice.style.display = "block";
-  els.offlineNotice.innerHTML = `<strong>LIVECHECK EN COURS</strong><p>Test des sources publiques. Aucun chiffre ne sera affiché sans réponse exploitable.</p>`;
-  state.sourceStatus = [];
-  state.coins = [];
-  state.global = null;
-  renderSourceGrid();
-  updateSourceMetric();
-
-  for (const src of liveSources) {
-    const started = performance.now();
-    try {
-      const result = await src.fn();
-      const ms = Math.round(performance.now() - started);
-      state.sourceStatus.push({ ...src, status: "OK", ms, detail: detailFromResult(result) });
-      if (src.key === "coingecko") {
-        state.coins = result.markets;
-        state.global = result.global;
-        state.mainSource = "CoinGecko";
-        state.timestamp = new Date().toISOString();
-      }
-    } catch (error) {
-      state.sourceStatus.push({ ...src, status: "ÉCHEC", ms: null, detail: cleanError(error) });
-    }
-    renderSourceGrid();
-    updateSourceMetric();
-  }
-
-  const okCount = state.sourceStatus.filter(s => s.status === "OK").length;
-  state.liveOk = state.coins.length > 0;
-
-  if (state.liveOk) {
-    setLiveStatus("ok", "Livecheck OK");
-    els.offlineNotice.style.display = "none";
-    els.sourceName.textContent = state.mainSource;
-    els.sourceTime.textContent = new Date(state.timestamp).toLocaleString("fr-FR");
-    els.sourceDecision.textContent = "Tableau autorisé : source marché réelle";
-    els.tableDecision.textContent = "Autorisé · source réelle";
-    renderAll();
-  } else {
-    setLiveStatus("fail", "Livecheck échec");
-    els.offlineNotice.style.display = "block";
-    els.offlineNotice.innerHTML = `<strong>ACCÈS LIVE INDISPONIBLE</strong><p>Aucune source marché exploitable n’a répondu. Aucun prix ne sera affiché. Aucun tableau chiffré ne sera produit.</p>`;
-    els.sourceName.textContent = "Aucune source marché exploitable";
-    els.sourceTime.textContent = "—";
-    els.sourceDecision.textContent = "Tableau refusé : pas de source live";
-    els.tableDecision.textContent = "Refusé · pas de source";
-    renderEmptyMarket("RECHERCHE LIVE ÉCHOUÉE — pas de tableau fictif.");
-    renderColdRead();
-  }
-  els.metricSources.textContent = `${okCount}/${liveSources.length}`;
-  els.metricSourcesHint.textContent = `${liveSources.length}/${liveSources.length} testées`;
-  updateSourceMetric();
+function cleanError(error) {
+  return String(error?.message || error || "Erreur inconnue")
+    .replace(/AbortError/i, "Timeout")
+    .slice(0, 72);
 }
 
 function detailFromResult(result) {
@@ -186,8 +178,85 @@ function detailFromResult(result) {
   if (result.symbol) return result.symbol;
   return "OK";
 }
-function cleanError(error) {
-  return String(error?.message || error || "Erreur inconnue").replace(/AbortError/i, "Timeout").slice(0, 86);
+
+function updateSourceMetric(doneOverride = null) {
+  const done = doneOverride ?? state.sourceStatus.length;
+  const ok = state.sourceStatus.filter(s => s.status === "OK").length;
+  setText(els.metricSources, `${ok}/${liveSources.length}`);
+  if (!done) setText(els.metricSourcesHint, "Livecheck requis");
+  else if (done < liveSources.length) setText(els.metricSourcesHint, `${done}/${liveSources.length} testées`);
+  else setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
+}
+
+async function runLivecheck() {
+  setLiveStatus("warn", "Livecheck en cours");
+  setText(els.sourceDecision, "Tests sources en cours");
+  setText(els.sourceName, "Recherche...");
+  setText(els.sourceTime, "—");
+
+  state.liveOk = false;
+  state.mainSource = null;
+  state.timestamp = null;
+  state.sourceStatus = [];
+  state.coins = [];
+  state.global = null;
+
+  renderSourceGrid();
+  updateSourceMetric(0);
+  renderEmptyMarket("Livecheck en cours. Aucun chiffre inventé.");
+  renderScore(null);
+  renderColdRead(false);
+
+  for (const src of liveSources) {
+    const started = performance.now();
+
+    try {
+      const result = await src.fn();
+      const ms = Math.round(performance.now() - started);
+      state.sourceStatus.push({ ...src, status: "OK", ms, detail: detailFromResult(result) });
+
+      if (src.key === "coingecko" && result.markets?.length) {
+        state.coins = result.markets;
+        state.global = result.global;
+        state.mainSource = "CoinGecko";
+        state.timestamp = new Date().toISOString();
+        state.liveOk = true;
+
+        // Affichage immédiat dès que la source marché est valide.
+        renderAll();
+      }
+    } catch (error) {
+      state.sourceStatus.push({ ...src, status: "ÉCHEC", ms: null, detail: cleanError(error) });
+    }
+
+    renderSourceGrid();
+    updateSourceMetric();
+  }
+
+  const okCount = state.sourceStatus.filter(s => s.status === "OK").length;
+
+  if (state.liveOk && state.coins.length) {
+    setLiveStatus("ok", "Livecheck OK");
+    setText(els.sourceName, state.mainSource);
+    setText(els.sourceTime, new Date(state.timestamp).toLocaleString("fr-FR"));
+    setText(els.sourceDecision, "Autorisé · source réelle");
+    if (els.offlineNotice) els.offlineNotice.style.display = "none";
+    renderAll();
+  } else {
+    setLiveStatus("fail", "Livecheck échec");
+    if (els.offlineNotice) {
+      els.offlineNotice.style.display = "block";
+      els.offlineNotice.innerHTML = "<strong>ACCÈS LIVE INDISPONIBLE</strong><p>Aucune source marché exploitable n’a répondu. Aucun prix ne sera affiché. Aucun tableau chiffré ne sera produit.</p>";
+    }
+    setText(els.sourceName, "Aucune source marché exploitable");
+    setText(els.sourceTime, "—");
+    setText(els.sourceDecision, "Refusé · pas de source live");
+    renderEmptyMarket("RECHERCHE LIVE ÉCHOUÉE — pas de tableau fictif.");
+    renderColdRead(false);
+  }
+
+  setText(els.metricSources, `${okCount}/${liveSources.length}`);
+  setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
 }
 
 function renderAll() {
@@ -195,110 +264,163 @@ function renderAll() {
   renderTicker();
   renderMarketTable();
   renderWatchlist();
-  renderScore(state.coins[0]);
+  renderScore(state.coins[0] || null);
   renderRiskGrid();
-  renderColdRead();
+  renderColdRead(true);
 }
 
 function renderMetrics() {
   const g = state.global;
-  if (!g) return;
-  els.metricMarketCap.textContent = fmtCompactEUR.format(g.total_market_cap?.eur || 0);
-  els.metricMarketCapHint.textContent = "CoinGecko global";
-  els.metricVolume.textContent = fmtCompactEUR.format(g.total_volume?.eur || 0);
-  els.metricVolumeHint.textContent = "Volume global 24h";
-  const btc = g.market_cap_percentage?.btc;
-  els.metricBtcDom.textContent = typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante";
-  els.metricBtcDomHint.textContent = "Dominance BTC";
+
+  if (g) {
+    setText(els.metricMarketCap, num(g.total_market_cap?.eur, fmtCompactEUR.format.bind(fmtCompactEUR)));
+    setText(els.metricMarketCapHint, "CoinGecko global");
+    setText(els.metricVolume, num(g.total_volume?.eur, fmtCompactEUR.format.bind(fmtCompactEUR)));
+    setText(els.metricVolumeHint, "Volume global 24h");
+
+    const btc = g.market_cap_percentage?.btc;
+    setText(els.metricBtcDom, typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante");
+    setText(els.metricBtcDomHint, "Dominance BTC");
+  }
+
+  updateSourceMetric();
 }
 
 function renderTicker() {
-  const items = state.coins.slice(0, 16).map(c => `${c.symbol} ${fmtEUR.format(c.price)} ${fmtPct(c.change24h)}`).join(" · ");
-  const message = `${items} · Source : ${state.mainSource} · Heure : ${new Date(state.timestamp).toLocaleTimeString("fr-FR")} · `;
-  els.tickerTrack.innerHTML = `<span>${escapeHtml(message)}</span><span>${escapeHtml(message)}</span>`;
+  if (!state.liveOk || !state.coins.length) {
+    setHTML(els.tickerTrack, `<span class="ticker-meta">Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif</span>`);
+    return;
+  }
+
+  const items = state.coins.slice(0, 18).map(c => {
+    const cls = clsPct(c.change24h);
+    return `<span class="ticker-item">
+      <span class="ticker-symbol">${escapeHtml(c.symbol)}</span>
+      <span class="ticker-price">${num(c.price, fmtEUR.format.bind(fmtEUR))}</span>
+      <span class="ticker-change ${cls}">${fmtPct(c.change24h)}</span>
+    </span>`;
+  }).join("");
+
+  const meta = `<span class="ticker-meta">Source : ${escapeHtml(state.mainSource)} · Heure : ${new Date(state.timestamp).toLocaleTimeString("fr-FR")}</span>`;
+
+  setHTML(els.tickerTrack, `<span>${items}${meta}</span><span>${items}${meta}</span>`);
 }
 
 function scoreCoin(c) {
   if (!c) return { score: null, label: "En attente", parts: {} };
-  let parts = {
+
+  const parts = {
     information: 12,
     market: c.marketCap ? 14 : 6,
     liquidity: c.volume24h && c.marketCap ? clamp(3, 15, (c.volume24h / c.marketCap) * 350) : 4,
     momentum: typeof c.change24h === "number" ? clamp(1, 10, 8 - Math.abs(c.change24h) / 7) : 4,
-    regime: 7,
-    security: 8,
-    social: 3,
-    onchain: 4,
-    asymmetry: 5,
-    invalidation: 3
+    risk: 8
   };
-  let positive = Object.values(parts).reduce((a,b)=>a+b,0) / 110 * 100;
+
+  const base = (
+    parts.information / 15 * 18 +
+    parts.market / 15 * 22 +
+    parts.liquidity / 15 * 22 +
+    parts.momentum / 10 * 18 +
+    parts.risk / 15 * 20
+  );
+
   let penalty = 0;
   if (typeof c.change24h === "number" && Math.abs(c.change24h) > 18) penalty += 12;
   if (c.volume24h && c.marketCap && c.volume24h / c.marketCap < 0.01) penalty += 10;
-  penalty += 16; // sécurité/social/on-chain non vérifiés dans le prototype public
-  const score = Math.round(clamp(0, 100, positive - penalty));
-  let label = score <= 40 ? "Veille fragile" : score <= 55 ? "Veille" : score <= 65 ? "Signal faible" : score <= 75 ? "Analyse approfondie" : "Signal fort mais risqué";
-  return { score, label, parts, penalty };
+  penalty += 16; // sécurité/social/on-chain non vérifiés dans le prototype public.
+
+  const score = Math.round(clamp(0, 100, base - penalty));
+  let label = "Veille";
+  if (score <= 40) label = "Veille fragile";
+  else if (score <= 55) label = "Veille";
+  else if (score <= 65) label = "Signal faible";
+  else if (score <= 75) label = "Analyse approfondie";
+  else label = "Signal fort mais risqué";
+
+  return { score, label, parts };
 }
-function decisionFromScore(s) {
-  if (s === null) return "Livecheck requis";
-  if (s <= 40) return "Veille fragile";
-  if (s <= 55) return "Veille";
-  if (s <= 65) return "Signal faible";
-  if (s <= 75) return "Analyse approfondie";
+
+function decisionFromScore(score) {
+  if (score === null || score === undefined) return "Livecheck requis";
+  if (score <= 40) return "Veille fragile";
+  if (score <= 55) return "Veille";
+  if (score <= 65) return "Signal faible";
+  if (score <= 75) return "Analyse approfondie";
   return "Signal fort mais risqué";
 }
 
-function renderColdRead() {
-  if (!state.liveOk) {
-    els.coldRead.textContent = "Accès live absent ou non testé. L’observatoire refuse d’afficher un tableau chiffré. Action sûre : lancer Livecheck ou fournir un export de données.";
+function renderMarketTable() {
+  if (!els.marketRows) return;
+
+  if (!state.liveOk || !state.coins.length) {
+    renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
     return;
   }
-  const btc = state.coins.find(c => c.id === "bitcoin") || state.coins[0];
-  const eth = state.coins.find(c => c.id === "ethereum");
-  const movers = [...state.coins].filter(c => typeof c.change24h === "number").sort((a,b)=>Math.abs(b.change24h)-Math.abs(a.change24h)).slice(0,3);
-  const globalCap = state.global?.total_market_cap?.eur;
-  const btcDom = state.global?.market_cap_percentage?.btc;
-  els.coldRead.innerHTML = `Source active : <b>${state.mainSource}</b>. Marché global récupéré${globalCap ? `, capitalisation ${fmtCompactEUR.format(globalCap)}` : ""}${typeof btcDom === "number" ? `, dominance BTC ${btcDom.toFixed(2)} %` : ""}.<br><br>` +
-    `BTC : <b>${fmtEUR.format(btc.price)}</b> (${fmtPct(btc.change24h)} sur 24h). ${eth ? `ETH : <b>${fmtEUR.format(eth.price)}</b> (${fmtPct(eth.change24h)}).` : ""}<br><br>` +
-    `Mouvements à surveiller : ${movers.map(m => `${m.symbol} ${fmtPct(m.change24h)}`).join(" · ")}. Lecture prudente : ces variations déclenchent une veille, pas une décision.`;
-}
 
-function renderMarketTable() {
-  const q = (els.searchInput.value || "").toLowerCase().trim();
-  const rows = state.coins.filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q)).slice(0, 30);
-  if (!state.liveOk) return renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
-  if (!rows.length) return renderEmptyMarket("Aucun actif ne correspond au filtre.");
+  const q = (els.searchInput?.value || "").toLowerCase().trim();
+  const rows = state.coins
+    .filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q))
+    .slice(0, 30);
+
+  if (!rows.length) {
+    renderEmptyMarket("Aucun actif ne correspond au filtre.");
+    return;
+  }
+
   els.marketRows.innerHTML = rows.map(c => {
     const s = scoreCoin(c);
     return `<tr data-id="${escapeHtml(c.id)}">
       <td>${c.rank ?? "—"}</td>
-      <td><div class="coin-cell">${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small></div></div></td>
-      <td>${num(c.price, fmtEUR)}</td>
+      <td><div class="coin-cell">${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small></div></div></td>
+      <td>${num(c.price, fmtEUR.format.bind(fmtEUR))}</td>
       <td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td>
       <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
-      <td>${num(c.marketCap, v => fmtCompactEUR.format(v))}</td>
-      <td>${num(c.volume24h, v => fmtCompactEUR.format(v))}</td>
+      <td>${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
+      <td>${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
       <td>${s.score}</td>
       <td>${decisionFromScore(s.score)}</td>
     </tr>`;
   }).join("");
-  els.tableNote.textContent = `Données récupérées depuis ${state.mainSource}. Heure : ${new Date(state.timestamp).toLocaleString("fr-FR")}. Sécurité contrat non validée par cette table.`;
-  [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => row.addEventListener("click", () => {
-    const coin = state.coins.find(c => c.id === row.dataset.id);
-    renderScore(coin);
-  }));
+
+  setText(
+    els.tableNote,
+    `Données récupérées depuis ${state.mainSource}. Heure : ${new Date(state.timestamp).toLocaleString("fr-FR")}. Sécurité contrat non validée par cette table.`
+  );
+
+  [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
+    row.addEventListener("click", () => {
+      const coin = state.coins.find(c => c.id === row.dataset.id);
+      renderScore(coin);
+    });
+  });
 }
+
 function renderEmptyMarket(message) {
-  els.marketRows.innerHTML = `<tr><td colspan="9" class="empty">${escapeHtml(message)}</td></tr>`;
-  els.tableNote.textContent = "Pas de source live, pas de prix.";
+  if (els.marketRows) {
+    els.marketRows.innerHTML = `<tr><td colspan="9" class="empty">${escapeHtml(message)}</td></tr>`;
+  }
+  setText(els.tableNote, "Pas de source live, pas de prix.");
 }
+
 function renderScore(coin) {
   const s = scoreCoin(coin);
+
+  if (!els.scoreRing || !els.scoreValue || !els.scoreLabel || !els.scoreBreakdown) return;
+
   if (s.score === null) {
-    els.scoreRing.style.setProperty("--score", 0); els.scoreValue.textContent = "—"; els.scoreLabel.textContent = "En attente"; return;
+    els.scoreRing.style.setProperty("--score", 0);
+    els.scoreValue.textContent = "—";
+    els.scoreLabel.textContent = "En attente";
+    els.scoreBreakdown.innerHTML = `
+      <div><span>Information</span><b>—</b></div>
+      <div><span>Marché</span><b>—</b></div>
+      <div><span>Liquidité</span><b>—</b></div>
+      <div><span>Momentum</span><b>—</b></div>
+      <div><span>Risque</span><b>—</b></div>`;
+    return;
   }
+
   els.scoreRing.style.setProperty("--score", s.score);
   els.scoreValue.textContent = s.score;
   els.scoreLabel.textContent = s.label;
@@ -307,66 +429,146 @@ function renderScore(coin) {
     <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div>
     <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div>
     <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div>
-    <div><span>Pénalité sécurité</span><b>active</b></div>`;
+    <div><span>Risque</span><b>pénalité active</b></div>`;
 }
+
 function renderWatchlist() {
-  if (!state.liveOk) { els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Aucune donnée watchlist inventée.</div>`; return; }
-  const cards = state.watchIds.map(id => state.coins.find(c => c.id === id)).filter(Boolean).map(c => {
-    const s = scoreCoin(c);
-    return `<div class="mini-card"><strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong><div class="meta">${fmtEUR.format(c.price)} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span> · 7j <span class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</span></div><div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div></div>`;
-  });
-  els.watchCards.innerHTML = cards.length ? cards.join("") : `<div class="mini-card muted">Aucun actif de watchlist trouvé dans le top chargé.</div>`;
+  if (!els.watchCards) return;
+
+  if (!state.liveOk || !state.coins.length) {
+    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Aucune donnée watchlist inventée.</div>`;
+    return;
+  }
+
+  const cards = state.watchIds
+    .map(id => state.coins.find(c => c.id === id))
+    .filter(Boolean)
+    .map(c => {
+      const s = scoreCoin(c);
+      return `<div class="mini-card">
+        <strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong>
+        <div class="meta">${num(c.price, fmtEUR.format.bind(fmtEUR))} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span></div>
+        <div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div>
+      </div>`;
+    });
+
+  els.watchCards.innerHTML = cards.length
+    ? cards.join("")
+    : `<div class="mini-card muted">Aucun actif de watchlist trouvé dans le top chargé.</div>`;
 }
+
 function renderRiskGrid() {
+  if (!els.riskGrid) return;
+
   els.riskGrid.innerHTML = `
-    <div class="risk ok"><span>Marché</span><b>${state.liveOk ? "Validé source live" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V0.3</b></div>
+    <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V0.8</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
+
 function renderSourceGrid() {
+  if (!els.sourceGrid) return;
+
   if (!state.sourceStatus.length) {
-    els.sourceGrid.innerHTML = liveSources.map(s => `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>`).join("");
+    els.sourceGrid.innerHTML = liveSources.map(s =>
+      `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>`
+    ).join("");
     return;
   }
-  els.sourceGrid.innerHTML = state.sourceStatus.map(s => `<div class="source-item ${s.status === "OK" ? "ok" : "fail"}"><strong>${s.name}</strong><span>${s.kind}</span><span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span><span>${escapeHtml(s.detail || "")}</span></div>`).join("");
+
+  els.sourceGrid.innerHTML = state.sourceStatus.map(s =>
+    `<div class="source-item ${s.status === "OK" ? "ok" : "fail"}">
+      <strong>${s.name}</strong>
+      <span>${s.kind}</span>
+      <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span>
+      <span>${escapeHtml(s.detail || "")}</span>
+    </div>`
+  ).join("");
 }
+
+function renderColdRead(live = false) {
+  if (!els.coldRead) return;
+
+  const box = els.coldRead.closest(".cold-read");
+  if (box) {
+    box.classList.toggle("live", live);
+    box.classList.toggle("offline", !live);
+  }
+
+  if (live) {
+    els.coldRead.textContent =
+      `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette V0.8.`;
+  } else {
+    els.coldRead.textContent =
+      "Accès live absent ou non testé. L’observatoire refuse d’afficher un tableau chiffré. Action sûre : lancer Livecheck ou fournir un export de données.";
+  }
+}
+
 function analyzeNews() {
-  const text = els.newsInput.value.trim();
-  if (!text) { els.newsOutput.textContent = "Colle une actualité à classifier."; return; }
+  const text = els.newsInput?.value.trim() || "";
+  if (!text) {
+    setText(els.newsOutput, "Colle une actualité à classifier.");
+    return;
+  }
+
   const lower = text.toLowerCase();
   const isRumor = /rumeur|serait|peut-être|insider|leak|telegram|x\.com|twitter/.test(lower);
   const isCritical = /hack|exploit|bridge|faillite|sec|amf|delisting|suspension|procès|attaque/.test(lower);
   const isListing = /listing|listé|binance|coinbase|kraken/.test(lower);
   const type = isRumor ? "rumeur / non confirmé" : isCritical ? "information critique potentielle" : isListing ? "catalyseur listing potentiel" : "information à qualifier";
   const score = isCritical ? 78 : isListing ? 64 : isRumor ? 36 : 48;
-  els.newsOutput.textContent = `NEWS SENTINEL\n\nType : ${type}\nScore News Impact : ${score}/100\nDécision : ${score >= 60 ? "analyse approfondie" : "veille"}\n\nRègle : ce score déclenche une vérification, pas une position.\nSources à vérifier : source primaire, communiqué officiel, source secondaire fiable, réaction marché, risque de manipulation.`;
+
+  setText(
+    els.newsOutput,
+    `NEWS SENTINEL\n\nType : ${type}\nScore News Impact : ${score}/100\nDécision : ${score >= 60 ? "analyse approfondie" : "veille"}\n\nRègle : ce score déclenche une vérification, pas une position.\nSources à vérifier : source primaire, communiqué officiel, source secondaire fiable, réaction marché, risque de manipulation.`
+  );
 }
+
 function analyzeFomo() {
-  const text = els.fomoInput.value.trim();
-  if (!text) { els.fomoOutput.textContent = "Écris ce qui déclenche la FOMO."; return; }
-  const hasBigMove = /\+\s?\d{2,}|explos|pump|raté|rate|peur|vite|maintenant/i.test(text);
-  els.fomoOutput.textContent = `MODE NO-FOMO\n\nSignal émotionnel : ${hasBigMove ? "élevé" : "à vérifier"}\nDécision : position théorique interdite tant que l’analyse froide n’est pas faite.\n\nQuestions :\n1. La hausse est-elle déjà pricée ?\n2. Qui vend si tu entres maintenant ?\n3. Quelle source primaire confirme le signal ?\n4. Où est l’invalidation ?\n5. La perte maximale est-elle acceptée ?\n\nConclusion : une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.`;
+  const text = els.fomoInput?.value.trim() || "";
+  if (!text) {
+    setText(els.fomoOutput, "Écris ce qui déclenche la FOMO.");
+    return;
+  }
+
+  const hasBigMove = /\+\s?\d{2,}|explos|pump|rate|raté|peur|vite|maintenant/i.test(text);
+
+  setText(
+    els.fomoOutput,
+    `MODE NO-FOMO\n\nSignal émotionnel : ${hasBigMove ? "élevé" : "à vérifier"}\nDécision : position théorique interdite tant que l’analyse froide n’est pas faite.\n\nQuestions :\n1. La hausse est-elle déjà pricée ?\n2. Qui vend si tu entres maintenant ?\n3. Quelle source primaire confirme le signal ?\n4. Où est l’invalidation ?\n5. La perte maximale est-elle acceptée ?\n\nConclusion : une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.`
+  );
 }
+
 function addWatch() {
-  const id = els.watchInput.value.trim().toLowerCase();
+  const id = els.watchInput?.value.trim().toLowerCase();
   if (!id) return;
   if (!state.watchIds.includes(id)) state.watchIds.push(id);
   els.watchInput.value = "";
   renderWatchlist();
 }
-function seedWatch() { state.watchIds = ["bitcoin", "ethereum", "solana", "chainlink", "render-token", "near"]; renderWatchlist(); }
-function num(value, formatter) { return typeof value === "number" ? formatter(value) : "Donnée manquante"; }
-function escapeHtml(str) { return String(str).replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c])); }
 
-$("btnLivecheck").addEventListener("click", runLivecheck);
-$("btnRefresh").addEventListener("click", runLivecheck);
-$("btnNoFomo").addEventListener("click", () => document.querySelector("#nofomo").scrollIntoView({ behavior: "smooth" }));
-els.searchInput.addEventListener("input", renderMarketTable);
-$("btnAddWatch").addEventListener("click", addWatch);
-$("btnSeedWatch").addEventListener("click", seedWatch);
-$("btnAnalyzeNews").addEventListener("click", analyzeNews);
-$("btnAnalyzeFomo").addEventListener("click", analyzeFomo);
+function seedWatch() {
+  state.watchIds = ["bitcoin", "ethereum", "solana", "chainlink", "render-token", "near"];
+  renderWatchlist();
+}
+
+$("btnLivecheck")?.addEventListener("click", runLivecheck);
+$("btnRefresh")?.addEventListener("click", runLivecheck);
+$("btnNoFomo")?.addEventListener("click", () => document.querySelector("#nofomo")?.scrollIntoView({ behavior: "smooth" }));
+$("btnAddWatch")?.addEventListener("click", addWatch);
+$("btnSeedWatch")?.addEventListener("click", seedWatch);
+$("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
+$("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
+
+els.searchInput?.addEventListener("input", renderMarketTable);
 
 renderSourceGrid();
-renderColdRead();
+updateSourceMetric(0);
+renderTicker();
+renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
+renderScore(null);
+renderWatchlist();
+renderRiskGrid();
+renderColdRead(false);

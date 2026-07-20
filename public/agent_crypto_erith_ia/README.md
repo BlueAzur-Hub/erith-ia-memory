@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.7  
+Version : V0.8  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -158,3 +158,21 @@ Objectif : correction réelle du titre et passage terminal compact.
 - Header compressé.
 - Dashboard-first : plus de tableau et de contenu utile visible rapidement.
 - Verrou anti-hallucination inchangé.
+
+
+---
+
+## Changelog V0.8
+
+Objectif : arrêter la boucle design et corriger les vrais défauts fonctionnels.
+
+- Ticker rendu lisible avec éléments séparés :
+  symbole, prix, variation, couleurs distinctes.
+- Tableau marché corrigé :
+  après Livecheck OK, les lignes CoinGecko doivent apparaître.
+- Score Observation corrigé :
+  après Livecheck OK, le premier actif chargé est scoré.
+- Lecture froide corrigée :
+  elle passe en mode live quand une source réelle est active.
+- Aucun changement de règle :
+  pas de source live, pas de prix.
