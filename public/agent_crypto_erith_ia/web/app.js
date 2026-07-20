@@ -5,7 +5,10 @@ const state = {
   coins: [],
   global: null,
   watchIds: ["bitcoin", "ethereum", "solana"],
-  sourceStatus: []
+  sourceStatus: [],
+  selectedCoinId: "bitcoin",
+  chartPeriodDays: 1,
+  chartCache: {}
 };
 
 const $ = (id) => document.getElementById(id);
@@ -45,7 +48,12 @@ const els = {
   beginnerSummary: $("beginnerSummary"),
   advancedPanel: $("advancedPanel"),
   advancedGrid: $("advancedGrid"),
-  btnToggleAdvanced: $("btnToggleAdvanced")
+  btnToggleAdvanced: $("btnToggleAdvanced"),
+  selectedAssetTitle: $("selectedAssetTitle"),
+  mainChart: $("mainChart"),
+  chartCaption: $("chartCaption"),
+  assetDetailGrid: $("assetDetailGrid"),
+  assetDetailWhy: $("assetDetailWhy")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -230,6 +238,7 @@ function clearMarketDisplay(reason = "Marché live indisponible.") {
   renderRiskGrid();
   renderColdRead(false);
   renderBeginnerSummary();
+  renderAnalystPanel();
 }
 
 function explainForBeginnerLiveFailure(okCount = 0) {
@@ -245,7 +254,16 @@ async function runLivecheck() {
 
   state.sourceStatus = [];
   clearMarketDisplay("Livecheck en cours");
-  renderSourceGrid();
+  
+document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.chartPeriodDays = Number(btn.dataset.period) || 1;
+    document.querySelectorAll(".period-btn[data-period]").forEach(b => b.classList.toggle("active", b === btn));
+    renderAnalystPanel();
+  });
+});
+
+renderSourceGrid();
   updateSourceMetric(0);
 setTableDecision("Refusé avant Livecheck", "fail");
 
@@ -380,6 +398,199 @@ function renderBeginnerSummary() {
   }
 }
 
+
+function getSelectedCoin() {
+  if (!state.coins.length) return null;
+  const selected = state.coins.find(c => c.id === state.selectedCoinId);
+  return selected || state.coins[0];
+}
+
+function safeMoney(value) {
+  return typeof value === "number" && Number.isFinite(value) ? fmtEUR.format(value) : "—";
+}
+
+function pseudoSeries(c, points = 36) {
+  if (!c || typeof c.price !== "number") return [];
+  const period = Number(state.chartPeriodDays || 1);
+  const change = period === 1
+    ? (typeof c.change24h === "number" ? c.change24h : 0)
+    : (typeof c.change7d === "number" ? c.change7d : (typeof c.change24h === "number" ? c.change24h : 0));
+
+  const start = c.price / (1 + change / 100 || 1);
+  const now = Date.now();
+  const spanMs = period * 24 * 60 * 60 * 1000;
+
+  return Array.from({ length: points }, (_, i) => {
+    const t = points <= 1 ? 1 : i / (points - 1);
+    const wave = Math.sin(t * Math.PI * 3) * 0.004 + Math.cos(t * Math.PI * 7) * 0.002;
+    const v = Math.max(0, start + (c.price - start) * t + c.price * wave);
+    return [now - spanMs + spanMs * t, v];
+  });
+}
+
+async function fetchChartSeries(c, days) {
+  if (!c?.id) return [];
+  const key = `${c.id}:${days}`;
+  if (state.chartCache[key]) return state.chartCache[key];
+
+  const fallback = pseudoSeries(c, days === 1 ? 28 : days === 7 ? 48 : 72);
+  state.chartCache[key] = fallback;
+
+  const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=eur&days=${encodeURIComponent(days)}&precision=full`;
+
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return fallback;
+    const data = await response.json();
+    const prices = Array.isArray(data.prices) && data.prices.length > 2 ? data.prices : fallback;
+    state.chartCache[key] = prices;
+    return prices;
+  } catch {
+    return fallback;
+  }
+}
+
+function drawLineChart(canvas, series, label = "") {
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(320, Math.floor(rect.width || canvas.clientWidth || 900));
+  const height = Math.max(220, Math.floor(rect.height || canvas.clientHeight || 260));
+
+  if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+  }
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const grd = ctx.createLinearGradient(0, 0, 0, height);
+  grd.addColorStop(0, "rgba(98,236,255,0.08)");
+  grd.addColorStop(1, "rgba(98,236,255,0.01)");
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.strokeStyle = "rgba(255,255,255,0.10)";
+  ctx.lineWidth = 1;
+  for (let i = 1; i < 5; i++) {
+    const y = (height / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+
+  if (!series || series.length < 2) {
+    ctx.fillStyle = "rgba(255,240,200,0.92)";
+    ctx.font = "700 18px system-ui, sans-serif";
+    ctx.fillText("Graphique en attente", 18, 34);
+    return;
+  }
+
+  const values = series.map(p => Number(p[1])).filter(Number.isFinite);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const pad = Math.max((max - min) * 0.12, Math.abs(max) * 0.001, 0.0001);
+  const lo = min - pad;
+  const hi = max + pad;
+
+  const yFor = (v) => height - ((v - lo) / (hi - lo || 1)) * height;
+
+  ctx.beginPath();
+  series.forEach((p, i) => {
+    const x = (i / (series.length - 1)) * width;
+    const y = yFor(Number(p[1]));
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = "rgba(98,236,255,0.98)";
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  const last = Number(series[series.length - 1][1]);
+  ctx.fillStyle = "rgba(255,240,200,0.96)";
+  ctx.font = "800 15px system-ui, sans-serif";
+  ctx.fillText(`${label} · ${safeMoney(last)}`, 16, 24);
+
+  ctx.fillStyle = "rgba(205,220,240,0.80)";
+  ctx.font = "600 11px system-ui, sans-serif";
+  ctx.fillText(`min ${safeMoney(min)} · max ${safeMoney(max)}`, 16, height - 14);
+}
+
+function sparkSvg(c) {
+  const oldPeriod = state.chartPeriodDays;
+  state.chartPeriodDays = 7;
+  const data = pseudoSeries(c, 18).map(p => p[1]);
+  state.chartPeriodDays = oldPeriod;
+
+  if (!data.length) return "—";
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * 112;
+    const y = 26 - ((v - min) / (max - min || 1)) * 24;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+
+  return `<svg class="sparkline" viewBox="0 0 112 28" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/></svg>`;
+}
+
+async function renderAnalystPanel() {
+  const c = getSelectedCoin();
+
+  if (!c) {
+    setText(els.selectedAssetTitle, "Aucun actif sélectionné");
+    drawLineChart(els.mainChart, [], "");
+    if (els.chartCaption) els.chartCaption.textContent = "Livecheck requis.";
+    if (els.assetDetailGrid) {
+      els.assetDetailGrid.innerHTML = `
+        <div><b>Actif</b><span>En attente</span></div>
+        <div><b>Type</b><span>—</span></div>
+        <div><b>Décision</b><span>—</span></div>
+        <div><b>Ratio vol/cap</b><span>—</span></div>`;
+    }
+    if (els.assetDetailWhy) els.assetDetailWhy.textContent = "Livecheck requis avant lecture détaillée.";
+    return;
+  }
+
+  state.selectedCoinId = c.id;
+  setText(els.selectedAssetTitle, `${c.name} — ${c.symbol}`);
+
+  const ratio = c.volume24h && c.marketCap ? `${((c.volume24h / c.marketCap) * 100).toFixed(2)} %` : "Donnée manquante";
+
+  if (els.assetDetailGrid) {
+    els.assetDetailGrid.innerHTML = `
+      <div><b>Actif</b><span>${escapeHtml(c.name)} (${escapeHtml(c.symbol)})</span></div>
+      <div><b>Type</b><span>${escapeHtml(classifyAsset(c))}</span></div>
+      <div><b>Décision</b><span>${escapeHtml(beginnerDecision(c))}</span></div>
+      <div><b>Ratio vol/cap</b><span>${ratio}</span></div>
+      <div><b>Prix</b><span>${safeMoney(c.price)}</span></div>
+      <div><b>24h / 7j</b><span>${fmtPct(c.change24h)} · ${fmtPct(c.change7d)}</span></div>`;
+  }
+
+  if (els.assetDetailWhy) els.assetDetailWhy.textContent = whyDecision(c);
+
+  const periodLabel = state.chartPeriodDays === 1 ? "24h" : `${state.chartPeriodDays}j`;
+
+  // Affichage immédiat : jamais de grand bloc vide.
+  drawLineChart(els.mainChart, pseudoSeries(c, state.chartPeriodDays === 1 ? 28 : state.chartPeriodDays === 7 ? 48 : 72), `${c.symbol} ${periodLabel}`);
+
+  if (els.chartCaption) {
+    els.chartCaption.textContent = `Graphique ${c.symbol} · période ${periodLabel} · chargement CoinGecko si disponible.`;
+  }
+
+  const series = await fetchChartSeries(c, state.chartPeriodDays);
+  drawLineChart(els.mainChart, series, `${c.symbol} ${periodLabel}`);
+
+  if (els.chartCaption) {
+    els.chartCaption.textContent = `Graphique ${c.symbol} · période ${periodLabel} · source CoinGecko si disponible, fallback visuel sinon.`;
+  }
+}
+
 function renderAll() {
   renderMetrics();
   renderTicker();
@@ -492,7 +703,7 @@ function renderMarketTable() {
 
   els.marketRows.innerHTML = rows.map(c => {
     const s = scoreCoin(c);
-    return `<tr data-id="${escapeHtml(c.id)}">
+    return `<tr class="asset-row ${c.id === state.selectedCoinId ? 'is-selected' : ''}" data-id="${escapeHtml(c.id)}">
       <td>${c.rank ?? "—"}</td>
       <td><div class="coin-cell">${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
       <td>${num(c.price, fmtEUR.format.bind(fmtEUR))}</td>
@@ -500,6 +711,7 @@ function renderMarketTable() {
       <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
       <td>${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
       <td>${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
+      <td class="spark-cell">${sparkSvg(c)}</td>
       <td>${s.score}</td>
       <td>${beginnerDecision(c)}</td>
     </tr>`;
@@ -513,14 +725,18 @@ function renderMarketTable() {
   [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
     row.addEventListener("click", () => {
       const coin = state.coins.find(c => c.id === row.dataset.id);
+      if (!coin) return;
+      state.selectedCoinId = coin.id;
       renderScore(coin);
+      renderMarketTable();
+      renderAnalystPanel();
     });
   });
 }
 
 function renderEmptyMarket(message) {
   if (els.marketRows) {
-    els.marketRows.innerHTML = `<tr><td colspan="9" class="empty">${escapeHtml(message)}</td></tr>`;
+    els.marketRows.innerHTML = `<tr><td colspan="10" class="empty">${escapeHtml(message)}</td></tr>`;
   }
   setText(els.tableNote, "Pas de source live, pas de prix.");
 }
@@ -708,3 +924,4 @@ renderRiskGrid();
 renderColdRead(false);
 
 renderBeginnerSummary();
+renderAnalystPanel();

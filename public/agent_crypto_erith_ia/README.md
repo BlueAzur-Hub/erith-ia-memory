@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC5  
+Version : V1.0-RC6  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -288,3 +288,20 @@ Objectif : ajouter une couche visuelle inspirée des grands tableaux crypto, san
 ### Règle
 
 Les graphiques aident à observer. Ils ne donnent pas de conseil d’achat.
+
+
+---
+
+## V1.0-RC6 — Correction affichage graphiques
+
+Objectif : corriger RC5, où le bloc graphique existait mais le JavaScript ne pilotait pas encore correctement le canvas et le détail actif.
+
+### Correctifs
+
+- Graphique principal rendu immédiatement après Livecheck.
+- Fallback visuel immédiat pour éviter un panneau vide.
+- Chargement CoinGecko historique quand disponible.
+- Détail actif rempli après Livecheck.
+- Clic sur une ligne du tableau = graphique + détail + score mis à jour.
+- Périodes 24h / 7j / 30j actives.
+- Colonne mini-graph dans le tableau.

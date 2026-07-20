@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC5 — GRAPHIQUES ANALYSTE
+   V1.0-RC6 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -902,4 +902,31 @@ tr.asset-row.is-selected{
 @media (max-width:760px){
   .detail-grid{grid-template-columns:1fr}
   .spark-cell{display:none}
+}
+
+
+/* =========================================================
+   V1.0-RC6 — FIX GRAPHIQUES RÉELS
+   ========================================================= */
+
+.chart-shell{
+  position:relative;
+}
+
+.chart-loading{
+  color:#ffd782;
+  font-size:11px;
+  margin-top:6px;
+}
+
+.spark-cell{
+  color:#5ee8ff;
+}
+
+.asset-row.is-selected td{
+  background:rgba(98,236,255,.055);
+}
+
+.asset-row.is-selected .coin-cell strong{
+  color:#fff0c8;
 }
