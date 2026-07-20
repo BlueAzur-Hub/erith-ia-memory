@@ -1,7 +1,7 @@
 {
   "project": "Agent-Crypto @erith.IA",
-  "version": "1.0-RC10",
-  "status": "release candidate source diagnostic bottom only",
+  "version": "1.0-RC11",
+  "status": "release candidate crypto command layer",
   "target_path": "public/agent_crypto_erith_ia/",
   "web_entry": "public/agent_crypto_erith_ia/web/index.html",
   "generated": "2026-07-20",
@@ -42,10 +42,11 @@
   "name": "Agent-Crypto @erith.IA",
   "updated": "2026-07-20",
   "notes": [
-    "Suppression du diagnostic sources dupliqué en haut.",
-    "Diagnostic conservé dans Live Sources en bas.",
-    "Navigation supérieure allégée.",
-    "Note source critique ajoutée au panneau bas."
+    "Ajout Crypto Command Layer.",
+    "Commandes observation-only.",
+    "Commandes buy/sell/order/withdraw bloquées.",
+    "Exposition contrôlée window.AgentCryptoCommands pour future couche IA.",
+    "Préparation backend sécurisé Kraken/Bybit/Binance."
   ],
   "archives_yohan_policy": "frozen"
 }

@@ -60,7 +60,10 @@ const els = {
   sourceDiagnosticTitle: $("sourceDiagnosticTitle"),
   sourceDiagnosticNote: $("sourceDiagnosticNote"),
   sourceDiagnosticGrid: $("sourceDiagnosticGrid"),
-  sortSelect: $("sortSelect")
+  sortSelect: $("sortSelect"),
+  commandInput: $("commandInput"),
+  commandOutput: $("commandOutput"),
+  btnRunCommand: $("btnRunCommand")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -644,6 +647,261 @@ function sortAssets(rows) {
   return byNumber(c => c.rank ?? 999999, "asc");
 }
 
+
+function commandError(message, details = {}) {
+  return { ok: false, error: message, ...details };
+}
+
+function commandOk(command, payload) {
+  return {
+    ok: true,
+    command,
+    mode: "observation_only",
+    trading: "blocked",
+    timestamp: new Date().toISOString(),
+    payload
+  };
+}
+
+function normalizeSymbol(value) {
+  return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase();
+}
+
+function findCoinByQuery(query) {
+  const q = normalizeSymbol(query);
+  if (!q) return null;
+
+  return state.coins.find(c =>
+    String(c.symbol || "").toUpperCase() === q ||
+    String(c.id || "").toUpperCase() === q ||
+    String(c.name || "").toUpperCase() === q
+  ) || null;
+}
+
+function coinPayload(c) {
+  if (!c) return null;
+  const s = scoreCoin(c);
+  const ratio = c.volume24h && c.marketCap ? c.volume24h / c.marketCap : null;
+  return {
+    id: c.id,
+    rank: c.rank ?? null,
+    name: c.name,
+    symbol: c.symbol,
+    type: classifyAsset(c),
+    price_eur: c.price ?? null,
+    change_24h_pct: c.change24h ?? null,
+    change_7d_pct: c.change7d ?? null,
+    market_cap_eur: c.marketCap ?? null,
+    volume_24h_eur: c.volume24h ?? null,
+    volume_marketcap_ratio: ratio,
+    score: s.score,
+    score_label: s.label,
+    decision: beginnerDecision(c),
+    limits: ["no_contract_security", "no_social_validation", "no_onchain_validation", "not_financial_advice"]
+  };
+}
+
+function sourceHealthPayload() {
+  const total = liveSources.length;
+  const status = liveSources.map(src => {
+    const rec = state.sourceStatus.find(s => s.key === src.key);
+    return {
+      key: src.key,
+      name: src.name,
+      role: src.key === "coingecko" ? "critical_market_source" : "secondary_source",
+      kind: src.kind,
+      status: rec ? rec.status : "WAIT",
+      ms: rec?.ms ?? null,
+      detail: rec?.detail ?? "not_tested"
+    };
+  });
+
+  const ok = status.filter(s => s.status === "OK").length;
+  const fail = status.filter(s => s.status === "ÉCHEC").length;
+
+  return {
+    live_ok: state.liveOk,
+    main_source: state.mainSource,
+    total_sources: total,
+    successful_sources: ok,
+    failed_sources: fail,
+    tested_sources: state.sourceStatus.length,
+    critical_rule: "CoinGecko market must be OK to authorize table/prices/charts in this public build.",
+    sources: status
+  };
+}
+
+const CryptoCommands = {
+  help() {
+    return commandOk("help", {
+      available_commands: [
+        "market_snapshot",
+        "asset BTC",
+        "chart ETH 7d",
+        "compare BTC ETH",
+        "sources",
+        "category USDT",
+        "risk SOL"
+      ],
+      blocked_commands: ["buy", "sell", "order", "trade", "withdraw", "transfer"],
+      rule: "Observation only. No real trading from GitHub Pages."
+    });
+  },
+
+  market_snapshot() {
+    if (!state.liveOk || !state.coins.length) {
+      return commandError("Livecheck requis : aucune donnée marché fiable chargée.", sourceHealthPayload());
+    }
+
+    const btc = findCoinByQuery("BTC");
+    const eth = findCoinByQuery("ETH");
+
+    return commandOk("market_snapshot", {
+      source: state.mainSource,
+      timestamp: state.timestamp,
+      global: {
+        market_cap_eur: state.global?.total_market_cap?.eur ?? null,
+        volume_24h_eur: state.global?.total_volume?.eur ?? null,
+        btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null
+      },
+      loaded_assets: state.coins.length,
+      btc: coinPayload(btc),
+      eth: coinPayload(eth),
+      source_health: sourceHealthPayload()
+    });
+  },
+
+  asset(symbol) {
+    if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant lecture actif.", sourceHealthPayload());
+    const c = findCoinByQuery(symbol);
+    if (!c) return commandError(`Actif introuvable dans le top chargé : ${symbol}`, { loaded_assets: state.coins.length });
+    return commandOk(`asset ${symbol}`, coinPayload(c));
+  },
+
+  category(symbol) {
+    if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant classification.", sourceHealthPayload());
+    const c = findCoinByQuery(symbol);
+    if (!c) return commandError(`Actif introuvable : ${symbol}`);
+    return commandOk(`category ${symbol}`, {
+      symbol: c.symbol,
+      name: c.name,
+      category: classifyAsset(c),
+      reading: whyDecision(c)
+    });
+  },
+
+  risk(symbol) {
+    if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant lecture risque.", sourceHealthPayload());
+    const c = findCoinByQuery(symbol);
+    if (!c) return commandError(`Actif introuvable : ${symbol}`);
+    return commandOk(`risk ${symbol}`, {
+      asset: coinPayload(c),
+      risk_flags: [
+        "contract_security_not_checked",
+        "social_signal_not_checked",
+        "onchain_signal_not_checked",
+        "public_market_data_only"
+      ],
+      no_fomo_rule: "Une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.",
+      conclusion: "Observation only. Human validation required."
+    });
+  },
+
+  sources() {
+    return commandOk("sources", sourceHealthPayload());
+  },
+
+  chart(symbol, period = "24h") {
+    if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant graphique.", sourceHealthPayload());
+    const c = findCoinByQuery(symbol);
+    if (!c) return commandError(`Actif introuvable : ${symbol}`);
+
+    const normalized = String(period || "24h").toLowerCase();
+    const days = normalized.includes("30") ? 30 : normalized.includes("7") ? 7 : 1;
+
+    state.selectedCoinId = c.id;
+    state.chartPeriodDays = days;
+    document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
+      btn.classList.toggle("active", Number(btn.dataset.period) === days);
+    });
+    renderScore(c);
+    renderMarketTable();
+    requestAnimationFrame(() => renderAnalystPanel());
+
+    return commandOk(`chart ${symbol} ${period}`, {
+      selected_asset: coinPayload(c),
+      period_days: days,
+      action: "chart_panel_updated"
+    });
+  },
+
+  compare(symbolA, symbolB) {
+    if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant comparaison.", sourceHealthPayload());
+    const a = findCoinByQuery(symbolA);
+    const b = findCoinByQuery(symbolB);
+    if (!a || !b) return commandError("Comparaison impossible : un actif est introuvable.", { symbolA, foundA: !!a, symbolB, foundB: !!b });
+
+    const ap = coinPayload(a);
+    const bp = coinPayload(b);
+
+    return commandOk(`compare ${symbolA} ${symbolB}`, {
+      left: ap,
+      right: bp,
+      delta: {
+        price_eur: (a.price ?? 0) - (b.price ?? 0),
+        change_24h_pct: (a.change24h ?? 0) - (b.change24h ?? 0),
+        change_7d_pct: (a.change7d ?? 0) - (b.change7d ?? 0),
+        market_cap_eur: (a.marketCap ?? 0) - (b.marketCap ?? 0),
+        volume_24h_eur: (a.volume24h ?? 0) - (b.volume24h ?? 0),
+        score: (ap.score ?? 0) - (bp.score ?? 0)
+      },
+      warning: "Comparison is observational; it does not rank investment quality."
+    });
+  }
+};
+
+function parseCommandLine(input) {
+  const raw = String(input || "").trim();
+  if (!raw) return commandError("Commande vide. Tape help.");
+
+  const parts = raw.split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+
+  if (["buy", "sell", "order", "trade", "withdraw", "transfer"].includes(cmd)) {
+    return commandError("Commande bloquée : aucun ordre réel, retrait ou transfert depuis cette interface publique.", {
+      command: raw,
+      rule: "Trading must require backend, API keys protected, dry-run, logs, limits, and human validation."
+    });
+  }
+
+  if (cmd === "help") return CryptoCommands.help();
+  if (cmd === "market_snapshot" || cmd === "snapshot" || cmd === "market") return CryptoCommands.market_snapshot();
+  if (cmd === "asset" || cmd === "quote") return CryptoCommands.asset(parts[1]);
+  if (cmd === "chart" || cmd === "graph") return CryptoCommands.chart(parts[1], parts[2] || "24h");
+  if (cmd === "compare") return CryptoCommands.compare(parts[1], parts[2]);
+  if (cmd === "sources" || cmd === "health" || cmd === "source_health") return CryptoCommands.sources();
+  if (cmd === "category" || cmd === "cat") return CryptoCommands.category(parts[1]);
+  if (cmd === "risk" || cmd === "risk_readout") return CryptoCommands.risk(parts[1]);
+
+  return commandError(`Commande inconnue : ${cmd}`, {
+    hint: "Tape help.",
+    received: raw
+  });
+}
+
+function renderCommandOutput(result) {
+  if (!els.commandOutput) return;
+  els.commandOutput.textContent = JSON.stringify(result, null, 2);
+}
+
+function runCommandFromInput(commandText = null) {
+  const text = commandText ?? els.commandInput?.value ?? "";
+  if (els.commandInput && commandText !== null) els.commandInput.value = commandText;
+  const result = parseCommandLine(text);
+  if (els.commandOutput) els.commandOutput.dataset.userRan = "1";
+  renderCommandOutput(result);
+}
+
 function renderAll() {
   renderMetrics();
   renderTicker();
@@ -656,6 +914,9 @@ function renderAll() {
 
   requestAnimationFrame(() => {
     renderAnalystPanel();
+    if (els.commandOutput && !els.commandOutput.dataset.userRan) {
+      renderCommandOutput(CryptoCommands.market_snapshot());
+    }
   });
 }
 
@@ -860,7 +1121,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V0.8</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC11</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -940,7 +1201,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC10.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC11.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -994,6 +1255,17 @@ function seedWatch() {
   state.watchIds = ["bitcoin", "ethereum", "solana", "chainlink", "render-token", "near"];
   renderWatchlist();
 }
+
+
+els.btnRunCommand?.addEventListener("click", () => runCommandFromInput());
+els.commandInput?.addEventListener("keydown", event => {
+  if (event.key === "Enter") runCommandFromInput();
+});
+document.querySelectorAll(".cmd-preset[data-command]").forEach(btn => {
+  btn.addEventListener("click", () => runCommandFromInput(btn.dataset.command));
+});
+
+window.AgentCryptoCommands = CryptoCommands;
 
 $("btnLivecheck")?.addEventListener("click", runLivecheck);
 $("btnRefresh")?.addEventListener("click", runLivecheck);

@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC10  
+Version : V1.0-RC11  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -406,3 +406,38 @@ Objectif : respecter l’ergonomie validée.
 ### Raison
 
 Le diagnostic existait déjà en bas et y était plus lisible. RC9 le dupliquait inutilement en haut.
+
+
+---
+
+## V1.0-RC11 — Crypto Command Layer
+
+Objectif : préparer une couche de commandes IA propre, inspirée des architectures CLI/API, sans exposer de clés privées et sans trading réel.
+
+### Commandes ajoutées
+
+```text
+help
+market_snapshot
+asset BTC
+chart ETH 7d
+compare BTC ETH
+sources
+category USDT
+risk SOL
+```
+
+### Règles de sécurité
+
+```text
+Aucun buy.
+Aucun sell.
+Aucun order.
+Aucun withdraw.
+Aucune clé privée dans GitHub Pages.
+Aucun wallet réel dans le frontend public.
+```
+
+### Rôle
+
+Cette couche prépare une future intégration Kraken / Bybit / Binance via backend sécurisé, dry-run, logs, limites et validation humaine.

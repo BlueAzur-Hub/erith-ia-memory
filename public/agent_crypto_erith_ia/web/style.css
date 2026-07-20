@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC10 — STABILISATION
+   V1.0-RC11 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC10 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC11 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC10 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC11 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC10 — GRAPHIQUES ANALYSTE
+   V1.0-RC11 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC10 — FIX GRAPHIQUES RÉELS
+   V1.0-RC11 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC10 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC11 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC10 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC11 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC10 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC11 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC10 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC11 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1125,4 +1125,110 @@ tr.asset-row.is-selected{
 #sources .source-grid,
 .live-sources .source-grid{
   margin-top:8px;
+}
+
+
+/* =========================================================
+   V1.0-RC11 — CRYPTO COMMAND LAYER
+   ========================================================= */
+
+.command-layer{
+  margin-top:8px;
+}
+
+.command-intro{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0 0;
+}
+
+.command-presets{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:10px 0;
+}
+
+.cmd-preset{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:#fff0c8;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.cmd-preset:hover{
+  background:rgba(98,236,255,.16);
+  border-color:rgba(98,236,255,.42);
+}
+
+.command-line{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:8px;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  border-radius:14px;
+  padding:8px;
+}
+
+.command-line .prompt{
+  color:#5ee8ff;
+  font-weight:1000;
+  font-size:14px;
+}
+
+.command-line input{
+  border:0;
+  background:transparent;
+  color:#fff;
+  outline:0;
+  font-size:12px;
+  font-weight:700;
+}
+
+.command-output{
+  margin:10px 0 0;
+  min-height:150px;
+  max-height:340px;
+  overflow:auto;
+  white-space:pre-wrap;
+  border:1px solid rgba(98,236,255,.16);
+  background:rgba(2,12,24,.50);
+  color:#dff6ff;
+  border-radius:14px;
+  padding:12px;
+  font-size:11px;
+  line-height:1.45;
+}
+
+.command-safety{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:8px;
+}
+
+.command-safety span{
+  border:1px solid rgba(255,215,130,.22);
+  background:rgba(255,215,130,.055);
+  color:#ffe6ac;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:9px;
+  font-weight:900;
+}
+
+@media (max-width:720px){
+  .command-line{
+    grid-template-columns:auto 1fr;
+  }
+  .command-line button{
+    grid-column:1 / -1;
+  }
 }

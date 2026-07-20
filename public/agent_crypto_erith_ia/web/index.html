@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC10</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC11</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc10" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc11" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC10</span>
+          <span class="pill ok">GitHub Pack V1.0-RC11</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -32,6 +32,7 @@
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
+        <a href="#commandes">Commandes IA</a>
         <a href="#math">Math Model</a>
         <a href="#risques">Risques</a>
         <a href="#nofomo">No-FOMO</a>
@@ -178,7 +179,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC8</p>
+        <p class="eyebrow">VERROU RC11</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -314,6 +315,45 @@
       </article>
     </section>
 
+
+    <section class="panel glass command-layer" id="commandes">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">CRYPTO COMMAND LAYER</p>
+          <h2>Commandes IA contrôlées</h2>
+          <p class="command-intro">
+            Couche de commande propre : observation, diagnostic, comparaison, risque. Aucun ordre réel, aucune clé privée, aucun wallet exposé.
+          </p>
+        </div>
+        <span class="pill warn">Dry-run only</span>
+      </div>
+
+      <div class="command-presets" aria-label="Commandes rapides">
+        <button class="cmd-preset" data-command="help">help</button>
+        <button class="cmd-preset" data-command="market_snapshot">market_snapshot</button>
+        <button class="cmd-preset" data-command="asset BTC">asset BTC</button>
+        <button class="cmd-preset" data-command="chart BTC 24h">chart BTC 24h</button>
+        <button class="cmd-preset" data-command="compare BTC ETH">compare BTC ETH</button>
+        <button class="cmd-preset" data-command="sources">sources</button>
+        <button class="cmd-preset" data-command="risk SOL">risk SOL</button>
+      </div>
+
+      <div class="command-line">
+        <span class="prompt">&gt;</span>
+        <input id="commandInput" type="text" placeholder="Exemples : asset BTC · chart ETH 7d · compare BTC SOL · sources · risk USDT" autocomplete="off" />
+        <button class="btn small primary" id="btnRunCommand">Exécuter</button>
+      </div>
+
+      <pre class="command-output" id="commandOutput">Commande prête. Lance Livecheck puis teste : help, market_snapshot, asset BTC, chart ETH 7d, compare BTC ETH.</pre>
+
+      <div class="command-safety">
+        <span>Aucun buy/sell/order autorisé.</span>
+        <span>Mode public GitHub Pages.</span>
+        <span>Prépare Kraken / Bybit / Binance plus tard, via backend sécurisé.</span>
+      </div>
+    </section>
+
+
     <section class="panel glass" id="sources">
       <div class="section-head">
         <div>
@@ -324,15 +364,15 @@
         <span class="pill" id="sourceDecision">Refusé avant Livecheck</span>
       </div>
       <div class="source-grid" id="sourceGrid"></div>
-      <p class="source-help">Les sources avec clé API privée ne doivent jamais être exposées dans GitHub Pages. Cette V0.3 privilégie les endpoints publics et un refus propre en cas d’échec.</p>
+      <p class="source-help">Les sources avec clé API privée ne doivent jamais être exposées dans GitHub Pages. Cette version publique privilégie les endpoints publics et un refus propre en cas d’échec.</p>
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC10</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC11</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc10"></script>
+  <script src="./app.js?v=1.0-rc11"></script>
 </body>
 </html>
