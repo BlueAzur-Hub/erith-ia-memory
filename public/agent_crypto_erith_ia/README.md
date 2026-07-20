@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.8  
+Version : V1.0-RC1  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -176,3 +176,45 @@ Objectif : arrêter la boucle design et corriger les vrais défauts fonctionnels
   elle passe en mode live quand une source réelle est active.
 - Aucun changement de règle :
   pas de source live, pas de prix.
+
+
+---
+
+## Changelog V0.9
+
+Objectif : micro-correction après validation de la V0.8.
+
+- Correction du champ `Décision tableau` :
+  il passe maintenant bien à `Autorisé · source réelle` après Livecheck OK.
+- Le ticker garde un temps d’arrêt au départ pour éviter d’être coupé à gauche.
+- Aucun changement dans `archives_yohan/`.
+- Recommandation : ne plus mettre à jour `archives_yohan/` à chaque version.
+  Ce dossier doit rester une archive historique figée.
+
+
+---
+
+## V1.0-RC1 — Version candidate stabilisée
+
+Cette version regroupe les corrections utiles sans toucher aux archives historiques.
+
+### Inclus
+
+- Titre sur une ligne : `Agent-Crypto @erith.IA`.
+- Interface compacte de type cockpit.
+- Livecheck multi-sources.
+- CoinGecko comme source marché principale.
+- Tableau marché actif après Livecheck OK.
+- Score Observation actif après récupération des données.
+- Ticker lisible avec couleurs distinctes.
+- Lecture froide synchronisée avec l’état live.
+- Décision tableau synchronisée entre header et panneau sources.
+- Dossier `archives_yohan/` laissé figé.
+
+### Règle inchangée
+
+```text
+Pas de source live, pas de prix.
+Pas de données récupérées, pas de tableau chiffré.
+Pas de tableau fictif.
+```

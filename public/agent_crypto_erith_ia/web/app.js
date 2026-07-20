@@ -15,6 +15,7 @@ const els = {
   sourceName: $("sourceName"),
   sourceTime: $("sourceTime"),
   sourceDecision: $("sourceDecision"),
+  tableDecision: $("tableDecision"),
   offlineNotice: $("offlineNotice"),
   tickerTrack: $("tickerTrack"),
   marketRows: $("marketRows"),
@@ -51,6 +52,17 @@ const clamp = (min, max, value) => Math.max(min, Math.min(max, value));
 
 function setText(el, value) {
   if (el) el.textContent = value;
+}
+
+function setTableDecision(text, mode = "") {
+  setText(els.sourceDecision, text);
+  setText(els.tableDecision, text);
+
+  for (const el of [els.sourceDecision, els.tableDecision]) {
+    if (!el) continue;
+    el.classList.remove("ok", "fail", "warn");
+    if (mode) el.classList.add(mode);
+  }
 }
 
 function setHTML(el, value) {
@@ -190,7 +202,7 @@ function updateSourceMetric(doneOverride = null) {
 
 async function runLivecheck() {
   setLiveStatus("warn", "Livecheck en cours");
-  setText(els.sourceDecision, "Tests sources en cours");
+  setTableDecision("Tests sources en cours", "warn");
   setText(els.sourceName, "Recherche...");
   setText(els.sourceTime, "—");
 
@@ -206,6 +218,7 @@ async function runLivecheck() {
   renderEmptyMarket("Livecheck en cours. Aucun chiffre inventé.");
   renderScore(null);
   renderColdRead(false);
+setTableDecision("Refusé avant Livecheck", "fail");
 
   for (const src of liveSources) {
     const started = performance.now();
@@ -239,7 +252,7 @@ async function runLivecheck() {
     setLiveStatus("ok", "Livecheck OK");
     setText(els.sourceName, state.mainSource);
     setText(els.sourceTime, new Date(state.timestamp).toLocaleString("fr-FR"));
-    setText(els.sourceDecision, "Autorisé · source réelle");
+    setTableDecision("Autorisé · source réelle", "ok");
     if (els.offlineNotice) els.offlineNotice.style.display = "none";
     renderAll();
   } else {
@@ -250,7 +263,7 @@ async function runLivecheck() {
     }
     setText(els.sourceName, "Aucune source marché exploitable");
     setText(els.sourceTime, "—");
-    setText(els.sourceDecision, "Refusé · pas de source live");
+    setTableDecision("Refusé · pas de source live", "fail");
     renderEmptyMarket("RECHERCHE LIVE ÉCHOUÉE — pas de tableau fictif.");
     renderColdRead(false);
   }

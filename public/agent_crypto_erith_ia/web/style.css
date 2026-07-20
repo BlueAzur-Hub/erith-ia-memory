@@ -595,3 +595,73 @@ td.empty{
     animation-duration:170s !important;
   }
 }
+
+
+/* =========================================================
+   V0.9 — MICRO-FIX: DECISION TABLE + TICKER SAFE START
+   ========================================================= */
+
+.ticker{
+  padding-left:8px !important;
+  padding-right:8px !important;
+}
+
+.ticker-track{
+  animation-name:ticker-safe !important;
+  transform:translateX(0);
+}
+
+@keyframes ticker-safe{
+  0%{transform:translateX(0)}
+  8%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+.live-decision.ok strong,
+#tableDecision.ok{
+  color:#72f0aa !important;
+}
+
+.live-decision.fail strong,
+#tableDecision.fail{
+  color:#ffad4c !important;
+}
+
+
+/* =========================================================
+   V1.0-RC1 — STABILISATION
+   ========================================================= */
+
+#tableDecision.ok,
+.live-decision strong.ok{
+  color:#72f0aa !important;
+}
+
+#tableDecision.fail,
+.live-decision strong.fail{
+  color:#ffad4c !important;
+}
+
+#sourceDecision.ok{
+  border-color:rgba(71,223,145,.44) !important;
+  background:rgba(71,223,145,.15) !important;
+  color:#c4fbdc !important;
+}
+
+#sourceDecision.fail{
+  border-color:rgba(255,171,76,.45) !important;
+  background:rgba(255,171,76,.10) !important;
+  color:#ffe4a8 !important;
+}
+
+.ticker-track{
+  color:#dceaff !important;
+}
+
+tr[data-id]{
+  cursor:pointer;
+}
+
+tr[data-id]:hover{
+  background:rgba(98,236,255,.055);
+}
