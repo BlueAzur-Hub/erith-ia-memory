@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.1-alpha.3  
+Version : V1.1-alpha.4  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -944,7 +944,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.3 — Profil Solo Débutant 100 €
+## V1.1-alpha.4 — Profil Solo Débutant 100 €
 
 Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
 
@@ -976,7 +976,7 @@ Aucun retrait.
 
 ---
 
-## V1.1-alpha.3 — Refus visibles + Data Roadmap
+## V1.1-alpha.4 — Refus visibles + Data Roadmap
 
 Correction du test profil 100 € :
 
@@ -992,7 +992,7 @@ Ajout :
 
 ---
 
-## V1.1-alpha.3 — Mode École guidé
+## V1.1-alpha.4 — Mode École guidé
 
 Objectif : rendre le simulateur compréhensible par un non-technicien.
 
@@ -1017,7 +1017,7 @@ Aucun trading réel ajouté.
 
 ---
 
-## V1.1-alpha.3 — Journal pédagogique + Data Collector public
+## V1.1-alpha.4 — Journal pédagogique + Data Collector public
 
 Objectif : transformer les tests en mémoire exploitable.
 
@@ -1039,3 +1039,36 @@ Aucune donnée personnelle.
 ### Direction
 
 Prépare la future base locale sur PC Ryzen 7.
+
+
+---
+
+## V1.1-alpha.4 — Data Collector local
+
+Objectif : commencer une mémoire qui grossit sans backend.
+
+### Ajouts
+
+- Enregistrer snapshot maintenant.
+- Voir mémoire locale.
+- Exporter mémoire JSON.
+- Exporter mémoire JSONL.
+- Effacer mémoire locale.
+- Compteur de snapshots.
+- Dernier enregistrement.
+
+### Stockage
+
+LocalStorage navigateur.
+
+### Sécurité
+
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun compte exchange.
+Aucun ordre réel.
+Aucune donnée personnelle.
+
+### Direction
+
+Prépare la future base locale Ryzen 7.

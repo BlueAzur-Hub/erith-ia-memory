@@ -82,7 +82,15 @@ const els = {
   btnBuildSimSummary: $("btnBuildSimSummary"),
   btnDownloadLearningJournal: $("btnDownloadLearningJournal"),
   btnDownloadSimJSON: $("btnDownloadSimJSON"),
-  simLearningOutput: $("simLearningOutput")
+  simLearningOutput: $("simLearningOutput"),
+  btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"),
+  btnShowCollectorMemory: $("btnShowCollectorMemory"),
+  btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"),
+  btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"),
+  btnClearCollectorMemory: $("btnClearCollectorMemory"),
+  collectorCount: $("collectorCount"),
+  collectorLast: $("collectorLast"),
+  collectorOutput: $("collectorOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -763,7 +771,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_3",
+  key: "solo_beginner_100_v1_1_alpha_4",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -772,7 +780,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_3";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_4";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1016,7 +1024,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.3",
+    version: "V1.1-alpha.4",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1124,7 +1132,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.3",
+    version: "V1.1-alpha.4",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2169,7 +2177,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.3</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.4</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2249,7 +2257,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.3.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.4.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2339,7 +2347,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.3",
+    version: "V1.1-alpha.4",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2414,7 +2422,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.3`,
+    `Version : V1.1-alpha.4`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2510,6 +2518,194 @@ function downloadSimulationJSON() {
       "- aucun wallet ;",
       "- aucun compte réel ;",
       "- aucune donnée personnelle."
+    ].join("\n");
+  }
+}
+
+
+
+const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_4";
+const COLLECTOR_MAX_RECORDS = 500;
+
+function readCollectorMemory() {
+  try {
+    const raw = localStorage.getItem(COLLECTOR_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCollectorMemory(records) {
+  const safe = Array.isArray(records) ? records.slice(-COLLECTOR_MAX_RECORDS) : [];
+  localStorage.setItem(COLLECTOR_STORAGE_KEY, JSON.stringify(safe));
+  renderCollectorStatus();
+  return safe;
+}
+
+function collectorRecordReasonFromLogs(logs) {
+  const messages = (logs || []).map(l => String(l.message || "")).join(" | ");
+  const reasons = [];
+  if (messages.includes("maximum par opération")) reasons.push("montant_trop_gros");
+  if (messages.includes("refusé. Autorisés")) reasons.push("crypto_non_autorisee");
+  if (messages.includes("réserve minimale")) reasons.push("plafond_ou_reserve");
+  if ((logs || []).some(l => l.type === "SIM_BUY")) reasons.push("achat_simule");
+  if ((logs || []).some(l => l.type === "SIM_SELL")) reasons.push("vente_simulee");
+  return reasons.length ? reasons : ["observation"];
+}
+
+function makeCollectorRecord() {
+  const snapshot = simulationDataSnapshot();
+  const logs = snapshot?.simulation?.logs || [];
+  const marketAssets = snapshot?.market_snapshot?.assets || [];
+  return {
+    id: `snapshot_${Date.now()}`,
+    saved_at: new Date().toISOString(),
+    version: "V1.1-alpha.4",
+    public_only: true,
+    source: snapshot?.market_snapshot?.source || "source live",
+    live_ok: !!snapshot?.market_snapshot?.live_ok,
+    symbols: marketAssets.map(a => a.symbol),
+    learning_tags: collectorRecordReasonFromLogs(logs),
+    snapshot
+  };
+}
+
+function renderCollectorStatus() {
+  const records = readCollectorMemory();
+  if (els.collectorCount) {
+    els.collectorCount.textContent = records.length === 1 ? "1 snapshot enregistré" : `${records.length} snapshots enregistrés`;
+  }
+
+  const last = records[records.length - 1];
+  if (els.collectorLast) {
+    els.collectorLast.textContent = last?.saved_at
+      ? new Date(last.saved_at).toLocaleString("fr-FR")
+      : "Aucun";
+  }
+}
+
+function collectorPreview(records) {
+  if (!records.length) {
+    return [
+      "Mémoire locale vide.",
+      "",
+      "Conseil :",
+      "1. Lance Livecheck.",
+      "2. Lance quelques tests guidés.",
+      "3. Clique “Enregistrer snapshot maintenant”."
+    ].join("\n");
+  }
+
+  const last = records[records.length - 1];
+  const lines = [
+    "MÉMOIRE LOCALE — DATA COLLECTOR",
+    "",
+    `Snapshots enregistrés : ${records.length}`,
+    `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`,
+    `Symboles : ${(last.symbols || []).join(" / ") || "—"}`,
+    `Tags apprentissage : ${(last.learning_tags || []).join(", ")}`,
+    "",
+    "Derniers enregistrements :"
+  ];
+
+  records.slice(-8).reverse().forEach((record, index) => {
+    const totals = record?.snapshot?.totals || {};
+    const exposure = totals.positions_value_eur ?? record?.snapshot?.profile?.current_exposure_eur ?? 0;
+    lines.push(
+      `${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · exposé ${fmtEUR.format(Number(exposure) || 0)} · ${(record.learning_tags || []).join(", ")}`
+    );
+  });
+
+  lines.push("");
+  lines.push("Sécurité : mémoire locale navigateur uniquement. Aucune clé, aucun wallet, aucun compte réel.");
+  return lines.join("\n");
+}
+
+function showCollectorMemory() {
+  const records = readCollectorMemory();
+  renderCollectorStatus();
+  if (els.collectorOutput) els.collectorOutput.textContent = collectorPreview(records);
+}
+
+function saveCollectorSnapshot() {
+  const records = readCollectorMemory();
+  const record = makeCollectorRecord();
+  records.push(record);
+  const saved = writeCollectorMemory(records);
+
+  if (els.collectorOutput) {
+    els.collectorOutput.textContent = [
+      "SNAPSHOT ENREGISTRÉ",
+      "",
+      `Heure : ${new Date(record.saved_at).toLocaleString("fr-FR")}`,
+      `Mémoire locale : ${saved.length}/${COLLECTOR_MAX_RECORDS} snapshots`,
+      `Symboles : ${(record.symbols || []).join(" / ") || "—"}`,
+      `Tags : ${(record.learning_tags || []).join(", ")}`,
+      "",
+      "Ce snapshot contient :",
+      "- profil 100 € ;",
+      "- simulation locale ;",
+      "- positions fictives ;",
+      "- logs pédagogiques ;",
+      "- données publiques BTC / ETH / SOL si Livecheck est actif.",
+      "",
+      "Il ne contient pas :",
+      "- clé API ;",
+      "- wallet ;",
+      "- compte réel ;",
+      "- seed phrase ;",
+      "- ordre réel."
+    ].join("\n");
+  }
+}
+
+function downloadCollectorJSON() {
+  const records = readCollectorMemory();
+  const payload = {
+    exported_at: new Date().toISOString(),
+    version: "V1.1-alpha.4",
+    public_only: true,
+    warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
+    count: records.length,
+    records
+  };
+  downloadTextFile(
+    `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.json`,
+    "application/json",
+    JSON.stringify(payload, null, 2)
+  );
+  showCollectorMemory();
+}
+
+function downloadCollectorJSONL() {
+  const records = readCollectorMemory();
+  const header = {
+    exported_at: new Date().toISOString(),
+    version: "V1.1-alpha.4",
+    public_only: true,
+    type: "agent_crypto_collector_memory_jsonl_header"
+  };
+  const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))];
+  downloadTextFile(
+    `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`,
+    "application/x-ndjson",
+    lines.join("\n")
+  );
+  showCollectorMemory();
+}
+
+function clearCollectorMemory() {
+  localStorage.removeItem(COLLECTOR_STORAGE_KEY);
+  renderCollectorStatus();
+  if (els.collectorOutput) {
+    els.collectorOutput.textContent = [
+      "MÉMOIRE LOCALE EFFACÉE",
+      "",
+      "Le Data Collector local est revenu à zéro.",
+      "Cela ne touche pas GitHub.",
+      "Cela ne touche aucun compte réel."
     ].join("\n");
   }
 }
@@ -2664,6 +2860,14 @@ function runSchoolTest(testName) {
 
 
 
+
+
+els.btnSaveCollectorSnapshot?.addEventListener("click", saveCollectorSnapshot);
+els.btnShowCollectorMemory?.addEventListener("click", showCollectorMemory);
+els.btnDownloadCollectorJSON?.addEventListener("click", downloadCollectorJSON);
+els.btnDownloadCollectorJSONL?.addEventListener("click", downloadCollectorJSONL);
+els.btnClearCollectorMemory?.addEventListener("click", clearCollectorMemory);
+renderCollectorStatus();
 
 els.btnBuildSimSummary?.addEventListener("click", renderLearningSummary);
 els.btnDownloadLearningJournal?.addEventListener("click", downloadLearningJournal);
