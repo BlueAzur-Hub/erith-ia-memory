@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC8  
+Version : V1.0-RC9  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -353,3 +353,37 @@ Objectif : corriger deux points d’ergonomie.
   - sources interrogées ;
   - échecs.
 - Le rouge est expliqué : il signifie source marché principale indisponible, pas erreur utilisateur.
+
+
+---
+
+## V1.0-RC9 — Diagnostic sources + filtres/tri
+
+Objectif : rendre visible la source exacte qui échoue et améliorer la navigation dans le tableau.
+
+### Ajouts
+
+- Panneau `Diagnostic sources` visible en haut.
+- CoinGecko marqué comme source critique.
+- Sources secondaires distinguées.
+- État par source :
+  - OK ;
+  - ÉCHEC ;
+  - en attente ;
+  - temps de réponse ;
+  - détail.
+- Explication claire :
+  si CoinGecko échoue, le tableau reste bloqué même si des sources secondaires répondent.
+- Filtres du tableau :
+  - Tous ;
+  - BTC / ETH ;
+  - Stablecoins ;
+  - Altcoins majeurs ;
+  - Spéculatifs.
+- Tri du tableau :
+  - rang marché ;
+  - score ;
+  - volume ;
+  - hausse 24h ;
+  - baisse 24h ;
+  - ratio volume / market cap.

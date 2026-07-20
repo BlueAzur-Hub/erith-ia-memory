@@ -8,7 +8,9 @@ const state = {
   sourceStatus: [],
   selectedCoinId: "bitcoin",
   chartPeriodDays: 1,
-  chartCache: {}
+  chartCache: {},
+  assetFilter: "all",
+  sortKey: "rank-asc"
 };
 
 const $ = (id) => document.getElementById(id);
@@ -54,7 +56,11 @@ const els = {
   chartCaption: $("chartCaption"),
   assetDetailGrid: $("assetDetailGrid"),
   assetDetailWhy: $("assetDetailWhy"),
-  trustLockText: $("trustLockText")
+  trustLockText: $("trustLockText"),
+  sourceDiagnosticTitle: $("sourceDiagnosticTitle"),
+  sourceDiagnosticNote: $("sourceDiagnosticNote"),
+  sourceDiagnosticGrid: $("sourceDiagnosticGrid"),
+  sortSelect: $("sortSelect")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -593,6 +599,83 @@ async function renderAnalystPanel() {
   }
 }
 
+
+function getSourceRecord(key) {
+  return state.sourceStatus.find(s => s.key === key) || null;
+}
+
+function renderSourceDiagnostic() {
+  if (!els.sourceDiagnosticGrid) return;
+
+  const total = liveSources.length;
+  const done = state.sourceStatus.length;
+  const ok = state.sourceStatus.filter(s => s.status === "OK").length;
+  const coingecko = getSourceRecord("coingecko");
+
+  if (!done) {
+    setText(els.sourceDiagnosticTitle, "En attente Livecheck");
+    setText(els.sourceDiagnosticNote, "CoinGecko est critique : sans lui, le tableau marché reste bloqué même si des sources secondaires répondent.");
+  } else if (state.liveOk) {
+    setText(els.sourceDiagnosticTitle, `Source marché OK · ${ok}/${total} réussies`);
+    setText(els.sourceDiagnosticNote, "CoinGecko marché répond : tableau, prix et graphiques autorisés. Les échecs secondaires restent visibles mais ne bloquent pas le marché.");
+  } else if (coingecko && coingecko.status !== "OK") {
+    setText(els.sourceDiagnosticTitle, `Source marché critique en échec · ${ok}/${total} réussies`);
+    setText(els.sourceDiagnosticNote, "Rouge parce que CoinGecko marché n’a pas répondu : l’interface bloque volontairement le tableau, même si des sources secondaires répondent.");
+  } else {
+    setText(els.sourceDiagnosticTitle, `Tests sources en cours · ${done}/${total} interrogées`);
+    setText(els.sourceDiagnosticNote, "Le Livecheck interroge toutes les sources. Le tableau devient autorisé uniquement quand la source marché principale est exploitable.");
+  }
+
+  els.sourceDiagnosticGrid.innerHTML = liveSources.map(source => {
+    const rec = getSourceRecord(source.key);
+    const status = rec ? rec.status : "EN ATTENTE";
+    const css = rec ? (rec.status === "OK" ? "ok" : "fail") : "wait";
+    const detail = rec ? escapeHtml(rec.detail || "") : "Non interrogée";
+    const ms = rec?.ms ? `${rec.ms} ms` : "—";
+    const role = source.key === "coingecko" ? "Source marché principale" : "Source secondaire";
+    return `<div class="diagnostic-source ${css} ${source.key === "coingecko" ? "critical" : ""}">
+      <b>${escapeHtml(source.name)}</b>
+      <span>${escapeHtml(role)}</span>
+      <span>${escapeHtml(status)} · ${ms}</span>
+      <span>${detail}</span>
+    </div>`;
+  }).join("");
+}
+
+function matchAssetFilter(c) {
+  const type = classifyAsset(c);
+  if (state.assetFilter === "pillar") return type === "Pilier marché";
+  if (state.assetFilter === "stablecoin") return type === "Stablecoin";
+  if (state.assetFilter === "major") return type === "Altcoin majeur";
+  if (state.assetFilter === "speculative") return type === "Token spéculatif" || type === "Altcoin";
+  return true;
+}
+
+function volCapRatio(c) {
+  return c?.volume24h && c?.marketCap ? c.volume24h / c.marketCap : 0;
+}
+
+function sortAssets(rows) {
+  const list = [...rows];
+  const key = state.sortKey || "rank-asc";
+
+  const byNumber = (getter, dir = "desc") => list.sort((a, b) => {
+    const av = Number(getter(a));
+    const bv = Number(getter(b));
+    const aa = Number.isFinite(av) ? av : -Infinity;
+    const bb = Number.isFinite(bv) ? bv : -Infinity;
+    return dir === "asc" ? aa - bb : bb - aa;
+  });
+
+  if (key === "score-desc") return byNumber(c => scoreCoin(c).score ?? -1, "desc");
+  if (key === "volume-desc") return byNumber(c => c.volume24h ?? -1, "desc");
+  if (key === "change24-desc") return byNumber(c => c.change24h ?? -Infinity, "desc");
+  if (key === "change24-asc") return byNumber(c => c.change24h ?? Infinity, "asc");
+  if (key === "ratio-desc") return byNumber(c => volCapRatio(c), "desc");
+
+  return byNumber(c => c.rank ?? 999999, "asc");
+}
+
 function renderAll() {
   renderMetrics();
   renderTicker();
@@ -698,9 +781,11 @@ function renderMarketTable() {
   }
 
   const q = (els.searchInput?.value || "").toLowerCase().trim();
-  const rows = state.coins
+  const filtered = state.coins
     .filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q))
-    .slice(0, 30);
+    .filter(matchAssetFilter);
+
+  const rows = sortAssets(filtered).slice(0, 50);
 
   if (!rows.length) {
     renderEmptyMarket("Aucun actif ne correspond au filtre.");
@@ -725,7 +810,7 @@ function renderMarketTable() {
 
   setText(
     els.tableNote,
-    `Données récupérées depuis ${state.mainSource}. Heure : ${new Date(state.timestamp).toLocaleString("fr-FR")}. Sécurité contrat non validée par cette table.`
+    `${rows.length}/${filtered.length} actifs affichés · filtre : ${state.assetFilter} · tri : ${state.sortKey}. Source : ${state.mainSource}.`
   );
 
   [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
@@ -813,12 +898,16 @@ function renderRiskGrid() {
 }
 
 function renderSourceGrid() {
-  if (!els.sourceGrid) return;
+  if (!els.sourceGrid) {
+    renderSourceDiagnostic();
+    return;
+  }
 
   if (!state.sourceStatus.length) {
     els.sourceGrid.innerHTML = liveSources.map(s =>
       `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>`
     ).join("");
+    renderSourceDiagnostic();
     return;
   }
 
@@ -830,6 +919,8 @@ function renderSourceGrid() {
       <span>${escapeHtml(s.detail || "")}</span>
     </div>`
   ).join("");
+
+  renderSourceDiagnostic();
 }
 
 
@@ -881,7 +972,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC8.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC9.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -961,6 +1052,20 @@ $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
 els.searchInput?.addEventListener("input", renderMarketTable);
 
+document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.assetFilter = btn.dataset.filter || "all";
+    document.querySelectorAll(".filter-btn[data-filter]").forEach(b => b.classList.toggle("active", b === btn));
+    renderMarketTable();
+  });
+});
+
+els.sortSelect?.addEventListener("change", () => {
+  state.sortKey = els.sortSelect.value || "rank-asc";
+  renderMarketTable();
+});
+
+
 const advancedButton = document.getElementById("btnToggleAdvanced");
 const advancedPanel = document.getElementById("advancedPanel");
 if (advancedButton && advancedPanel) {
@@ -973,6 +1078,7 @@ if (advancedButton && advancedPanel) {
 }
 
 renderSourceGrid();
+renderSourceDiagnostic();
 updateSourceMetric(0);
 renderTicker();
 renderEmptyMarket("Livecheck requis. Aucun prix inventé.");

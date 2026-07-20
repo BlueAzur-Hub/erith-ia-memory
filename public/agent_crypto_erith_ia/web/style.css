@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC8 — STABILISATION
+   V1.0-RC9 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC8 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC9 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC8 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC9 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC8 — GRAPHIQUES ANALYSTE
+   V1.0-RC9 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC8 — FIX GRAPHIQUES RÉELS
+   V1.0-RC9 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC8 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC9 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC8 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC9 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -971,4 +971,137 @@ tr.asset-row.is-selected{
 
 .chart-shell canvas{
   background:linear-gradient(180deg,rgba(98,236,255,.035),rgba(98,236,255,.01));
+}
+
+
+/* =========================================================
+   V1.0-RC9 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   ========================================================= */
+
+.source-diagnostic{
+  padding:12px 14px;
+}
+
+.diagnostic-note{
+  color:#b9c8dc;
+  font-size:11px;
+  line-height:1.35;
+  max-width:720px;
+  margin:0;
+}
+
+.diagnostic-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  margin-top:8px;
+}
+
+.diagnostic-source{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  border-radius:12px;
+  padding:8px;
+  min-height:72px;
+}
+
+.diagnostic-source b{
+  display:block;
+  font-size:10px;
+  color:#fff0c8;
+  margin-bottom:3px;
+}
+
+.diagnostic-source span{
+  display:block;
+  font-size:9px;
+  color:#b9c8dc;
+  line-height:1.25;
+}
+
+.diagnostic-source.ok{
+  border-color:rgba(115,255,177,.32);
+  background:rgba(115,255,177,.06);
+}
+
+.diagnostic-source.fail{
+  border-color:rgba(255,105,135,.32);
+  background:rgba(255,105,135,.06);
+}
+
+.diagnostic-source.wait{
+  border-color:rgba(255,215,130,.24);
+  background:rgba(255,215,130,.045);
+}
+
+.diagnostic-source.critical b::after{
+  content:" · critique";
+  color:#ffdf8a;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.market-tools{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin:8px 0 10px;
+  flex-wrap:wrap;
+}
+
+.filter-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.filter-btn{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:#fff0c8;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.filter-btn.active{
+  background:rgba(98,236,255,.20);
+  border-color:rgba(98,236,255,.48);
+  color:#fff;
+}
+
+.sort-box{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#b9c8dc;
+  font-size:10px;
+  font-weight:800;
+}
+
+.sort-box select{
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  color:#fff0c8;
+  border-radius:10px;
+  padding:7px 10px;
+  font-weight:800;
+}
+
+.sort-box option{
+  background:#102033;
+  color:#fff0c8;
+}
+
+@media (max-width:1200px){
+  .diagnostic-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+@media (max-width:760px){
+  .diagnostic-grid{grid-template-columns:repeat(2,1fr)}
+  .market-tools{align-items:flex-start}
 }

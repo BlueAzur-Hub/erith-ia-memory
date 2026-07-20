@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC8</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC9</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc8" />
+  <link rel="stylesheet" href="./style.css?v=1.0-rc9" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC8</span>
+          <span class="pill ok">GitHub Pack V1.0-RC9</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -28,6 +28,7 @@
 
       <nav class="nav" aria-label="Navigation principale">
         <a href="#livecheck">Livecheck</a>
+        <a href="#diagnostic">Diagnostic</a>
         <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
         <a href="#watchlist">Watchlist</a>
@@ -79,6 +80,21 @@
         <small id="metricSourcesHint">0/7 interrogées</small>
       </article>
     </section>
+
+
+    <section class="source-diagnostic glass" id="diagnostic">
+      <div class="section-head compact">
+        <div>
+          <p class="eyebrow">DIAGNOSTIC SOURCES</p>
+          <h2 id="sourceDiagnosticTitle">En attente Livecheck</h2>
+        </div>
+        <p class="diagnostic-note" id="sourceDiagnosticNote">
+          CoinGecko est critique : sans lui, le tableau marché reste bloqué même si des sources secondaires répondent.
+        </p>
+      </div>
+      <div class="diagnostic-grid" id="sourceDiagnosticGrid"></div>
+    </section>
+
 
     <section class="notice glass" id="offlineNotice">
       <strong>ACCÈS LIVE NON TESTÉ</strong>
@@ -198,6 +214,29 @@
           </label>
         </div>
 
+
+        <div class="market-tools" id="marketTools">
+          <div class="filter-chips" aria-label="Filtres actifs">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="pillar">BTC / ETH</button>
+            <button class="filter-btn" data-filter="stablecoin">Stablecoins</button>
+            <button class="filter-btn" data-filter="major">Altcoins majeurs</button>
+            <button class="filter-btn" data-filter="speculative">Spéculatifs</button>
+          </div>
+          <label class="sort-box">
+            <span>Tri</span>
+            <select id="sortSelect">
+              <option value="rank-asc">Rang marché</option>
+              <option value="score-desc">Score décroissant</option>
+              <option value="volume-desc">Volume 24h</option>
+              <option value="change24-desc">24h hausse</option>
+              <option value="change24-asc">24h baisse</option>
+              <option value="ratio-desc">Vol/Cap</option>
+            </select>
+          </label>
+        </div>
+
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -305,11 +344,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC8</span>
+      <span>Agent-Crypto @erith.IA V1.0-RC9</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc8"></script>
+  <script src="./app.js?v=1.0-rc9"></script>
 </body>
 </html>
