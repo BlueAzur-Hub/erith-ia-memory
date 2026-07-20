@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC15  
+Version : V1.0-RC16  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -581,3 +581,35 @@ Objectif : séparer clairement public, privé, simulation et futur Kraken.
 ### Prochaine étape
 
 `RC16 — Kraken Read-Only Plan`, sans ordre réel.
+
+
+---
+
+## V1.0-RC16 — Command Output Humain
+
+Objectif : rendre les commandes IA compréhensibles sans devoir lire le JSON brut.
+
+### Problème
+
+Les commandes `backend_blueprint` et `security_review` fonctionnaient, mais l’interface affichait surtout du JSON technique. Résultat : l’utilisateur pouvait croire que rien ne s’était passé.
+
+### Ajouts
+
+- Bloc `Lecture humaine` au-dessus du JSON.
+- Résumé clair par commande :
+  - `backend_blueprint`
+  - `security_review`
+  - `kraken_readonly_plan`
+  - `remote_blueprint`
+  - `market_snapshot`
+  - `asset`
+  - `chart`
+  - `portfolio`
+  - `sources`
+- Le JSON reste affiché dessous pour Yohan / analyse technique.
+
+### Règle
+
+Aucune fonction dangereuse ajoutée.
+Aucun ordre réel.
+Aucune clé privée.

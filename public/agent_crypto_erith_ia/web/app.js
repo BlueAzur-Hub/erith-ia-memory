@@ -64,6 +64,7 @@ const els = {
   sortSelect: $("sortSelect"),
   commandInput: $("commandInput"),
   commandOutput: $("commandOutput"),
+  commandHuman: $("commandHuman"),
   btnRunCommand: $("btnRunCommand"),
   simCash: $("simCash"),
   simPositionsValue: $("simPositionsValue"),
@@ -1381,7 +1382,182 @@ function parseCommandLine(input) {
   });
 }
 
+
+function humanCommandSummary(result) {
+  const cmd = String(result?.command || "").toLowerCase();
+
+  if (!result || result.ok === false) {
+    return {
+      title: "Commande bloquée ou impossible",
+      text: result?.error || "La commande n’a pas pu être exécutée.",
+      bullets: [
+        "Aucun ordre réel n’a été envoyé.",
+        "Aucune clé API n’est utilisée dans cette page.",
+        "Vérifie Livecheck si la commande dépend des données marché."
+      ],
+      tags: ["sécurité", "observation only"]
+    };
+  }
+
+  if (cmd === "backend_blueprint") {
+    return {
+      title: "Backend Blueprint : test OK",
+      text: "La commande a affiché le plan public / privé / Kraken. Elle ne connecte rien : elle vérifie seulement que l’architecture future est bien décrite.",
+      bullets: [
+        "Public : GitHub Pages, sans clé, observation et simulation seulement.",
+        "Privé : futur PC Yohan ou backend local sécurisé.",
+        "Exchange : Kraken en lecture seule d’abord.",
+        "Interdit : ordre réel, clé de retrait, clé API dans GitHub."
+      ],
+      tags: ["plan validé", "aucune connexion réelle", "Kraken plus tard"]
+    };
+  }
+
+  if (cmd === "security_review") {
+    return {
+      title: "Security Review : checklist OK",
+      text: "La commande affiche les sécurités obligatoires avant tout passage à une machine privée ou à Kraken.",
+      bullets: [
+        "Aucune clé dans GitHub Pages.",
+        "Clé Kraken lecture seule au départ.",
+        "Retrait désactivé.",
+        "Logs, kill switch et validation humaine obligatoires.",
+        "Paper trading avant argent réel."
+      ],
+      tags: ["sécurité", "checklist", "avant réel"]
+    };
+  }
+
+  if (cmd === "kraken_readonly_plan") {
+    return {
+      title: "Kraken lecture seule : plan OK",
+      text: "La commande décrit le futur premier niveau Kraken : lire des données, sans acheter, vendre, transférer ou retirer.",
+      bullets: [
+        "Lecture solde / prix / historique uniquement.",
+        "Aucun ordre autorisé.",
+        "Aucun retrait autorisé.",
+        "Backend sécurisé requis."
+      ],
+      tags: ["Kraken", "lecture seule", "future étape"]
+    };
+  }
+
+  if (cmd === "remote_blueprint") {
+    return {
+      title: "Accès distant : plan OK",
+      text: "La commande décrit le futur accès réservé à Christophe et Yohan uniquement.",
+      bullets: [
+        "Pas de panneau admin public.",
+        "Comptes séparés.",
+        "Authentification forte.",
+        "Actions admin journalisées.",
+        "Désactivation d’urgence prévue."
+      ],
+      tags: ["accès renforcé", "2 personnes", "hors GitHub Pages"]
+    };
+  }
+
+  if (cmd === "market_snapshot") {
+    return {
+      title: "Snapshot marché : OK",
+      text: "La commande résume l’état du marché chargé par Livecheck.",
+      bullets: [
+        "Source principale utilisée.",
+        "Capitalisation globale.",
+        "Volume 24h.",
+        "BTC / ETH comme repères."
+      ],
+      tags: ["marché", "lecture live"]
+    };
+  }
+
+  if (cmd.startsWith("asset ")) {
+    return {
+      title: "Lecture actif : OK",
+      text: "La commande a récupéré les données d’une crypto chargée dans le tableau.",
+      bullets: [
+        "Prix.",
+        "Variation 24h / 7j.",
+        "Type d’actif.",
+        "Score de veille.",
+        "Limites : pas sécurité contrat, pas social, pas on-chain."
+      ],
+      tags: ["actif", "observation"]
+    };
+  }
+
+  if (cmd.startsWith("chart ")) {
+    return {
+      title: "Graphique mis à jour",
+      text: "La commande a sélectionné l’actif et la période dans le panneau graphique.",
+      bullets: [
+        "Le graphique change dans la zone Analyste.",
+        "Le score et le détail actif se synchronisent.",
+        "Ce n’est pas un signal d’achat."
+      ],
+      tags: ["graphique", "analyste"]
+    };
+  }
+
+  if (cmd === "portfolio" || cmd.startsWith("sim_") || cmd === "reset_sim") {
+    return {
+      title: "Simulation : OK",
+      text: "La commande agit uniquement sur le portefeuille virtuel local.",
+      bullets: [
+        "Aucun argent réel.",
+        "Aucun wallet connecté.",
+        "Aucune clé API.",
+        "Stockage local navigateur."
+      ],
+      tags: ["paper trading", "simulation only"]
+    };
+  }
+
+  if (cmd === "sources") {
+    return {
+      title: "Sources : diagnostic OK",
+      text: "La commande affiche l’état des sources interrogées.",
+      bullets: [
+        "CoinGecko est critique pour le tableau.",
+        "Les sources secondaires peuvent échouer sans bloquer si CoinGecko répond.",
+        "Les erreurs restent visibles."
+      ],
+      tags: ["diagnostic", "sources"]
+    };
+  }
+
+  return {
+    title: "Commande exécutée",
+    text: "La commande a produit un résultat technique. Le résumé JSON reste disponible dessous.",
+    bullets: [
+      "Résultat reçu.",
+      "Aucun ordre réel.",
+      "Mode observation only."
+    ],
+    tags: ["OK", "dry-run"]
+  };
+}
+
+function renderHumanCommand(result) {
+  if (!els.commandHuman) return;
+
+  const summary = humanCommandSummary(result);
+  els.commandHuman.classList.toggle("ok", result?.ok !== false);
+  els.commandHuman.classList.toggle("err", result?.ok === false);
+
+  const bullets = summary.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+  const tags = summary.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join("");
+
+  els.commandHuman.innerHTML = `
+    <b>${escapeHtml(summary.title)}</b>
+    <p>${escapeHtml(summary.text)}</p>
+    <ul>${bullets}</ul>
+    <div class="cmd-tags">${tags}</div>
+  `;
+}
+
 function renderCommandOutput(result) {
+  renderHumanCommand(result);
   if (!els.commandOutput) return;
   els.commandOutput.textContent = JSON.stringify(result, null, 2);
 }
@@ -1614,7 +1790,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC15</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC16</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -1694,7 +1870,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC15.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC16.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";

@@ -629,7 +629,7 @@ td.empty{
 
 
 /* =========================================================
-   V1.0-RC15 — STABILISATION
+   V1.0-RC16 — STABILISATION
    ========================================================= */
 
 #tableDecision.ok,
@@ -668,7 +668,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC15 — MODE DÉBUTANT + MODE AVANCÉ
+   V1.0-RC16 — MODE DÉBUTANT + MODE AVANCÉ
    ========================================================= */
 
 .beginner-deck{
@@ -765,7 +765,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC15 — AVANCÉ VISIBLE + CACHE STABLE
+   V1.0-RC16 — AVANCÉ VISIBLE + CACHE STABLE
    ========================================================= */
 
 .advanced-panel{
@@ -789,7 +789,7 @@ tr[data-id]:hover{
 
 
 /* =========================================================
-   V1.0-RC15 — GRAPHIQUES ANALYSTE
+   V1.0-RC16 — GRAPHIQUES ANALYSTE
    ========================================================= */
 
 .analyst-deck{
@@ -906,7 +906,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — FIX GRAPHIQUES RÉELS
+   V1.0-RC16 — FIX GRAPHIQUES RÉELS
    ========================================================= */
 
 .chart-shell{
@@ -933,7 +933,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
+   V1.0-RC16 — LIBELLÉS SOURCES + VERROU DYNAMIQUE
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -950,7 +950,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — REDRAW 24H + SOURCES CLAIRES
+   V1.0-RC16 — REDRAW 24H + SOURCES CLAIRES
    ========================================================= */
 
 .rule-line.ok-lock{
@@ -975,7 +975,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — DIAGNOSTIC SOURCES + FILTRES/TRI
+   V1.0-RC16 — DIAGNOSTIC SOURCES + FILTRES/TRI
    ========================================================= */
 
 .source-diagnostic{
@@ -1108,7 +1108,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
+   V1.0-RC16 — DIAGNOSTIC SOURCES UNIQUEMENT EN BAS
    ========================================================= */
 
 .source-diagnostic{
@@ -1129,7 +1129,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — CRYPTO COMMAND LAYER
+   V1.0-RC16 — CRYPTO COMMAND LAYER
    ========================================================= */
 
 .command-layer{
@@ -1235,7 +1235,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — EXCHANGE / NEWS / REMOTE PLANNING
+   V1.0-RC16 — EXCHANGE / NEWS / REMOTE PLANNING
    ========================================================= */
 
 .planning-deck{
@@ -1393,7 +1393,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — PAPER TRADING SANDBOX
+   V1.0-RC16 — PAPER TRADING SANDBOX
    ========================================================= */
 
 .sim-layer{margin-top:8px}
@@ -1419,7 +1419,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — SAFETY CONTROL ROOM
+   V1.0-RC16 — SAFETY CONTROL ROOM
    ========================================================= */
 
 .safety-layer{margin-top:8px}
@@ -1532,7 +1532,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.0-RC15 — BACKEND BLUEPRINT
+   V1.0-RC16 — BACKEND BLUEPRINT
    ========================================================= */
 
 .backend-layer{margin-top:8px}
@@ -1676,4 +1676,74 @@ tr.asset-row.is-selected{
 
 @media (max-width:700px){
   .blueprint-grid,.backend-gates{grid-template-columns:1fr}
+}
+
+
+/* =========================================================
+   V1.0-RC16 — COMMAND OUTPUT HUMAIN
+   ========================================================= */
+
+.command-human{
+  margin-top:10px;
+  border:1px solid rgba(98,236,255,.22);
+  background:rgba(98,236,255,.065);
+  border-radius:14px;
+  padding:12px;
+  color:#dff6ff;
+}
+
+.command-human.ok{
+  border-color:rgba(115,255,177,.30);
+  background:rgba(115,255,177,.065);
+}
+
+.command-human.err{
+  border-color:rgba(255,105,135,.32);
+  background:rgba(255,105,135,.06);
+}
+
+.command-human b{
+  display:block;
+  color:#fff0c8;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.command-human p{
+  margin:0 0 8px;
+  font-size:11px;
+  line-height:1.45;
+}
+
+.command-human ul{
+  margin:0;
+  padding-left:18px;
+  color:#dbe8f6;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.command-human li{
+  margin:2px 0;
+}
+
+.command-human .cmd-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.command-human .cmd-tags span{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:#fff0c8;
+  border-radius:999px;
+  padding:4px 7px;
+  font-size:9px;
+  font-weight:900;
+}
+
+.command-output{
+  max-height:220px;
 }
