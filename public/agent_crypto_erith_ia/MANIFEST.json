@@ -1,7 +1,7 @@
 {
   "project": "Agent-Crypto @erith.IA",
-  "version": "1.0-RC27",
-  "status": "hotfix export markdown and coinbase backend required",
+  "version": "1.1-alpha",
+  "status": "solo beginner simulation profile 100 EUR",
   "target_path": "public/agent_crypto_erith_ia/",
   "web_entry": "public/agent_crypto_erith_ia/web/index.html",
   "generated": "2026-07-20",
@@ -33,10 +33,24 @@
   "name": "Agent-Crypto @erith.IA",
   "updated": "2026-07-20",
   "notes": [
-    "Correction export Markdown : vrais retours ligne.",
-    "Nettoyage préfixes Champ dans la note exportée.",
-    "Coinbase reclassé Backend requis.",
+    "Profil simulateur personnel 100 €.",
+    "Refus automatique hors BTC/ETH/SOL.",
+    "Refus automatique au-dessus de 10 € par opération.",
+    "Refus automatique au-dessus de 30 € d’exposition virtuelle.",
     "Aucune fonction de trading réel ajoutée."
   ],
-  "archives_policy": "frozen_not_listed_in_public_manifest"
+  "archives_policy": "frozen_not_listed_in_public_manifest",
+  "profile": {
+    "name": "Solo Débutant 100 €",
+    "capital_virtual_eur": 100,
+    "allowed_symbols": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "default_ticket_eur": 5,
+    "max_per_operation_eur": 10,
+    "max_exposure_eur": 30,
+    "min_reserve_eur": 70
+  }
 }

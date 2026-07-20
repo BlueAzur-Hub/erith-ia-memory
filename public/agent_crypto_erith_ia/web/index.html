@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.0-RC27</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.0-rc27" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.0-RC27</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU RC27</p>
+        <p class="eyebrow">VERROU V1.1-alpha</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">RC24 · situation claire</span>
+        <span class="pill">V1.1-alpha · profil 100 €</span>
       </div>
 
       <div class="situation-grid">
@@ -521,7 +521,7 @@
         </label>
         <label>
           <span>Montant virtuel de simulation</span>
-          <textarea id="qVirtualAmount" placeholder="Ex. 1000 € virtuels, micro-transactions simulées de 10–25 €..."></textarea>
+          <textarea id="qVirtualAmount" placeholder="Ex. 100 € virtuels, micro-transactions simulées de 5 €..."></textarea>
         </label>
         <label>
           <span>Risques interdits</span>
@@ -559,7 +559,7 @@
       </div>
 
       <div class="export-brief-help">
-        <b>Export propre</b><em class="export-fix-note">Export corrigé RC27 : vrais retours ligne Markdown.</em>
+        <b>Export propre</b><em class="export-fix-note">Export corrigé · vrais retours ligne Markdown.</em>
         <span>La note générée peut être copiée ou téléchargée en Markdown. Vérifie qu’elle ne contient aucun secret avant partage.</span>
       </div>
 
@@ -861,10 +861,25 @@
           <p class="eyebrow">PAPER TRADING SANDBOX</p>
           <h2>Simulation micro-transactions</h2>
           <p class="sim-intro">
-            Portefeuille virtuel local. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à tester une logique avant toute future connexion Kraken.
+            Portefeuille virtuel local avec profil débutant 100 €. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à apprendre avant toute future connexion Kraken.
           </p>
         </div>
-        <span class="pill warn">Simulation only</span>
+        <span class="pill warn">Profil 100 €</span>
+      </div>
+
+      <div class="sim-profile-panel" id="simProfilePanel">
+        <div class="sim-profile-head">
+          <b>Profil actif : Solo Débutant 100 €</b>
+          <span id="simProfileStatus">BTC / ETH / SOL · ticket 5 € · maximum 10 € · exposition 30 €</span>
+        </div>
+        <div class="sim-profile-grid">
+          <div><b>Capital</b><span>100 € virtuels</span></div>
+          <div><b>Ticket conseillé</b><span>5 €</span></div>
+          <div><b>Maximum opération</b><span>10 €</span></div>
+          <div><b>Exposition maximale</b><span>30 €</span></div>
+          <div><b>Réserve minimale</b><span>70 €</span></div>
+          <div><b>Cryptos autorisées</b><span>BTC · ETH · SOL</span></div>
+        </div>
       </div>
 
       <div class="sim-grid">
@@ -876,7 +891,7 @@
 
       <div class="sim-controls">
         <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
-        <label><span>Montant €</span><input id="simAmount" type="number" min="1" step="1" value="25" /></label>
+        <label><span>Montant €</span><input id="simAmount" type="number" min="1" max="10" step="1" value="5" /></label>
         <button class="btn small primary" id="btnSimBuy">Simuler achat</button>
         <button class="btn small" id="btnSimSell">Simuler vente</button>
         <button class="btn small danger" id="btnSimReset">Reset simulation</button>
@@ -926,7 +941,10 @@
         <button class="cmd-preset" data-command="compare BTC ETH">Comparer BTC/ETH</button>
         <button class="cmd-preset" data-command="sources">Sources</button>
         <button class="cmd-preset" data-command="risk SOL">Risque SOL</button>
-        <button class="cmd-preset" data-command="sim_buy BTC 25">Simuler achat BTC 25€</button>
+        <button class="cmd-preset" data-command="simulation_profile">Profil 100€</button>
+        <button class="cmd-preset" data-command="sim_buy BTC 5">Simuler achat BTC 5€</button>
+        <button class="cmd-preset" data-command="sim_buy BTC 50">Test refus 50€</button>
+        <button class="cmd-preset" data-command="sim_buy DOGE 5">Test refus DOGE</button>
         <button class="cmd-preset" data-command="portfolio">Portefeuille virtuel</button>
         <button class="cmd-preset" data-command="planning">Plan projet</button>
         <button class="cmd-preset" data-command="exchange_plan">Plan exchanges</button>
@@ -977,11 +995,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.0-RC27</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.0-rc27"></script>
+  <script src="./app.js?v=1.1-alpha"></script>
 </body>
 </html>

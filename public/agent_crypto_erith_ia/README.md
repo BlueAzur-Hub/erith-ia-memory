@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC27  
+Version : V1.1-alpha  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -940,3 +940,35 @@ Aucune clé réelle.
 Aucun wallet réel.
 Aucun ordre réel.
 Aucun trading automatique.
+
+
+---
+
+## V1.1-alpha — Profil Solo Débutant 100 €
+
+Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
+
+### Profil actif
+
+- Capital virtuel : 100 €.
+- Cryptos autorisées : BTC, ETH, SOL.
+- Ticket conseillé : 5 €.
+- Maximum par opération : 10 €.
+- Exposition maximale : 30 €.
+- Réserve minimale : 70 €.
+
+### Nouvelles règles de refus
+
+- Refus hors BTC / ETH / SOL.
+- Refus au-dessus de 10 € par opération.
+- Refus si l’exposition virtuelle dépasse 30 €.
+- Refus si la réserve virtuelle descend sous 70 €.
+- Livecheck obligatoire avant simulation.
+
+### Sécurité maintenue
+
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun ordre réel.
+Aucun trading automatique.
+Aucun retrait.

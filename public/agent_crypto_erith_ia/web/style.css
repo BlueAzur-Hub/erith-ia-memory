@@ -2502,3 +2502,74 @@ tr.asset-row.is-selected{
   font-style:normal;
   margin-top:3px;
 }
+
+
+/* =========================================================
+   V1.1-alpha — PROFIL SOLO DÉBUTANT 100 €
+   ========================================================= */
+
+.sim-profile-panel{
+  margin-top:10px;
+  border:1px solid rgba(115,255,177,.28);
+  background:linear-gradient(135deg, rgba(115,255,177,.07), rgba(98,236,255,.045));
+  border-radius:16px;
+  padding:12px;
+}
+
+.sim-profile-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:9px;
+}
+
+.sim-profile-head b{
+  color:#fff0c8;
+  font-size:13px;
+}
+
+.sim-profile-head span{
+  color:#73ffb1;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.sim-profile-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+}
+
+.sim-profile-grid div{
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(0,0,0,.13);
+  border-radius:12px;
+  padding:9px;
+  min-height:58px;
+}
+
+.sim-profile-grid b{
+  display:block;
+  color:#b9c8dc;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:5px;
+}
+
+.sim-profile-grid span{
+  color:#e6f4ff;
+  font-size:12px;
+  font-weight:950;
+}
+
+.sim-card.profile-lock{
+  border-color:rgba(115,255,177,.28);
+}
+
+@media (max-width:1200px){.sim-profile-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.sim-profile-head{align-items:flex-start;flex-direction:column}.sim-profile-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.sim-profile-grid{grid-template-columns:1fr}}

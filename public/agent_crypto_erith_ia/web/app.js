@@ -76,7 +76,8 @@ const els = {
   btnSimSell: $("btnSimSell"),
   btnSimReset: $("btnSimReset"),
   simPositions: $("simPositions"),
-  simLog: $("simLog")
+  simLog: $("simLog"),
+  simProfileStatus: $("simProfileStatus")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -756,21 +757,31 @@ function sourceHealthPayload() {
 
 
 
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1";
-const SIM_START_CASH = 1000;
+const SIM_PROFILE = {
+  key: "solo_beginner_100_v1_1_alpha",
+  label: "Solo Débutant 100 €",
+  startCash: 100,
+  allowedSymbols: ["BTC", "ETH", "SOL"],
+  defaultAmount: 5,
+  maxPerOperation: 10,
+  maxExposure: 30,
+  minReserve: 70
+};
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha";
+const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
   try {
     const raw = localStorage.getItem(SIM_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.cash === "number" && parsed.positions) {
+      if (parsed && typeof parsed.cash === "number" && parsed.positions && parsed.profileKey === SIM_PROFILE.key) {
         state.sim = parsed;
         return;
       }
     }
   } catch {}
-  state.sim = { cash: SIM_START_CASH, initialCash: SIM_START_CASH, positions: {}, logs: [] };
+  state.sim = { cash: SIM_START_CASH, initialCash: SIM_START_CASH, profileKey: SIM_PROFILE.key, positions: {}, logs: [{ time: new Date().toISOString(), type: "PROFILE", message: "Profil Solo Débutant 100 € chargé." }] };
 }
 
 function saveSimulation() {
@@ -781,8 +792,9 @@ function resetSimulation() {
   state.sim = {
     cash: SIM_START_CASH,
     initialCash: SIM_START_CASH,
+    profileKey: SIM_PROFILE.key,
     positions: {},
-    logs: [{ time: new Date().toISOString(), type: "RESET", message: "Simulation réinitialisée." }]
+    logs: [{ time: new Date().toISOString(), type: "RESET", message: "Simulation réinitialisée sur profil Solo Débutant 100 €." }]
   };
   saveSimulation();
   renderSimulation();
@@ -810,6 +822,32 @@ function getSimulationTotals() {
   return { positionsValue, total, pnl: total - state.sim.initialCash };
 }
 
+
+function getSimulationProfileStatus() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  const remainingExposure = Math.max(0, SIM_PROFILE.maxExposure - totals.positionsValue);
+  return {
+    profile: SIM_PROFILE.label,
+    start_cash_eur: SIM_PROFILE.startCash,
+    allowed_symbols: SIM_PROFILE.allowedSymbols,
+    default_amount_eur: SIM_PROFILE.defaultAmount,
+    max_per_operation_eur: SIM_PROFILE.maxPerOperation,
+    max_exposure_eur: SIM_PROFILE.maxExposure,
+    current_exposure_eur: totals.positionsValue,
+    remaining_exposure_eur: remainingExposure,
+    min_reserve_eur: SIM_PROFILE.minReserve,
+    cash_eur: state.sim.cash
+  };
+}
+
+function profileRefusal(message, extra = {}) {
+  return commandError(message, {
+    profile: getSimulationProfileStatus(),
+    ...extra
+  });
+}
+
 function simulationPayload() {
   if (!state.sim) loadSimulation();
   const totals = getSimulationTotals();
@@ -831,6 +869,7 @@ function simulationPayload() {
   });
   return {
     mode: "paper_trading_only",
+    profile: getSimulationProfileStatus(),
     cash_eur: state.sim.cash,
     initial_cash_eur: state.sim.initialCash,
     positions_value_eur: totals.positionsValue,
@@ -848,18 +887,34 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
   const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
   const coin = findCoinByQuery(symbol);
 
-  if (!coin) return commandError(`Actif introuvable pour simulation : ${symbol}`);
-  if (!Number.isFinite(amount) || amount <= 0) return commandError("Montant invalide.");
+  if (!coin) return profileRefusal(`Actif introuvable pour simulation : ${symbol || "—"}`);
+  if (!Number.isFinite(amount) || amount <= 0) return profileRefusal("Montant invalide.");
   if (!state.sim) loadSimulation();
 
   const price = coin.price;
-  if (!Number.isFinite(price) || price <= 0) return commandError("Prix indisponible pour simulation.");
+  if (!Number.isFinite(price) || price <= 0) return profileRefusal("Prix indisponible pour simulation.");
 
   const sym = coin.symbol.toUpperCase();
+  if (!SIM_PROFILE.allowedSymbols.includes(sym)) {
+    return profileRefusal(`Profil débutant : ${sym} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: sym });
+  }
+
+  if (amount > SIM_PROFILE.maxPerOperation) {
+    return profileRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
+  }
+
   const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price };
 
   if (side === "buy") {
-    if (amount > state.sim.cash) return commandError("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
+    const totals = getSimulationTotals();
+    if (amount > state.sim.cash) return profileRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
+    if (state.sim.cash - amount < SIM_PROFILE.minReserve) {
+      return profileRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount });
+    }
+    if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) {
+      return profileRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount });
+    }
+
     const qty = amount / price;
     const newQty = pos.qty + qty;
     const newInvested = pos.invested + amount;
@@ -869,9 +924,9 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
     pos.lastPrice = price;
     state.sim.positions[sym] = pos;
     state.sim.cash -= amount;
-    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)}.` });
+    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · profil 100 €.` });
   } else if (side === "sell") {
-    if (!pos.qty || pos.qty <= 0) return commandError(`Aucune position virtuelle à vendre pour ${sym}.`);
+    if (!pos.qty || pos.qty <= 0) return profileRefusal(`Aucune position virtuelle à vendre pour ${sym}.`);
     const maxValue = pos.qty * price;
     const sellValue = Math.min(amount, maxValue);
     const qty = sellValue / price;
@@ -882,7 +937,7 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
     state.sim.cash += sellValue;
     if (pos.qty <= 0.00000001) delete state.sim.positions[sym];
     else state.sim.positions[sym] = pos;
-    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)}.` });
+    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)} · profil 100 €.` });
   }
 
   saveSimulation();
@@ -893,6 +948,10 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
 function renderSimulation() {
   if (!state.sim) loadSimulation();
   const totals = getSimulationTotals();
+  if (els.simProfileStatus) {
+    const profile = getSimulationProfileStatus();
+    els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`;
+  }
   setText(els.simCash, fmtEUR.format(state.sim.cash));
   setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue));
   setText(els.simTotalValue, fmtEUR.format(totals.total));
@@ -923,13 +982,14 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "RC24",
+    version: "V1.1-alpha",
     active_now: [
       "public_market_observation",
       "charts",
       "source_diagnostic",
       "human_readable_tests",
       "local_paper_trading",
+      "solo_beginner_profile_100_eur",
       "briefing_questions"
     ],
     prepared_only: [
@@ -959,7 +1019,7 @@ function nextStepsPayload() {
       "describe_private_machine",
       "choose_access_security_model"
     ],
-    next_version_candidate: "RC25_exportable_brief"
+    next_version_candidate: "V1.1-beta_local_private_preparation"
   };
 }
 
@@ -1030,7 +1090,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "RC24",
+    version: "V1.1-alpha",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -1313,8 +1373,8 @@ const CryptoCommands = {
         "planning",
         "exchange_plan",
         "news_sources",
-        "sim_buy BTC 25",
-        "sim_sell BTC 10",
+        "sim_buy BTC 5",
+        "sim_sell BTC 5",
         "portfolio",
         "reset_sim",
         "safety_plan",
@@ -1392,6 +1452,10 @@ const CryptoCommands = {
 
   sources() {
     return commandOk("sources", sourceHealthPayload());
+  },
+
+  simulation_profile() {
+    return commandOk("simulation_profile", getSimulationProfileStatus());
   },
 
   chart(symbol, period = "24h") {
@@ -1484,6 +1548,7 @@ function parseCommandLine(input) {
   if (cmd === "chart" || cmd === "graph") return CryptoCommands.chart(parts[1], parts[2] || "24h");
   if (cmd === "compare") return CryptoCommands.compare(parts[1], parts[2]);
   if (cmd === "sources" || cmd === "health" || cmd === "source_health") return CryptoCommands.sources();
+  if (cmd === "simulation_profile" || cmd === "profil_simulation" || cmd === "profil") return CryptoCommands.simulation_profile();
   if (cmd === "sim_buy" || cmd === "paper_buy") return simulateOrder("buy", parts[1], parts[2]);
   if (cmd === "sim_sell" || cmd === "paper_sell") return simulateOrder("sell", parts[1], parts[2]);
   if (cmd === "portfolio" || cmd === "paper_portfolio") return commandOk("portfolio", simulationPayload());
@@ -1528,9 +1593,9 @@ function renderSimpleCommandIntro() {
       <li>Résumé marché : vérifie les données principales.</li>
       <li>Plan architecture : explique public / privé / Kraken.</li>
       <li>Contrôle sécurité : liste les protections obligatoires.</li>
-      <li>Portefeuille virtuel : simulation, sans argent réel.</li>
+      <li>Portefeuille virtuel : simulation 100 €, sans argent réel.</li>
     </ul>
-    <div class="cmd-tags"><span>aucun achat</span><span>aucune vente</span><span>simulation only</span></div>
+    <div class="cmd-tags"><span>aucun achat réel</span><span>profil 100 €</span><span>simulation only</span></div>
   `;
 }
 
@@ -1754,6 +1819,21 @@ function humanCommandSummary(result) {
     };
   }
 
+  if (cmd === "simulation_profile") {
+    return {
+      title: "Profil simulateur : OK",
+      text: "Le profil Solo Débutant 100 € est actif.",
+      bullets: [
+        "Capital virtuel : 100 €.",
+        "Cryptos autorisées : BTC, ETH, SOL.",
+        "Ticket conseillé : 5 €.",
+        "Maximum opération : 10 €.",
+        "Exposition maximale : 30 €."
+      ],
+      tags: ["profil 100 €", "débutant", "simulation"]
+    };
+  }
+
   if (cmd === "portfolio" || cmd.startsWith("sim_") || cmd === "reset_sim") {
     return {
       title: "Simulation : OK",
@@ -1762,9 +1842,10 @@ function humanCommandSummary(result) {
         "Aucun argent réel.",
         "Aucun wallet connecté.",
         "Aucune clé API.",
-        "Stockage local navigateur."
+        "Stockage local navigateur.",
+        "Profil actif : 100 € virtuels, ticket conseillé 5 €, maximum 10 €."
       ],
-      tags: ["paper trading", "simulation only"]
+      tags: ["paper trading", "profil 100 €", "simulation only"]
     };
   }
 
@@ -2049,7 +2130,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC27</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2129,7 +2210,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC27.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
