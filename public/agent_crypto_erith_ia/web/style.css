@@ -2505,7 +2505,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.2.2.2 — PROFIL SOLO DÉBUTANT 100 €
+   V1.1-alpha.3 — PROFIL SOLO DÉBUTANT 100 €
    ========================================================= */
 
 .sim-profile-panel{
@@ -2576,7 +2576,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.2.2.2 — Refus visibles simulation
+   V1.1-alpha.3 — Refus visibles simulation
    ========================================================= */
 
 .sim-test-hint{
@@ -2596,7 +2596,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.2 — MODE ÉCOLE GUIDÉ
+   V1.1-alpha.3 — MODE ÉCOLE GUIDÉ
    ========================================================= */
 
 .school-panel{
@@ -2714,6 +2714,83 @@ tr.asset-row.is-selected{
 }
 @media (max-width: 980px){
   .school-tests{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   V1.1-alpha.3 — JOURNAL PÉDAGOGIQUE + DATA COLLECTOR
+   ========================================================= */
+
+.learning-panel{
+  margin:14px 0 12px;
+  padding:14px;
+  border:1px solid rgba(72,199,255,.28);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at top right, rgba(72,199,255,.11), transparent 42%),
+    rgba(12,28,43,.70);
+}
+.learning-head{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+}
+.learning-head h3{
+  margin:0 0 6px;
+  color:#fff4c2;
+}
+.learning-head p{
+  margin:0;
+  color:#d8e6f2;
+  font-size:13px;
+  line-height:1.45;
+}
+.learning-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:10px 0 12px;
+}
+.learning-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+.learning-grid article{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:14px;
+  padding:11px 12px;
+  background:rgba(255,255,255,.055);
+}
+.learning-grid b{
+  display:block;
+  color:#fff4c2;
+  margin-bottom:5px;
+}
+.learning-grid span{
+  display:block;
+  color:#c9d6e2;
+  font-size:12px;
+  line-height:1.4;
+}
+.learning-output{
+  white-space:pre-wrap;
+  min-height:150px;
+  max-height:360px;
+  overflow:auto;
+  padding:14px;
+  border:1px solid rgba(72,255,177,.25);
+  border-radius:14px;
+  background:rgba(4,14,24,.72);
+  color:#eaf4ff;
+  line-height:1.55;
+}
+@media (max-width: 980px){
+  .learning-grid{
     grid-template-columns:1fr;
   }
 }

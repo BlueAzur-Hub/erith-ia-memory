@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.1-alpha.2.2.2  
+Version : V1.1-alpha.3  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -944,7 +944,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.2.2.2 — Profil Solo Débutant 100 €
+## V1.1-alpha.3 — Profil Solo Débutant 100 €
 
 Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
 
@@ -976,7 +976,7 @@ Aucun retrait.
 
 ---
 
-## V1.1-alpha.2.2.2 — Refus visibles + Data Roadmap
+## V1.1-alpha.3 — Refus visibles + Data Roadmap
 
 Correction du test profil 100 € :
 
@@ -992,7 +992,7 @@ Ajout :
 
 ---
 
-## V1.1-alpha.2 — Mode École guidé
+## V1.1-alpha.3 — Mode École guidé
 
 Objectif : rendre le simulateur compréhensible par un non-technicien.
 
@@ -1013,3 +1013,29 @@ Objectif : rendre le simulateur compréhensible par un non-technicien.
 - BTC 5 € refusé après plafond 30 €.
 
 Aucun trading réel ajouté.
+
+
+---
+
+## V1.1-alpha.3 — Journal pédagogique + Data Collector public
+
+Objectif : transformer les tests en mémoire exploitable.
+
+### Ajouts
+
+- Résumé pédagogique de session.
+- Export journal `.md`.
+- Export data snapshot `.json`.
+- Snapshot public non sensible : profil, simulation, positions fictives, logs, données BTC / ETH / SOL si Livecheck actif.
+
+### Sécurité
+
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun compte exchange.
+Aucun ordre réel.
+Aucune donnée personnelle.
+
+### Direction
+
+Prépare la future base locale sur PC Ryzen 7.

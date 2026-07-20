@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.2.2.2</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.3</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.2" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.3" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.2.2.2</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.3</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.2.2.2</p>
+        <p class="eyebrow">VERROU V1.1-alpha.3</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.2.2.2 · profil 100 €</span>
+        <span class="pill">V1.1-alpha.3 · profil 100 €</span>
       </div>
 
       <div class="situation-grid">
@@ -937,6 +937,40 @@
         </div>
       </div>
 
+      <div class="learning-panel" id="learningPanel">
+        <div class="learning-head">
+          <div>
+            <p class="eyebrow">JOURNAL PÉDAGOGIQUE + DATA</p>
+            <h3>Transformer les tests en mémoire exploitable</h3>
+            <p>L’app résume ce que tu as testé, ce qu’elle a refusé, ce que ça apprend, puis prépare un export propre pour la future base locale.</p>
+          </div>
+          <span class="pill ok">Mémoire</span>
+        </div>
+
+        <div class="learning-actions">
+          <button class="btn small primary" id="btnBuildSimSummary" type="button">Résumer ma session</button>
+          <button class="btn small" id="btnDownloadLearningJournal" type="button">Télécharger journal .md</button>
+          <button class="btn small" id="btnDownloadSimJSON" type="button">Télécharger data JSON</button>
+        </div>
+
+        <div class="learning-grid">
+          <article>
+            <b>Ce que j’ai appris</b>
+            <span>Lecture humaine : prudence, refus, plafond, réserve.</span>
+          </article>
+          <article>
+            <b>Snapshot public</b>
+            <span>Données non sensibles : prix, variations, positions simulées.</span>
+          </article>
+          <article>
+            <b>Future base locale</b>
+            <span>Ton PC Ryzen 7 pourra stocker l’historique plus tard.</span>
+          </article>
+        </div>
+
+        <pre class="learning-output" id="simLearningOutput">Clique “Résumer ma session”. L’app générera une note lisible et un format de données public non sensible.</pre>
+      </div>
+
       <div class="sim-manual-title">Mode manuel avancé — utile plus tard, pas obligatoire pour apprendre</div>
       <div class="sim-controls">
         <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
@@ -1048,11 +1082,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.2.2.2</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.3</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.2"></script>
+  <script src="./app.js?v=1.1-alpha.3"></script>
 </body>
 </html>

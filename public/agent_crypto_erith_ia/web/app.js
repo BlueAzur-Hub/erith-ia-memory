@@ -78,7 +78,11 @@ const els = {
   simPositions: $("simPositions"),
   simLog: $("simLog"),
   simProfileStatus: $("simProfileStatus"),
-  schoolResult: $("schoolResult")
+  schoolResult: $("schoolResult"),
+  btnBuildSimSummary: $("btnBuildSimSummary"),
+  btnDownloadLearningJournal: $("btnDownloadLearningJournal"),
+  btnDownloadSimJSON: $("btnDownloadSimJSON"),
+  simLearningOutput: $("simLearningOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -759,7 +763,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_2",
+  key: "solo_beginner_100_v1_1_alpha_3",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -768,7 +772,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_2";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_3";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1012,7 +1016,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.2.2.2",
+    version: "V1.1-alpha.3",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1120,7 +1124,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.2.2.2",
+    version: "V1.1-alpha.3",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2165,7 +2169,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.2.2.2</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.3</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2245,7 +2249,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.2.2.2.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.3.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2301,6 +2305,214 @@ function seedWatch() {
 }
 
 
+
+
+
+function publicMarketSnapshot() {
+  const wanted = SIM_PROFILE.allowedSymbols;
+  const coins = state.coins
+    .filter(c => wanted.includes(String(c.symbol || "").toUpperCase()))
+    .map(c => ({
+      id: c.id,
+      symbol: String(c.symbol || "").toUpperCase(),
+      name: c.name,
+      price_eur: c.price,
+      change_24h_pct: c.change24h,
+      change_7d_pct: c.change7d,
+      market_cap_eur: c.marketCap,
+      volume_24h_eur: c.volume,
+      source: state.mainSource?.name || "source live"
+    }));
+
+  return {
+    generated_at: new Date().toISOString(),
+    source: state.mainSource?.name || null,
+    source_time: state.timestamp || null,
+    live_ok: !!state.liveOk,
+    public_only: true,
+    assets: coins
+  };
+}
+
+function simulationDataSnapshot() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  return {
+    generated_at: new Date().toISOString(),
+    version: "V1.1-alpha.3",
+    public_only: true,
+    warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
+    profile: getSimulationProfileStatus(),
+    simulation: simulationPayload(),
+    totals: {
+      cash_eur: state.sim.cash,
+      positions_value_eur: totals.positionsValue,
+      total_value_eur: totals.total,
+      pnl_eur: totals.pnl
+    },
+    market_snapshot: publicMarketSnapshot()
+  };
+}
+
+function learningFactsFromLogs() {
+  if (!state.sim) loadSimulation();
+  const logs = state.sim.logs || [];
+  const hasBuy = logs.some(l => l.type === "SIM_BUY");
+  const hasSell = logs.some(l => l.type === "SIM_SELL");
+  const hasTooBig = logs.some(l => String(l.message || "").includes("maximum par opération"));
+  const hasForbidden = logs.some(l => String(l.message || "").includes("refusé. Autorisés"));
+  const hasReserve = logs.some(l => String(l.message || "").includes("réserve minimale"));
+  const hasLivecheckRefusal = logs.some(l => String(l.message || "").includes("Livecheck requis"));
+
+  const facts = [];
+
+  if (hasBuy) facts.push("Tu as testé au moins un achat simulé : l’app sait transformer un montant virtuel en position fictive.");
+  if (hasSell) facts.push("Tu as testé une vente simulée : l’app sait réduire une position fictive.");
+  if (hasTooBig) facts.push("Tu as déclenché la protection “montant trop gros” : le profil bloque toute opération au-dessus de 10 €.");
+  if (hasForbidden) facts.push("Tu as déclenché la protection “crypto non autorisée” : le profil débutant reste limité à BTC / ETH / SOL.");
+  if (hasReserve) facts.push("Tu as déclenché la protection “réserve minimale” : l’app empêche de dépasser 30 € exposés.");
+  if (hasLivecheckRefusal) facts.push("Tu as vérifié la règle “pas de prix inventé” : le simulateur exige Livecheck avant d’agir.");
+
+  if (!facts.length) {
+    facts.push("Aucun test pédagogique important n’est encore enregistré. Lance les boutons du Mode École guidé pour générer une vraie mémoire.");
+  }
+
+  return facts;
+}
+
+function positionLinesForMarkdown() {
+  if (!state.sim) loadSimulation();
+  const positions = Object.keys(state.sim.positions || {});
+  if (!positions.length) return ["Aucune position simulée."];
+
+  return positions.map(sym => {
+    const pos = state.sim.positions[sym];
+    const value = getPositionValue(sym);
+    return `- ${sym} : ${fmtEUR.format(value)} simulés, quantité fictive ${Number(pos.qty || 0).toFixed(8)}.`;
+  });
+}
+
+function marketLinesForMarkdown() {
+  const snap = publicMarketSnapshot();
+  if (!snap.live_ok || !snap.assets.length) {
+    return ["Livecheck non disponible dans le résumé courant."];
+  }
+
+  return snap.assets.map(asset => {
+    const price = Number.isFinite(asset.price_eur) ? fmtEUR.format(asset.price_eur) : "prix manquant";
+    const ch24 = typeof asset.change_24h_pct === "number" ? `${asset.change_24h_pct >= 0 ? "+" : ""}${asset.change_24h_pct.toFixed(2)} %` : "variation manquante";
+    return `- ${asset.symbol} : ${price}, variation 24h ${ch24}.`;
+  });
+}
+
+function buildLearningJournalMarkdown() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  const profile = getSimulationProfileStatus();
+  const facts = learningFactsFromLogs();
+
+  const lines = [
+    "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
+    "",
+    `Version : V1.1-alpha.3`,
+    `Date locale : ${new Date().toISOString()}`,
+    "",
+    "## Statut sécurité",
+    "",
+    "- Simulation locale uniquement.",
+    "- Aucun argent réel.",
+    "- Aucune clé API.",
+    "- Aucun wallet.",
+    "- Aucun ordre réel.",
+    "",
+    "## Profil actif",
+    "",
+    `- Profil : ${profile.profile}`,
+    `- Capital virtuel initial : ${fmtEUR.format(profile.start_cash_eur)}`,
+    `- Ticket conseillé : ${fmtEUR.format(profile.default_amount_eur)}`,
+    `- Maximum par opération : ${fmtEUR.format(profile.max_per_operation_eur)}`,
+    `- Exposition maximale : ${fmtEUR.format(profile.max_exposure_eur)}`,
+    `- Réserve minimale : ${fmtEUR.format(profile.min_reserve_eur)}`,
+    `- Cryptos autorisées : ${profile.allowed_symbols.join(" / ")}`,
+    "",
+    "## Résumé de session",
+    "",
+    `- Capital virtuel restant : ${fmtEUR.format(state.sim.cash)}`,
+    `- Valeur positions simulées : ${fmtEUR.format(totals.positionsValue)}`,
+    `- Total simulé : ${fmtEUR.format(totals.total)}`,
+    `- P/L virtuel : ${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`,
+    "",
+    "## Positions simulées",
+    "",
+    ...positionLinesForMarkdown(),
+    "",
+    "## Ce que j’ai appris",
+    "",
+    ...facts.map(f => `- ${f}`),
+    "",
+    "## Snapshot marché public",
+    "",
+    ...marketLinesForMarkdown(),
+    "",
+    "## Conclusion pédagogique",
+    "",
+    "Le simulateur sert à apprendre les règles de prudence avant toute connexion réelle. Les refus sont normaux : ils prouvent que le profil protège le capital virtuel.",
+    "",
+    "## Prochaine étape possible",
+    "",
+    "Construire une mémoire locale sur PC Ryzen 7 avec historique de snapshots, journaux de simulation et scoring pédagogique, sans clé réelle au départ."
+  ];
+
+  return lines.join("\n");
+}
+
+function renderLearningSummary() {
+  const text = buildLearningJournalMarkdown();
+  if (els.simLearningOutput) els.simLearningOutput.textContent = text;
+  return text;
+}
+
+function downloadTextFile(filename, mimeType, text) {
+  const blob = new Blob([text], { type: `${mimeType};charset=utf-8` });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function downloadLearningJournal() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  downloadTextFile(`agent_crypto_journal_pedagogique_${stamp}.md`, "text/markdown", buildLearningJournalMarkdown());
+  renderLearningSummary();
+}
+
+function downloadSimulationJSON() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  const data = simulationDataSnapshot();
+  downloadTextFile(`agent_crypto_data_snapshot_${stamp}.json`, "application/json", JSON.stringify(data, null, 2));
+  if (els.simLearningOutput) {
+    els.simLearningOutput.textContent = [
+      "DATA SNAPSHOT JSON PRÊT",
+      "",
+      "Contenu :",
+      "- profil 100 € ;",
+      "- simulation locale ;",
+      "- positions fictives ;",
+      "- logs de simulation ;",
+      "- snapshot public BTC / ETH / SOL si Livecheck est actif.",
+      "",
+      "Sécurité :",
+      "- aucune clé API ;",
+      "- aucun wallet ;",
+      "- aucun compte réel ;",
+      "- aucune donnée personnelle."
+    ].join("\n");
+  }
+}
 
 
 function setSimManualFields(symbol, amount) {
@@ -2451,6 +2663,11 @@ function runSchoolTest(testName) {
 }
 
 
+
+
+els.btnBuildSimSummary?.addEventListener("click", renderLearningSummary);
+els.btnDownloadLearningJournal?.addEventListener("click", downloadLearningJournal);
+els.btnDownloadSimJSON?.addEventListener("click", downloadSimulationJSON);
 
 els.btnSimBuy?.addEventListener("click", () => renderCommandOutput(simulateOrder("buy")));
 els.btnSimSell?.addEventListener("click", () => renderCommandOutput(simulateOrder("sell")));
