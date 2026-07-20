@@ -41,7 +41,11 @@ const els = {
   newsOutput: $("newsOutput"),
   fomoInput: $("fomoInput"),
   fomoOutput: $("fomoOutput"),
-  coldRead: $("coldRead")
+  coldRead: $("coldRead"),
+  beginnerSummary: $("beginnerSummary"),
+  advancedPanel: $("advancedPanel"),
+  advancedGrid: $("advancedGrid"),
+  btnToggleAdvanced: $("btnToggleAdvanced")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -225,6 +229,7 @@ function clearMarketDisplay(reason = "Marché live indisponible.") {
   renderWatchlist();
   renderRiskGrid();
   renderColdRead(false);
+  renderBeginnerSummary();
 }
 
 function explainForBeginnerLiveFailure(okCount = 0) {
@@ -296,6 +301,85 @@ setTableDecision("Refusé avant Livecheck", "fail");
   setText(els.metricSourcesHint, `${liveSources.length}/${liveSources.length} testées`);
 }
 
+
+function classifyAsset(c) {
+  if (!c) return "À vérifier";
+  const id = String(c.id || "").toLowerCase();
+  const sym = String(c.symbol || "").toUpperCase();
+
+  if (id === "bitcoin" || id === "ethereum" || sym === "BTC" || sym === "ETH") return "Pilier marché";
+  if (["USDT","USDC","DAI","FDUSD","TUSD","USDE"].includes(sym)) return "Stablecoin";
+  if ((c.rank || 9999) <= 20) return "Altcoin majeur";
+  if ((c.rank || 9999) <= 100) return "Altcoin";
+  return "Token spéculatif";
+}
+
+function beginnerDecision(c) {
+  const type = classifyAsset(c);
+  if (type === "Stablecoin") return "Surveillance stabilité";
+  if (type === "Pilier marché") return "Repère marché";
+  const s = scoreCoin(c);
+  if (s.score === null) return "Données insuffisantes";
+  if (s.score <= 55) return "Observer";
+  if (s.score <= 75) return "Vérifier";
+  return "Risque élevé";
+}
+
+function whyDecision(c) {
+  if (!c) return "Aucune donnée live exploitable.";
+  const type = classifyAsset(c);
+  const bits = [];
+  bits.push(`Type : ${type}.`);
+  if (type === "Stablecoin") bits.push("Un stablecoin ne se lit pas comme une crypto de hausse : on surveille surtout la stabilité, la liquidité et le risque d’ancrage.");
+  if (type === "Pilier marché") bits.push("Actif repère : utile pour lire l’état général du marché.");
+  if (typeof c.change24h === "number") bits.push(`Variation 24h : ${fmtPct(c.change24h)}.`);
+  if (c.volume24h && c.marketCap) bits.push(`Ratio volume/market cap : ${((c.volume24h / c.marketCap) * 100).toFixed(2)} %.`);
+  bits.push("Sécurité, social et on-chain non validés par cette interface.");
+  bits.push("Conclusion : observation seulement, pas conseil d’achat.");
+  return bits.join(" ");
+}
+
+function renderBeginnerSummary() {
+  if (!els.beginnerSummary) return;
+
+  if (!state.liveOk || !state.coins.length) {
+    els.beginnerSummary.textContent =
+      "Le marché n’est pas lisible pour l’instant. Aucune source marché principale n’a fourni un tableau fiable. Donc : pas de prix, pas de conclusion, pas de tableau fictif.";
+    if (els.advancedGrid) {
+      els.advancedGrid.innerHTML = `
+        <div><b>État</b><span>Livecheck absent ou échec</span></div>
+        <div><b>Tableau</b><span>Bloqué</span></div>
+        <div><b>Données</b><span>Non récupérées</span></div>
+        <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>`;
+    }
+    return;
+  }
+
+  const btc = state.coins.find(c => c.id === "bitcoin");
+  const eth = state.coins.find(c => c.id === "ethereum");
+  const first = state.coins[0];
+
+  els.beginnerSummary.textContent =
+    `Marché lisible depuis ${state.mainSource}. ` +
+    `Le tableau montre des données de marché réelles : prix, variation, volume et capitalisation. ` +
+    `Bitcoin et Ethereum servent de repères. ` +
+    `Les stablecoins ne sont pas des opportunités de hausse : ils servent surtout à lire stabilité et liquidité. ` +
+    `Ce cockpit aide à observer, pas à acheter.`;
+
+  if (els.advancedGrid) {
+    const ratio = first?.volume24h && first?.marketCap ? ((first.volume24h / first.marketCap) * 100).toFixed(2) + " %" : "Donnée manquante";
+    els.advancedGrid.innerHTML = `
+      <div><b>Source</b><span>${escapeHtml(state.mainSource || "—")}</span></div>
+      <div><b>Actifs chargés</b><span>${state.coins.length}</span></div>
+      <div><b>BTC 24h</b><span>${btc ? fmtPct(btc.change24h) : "Donnée manquante"}</span></div>
+      <div><b>ETH 24h</b><span>${eth ? fmtPct(eth.change24h) : "Donnée manquante"}</span></div>
+      <div><b>Premier actif</b><span>${first ? escapeHtml(first.name) : "—"}</span></div>
+      <div><b>Type</b><span>${escapeHtml(classifyAsset(first))}</span></div>
+      <div><b>Vol/Market cap</b><span>${ratio}</span></div>
+      <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>`;
+  }
+}
+
 function renderAll() {
   renderMetrics();
   renderTicker();
@@ -304,6 +388,7 @@ function renderAll() {
   renderScore(state.coins[0] || null);
   renderRiskGrid();
   renderColdRead(true);
+  renderBeginnerSummary();
 }
 
 function renderMetrics() {
@@ -409,14 +494,14 @@ function renderMarketTable() {
     const s = scoreCoin(c);
     return `<tr data-id="${escapeHtml(c.id)}">
       <td>${c.rank ?? "—"}</td>
-      <td><div class="coin-cell">${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small></div></div></td>
+      <td><div class="coin-cell">${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
       <td>${num(c.price, fmtEUR.format.bind(fmtEUR))}</td>
       <td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td>
       <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
       <td>${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
       <td>${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
       <td>${s.score}</td>
-      <td>${decisionFromScore(s.score)}</td>
+      <td>${beginnerDecision(c)}</td>
     </tr>`;
   }).join("");
 
@@ -466,7 +551,8 @@ function renderScore(coin) {
     <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div>
     <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div>
     <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div>
-    <div><span>Risque</span><b>pénalité active</b></div>`;
+    <div><span>Risque</span><b>pénalité active</b></div>
+    <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
 }
 
 function renderWatchlist() {
@@ -600,6 +686,11 @@ $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
 els.searchInput?.addEventListener("input", renderMarketTable);
+els.btnToggleAdvanced?.addEventListener("click", () => {
+  els.advancedPanel?.classList.toggle("is-collapsed");
+  const open = !els.advancedPanel?.classList.contains("is-collapsed");
+  setText(els.btnToggleAdvanced, open ? "Masquer avancé" : "Afficher avancé");
+});
 
 renderSourceGrid();
 updateSourceMetric(0);
@@ -609,3 +700,5 @@ renderScore(null);
 renderWatchlist();
 renderRiskGrid();
 renderColdRead(false);
+
+renderBeginnerSummary();

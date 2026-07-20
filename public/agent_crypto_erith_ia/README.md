@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC1  
+Version : V1.0-RC3  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -210,6 +210,34 @@ Cette version regroupe les corrections utiles sans toucher aux archives historiq
 - Lecture froide synchronisée avec l’état live.
 - Décision tableau synchronisée entre header et panneau sources.
 - Dossier `archives_yohan/` laissé figé.
+
+### Règle inchangée
+
+```text
+Pas de source live, pas de prix.
+Pas de données récupérées, pas de tableau chiffré.
+Pas de tableau fictif.
+```
+
+
+---
+
+## V1.0-RC3 — Mode Débutant + Mode Avancé
+
+Objectif : rendre le cockpit compréhensible sans supprimer les données utiles.
+
+### Ajouts
+
+- Panneau `Mode Débutant`.
+- Panneau `Mode Avancé` repliable.
+- Explication simple des métriques :
+  capitalisation, volume 24h, dominance BTC, score de veille.
+- Classification des actifs :
+  pilier marché, stablecoin, altcoin majeur, altcoin, token spéculatif.
+- Décisions plus simples :
+  observer, vérifier, repère marché, surveillance stabilité, risque élevé.
+- Bloc “Pourquoi cette décision ?” dans le score.
+- Les données avancées restent disponibles.
 
 ### Règle inchangée
 
