@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC26  
+Version : V1.0-RC27  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -914,3 +914,29 @@ Objectif : rendre la fiche de session exploitable hors interface.
 
 La note exportée doit être relue avant partage.
 Ne jamais y inscrire de seed phrase, clé API, mot de passe ou information personnelle.
+
+
+---
+
+## V1.0-RC27 — Hotfix export Markdown + Coinbase backend requis
+
+Objectif : corriger deux vrais problèmes fonctionnels constatés en test.
+
+### Corrections
+
+- Export Markdown :
+  - les `\n` visibles sont remplacés par de vrais retours ligne ;
+  - les préfixes collés du type `Champ Objectif...` sont nettoyés dans l’export ;
+  - la note `.md` redevient lisible pour un humain.
+
+- Coinbase :
+  - Coinbase n’est plus traité comme un échec réseau bloquant ;
+  - Coinbase est classé `Backend requis` ;
+  - le compteur de sources ne doit plus présenter Coinbase comme une panne utilisateur.
+
+### Règle
+
+Aucune clé réelle.
+Aucun wallet réel.
+Aucun ordre réel.
+Aucun trading automatique.

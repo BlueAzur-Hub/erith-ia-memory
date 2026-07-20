@@ -188,9 +188,7 @@ const SourceAdapter = {
   },
 
   async coinbasePing() {
-    const data = await fetchWithTimeout("https://api.coinbase.com/api/v3/brokerage/market/products?limit=5");
-    if (!data || (!Array.isArray(data.products) && !Array.isArray(data))) throw new Error("Format Coinbase invalide");
-    return { ok: true };
+    return { backendRequired: true, detail: "Backend requis : endpoint Coinbase non testé depuis GitHub Pages." };
   }
 };
 
@@ -218,6 +216,7 @@ function cleanError(error) {
 
 function detailFromResult(result) {
   if (!result) return "OK";
+  if (result.backendRequired) return result.detail || "Backend requis";
   if (result.markets) return `${result.markets.length} actifs marché`;
   if (result.pairs !== undefined) return `${result.pairs} paires`;
   if (result.networks !== undefined) return `${result.networks} réseaux`;
@@ -230,7 +229,9 @@ function updateSourceMetric(doneOverride = null) {
   const total = liveSources.length;
   const done = doneOverride ?? state.sourceStatus.length;
   const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-  const fail = Math.max(0, done - ok);
+  const backend = state.sourceStatus.filter(s => s.status === "BACKEND").length;
+  const fail = Math.max(0, done - ok - backend);
+  const backendText = backend ? ` · ${backend} backend requis` : "";
   const failText = fail === 1 ? "1 échec" : `${fail} échecs`;
 
   setText(els.metricSources, `${ok}/${total}`);
@@ -238,9 +239,9 @@ function updateSourceMetric(doneOverride = null) {
   if (!done) {
     setText(els.metricSourcesHint, `0/${total} interrogées`);
   } else if (done < total) {
-    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${ok} réussies`);
+    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${ok} réussies${backendText}`);
   } else {
-    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${failText}`);
+    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${failText}${backendText}`);
   }
 }
 
@@ -299,6 +300,12 @@ setTableDecision("Refusé avant Livecheck", "fail");
     try {
       const result = await src.fn();
       const ms = Math.round(performance.now() - started);
+      if (result?.backendRequired) {
+        state.sourceStatus.push({ ...src, status: "BACKEND", ms, detail: detailFromResult(result) });
+        updateSourceMetric();
+        renderSourceGrid();
+        continue;
+      }
       state.sourceStatus.push({ ...src, status: "OK", ms, detail: detailFromResult(result) });
 
       if (src.key === "coingecko" && result.markets?.length) {
@@ -2042,7 +2049,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC26</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée RC27</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2062,7 +2069,7 @@ function renderSourceGrid() {
   }
 
   els.sourceGrid.innerHTML = state.sourceStatus.map(s =>
-    `<div class="source-item ${s.status === "OK" ? "ok" : "fail"}">
+    `<div class="source-item ${s.status === "OK" ? "ok" : s.status === "BACKEND" ? "warn" : "fail"}">
       <strong>${s.name}</strong>
       <span>${s.kind}</span>
       <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span>
@@ -2122,7 +2129,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC26.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface RC27.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2329,6 +2336,18 @@ function clearQuestionnaire() {
   if (out) out.textContent = "Fiche effacée localement.";
 }
 
+
+function cleanBriefField(value) {
+  return String(value || "")
+    .replace(/^Champ\s+Objectif\s+de\s+la\s+session\s*:\s*/i, "")
+    .replace(/^Champ\s+Cryptos\s+prioritaires\s*:\s*/i, "")
+    .replace(/^Champ\s+Risques\s+interdits\s*:\s*/i, "")
+    .replace(/^Objectif\s+de\s+la\s+session\s*:\s*/i, "")
+    .replace(/^Cryptos\s+prioritaires\s*:\s*/i, "")
+    .replace(/^Risques\s+interdits\s*:\s*/i, "")
+    .trim();
+}
+
 function buildSessionBrief() {
   const data = saveQuestionnaire();
   const lines = [
@@ -2344,35 +2363,35 @@ function buildSessionBrief() {
     "",
     "## 1. Objectif de la session",
     "",
-    data.objective || "À compléter.",
+    cleanBriefField(data.objective) || "À compléter.",
     "",
     "## 2. Cryptos prioritaires",
     "",
-    data.assets || "À compléter.",
+    cleanBriefField(data.assets) || "À compléter.",
     "",
     "## 3. Montant virtuel de simulation",
     "",
-    data.virtualAmount || "À compléter.",
+    cleanBriefField(data.virtualAmount) || "À compléter.",
     "",
     "## 4. Risques interdits",
     "",
-    data.risks || "À compléter.",
+    cleanBriefField(data.risks) || "À compléter.",
     "",
     "## 5. Sources d'information",
     "",
-    data.news || "À compléter.",
+    cleanBriefField(data.news) || "À compléter.",
     "",
     "## 6. Machine privée envisagée",
     "",
-    data.machine || "À compléter.",
+    cleanBriefField(data.machine) || "À compléter.",
     "",
     "## 7. Accès renforcé",
     "",
-    data.access || "À compléter.",
+    cleanBriefField(data.access) || "À compléter.",
     "",
     "## 8. Sécurité physique / wallet matériel",
     "",
-    data.physical || "À compléter.",
+    cleanBriefField(data.physical) || "À compléter.",
     "",
     "## Interdits rappelés",
     "",
@@ -2386,7 +2405,7 @@ function buildSessionBrief() {
     `Dernière mise à jour locale : ${data.updatedAt}`
   ];
 
-  const text = lines.join("\\n");
+  const text = lines.join("\n");
   const out = document.getElementById("questionnaireOutput");
   if (out) out.textContent = text;
   return text;
