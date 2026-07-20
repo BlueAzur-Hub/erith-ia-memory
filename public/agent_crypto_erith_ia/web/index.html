@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.6</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.7</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.6" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.7" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.6</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.7</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.6</p>
+        <p class="eyebrow">VERROU V1.1-alpha.7</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.6 · profil 100 €</span>
+        <span class="pill">V1.1-alpha.7 · profil 100 €</span>
       </div>
 
       <div class="situation-grid">
@@ -867,6 +867,11 @@
         <span class="pill warn">Profil 100 €</span>
       </div>
 
+      <div class="action-feedback neutral" id="actionFeedback" aria-live="polite">
+        <b>Assistant prêt</b>
+        <span>Chaque action importante affichera maintenant une confirmation claire ici.</span>
+      </div>
+
       <div class="sim-profile-panel" id="simProfilePanel">
         <div class="sim-profile-head">
           <b>Profil actif : Solo Débutant 100 €</b>
@@ -1098,6 +1103,31 @@
         <pre class="collection-plan-output" id="collectionPlanOutput">Plan prêt. Commence par “Snapshot de référence”, puis ajoute un snapshot après test. La vraie comparaison devient utile avec au moins 2 snapshots.</pre>
       </div>
 
+      <div class="resume-assistant-panel" id="resumeAssistantPanel">
+        <div class="resume-assistant-head">
+          <div>
+            <p class="eyebrow">ASSISTANT DE REPRISE</p>
+            <h3>Reprendre proprement après la pause</h3>
+            <p>Ce bloc prépare la suite : ce qui est validé, ce qui reste à faire, et la première action au réveil.</p>
+          </div>
+          <span class="pill ok">Reprise</span>
+        </div>
+
+        <div class="resume-assistant-actions">
+          <button class="btn small primary" id="btnShowWakePlan" type="button">Afficher reprise au réveil</button>
+          <button class="btn small" id="btnDownloadWakePlan" type="button">Télécharger reprise .md</button>
+          <button class="btn small" id="btnMarkPauseReady" type="button">Marquer prêt pour pause</button>
+        </div>
+
+        <div class="resume-assistant-grid">
+          <article><b>Validé</b><span>Mode école, mémoire, explorateur, plan de collecte.</span></article>
+          <article><b>À faire</b><span>Créer un 3e snapshot plus tard, puis comparer.</span></article>
+          <article><b>Suite</b><span>Préparer V1.2-local-plan après repos.</span></article>
+        </div>
+
+        <pre class="resume-assistant-output" id="resumeAssistantOutput">Prêt pour pause. Clique “Afficher reprise au réveil” pour générer la note de reprise.</pre>
+      </div>
+
       <div class="sim-manual-title">Mode manuel avancé — utile plus tard, pas obligatoire pour apprendre</div>
       <div class="sim-controls">
         <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
@@ -1209,11 +1239,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.6</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.7</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.6"></script>
+  <script src="./app.js?v=1.1-alpha.7"></script>
 </body>
 </html>

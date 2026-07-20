@@ -2505,7 +2505,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — PROFIL SOLO DÉBUTANT 100 €
+   V1.1-alpha.7 — PROFIL SOLO DÉBUTANT 100 €
    ========================================================= */
 
 .sim-profile-panel{
@@ -2576,7 +2576,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — Refus visibles simulation
+   V1.1-alpha.7 — Refus visibles simulation
    ========================================================= */
 
 .sim-test-hint{
@@ -2596,7 +2596,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — MODE ÉCOLE GUIDÉ
+   V1.1-alpha.7 — MODE ÉCOLE GUIDÉ
    ========================================================= */
 
 .school-panel{
@@ -2720,7 +2720,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — JOURNAL PÉDAGOGIQUE + DATA COLLECTOR
+   V1.1-alpha.7 — JOURNAL PÉDAGOGIQUE + DATA COLLECTOR
    ========================================================= */
 
 .learning-panel{
@@ -2797,7 +2797,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — DATA COLLECTOR LOCAL
+   V1.1-alpha.7 — DATA COLLECTOR LOCAL
    ========================================================= */
 
 .collector-panel{
@@ -2879,7 +2879,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — EXPLORATEUR DE MÉMOIRE LOCALE
+   V1.1-alpha.7 — EXPLORATEUR DE MÉMOIRE LOCALE
    ========================================================= */
 
 .memory-explorer-panel{
@@ -2961,7 +2961,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha.6 — PLAN DE COLLECTE GUIDÉ
+   V1.1-alpha.7 — PLAN DE COLLECTE GUIDÉ
    ========================================================= */
 
 .collection-plan-panel{
@@ -3075,4 +3075,85 @@ tr.asset-row.is-selected{
   .collection-plan-grid{
     grid-template-columns:1fr;
   }
+}
+
+
+/* =========================================================
+   V1.1-alpha.7 — FEEDBACK VISUEL + ASSISTANT DE REPRISE
+   ========================================================= */
+
+.action-feedback{
+  margin:0 0 14px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.055);
+  color:#eaf4ff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.action-feedback b{ color:#fff4c2; }
+.action-feedback span{ color:#d8e6f2; }
+.action-feedback.ok{ border-color:rgba(72,255,177,.42); background:rgba(72,255,177,.10); }
+.action-feedback.warn{ border-color:rgba(255,214,122,.50); background:rgba(255,214,122,.10); }
+.action-feedback.info{ border-color:rgba(72,199,255,.40); background:rgba(72,199,255,.10); }
+
+.feedback-flash{ animation: feedbackFlash 1.15s ease-out 1; }
+@keyframes feedbackFlash{
+  0%{ box-shadow:0 0 0 0 rgba(72,255,177,.0); }
+  25%{ box-shadow:0 0 0 4px rgba(72,255,177,.25), 0 0 22px rgba(72,255,177,.12); }
+  100%{ box-shadow:0 0 0 0 rgba(72,255,177,0); }
+}
+
+.resume-assistant-panel{
+  margin:14px 0 12px;
+  padding:14px;
+  border:1px solid rgba(72,199,255,.28);
+  border-radius:18px;
+  background:radial-gradient(circle at top right, rgba(72,199,255,.12), transparent 45%), rgba(12,24,40,.78);
+}
+.resume-assistant-head{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+}
+.resume-assistant-head h3{ margin:0 0 6px; color:#fff4c2; }
+.resume-assistant-head p{ margin:0; color:#d8e6f2; font-size:13px; line-height:1.45; }
+.resume-assistant-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:10px 0 12px;
+}
+.resume-assistant-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+.resume-assistant-grid article{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:14px;
+  padding:11px 12px;
+  background:rgba(255,255,255,.055);
+}
+.resume-assistant-grid b{ display:block; color:#fff4c2; margin-bottom:5px; }
+.resume-assistant-grid span{ display:block; color:#c9d6e2; font-size:12px; line-height:1.4; }
+.resume-assistant-output{
+  white-space:pre-wrap;
+  min-height:130px;
+  max-height:380px;
+  overflow:auto;
+  padding:14px;
+  border:1px solid rgba(72,199,255,.25);
+  border-radius:14px;
+  background:rgba(4,14,24,.72);
+  color:#eaf4ff;
+  line-height:1.55;
+}
+@media (max-width: 900px){
+  .resume-assistant-grid{ grid-template-columns:1fr; }
 }

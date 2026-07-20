@@ -104,7 +104,12 @@ const els = {
   collectionProgressTitle: $("collectionProgressTitle"),
   collectionProgressText: $("collectionProgressText"),
   collectionProgressBar: $("collectionProgressBar"),
-  collectionPlanOutput: $("collectionPlanOutput")
+  collectionPlanOutput: $("collectionPlanOutput"),
+  actionFeedback: $("actionFeedback"),
+  btnShowWakePlan: $("btnShowWakePlan"),
+  btnDownloadWakePlan: $("btnDownloadWakePlan"),
+  btnMarkPauseReady: $("btnMarkPauseReady"),
+  resumeAssistantOutput: $("resumeAssistantOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -785,7 +790,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_6",
+  key: "solo_beginner_100_v1_1_alpha_7",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -794,7 +799,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_6";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_7";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1038,7 +1043,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1146,7 +1151,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2191,7 +2196,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.6</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.7</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2271,7 +2276,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.6.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.7.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2361,7 +2366,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2436,7 +2441,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.6`,
+    `Version : V1.1-alpha.7`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2538,7 +2543,7 @@ function downloadSimulationJSON() {
 
 
 
-const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_6";
+const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_7";
 const COLLECTOR_MAX_RECORDS = 500;
 
 function readCollectorMemory() {
@@ -2577,7 +2582,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2680,7 +2685,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2698,7 +2703,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.6",
+    version: "V1.1-alpha.7",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -2995,7 +3000,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.6",
+    "Version : V1.1-alpha.7",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3033,14 +3038,17 @@ function renderMemoryExplorer(text) {
 
 function exploreMemory() {
   renderMemoryExplorer(exploreMemoryText());
+  setActionFeedback("info", "Mémoire lue", "L’Explorateur affiche les snapshots, tags et refus observés.", els.memoryExplorerOutput);
 }
 
 function compareMemory() {
   renderMemoryExplorer(compareMemoryText());
+  setActionFeedback("info", "Comparaison affichée", "L’Explorateur compare le premier et le dernier snapshot quand il y en a au moins deux.", els.memoryExplorerOutput);
 }
 
 function summarizeRefusals() {
   renderMemoryExplorer(refusalSummaryText());
+  setActionFeedback("info", "Refus résumés", "Les refus de sécurité sont comptés et expliqués.", els.memoryExplorerOutput);
 }
 
 function downloadMemoryReport() {
@@ -3048,8 +3056,120 @@ function downloadMemoryReport() {
   const report = buildMemoryReportMarkdown();
   downloadTextFile(`agent_crypto_rapport_memoire_${stamp}.md`, "text/markdown", report);
   renderMemoryExplorer(report);
+  setActionFeedback("ok", "Rapport téléchargé", "Le rapport mémoire .md est prêt.", els.memoryExplorerOutput);
 }
 
+
+
+
+function setActionFeedback(kind, title, text, target = null) {
+  const el = els.actionFeedback || document.getElementById("actionFeedback");
+  if (!el) return;
+
+  el.classList.remove("ok", "warn", "info", "neutral", "feedback-flash");
+  el.classList.add(kind || "neutral");
+  el.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(text)}</span>`;
+  void el.offsetWidth;
+  el.classList.add("feedback-flash");
+
+  if (target?.scrollIntoView) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function flashPanel(panel) {
+  if (!panel) return;
+  panel.classList.remove("feedback-flash");
+  void panel.offsetWidth;
+  panel.classList.add("feedback-flash");
+}
+
+function buildWakePlanText() {
+  const records = readCollectorMemory();
+  const count = records.length;
+  const last = records[count - 1];
+  const lastLine = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun snapshot";
+
+  return [
+    "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
+    "",
+    "Version : V1.1-alpha.7",
+    `Date : ${new Date().toISOString()}`,
+    "",
+    "## État validé avant pause",
+    "",
+    "- Simulateur-école Solo Débutant 100 €.",
+    "- Mode École guidé.",
+    "- Refus visibles.",
+    "- Journal pédagogique.",
+    "- Data Collector local.",
+    "- Explorateur de mémoire.",
+    "- Plan de collecte guidé.",
+    "- Feedback visuel ajouté.",
+    "",
+    "## Mémoire locale",
+    "",
+    `- Snapshots enregistrés : ${count}`,
+    `- Dernier snapshot : ${lastLine}`,
+    "- Objectif conseillé : 3 snapshots",
+    "",
+    "## Reprise au réveil",
+    "",
+    "1. Ouvrir la page publique.",
+    "2. Faire Ctrl + F5.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.7.",
+    "4. Lancer Livecheck.",
+    "5. Aller dans Simulation.",
+    "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
+    "7. Cliquer “Comparer premier / dernier”.",
+    "8. Lire la conclusion de l’Explorateur.",
+    "9. Exporter le rapport mémoire .md si besoin.",
+    "",
+    "## Suite produit après repos",
+    "",
+    "Préparer V1.2-local-plan : architecture backend local Ryzen 7.",
+    "",
+    "## Sécurité",
+    "",
+    "- Aucun argent réel.",
+    "- Aucune clé API.",
+    "- Aucun wallet.",
+    "- Aucun compte exchange.",
+    "- Aucun ordre réel.",
+    "- Aucun trading automatique."
+  ].join("\\n");
+}
+
+function showWakePlan() {
+  const text = buildWakePlanText();
+  if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text;
+  setActionFeedback("info", "Reprise affichée", "La note de reprise au réveil est prête dans le bloc Assistant de reprise.", els.resumeAssistantOutput);
+}
+
+function downloadWakePlan() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  const text = buildWakePlanText();
+  downloadTextFile(`agent_crypto_reprise_apres_pause_${stamp}.md`, "text/markdown", text);
+  if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text;
+  setActionFeedback("ok", "Reprise téléchargée", "Le fichier .md de reprise est prêt.", els.resumeAssistantOutput);
+}
+
+function markPauseReady() {
+  const records = readCollectorMemory();
+  const text = [
+    "PAUSE VALIDÉE",
+    "",
+    "État conseillé avant coupure :",
+    "- Version : V1.1-alpha.7",
+    `- Snapshots mémoire : ${records.length}`,
+    "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
+    "",
+    "Tu peux fermer sans perdre la mémoire locale tant que tu gardes le même navigateur et que tu n’effaces pas les données du site."
+  ].join("\\n");
+
+  if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text;
+  setActionFeedback("ok", "Prêt pour pause", "Version de reprise préparée. Tu peux couper.", els.resumeAssistantOutput);
+}
 
 
 function collectionCount() {
@@ -3158,6 +3278,7 @@ function saveCollectionSnapshot(kind) {
     ].join("\n");
   }
 
+  setActionFeedback("ok", "Snapshot enregistré", `Mémoire locale : ${saved.length}/3 pour la lecture guidée.`, els.collectionPlanOutput);
   if (recordsBefore === 0 && kind !== "reference") {
     if (els.collectionPlanOutput) {
       els.collectionPlanOutput.textContent += "\n\nNote : tu n’avais pas encore de référence. Ce snapshot servira quand même de premier point.";
@@ -3170,7 +3291,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.6",
+    "Version : V1.1-alpha.7",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3221,7 +3342,10 @@ function buildCollectionPlanMarkdown() {
 
 function showCollectionChecklist() {
   renderCollectionProgress();
-  if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = collectionPlanText();
+  const text = collectionPlanText();
+  if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = text;
+  flashPanel(document.getElementById("collectionPlanPanel"));
+  setActionFeedback("info", "Routine de collecte affichée", "Lis le bloc Plan de collecte guidé : il indique la prochaine action et l’objectif 3 snapshots.", els.collectionPlanOutput);
 }
 
 function downloadCollectionPlan() {
@@ -3391,6 +3515,11 @@ els.btnClearCollectorMemory?.addEventListener("click", clearCollectorMemory);
 renderCollectorStatus();
 
 
+
+
+els.btnShowWakePlan?.addEventListener("click", showWakePlan);
+els.btnDownloadWakePlan?.addEventListener("click", downloadWakePlan);
+els.btnMarkPauseReady?.addEventListener("click", markPauseReady);
 
 els.btnSaveReferenceSnapshot?.addEventListener("click", () => saveCollectionSnapshot("reference"));
 els.btnSaveAfterTestSnapshot?.addEventListener("click", () => saveCollectionSnapshot("after_test"));
