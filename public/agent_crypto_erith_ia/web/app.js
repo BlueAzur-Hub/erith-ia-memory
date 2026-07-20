@@ -90,7 +90,12 @@ const els = {
   btnClearCollectorMemory: $("btnClearCollectorMemory"),
   collectorCount: $("collectorCount"),
   collectorLast: $("collectorLast"),
-  collectorOutput: $("collectorOutput")
+  collectorOutput: $("collectorOutput"),
+  btnExploreMemory: $("btnExploreMemory"),
+  btnCompareMemory: $("btnCompareMemory"),
+  btnSummarizeRefusals: $("btnSummarizeRefusals"),
+  btnDownloadMemoryReport: $("btnDownloadMemoryReport"),
+  memoryExplorerOutput: $("memoryExplorerOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -771,7 +776,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_4",
+  key: "solo_beginner_100_v1_1_alpha_5",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -780,7 +785,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_4";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_5";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1024,7 +1029,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1132,7 +1137,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2177,7 +2182,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.4</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.5</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2257,7 +2262,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.4.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.5.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2347,7 +2352,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2422,7 +2427,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.4`,
+    `Version : V1.1-alpha.5`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2524,7 +2529,7 @@ function downloadSimulationJSON() {
 
 
 
-const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_4";
+const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_5";
 const COLLECTOR_MAX_RECORDS = 500;
 
 function readCollectorMemory() {
@@ -2562,7 +2567,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2665,7 +2670,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2683,7 +2688,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.4",
+    version: "V1.1-alpha.5",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -2708,6 +2713,330 @@ function clearCollectorMemory() {
       "Cela ne touche aucun compte réel."
     ].join("\n");
   }
+}
+
+
+
+function safeNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function recordAssetsMap(record) {
+  const assets = record?.snapshot?.market_snapshot?.assets || [];
+  const map = {};
+  assets.forEach(asset => {
+    const sym = String(asset.symbol || "").toUpperCase();
+    if (!sym) return;
+    map[sym] = asset;
+  });
+  return map;
+}
+
+function pctChange(first, last) {
+  const a = safeNumber(first);
+  const b = safeNumber(last);
+  if (a === null || b === null || a === 0) return null;
+  return ((b - a) / a) * 100;
+}
+
+function signedPct(value) {
+  if (value === null || !Number.isFinite(value)) return "n/a";
+  return `${value >= 0 ? "+" : ""}${value.toFixed(2)} %`;
+}
+
+function countLearningTags(records) {
+  const counts = {};
+  records.forEach(record => {
+    (record.learning_tags || []).forEach(tag => {
+      counts[tag] = (counts[tag] || 0) + 1;
+    });
+  });
+  return counts;
+}
+
+function countRefusalTypes(records) {
+  const counts = {
+    montant_trop_gros: 0,
+    crypto_non_autorisee: 0,
+    plafond_ou_reserve: 0,
+    livecheck_requis: 0,
+    autres_refus: 0
+  };
+
+  records.forEach(record => {
+    const logs = record?.snapshot?.simulation?.logs || [];
+    logs.forEach(log => {
+      const msg = String(log.message || "");
+      if (log.type !== "REFUS") return;
+      if (msg.includes("maximum par opération")) counts.montant_trop_gros += 1;
+      else if (msg.includes("refusé. Autorisés")) counts.crypto_non_autorisee += 1;
+      else if (msg.includes("réserve minimale")) counts.plafond_ou_reserve += 1;
+      else if (msg.includes("Livecheck requis")) counts.livecheck_requis += 1;
+      else counts.autres_refus += 1;
+    });
+  });
+
+  return counts;
+}
+
+function memoryDominantTags(records) {
+  const counts = countLearningTags(records);
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) return "aucun tag dominant";
+  return entries.map(([tag, count]) => `${tag} (${count})`).join(", ");
+}
+
+function memoryExplorerEmptyText() {
+  return [
+    "MÉMOIRE VIDE",
+    "",
+    "Aucun snapshot à explorer.",
+    "",
+    "Procédure :",
+    "1. Lance Livecheck.",
+    "2. Lance un ou deux tests guidés.",
+    "3. Clique “Enregistrer snapshot maintenant”.",
+    "4. Reviens ici et clique “Lire mémoire”."
+  ].join("\n");
+}
+
+function exploreMemoryText(records = readCollectorMemory()) {
+  if (!records.length) return memoryExplorerEmptyText();
+
+  const first = records[0];
+  const last = records[records.length - 1];
+  const lastTotals = last?.snapshot?.totals || {};
+  const lastProfile = last?.snapshot?.profile || {};
+  const refusalCounts = countRefusalTypes(records);
+
+  const lines = [
+    "EXPLORATEUR DE MÉMOIRE LOCALE",
+    "",
+    `Snapshots enregistrés : ${records.length}`,
+    `Premier snapshot : ${new Date(first.saved_at).toLocaleString("fr-FR")}`,
+    `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`,
+    `Tags dominants : ${memoryDominantTags(records)}`,
+    "",
+    "Dernier état simulé :",
+    `- Capital virtuel : ${fmtEUR.format(Number(lastTotals.cash_eur ?? lastProfile.cash_eur ?? 0))}`,
+    `- Positions simulées : ${fmtEUR.format(Number(lastTotals.positions_value_eur ?? 0))}`,
+    `- Total simulé : ${fmtEUR.format(Number(lastTotals.total_value_eur ?? 0))}`,
+    `- P/L virtuel : ${fmtEUR.format(Number(lastTotals.pnl_eur ?? 0))}`,
+    "",
+    "Refus observés :",
+    `- Montant trop gros : ${refusalCounts.montant_trop_gros}`,
+    `- Crypto non autorisée : ${refusalCounts.crypto_non_autorisee}`,
+    `- Plafond / réserve : ${refusalCounts.plafond_ou_reserve}`,
+    `- Livecheck requis : ${refusalCounts.livecheck_requis}`,
+    `- Autres refus : ${refusalCounts.autres_refus}`,
+    "",
+    "Lecture pédagogique :",
+    memoryLearningConclusion(records)
+  ];
+
+  return lines.join("\n");
+}
+
+function compareMemoryText(records = readCollectorMemory()) {
+  if (!records.length) return memoryExplorerEmptyText();
+  if (records.length === 1) {
+    const one = records[0];
+    const assets = recordAssetsMap(one);
+    const lines = [
+      "COMPARAISON IMPOSSIBLE POUR L’INSTANT",
+      "",
+      "Il y a seulement 1 snapshot.",
+      "Il faut au moins 2 snapshots pour comparer une évolution.",
+      "",
+      "Snapshot actuel :"
+    ];
+    SIM_PROFILE.allowedSymbols.forEach(sym => {
+      const asset = assets[sym];
+      const price = asset?.price_eur;
+      lines.push(`- ${sym} : ${Number.isFinite(price) ? fmtEUR.format(price) : "prix manquant"}`);
+    });
+    lines.push("");
+    lines.push("Action : enregistre un autre snapshot plus tard, puis relance la comparaison.");
+    return lines.join("\n");
+  }
+
+  const first = records[0];
+  const last = records[records.length - 1];
+  const firstMap = recordAssetsMap(first);
+  const lastMap = recordAssetsMap(last);
+
+  const lines = [
+    "COMPARAISON PREMIER / DERNIER SNAPSHOT",
+    "",
+    `Premier : ${new Date(first.saved_at).toLocaleString("fr-FR")}`,
+    `Dernier : ${new Date(last.saved_at).toLocaleString("fr-FR")}`,
+    "",
+    "Variations observées :"
+  ];
+
+  SIM_PROFILE.allowedSymbols.forEach(sym => {
+    const a = firstMap[sym];
+    const b = lastMap[sym];
+    const pa = safeNumber(a?.price_eur);
+    const pb = safeNumber(b?.price_eur);
+    const delta = pctChange(pa, pb);
+
+    lines.push(
+      `- ${sym} : ${pa !== null ? fmtEUR.format(pa) : "n/a"} → ${pb !== null ? fmtEUR.format(pb) : "n/a"} (${signedPct(delta)})`
+    );
+  });
+
+  lines.push("");
+  lines.push("Lecture :");
+  lines.push(memoryMarketConclusion(firstMap, lastMap));
+
+  return lines.join("\n");
+}
+
+function refusalSummaryText(records = readCollectorMemory()) {
+  if (!records.length) return memoryExplorerEmptyText();
+
+  const counts = countRefusalTypes(records);
+  const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
+
+  const lines = [
+    "RÉSUMÉ DES REFUS DE SÉCURITÉ",
+    "",
+    `Total refus observés : ${total}`,
+    "",
+    `- Montant trop gros : ${counts.montant_trop_gros}`,
+    `- Crypto non autorisée : ${counts.crypto_non_autorisee}`,
+    `- Plafond / réserve : ${counts.plafond_ou_reserve}`,
+    `- Livecheck requis : ${counts.livecheck_requis}`,
+    `- Autres refus : ${counts.autres_refus}`,
+    "",
+    "Interprétation :"
+  ];
+
+  if (total === 0) {
+    lines.push("Aucun refus enregistré. Il faut tester les protections pour vérifier que le profil débutant bloque bien les actions risquées.");
+  } else {
+    if (counts.montant_trop_gros) lines.push("- Tu testes la limite de montant : le profil bloque les opérations supérieures à 10 €.");
+    if (counts.crypto_non_autorisee) lines.push("- Tu testes le périmètre crypto : le profil reste limité à BTC / ETH / SOL.");
+    if (counts.plafond_ou_reserve) lines.push("- Tu testes la réserve : le profil protège les 70 € virtuels minimum.");
+    if (counts.livecheck_requis) lines.push("- Tu as testé la règle anti-prix inventé : Livecheck doit être OK avant simulation.");
+  }
+
+  lines.push("");
+  lines.push("Conclusion : un refus n’est pas un échec de l’app. C’est une preuve que la règle de sécurité fonctionne.");
+
+  return lines.join("\n");
+}
+
+function memoryMarketConclusion(firstMap, lastMap) {
+  const parts = [];
+  SIM_PROFILE.allowedSymbols.forEach(sym => {
+    const delta = pctChange(firstMap[sym]?.price_eur, lastMap[sym]?.price_eur);
+    if (delta === null) return;
+    if (delta > 1) parts.push(`${sym} monte nettement dans la mémoire courte.`);
+    else if (delta < -1) parts.push(`${sym} baisse nettement dans la mémoire courte.`);
+    else parts.push(`${sym} reste relativement stable dans la mémoire courte.`);
+  });
+
+  if (!parts.length) return "Pas assez de prix exploitables pour conclure.";
+  return parts.join("\n");
+}
+
+function memoryLearningConclusion(records) {
+  const tags = countLearningTags(records);
+  const refusals = countRefusalTypes(records);
+  const totalRefusals = Object.values(refusals).reduce((sum, n) => sum + n, 0);
+  const hasExposure = records.some(record => Number(record?.snapshot?.totals?.positions_value_eur || 0) > 0);
+
+  const lines = [];
+
+  if (hasExposure) {
+    lines.push("- La mémoire contient au moins une exposition simulée : le simulateur commence à enregistrer des scénarios.");
+  } else {
+    lines.push("- La mémoire contient surtout des tests de refus : c’est normal au début, on valide d’abord les sécurités.");
+  }
+
+  if (totalRefusals) {
+    lines.push("- Les refus enregistrés montrent que le profil Solo Débutant protège le capital virtuel.");
+  }
+
+  if (tags.montant_trop_gros) {
+    lines.push("- Le tag dominant “montant_trop_gros” indique que la règle de maximum 10 € est testée.");
+  }
+
+  if (tags.crypto_non_autorisee) {
+    lines.push("- Le tag “crypto_non_autorisee” indique que le périmètre BTC / ETH / SOL est bien contrôlé.");
+  }
+
+  if (tags.plafond_ou_reserve) {
+    lines.push("- Le tag “plafond_ou_reserve” indique que la réserve minimale de 70 € est protégée.");
+  }
+
+  lines.push("- Cette mémoire reste locale navigateur : elle prépare la future base Ryzen 7, sans donnée sensible.");
+
+  return lines.join("\n");
+}
+
+function buildMemoryReportMarkdown() {
+  const records = readCollectorMemory();
+
+  const lines = [
+    "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
+    "",
+    "Version : V1.1-alpha.5",
+    `Date : ${new Date().toISOString()}`,
+    "",
+    "## Statut sécurité",
+    "",
+    "- Mémoire locale navigateur uniquement.",
+    "- Données public-compatible.",
+    "- Aucun compte réel.",
+    "- Aucune clé API.",
+    "- Aucun wallet.",
+    "- Aucun ordre réel.",
+    "",
+    "## Lecture mémoire",
+    "",
+    exploreMemoryText(records),
+    "",
+    "## Comparaison premier / dernier",
+    "",
+    compareMemoryText(records),
+    "",
+    "## Refus de sécurité",
+    "",
+    refusalSummaryText(records),
+    "",
+    "## Conclusion",
+    "",
+    "L’explorateur transforme les snapshots en lecture pédagogique. La prochaine vraie étape sera de déplacer ce principe vers une base locale plus solide sur PC Ryzen 7."
+  ];
+
+  return lines.join("\n");
+}
+
+function renderMemoryExplorer(text) {
+  if (els.memoryExplorerOutput) els.memoryExplorerOutput.textContent = text;
+}
+
+function exploreMemory() {
+  renderMemoryExplorer(exploreMemoryText());
+}
+
+function compareMemory() {
+  renderMemoryExplorer(compareMemoryText());
+}
+
+function summarizeRefusals() {
+  renderMemoryExplorer(refusalSummaryText());
+}
+
+function downloadMemoryReport() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  const report = buildMemoryReportMarkdown();
+  downloadTextFile(`agent_crypto_rapport_memoire_${stamp}.md`, "text/markdown", report);
+  renderMemoryExplorer(report);
 }
 
 
@@ -2868,6 +3197,12 @@ els.btnDownloadCollectorJSON?.addEventListener("click", downloadCollectorJSON);
 els.btnDownloadCollectorJSONL?.addEventListener("click", downloadCollectorJSONL);
 els.btnClearCollectorMemory?.addEventListener("click", clearCollectorMemory);
 renderCollectorStatus();
+
+
+els.btnExploreMemory?.addEventListener("click", exploreMemory);
+els.btnCompareMemory?.addEventListener("click", compareMemory);
+els.btnSummarizeRefusals?.addEventListener("click", summarizeRefusals);
+els.btnDownloadMemoryReport?.addEventListener("click", downloadMemoryReport);
 
 els.btnBuildSimSummary?.addEventListener("click", renderLearningSummary);
 els.btnDownloadLearningJournal?.addEventListener("click", downloadLearningJournal);
