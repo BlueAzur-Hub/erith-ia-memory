@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.5  
+Version : V0.6  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -128,3 +128,19 @@ Objectif : passage en mode cockpit dense.
 - Tableau et panneaux plus denses.
 - Premier écran conçu pour montrer immédiatement métriques + lecture froide + verrou.
 - Aucune modification du principe live : pas de source live, pas de prix.
+
+
+---
+
+## Changelog V0.6
+
+Objectif : ultra-compact.
+
+- Titre `Agent-Crypto @erith.IA` sur une seule ligne.
+- Header encore réduit.
+- Navigation et boutons réduits.
+- Cards marché plus basses.
+- Tableau plus dense.
+- Score mathématique plus petit.
+- Plus de contenu exploitable visible dès le haut de page.
+- Verrou anti-hallucination inchangé.
