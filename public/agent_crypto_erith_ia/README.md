@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.1-alpha.7.1  
+Version : V1.1-alpha.8  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -944,7 +944,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.7.1 — Profil Solo Débutant 100 €
+## V1.1-alpha.8 — Profil Solo Débutant 100 €
 
 Objectif : passer de RC27 à un simulateur-école personnel adapté au profil débutant.
 
@@ -976,7 +976,7 @@ Aucun retrait.
 
 ---
 
-## V1.1-alpha.7.1 — Refus visibles + Data Roadmap
+## V1.1-alpha.8 — Refus visibles + Data Roadmap
 
 Correction du test profil 100 € :
 
@@ -992,7 +992,7 @@ Ajout :
 
 ---
 
-## V1.1-alpha.7.1 — Mode École guidé
+## V1.1-alpha.8 — Mode École guidé
 
 Objectif : rendre le simulateur compréhensible par un non-technicien.
 
@@ -1017,7 +1017,7 @@ Aucun trading réel ajouté.
 
 ---
 
-## V1.1-alpha.7.1 — Journal pédagogique + Data Collector public
+## V1.1-alpha.8 — Journal pédagogique + Data Collector public
 
 Objectif : transformer les tests en mémoire exploitable.
 
@@ -1043,7 +1043,7 @@ Prépare la future base locale sur PC Ryzen 7.
 
 ---
 
-## V1.1-alpha.7.1 — Data Collector local
+## V1.1-alpha.8 — Data Collector local
 
 Objectif : commencer une mémoire qui grossit sans backend.
 
@@ -1076,7 +1076,7 @@ Prépare la future base locale Ryzen 7.
 
 ---
 
-## V1.1-alpha.7.1 — Explorateur de mémoire locale
+## V1.1-alpha.8 — Explorateur de mémoire locale
 
 Objectif : lire et expliquer la mémoire locale enregistrée par le Data Collector.
 
@@ -1107,7 +1107,7 @@ Aucune donnée personnelle.
 
 ---
 
-## V1.1-alpha.7.1 — Plan de collecte guidé
+## V1.1-alpha.8 — Plan de collecte guidé
 
 Objectif : guider la création d’une mémoire comparable.
 
@@ -1137,7 +1137,7 @@ Aucune donnée personnelle.
 
 ---
 
-## V1.1-alpha.7.1 — Feedback visuel + assistant de reprise
+## V1.1-alpha.8 — Feedback visuel + assistant de reprise
 
 Objectif : rendre les actions plus visibles et préparer une reprise propre après pause.
 
@@ -1161,7 +1161,7 @@ Aucun trading automatique.
 
 ---
 
-## V1.1-alpha.7.1 — Hotfix reprise lisible
+## V1.1-alpha.8 — Hotfix reprise lisible
 
 Correction ciblée :
 
@@ -1171,3 +1171,21 @@ Correction ciblée :
 
 Aucun changement crypto.
 Aucun trading réel.
+
+
+---
+
+## V1.1-alpha.8 — Icônes pédagogiques + Atlas/NØX UI
+
+Objectif : rendre l’application plus agréable et plus lisible.
+
+### Ajouts
+
+- Repères visuels par section.
+- Icônes pédagogiques.
+- Bande Atlas-10 Crypto / Math Oracle / NØX Risk Auditor.
+- Preview agents à venir.
+
+### Règle
+
+Cette version ne publie aucun Core privé et ne crée aucun agent autonome. Futhark / glyphes = esthétique, pas sécurité.

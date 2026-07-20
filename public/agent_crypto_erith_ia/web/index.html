@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.7.1</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.8</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.7.1" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.8" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.7.1</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.8</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.7.1</p>
+        <p class="eyebrow">VERROU V1.1-alpha.8</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -425,7 +425,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.7.1 · profil 100 €</span>
+        <span class="pill">V1.1-alpha.8 · profil 100 €</span>
       </div>
 
       <div class="situation-grid">
@@ -858,13 +858,19 @@
     <section class="panel glass sim-layer" id="simulation">
       <div class="section-head">
         <div>
-          <p class="eyebrow">PAPER TRADING SANDBOX</p>
+          <p class="eyebrow">△ PAPER TRADING SANDBOX</p>
           <h2>Simulation micro-transactions</h2>
           <p class="sim-intro">
             Portefeuille virtuel local avec profil débutant 100 €. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à apprendre avant toute future connexion Kraken.
           </p>
         </div>
         <span class="pill warn">Profil 100 €</span>
+      </div>
+
+      <div class="visual-identity-strip" aria-label="Identité visuelle Atlas et NØX">
+        <div class="visual-chip atlas-chip"><span class="section-icon">◇</span><div><b>Atlas-10 Crypto</b><em>analyse · mémoire · cartographie</em></div></div>
+        <div class="visual-chip oracle-chip"><span class="section-icon">∑</span><div><b>Math Oracle</b><em>scores · variations · prudence</em></div></div>
+        <div class="visual-chip nox-chip"><span class="section-icon">⊘</span><div><b>NØX Risk Auditor</b><em>refus · anti-FOMO · sécurité</em></div></div>
       </div>
 
       <div class="action-feedback neutral" id="actionFeedback" aria-live="polite">
@@ -894,10 +900,22 @@
         <div class="sim-card"><b>P/L virtuel</b><span id="simPnL">—</span></div>
       </div>
 
+      <div class="icon-legend-panel" id="iconLegendPanel">
+        <div class="icon-legend-head"><div><p class="eyebrow">REPÈRES VISUELS</p><h3>Lire l’app plus vite</h3><p>Les icônes servent à reconnaître les zones : observer, apprendre, refuser, mémoriser, reprendre.</p></div><span class="pill ok">UI douce</span></div>
+        <div class="icon-legend-grid">
+          <article><span>◉</span><b>Observer</b><em>Livecheck et marché</em></article>
+          <article><span>△</span><b>Simuler</b><em>opérations fictives</em></article>
+          <article><span>⊘</span><b>Refuser</b><em>risque bloqué</em></article>
+          <article><span>✦</span><b>Apprendre</b><em>mode école</em></article>
+          <article><span>◇</span><b>Mémoriser</b><em>snapshots locaux</em></article>
+          <article><span>☉</span><b>Reprendre</b><em>pause et suite</em></article>
+        </div>
+      </div>
+
       <div class="school-panel" id="schoolPanel">
         <div class="school-head">
           <div>
-            <p class="eyebrow">MODE ÉCOLE GUIDÉ</p>
+            <p class="eyebrow">✦ MODE ÉCOLE GUIDÉ</p>
             <h3>Apprendre sans deviner quoi taper</h3>
             <p>Chaque bouton lance un test complet et explique le résultat. Aucun argent réel, aucune clé API, aucun wallet.</p>
           </div>
@@ -945,7 +963,7 @@
       <div class="learning-panel" id="learningPanel">
         <div class="learning-head">
           <div>
-            <p class="eyebrow">JOURNAL PÉDAGOGIQUE + DATA</p>
+            <p class="eyebrow">✧ JOURNAL PÉDAGOGIQUE + DATA</p>
             <h3>Transformer les tests en mémoire exploitable</h3>
             <p>L’app résume ce que tu as testé, ce qu’elle a refusé, ce que ça apprend, puis prépare un export propre pour la future base locale.</p>
           </div>
@@ -979,7 +997,7 @@
       <div class="collector-panel" id="collectorPanel">
         <div class="collector-head">
           <div>
-            <p class="eyebrow">DATA COLLECTOR LOCAL</p>
+            <p class="eyebrow">◇ DATA COLLECTOR LOCAL</p>
             <h3>Commencer une mémoire qui grossit</h3>
             <p>Enregistre des snapshots publics non sensibles dans ce navigateur. C’est une base d’entraînement locale, pas encore un backend Ryzen 7.</p>
           </div>
@@ -1019,7 +1037,7 @@
       <div class="memory-explorer-panel" id="memoryExplorerPanel">
         <div class="memory-explorer-head">
           <div>
-            <p class="eyebrow">EXPLORATEUR DE MÉMOIRE</p>
+            <p class="eyebrow">◌ EXPLORATEUR DE MÉMOIRE</p>
             <h3>Lire ce que la mémoire commence à montrer</h3>
             <p>Compare les snapshots enregistrés, repère les variations BTC / ETH / SOL et résume les refus de sécurité.</p>
           </div>
@@ -1058,7 +1076,7 @@
       <div class="collection-plan-panel" id="collectionPlanPanel">
         <div class="collection-plan-head">
           <div>
-            <p class="eyebrow">PLAN DE COLLECTE GUIDÉ</p>
+            <p class="eyebrow">⌁ PLAN DE COLLECTE GUIDÉ</p>
             <h3>Construire une mémoire comparable</h3>
             <p>Une comparaison utile demande plusieurs snapshots. Ce bloc guide la collecte sans backend, en attendant la future base Ryzen 7.</p>
           </div>
@@ -1103,10 +1121,19 @@
         <pre class="collection-plan-output" id="collectionPlanOutput">Plan prêt. Commence par “Snapshot de référence”, puis ajoute un snapshot après test. La vraie comparaison devient utile avec au moins 2 snapshots.</pre>
       </div>
 
+      <div class="agents-preview-panel" id="agentsPreviewPanel">
+        <div class="agents-preview-head"><div><p class="eyebrow">AGENTS À VENIR</p><h3>Atlas-10 Crypto + NØX Risk Auditor</h3><p>Préparation visuelle seulement : aucun agent autonome, aucun conseil financier, aucun trading réel.</p></div><span class="pill ok">Preview</span></div>
+        <div class="agents-preview-grid">
+          <article class="agent-card atlas"><span class="agent-glyph">◇</span><b>Atlas-10 Crypto</b><p>Cartographe analytique : lit les données, structure la mémoire, prépare les scénarios.</p></article>
+          <article class="agent-card aerith"><span class="agent-glyph">✦</span><b>Aerith-10 Crypto</b><p>Pédagogie et continuité : explique, relie, garde la logique humaine du simulateur.</p></article>
+          <article class="agent-card nox"><span class="agent-glyph">⊘</span><b>NØX Risk Auditor</b><p>Contradiction utile : détecte FOMO, excès, illusion de contrôle et risques bloqués.</p></article>
+        </div>
+      </div>
+
       <div class="resume-assistant-panel" id="resumeAssistantPanel">
         <div class="resume-assistant-head">
           <div>
-            <p class="eyebrow">ASSISTANT DE REPRISE</p>
+            <p class="eyebrow">☉ ASSISTANT DE REPRISE</p>
             <h3>Reprendre proprement après la pause</h3>
             <p>Ce bloc prépare la suite : ce qui est validé, ce qui reste à faire, et la première action au réveil. Hotfix 7.1 : note lisible avec vrais retours ligne.</p>
           </div>
@@ -1239,11 +1266,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.7.1</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.8</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.7.1"></script>
+  <script src="./app.js?v=1.1-alpha.8"></script>
 </body>
 </html>
