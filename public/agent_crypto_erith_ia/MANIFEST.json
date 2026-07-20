@@ -1,7 +1,7 @@
 {
   "project": "Agent-Crypto @erith.IA",
-  "version": "1.1-alpha.7",
-  "status": "visual feedback and resume assistant",
+  "version": "1.1-alpha.7.1",
+  "status": "hotfix resume assistant markdown newlines",
   "target_path": "public/agent_crypto_erith_ia/",
   "web_entry": "public/agent_crypto_erith_ia/web/index.html",
   "generated": "2026-07-20",
@@ -33,11 +33,9 @@
   "name": "Agent-Crypto @erith.IA",
   "updated": "2026-07-20",
   "notes": [
-    "Added visual action feedback banner.",
-    "Improved collection routine feedback.",
-    "Added resume assistant panel.",
-    "Added wake-up resume Markdown export.",
-    "Added pause-ready confirmation.",
+    "Fixed literal backslash-n display in resume assistant.",
+    "Resume Markdown export now uses real newlines.",
+    "Pause-ready text now uses real newlines.",
     "No real trading added.",
     "No sensitive data stored."
   ],
