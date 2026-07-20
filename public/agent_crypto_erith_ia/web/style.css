@@ -2505,7 +2505,7 @@ tr.asset-row.is-selected{
 
 
 /* =========================================================
-   V1.1-alpha — PROFIL SOLO DÉBUTANT 100 €
+   V1.1-alpha.1.1 — PROFIL SOLO DÉBUTANT 100 €
    ========================================================= */
 
 .sim-profile-panel{
@@ -2573,3 +2573,23 @@ tr.asset-row.is-selected{
 @media (max-width:1200px){.sim-profile-grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:700px){.sim-profile-head{align-items:flex-start;flex-direction:column}.sim-profile-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.sim-profile-grid{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   V1.1-alpha.1 — Refus visibles simulation
+   ========================================================= */
+
+.sim-test-hint{
+  margin-top:12px;
+  padding:10px 12px;
+  border:1px solid rgba(255,214,122,.35);
+  border-radius:12px;
+  background:rgba(255,214,122,.08);
+  color:#fff4c2;
+  font-size:12px;
+  line-height:1.45;
+}
+.cmd-human.err{
+  border-color:rgba(255,116,116,.55) !important;
+  background:rgba(120,30,40,.22) !important;
+}

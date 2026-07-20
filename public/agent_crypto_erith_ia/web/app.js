@@ -758,7 +758,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha",
+  key: "solo_beginner_100_v1_1_alpha_1",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -767,7 +767,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_1";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -848,6 +848,14 @@ function profileRefusal(message, extra = {}) {
   });
 }
 
+function simulationRefusal(message, extra = {}) {
+  if (!state.sim) loadSimulation();
+  simLog({ type: "REFUS", message });
+  saveSimulation();
+  renderSimulation();
+  return profileRefusal(message, extra);
+}
+
 function simulationPayload() {
   if (!state.sim) loadSimulation();
   const totals = getSimulationTotals();
@@ -881,38 +889,38 @@ function simulationPayload() {
 }
 
 function simulateOrder(side, symbolInput = null, amountInput = null) {
-  if (!state.liveOk || !state.coins.length) return commandError("Livecheck requis avant simulation.", sourceHealthPayload());
+  if (!state.liveOk || !state.coins.length) return simulationRefusal("Livecheck requis avant simulation.", sourceHealthPayload());
 
   const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
   const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
   const coin = findCoinByQuery(symbol);
 
-  if (!coin) return profileRefusal(`Actif introuvable pour simulation : ${symbol || "—"}`);
-  if (!Number.isFinite(amount) || amount <= 0) return profileRefusal("Montant invalide.");
+  if (!coin) return simulationRefusal(`Actif introuvable pour simulation : ${symbol || "—"}`);
+  if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.");
   if (!state.sim) loadSimulation();
 
   const price = coin.price;
-  if (!Number.isFinite(price) || price <= 0) return profileRefusal("Prix indisponible pour simulation.");
+  if (!Number.isFinite(price) || price <= 0) return simulationRefusal("Prix indisponible pour simulation.");
 
   const sym = coin.symbol.toUpperCase();
   if (!SIM_PROFILE.allowedSymbols.includes(sym)) {
-    return profileRefusal(`Profil débutant : ${sym} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: sym });
+    return simulationRefusal(`Profil débutant : ${sym} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: sym });
   }
 
   if (amount > SIM_PROFILE.maxPerOperation) {
-    return profileRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
+    return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
   }
 
   const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price };
 
   if (side === "buy") {
     const totals = getSimulationTotals();
-    if (amount > state.sim.cash) return profileRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
+    if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
     if (state.sim.cash - amount < SIM_PROFILE.minReserve) {
-      return profileRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount });
+      return simulationRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount });
     }
     if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) {
-      return profileRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount });
+      return simulationRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount });
     }
 
     const qty = amount / price;
@@ -926,7 +934,7 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
     state.sim.cash -= amount;
     simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · profil 100 €.` });
   } else if (side === "sell") {
-    if (!pos.qty || pos.qty <= 0) return profileRefusal(`Aucune position virtuelle à vendre pour ${sym}.`);
+    if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`);
     const maxValue = pos.qty * price;
     const sellValue = Math.min(amount, maxValue);
     const qty = sellValue / price;
@@ -982,7 +990,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha",
+    version: "V1.1-alpha.1.1",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1090,7 +1098,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha",
+    version: "V1.1-alpha.1.1",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -1603,15 +1611,20 @@ function humanCommandSummary(result) {
   const cmd = String(result?.command || "").toLowerCase();
 
   if (!result || result.ok === false) {
+    const isProfileRefusal = !!result?.profile;
     return {
-      title: "Commande bloquée ou impossible",
+      title: isProfileRefusal ? "Simulation refusée : sécurité OK" : "Commande bloquée ou impossible",
       text: result?.error || "La commande n’a pas pu être exécutée.",
-      bullets: [
+      bullets: isProfileRefusal ? [
+        "Le refus est normal : le profil débutant protège le capital virtuel.",
+        "Aucun ordre réel n’a été envoyé.",
+        "Le refus est inscrit dans le journal simulation."
+      ] : [
         "Aucun ordre réel n’a été envoyé.",
         "Aucune clé API n’est utilisée dans cette page.",
         "Vérifie Livecheck si la commande dépend des données marché."
       ],
-      tags: ["sécurité", "observation only"]
+      tags: isProfileRefusal ? ["refus visible", "profil 100 €", "sécurité"] : ["sécurité", "observation only"]
     };
   }
 
@@ -2130,7 +2143,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.1.1</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2210,7 +2223,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.1.1.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
