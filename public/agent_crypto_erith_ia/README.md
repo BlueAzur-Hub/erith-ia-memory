@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V1.0-RC3  
+Version : V1.0-RC4  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -246,3 +246,23 @@ Pas de source live, pas de prix.
 Pas de données récupérées, pas de tableau chiffré.
 Pas de tableau fictif.
 ```
+
+
+---
+
+## V1.0-RC4 — Avancé visible + cache stable
+
+Objectif : garder la puissance visible et éviter les mélanges de fichiers en cache.
+
+### Correctifs
+
+- `style.css` chargé avec cache-buster `?v=1.0-rc4`.
+- `app.js` chargé avec cache-buster `?v=1.0-rc4`.
+- Mode Avancé visible par défaut.
+- Bouton renommé `Masquer avancé`.
+- Toggle avancé rendu plus robuste.
+
+### Règle
+
+Débutant crypto ne veut pas dire débutant informatique.
+La version RC4 garde le cockpit avancé visible.

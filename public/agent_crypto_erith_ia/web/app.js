@@ -686,11 +686,17 @@ $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
 els.searchInput?.addEventListener("input", renderMarketTable);
-els.btnToggleAdvanced?.addEventListener("click", () => {
-  els.advancedPanel?.classList.toggle("is-collapsed");
-  const open = !els.advancedPanel?.classList.contains("is-collapsed");
-  setText(els.btnToggleAdvanced, open ? "Masquer avancé" : "Afficher avancé");
-});
+
+const advancedButton = document.getElementById("btnToggleAdvanced");
+const advancedPanel = document.getElementById("advancedPanel");
+if (advancedButton && advancedPanel) {
+  advancedButton.type = "button";
+  advancedButton.addEventListener("click", () => {
+    advancedPanel.classList.toggle("is-collapsed");
+    const open = !advancedPanel.classList.contains("is-collapsed");
+    advancedButton.textContent = open ? "Masquer avancé" : "Afficher avancé";
+  });
+}
 
 renderSourceGrid();
 updateSourceMetric(0);

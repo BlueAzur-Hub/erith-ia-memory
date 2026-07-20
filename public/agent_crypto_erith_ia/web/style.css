@@ -762,3 +762,27 @@ tr[data-id]:hover{
 @media (max-width:560px){
   .simple-grid,.advanced-grid{grid-template-columns:1fr}
 }
+
+
+/* =========================================================
+   V1.0-RC4 — AVANCÉ VISIBLE + CACHE STABLE
+   ========================================================= */
+
+.advanced-panel{
+  min-height:100%;
+}
+
+.advanced-panel .rule-line{
+  margin-top:0;
+  margin-bottom:8px;
+}
+
+.advanced-panel.is-collapsed .advanced-grid,
+.advanced-panel.is-collapsed .rule-line{
+  display:none !important;
+}
+
+#btnToggleAdvanced{
+  cursor:pointer;
+  user-select:none;
+}
