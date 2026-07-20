@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V0.3</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -14,13 +14,13 @@
   <main class="shell">
     <header class="hero glass" id="accueil">
       <div class="hero-top">
-        <div>
+        <div class="title-block">
           <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
           <h1>Agent-Crypto <span>@erith.IA</span></h1>
-          <p class="subtitle">Observatoire crypto prudent · modèle mathématique · livecheck multi-sources · anti-FOMO</p>
+          <p class="subtitle">Observatoire prudent · modèle mathématique · livecheck multi-sources · anti-FOMO</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V0.2</span>
+          <span class="pill ok">GitHub Pack V0.3</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -40,6 +40,10 @@
         <button class="btn primary" id="btnLivecheck">Lancer Livecheck</button>
         <button class="btn" id="btnRefresh">Rafraîchir marché</button>
         <button class="btn ghost" id="btnNoFomo">Mode No-FOMO</button>
+        <div class="source-card live-decision">
+          <span>Décision tableau</span>
+          <strong id="tableDecision">Refusé avant Livecheck</strong>
+        </div>
         <div class="source-card">
           <span>Source active</span>
           <strong id="sourceName">Aucune source consultée</strong>
@@ -51,19 +55,7 @@
       </section>
     </header>
 
-    <section class="notice glass" id="offlineNotice">
-      <strong>ACCÈS LIVE NON TESTÉ</strong>
-      <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
-    </section>
-
-    <section class="ticker glass" aria-label="Ticker marché">
-      <div class="ticker-track" id="tickerTrack">
-        <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
-        <span>Agent-Crypto @erith.IA observe, vérifie, classe, refuse l’invention · </span>
-      </div>
-    </section>
-
-    <section class="metrics" id="marche">
+    <section class="metrics metrics-prime" id="marche">
       <article class="metric glass">
         <span>Capitalisation totale</span>
         <strong id="metricMarketCap">—</strong>
@@ -83,6 +75,31 @@
         <span>Sources OK</span>
         <strong id="metricSources">0/7</strong>
         <small id="metricSourcesHint">Livecheck requis</small>
+      </article>
+    </section>
+
+    <section class="notice glass" id="offlineNotice">
+      <strong>ACCÈS LIVE NON TESTÉ</strong>
+      <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
+    </section>
+
+    <section class="ticker glass" aria-label="Ticker marché">
+      <div class="ticker-track" id="tickerTrack">
+        <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
+        <span>Agent-Crypto @erith.IA observe, vérifie, classe, refuse l’invention · </span>
+      </div>
+    </section>
+
+    <section class="quick-deck">
+      <article class="panel glass cold-read">
+        <p class="eyebrow">LECTURE FROIDE</p>
+        <h2>Snapshot d’observation</h2>
+        <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
+      </article>
+      <article class="panel glass compact-panel">
+        <p class="eyebrow">VERROU V1.2</p>
+        <h2>Anti-hallucination</h2>
+        <p class="rule-line">Pas de source live, pas de prix. Pas de données récupérées, pas de tableau chiffré.</p>
       </article>
     </section>
 
@@ -122,7 +139,7 @@
         <p class="table-note" id="tableNote">Les données chiffrées apparaissent uniquement si une source réelle répond.</p>
       </article>
 
-      <aside class="panel glass" id="math">
+      <aside class="panel glass score-panel" id="math">
         <p class="eyebrow">MATH ORACLE</p>
         <h2>Score Observation Crypto</h2>
         <div class="score-ring" id="scoreRing" style="--score:0">
@@ -136,6 +153,7 @@
           <div><span>Momentum</span><b>—</b></div>
           <div><span>Risque</span><b>—</b></div>
         </div>
+        <p class="muted-line">Score indicatif : il classe une hypothèse, il ne prédit pas l’avenir.</p>
       </aside>
     </section>
 
@@ -161,7 +179,7 @@
         <p class="eyebrow">RISK SENTINEL</p>
         <h2>Validation croisée</h2>
         <div class="risk-grid" id="riskGrid">
-          <div class="risk ok"><span>Marché</span><b>En attente</b></div>
+          <div class="risk wait"><span>Marché</span><b>En attente</b></div>
           <div class="risk warn"><span>Sécurité</span><b>Non vérifiée</b></div>
           <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
           <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>
@@ -194,16 +212,17 @@
     <section class="panel glass" id="sources">
       <div class="section-head">
         <div>
-          <p class="eyebrow">SOURCE STACK</p>
-          <h2>Sources live et statut</h2>
+          <p class="eyebrow">LIVE SOURCES</p>
+          <h2>Sources testées et statut</h2>
         </div>
         <span class="pill" id="sourceDecision">Tableau refusé avant Livecheck</span>
       </div>
       <div class="source-grid" id="sourceGrid"></div>
+      <p class="source-help">Les sources avec clé API privée ne doivent jamais être exposées dans GitHub Pages. Cette V0.3 privilégie les endpoints publics et un refus propre en cas d’échec.</p>
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V0.2</span>
+      <span>Agent-Crypto @erith.IA V0.3</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>

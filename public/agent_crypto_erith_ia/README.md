@@ -1,6 +1,6 @@
 # Agent-Crypto @erith.IA
 
-Version : V0.2  
+Version : V0.3  
 Statut : prototype public / observatoire crypto prudent / non financier  
 Dépôt cible : `BlueAzur-Hub/erith-ia-memory`  
 Répertoire cible : `public/agent_crypto_erith_ia/`
@@ -28,6 +28,21 @@ Il ne sert pas à :
 - donner un conseil financier personnalisé ;
 - promettre un gain ;
 - recommander le levier, les futures ou le all-in.
+
+---
+
+## Nouveautés V0.3
+
+- interface plus compacte et plus lisible au premier écran ;
+- ticker corrigé, moins coupé, plus lent ;
+- panneau **Live Sources** renforcé ;
+- panneau **Score Observation Crypto** plus lisible ;
+- ajout d’un bloc **Tableau autorisé / refusé** ;
+- ajout d’une lecture froide automatique du marché chargé ;
+- No-FOMO plus visible ;
+- footer et labels mis à jour V0.3 ;
+- aucun prix statique ajouté ;
+- maintien du verrou V1.2 : pas de source live, pas de prix.
 
 ---
 
@@ -75,33 +90,10 @@ Ouvrir :
 web/index.html
 ```
 
-Le prototype ne contient pas de prix statiques. Les tableaux se remplissent uniquement si une source réelle répond au Livecheck.
-
----
-
-## Sources intégrées V0.2
-
-Sources directes côté navigateur selon disponibilité CORS / quotas :
-
-- CoinGecko ;
-- DEX Screener ;
-- GeckoTerminal ;
-- DefiLlama ;
-- Binance public ticker ;
-- Kraken public ticker ;
-- Coinbase public market data.
-
-Sources à réserver à une version avec proxy ou backend :
-
-- CoinMarketCap avec clé API ;
-- Etherscan avec clé API ;
-- Token Sniffer selon clé/API ;
-- sources nécessitant un secret.
-
----
-
-## Commit recommandé
+Lien GitHub Pages attendu après commit :
 
 ```text
-add public agent crypto erith ia observatory
+https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/web/index.html
 ```
+
+Le prototype ne contient pas de prix statiques. Les tableaux se remplissent uniquement si une source réelle répond au Livecheck.

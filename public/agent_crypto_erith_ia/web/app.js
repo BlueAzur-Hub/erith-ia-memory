@@ -10,8 +10,8 @@ const state = {
 
 const $ = (id) => document.getElementById(id);
 const els = {
-  liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), offlineNotice: $("offlineNotice"),
-  tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"),
+  liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), offlineNotice: $("offlineNotice"), tableDecision: $("tableDecision"),
+  tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), coldRead: $("coldRead"),
   metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"),
   metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"),
   sourceGrid: $("sourceGrid"), sourceDecision: $("sourceDecision"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"),
@@ -19,7 +19,7 @@ const els = {
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
-const fmtCompact = new Intl.NumberFormat("fr-FR", { notation: "compact", maximumFractionDigits: 2 });
+const fmtCompactEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", notation: "compact", maximumFractionDigits: 2 });
 const fmtPct = (n) => typeof n === "number" ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "Donnée manquante";
 const clsPct = (n) => typeof n !== "number" ? "neutral" : n > 0 ? "pos" : n < 0 ? "neg" : "neutral";
 const clamp = (min, max, value) => Math.max(min, Math.min(max, value));
@@ -38,7 +38,7 @@ async function fetchWithTimeout(url, options = {}, timeout = 9000) {
 
 const SourceAdapter = {
   async coingeckoMarkets() {
-    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d&locale=fr";
+    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=60&page=1&sparkline=false&price_change_percentage=24h,7d&locale=fr";
     const data = await fetchWithTimeout(url);
     if (!Array.isArray(data) || !data.length) throw new Error("Format CoinGecko invalide");
     return data.map((coin) => ({
@@ -111,6 +111,9 @@ function setLiveStatus(mode, text) {
 async function runLivecheck() {
   setLiveStatus("warn", "Livecheck en cours");
   els.sourceDecision.textContent = "Tests sources en cours";
+  els.tableDecision.textContent = "Test en cours";
+  els.offlineNotice.style.display = "block";
+  els.offlineNotice.innerHTML = `<strong>LIVECHECK EN COURS</strong><p>Test des sources publiques. Aucun chiffre ne sera affiché sans réponse exploitable.</p>`;
   state.sourceStatus = [];
   state.coins = [];
   state.global = null;
@@ -143,6 +146,7 @@ async function runLivecheck() {
     els.sourceName.textContent = state.mainSource;
     els.sourceTime.textContent = new Date(state.timestamp).toLocaleString("fr-FR");
     els.sourceDecision.textContent = "Tableau autorisé : source marché réelle";
+    els.tableDecision.textContent = "Autorisé · source réelle";
     renderAll();
   } else {
     setLiveStatus("fail", "Livecheck échec");
@@ -151,7 +155,9 @@ async function runLivecheck() {
     els.sourceName.textContent = "Aucune source marché exploitable";
     els.sourceTime.textContent = "—";
     els.sourceDecision.textContent = "Tableau refusé : pas de source live";
+    els.tableDecision.textContent = "Refusé · pas de source";
     renderEmptyMarket("RECHERCHE LIVE ÉCHOUÉE — pas de tableau fictif.");
+    renderColdRead();
   }
   els.metricSources.textContent = `${okCount}/${liveSources.length}`;
   els.metricSourcesHint.textContent = state.liveOk ? "Source marché active" : "Pas de source marché exploitable";
@@ -167,7 +173,7 @@ function detailFromResult(result) {
   return "OK";
 }
 function cleanError(error) {
-  return String(error?.message || error || "Erreur inconnue").replace(/AbortError/i, "Timeout").slice(0, 72);
+  return String(error?.message || error || "Erreur inconnue").replace(/AbortError/i, "Timeout").slice(0, 86);
 }
 
 function renderAll() {
@@ -177,14 +183,15 @@ function renderAll() {
   renderWatchlist();
   renderScore(state.coins[0]);
   renderRiskGrid();
+  renderColdRead();
 }
 
 function renderMetrics() {
   const g = state.global;
   if (!g) return;
-  els.metricMarketCap.textContent = fmtEUR.format(g.total_market_cap?.eur || 0);
+  els.metricMarketCap.textContent = fmtCompactEUR.format(g.total_market_cap?.eur || 0);
   els.metricMarketCapHint.textContent = "CoinGecko global";
-  els.metricVolume.textContent = fmtEUR.format(g.total_volume?.eur || 0);
+  els.metricVolume.textContent = fmtCompactEUR.format(g.total_volume?.eur || 0);
   els.metricVolumeHint.textContent = "Volume global 24h";
   const btc = g.market_cap_percentage?.btc;
   els.metricBtcDom.textContent = typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante";
@@ -192,8 +199,9 @@ function renderMetrics() {
 }
 
 function renderTicker() {
-  const items = state.coins.slice(0, 12).map(c => `${c.symbol} ${fmtEUR.format(c.price)} ${fmtPct(c.change24h)}`).join(" · ");
-  els.tickerTrack.innerHTML = `<span>${items} · Source : ${state.mainSource} · </span><span>${items} · Source : ${state.mainSource} · </span>`;
+  const items = state.coins.slice(0, 16).map(c => `${c.symbol} ${fmtEUR.format(c.price)} ${fmtPct(c.change24h)}`).join(" · ");
+  const message = `${items} · Source : ${state.mainSource} · Heure : ${new Date(state.timestamp).toLocaleTimeString("fr-FR")} · `;
+  els.tickerTrack.innerHTML = `<span>${escapeHtml(message)}</span><span>${escapeHtml(message)}</span>`;
 }
 
 function scoreCoin(c) {
@@ -217,7 +225,7 @@ function scoreCoin(c) {
   penalty += 16; // sécurité/social/on-chain non vérifiés dans le prototype public
   const score = Math.round(clamp(0, 100, positive - penalty));
   let label = score <= 40 ? "Veille fragile" : score <= 55 ? "Veille" : score <= 65 ? "Signal faible" : score <= 75 ? "Analyse approfondie" : "Signal fort mais risqué";
-  return { score, label, parts };
+  return { score, label, parts, penalty };
 }
 function decisionFromScore(s) {
   if (s === null) return "Livecheck requis";
@@ -226,6 +234,21 @@ function decisionFromScore(s) {
   if (s <= 65) return "Signal faible";
   if (s <= 75) return "Analyse approfondie";
   return "Signal fort mais risqué";
+}
+
+function renderColdRead() {
+  if (!state.liveOk) {
+    els.coldRead.textContent = "Accès live absent ou non testé. L’observatoire refuse d’afficher un tableau chiffré. Action sûre : lancer Livecheck ou fournir un export de données.";
+    return;
+  }
+  const btc = state.coins.find(c => c.id === "bitcoin") || state.coins[0];
+  const eth = state.coins.find(c => c.id === "ethereum");
+  const movers = [...state.coins].filter(c => typeof c.change24h === "number").sort((a,b)=>Math.abs(b.change24h)-Math.abs(a.change24h)).slice(0,3);
+  const globalCap = state.global?.total_market_cap?.eur;
+  const btcDom = state.global?.market_cap_percentage?.btc;
+  els.coldRead.innerHTML = `Source active : <b>${state.mainSource}</b>. Marché global récupéré${globalCap ? `, capitalisation ${fmtCompactEUR.format(globalCap)}` : ""}${typeof btcDom === "number" ? `, dominance BTC ${btcDom.toFixed(2)} %` : ""}.<br><br>` +
+    `BTC : <b>${fmtEUR.format(btc.price)}</b> (${fmtPct(btc.change24h)} sur 24h). ${eth ? `ETH : <b>${fmtEUR.format(eth.price)}</b> (${fmtPct(eth.change24h)}).` : ""}<br><br>` +
+    `Mouvements à surveiller : ${movers.map(m => `${m.symbol} ${fmtPct(m.change24h)}`).join(" · ")}. Lecture prudente : ces variations déclenchent une veille, pas une décision.`;
 }
 
 function renderMarketTable() {
@@ -241,8 +264,8 @@ function renderMarketTable() {
       <td>${num(c.price, fmtEUR)}</td>
       <td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td>
       <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
-      <td>${num(c.marketCap, v => fmtEUR.format(v))}</td>
-      <td>${num(c.volume24h, v => fmtEUR.format(v))}</td>
+      <td>${num(c.marketCap, v => fmtCompactEUR.format(v))}</td>
+      <td>${num(c.volume24h, v => fmtCompactEUR.format(v))}</td>
       <td>${s.score}</td>
       <td>${decisionFromScore(s.score)}</td>
     </tr>`;
@@ -276,14 +299,14 @@ function renderWatchlist() {
   if (!state.liveOk) { els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Aucune donnée watchlist inventée.</div>`; return; }
   const cards = state.watchIds.map(id => state.coins.find(c => c.id === id)).filter(Boolean).map(c => {
     const s = scoreCoin(c);
-    return `<div class="mini-card"><strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong><div class="meta">${fmtEUR.format(c.price)} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span></div><div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div></div>`;
+    return `<div class="mini-card"><strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong><div class="meta">${fmtEUR.format(c.price)} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span> · 7j <span class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</span></div><div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div></div>`;
   });
   els.watchCards.innerHTML = cards.length ? cards.join("") : `<div class="mini-card muted">Aucun actif de watchlist trouvé dans le top chargé.</div>`;
 }
 function renderRiskGrid() {
   els.riskGrid.innerHTML = `
     <div class="risk ok"><span>Marché</span><b>${state.liveOk ? "Validé source live" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée par V0.2</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V0.3</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -308,7 +331,7 @@ function analyzeNews() {
 function analyzeFomo() {
   const text = els.fomoInput.value.trim();
   if (!text) { els.fomoOutput.textContent = "Écris ce qui déclenche la FOMO."; return; }
-  const hasBigMove = /\+\s?\d{2,}|explos|pump|rate|raté|peur|vite|maintenant/i.test(text);
+  const hasBigMove = /\+\s?\d{2,}|explos|pump|raté|rate|peur|vite|maintenant/i.test(text);
   els.fomoOutput.textContent = `MODE NO-FOMO\n\nSignal émotionnel : ${hasBigMove ? "élevé" : "à vérifier"}\nDécision : position théorique interdite tant que l’analyse froide n’est pas faite.\n\nQuestions :\n1. La hausse est-elle déjà pricée ?\n2. Qui vend si tu entres maintenant ?\n3. Quelle source primaire confirme le signal ?\n4. Où est l’invalidation ?\n5. La perte maximale est-elle acceptée ?\n\nConclusion : une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.`;
 }
 function addWatch() {
@@ -332,3 +355,4 @@ $("btnAnalyzeNews").addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo").addEventListener("click", analyzeFomo);
 
 renderSourceGrid();
+renderColdRead();
