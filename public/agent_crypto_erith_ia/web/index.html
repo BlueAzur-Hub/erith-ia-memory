@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.11</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.12</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.11" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.12" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.11</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.12</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.11</p>
+        <p class="eyebrow">VERROU V1.1-alpha.12</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -267,20 +267,32 @@
           <div><span>Momentum</span><b>—</b></div>
           <div><span>Risque</span><b>—</b></div>
         </div>
-        <p class="muted-line">Lecture mathématique : observation, simulation, risque et refus. Aucun ordre réel.</p>
-        <div class="atlas-math-core" id="atlasMathCorePanel">
-          <div class="atlas-math-card"><span>Data Quality</span><b>—</b><small>Livecheck requis</small></div>
-          <div class="atlas-math-card"><span>Market Math</span><b>—</b><small>En attente</small></div>
-          <div class="atlas-math-card"><span>Signal Quality</span><b>—</b><small>En attente</small></div>
-          <div class="atlas-math-card"><span>Scenario Math</span><b>—</b><small>En attente</small></div>
-          <div class="atlas-math-card"><span>Risk Math</span><b>—</b><small>En attente</small></div>
-          <div class="atlas-math-card"><span>Micro-Transaction</span><b>—</b><small>Lecture seule</small></div>
-          <div class="atlas-math-card wide"><span>Execution Math</span><b>—</b><small>Aucun ordre réel</small></div>
+        <p class="muted-line">Lecture humaine d’abord. Les scores techniques restent en dessous.</p>
+        <div class="atlas-human-verdict" id="atlasHumanVerdict">
+          <b>Verdict :</b> en attente du Livecheck.<br>
+          <b>Pourquoi :</b> aucune source marché n’a encore répondu.<br>
+          <b>Action :</b> lecture seule.
         </div>
+        <div class="atlas-summary-grid" id="atlasSummaryGrid">
+          <div><span>Données</span><b>En attente</b></div>
+          <div><span>Marché</span><b>En attente</b></div>
+          <div><span>Signal</span><b>En attente</b></div>
+          <div><span>Risque</span><b>En attente</b></div>
+        </div>
+        <details class="atlas-tech-details" open>
+          <summary>Détails mathématiques</summary>
+          <div class="atlas-math-core" id="atlasMathCorePanel">
+            <div class="atlas-math-card"><span>Data Quality</span><b>—</b><small>Livecheck requis</small></div>
+            <div class="atlas-math-card"><span>Market Math</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Signal Quality</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Scenario Math</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Risk Math</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Micro-Transaction</span><b>—</b><small>Lecture seule</small></div>
+            <div class="atlas-math-card wide"><span>Execution Math</span><b>—</b><small>Aucun ordre réel</small></div>
+          </div>
+        </details>
         <div class="atlas-verdict" id="atlasMathVerdict">
-          <b>Verdict Atlas :</b> observation<br>
-          <b>Raison :</b> Livecheck requis.<br>
-          <b>Action autorisée :</b> lecture seule.
+          <b>Verrou :</b> aucun ordre réel · aucune clé API · aucun capital engagé.
         </div>
       </aside>
     </section>
@@ -448,7 +460,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.11 · Math Core</span>
+        <span class="pill">V1.1-alpha.12 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1294,11 +1306,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.11</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.12</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.11"></script>
+  <script src="./app.js?v=1.1-alpha.12"></script>
 </body>
 </html>
