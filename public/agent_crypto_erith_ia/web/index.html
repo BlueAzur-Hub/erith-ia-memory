@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.13</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.14</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.13" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.14" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.13</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.14</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -31,6 +31,7 @@
         <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
         <a href="#auto-reader">Auto Reader</a>
+        <a href="#shared-memory">Shared Memory</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
         <a href="#situation">Situation</a>
@@ -130,6 +131,38 @@
       <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture se lance automatiquement.</pre>
     </section>
 
+    <section class="panel glass shared-memory-panel" id="shared-memory">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
+          <h2>Identité collecteur + export / import</h2>
+          <p class="planning-intro">Chaque machine a une ID. Elle collecte localement, exporte sa mémoire, puis peut importer les relevés d’une autre machine sans écraser les siens.</p>
+        </div>
+        <span class="pill" id="collectorIdentityBadge">Collecteur local</span>
+      </div>
+
+      <div class="collector-id-row">
+        <label class="sort-box collector-id-box">
+          <span>ID collecteur</span>
+          <input id="collectorIdInput" type="text" placeholder="transformer-book-christophe" />
+        </label>
+        <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID</button>
+        <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
+        <label class="btn small file-like" for="autoMemoryImport">Importer JSON</label>
+        <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
+        <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
+      </div>
+
+      <div class="shared-grid">
+        <article><b>Collecteur actif</b><span id="sharedCollectorId">Non défini</span></article>
+        <article><b>Mémoire locale</b><span id="sharedLocalCount">0 snapshots</span></article>
+        <article><b>Collecteurs connus</b><span id="sharedCollectorsCount">0</span></article>
+        <article><b>Dernier import</b><span id="sharedLastImport">Aucun</span></article>
+      </div>
+
+      <pre class="shared-memory-output" id="sharedMemoryOutput">Définis une ID collecteur sur chaque machine : ryzen7-christophe, transformer-book-christophe, yohan-machine.</pre>
+    </section>
+
 
     <section class="beginner-deck" id="debutant">
       <article class="panel glass beginner-panel">
@@ -224,7 +257,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.13</p>
+        <p class="eyebrow">VERROU V1.1-alpha.14</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -497,7 +530,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.13 · Math Core</span>
+        <span class="pill">V1.1-alpha.14 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1343,11 +1376,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.13</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.14</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.13"></script>
+  <script src="./app.js?v=1.1-alpha.14"></script>
 </body>
 </html>
