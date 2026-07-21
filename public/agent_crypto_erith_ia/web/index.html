@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.15</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.16</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.15" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.16" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.15</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.16</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -95,73 +95,9 @@
       <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
     </section>
 
-    <section class="panel glass auto-reader-panel" id="auto-reader">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ATLAS AUTO READER</p>
-          <h2>Collecte autonome du marché</h2>
-          <p class="planning-intro">À l’ouverture, Atlas lance le Livecheck, rafraîchit le marché, enregistre les snapshots et résume les mouvements.</p>
-        </div>
-        <span class="pill ok" id="autoModeStatus">Auto ON</span>
-      </div>
+    
 
-      <div class="auto-actions">
-        <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
-        <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
-        <label class="sort-box auto-cadence-box">
-          <span>Cadence</span>
-          <select id="autoCadenceSelect">
-            <option value="adaptive" selected>Adaptative</option>
-            <option value="30">30 secondes</option>
-            <option value="60">60 secondes</option>
-            <option value="300">5 minutes</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="auto-grid">
-        <article><b>Dernière lecture</b><span id="autoLastRead">En attente</span></article>
-        <article><b>Prochaine lecture</b><span id="autoNextRead">Préparation</span></article>
-        <article><b>Cadence active</b><span id="autoActiveCadence">60 secondes</span></article>
-        <article><b>Snapshots auto</b><span id="autoSnapshots">0</span></article>
-        <article><b>État marché</b><span id="autoMarketPulse">En attente</span></article>
-        <article><b>Watchlist</b><span id="autoWatchStatus">BTC · ETH · SOL</span></article>
-      </div>
-
-      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. Hotfix alpha.15 : interface déverrouillée même si une lecture échoue.</pre>
-    </section>
-
-    <section class="panel glass shared-memory-panel" id="shared-memory">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
-          <h2>Identité collecteur + export / import</h2>
-          <p class="planning-intro">Chaque machine a une ID. Elle collecte localement, exporte sa mémoire, puis peut importer les relevés d’une autre machine sans écraser les siens.</p>
-        </div>
-        <span class="pill" id="collectorIdentityBadge">Collecteur local</span>
-      </div>
-
-      <div class="collector-id-row">
-        <label class="sort-box collector-id-box">
-          <span>ID collecteur</span>
-          <input id="collectorIdInput" type="text" placeholder="transformer-book-christophe" />
-        </label>
-        <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID</button>
-        <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
-        <label class="btn small file-like" for="autoMemoryImport">Importer JSON</label>
-        <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
-        <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
-      </div>
-
-      <div class="shared-grid">
-        <article><b>Collecteur actif</b><span id="sharedCollectorId">Non défini</span></article>
-        <article><b>Mémoire locale</b><span id="sharedLocalCount">0 snapshots</span></article>
-        <article><b>Collecteurs connus</b><span id="sharedCollectorsCount">0</span></article>
-        <article><b>Dernier import</b><span id="sharedLastImport">Aucun</span></article>
-      </div>
-
-      <pre class="shared-memory-output" id="sharedMemoryOutput">Définis une ID collecteur sur chaque machine : ryzen7-christophe, transformer-book-christophe, yohan-machine.</pre>
-    </section>
+    
 
 
     <section class="beginner-deck" id="debutant">
@@ -257,7 +193,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.15</p>
+        <p class="eyebrow">VERROU V1.1-alpha.16</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -402,6 +338,77 @@
       </article>
     </section>
 
+
+
+    <!-- Atlas technical collectors moved below market/watchlist in V1.1-alpha.16 -->
+<section class="panel glass auto-reader-panel" id="auto-reader">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ATLAS AUTO READER</p>
+          <h2>Collecte autonome du marché</h2>
+          <p class="planning-intro">À l’ouverture, Atlas lance le Livecheck en arrière-plan. Ce panneau reste placé après la lecture marché/watchlist pour ne pas encombrer l’entrée.</p>
+        </div>
+        <span class="pill ok" id="autoModeStatus">Auto ON</span>
+      </div>
+
+      <div class="auto-actions">
+        <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
+        <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
+        <label class="sort-box auto-cadence-box">
+          <span>Cadence</span>
+          <select id="autoCadenceSelect">
+            <option value="adaptive" selected>Adaptative</option>
+            <option value="30">30 secondes</option>
+            <option value="60">60 secondes</option>
+            <option value="300">5 minutes</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="auto-grid">
+        <article><b>Dernière lecture</b><span id="autoLastRead">En attente</span></article>
+        <article><b>Prochaine lecture</b><span id="autoNextRead">Préparation</span></article>
+        <article><b>Cadence active</b><span id="autoActiveCadence">60 secondes</span></article>
+        <article><b>Snapshots auto</b><span id="autoSnapshots">0</span></article>
+        <article><b>État marché</b><span id="autoMarketPulse">En attente</span></article>
+        <article><b>Watchlist</b><span id="autoWatchStatus">BTC · ETH · SOL</span></article>
+      </div>
+
+      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. Hotfix alpha.16 : interface déverrouillée même si une lecture échoue.</pre>
+    </section>
+
+<section class="panel glass shared-memory-panel" id="shared-memory">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
+          <h2>Identité collecteur + export / import</h2>
+          <p class="planning-intro">Chaque machine a une ID. Elle collecte localement, exporte sa mémoire, puis peut importer les relevés d’une autre machine sans écraser les siens.</p>
+        </div>
+        <span class="pill" id="collectorIdentityBadge">Collecteur local</span>
+      </div>
+
+      <div class="collector-id-row">
+        <label class="sort-box collector-id-box">
+          <span>ID collecteur</span>
+          <input id="collectorIdInput" type="text" placeholder="transformer-book-christophe" />
+        </label>
+        <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID</button>
+        <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
+        <label class="btn small file-like" for="autoMemoryImport">Importer JSON</label>
+        <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
+        <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
+      </div>
+
+      <div class="shared-grid">
+        <article><b>Collecteur actif</b><span id="sharedCollectorId">Non défini</span></article>
+        <article><b>Mémoire locale</b><span id="sharedLocalCount">0 snapshots</span></article>
+        <article><b>Collecteurs connus</b><span id="sharedCollectorsCount">0</span></article>
+        <article><b>Dernier import</b><span id="sharedLastImport">Aucun</span></article>
+      </div>
+
+      <pre class="shared-memory-output" id="sharedMemoryOutput">Définis une ID collecteur sur chaque machine : ryzen7-christophe, transformer-book-christophe, yohan-machine.</pre>
+    </section>
+
     <section class="layout-two">
       <article class="panel glass" id="nofomo">
         <p class="eyebrow">NO-FOMO</p>
@@ -530,7 +537,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.15 · Math Core</span>
+        <span class="pill">V1.1-alpha.16 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1376,11 +1383,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.15</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.16</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.15"></script>
+  <script src="./app.js?v=1.1-alpha.16"></script>
 </body>
 </html>
