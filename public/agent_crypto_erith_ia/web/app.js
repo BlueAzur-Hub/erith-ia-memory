@@ -1228,7 +1228,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1336,7 +1336,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2381,7 +2381,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.21</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.22</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2461,7 +2461,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.21.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.22.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2599,7 +2599,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2674,7 +2674,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.21`,
+    `Version : V1.1-alpha.22`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2815,7 +2815,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2918,7 +2918,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2936,7 +2936,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3233,7 +3233,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.21",
+    "Version : V1.1-alpha.22",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3326,7 +3326,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.21",
+    "Version : V1.1-alpha.22",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3350,7 +3350,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.21.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.22.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3393,7 +3393,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.21",
+    "- Version : V1.1-alpha.22",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3524,7 +3524,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.21",
+    "Version : V1.1-alpha.22",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3742,7 +3742,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.21 — Atlas Auto Reader
+   V1.1-alpha.22 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3803,7 +3803,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.21",
+    version: "V1.1-alpha.22",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3942,7 +3942,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.21",
+      "ATLAS AUTO READER — V1.1-alpha.22",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4039,6 +4039,8 @@ function setAutoCadence(value) {
 
 
 const COLLECTOR_ID_KEY = "agent_crypto_erith_ia_collector_id_v1";
+const COLLECTOR_CONFIGURED_KEY = "agent_crypto_erith_ia_collector_configured_v1";
+const COLLECTOR_MIGRATION_NOTE_KEY = "agent_crypto_erith_ia_collector_migration_note_v1";
 const AUTO_LAST_IMPORT_KEY = "agent_crypto_erith_ia_last_import_v1";
 
 function cleanCollectorId(value) {
@@ -4052,9 +4054,25 @@ function cleanCollectorId(value) {
 }
 
 function defaultCollectorId() {
+  const ua = navigator.userAgent || "";
   const platform = navigator.platform || "browser";
-  const guess = /Win/i.test(platform) ? "windows" : "browser";
+  const guess = /Android|Mobile/i.test(ua) ? "mobile" : /Win/i.test(platform) ? "windows" : "browser";
   return `collector-${guess}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function isGeneratedCollectorId(id) {
+  return /^collector-(windows|browser|mobile)-[a-z0-9]+$/i.test(String(id || ""));
+}
+
+function isLegacyCollectorId(id) {
+  const value = String(id || "").trim();
+  return !value || value === "local-legacy" || isGeneratedCollectorId(value);
+}
+
+function isCollectorConfigured() {
+  const stored = cleanCollectorId(localStorage.getItem(COLLECTOR_ID_KEY));
+  const flag = localStorage.getItem(COLLECTOR_CONFIGURED_KEY) === "1";
+  return !!stored && (flag || !isGeneratedCollectorId(stored));
 }
 
 function getCollectorId() {
@@ -4062,26 +4080,90 @@ function getCollectorId() {
   if (!id) {
     id = defaultCollectorId();
     localStorage.setItem(COLLECTOR_ID_KEY, id);
+    localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "0");
   }
   return id;
+}
+
+function migrateLocalCollectorRecords(targetId, silent = false) {
+  const id = cleanCollectorId(targetId || getCollectorId());
+  if (!id || isGeneratedCollectorId(id)) return { changed: 0, total: 0, collectors_before: [] };
+
+  const records = readAutoMemory();
+  const beforeCollectors = collectorStats(records).collectors;
+  let changed = 0;
+
+  const migrated = records.map(record => {
+    if (!record || typeof record !== "object") return record;
+    const current = record.collector_id || "local-legacy";
+
+    if (!isLegacyCollectorId(current)) return record;
+
+    changed += 1;
+    const saved = record.saved_at || new Date().toISOString();
+    const key = `${id}_${String(saved).replace(/[:.]/g, "-")}`;
+
+    return {
+      ...record,
+      id: key,
+      snapshot_id: key,
+      collector_id: id,
+      collector_type: record.collector_type || "local_browser",
+      migrated_from_collector_id: current,
+      migrated_at: new Date().toISOString()
+    };
+  });
+
+  if (changed) {
+    writeAutoMemory(normalizeSharedRecords(migrated, id));
+  }
+
+  const note = changed
+    ? `${new Date().toLocaleString("fr-FR")} · ${changed} anciens snapshots rattachés à ${id}`
+    : `${new Date().toLocaleString("fr-FR")} · aucun ancien snapshot à migrer`;
+
+  localStorage.setItem(COLLECTOR_MIGRATION_NOTE_KEY, note);
+
+  if (!silent && els.sharedMemoryOutput) {
+    els.sharedMemoryOutput.textContent = [
+      "ID COLLECTEUR SAUVÉ",
+      "",
+      `Machine configurée : ${id}`,
+      `Anciens snapshots rattachés : ${changed}`,
+      "",
+      "Cette configuration est conservée dans Firefox.",
+      "Tu n’as pas à refaire cette étape à chaque ouverture."
+    ].join("\n");
+  }
+
+  return { changed, total: records.length, collectors_before: beforeCollectors };
 }
 
 function setCollectorId(value) {
   const id = cleanCollectorId(value);
   if (!id) return getCollectorId();
+
   localStorage.setItem(COLLECTOR_ID_KEY, id);
+  localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "1");
+  migrateLocalCollectorRecords(id, false);
   return id;
 }
 
-function normalizeSharedRecords(records) {
+function normalizeSharedRecords(records, fallbackCollectorId = null) {
   const map = new Map();
+  const fallback = cleanCollectorId(fallbackCollectorId || getCollectorId());
+
   for (const record of records || []) {
     if (!record || typeof record !== "object") continue;
-    const collector = record.collector_id || getCollectorId();
+
+    const existingCollector = record.collector_id || "";
+    const collector = existingCollector || fallback || "local-legacy";
     const saved = record.saved_at || record.id || new Date().toISOString();
     const key = record.snapshot_id || record.id || `${collector}_${String(saved).replace(/[:.]/g, "-")}`;
+
     map.set(key, { ...record, id: key, snapshot_id: key, collector_id: collector });
   }
+
   return [...map.values()]
     .sort((a, b) => String(a.saved_at || "").localeCompare(String(b.saved_at || "")))
     .slice(-AUTO_MAX_RECORDS);
@@ -4094,13 +4176,20 @@ function collectorStats(records = readAutoMemory()) {
 }
 
 function renderSharedMemory() {
-  const records = readAutoMemory();
-  const stats = collectorStats(records);
   const id = getCollectorId();
 
+  if (isCollectorConfigured()) {
+    migrateLocalCollectorRecords(id, true);
+  }
+
+  const records = readAutoMemory();
+  const stats = collectorStats(records);
+  const configured = isCollectorConfigured();
+  const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire.";
+
   if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id;
-  if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = id;
-  if (els.sharedCollectorId) els.sharedCollectorId.textContent = id;
+  if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer";
+  if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`;
   if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot" : `${records.length} snapshots`;
   if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${stats.collectors.join(" / ") || "—"}`;
   if (els.sharedLastImport) els.sharedLastImport.textContent = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun";
@@ -4108,25 +4197,31 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     const last = records[records.length - 1];
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.21",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.22",
       "",
-      `Collecteur actif : ${id}`,
+      configured
+        ? `Machine configurée : ${id}`
+        : `Machine non finalisée : ${id}`,
+      configured
+        ? "Configuration : gardée automatiquement dans ce Firefox."
+        : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / yohan-machine puis clique Sauver ID une fois.",
       `Snapshots locaux : ${records.length}`,
-      `Collecteurs connus : ${stats.collectors.join(" / ") || "aucun"}`,
+      `Mémoire fusionnée : ${stats.collectors.join(" / ") || "aucune"}`,
       last?.saved_at ? `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot : aucun",
+      `Migration : ${migrationNote}`,
       "",
       "IDs conseillées :",
       "- Ryzen 7 : ryzen7-christophe",
       "- Transformer Book : transformer-book-christophe",
       "- Yohan : yohan-machine",
       "",
-      "Règle : chaque machine garde une ID unique. Export/import fusionne les relevés sans écraser."
+      "Règle : une ID par machine, une seule configuration. Export/import fusionne ensuite les relevés sans écraser."
     ].join("\n");
   }
 }
 
 function exportAutoMemory() {
-  const records = normalizeSharedRecords(readAutoMemory());
+  const records = normalizeSharedRecords(readAutoMemory(), getCollectorId());
   const payload = {
     schema: "atlas_shared_market_memory_v1",
     exported_at: new Date().toISOString(),
@@ -4181,6 +4276,7 @@ function clearAutoMemory() {
   const ok = confirm("Effacer la mémoire Auto Reader locale de ce navigateur ?");
   if (!ok) return;
   localStorage.removeItem(AUTO_MEMORY_KEY);
+  localStorage.removeItem(COLLECTOR_MIGRATION_NOTE_KEY);
   renderSharedMemory();
   renderAutoReader();
 }
@@ -4526,7 +4622,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.21
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.22
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
