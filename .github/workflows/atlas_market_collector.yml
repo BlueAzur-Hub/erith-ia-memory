@@ -31,12 +31,19 @@ jobs:
           const HISTORY = path.join(ROOT, "history");
           fs.mkdirSync(HISTORY, { recursive: true });
 
-          const now = new Date();
-          const iso = now.toISOString();
-          const day = iso.slice(0, 10);
-          const historyFile = path.join(HISTORY, `${day}.jsonl`);
-
           const TOP_LIMIT = 50;
+
+          function nowContext() {
+            const now = new Date();
+            const iso = now.toISOString();
+            const day = iso.slice(0, 10);
+            return {
+              now,
+              iso,
+              day,
+              historyFile: path.join(HISTORY, `${day}.jsonl`)
+            };
+          }
 
           function writeJson(file, payload) {
             fs.writeFileSync(file, JSON.stringify(payload, null, 2) + "\n", "utf8");
@@ -44,6 +51,58 @@ jobs:
 
           function appendJsonl(file, payload) {
             fs.appendFileSync(file, JSON.stringify(payload) + "\n", "utf8");
+          }
+
+          function writeFatalStatus(error) {
+            const ctx = nowContext();
+            writeJson(path.join(ROOT, "status.json"), {
+              schema: "atlas_github_market_status_v1",
+              version: "V1.1-alpha.25.2",
+              updated_at: ctx.iso,
+              status: "workflow_error",
+              live_ok: false,
+              source: "none",
+              assets_count: 0,
+              history_file: null,
+              message: "Erreur interne du workflow. Diagnostic commité si possible.",
+              errors: [String(error?.stack || error?.message || error)]
+            });
+            writeJson(path.join(ROOT, "latest.json"), {
+              schema: "atlas_github_market_latest_v1",
+              version: "V1.1-alpha.25.2",
+              generated_at: ctx.iso,
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: "none",
+              live_ok: false,
+              record_count: 0,
+              records: [],
+              last_error_record: {
+                id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
+                snapshot_id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
+                saved_at: ctx.iso,
+                version: "V1.1-alpha.25.2",
+                collector_id: "github-action-main",
+                collector_type: "github_action",
+                source: "none",
+                live_ok: false,
+                cadence_ms: 300000,
+                global: {
+                  market_cap_eur: null,
+                  volume_24h_eur: null,
+                  btc_dominance_pct: null
+                },
+                market_pulse: {
+                  state: "Diagnostic workflow",
+                  avg_top20_24h_pct: 0,
+                  btc_24h_pct: null,
+                  eth_24h_pct: null
+                },
+                assets: [],
+                errors: [String(error?.stack || error?.message || error)]
+              }
+            });
+            console.log("ATLAS_COLLECTOR_WORKFLOW_ERROR", String(error?.message || error));
           }
 
           const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -56,7 +115,7 @@ jobs:
                 signal: controller.signal,
                 headers: {
                   "accept": "application/json",
-                  "user-agent": "atlas-market-collector/1.1-alpha.25.1"
+                  "user-agent": "atlas-market-collector/1.1-alpha.25.2"
                 }
               });
               if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -244,62 +303,69 @@ jobs:
             };
           }
 
-          const collected = await collect();
-          const assets = Array.isArray(collected.assets) ? collected.assets : [];
-          const liveOk = assets.length > 0 && collected.source !== "none";
-          const snapshotId = `github-action-main_${iso.replace(/[:.]/g, "-")}`;
+          async function main() {
+            const ctx = nowContext();
+            const collected = await collect();
+            const assets = Array.isArray(collected.assets) ? collected.assets : [];
+            const liveOk = assets.length > 0 && collected.source !== "none";
+            const snapshotId = `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`;
 
-          const record = {
-            id: snapshotId,
-            snapshot_id: snapshotId,
-            saved_at: iso,
-            version: "V1.1-alpha.25.1",
-            collector_id: "github-action-main",
-            collector_type: "github_action",
-            source: collected.source,
-            live_ok: liveOk,
-            cadence_ms: 300000,
-            global: collected.global,
-            market_pulse: marketPulse(assets),
-            assets,
-            errors: collected.errors || []
-          };
+            const record = {
+              id: snapshotId,
+              snapshot_id: snapshotId,
+              saved_at: ctx.iso,
+              version: "V1.1-alpha.25.2",
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: collected.source,
+              live_ok: liveOk,
+              cadence_ms: 300000,
+              global: collected.global,
+              market_pulse: marketPulse(assets),
+              assets,
+              errors: collected.errors || []
+            };
 
-          const latest = {
-            schema: "atlas_github_market_latest_v1",
-            version: "V1.1-alpha.25.1",
-            generated_at: iso,
-            collector_id: "github-action-main",
-            collector_type: "github_action",
-            source: collected.source,
-            live_ok: liveOk,
-            record_count: liveOk ? 1 : 0,
-            records: liveOk ? [record] : [],
-            last_error_record: liveOk ? null : record
-          };
+            const latest = {
+              schema: "atlas_github_market_latest_v1",
+              version: "V1.1-alpha.25.2",
+              generated_at: ctx.iso,
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: collected.source,
+              live_ok: liveOk,
+              record_count: liveOk ? 1 : 0,
+              records: liveOk ? [record] : [],
+              last_error_record: liveOk ? null : record
+            };
 
-          const status = {
-            schema: "atlas_github_market_status_v1",
-            version: "V1.1-alpha.25.1",
-            updated_at: iso,
-            status: liveOk ? "ok" : "source_error",
-            live_ok: liveOk,
-            source: collected.source,
-            assets_count: assets.length,
-            history_file: liveOk ? historyFile : null,
-            message: liveOk ? `Collecte OK depuis ${collected.source}` : "Collecte impossible : toutes les sources ont échoué, diagnostic commité.",
-            errors: collected.errors || []
-          };
+            const status = {
+              schema: "atlas_github_market_status_v1",
+              version: "V1.1-alpha.25.2",
+              updated_at: ctx.iso,
+              status: liveOk ? "ok" : "source_error",
+              live_ok: liveOk,
+              source: collected.source,
+              assets_count: assets.length,
+              history_file: liveOk ? ctx.historyFile : null,
+              message: liveOk ? `Collecte OK depuis ${collected.source}` : "Collecte impossible : toutes les sources ont échoué, diagnostic commité.",
+              errors: collected.errors || []
+            };
 
-          writeJson(path.join(ROOT, "latest.json"), latest);
-          writeJson(path.join(ROOT, "status.json"), status);
+            writeJson(path.join(ROOT, "latest.json"), latest);
+            writeJson(path.join(ROOT, "status.json"), status);
 
-          if (liveOk) {
-            appendJsonl(historyFile, record);
-            console.log(`ATLAS_COLLECTOR_OK source=${collected.source} assets=${assets.length} history=${historyFile}`);
-          } else {
-            console.log(`ATLAS_COLLECTOR_SOURCE_ERROR ${JSON.stringify(collected.errors || [])}`);
+            if (liveOk) {
+              appendJsonl(ctx.historyFile, record);
+              console.log(`ATLAS_COLLECTOR_OK source=${collected.source} assets=${assets.length} history=${ctx.historyFile}`);
+            } else {
+              console.log(`ATLAS_COLLECTOR_SOURCE_ERROR ${JSON.stringify(collected.errors || [])}`);
+            }
           }
+
+          main().catch((error) => {
+            writeFatalStatus(error);
+          });
           NODE
 
       - name: Commit collected data or diagnostic
