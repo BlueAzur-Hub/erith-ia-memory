@@ -1044,7 +1044,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1152,7 +1152,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2197,7 +2197,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.10</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.11</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2277,7 +2277,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.10.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.11.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2367,7 +2367,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2442,7 +2442,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.10`,
+    `Version : V1.1-alpha.11`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2583,7 +2583,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2686,7 +2686,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2704,7 +2704,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.10",
+    version: "V1.1-alpha.11",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3001,7 +3001,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.10",
+    "Version : V1.1-alpha.11",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3094,7 +3094,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.10",
+    "Version : V1.1-alpha.11",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3118,7 +3118,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.10.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.11.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3161,7 +3161,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.10",
+    "- Version : V1.1-alpha.11",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3292,7 +3292,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.10",
+    "Version : V1.1-alpha.11",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3824,15 +3824,28 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.10
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.11
+   Source: modules .md Atlas Math.
+   Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
 function atlasFmtPct(n) {
   return typeof n === "number" && Number.isFinite(n) ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "—";
 }
 
+function atlasFmtEUR(n) {
+  return typeof n === "number" && Number.isFinite(n) ? fmtEUR.format(n) : "—";
+}
+
 function atlasSelectedCoin() {
   if (!Array.isArray(state.coins) || !state.coins.length) return null;
   return state.coins.find(c => c.id === state.selectedCoinId) || state.coins[0] || null;
+}
+
+function atlasHumanDataStatus(data) {
+  if (!data) return "données absentes";
+  if (data.status === "ok") return "données utilisables";
+  if (data.status === "faible") return `données faibles : ${data.missing.join(", ")}`;
+  return `refus données : ${data.missing.join(", ") || "inconnu"}`;
 }
 
 function computeAtlasDataQuality(coin) {
@@ -3842,38 +3855,75 @@ function computeAtlasDataQuality(coin) {
   if (coin && typeof coin.volume24h !== "number") missing.push("volume 24h");
   if (coin && !coin.source) missing.push("source");
   if (coin && !coin.timestamp) missing.push("timestamp");
+
   const score = clamp(0, 100, 100 - missing.length * 22);
-  return { score, status: score >= 80 ? "ok" : score >= 50 ? "faible" : "refus", missing };
+  return {
+    score,
+    status: score >= 80 ? "ok" : score >= 50 ? "faible" : "refus",
+    missing,
+    source: coin?.source || "aucune source",
+    timestamp: coin?.timestamp || null
+  };
 }
 
 function computeAtlasMarketMath(coin) {
-  if (!coin) return { score: 0, reason: "Livecheck requis", change24h: null, change7d: null, fomoPenalty: 0 };
+  if (!coin) {
+    return {
+      score: 0,
+      reason: "Livecheck requis",
+      human: "aucune lecture marché sans source",
+      change24h: null,
+      change7d: null,
+      fomoPenalty: 0
+    };
+  }
+
   const change24h = typeof coin.change24h === "number" ? coin.change24h : null;
   const change7d = typeof coin.change7d === "number" ? coin.change7d : null;
   const volumeScore = typeof coin.volume24h === "number" && coin.volume24h > 0 ? 20 : 0;
   const momentumScore = change24h === null ? 0 : clamp(0, 35, 18 + change24h * 2);
   const fomoPenalty = change24h !== null && Math.abs(change24h) > 12 ? 20 : 0;
   const score = clamp(0, 100, 35 + volumeScore + momentumScore - fomoPenalty);
-  return { score, reason: fomoPenalty ? "Mouvement fort : prudence" : "Marché lisible en observation", change24h, change7d, fomoPenalty };
+
+  return {
+    score,
+    reason: fomoPenalty ? "Mouvement fort : prudence" : "Marché lisible en observation",
+    human: fomoPenalty ? "marché actif mais entrée potentiellement tardive" : "marché lisible, pas un signal d’achat",
+    change24h,
+    change7d,
+    volumeScore,
+    momentumScore,
+    fomoPenalty
+  };
 }
 
 function computeAtlasSignalQuality(coin, market) {
-  if (!coin) return { score: 0, reason: "Aucun signal sans donnée" };
+  if (!coin) return { score: 0, reason: "Aucun signal sans donnée", human: "signal absent" };
+
   let score = 45;
   if (coin.source) score += 20;
   if (typeof coin.change24h === "number") score += 10;
   if (typeof coin.change7d === "number") score += 10;
   if (market?.fomoPenalty) score -= 15;
+
   score = clamp(0, 100, score);
-  return { score, reason: score >= 70 ? "Signal exploitable en simulation" : "Signal à surveiller seulement" };
+  return {
+    score,
+    reason: score >= 70 ? "Signal exploitable en simulation" : "Signal à surveiller seulement",
+    human: score >= 70 ? "hypothèse assez propre pour simulation" : "hypothèse trop faible pour action"
+  };
 }
 
 function computeAtlasScenarioMath(coin, signal) {
-  if (!coin || typeof coin.price !== "number") return { score: 0, reason: "Scénario impossible sans prix", favorable: null, neutral: null, unfavorable: null };
+  if (!coin || typeof coin.price !== "number") {
+    return { score: 0, reason: "Scénario impossible sans prix", human: "pas de scénario sans prix", favorable: null, neutral: null, unfavorable: null };
+  }
+
   const price = coin.price;
   return {
     score: clamp(0, 100, (signal?.score || 0) - 5),
     reason: "Scénario prudent ±3 % pour observation",
+    human: `favorable ${atlasFmtEUR(price * 1.03)} · neutre ${atlasFmtEUR(price)} · défavorable ${atlasFmtEUR(price * 0.97)}`,
     favorable: price * 1.03,
     neutral: price,
     unfavorable: price * 0.97
@@ -3881,27 +3931,64 @@ function computeAtlasScenarioMath(coin, signal) {
 }
 
 function computeAtlasRiskMath(coin, market) {
-  if (!coin) return { score: 80, reason: "Risque inconnu : données absentes" };
+  if (!coin) return { score: 80, reason: "Risque inconnu : données absentes", human: "risque non borné" };
+
   const change = typeof coin.change24h === "number" ? Math.abs(coin.change24h) : 8;
   const score = clamp(0, 100, 25 + change * 4 + (market?.fomoPenalty || 0));
-  return { score, reason: score > 70 ? "Risque élevé : simulation seulement" : score > 45 ? "Risque moyen : prudence" : "Risque contenu en observation" };
+  const reason = score > 70 ? "Risque élevé : simulation seulement" : score > 45 ? "Risque moyen : prudence" : "Risque contenu en observation";
+
+  return {
+    score,
+    reason,
+    human: score > 70 ? "bloquer l’action réelle" : score > 45 ? "réduire l’ambition" : "risque compatible lecture seule"
+  };
 }
 
 function computeAtlasMicroTransactionMath() {
-  return { score: 50, reason: "Frais, spread et slippage non connectés : préparation réelle interdite", gate: "unknown" };
+  return {
+    score: 50,
+    reason: "Frais, spread et slippage non connectés : préparation réelle interdite",
+    human: "pas de micro-transaction réelle sans frais/spread/slippage",
+    gate: "unknown"
+  };
 }
 
 function computeAtlasExecutionMath(data, market, signal, scenario, risk, micro) {
-  if (!data || data.status !== "ok") return { verdict: "observation", action: "lecture seule", score: 0, reason: "Data Quality Gate non validé", tone: "warn" };
-  if (risk.score >= 75) return { verdict: "simulation seulement", action: "aucun ordre", score: 25, reason: risk.reason, tone: "warn" };
+  if (!data || data.status !== "ok") {
+    return { verdict: "observation", action: "lecture seule", score: 0, reason: "Data Quality Gate non validé", tone: "warn" };
+  }
+
+  if (risk.score >= 75) {
+    return { verdict: "simulation seulement", action: "aucun ordre", score: 25, reason: risk.reason, tone: "warn" };
+  }
+
   const score = clamp(0, 100, (market.score + signal.score + scenario.score + micro.score) / 4 - risk.score * 0.35);
-  if (score >= 70) return { verdict: "simulation seulement", action: "aucun ordre", score, reason: "Signal mathématique correct, mais exécution réelle verrouillée", tone: "ok" };
-  if (score >= 45) return { verdict: "observation", action: "lecture seule", score, reason: "Hypothèse à surveiller", tone: "warn" };
+
+  if (score >= 70) {
+    return {
+      verdict: "simulation seulement",
+      action: "aucun ordre",
+      score,
+      reason: "Signal mathématique correct, mais exécution réelle verrouillée",
+      tone: "ok"
+    };
+  }
+
+  if (score >= 45) {
+    return { verdict: "observation", action: "lecture seule", score, reason: "Hypothèse à surveiller", tone: "warn" };
+  }
+
   return { verdict: "refus", action: "lecture seule", score, reason: "Conditions mathématiques insuffisantes", tone: "refus" };
 }
 
-function atlasMathCard(title, value, detail) {
-  return `<div class="atlas-math-card"><span>${escapeHtml(title)}</span><b>${escapeHtml(value)}</b><small>${escapeHtml(detail || "")}</small></div>`;
+function atlasMathCard(title, value, detail, human = "") {
+  return `
+    <div class="atlas-math-card">
+      <span>${escapeHtml(title)}</span>
+      <b>${escapeHtml(value)}</b>
+      <small>${escapeHtml(detail || "")}</small>
+      ${human ? `<em>${escapeHtml(human)}</em>` : ""}
+    </div>`;
 }
 
 function renderAtlasMathCore() {
@@ -3914,18 +4001,29 @@ function renderAtlasMathCore() {
   const micro = computeAtlasMicroTransactionMath();
   const execution = computeAtlasExecutionMath(data, market, signal, scenario, risk, micro);
 
-  state.math = { data, market, signal, scenario, risk, micro, execution, asset: coin?.id || null };
+  state.math = {
+    asset: coin ? `${coin.name} (${coin.symbol})` : null,
+    data,
+    market,
+    signal,
+    scenario,
+    risk,
+    micro,
+    execution,
+    updated_at: new Date().toISOString()
+  };
 
   const panel = document.getElementById("atlasMathCorePanel");
   if (panel) {
     panel.innerHTML = [
-      atlasMathCard("Data Quality", `${Math.round(data.score)}/100`, data.status),
-      atlasMathCard("Market Math", `${Math.round(market.score)}/100`, `${atlasFmtPct(market.change24h)} 24h · ${market.reason}`),
-      atlasMathCard("Signal Quality", `${Math.round(signal.score)}/100`, signal.reason),
-      atlasMathCard("Scenario Math", `${Math.round(scenario.score)}/100`, scenario.reason),
-      atlasMathCard("Risk Math", `${Math.round(risk.score)}/100`, risk.reason),
-      atlasMathCard("Micro-Transaction", `${Math.round(micro.score)}/100`, micro.reason),
-      `<div class="atlas-math-card wide"><span>Execution Math</span><b>${Math.round(execution.score)}/100</b><small>${escapeHtml(execution.verdict)}</small></div>`
+      atlasMathCard("Actif", coin ? `${coin.symbol}` : "—", coin ? coin.name : "Livecheck requis", coin ? `${coin.source || "source"} · ${atlasFmtEUR(coin.price)}` : ""),
+      atlasMathCard("Data Quality", `${Math.round(data.score)}/100`, data.status, atlasHumanDataStatus(data)),
+      atlasMathCard("Market Math", `${Math.round(market.score)}/100`, `${atlasFmtPct(market.change24h)} 24h`, market.human),
+      atlasMathCard("Signal Quality", `${Math.round(signal.score)}/100`, signal.reason, signal.human),
+      atlasMathCard("Scenario Math", `${Math.round(scenario.score)}/100`, scenario.reason, scenario.human),
+      atlasMathCard("Risk Math", `${Math.round(risk.score)}/100`, risk.reason, risk.human),
+      atlasMathCard("Micro-Transaction", `${Math.round(micro.score)}/100`, "lecture seule", micro.human),
+      `<div class="atlas-math-card wide"><span>Execution Math</span><b>${Math.round(execution.score)}/100</b><small>${escapeHtml(execution.verdict)}</small><em>${escapeHtml(execution.reason)}</em></div>`
     ].join("");
   }
 
@@ -3933,7 +4031,11 @@ function renderAtlasMathCore() {
   if (verdict) {
     verdict.classList.remove("ok", "warn", "refus");
     verdict.classList.add(execution.tone || "warn");
-    verdict.innerHTML = `<b>Verdict Atlas :</b> ${escapeHtml(execution.verdict)}<br><b>Raison :</b> ${escapeHtml(execution.reason)}<br><b>Action autorisée :</b> ${escapeHtml(execution.action)}`;
+    verdict.innerHTML =
+      `<b>Verdict Atlas :</b> ${escapeHtml(execution.verdict)}<br>` +
+      `<b>Raison :</b> ${escapeHtml(execution.reason)}<br>` +
+      `<b>Action autorisée :</b> ${escapeHtml(execution.action)}<br>` +
+      `<b>Verrou :</b> aucun ordre réel · aucune clé API · aucun capital engagé`;
   }
 
   const riskPanel = document.getElementById("atlasRiskMathPanel");
