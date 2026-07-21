@@ -10,6 +10,7 @@ const state = {
   selectedCoinId: "bitcoin",
   chartPeriodDays: 1,
   chartCache: {},
+  chartRenderToken: 0,
   assetFilter: "all",
   sortKey: "rank-asc",
   sim: null,
@@ -800,6 +801,7 @@ function sparkSvg(c) {
 
 async function renderAnalystPanel() {
   const c = getSelectedCoin();
+  const renderToken = ++state.chartRenderToken;
 
   if (!c) {
     setText(els.selectedAssetTitle, "Aucun actif sélectionné");
@@ -817,6 +819,8 @@ async function renderAnalystPanel() {
   }
 
   state.selectedCoinId = c.id;
+  const coinId = c.id;
+  const period = Number(state.chartPeriodDays || 1);
   setText(els.selectedAssetTitle, `${c.name} — ${c.symbol}`);
 
   const ratio = c.volume24h && c.marketCap ? `${((c.volume24h / c.marketCap) * 100).toFixed(2)} %` : "Donnée manquante";
@@ -833,16 +837,24 @@ async function renderAnalystPanel() {
 
   if (els.assetDetailWhy) els.assetDetailWhy.textContent = whyDecision(c);
 
-  const periodLabel = state.chartPeriodDays === 1 ? "24h" : `${state.chartPeriodDays}j`;
+  const periodLabel = period === 1 ? "24h" : `${period}j`;
+  const fallbackSeries = pseudoSeries(c, period === 1 ? 28 : period === 7 ? 48 : 72);
 
-  // Affichage immédiat : jamais de grand bloc vide.
-  drawLineChart(els.mainChart, pseudoSeries(c, state.chartPeriodDays === 1 ? 28 : state.chartPeriodDays === 7 ? 48 : 72), `${c.symbol} ${periodLabel}`);
+  // Affichage immédiat compact : jamais de grand bloc vide.
+  drawLineChart(els.mainChart, fallbackSeries, `${c.symbol} ${periodLabel}`);
 
   if (els.chartCaption) {
-    els.chartCaption.textContent = `Graphique ${c.symbol} · période ${periodLabel} · chargement CoinGecko si disponible.`;
+    els.chartCaption.textContent = `Graphique ${c.symbol} · période ${periodLabel} · stabilisé sur le tableau actif.`;
   }
 
-  const series = await fetchChartSeries(c, state.chartPeriodDays);
+  const series = await fetchChartSeries(c, period);
+
+  // Anti-saut visuel : si une ancienne requête graphique revient après un nouveau rendu,
+  // elle ne doit pas redessiner le canvas ni changer brutalement l’affichage.
+  if (renderToken !== state.chartRenderToken || state.selectedCoinId !== coinId || Number(state.chartPeriodDays || 1) !== period) {
+    return;
+  }
+
   drawLineChart(els.mainChart, series, `${c.symbol} ${periodLabel}`);
 
   if (els.chartCaption) {
@@ -1235,7 +1247,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1343,7 +1355,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2388,7 +2400,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.24.1.1.1</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.24.2</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2468,7 +2480,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.24.1.1.1.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.24.2.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2606,7 +2618,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2681,7 +2693,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.24.1.1.1`,
+    `Version : V1.1-alpha.24.2`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2822,7 +2834,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2925,7 +2937,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2943,7 +2955,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3240,7 +3252,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.24.1.1.1",
+    "Version : V1.1-alpha.24.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3333,7 +3345,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.24.1.1.1",
+    "Version : V1.1-alpha.24.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3357,7 +3369,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.24.1.1.1.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.24.2.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3400,7 +3412,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.24.1.1.1",
+    "- Version : V1.1-alpha.24.2",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3531,7 +3543,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.24.1.1.1",
+    "Version : V1.1-alpha.24.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3749,7 +3761,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.24.1.1.1 — Atlas Auto Reader
+   V1.1-alpha.24.2 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3810,7 +3822,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.24.1.1.1",
+    version: "V1.1-alpha.24.2",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3949,7 +3961,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.24.1.1.1",
+      "ATLAS AUTO READER — V1.1-alpha.24.2",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4223,7 +4235,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.24.1.1.1",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.24.2",
       "",
       configured
         ? `✅ Machine configurée : ${id}`
@@ -4841,7 +4853,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.24.1.1.1
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.24.2
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
