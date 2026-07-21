@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.11</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.12</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.11" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.12" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.11</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.12</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -99,46 +99,6 @@
     
 
 
-    <section class="beginner-deck" id="debutant">
-      <article class="panel glass beginner-panel">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">MODE DÉBUTANT</p>
-            <h2>Lecture simple</h2>
-          </div>
-          <button class="btn small" id="btnToggleAdvanced" type="button">Masquer avancé</button>
-        </div>
-        <p id="beginnerSummary" class="simple-summary">
-          Lance Livecheck. L’interface expliquera ensuite ce que le tableau montre, sans donner de conseil d’achat.
-        </p>
-        <div class="simple-grid">
-          <div><b>Capitalisation</b><span>Valeur totale estimée du marché crypto.</span></div>
-          <div><b>Volume 24h</b><span>Montant échangé sur 24 heures.</span></div>
-          <div><b>Dominance BTC</b><span>Poids de Bitcoin dans tout le marché.</span></div>
-          <div><b>Score de veille</b><span>Signal d’observation, pas conseil d’achat.</span></div>
-        </div>
-      </article>
-
-      <article class="panel glass advanced-panel" id="advancedPanel">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">MODE AVANCÉ</p>
-            <h2>Données conservées</h2>
-          </div>
-        </div>
-        <p class="rule-line">
-          Vue avancée : prix, variations, market cap, volume, ratio volume/market cap, type d’actif, score, source, heure, limites.
-        </p>
-        <div class="advanced-grid" id="advancedGrid">
-          <div><b>État</b><span>En attente de Livecheck</span></div>
-          <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>
-          <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>
-        </div>
-      </article>
-    </section>
-
-
-
     <section class="analyst-deck" id="analyste">
       <article class="panel glass chart-panel">
         <div class="section-head compact">
@@ -178,6 +138,7 @@
     </section>
 
 
+
     <section class="ticker glass" aria-label="Ticker marché">
       <div class="ticker-track" id="tickerTrack">
         <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
@@ -185,18 +146,6 @@
       </div>
     </section>
 
-    <section class="quick-deck">
-      <article class="panel glass cold-read">
-        <p class="eyebrow">LECTURE FROIDE</p>
-        <h2>Snapshot d’observation</h2>
-        <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
-      </article>
-      <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.11</p>
-        <h2>Anti-hallucination</h2>
-        <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
-      </article>
-    </section>
 
     <section class="layout-two">
       <article class="panel glass wide">
@@ -302,6 +251,83 @@
       </aside>
     </section>
 
+
+    <details class="atlas-collapse glass" data-collapse-key="lecture-verrou">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Lecture froide + verrou</span>
+        <span class="atlas-collapse-subtitle">Snapshot d’observation et anti-hallucination</span>
+      </summary>
+      <div class="atlas-collapse-body">
+    <section class="quick-deck">
+      <article class="panel glass cold-read">
+        <p class="eyebrow">LECTURE FROIDE</p>
+        <h2>Snapshot d’observation</h2>
+        <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
+      </article>
+      <article class="panel glass compact-panel">
+        <p class="eyebrow">VERROU V1.1-alpha.26.12</p>
+        <h2>Anti-hallucination</h2>
+        <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
+      </article>
+    </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="mode-debutant-avance">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Mode débutant + mode avancé</span>
+        <span class="atlas-collapse-subtitle">Aide de lecture et données conservées</span>
+      </summary>
+      <div class="atlas-collapse-body">
+    <section class="beginner-deck" id="debutant">
+      <article class="panel glass beginner-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">MODE DÉBUTANT</p>
+            <h2>Lecture simple</h2>
+          </div>
+          <button class="btn small" id="btnToggleAdvanced" type="button">Masquer avancé</button>
+        </div>
+        <p id="beginnerSummary" class="simple-summary">
+          Lance Livecheck. L’interface expliquera ensuite ce que le tableau montre, sans donner de conseil d’achat.
+        </p>
+        <div class="simple-grid">
+          <div><b>Capitalisation</b><span>Valeur totale estimée du marché crypto.</span></div>
+          <div><b>Volume 24h</b><span>Montant échangé sur 24 heures.</span></div>
+          <div><b>Dominance BTC</b><span>Poids de Bitcoin dans tout le marché.</span></div>
+          <div><b>Score de veille</b><span>Signal d’observation, pas conseil d’achat.</span></div>
+        </div>
+      </article>
+
+      <article class="panel glass advanced-panel" id="advancedPanel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">MODE AVANCÉ</p>
+            <h2>Données conservées</h2>
+          </div>
+        </div>
+        <p class="rule-line">
+          Vue avancée : prix, variations, market cap, volume, ratio volume/market cap, type d’actif, score, source, heure, limites.
+        </p>
+        <div class="advanced-grid" id="advancedGrid">
+          <div><b>État</b><span>En attente de Livecheck</span></div>
+          <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>
+          <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>
+        </div>
+      </article>
+    </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="watch-risques">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Watchlist + Risk Sentinel</span>
+        <span class="atlas-collapse-subtitle">Actifs à observer et validation croisée</span>
+      </summary>
+      <div class="atlas-collapse-body">
     <section class="layout-two">
       <article class="panel glass" id="watchlist">
         <div class="section-head compact">
@@ -340,7 +366,18 @@
 
 
 
-    <!-- Atlas collectors actifs sous le marché en alpha.26.11 -->
+    <!-- Atlas collectors actifs sous le marché en alpha.26.12 -->
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="auto-reader">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Atlas Auto Reader</span>
+        <span class="atlas-collapse-subtitle">Collecte autonome du marché</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 <section class="panel glass auto-reader-panel" id="auto-reader">
       <div class="section-head">
         <div>
@@ -376,6 +413,17 @@
 
       <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture se lance automatiquement.</pre>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="shared-memory">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Shared Memory</span>
+        <span class="atlas-collapse-subtitle">Export / import par machine</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
     <section class="panel glass shared-memory-panel" id="shared-memory">
       <div class="section-head">
@@ -408,6 +456,17 @@
 
       <pre class="shared-memory-output" id="sharedMemoryOutput">Statut import/export affiché ici. Un import réussi indique les snapshots ajoutés, le total et les collecteurs fusionnés.</pre>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="github-memory">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">GitHub Memory</span>
+        <span class="atlas-collapse-subtitle">Mémoire commune GitHub</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
     <section class="panel glass github-memory-panel" id="github-memory">
       <div class="section-head">
@@ -430,8 +489,19 @@
         <article><b>Fusion locale</b><span id="githubMemoryFusion">En attente</span></article>
       </div>
 
-      <pre class="github-memory-output" id="githubMemoryOutput">Mémoire GitHub non chargée. En alpha.26.11, Atlas sait déjà lire data/latest.json si le fichier existe. En alpha.26.11, GitHub Action crée ce fichier automatiquement après exécution du workflow.</pre>
+      <pre class="github-memory-output" id="githubMemoryOutput">Mémoire GitHub non chargée. En alpha.26.12, Atlas sait déjà lire data/latest.json si le fichier existe. En alpha.26.12, GitHub Action crée ce fichier automatiquement après exécution du workflow.</pre>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="nofomo-news">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">No-FOMO + News Sentinel</span>
+        <span class="atlas-collapse-subtitle">Refroidissement et classification d’actualité</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
     <section class="layout-two">
       <article class="panel glass" id="nofomo">
@@ -458,6 +528,17 @@
         <div class="analysis-box" id="newsOutput">Aucune actualité analysée.</div>
       </article>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="planning">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Plan exchange / accès déporté</span>
+        <span class="atlas-collapse-subtitle">Préparation hors GitHub Pages</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
 
@@ -519,6 +600,17 @@
         </p>
       </article>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="news-plan">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">News Sentinel — références</span>
+        <span class="atlas-collapse-subtitle">Sources d’information à surveiller</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
     <section class="panel glass news-plan" id="news-plan">
       <div class="section-head">
@@ -544,6 +636,17 @@
         <span>source identifiée → fiabilité → impact possible → données à vérifier → action : attendre / surveiller / ignorer.</span>
       </div>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="situation">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Situation du projet</span>
+        <span class="atlas-collapse-subtitle">Synthèse d’état</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
 
@@ -561,7 +664,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.11 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.12 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -626,6 +729,17 @@
         <button class="cmd-preset" data-command="boundaries">Limites verrouillées</button>
       </div>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="questionnaire">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Questionnaire opérateur</span>
+        <span class="atlas-collapse-subtitle">Cadre humain et limites</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
 
@@ -703,6 +817,17 @@
         Cette fiche reste locale au navigateur. Elle ne connecte rien et ne remplace pas un audit sécurité.
       </p>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="briefing">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Briefing opérateur</span>
+        <span class="atlas-collapse-subtitle">Lecture de contexte</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass briefing-layer" id="briefing">
@@ -775,6 +900,17 @@
         Règle session : collecter, noter, clarifier. Ne pas créer de clé, ne pas connecter de wallet, ne pas activer d’argent réel.
       </p>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="impact">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Impact / risques</span>
+        <span class="atlas-collapse-subtitle">Lecture prudente</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass impact-layer" id="impact">
@@ -818,6 +954,17 @@
         <div class="status-lock"><b>Verrouillé</b><span>Tout passage argent réel exige backend privé, logs, validation humaine et sécurité physique.</span></div>
       </div>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="physical-security">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Sécurité physique</span>
+        <span class="atlas-collapse-subtitle">Accès réel et poste local</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
     <section class="panel glass physical-layer" id="physical-security">
       <div class="section-head">
@@ -859,6 +1006,17 @@
         <span>L’IA peut observer et simuler. L’humain valide. Le matériel protège. Le réel reste verrouillé.</span>
       </div>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="backend">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Backend / API</span>
+        <span class="atlas-collapse-subtitle">Architecture future</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass backend-layer" id="backend">
@@ -932,6 +1090,17 @@
         Prochaine étape réelle : continuer la préparation sans clé réelle. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
       </p>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="safety">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Sécurité</span>
+        <span class="atlas-collapse-subtitle">Verrous et limites</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass safety-layer" id="safety">
@@ -989,6 +1158,17 @@
         GitHub Pages reste observation + simulation. L’accès distant réel, les clés Kraken et les logs doivent vivre dans un backend ou une machine sécurisée hors dépôt public.
       </p>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="simulation">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Simulation</span>
+        <span class="atlas-collapse-subtitle">Paper trading local</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass sim-layer" id="simulation">
@@ -1324,6 +1504,17 @@
         Verrou : la simulation ne remplace pas une stratégie. Tout passage réel devra exiger backend sécurisé, logs, limites, dry-run prolongé et validation humaine.
       </p>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="commandes">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Tests / Commandes</span>
+        <span class="atlas-collapse-subtitle">Commandes simples</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass command-layer" id="commandes">
@@ -1391,6 +1582,17 @@
         <span>Prépare Kraken / Bybit / Binance plus tard, via backend sécurisé.</span>
       </div>
     </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass" data-collapse-key="sources">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Sources</span>
+        <span class="atlas-collapse-subtitle">Diagnostic des sources</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
 
 
     <section class="panel glass" id="sources">
@@ -1407,11 +1609,13 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.11</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.12</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
+      </div>
+    </details>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.26.11"></script>
+  <script src="./app.js?v=1.1-alpha.26.12"></script>
 </body>
 </html>
