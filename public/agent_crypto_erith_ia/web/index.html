@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.12</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.13</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.12" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.13" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.12</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.13</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -30,6 +30,7 @@
         <a href="#livecheck">Livecheck</a>
         <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
+        <a href="#auto-reader">Auto Reader</a>
         <a href="#watchlist">Watchlist</a>
         <a href="#analyste">Analyste</a>
         <a href="#situation">Situation</a>
@@ -91,6 +92,42 @@
     <section class="notice glass" id="offlineNotice">
       <strong>ACCÈS LIVE NON TESTÉ</strong>
       <p>Aucun prix n’est affiché tant qu’une source réelle n’a pas répondu. Pas de source live, pas de prix.</p>
+    </section>
+
+    <section class="panel glass auto-reader-panel" id="auto-reader">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ATLAS AUTO READER</p>
+          <h2>Collecte autonome du marché</h2>
+          <p class="planning-intro">À l’ouverture, Atlas lance le Livecheck, rafraîchit le marché, enregistre les snapshots et résume les mouvements.</p>
+        </div>
+        <span class="pill ok" id="autoModeStatus">Auto ON</span>
+      </div>
+
+      <div class="auto-actions">
+        <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
+        <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
+        <label class="sort-box auto-cadence-box">
+          <span>Cadence</span>
+          <select id="autoCadenceSelect">
+            <option value="adaptive" selected>Adaptative</option>
+            <option value="30">30 secondes</option>
+            <option value="60">60 secondes</option>
+            <option value="300">5 minutes</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="auto-grid">
+        <article><b>Dernière lecture</b><span id="autoLastRead">En attente</span></article>
+        <article><b>Prochaine lecture</b><span id="autoNextRead">Préparation</span></article>
+        <article><b>Cadence active</b><span id="autoActiveCadence">60 secondes</span></article>
+        <article><b>Snapshots auto</b><span id="autoSnapshots">0</span></article>
+        <article><b>État marché</b><span id="autoMarketPulse">En attente</span></article>
+        <article><b>Watchlist</b><span id="autoWatchStatus">BTC · ETH · SOL</span></article>
+      </div>
+
+      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture se lance automatiquement.</pre>
     </section>
 
 
@@ -187,7 +224,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.12</p>
+        <p class="eyebrow">VERROU V1.1-alpha.13</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -304,10 +341,10 @@
             <p class="eyebrow">WATCHLIST</p>
             <h2>Actifs à observer</h2>
           </div>
-          <button class="btn small" id="btnSeedWatch">BTC · ETH · SOL</button>
+          <button class="btn small" id="btnSeedWatch">Watchlist Atlas</button>
         </div>
         <div class="watch-inputs">
-          <input id="watchInput" type="text" placeholder="Ajouter un id CoinGecko : bitcoin" />
+          <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, DOGE ou id CoinGecko" />
           <button class="btn small primary" id="btnAddWatch">Ajouter</button>
         </div>
         <div class="cards" id="watchCards">
@@ -460,7 +497,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.12 · Math Core</span>
+        <span class="pill">V1.1-alpha.13 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1306,11 +1343,11 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.12</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.13</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=1.1-alpha.12"></script>
+  <script src="./app.js?v=1.1-alpha.13"></script>
 </body>
 </html>

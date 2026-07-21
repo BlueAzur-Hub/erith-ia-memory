@@ -12,7 +12,17 @@ const state = {
   assetFilter: "all",
   sortKey: "rank-asc",
   sim: null,
-  math: null
+  math: null,
+  auto: {
+    enabled: true,
+    cadence: "adaptive",
+    intervalMs: 60000,
+    timer: null,
+    countdownTimer: null,
+    nextAt: null,
+    lastStartedAt: null,
+    livecheckBusy: false
+  }
 };
 
 const $ = (id) => document.getElementById(id);
@@ -110,7 +120,18 @@ const els = {
   btnShowWakePlan: $("btnShowWakePlan"),
   btnDownloadWakePlan: $("btnDownloadWakePlan"),
   btnMarkPauseReady: $("btnMarkPauseReady"),
-  resumeAssistantOutput: $("resumeAssistantOutput")
+  resumeAssistantOutput: $("resumeAssistantOutput"),
+  autoModeStatus: $("autoModeStatus"),
+  btnAutoToggle: $("btnAutoToggle"),
+  btnAutoNow: $("btnAutoNow"),
+  autoCadenceSelect: $("autoCadenceSelect"),
+  autoLastRead: $("autoLastRead"),
+  autoNextRead: $("autoNextRead"),
+  autoActiveCadence: $("autoActiveCadence"),
+  autoSnapshots: $("autoSnapshots"),
+  autoMarketPulse: $("autoMarketPulse"),
+  autoWatchStatus: $("autoWatchStatus"),
+  autoReaderOutput: $("autoReaderOutput")
 };
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -314,6 +335,10 @@ function explainForBeginnerLiveFailure(okCount = 0) {
 }
 
 async function runLivecheck() {
+  if (state.auto?.livecheckBusy) return;
+  state.auto.livecheckBusy = true;
+  state.auto.lastStartedAt = new Date().toISOString();
+  renderAutoReader();
   setLiveStatus("warn", "Livecheck en cours");
   setTableDecision("Tests sources en cours", "warn");
   setText(els.sourceName, "Recherche...");
@@ -385,6 +410,8 @@ setTableDecision("Refusé avant Livecheck", "fail");
     setText(els.coldRead, explainForBeginnerLiveFailure(okCount));
   }
   updateSourceMetric();
+  atlasAfterLivecheck();
+  state.auto.livecheckBusy = false;
 }
 
 
@@ -392,36 +419,54 @@ function classifyAsset(c) {
   if (!c) return "À vérifier";
   const id = String(c.id || "").toLowerCase();
   const sym = String(c.symbol || "").toUpperCase();
+  const rank = Number(c.rank || 999999);
+  const change24 = typeof c.change24h === "number" ? c.change24h : 0;
+  const change7 = typeof c.change7d === "number" ? c.change7d : 0;
+  const ratio = c.volume24h && c.marketCap ? c.volume24h / c.marketCap : 0;
+  const meme = ["DOGE","SHIB","PEPE","BONK","WIF","FLOKI"].includes(sym) || /dog|shib|pepe|bonk|floki|meme/i.test(id);
 
-  if (id === "bitcoin" || id === "ethereum" || sym === "BTC" || sym === "ETH") return "Pilier marché";
-  if (["USDT","USDC","DAI","FDUSD","TUSD","USDE"].includes(sym)) return "Stablecoin";
-  if ((c.rank || 9999) <= 20) return "Altcoin majeur";
-  if ((c.rank || 9999) <= 100) return "Altcoin";
-  return "Token spéculatif";
+  if (id === "bitcoin" || id === "ethereum" || sym === "BTC" || sym === "ETH") return "Socle marché";
+  if (["USDT","USDC","DAI","FDUSD","TUSD","USDE","USDS"].includes(sym)) return "Stablecoin";
+  if (meme && rank <= 100) return "Spéculatif liquide";
+  if (rank <= 20) return "Grand actif solide";
+  if (rank <= 100 && change24 > 0 && change7 > 0 && ratio >= 0.025) return "Opportunité à surveiller";
+  if (rank <= 120) return "À vérifier";
+  if (rank > 200 || ratio < 0.003 || Math.abs(change24) > 35) return "À éviter";
+  return "À vérifier";
+}
+
+function atlasActionForCoin(c) {
+  const type = classifyAsset(c);
+  const s = scoreCoin(c);
+  if (!c || s.score === null) return "Attendre";
+  if (type === "Socle marché") return "Observer / comparer";
+  if (type === "Stablecoin") return "Surveiller stabilité";
+  if (type === "Grand actif solide") return "Comparer";
+  if (type === "Opportunité à surveiller") return "Simulation possible";
+  if (type === "Spéculatif liquide") return "Surveiller fortement";
+  if (type === "À éviter") return "Écarter";
+  return "Vérifier";
 }
 
 function beginnerDecision(c) {
-  const type = classifyAsset(c);
-  if (type === "Stablecoin") return "Surveillance stabilité";
-  if (type === "Pilier marché") return "Repère marché";
-  const s = scoreCoin(c);
-  if (s.score === null) return "Données insuffisantes";
-  if (s.score <= 55) return "Observer";
-  if (s.score <= 75) return "Vérifier";
-  return "Risque élevé";
+  return atlasActionForCoin(c);
 }
 
 function whyDecision(c) {
   if (!c) return "Aucune donnée live exploitable.";
   const type = classifyAsset(c);
+  const action = atlasActionForCoin(c);
   const bits = [];
-  bits.push(`Type : ${type}.`);
-  if (type === "Stablecoin") bits.push("Un stablecoin ne se lit pas comme une crypto de hausse : on surveille surtout la stabilité, la liquidité et le risque d’ancrage.");
-  if (type === "Pilier marché") bits.push("Actif repère : utile pour lire l’état général du marché.");
+  bits.push(`Catégorie Atlas : ${type}.`);
+  bits.push(`Action de travail : ${action}.`);
+  if (type === "Stablecoin") bits.push("Un stablecoin n’est pas une crypto de hausse : on surveille surtout stabilité, liquidité et risque de désancrage.");
+  if (type === "Socle marché") bits.push("Actif repère : il sert à lire l’état général du marché.");
+  if (type === "Spéculatif liquide") bits.push("Actif liquide mais narratif/spéculatif : prudence renforcée.");
+  if (type === "À éviter") bits.push("Signaux trop fragiles ou trop nerveux pour une simulation simple.");
   if (typeof c.change24h === "number") bits.push(`Variation 24h : ${fmtPct(c.change24h)}.`);
+  if (typeof c.change7d === "number") bits.push(`Variation 7j : ${fmtPct(c.change7d)}.`);
   if (c.volume24h && c.marketCap) bits.push(`Ratio volume/market cap : ${((c.volume24h / c.marketCap) * 100).toFixed(2)} %.`);
-  bits.push("Sécurité, social et on-chain non validés par cette interface.");
-  bits.push("Conclusion : observation seulement, pas conseil d’achat.");
+  bits.push("Sécurité, social, news et on-chain non encore validés automatiquement.");
   return bits.join(" ");
 }
 
@@ -791,7 +836,7 @@ function sourceHealthPayload() {
 
 
 const SIM_PROFILE = {
-  key: "solo_beginner_100_v1_1_alpha_8",
+  key: "solo_beginner_100_v1_1_alpha_13",
   label: "Solo Débutant 100 €",
   startCash: 100,
   allowedSymbols: ["BTC", "ETH", "SOL"],
@@ -800,7 +845,7 @@ const SIM_PROFILE = {
   maxExposure: 30,
   minReserve: 70
 };
-const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_8";
+const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_13";
 const SIM_START_CASH = SIM_PROFILE.startCash;
 
 function loadSimulation() {
@@ -1044,7 +1089,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1152,7 +1197,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2197,7 +2242,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.12</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.13</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2277,7 +2322,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.12.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.13.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2319,17 +2364,65 @@ function analyzeFomo() {
   );
 }
 
+const WATCH_STORAGE_KEY = "agent_crypto_erith_ia_watchlist_v1_1_alpha_13";
+const WATCH_ALIAS = {
+  btc: "bitcoin",
+  bitcoin: "bitcoin",
+  eth: "ethereum",
+  ethereum: "ethereum",
+  sol: "solana",
+  solana: "solana",
+  doge: "dogecoin",
+  dogecoin: "dogecoin",
+  bnb: "binancecoin",
+  xrp: "ripple",
+  tron: "tron",
+  trx: "tron",
+  link: "chainlink",
+  chainlink: "chainlink",
+  near: "near",
+  rndr: "render-token",
+  render: "render-token",
+  usdt: "tether",
+  usdc: "usd-coin"
+};
+
+function normalizeWatchId(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) return "";
+  return WATCH_ALIAS[raw] || raw.replace(/\s+/g, "-");
+}
+
+function saveWatchIds() {
+  try { localStorage.setItem(WATCH_STORAGE_KEY, JSON.stringify(state.watchIds)); } catch {}
+}
+
+function loadWatchIds() {
+  try {
+    const raw = localStorage.getItem(WATCH_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (Array.isArray(parsed) && parsed.length) {
+      state.watchIds = parsed.map(normalizeWatchId).filter(Boolean).slice(0, 24);
+    }
+  } catch {}
+}
+
 function addWatch() {
-  const id = els.watchInput?.value.trim().toLowerCase();
+  const id = normalizeWatchId(els.watchInput?.value);
   if (!id) return;
   if (!state.watchIds.includes(id)) state.watchIds.push(id);
-  els.watchInput.value = "";
+  state.watchIds = state.watchIds.slice(0, 24);
+  saveWatchIds();
+  if (els.watchInput) els.watchInput.value = "";
   renderWatchlist();
+  renderAutoReader();
 }
 
 function seedWatch() {
-  state.watchIds = ["bitcoin", "ethereum", "solana", "chainlink", "render-token", "near"];
+  state.watchIds = ["bitcoin", "ethereum", "solana", "dogecoin", "binancecoin", "ripple", "tron", "chainlink"];
+  saveWatchIds();
   renderWatchlist();
+  renderAutoReader();
 }
 
 
@@ -2367,7 +2460,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2442,7 +2535,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.12`,
+    `Version : V1.1-alpha.13`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2544,7 +2637,7 @@ function downloadSimulationJSON() {
 
 
 
-const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_8";
+const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_13";
 const COLLECTOR_MAX_RECORDS = 500;
 
 function readCollectorMemory() {
@@ -2583,7 +2676,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2686,7 +2779,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2704,7 +2797,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.12",
+    version: "V1.1-alpha.13",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3001,7 +3094,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.12",
+    "Version : V1.1-alpha.13",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3094,7 +3187,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.12",
+    "Version : V1.1-alpha.13",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3118,7 +3211,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.12.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.13.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3161,7 +3254,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.12",
+    "- Version : V1.1-alpha.13",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3292,7 +3385,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.12",
+    "Version : V1.1-alpha.13",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3508,6 +3601,296 @@ function runSchoolTest(testName) {
 
 
 
+
+/* =========================================================
+   V1.1-alpha.13 — Atlas Auto Reader
+   Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
+   ========================================================= */
+
+const AUTO_MEMORY_KEY = "agent_crypto_erith_ia_auto_reader_v1_1_alpha_13";
+const AUTO_MAX_RECORDS = 3000;
+
+function readAutoMemory() {
+  try {
+    const raw = localStorage.getItem(AUTO_MEMORY_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeAutoMemory(records) {
+  let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : [];
+  try {
+    localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe));
+  } catch {
+    safe = safe.slice(Math.floor(safe.length / 2));
+    try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {}
+  }
+  return safe;
+}
+
+function compactCoinForAuto(c) {
+  const s = scoreCoin(c);
+  return {
+    id: c.id,
+    symbol: String(c.symbol || "").toUpperCase(),
+    name: c.name,
+    rank: c.rank ?? null,
+    price_eur: c.price ?? null,
+    change_24h_pct: c.change24h ?? null,
+    change_7d_pct: c.change7d ?? null,
+    market_cap_eur: c.marketCap ?? null,
+    volume_24h_eur: c.volume24h ?? null,
+    category: classifyAsset(c),
+    action: atlasActionForCoin(c),
+    score: s.score,
+    source: c.source || state.mainSource || null
+  };
+}
+
+function makeAutoSnapshot() {
+  const wanted = new Set(state.watchIds || []);
+  const watch = state.coins.filter(c => wanted.has(c.id));
+  const leaders = state.coins.slice(0, 20);
+  const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i);
+
+  return {
+    id: `auto_${Date.now()}`,
+    saved_at: new Date().toISOString(),
+    version: "V1.1-alpha.13",
+    source: state.mainSource || null,
+    source_time: state.timestamp || null,
+    live_ok: !!state.liveOk,
+    cadence_ms: state.auto?.intervalMs || 60000,
+    global: {
+      market_cap_eur: state.global?.total_market_cap?.eur ?? null,
+      volume_24h_eur: state.global?.total_volume?.eur ?? null,
+      btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null
+    },
+    assets: merged.map(compactCoinForAuto)
+  };
+}
+
+function lastAutoSnapshot() {
+  const records = readAutoMemory();
+  return records.length ? records[records.length - 1] : null;
+}
+
+function saveAutoSnapshot() {
+  if (!state.liveOk || !state.coins.length) return null;
+  const records = readAutoMemory();
+  const snapshot = makeAutoSnapshot();
+  records.push(snapshot);
+  const saved = writeAutoMemory(records);
+  return saved[saved.length - 1] || snapshot;
+}
+
+function findAutoAsset(snapshot, idOrSymbol) {
+  if (!snapshot || !Array.isArray(snapshot.assets)) return null;
+  const q = String(idOrSymbol || "").toUpperCase();
+  return snapshot.assets.find(a => String(a.id || "").toUpperCase() === q || String(a.symbol || "").toUpperCase() === q) || null;
+}
+
+function priceDeltaPct(nowAsset, prevAsset) {
+  const a = Number(nowAsset?.price_eur);
+  const b = Number(prevAsset?.price_eur);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || b === 0) return null;
+  return ((a - b) / b) * 100;
+}
+
+function autoMarketPulse(snapshot = null, previous = null) {
+  const snap = snapshot || makeAutoSnapshot();
+  const assets = snap.assets || [];
+  if (!assets.length) return { label: "En attente", mode: "wait", lines: ["Aucune donnée marché exploitable."] };
+
+  const btc = assets.find(a => a.symbol === "BTC");
+  const eth = assets.find(a => a.symbol === "ETH");
+  const watchAssets = assets.filter(a => (state.watchIds || []).includes(a.id));
+  const strongest = [...assets].filter(a => typeof a.change_24h_pct === "number").sort((a, b) => b.change_24h_pct - a.change_24h_pct).slice(0, 3);
+  const weakest = [...assets].filter(a => typeof a.change_24h_pct === "number").sort((a, b) => a.change_24h_pct - b.change_24h_pct).slice(0, 3);
+
+  const maxMove = Math.max(...assets.map(a => Math.abs(Number(a.change_24h_pct) || 0)), 0);
+  const btcMove = Number(btc?.change_24h_pct || 0);
+  const ethMove = Number(eth?.change_24h_pct || 0);
+
+  let label = "Marché calme";
+  let mode = "ok";
+  if (maxMove >= 12) { label = "Marché nerveux"; mode = "warn"; }
+  if (btcMove > 2 && ethMove > 1) { label = "Marché positif"; mode = "ok"; }
+  if (btcMove < -2 && ethMove < -1) { label = "Marché sous pression"; mode = "warn"; }
+
+  const deltaLines = [];
+  if (previous) {
+    for (const a of watchAssets.slice(0, 6)) {
+      const prev = findAutoAsset(previous, a.id);
+      const delta = priceDeltaPct(a, prev);
+      if (typeof delta === "number" && Math.abs(delta) >= 0.15) {
+        deltaLines.push(`${a.symbol} ${delta >= 0 ? "monte" : "baisse"} depuis le dernier relevé : ${delta >= 0 ? "+" : ""}${delta.toFixed(2)} %`);
+      }
+    }
+  }
+
+  const lines = [
+    `État : ${label}.`,
+    btc ? `BTC : ${btc.change_24h_pct >= 0 ? "+" : ""}${Number(btc.change_24h_pct || 0).toFixed(2)} % sur 24h · catégorie ${btc.category}.` : "BTC non chargé.",
+    eth ? `ETH : ${eth.change_24h_pct >= 0 ? "+" : ""}${Number(eth.change_24h_pct || 0).toFixed(2)} % sur 24h · catégorie ${eth.category}.` : "ETH non chargé.",
+    `Hausse 24h : ${strongest.map(a => `${a.symbol} ${Number(a.change_24h_pct).toFixed(2)} %`).join(" · ") || "—"}.`,
+    `Baisse 24h : ${weakest.map(a => `${a.symbol} ${Number(a.change_24h_pct).toFixed(2)} %`).join(" · ") || "—"}.`,
+    ...deltaLines.slice(0, 4)
+  ];
+
+  return { label, mode, lines, maxMove };
+}
+
+function chooseAutoIntervalMs(snapshot, previous) {
+  const manual = state.auto?.cadence;
+  if (manual === "30") return 30000;
+  if (manual === "60") return 60000;
+  if (manual === "300") return 300000;
+
+  const pulse = autoMarketPulse(snapshot, previous);
+  if (pulse.maxMove >= 10) return 30000;
+
+  if (snapshot && previous) {
+    const watch = (snapshot.assets || []).filter(a => (state.watchIds || []).includes(a.id));
+    const deltas = watch.map(a => priceDeltaPct(a, findAutoAsset(previous, a.id))).filter(v => typeof v === "number");
+    const maxDelta = Math.max(...deltas.map(v => Math.abs(v)), 0);
+    if (maxDelta >= 0.75) return 30000;
+    if (maxDelta < 0.10 && pulse.maxMove < 2) return 300000;
+  }
+
+  return 60000;
+}
+
+function formatAutoDelay(ms) {
+  const sec = Math.max(0, Math.round(ms / 1000));
+  if (sec >= 60) {
+    const min = Math.floor(sec / 60);
+    const rest = sec % 60;
+    return rest ? `${min} min ${rest} s` : `${min} min`;
+  }
+  return `${sec} s`;
+}
+
+function renderAutoReader(snapshot = null, previous = null) {
+  const records = readAutoMemory();
+  const last = snapshot || records[records.length - 1] || null;
+  const pulse = last ? autoMarketPulse(last, previous || records[records.length - 2] || null) : { label: "En attente", mode: "wait", lines: ["Atlas attend la première lecture."] };
+
+  if (els.autoModeStatus) {
+    els.autoModeStatus.textContent = state.auto?.enabled ? "Auto ON" : "Auto OFF";
+    els.autoModeStatus.className = `pill ${state.auto?.enabled ? "ok" : "warn"}`;
+  }
+  if (els.btnAutoToggle) els.btnAutoToggle.textContent = state.auto?.enabled ? "Auto ON" : "Auto OFF";
+  if (els.autoLastRead) els.autoLastRead.textContent = last?.saved_at ? new Date(last.saved_at).toLocaleTimeString("fr-FR") : "En attente";
+  if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length}/${AUTO_MAX_RECORDS}`;
+  if (els.autoActiveCadence) els.autoActiveCadence.textContent = formatAutoDelay(state.auto?.intervalMs || 60000);
+  if (els.autoMarketPulse) els.autoMarketPulse.textContent = pulse.label;
+  if (els.autoWatchStatus) els.autoWatchStatus.textContent = (state.watchIds || []).slice(0, 8).map(id => id.toUpperCase()).join(" · ");
+
+  if (els.autoReaderOutput) {
+    const watchLines = last?.assets
+      ? last.assets.filter(a => (state.watchIds || []).includes(a.id)).slice(0, 8).map(a =>
+          `${a.symbol} · ${a.category} · ${a.action} · 24h ${typeof a.change_24h_pct === "number" ? (a.change_24h_pct >= 0 ? "+" : "") + a.change_24h_pct.toFixed(2) + " %" : "—"}`
+        )
+      : [];
+
+    els.autoReaderOutput.textContent = [
+      "ATLAS AUTO READER — V1.1-alpha.13",
+      "",
+      state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
+      `Snapshots enregistrés : ${records.length}`,
+      last?.saved_at ? `Dernier relevé : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier relevé : en attente",
+      "",
+      "Lecture marché :",
+      ...pulse.lines,
+      "",
+      "Watchlist :",
+      ...(watchLines.length ? watchLines : ["BTC / ETH / SOL se rempliront après Livecheck."]),
+      "",
+      "Règle : Atlas observe, enregistre, compare et propose une action de travail. Achat/vente désactivés sur GitHub Pages."
+    ].join("\n");
+  }
+}
+
+function updateAutoCountdown() {
+  if (!els.autoNextRead) return;
+  if (!state.auto?.enabled) {
+    els.autoNextRead.textContent = "Auto OFF";
+    return;
+  }
+  if (state.auto?.livecheckBusy) {
+    els.autoNextRead.textContent = "Lecture en cours";
+    return;
+  }
+  if (!state.auto?.nextAt) {
+    els.autoNextRead.textContent = "Préparation";
+    return;
+  }
+  els.autoNextRead.textContent = formatAutoDelay(new Date(state.auto.nextAt).getTime() - Date.now());
+}
+
+function scheduleAutoRead(ms = null) {
+  if (!state.auto?.enabled) return;
+  if (state.auto.timer) clearTimeout(state.auto.timer);
+  const delay = ms ?? state.auto.intervalMs ?? 60000;
+  state.auto.nextAt = new Date(Date.now() + delay).toISOString();
+  updateAutoCountdown();
+  state.auto.timer = setTimeout(() => {
+    if (state.auto?.enabled) runLivecheck();
+  }, delay);
+}
+
+function atlasAfterLivecheck() {
+  if (!state.liveOk || !state.coins.length) {
+    renderAutoReader();
+    if (state.auto?.enabled) scheduleAutoRead(60000);
+    return;
+  }
+
+  const previous = lastAutoSnapshot();
+  const snapshot = saveAutoSnapshot();
+  state.auto.intervalMs = chooseAutoIntervalMs(snapshot, previous);
+  renderAutoReader(snapshot, previous);
+
+  if (state.auto?.enabled) scheduleAutoRead(state.auto.intervalMs);
+}
+
+function startAutoReader() {
+  loadWatchIds();
+  if (els.autoCadenceSelect) state.auto.cadence = els.autoCadenceSelect.value || "adaptive";
+  renderAutoReader();
+
+  if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
+  state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
+
+  if (state.auto.enabled) {
+    setTimeout(() => runLivecheck(), 650);
+  }
+}
+
+function toggleAutoReader() {
+  state.auto.enabled = !state.auto.enabled;
+  if (!state.auto.enabled && state.auto.timer) {
+    clearTimeout(state.auto.timer);
+    state.auto.timer = null;
+    state.auto.nextAt = null;
+  }
+  renderAutoReader();
+  updateAutoCountdown();
+  if (state.auto.enabled) scheduleAutoRead(1000);
+}
+
+function setAutoCadence(value) {
+  state.auto.cadence = String(value || "adaptive");
+  state.auto.intervalMs = state.auto.cadence === "30" ? 30000 : state.auto.cadence === "300" ? 300000 : 60000;
+  renderAutoReader();
+  if (state.auto.enabled) scheduleAutoRead(1000);
+}
+
+
 els.btnSaveCollectorSnapshot?.addEventListener("click", saveCollectorSnapshot);
 els.btnShowCollectorMemory?.addEventListener("click", showCollectorMemory);
 els.btnDownloadCollectorJSON?.addEventListener("click", downloadCollectorJSON);
@@ -3559,6 +3942,10 @@ document.querySelectorAll(".cmd-preset[data-command]").forEach(btn => {
 });
 
 window.AgentCryptoCommands = CryptoCommands;
+
+els.btnAutoToggle?.addEventListener("click", toggleAutoReader);
+els.btnAutoNow?.addEventListener("click", () => runLivecheck());
+els.autoCadenceSelect?.addEventListener("change", () => setAutoCadence(els.autoCadenceSelect.value));
 
 $("btnLivecheck")?.addEventListener("click", runLivecheck);
 $("btnRefresh")?.addEventListener("click", runLivecheck);
@@ -3616,12 +4003,15 @@ updateSourceMetric(0);
 renderTicker();
 renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
 renderScore(null);
+loadWatchIds();
 renderWatchlist();
 renderRiskGrid();
 renderColdRead(false);
+renderAutoReader();
 
 renderBeginnerSummary();
 requestAnimationFrame(() => renderAnalystPanel());
+startAutoReader();
 
 
 
@@ -3824,7 +4214,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.12
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.13
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
