@@ -6,6 +6,7 @@ const state = {
   global: null,
   watchIds: ["bitcoin", "ethereum", "solana"],
   sourceStatus: [],
+  sourceStatusExpectedTotal: 7,
   selectedCoinId: "bitcoin",
   chartPeriodDays: 1,
   chartCache: {},
@@ -21,6 +22,7 @@ const state = {
     countdownTimer: null,
     nextAt: null,
     lastStartedAt: null,
+    lastRunMs: 0,
     livecheckBusy: false
   }
 };
@@ -145,6 +147,7 @@ const els = {
   sharedMemoryOutput: $("sharedMemoryOutput")
 };
 
+const MARKET_CACHE_KEY = "agent_crypto_erith_ia_market_cache_v1_1_alpha_18";
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
 const fmtCompactEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", notation: "compact", maximumFractionDigits: 2 });
 const fmtPct = (n) => typeof n === "number" ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "Donnée manquante";
@@ -291,26 +294,88 @@ function detailFromResult(result) {
   return "OK";
 }
 
+function normalizeSourceStatusList(list = state.sourceStatus) {
+  const map = new Map();
+  for (const item of list || []) {
+    if (!item || !item.key) continue;
+    map.set(item.key, item);
+  }
+  return [...map.values()];
+}
+
+function pushSourceStatus(record) {
+  if (!record || !record.key) return;
+  state.sourceStatus = normalizeSourceStatusList(state.sourceStatus).filter(item => item.key !== record.key);
+  state.sourceStatus.push(record);
+}
+
 function updateSourceMetric(doneOverride = null) {
-  const total = liveSources.length;
-  const done = doneOverride ?? state.sourceStatus.length;
+  state.sourceStatus = normalizeSourceStatusList(state.sourceStatus);
+  const total = Math.max(1, Number(state.sourceStatusExpectedTotal || liveSources.length));
+  const done = Math.min(total, doneOverride ?? state.sourceStatus.length);
   const ok = state.sourceStatus.filter(s => s.status === "OK").length;
   const backend = state.sourceStatus.filter(s => s.status === "BACKEND").length;
   const fail = Math.max(0, done - ok - backend);
   const backendText = backend ? ` · ${backend} backend requis` : "";
   const failText = fail === 1 ? "1 échec" : `${fail} échecs`;
 
-  setText(els.metricSources, `${ok}/${total}`);
+  setText(els.metricSources, `${Math.min(ok, total)}/${total}`);
 
   if (!done) {
     setText(els.metricSourcesHint, `0/${total} interrogées`);
   } else if (done < total) {
-    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${ok} réussies${backendText}`);
+    setText(els.metricSourcesHint, `${done}/${total} interrogées · ${Math.min(ok, total)} réussies${backendText}`);
   } else {
     setText(els.metricSourcesHint, `${done}/${total} interrogées · ${failText}${backendText}`);
   }
 }
 
+function saveMarketCache() {
+  if (!state.coins?.length) return;
+  try {
+    localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
+      saved_at: new Date().toISOString(),
+      source: state.mainSource || "CoinGecko",
+      timestamp: state.timestamp || new Date().toISOString(),
+      coins: state.coins,
+      global: state.global
+    }));
+  } catch {}
+}
+
+function loadMarketCache() {
+  try {
+    const raw = localStorage.getItem(MARKET_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.coins) || !parsed.coins.length) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function applyMarketCache(reason = "Source live indisponible : dernier snapshot local affiché.") {
+  const cache = loadMarketCache();
+  if (!cache) return false;
+
+  state.coins = cache.coins;
+  state.global = cache.global || null;
+  state.mainSource = "Cache local CoinGecko";
+  state.timestamp = cache.timestamp || cache.saved_at || new Date().toISOString();
+  state.liveOk = true;
+
+  setLiveStatus("warn", "Cache local");
+  setText(els.sourceName, "Cache local CoinGecko");
+  setText(els.sourceTime, new Date(state.timestamp).toLocaleString("fr-FR"));
+  setTableDecision("Données locales · à vérifier", "warn");
+  if (els.offlineNotice) {
+    els.offlineNotice.style.display = "block";
+    els.offlineNotice.innerHTML = `<strong>LIVECHÈQUE PARTIEL</strong><p>${escapeHtml(reason)} Les prix restent lisibles mais doivent être considérés comme non frais.</p>`;
+  }
+  renderAll();
+  return true;
+}
 
 function clearMarketDisplay(reason = "Marché live indisponible.") {
   state.liveOk = false;
@@ -341,33 +406,48 @@ function clearMarketDisplay(reason = "Marché live indisponible.") {
 }
 
 function explainForBeginnerLiveFailure(okCount = 0) {
-  return `Livecheck échec : ${okCount}/${liveSources.length} sources ont répondu, mais aucune source marché exploitable n’a fourni le tableau principal. ` +
-    "Ce n’est pas une erreur utilisateur. L’interface doit refuser les prix tant que le marché principal n’est pas récupéré.";
+  const total = Math.max(1, Number(state.sourceStatusExpectedTotal || liveSources.length));
+  return `Livecheck échec : ${Math.min(okCount, total)}/${total} source(s) utile(s) ont répondu, mais CoinGecko n’a pas fourni le tableau principal. ` +
+    "Ce n’est pas une erreur utilisateur. L’interface conserve le dernier cache local quand il existe.";
 }
 
-async function runLivecheck() {
+async function runAutoLivecheck() {
+  return runLivecheck({ auto: true });
+}
+
+async function runLivecheck(options = {}) {
   if (state.auto?.livecheckBusy) return;
+  const autoMode = !!options.auto;
   state.auto.livecheckBusy = true;
   state.auto.lastStartedAt = new Date().toISOString();
+  state.auto.lastRunMs = Date.now();
+
+  const sourcesToTest = autoMode ? liveSources.filter(src => src.key === "coingecko") : liveSources;
+  state.sourceStatusExpectedTotal = sourcesToTest.length || liveSources.length;
 
   try {
     try { renderAutoReader(); } catch (error) { console.warn("Auto Reader render skipped", error); }
 
-    setLiveStatus("warn", "Livecheck en cours");
-    setTableDecision("Tests sources en cours", "warn");
+    setLiveStatus("warn", autoMode ? "Auto lecture" : "Livecheck en cours");
+    setTableDecision(autoMode ? "Actualisation auto" : "Tests sources en cours", "warn");
     setText(els.sourceName, "Recherche...");
     setText(els.sourceTime, "—");
 
     state.sourceStatus = [];
-    clearMarketDisplay("Livecheck en cours");
+
+    if (!autoMode || !state.coins.length) {
+      clearMarketDisplay("Livecheck en cours");
+    } else {
+      setText(els.tableNote, "Actualisation automatique en cours. Dernières données conservées pendant la requête.");
+    }
+
     loadSimulation();
     renderSimulation();
     renderSimpleCommandIntro();
     renderSourceGrid();
     updateSourceMetric(0);
-    setTableDecision("Refusé avant Livecheck", "fail");
 
-    for (const src of liveSources) {
+    for (const src of sourcesToTest) {
       const started = performance.now();
 
       try {
@@ -375,13 +455,13 @@ async function runLivecheck() {
         const ms = Math.round(performance.now() - started);
 
         if (result?.backendRequired) {
-          state.sourceStatus.push({ ...src, status: "BACKEND", ms, detail: detailFromResult(result) });
+          pushSourceStatus({ ...src, status: "BACKEND", ms, detail: detailFromResult(result) });
           updateSourceMetric();
           renderSourceGrid();
           continue;
         }
 
-        state.sourceStatus.push({ ...src, status: "OK", ms, detail: detailFromResult(result) });
+        pushSourceStatus({ ...src, status: "OK", ms, detail: detailFromResult(result) });
 
         if (src.key === "coingecko" && result.markets?.length) {
           state.coins = result.markets;
@@ -394,10 +474,11 @@ async function runLivecheck() {
             state.selectedCoinId = state.coins[0]?.id || "bitcoin";
           }
 
+          saveMarketCache();
           renderAll();
         }
       } catch (error) {
-        state.sourceStatus.push({ ...src, status: "ÉCHEC", ms: null, detail: cleanError(error) });
+        pushSourceStatus({ ...src, status: "ÉCHEC", ms: null, detail: cleanError(error) });
       }
 
       renderSourceGrid();
@@ -406,24 +487,35 @@ async function runLivecheck() {
 
     const okCount = state.sourceStatus.filter(s => s.status === "OK").length;
 
-    if (state.liveOk && state.coins.length) {
+    if (state.liveOk && state.coins.length && state.mainSource === "CoinGecko") {
       setLiveStatus("ok", "Livecheck OK");
       setText(els.sourceName, state.mainSource);
       setText(els.sourceTime, new Date(state.timestamp).toLocaleString("fr-FR"));
       setTableDecision("Autorisé · source réelle", "ok");
       if (els.offlineNotice) els.offlineNotice.style.display = "none";
       renderAll();
+    } else if (state.liveOk && state.coins.length) {
+      setLiveStatus("warn", "Cache local");
+      setText(els.sourceName, state.mainSource || "Cache local");
+      setText(els.sourceTime, new Date(state.timestamp).toLocaleString("fr-FR"));
+      setTableDecision("Données locales · à vérifier", "warn");
+      renderAll();
     } else {
-      setLiveStatus("fail", "Livecheck échec");
-      clearMarketDisplay("Recherche live échouée");
-      if (els.offlineNotice) {
-        els.offlineNotice.style.display = "block";
-        els.offlineNotice.innerHTML = `<strong>ACCÈS LIVE INDISPONIBLE</strong><p>${escapeHtml(explainForBeginnerLiveFailure(okCount))}</p>`;
+      const cacheUsed = applyMarketCache(autoMode
+        ? "CoinGecko n’a pas répondu pendant l’actualisation auto."
+        : "CoinGecko n’a pas répondu pendant le Livecheck.");
+      if (!cacheUsed) {
+        setLiveStatus("fail", "Livecheck échec");
+        clearMarketDisplay("Recherche live échouée");
+        if (els.offlineNotice) {
+          els.offlineNotice.style.display = "block";
+          els.offlineNotice.innerHTML = `<strong>ACCÈS LIVE INDISPONIBLE</strong><p>${escapeHtml(explainForBeginnerLiveFailure(okCount))}</p>`;
+        }
+        setText(els.sourceName, "Aucune source marché exploitable");
+        setText(els.sourceTime, "—");
+        setTableDecision("Refusé · pas de source live", "fail");
+        setText(els.coldRead, explainForBeginnerLiveFailure(okCount));
       }
-      setText(els.sourceName, "Aucune source marché exploitable");
-      setText(els.sourceTime, "—");
-      setTableDecision("Refusé · pas de source live", "fail");
-      setText(els.coldRead, explainForBeginnerLiveFailure(okCount));
     }
 
     updateSourceMetric();
@@ -1125,7 +1217,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1233,7 +1325,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2278,7 +2370,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.17</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.18</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2358,7 +2450,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.17.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.18.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2496,7 +2588,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2571,7 +2663,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.17`,
+    `Version : V1.1-alpha.18`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2713,7 +2805,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2816,7 +2908,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2834,7 +2926,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3131,7 +3223,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.17",
+    "Version : V1.1-alpha.18",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3224,7 +3316,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.17",
+    "Version : V1.1-alpha.18",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3248,7 +3340,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.17.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.18.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3291,7 +3383,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.17",
+    "- Version : V1.1-alpha.18",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3422,7 +3514,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.17",
+    "Version : V1.1-alpha.18",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3640,7 +3732,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.17 — Atlas Auto Reader
+   V1.1-alpha.18 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3708,7 +3800,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.17",
+    version: "V1.1-alpha.18",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3886,7 +3978,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     const last = records[records.length - 1];
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.17",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.18",
       "",
       `Collecteur actif : ${id}`,
       `Snapshots locaux : ${records.length}`,
@@ -3992,7 +4084,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.17",
+      "ATLAS AUTO READER — V1.1-alpha.18",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4033,7 +4125,8 @@ function scheduleAutoRead(ms = null) {
   state.auto.nextAt = new Date(Date.now() + delay).toISOString();
   updateAutoCountdown();
   state.auto.timer = setTimeout(() => {
-    if (state.auto?.enabled) runLivecheck();
+    state.auto.timer = null;
+    if (state.auto?.enabled) runAutoLivecheck();
   }, delay);
 }
 
@@ -4065,7 +4158,7 @@ function startAutoReader() {
   if (state.auto.enabled) {
     setTimeout(() => {
       state.auto.livecheckBusy = false;
-      runLivecheck();
+      runAutoLivecheck();
     }, 650);
   }
 }
@@ -4153,7 +4246,7 @@ els.autoMemoryImport?.addEventListener("change", () => importAutoMemoryFile(els.
 els.btnClearAutoMemory?.addEventListener("click", clearAutoMemory);
 
 els.btnAutoToggle?.addEventListener("click", toggleAutoReader);
-els.btnAutoNow?.addEventListener("click", () => runLivecheck());
+els.btnAutoNow?.addEventListener("click", () => runAutoLivecheck());
 els.autoCadenceSelect?.addEventListener("change", () => setAutoCadence(els.autoCadenceSelect.value));
 
 $("btnLivecheck")?.addEventListener("click", runLivecheck);
@@ -4237,8 +4330,9 @@ function bootAtlasApp() {
 
   // Failsafe : si le timer de démarrage est perdu, on relance une fois.
   setTimeout(() => {
-    if (state.auto?.enabled && !state.auto.livecheckBusy && !state.liveOk) {
-      runLivecheck();
+    const age = Date.now() - (state.auto?.lastRunMs || 0);
+    if (state.auto?.enabled && !state.auto.livecheckBusy && !state.liveOk && age > 8000) {
+      runAutoLivecheck();
     }
   }, 1800);
 }
@@ -4246,8 +4340,9 @@ function bootAtlasApp() {
 bootAtlasApp();
 
 window.addEventListener("pageshow", () => {
-  if (state.auto?.enabled && !state.auto.livecheckBusy && !state.liveOk) {
-    setTimeout(() => runLivecheck(), 600);
+  const age = Date.now() - (state.auto?.lastRunMs || 0);
+  if (state.auto?.enabled && !state.auto.livecheckBusy && !state.liveOk && age > 15000) {
+    setTimeout(() => runAutoLivecheck(), 600);
   }
 });
 
@@ -4452,7 +4547,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.17
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.18
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
