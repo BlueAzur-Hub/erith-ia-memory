@@ -4,7 +4,7 @@ const state = {
   timestamp: null,
   coins: [],
   global: null,
-  watchIds: ["bitcoin","ethereum","solana","binancecoin","ripple","tether","usd-coin","usds","cardano","tron","dogecoin","chainlink","toncoin","avalanche-2","polkadot","litecoin","sui","aptos","arbitrum","optimism","polygon-ecosystem-token","uniswap","aave","ondo-finance","maker","pendle","near","bittensor","render","internet-computer","shiba-inu","pepe","monero","zcash"],
+  watchIds: ["bitcoin","ethereum","solana","binancecoin","ripple","tether","usd-coin","usds","cardano","tron","dogecoin","chainlink","toncoin","avalanche-2","polkadot","litecoin","sui","aptos","arbitrum","optimism","polygon-ecosystem-token","uniswap","aave","ondo-finance","maker","pendle","near","bittensor","render-token","internet-computer","shiba-inu","pepe","monero","zcash"],
   sourceStatus: [],
   sourceStatusExpectedTotal: 7,
   selectedCoinId: "bitcoin",
@@ -1354,7 +1354,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1462,7 +1462,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2311,7 +2311,7 @@ function renderMetrics() {
 
   if (g) {
     setText(els.metricMarketCap, num(g.total_market_cap?.eur, fmtCompactEUR.format.bind(fmtCompactEUR)));
-    setText(els.metricMarketCapHint, "CoinGecko global");
+    setText(els.metricMarketCapHint, `${state.mainSource || "Source marché"} global`);
     setText(els.metricVolume, num(g.total_volume?.eur, fmtCompactEUR.format.bind(fmtCompactEUR)));
     setText(els.metricVolumeHint, "Volume global 24h");
 
@@ -2480,26 +2480,54 @@ function renderScore(coin) {
 function renderWatchlist() {
   if (!els.watchCards) return;
 
+  const selectedCount = (state.watchIds || []).length;
+  if (els.watchBasketSummary) {
+    els.watchBasketSummary.textContent = `Atlas Watchlist V2 auto · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers compacts.`;
+  }
+
   if (!state.liveOk || !state.coins.length) {
-    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Aucune donnée watchlist inventée.</div>`;
+    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 est prêt, sans inventer de prix.</div>`;
     return;
   }
 
-  const cards = state.watchIds
-    .map(id => state.coins.find(c => c.id === id))
-    .filter(Boolean)
-    .map(c => {
-      const s = scoreCoin(c);
-      return `<div class="mini-card">
-        <strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong>
-        <div class="meta">${num(c.price, fmtEUR.format.bind(fmtEUR))} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span></div>
-        <div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div>
-      </div>`;
-    });
+  const topMovers = state.coins
+    .filter(c => typeof c.change24h === "number")
+    .slice()
+    .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h))
+    .slice(0, 6)
+    .map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`)
+    .join(" · ");
 
-  els.watchCards.innerHTML = cards.length
-    ? cards.join("")
-    : `<div class="mini-card muted">Aucun actif de watchlist trouvé dans le top chargé.</div>`;
+  const basketRows = ATLAS_WATCH_BASKETS.map(basket => {
+    const coins = watchBasketCoins(basket);
+    const status = basketStatus(coins);
+    const leaders = coins
+      .slice()
+      .sort((a, b) => Math.abs(Number(b.change24h) || 0) - Math.abs(Number(a.change24h) || 0))
+      .slice(0, 4);
+
+    const leaderText = leaders.length
+      ? leaders.map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ")
+      : "aucun actif dans le top chargé";
+
+    return `<article class="watch-compact-row ${status.mode}">
+      <div>
+        <b>${escapeHtml(basket.label)}</b>
+        <span>${escapeHtml(basket.role)}</span>
+      </div>
+      <strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong>
+      <em>${leaderText}</em>
+      <small>${coins.length}/${basket.ids.length} actifs visibles</small>
+    </article>`;
+  }).join("");
+
+  els.watchCards.innerHTML = [
+    `<div class="watch-v2-diagnostic compact">
+      <b>Lecture Atlas V2 compacte</b>
+      <span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · mouvements : ${topMovers || "en attente"}</span>
+    </div>`,
+    `<div class="watch-compact-list">${basketRows}</div>`
+  ].join("");
 }
 
 function renderRiskGrid() {
@@ -2507,7 +2535,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.26.7</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.26.8-recovery-recovery-recovery</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2539,6 +2567,58 @@ function renderSourceGrid() {
 }
 
 
+function atlasMarketTone() {
+  if (!state.liveOk || !state.coins.length) return { label: "En attente", mode: "wait" };
+  const btc = state.coins.find(c => c.id === "bitcoin" || c.symbol === "BTC");
+  const eth = state.coins.find(c => c.id === "ethereum" || c.symbol === "ETH");
+  const avgTop = state.coins.slice(0, 10).reduce((s, c) => s + (Number(c.change24h) || 0), 0) / Math.max(1, Math.min(10, state.coins.length));
+  const btcMove = Number(btc?.change24h) || 0;
+  const ethMove = Number(eth?.change24h) || 0;
+  const momentum = (avgTop + btcMove + ethMove) / 3;
+  if (momentum >= 4) return { label: "Marché très positif, risque FOMO élevé", mode: "hot" };
+  if (momentum >= 1) return { label: "Marché positif, observation active", mode: "ok" };
+  if (momentum <= -3) return { label: "Marché sous pression, prudence renforcée", mode: "cold" };
+  return { label: "Marché neutre à surveiller", mode: "calm" };
+}
+
+function atlasTopSymbols(list, limit = 4) {
+  return list.slice(0, limit).map(c => `${c.symbol} ${fmtPct(c.change24h)}`).join(" · ");
+}
+
+function atlasDecisionBriefText() {
+  if (!state.liveOk || !state.coins.length) {
+    return "ATLAS DECISION BRIEF — Livecheck requis. Aucun conseil de lecture sans source marché.";
+  }
+
+  const tone = atlasMarketTone();
+  const nonStable = state.coins.filter(c => classifyAsset(c) !== "Stablecoin" && typeof c.change24h === "number");
+  const hot = nonStable.slice().sort((a, b) => b.change24h - a.change24h).filter(c => c.change24h > 3);
+  const cold = nonStable.slice().sort((a, b) => a.change24h - b.change24h).filter(c => c.change24h < -3);
+  const baskets = (typeof ATLAS_WATCH_BASKETS !== "undefined" ? ATLAS_WATCH_BASKETS : [])
+    .map(b => ({ basket: b, status: basketStatus(watchBasketCoins(b)) }))
+    .filter(x => typeof x.status.avg === "number")
+    .sort((a, b) => Math.abs(b.status.avg) - Math.abs(a.status.avg))
+    .slice(0, 3);
+
+  const hotText = hot.length ? atlasTopSymbols(hot, 5) : "aucun panier explosif net";
+  const coldText = cold.length ? atlasTopSymbols(cold, 4) : "aucun décrochage majeur dans le top chargé";
+  const basketText = baskets.length ? baskets.map(x => `${x.basket.label} ${fmtPct(x.status.avg)}`).join(" · ") : "paniers en attente";
+
+  const chartRule = "Graphique : CoinGecko market_chart uniquement ; CoinLore/mémoire Atlas refusés pour la courbe.";
+  const sourceRule = `Source tableau : ${state.mainSource || "source marché"}.`;
+
+  return [
+    "ATLAS DECISION BRIEF — RECOVERY",
+    `État : ${tone.label}.`,
+    sourceRule,
+    chartRule,
+    `Paniers à regarder : ${basketText}.`,
+    `À observer : ${hotText}.`,
+    `À protéger : ${coldText}.`,
+    "Décision de travail : observer / comparer. Pas d’achat automatique, pas de FOMO, pas d’ordre réel."
+  ].join("\n");
+}
+
 function renderTrustLock(live = false) {
   if (!els.trustLockText) return;
 
@@ -2549,12 +2629,14 @@ function renderTrustLock(live = false) {
     const total = liveSources.length;
     const done = state.sourceStatus.length;
     const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-    const fail = Math.max(0, done - ok);
+    const backend = state.sourceStatus.filter(s => s.status === "BACKEND").length;
+    const fail = Math.max(0, done - ok - backend);
     const failText = fail === 1 ? "1 source secondaire a échoué" : `${fail} sources secondaires ont échoué`;
 
     els.trustLockText.textContent =
-      `Source marché active : ${state.mainSource || "source réelle"}. ` +
+      `Source tableau active : ${state.mainSource || "source réelle"}. ` +
       `Tableau autorisé parce que les prix viennent d’une source live. ` +
+      `Source graphique séparée : CoinGecko market_chart uniquement. ` +
       `Sources : ${ok}/${total} réussies, ${done}/${total} interrogées. ` +
       `${fail ? failText + ". " : ""}` +
       "Achat interdit : sécurité, social et on-chain restent à vérifier.";
@@ -2585,12 +2667,10 @@ function renderColdRead(live = false) {
   }
 
   if (live) {
-    els.coldRead.textContent =
-      `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.26.7.`;
+    els.coldRead.textContent = atlasDecisionBriefText();
   } else {
     els.coldRead.textContent =
-      "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
+      "ATLAS DECISION BRIEF — Livecheck absent. L’observatoire refuse d’afficher un tableau chiffré et ne donne aucune lecture de marché.";
   }
 }
 
@@ -2629,53 +2709,115 @@ function analyzeFomo() {
   );
 }
 
-const WATCH_STORAGE_KEY = "agent_crypto_erith_ia_watchlist_v2_alpha_26_4";
+const WATCH_STORAGE_KEY = "agent_crypto_erith_ia_watchlist_v2_alpha_26_8_recovery";
 
 const ATLAS_WATCH_BASKETS = [
   { key: "core", label: "Socle marché", role: "Repères marché.", ids: ["bitcoin", "ethereum", "solana", "binancecoin", "ripple"] },
   { key: "liquidity", label: "Stablecoins / liquidité", role: "Flux et stabilité.", ids: ["tether", "usd-coin", "usds"] },
   { key: "majors", label: "Grands actifs solides", role: "Grandes capitalisations.", ids: ["cardano", "tron", "dogecoin", "chainlink", "toncoin", "avalanche-2", "polkadot", "litecoin"] },
   { key: "defi", label: "DeFi / oracles / RWA", role: "Infrastructure et tokenisation.", ids: ["chainlink", "uniswap", "aave", "ondo-finance", "maker", "pendle"] },
-  { key: "ai", label: "IA / compute / data", role: "Narratif IA et calcul.", ids: ["near", "bittensor", "render", "internet-computer"] },
+  { key: "ai", label: "IA / compute / data", role: "Narratif IA et calcul.", ids: ["near", "bittensor", "render-token", "internet-computer"] },
   { key: "l1l2", label: "Layer 1 / Layer 2", role: "Écosystèmes et scalabilité.", ids: ["sui", "aptos", "arbitrum", "optimism", "polygon-ecosystem-token"] },
   { key: "speculative", label: "Spéculatif liquide", role: "Température du risque.", ids: ["dogecoin", "shiba-inu", "pepe"] },
   { key: "privacy", label: "Privacy / risque réglementaire", role: "Flux atypiques.", ids: ["monero", "zcash"] }
 ];
 
 const WATCH_ALIAS = {
-  btc: "bitcoin", bitcoin: "bitcoin", eth: "ethereum", ethereum: "ethereum", sol: "solana", solana: "solana",
-  bnb: "binancecoin", binance: "binancecoin", binancecoin: "binancecoin", xrp: "ripple", ripple: "ripple",
-  usdt: "tether", tether: "tether", usdc: "usd-coin", "usd-coin": "usd-coin", usds: "usds", dai: "dai",
-  ada: "cardano", cardano: "cardano", trx: "tron", tron: "tron", doge: "dogecoin", dogecoin: "dogecoin",
-  link: "chainlink", chainlink: "chainlink", ton: "toncoin", toncoin: "toncoin", avax: "avalanche-2", avalanche: "avalanche-2",
-  dot: "polkadot", polkadot: "polkadot", ltc: "litecoin", litecoin: "litecoin", uni: "uniswap", uniswap: "uniswap", aave: "aave",
-  ondo: "ondo-finance", "ondo-finance": "ondo-finance", mkr: "maker", maker: "maker", sky: "maker", pendle: "pendle",
-  near: "near", tao: "bittensor", bittensor: "bittensor", render: "render", rndr: "render", icp: "internet-computer", "internet-computer": "internet-computer",
-  sui: "sui", apt: "aptos", aptos: "aptos", arb: "arbitrum", arbitrum: "arbitrum", op: "optimism", optimism: "optimism",
-  pol: "polygon-ecosystem-token", matic: "polygon-ecosystem-token", polygon: "polygon-ecosystem-token", shib: "shiba-inu", "shiba-inu": "shiba-inu",
-  pepe: "pepe", xmr: "monero", monero: "monero", zec: "zcash", zcash: "zcash"
+  btc: "bitcoin", bitcoin: "bitcoin",
+  eth: "ethereum", ethereum: "ethereum",
+  sol: "solana", solana: "solana",
+  bnb: "binancecoin", binance: "binancecoin", binancecoin: "binancecoin",
+  xrp: "ripple", ripple: "ripple",
+  usdt: "tether", tether: "tether",
+  usdc: "usd-coin", "usd-coin": "usd-coin",
+  usds: "usds", dai: "dai",
+  ada: "cardano", cardano: "cardano",
+  trx: "tron", tron: "tron",
+  doge: "dogecoin", dogecoin: "dogecoin",
+  link: "chainlink", chainlink: "chainlink",
+  ton: "toncoin", toncoin: "toncoin",
+  avax: "avalanche-2", avalanche: "avalanche-2",
+  dot: "polkadot", polkadot: "polkadot",
+  ltc: "litecoin", litecoin: "litecoin",
+  uni: "uniswap", uniswap: "uniswap",
+  aave: "aave",
+  ondo: "ondo-finance", "ondo-finance": "ondo-finance",
+  mkr: "maker", maker: "maker", sky: "maker",
+  pendle: "pendle",
+  near: "near",
+  tao: "bittensor", bittensor: "bittensor",
+  render: "render-token", rndr: "render-token", "render-token": "render-token",
+  icp: "internet-computer", "internet-computer": "internet-computer",
+  sui: "sui",
+  apt: "aptos", aptos: "aptos",
+  arb: "arbitrum", arbitrum: "arbitrum",
+  op: "optimism", optimism: "optimism",
+  pol: "polygon-ecosystem-token", matic: "polygon-ecosystem-token", polygon: "polygon-ecosystem-token",
+  shib: "shiba-inu", "shiba-inu": "shiba-inu",
+  pepe: "pepe",
+  xmr: "monero", monero: "monero",
+  zec: "zcash", zcash: "zcash"
 };
 
-function atlasWatchDefaultIds() { return [...new Set(ATLAS_WATCH_BASKETS.flatMap(b => b.ids))]; }
-function normalizeWatchId(value) { const raw = String(value || "").trim().toLowerCase(); if (!raw) return ""; return WATCH_ALIAS[raw] || raw.replace(/\s+/g, "-"); }
-function saveWatchIds() { try { localStorage.setItem(WATCH_STORAGE_KEY, JSON.stringify(state.watchIds)); } catch {} }
-function loadWatchIds() {
-  try { const raw = localStorage.getItem(WATCH_STORAGE_KEY); const parsed = raw ? JSON.parse(raw) : null; if (Array.isArray(parsed) && parsed.length >= 12) { state.watchIds = [...new Set(parsed.map(normalizeWatchId).filter(Boolean))].slice(0, 48); return; } } catch {}
-  state.watchIds = atlasWatchDefaultIds(); saveWatchIds();
+function atlasWatchDefaultIds() {
+  return [...new Set(ATLAS_WATCH_BASKETS.flatMap(b => b.ids))];
 }
-function addWatch() { const id = normalizeWatchId(els.watchInput?.value); if (!id) return; if (!state.watchIds.includes(id)) state.watchIds.push(id); state.watchIds = [...new Set(state.watchIds)].slice(0,48); saveWatchIds(); if (els.watchInput) els.watchInput.value=""; renderWatchlist(); renderAutoReader(); }
-function seedWatch() { state.watchIds = atlasWatchDefaultIds(); saveWatchIds(); renderWatchlist(); renderAutoReader(); }
-function watchCoinById(id) { return state.coins.find(c => c.id === id) || null; }
-function watchBasketCoins(basket) { return basket.ids.map(watchCoinById).filter(Boolean); }
-function basketStatus(coins) { if (!coins.length) return { label:"À charger", mode:"wait", avg:null }; const avg = coins.reduce((s,c)=>s+(Number(c.change24h)||0),0)/coins.length; const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm"; const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme"; return {label,mode,avg}; }
-function renderWatchlist() {
-  if (!els.watchCards) return;
-  const selectedCount = (state.watchIds || []).length;
-  if (els.watchBasketSummary) els.watchBasketSummary.textContent = `Atlas Watchlist V2 auto · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers compacts.`;
-  if (!state.liveOk || !state.coins.length) { els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 est prêt, sans inventer de prix.</div>`; return; }
-  const topMovers = state.coins.filter(c => typeof c.change24h === "number").slice().sort((a,b)=>Math.abs(b.change24h)-Math.abs(a.change24h)).slice(0,6).map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ");
-  const basketRows = ATLAS_WATCH_BASKETS.map(basket => { const coins=watchBasketCoins(basket); const status=basketStatus(coins); const leaders=coins.slice().sort((a,b)=>Math.abs(Number(b.change24h)||0)-Math.abs(Number(a.change24h)||0)).slice(0,4); const leaderText = leaders.length ? leaders.map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ") : "aucun actif dans le top chargé"; return `<article class="watch-compact-row ${status.mode}"><div><b>${escapeHtml(basket.label)}</b><span>${escapeHtml(basket.role)}</span></div><strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong><em>${leaderText}</em><small>${coins.length}/${basket.ids.length} actifs visibles</small></article>`; }).join("");
-  els.watchCards.innerHTML = [`<div class="watch-v2-diagnostic compact"><b>Lecture Atlas V2 compacte</b><span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · mouvements : ${topMovers || "en attente"}</span></div>`, `<div class="watch-compact-list">${basketRows}</div>`].join("");
+
+function normalizeWatchId(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) return "";
+  return WATCH_ALIAS[raw] || raw.replace(/\s+/g, "-");
+}
+
+function saveWatchIds() {
+  try { localStorage.setItem(WATCH_STORAGE_KEY, JSON.stringify(state.watchIds)); } catch {}
+}
+
+function loadWatchIds() {
+  try {
+    const raw = localStorage.getItem(WATCH_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (Array.isArray(parsed) && parsed.length >= 12) {
+      state.watchIds = [...new Set(parsed.map(normalizeWatchId).filter(Boolean))].slice(0, 48);
+      return;
+    }
+  } catch {}
+  state.watchIds = atlasWatchDefaultIds();
+  saveWatchIds();
+}
+
+function addWatch() {
+  const id = normalizeWatchId(els.watchInput?.value);
+  if (!id) return;
+  if (!state.watchIds.includes(id)) state.watchIds.push(id);
+  state.watchIds = [...new Set(state.watchIds)].slice(0, 48);
+  saveWatchIds();
+  if (els.watchInput) els.watchInput.value = "";
+  renderWatchlist();
+  renderAutoReader();
+}
+
+function seedWatch() {
+  state.watchIds = atlasWatchDefaultIds();
+  saveWatchIds();
+  renderWatchlist();
+  renderAutoReader();
+}
+
+function watchCoinById(id) {
+  return state.coins.find(c => c.id === id) || null;
+}
+
+function watchBasketCoins(basket) {
+  return basket.ids.map(watchCoinById).filter(Boolean);
+}
+
+function basketStatus(coins) {
+  if (!coins.length) return { label: "À charger", mode: "wait", avg: null };
+  const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length;
+  const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm";
+  const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme";
+  return { label, mode, avg };
 }
 
 
@@ -2711,7 +2853,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2786,7 +2928,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.26.7`,
+    `Version : V1.1-alpha.26.8-recovery-recovery-recovery`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2927,7 +3069,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -3030,7 +3172,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -3048,7 +3190,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3345,7 +3487,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.7",
+    "Version : V1.1-alpha.26.8-recovery-recovery-recovery",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3438,7 +3580,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.7",
+    "Version : V1.1-alpha.26.8-recovery-recovery-recovery",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3462,7 +3604,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.26.7.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.26.8-recovery-recovery-recovery.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3505,7 +3647,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.26.7",
+    "- Version : V1.1-alpha.26.8-recovery-recovery-recovery",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3636,7 +3778,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.7",
+    "Version : V1.1-alpha.26.8-recovery-recovery-recovery",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3854,7 +3996,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.26.7 — Atlas Auto Reader
+   V1.1-alpha.26.8-recovery-recovery-recovery — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3915,7 +4057,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.26.7",
+    version: "V1.1-alpha.26.8-recovery-recovery-recovery",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -4054,7 +4196,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.26.7",
+      "ATLAS AUTO READER — V1.1-alpha.26.8-recovery-recovery-recovery",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4328,7 +4470,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26.7",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26.8-recovery-recovery-recovery",
       "",
       configured
         ? `✅ Machine configurée : ${id}`
@@ -4547,7 +4689,7 @@ async function loadGithubSharedMemory(showMessages = true) {
         `Collecteurs GitHub : ${stats.text}`,
         "",
         "Résultat : Atlas peut maintenant fusionner mémoire locale + mémoire GitHub.",
-        "Étape active : alpha.26.7 installe GitHub Action Collector pour créer data/latest.json automatiquement."
+        "Étape active : alpha.26.8-recovery installe GitHub Action Collector pour créer data/latest.json automatiquement."
       ].join("\n");
     }
 
@@ -4946,7 +5088,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26.7
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26.8-recovery-recovery-recovery
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
