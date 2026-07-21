@@ -145,7 +145,14 @@ const els = {
   sharedLocalCount: $("sharedLocalCount"),
   sharedCollectorsCount: $("sharedCollectorsCount"),
   sharedLastImport: $("sharedLastImport"),
-  sharedMemoryOutput: $("sharedMemoryOutput")
+  sharedMemoryOutput: $("sharedMemoryOutput"),
+  githubMemoryStatus: $("githubMemoryStatus"),
+  btnLoadGithubMemory: $("btnLoadGithubMemory"),
+  githubMemoryLatest: $("githubMemoryLatest"),
+  githubMemoryRecords: $("githubMemoryRecords"),
+  githubMemoryCollectors: $("githubMemoryCollectors"),
+  githubMemoryFusion: $("githubMemoryFusion"),
+  githubMemoryOutput: $("githubMemoryOutput")
 };
 
 const MARKET_CACHE_KEY = "agent_crypto_erith_ia_market_cache_v1_1_alpha_21";
@@ -1228,7 +1235,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1336,7 +1343,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2381,7 +2388,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.23</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.24</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2461,7 +2468,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.23.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.24.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2599,7 +2606,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2674,7 +2681,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.23`,
+    `Version : V1.1-alpha.24`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2815,7 +2822,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2918,7 +2925,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2936,7 +2943,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3233,7 +3240,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.23",
+    "Version : V1.1-alpha.24",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3326,7 +3333,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.23",
+    "Version : V1.1-alpha.24",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3350,7 +3357,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.23.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.24.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3393,7 +3400,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.23",
+    "- Version : V1.1-alpha.24",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3524,7 +3531,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.23",
+    "Version : V1.1-alpha.24",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3742,7 +3749,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.23 — Atlas Auto Reader
+   V1.1-alpha.24 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3803,7 +3810,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.23",
+    version: "V1.1-alpha.24",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3942,7 +3949,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.23",
+      "ATLAS AUTO READER — V1.1-alpha.24",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4042,6 +4049,8 @@ const COLLECTOR_ID_KEY = "agent_crypto_erith_ia_collector_id_v1";
 const COLLECTOR_CONFIGURED_KEY = "agent_crypto_erith_ia_collector_configured_v1";
 const COLLECTOR_MIGRATION_NOTE_KEY = "agent_crypto_erith_ia_collector_migration_note_v1";
 const AUTO_LAST_IMPORT_KEY = "agent_crypto_erith_ia_last_import_v1";
+const GITHUB_MEMORY_LATEST_URL = "../data/latest.json";
+const GITHUB_MEMORY_STATUS_URL = "../data/status.json";
 
 function cleanCollectorId(value) {
   return String(value || "")
@@ -4214,7 +4223,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.23",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.24",
       "",
       configured
         ? `✅ Machine configurée : ${id}`
@@ -4317,6 +4326,165 @@ async function importAutoMemoryFile(file) {
   }
 }
 
+
+function setGithubMemoryStatus(kind = "", text = "") {
+  if (els.githubMemoryStatus) {
+    els.githubMemoryStatus.classList.remove("ok", "warn", "fail");
+    if (kind) els.githubMemoryStatus.classList.add(kind);
+    if (text) els.githubMemoryStatus.textContent = text;
+  }
+  if (els.githubMemoryOutput) {
+    els.githubMemoryOutput.classList.remove("ok", "warn", "fail");
+    if (kind) els.githubMemoryOutput.classList.add(kind);
+  }
+}
+
+function normalizeGithubMemoryPayload(payload) {
+  if (!payload) return [];
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload.records)) return payload.records;
+  if (payload.latest && typeof payload.latest === "object") return [payload.latest];
+  if (Array.isArray(payload.snapshots)) return payload.snapshots;
+  if (payload.assets && Array.isArray(payload.assets)) return [payload];
+  return [];
+}
+
+function githubMemoryCollectorStats(records) {
+  const counts = {};
+  for (const record of records || []) {
+    const id = record.collector_id || record.exporter_collector_id || "github-action-main";
+    counts[id] = (counts[id] || 0) + 1;
+  }
+  const collectors = Object.keys(counts).sort();
+  return {
+    collectors,
+    counts,
+    text: collectors.length ? collectors.map(id => `${id} (${counts[id]})`).join(" / ") : "aucun"
+  };
+}
+
+function stampGithubRecords(records) {
+  return (records || []).map((record, index) => {
+    const saved = record.saved_at || record.created_at || record.source_time || record.timestamp || new Date().toISOString();
+    const collector = record.collector_id || "github-action-main";
+    const key = record.snapshot_id || record.id || `${collector}_${String(saved).replace(/[:.]/g, "-")}_${index}`;
+    return {
+      ...record,
+      id: key,
+      snapshot_id: key,
+      collector_id: collector,
+      collector_type: record.collector_type || "github_shared_memory",
+      imported_from_github: true,
+      github_imported_at: new Date().toISOString(),
+      saved_at: saved
+    };
+  });
+}
+
+async function fetchJsonNoCache(url) {
+  const cacheBuster = `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
+  const response = await fetch(cacheBuster, { cache: "no-store" });
+  if (!response.ok) {
+    const error = new Error(`HTTP ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+}
+
+async function loadGithubSharedMemory(showMessages = true) {
+  setGithubMemoryStatus("warn", "Chargement");
+
+  try {
+    const payload = await fetchJsonNoCache(GITHUB_MEMORY_LATEST_URL);
+    const records = stampGithubRecords(normalizeGithubMemoryPayload(payload));
+
+    if (!records.length) {
+      setGithubMemoryStatus("fail", "Vide");
+      if (els.githubMemoryOutput) {
+        els.githubMemoryOutput.textContent = [
+          "MÉMOIRE GITHUB VIDE",
+          "",
+          "Le fichier data/latest.json existe, mais aucun snapshot exploitable n’a été trouvé.",
+          "Alpha.25 devra écrire un format records[] ou latest{}."
+        ].join("\n");
+      }
+      return { ok: false, records: [] };
+    }
+
+    const before = readAutoMemory();
+    const beforeCount = before.length;
+    const merged = normalizeSharedRecords([...before, ...records], getCollectorId());
+    writeAutoMemory(merged);
+
+    const added = Math.max(0, merged.length - beforeCount);
+    const stats = githubMemoryCollectorStats(records);
+    const last = records[records.length - 1];
+
+    if (els.githubMemoryLatest) {
+      els.githubMemoryLatest.textContent = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "date inconnue";
+    }
+    if (els.githubMemoryRecords) els.githubMemoryRecords.textContent = `${records.length}`;
+    if (els.githubMemoryCollectors) els.githubMemoryCollectors.textContent = stats.text;
+    if (els.githubMemoryFusion) els.githubMemoryFusion.textContent = `${added} nouveaux · ${merged.length} total`;
+
+    setGithubMemoryStatus("ok", "GitHub OK");
+    renderSharedMemory();
+    renderAutoReader();
+
+    if (showMessages && els.githubMemoryOutput) {
+      els.githubMemoryOutput.textContent = [
+        "✅ MÉMOIRE GITHUB CHARGÉE",
+        "",
+        `Snapshots lus depuis GitHub : ${records.length}`,
+        `Nouveaux snapshots ajoutés localement : ${added}`,
+        `Total mémoire fusionnée locale : ${merged.length}`,
+        `Collecteurs GitHub : ${stats.text}`,
+        "",
+        "Résultat : Atlas peut maintenant fusionner mémoire locale + mémoire GitHub.",
+        "Étape suivante : alpha.25 créera automatiquement data/latest.json avec GitHub Action."
+      ].join("\n");
+    }
+
+    return { ok: true, records, added };
+  } catch (error) {
+    const missing = error?.status === 404;
+    setGithubMemoryStatus(missing ? "warn" : "fail", missing ? "À créer" : "Erreur");
+    if (els.githubMemoryLatest) els.githubMemoryLatest.textContent = missing ? "Fichier absent" : "Erreur";
+    if (els.githubMemoryRecords) els.githubMemoryRecords.textContent = "0";
+    if (els.githubMemoryCollectors) els.githubMemoryCollectors.textContent = "aucun";
+    if (els.githubMemoryFusion) els.githubMemoryFusion.textContent = "locale seulement";
+
+    if (showMessages && els.githubMemoryOutput) {
+      els.githubMemoryOutput.textContent = missing
+        ? [
+            "MÉMOIRE GITHUB PAS ENCORE INSTALLÉE",
+            "",
+            "Le fichier ../data/latest.json n’existe pas encore.",
+            "Ce n’est pas une panne de l’application.",
+            "",
+            "État actuel :",
+            "- Ryzen collecte localement ;",
+            "- Transformer Book collecte localement ;",
+            "- Export/import manuel fonctionne ;",
+            "- GitHub ne collecte pas encore.",
+            "",
+            "Prochaine version : alpha.25 — GitHub Action Collector."
+          ].join("\n")
+        : [
+            "ERREUR LECTURE MÉMOIRE GITHUB",
+            "",
+            String(error?.message || error),
+            "",
+            "L’application continue avec la mémoire locale."
+          ].join("\n");
+    }
+
+    return { ok: false, error };
+  }
+}
+
+
 function clearAutoMemory() {
   const ok = confirm("Effacer la mémoire Auto Reader locale de ce navigateur ?");
   if (!ok) return;
@@ -4395,6 +4563,7 @@ els.btnSaveCollectorId?.addEventListener("click", () => {
 els.btnExportAutoMemory?.addEventListener("click", exportAutoMemory);
 els.autoMemoryImport?.addEventListener("change", () => importAutoMemoryFile(els.autoMemoryImport.files?.[0]));
 els.btnClearAutoMemory?.addEventListener("click", clearAutoMemory);
+els.btnLoadGithubMemory?.addEventListener("click", () => loadGithubSharedMemory(true));
 
 $("btnLivecheck")?.addEventListener("click", runLivecheck);
 $("btnRefresh")?.addEventListener("click", runLivecheck);
@@ -4466,6 +4635,7 @@ atlasSafeBoot("risk grid", renderRiskGrid);
 atlasSafeBoot("cold read", () => renderColdRead(false));
 atlasSafeBoot("auto reader render", renderAutoReader);
 atlasSafeBoot("shared memory render", renderSharedMemory);
+atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false));
 atlasSafeBoot("beginner summary", renderBeginnerSummary);
 requestAnimationFrame(() => atlasSafeBoot("analyst panel", renderAnalystPanel));
 atlasSafeBoot("auto reader start", startAutoReader);
@@ -4671,7 +4841,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.23
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.24
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
