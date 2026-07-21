@@ -1,0 +1,319 @@
+name: Atlas Market Collector
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atlas-market-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Collect market data
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const path = require("path");
+
+          const ROOT = "public/agent_crypto_erith_ia/data";
+          const HISTORY = path.join(ROOT, "history");
+          fs.mkdirSync(HISTORY, { recursive: true });
+
+          const now = new Date();
+          const iso = now.toISOString();
+          const day = iso.slice(0, 10);
+          const historyFile = path.join(HISTORY, `${day}.jsonl`);
+
+          const TOP_LIMIT = 50;
+
+          const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+          async function fetchJson(url, timeoutMs = 18000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+              const res = await fetch(url, {
+                signal: controller.signal,
+                headers: {
+                  "accept": "application/json",
+                  "user-agent": "atlas-market-collector/1.1-alpha.25"
+                }
+              });
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              return await res.json();
+            } finally {
+              clearTimeout(timeout);
+            }
+          }
+
+          function scoreCoin(c) {
+            let score = 40;
+            const rank = Number(c.rank || 9999);
+            const change24 = Number(c.change_24h_pct ?? c.change24h ?? 0);
+            const change7 = Number(c.change_7d_pct ?? c.change7d ?? 0);
+            const marketCap = Number(c.market_cap_eur ?? c.marketCap ?? 0);
+            const volume = Number(c.volume_24h_eur ?? c.volume24h ?? 0);
+            const ratio = marketCap > 0 ? volume / marketCap : 0;
+
+            if (rank <= 2) score += 12;
+            else if (rank <= 10) score += 7;
+            else if (rank <= 30) score += 4;
+
+            if (Math.abs(change24) <= 5) score += 5;
+            if (change24 > 0 && change7 > 0) score += 8;
+            if (ratio > 0.015) score += 8;
+            if (ratio > 0.05) score += 4;
+            if (marketCap > 10000000000) score += 6;
+            if (change24 < -10) score -= 10;
+
+            return Math.max(0, Math.min(100, Math.round(score)));
+          }
+
+          function classifyAsset(c) {
+            const symbol = String(c.symbol || "").toUpperCase();
+            const rank = Number(c.rank || 9999);
+            const marketCap = Number(c.market_cap_eur ?? c.marketCap ?? 0);
+            const volume = Number(c.volume_24h_eur ?? c.volume24h ?? 0);
+            const ratio = marketCap > 0 ? volume / marketCap : 0;
+
+            if (["USDT", "USDC", "DAI", "USDS", "FDUSD", "TUSD"].includes(symbol)) return "Stablecoin";
+            if (["BTC", "ETH"].includes(symbol)) return "Socle marché";
+            if (rank <= 20 && marketCap > 3000000000) return "Grand actif solide";
+            if (rank <= 80 && ratio > 0.02) return "Spéculatif liquide";
+            if (rank <= 150) return "Opportunité à surveiller";
+            if (volume < 1000000 || marketCap < 50000000) return "À vérifier";
+            return "À vérifier";
+          }
+
+          function decideAction(c) {
+            const type = classifyAsset(c);
+            const change24 = Number(c.change_24h_pct ?? c.change24h ?? 0);
+            const change7 = Number(c.change_7d_pct ?? c.change7d ?? 0);
+
+            if (type === "Stablecoin") return "Surveiller stabilité";
+            if (type === "Socle marché") return "Observer / comparer";
+            if (change24 > 12 && change7 > 20) return "Attendre / éviter FOMO";
+            if (change24 < -10) return "Surveiller risque";
+            if (type === "Spéculatif liquide") return "Surveiller fortement";
+            if (type === "Opportunité à surveiller") return "Comparer";
+            return "Observer";
+          }
+
+          function normalizeCoinGeckoMarket(rows) {
+            return rows.slice(0, TOP_LIMIT).map((c) => ({
+              id: c.id,
+              symbol: String(c.symbol || "").toUpperCase(),
+              name: c.name,
+              rank: c.market_cap_rank,
+              price_eur: c.current_price,
+              change_24h_pct: c.price_change_percentage_24h,
+              change_7d_pct: c.price_change_percentage_7d_in_currency,
+              market_cap_eur: c.market_cap,
+              volume_24h_eur: c.total_volume,
+              category: classifyAsset({
+                symbol: c.symbol,
+                rank: c.market_cap_rank,
+                market_cap_eur: c.market_cap,
+                volume_24h_eur: c.total_volume
+              }),
+              action: decideAction({
+                symbol: c.symbol,
+                rank: c.market_cap_rank,
+                market_cap_eur: c.market_cap,
+                volume_24h_eur: c.total_volume,
+                change_24h_pct: c.price_change_percentage_24h,
+                change_7d_pct: c.price_change_percentage_7d_in_currency
+              }),
+              score: scoreCoin({
+                rank: c.market_cap_rank,
+                market_cap_eur: c.market_cap,
+                volume_24h_eur: c.total_volume,
+                change_24h_pct: c.price_change_percentage_24h,
+                change_7d_pct: c.price_change_percentage_7d_in_currency
+              }),
+              source: "CoinGecko"
+            }));
+          }
+
+          function normalizeCoinLore(rows) {
+            return rows.slice(0, TOP_LIMIT).map((c) => {
+              const marketCap = Number(c.market_cap_usd || 0) * 0.92;
+              const volume = Number(c.volume24 || 0) * 0.92;
+              const price = Number(c.price_usd || 0) * 0.92;
+              const row = {
+                id: String(c.nameid || c.symbol || c.id || "").toLowerCase(),
+                symbol: String(c.symbol || "").toUpperCase(),
+                name: c.name,
+                rank: Number(c.rank || 9999),
+                price_eur: price,
+                change_24h_pct: Number(c.percent_change_24h || 0),
+                change_7d_pct: Number(c.percent_change_7d || 0),
+                market_cap_eur: marketCap,
+                volume_24h_eur: volume,
+                source: "CoinLore"
+              };
+              row.category = classifyAsset(row);
+              row.action = decideAction(row);
+              row.score = scoreCoin(row);
+              return row;
+            });
+          }
+
+          async function collectCoinGecko() {
+            const marketsUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h%2C7d";
+            const globalUrl = "https://api.coingecko.com/api/v3/global";
+            const [markets, global] = await Promise.all([
+              fetchJson(marketsUrl),
+              fetchJson(globalUrl).catch(() => null)
+            ]);
+
+            const assets = normalizeCoinGeckoMarket(markets);
+            const g = global?.data || {};
+            return {
+              source: "CoinGecko",
+              global: {
+                market_cap_eur: g.total_market_cap?.eur ?? assets.reduce((sum, a) => sum + Number(a.market_cap_eur || 0), 0),
+                volume_24h_eur: g.total_volume?.eur ?? assets.reduce((sum, a) => sum + Number(a.volume_24h_eur || 0), 0),
+                btc_dominance_pct: g.market_cap_percentage?.btc ?? null
+              },
+              assets
+            };
+          }
+
+          async function collectCoinLore() {
+            const url = "https://api.coinlore.net/api/tickers/?start=0&limit=50";
+            const payload = await fetchJson(url);
+            const assets = normalizeCoinLore(payload?.data || []);
+            return {
+              source: "CoinLore",
+              global: {
+                market_cap_eur: assets.reduce((sum, a) => sum + Number(a.market_cap_eur || 0), 0),
+                volume_24h_eur: assets.reduce((sum, a) => sum + Number(a.volume_24h_eur || 0), 0),
+                btc_dominance_pct: null
+              },
+              assets
+            };
+          }
+
+          async function collect() {
+            const errors = [];
+            try {
+              return await collectCoinGecko();
+            } catch (error) {
+              errors.push(`CoinGecko: ${error.message}`);
+            }
+
+            await sleep(1200);
+
+            try {
+              const data = await collectCoinLore();
+              data.errors = errors;
+              return data;
+            } catch (error) {
+              errors.push(`CoinLore: ${error.message}`);
+              throw new Error(errors.join(" | "));
+            }
+          }
+
+          function marketPulse(assets) {
+            const btc = assets.find(a => a.symbol === "BTC");
+            const eth = assets.find(a => a.symbol === "ETH");
+            const top = assets.slice(0, 20);
+            const avg24 = top.length ? top.reduce((s, a) => s + Number(a.change_24h_pct || 0), 0) / top.length : 0;
+            return {
+              state: avg24 > 3 ? "Marché en hausse" : avg24 < -3 ? "Marché sous pression" : "Marché calme",
+              avg_top20_24h_pct: avg24,
+              btc_24h_pct: btc?.change_24h_pct ?? null,
+              eth_24h_pct: eth?.change_24h_pct ?? null
+            };
+          }
+
+          try {
+            const collected = await collect();
+            const assets = collected.assets || [];
+            const snapshotId = `github-action-main_${iso.replace(/[:.]/g, "-")}`;
+            const record = {
+              id: snapshotId,
+              snapshot_id: snapshotId,
+              saved_at: iso,
+              version: "V1.1-alpha.25",
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: collected.source,
+              live_ok: true,
+              cadence_ms: 300000,
+              global: collected.global,
+              market_pulse: marketPulse(assets),
+              assets
+            };
+
+            const latest = {
+              schema: "atlas_github_market_latest_v1",
+              version: "V1.1-alpha.25",
+              generated_at: iso,
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: collected.source,
+              live_ok: true,
+              record_count: 1,
+              records: [record]
+            };
+
+            const status = {
+              schema: "atlas_github_market_status_v1",
+              version: "V1.1-alpha.25",
+              updated_at: iso,
+              status: "ok",
+              live_ok: true,
+              source: collected.source,
+              assets_count: assets.length,
+              history_file: historyFile,
+              message: `Collecte OK depuis ${collected.source}`,
+              errors: collected.errors || []
+            };
+
+            fs.writeFileSync(path.join(ROOT, "latest.json"), JSON.stringify(latest, null, 2) + "\n", "utf8");
+            fs.writeFileSync(path.join(ROOT, "status.json"), JSON.stringify(status, null, 2) + "\n", "utf8");
+            fs.appendFileSync(historyFile, JSON.stringify(record) + "\n", "utf8");
+
+            console.log(`ATLAS_COLLECTOR_OK source=${collected.source} assets=${assets.length} history=${historyFile}`);
+          } catch (error) {
+            const status = {
+              schema: "atlas_github_market_status_v1",
+              version: "V1.1-alpha.25",
+              updated_at: iso,
+              status: "error",
+              live_ok: false,
+              message: String(error?.message || error),
+              history_file: historyFile
+            };
+            fs.writeFileSync(path.join(ROOT, "status.json"), JSON.stringify(status, null, 2) + "\n", "utf8");
+            console.error("ATLAS_COLLECTOR_FAIL", error);
+            process.exitCode = 1;
+          }
+          NODE
+
+      - name: Commit collected data
+        shell: bash
+        run: |
+          git config user.name "atlas-market-collector"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/data/latest.json public/agent_crypto_erith_ia/data/status.json public/agent_crypto_erith_ia/data/history/
+          if git diff --cached --quiet; then
+            echo "No market data changes to commit."
+          else
+            git commit -m "update atlas market memory"
+            git push
+          fi
