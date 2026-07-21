@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.8</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.9</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.8" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.9" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Livecheck · scoring · risques · sources vérifiées</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.8</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.9</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -187,7 +187,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.8</p>
+        <p class="eyebrow">VERROU V1.1-alpha.9</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -268,6 +268,20 @@
           <div><span>Risque</span><b>—</b></div>
         </div>
         <p class="muted-line">Score indicatif : il classe une hypothèse, il ne prédit pas l’avenir.</p>
+        <div class="atlas-math-core" id="atlasMathCorePanel">
+          <div class="atlas-math-card"><span>Data Quality</span><b>—</b><small>Livecheck requis</small></div>
+          <div class="atlas-math-card"><span>Market Math</span><b>—</b><small>En attente</small></div>
+          <div class="atlas-math-card"><span>Signal Quality</span><b>—</b><small>En attente</small></div>
+          <div class="atlas-math-card"><span>Scenario Math</span><b>—</b><small>En attente</small></div>
+          <div class="atlas-math-card"><span>Risk Math</span><b>—</b><small>En attente</small></div>
+          <div class="atlas-math-card"><span>Micro-Transaction</span><b>—</b><small>Lecture seule</small></div>
+          <div class="atlas-math-card wide"><span>Execution Math</span><b>—</b><small>Aucun ordre réel</small></div>
+        </div>
+        <div class="atlas-verdict" id="atlasMathVerdict">
+          <b>Verdict Atlas :</b> observation<br>
+          <b>Raison :</b> Livecheck requis.<br>
+          <b>Action autorisée :</b> lecture seule.
+        </div>
       </aside>
     </section>
 
@@ -299,6 +313,10 @@
           <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>
         </div>
         <p class="muted-line">Une validation marché ne remplace jamais la sécurité contrat.</p>
+        <div class="atlas-subpanel" id="atlasRiskMathPanel">
+          <b>Atlas Risk Math</b>
+          <span>En attente de données. Le risque est lu avant l’opportunité.</span>
+        </div>
       </article>
     </section>
 
@@ -312,6 +330,11 @@
         <textarea id="fomoInput" placeholder="Exemple : ce token a fait +300 %, j’ai peur de rater la suite..."></textarea>
         <button class="btn primary" id="btnAnalyzeFomo">Analyser la FOMO</button>
         <div class="analysis-box" id="fomoOutput">Aucune analyse lancée.</div>
+
+        <div class="atlas-subpanel" id="atlasNoFomoMathPanel">
+          <b>Atlas No-FOMO Math</b>
+          <span>Le signal peut être réel, mais l’entrée peut être trop tardive.</span>
+        </div>
       </article>
 
       <article class="panel glass">
@@ -425,7 +448,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.8 · profil 100 €</span>
+        <span class="pill">V1.1-alpha.9 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -898,6 +921,11 @@
         <div class="sim-card"><b>Valeur positions</b><span id="simPositionsValue">—</span></div>
         <div class="sim-card"><b>Total simulé</b><span id="simTotalValue">—</span></div>
         <div class="sim-card"><b>P/L virtuel</b><span id="simPnL">—</span></div>
+      </div>
+
+      <div class="atlas-simulation-math" id="atlasSimulationMathPanel">
+        <b>Atlas Simulation Math</b>
+        <span>Simulation locale uniquement. Une simulation réussie n’autorise jamais une exécution réelle.</span>
       </div>
 
       <div class="icon-legend-panel" id="iconLegendPanel">

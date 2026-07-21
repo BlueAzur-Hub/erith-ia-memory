@@ -11,7 +11,8 @@ const state = {
   chartCache: {},
   assetFilter: "all",
   sortKey: "rank-asc",
-  sim: null
+  sim: null,
+  math: null
 };
 
 const $ = (id) => document.getElementById(id);
@@ -3821,3 +3822,136 @@ function downloadSessionBrief() {
   URL.revokeObjectURL(url);
 }
 
+
+
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.9
+   Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
+function atlasFmtPct(n) {
+  return typeof n === "number" && Number.isFinite(n) ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "—";
+}
+
+function atlasSelectedCoin() {
+  if (!Array.isArray(state.coins) || !state.coins.length) return null;
+  return state.coins.find(c => c.id === state.selectedCoinId) || state.coins[0] || null;
+}
+
+function computeAtlasDataQuality(coin) {
+  const missing = [];
+  if (!coin) missing.push("actif");
+  if (coin && typeof coin.price !== "number") missing.push("prix");
+  if (coin && typeof coin.volume24h !== "number") missing.push("volume 24h");
+  if (coin && !coin.source) missing.push("source");
+  if (coin && !coin.timestamp) missing.push("timestamp");
+  const score = clamp(0, 100, 100 - missing.length * 22);
+  return { score, status: score >= 80 ? "ok" : score >= 50 ? "faible" : "refus", missing };
+}
+
+function computeAtlasMarketMath(coin) {
+  if (!coin) return { score: 0, reason: "Livecheck requis", change24h: null, change7d: null, fomoPenalty: 0 };
+  const change24h = typeof coin.change24h === "number" ? coin.change24h : null;
+  const change7d = typeof coin.change7d === "number" ? coin.change7d : null;
+  const volumeScore = typeof coin.volume24h === "number" && coin.volume24h > 0 ? 20 : 0;
+  const momentumScore = change24h === null ? 0 : clamp(0, 35, 18 + change24h * 2);
+  const fomoPenalty = change24h !== null && Math.abs(change24h) > 12 ? 20 : 0;
+  const score = clamp(0, 100, 35 + volumeScore + momentumScore - fomoPenalty);
+  return { score, reason: fomoPenalty ? "Mouvement fort : prudence" : "Marché lisible en observation", change24h, change7d, fomoPenalty };
+}
+
+function computeAtlasSignalQuality(coin, market) {
+  if (!coin) return { score: 0, reason: "Aucun signal sans donnée" };
+  let score = 45;
+  if (coin.source) score += 20;
+  if (typeof coin.change24h === "number") score += 10;
+  if (typeof coin.change7d === "number") score += 10;
+  if (market?.fomoPenalty) score -= 15;
+  score = clamp(0, 100, score);
+  return { score, reason: score >= 70 ? "Signal exploitable en simulation" : "Signal à surveiller seulement" };
+}
+
+function computeAtlasScenarioMath(coin, signal) {
+  if (!coin || typeof coin.price !== "number") return { score: 0, reason: "Scénario impossible sans prix", favorable: null, neutral: null, unfavorable: null };
+  const price = coin.price;
+  return {
+    score: clamp(0, 100, (signal?.score || 0) - 5),
+    reason: "Scénario prudent ±3 % pour observation",
+    favorable: price * 1.03,
+    neutral: price,
+    unfavorable: price * 0.97
+  };
+}
+
+function computeAtlasRiskMath(coin, market) {
+  if (!coin) return { score: 80, reason: "Risque inconnu : données absentes" };
+  const change = typeof coin.change24h === "number" ? Math.abs(coin.change24h) : 8;
+  const score = clamp(0, 100, 25 + change * 4 + (market?.fomoPenalty || 0));
+  return { score, reason: score > 70 ? "Risque élevé : simulation seulement" : score > 45 ? "Risque moyen : prudence" : "Risque contenu en observation" };
+}
+
+function computeAtlasMicroTransactionMath() {
+  return { score: 50, reason: "Frais, spread et slippage non connectés : préparation réelle interdite", gate: "unknown" };
+}
+
+function computeAtlasExecutionMath(data, market, signal, scenario, risk, micro) {
+  if (!data || data.status !== "ok") return { verdict: "observation", action: "lecture seule", score: 0, reason: "Data Quality Gate non validé", tone: "warn" };
+  if (risk.score >= 75) return { verdict: "simulation seulement", action: "aucun ordre", score: 25, reason: risk.reason, tone: "warn" };
+  const score = clamp(0, 100, (market.score + signal.score + scenario.score + micro.score) / 4 - risk.score * 0.35);
+  if (score >= 70) return { verdict: "simulation seulement", action: "aucun ordre", score, reason: "Signal mathématique correct, mais exécution réelle verrouillée", tone: "ok" };
+  if (score >= 45) return { verdict: "observation", action: "lecture seule", score, reason: "Hypothèse à surveiller", tone: "warn" };
+  return { verdict: "refus", action: "lecture seule", score, reason: "Conditions mathématiques insuffisantes", tone: "refus" };
+}
+
+function atlasMathCard(title, value, detail) {
+  return `<div class="atlas-math-card"><span>${escapeHtml(title)}</span><b>${escapeHtml(value)}</b><small>${escapeHtml(detail || "")}</small></div>`;
+}
+
+function renderAtlasMathCore() {
+  const coin = atlasSelectedCoin();
+  const data = computeAtlasDataQuality(coin);
+  const market = computeAtlasMarketMath(coin);
+  const signal = computeAtlasSignalQuality(coin, market);
+  const scenario = computeAtlasScenarioMath(coin, signal);
+  const risk = computeAtlasRiskMath(coin, market);
+  const micro = computeAtlasMicroTransactionMath();
+  const execution = computeAtlasExecutionMath(data, market, signal, scenario, risk, micro);
+
+  state.math = { data, market, signal, scenario, risk, micro, execution, asset: coin?.id || null };
+
+  const panel = document.getElementById("atlasMathCorePanel");
+  if (panel) {
+    panel.innerHTML = [
+      atlasMathCard("Data Quality", `${Math.round(data.score)}/100`, data.status),
+      atlasMathCard("Market Math", `${Math.round(market.score)}/100`, `${atlasFmtPct(market.change24h)} 24h · ${market.reason}`),
+      atlasMathCard("Signal Quality", `${Math.round(signal.score)}/100`, signal.reason),
+      atlasMathCard("Scenario Math", `${Math.round(scenario.score)}/100`, scenario.reason),
+      atlasMathCard("Risk Math", `${Math.round(risk.score)}/100`, risk.reason),
+      atlasMathCard("Micro-Transaction", `${Math.round(micro.score)}/100`, micro.reason),
+      `<div class="atlas-math-card wide"><span>Execution Math</span><b>${Math.round(execution.score)}/100</b><small>${escapeHtml(execution.verdict)}</small></div>`
+    ].join("");
+  }
+
+  const verdict = document.getElementById("atlasMathVerdict");
+  if (verdict) {
+    verdict.classList.remove("ok", "warn", "refus");
+    verdict.classList.add(execution.tone || "warn");
+    verdict.innerHTML = `<b>Verdict Atlas :</b> ${escapeHtml(execution.verdict)}<br><b>Raison :</b> ${escapeHtml(execution.reason)}<br><b>Action autorisée :</b> ${escapeHtml(execution.action)}`;
+  }
+
+  const riskPanel = document.getElementById("atlasRiskMathPanel");
+  if (riskPanel) {
+    riskPanel.innerHTML = `<b>Atlas Risk Math</b><span>Score risque : ${Math.round(risk.score)}/100 · ${escapeHtml(risk.reason)}</span>`;
+  }
+
+  const noFomoPanel = document.getElementById("atlasNoFomoMathPanel");
+  if (noFomoPanel) {
+    const noFomo = market.fomoPenalty ? "ralentir / simulation seulement" : "continuer en observation";
+    noFomoPanel.innerHTML = `<b>Atlas No-FOMO Math</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`;
+  }
+
+  const simPanel = document.getElementById("atlasSimulationMathPanel");
+  if (simPanel) {
+    simPanel.innerHTML = `<b>Atlas Simulation Math</b><span>Verdict : ${escapeHtml(execution.verdict)} · simulation locale uniquement · aucun ordre réel.</span>`;
+  }
+}
+
+renderAtlasMathCore();
+setInterval(renderAtlasMathCore, 5000);
