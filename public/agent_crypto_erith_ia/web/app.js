@@ -1228,7 +1228,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1336,7 +1336,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2381,7 +2381,7 @@ function renderRiskGrid() {
 
   els.riskGrid.innerHTML = `
     <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.22</b></div>
+    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.23</b></div>
     <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
     <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 }
@@ -2461,7 +2461,7 @@ function renderColdRead(live = false) {
   if (live) {
     els.coldRead.textContent =
       `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.22.`;
+      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.23.`;
   } else {
     els.coldRead.textContent =
       "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
@@ -2599,7 +2599,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2674,7 +2674,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.22`,
+    `Version : V1.1-alpha.23`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2815,7 +2815,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2918,7 +2918,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2936,7 +2936,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3233,7 +3233,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.22",
+    "Version : V1.1-alpha.23",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3326,7 +3326,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.22",
+    "Version : V1.1-alpha.23",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3350,7 +3350,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.22.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.23.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3393,7 +3393,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.22",
+    "- Version : V1.1-alpha.23",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3524,7 +3524,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.22",
+    "Version : V1.1-alpha.23",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3742,7 +3742,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.22 — Atlas Auto Reader
+   V1.1-alpha.23 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3803,7 +3803,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.22",
+    version: "V1.1-alpha.23",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3942,7 +3942,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.22",
+      "ATLAS AUTO READER — V1.1-alpha.23",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4170,9 +4170,24 @@ function normalizeSharedRecords(records, fallbackCollectorId = null) {
 }
 
 function collectorStats(records = readAutoMemory()) {
-  const ids = new Set();
-  for (const r of records || []) ids.add(r.collector_id || "local-legacy");
-  return { count: records.length, collectors: [...ids].sort() };
+  const counts = {};
+  for (const r of records || []) {
+    const id = r.collector_id || "local-legacy";
+    counts[id] = (counts[id] || 0) + 1;
+  }
+  const collectors = Object.keys(counts).sort();
+  return { count: records.length, collectors, counts };
+}
+
+function formatCollectorCounts(stats) {
+  if (!stats || !stats.collectors?.length) return "aucun";
+  return stats.collectors.map(id => `${id} (${stats.counts[id] || 0})`).join(" / ");
+}
+
+function setSharedOutputStatus(kind = "") {
+  if (!els.sharedMemoryOutput) return;
+  els.sharedMemoryOutput.classList.remove("ok", "warn", "fail");
+  if (kind) els.sharedMemoryOutput.classList.add(kind);
 }
 
 function renderSharedMemory() {
@@ -4186,37 +4201,46 @@ function renderSharedMemory() {
   const stats = collectorStats(records);
   const configured = isCollectorConfigured();
   const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire.";
+  const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué";
+  const last = records[records.length - 1];
 
   if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id;
   if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer";
   if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`;
-  if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot" : `${records.length} snapshots`;
-  if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${stats.collectors.join(" / ") || "—"}`;
-  if (els.sharedLastImport) els.sharedLastImport.textContent = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun";
+  if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`;
+  if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`;
+  if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport;
 
   if (els.sharedMemoryOutput) {
-    const last = records[records.length - 1];
+    setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.22",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.23",
       "",
       configured
-        ? `Machine configurée : ${id}`
-        : `Machine non finalisée : ${id}`,
+        ? `✅ Machine configurée : ${id}`
+        : `⚠️ Machine non finalisée : ${id}`,
       configured
         ? "Configuration : gardée automatiquement dans ce Firefox."
         : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / yohan-machine puis clique Sauver ID une fois.",
-      `Snapshots locaux : ${records.length}`,
-      `Mémoire fusionnée : ${stats.collectors.join(" / ") || "aucune"}`,
-      last?.saved_at ? `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot : aucun",
+      "",
+      "ÉTAT MÉMOIRE",
+      `Total disponible : ${records.length} snapshots fusionnés`,
+      `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`,
+      last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun",
+      `Dernière opération : ${lastImport}`,
       `Migration : ${migrationNote}`,
       "",
-      "IDs conseillées :",
-      "- Ryzen 7 : ryzen7-christophe",
-      "- Transformer Book : transformer-book-christophe",
-      "- Yohan : yohan-machine",
+      "LECTURE SIMPLE",
+      records.length
+        ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine."
+        : "Aucune donnée fusionnée pour l’instant.",
+      stats.collectors.length > 1
+        ? "Fusion multi-machine active : les relevés de plusieurs collecteurs sont présents."
+        : "Fusion multi-machine non active : une seule machine est présente pour l’instant.",
       "",
-      "Règle : une ID par machine, une seule configuration. Export/import fusionne ensuite les relevés sans écraser."
-    ].join("\n");
+      "RÈGLE",
+      "Export/import fusionne les relevés sans écraser. La prochaine étape projet est l’automatisation GitHub pour éviter ces imports manuels."
+    ].join("\\n");
   }
 }
 
@@ -4242,33 +4266,54 @@ async function importAutoMemoryFile(file) {
     const payload = JSON.parse(text);
     const incoming = Array.isArray(payload) ? payload : Array.isArray(payload.records) ? payload.records : [];
     if (!incoming.length) {
-      if (els.sharedMemoryOutput) els.sharedMemoryOutput.textContent = "Import refusé : aucun snapshot trouvé.";
+      setSharedOutputStatus("fail");
+      if (els.sharedMemoryOutput) els.sharedMemoryOutput.textContent = "IMPORT REFUSÉ\\n\\nAucun snapshot trouvé dans ce fichier JSON.";
       return;
     }
 
     const before = readAutoMemory();
+    const beforeStats = collectorStats(before);
     const merged = normalizeSharedRecords([...before, ...incoming]);
     writeAutoMemory(merged);
+
+    const afterStats = collectorStats(merged);
     const imported = Math.max(0, merged.length - before.length);
-    const line = `${new Date().toLocaleString("fr-FR")} · ${incoming.length} lus · ${imported} nouveaux`;
+    const newCollectors = afterStats.collectors.filter(id => !beforeStats.collectors.includes(id));
+    const line = `${new Date().toLocaleString("fr-FR")} · import OK · ${incoming.length} lus · ${imported} nouveaux`;
     localStorage.setItem(AUTO_LAST_IMPORT_KEY, line);
+
     renderSharedMemory();
     renderAutoReader();
 
+    setSharedOutputStatus("ok");
     if (els.sharedMemoryOutput) {
       els.sharedMemoryOutput.textContent = [
-        "IMPORT TERMINÉ",
+        "✅ IMPORT RÉUSSI",
         "",
-        `Snapshots lus : ${incoming.length}`,
-        `Nouveaux snapshots : ${imported}`,
-        `Total mémoire : ${merged.length}`,
-        `Collecteurs connus : ${collectorStats(merged).collectors.join(" / ")}`,
+        `Fichier lu : ${file.name || "mémoire JSON"}`,
+        `Snapshots lus dans le fichier : ${incoming.length}`,
+        `Nouveaux snapshots ajoutés : ${imported}`,
+        `Total mémoire fusionnée : ${merged.length}`,
         "",
-        "Les données importées sont disponibles pour la lecture locale."
-      ].join("\n");
+        "COLLECTEURS APRÈS IMPORT",
+        formatCollectorCounts(afterStats),
+        newCollectors.length ? `Nouveau(x) collecteur(s) détecté(s) : ${newCollectors.join(" / ")}` : "Aucun nouveau collecteur, données déjà connues ou mises à jour.",
+        "",
+        "RÉSULTAT",
+        "Les données importées sont maintenant disponibles sur ce Ryzen dans la mémoire fusionnée locale.",
+        "Prochaine étape projet : automatiser ce transfert via GitHub pour ne plus passer par Exporter / Importer."
+      ].join("\\n");
     }
   } catch (error) {
-    if (els.sharedMemoryOutput) els.sharedMemoryOutput.textContent = `Import refusé : ${String(error?.message || error)}`;
+    setSharedOutputStatus("fail");
+    if (els.sharedMemoryOutput) {
+      els.sharedMemoryOutput.textContent = [
+        "❌ IMPORT REFUSÉ",
+        "",
+        "Le fichier choisi n’a pas pu être lu comme mémoire Atlas JSON.",
+        String(error?.message || error)
+      ].join("\\n");
+    }
   }
 }
 
@@ -4279,6 +4324,10 @@ function clearAutoMemory() {
   localStorage.removeItem(COLLECTOR_MIGRATION_NOTE_KEY);
   renderSharedMemory();
   renderAutoReader();
+  setSharedOutputStatus("warn");
+  if (els.sharedMemoryOutput) {
+    els.sharedMemoryOutput.textContent = "MÉMOIRE LOCALE EFFACÉE\n\nL’ID machine est conservée. Les snapshots devront être recollectés ou réimportés.";
+  }
 }
 
 
@@ -4622,7 +4671,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.22
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.23
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
