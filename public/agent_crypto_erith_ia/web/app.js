@@ -1297,7 +1297,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1405,7 +1405,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2423,394 +2423,53 @@ function renderScore(coin) {
 function renderWatchlist() {
   if (!els.watchCards) return;
 
-  if (!state.liveOk || !state.coins.length) {
-    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Aucune donnée watchlist inventée.</div>`;
-    return;
-  }
-
-  const cards = state.watchIds
-    .map(id => state.coins.find(c => c.id === id))
-    .filter(Boolean)
-    .map(c => {
-      const s = scoreCoin(c);
-      return `<div class="mini-card">
-        <strong>${escapeHtml(c.name)} · ${escapeHtml(c.symbol)}</strong>
-        <div class="meta">${num(c.price, fmtEUR.format.bind(fmtEUR))} · 24h <span class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</span></div>
-        <div class="meta">Score ${s.score} · ${decisionFromScore(s.score)}</div>
-      </div>`;
-    });
-
-  els.watchCards.innerHTML = cards.length
-    ? cards.join("")
-    : `<div class="mini-card muted">Aucun actif de watchlist trouvé dans le top chargé.</div>`;
-}
-
-function renderRiskGrid() {
-  if (!els.riskGrid) return;
-
-  els.riskGrid.innerHTML = `
-    <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.liveOk ? "Source live OK" : "Non récupéré"}</b></div>
-    <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.26</b></div>
-    <div class="risk warn"><span>Social</span><b>Non vérifié</b></div>
-    <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
-}
-
-function renderSourceGrid() {
-  if (!els.sourceGrid) {
-    renderSourceDiagnostic();
-    return;
-  }
-
-  if (!state.sourceStatus.length) {
-    els.sourceGrid.innerHTML = liveSources.map(s =>
-      `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>`
-    ).join("");
-    renderSourceDiagnostic();
-    return;
-  }
-
-  els.sourceGrid.innerHTML = state.sourceStatus.map(s =>
-    `<div class="source-item ${s.status === "OK" ? "ok" : s.status === "BACKEND" ? "warn" : "fail"}">
-      <strong>${s.name}</strong>
-      <span>${s.kind}</span>
-      <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span>
-      <span>${escapeHtml(s.detail || "")}</span>
-    </div>`
-  ).join("");
-
-  renderSourceDiagnostic();
-}
-
-
-function renderTrustLock(live = false) {
-  if (!els.trustLockText) return;
-
-  els.trustLockText.classList.toggle("ok-lock", !!live);
-  els.trustLockText.classList.toggle("warn-lock", !live);
-
-  if (live) {
-    const total = liveSources.length;
-    const done = state.sourceStatus.length;
-    const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-    const fail = Math.max(0, done - ok);
-    const failText = fail === 1 ? "1 source secondaire a échoué" : `${fail} sources secondaires ont échoué`;
-
-    els.trustLockText.textContent =
-      `Source marché active : ${state.mainSource || "source réelle"}. ` +
-      `Tableau autorisé parce que les prix viennent d’une source live. ` +
-      `Sources : ${ok}/${total} réussies, ${done}/${total} interrogées. ` +
-      `${fail ? failText + ". " : ""}` +
-      "Achat interdit : sécurité, social et on-chain restent à vérifier.";
-  } else {
-    const total = liveSources.length;
-    const done = state.sourceStatus.length;
-    const ok = state.sourceStatus.filter(s => s.status === "OK").length;
-
-    if (done) {
-      els.trustLockText.textContent =
-        `Source marché principale indisponible. ${ok}/${total} sources ont répondu, ${done}/${total} ont été interrogées. ` +
-        "Rouge = tableau bloqué, pas erreur utilisateur.";
-    } else {
-      els.trustLockText.textContent =
-        "Pas de source marché active : pas de prix, pas de tableau chiffré, pas de score fiable.";
-    }
-  }
-}
-
-function renderColdRead(live = false) {
-  renderTrustLock(live);
-  if (!els.coldRead) return;
-
-  const box = els.coldRead.closest(".cold-read");
-  if (box) {
-    box.classList.toggle("live", live);
-    box.classList.toggle("offline", !live);
-  }
-
-  if (live) {
-    els.coldRead.textContent =
-      `Snapshot live récupéré depuis ${state.mainSource}. Tableau autorisé : données marché réelles. ` +
-      `Lecture froide : prix, volumes et market cap sont disponibles, mais sécurité contrat, social et on-chain restent non validés par cette interface V1.1-alpha.26.`;
-  } else {
-    els.coldRead.textContent =
-      "Accès live absent ou source marché principale indisponible. L’observatoire refuse d’afficher un tableau chiffré.";
-  }
-}
-
-function analyzeNews() {
-  const text = els.newsInput?.value.trim() || "";
-  if (!text) {
-    setText(els.newsOutput, "Colle une actualité à classifier.");
-    return;
-  }
-
-  const lower = text.toLowerCase();
-  const isRumor = /rumeur|serait|peut-être|insider|leak|telegram|x\.com|twitter/.test(lower);
-  const isCritical = /hack|exploit|bridge|faillite|sec|amf|delisting|suspension|procès|attaque/.test(lower);
-  const isListing = /listing|listé|binance|coinbase|kraken/.test(lower);
-  const type = isRumor ? "rumeur / non confirmé" : isCritical ? "information critique potentielle" : isListing ? "catalyseur listing potentiel" : "information à qualifier";
-  const score = isCritical ? 78 : isListing ? 64 : isRumor ? 36 : 48;
-
-  setText(
-    els.newsOutput,
-    `NEWS SENTINEL\n\nType : ${type}\nScore News Impact : ${score}/100\nDécision : ${score >= 60 ? "analyse approfondie" : "veille"}\n\nRègle : ce score déclenche une vérification, pas une position.\nSources à vérifier : source primaire, communiqué officiel, source secondaire fiable, réaction marché, risque de manipulation.`
-  );
-}
-
-function analyzeFomo() {
-  const text = els.fomoInput?.value.trim() || "";
-  if (!text) {
-    setText(els.fomoOutput, "Écris ce qui déclenche la FOMO.");
-    return;
-  }
-
-  const hasBigMove = /\+\s?\d{2,}|explos|pump|rate|raté|peur|vite|maintenant/i.test(text);
-
-  setText(
-    els.fomoOutput,
-    `MODE NO-FOMO\n\nSignal émotionnel : ${hasBigMove ? "élevé" : "à vérifier"}\nDécision : position théorique interdite tant que l’analyse froide n’est pas faite.\n\nQuestions :\n1. La hausse est-elle déjà pricée ?\n2. Qui vend si tu entres maintenant ?\n3. Quelle source primaire confirme le signal ?\n4. Où est l’invalidation ?\n5. La perte maximale est-elle acceptée ?\n\nConclusion : une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.`
-  );
-}
-
-const WATCH_STORAGE_KEY = "agent_crypto_erith_ia_watchlist_v2_alpha_26";
-
-const ATLAS_WATCH_BASKETS = [
-  {
-    key: "core",
-    label: "Socle marché",
-    role: "Repères de marché, dominance, stabilité relative.",
-    ids: ["bitcoin", "ethereum", "solana", "binancecoin", "ripple"]
-  },
-  {
-    key: "liquidity",
-    label: "Stablecoins / liquidité",
-    role: "Stabilité, flux, stress, base de comparaison.",
-    ids: ["tether", "usd-coin", "usds"]
-  },
-  {
-    key: "majors",
-    label: "Grands actifs solides",
-    role: "Grandes capitalisations à suivre hors socle.",
-    ids: ["cardano", "tron", "dogecoin", "chainlink", "toncoin", "avalanche-2", "polkadot", "litecoin"]
-  },
-  {
-    key: "defi",
-    label: "DeFi / oracles / RWA",
-    role: "Infrastructure, rendement, tokenisation, flux DeFi.",
-    ids: ["chainlink", "uniswap", "aave", "ondo-finance", "maker", "pendle"]
-  },
-  {
-    key: "ai",
-    label: "IA / compute / data",
-    role: "Narratif IA, calcul, data, infrastructure numérique.",
-    ids: ["near", "bittensor", "render", "internet-computer"]
-  },
-  {
-    key: "l1l2",
-    label: "Layer 1 / Layer 2",
-    role: "Écosystèmes, scalabilité, rotation sectorielle.",
-    ids: ["sui", "aptos", "arbitrum", "optimism", "polygon-ecosystem-token"]
-  },
-  {
-    key: "speculative",
-    label: "Spéculatif liquide",
-    role: "Température du risque et FOMO de marché.",
-    ids: ["dogecoin", "shiba-inu", "pepe"]
-  },
-  {
-    key: "privacy",
-    label: "Privacy / risque réglementaire",
-    role: "Flux particuliers, risque réglementaire, signaux atypiques.",
-    ids: ["monero", "zcash"]
-  }
-];
-
-const WATCH_ALIAS = {
-  btc: "bitcoin",
-  bitcoin: "bitcoin",
-  eth: "ethereum",
-  ethereum: "ethereum",
-  sol: "solana",
-  solana: "solana",
-  bnb: "binancecoin",
-  binance: "binancecoin",
-  binancecoin: "binancecoin",
-  xrp: "ripple",
-  ripple: "ripple",
-  usdt: "tether",
-  tether: "tether",
-  usdc: "usd-coin",
-  "usd-coin": "usd-coin",
-  usds: "usds",
-  dai: "dai",
-  ada: "cardano",
-  cardano: "cardano",
-  tron: "tron",
-  trx: "tron",
-  doge: "dogecoin",
-  dogecoin: "dogecoin",
-  link: "chainlink",
-  chainlink: "chainlink",
-  ton: "toncoin",
-  toncoin: "toncoin",
-  avax: "avalanche-2",
-  avalanche: "avalanche-2",
-  dot: "polkadot",
-  polkadot: "polkadot",
-  ltc: "litecoin",
-  litecoin: "litecoin",
-  uni: "uniswap",
-  uniswap: "uniswap",
-  aave: "aave",
-  ondo: "ondo-finance",
-  "ondo-finance": "ondo-finance",
-  mkr: "maker",
-  maker: "maker",
-  sky: "maker",
-  pendle: "pendle",
-  near: "near",
-  tao: "bittensor",
-  bittensor: "bittensor",
-  render: "render",
-  rndr: "render",
-  icp: "internet-computer",
-  "internet-computer": "internet-computer",
-  sui: "sui",
-  apt: "aptos",
-  aptos: "aptos",
-  arb: "arbitrum",
-  arbitrum: "arbitrum",
-  op: "optimism",
-  optimism: "optimism",
-  pol: "polygon-ecosystem-token",
-  matic: "polygon-ecosystem-token",
-  polygon: "polygon-ecosystem-token",
-  shib: "shiba-inu",
-  "shiba-inu": "shiba-inu",
-  pepe: "pepe",
-  xmr: "monero",
-  monero: "monero",
-  zec: "zcash",
-  zcash: "zcash"
-};
-
-function atlasWatchDefaultIds() {
-  return [...new Set(ATLAS_WATCH_BASKETS.flatMap(b => b.ids))];
-}
-
-function normalizeWatchId(value) {
-  const raw = String(value || "").trim().toLowerCase();
-  if (!raw) return "";
-  return WATCH_ALIAS[raw] || raw.replace(/\s+/g, "-");
-}
-
-function saveWatchIds() {
-  try { localStorage.setItem(WATCH_STORAGE_KEY, JSON.stringify(state.watchIds)); } catch {}
-}
-
-function loadWatchIds() {
-  try {
-    const raw = localStorage.getItem(WATCH_STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    if (Array.isArray(parsed) && parsed.length) {
-      state.watchIds = [...new Set(parsed.map(normalizeWatchId).filter(Boolean))].slice(0, 48);
-      return;
-    }
-  } catch {}
-
-  state.watchIds = atlasWatchDefaultIds();
-  saveWatchIds();
-}
-
-function addWatch() {
-  const id = normalizeWatchId(els.watchInput?.value);
-  if (!id) return;
-  if (!state.watchIds.includes(id)) state.watchIds.push(id);
-  state.watchIds = [...new Set(state.watchIds)].slice(0, 48);
-  saveWatchIds();
-  if (els.watchInput) els.watchInput.value = "";
-  renderWatchlist();
-  renderAutoReader();
-}
-
-function seedWatch() {
-  state.watchIds = atlasWatchDefaultIds();
-  saveWatchIds();
-  renderWatchlist();
-  renderAutoReader();
-}
-
-function watchCoinById(id) {
-  return state.coins.find(c => c.id === id) || null;
-}
-
-function watchBasketCoins(basket) {
-  return basket.ids.map(watchCoinById).filter(Boolean);
-}
-
-function basketStatus(coins) {
-  if (!coins.length) return { label: "À charger", mode: "wait", avg: null };
-  const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length;
-  const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm";
-  const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme";
-  return { label, mode, avg };
-}
-
-function renderWatchlist() {
-  if (!els.watchCards) return;
-
   const selectedCount = (state.watchIds || []).length;
   if (els.watchBasketSummary) {
-    els.watchBasketSummary.textContent = `Atlas Watchlist V2 · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers : socle, liquidité, grands actifs, DeFi/RWA, IA, L1/L2, spéculatif, privacy.`;
+    els.watchBasketSummary.textContent = `Atlas Watchlist V2 compacte · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers sectoriels résumés.`;
   }
 
   if (!state.liveOk || !state.coins.length) {
-    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 prépare ${selectedCount} actifs, mais aucun prix n’est inventé.</div>`;
+    els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 prépare ${selectedCount} actifs, sans inventer de prix.</div>`;
     return;
   }
-
-  const baskets = ATLAS_WATCH_BASKETS.map(basket => {
-    const coins = watchBasketCoins(basket);
-    const status = basketStatus(coins);
-    const missing = basket.ids.filter(id => !state.coins.some(c => c.id === id));
-
-    const coinCards = coins.slice(0, 8).map(c => {
-      const s = scoreCoin(c);
-      return `<div class="watch-coin-card" data-id="${escapeHtml(c.id)}">
-        <b>${escapeHtml(c.symbol)}</b>
-        <span>${safeMoney(c.price)}</span>
-        <em class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</em>
-        <small>${escapeHtml(classifyAsset(c))} · ${s.score}</small>
-      </div>`;
-    }).join("");
-
-    return `<section class="watch-basket ${status.mode}">
-      <header>
-        <div>
-          <h3>${escapeHtml(basket.label)}</h3>
-          <p>${escapeHtml(basket.role)}</p>
-        </div>
-        <strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong>
-      </header>
-      <div class="watch-coin-grid">${coinCards || `<div class="mini-card muted">Aucun actif de ce panier dans les ${state.coins.length} actifs chargés.</div>`}</div>
-      ${missing.length ? `<div class="watch-missing">Hors top chargé ou source absente : ${missing.slice(0, 6).map(id => id.toUpperCase()).join(" · ")}${missing.length > 6 ? " · …" : ""}</div>` : ""}
-    </section>`;
-  });
 
   const topMovers = state.coins
     .filter(c => typeof c.change24h === "number")
     .slice()
     .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h))
     .slice(0, 6)
-    .map(c => `<span>${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b></span>`)
-    .join("");
+    .map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`)
+    .join(" · ");
+
+  const basketRows = ATLAS_WATCH_BASKETS.map(basket => {
+    const coins = watchBasketCoins(basket);
+    const status = basketStatus(coins);
+    const leaders = coins
+      .slice()
+      .sort((a, b) => Math.abs(Number(b.change24h) || 0) - Math.abs(Number(a.change24h) || 0))
+      .slice(0, 4);
+
+    const leaderText = leaders.length
+      ? leaders.map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ")
+      : "aucun actif dans le top chargé";
+
+    return `<article class="watch-compact-row ${status.mode}">
+      <div>
+        <b>${escapeHtml(basket.label)}</b>
+        <span>${escapeHtml(basket.role)}</span>
+      </div>
+      <strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong>
+      <em>${leaderText}</em>
+      <small>${coins.length}/${basket.ids.length} actifs visibles</small>
+    </article>`;
+  }).join("");
 
   els.watchCards.innerHTML = [
-    `<div class="watch-v2-diagnostic">
-      <b>Lecture Atlas V2</b>
-      <span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · top mouvements : ${topMovers || "en attente"}</span>
+    `<div class="watch-v2-diagnostic compact">
+      <b>Lecture Atlas V2 compacte</b>
+      <span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · mouvements : ${topMovers || "en attente"}</span>
     </div>`,
-    ...baskets
+    `<div class="watch-compact-list">${basketRows}</div>`
   ].join("");
 }
 
@@ -2847,7 +2506,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2922,7 +2581,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.26`,
+    `Version : V1.1-alpha.26.2`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3063,7 +2722,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -3166,7 +2825,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -3184,7 +2843,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3481,7 +3140,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26",
+    "Version : V1.1-alpha.26.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3574,7 +3233,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26",
+    "Version : V1.1-alpha.26.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3598,7 +3257,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.26.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.26.2.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3641,7 +3300,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.26",
+    "- Version : V1.1-alpha.26.2",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3772,7 +3431,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26",
+    "Version : V1.1-alpha.26.2",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3990,7 +3649,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.26 — Atlas Auto Reader
+   V1.1-alpha.26.2 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -4051,7 +3710,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.26",
+    version: "V1.1-alpha.26.2",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -4196,7 +3855,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.26",
+      "ATLAS AUTO READER — V1.1-alpha.26.2",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -4470,7 +4129,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26.2",
       "",
       configured
         ? `✅ Machine configurée : ${id}`
@@ -4689,7 +4348,7 @@ async function loadGithubSharedMemory(showMessages = true) {
         `Collecteurs GitHub : ${stats.text}`,
         "",
         "Résultat : Atlas peut maintenant fusionner mémoire locale + mémoire GitHub.",
-        "Étape active : alpha.26 installe GitHub Action Collector pour créer data/latest.json automatiquement."
+        "Étape active : alpha.26.2 installe GitHub Action Collector pour créer data/latest.json automatiquement."
       ].join("\n");
     }
 
@@ -5088,7 +4747,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26.2
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
