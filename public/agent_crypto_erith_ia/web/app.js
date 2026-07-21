@@ -1297,7 +1297,7 @@ function renderSimulation() {
 
 function situationPayload() {
   return {
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     active_now: [
       "public_market_observation",
       "charts",
@@ -1405,7 +1405,7 @@ function doNotDoPayload() {
 
 function backendBlueprintPayload() {
   return {
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     principle: "separate_public_frontend_from_private_backend",
     public_layer: {
       host: "GitHub Pages",
@@ -2420,6 +2420,192 @@ function renderScore(coin) {
     <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
 }
 
+
+const WATCH_STORAGE_KEY = "agent_crypto_erith_ia_watchlist_v2_alpha_26_3";
+
+const ATLAS_WATCH_BASKETS = [
+  {
+    key: "core",
+    label: "Socle marché",
+    role: "Repères de marché, dominance, stabilité relative.",
+    ids: ["bitcoin", "ethereum", "solana", "binancecoin", "ripple"]
+  },
+  {
+    key: "liquidity",
+    label: "Stablecoins / liquidité",
+    role: "Stabilité, flux, stress, base de comparaison.",
+    ids: ["tether", "usd-coin", "usds"]
+  },
+  {
+    key: "majors",
+    label: "Grands actifs solides",
+    role: "Grandes capitalisations à suivre hors socle.",
+    ids: ["cardano", "tron", "dogecoin", "chainlink", "toncoin", "avalanche-2", "polkadot", "litecoin"]
+  },
+  {
+    key: "defi",
+    label: "DeFi / oracles / RWA",
+    role: "Infrastructure, rendement, tokenisation, flux DeFi.",
+    ids: ["chainlink", "uniswap", "aave", "ondo-finance", "maker", "pendle"]
+  },
+  {
+    key: "ai",
+    label: "IA / compute / data",
+    role: "Narratif IA, calcul, data, infrastructure numérique.",
+    ids: ["near", "bittensor", "render", "internet-computer"]
+  },
+  {
+    key: "l1l2",
+    label: "Layer 1 / Layer 2",
+    role: "Écosystèmes, scalabilité, rotation sectorielle.",
+    ids: ["sui", "aptos", "arbitrum", "optimism", "polygon-ecosystem-token"]
+  },
+  {
+    key: "speculative",
+    label: "Spéculatif liquide",
+    role: "Température du risque et FOMO de marché.",
+    ids: ["dogecoin", "shiba-inu", "pepe"]
+  },
+  {
+    key: "privacy",
+    label: "Privacy / risque réglementaire",
+    role: "Flux particuliers, risque réglementaire, signaux atypiques.",
+    ids: ["monero", "zcash"]
+  }
+];
+
+const WATCH_ALIAS = {
+  btc: "bitcoin",
+  bitcoin: "bitcoin",
+  eth: "ethereum",
+  ethereum: "ethereum",
+  sol: "solana",
+  solana: "solana",
+  bnb: "binancecoin",
+  binance: "binancecoin",
+  binancecoin: "binancecoin",
+  xrp: "ripple",
+  ripple: "ripple",
+  usdt: "tether",
+  tether: "tether",
+  usdc: "usd-coin",
+  "usd-coin": "usd-coin",
+  usds: "usds",
+  dai: "dai",
+  ada: "cardano",
+  cardano: "cardano",
+  trx: "tron",
+  tron: "tron",
+  doge: "dogecoin",
+  dogecoin: "dogecoin",
+  link: "chainlink",
+  chainlink: "chainlink",
+  ton: "toncoin",
+  toncoin: "toncoin",
+  avax: "avalanche-2",
+  avalanche: "avalanche-2",
+  dot: "polkadot",
+  polkadot: "polkadot",
+  ltc: "litecoin",
+  litecoin: "litecoin",
+  uni: "uniswap",
+  uniswap: "uniswap",
+  aave: "aave",
+  ondo: "ondo-finance",
+  "ondo-finance": "ondo-finance",
+  mkr: "maker",
+  maker: "maker",
+  sky: "maker",
+  pendle: "pendle",
+  near: "near",
+  tao: "bittensor",
+  bittensor: "bittensor",
+  render: "render",
+  rndr: "render",
+  icp: "internet-computer",
+  "internet-computer": "internet-computer",
+  sui: "sui",
+  apt: "aptos",
+  aptos: "aptos",
+  arb: "arbitrum",
+  arbitrum: "arbitrum",
+  op: "optimism",
+  optimism: "optimism",
+  pol: "polygon-ecosystem-token",
+  matic: "polygon-ecosystem-token",
+  polygon: "polygon-ecosystem-token",
+  shib: "shiba-inu",
+  "shiba-inu": "shiba-inu",
+  pepe: "pepe",
+  xmr: "monero",
+  monero: "monero",
+  zec: "zcash",
+  zcash: "zcash"
+};
+
+function atlasWatchDefaultIds() {
+  return [...new Set(ATLAS_WATCH_BASKETS.flatMap(b => b.ids))];
+}
+
+function normalizeWatchId(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) return "";
+  return WATCH_ALIAS[raw] || raw.replace(/\s+/g, "-");
+}
+
+function saveWatchIds() {
+  try { localStorage.setItem(WATCH_STORAGE_KEY, JSON.stringify(state.watchIds)); } catch {}
+}
+
+function loadWatchIds() {
+  try {
+    const raw = localStorage.getItem(WATCH_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (Array.isArray(parsed) && parsed.length >= 12) {
+      state.watchIds = [...new Set(parsed.map(normalizeWatchId).filter(Boolean))].slice(0, 48);
+      return;
+    }
+  } catch {}
+
+  state.watchIds = atlasWatchDefaultIds();
+  saveWatchIds();
+}
+
+function addWatch() {
+  const id = normalizeWatchId(els.watchInput?.value);
+  if (!id) return;
+  if (!state.watchIds.includes(id)) state.watchIds.push(id);
+  state.watchIds = [...new Set(state.watchIds)].slice(0, 48);
+  saveWatchIds();
+  if (els.watchInput) els.watchInput.value = "";
+  renderWatchlist();
+  renderAutoReader();
+}
+
+function seedWatch() {
+  state.watchIds = atlasWatchDefaultIds();
+  saveWatchIds();
+  renderWatchlist();
+  renderAutoReader();
+}
+
+function watchCoinById(id) {
+  return state.coins.find(c => c.id === id) || null;
+}
+
+function watchBasketCoins(basket) {
+  return basket.ids.map(watchCoinById).filter(Boolean);
+}
+
+function basketStatus(coins) {
+  if (!coins.length) return { label: "À charger", mode: "wait", avg: null };
+  const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length;
+  const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm";
+  const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme";
+  return { label, mode, avg };
+}
+
+
 function renderWatchlist() {
   if (!els.watchCards) return;
 
@@ -2506,7 +2692,7 @@ function simulationDataSnapshot() {
   const totals = getSimulationTotals();
   return {
     generated_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     public_only: true,
     warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.",
     profile: getSimulationProfileStatus(),
@@ -2581,7 +2767,7 @@ function buildLearningJournalMarkdown() {
   const lines = [
     "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA",
     "",
-    `Version : V1.1-alpha.26.2`,
+    `Version : V1.1-alpha.26.3`,
     `Date locale : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -2722,7 +2908,7 @@ function makeCollectorRecord() {
   return {
     id: `snapshot_${Date.now()}`,
     saved_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     public_only: true,
     source: snapshot?.market_snapshot?.source || "source live",
     live_ok: !!snapshot?.market_snapshot?.live_ok,
@@ -2825,7 +3011,7 @@ function downloadCollectorJSON() {
   const records = readCollectorMemory();
   const payload = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     public_only: true,
     warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.",
     count: records.length,
@@ -2843,7 +3029,7 @@ function downloadCollectorJSONL() {
   const records = readCollectorMemory();
   const header = {
     exported_at: new Date().toISOString(),
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     public_only: true,
     type: "agent_crypto_collector_memory_jsonl_header"
   };
@@ -3140,7 +3326,7 @@ function buildMemoryReportMarkdown() {
   const lines = [
     "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.2",
+    "Version : V1.1-alpha.26.3",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Statut sécurité",
@@ -3233,7 +3419,7 @@ function buildWakePlanText() {
   return [
     "# NOTE DE REPRISE — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.2",
+    "Version : V1.1-alpha.26.3",
     `Date : ${new Date().toISOString()}`,
     "",
     "## État validé avant pause",
@@ -3257,7 +3443,7 @@ function buildWakePlanText() {
     "",
     "1. Ouvrir la page publique.",
     "2. Faire Ctrl + F5.",
-    "3. Vérifier : GitHub Pack V1.1-alpha.26.2.",
+    "3. Vérifier : GitHub Pack V1.1-alpha.26.3.",
     "4. Lancer Livecheck.",
     "5. Aller dans Simulation.",
     "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.",
@@ -3300,7 +3486,7 @@ function markPauseReady() {
     "PAUSE VALIDÉE",
     "",
     "État conseillé avant coupure :",
-    "- Version : V1.1-alpha.26.2",
+    "- Version : V1.1-alpha.26.3",
     `- Snapshots mémoire : ${records.length}`,
     "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.",
     "",
@@ -3431,7 +3617,7 @@ function buildCollectionPlanMarkdown() {
   const lines = [
     "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA",
     "",
-    "Version : V1.1-alpha.26.2",
+    "Version : V1.1-alpha.26.3",
     `Date : ${new Date().toISOString()}`,
     "",
     "## Objectif",
@@ -3649,7 +3835,7 @@ function runSchoolTest(testName) {
 
 
 /* =========================================================
-   V1.1-alpha.26.2 — Atlas Auto Reader
+   V1.1-alpha.26.3 — Atlas Auto Reader
    Ouverture page -> Livecheck auto -> snapshots -> lecture marché.
    ========================================================= */
 
@@ -3710,7 +3896,7 @@ function makeAutoSnapshot() {
     collector_id: collectorId,
     collector_type: "local_browser",
     saved_at: created,
-    version: "V1.1-alpha.26.2",
+    version: "V1.1-alpha.26.3",
     source: state.mainSource || null,
     source_time: state.timestamp || null,
     live_ok: !!state.liveOk,
@@ -3855,7 +4041,7 @@ function renderAutoReader(snapshot = null, previous = null) {
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V1.1-alpha.26.2",
+      "ATLAS AUTO READER — V1.1-alpha.26.3",
       "",
       state.auto?.enabled ? "Mode : collecte automatique active." : "Mode : collecte automatique désactivée.",
       `Snapshots enregistrés : ${records.length}`,
@@ -3922,11 +4108,21 @@ function startAutoReader() {
   if (els.autoCadenceSelect) state.auto.cadence = els.autoCadenceSelect.value || "adaptive";
   renderAutoReader();
 
+  if (!state.liveOk) {
+    setLiveStatus("warn", "Démarrage auto");
+    setTableDecision("Livecheck automatique en cours", "warn");
+    setText(els.sourceName, "Démarrage Auto Reader");
+    setText(els.sourceTime, "—");
+  }
+
   if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
   state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
 
   if (state.auto.enabled) {
     setTimeout(() => runLivecheck(), 650);
+    setTimeout(() => {
+      if (!state.liveOk && !state.auto.livecheckBusy) runLivecheck();
+    }, 2200);
   }
 }
 
@@ -4129,7 +4325,7 @@ function renderSharedMemory() {
   if (els.sharedMemoryOutput) {
     setSharedOutputStatus(configured ? "ok" : "warn");
     els.sharedMemoryOutput.textContent = [
-      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26.2",
+      "ATLAS SHARED MARKET MEMORY — V1.1-alpha.26.3",
       "",
       configured
         ? `✅ Machine configurée : ${id}`
@@ -4348,7 +4544,7 @@ async function loadGithubSharedMemory(showMessages = true) {
         `Collecteurs GitHub : ${stats.text}`,
         "",
         "Résultat : Atlas peut maintenant fusionner mémoire locale + mémoire GitHub.",
-        "Étape active : alpha.26.2 installe GitHub Action Collector pour créer data/latest.json automatiquement."
+        "Étape active : alpha.26.3 installe GitHub Action Collector pour créer data/latest.json automatiquement."
       ].join("\n");
     }
 
@@ -4533,7 +4729,7 @@ atlasSafeBoot("source grid", renderSourceGrid);
 atlasSafeBoot("source diagnostic", renderSourceDiagnostic);
 atlasSafeBoot("source metric", () => updateSourceMetric(0));
 atlasSafeBoot("ticker", renderTicker);
-atlasSafeBoot("empty market", () => renderEmptyMarket("Livecheck requis. Aucun prix inventé."));
+atlasSafeBoot("empty market", () => renderEmptyMarket("Démarrage Auto Reader. Aucun prix inventé avant source réelle."));
 atlasSafeBoot("score", () => renderScore(null));
 atlasSafeBoot("watch ids", loadWatchIds);
 atlasSafeBoot("watchlist", renderWatchlist);
@@ -4747,7 +4943,7 @@ function downloadSessionBrief() {
 
 
 
-/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26.2
+/* Atlas-10 Crypto — Math Core intégré V1.1-alpha.26.3
    Source: modules .md Atlas Math.
    Exécution: traduction JS condensée.
    Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
