@@ -4541,3 +4541,48 @@ main .decision-board{
     min-height:325px !important;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.32 — Atlas Chart Integrity Lock
+   États stricts : réel / chargement / blocage. Aucun autre panneau modifié.
+   ========================================================= */
+.atlas-market-zone #analyste .chart-shell:not([data-chart-summary])::after{
+  display:none !important;
+}
+.atlas-market-zone #analyste .chart-shell[data-chart-state="loading"]::before,
+.atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"]::before{
+  position:absolute;
+  top:14px;
+  right:16px;
+  z-index:6;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.045em;
+  pointer-events:none;
+}
+.atlas-market-zone #analyste .chart-shell[data-chart-state="loading"]::before{
+  content:"CHARGEMENT · COINGECKO EUR";
+  color:#fff0c8;
+  background:rgba(46,48,80,.64);
+  border:1px solid rgba(255,216,135,.28);
+}
+.atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"]::before{
+  content:"GRAPHE BLOQUÉ · INTÉGRITÉ";
+  color:#ffd8dd;
+  background:rgba(82,20,35,.62);
+  border:1px solid rgba(255,92,117,.34);
+}
+.atlas-market-zone .spark-cell .sparkline.spark-up{color:var(--green)}
+.atlas-market-zone .spark-cell .sparkline.spark-down{color:var(--red)}
+.atlas-market-zone .spark-cell .sparkline-empty{
+  display:inline-flex;
+  width:112px;
+  height:28px;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  font-weight:900;
+}
