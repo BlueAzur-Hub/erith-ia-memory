@@ -1,28 +1,9 @@
 {
-  "schema": "atlas_github_market_status_v1",
-  "version": "V1.1-alpha.26.35",
-  "updated_at": "2026-07-22T09:33:13.824Z",
-  "status": "ok",
-  "live_ok": true,
-  "source": "CoinGecko",
-  "source_lock": "CoinGecko",
-  "quote_currencies": [
-    "EUR",
-    "USD"
-  ],
-  "assets_count": 50,
-  "history_file": "public/agent_crypto_erith_ia/data/history/2026-07-22.jsonl",
-  "chart_cache": [
-    {
-      "file": "assets/uniswap_30d.json",
-      "coin_id": "uniswap",
-      "symbol": "UNI",
-      "live_ok": true,
-      "retained_existing": false,
-      "point_count": 721,
-      "source": "CoinGecko"
-    }
-  ],
-  "message": "Collecte OK depuis CoinGecko",
-  "errors": []
+  "schema": "atlas_github_market_status_v3",
+  "version": "V1.1-alpha.26.38",
+  "updated_at": "2026-07-22T12:04:35.565Z",
+  "status": "error",
+  "source": "CoinMarketCap",
+  "archive_only": true,
+  "message": "HTTP 400"
 }
