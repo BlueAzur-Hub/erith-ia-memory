@@ -1,4 +1,4 @@
-name: Atlas Market Archive Top 50
+name: Atlas Market Archive CoinMarketCap Top 50
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: atlas-market-archive-top50
+  group: atlas-market-archive-cmc-top50
   cancel-in-progress: false
 
 jobs:
@@ -22,143 +22,118 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Collect CoinGecko Top 50 archive
-        env:
-          COINGECKO_DEMO_API_KEY: ${{ secrets.COINGECKO_DEMO_API_KEY }}
+      - name: Collect CoinMarketCap Top 50 archive
         run: |
           node <<'NODE'
           const fs = require('fs');
           const path = require('path');
-
           const ROOT = path.join('public', 'agent_crypto_erith_ia', 'data');
           const HISTORY = path.join(ROOT, 'history');
           fs.mkdirSync(HISTORY, { recursive: true });
-
           const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-          const headers = process.env.COINGECKO_DEMO_API_KEY
-            ? { 'x-cg-demo-api-key': process.env.COINGECKO_DEMO_API_KEY }
-            : {};
 
           async function fetchJson(url, attempts = 3) {
-            let last;
-            for (let i = 0; i < attempts; i++) {
+            let lastError;
+            for (let attempt = 0; attempt < attempts; attempt += 1) {
               try {
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), 20000);
-                const response = await fetch(url, { headers, signal: controller.signal });
+                const response = await fetch(url, { signal: controller.signal, headers: { accept: 'application/json' } });
                 clearTimeout(timer);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return await response.json();
+                const payload = await response.json();
+                if (Number(payload?.status?.error_code || 0) !== 0) throw new Error(payload?.status?.error_message || 'CMC API error');
+                return payload;
               } catch (error) {
-                last = error;
-                if (i + 1 < attempts) await sleep(2000 * (i + 1));
+                lastError = error;
+                if (attempt + 1 < attempts) await sleep(1500 * (2 ** attempt));
               }
             }
-            throw last;
+            throw lastError;
           }
 
-          function compact(row, usd = {}) {
-            return {
-              id: row.id,
-              rank: row.market_cap_rank,
-              name: row.name,
-              symbol: String(row.symbol || '').toUpperCase(),
-              image: row.image || '',
-              price_eur: row.current_price,
-              price_usd: Number.isFinite(Number(usd.usd)) ? Number(usd.usd) : null,
-              change_1h_pct: row.price_change_percentage_1h_in_currency ?? null,
-              change_24h_pct: row.price_change_percentage_24h_in_currency ?? row.price_change_percentage_24h ?? null,
-              change_7d_pct: row.price_change_percentage_7d_in_currency ?? null,
-              change_30d_pct: row.price_change_percentage_30d_in_currency ?? null,
-              market_cap_eur: row.market_cap,
-              market_cap_usd: null,
-              volume_24h_eur: row.total_volume,
-              volume_24h_usd: null,
-              high_24h_eur: row.high_24h,
-              low_24h_eur: row.low_24h,
-              last_updated: row.last_updated || (usd.last_updated_at ? new Date(Number(usd.last_updated_at) * 1000).toISOString() : null)
-            };
+          function quote(row, symbol) {
+            const wanted = String(symbol).toUpperCase();
+            const q = row?.quote;
+            if (Array.isArray(q)) return q.find(x => String(x?.symbol || x?.name || '').toUpperCase() === wanted) || null;
+            if (q && typeof q === 'object') return q[wanted] || Object.values(q).find(x => String(x?.symbol || x?.name || '').toUpperCase() === wanted) || null;
+            return null;
           }
 
           (async () => {
-            const common = 'order=market_cap_desc&per_page=50&page=1&sparkline=false&precision=full';
-            const eurUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&${common}&price_change_percentage=1h,24h,7d,30d`;
-            const eurRows = await fetchJson(eurUrl);
-            if (!Array.isArray(eurRows) || eurRows.length < 40) throw new Error(`EUR incomplet ${eurRows?.length || 0}/50`);
-
-            const ids = eurRows.map(row => row.id).filter(Boolean);
-            let usdPayload = {};
-            try {
-              await sleep(1500);
-              usdPayload = await fetchJson(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(ids.join(','))}&vs_currencies=usd&include_last_updated_at=true&precision=full`);
-            } catch (error) {
-              console.warn('USD enrichment unavailable:', error.message);
-            }
-
-            const assets = eurRows.map(row => compact(row, usdPayload?.[row.id] || {})).filter(row => row.id && Number.isFinite(Number(row.price_eur)) && Number(row.price_eur) > 0);
-            if (assets.length < 40) throw new Error(`Top 50 EUR incomplet ${assets.length}/50`);
-            const usdCount = assets.filter(row => Number.isFinite(Number(row.price_usd)) && Number(row.price_usd) > 0).length;
-
-            const now = new Date().toISOString();
+            const url = 'https://pro-api.coinmarketcap.com/public-api/v3/cryptocurrency/listings/latest?start=1&limit=50&convert=EUR,USD';
+            const payload = await fetchJson(url);
+            const rows = Array.isArray(payload?.data) ? payload.data : [];
+            if (rows.length < 40) throw new Error(`Top 50 incomplet ${rows.length}/50`);
+            const now = payload?.status?.timestamp || new Date().toISOString();
+            const assets = rows.map(row => {
+              const eur = quote(row, 'EUR');
+              const usd = quote(row, 'USD');
+              if (!eur || !Number.isFinite(Number(eur.price))) return null;
+              return {
+                cmc_id: Number(row.id),
+                slug: row.slug,
+                rank: Number(row.cmc_rank),
+                name: row.name,
+                symbol: String(row.symbol || '').toUpperCase(),
+                price_eur: Number(eur.price),
+                price_usd: Number.isFinite(Number(usd?.price)) ? Number(usd.price) : null,
+                change_1h_pct: Number.isFinite(Number(eur.percent_change_1h)) ? Number(eur.percent_change_1h) : null,
+                change_24h_pct: Number.isFinite(Number(eur.percent_change_24h)) ? Number(eur.percent_change_24h) : null,
+                change_7d_pct: Number.isFinite(Number(eur.percent_change_7d)) ? Number(eur.percent_change_7d) : null,
+                change_30d_pct: Number.isFinite(Number(eur.percent_change_30d)) ? Number(eur.percent_change_30d) : null,
+                market_cap_eur: Number.isFinite(Number(eur.market_cap)) ? Number(eur.market_cap) : null,
+                market_cap_usd: Number.isFinite(Number(usd?.market_cap)) ? Number(usd.market_cap) : null,
+                market_cap_dominance: Number.isFinite(Number(eur.market_cap_dominance)) ? Number(eur.market_cap_dominance) : null,
+                volume_24h_eur: Number.isFinite(Number(eur.volume_24h)) ? Number(eur.volume_24h) : null,
+                volume_24h_usd: Number.isFinite(Number(usd?.volume_24h)) ? Number(usd.volume_24h) : null,
+                circulating_supply: Number.isFinite(Number(row.circulating_supply)) ? Number(row.circulating_supply) : null,
+                total_supply: Number.isFinite(Number(row.total_supply)) ? Number(row.total_supply) : null,
+                max_supply: Number.isFinite(Number(row.max_supply)) ? Number(row.max_supply) : null,
+                last_updated: row.last_updated || eur.last_updated || now
+              };
+            }).filter(Boolean);
+            if (assets.length < 40) throw new Error(`Top 50 valide incomplet ${assets.length}/50`);
             const totalCap = assets.reduce((sum, row) => sum + (Number(row.market_cap_eur) || 0), 0);
             const totalVolume = assets.reduce((sum, row) => sum + (Number(row.volume_24h_eur) || 0), 0);
-            const btc = assets.find(row => row.id === 'bitcoin');
+            const btc = assets.find(row => row.symbol === 'BTC');
             const record = {
-              schema: 'atlas_market_snapshot_top50_v1',
-              version: 'V1.1-alpha.26.37',
-              snapshot_id: `github-action-main_${now.replace(/[:.]/g, '-')}`,
+              schema: 'atlas_market_snapshot_cmc_top50_v1',
+              version: 'V1.1-alpha.26.38',
+              snapshot_id: `github-action-cmc_${String(now).replace(/[:.]/g, '-')}`,
               collector_id: 'github-action-main',
               collector_type: 'github_archive',
               saved_at: now,
-              source: 'CoinGecko',
+              source: 'CoinMarketCap',
               source_mode: 'archive',
               live_ok: true,
-              usd_enriched_count: usdCount,
+              archive_only: true,
               assets_count: assets.length,
-              quote_currencies: usdCount ? ['EUR', 'USD'] : ['EUR'],
+              quote_currencies: ['EUR', 'USD'],
               global: {
                 market_cap_eur: totalCap,
                 volume_24h_eur: totalVolume,
-                btc_dominance_pct: totalCap > 0 && btc ? Number(btc.market_cap_eur) / totalCap * 100 : null,
+                btc_dominance_pct: Number.isFinite(Number(btc?.market_cap_dominance)) ? Number(btc.market_cap_dominance) : null,
                 scope: 'top50'
               },
               assets
             };
-
-            const latest = {
-              schema: 'atlas_github_market_memory_v2',
-              version: record.version,
-              generated_at: now,
-              source: 'CoinGecko',
-              live_ok: true,
-              archive_only: true,
-              assets_count: assets.length,
-              latest: record,
-              records: [record]
-            };
-            fs.writeFileSync(path.join(ROOT, 'latest.json'), JSON.stringify(latest, null, 2) + '\n');
-            const day = now.slice(0, 10);
-            fs.appendFileSync(path.join(HISTORY, `${day}.jsonl`), JSON.stringify(record) + '\n');
+            fs.writeFileSync(path.join(ROOT, 'latest.json'), JSON.stringify({
+              schema: 'atlas_github_market_memory_v3', version: record.version, generated_at: now,
+              source: 'CoinMarketCap', live_ok: true, archive_only: true, assets_count: assets.length,
+              latest: record, records: [record]
+            }, null, 2) + '\n');
+            fs.appendFileSync(path.join(HISTORY, `${String(now).slice(0, 10)}.jsonl`), JSON.stringify(record) + '\n');
             fs.writeFileSync(path.join(ROOT, 'status.json'), JSON.stringify({
-              schema: 'atlas_github_market_status_v2',
-              version: record.version,
-              updated_at: now,
-              status: 'ok',
-              source: 'CoinGecko',
-              archive_only: true,
-              assets_count: assets.length,
-              quote_currencies: usdCount ? ['EUR', 'USD'] : ['EUR'],
-              message: 'Archive Top 50 EUR créée ; USD ajouté si disponible. Aucun graphe collecté.'
+              schema: 'atlas_github_market_status_v3', version: record.version, updated_at: now,
+              status: 'ok', source: 'CoinMarketCap', archive_only: true, assets_count: assets.length,
+              quote_currencies: ['EUR', 'USD'], message: 'Archive Top 50 CoinMarketCap créée en un appel. Non utilisée comme flux live.'
             }, null, 2) + '\n');
           })().catch(error => {
             const now = new Date().toISOString();
             fs.writeFileSync(path.join(ROOT, 'status.json'), JSON.stringify({
-              schema: 'atlas_github_market_status_v2',
-              version: 'V1.1-alpha.26.37',
-              updated_at: now,
-              status: 'error',
-              source: 'CoinGecko',
-              archive_only: true,
+              schema: 'atlas_github_market_status_v3', version: 'V1.1-alpha.26.38', updated_at: now,
+              status: 'error', source: 'CoinMarketCap', archive_only: true,
               message: String(error?.message || error)
             }, null, 2) + '\n');
             console.error(error);
@@ -178,6 +153,6 @@ jobs:
             echo "No archive change"
             exit 0
           fi
-          git commit -m "archive atlas top 50 market snapshot"
+          git commit -m "archive atlas coinmarketcap top 50 snapshot"
           git pull --rebase origin main
           git push origin HEAD:main
