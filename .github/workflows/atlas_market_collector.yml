@@ -3,7 +3,7 @@ name: Atlas Market Collector
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "2-57/5 * * * *"
 
 permissions:
   contents: write
@@ -15,26 +15,35 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    env:
+      COINGECKO_DEMO_API_KEY: ${{ secrets.COINGECKO_DEMO_API_KEY }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Collect market data
+      - name: Collect market data and rotating chart caches
         shell: bash
         run: |
           node <<'NODE'
           const fs = require("fs");
           const path = require("path");
-
+          
           const ROOT = "public/agent_crypto_erith_ia/data";
           const HISTORY = path.join(ROOT, "history");
           const CHARTS = path.join(ROOT, "charts");
+          const CHART_ASSETS = path.join(CHARTS, "assets");
           fs.mkdirSync(HISTORY, { recursive: true });
           fs.mkdirSync(CHARTS, { recursive: true });
-
+          fs.mkdirSync(CHART_ASSETS, { recursive: true });
+          
           const TOP_LIMIT = 50;
-
+          const CG_DEMO_KEY = String(process.env.COINGECKO_DEMO_API_KEY || "").trim();
+          const PRIORITY_CHART_IDS = Object.freeze(["bitcoin", "ethereum", "solana"]);
+          const CHART_BATCH_SIZE = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? 8 : 3;
+          
           function nowContext() {
             const now = new Date();
             const iso = now.toISOString();
@@ -46,20 +55,31 @@ jobs:
               historyFile: path.join(HISTORY, `${day}.jsonl`)
             };
           }
-
+          
           function writeJson(file, payload) {
             fs.writeFileSync(file, JSON.stringify(payload, null, 2) + "\n", "utf8");
           }
-
+          
+          function writeJsonAtomic(file, payload) {
+            const temp = `${file}.tmp`;
+            fs.writeFileSync(temp, JSON.stringify(payload, null, 2) + "\n", "utf8");
+            fs.renameSync(temp, file);
+          }
+          
+          function readJsonSafe(file) {
+            try { return JSON.parse(fs.readFileSync(file, "utf8")); }
+            catch { return null; }
+          }
+          
           function appendJsonl(file, payload) {
             fs.appendFileSync(file, JSON.stringify(payload) + "\n", "utf8");
           }
-
+          
           function writeFatalStatus(error) {
             const ctx = nowContext();
-            writeJson(path.join(ROOT, "status.json"), {
+            writeJsonAtomic(path.join(ROOT, "status.json"), {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.29",
+              version: "V1.1-alpha.26.33",
               updated_at: ctx.iso,
               status: "workflow_error",
               live_ok: false,
@@ -69,9 +89,9 @@ jobs:
               message: "Erreur interne du workflow. Diagnostic commité si possible.",
               errors: [String(error?.stack || error?.message || error)]
             });
-            writeJson(path.join(ROOT, "latest.json"), {
+            if (!fs.existsSync(path.join(ROOT, "latest.json"))) writeJsonAtomic(path.join(ROOT, "latest.json"), {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.29",
+              version: "V1.1-alpha.26.33",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -83,12 +103,12 @@ jobs:
                 id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 snapshot_id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 saved_at: ctx.iso,
-                version: "V1.1-alpha.26.29",
+                version: "V1.1-alpha.26.33",
                 collector_id: "github-action-main",
                 collector_type: "github_action",
                 source: "none",
                 live_ok: false,
-                cadence_ms: 300000,
+                cadence_ms: 1800000,
                 global: {
                   market_cap_eur: null,
                   volume_24h_eur: null,
@@ -106,27 +126,39 @@ jobs:
             });
             console.log("ATLAS_COLLECTOR_WORKFLOW_ERROR", String(error?.message || error));
           }
-
+          
           const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-          async function fetchJson(url, timeoutMs = 18000) {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), timeoutMs);
-            try {
-              const res = await fetch(url, {
-                signal: controller.signal,
-                headers: {
-                  "accept": "application/json",
-                  "user-agent": "atlas-market-collector/1.1-alpha.26.29"
+          
+          async function fetchJson(url, timeoutMs = 18000, retries = 2) {
+            let lastError = null;
+            for (let attempt = 0; attempt <= retries; attempt += 1) {
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), timeoutMs);
+              try {
+                const headers = {
+                  accept: "application/json",
+                  "user-agent": "atlas-market-collector/1.1-alpha.26.33"
+                };
+                if (CG_DEMO_KEY && String(url).includes("api.coingecko.com")) headers["x-cg-demo-api-key"] = CG_DEMO_KEY;
+                const res = await fetch(url, { signal: controller.signal, headers });
+                if (!res.ok) {
+                  const error = new Error(`HTTP ${res.status}`);
+                  error.status = res.status;
+                  throw error;
                 }
-              });
-              if (!res.ok) throw new Error(`HTTP ${res.status}`);
-              return await res.json();
-            } finally {
-              clearTimeout(timeout);
+                return await res.json();
+              } catch (error) {
+                lastError = error;
+                const retryable = error?.name === "AbortError" || Number(error?.status || 0) === 429 || Number(error?.status || 0) >= 500 || !error?.status;
+                if (!retryable || attempt >= retries) break;
+                await sleep(1200 * Math.pow(2, attempt));
+              } finally {
+                clearTimeout(timeout);
+              }
             }
+            throw lastError || new Error("fetch failed");
           }
-
+          
           function scoreCoin(c) {
             let score = 40;
             const rank = Number(c.rank || 9999);
@@ -135,7 +167,7 @@ jobs:
             const marketCap = Number(c.market_cap_eur ?? c.marketCap ?? 0);
             const volume = Number(c.volume_24h_eur ?? c.volume24h ?? 0);
             const ratio = marketCap > 0 ? volume / marketCap : 0;
-
+          
             if (rank <= 2) score += 12;
             else if (rank <= 10) score += 7;
             else if (rank <= 30) score += 4;
@@ -145,17 +177,17 @@ jobs:
             if (ratio > 0.05) score += 4;
             if (marketCap > 10000000000) score += 6;
             if (change24 < -10) score -= 10;
-
+          
             return Math.max(0, Math.min(100, Math.round(score)));
           }
-
+          
           function classifyAsset(c) {
             const symbol = String(c.symbol || "").toUpperCase();
             const rank = Number(c.rank || 9999);
             const marketCap = Number(c.market_cap_eur ?? c.marketCap ?? 0);
             const volume = Number(c.volume_24h_eur ?? c.volume24h ?? 0);
             const ratio = marketCap > 0 ? volume / marketCap : 0;
-
+          
             if (["USDT", "USDC", "DAI", "USDS", "FDUSD", "TUSD"].includes(symbol)) return "Stablecoin";
             if (["BTC", "ETH"].includes(symbol)) return "Socle marché";
             if (rank <= 20 && marketCap > 3000000000) return "Grand actif solide";
@@ -164,12 +196,12 @@ jobs:
             if (volume < 1000000 || marketCap < 50000000) return "À vérifier";
             return "À vérifier";
           }
-
+          
           function decideAction(c) {
             const type = classifyAsset(c);
             const change24 = Number(c.change_24h_pct ?? c.change24h ?? 0);
             const change7 = Number(c.change_7d_pct ?? c.change7d ?? 0);
-
+          
             if (type === "Stablecoin") return "Surveiller stabilité";
             if (type === "Socle marché") return "Observer / comparer";
             if (change24 > 12 && change7 > 20) return "Attendre / éviter FOMO";
@@ -178,7 +210,7 @@ jobs:
             if (type === "Opportunité à surveiller") return "Comparer";
             return "Observer";
           }
-
+          
           function normalizeCoinGeckoMarket(rows) {
             if (!Array.isArray(rows)) throw new Error("CoinGecko payload invalid");
             return rows.slice(0, TOP_LIMIT).map((c) => {
@@ -188,10 +220,16 @@ jobs:
                 name: c.name,
                 rank: c.market_cap_rank,
                 price_eur: c.current_price,
-                change_24h_pct: c.price_change_percentage_24h,
+                change_1h_pct: c.price_change_percentage_1h_in_currency,
+                change_24h_pct: c.price_change_percentage_24h_in_currency ?? c.price_change_percentage_24h,
                 change_7d_pct: c.price_change_percentage_7d_in_currency,
+                change_30d_pct: c.price_change_percentage_30d_in_currency,
+                high_24h_eur: c.high_24h,
+                low_24h_eur: c.low_24h,
                 market_cap_eur: c.market_cap,
                 volume_24h_eur: c.total_volume,
+                sparkline_7d_eur: Array.isArray(c.sparkline_in_7d?.price) ? c.sparkline_in_7d.price : [],
+                last_updated: c.last_updated || new Date().toISOString(),
                 source: "CoinGecko"
               };
               row.category = classifyAsset(row);
@@ -200,7 +238,7 @@ jobs:
               return row;
             });
           }
-
+          
           function normalizeCoinLore(rows) {
             if (!Array.isArray(rows)) throw new Error("CoinLore payload invalid");
             return rows.slice(0, TOP_LIMIT).map((c) => {
@@ -225,9 +263,9 @@ jobs:
               return row;
             });
           }
-
+          
           async function collectCoinGecko() {
-            const marketsUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h%2C7d";
+            const marketsUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d";
             const globalUrl = "https://api.coingecko.com/api/v3/global";
             const [markets, global] = await Promise.all([
               fetchJson(marketsUrl),
@@ -245,7 +283,7 @@ jobs:
               assets
             };
           }
-
+          
           async function collectCoinLore() {
             const url = "https://api.coinlore.net/api/tickers/?start=0&limit=50";
             const payload = await fetchJson(url);
@@ -260,18 +298,18 @@ jobs:
               assets
             };
           }
-
+          
           async function collect() {
             const errors = [];
-
+          
             try {
               return await collectCoinGecko();
             } catch (error) {
               errors.push(`CoinGecko: ${error.message}`);
             }
-
+          
             await sleep(1200);
-
+          
             try {
               const data = await collectCoinLore();
               data.errors = errors;
@@ -291,7 +329,7 @@ jobs:
               };
             }
           }
-
+          
           function marketPulse(assets) {
             const btc = assets.find(a => a.symbol === "BTC");
             const eth = assets.find(a => a.symbol === "ETH");
@@ -304,110 +342,163 @@ jobs:
               eth_24h_pct: eth?.change_24h_pct ?? null
             };
           }
-
-
-
+          
+          
+          
           function normalizeMarketChartPrices(payload) {
             const rows = Array.isArray(payload?.prices) ? payload.prices : [];
-            return rows
-              .map((p) => [Number(p[0]), Number(p[1])])
-              .filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1]) && p[1] > 0)
-              .sort((a, b) => a[0] - b[0]);
+            const dedup = new Map();
+            for (const point of rows) {
+              const timestamp = Number(point?.[0]);
+              const price = Number(point?.[1]);
+              if (!Number.isFinite(timestamp) || timestamp <= 0 || !Number.isFinite(price) || price <= 0) continue;
+              dedup.set(timestamp, price);
+            }
+            return [...dedup.entries()].sort((a, b) => a[0] - b[0]);
           }
-
-          async function collectBitcoinChart(ctx, days, slug, label) {
-            const url = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=eur&days=${encodeURIComponent(days)}&precision=full`;
+          
+          function sliceChartPeriod(prices, days) {
+            if (!Array.isArray(prices) || prices.length < 2) return [];
+            const lastTimestamp = Number(prices[prices.length - 1][0]);
+            const startTimestamp = lastTimestamp - Number(days) * 24 * 60 * 60 * 1000;
+            const sliced = prices.filter((point) => Number(point[0]) >= startTimestamp);
+            if (sliced.length && Number(sliced[0][0]) > startTimestamp) {
+              const previous = [...prices].reverse().find((point) => Number(point[0]) < Number(sliced[0][0]));
+              if (previous) sliced.unshift(previous);
+            }
+            return sliced;
+          }
+          
+          function chartPayload(ctx, asset, prices) {
+            const values = prices.map((point) => point[1]);
+            return {
+              schema: "atlas_chart_asset_cache_v1",
+              version: "V1.1-alpha.26.33",
+              generated_at: ctx.iso,
+              collector_id: "github-action-main",
+              collector_type: "github_action",
+              source: "CoinGecko",
+              endpoint: `coins/${asset.id}/market_chart`,
+              coin_id: asset.id,
+              symbol: asset.symbol,
+              vs_currency: "eur",
+              period: "30j",
+              days: 30,
+              point_count: prices.length,
+              first_timestamp: prices[0]?.[0] ?? null,
+              last_timestamp: prices[prices.length - 1]?.[0] ?? null,
+              min_price_eur: Math.min(...values),
+              max_price_eur: Math.max(...values),
+              first_price_eur: values[0],
+              last_price_eur: values[values.length - 1],
+              prices,
+              live_ok: true,
+              errors: []
+            };
+          }
+          
+          function safeChartAssetId(id) {
+            return String(id || "").toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
+          }
+          
+          function chartAssetFile(asset) {
+            return path.join(CHART_ASSETS, `${safeChartAssetId(asset.id)}_30d.json`);
+          }
+          
+          function existingChartStatus(asset, error = null) {
+            const file = chartAssetFile(asset);
+            const existing = readJsonSafe(file);
+            const usable = existing?.live_ok === true && Array.isArray(existing?.prices) && existing.prices.length >= 100;
+            return {
+              file: `assets/${path.basename(file)}`,
+              coin_id: asset.id,
+              symbol: asset.symbol,
+              live_ok: usable,
+              retained_existing: usable,
+              point_count: usable ? existing.prices.length : 0,
+              source: "CoinGecko",
+              error: error ? String(error?.message || error) : null
+            };
+          }
+          
+          function chooseChartBatch(assets, ctx) {
+            const candidates = (assets || [])
+              .filter(asset => asset?.id && asset?.symbol && asset.source === "CoinGecko")
+              .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+            if (!candidates.length) return [];
+            const byId = new Map(candidates.map(asset => [asset.id, asset]));
+            const chosen = [];
+            for (const id of PRIORITY_CHART_IDS) {
+              const asset = byId.get(id);
+              if (asset && !fs.existsSync(chartAssetFile(asset))) chosen.push(asset);
+            }
+            const slot = Math.floor(ctx.now.getTime() / 300000) % candidates.length;
+            for (let offset = 0; chosen.length < CHART_BATCH_SIZE && offset < candidates.length * 2; offset += 1) {
+              const asset = candidates[(slot + offset) % candidates.length];
+              if (!chosen.some(item => item.id === asset.id)) chosen.push(asset);
+            }
+            return chosen.slice(0, CHART_BATCH_SIZE);
+          }
+          
+          async function collectAssetChart(ctx, asset) {
+            const file = chartAssetFile(asset);
             try {
-              const payload = await fetchJson(url, 22000);
+              const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(asset.id)}/market_chart?vs_currency=eur&days=30&precision=full`;
+              const payload = await fetchJson(url, 22000, 2);
               const prices = normalizeMarketChartPrices(payload);
-              if (prices.length < 3) throw new Error(`not enough points: ${prices.length}`);
-              const values = prices.map((p) => p[1]);
-              const chart = {
-                schema: "atlas_chart_cache_v1",
-                version: "V1.1-alpha.26.29",
-                generated_at: ctx.iso,
-                collector_id: "github-action-main",
-                collector_type: "github_action",
-                source: "CoinGecko",
-                endpoint: "coins/bitcoin/market_chart",
-                coin_id: "bitcoin",
-                symbol: "BTC",
-                vs_currency: "eur",
-                period: label,
-                days,
-                point_count: prices.length,
-                min_price_eur: Math.min(...values),
-                max_price_eur: Math.max(...values),
-                first_price_eur: values[0],
-                last_price_eur: values[values.length - 1],
-                prices,
-                live_ok: true,
-                errors: []
-              };
-              writeJson(path.join(CHARTS, `btc_${slug}.json`), chart);
-              return { file: `btc_${slug}.json`, live_ok: true, point_count: prices.length, source: "CoinGecko" };
+              if (prices.length < 100) throw new Error(`not enough 30d points: ${prices.length}`);
+              writeJsonAtomic(file, chartPayload(ctx, asset, prices));
+              return { file: `assets/${path.basename(file)}`, coin_id: asset.id, symbol: asset.symbol, live_ok: true, retained_existing: false, point_count: prices.length, source: "CoinGecko" };
             } catch (error) {
-              const chart = {
-                schema: "atlas_chart_cache_v1",
-                version: "V1.1-alpha.26.29",
-                generated_at: ctx.iso,
-                collector_id: "github-action-main",
-                collector_type: "github_action",
-                source: "CoinGecko",
-                endpoint: "coins/bitcoin/market_chart",
-                coin_id: "bitcoin",
-                symbol: "BTC",
-                vs_currency: "eur",
-                period: label,
-                days,
-                point_count: 0,
-                prices: [],
-                live_ok: false,
-                errors: [String(error?.message || error)]
-              };
-              writeJson(path.join(CHARTS, `btc_${slug}.json`), chart);
-              return { file: `btc_${slug}.json`, live_ok: false, point_count: 0, source: "CoinGecko", error: String(error?.message || error) };
+              return existingChartStatus(asset, error);
             }
           }
-
-          async function collectBitcoinCharts(ctx) {
-            const charts = [];
-            charts.push(await collectBitcoinChart(ctx, 1, "24h", "24h"));
-            await sleep(650);
-            charts.push(await collectBitcoinChart(ctx, 7, "7d", "7j"));
-            await sleep(650);
-            charts.push(await collectBitcoinChart(ctx, 30, "30d", "30j"));
-            return charts;
+          
+          async function collectRotatingCharts(ctx, assets) {
+            const batch = chooseChartBatch(assets, ctx);
+            const statuses = [];
+            for (const asset of batch) {
+              statuses.push(await collectAssetChart(ctx, asset));
+              await sleep(1400);
+            }
+            return statuses;
           }
-
+          
+          function historyAssets(assets) {
+            return (assets || []).map(asset => {
+              const { sparkline_7d_eur, ...compact } = asset;
+              return compact;
+            });
+          }
+          
           async function main() {
             const ctx = nowContext();
             const collected = await collect();
             const assets = Array.isArray(collected.assets) ? collected.assets : [];
             const liveOk = assets.length > 0 && collected.source !== "none";
             const snapshotId = `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`;
-
+          
             const record = {
               id: snapshotId,
               snapshot_id: snapshotId,
               saved_at: ctx.iso,
-              version: "V1.1-alpha.26.29",
+              version: "V1.1-alpha.26.33",
               collector_id: "github-action-main",
               collector_type: "github_action",
               source: collected.source,
               live_ok: liveOk,
-              cadence_ms: 300000,
+              cadence_ms: 1800000,
               global: collected.global,
               market_pulse: marketPulse(assets),
-              assets,
+              assets: historyAssets(assets),
               errors: collected.errors || []
             };
-
-            const chartCache = await collectBitcoinCharts(ctx);
-
+          
+            const chartCache = await collectRotatingCharts(ctx, assets);
+          
             const latest = {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.29",
+              version: "V1.1-alpha.26.33",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -415,13 +506,14 @@ jobs:
               live_ok: liveOk,
               record_count: liveOk ? 1 : 0,
               records: liveOk ? [record] : [],
+              live_assets: liveOk ? assets : [],
               chart_cache: chartCache,
               last_error_record: liveOk ? null : record
             };
-
+          
             const status = {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.29",
+              version: "V1.1-alpha.26.33",
               updated_at: ctx.iso,
               status: liveOk ? "ok" : "source_error",
               live_ok: liveOk,
@@ -432,10 +524,14 @@ jobs:
               message: liveOk ? `Collecte OK depuis ${collected.source}` : "Collecte impossible : toutes les sources ont échoué, diagnostic commité.",
               errors: collected.errors || []
             };
-
-            writeJson(path.join(ROOT, "latest.json"), latest);
-            writeJson(path.join(ROOT, "status.json"), status);
-
+          
+            if (liveOk || !fs.existsSync(path.join(ROOT, "latest.json"))) {
+              writeJsonAtomic(path.join(ROOT, "latest.json"), latest);
+            } else {
+              console.log("ATLAS_LATEST_RETAINED previous valid latest.json preserved");
+            }
+            writeJsonAtomic(path.join(ROOT, "status.json"), status);
+          
             if (liveOk) {
               appendJsonl(ctx.historyFile, record);
               console.log(`ATLAS_COLLECTOR_OK source=${collected.source} assets=${assets.length} history=${ctx.historyFile}`);
@@ -443,7 +539,7 @@ jobs:
               console.log(`ATLAS_COLLECTOR_SOURCE_ERROR ${JSON.stringify(collected.errors || [])}`);
             }
           }
-
+          
           main().catch((error) => {
             writeFatalStatus(error);
           });
@@ -452,12 +548,25 @@ jobs:
       - name: Commit collected data or diagnostic
         shell: bash
         run: |
+          set -e
           git config user.name "atlas-market-collector"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/agent_crypto_erith_ia/data/latest.json public/agent_crypto_erith_ia/data/status.json public/agent_crypto_erith_ia/data/history/ public/agent_crypto_erith_ia/data/charts/
+          git add public/agent_crypto_erith_ia/data/latest.json \
+                  public/agent_crypto_erith_ia/data/status.json \
+                  public/agent_crypto_erith_ia/data/history/ \
+                  public/agent_crypto_erith_ia/data/charts/
           if git diff --cached --quiet; then
             echo "No market data changes to commit."
-          else
-            git commit -m "update atlas market memory"
-            git push
+            exit 0
           fi
+          git commit -m "update atlas market memory"
+          for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; retrying after rebase."
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 4))
+          done
+          echo "Unable to push Atlas data after 3 attempts."
+          exit 1
