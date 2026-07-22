@@ -1,9 +1,14 @@
 {
-  "schema": "atlas_github_market_status_v3",
-  "version": "V1.1-alpha.26.38",
-  "updated_at": "2026-07-22T12:04:35.565Z",
-  "status": "error",
-  "source": "CoinMarketCap",
+  "schema": "atlas_github_market_status_v2",
+  "version": "V1.1-alpha.26.39",
+  "updated_at": "2026-07-22T12:31:05.488Z",
+  "status": "ok",
+  "source": "CoinGecko",
   "archive_only": true,
-  "message": "HTTP 400"
+  "assets_count": 50,
+  "quote_currencies": [
+    "EUR",
+    "USD"
+  ],
+  "message": "Archive Top 50 EUR créée ; USD ajouté si disponible. Aucun graphe collecté."
 }
