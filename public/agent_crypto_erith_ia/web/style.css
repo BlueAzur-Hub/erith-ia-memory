@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.41 — Missions de Vie
+   V1.1-alpha.26.42 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4712,88 +4712,63 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.41 — Analyst Compact Recovery
-   Sélection actif = 24 h immédiat + retry automatique borné.
-   Panne/loading compacts ; détail non étiré.
+   V1.1-alpha.26.42 — Analyst Stable Dimensions
+   Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
   align-items:start !important;
+  grid-auto-rows:auto !important;
 }
 .atlas-market-zone #analyste .chart-panel,
 .atlas-market-zone #analyste .detail-panel{
   align-self:start !important;
   height:auto !important;
   min-height:0 !important;
+  max-height:none !important;
 }
 .atlas-market-zone #analyste .chart-shell{
-  min-height:342px !important;
-  max-height:342px !important;
+  height:540px !important;
+  min-height:540px !important;
+  max-height:540px !important;
   padding:12px 12px 14px !important;
+  overflow:hidden !important;
 }
 .atlas-market-zone #analyste #mainChart{
-  height:312px !important;
-  min-height:312px !important;
-  max-height:312px !important;
+  display:block !important;
+  width:100% !important;
+  height:510px !important;
+  min-height:510px !important;
+  max-height:510px !important;
 }
 .atlas-market-zone #analyste .chart-shell[data-chart-state="loading"],
 .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"]{
-  min-height:248px !important;
-  max-height:248px !important;
+  height:290px !important;
+  min-height:290px !important;
+  max-height:290px !important;
 }
 .atlas-market-zone #analyste .chart-shell[data-chart-state="loading"] #mainChart,
 .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{
-  height:218px !important;
-  min-height:218px !important;
-  max-height:218px !important;
+  height:260px !important;
+  min-height:260px !important;
+  max-height:260px !important;
 }
-.atlas-market-zone #analyste .broker-strip{
-  gap:6px !important;
-  margin-bottom:7px !important;
-}
-.atlas-market-zone #analyste .broker-strip > div{
-  padding:7px 8px !important;
-  min-height:50px !important;
-}
-.atlas-market-zone #analyste #assetDetailGrid{
-  gap:5px !important;
-}
-.atlas-market-zone #analyste #assetDetailGrid > div{
-  min-height:46px !important;
-  padding:7px 8px !important;
-}
+.atlas-market-zone #analyste .broker-strip{gap:6px !important;margin-bottom:7px !important}
+.atlas-market-zone #analyste .broker-strip > div{padding:7px 8px !important;min-height:48px !important}
+.atlas-market-zone #analyste #assetDetailGrid{gap:5px !important;grid-auto-rows:auto !important}
+.atlas-market-zone #analyste #assetDetailGrid > div{min-height:44px !important;padding:7px 8px !important}
 .atlas-market-zone #analyste #assetDetailGrid b,
-.atlas-market-zone #analyste #assetDetailGrid span{
-  line-height:1.22 !important;
-}
-.atlas-market-zone #analyste #assetDetailWhy{
-  margin-top:7px !important;
-  padding:8px 9px !important;
-  line-height:1.28 !important;
-}
+.atlas-market-zone #analyste #assetDetailGrid span{line-height:1.2 !important}
+.atlas-market-zone #analyste #assetDetailWhy{margin-top:7px !important;padding:8px 9px !important;line-height:1.3 !important}
 @media (max-width:980px){
-  .atlas-market-zone #analyste .chart-shell{
-    min-height:300px !important;
-    max-height:300px !important;
-  }
-  .atlas-market-zone #analyste #mainChart{
-    height:270px !important;
-    min-height:270px !important;
-    max-height:270px !important;
-  }
+  .atlas-market-zone #analyste .chart-shell{height:430px !important;min-height:430px !important;max-height:430px !important}
+  .atlas-market-zone #analyste #mainChart{height:400px !important;min-height:400px !important;max-height:400px !important}
   .atlas-market-zone #analyste .chart-shell[data-chart-state="loading"],
-  .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"]{
-    min-height:225px !important;
-    max-height:225px !important;
-  }
+  .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"]{height:270px !important;min-height:270px !important;max-height:270px !important}
   .atlas-market-zone #analyste .chart-shell[data-chart-state="loading"] #mainChart,
-  .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{
-    height:195px !important;
-    min-height:195px !important;
-    max-height:195px !important;
-  }
+  .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.41 — mesure d’audience */
+/* V1.1-alpha.26.42 — mesure d’audience */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4809,3 +4784,13 @@ main .decision-board{
   opacity:1;
   text-decoration:underline;
 }
+
+
+/* V1.1-alpha.26.42 — Audience active */
+.audience-live-panel{position:relative}
+.audience-live-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.audience-live-grid article{min-height:82px;padding:14px;border:1px solid rgba(93,211,222,.22);border-radius:14px;background:rgba(4,15,28,.68);display:flex;flex-direction:column;gap:7px}
+.audience-live-grid b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.audience-live-grid span{font-size:.98rem;font-weight:800;color:var(--cream);overflow-wrap:anywhere}
+@media(max-width:980px){.audience-live-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.audience-live-grid{grid-template-columns:1fr}}

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.41</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.42</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.41" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.42" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · graphiques auto-récupérés · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.41</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.42</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -326,7 +326,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.41</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.42</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -723,7 +723,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.41 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.42 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1771,23 +1771,24 @@
       </div>
     </details>
 
-
     <details class="atlas-collapse glass life-project-collapse" data-collapse-key="mesure-audience" id="mesure-audience">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">📊 Mesure d’audience</span>
-        <span class="atlas-collapse-subtitle">Activité de l’application et diagnostic d’utilisation</span>
+        <span class="atlas-collapse-subtitle">Activité, appareil, réseau et fonctions consultées</span>
       </summary>
       <div class="atlas-collapse-body">
-        <section class="panel glass life-project">
-          <div class="life-project-head"><div><p class="eyebrow">OBSERVATOIRE D’USAGE</p><h2>Statistiques d’utilisation de l’application</h2></div><span class="life-status" id="audienceModuleStatus">Collecteur à renseigner</span></div>
-          <div class="life-grid">
-            <article><b>Activité</b><span>Ouvertures de l’application, sessions, fréquence d’utilisation, pages et sections consultées.</span></article>
-            <article><b>Contexte technique</b><span>Date et heure, navigateur, système, catégorie d’appareil, langue, résolution et origine générale de la visite.</span></article>
-            <article><b>Fonctions suivies</b><span>Chargement du Top 50, actualisations, actifs consultés, périodes graphiques demandées et erreurs techniques.</span></article>
-            <article><b>Identification de participation</b><span>Un lien peut inclure un identifiant de membre, par exemple <code>?member=yohan</code>, afin de distinguer les contributions dans le tableau d’audience.</span></article>
+        <section class="panel glass life-project audience-live-panel">
+          <div class="life-project-head"><div><p class="eyebrow">OBSERVATOIRE D’USAGE</p><h2>Mesure d’audience active</h2></div><span class="life-status" id="audienceModuleStatus">Initialisation</span></div>
+          <div class="audience-live-grid">
+            <article><b>IP publique</b><span id="audienceIp">En attente</span></article>
+            <article><b>Localisation approximative</b><span id="audienceLocation">En attente</span></article>
+            <article><b>Appareil</b><span id="audienceDevice">En attente</span></article>
+            <article><b>Identifiant de participation</b><span id="audienceMember">visiteur non nommé</span></article>
+            <article><b>Événements envoyés</b><span id="audienceSent">0</span></article>
+            <article><b>Dernier événement</b><span id="audienceLast">—</span></article>
           </div>
-          <p class="life-rule"><b>Configuration :</b> renseigner <code>window.ERITH_AUDIENCE_ENDPOINT</code> ou ouvrir une fois l’application avec <code>?audience_endpoint=https://…&amp;member=nom</code>. Le réglage est mémorisé dans le navigateur.</p>
+          <p class="life-rule"><b>Éléments mesurés :</b> ouvertures, sessions, sections consultées, actifs sélectionnés, périodes 24 h / 7 j / 30 j, rafraîchissements, graphiques chargés, erreurs techniques, appareil, navigateur, heure, IP publique et localisation approximative.</p>
         </section>
       </div>
     </details>
@@ -1816,7 +1817,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.41</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.42</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -1825,6 +1826,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.41"></script>
+  <script src="./app.js?v=1.1-alpha.26.42"></script>
 </body>
 </html>
