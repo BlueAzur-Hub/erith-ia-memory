@@ -42,7 +42,7 @@ jobs:
           const TOP_LIMIT = 50;
           const CG_DEMO_KEY = String(process.env.COINGECKO_DEMO_API_KEY || "").trim();
           const PRIORITY_CHART_IDS = Object.freeze(["bitcoin", "ethereum", "solana"]);
-          const CHART_BATCH_SIZE = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? 10 : 3;
+          const CHART_BATCH_SIZE = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? 3 : 1;
           
           function nowContext() {
             const now = new Date();
@@ -79,7 +79,7 @@ jobs:
             const ctx = nowContext();
             writeJsonAtomic(path.join(ROOT, "status.json"), {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               updated_at: ctx.iso,
               status: "workflow_error",
               live_ok: false,
@@ -91,7 +91,7 @@ jobs:
             });
             if (!fs.existsSync(path.join(ROOT, "latest.json"))) writeJsonAtomic(path.join(ROOT, "latest.json"), {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -103,7 +103,7 @@ jobs:
                 id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 snapshot_id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 saved_at: ctx.iso,
-                version: "V1.1-alpha.26.34",
+                version: "V1.1-alpha.26.35",
                 collector_id: "github-action-main",
                 collector_type: "github_action",
                 source: "none",
@@ -137,7 +137,7 @@ jobs:
               try {
                 const headers = {
                   accept: "application/json",
-                  "user-agent": "atlas-market-collector/1.1-alpha.26.34"
+                  "user-agent": "atlas-market-collector/1.1-alpha.26.35"
                 };
                 if (CG_DEMO_KEY && String(url).includes("api.coingecko.com")) headers["x-cg-demo-api-key"] = CG_DEMO_KEY;
                 const res = await fetch(url, { signal: controller.signal, headers });
@@ -325,7 +325,7 @@ jobs:
             const values = prices.map((point) => point[1]);
             return {
               schema: "atlas_chart_asset_cache_v1",
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -434,7 +434,7 @@ jobs:
               id: snapshotId,
               snapshot_id: snapshotId,
               saved_at: ctx.iso,
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               collector_id: "github-action-main",
               collector_type: "github_action",
               source: collected.source,
@@ -452,7 +452,7 @@ jobs:
           
             const latest = {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -469,7 +469,7 @@ jobs:
           
             const status = {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.34",
+              version: "V1.1-alpha.26.35",
               updated_at: ctx.iso,
               status: liveOk ? "ok" : "source_error",
               live_ok: liveOk,
