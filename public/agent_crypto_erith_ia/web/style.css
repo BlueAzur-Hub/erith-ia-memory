@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.43 — Atlas compact diagnostics
+   V1.1-alpha.26.44 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.43 — Missions de Vie
+   V1.1-alpha.26.44 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.43 — Analyst Stable Dimensions
+   V1.1-alpha.26.44 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.43 — mesure d’audience */
+/* V1.1-alpha.26.44 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4828,13 +4828,18 @@ main .decision-board{
   opacity:1;
   text-decoration:underline;
 }
-
-
-/* V1.1-alpha.26.43 — Audience active */
 .audience-live-panel{position:relative}
 .audience-live-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .audience-live-grid article{min-height:82px;padding:14px;border:1px solid rgba(93,211,222,.22);border-radius:14px;background:rgba(4,15,28,.68);display:flex;flex-direction:column;gap:7px}
 .audience-live-grid b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .audience-live-grid span{font-size:.98rem;font-weight:800;color:var(--cream);overflow-wrap:anywhere}
+.audience-v2-delivery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.audience-v2-delivery span{padding:7px 10px;border:1px solid rgba(255,216,135,.2);border-radius:999px;background:rgba(7,18,32,.8);color:var(--cream);font-size:.76rem;font-weight:800;letter-spacing:.02em}
+.audience-v2-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:11px 12px;border:1px solid rgba(93,211,222,.18);border-radius:13px;background:rgba(4,15,28,.56)}
+.audience-v2-actions span{color:var(--muted);font-size:.82rem;font-weight:700;text-align:right}
 @media(max-width:980px){.audience-live-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.audience-live-grid{grid-template-columns:1fr}}
+@media(max-width:620px){
+  .audience-live-grid{grid-template-columns:1fr}
+  .audience-v2-actions{align-items:stretch;flex-direction:column}
+  .audience-v2-actions span{text-align:left}
+}
