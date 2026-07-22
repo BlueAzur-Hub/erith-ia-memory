@@ -1,89 +1,26 @@
 {
   "schema": "atlas_github_market_status_v1",
-  "version": "V1.1-alpha.26.33",
-  "updated_at": "2026-07-22T07:18:22.344Z",
+  "version": "V1.1-alpha.26.35",
+  "updated_at": "2026-07-22T09:33:13.824Z",
   "status": "ok",
   "live_ok": true,
   "source": "CoinGecko",
+  "source_lock": "CoinGecko",
+  "quote_currencies": [
+    "EUR",
+    "USD"
+  ],
   "assets_count": 50,
   "history_file": "public/agent_crypto_erith_ia/data/history/2026-07-22.jsonl",
   "chart_cache": [
     {
-      "file": "assets/bitcoin_30d.json",
-      "coin_id": "bitcoin",
-      "symbol": "BTC",
+      "file": "assets/uniswap_30d.json",
+      "coin_id": "uniswap",
+      "symbol": "UNI",
       "live_ok": true,
       "retained_existing": false,
       "point_count": 721,
       "source": "CoinGecko"
-    },
-    {
-      "file": "assets/ethereum_30d.json",
-      "coin_id": "ethereum",
-      "symbol": "ETH",
-      "live_ok": true,
-      "retained_existing": false,
-      "point_count": 720,
-      "source": "CoinGecko"
-    },
-    {
-      "file": "assets/solana_30d.json",
-      "coin_id": "solana",
-      "symbol": "SOL",
-      "live_ok": true,
-      "retained_existing": false,
-      "point_count": 721,
-      "source": "CoinGecko"
-    },
-    {
-      "file": "assets/figure-heloc_30d.json",
-      "coin_id": "figure-heloc",
-      "symbol": "FIGR_HELOC",
-      "live_ok": false,
-      "retained_existing": false,
-      "point_count": 0,
-      "source": "CoinGecko",
-      "error": "HTTP 429"
-    },
-    {
-      "file": "assets/global-dollar_30d.json",
-      "coin_id": "global-dollar",
-      "symbol": "USDG",
-      "live_ok": false,
-      "retained_existing": false,
-      "point_count": 0,
-      "source": "CoinGecko",
-      "error": "HTTP 429"
-    },
-    {
-      "file": "assets/hashnote-usyc_30d.json",
-      "coin_id": "hashnote-usyc",
-      "symbol": "USYC",
-      "live_ok": false,
-      "retained_existing": false,
-      "point_count": 0,
-      "source": "CoinGecko",
-      "error": "HTTP 429"
-    },
-    {
-      "file": "assets/hedera-hashgraph_30d.json",
-      "coin_id": "hedera-hashgraph",
-      "symbol": "HBAR",
-      "live_ok": false,
-      "retained_existing": false,
-      "point_count": 0,
-      "source": "CoinGecko",
-      "error": "HTTP 429"
-    },
-    {
-      "file": "assets/htx-dao_30d.json",
-      "coin_id": "htx-dao",
-      "symbol": "HTX",
-      "live_ok": false,
-      "retained_existing": false,
-      "point_count": 0,
-      "source": "CoinGecko",
-      "error": "HTTP 429"
     }
   ],
   "message": "Collecte OK depuis CoinGecko",
