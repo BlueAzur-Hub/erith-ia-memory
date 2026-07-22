@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.44 — Atlas compact diagnostics
+   V1.1-alpha.26.44.1 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.44 — Missions de Vie
+   V1.1-alpha.26.44.1 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.44 — Analyst Stable Dimensions
+   V1.1-alpha.26.44.1 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.44 — Audience V2 */
+/* V1.1-alpha.26.44.1 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4843,3 +4843,189 @@ main .decision-board{
   .audience-v2-actions{align-items:stretch;flex-direction:column}
   .audience-v2-actions span{text-align:left}
 }
+
+/* =========================================================
+   V1.1-alpha.26.44.1 — CHAMPAGNE FULLSCREEN FIT
+   Mission : en plein écran, le graphique individuel, la lecture
+   technique et le bandeau crypto restent visibles ensemble.
+   Moteur graphique, données, sources et calculs inchangés.
+   ========================================================= */
+#analyste{scroll-margin-top:6px}
+
+@media (min-width:1180px) and (max-height:1050px){
+  .shell{
+    width:min(1660px,calc(100vw - 12px)) !important;
+    margin:6px auto 18px !important;
+    gap:6px !important;
+  }
+
+  .atlas-market-zone{
+    margin:6px 0 !important;
+    padding:6px !important;
+    border-radius:18px !important;
+  }
+
+  .atlas-market-zone #analyste{
+    padding:7px !important;
+    margin-bottom:5px !important;
+    gap:6px !important;
+    border-radius:16px !important;
+  }
+
+  .atlas-market-zone #analyste .panel.glass{
+    padding:8px 10px !important;
+  }
+
+  .atlas-market-zone #analyste .section-head{
+    margin-bottom:5px !important;
+    gap:7px !important;
+  }
+
+  .atlas-market-zone #analyste .eyebrow{
+    margin-bottom:3px !important;
+    font-size:8px !important;
+  }
+
+  .atlas-market-zone #analyste h2{
+    font-size:14px !important;
+    line-height:1.08 !important;
+  }
+
+  .atlas-market-zone #analyste .period-tabs{
+    gap:4px !important;
+  }
+
+  .atlas-market-zone #analyste .period-btn{
+    padding:5px 10px !important;
+    font-size:10px !important;
+  }
+
+  .atlas-market-zone #analyste .chart-shell{
+    height:500px !important;
+    min-height:500px !important;
+    max-height:500px !important;
+    padding:9px 10px 12px !important;
+    border-radius:16px !important;
+  }
+
+  .atlas-market-zone #analyste #mainChart{
+    height:470px !important;
+    min-height:470px !important;
+    max-height:470px !important;
+  }
+
+  .atlas-market-zone #analyste .chart-caption,
+  .atlas-market-zone #analyste #chartCaption{
+    margin-top:5px !important;
+    padding:5px 8px !important;
+    font-size:10px !important;
+    line-height:1.24 !important;
+  }
+
+  .atlas-market-zone #analyste .broker-strip{
+    gap:4px !important;
+    margin-bottom:4px !important;
+  }
+
+  .atlas-market-zone #analyste .broker-strip > div{
+    min-height:42px !important;
+    padding:5px 7px !important;
+    border-radius:9px !important;
+  }
+
+  .atlas-market-zone #analyste .broker-strip span,
+  .atlas-market-zone #analyste .broker-strip small{
+    font-size:8.5px !important;
+    line-height:1.12 !important;
+  }
+
+  .atlas-market-zone #analyste .broker-strip b{
+    margin:2px 0 1px !important;
+    font-size:9.5px !important;
+    line-height:1.12 !important;
+  }
+
+  .atlas-market-zone #analyste .diagnostic-strip{
+    gap:4px !important;
+    margin-bottom:4px !important;
+  }
+
+  .atlas-market-zone #analyste .diagnostic-strip > div{
+    min-height:42px !important;
+    padding:5px 6px !important;
+    border-radius:9px !important;
+  }
+
+  .atlas-market-zone #analyste .diagnostic-strip span,
+  .atlas-market-zone #analyste .diagnostic-strip small{
+    font-size:8px !important;
+    line-height:1.12 !important;
+  }
+
+  .atlas-market-zone #analyste .diagnostic-strip b{
+    margin:2px 0 1px !important;
+    font-size:9px !important;
+    line-height:1.12 !important;
+  }
+
+  .atlas-market-zone #analyste #assetDetailGrid{
+    gap:4px !important;
+  }
+
+  .atlas-market-zone #analyste #assetDetailGrid > div{
+    min-height:36px !important;
+    padding:5px 7px !important;
+    border-radius:9px !important;
+  }
+
+  .atlas-market-zone #analyste #assetDetailGrid b{
+    margin-bottom:2px !important;
+    font-size:9px !important;
+    line-height:1.12 !important;
+  }
+
+  .atlas-market-zone #analyste #assetDetailGrid span{
+    font-size:9px !important;
+    line-height:1.16 !important;
+  }
+
+  .atlas-market-zone #analyste #assetDetailWhy{
+    margin-top:5px !important;
+    padding:6px 7px !important;
+    font-size:9px !important;
+    line-height:1.24 !important;
+  }
+
+  .atlas-market-zone > .ticker{
+    min-height:31px !important;
+    padding-left:5px !important;
+    padding-right:5px !important;
+    border-radius:10px !important;
+  }
+
+  .atlas-market-zone > .ticker .ticker-track{
+    padding:4px 8px !important;
+    gap:7px !important;
+    font-size:11px !important;
+  }
+
+  .atlas-market-zone > .ticker .ticker-item{
+    padding:3px 7px !important;
+    margin-right:3px !important;
+    gap:5px !important;
+  }
+}
+
+@media (min-width:1180px) and (max-height:850px){
+  .atlas-market-zone #analyste .chart-shell{
+    height:470px !important;
+    min-height:470px !important;
+    max-height:470px !important;
+  }
+  .atlas-market-zone #analyste #mainChart{
+    height:440px !important;
+    min-height:440px !important;
+    max-height:440px !important;
+  }
+}
+
