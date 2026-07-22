@@ -42,7 +42,7 @@ jobs:
           const TOP_LIMIT = 50;
           const CG_DEMO_KEY = String(process.env.COINGECKO_DEMO_API_KEY || "").trim();
           const PRIORITY_CHART_IDS = Object.freeze(["bitcoin", "ethereum", "solana"]);
-          const CHART_BATCH_SIZE = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? 8 : 3;
+          const CHART_BATCH_SIZE = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? 10 : 3;
           
           function nowContext() {
             const now = new Date();
@@ -79,7 +79,7 @@ jobs:
             const ctx = nowContext();
             writeJsonAtomic(path.join(ROOT, "status.json"), {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               updated_at: ctx.iso,
               status: "workflow_error",
               live_ok: false,
@@ -91,7 +91,7 @@ jobs:
             });
             if (!fs.existsSync(path.join(ROOT, "latest.json"))) writeJsonAtomic(path.join(ROOT, "latest.json"), {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -103,12 +103,12 @@ jobs:
                 id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 snapshot_id: `github-action-main_${ctx.iso.replace(/[:.]/g, "-")}`,
                 saved_at: ctx.iso,
-                version: "V1.1-alpha.26.33",
+                version: "V1.1-alpha.26.34",
                 collector_id: "github-action-main",
                 collector_type: "github_action",
                 source: "none",
                 live_ok: false,
-                cadence_ms: 1800000,
+                cadence_ms: 300000,
                 global: {
                   market_cap_eur: null,
                   volume_24h_eur: null,
@@ -137,7 +137,7 @@ jobs:
               try {
                 const headers = {
                   accept: "application/json",
-                  "user-agent": "atlas-market-collector/1.1-alpha.26.33"
+                  "user-agent": "atlas-market-collector/1.1-alpha.26.34"
                 };
                 if (CG_DEMO_KEY && String(url).includes("api.coingecko.com")) headers["x-cg-demo-api-key"] = CG_DEMO_KEY;
                 const res = await fetch(url, { signal: controller.signal, headers });
@@ -211,7 +211,7 @@ jobs:
             return "Observer";
           }
           
-          function normalizeCoinGeckoMarket(rows) {
+          function normalizeCoinGeckoMarket(rows, usdById = {}) {
             if (!Array.isArray(rows)) throw new Error("CoinGecko payload invalid");
             return rows.slice(0, TOP_LIMIT).map((c) => {
               const row = {
@@ -220,6 +220,7 @@ jobs:
                 name: c.name,
                 rank: c.market_cap_rank,
                 price_eur: c.current_price,
+                price_usd: Number.isFinite(Number(usdById?.[c.id]?.usd)) ? Number(usdById[c.id].usd) : null,
                 change_1h_pct: c.price_change_percentage_1h_in_currency,
                 change_24h_pct: c.price_change_percentage_24h_in_currency ?? c.price_change_percentage_24h,
                 change_7d_pct: c.price_change_percentage_7d_in_currency,
@@ -239,93 +240,44 @@ jobs:
             });
           }
           
-          function normalizeCoinLore(rows) {
-            if (!Array.isArray(rows)) throw new Error("CoinLore payload invalid");
-            return rows.slice(0, TOP_LIMIT).map((c) => {
-              const marketCap = Number(c.market_cap_usd || 0) * 0.92;
-              const volume = Number(c.volume24 || 0) * 0.92;
-              const price = Number(c.price_usd || 0) * 0.92;
-              const row = {
-                id: String(c.nameid || c.symbol || c.id || "").toLowerCase(),
-                symbol: String(c.symbol || "").toUpperCase(),
-                name: c.name,
-                rank: Number(c.rank || 9999),
-                price_eur: price,
-                change_24h_pct: Number(c.percent_change_24h || 0),
-                change_7d_pct: Number(c.percent_change_7d || 0),
-                market_cap_eur: marketCap,
-                volume_24h_eur: volume,
-                source: "CoinLore"
-              };
-              row.category = classifyAsset(row);
-              row.action = decideAction(row);
-              row.score = scoreCoin(row);
-              return row;
-            });
-          }
-          
           async function collectCoinGecko() {
-            const marketsUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d";
+            const marketsUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d&precision=full";
             const globalUrl = "https://api.coingecko.com/api/v3/global";
-            const [markets, global] = await Promise.all([
-              fetchJson(marketsUrl),
-              fetchJson(globalUrl).catch(() => null)
-            ]);
-            const assets = normalizeCoinGeckoMarket(markets);
-            const g = global?.data || {};
+            const [markets, global] = await Promise.all([fetchJson(marketsUrl), fetchJson(globalUrl)]);
+            const ids = Array.isArray(markets) ? markets.map(row => row.id).filter(Boolean).join(",") : "";
+            let usdById = {};
+            if (ids) {
+              try {
+                usdById = await fetchJson(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(ids)}&vs_currencies=usd&include_last_updated_at=true&precision=full`, 18000, 2);
+              } catch (error) {
+                console.log("ATLAS_USD_PRICE_WARNING", String(error?.message || error));
+              }
+            }
+            const assets = normalizeCoinGeckoMarket(markets, usdById);
             return {
               source: "CoinGecko",
+              source_lock: "CoinGecko",
+              quote_currencies: ["EUR", "USD"],
               global: {
-                market_cap_eur: g.total_market_cap?.eur ?? assets.reduce((sum, a) => sum + Number(a.market_cap_eur || 0), 0),
-                volume_24h_eur: g.total_volume?.eur ?? assets.reduce((sum, a) => sum + Number(a.volume_24h_eur || 0), 0),
-                btc_dominance_pct: g.market_cap_percentage?.btc ?? null
-              },
-              assets
-            };
-          }
-          
-          async function collectCoinLore() {
-            const url = "https://api.coinlore.net/api/tickers/?start=0&limit=50";
-            const payload = await fetchJson(url);
-            const assets = normalizeCoinLore(payload?.data || []);
-            return {
-              source: "CoinLore",
-              global: {
-                market_cap_eur: assets.reduce((sum, a) => sum + Number(a.market_cap_eur || 0), 0),
-                volume_24h_eur: assets.reduce((sum, a) => sum + Number(a.volume_24h_eur || 0), 0),
-                btc_dominance_pct: null
+                market_cap_eur: global?.data?.total_market_cap?.eur ?? null,
+                volume_24h_eur: global?.data?.total_volume?.eur ?? null,
+                btc_dominance_pct: global?.data?.market_cap_percentage?.btc ?? null
               },
               assets
             };
           }
           
           async function collect() {
-            const errors = [];
-          
             try {
               return await collectCoinGecko();
             } catch (error) {
-              errors.push(`CoinGecko: ${error.message}`);
-            }
-          
-            await sleep(1200);
-          
-            try {
-              const data = await collectCoinLore();
-              data.errors = errors;
-              return data;
-            } catch (error) {
-              errors.push(`CoinLore: ${error.message}`);
               return {
                 source: "none",
-                live_ok: false,
-                errors,
-                global: {
-                  market_cap_eur: null,
-                  volume_24h_eur: null,
-                  btc_dominance_pct: null
-                },
-                assets: []
+                source_lock: "CoinGecko",
+                quote_currencies: ["EUR", "USD"],
+                global: { market_cap_eur: null, volume_24h_eur: null, btc_dominance_pct: null },
+                assets: [],
+                errors: [`CoinGecko: ${String(error?.message || error)}`]
               };
             }
           }
@@ -373,7 +325,7 @@ jobs:
             const values = prices.map((point) => point[1]);
             return {
               schema: "atlas_chart_asset_cache_v1",
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
@@ -482,12 +434,14 @@ jobs:
               id: snapshotId,
               snapshot_id: snapshotId,
               saved_at: ctx.iso,
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               collector_id: "github-action-main",
               collector_type: "github_action",
               source: collected.source,
+              source_lock: "CoinGecko",
+              quote_currencies: collected.quote_currencies || ["EUR", "USD"],
               live_ok: liveOk,
-              cadence_ms: 1800000,
+              cadence_ms: 300000,
               global: collected.global,
               market_pulse: marketPulse(assets),
               assets: historyAssets(assets),
@@ -498,11 +452,13 @@ jobs:
           
             const latest = {
               schema: "atlas_github_market_latest_v1",
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               generated_at: ctx.iso,
               collector_id: "github-action-main",
               collector_type: "github_action",
               source: collected.source,
+              source_lock: "CoinGecko",
+              quote_currencies: collected.quote_currencies || ["EUR", "USD"],
               live_ok: liveOk,
               record_count: liveOk ? 1 : 0,
               records: liveOk ? [record] : [],
@@ -513,15 +469,17 @@ jobs:
           
             const status = {
               schema: "atlas_github_market_status_v1",
-              version: "V1.1-alpha.26.33",
+              version: "V1.1-alpha.26.34",
               updated_at: ctx.iso,
               status: liveOk ? "ok" : "source_error",
               live_ok: liveOk,
               source: collected.source,
+              source_lock: "CoinGecko",
+              quote_currencies: collected.quote_currencies || ["EUR", "USD"],
               assets_count: assets.length,
               history_file: liveOk ? ctx.historyFile : null,
               chart_cache: chartCache,
-              message: liveOk ? `Collecte OK depuis ${collected.source}` : "Collecte impossible : toutes les sources ont échoué, diagnostic commité.",
+              message: liveOk ? `Collecte OK depuis ${collected.source}` : "CoinGecko indisponible : dernier latest.json canonique conservé, diagnostic commité.",
               errors: collected.errors || []
             };
           
