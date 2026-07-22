@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.43</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.44</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.43" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.44" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · graphiques auto-récupérés · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.43</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.44</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -332,7 +332,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.43</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.44</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -729,7 +729,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.43 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.44 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1785,16 +1785,33 @@
       </summary>
       <div class="atlas-collapse-body">
         <section class="panel glass life-project audience-live-panel">
-          <div class="life-project-head"><div><p class="eyebrow">OBSERVATOIRE D’USAGE</p><h2>Mesure d’audience active</h2></div><span class="life-status" id="audienceModuleStatus">Initialisation</span></div>
-          <div class="audience-live-grid">
+          <div class="life-project-head"><div><p class="eyebrow">AUDIENCE V2 · MOTEUR DE SESSION</p><h2>Mesure d’audience active et traçable</h2></div><span class="life-status" id="audienceModuleStatus">Initialisation</span></div>
+          <div class="audience-live-grid audience-v2-grid">
             <article><b>IP publique</b><span id="audienceIp">En attente</span></article>
             <article><b>Localisation approximative</b><span id="audienceLocation">En attente</span></article>
             <article><b>Appareil</b><span id="audienceDevice">En attente</span></article>
             <article><b>Identifiant de participation</b><span id="audienceMember">visiteur non nommé</span></article>
-            <article><b>Événements envoyés</b><span id="audienceSent">0</span></article>
+            <article><b>État de session</b><span id="audienceSessionState">Ouverture</span></article>
+            <article><b>Durée de session</b><span id="audienceDuration">0 s</span></article>
+            <article><b>Événements créés</b><span id="audienceCreated">0</span></article>
+            <article><b>Tentatives d’envoi</b><span id="audienceAttempted">0</span></article>
+            <article><b>Remis au navigateur</b><span id="audienceSubmitted">0</span></article>
+            <article><b>Échecs locaux</b><span id="audienceFailed">0</span></article>
+            <article><b>Heartbeat</b><span id="audienceHeartbeat">En attente</span></article>
             <article><b>Dernier événement</b><span id="audienceLast">—</span></article>
           </div>
-          <p class="life-rule"><b>Éléments mesurés :</b> ouvertures, sessions, sections consultées, actifs sélectionnés, périodes 24 h / 7 j / 30 j, rafraîchissements, graphiques chargés, erreurs techniques, appareil, navigateur, heure, IP publique et localisation approximative.</p>
+          <div class="audience-v2-delivery" aria-label="États de livraison Audience V2">
+            <span id="audienceDeliveryCreated">Créé · 0</span>
+            <span id="audienceDeliveryEncrypted">Chiffré · 0</span>
+            <span id="audienceDeliveryAttempted">Tenté · 0</span>
+            <span id="audienceDeliverySubmitted">Remis navigateur · 0</span>
+            <span id="audienceDeliveryConfirmed">Réception confirmée · console 26.45</span>
+          </div>
+          <div class="audience-v2-actions">
+            <button class="btn ghost" id="btnAudienceExport" type="button">Exporter diagnostic session</button>
+            <span id="audienceQueueState">Journal local : 0 événement</span>
+          </div>
+          <p class="life-rule"><b>Audience V2 :</b> chaque événement reçoit un identifiant unique, un numéro de séquence, un état local de livraison et une session horodatée. Le navigateur peut confirmer la création, le chiffrement, la tentative et la remise technique. La récupération, le déchiffrement et l’archivage seront confirmés par la console privée V2 de la version 26.45.</p>
         </section>
       </div>
     </details>
@@ -1823,7 +1840,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.43</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.44</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -1832,6 +1849,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.43"></script>
+  <script src="./app.js?v=1.1-alpha.26.44"></script>
 </body>
 </html>
