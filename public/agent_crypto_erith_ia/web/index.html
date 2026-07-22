@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.38</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.39</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.38" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.39" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -17,10 +17,10 @@
         <div class="title-block">
           <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
           <h1 class="brandline">Agent-Crypto @erith.IA</h1>
-          <p class="subtitle">Top 50 CoinMarketCap · EUR + USD en un appel · graphiques CoinGecko à la demande</p>
+          <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · rafraîchissement stable · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.38</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.39</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -48,6 +48,7 @@
         <a href="#math">Math Model</a>
         <a href="#risques">Risques</a>
         <a href="#nofomo">No-FOMO</a>
+        <a href="#missions-vie">Missions Vie</a>
         <a href="#sources">Sources</a>
       </nav>
 
@@ -82,7 +83,7 @@
         <small id="metricVolumeHint">Donnée non récupérée</small>
       </article>
       <article class="metric glass">
-        <span>Dominance BTC</span>
+        <span>Poids BTC · Top 50</span>
         <strong id="metricBtcDom">—</strong>
         <small id="metricBtcDomHint">Donnée non récupérée</small>
       </article>
@@ -118,7 +119,7 @@
           <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix"></canvas>
         </div>
         <div class="chart-caption" id="chartCaption">
-          Les 50 premières cryptomonnaies sont chargées par un seul flux CoinMarketCap contenant EUR et USD. Sélectionne un actif pour charger séparément son historique CoinGecko.
+          Les 50 premières cryptomonnaies sont chargées en EUR. Les prix USD enrichissent ensuite le tableau sans bloquer le marché. Sélectionne un actif pour charger son historique CoinGecko à la demande.
         </div>
       </article>
 
@@ -197,19 +198,18 @@
               <tr>
                 <th>Rang</th>
                 <th>Crypto</th>
-                <th>Prix EUR / USD</th>
-                <th>1h</th>
+                <th>Prix</th>
                 <th>24h</th>
                 <th>7j</th>
                 <th>Market Cap</th>
                 <th>Volume 24h</th>
-                <th>Offre circulation</th>
+                <th>Graph</th>
                 <th>Score</th>
                 <th>Décision</th>
               </tr>
             </thead>
             <tbody id="marketRows">
-              <tr><td colspan="11" class="empty">Livecheck requis. Aucun prix inventé.</td></tr>
+              <tr><td colspan="10" class="empty">Livecheck requis. Aucun prix inventé.</td></tr>
             </tbody>
           </table>
         </div>
@@ -326,7 +326,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.38</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.39</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -399,7 +399,7 @@
         </div>
         <div class="watch-v2-note" id="watchBasketSummary">Atlas Watchlist V2 auto : 34 actifs suivis · 8 paniers compacts.</div>
         <div class="watch-inputs">
-          <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, LINK, ONDO, TAO" />
+          <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, LINK, ONDO, TAO ou id CoinGecko" />
           <button class="btn small primary" id="btnAddWatch">Ajouter</button>
         </div>
         <div class="cards" id="watchCards">
@@ -454,10 +454,9 @@
         <label class="sort-box auto-cadence-box">
           <span>Cadence</span>
           <select id="autoCadenceSelect">
-            <option value="adaptive" selected>Adaptative</option>
-            <option value="30">30 secondes</option>
-            <option value="60">60 secondes</option>
+            <option value="adaptive" selected>Adaptative · 5 minutes</option>
             <option value="300">5 minutes</option>
+            <option value="900">15 minutes</option>
           </select>
         </label>
       </div>
@@ -724,13 +723,13 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.38 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.39 · Math Core</span>
       </div>
 
       <div class="situation-grid">
         <article class="situation-card ok">
           <b>Actif maintenant</b>
-          <span>Top 50 CoinMarketCap, graphiques CoinGecko à la demande, watchlist, tests et simulation locale.</span>
+          <span>Marché live, graphiques, sources, watchlist, tests simples, simulation locale.</span>
           <em>Utilisable dans la page publique.</em>
         </article>
         <article class="situation-card plan">
@@ -1645,6 +1644,126 @@
       </div>
     </details>
 
+
+
+    <section class="life-missions-intro glass" id="missions-vie" aria-labelledby="missions-vie-title">
+      <div>
+        <p class="eyebrow">✦ ERITH.IA · MISSIONS DE VIE</p>
+        <h2 id="missions-vie-title">Financer la création et protéger le vivant</h2>
+        <p>Ces cinq programmes sont des cadres de conception. Ils ne collectent aucun argent dans cette page, ne promettent aucun rendement et ne remplacent ni un conseil juridique ni les obligations fiscales. Chaque lancement réel exigera une structure, des comptes séparés, des partenaires vérifiés et un rapport d’impact public.</p>
+      </div>
+      <span class="pill warn">Conception · aucun paiement actif</span>
+    </section>
+
+    <details class="atlas-collapse glass life-project-collapse" data-collapse-key="fonds-erith">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">✦ Fonds ERITH.IA — Crypto + Monnaies</span>
+        <span class="atlas-collapse-subtitle">Financer l’infrastructure, la recherche et la création</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass life-project" id="fonds-erith-ia">
+          <div class="life-project-head"><div><p class="eyebrow">PROGRAMME 01</p><h2>Transformer une activité financière prudente en capacité de création</h2></div><span class="life-status">Phase : simulation</span></div>
+          <div class="life-grid">
+            <article><b>Mission</b><span>Financer les serveurs locaux, abonnements de données, stockage, développement, accessibilité, traduction et production d’@erith.IA.</span></article>
+            <article><b>Origines possibles</b><span>Résultats nets réellement réalisés, mécénat, subventions, prestations et dons autorisés — jamais les dépôts confiés par le public.</span></article>
+            <article><b>Comptabilité</b><span>Trésorerie séparée, journal des frais, fiscalité provisionnée, réserve de sécurité et validation humaine de chaque affectation.</span></article>
+            <article><b>Interdit au lancement</b><span>Promesse de rendement, gestion de fonds pour autrui, trading autonome, dette cachée, confusion entre simulation et argent réel.</span></article>
+          </div>
+          <div class="life-roadmap"><span>1 · Observation</span><span>2 · Simulation</span><span>3 · Lecture exchange</span><span>4 · Ordre manuel borné</span><span>5 · Affectation auditée</span></div>
+          <p class="life-rule"><b>Principe :</b> seuls des gains nets après frais, impôts, pertes et réserves peuvent être proposés au financement. L’interface publique ne reçoit aucune clé, aucun wallet et aucun ordre.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass life-project-collapse" data-collapse-key="association-erith">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">⚖ Association ERITH.IA</span>
+        <span class="atlas-collapse-subtitle">Gouvernance non lucrative et financement transparent</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass life-project" id="association-erith-ia">
+          <div class="life-project-head"><div><p class="eyebrow">PROGRAMME 02</p><h2>Une structure dédiée pour porter les missions d’intérêt général</h2></div><span class="life-status">Étude juridique</span></div>
+          <div class="life-grid">
+            <article><b>Objet proposé</b><span>Éducation numérique, recherche ouverte, inclusion, protection de l’enfance, bien-être animal, biodiversité et soutien à des partenaires de terrain.</span></article>
+            <article><b>Gouvernance</b><span>Statuts clairs, conseil collégial, conflits d’intérêts déclarés, décisions tracées, comptes annuels et fonds affectés par mission.</span></article>
+            <article><b>Dons</b><span>Un don est sans contrepartie. La réduction d’impôt dépend de l’éligibilité réelle de l’organisme ; elle ne remplace pas automatiquement l’impôt dû.</span></article>
+            <article><b>Sécurisation</b><span>Demander un rescrit fiscal avant d’émettre des reçus, utiliser un compte bancaire associatif et publier les montants reçus, employés et réservés.</span></article>
+          </div>
+          <div class="life-links" aria-label="Sources officielles association">
+            <a href="https://www.associations.gouv.fr/dons-donations-et-legs" target="_blank" rel="noopener noreferrer">Associations.gouv.fr · dons</a>
+            <a href="https://www.service-public.fr/particuliers/vosdroits/F426" target="_blank" rel="noopener noreferrer">Service-Public · réduction d’impôt</a>
+            <a href="https://www.associations.gouv.fr/obligation-declarative-pour-les-organismes-beneficiaires-de-dons" target="_blank" rel="noopener noreferrer">Obligations déclaratives</a>
+          </div>
+          <p class="life-rule"><b>Point fiscal :</b> financer une association peut ouvrir droit à une réduction selon les conditions légales, mais ne permet pas de choisir librement de ne plus payer ses taxes. La structure doit rester non lucrative, désintéressée et ne pas servir un cercle restreint.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass life-project-collapse" data-collapse-key="aerith-enfance">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">🕊 Aerith Enfance</span>
+        <span class="atlas-collapse-subtitle">Protection, éducation et autonomie des enfants confiés</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass life-project" id="aerith-enfance">
+          <div class="life-project-head"><div><p class="eyebrow">PROGRAMME 03</p><h2>Soutenir les enfants protégés et les structures qui les accompagnent</h2></div><span class="life-status">Partenariats requis</span></div>
+          <div class="life-grid">
+            <article><b>Champ français</b><span>Travailler avec l’Aide sociale à l’enfance, les MECS, foyers de l’enfance, pouponnières, villages d’enfants et associations habilitées.</span></article>
+            <article><b>Actions finançables</b><span>Fournitures, accès numérique, culture, santé, soutien scolaire, mobilité, équipement des lieux de vie et accompagnement des jeunes majeurs.</span></article>
+            <article><b>Protection</b><span>Aucun contact direct non encadré avec des mineurs ; partenaires vérifiés, règles de signalement, honorabilité, consentement et minimisation des données.</span></article>
+            <article><b>Mesure d’impact</b><span>Nombre de structures soutenues, dépenses justifiées, bénéficiaires agrégés, continuité scolaire, accès aux soins et passage à l’autonomie.</span></article>
+          </div>
+          <div class="life-links"><a href="https://solidarites.gouv.fr/protection-enfance" target="_blank" rel="noopener noreferrer">Ministère · protection de l’enfance</a><a href="https://solidarites.gouv.fr/laide-sociale-lenfance-acteur-majeur-de-la-protection-de-lenfance" target="_blank" rel="noopener noreferrer">ASE et établissements</a></div>
+          <p class="life-rule"><b>Terminologie :</b> en France, le projet ne doit pas se limiter au mot « orphelinat ». La protection concerne aussi des enfants dont les parents sont vivants mais qui sont en danger ou ne peuvent temporairement assurer leur prise en charge.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass life-project-collapse" data-collapse-key="aerith-animaux">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">🐾 Aerith Animaux</span>
+        <span class="atlas-collapse-subtitle">Refuges, soins, familles d’accueil et lutte contre l’abandon</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass life-project" id="aerith-animaux">
+          <div class="life-project-head"><div><p class="eyebrow">PROGRAMME 04</p><h2>Renforcer les refuges et associations de protection animale</h2></div><span class="life-status">Audit partenaires</span></div>
+          <div class="life-grid">
+            <article><b>Urgences</b><span>Soins vétérinaires, nourriture, quarantaine, transports, stérilisation, identification et équipements liés aux vagues de chaleur.</span></article>
+            <article><b>Structures</b><span>Refuges déclarés, associations sans refuge et réseaux de familles d’accueil respectant les obligations administratives et sanitaires.</span></article>
+            <article><b>Prévention</b><span>Adoption responsable, lutte contre l’abandon, soutien à la stérilisation et information sur les besoins réels des animaux.</span></article>
+            <article><b>Traçabilité</b><span>Factures vétérinaires, nombre d’animaux aidés, durée de prise en charge, adoptions responsables et fonds d’urgence disponibles.</span></article>
+          </div>
+          <div class="life-links"><a href="https://agriculture.gouv.fr/la-lutte-contre-labandon-des-animaux-de-compagnie" target="_blank" rel="noopener noreferrer">Ministère · lutte contre l’abandon</a><a href="https://www.mesdemarches.agriculture.gouv.fr/demarches/particulier/vivre-avec-un-animal-de-compagnie/article/declarer-un-etablissement-d-302" target="_blank" rel="noopener noreferrer">Déclaration refuge / association</a></div>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass life-project-collapse" data-collapse-key="aerith-terre-vivante">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">🌿 Aerith Terre Vivante</span>
+        <span class="atlas-collapse-subtitle">Nature, biodiversité, eau, sols et éducation environnementale</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass life-project" id="aerith-terre-vivante">
+          <div class="life-project-head"><div><p class="eyebrow">PROGRAMME 05</p><h2>Protéger et restaurer les milieux vivants</h2></div><span class="life-status">Cadre territorial</span></div>
+          <div class="life-grid">
+            <article><b>Axes</b><span>Restauration d’habitats, biodiversité locale, eau et rivières, sols, pollinisateurs, forêts, littoral et réduction des déchets.</span></article>
+            <article><b>Méthode</b><span>Financer des projets territoriaux mesurables avec associations, scientifiques, collectivités et gestionnaires d’espaces naturels.</span></article>
+            <article><b>Éducation</b><span>Ateliers, données ouvertes, sciences participatives, contenus pédagogiques et équipements de terrain.</span></article>
+            <article><b>Indicateurs</b><span>Surface restaurée, habitats suivis, qualité de l’eau, espèces protégées, bénévoles mobilisés et résultats publiés sur plusieurs années.</span></article>
+          </div>
+          <div class="life-links"><a href="https://www.ecologie.gouv.fr/politiques-publiques/participation-associations-dialogue-environnemental-agrement-habilitation" target="_blank" rel="noopener noreferrer">Agrément environnement</a><a href="https://www.ecologie.gouv.fr/politiques-publiques/subventions-aux-associations" target="_blank" rel="noopener noreferrer">Subventions aux associations</a></div>
+          <p class="life-rule"><b>Règle d’impact :</b> financer moins de projets, mais exiger un objectif, une mesure initiale, un budget, un responsable, une preuve de réalisation et un suivi après financement.</p>
+        </section>
+      </div>
+    </details>
+
+
     <details class="atlas-collapse glass" data-collapse-key="sources">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
@@ -1660,7 +1779,7 @@
         <div>
           <p class="eyebrow">LIVE SOURCES</p>
           <h2>Sources testées et statut</h2>
-        <p class="source-bottom-note">Diagnostic : CoinMarketCap alimente le Top 50 ; CoinGecko sert uniquement à l’historique sélectionné.</p>
+        <p class="source-bottom-note">Diagnostic source principal en bas de page : CoinGecko est critique pour autoriser tableau, prix et graphiques.</p>
         </div>
         <span class="pill" id="sourceDecision">Refusé avant Livecheck</span>
       </div>
@@ -1669,7 +1788,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.38</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.39</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
       </div>
@@ -1677,6 +1796,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.38"></script>
+  <script src="./app.js?v=1.1-alpha.26.39"></script>
 </body>
 </html>
