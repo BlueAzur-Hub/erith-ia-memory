@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.37</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.38</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.37" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.38" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -17,10 +17,10 @@
         <div class="title-block">
           <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
           <h1 class="brandline">Agent-Crypto @erith.IA</h1>
-          <p class="subtitle">Top 50 direct EUR · USD en enrichissement · graphiques à la demande</p>
+          <p class="subtitle">Top 50 CoinMarketCap · EUR + USD en un appel · graphiques CoinGecko à la demande</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.37</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.38</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -82,7 +82,7 @@
         <small id="metricVolumeHint">Donnée non récupérée</small>
       </article>
       <article class="metric glass">
-        <span>Poids BTC · Top 50</span>
+        <span>Dominance BTC</span>
         <strong id="metricBtcDom">—</strong>
         <small id="metricBtcDomHint">Donnée non récupérée</small>
       </article>
@@ -118,7 +118,7 @@
           <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix"></canvas>
         </div>
         <div class="chart-caption" id="chartCaption">
-          Les 50 premières cryptomonnaies sont chargées en EUR. Les prix USD enrichissent ensuite le tableau sans bloquer le marché. Sélectionne un actif pour charger son historique CoinGecko à la demande.
+          Les 50 premières cryptomonnaies sont chargées par un seul flux CoinMarketCap contenant EUR et USD. Sélectionne un actif pour charger séparément son historique CoinGecko.
         </div>
       </article>
 
@@ -197,18 +197,19 @@
               <tr>
                 <th>Rang</th>
                 <th>Crypto</th>
-                <th>Prix</th>
+                <th>Prix EUR / USD</th>
+                <th>1h</th>
                 <th>24h</th>
                 <th>7j</th>
                 <th>Market Cap</th>
                 <th>Volume 24h</th>
-                <th>Graph</th>
+                <th>Offre circulation</th>
                 <th>Score</th>
                 <th>Décision</th>
               </tr>
             </thead>
             <tbody id="marketRows">
-              <tr><td colspan="10" class="empty">Livecheck requis. Aucun prix inventé.</td></tr>
+              <tr><td colspan="11" class="empty">Livecheck requis. Aucun prix inventé.</td></tr>
             </tbody>
           </table>
         </div>
@@ -325,7 +326,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.37</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.38</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -398,7 +399,7 @@
         </div>
         <div class="watch-v2-note" id="watchBasketSummary">Atlas Watchlist V2 auto : 34 actifs suivis · 8 paniers compacts.</div>
         <div class="watch-inputs">
-          <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, LINK, ONDO, TAO ou id CoinGecko" />
+          <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, LINK, ONDO, TAO" />
           <button class="btn small primary" id="btnAddWatch">Ajouter</button>
         </div>
         <div class="cards" id="watchCards">
@@ -723,13 +724,13 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.37 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.38 · Math Core</span>
       </div>
 
       <div class="situation-grid">
         <article class="situation-card ok">
           <b>Actif maintenant</b>
-          <span>Marché live, graphiques, sources, watchlist, tests simples, simulation locale.</span>
+          <span>Top 50 CoinMarketCap, graphiques CoinGecko à la demande, watchlist, tests et simulation locale.</span>
           <em>Utilisable dans la page publique.</em>
         </article>
         <article class="situation-card plan">
@@ -1659,7 +1660,7 @@
         <div>
           <p class="eyebrow">LIVE SOURCES</p>
           <h2>Sources testées et statut</h2>
-        <p class="source-bottom-note">Diagnostic source principal en bas de page : CoinGecko est critique pour autoriser tableau, prix et graphiques.</p>
+        <p class="source-bottom-note">Diagnostic : CoinMarketCap alimente le Top 50 ; CoinGecko sert uniquement à l’historique sélectionné.</p>
         </div>
         <span class="pill" id="sourceDecision">Refusé avant Livecheck</span>
       </div>
@@ -1668,7 +1669,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.37</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.38</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
     </footer>
       </div>
@@ -1676,6 +1677,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.37"></script>
+  <script src="./app.js?v=1.1-alpha.26.38"></script>
 </body>
 </html>
