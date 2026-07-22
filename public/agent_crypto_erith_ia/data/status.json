@@ -1,12 +1,32 @@
 {
   "schema": "atlas_github_market_status_v1",
-  "version": "V1.1-alpha.25.2",
-  "updated_at": "2026-07-21T23:14:04.081Z",
+  "version": "V1.1-alpha.26.29",
+  "updated_at": "2026-07-22T00:07:26.609Z",
   "status": "ok",
   "live_ok": true,
   "source": "CoinGecko",
   "assets_count": 50,
-  "history_file": "public/agent_crypto_erith_ia/data/history/2026-07-21.jsonl",
+  "history_file": "public/agent_crypto_erith_ia/data/history/2026-07-22.jsonl",
+  "chart_cache": [
+    {
+      "file": "btc_24h.json",
+      "live_ok": true,
+      "point_count": 289,
+      "source": "CoinGecko"
+    },
+    {
+      "file": "btc_7d.json",
+      "live_ok": true,
+      "point_count": 169,
+      "source": "CoinGecko"
+    },
+    {
+      "file": "btc_30d.json",
+      "live_ok": true,
+      "point_count": 721,
+      "source": "CoinGecko"
+    }
+  ],
   "message": "Collecte OK depuis CoinGecko",
   "errors": []
 }
