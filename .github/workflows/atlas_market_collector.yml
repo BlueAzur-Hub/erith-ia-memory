@@ -30,6 +30,7 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
+          const ARCHIVE_VERSION = 'V1.1-alpha.26.43';
           const ROOT = path.join('public', 'agent_crypto_erith_ia', 'data');
           const HISTORY = path.join(ROOT, 'history');
           fs.mkdirSync(HISTORY, { recursive: true });
@@ -105,7 +106,7 @@ jobs:
             const btc = assets.find(row => row.id === 'bitcoin');
             const record = {
               schema: 'atlas_market_snapshot_top50_v1',
-              version: 'V1.1-alpha.26.41',
+              version: ARCHIVE_VERSION,
               snapshot_id: `github-action-main_${now.replace(/[:.]/g, '-')}`,
               collector_id: 'github-action-main',
               collector_type: 'github_archive',
@@ -154,7 +155,7 @@ jobs:
             const now = new Date().toISOString();
             fs.writeFileSync(path.join(ROOT, 'status.json'), JSON.stringify({
               schema: 'atlas_github_market_status_v2',
-              version: 'V1.1-alpha.26.41',
+              version: ARCHIVE_VERSION,
               updated_at: now,
               status: 'error',
               source: 'CoinGecko',
