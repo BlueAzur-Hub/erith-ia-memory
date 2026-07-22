@@ -4678,7 +4678,51 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.42 — Missions de Vie
+   V1.1-alpha.26.43 — Atlas compact diagnostics
+   Source, cache, latency, retries and latest technical error.
+   ========================================================= */
+.diagnostic-strip{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin:0 0 9px;
+}
+.diagnostic-strip>div{
+  min-width:0;
+  padding:7px 8px;
+  min-height:52px;
+  border:1px solid rgba(139,244,212,.18);
+  border-radius:10px;
+  background:rgba(4,18,25,.52);
+}
+.diagnostic-strip span,.diagnostic-strip small{
+  display:block;
+  color:rgba(202,221,240,.72);
+  font-size:9px;
+  font-weight:800;
+  line-height:1.25;
+}
+.diagnostic-strip b{
+  display:block;
+  margin:3px 0 2px;
+  color:var(--cream,#fff0c8);
+  font-size:10px;
+  line-height:1.25;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.diagnostic-strip small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+@media (max-width:980px){.diagnostic-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.diagnostic-strip{grid-template-columns:1fr}.diagnostic-strip b,.diagnostic-strip small{white-space:normal}}
+
+
+/* =========================================================
+   V1.1-alpha.26.43 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4712,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.42 — Analyst Stable Dimensions
+   V1.1-alpha.26.43 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4768,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.42 — mesure d’audience */
+/* V1.1-alpha.26.43 — mesure d’audience */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4786,7 +4830,7 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.42 — Audience active */
+/* V1.1-alpha.26.43 — Audience active */
 .audience-live-panel{position:relative}
 .audience-live-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .audience-live-grid article{min-height:82px;padding:14px;border:1px solid rgba(93,211,222,.22);border-radius:14px;background:rgba(4,15,28,.68);display:flex;flex-direction:column;gap:7px}
