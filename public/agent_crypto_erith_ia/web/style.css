@@ -4544,7 +4544,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.33 — Atlas Chart Availability Recovery
+   V1.1-alpha.26.34 — Atlas Chart Availability Recovery
    Dernière série réelle conservée, actualisation discrète, erreurs techniques masquées.
    ========================================================= */
 .atlas-market-zone #analyste .chart-shell:not([data-chart-summary])::after{
@@ -4628,3 +4628,14 @@ main .decision-board{
   color:var(--muted);
   font-weight:900;
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.34 — Atlas Canonical Source Lock
+   EUR + USD directs CoinGecko, aucune estimation, aucune source mélangée.
+   ========================================================= */
+.price-dual{display:flex;flex-direction:column;gap:2px;min-width:112px}
+.price-dual b{font-weight:900;color:var(--cream,#fff0c8);font-variant-numeric:tabular-nums}
+.price-dual small{font-size:10px;color:rgba(198,220,240,.76);font-weight:700;font-variant-numeric:tabular-nums}
+#assetDetailGrid span{font-variant-numeric:tabular-nums}
+.atlas-market-zone #analyste .chart-shell[data-chart-state="valid"]::before{max-width:min(46%,320px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
