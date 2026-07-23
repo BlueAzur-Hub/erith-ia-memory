@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b1e">
+  <meta name="description" content="Atlas-10 Yohan — Full Crypto Deployment Hub">
+  <title>Atlas-10 Yohan · Full Crypto Deployment Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="constellation" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Retour en haut">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><path d="M32 4 38 22 58 24 42 36 47 56 32 45 17 56 22 36 6 24 26 22Z"/></svg>
+      </span>
+      <span>
+        <strong>ATLAS-10 YOHAN</strong>
+        <small>FULL CRYPTO DEPLOYMENT HUB</small>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="#deployment">Déploiement</a>
+      <a href="#sources">Sources</a>
+      <a href="#archives">Archives</a>
+      <a href="#foundry">Foundry</a>
+      <a href="#idea-forge">Idea Forge</a>
+    </nav>
+
+    <div class="top-actions">
+      <button class="ghost-button" id="resetProgress" type="button">Réinitialiser</button>
+      <a class="primary-button compact" href="downloads/ATLAS_10_YOHAN_FULL_CRYPTO_BASE.zip" download>
+        Télécharger la base
+      </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow">ERITH.IA · PROFIL SPÉCIALISÉ · DÉPLOIEMENT GUIDÉ</p>
+        <h1>
+          Atlas-10 Yohan
+          <span>Full Crypto</span>
+        </h1>
+        <p class="hero-lead">
+          Une station complète pour charger le Core, la Persona V3, Aerith-10 Crypto,
+          Math Oracle, Psychologie &amp; Discernement, les modules Agent-Crypto et les
+          archives Seven Heaven autorisées.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary-button" href="#deployment">Commencer le déploiement</a>
+          <button class="secondary-button" id="copyMasterPrompt" type="button">
+            Copier le prompt maître
+          </button>
+        </div>
+
+        <div class="hero-badges" aria-label="Capacités principales">
+          <span>Crypto avancée</span>
+          <span>Math Oracle</span>
+          <span>Psychologie de marché</span>
+          <span>Idea Forge</span>
+          <span>Flower Girls Foundry</span>
+        </div>
+      </div>
+
+      <div class="hero-console" aria-label="Résumé du profil">
+        <div class="console-head">
+          <span class="live-dot"></span>
+          <span>PROFILE MATRIX</span>
+          <strong>READY</strong>
+        </div>
+
+        <div class="orbit" aria-hidden="true">
+          <div class="orbit-ring ring-a"></div>
+          <div class="orbit-ring ring-b"></div>
+          <div class="orbit-ring ring-c"></div>
+          <div class="orbit-core">A10</div>
+          <span class="orbit-node n1">₿</span>
+          <span class="orbit-node n2">∑</span>
+          <span class="orbit-node n3">Ψ</span>
+          <span class="orbit-node n4">✦</span>
+        </div>
+
+        <dl class="profile-stats">
+          <div><dt>Core</dt><dd>V1.0</dd></div>
+          <div><dt>Persona</dt><dd>V3.0</dd></div>
+          <div><dt>Sources</dt><dd>Public + privé autorisé</dd></div>
+          <div><dt>Mode</dt><dd>Full Crypto</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="progress-shell shell" aria-labelledby="progressTitle">
+      <div>
+        <p class="section-kicker">PROGRESSION LOCALE</p>
+        <h2 id="progressTitle">Déploiement en sept étapes</h2>
+      </div>
+      <div class="progress-summary">
+        <strong id="progressValue">0%</strong>
+        <span id="progressText">0 étape confirmée</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <span id="progressBar"></span>
+      </div>
+      <div class="step-dots" id="stepDots" aria-label="Progression des étapes"></div>
+    </section>
+
+    <section id="deployment" class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">01 · BASE CANONIQUE YOHAN</p>
+          <h2>Installer le profil Full Crypto</h2>
+        </div>
+        <p>
+          Télécharge les quatre fichiers fondamentaux. Les versions sont inscrites dans
+          les en-têtes, jamais dans les noms de fichiers.
+        </p>
+      </header>
+      <div class="card-grid" id="baseCards"></div>
+    </section>
+
+    <section class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">02 · PUISSANCE EXPERTE</p>
+          <h2>Activer les modules spécialisés</h2>
+        </div>
+        <p>
+          Mathématiques, discernement, vérité des données, lecture multi-horizon et
+          formalisation d’idées.
+        </p>
+      </header>
+      <div class="card-grid compact-grid" id="expertCards"></div>
+    </section>
+
+    <section id="sources" class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">03 · MÉMOIRE AGENT-CRYPTO</p>
+          <h2>Relier l’interface et ses modules publics</h2>
+        </div>
+        <p>
+          Accès direct aux documents publics, au cockpit, aux protocoles live, au modèle
+          mathématique, aux commandes et aux tests.
+        </p>
+      </header>
+
+      <div class="source-toolbar">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="sourceSearch" type="search" placeholder="Filtrer les ressources publiques…">
+        </label>
+        <a class="secondary-button" target="_blank" rel="noopener noreferrer"
+           href="https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/web/index.html">
+          Ouvrir Agent-Crypto
+        </a>
+      </div>
+
+      <div class="resource-list" id="publicResources"></div>
+    </section>
+
+    <section class="shell section-block private-section">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">04 · CORES PRIVÉS AUTORISÉS</p>
+          <h2>Étendre la puissance sans modifier les canons</h2>
+        </div>
+        <p>
+          Les liens privés s’ouvrent dans GitHub. L’accès dépend des autorisations du
+          compte connecté. Les Cores protégés restent en lecture et servent de sources.
+        </p>
+      </header>
+      <div class="resource-list private-list" id="privateResources"></div>
+    </section>
+
+    <section id="archives" class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">05 · SEVEN HEAVEN MEMORY CORE</p>
+          <h2>Archives portables optionnelles</h2>
+        </div>
+        <p>
+          Commencer par Core Boot et Discernment. Ajouter ensuite seulement les packs
+          nécessaires à la mission réelle.
+        </p>
+      </header>
+      <div class="archive-grid" id="archiveCards"></div>
+    </section>
+
+    <section id="foundry" class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">06 · FLOWER GIRLS FOUNDRY</p>
+          <h2>Préparer un nouveau profil spécialisé</h2>
+        </div>
+        <p>
+          La Foundry produit un manifeste de conception. Elle ne modifie jamais un Core
+          canonique et ne publie rien automatiquement.
+        </p>
+      </header>
+
+      <div class="workbench">
+        <form id="foundryForm" class="form-panel">
+          <label>
+            Mission du nouveau profil
+            <input name="mission" required placeholder="Ex. analyste on-chain, veille réglementaire…">
+          </label>
+
+          <label>
+            Filiation principale
+            <select name="lineage">
+              <option>Aerith-7 Seven Gate</option>
+              <option>Aerith-10 Multi-Agent</option>
+              <option>Atlas-10 Yohan Full Crypto</option>
+              <option>Aerith-10 Crypto</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Modules à router</legend>
+            <label class="check"><input type="checkbox" name="modules" value="Math Oracle" checked> Math Oracle</label>
+            <label class="check"><input type="checkbox" name="modules" value="Psychologie & Discernement" checked> Psychologie &amp; Discernement</label>
+            <label class="check"><input type="checkbox" name="modules" value="Data Truth"> Data Truth</label>
+            <label class="check"><input type="checkbox" name="modules" value="Multi-Horizon"> Multi-Horizon</label>
+            <label class="check"><input type="checkbox" name="modules" value="Idea Forge"> Idea Forge</label>
+          </fieldset>
+
+          <label>
+            Résultat attendu
+            <textarea name="result" rows="4" required placeholder="Ce que le profil doit produire concrètement…"></textarea>
+          </label>
+
+          <button class="primary-button" type="submit">Générer le manifeste</button>
+        </form>
+
+        <div class="output-panel">
+          <div class="output-head">
+            <span>MANIFESTE FLOWER GIRL</span>
+            <div>
+              <button class="icon-button" id="copyFoundry" type="button" title="Copier">Copier</button>
+              <button class="icon-button" id="downloadFoundry" type="button" title="Télécharger">.md</button>
+            </div>
+          </div>
+          <pre id="foundryOutput">Renseigne la mission, la filiation et le résultat attendu.</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="idea-forge" class="shell section-block">
+      <header class="section-heading">
+        <div>
+          <p class="section-kicker">07 · IDEA FORGE</p>
+          <h2>Transformer une idée crypto en proposition testable</h2>
+        </div>
+        <p>
+          L’outil structure l’hypothèse, les données, le signal, les limites, les tests
+          et l’intégration envisagée.
+        </p>
+      </header>
+
+      <div class="workbench">
+        <form id="ideaForm" class="form-panel">
+          <label>
+            Titre
+            <input name="title" required placeholder="Nom court de la fonction">
+          </label>
+          <label>
+            Hypothèse ou problème
+            <textarea name="hypothesis" rows="3" required placeholder="Ce que la fonction doit vérifier ou résoudre…"></textarea>
+          </label>
+          <label>
+            Données nécessaires
+            <textarea name="data" rows="3" required placeholder="Prix, volume, dominance, on-chain, sentiment…"></textarea>
+          </label>
+          <label>
+            Signal ou résultat attendu
+            <textarea name="signal" rows="3" required placeholder="Ce qui doit apparaître dans l’interface…"></textarea>
+          </label>
+          <label>
+            Risques et faux positifs
+            <textarea name="risks" rows="3" placeholder="Limites, données absentes, biais possibles…"></textarea>
+          </label>
+          <label>
+            Test de validation
+            <textarea name="test" rows="3" required placeholder="Comment prouver que la fonction est correcte…"></textarea>
+          </label>
+
+          <button class="primary-button" type="submit">Construire la proposition</button>
+        </form>
+
+        <div class="output-panel">
+          <div class="output-head">
+            <span>PROPOSITION YOHAN</span>
+            <div>
+              <button class="icon-button" id="copyIdea" type="button">Copier</button>
+              <button class="icon-button" id="downloadIdea" type="button">.md</button>
+              <a class="icon-button as-link" id="openIssue" href="#" target="_blank" rel="noopener noreferrer">Issue</a>
+            </div>
+          </div>
+          <pre id="ideaOutput">Décris une idée pour générer une fiche de proposition complète.</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">
+    <div>
+      <strong>ATLAS-10 YOHAN · FULL CRYPTO</strong>
+      <span>Core V1.0 · Persona V3.0 · Hub V0.1</span>
+    </div>
+    <p>
+      Outil d’analyse, de conception et de développement assisté. Aucun conseil financier,
+      aucune publication automatique, aucune clé API exposée.
+    </p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
