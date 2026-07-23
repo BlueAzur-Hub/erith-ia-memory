@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — Atlas compact diagnostics
+   V1.1-alpha.26.47 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — Missions de Vie
+   V1.1-alpha.26.47 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — Analyst Stable Dimensions
+   V1.1-alpha.26.47 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.46.6 — Audience V2 */
+/* V1.1-alpha.26.47 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.47 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — MULTI HORIZON
+   V1.1-alpha.26.47 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5224,7 +5224,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.46.6 */
+/* Navigation active — V1.1-alpha.26.47 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5235,7 +5235,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.47 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5498,13 +5498,13 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK */
+/* V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE */
 .decision-card span{line-height:1.42;}
 .decision-verdict-body span{line-height:1.42;}
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK
+   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
    Sélection/désélection libre + presets + micro-polissage visuel.
    ========================================================= */
 .compare-actions {
@@ -5577,7 +5577,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK
+   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
    Micro-polissage uniquement : groupes de commandes, états de séries,
    contraste local, hiérarchie des preuves et respiration de la légende.
    Moteur, sources, calculs et palette des courbes inchangés.
@@ -5686,4 +5686,222 @@ main .decision-board{
     width: 100%;
     justify-content: flex-end;
   }
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
+   ========================================================= */
+.news-sentinel{
+  position:relative;
+  overflow:hidden;
+  margin:18px 0;
+  padding:20px;
+  border:1px solid rgba(111,224,239,.27);
+  background:
+    linear-gradient(135deg,rgba(6,18,38,.96),rgba(10,20,38,.88) 52%,rgba(35,20,55,.75)),
+    radial-gradient(circle at 86% 15%,rgba(190,116,255,.15),transparent 34%);
+  box-shadow:0 18px 48px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.04);
+}
+.news-sentinel::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:linear-gradient(180deg,#64e8ff,#d7ad5c,#ad74ff);
+  box-shadow:0 0 18px rgba(100,232,255,.5);
+}
+.news-sentinel > *{position:relative;z-index:1;}
+.news-sentinel-head{align-items:flex-start;gap:18px;}
+.news-sentinel-status-stack{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+.news-sentinel-intro{margin:4px 0 16px;color:var(--muted);font-size:.92rem;max-width:1100px;}
+.news-sentinel-summary{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:14px;
+}
+.news-sentinel-summary article{
+  min-height:92px;
+  padding:12px 13px;
+  border:1px solid rgba(111,224,239,.17);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(12,28,49,.88),rgba(7,15,29,.76));
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+}
+.news-sentinel-summary article span{display:block;color:#8ca2b9;font-size:.69rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px;}
+.news-sentinel-summary article b{display:block;color:#fff1c9;font-size:.96rem;line-height:1.25;}
+.news-sentinel-summary article small{display:block;color:#a7bad0;font-size:.72rem;line-height:1.35;margin-top:5px;}
+.news-sentinel-summary .news-summary-decision{border-color:rgba(217,177,93,.38);background:linear-gradient(145deg,rgba(52,39,22,.68),rgba(15,22,35,.84));}
+.news-sentinel-workbench{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(310px,.75fr);gap:14px;align-items:start;}
+.news-entry-panel,.news-history-panel{border:1px solid rgba(111,224,239,.16);border-radius:18px;background:rgba(3,12,25,.72);padding:15px;}
+.news-form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.news-field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.news-field-wide{grid-column:span 2;}
+.news-field span{color:#d9e6f3;font-size:.72rem;font-weight:800;letter-spacing:.03em;}
+.news-field input,.news-field select,.news-field textarea{
+  width:100%;
+  border:1px solid rgba(111,224,239,.2);
+  border-radius:11px;
+  background:rgba(4,14,28,.9);
+  color:#f7fbff;
+  padding:10px 11px;
+  font:inherit;
+  outline:none;
+}
+.news-field input:focus,.news-field select:focus,.news-field textarea:focus{border-color:rgba(100,232,255,.72);box-shadow:0 0 0 3px rgba(100,232,255,.08);}
+.news-text-field{margin-top:10px;}
+.news-text-field textarea{min-height:145px;resize:vertical;line-height:1.5;}
+.news-actions{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0;}
+.news-analysis-output{min-height:220px;white-space:pre-wrap;line-height:1.5;background:rgba(2,10,21,.86);border-color:rgba(217,177,93,.25);font-size:.82rem;}
+.news-history-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.news-history-head h3{margin:2px 0 0;font-size:1.08rem;}
+.news-history-list{display:flex;flex-direction:column;gap:8px;max-height:555px;overflow:auto;padding-right:3px;}
+.news-history-item{
+  width:100%;
+  text-align:left;
+  border:1px solid rgba(111,224,239,.14);
+  border-radius:13px;
+  background:rgba(10,25,43,.78);
+  color:#eaf4ff;
+  padding:10px 11px;
+  cursor:pointer;
+  transition:border-color .16s ease,transform .16s ease,background .16s ease;
+}
+.news-history-item:hover,.news-history-item.active{border-color:rgba(100,232,255,.55);background:rgba(16,39,62,.9);transform:translateY(-1px);}
+.news-history-item .news-history-type{display:block;color:#d9b96e;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
+.news-history-item b{display:block;font-size:.83rem;line-height:1.3;margin:4px 0;color:#f6fbff;}
+.news-history-item small,.news-history-item em{display:block;color:#9fb3c7;font-size:.69rem;line-height:1.35;font-style:normal;}
+.news-history-item em{margin-top:4px;color:#72879c;}
+.news-history-empty{color:#8fa4b8;font-size:.82rem;padding:12px;border:1px dashed rgba(111,224,239,.18);border-radius:12px;}
+.news-source-registry{margin-top:13px;border:1px solid rgba(111,224,239,.15);border-radius:15px;background:rgba(4,13,26,.7);}
+.news-source-registry summary{cursor:pointer;padding:13px 15px;color:#fff0c8;font-weight:900;}
+.news-source-registry-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:0 13px 12px;}
+.news-source-registry-grid article{padding:11px;border:1px solid rgba(111,224,239,.13);border-radius:12px;background:rgba(10,24,41,.74);}
+.news-source-registry-grid b,.news-source-registry-grid span,.news-source-registry-grid em{display:block;}
+.news-source-registry-grid b{color:#f6e6b9;font-size:.78rem;}
+.news-source-registry-grid span{color:#b7c8d9;font-size:.72rem;line-height:1.4;margin-top:4px;}
+.news-source-registry-grid em{color:#7f96ac;font-size:.68rem;line-height:1.4;margin-top:6px;font-style:normal;}
+.news-source-note{margin:0 13px 13px;color:#90a4b9;font-size:.72rem;}
+.decision-news-bridge{display:grid;grid-template-columns:1.4fr .8fr 1fr;gap:9px;margin:12px 0;}
+.decision-news-bridge > div{padding:10px 12px;border:1px solid rgba(111,224,239,.16);border-radius:12px;background:rgba(7,19,34,.76);}
+.decision-news-bridge span,.decision-news-bridge b{display:block;}
+.decision-news-bridge span{font-size:.67rem;color:#8fa5bb;text-transform:uppercase;letter-spacing:.08em;}
+.decision-news-bridge b{font-size:.8rem;color:#f5e5ba;margin-top:4px;}
+.decision-news-bridge[data-tone="danger"] > div{border-color:rgba(255,109,134,.32);}
+.layout-one.nofomo-only{display:block;}
+.layout-one.nofomo-only > .panel{max-width:none;}
+@media (max-width:1250px){
+  .news-sentinel-summary{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .news-sentinel-workbench{grid-template-columns:1fr;}
+  .news-history-list{max-height:350px;}
+  .news-source-registry-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:760px){
+  .news-sentinel{padding:15px;}
+  .news-sentinel-summary{grid-template-columns:1fr 1fr;}
+  .news-form-grid{grid-template-columns:1fr;}
+  .news-field-wide{grid-column:auto;}
+  .news-source-registry-grid{grid-template-columns:1fr;}
+  .decision-news-bridge{grid-template-columns:1fr;}
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47 — CHAMPAGNE HEADER FIT
+   Titre stable, commandes ordonnées, libellés techniques courts.
+   ========================================================= */
+#analyste.champagne-clean-lens > .chart-panel > .section-head.compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+}
+
+#analyste.champagne-clean-lens > .chart-panel > .section-head.compact > div:first-child {
+  min-width: 0;
+  width: 100%;
+}
+
+#analyste.champagne-clean-lens #selectedAssetTitle {
+  display: block;
+  max-width: 100%;
+  margin-right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#analyste.champagne-clean-lens .chart-head-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+}
+
+#analyste.champagne-clean-lens .period-tabs {
+  flex: 0 0 auto;
+}
+
+#analyste.champagne-clean-lens .compare-actions {
+  width: auto;
+  max-width: none;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  row-gap: 6px;
+}
+
+#analyste.champagne-clean-lens .broker-strip > div b,
+#analyste.champagne-clean-lens .diagnostic-strip > div b {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  line-height: 1.16;
+}
+
+#analyste.champagne-clean-lens .broker-strip > div small,
+#analyste.champagne-clean-lens .diagnostic-strip > div small {
+  white-space: normal;
+  line-height: 1.2;
+}
+
+@media (min-width: 1380px) {
+  #analyste.champagne-clean-lens .chart-head-actions,
+  #analyste.champagne-clean-lens .compare-actions {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 980px) {
+  #analyste.champagne-clean-lens #selectedAssetTitle {
+    white-space: normal;
+  }
+  #analyste.champagne-clean-lens .chart-head-actions {
+    justify-content: flex-start;
+  }
+  #analyste.champagne-clean-lens .compare-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* News Sentinel : synthèse permanente dans le Decision Board, atelier replié par défaut. */
+.news-sentinel-collapse > .atlas-collapse-body {
+  padding: 0;
+}
+.news-sentinel-collapse .news-sentinel {
+  margin: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: 0 0 18px 18px;
+}
+.news-sentinel-collapse > .atlas-collapse-summary {
+  border-color: rgba(111,224,239,.24);
+}
+.news-sentinel-collapse > .atlas-collapse-summary .atlas-collapse-title {
+  color: #fff0c8;
 }
