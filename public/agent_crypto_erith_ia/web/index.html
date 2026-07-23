@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.44.1</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.46</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.44" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.46" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -17,38 +17,43 @@
         <div class="title-block">
           <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
           <h1 class="brandline">Agent-Crypto @erith.IA</h1>
-          <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · graphiques auto-récupérés · Missions de Vie</p>
+          <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · Multi-Horizon · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.44.1</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.46</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Navigation principale">
+      <nav class="nav" aria-label="Navigation principale ordonnée selon les sections">
         <a href="#livecheck">Livecheck</a>
-        <a href="#debutant">Débutant</a>
         <a href="#marche">Marché</a>
+        <a href="#analyste">Analyste</a>
+        <a href="#math">Math Model</a>
+        <a href="#multi-horizon">Multi-Horizon</a>
+        <a href="#decision-board">Décision</a>
+        <a href="#lecture-froide">Lecture froide</a>
+        <a href="#debutant">Débutant</a>
+        <a href="#watchlist">Watchlist</a>
+        <a href="#risques">Risques</a>
         <a href="#auto-reader">Auto Reader</a>
         <a href="#shared-memory">Shared Memory</a>
         <a href="#github-memory">GitHub Memory</a>
-        <a href="#watchlist">Watchlist</a>
-        <a href="#analyste">Analyste</a>
-        <a href="#decision-board">Décision</a>
+        <a href="#nofomo">No-FOMO</a>
+        <a href="#planning">Plan</a>
+        <a href="#news-plan">News Sentinel</a>
         <a href="#situation">Situation</a>
         <a href="#questionnaire">Questionnaire</a>
         <a href="#briefing">Briefing</a>
         <a href="#impact">Impact</a>
+        <a href="#physical-security">Protection physique</a>
         <a href="#backend">Backend</a>
         <a href="#safety">Sécurité</a>
         <a href="#simulation">Simulation</a>
         <a href="#commandes">Tests</a>
-        <a href="#planning">Plan</a>
-        <a href="#math">Math Model</a>
-        <a href="#risques">Risques</a>
-        <a href="#nofomo">No-FOMO</a>
         <a href="#missions-vie">Missions Vie</a>
+        <a href="#mesure-audience">Audience</a>
         <a href="#sources">Sources</a>
       </nav>
 
@@ -109,14 +114,24 @@
             <p class="eyebrow">GRAPHIQUE ANALYSTE</p>
             <h2 id="selectedAssetTitle">Bitcoin — BTC</h2>
           </div>
-          <div class="period-tabs" aria-label="Période graphique">
-            <button class="period-btn active" data-period="1">24h</button>
-            <button class="period-btn" data-period="7">7j</button>
-            <button class="period-btn" data-period="30">30j</button>
+          <div class="chart-head-actions">
+            <div class="period-tabs" aria-label="Période graphique">
+              <button class="period-btn active" data-period="1">24h</button>
+              <button class="period-btn" data-period="7">7j</button>
+              <button class="period-btn" data-period="30">30j</button>
+            </div>
+            <div class="compare-actions" aria-label="Actions de comparaison">
+              <button class="compare-btn active" id="btnChartSolo" type="button" title="Revenir à l’actif principal seul">Solo</button>
+              <button class="compare-btn" id="btnChartTop3" type="button" title="Comparer les trois premiers actifs hors stablecoins">Top 3</button>
+              <button class="compare-btn" id="btnChartTop5" type="button" title="Comparer les cinq premiers actifs hors stablecoins">Top 5</button>
+            </div>
           </div>
         </div>
         <div class="chart-shell">
-          <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix"></canvas>
+          <div class="comparison-selection" id="comparisonSelection" aria-live="polite">
+            <span class="compare-hint">BTC seul · clique une autre ligne du MARKET SNAPSHOT pour comparer</span>
+          </div>
+          <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix ou comparaison normalisée"></canvas>
         </div>
         <div class="chart-caption" id="chartCaption">
           Les 50 premières cryptomonnaies sont chargées en EUR. Les prix USD enrichissent ensuite le tableau sans bloquer le marché. Sélectionne un actif pour charger son historique CoinGecko à la demande.
@@ -271,7 +286,48 @@
 
     </section>
 
-    
+    <section class="multi-horizon glass" id="multi-horizon" aria-labelledby="multiHorizonTitle">
+      <div class="section-head compact multi-horizon-head">
+        <div>
+          <p class="eyebrow">RÉSUMÉ DYNAMIQUE MULTI-HORIZON</p>
+          <h2 id="multiHorizonTitle">Lecture temporelle du mouvement</h2>
+        </div>
+        <span class="pill warn" id="multiHorizonStatus">Livecheck requis</span>
+      </div>
+
+      <p class="multi-horizon-summary" id="multiHorizonSummary">
+        Atlas expliquera ensemble les mouvements 24 h, 7 jours et 30 jours sans produire de conseil financier.
+      </p>
+
+      <div class="multi-horizon-grid" id="multiHorizonGrid">
+        <article class="horizon-card" data-horizon="24h">
+          <span>24 HEURES</span>
+          <b id="multiHorizon24Value">—</b>
+          <small id="multiHorizon24Label">En attente</small>
+        </article>
+        <article class="horizon-card" data-horizon="7d">
+          <span>7 JOURS</span>
+          <b id="multiHorizon7Value">—</b>
+          <small id="multiHorizon7Label">En attente</small>
+        </article>
+        <article class="horizon-card" data-horizon="30d">
+          <span>30 JOURS</span>
+          <b id="multiHorizon30Value">—</b>
+          <small id="multiHorizon30Label">En attente</small>
+        </article>
+      </div>
+
+      <div class="multi-horizon-meta" id="multiHorizonMeta">
+        <span>Spot : —</span>
+        <span>Écart courbe : —</span>
+        <span>Source : —</span>
+      </div>
+
+      <details class="multi-horizon-details" id="multiHorizonDetails">
+        <summary>Pourquoi cette lecture ?</summary>
+        <div id="multiHorizonTechnical">Les détails apparaîtront après le Livecheck.</div>
+      </details>
+    </section>
 
     <section class="decision-board glass" id="decision-board" aria-label="Atlas Decision Board">
       <div class="section-head compact">
@@ -318,7 +374,7 @@
       </div>
     </section>
 
-<details class="atlas-collapse glass" data-collapse-key="lecture-verrou">
+<details class="atlas-collapse glass" data-collapse-key="lecture-verrou" id="lecture-froide">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Lecture froide + verrou</span>
@@ -332,7 +388,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.44.1</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.46</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -729,7 +785,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.44.1 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.46 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1840,7 +1896,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.44.1 — CHAMPAGNE FULLSCREEN FIT</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.46 — MULTI HORIZON</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -1849,6 +1905,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.44"></script>
+  <script src="./app.js?v=1.1-alpha.26.46"></script>
 </body>
 </html>
