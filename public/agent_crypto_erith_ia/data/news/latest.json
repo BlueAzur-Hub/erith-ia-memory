@@ -1,19 +1,19 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
-  "version": "V1.1-alpha.26.47.1",
-  "generated_at": "2026-07-23T06:27:29.980135+00:00",
+  "version": "V1.1-alpha.26.47.2",
+  "generated_at": "2026-07-23T07:32:34.335740+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 54,
+    "events_24h": 55,
     "critical_24h": 17,
     "strong_24h": 10,
-    "sources_ok": 10,
+    "sources_ok": 11,
     "sources_total": 11,
-    "sources_failed": 1,
+    "sources_failed": 0,
     "lead_event_id": "feed_5d18dd9a7fb22b97",
     "decision": "Surveillance renforcée"
   },
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 576,
+      "latency_ms": 205,
       "error": null
     },
     {
@@ -37,19 +37,19 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 2,
-      "latency_ms": 490,
+      "latency_ms": 300,
       "error": null
     },
     {
       "id": "cftc",
       "name": "U.S. CFTC",
       "group": "primary",
-      "url": "https://www.cftc.gov/PressRoom/PressReleases/rss",
-      "status": "error",
-      "fetched_count": 0,
-      "qualified_count": 0,
-      "latency_ms": 1440,
-      "error": "ParseError: mismatched tag: line 26, column 4"
+      "url": "https://www.cftc.gov/RSS/RSSGP/rssgp.xml",
+      "status": "ok",
+      "fetched_count": 10,
+      "qualified_count": 10,
+      "latency_ms": 117,
+      "error": null
     },
     {
       "id": "cisa",
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 118,
+      "latency_ms": 142,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 374,
+      "latency_ms": 398,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 29,
-      "latency_ms": 240,
+      "latency_ms": 170,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 22,
-      "latency_ms": 162,
+      "latency_ms": 226,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 6,
-      "latency_ms": 4888,
+      "latency_ms": 1504,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 106,
+      "latency_ms": 121,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 0,
-      "latency_ms": 310,
+      "latency_ms": 253,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 123,
+      "latency_ms": 178,
       "error": null
     }
   ],
@@ -211,7 +211,7 @@
       "id": "feed_5d18dd9a7fb22b97",
       "event_id": "feed_5d18dd9a7fb22b97",
       "fingerprint": "5d18dd9a7fb22b97",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "SecondFi to shut down after $2.4 million ADA wallet theft",
       "body": "The breach stemmed from a vulnerability in transaction signing software that enabled the derivation of private keys from blockchain transaction data.",
@@ -233,16 +233,16 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T11:10:27+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.123273+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.123273+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.893024+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.893024+00:00",
       "freshness": {
         "iso": "2026-07-22T11:10:27+00:00",
-        "hours": 19.28,
+        "hours": 20.37,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
-        "score": 71,
+        "score": 81,
         "level": "Assez élevé"
       },
       "impact": {
@@ -281,7 +281,7 @@
       "id": "feed_2ba5af9e28d93441",
       "event_id": "feed_2ba5af9e28d93441",
       "fingerprint": "2ba5af9e28d93441",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Arbitrum-based AFX Trade drained of $24 million after bridge keys compromised",
       "body": "Security firms said the attacker used enough hot-validator signatures to approve a 24.15 million USDC withdrawal, while Arbitrum said its native bridge was not affected.",
@@ -301,12 +301,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-23T05:01:06+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.105803+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.105803+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.876392+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.876392+00:00",
       "freshness": {
         "iso": "2026-07-23T05:01:06+00:00",
-        "hours": 1.44,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.52,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -350,7 +350,7 @@
       "id": "feed_a344be9780e8a740",
       "event_id": "feed_a344be9780e8a740",
       "fingerprint": "a344be9780e8a740",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Balance stablecoin collapses 99% after $1 million exploit drains its bitcoin vaults",
       "body": "An attacker fed the lending system a fake, abnormally low bitcoin price, liquidated vaults that should have been safe, and pocketed the difference in a single transaction.",
@@ -370,11 +370,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T09:01:54+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.126237+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.126237+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.895797+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.895797+00:00",
       "freshness": {
         "iso": "2026-07-22T09:01:54+00:00",
-        "hours": 21.43,
+        "hours": 22.51,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -423,7 +423,7 @@
       "id": "feed_47a531dea73c41d7",
       "event_id": "feed_47a531dea73c41d7",
       "fingerprint": "47a531dea73c41d7",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Balance Coin crashes 99% after reported $915K exploit",
       "body": "The attack allowed the exploiter to liquidate multiple Bitcoin-backed vaults before swapping the assets for profit.",
@@ -443,11 +443,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T03:12:48+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.001580+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.001580+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.678974+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.678974+00:00",
       "freshness": {
         "iso": "2026-07-22T03:12:48+00:00",
-        "hours": 27.24,
+        "hours": 28.33,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -494,7 +494,7 @@
       "id": "feed_168a973ebd3a67dd",
       "event_id": "feed_168a973ebd3a67dd",
       "fingerprint": "168a973ebd3a67dd",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Midnight token rebounds 19% after Wanchain bridge hack, Hoskinson calls for ZK revamp",
       "body": "Charles Hoskinson says the exploit, which briefly sent NIGHT to an all-time low, underscores why the industry needs to move beyond legacy bridge infrastructure.",
@@ -514,11 +514,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T11:45:42+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.121294+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.121294+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.891127+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.891127+00:00",
       "freshness": {
         "iso": "2026-07-22T11:45:42+00:00",
-        "hours": 18.7,
+        "hours": 19.78,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -561,7 +561,7 @@
       "id": "feed_a7459a5751b090c0",
       "event_id": "feed_a7459a5751b090c0",
       "fingerprint": "a7459a5751b090c0",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "AI models escaped OpenAI’s sandbox and hit Hugging Face. Crypto is where that gets dangerous",
       "body": "OpenAI said the systems had their cyber guardrails lowered for an internal benchmark, but the incident shows how autonomous exploit chains could pose a deeper threat to smart contracts.",
@@ -581,11 +581,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T06:01:56+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.128332+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.128332+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.897780+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.897780+00:00",
       "freshness": {
         "iso": "2026-07-22T06:01:56+00:00",
-        "hours": 24.42,
+        "hours": 25.51,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -628,7 +628,7 @@
       "id": "feed_b1c5ce390cf74831",
       "event_id": "feed_b1c5ce390cf74831",
       "fingerprint": "b1c5ce390cf74831",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Hugging Face CEO Thanks Chinese AI for Saving the Day After OpenAI Hack",
       "body": "When American commercial AI refused to help investigate the breach, Hugging Face ran Chinese model GLM 5.2 locally. Its CEO now says there's an important lesson in this.",
@@ -648,11 +648,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T16:23:16+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.902329+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.902329+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.710457+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.710457+00:00",
       "freshness": {
         "iso": "2026-07-22T16:23:16+00:00",
-        "hours": 14.07,
+        "hours": 15.15,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -694,7 +694,7 @@
       "id": "feed_59335d2b67266922",
       "event_id": "feed_59335d2b67266922",
       "fingerprint": "59335d2b67266922",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "OpenAI says AI models escaped containment to hack Hugging Face",
       "body": "OpenAI called it an “unprecedented cyber incident” after its AI models broke out of their sandbox to hack an AI startup during a security evaluation.",
@@ -714,11 +714,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-22T02:45:55+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.002480+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.002480+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.679873+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.679873+00:00",
       "freshness": {
         "iso": "2026-07-22T02:45:55+00:00",
-        "hours": 27.69,
+        "hours": 28.78,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -760,7 +760,7 @@
       "id": "feed_2b5ad15c9ae344d2",
       "event_id": "feed_2b5ad15c9ae344d2",
       "fingerprint": "2b5ad15c9ae344d2",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin wilts as oil and rates rise. Clarity Act odds tumble to 38%",
       "body": "Geopolitical risks, rising rates, and fresh regulatory setbacks send crypto lower as key Democrats demand stronger safeguards in the market structure bill.",
@@ -780,11 +780,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T03:50:20+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.108169+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.108169+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.878582+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.878582+00:00",
       "freshness": {
         "iso": "2026-07-23T03:50:20+00:00",
-        "hours": 2.62,
+        "hours": 3.7,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -830,7 +830,7 @@
       "id": "feed_77b5f27098698dd2",
       "event_id": "feed_77b5f27098698dd2",
       "fingerprint": "77b5f27098698dd2",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Here’s what happened in crypto today",
       "body": "Need to know what happened in crypto today? Here is the latest news on daily trends and events impacting Bitcoin price, blockchain, DeFi, Web3 and crypto regulation.",
@@ -850,11 +850,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T06:12:09+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.973545+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.973545+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.650856+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.650856+00:00",
       "freshness": {
         "iso": "2026-07-23T06:12:09+00:00",
-        "hours": 0.25,
+        "hours": 1.34,
         "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
@@ -899,7 +899,7 @@
       "id": "feed_9fe08223ac83fce8",
       "event_id": "feed_9fe08223ac83fce8",
       "fingerprint": "9fe08223ac83fce8",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "SEC Announces Departure of Principal Deputy Director of Enforcement Sam Waldon",
       "body": "The Securities and Exchange Commission today announced that Sam Waldon, Principal Deputy Director of the Division of Enforcement, will depart the agency on July 31, 2026, after more than 14 years at the SEC. He will be succeeded as Principal Deputy…",
@@ -919,11 +919,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T13:45:25+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.018908+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.018908+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.825610+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.825610+00:00",
       "freshness": {
         "iso": "2026-07-22T13:45:25+00:00",
-        "hours": 16.7,
+        "hours": 17.79,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -965,7 +965,7 @@
       "id": "feed_5d4aa694b14e4827",
       "event_id": "feed_5d4aa694b14e4827",
       "fingerprint": "5d4aa694b14e4827",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Federal Reserve Board issues enforcement action with former chief lending officer of Heritage State Bank",
       "body": "Federal Reserve Board issues enforcement action with former chief lending officer of Heritage State Bank",
@@ -985,11 +985,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-16T15:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.080778+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.080778+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.805280+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.805280+00:00",
       "freshness": {
         "iso": "2026-07-16T15:00:00+00:00",
-        "hours": 159.46,
+        "hours": 160.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1031,7 +1031,7 @@
       "id": "feed_e8f96e7bd483aeb4",
       "event_id": "feed_e8f96e7bd483aeb4",
       "fingerprint": "e8f96e7bd483aeb4",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "SEC Proposes New E-Delivery Approach to Make Information More Readily Accessible and Useful for Investors",
       "body": "The Securities and Exchange Commission today proposed Regulation E-Delivery, a new rule that would expand the ability of issuers, broker-dealers, investment advisers, and others to use electronic delivery to satisfy information delivery requirements…",
@@ -1051,11 +1051,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-16T12:57:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.019965+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.019965+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.826653+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.826653+00:00",
       "freshness": {
         "iso": "2026-07-16T12:57:00+00:00",
-        "hours": 161.51,
+        "hours": 162.59,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1097,7 +1097,7 @@
       "id": "feed_59a23148f42ed066",
       "event_id": "feed_59a23148f42ed066",
       "fingerprint": "59a23148f42ed066",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "SEC’s Peirce says crypto vaults and onchain lending may fall under securities laws",
       "body": "The SEC commissioner said crypto vaults, onchain lending products and other asset management tools may trigger US securities laws, depending on how they are structured and operated.",
@@ -1119,16 +1119,16 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T17:39:57+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.983246+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.114709+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.660651+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.884758+00:00",
       "freshness": {
         "iso": "2026-07-22T17:39:57+00:00",
-        "hours": 12.79,
+        "hours": 13.88,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
-        "score": 71,
+        "score": 81,
         "level": "Assez élevé"
       },
       "impact": {
@@ -1165,7 +1165,7 @@
       "id": "feed_835389cf4d14431c",
       "event_id": "feed_835389cf4d14431c",
       "fingerprint": "835389cf4d14431c",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Clarity Act Latest Draft Bars Trump From Crypto Ventures—But Only Until 2029",
       "body": "The long-awaited market-structure bill would block officials and their spouses from issuing digital assets and shield non-custodial developers, but the ethics ban expires in 2029 and enforcement rests solely with the DOJ.",
@@ -1185,11 +1185,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T17:51:54+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.901389+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.901389+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.709579+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.709579+00:00",
       "freshness": {
         "iso": "2026-07-22T17:51:54+00:00",
-        "hours": 12.59,
+        "hours": 13.68,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1232,7 +1232,7 @@
       "id": "feed_2dfb60ef988dc207",
       "event_id": "feed_2dfb60ef988dc207",
       "fingerprint": "2dfb60ef988dc207",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Pakistan Launches Crypto Investigation Unit to Fight Money Laundering",
       "body": "Islamabad is building the enforcement side of its crypto push, standing up a unit to police money laundering even as it licenses exchanges.",
@@ -1252,11 +1252,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-21T11:40:48+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.918793+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.918793+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.725046+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.725046+00:00",
       "freshness": {
         "iso": "2026-07-21T11:40:48+00:00",
-        "hours": 42.78,
+        "hours": 43.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1296,7 +1296,7 @@
       "id": "feed_daff2aca13801f55",
       "event_id": "feed_daff2aca13801f55",
       "fingerprint": "daff2aca13801f55",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "SEC settles Coinbase suit over ‘text messages that disappeared’",
       "body": "The settlement follows a watchdog report last year that blamed “avoidable errors” for the loss of nearly a year’s worth of Gary Gensler’s text messages.",
@@ -1316,11 +1316,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T02:57:10+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.976748+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.976748+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.654342+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.654342+00:00",
       "freshness": {
         "iso": "2026-07-23T02:57:10+00:00",
-        "hours": 3.5,
+        "hours": 4.59,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1362,7 +1362,7 @@
       "id": "feed_4041e7a767fe3b3e",
       "event_id": "feed_4041e7a767fe3b3e",
       "fingerprint": "4041e7a767fe3b3e",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Digital Chamber sues Illinois officials over new state 0.2% crypto tax",
       "body": "The group alleged that the tax signed into law in June “discriminates against people who transact in digital assets“ and should be blocked from implementation and enforcement.",
@@ -1382,11 +1382,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T16:28:10+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.984270+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.984270+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.661614+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.661614+00:00",
       "freshness": {
         "iso": "2026-07-22T16:28:10+00:00",
-        "hours": 13.99,
+        "hours": 15.07,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1426,7 +1426,7 @@
       "id": "feed_e6b3b61c9b1ff34c",
       "event_id": "feed_e6b3b61c9b1ff34c",
       "fingerprint": "e6b3b61c9b1ff34c",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin ETFs Are Green Again—Here’s Why Investors Should Zoom Out",
       "body": "Two consecutive weeks of inflows ended the worst sustained outflow streak in Bitcoin ETF history. Here's why patience may be required from investors.",
@@ -1446,11 +1446,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-20T17:59:51+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.930047+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.930047+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.730618+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.730618+00:00",
       "freshness": {
         "iso": "2026-07-20T17:59:51+00:00",
-        "hours": 60.46,
+        "hours": 61.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1494,7 +1494,7 @@
       "id": "feed_98264222bf4fbc1a",
       "event_id": "feed_98264222bf4fbc1a",
       "fingerprint": "98264222bf4fbc1a",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Franklin Templeton Says Agentic AI Is Crypto's 'Killer Use Case'",
       "body": "The asset manager argues that AI software capable of paying for things autonomously will need blockchain rails to work—and that most investors aren't positioned for it.",
@@ -1514,12 +1514,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-22T19:04:05+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.899106+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.899106+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.707485+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.707485+00:00",
       "freshness": {
         "iso": "2026-07-22T19:04:05+00:00",
-        "hours": 11.39,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.47,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1560,7 +1560,7 @@
       "id": "feed_c5ea046bfc172740",
       "event_id": "feed_c5ea046bfc172740",
       "fingerprint": "c5ea046bfc172740",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Worldcoin’s WLD Jumps 8% on Grayscale ETF Filing",
       "body": "The asset manager's S-1 for a spot WLD fund would be the first U.S. ETF tied to Sam Altman's biometric crypto project.",
@@ -1580,11 +1580,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-21T10:16:58+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.920589+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.920589+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.725885+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.725885+00:00",
       "freshness": {
         "iso": "2026-07-21T10:16:58+00:00",
-        "hours": 44.17,
+        "hours": 45.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1624,7 +1624,7 @@
       "id": "feed_6b0234cae1845c08",
       "event_id": "feed_6b0234cae1845c08",
       "fingerprint": "6b0234cae1845c08",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Talos brings institutional trading tools to Kalshi prediction markets",
       "body": "The integration provides institutional clients with access to Kalshi’s event contracts and crypto perpetuals via Talos’ existing trading infrastructure.",
@@ -1644,11 +1644,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-22T11:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.994127+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.994127+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.671209+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.671209+00:00",
       "freshness": {
         "iso": "2026-07-22T11:00:00+00:00",
-        "hours": 19.46,
+        "hours": 20.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1688,7 +1688,7 @@
       "id": "feed_b16e406fe5589280",
       "event_id": "feed_b16e406fe5589280",
       "fingerprint": "b16e406fe5589280",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Crypto institutions look beyond audits as trust signals falter: Hacken",
       "body": "Institutional due diligence is shifting toward continuous monitoring, signer controls and incident readiness after operational failures accounted for most crypto losses.",
@@ -1708,11 +1708,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-22T11:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.995140+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.995140+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.672235+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.672235+00:00",
       "freshness": {
         "iso": "2026-07-22T11:00:00+00:00",
-        "hours": 19.46,
+        "hours": 20.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1752,7 +1752,7 @@
       "id": "feed_80981e641c5745a9",
       "event_id": "feed_80981e641c5745a9",
       "fingerprint": "80981e641c5745a9",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin retreats from one-month high as oil tops $85, inflation concerns resurface",
       "body": "BTC retreated from a one-month high as WTI crude topped $85 for the first time since June, reigniting inflation concerns and pushing investors toward gold, silver and the safety of bitcoin over altcoins.",
@@ -1772,11 +1772,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-22T10:33:33+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.124252+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.124252+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.893955+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.893955+00:00",
       "freshness": {
         "iso": "2026-07-22T10:33:33+00:00",
-        "hours": 19.9,
+        "hours": 20.98,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1822,7 +1822,7 @@
       "id": "feed_4463656755961c34",
       "event_id": "feed_4463656755961c34",
       "fingerprint": "4463656755961c34",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin price avoids major Iran jitters as S&P 500 ‘short squeeze’ on horizon",
       "body": "Bitcoin and US stocks stayed strong in the face of US-Iran escalation as analysis predicted BTC price action outperforming equities later.",
@@ -1842,11 +1842,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-22T15:55:20+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.986545+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.986545+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.663825+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.663825+00:00",
       "freshness": {
         "iso": "2026-07-22T15:55:20+00:00",
-        "hours": 14.53,
+        "hours": 15.62,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1888,10 +1888,73 @@
       "observation_only": true
     },
     {
+      "id": "feed_8fc53ab541f711d9",
+      "event_id": "feed_8fc53ab541f711d9",
+      "fingerprint": "8fc53ab541f711d9",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "CFTC Sunsets Routine Large Trader Reporting Requirements for Physical Commodity Swaps",
+      "body": "",
+      "source_name": "U.S. CFTC",
+      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9269-26",
+      "source_host": "cftc.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. CFTC"
+      ],
+      "source_urls": [
+        "https://www.cftc.gov/PressRoom/PressReleases/9269-26"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-07-17T14:38:56+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.851923+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.851923+00:00",
+      "freshness": {
+        "iso": "2026-07-17T14:38:56+00:00",
+        "hours": 136.89,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 94,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_078a0095f964c63e",
       "event_id": "feed_078a0095f964c63e",
       "fingerprint": "078a0095f964c63e",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "New draft of Clarity Act is out, and it would impose limits on Trump's crypto empire",
       "body": "Lawmakers have circulated text of the latest draft that will be pushed toward a Senate finish line, but they're still debating a core government-ethics piece.",
@@ -1911,11 +1974,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-22T16:15:55+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.113194+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.113194+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.883279+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.883279+00:00",
       "freshness": {
         "iso": "2026-07-22T16:15:55+00:00",
-        "hours": 14.19,
+        "hours": 15.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2023,7 +2086,7 @@
       "id": "feed_0f31fb1245e9465b",
       "event_id": "feed_0f31fb1245e9465b",
       "fingerprint": "0f31fb1245e9465b",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Justin Sun's HTX 'Rotating' On-Chain Wallets Amid UK Sanctions: TRM Labs",
       "body": "TRM Labs says the UK-sanctioned exchange has rotated hot wallets across blockchains, leaving address-list screening struggling to keep pace.",
@@ -2043,11 +2106,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-22T12:44:48+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.905806+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.905806+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.713621+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.713621+00:00",
       "freshness": {
         "iso": "2026-07-22T12:44:48+00:00",
-        "hours": 17.71,
+        "hours": 18.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2090,7 +2153,7 @@
       "id": "feed_b33c4533b1f8124a",
       "event_id": "feed_b33c4533b1f8124a",
       "fingerprint": "b33c4533b1f8124a",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Russia's First Comprehensive Crypto Law Is Two Votes Away From Passing",
       "body": "The bill licenses exchanges, caps retail investors at about $3,800 a year, and creates a legal pathway for Russian companies to pay foreign partners in crypto—bypassing Western sanctions.",
@@ -2110,11 +2173,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-20T20:02:33+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.925987+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.925987+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.728623+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.728623+00:00",
       "freshness": {
         "iso": "2026-07-20T20:02:33+00:00",
-        "hours": 58.41,
+        "hours": 59.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2156,7 +2219,7 @@
       "id": "feed_39d5961c75391343",
       "event_id": "feed_39d5961c75391343",
       "fingerprint": "39d5961c75391343",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Crypto PAC pours $1M into Michigan Democratic primary race",
       "body": "Donavan McKinney, running against Michigan incumbent Shri Thanedar, said that “the crypto lobby is paying my opponent back for helping Trump“ with the PAC-funded ads.",
@@ -2176,11 +2239,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-22T20:38:08+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.980135+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.980135+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.657638+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.657638+00:00",
       "freshness": {
         "iso": "2026-07-22T20:38:08+00:00",
-        "hours": 9.82,
+        "hours": 10.91,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2222,7 +2285,7 @@
       "id": "feed_e7717bb65c4692a1",
       "event_id": "feed_e7717bb65c4692a1",
       "fingerprint": "e7717bb65c4692a1",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "US officials barred until 2029 from issuing or sponsoring tokens under CLARITY’s proposed ethics rules",
       "body": "According to Senator Cynthia Lummis, one of the bill’s advocates, the ethics language would apply to US presidents’ crypto ventures, including Donald Trump’s.",
@@ -2242,12 +2305,12 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-22T18:41:30+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.981203+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.981203+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.658643+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.658643+00:00",
       "freshness": {
         "iso": "2026-07-22T18:41:30+00:00",
-        "hours": 11.77,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.85,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2288,7 +2351,7 @@
       "id": "feed_dfba3649322a1cef",
       "event_id": "feed_dfba3649322a1cef",
       "fingerprint": "dfba3649322a1cef",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Anthropic joins UK FCA’s AI regulatory sandbox as second cohort launches",
       "body": "Anthropic will provide Claude AI models to companies participating in the UK Financial Conduct Authority’s next Supercharged Sandbox cohort, as the regulator pushes to test AI applications in financial services.",
@@ -2308,11 +2371,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T17:57:11+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.982264+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.982264+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.659663+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.659663+00:00",
       "freshness": {
         "iso": "2026-07-22T17:57:11+00:00",
-        "hours": 12.5,
+        "hours": 13.59,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2416,7 +2479,7 @@
       "id": "feed_cce4cd71959b8b49",
       "event_id": "feed_cce4cd71959b8b49",
       "fingerprint": "cce4cd71959b8b49",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "ECB appoints Boris Kisselevsky as Director General Secretariat",
       "body": "",
@@ -2436,11 +2499,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-21T14:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:29.907514+00:00",
-      "last_seen_at": "2026-07-23T06:27:29.907514+00:00",
+      "first_seen_at": "2026-07-23T07:32:34.208111+00:00",
+      "last_seen_at": "2026-07-23T07:32:34.208111+00:00",
       "freshness": {
         "iso": "2026-07-21T14:00:00+00:00",
-        "hours": 40.46,
+        "hours": 41.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2481,7 +2544,7 @@
       "id": "feed_51983de4cdd9c14c",
       "event_id": "feed_51983de4cdd9c14c",
       "fingerprint": "51983de4cdd9c14c",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "The digital euro: Surveillance money, or a better alternative to cash?",
       "body": "Proponents of the digital euro say its a better alternative to cash that’s fully backed by the ECB. But critics argue it could provide the EU with too much power over its citizens.",
@@ -2501,11 +2564,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-22T13:30:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.987629+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.987629+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.664869+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.664869+00:00",
       "freshness": {
         "iso": "2026-07-22T13:30:00+00:00",
-        "hours": 16.96,
+        "hours": 18.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2546,7 +2609,7 @@
       "id": "feed_3771d9653f4469f7",
       "event_id": "feed_3771d9653f4469f7",
       "fingerprint": "3771d9653f4469f7",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Houthis claim attack on oil tankers as US launches more strikes on Iran",
       "body": "The Houthi attacks would be the first in the Red Sea since the Iran-backed group announced a \"maritime embargo\" against Saudi Arabia.",
@@ -2566,11 +2629,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-23T03:48:27+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.225314+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.225314+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.778299+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.778299+00:00",
       "freshness": {
         "iso": "2026-07-23T03:48:27+00:00",
-        "hours": 2.65,
+        "hours": 3.73,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2612,7 +2675,7 @@
       "id": "feed_7b8422e2f28d6bca",
       "event_id": "feed_7b8422e2f28d6bca",
       "fingerprint": "7b8422e2f28d6bca",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "British woman jailed for blackmail after accusing banker of rape in Hong Kong",
       "body": "Isabel Rose was convicted of trying to extort £100,000 from the UK banker and perverting the course of justice.",
@@ -2632,11 +2695,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T14:14:16+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.228045+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.228045+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.780906+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.780906+00:00",
       "freshness": {
         "iso": "2026-07-22T14:14:16+00:00",
-        "hours": 16.22,
+        "hours": 17.3,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2675,7 +2738,7 @@
       "id": "feed_d96d5c229872f8f5",
       "event_id": "feed_d96d5c229872f8f5",
       "fingerprint": "d96d5c229872f8f5",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Some food prices have fallen – but inflation expected to rise from here",
       "body": "June's fall in inflation will be welcomed by the new prime minister but analysts warn the fall is temporary.",
@@ -2695,11 +2758,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-22T10:10:01+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.312418+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.312418+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.685734+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.685734+00:00",
       "freshness": {
         "iso": "2026-07-22T10:10:01+00:00",
-        "hours": 20.29,
+        "hours": 21.38,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2740,7 +2803,7 @@
       "id": "feed_bcaea9c296147917",
       "event_id": "feed_bcaea9c296147917",
       "fingerprint": "bcaea9c296147917",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "White House accuses Moonshot AI of distilling Anthropic tech for K3",
       "body": "US officials warn that Chinese firms conducting covert, industrial-scale AI distillation could face sanctions and export restrictions.",
@@ -2760,11 +2823,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-23T04:15:30+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.975761+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.975761+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.653406+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.653406+00:00",
       "freshness": {
         "iso": "2026-07-23T04:15:30+00:00",
-        "hours": 2.2,
+        "hours": 3.28,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2803,10 +2866,79 @@
       "observation_only": true
     },
     {
+      "id": "feed_cd39de2e6127a2d8",
+      "event_id": "feed_cd39de2e6127a2d8",
+      "fingerprint": "cd39de2e6127a2d8",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin, Ethereum-linked protocols lose $35 million in multiple attacks hours apart",
+      "body": "The attacks hit Verus, B² Network and other cross-chain systems, showing how compromised keys, upgrade powers and validation checks can empty protocols without breaking the underlying cryptography.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/tech/2026/07/23/bitcoin-ethereum-linked-protocols-lose-usd35-million-in-multiple-attacks-hours-apart",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/tech/2026/07/23/bitcoin-ethereum-linked-protocols-lose-usd35-million-in-multiple-attacks-hours-apart"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-07-23T06:38:18+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.875418+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.875418+00:00",
+      "freshness": {
+        "iso": "2026-07-23T06:38:18+00:00",
+        "hours": 0.9,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 60,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "BTC",
+        "ETH"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 11,
+      "matched_topics": [
+        "crypto",
+        "market_structure"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_e233fe0b7d478f91",
       "event_id": "feed_e233fe0b7d478f91",
       "fingerprint": "e233fe0b7d478f91",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin holds near $66,300 as chips extend their rally and the yen hits a 40-year low",
       "body": "Semiconductor stocks led a second day of gains on AI optimism, while the yen slid past 163 per dollar for the first time since 1986.",
@@ -2826,11 +2958,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T05:03:39+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.129526+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.129526+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.898942+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.898942+00:00",
       "freshness": {
         "iso": "2026-07-22T05:03:39+00:00",
-        "hours": 25.4,
+        "hours": 26.48,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2875,7 +3007,7 @@
       "id": "feed_ffb9846189263724",
       "event_id": "feed_ffb9846189263724",
       "fingerprint": "ffb9846189263724",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Cardano Triggers Hard Fork With First Community-Voted Upgrade",
       "body": "For the first time in Cardano's history, no company flipped the switch on a major protocol update.",
@@ -2895,11 +3027,11 @@
       "event_type": "network",
       "event_label": "Upgrade / mainnet / réseau",
       "event_time": "2026-07-20T18:50:48+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.928084+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.928084+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.729715+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.729715+00:00",
       "freshness": {
         "iso": "2026-07-20T18:50:48+00:00",
-        "hours": 59.61,
+        "hours": 60.7,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2942,7 +3074,7 @@
       "id": "feed_3b8eb2a1d053bf46",
       "event_id": "feed_3b8eb2a1d053bf46",
       "fingerprint": "3b8eb2a1d053bf46",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Siemens Opcenter X",
       "body": "View CSAF Summary Opcenter X before V2604 contain an authentication bypass vulnerability that could allow an attacker to gain full unauthorized access to the application. Siemens has released a new version for Opcenter X and recommends to update to the latest version. The following versions of Siemens Opcenter X are affected: Opcenter X vers:intdot/ CVSS Vendor Equipment Vulnerabilities v3 10 Siemens Siemens Opcenter X Improper Verification of Cryptographic Signature Background Critical Infrastructure Sectors: Critical Manufacturing Countries/Areas Deployed: Worldwide Company Headquarters Location: Germany Vulnerabilities Expand All + CVE-2026-56451 Affected applications do not properly validate the algorithm specified in the JSON Web Token (JWT) header. This could allow an unauthenticated remote attacker to forge arbitrary JWT, bypass authentication mechanisms and impersonate any user including administrative accounts, potentially gaining full unauthorized access to the application. V",
@@ -2962,11 +3094,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T12:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.207849+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.207849+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.928463+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.928463+00:00",
       "freshness": {
         "iso": "2026-07-21T12:00:00+00:00",
-        "hours": 42.46,
+        "hours": 43.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3006,7 +3138,7 @@
       "id": "feed_ec89e9e856fcbca3",
       "event_id": "feed_ec89e9e856fcbca3",
       "fingerprint": "ec89e9e856fcbca3",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "UK digital bond plans hinge on one missing piece: onchain cash",
       "body": "Experts say Britain's digital gilt pilot can unlock trapped liquidity in financial markets only if regulators approve an onchain stablecoin.",
@@ -3026,11 +3158,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T15:36:49+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.115937+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.115937+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.885904+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.885904+00:00",
       "freshness": {
         "iso": "2026-07-22T15:36:49+00:00",
-        "hours": 14.84,
+        "hours": 15.93,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3072,7 +3204,7 @@
       "id": "feed_d4f7a73c5c1e5d1a",
       "event_id": "feed_d4f7a73c5c1e5d1a",
       "fingerprint": "d4f7a73c5c1e5d1a",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Augustus Raises $180 Million to Build a Stablecoin-Ready 'Global Dollar Bank'",
       "body": "The Tiger Global-led round values the startup at $1 billion as it wires stablecoin rails directly into a federally chartered bank, aiming to modernize the correspondent-banking plumbing behind cross-border payments.",
@@ -3092,11 +3224,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T18:13:48+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.911984+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.911984+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.719238+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.719238+00:00",
       "freshness": {
         "iso": "2026-07-21T18:13:48+00:00",
-        "hours": 36.23,
+        "hours": 37.31,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3138,7 +3270,7 @@
       "id": "feed_545ce03788b763e0",
       "event_id": "feed_545ce03788b763e0",
       "fingerprint": "545ce03788b763e0",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Jack Mallers Quits Twenty One Capital as Tether's Bitcoin Merger Collapses",
       "body": "XXI stock dropped nearly 18% after the company's co-founder stepped down and Tether's plan to combine three Bitcoin firms officially fell apart.",
@@ -3158,11 +3290,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T16:06:20+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.915184+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.915184+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.722143+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.722143+00:00",
       "freshness": {
         "iso": "2026-07-21T16:06:20+00:00",
-        "hours": 38.35,
+        "hours": 39.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3206,7 +3338,7 @@
       "id": "feed_66100b85bb293335",
       "event_id": "feed_66100b85bb293335",
       "fingerprint": "66100b85bb293335",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "XRP whales accumulate as small holders capitulate",
       "body": "XRP whales accumulate 2.8% more tokens over five weeks as small holders capitulate, sending the price back above $1.16.",
@@ -3226,11 +3358,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-23T04:11:13+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.107056+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.107056+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.877628+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.877628+00:00",
       "freshness": {
         "iso": "2026-07-23T04:11:13+00:00",
-        "hours": 2.27,
+        "hours": 3.36,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3271,7 +3403,7 @@
       "id": "feed_1be25fda00d1ec6b",
       "event_id": "feed_1be25fda00d1ec6b",
       "fingerprint": "1be25fda00d1ec6b",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Tesla holds bitcoin treasury steady, reports $112M impairment loss",
       "body": "The electric vehicle maker maintained its 11,509 BTC treasury through the second quarter as bitcoin declined 14%, alongside mixed earnings that beat revenue expectations but missed on profit.",
@@ -3291,11 +3423,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T20:40:24+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.112093+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.112093+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.882212+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.882212+00:00",
       "freshness": {
         "iso": "2026-07-22T20:40:24+00:00",
-        "hours": 9.78,
+        "hours": 10.87,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3338,7 +3470,7 @@
       "id": "feed_d74670dbb6fd53df",
       "event_id": "feed_d74670dbb6fd53df",
       "fingerprint": "d74670dbb6fd53df",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Here's why bitcoin bulls should take a closer look at interest rates",
       "body": "Your day-ahead look for July 22, 2026",
@@ -3358,11 +3490,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T11:23:36+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.122391+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.122391+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.892168+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.892168+00:00",
       "freshness": {
         "iso": "2026-07-22T11:23:36+00:00",
-        "hours": 19.06,
+        "hours": 20.15,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3405,7 +3537,7 @@
       "id": "feed_fb6956e1030883fb",
       "event_id": "feed_fb6956e1030883fb",
       "fingerprint": "fb6956e1030883fb",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Live updates: Bitcoin holds near $66,000 as stocks claw back from big early decline",
       "body": "Later on Wednesday, Alphabet's earnings should give a sign of whether the hundreds of billions going into AI is paying off.",
@@ -3425,11 +3557,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T08:13:28+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.127414+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.127414+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.896902+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.896902+00:00",
       "freshness": {
         "iso": "2026-07-22T08:13:28+00:00",
-        "hours": 22.23,
+        "hours": 23.32,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3473,7 +3605,7 @@
       "id": "feed_474b04031b2eeb74",
       "event_id": "feed_474b04031b2eeb74",
       "fingerprint": "474b04031b2eeb74",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin Is Bouncing: Here’s the Bull and Bear Case for Its Next Move",
       "body": "The good news: Bitcoin is holding onto key support, and rising. The bad news: a \"death cross\" is still active, and prediction markets are still overwhelmingly bearish.",
@@ -3493,12 +3625,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T18:48:45+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.900374+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.900374+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.708662+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.708662+00:00",
       "freshness": {
         "iso": "2026-07-22T18:48:45+00:00",
-        "hours": 11.64,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.73,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3540,7 +3672,7 @@
       "id": "feed_c450f7c2928fb298",
       "event_id": "feed_c450f7c2928fb298",
       "fingerprint": "c450f7c2928fb298",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "DAT Went Wrong: Satsuma to Unwind Bitcoin Treasury, Sell Off $43 Million in BTC",
       "body": "The UK Bitcoin treasury company raised $218 million less than a year ago. Now it's returning whatever is left.",
@@ -3560,11 +3692,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T00:32:58+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.908111+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.908111+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.715746+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.715746+00:00",
       "freshness": {
         "iso": "2026-07-22T00:32:58+00:00",
-        "hours": 29.91,
+        "hours": 30.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3607,7 +3739,7 @@
       "id": "feed_3fa9b787f6c3c622",
       "event_id": "feed_3fa9b787f6c3c622",
       "fingerprint": "3fa9b787f6c3c622",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "XRP Breaks Out on Clarity Act Hopes. The Charts Are Still Cautious",
       "body": "The Ripple-linked token just had its best day in weeks, as Washington may finally be delivering what the XRP Army has been waiting for.",
@@ -3627,11 +3759,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T16:20:29+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.913815+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.913815+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.720925+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.720925+00:00",
       "freshness": {
         "iso": "2026-07-21T16:20:29+00:00",
-        "hours": 38.12,
+        "hours": 39.2,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3672,7 +3804,7 @@
       "id": "feed_601e7db51060036a",
       "event_id": "feed_601e7db51060036a",
       "fingerprint": "601e7db51060036a",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Galaxy Commits Up to $5 Million to Prepare Bitcoin for Quantum Threat",
       "body": "The crypto firm's initiative arrives as researchers, exchanges, and the U.S. government warn that \"Q-Day\" may land as soon as 2030.",
@@ -3692,11 +3824,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T12:01:03+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.916348+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.916348+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.723243+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.723243+00:00",
       "freshness": {
         "iso": "2026-07-21T12:01:03+00:00",
-        "hours": 42.44,
+        "hours": 43.52,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3736,10 +3868,77 @@
       "observation_only": true
     },
     {
+      "id": "feed_d38fce1e24c5a43d",
+      "event_id": "feed_d38fce1e24c5a43d",
+      "fingerprint": "d38fce1e24c5a43d",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin ETFs approach $1B in 7-session inflow run",
+      "body": "US spot Bitcoin ETFs recorded $69 million in inflows on Wednesday, extending their inflow streak to seven sessions and bringing total inflows during the period to nearly $1 billion",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/bitcoin-etfs-1-billion-7-session-inflow-streak",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/markets/bitcoin-etfs-1-billion-7-session-inflow-streak"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-07-23T07:08:25+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.648300+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.648300+00:00",
+      "freshness": {
+        "iso": "2026-07-23T07:08:25+00:00",
+        "hours": 0.4,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_6c46fac33ac5acd1",
       "event_id": "feed_6c46fac33ac5acd1",
       "fingerprint": "6c46fac33ac5acd1",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Swiss bank BancaStato launches regulated crypto trading with Sygnum",
       "body": "Swiss cantonal bank BancaStato integrated Sygnum’s crypto trading and custody services into its Avaloq-powered digital banking apps for Bitcoin and other assets.",
@@ -3759,11 +3958,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-23T06:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.974719+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.974719+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.652180+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.652180+00:00",
       "freshness": {
         "iso": "2026-07-23T06:00:00+00:00",
-        "hours": 0.46,
+        "hours": 1.54,
         "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
@@ -3806,7 +4005,7 @@
       "id": "feed_4d3338fb25fbe4b0",
       "event_id": "feed_4d3338fb25fbe4b0",
       "fingerprint": "4d3338fb25fbe4b0",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Hackers steal $31.6M in 2 crypto bridge attacks within 7 hours",
       "body": "AFX, a decentralized perpetual exchange operating on Arbitrum, reportedly lost $24.15 million on Wednesday, while the Verus Ethereum bridge was attacked hours later.",
@@ -3826,11 +4025,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-23T01:47:20+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.977926+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.977926+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.655498+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.655498+00:00",
       "freshness": {
         "iso": "2026-07-23T01:47:20+00:00",
-        "hours": 4.67,
+        "hours": 5.75,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3875,7 +4074,7 @@
       "id": "feed_cd3f06a949470984",
       "event_id": "feed_cd3f06a949470984",
       "fingerprint": "cd3f06a949470984",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "BitGo, OTC Markets plan tokenized securities access for broker-dealers",
       "body": "The proposed alliance would enable more than 150 broker-dealers to trade and settle digital asset securities through OTC Link ATS using BitGo’s custody infrastructure.",
@@ -3895,11 +4094,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T16:10:22+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.985510+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.985510+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.662815+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.662815+00:00",
       "freshness": {
         "iso": "2026-07-22T16:10:22+00:00",
-        "hours": 14.28,
+        "hours": 15.37,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3940,7 +4139,7 @@
       "id": "feed_b10c3e090482ba3e",
       "event_id": "feed_b10c3e090482ba3e",
       "fingerprint": "b10c3e090482ba3e",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin analysis eyes ‘serious volume’ after Binance sees 9K BTC daily outflow",
       "body": "Binance set multimonth records for net BTC outflows on Tuesday, adding to an emerging trend of positive inflows to the US spot Bitcoin ETFs.",
@@ -3960,11 +4159,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T11:55:21+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.990425+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.990425+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.667451+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.667451+00:00",
       "freshness": {
         "iso": "2026-07-22T11:55:21+00:00",
-        "hours": 18.53,
+        "hours": 19.62,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4008,7 +4207,7 @@
       "id": "feed_1b5f3305187c71af",
       "event_id": "feed_1b5f3305187c71af",
       "fingerprint": "1b5f3305187c71af",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Foundry asks Bitcoin miners to vote on BIP-110 support",
       "body": "Foundry USA asked its mining customers to signal their support for BIP-110, an actively debated proposal seeking to shrink the amount of data that can be stored in a Bitcoin transaction.",
@@ -4028,11 +4227,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T10:29:42+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.997528+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.997528+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.674556+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.674556+00:00",
       "freshness": {
         "iso": "2026-07-22T10:29:42+00:00",
-        "hours": 19.96,
+        "hours": 21.05,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4075,7 +4274,7 @@
       "id": "feed_3ca1a054e3f28764",
       "event_id": "feed_3ca1a054e3f28764",
       "fingerprint": "3ca1a054e3f28764",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Galaxy pledges $5M for developers quantum-proofing Bitcoin",
       "body": "Galaxy pledged up to $5 million in grants for developers working on Bitcoin’s quantum security and elected a council of quantum-advisory experts to research quantum-resistant migration solutions.",
@@ -4095,11 +4294,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T09:30:05+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.999709+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.999709+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.677268+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.677268+00:00",
       "freshness": {
         "iso": "2026-07-22T09:30:05+00:00",
-        "hours": 20.96,
+        "hours": 22.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4142,7 +4341,7 @@
       "id": "feed_fc62c0c8a25afc0d",
       "event_id": "feed_fc62c0c8a25afc0d",
       "fingerprint": "fc62c0c8a25afc0d",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Bitcoin ETFs extend inflow streak to 6 days with $203M added",
       "body": "US spot Bitcoin ETFs extended their inflow streak to six sessions, bringing in about $930 million while remaining down $4.84 billion on a net basis year to date.",
@@ -4162,11 +4361,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T07:57:03+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.000899+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.000899+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.678298+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.678298+00:00",
       "freshness": {
         "iso": "2026-07-22T07:57:03+00:00",
-        "hours": 22.51,
+        "hours": 23.59,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4206,10 +4405,140 @@
       "observation_only": true
     },
     {
+      "id": "feed_6fbf96f2c1a50ffe",
+      "event_id": "feed_6fbf96f2c1a50ffe",
+      "fingerprint": "6fbf96f2c1a50ffe",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "US Seizes More Than $25M in Crypto Tied to Investment and Romance Scams",
+      "body": "Prosecutors filed five forfeiture cases as Secret Service agents traced funds from thousands of victims to launderers in Southeast Asia.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374049/us-seizes-more-than-25m-in-crypto-tied-to-investment-and-romance-scams",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 2,
+      "source_names": [
+        "Decrypt",
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374049/us-seizes-more-than-25m-in-crypto-tied-to-investment-and-romance-scams",
+        "https://cointelegraph.com/news/doj-25m-crypto-forfeiture-romance-investment-scams"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-07-22T15:10:46+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.711555+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.711555+00:00",
+      "freshness": {
+        "iso": "2026-07-22T15:10:46+00:00",
+        "hours": 16.36,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 75,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 54,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 2,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_816d08bf8bebd11b",
+      "event_id": "feed_816d08bf8bebd11b",
+      "fingerprint": "816d08bf8bebd11b",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "South Korea's oldest crypto exchange is now part of the $1 trillion Mirae Group family",
+      "body": "Korbit, South Korea's first cryptocurrency exchange, has joined the Mirae Asset Group family, marking the first time a traditional Korean financial group's affiliate has taken a controlling stake in a domestic crypto exchange.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/07/23/south-korea-s-oldest-crypto-exchange-is-now-part-of-the-usd800-billion-mirae-group-family",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/07/23/south-korea-s-oldest-crypto-exchange-is-now-part-of-the-usd800-billion-mirae-group-family"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-07-23T07:05:42+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.874163+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.874163+00:00",
+      "freshness": {
+        "iso": "2026-07-23T07:05:42+00:00",
+        "hours": 0.45,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 54,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [
+        "Exchanges"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_8db07cab567274bb",
       "event_id": "feed_8db07cab567274bb",
       "fingerprint": "8db07cab567274bb",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Senator Lummis: Ethics, other provisions in crypto Clarity Act to be further discussed",
       "body": "Senator Cynthia Lummis, one of the lead negotiators on the bill, told CoinDesk she was \"pleased\" that the updated bill was ready for release.",
@@ -4229,11 +4558,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T23:19:41+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.109594+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.109594+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.879791+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.879791+00:00",
       "freshness": {
         "iso": "2026-07-22T23:19:41+00:00",
-        "hours": 7.13,
+        "hours": 8.21,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4272,7 +4601,7 @@
       "id": "feed_ef4c47bba09f418a",
       "event_id": "feed_ef4c47bba09f418a",
       "fingerprint": "ef4c47bba09f418a",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Key Democratic lawmakers say crypto Clarity Act 'falls short' on ethics, other issues",
       "body": "Several of the Democrats most likely to vote for the crypto market structure bill said they had issues with the new draft published by Republicans earlier in the day.",
@@ -4292,11 +4621,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T22:22:25+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.110875+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.110875+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.881013+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.881013+00:00",
       "freshness": {
         "iso": "2026-07-22T22:22:25+00:00",
-        "hours": 8.08,
+        "hours": 9.17,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4335,7 +4664,7 @@
       "id": "feed_e892c82e8a20e525",
       "event_id": "feed_e892c82e8a20e525",
       "fingerprint": "e892c82e8a20e525",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Crypto Long & Short: The crypto question isn't what to own — it's what you can survive holding",
       "body": "In this week's Crypto Long & Short, Lionsoul Global’s Gregory Mall writes that the primary crypto allocation decision is size, not selection.",
@@ -4355,11 +4684,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T15:09:47+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.117189+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.117189+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.887135+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.887135+00:00",
       "freshness": {
         "iso": "2026-07-22T15:09:47+00:00",
-        "hours": 15.29,
+        "hours": 16.38,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4398,7 +4727,7 @@
       "id": "feed_2b140d6f98ec43f5",
       "event_id": "feed_2b140d6f98ec43f5",
       "fingerprint": "2b140d6f98ec43f5",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "U.S. seeks forfeiture of $25 million in crypto tied to romance and investment scams",
       "body": "The cases add to more than $800 million that authorities say a dedicated federal scam task force has recovered.",
@@ -4418,11 +4747,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T13:45:58+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.118383+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.118383+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.888549+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.888549+00:00",
       "freshness": {
         "iso": "2026-07-22T13:45:58+00:00",
-        "hours": 16.69,
+        "hours": 17.78,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4461,7 +4790,7 @@
       "id": "feed_87d7a786983a12e8",
       "event_id": "feed_87d7a786983a12e8",
       "fingerprint": "87d7a786983a12e8",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Forget Nvidia: The next big AI trade could be crypto and blockchain",
       "body": "Franklin Templeton’s Sandy Kaul and Circle CEO Jeremy Allaire argue that as autonomous AI agents start spending money on their own, blockchain networks will power the next big AI trade.",
@@ -4481,11 +4810,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T13:32:40+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.119797+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.119797+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.889736+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.889736+00:00",
       "freshness": {
         "iso": "2026-07-22T13:32:40+00:00",
-        "hours": 16.91,
+        "hours": 18.0,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4526,7 +4855,7 @@
       "id": "feed_1d65189fc141ef25",
       "event_id": "feed_1d65189fc141ef25",
       "fingerprint": "1d65189fc141ef25",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Kraken parent expands tokenized stocks to Hong Kong, UK and South Korea equities",
       "body": "Payward's xStocks pushes beyond U.S. equities as competition to bring global stock markets onchain accelerates.",
@@ -4546,11 +4875,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T10:30:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:25.125505+00:00",
-      "last_seen_at": "2026-07-23T06:27:25.125505+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.895104+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.895104+00:00",
       "freshness": {
         "iso": "2026-07-22T10:30:00+00:00",
-        "hours": 19.96,
+        "hours": 21.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4651,75 +4980,10 @@
       "observation_only": true
     },
     {
-      "id": "feed_6fbf96f2c1a50ffe",
-      "event_id": "feed_6fbf96f2c1a50ffe",
-      "fingerprint": "6fbf96f2c1a50ffe",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "US Seizes More Than $25M in Crypto Tied to Investment and Romance Scams",
-      "body": "Prosecutors filed five forfeiture cases as Secret Service agents traced funds from thousands of victims to launderers in Southeast Asia.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/374049/us-seizes-more-than-25m-in-crypto-tied-to-investment-and-romance-scams",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "Decrypt",
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://decrypt.co/374049/us-seizes-more-than-25m-in-crypto-tied-to-investment-and-romance-scams",
-        "https://cointelegraph.com/news/doj-25m-crypto-forfeiture-romance-investment-scams"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-22T15:10:46+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.903605+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.993110+00:00",
-      "freshness": {
-        "iso": "2026-07-22T15:10:46+00:00",
-        "hours": 15.28,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 65,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 54,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 2,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_d7f97895fdef1dc8",
       "event_id": "feed_d7f97895fdef1dc8",
       "fingerprint": "d7f97895fdef1dc8",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Coinbase Wants to Be Canada's One-Stop Shop for Stocks, Crypto and Prediction Markets",
       "body": "The company's \"Everything Exchange\" is heading north. No launch date set yet, but the Coinbase Canada CEO says phase two for the company is in motion.",
@@ -4739,11 +5003,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T21:13:04+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.896066+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.896066+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.704321+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.704321+00:00",
       "freshness": {
         "iso": "2026-07-22T21:13:04+00:00",
-        "hours": 9.24,
+        "hours": 10.32,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4784,7 +5048,7 @@
       "id": "feed_90cd963ba47a19a7",
       "event_id": "feed_90cd963ba47a19a7",
       "fingerprint": "90cd963ba47a19a7",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Kraken Parent Company Makes Moves to Offer xStocks From Global Markets",
       "body": "Payward and fintech GTN are teaming up to bring xStocks—blockchain-based copies of real company shares—to Hong Kong, the UK, Europe, and South Korea.",
@@ -4804,11 +5068,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T20:07:34+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.897357+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.897357+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.705722+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.705722+00:00",
       "freshness": {
         "iso": "2026-07-22T20:07:34+00:00",
-        "hours": 10.33,
+        "hours": 11.42,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4849,7 +5113,7 @@
       "id": "feed_537e2e89b0d10c95",
       "event_id": "feed_537e2e89b0d10c95",
       "fingerprint": "537e2e89b0d10c95",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Centralized Elements 'Frequently Persist' in DeFi and Should Be Regulated: FATF",
       "body": "Nearly every country has yet to apply the rules, the watchdog said, warning of outright bans for platforms that don’t comply.",
@@ -4869,11 +5133,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T14:41:56+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.904811+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.904811+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.712694+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.712694+00:00",
       "freshness": {
         "iso": "2026-07-22T14:41:56+00:00",
-        "hours": 15.76,
+        "hours": 16.84,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4914,7 +5178,7 @@
       "id": "feed_8475da862b8b370d",
       "event_id": "feed_8475da862b8b370d",
       "fingerprint": "8475da862b8b370d",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Pavel Durov Wants to Give a Billion Telegram Users a Crypto Wallet",
       "body": "The promise of instant, zero-fee crypto transactions for over a billion Telegram users sent its native Gram token up 7%.",
@@ -4934,11 +5198,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T20:20:49+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.910083+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.910083+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.717445+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.717445+00:00",
       "freshness": {
         "iso": "2026-07-21T20:20:49+00:00",
-        "hours": 34.11,
+        "hours": 35.2,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4977,7 +5241,7 @@
       "id": "feed_5e5bc0814eea338e",
       "event_id": "feed_5e5bc0814eea338e",
       "fingerprint": "5e5bc0814eea338e",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "UK Lawmakers Launch Inquiry Into Crypto Banking Access",
       "body": "A cross-party group is examining why UK banks block accounts and payments for crypto firms—and whether it's holding the sector back.",
@@ -4997,11 +5261,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-21T09:05:35+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.922741+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.922741+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.727030+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.727030+00:00",
       "freshness": {
         "iso": "2026-07-21T09:05:35+00:00",
-        "hours": 45.36,
+        "hours": 46.45,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5037,10 +5301,75 @@
       "observation_only": true
     },
     {
+      "id": "feed_4f2007907910015c",
+      "event_id": "feed_4f2007907910015c",
+      "fingerprint": "4f2007907910015c",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Kakao taps Circle to explore won stablecoin payment infrastructure",
+      "body": "Kakao Group and Circle signed an MOU to explore won stablecoin payments, remittances, merchant settlement and tokenized financial services.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/kakao-circle-won-stablecoin-payment-infrastructure",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/kakao-circle-won-stablecoin-payment-infrastructure"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-07-23T06:46:58+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.649739+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.649739+00:00",
+      "freshness": {
+        "iso": "2026-07-23T06:46:58+00:00",
+        "hours": 0.76,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 54,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [
+        "Stablecoins"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_6f86795995d4af44",
       "event_id": "feed_6f86795995d4af44",
       "fingerprint": "6f86795995d4af44",
-      "version": "V1.1-alpha.26.47.1",
+      "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "S&P launches blockchain fundamentals index for digital assets",
       "body": "The benchmark tracks blockchain networks using protocol revenue, offering an alternative to traditional market capitalization-weighted crypto indexes.",
@@ -5060,11 +5389,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-07-22T21:09:59+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.979113+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.979113+00:00",
+      "first_seen_at": "2026-07-23T07:32:32.656650+00:00",
+      "last_seen_at": "2026-07-23T07:32:32.656650+00:00",
       "freshness": {
         "iso": "2026-07-22T21:09:59+00:00",
-        "hours": 9.29,
+        "hours": 10.38,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5096,325 +5425,6 @@
       "relevance_score": 8,
       "matched_topics": [
         "crypto"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_db0a3b4d9d9e7ea8",
-      "event_id": "feed_db0a3b4d9d9e7ea8",
-      "fingerprint": "db0a3b4d9d9e7ea8",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "Franklin Templeton calls agentic AI next ‘killer’ use case for blockchain",
-      "body": "Franklin Templeton’s digital assets lead said that the autonomous AI agent economy will increase demand for blockchain protocols hosting machine-to-machine micropayments.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/agentic-ai-killer-use-case-blockchain-franklin-templeton",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/agentic-ai-killer-use-case-blockchain-franklin-templeton"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-22T13:18:50+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.989086+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.989086+00:00",
-      "freshness": {
-        "iso": "2026-07-22T13:18:50+00:00",
-        "hours": 17.14,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 54,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [
-        "IA"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_d842aa56023b067c",
-      "event_id": "feed_d842aa56023b067c",
-      "fingerprint": "d842aa56023b067c",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "Zilliqa Ledger app vulnerability lets attackers recover signer’s private keys",
-      "body": "A security vulnerability in the Zilliqa Ledger app is enabling attackers to reconstruct private keys using publicly available onchain data.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/zilliqa-ledger-vulnerability-attackers-recover-private-keys",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/zilliqa-ledger-vulnerability-attackers-recover-private-keys"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-22T11:49:53+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.991816+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.991816+00:00",
-      "freshness": {
-        "iso": "2026-07-22T11:49:53+00:00",
-        "hours": 18.63,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 54,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_2158abaf70e585fc",
-      "event_id": "feed_2158abaf70e585fc",
-      "fingerprint": "2158abaf70e585fc",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "South Korea crypto volumes shrink as retail investors shift to stocks",
-      "body": "Trading activity on South Korea’s five major crypto exchanges fell sharply as the KOSPI surged, signaling a shift in retail investors toward equities.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/south-korea-crypto-volume-decline-kospi-retail-stocks",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/south-korea-crypto-volume-decline-kospi-retail-stocks"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-22T10:47:09+00:00",
-      "first_seen_at": "2026-07-23T06:27:24.996340+00:00",
-      "last_seen_at": "2026-07-23T06:27:24.996340+00:00",
-      "freshness": {
-        "iso": "2026-07-22T10:47:09+00:00",
-        "hours": 19.67,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 54,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_dfb1c0828cb993b7",
-      "event_id": "feed_dfb1c0828cb993b7",
-      "fingerprint": "dfb1c0828cb993b7",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "July 2026 euro area bank lending survey",
-      "body": "",
-      "source_name": "Banque centrale européenne",
-      "source_url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260721~44ee50f75c.en.html",
-      "source_host": "ecb.europa.eu",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Banque centrale européenne"
-      ],
-      "source_urls": [
-        "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260721~44ee50f75c.en.html"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-21T08:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:29.908605+00:00",
-      "last_seen_at": "2026-07-23T06:27:29.908605+00:00",
-      "freshness": {
-        "iso": "2026-07-21T08:00:00+00:00",
-        "hours": 46.46,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 52,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [
-        "DeFi"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "macro"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_10f7b3cddca7b88c",
-      "event_id": "feed_10f7b3cddca7b88c",
-      "fingerprint": "10f7b3cddca7b88c",
-      "version": "V1.1-alpha.26.47.1",
-      "origin": "github_news_collector",
-      "headline": "Piero Cipollone: The cooperative spirit at the heart of the digital euro",
-      "body": "",
-      "source_name": "Banque centrale européenne",
-      "source_url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260717~b6a156dc40.en.html",
-      "source_host": "ecb.europa.eu",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Banque centrale européenne"
-      ],
-      "source_urls": [
-        "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260717~b6a156dc40.en.html"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-07-17T10:00:00+00:00",
-      "first_seen_at": "2026-07-23T06:27:29.910327+00:00",
-      "last_seen_at": "2026-07-23T06:27:29.910327+00:00",
-      "freshness": {
-        "iso": "2026-07-17T10:00:00+00:00",
-        "hours": 140.46,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 52,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "macro"
       ],
       "observation_only": true
     }
