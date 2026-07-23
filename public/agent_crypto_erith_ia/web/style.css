@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — Atlas compact diagnostics
+   V1.1-alpha.26.46.6 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — Missions de Vie
+   V1.1-alpha.26.46.6 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — Analyst Stable Dimensions
+   V1.1-alpha.26.46.6 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.46.5 — Audience V2 */
+/* V1.1-alpha.26.46.6 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.46.6 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — MULTI HORIZON
+   V1.1-alpha.26.46.6 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5224,7 +5224,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.46.5 */
+/* Navigation active — V1.1-alpha.26.46.6 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5235,7 +5235,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.46.6 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5498,14 +5498,14 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.46.5 — MARKET SNAPSHOT GRAPH CONTROL LOCK */
+/* V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK */
 .decision-card span{line-height:1.42;}
 .decision-verdict-body span{line-height:1.42;}
 
 
 /* =========================================================
-   V1.1-alpha.26.46.5 — MARKET SNAPSHOT GRAPH CONTROL LOCK
-   Sélection/désélection libre + presets hausses/baisses/volume.
+   V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK
+   Sélection/désélection libre + presets + micro-polissage visuel.
    ========================================================= */
 .compare-actions {
   row-gap: 5px;
@@ -5573,4 +5573,117 @@ main .decision-board{
 }
 @media (max-width: 1280px) {
   .compare-actions { max-width: 520px; justify-content: flex-end; }
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.46.6 — CHAMPAGNE INTERACTION POLISH LOCK
+   Micro-polissage uniquement : groupes de commandes, états de séries,
+   contraste local, hiérarchie des preuves et respiration de la légende.
+   Moteur, sources, calculs et palette des courbes inchangés.
+   ========================================================= */
+
+#analyste.champagne-clean-lens .compare-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+#analyste.champagne-clean-lens .compare-action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+#analyste.champagne-clean-lens .compare-action-group + .compare-action-group {
+  position: relative;
+  margin-left: 3px;
+  padding-left: 10px;
+}
+
+#analyste.champagne-clean-lens .compare-action-group + .compare-action-group::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  bottom: 5px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(112,244,255,.28), rgba(255,214,122,.22), transparent);
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-unavailable {
+  border-style: dashed;
+  border-color: rgba(255, 171, 104, .54);
+  background: rgba(34, 21, 18, .70);
+  color: rgba(235, 224, 214, .72);
+  box-shadow: none;
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-unavailable small {
+  color: rgba(255, 190, 132, .88);
+  letter-spacing: .025em;
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-unavailable .compare-chip-main {
+  cursor: help;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-grid > div,
+#analyste.champagne-clean-lens .clean-lens-disclosure .broker-strip > div,
+#analyste.champagne-clean-lens .clean-lens-disclosure .diagnostic-strip > div {
+  background: rgba(2, 9, 18, .72) !important;
+  border-color: rgba(255,255,255,.17) !important;
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+
+#analyste.champagne-clean-lens #assetDetailWhy {
+  background: rgba(2, 9, 18, .66) !important;
+  border-color: rgba(255, 216, 135, .24) !important;
+  font-weight: 650 !important;
+  color: rgba(233, 242, 249, .88) !important;
+}
+
+#analyste.champagne-clean-lens #assetDetailWhy strong {
+  color: #fff0c8;
+  font-weight: 950;
+  letter-spacing: .025em;
+}
+
+#analyste.champagne-clean-lens .chart-caption {
+  margin-top: 7px !important;
+  padding: 7px 10px !important;
+  color: rgba(205, 222, 235, .76) !important;
+  font-size: 9px !important;
+  font-weight: 720 !important;
+  line-height: 1.35 !important;
+  border-color: rgba(112,244,255,.16) !important;
+  background: rgba(2, 9, 18, .54) !important;
+}
+
+#analyste.champagne-clean-lens .chart-shell[data-chart-summary]::after {
+  color: #fff0c8 !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  border-color: rgba(255,216,135,.24) !important;
+  background: rgba(2, 9, 18, .72) !important;
+}
+
+@media (max-width: 1360px) {
+  #analyste.champagne-clean-lens .compare-action-group + .compare-action-group {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  #analyste.champagne-clean-lens .compare-action-group + .compare-action-group::before {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  #analyste.champagne-clean-lens .compare-actions,
+  #analyste.champagne-clean-lens .compare-action-group {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
