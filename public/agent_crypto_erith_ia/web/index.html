@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.46</title>
+  <title>Agent-Crypto @erith.IA — V1.1-alpha.26.46.1 CHAMPAGNE LUXE MARKET LENS</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.46" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.46.1" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · Multi-Horizon · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.46</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.46.1</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -107,12 +107,18 @@
 
 
     <section class="atlas-market-zone" id="market-zone" aria-label="Zone marché Atlas">
-    <section class="analyst-deck" id="analyste">
+    <section class="analyst-deck luxe-market-lens" id="analyste">
       <article class="panel glass chart-panel">
-        <div class="section-head compact">
-          <div>
+        <div class="section-head compact analyst-luxe-head">
+          <div class="analyst-identity">
             <p class="eyebrow">GRAPHIQUE ANALYSTE</p>
             <h2 id="selectedAssetTitle">Bitcoin — BTC</h2>
+            <div class="analyst-price-line" aria-live="polite">
+              <strong id="analystPriceEur">—</strong>
+              <span id="analystPriceUsd">USD —</span>
+              <span id="analystChange24" class="analyst-change neutral">24 h —</span>
+            </div>
+            <div class="analyst-source-line" id="analystSourceMeta">CoinGecko direct · historique EUR vérifié</div>
           </div>
           <div class="chart-head-actions">
             <div class="period-tabs" aria-label="Période graphique">
@@ -127,43 +133,63 @@
             </div>
           </div>
         </div>
-        <div class="chart-shell">
+        <div class="chart-shell luxe-chart-shell">
           <div class="comparison-selection" id="comparisonSelection" aria-live="polite">
             <span class="compare-hint">BTC seul · clique une autre ligne du MARKET SNAPSHOT pour comparer</span>
           </div>
-          <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix ou comparaison normalisée"></canvas>
+          <canvas id="mainChart" width="1280" height="620" aria-label="Graphique prix ou comparaison normalisée"></canvas>
         </div>
-        <div class="chart-caption" id="chartCaption">
+        <div class="chart-caption luxe-chart-caption" id="chartCaption">
           Les 50 premières cryptomonnaies sont chargées en EUR. Les prix USD enrichissent ensuite le tableau sans bloquer le marché. Sélectionne un actif pour charger son historique CoinGecko à la demande.
         </div>
       </article>
 
-      <article class="panel glass detail-panel">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">DÉTAIL ACTIF</p>
-            <h2>Lecture technique</h2>
+      <article class="panel glass detail-panel" id="detailPanel">
+        <button class="detail-panel-head" id="detailPanelToggle" type="button" aria-expanded="true" aria-controls="detailPanelBody" title="Replier le détail actif et agrandir le graphique">
+          <span>
+            <small>DÉTAIL ACTIF</small>
+            <strong>Lecture technique</strong>
+          </span>
+          <span class="detail-panel-toggle-label" id="detailPanelToggleLabel">Réduire ◀</span>
+        </button>
+        <div class="detail-panel-body" id="detailPanelBody">
+          <div class="detail-grid luxe-detail-grid" id="assetDetailGrid">
+            <div><b>Actif</b><span>En attente</span></div>
+            <div><b>Type</b><span>—</span></div>
+            <div><b>Décision</b><span>—</span></div>
+            <div><b>Ratio vol/cap</b><span>—</span></div>
           </div>
+          <p class="why-box luxe-why-box" id="assetDetailWhy">Livecheck requis avant lecture détaillée.</p>
+
+          <details class="luxe-detail-disclosure">
+            <summary><span>Sources et fraîcheur</span><small>marché · spot · historique</small></summary>
+            <div class="broker-strip luxe-broker-strip" id="brokerStrip" aria-label="État atomique des données">
+              <div><span>Marché 50</span><b id="brokerMarket">En attente</b><small id="brokerMarketTime">—</small></div>
+              <div><span>Prix snapshot</span><b id="brokerSpot">En attente</b><small id="brokerSpotTime">—</small></div>
+              <div><span>Historique</span><b id="brokerChart">En attente</b><small id="brokerChartTime">—</small></div>
+            </div>
+          </details>
+
+          <details class="luxe-detail-disclosure">
+            <summary><span>Réseau, cache et latence</span><small>diagnostic avancé</small></summary>
+            <div class="diagnostic-strip luxe-diagnostic-strip" id="atlasDiagnosticStrip" aria-label="Diagnostic technique compact">
+              <div><span>Source marché</span><b id="diagSourceMode">En attente</b><small id="diagSourceDetail">—</small></div>
+              <div><span>Latence marché</span><b id="diagMarketLatency">—</b><small id="diagUsdLatency">USD : —</small></div>
+              <div><span>Graphique / cache</span><b id="diagChartMode">En attente</b><small id="diagChartLatency">Latence : —</small></div>
+              <div><span>Retries / erreur</span><b id="diagRetryCount">0 retry</b><small id="diagLastError">Aucune erreur</small></div>
+            </div>
+          </details>
+
+          <details class="luxe-detail-disclosure">
+            <summary><span>Intégrité graphique</span><small>devise · couverture · cohérence</small></summary>
+            <div class="luxe-integrity-copy" id="luxeIntegrityCopy">Atlas attend une série CoinGecko réelle avant de confirmer l’intégrité du graphique.</div>
+          </details>
         </div>
-        <div class="broker-strip" id="brokerStrip" aria-label="État atomique des données">
-          <div><span>Marché 50</span><b id="brokerMarket">En attente</b><small id="brokerMarketTime">—</small></div>
-          <div><span>Prix snapshot</span><b id="brokerSpot">En attente</b><small id="brokerSpotTime">—</small></div>
-          <div><span>Historique</span><b id="brokerChart">En attente</b><small id="brokerChartTime">—</small></div>
-        </div>
-        <div class="diagnostic-strip" id="atlasDiagnosticStrip" aria-label="Diagnostic technique compact">
-          <div><span>Source marché</span><b id="diagSourceMode">En attente</b><small id="diagSourceDetail">—</small></div>
-          <div><span>Latence marché</span><b id="diagMarketLatency">—</b><small id="diagUsdLatency">USD : —</small></div>
-          <div><span>Graphique / cache</span><b id="diagChartMode">En attente</b><small id="diagChartLatency">Latence : —</small></div>
-          <div><span>Retries / erreur</span><b id="diagRetryCount">0 retry</b><small id="diagLastError">Aucune erreur</small></div>
-        </div>
-        <div class="detail-grid" id="assetDetailGrid">
-          <div><b>Actif</b><span>En attente</span></div>
-          <div><b>Type</b><span>—</span></div>
-          <div><b>Décision</b><span>—</span></div>
-          <div><b>Ratio vol/cap</b><span>—</span></div>
-        </div>
-        <p class="why-box" id="assetDetailWhy">Livecheck requis avant lecture détaillée.</p>
       </article>
+
+      <button class="detail-panel-rail" id="detailPanelRail" type="button" aria-label="Afficher le détail actif" title="Afficher le détail actif">
+        <span>DÉTAIL ACTIF</span><b>▶</b>
+      </button>
     </section>
 
 
@@ -388,7 +414,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.46</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.46.1</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -785,7 +811,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.46 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.46.1 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1896,7 +1922,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.46 — MULTI HORIZON</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.46.1 — CHAMPAGNE LUXE MARKET LENS</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -1905,6 +1931,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.46"></script>
+  <script src="./app.js?v=1.1-alpha.26.46.1"></script>
 </body>
 </html>
