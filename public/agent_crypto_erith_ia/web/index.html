@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.46.4</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.46.5</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.46.4" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.46.5" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · USD optionnel · Multi-Horizon · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.46.4</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.46.5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -121,9 +121,14 @@
               <button class="period-btn" data-period="30">30j</button>
             </div>
             <div class="compare-actions" aria-label="Actions de comparaison">
-              <button class="compare-btn active" id="btnChartSolo" type="button" title="Revenir à l’actif principal seul">Solo</button>
+              <button class="compare-btn active" id="btnChartSolo" type="button" title="Revenir à un seul actif">Solo</button>
               <button class="compare-btn" id="btnChartTop3" type="button" title="Comparer les trois premiers actifs hors stablecoins">Top 3</button>
               <button class="compare-btn" id="btnChartTop5" type="button" title="Comparer les cinq premiers actifs hors stablecoins">Top 5</button>
+              <button class="compare-btn compare-btn-mover" id="btnChartGainers" type="button" title="Charger les cinq plus fortes hausses de la période active">Hausses 5</button>
+              <button class="compare-btn compare-btn-mover" id="btnChartLosers" type="button" title="Charger les cinq plus fortes baisses de la période active">Baisses 5</button>
+              <button class="compare-btn" id="btnChartVolume5" type="button" title="Charger les cinq plus gros volumes 24 h">Volumes 5</button>
+              <button class="compare-btn" id="btnChartReset" type="button" title="Réinitialiser le graphe sur Bitcoin en 24 h">Réinit.</button>
+              <button class="compare-btn compare-btn-clear" id="btnChartClear" type="button" title="Retirer toutes les cryptos du graphe">Vider</button>
             </div>
           </div>
         </div>
@@ -409,7 +414,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.46.4</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.46.5</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -806,7 +811,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.46.4 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.46.5 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -1917,7 +1922,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.46.4 — ATLAS DECISION BOARD TRUTH LOCK</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.46.5 — MARKET SNAPSHOT GRAPH CONTROL LOCK</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -1926,6 +1931,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.46.4"></script>
+  <script src="./app.js?v=1.1-alpha.26.46.5"></script>
 </body>
 </html>

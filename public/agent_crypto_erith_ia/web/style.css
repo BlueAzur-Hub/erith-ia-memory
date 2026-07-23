@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — Atlas compact diagnostics
+   V1.1-alpha.26.46.5 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — Missions de Vie
+   V1.1-alpha.26.46.5 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — Analyst Stable Dimensions
+   V1.1-alpha.26.46.5 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.46.4 — Audience V2 */
+/* V1.1-alpha.26.46.5 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.46.5 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — MULTI HORIZON
+   V1.1-alpha.26.46.5 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5090,8 +5090,34 @@ main .decision-board{
   border: 1px solid rgba(112, 244, 255, .28);
   background: rgba(3, 13, 24, .80);
   color: rgba(229, 248, 255, .90);
-  cursor: pointer;
   backdrop-filter: blur(8px);
+}
+.compare-chip-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.compare-chip-remove {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 127, 153, .30);
+  background: rgba(255, 90, 120, .09);
+  color: rgba(255, 214, 222, .92);
+  font: 900 13px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.compare-chip-remove:hover {
+  border-color: rgba(255, 127, 153, .68);
+  background: rgba(255, 90, 120, .20);
 }
 .compare-chip span { font: 900 10px/1 system-ui, sans-serif; }
 .compare-chip small { font: 700 8px/1 system-ui, sans-serif; color: rgba(209, 224, 240, .62); text-transform: uppercase; }
@@ -5198,7 +5224,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.46.4 */
+/* Navigation active — V1.1-alpha.26.46.5 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5209,7 +5235,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.4 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.46.5 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5472,6 +5498,79 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.46.4 — ATLAS DECISION BOARD TRUTH LOCK */
+/* V1.1-alpha.26.46.5 — MARKET SNAPSHOT GRAPH CONTROL LOCK */
 .decision-card span{line-height:1.42;}
 .decision-verdict-body span{line-height:1.42;}
+
+
+/* =========================================================
+   V1.1-alpha.26.46.5 — MARKET SNAPSHOT GRAPH CONTROL LOCK
+   Sélection/désélection libre + presets hausses/baisses/volume.
+   ========================================================= */
+.compare-actions {
+  row-gap: 5px;
+}
+.compare-btn-mover {
+  border-color: rgba(112, 244, 255, .30);
+}
+.compare-btn-clear {
+  border-color: rgba(255, 127, 153, .30);
+  color: rgba(255, 218, 225, .86);
+}
+.compare-btn-clear:hover,
+.compare-btn-clear.active {
+  border-color: rgba(255, 127, 153, .62);
+  background: linear-gradient(135deg, rgba(255, 90, 120, .16), rgba(255, 214, 122, .07));
+  color: #fff1f4;
+}
+.spark-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 142px;
+}
+.graph-row-toggle {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(112, 244, 255, .28);
+  background: rgba(4, 17, 29, .78);
+  color: rgba(219, 245, 255, .88);
+  font: 900 16px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.graph-row-toggle:hover {
+  transform: translateY(-1px);
+  border-color: rgba(112, 244, 255, .72);
+  box-shadow: 0 0 14px rgba(112, 244, 255, .13);
+}
+.graph-row-toggle.is-on {
+  border-color: rgba(255, 214, 122, .66);
+  background: rgba(255, 214, 122, .12);
+  color: #fff1c8;
+}
+
+.asset-row.is-compared:not(.is-selected) td {
+  background: rgba(112, 244, 255, .035);
+}
+.asset-row.is-compared:not(.is-selected) td:first-child {
+  box-shadow: inset 2px 0 0 rgba(112, 244, 255, .55);
+}
+.asset-row.is-compared:hover td {
+  background: rgba(112, 244, 255, .075);
+}
+
+.asset-row.is-compared .graph-row-toggle.is-on {
+  box-shadow: 0 0 0 1px rgba(255, 214, 122, .08), 0 0 15px rgba(112, 244, 255, .08);
+}
+.clean-lens-why-box {
+  font-weight: 800;
+  letter-spacing: .005em;
+}
+@media (max-width: 1280px) {
+  .compare-actions { max-width: 520px; justify-content: flex-end; }
+}
