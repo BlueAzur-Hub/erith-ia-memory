@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — Atlas compact diagnostics
+   V1.1-alpha.26.47.2 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — Missions de Vie
+   V1.1-alpha.26.47.2 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — Analyst Stable Dimensions
+   V1.1-alpha.26.47.2 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.47.1 — Audience V2 */
+/* V1.1-alpha.26.47.2 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.47.2 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — MULTI HORIZON
+   V1.1-alpha.26.47.2 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5224,7 +5224,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.47.1 */
+/* Navigation active — V1.1-alpha.26.47.2 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5235,7 +5235,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.47.2 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5498,13 +5498,13 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE */
+/* V1.1-alpha.26.47.2 — NEWS SENTINEL SOURCE INTELLIGENCE */
 .decision-card span{line-height:1.42;}
 .decision-verdict-body span{line-height:1.42;}
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.2 — NEWS SENTINEL SOURCE INTELLIGENCE
    Sélection/désélection libre + presets + micro-polissage visuel.
    ========================================================= */
 .compare-actions {
@@ -5577,7 +5577,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.2 — NEWS SENTINEL SOURCE INTELLIGENCE
    Micro-polissage uniquement : groupes de commandes, états de séries,
    contraste local, hiérarchie des preuves et respiration de la légende.
    Moteur, sources, calculs et palette des courbes inchangés.
@@ -5690,7 +5690,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.2 — NEWS SENTINEL SOURCE INTELLIGENCE
    ========================================================= */
 .news-sentinel{
   position:relative;
@@ -5808,7 +5808,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — CHAMPAGNE HEADER FIT
+   V1.1-alpha.26.47.2 — CHAMPAGNE HEADER FIT
    Titre stable, commandes ordonnées, libellés techniques courts.
    ========================================================= */
 #analyste.champagne-clean-lens > .chart-panel > .section-head.compact {
@@ -5908,7 +5908,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.1 — NEWS SENTINEL WORLD-TO-MARKET LIVE FEED TRUTH LOCK
+   V1.1-alpha.26.47.2 — NEWS SENTINEL WORLD-TO-MARKET LIVE FEED TRUTH LOCK
    Flux GitHub archivé, cartes compactes, Decision Board non étiré.
    ========================================================= */
 .news-sentinel-collapse > .atlas-collapse-summary{
@@ -6071,4 +6071,71 @@ main .decision-board{
   .news-live-toolbar{align-items:flex-start;flex-direction:column;}
   .news-live-actions{justify-content:flex-start;}
   .news-live-kpis{grid-template-columns:1fr 1fr;}
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47.2 — NEWS SENTINEL GRAPH TRUTH & VIEWPORT LOCK
+   Période active explicitement sourcée, ancre Analyste stable,
+   ticker visible sans F11 et titres partiels honnêtes.
+   ========================================================= */
+.multi-horizon-grid .horizon-card[data-source="series"]::after,
+.multi-horizon-grid .horizon-card[data-source="snapshot"]::after,
+.multi-horizon-grid .horizon-card[data-source="unavailable"]::after {
+  display: block;
+  margin-top: 6px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.multi-horizon-grid .horizon-card[data-source="series"]::after {
+  content: "SÉRIE RÉELLE ACTIVE";
+  color: rgba(112,244,255,.82);
+}
+.multi-horizon-grid .horizon-card[data-source="snapshot"]::after {
+  content: "SNAPSHOT MARCHÉ";
+  color: rgba(255,216,135,.72);
+}
+.multi-horizon-grid .horizon-card[data-source="unavailable"]::after {
+  content: "SÉRIE INDISPONIBLE";
+  color: rgba(255,171,104,.82);
+}
+
+#analyste.champagne-clean-lens #selectedAssetTitle {
+  max-width: min(100%, 780px);
+}
+
+@media (min-width:1180px) and (max-height:820px) {
+  .atlas-market-zone #analyste .chart-shell {
+    height: 440px !important;
+    min-height: 440px !important;
+    max-height: 440px !important;
+  }
+  .atlas-market-zone #analyste #mainChart {
+    height: 410px !important;
+    min-height: 410px !important;
+    max-height: 410px !important;
+  }
+  .atlas-market-zone > .ticker {
+    min-height: 30px !important;
+  }
+}
+
+@media (min-width:1180px) and (max-height:760px) {
+  .atlas-market-zone #analyste .chart-shell {
+    height: 405px !important;
+    min-height: 405px !important;
+    max-height: 405px !important;
+  }
+  .atlas-market-zone #analyste #mainChart {
+    height: 375px !important;
+    min-height: 375px !important;
+    max-height: 375px !important;
+  }
+}
+
+/* Ancre Analyste : le hash place le cockpit au sommet sans masquer son ticker. */
+#analyste.champagne-clean-lens {
+  scroll-margin-top: 6px;
 }

@@ -28,7 +28,7 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Iterable
 
-VERSION = "V1.1-alpha.26.47.1"
+VERSION = "V1.1-alpha.26.47.2"
 SCHEMA = "atlas_news_sentinel_world_to_market_v1"
 ROOT = Path("public/agent_crypto_erith_ia/data/news")
 MAX_EVENTS = 80
@@ -61,7 +61,7 @@ SOURCES: tuple[Source, ...] = (
     Source("sec", "U.S. SEC", "https://www.sec.gov/news/pressreleases.rss", "primary", "en", 92),
     Source("fed", "Federal Reserve", "https://www.federalreserve.gov/feeds/press_all.xml", "primary", "en", 92),
     Source("ecb", "Banque centrale européenne", "https://www.ecb.europa.eu/rss/press.html", "primary", "en", 92),
-    Source("cftc", "U.S. CFTC", "https://www.cftc.gov/PressRoom/PressReleases/rss", "primary", "en", 90),
+    Source("cftc", "U.S. CFTC", "https://www.cftc.gov/RSS/RSSGP/rssgp.xml", "primary", "en", 90),
     Source("cisa", "CISA Cybersecurity Advisories", "https://www.cisa.gov/cybersecurity-advisories/all.xml", "primary", "en", 88),
 )
 
