@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.47</title>
+  <title>Agent-Crypto @erith.IA — Observatoire V1.1-alpha.26.47.1</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.47" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha.26.47.1" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · Multi-Horizon · News Sentinel · Missions de Vie</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha.26.47</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha.26.47.1</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -366,114 +366,151 @@
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-copy">
           <span class="atlas-collapse-title">News Sentinel — veille événementielle</span>
-          <span class="atlas-collapse-subtitle">Sources · fraîcheur · preuve · impact potentiel · manipulation</span>
+          <span class="atlas-collapse-subtitle">Monde + crypto filtrés par pertinence marché · sources · fraîcheur · preuve</span>
+        </span>
+        <span class="news-collapse-live" aria-live="polite">
+          <b id="newsCollapseState">Flux en attente</b>
+          <small id="newsCollapseMeta">archive GitHub</small>
         </span>
         <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
       </summary>
       <div class="atlas-collapse-body">
-    <section class="news-sentinel" aria-labelledby="newsSentinelTitle">
-      <div class="section-head compact news-sentinel-head">
-        <div>
-          <p class="eyebrow">NEWS SENTINEL V1 · VEILLE ÉVÉNEMENTIELLE</p>
-          <h2 id="newsSentinelTitle">Nouvelles susceptibles d’influencer le marché</h2>
-        </div>
-        <div class="news-sentinel-status-stack">
-          <span class="pill warn" id="newsSentinelState">Aucune information analysée</span>
-          <span class="pill" id="newsSentinelMemoryCount">Mémoire 0/120</span>
-        </div>
-      </div>
-
-      <p class="news-sentinel-intro">
-        Atlas classe une information, sa source, sa fraîcheur et son impact potentiel. Il ne déduit jamais automatiquement un achat ou une vente.
-      </p>
-
-      <div class="news-sentinel-summary" id="newsSentinelSummary">
-        <article><span>Dernier événement</span><b id="newsSentinelLast">—</b><small id="newsSentinelFreshness">Fraîcheur inconnue</small></article>
-        <article><span>Niveau de preuve</span><b id="newsSentinelEvidence">—</b><small id="newsSentinelSourceClass">Source non qualifiée</small></article>
-        <article><span>Impact potentiel</span><b id="newsSentinelImpact">—</b><small id="newsSentinelDirection">Orientation indéterminée</small></article>
-        <article><span>Actifs / secteurs</span><b id="newsSentinelAssets">—</b><small id="newsSentinelSectors">—</small></article>
-        <article><span>Manipulation</span><b id="newsSentinelManipulation">—</b><small id="newsSentinelPriced">Déjà pricé : indéterminé</small></article>
-        <article class="news-summary-decision"><span>Décision Atlas</span><b id="newsSentinelDecision">Surveillance</b><small id="newsSentinelChecks">Attendre une information vérifiable.</small></article>
-      </div>
-
-      <div class="news-sentinel-workbench">
-        <article class="news-entry-panel">
-          <div class="news-form-grid">
-            <label class="news-field news-field-wide">
-              <span>Titre de l’information</span>
-              <input id="newsTitle" type="text" placeholder="Ex. Un régulateur publie une décision concernant un ETF crypto" autocomplete="off" />
-            </label>
-            <label class="news-field news-field-wide">
-              <span>URL ou domaine de la source</span>
-              <input id="newsSourceUrl" type="url" placeholder="https://source.example/article" autocomplete="off" />
-            </label>
-            <label class="news-field">
-              <span>Nom de la source</span>
-              <input id="newsSourceName" type="text" placeholder="SEC, Reuters, projet officiel…" autocomplete="off" />
-            </label>
-            <label class="news-field">
-              <span>Date / heure de l’événement</span>
-              <input id="newsEventTime" type="datetime-local" />
-            </label>
-            <label class="news-field">
-              <span>Sources concordantes</span>
-              <select id="newsSourceCount">
-                <option value="1">1 source</option>
-                <option value="2">2 sources</option>
-                <option value="3">3 sources ou plus</option>
-              </select>
-            </label>
-            <label class="news-field">
-              <span>Statut déclaré</span>
-              <select id="newsDeclaredStatus">
-                <option value="unknown">À déterminer</option>
-                <option value="confirmed">Confirmé / officiel</option>
-                <option value="reported">Rapporté par la presse</option>
-                <option value="rumor">Rumeur / non confirmé</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="news-field news-field-wide news-text-field">
-            <span>Contenu, annonce ou résumé factuel</span>
-            <textarea id="newsInput" placeholder="Colle ici le texte d’une annonce, d’un communiqué, d’une actualité, d’un listing, d’un hack, d’une décision réglementaire ou d’une rumeur à vérifier."></textarea>
-          </label>
-
-          <div class="news-actions">
-            <button class="btn primary" id="btnAnalyzeNews" type="button">Analyser et mémoriser</button>
-            <button class="btn" id="btnNewsClearForm" type="button">Effacer le formulaire</button>
-            <button class="btn ghost" id="btnNewsExport" type="button">Exporter JSON</button>
-            <button class="btn ghost" id="btnNewsClearHistory" type="button">Vider l’historique</button>
-          </div>
-
-          <div class="analysis-box news-analysis-output" id="newsOutput">Aucune actualité analysée.</div>
-        </article>
-
-        <aside class="news-history-panel">
-          <div class="news-history-head">
+        <section class="news-sentinel" aria-labelledby="newsSentinelTitle">
+          <div class="section-head compact news-sentinel-head">
             <div>
-              <p class="eyebrow">MÉMOIRE LOCALE</p>
-              <h3>Événements récents</h3>
+              <p class="eyebrow">NEWS SENTINEL · WORLD-TO-MARKET LIVE FEED</p>
+              <h2 id="newsSentinelTitle">Nouvelles susceptibles d’influencer le marché</h2>
             </div>
-            <span class="pill" id="newsHistoryStatus">0 événement</span>
+            <div class="news-sentinel-status-stack">
+              <span class="pill warn" id="newsSentinelState">Chargement du flux mondial</span>
+              <span class="pill" id="newsSentinelFeedCount">Flux 0 événement</span>
+              <span class="pill" id="newsSentinelMemoryCount">Manuel 0/120</span>
+            </div>
           </div>
-          <div class="news-history-list" id="newsHistoryList">
-            <p class="news-history-empty">Aucun événement mémorisé dans ce navigateur.</p>
-          </div>
-        </aside>
-      </div>
 
-      <details class="news-source-registry" id="newsSourceRegistry">
-        <summary>Sources déclarées et niveaux de confiance</summary>
-        <div class="news-source-registry-grid">
-          <article><b>Sources primaires</b><span>Institutions, régulateurs, projets, protocoles, exchanges et pages de statut officielles.</span><em>Preuve potentiellement élevée si le contenu est explicite et daté.</em></article>
-          <article><b>Presse financière</b><span>Agences de presse et médias financiers reconnus.</span><em>Preuve moyenne à élevée, à recouper lorsque l’impact est majeur.</em></article>
-          <article><b>Médias crypto</b><span>Presse spécialisée, analyses sectorielles et comptes rendus techniques.</span><em>Preuve moyenne ; vérifier la source primaire citée.</em></article>
-          <article><b>Réseaux sociaux</b><span>X, Telegram, Reddit, vidéos et messages non officiels.</span><em>Preuve faible tant qu’aucune source primaire ne confirme.</em></article>
-        </div>
-        <p class="news-source-note">V1 publique : aucune collecte massive et aucun scraping. Atlas analyse les éléments fournis et mémorise localement les événements dédupliqués.</p>
-      </details>
-    </section>
+          <p class="news-sentinel-intro">
+            Atlas lit une archive GitHub alimentée par des flux RSS/Atom mondiaux, économiques, institutionnels et crypto. Il conserve uniquement les événements ayant un lien plausible avec les marchés. Impact potentiel ne signifie ni causalité prouvée ni signal d’achat.
+          </p>
+
+          <div class="news-live-toolbar">
+            <div>
+              <p class="eyebrow">FLUX MONDIAL QUALIFIÉ</p>
+              <h3>Événements récents</h3>
+              <small id="newsFeedUpdatedAt">Première archive en attente</small>
+            </div>
+            <div class="news-live-actions">
+              <div class="news-live-filters" aria-label="Filtres du flux">
+                <button class="news-filter-btn active" type="button" data-news-filter="all">Tous</button>
+                <button class="news-filter-btn" type="button" data-news-filter="priority">Prioritaires</button>
+                <button class="news-filter-btn" type="button" data-news-filter="primary">Institutions</button>
+                <button class="news-filter-btn" type="button" data-news-filter="crypto">Crypto</button>
+                <button class="news-filter-btn" type="button" data-news-filter="world">Monde</button>
+              </div>
+              <button class="btn small" id="btnNewsRefresh" type="button">Actualiser le flux</button>
+            </div>
+          </div>
+
+          <div class="news-live-kpis">
+            <article><span>24 heures</span><b id="newsFeedEvents24">0 événement</b><small id="newsFeedPriority24">0 prioritaire</small></article>
+            <article><span>Sources</span><b id="newsFeedSources">0/0 disponibles</b><small id="newsFeedFailures">0 échec</small></article>
+            <article><span>État archive</span><b id="newsFeedArchiveState">En attente</b><small id="newsFeedArchiveAge">Heure inconnue</small></article>
+            <article><span>Décision globale</span><b id="newsFeedDecision">Collecte en attente</b><small>Aucun ordre automatique</small></article>
+          </div>
+
+          <div class="news-live-list" id="newsLiveList" aria-live="polite">
+            <p class="news-history-empty">Le premier flux sera créé par GitHub Actions.</p>
+          </div>
+
+          <div class="news-sentinel-summary" id="newsSentinelSummary">
+            <article><span>Événement principal</span><b id="newsSentinelLast">—</b><small id="newsSentinelFreshness">Fraîcheur inconnue</small></article>
+            <article><span>Niveau de preuve</span><b id="newsSentinelEvidence">—</b><small id="newsSentinelSourceClass">Source non qualifiée</small></article>
+            <article><span>Impact potentiel</span><b id="newsSentinelImpact">—</b><small id="newsSentinelDirection">Orientation indéterminée</small></article>
+            <article><span>Actifs / secteurs</span><b id="newsSentinelAssets">—</b><small id="newsSentinelSectors">—</small></article>
+            <article><span>Manipulation</span><b id="newsSentinelManipulation">—</b><small id="newsSentinelPriced">Réaction marché : à comparer</small></article>
+            <article class="news-summary-decision"><span>Décision Atlas</span><b id="newsSentinelDecision">Surveillance</b><small id="newsSentinelChecks">Attendre une information vérifiable.</small></article>
+          </div>
+
+          <details class="news-manual-disclosure">
+            <summary>Analyse manuelle et mémoire locale</summary>
+            <div class="news-sentinel-workbench">
+              <article class="news-entry-panel">
+                <div class="news-form-grid">
+                  <label class="news-field news-field-wide">
+                    <span>Titre de l’information</span>
+                    <input id="newsTitle" type="text" placeholder="Ex. Un régulateur publie une décision concernant un ETF crypto" autocomplete="off" />
+                  </label>
+                  <label class="news-field news-field-wide">
+                    <span>URL ou domaine de la source</span>
+                    <input id="newsSourceUrl" type="url" placeholder="https://source.example/article" autocomplete="off" />
+                  </label>
+                  <label class="news-field">
+                    <span>Nom de la source</span>
+                    <input id="newsSourceName" type="text" placeholder="SEC, Reuters, projet officiel…" autocomplete="off" />
+                  </label>
+                  <label class="news-field">
+                    <span>Date / heure de l’événement</span>
+                    <input id="newsEventTime" type="datetime-local" />
+                  </label>
+                  <label class="news-field">
+                    <span>Sources concordantes</span>
+                    <select id="newsSourceCount">
+                      <option value="1">1 source</option>
+                      <option value="2">2 sources</option>
+                      <option value="3">3 sources ou plus</option>
+                    </select>
+                  </label>
+                  <label class="news-field">
+                    <span>Statut déclaré</span>
+                    <select id="newsDeclaredStatus">
+                      <option value="unknown">À déterminer</option>
+                      <option value="confirmed">Confirmé / officiel</option>
+                      <option value="reported">Rapporté par la presse</option>
+                      <option value="rumor">Rumeur / non confirmé</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label class="news-field news-field-wide news-text-field">
+                  <span>Contenu, annonce ou résumé factuel</span>
+                  <textarea id="newsInput" placeholder="Colle ici le texte d’une annonce, d’un communiqué, d’une actualité, d’un listing, d’un hack, d’une décision réglementaire ou d’une rumeur à vérifier."></textarea>
+                </label>
+
+                <div class="news-actions">
+                  <button class="btn primary" id="btnAnalyzeNews" type="button">Analyser et mémoriser</button>
+                  <button class="btn" id="btnNewsClearForm" type="button">Effacer le formulaire</button>
+                  <button class="btn ghost" id="btnNewsExport" type="button">Exporter JSON</button>
+                  <button class="btn ghost" id="btnNewsClearHistory" type="button">Vider l’historique</button>
+                </div>
+
+                <div class="analysis-box news-analysis-output" id="newsOutput">Aucune actualité analysée manuellement.</div>
+              </article>
+
+              <aside class="news-history-panel">
+                <div class="news-history-head">
+                  <div>
+                    <p class="eyebrow">MÉMOIRE LOCALE</p>
+                    <h3>Événements manuels</h3>
+                  </div>
+                  <span class="pill" id="newsHistoryStatus">0 événement</span>
+                </div>
+                <div class="news-history-list" id="newsHistoryList">
+                  <p class="news-history-empty">Aucun événement manuel mémorisé dans ce navigateur.</p>
+                </div>
+              </aside>
+            </div>
+          </details>
+
+          <details class="news-source-registry" id="newsSourceRegistry">
+            <summary>Sources collectées et niveaux de confiance</summary>
+            <div class="news-source-registry-grid">
+              <article><b>Institutions</b><span>SEC · CFTC · Réserve fédérale · BCE.</span><em>Sources primaires ; le contenu doit néanmoins être pertinent pour les marchés.</em></article>
+              <article><b>Presse mondiale / économie</b><span>BBC World · BBC Business · France 24.</span><em>Guerres, sanctions, taux, inflation, énergie et décisions politiques uniquement lorsqu’un lien marché est détecté.</em></article>
+              <article><b>Médias crypto</b><span>CoinDesk · Decrypt · Cointelegraph avec prudence.</span><em>Flux spécialisés ; la source primaire citée reste prioritaire.</em></article>
+              <article><b>Cybersécurité</b><span>CISA uniquement lorsqu’un lien crypto, exchange ou infrastructure financière est détecté.</span><em>Les alertes techniques générales sont filtrées.</em></article>
+            </div>
+            <p class="news-source-note">Collecte bornée par GitHub Actions, archive publique JSON, déduplication et conservation maximale de sept jours. Aucune collecte massive, aucune clé privée, aucun ordre financier.</p>
+          </details>
+        </section>
       </div>
     </details>
 
@@ -518,9 +555,9 @@
       </div>
 
       <div class="decision-news-bridge" id="decisionNewsBridge">
-        <div><span>Contexte News Sentinel</span><b id="decisionNewsState">Aucune information analysée</b></div>
-        <div><span>Impact / preuve</span><b id="decisionNewsImpact">—</b></div>
-        <div><span>Décision événementielle</span><b id="decisionNewsAction">Surveillance</b></div>
+        <div><span>Contexte News Sentinel</span><b id="decisionNewsState">Chargement de l’archive mondiale</b></div>
+        <div><span>Impact / preuve</span><b id="decisionNewsImpact">En attente</b></div>
+        <div><span>Décision événementielle</span><b id="decisionNewsAction">Collecte à vérifier</b></div>
       </div>
 
       <div class="decision-board-verdict" id="decisionBoardVerdict">
@@ -542,7 +579,7 @@
         <div id="coldRead">En attente du Livecheck. Aucun prix ni classement ne sera affiché sans source réelle.</div>
       </article>
       <article class="panel glass compact-panel">
-        <p class="eyebrow">VERROU V1.1-alpha.26.47</p>
+        <p class="eyebrow">VERROU V1.1-alpha.26.47.1</p>
         <h2>Anti-hallucination</h2>
         <p class="rule-line warn-lock" id="trustLockText">En attente Livecheck. Pas de source marché active, pas de prix.</p>
       </article>
@@ -931,7 +968,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill">V1.1-alpha.26.47 · Math Core</span>
+        <span class="pill">V1.1-alpha.26.47.1 · Math Core</span>
       </div>
 
       <div class="situation-grid">
@@ -2042,7 +2079,7 @@
     </section>
 
     <footer class="footer">
-      <span>Agent-Crypto @erith.IA V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE · CHAMPAGNE HEADER FIT</span>
+      <span>Agent-Crypto @erith.IA V1.1-alpha.26.47.1 — NEWS SENTINEL WORLD-TO-MARKET LIVE FEED TRUTH LOCK</span>
       <span>Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience">Mesure d’audience · activité de l’application et diagnostic technique</a>
     </footer>
@@ -2051,6 +2088,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha.26.47"></script>
+  <script src="./app.js?v=1.1-alpha.26.47.1"></script>
 </body>
 </html>

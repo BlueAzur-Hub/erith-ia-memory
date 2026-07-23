@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — Atlas compact diagnostics
+   V1.1-alpha.26.47.1 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — Missions de Vie
+   V1.1-alpha.26.47.1 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — Analyst Stable Dimensions
+   V1.1-alpha.26.47.1 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.47 — Audience V2 */
+/* V1.1-alpha.26.47.1 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.47 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.47.1 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — MULTI HORIZON
+   V1.1-alpha.26.47.1 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5224,7 +5224,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.47 */
+/* Navigation active — V1.1-alpha.26.47.1 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5235,7 +5235,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.47.1 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5498,13 +5498,13 @@ main .decision-board{
 }
 
 
-/* V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE */
+/* V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE */
 .decision-card span{line-height:1.42;}
 .decision-verdict-body span{line-height:1.42;}
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
    Sélection/désélection libre + presets + micro-polissage visuel.
    ========================================================= */
 .compare-actions {
@@ -5577,7 +5577,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
    Micro-polissage uniquement : groupes de commandes, états de séries,
    contraste local, hiérarchie des preuves et respiration de la légende.
    Moteur, sources, calculs et palette des courbes inchangés.
@@ -5690,7 +5690,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V1.1-alpha.26.47.1 — NEWS SENTINEL SOURCE INTELLIGENCE
    ========================================================= */
 .news-sentinel{
   position:relative;
@@ -5808,7 +5808,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47 — CHAMPAGNE HEADER FIT
+   V1.1-alpha.26.47.1 — CHAMPAGNE HEADER FIT
    Titre stable, commandes ordonnées, libellés techniques courts.
    ========================================================= */
 #analyste.champagne-clean-lens > .chart-panel > .section-head.compact {
@@ -5904,4 +5904,171 @@ main .decision-board{
 }
 .news-sentinel-collapse > .atlas-collapse-summary .atlas-collapse-title {
   color: #fff0c8;
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47.1 — NEWS SENTINEL WORLD-TO-MARKET LIVE FEED TRUTH LOCK
+   Flux GitHub archivé, cartes compactes, Decision Board non étiré.
+   ========================================================= */
+.news-sentinel-collapse > .atlas-collapse-summary{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:12px;
+}
+.news-collapse-live{
+  display:flex;
+  align-items:flex-end;
+  flex-direction:column;
+  gap:2px;
+  min-width:150px;
+}
+.news-collapse-live b{
+  color:#dfffee;
+  font-size:.72rem;
+  line-height:1.1;
+}
+.news-collapse-live small{
+  color:#8ea6bc;
+  font-size:.62rem;
+  line-height:1.1;
+}
+.news-live-toolbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:14px;
+  margin:0 0 10px;
+}
+.news-live-toolbar h3{margin:2px 0 0;color:#fff1c9;font-size:1.04rem;}
+.news-live-toolbar small{display:block;margin-top:4px;color:#8fa5bb;font-size:.72rem;}
+.news-live-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;}
+.news-live-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.news-filter-btn{
+  min-height:28px;
+  padding:5px 9px;
+  border-radius:999px;
+  border:1px solid rgba(111,224,239,.18);
+  background:rgba(5,17,31,.76);
+  color:#b8c9d9;
+  font:850 .68rem/1 system-ui,sans-serif;
+  cursor:pointer;
+}
+.news-filter-btn:hover,.news-filter-btn.active{
+  color:#f6fbff;
+  border-color:rgba(100,232,255,.56);
+  background:rgba(15,49,67,.84);
+}
+.news-live-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:10px;
+}
+.news-live-kpis article{
+  min-height:68px;
+  padding:10px 12px;
+  border:1px solid rgba(111,224,239,.15);
+  border-radius:13px;
+  background:rgba(5,18,33,.72);
+}
+.news-live-kpis span,.news-live-kpis b,.news-live-kpis small{display:block;}
+.news-live-kpis span{color:#8ca2b9;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;}
+.news-live-kpis b{margin-top:5px;color:#fff1c9;font-size:.84rem;line-height:1.2;}
+.news-live-kpis small{margin-top:3px;color:#93a9bd;font-size:.67rem;line-height:1.25;}
+.news-live-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  max-height:430px;
+  overflow:auto;
+  padding:1px 3px 10px 1px;
+  margin-bottom:11px;
+}
+.news-live-item{
+  position:relative;
+  min-width:0;
+  border:1px solid rgba(111,224,239,.15);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(9,25,44,.88),rgba(4,13,27,.82));
+  padding:11px 12px;
+}
+.news-live-item[data-tone="danger"]{border-color:rgba(255,109,134,.42);}
+.news-live-item[data-tone="warn"]{border-color:rgba(255,215,130,.34);}
+.news-live-item.active{box-shadow:0 0 0 2px rgba(100,232,255,.16);border-color:rgba(100,232,255,.64);}
+.news-live-select{
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+.news-live-topline{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.news-live-type{color:#d9b96e;font-size:.63rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}
+.news-live-freshness{color:#8fa5bb;font-size:.63rem;white-space:nowrap;}
+.news-live-item h4{margin:6px 0 7px;color:#f6fbff;font-size:.84rem;line-height:1.35;}
+.news-live-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.news-live-meta span{
+  padding:4px 6px;
+  border:1px solid rgba(111,224,239,.12);
+  border-radius:999px;
+  background:rgba(2,11,23,.58);
+  color:#9eb3c6;
+  font-size:.62rem;
+}
+.news-live-source-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;}
+.news-live-source-row small{color:#7f96aa;font-size:.64rem;line-height:1.25;}
+.news-live-source-row a{color:#7eeeff;font-size:.66rem;font-weight:800;text-decoration:none;white-space:nowrap;}
+.news-live-source-row a:hover{text-decoration:underline;}
+.news-live-empty{
+  grid-column:1/-1;
+  padding:16px;
+  border:1px dashed rgba(111,224,239,.19);
+  border-radius:13px;
+  color:#8fa5bb;
+  font-size:.8rem;
+}
+.news-manual-disclosure{
+  margin-top:10px;
+  border:1px solid rgba(111,224,239,.14);
+  border-radius:15px;
+  background:rgba(4,13,26,.58);
+}
+.news-manual-disclosure > summary{
+  cursor:pointer;
+  padding:12px 14px;
+  color:#fff0c8;
+  font-weight:900;
+  font-size:.78rem;
+}
+.news-manual-disclosure > .news-sentinel-workbench{padding:0 12px 12px;}
+.news-sentinel-summary article{min-height:78px;}
+.decision-news-bridge{
+  height:max-content;
+  align-self:start;
+  align-items:start;
+  grid-auto-rows:max-content;
+}
+.decision-news-bridge > div{
+  min-height:0;
+  height:auto;
+  align-self:start;
+}
+.decision-news-bridge[data-state="idle"]{opacity:.78;}
+.decision-news-bridge[data-tone="ok"] > div{border-color:rgba(115,255,177,.28);}
+#newsSentinelState.loading,#newsSentinelState.pending{cursor:progress;}
+@media (max-width:1100px){
+  .news-live-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .news-live-list{grid-template-columns:1fr;}
+}
+@media (max-width:760px){
+  .news-sentinel-collapse > .atlas-collapse-summary{grid-template-columns:minmax(0,1fr) auto;}
+  .news-collapse-live{display:none;}
+  .news-live-toolbar{align-items:flex-start;flex-direction:column;}
+  .news-live-actions{justify-content:flex-start;}
+  .news-live-kpis{grid-template-columns:1fr 1fr;}
 }
