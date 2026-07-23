@@ -30,7 +30,7 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
-          const ARCHIVE_VERSION = 'V1.1-alpha.26.46.1';
+          const ARCHIVE_VERSION = 'V1.1-alpha.26.46';
           const ROOT = path.join('public', 'agent_crypto_erith_ia', 'data');
           const HISTORY = path.join(ROOT, 'history');
           fs.mkdirSync(HISTORY, { recursive: true });
