@@ -61,6 +61,68 @@ Mode actif : /atlas full-crypto.`;
     { id: "ideas", label: "Idea Forge" }
   ];
 
+  const WIZARD_STORAGE_KEY = "atlas10-yohan-active-step-v1";
+  const WIZARD_STEPS = Object.freeze([
+    {
+      id: "deployment",
+      progressKey: "base",
+      number: "01",
+      short: "Base",
+      title: "Base canonique",
+      description: "Core, Persona V3, Aerith-10 Crypto et prompt maître."
+    },
+    {
+      id: "experts",
+      progressKey: "expert",
+      number: "02",
+      short: "Experts",
+      title: "Puissance experte",
+      description: "Math Oracle, Psychologie, Idea Forge et cockpit."
+    },
+    {
+      id: "sources",
+      progressKey: "public",
+      number: "03",
+      short: "Sources",
+      title: "Mémoire Agent-Crypto",
+      description: "Documents publics, protocoles, modèle mathématique et tests."
+    },
+    {
+      id: "private-access",
+      progressKey: "private",
+      number: "04",
+      short: "Privé",
+      title: "Cores autorisés",
+      description: "Sources privées autorisées, ouvertes dans GitHub."
+    },
+    {
+      id: "archives",
+      progressKey: "archives",
+      number: "05",
+      short: "Archives",
+      title: "Seven Heaven",
+      description: "Packs portables à charger selon la mission."
+    },
+    {
+      id: "foundry",
+      progressKey: "foundry",
+      number: "06",
+      short: "Foundry",
+      title: "Flower Girls Foundry",
+      description: "Conception contrôlée d’un nouveau profil spécialisé."
+    },
+    {
+      id: "idea-forge",
+      progressKey: "ideas",
+      number: "07",
+      short: "Idées",
+      title: "Idea Forge",
+      description: "Transformation d’une idée crypto en proposition testable."
+    }
+  ]);
+
+  let wizardController = null;
+
   const baseCards = [
     {
       id: "base-core",
@@ -323,9 +385,26 @@ Mode actif : /atlas full-crypto.`;
 
   const state = loadState();
 
+  function safeStorageGet(key, fallback = null) {
+    try {
+      return window.localStorage.getItem(key) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function loadState() {
     try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      const parsed = JSON.parse(safeStorageGet(STORAGE_KEY, "{}") || "{}");
       return { completed: parsed.completed || {}, outputs: parsed.outputs || {} };
     } catch {
       return { completed: {}, outputs: {} };
@@ -333,7 +412,7 @@ Mode actif : /atlas full-crypto.`;
   }
 
   function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    safeStorageSet(STORAGE_KEY, JSON.stringify(state));
   }
 
   function esc(value) {
@@ -402,8 +481,12 @@ Mode actif : /atlas full-crypto.`;
         <p>${esc(item.description)}</p>
         <div class="card-meta">${item.tags.map((tag) => `<span>${esc(tag)}</span>`).join("")}</div>
         <div class="card-actions">
-          <a href="${esc(item.href)}" ${target}>${item.external ? "Ouvrir" : "Télécharger"}</a>
+          <a href="${esc(item.href)}" ${target}
+             data-tooltip-title="${item.external ? "Ouvrir la ressource" : "Télécharger le fichier"}"
+             data-tooltip="${esc(item.description)}">${item.external ? "Ouvrir" : "Télécharger"}</a>
           <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
+                  data-tooltip-title="Progression locale"
+                  data-tooltip="Confirme uniquement cette ressource dans ce navigateur. Aucun fichier n’est vérifié sur le disque."
                   class="${state.completed[item.id] ? "is-done" : ""}">
             ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
           </button>
@@ -421,8 +504,12 @@ Mode actif : /atlas full-crypto.`;
           <div class="resource-path">${esc(item.path)}</div>
         </div>
         <div class="resource-actions">
-          <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer"
+             data-tooltip-title="Ouvrir dans GitHub"
+             data-tooltip="${esc(item.description)}">GitHub</a>
           <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
+                  data-tooltip-title="Progression locale"
+                  data-tooltip="Marque cette ressource comme consultée dans ce navigateur."
                   class="${state.completed[item.id] ? "is-done" : ""}">
             ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
           </button>
@@ -437,13 +524,389 @@ Mode actif : /atlas full-crypto.`;
         <h3>${esc(item.title)}</h3>
         <p>${esc(item.description)}</p>
         <div class="card-actions">
-          <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer">Télécharger</a>
+          <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer"
+             data-tooltip-title="Télécharger le pack ${esc(item.index)}"
+             data-tooltip="${esc(item.description)}">Télécharger</a>
           <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
+                  data-tooltip-title="Progression locale"
+                  data-tooltip="Confirme ce pack. Pour valider l’étape Archives, Core Boot et Discernment suffisent."
                   class="${state.completed[item.id] ? "is-done" : ""}">
             ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
           </button>
         </div>
       </article>`;
+  }
+
+
+  function clearFieldError(field) {
+    field.classList.remove("is-invalid");
+    field.removeAttribute("aria-invalid");
+    const label = field.closest("label");
+    if (label) {
+      label.querySelectorAll(".field-error").forEach((node) => node.remove());
+    }
+  }
+
+  function validateForm(form) {
+    let firstInvalid = null;
+
+    form.querySelectorAll("[required]").forEach((field) => {
+      clearFieldError(field);
+      const value = typeof field.value === "string" ? field.value.trim() : "";
+      if (value) return;
+
+      field.classList.add("is-invalid");
+      field.setAttribute("aria-invalid", "true");
+
+      const label = field.closest("label");
+      if (label) {
+        const error = document.createElement("span");
+        error.className = "field-error";
+        error.setAttribute("role", "alert");
+        error.textContent = "Champ requis — renseigne cette étape pour continuer.";
+        label.appendChild(error);
+      }
+
+      if (!firstInvalid) firstInvalid = field;
+    });
+
+    if (!firstInvalid) return true;
+
+    firstInvalid.focus({ preventScroll: true });
+    firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+    showToast("Certains champs requis restent à compléter.");
+    return false;
+  }
+
+  function initFormAssistance() {
+    const helpByName = {
+      mission: "Décris la spécialisation réelle du nouveau profil en une phrase opérationnelle.",
+      result: "Indique l’objet concret que le profil devra produire, vérifier ou livrer.",
+      title: "Choisis un nom court, précis et reconnaissable pour la fonction.",
+      hypothesis: "Décris le problème ou l’hypothèse sans transformer l’intuition en certitude.",
+      data: "Liste les données réellement nécessaires, leurs sources et leur fréquence idéale.",
+      signal: "Décris ce qui doit devenir visible dans l’interface ou la sortie.",
+      risks: "Ajoute les données absentes, biais, contradictions et faux positifs possibles.",
+      test: "Définis une preuve reproductible permettant d’accepter ou de refuser la fonction."
+    };
+
+    document.querySelectorAll(".form-panel input, .form-panel textarea, .form-panel select").forEach((field) => {
+      field.addEventListener("input", () => clearFieldError(field));
+      field.addEventListener("change", () => clearFieldError(field));
+
+      const label = field.closest("label");
+      const help = helpByName[field.name];
+      if (!label || !help || label.querySelector(".field-help")) return;
+
+      const helper = document.createElement("button");
+      helper.type = "button";
+      helper.className = "field-help";
+      helper.setAttribute("aria-label", `Aide : ${field.name}`);
+      helper.dataset.tooltipTitle = "Repère de rédaction";
+      helper.dataset.tooltip = help;
+      helper.textContent = "?";
+      label.insertBefore(helper, field);
+    });
+  }
+
+  function initTooltips() {
+    const tooltip = document.createElement("div");
+    tooltip.className = "ui-tooltip";
+    tooltip.id = "uiTooltip";
+    tooltip.setAttribute("role", "tooltip");
+    tooltip.innerHTML = '<strong class="ui-tooltip-title"></strong><span class="ui-tooltip-text"></span>';
+    document.body.appendChild(tooltip);
+
+    const titleNode = tooltip.querySelector(".ui-tooltip-title");
+    const textNode = tooltip.querySelector(".ui-tooltip-text");
+    let activeTarget = null;
+
+    const defaults = new Map([
+      ["resetProgress", ["Réinitialiser la progression", "Efface uniquement les confirmations et brouillons conservés dans ce navigateur."]],
+      ["copyMasterPrompt", ["Copier le prompt maître", "Copie l’ordre de chargement complet pour activer Atlas-10 Yohan dans un fil ChatGPT."]],
+      ["copyFoundry", ["Copier le manifeste", "Copie le brouillon Flower Girl généré dans le presse-papiers."]],
+      ["downloadFoundry", ["Télécharger en Markdown", "Exporte le manifeste sans le publier ni modifier un Core canonique."]],
+      ["copyIdea", ["Copier la proposition", "Copie la fiche structurée produite par Idea Forge."]],
+      ["downloadIdea", ["Télécharger en Markdown", "Exporte la proposition dans un fichier .md local."]],
+      ["openIssue", ["Préparer une Issue", "Ouvre GitHub avec le titre et la proposition préremplis. Rien n’est soumis automatiquement."]]
+    ]);
+
+    defaults.forEach(([title, text], id) => {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.dataset.tooltipTitle = title;
+      element.dataset.tooltip = text;
+    });
+
+    document.querySelectorAll("[title]").forEach((element) => {
+      if (!element.dataset.tooltip) element.dataset.tooltip = element.getAttribute("title") || "";
+      if (!element.dataset.tooltipTitle) element.dataset.tooltipTitle = "Information";
+      element.removeAttribute("title");
+    });
+
+    document.querySelectorAll(".main-nav a").forEach((link) => {
+      const labels = {
+        "#deployment": ["Déploiement", "Ouvre l’étape 1 : les quatre fichiers fondamentaux."],
+        "#sources": ["Sources publiques", "Ouvre la mémoire documentaire d’Agent-Crypto."],
+        "#archives": ["Archives Seven Heaven", "Ouvre les sept packs portables, avec chargement minimal recommandé."],
+        "#foundry": ["Flower Girls Foundry", "Prépare un nouveau profil spécialisé sans modifier les canons."],
+        "#idea-forge": ["Idea Forge", "Structure une idée crypto en proposition testable."]
+      };
+      const data = labels[link.getAttribute("href")];
+      if (!data) return;
+      link.dataset.tooltipTitle = data[0];
+      link.dataset.tooltip = data[1];
+    });
+
+    document.querySelectorAll(".top-actions .primary-button, .hero-actions .primary-button").forEach((element) => {
+      if (element.dataset.tooltip) return;
+      element.dataset.tooltipTitle = "Base Full Crypto";
+      element.dataset.tooltip = "Télécharge le ZIP comprenant Core, Persona V3, Aerith-10 Crypto, prompt maître, Idea Forge et guide.";
+    });
+
+    function position(target) {
+      const rect = target.getBoundingClientRect();
+      const tipRect = tooltip.getBoundingClientRect();
+      const margin = 12;
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+
+      let top = rect.bottom + 10;
+      let placement = "bottom";
+      if (top + tipRect.height > window.innerHeight - margin) {
+        top = rect.top - tipRect.height - 10;
+        placement = "top";
+      }
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${Math.max(margin, top)}px`;
+      tooltip.dataset.placement = placement;
+    }
+
+    function show(target) {
+      const text = target.dataset.tooltip;
+      if (!text) return;
+      activeTarget = target;
+      titleNode.textContent = target.dataset.tooltipTitle || "Information";
+      textNode.textContent = text;
+      tooltip.classList.add("is-visible");
+      requestAnimationFrame(() => position(target));
+    }
+
+    function hide(target) {
+      if (target && activeTarget !== target) return;
+      activeTarget = null;
+      tooltip.classList.remove("is-visible");
+    }
+
+    document.addEventListener("pointerover", (event) => {
+      const target = event.target.closest("[data-tooltip]");
+      if (!target) return;
+      show(target);
+    });
+
+    document.addEventListener("pointerout", (event) => {
+      const target = event.target.closest("[data-tooltip]");
+      if (!target || target.contains(event.relatedTarget)) return;
+      hide(target);
+    });
+
+    document.addEventListener("focusin", (event) => {
+      const target = event.target.closest("[data-tooltip]");
+      if (target) show(target);
+    });
+
+    document.addEventListener("focusout", (event) => {
+      const target = event.target.closest("[data-tooltip]");
+      if (target) hide(target);
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      if (!event.target.closest("[data-tooltip]")) hide();
+    });
+
+    window.addEventListener("resize", () => {
+      if (activeTarget) position(activeTarget);
+    });
+
+    document.addEventListener("scroll", () => {
+      if (activeTarget) position(activeTarget);
+    }, true);
+  }
+
+  function initWizard() {
+    const progressShell = document.querySelector(".progress-shell");
+    const sections = Array.from(document.querySelectorAll("main > .section-block"));
+    if (!progressShell || sections.length !== WIZARD_STEPS.length) return;
+
+    sections.forEach((section, index) => {
+      section.id = WIZARD_STEPS[index].id;
+      section.classList.remove("shell");
+      section.classList.add("wizard-panel");
+      section.dataset.wizardIndex = String(index);
+      section.setAttribute("role", "tabpanel");
+      section.setAttribute("aria-labelledby", `wizard-step-${index}`);
+    });
+
+    const shell = document.createElement("section");
+    shell.className = "wizard-shell shell";
+    shell.id = "guided-workspace";
+    shell.innerHTML = `
+      <aside class="wizard-rail" aria-label="Étapes de déploiement">
+        <div class="wizard-rail-head">
+          <span class="wizard-rail-kicker">PARCOURS GUIDÉ</span>
+          <strong>Atlas Deployment</strong>
+          <small>Une fenêtre · sept étapes</small>
+        </div>
+        <nav class="wizard-nav" id="wizardNav"></nav>
+        <div class="wizard-rail-foot">
+          <span>Progression globale</span>
+          <strong id="wizardGlobalProgress">0%</strong>
+        </div>
+      </aside>
+      <div class="wizard-stage">
+        <header class="wizard-stage-head">
+          <div>
+            <span class="wizard-counter" id="wizardCounter"></span>
+            <strong class="wizard-current-title" id="wizardCurrentTitle"></strong>
+            <small class="wizard-current-description" id="wizardCurrentDescription"></small>
+          </div>
+          <div class="wizard-controls">
+            <button type="button" class="wizard-control" id="wizardPrevious"
+                    data-tooltip-title="Étape précédente"
+                    data-tooltip="Revient à l’étape précédente sans perdre les champs ni la progression.">←</button>
+            <button type="button" class="wizard-control next" id="wizardNext"
+                    data-tooltip-title="Étape suivante"
+                    data-tooltip="Passe à l’étape suivante. Les données saisies restent dans la fenêtre.">Suivant →</button>
+          </div>
+        </header>
+        <div class="wizard-viewport" id="wizardViewport"></div>
+        <footer class="wizard-stage-foot">
+          <button type="button" class="wizard-text-control" id="wizardPreviousBottom">← Précédent</button>
+          <span id="wizardStepStatus">Étape en cours</span>
+          <button type="button" class="wizard-text-control next" id="wizardNextBottom">Suivant →</button>
+        </footer>
+      </div>
+    `;
+
+    progressShell.insertAdjacentElement("afterend", shell);
+    const viewport = shell.querySelector("#wizardViewport");
+    sections.forEach((section) => viewport.appendChild(section));
+
+    const nav = shell.querySelector("#wizardNav");
+    nav.innerHTML = WIZARD_STEPS.map((step, index) => `
+      <button type="button" class="wizard-step-button" id="wizard-step-${index}"
+              data-wizard-index="${index}"
+              data-wizard-progress="${step.progressKey}"
+              data-tooltip-title="${esc(step.title)}"
+              data-tooltip="${esc(step.description)}">
+        <span class="wizard-step-number">${step.number}</span>
+        <span class="wizard-step-copy">
+          <strong>${esc(step.short)}</strong>
+          <small>${esc(step.title)}</small>
+        </span>
+        <span class="wizard-step-state" aria-hidden="true">•</span>
+      </button>
+    `).join("");
+
+    const previous = shell.querySelector("#wizardPrevious");
+    const next = shell.querySelector("#wizardNext");
+    const previousBottom = shell.querySelector("#wizardPreviousBottom");
+    const nextBottom = shell.querySelector("#wizardNextBottom");
+    const counter = shell.querySelector("#wizardCounter");
+    const currentTitle = shell.querySelector("#wizardCurrentTitle");
+    const currentDescription = shell.querySelector("#wizardCurrentDescription");
+    const status = shell.querySelector("#wizardStepStatus");
+    let activeIndex = 0;
+
+    function resolveInitialIndex() {
+      const hash = window.location.hash.replace("#", "");
+      const hashIndex = WIZARD_STEPS.findIndex((step) => step.id === hash);
+      if (hashIndex >= 0) return hashIndex;
+
+      const stored = Number.parseInt(safeStorageGet(WIZARD_STORAGE_KEY, "0") || "0", 10);
+      return Number.isFinite(stored) && stored >= 0 && stored < WIZARD_STEPS.length ? stored : 0;
+    }
+
+    function activate(index, options = {}) {
+      activeIndex = Math.max(0, Math.min(index, WIZARD_STEPS.length - 1));
+      const step = WIZARD_STEPS[activeIndex];
+
+      sections.forEach((section, sectionIndex) => {
+        const active = sectionIndex === activeIndex;
+        section.classList.toggle("is-active", active);
+        section.hidden = !active;
+        section.setAttribute("aria-hidden", String(!active));
+      });
+
+      nav.querySelectorAll(".wizard-step-button").forEach((button, buttonIndex) => {
+        const active = buttonIndex === activeIndex;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-current", active ? "step" : "false");
+      });
+
+      counter.textContent = `ÉTAPE ${step.number} SUR 07`;
+      currentTitle.textContent = step.title;
+      currentDescription.textContent = step.description;
+      status.textContent = stepDone(step.progressKey) ? "Étape confirmée" : "Étape en cours";
+
+      previous.disabled = activeIndex === 0;
+      previousBottom.disabled = activeIndex === 0;
+      next.disabled = activeIndex === WIZARD_STEPS.length - 1;
+      nextBottom.disabled = activeIndex === WIZARD_STEPS.length - 1;
+
+      viewport.scrollTo({ top: 0, behavior: options.instant ? "auto" : "smooth" });
+      safeStorageSet(WIZARD_STORAGE_KEY, String(activeIndex));
+
+      if (options.updateHash !== false) {
+        window.history.replaceState(null, "", `#${step.id}`);
+      }
+
+      if (options.focus) {
+        shell.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-wizard-index]");
+      if (!button) return;
+      activate(Number(button.dataset.wizardIndex), { focus: false });
+    });
+
+    previous.addEventListener("click", () => activate(activeIndex - 1));
+    previousBottom.addEventListener("click", () => activate(activeIndex - 1));
+    next.addEventListener("click", () => activate(activeIndex + 1));
+    nextBottom.addEventListener("click", () => activate(activeIndex + 1));
+
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const targetId = link.getAttribute("href").slice(1);
+        const index = WIZARD_STEPS.findIndex((step) => step.id === targetId);
+        if (index < 0) return;
+        event.preventDefault();
+        activate(index, { focus: true });
+      });
+    });
+
+    window.addEventListener("hashchange", () => {
+      const hash = window.location.hash.replace("#", "");
+      const index = WIZARD_STEPS.findIndex((step) => step.id === hash);
+      if (index >= 0 && index !== activeIndex) activate(index, { updateHash: false, instant: true });
+    });
+
+    wizardController = {
+      activate,
+      get activeIndex() {
+        return activeIndex;
+      },
+      updateStatus() {
+        const step = WIZARD_STEPS[activeIndex];
+        status.textContent = stepDone(step.progressKey) ? "Étape confirmée" : "Étape en cours";
+      }
+    };
+
+    document.body.classList.add("wizard-enabled");
+    activate(resolveInitialIndex(), { updateHash: false, instant: true });
   }
 
   function render() {
@@ -488,6 +951,17 @@ Mode actif : /atlas full-crypto.`;
     document.querySelectorAll("[data-step-dot]").forEach((dot) => {
       dot.classList.toggle("done", stepDone(dot.dataset.stepDot));
     });
+
+    document.querySelectorAll("[data-wizard-progress]").forEach((button) => {
+      const complete = stepDone(button.dataset.wizardProgress);
+      button.classList.toggle("is-complete", complete);
+      const stateNode = button.querySelector(".wizard-step-state");
+      if (stateNode) stateNode.textContent = complete ? "✓" : "•";
+    });
+
+    const wizardProgress = document.getElementById("wizardGlobalProgress");
+    if (wizardProgress) wizardProgress.textContent = `${percent}%`;
+    if (wizardController) wizardController.updateStatus();
   }
 
   document.getElementById("copyMasterPrompt").addEventListener("click", () => {
@@ -517,6 +991,7 @@ Mode actif : /atlas full-crypto.`;
 
   document.getElementById("foundryForm").addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) return;
     const data = new FormData(event.currentTarget);
     const modules = data.getAll("modules");
     const text = `# FLOWER GIRL — MANIFESTE DE CONCEPTION
@@ -575,6 +1050,7 @@ des limites explicites, une preuve vérifiable et un point d'arrêt.`;
 
   document.getElementById("ideaForm").addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) return;
     const data = new FormData(event.currentTarget);
     const title = data.get("title").trim();
     const text = `# ${title}
@@ -648,4 +1124,8 @@ ${data.get("test")}
   });
 
   render();
+  initFormAssistance();
+  initWizard();
+  initTooltips();
+  updateProgress();
 })();
