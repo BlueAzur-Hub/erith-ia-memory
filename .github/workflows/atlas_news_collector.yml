@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  ATLAS_NEWS_VERSION: V1.1-alpha.26.47.2
+
 concurrency:
   group: atlas-news-sentinel-world-to-market
   cancel-in-progress: false
