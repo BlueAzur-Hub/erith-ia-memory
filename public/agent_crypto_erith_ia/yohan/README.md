@@ -1,5 +1,7 @@
 # Atlas-10 Yohan — Full Crypto Deployment Hub
 
+**Version : V0.2 — Refined Crypto Console**
+
 Hub statique HTML/CSS/JS destiné à GitHub Pages.
 
 ## Contenu
