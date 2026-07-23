@@ -4678,7 +4678,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — Atlas compact diagnostics
+   V1.1-alpha.26.46.4 — Atlas compact diagnostics
    Source, cache, latency, retries and latest technical error.
    ========================================================= */
 .diagnostic-strip{
@@ -4722,7 +4722,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — Missions de Vie
+   V1.1-alpha.26.46.4 — Missions de Vie
    Sections natives repliées, sans JavaScript et sans paiement.
    ========================================================= */
 .life-missions-intro{
@@ -4756,7 +4756,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — Analyst Stable Dimensions
+   V1.1-alpha.26.46.4 — Analyst Stable Dimensions
    Graphique réel 540 px ; attente/échec 290 px ; détail auto.
    ========================================================= */
 .atlas-market-zone #analyste{
@@ -4812,7 +4812,7 @@ main .decision-board{
   .atlas-market-zone #analyste .chart-shell[data-chart-state="blocked"] #mainChart{height:240px !important;min-height:240px !important;max-height:240px !important}
 }
 
-/* V1.1-alpha.26.46.3 — Audience V2 */
+/* V1.1-alpha.26.46.4 — Audience V2 */
 .footer .privacy-footer-line{
   flex-basis:100%;
   margin-top:4px;
@@ -4845,7 +4845,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — CHAMPAGNE FULLSCREEN FIT
+   V1.1-alpha.26.46.4 — CHAMPAGNE FULLSCREEN FIT
    Mission : en plein écran, le graphique individuel, la lecture
    technique et le bandeau crypto restent visibles ensemble.
    Moteur graphique, données, sources et calculs inchangés.
@@ -5032,7 +5032,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — MULTI HORIZON
+   V1.1-alpha.26.46.4 — MULTI HORIZON
    Comparaison Base 100 + résumé temporel + navigation ordonnée.
    ========================================================= */
 .chart-head-actions {
@@ -5198,7 +5198,7 @@ main .decision-board{
 }
 
 
-/* Navigation active — V1.1-alpha.26.46.3 */
+/* Navigation active — V1.1-alpha.26.46.4 */
 .nav a.is-active,
 .nav a[aria-current="location"] {
   color: #fff5d8;
@@ -5209,7 +5209,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.46.3 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
+   V1.1-alpha.26.46.4 — CHAMPAGNE MULTI-SERIES PERIOD LOCK
    Base canonique : 26.46 Multi Horizon.
    Périmètre strict : détail actif repliable et lisibilité du panneau.
    Le dessin du graphique, ses couleurs, ses zones et ses sources restent inchangés.
@@ -5470,3 +5470,8 @@ main .decision-board{
     max-height: revert !important;
   }
 }
+
+
+/* V1.1-alpha.26.46.4 — ATLAS DECISION BOARD TRUTH LOCK */
+.decision-card span{line-height:1.42;}
+.decision-verdict-body span{line-height:1.42;}
