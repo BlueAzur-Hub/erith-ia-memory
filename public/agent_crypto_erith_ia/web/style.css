@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.30
+   INTERNAL PACKAGE BUILD 28.1.31
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.30
+   INTERNAL PACKAGE BUILD 28.1.31
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.30
+   INTERNAL PACKAGE BUILD 28.1.31
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12712,7 +12712,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
    ========================================================= */
 
@@ -12910,7 +12910,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    EXACT CHART FRAME · SUBGRAPH BOTTOM ALIGNMENT LOCK
    ========================================================= */
 
@@ -12961,7 +12961,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    HIDDEN TOP50 METRICS · NO EXTRA CONTROL BAR
    ========================================================= */
 
@@ -12980,7 +12980,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 }
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    COMPLETE ADMIN MODE · NO EXTRA PANEL
    ========================================================= */
 
@@ -13037,7 +13037,7 @@ html[data-atlas-role="administrator"] [data-private-key] {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    ORIGINAL BLUE THEME RESTORE
    "Champagne Luxe + Hostel Private Room" is a release name only.
    ========================================================= */
@@ -13072,7 +13072,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    SOURCES CLOSED BY DEFAULT · USER-CONTROLLED STATE
    ========================================================= */
 
@@ -13092,7 +13092,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.30
+   V2.0-alpha · Build 28.1.31
    ACCOUNT ADMIN LINK · PRACTICAL SHORTCUTS RESTORE
    ========================================================= */
 
@@ -13271,4 +13271,52 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
     height: 18px !important;
     font-size: 13px !important;
   }
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.31
+   DATA TRUTH · DIRECT / CACHE / TIMESTAMP LOCK
+   ========================================================= */
+
+/* Origine directe et fraîcheur sont deux dimensions séparées. */
+.atlas-market-zone #analyste
+.chart-shell[data-chart-state="valid"][data-chart-origin="direct"]
+[data-chart-freshness="fresh"]::before {
+  content: "GRAPHE RÉEL · COINGECKO DIRECT" !important;
+  border-color: rgba(92, 221, 156, .44) !important;
+  background: rgba(17, 85, 63, .78) !important;
+}
+
+.atlas-market-zone #analyste
+.chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
+[data-chart-freshness="fresh"]::before {
+  content: "GRAPHE RÉEL · CACHE RÉCENT" !important;
+  border-color: rgba(244, 217, 154, .50) !important;
+  background: rgba(92, 68, 26, .82) !important;
+}
+
+.atlas-market-zone #analyste
+.chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
+[data-chart-freshness="delayed"]::before {
+  content: "GRAPHE RÉEL · CACHE RETARDÉ" !important;
+  border-color: rgba(244, 178, 83, .55) !important;
+  background: rgba(94, 54, 18, .84) !important;
+}
+
+.atlas-market-zone #analyste
+.chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
+[data-chart-freshness="archive"]::before {
+  content: "GRAPHE RÉEL · ARCHIVE DATÉE" !important;
+  border-color: rgba(255, 126, 96, .48) !important;
+  background: rgba(91, 34, 27, .84) !important;
+}
+
+/* Le symbole ≈ signale une variation 24 h conservée depuis un cache. */
+html[data-market-truth="recent-cache"] .ticker-change,
+html[data-market-truth="recent-cache"] .top5-change,
+html[data-market-truth="stale-cache"] .ticker-change,
+html[data-market-truth="stale-cache"] .top5-change {
+  text-decoration: underline dotted rgba(244, 217, 154, .42);
+  text-underline-offset: 3px;
 }
