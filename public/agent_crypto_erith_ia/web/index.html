@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.5 — AUTO MEMORY & COLLECTOR TRUTH LOCK</title>
+  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.7 — MEMORY HISTORY COVERAGE & DATA QUALITY</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.5-auto-memory-collector-truth" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.7-memory-history-coverage-quality" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.5</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.7</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -118,6 +118,8 @@
               <button class="period-btn active" data-period="1">24h</button>
               <button class="period-btn" data-period="7">7j</button>
               <button class="period-btn" data-period="30">30j</button>
+              <button class="period-btn" data-period="60">60j</button>
+              <button class="period-btn" data-period="90">90j</button>
             </div>
             <div class="compare-actions" aria-label="Actions de comparaison">
               <span class="compare-action-group compare-action-group-mode" aria-label="Mode de comparaison">
@@ -459,6 +461,7 @@
               <p class="eyebrow">FLUX MONDIAL QUALIFIÉ</p>
               <h3>Événements récents</h3>
               <small id="newsFeedUpdatedAt">Première archive en attente</small>
+              <small class="news-auto-check" id="newsFeedAutoState">Relecture automatique · 5 min</small>
             </div>
             <div class="news-live-actions">
               <div class="news-live-filters" aria-label="Filtres du flux">
@@ -468,7 +471,7 @@
                 <button class="news-filter-btn" type="button" data-news-filter="crypto">Crypto</button>
                 <button class="news-filter-btn" type="button" data-news-filter="world">Monde</button>
               </div>
-              <button class="btn small" id="btnNewsRefresh" type="button">Actualiser le flux</button>
+              <button class="btn small" id="btnNewsRefresh" type="button">Relire l’archive maintenant</button>
             </div>
           </div>
 
@@ -476,6 +479,7 @@
             <article><span>24 heures</span><b id="newsFeedEvents24">0 événement</b><small id="newsFeedPriority24">0 prioritaire</small></article>
             <article><span>Sources</span><b id="newsFeedSources">0/0 disponibles</b><small id="newsFeedFailures">0 échec</small></article>
             <article><span>État archive</span><b id="newsFeedArchiveState">En attente</b><small id="newsFeedArchiveAge">Heure inconnue</small></article>
+            <article><span>Relecture automatique</span><b id="newsFeedNextCheck">5 min</b><small id="newsFeedLastCheck">Aucun contrôle</small></article>
             <article><span>Décision globale</span><b id="newsFeedDecision">Collecte en attente</b><small>Aucun ordre automatique</small></article>
           </div>
 
@@ -766,14 +770,11 @@
       <div class="auto-actions">
         <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
         <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
-        <label class="sort-box auto-cadence-box">
-          <span>Cadence marché</span>
-          <select id="autoCadenceSelect">
-            <option value="adaptive" selected>Automatique · 60 secondes</option>
-            <option value="300">60 secondes</option>
-            <option value="900">60 secondes</option>
-          </select>
-        </label>
+        <div class="auto-cadence-lock" aria-label="Cadences verrouillées">
+          <span><b>Marché</b><em>60 s</em></span>
+          <span><b>Spot</b><em>30 s</em></span>
+          <span><b>Historique</b><em>5 min</em></span>
+        </div>
       </div>
 
       <div class="auto-grid memory-truth-grid">
@@ -832,6 +833,40 @@
         <article><b>Collecteurs présents</b><span id="sharedCollectorsCount">0</span></article>
         <article><b>Dernière opération</b><span id="sharedLastImport">Aucun import</span></article>
       </div>
+
+      <section class="memory-coverage-panel" id="memoryCoveragePanel" aria-labelledby="memoryCoverageTitle">
+        <div class="memory-coverage-head">
+          <div>
+            <p class="eyebrow">MEMORY HISTORY COVERAGE</p>
+            <h3 id="memoryCoverageTitle">Couverture temporelle et qualité des données</h3>
+            <small>Snapshots de marché et séries graphiques CoinGecko sont mesurés séparément.</small>
+          </div>
+          <button class="btn small" id="btnRecalculateCoverage" type="button">Recalculer</button>
+        </div>
+
+        <div class="memory-coverage-kpis">
+          <article><span>Première trace</span><b id="memoryCoverageFirst">Aucune</b></article>
+          <article><span>Dernière trace</span><b id="memoryCoverageLast">Aucune</b></article>
+          <article><span>Durée réelle</span><b id="memoryCoverageSpan">0 s</b></article>
+          <article><span>Snapshots valides</span><b id="memoryCoverageValid">0/0</b></article>
+          <article><span>Cadence médiane</span><b id="memoryCoverageCadence">—</b></article>
+          <article><span>Plus grand trou</span><b id="memoryCoverageLargestGap">—</b></article>
+        </div>
+
+        <div class="memory-horizon-grid" id="memoryHorizonGrid" aria-label="Couverture par horizon">
+          <article data-horizon="1"><span>24 h</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
+          <article data-horizon="7"><span>7 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
+          <article data-horizon="30"><span>30 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
+          <article data-horizon="60"><span>60 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
+          <article data-horizon="90"><span>90 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
+        </div>
+
+        <div class="memory-collector-quality" id="memoryCollectorQuality">
+          <span class="collector-truth-empty">Aucun collecteur exploitable.</span>
+        </div>
+
+        <pre class="memory-coverage-output" id="memoryCoverageOutput">Analyse de couverture en attente.</pre>
+      </section>
 
       <pre class="shared-memory-output" id="sharedMemoryOutput">Statut import/export affiché ici. Un import réussi indique les snapshots ajoutés, le total et les collecteurs fusionnés.</pre>
     </section>
@@ -2168,6 +2203,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha-build-27.2.5-auto-memory-collector-truth"></script>
+  <script src="./app.js?v=1.1-alpha-build-27.2.7-memory-history-coverage-quality"></script>
 </body>
 </html>
