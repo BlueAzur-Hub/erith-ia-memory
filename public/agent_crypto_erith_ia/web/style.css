@@ -8538,3 +8538,40 @@ a.source-portal:focus-visible {
 #analyste:not(.detail-collapsed) .detail-panel-rail {
   display: none !important;
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2.4
+   NETWORK REQUEST GOVERNOR & CHART CONTINUITY LOCK
+   ========================================================= */
+
+.hero .subtitle {
+  display: none !important;
+}
+
+.hero {
+  padding-bottom: 7px !important;
+}
+
+.hero .nav {
+  margin-top: 5px !important;
+}
+
+.chart-shell {
+  --atlas-chart-top-reserve: 18px;
+}
+
+.chart-shell canvas {
+  margin-top: 0 !important;
+}
+
+.chart-shell[data-chart-refreshing="true"] canvas {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.atlas-chart-refresh {
+  pointer-events: none !important;
+}
+
+/* The legend now contains only crypto symbols; Base 100 remains once on the axis/caption. */
