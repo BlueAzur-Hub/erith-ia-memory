@@ -1,17 +1,16 @@
-/* V2.0-alpha · Build 28.1.9 — FULL-BLEED EXPANDED CHART & SCALE TRUTH LOCK
-   Extension cumulative et corrective du Graphique Analyste.
-   - scène panoramique réellement agrandie sur desktop et Transformer Book ;
-   - fond du penthouse continu derrière le cockpit, le canvas et le détail actif ;
-   - axe Prix strictement isolé de l’axe Volume ;
-   - correction du défaut récent où les volumes forçaient l’axe Prix à plusieurs milliards ;
-   - synchronisation spot compatible Prix réel et Base 100 ;
-   - rejet des points de prix non finis et des ruptures manifestement aberrantes ;
-   - dernier graphe valide conservé si une nouvelle série est incohérente ;
-   - Top 3 / Top 5 et sélections longues conservés avec états indisponibles explicites ;
-   - Graphique, Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
+/* V2.0-alpha · Build 28.1.10 — PLOT AREA & AXIS PROPORTION RECOVERY LOCK
+   Correction cumulative du Graphique Analyste.
+   - zone de tracé agrandie sans gonfler les axes ;
+   - colonne Prix limitée et labels EUR adaptatifs ;
+   - ligne de dates compacte, lisible et proportionnée ;
+   - valeurs légèrement agrandies sans réduire le graphe ;
+   - titre vertical Prix EUR retiré de l’axe pour libérer la largeur ;
+   - volume toujours superposé derrière la courbe, jamais mélangé à l’échelle Prix ;
+   - fond panoramique plein cadre, tooltip, comparaison et Détail actif préservés ;
+   - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.9";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.10";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -2976,6 +2975,43 @@ function atlasChartLabelForTime(ts, days) {
   return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" });
 }
 
+function atlasChartAxisMetrics() {
+  const width = Math.max(0, Number(window.innerWidth || 0));
+  if (width >= 1500) return { xFont: 12, yFont: 12, xHeight: 32, yWidth: 88 };
+  if (width >= 1180) return { xFont: 12, yFont: 12, xHeight: 31, yWidth: 84 };
+  if (width >= 800) return { xFont: 11, yFont: 11, xHeight: 30, yWidth: 80 };
+  return { xFont: 10, yFont: 10, xHeight: 28, yWidth: 74 };
+}
+
+function atlasChartAxisPriceLabel(value, view = "price") {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "—";
+  if (view === "base100") return number.toFixed(1);
+
+  const absolute = Math.abs(number);
+  let maximumFractionDigits = 2;
+  if (absolute >= 1000) maximumFractionDigits = 0;
+  else if (absolute >= 100) maximumFractionDigits = 1;
+  else if (absolute >= 1) maximumFractionDigits = 2;
+  else if (absolute >= 0.01) maximumFractionDigits = 4;
+  else maximumFractionDigits = 6;
+
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits
+  }).format(number);
+}
+
+function atlasChartXAxisTickLimit(period) {
+  const width = Math.max(0, Number(window.innerWidth || 0));
+  if (width < 800) return 6;
+  if (width < 1180) return 7;
+  if (Number(period) >= 365) return 8;
+  return width >= 1500 ? 10 : 9;
+}
+
 function atlasChartLabelFull(ts) {
   return new Date(Number(ts)).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
@@ -3656,7 +3692,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       data: points,
       parsing: false,
       yAxisID: "y",
-      borderWidth: 2.2,
+      borderWidth: 2.55,
       pointRadius(context) {
         return context.dataIndex === context.dataset.data.length - 1 ? 3.8 : 0;
       },
@@ -3696,7 +3732,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        layout: { padding: { top: 18, right: 22, bottom: showVolume ? 10 : 22, left: 10 } },
+        layout: { padding: { top: 8, right: 4, bottom: 4, left: 4 } },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -3710,12 +3746,21 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             type: "linear",
             min: rows[0].t,
             max: rows[rows.length - 1].t,
-            grid: { color: "rgba(176,236,255,.075)" },
+            bounds: "data",
+            offset: false,
+            afterFit(scale) {
+              scale.height = Math.min(scale.height, atlasChartAxisMetrics().xHeight);
+            },
+            grid: { color: "rgba(176,236,255,.075)", drawTicks: true },
             ticks: {
-              color: "rgba(226,244,255,.84)",
-              maxTicksLimit: period >= 365 ? 8 : 10,
+              color: "rgba(226,244,255,.88)",
+              maxTicksLimit: atlasChartXAxisTickLimit(period),
               autoSkip: true,
+              autoSkipPadding: 16,
               maxRotation: 0,
+              minRotation: 0,
+              padding: 5,
+              font: { size: atlasChartAxisMetrics().xFont, weight: "700" },
               callback(value) { return atlasChartLabelForTime(Number(value), period); }
             }
           },
@@ -3724,19 +3769,20 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             position: "right",
             min: scaleType === "linear" ? min - yPad : undefined,
             max: scaleType === "linear" ? max + yPad : undefined,
+            afterFit(scale) {
+              scale.width = Math.min(scale.width, atlasChartAxisMetrics().yWidth);
+            },
             grid: { color: "rgba(176,236,255,.105)" },
             ticks: {
-              color: "rgba(226,244,255,.86)",
-              maxTicksLimit: 7,
+              color: "rgba(238,248,255,.92)",
+              maxTicksLimit: 6,
+              padding: 4,
+              font: { size: atlasChartAxisMetrics().yFont, weight: "750" },
               callback(value) {
-                return view === "base100" ? Number(value).toFixed(1) : atlasFormatEUR(Number(value));
+                return atlasChartAxisPriceLabel(value, view);
               }
             },
-            title: {
-              display: true,
-              text: view === "base100" ? "Base 100" : "Prix EUR",
-              color: "rgba(255,240,200,.76)"
-            }
+            title: { display: false }
           },
           yVolume: {
             type: "linear",
@@ -3747,7 +3793,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             grid: { display: false, drawOnChartArea: false },
             ticks: { display: false },
             suggestedMin: 0,
-            suggestedMax: volumeRows.length ? Math.max(...volumeRows.map(row => row.y)) * 3.2 : undefined
+            suggestedMax: volumeRows.length ? Math.max(...volumeRows.map(row => row.y)) * 4.4 : undefined
           }
         }
       }
@@ -4127,7 +4173,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         atlasGradientCss: atlasCryptoGradientCss(entry.coin, index),
         data: entry.data,
         parsing: false,
-        borderWidth: index === 0 ? 3.0 : 2.35,
+        borderWidth: index === 0 ? 3.15 : 2.55,
         pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 3.5 : 0; },
         pointHoverRadius: 5,
         pointHitRadius: 24,
@@ -4152,7 +4198,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        layout: { padding: { top: 18, right: 22, bottom: 22, left: 10 } },
+        layout: { padding: { top: 8, right: 4, bottom: 4, left: 4 } },
         plugins: {
           legend: {
             display: true,
@@ -4181,15 +4227,43 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         },
         scales: {
           x: {
-            type: "linear", min: startTime, max: endTime,
+            type: "linear",
+            min: startTime,
+            max: endTime,
+            bounds: "data",
+            offset: false,
+            afterFit(scale) {
+              scale.height = Math.min(scale.height, atlasChartAxisMetrics().xHeight);
+            },
             grid: { color: "rgba(176,236,255,0.075)", drawTicks: true },
-            ticks: { color: "rgba(226,244,255,0.84)", maxTicksLimit: Number(period) === 1 ? 9 : 10, autoSkip: true, maxRotation: 0, font: { size: 11, weight: "700" }, callback(value) { return atlasChartLabelForTime(Number(value), period); } }
+            ticks: {
+              color: "rgba(226,244,255,0.88)",
+              maxTicksLimit: atlasChartXAxisTickLimit(period),
+              autoSkip: true,
+              autoSkipPadding: 16,
+              maxRotation: 0,
+              minRotation: 0,
+              padding: 5,
+              font: { size: atlasChartAxisMetrics().xFont, weight: "700" },
+              callback(value) { return atlasChartLabelForTime(Number(value), period); }
+            }
           },
           y: {
-            position: "right", min: min - yPad, max: max + yPad,
+            position: "right",
+            min: min - yPad,
+            max: max + yPad,
+            afterFit(scale) {
+              scale.width = Math.min(scale.width, atlasChartAxisMetrics().yWidth);
+            },
             grid: { color: "rgba(176,236,255,0.105)" },
-            ticks: { color: "rgba(226,244,255,0.86)", maxTicksLimit: 7, callback(value) { return Number(value).toFixed(1); }, font: { size: 11, weight: "700" }, padding: 8 },
-            title: { display: true, text: "Base 100", color: "rgba(255,240,200,0.78)", font: { size: 10, weight: "800" } }
+            ticks: {
+              color: "rgba(238,248,255,0.92)",
+              maxTicksLimit: 6,
+              callback(value) { return atlasChartAxisPriceLabel(value, "base100"); },
+              font: { size: atlasChartAxisMetrics().yFont, weight: "750" },
+              padding: 4
+            },
+            title: { display: false }
           }
         }
       }
@@ -8745,7 +8819,7 @@ function atlasInitRuntimeStability() {
 }
 
 const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
-const ATLAS_STORAGE_SCHEMA_VERSION = 2819;
+const ATLAS_STORAGE_SCHEMA_VERSION = 28110;
 
 function atlasStorageSafeJson(key) {
   try {
@@ -8756,7 +8830,7 @@ function atlasStorageSafeJson(key) {
   }
 }
 
-function atlasMigrateStorage2819() {
+function atlasMigrateStorage28110() {
   const mode = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
   if (!ATLAS_V2_ALLOWED_MODES.has(mode)) {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
@@ -8816,11 +8890,11 @@ function atlasMigrateStorage2819() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.9", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.9", atlasMigrateStorage2819);
+} atlasSafeBoot("release labels 28.1.10", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.10", atlasMigrateStorage28110);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.9", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.10", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);

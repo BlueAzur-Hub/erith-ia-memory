@@ -11980,3 +11980,64 @@ html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens .chart-shell {
 html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens #mainChart {
   min-height: 410px !important;
 }
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.10
+   PLOT AREA & AXIS PROPORTION RECOVERY LOCK
+   ========================================================= */
+
+#analyste.champagne-clean-lens {
+  grid-template-columns: minmax(0, 3.15fr) minmax(292px, .72fr) !important;
+}
+
+#analyste.champagne-clean-lens .chart-shell {
+  padding: 8px 8px 10px !important;
+}
+
+#analyste.champagne-clean-lens #mainChart {
+  height: calc(100% - 30px) !important;
+}
+
+#analyste.champagne-clean-lens .chart-caption {
+  min-height: 30px !important;
+  padding: 6px 9px !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  min-width: 292px !important;
+}
+
+/* La zone Prix et la ligne de dates restent lisibles sans manger le tracé. */
+#analyste.champagne-clean-lens canvas {
+  image-rendering: auto;
+}
+
+/* Le volume reste un arrière-plan analytique, pas un second panneau. */
+#analyste.champagne-clean-lens .chart-shell[data-chart-state="valid"] {
+  background:
+    linear-gradient(180deg, rgba(2,8,18,.045), rgba(2,8,18,.015) 66%, rgba(2,8,18,.08)) !important;
+}
+
+/* Transformer Book : garder les axes compacts et le graphe large. */
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens {
+  grid-template-columns: minmax(0, 3fr) minmax(274px, .72fr) !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-lens-detail-panel {
+  min-width: 274px !important;
+}
+
+@media (max-width: 1080px) {
+  #analyste.champagne-clean-lens {
+    grid-template-columns: minmax(0,1fr) 42px !important;
+  }
+
+  #analyste.champagne-clean-lens .clean-lens-detail-panel {
+    display: none !important;
+  }
+
+  #analyste.champagne-clean-lens .detail-panel-rail {
+    display: flex !important;
+  }
+}
