@@ -11836,7 +11836,7 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
 }
 
 /* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.12
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.13
    CANONICAL FULL-WIDTH CHART STAGE
    TOP 5 · MARKET FLOW · OVERLAY VALUES
    & NON-DESTRUCTIVE RECOVERY LOCK
@@ -12115,7 +12115,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   Build 28.1.12 — DETAIL RAIL INLINE TRIANGLE
+   Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
    & PRICE/VOLUME SINGLE-TIMELINE FINAL LOCK
    ========================================================= */
 
@@ -12193,3 +12193,184 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
   }
 }
 
+
+
+/* =========================================================
+   Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
+   INLINE HEADER · CLEAR DETAIL DOCK · VOLUME SHADOW LOCK
+   ========================================================= */
+
+/* No duplicated mode/version labels inside the interface strip. */
+.atlas-v2-mode-copy #atlasV2ModeTitle,
+.atlas-v2-mode-copy #atlasV2ReleaseBadge {
+  display: none !important;
+}
+
+/* Desktop command bar stays on one physical line. */
+@media (min-width: 1081px) {
+  html[data-atlas-mode="essential"] .hero .command-bar {
+    grid-template-columns: minmax(150px,180px) minmax(116px,145px) minmax(260px,1fr) minmax(170px,205px) !important;
+    grid-template-areas: "live refresh source time" !important;
+    grid-auto-rows: minmax(34px,auto) !important;
+  }
+  html[data-atlas-mode="essential"] #btnLivecheck { grid-area: live !important; }
+  html[data-atlas-mode="essential"] #btnRefresh { grid-area: refresh !important; }
+  html[data-atlas-mode="essential"] #sourceActiveCard { grid-area: source !important; }
+  html[data-atlas-mode="essential"] #sourceTimeCard { grid-area: time !important; }
+
+  html[data-atlas-mode="advanced"] .hero .command-bar {
+    grid-template-columns: minmax(145px,175px) minmax(110px,140px) minmax(110px,140px) minmax(190px,.8fr) minmax(240px,1fr) minmax(170px,205px) !important;
+    grid-template-areas: "live refresh nofomo decision source time" !important;
+    grid-auto-rows: minmax(34px,auto) !important;
+  }
+  html[data-atlas-mode="advanced"] #btnLivecheck { grid-area: live !important; }
+  html[data-atlas-mode="advanced"] #btnRefresh { grid-area: refresh !important; }
+  html[data-atlas-mode="advanced"] #btnNoFomo { grid-area: nofomo !important; }
+  html[data-atlas-mode="advanced"] #decisionCard { grid-area: decision !important; }
+  html[data-atlas-mode="advanced"] #sourceActiveCard { grid-area: source !important; }
+  html[data-atlas-mode="advanced"] #sourceTimeCard { grid-area: time !important; }
+}
+
+/* Transformer/compact keeps the bar on one horizontal line with scrolling instead of a second row. */
+@media (min-width: 620px) and (max-width: 1080px) {
+  .hero .command-bar,
+  html[data-atlas-mode="advanced"] .hero .command-bar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: thin;
+  }
+  .hero .command-bar > .btn,
+  .hero .command-bar > .source-card {
+    flex: 0 0 auto !important;
+  }
+  #btnLivecheck { width: 155px !important; }
+  #btnRefresh, #btnNoFomo { width: 126px !important; }
+  #decisionCard { width: 220px !important; }
+  #sourceActiveCard { width: 245px !important; }
+  #sourceTimeCard { width: 185px !important; }
+}
+
+/* Graph toolbar never wraps into a second line; it scrolls horizontally when needed. */
+#analyste .chart-v2-toolbar,
+#analyste .chart-v2-toolbar-row,
+#analyste .chart-v2-control-deck,
+#analyste .period-tabs,
+#analyste .compare-actions,
+#analyste .compare-action-group {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+#analyste .chart-v2-toolbar {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Single static value layer: the floating value board is canonical.
+   Selected chips and the separate legend stay hidden until explicitly requested. */
+#analyste .comparison-selection {
+  display: none !important;
+}
+
+/* Graph first, then Target Top 5, then Market Flow, then Math/Market. */
+.atlas-market-zone > .market-ribbon-stack,
+.market-ribbon-stack {
+  margin: 10px 0 12px !important;
+}
+
+/* The right control never covers the graph.
+   The graph reserves one narrow rail; expanded details open below the chart. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) 30px !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 4px !important;
+  row-gap: 6px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail,
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  inset: auto !important;
+  display: flex !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 7px 3px !important;
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span {
+  display: inline-block !important;
+  writing-mode: vertical-rl !important;
+  transform: rotate(180deg) !important;
+  white-space: nowrap !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span b {
+  display: inline !important;
+  margin-inline-start: 5px !important;
+  vertical-align: baseline !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  max-height: 360px !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  background: linear-gradient(180deg, rgba(4,13,26,.92), rgba(3,10,21,.84)) !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
+  display: none !important;
+}
+
+/* Value board does not collide with the reserved detail rail. */
+#analyste .chart-value-overlay {
+  width: min(286px, calc(100% - 54px)) !important;
+}
+
+@media (max-width: 760px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    grid-template-columns: minmax(0,1fr) 28px !important;
+    column-gap: 3px !important;
+  }
+  #analyste.champagne-clean-lens .detail-panel-rail,
+  #analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+  #analyste.champagne-clean-lens .clean-lens-detail-panel {
+    max-height: 320px !important;
+  }
+}

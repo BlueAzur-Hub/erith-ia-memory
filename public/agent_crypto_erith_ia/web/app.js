@@ -1,5 +1,5 @@
-/* V2.0-alpha · Build 28.1.12 — CANONICAL FULL-WIDTH CHART STAGE
-   TOP 5 · MARKET FLOW · OVERLAY VALUES & NON-DESTRUCTIVE RECOVERY LOCK
+/* V2.0-alpha · Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
+   INLINE HEADER · CLEAR DETAIL DOCK · VOLUME SHADOW LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
    - axes Prix et Date dessinés dans le chartArea, sans manger le tracé ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.12";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.13";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -34,7 +34,7 @@ const state = {
   chartCache: {},
   chartRenderToken: 0,
   comparisonRenderToken: 0,
-  chartViewV2: { view: "price", scale: "linear", volume: true, legend: true, comparisonLegend: false, marketColumns: "essential" },
+  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, marketColumns: "essential" },
   chartEngineV2: {
     token: 0,
     controller: null,
@@ -3097,14 +3097,16 @@ function atlasSetCleanLensCollapsed(collapsed, persist = true) {
   const panel = document.getElementById("detailPanel");
   const toggle = document.getElementById("detailPanelToggle");
   const stateLabel = document.getElementById("detailPanelToggleState");
+  const railArrow = document.querySelector("#detailPanelRail b");
   if (!deck) return;
 
-  const isCollapsed = window.matchMedia("(min-width: 981px)").matches && !!collapsed;
+  const isCollapsed = !!collapsed;
   deck.classList.toggle("detail-collapsed", isCollapsed);
   toggle?.setAttribute("aria-expanded", String(!isCollapsed));
   panel?.setAttribute("aria-hidden", String(isCollapsed));
   if (panel) panel.inert = isCollapsed;
-  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ▶" : "Réduire ◀";
+  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ▼" : "Réduire ▲";
+  if (railArrow) railArrow.textContent = isCollapsed ? "▼" : "▲";
   if (toggle) {
     toggle.disabled = false;
     toggle.tabIndex = 0;
@@ -3139,8 +3141,11 @@ function initAtlasCleanLensPanel() {
   const rail = document.getElementById("detailPanelRail");
   if (!deck || !toggle || !rail) return;
 
-  let collapsed = false;
-  try { collapsed = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY) === "1"; } catch {}
+  let collapsed = true;
+  try {
+    const storedPanelState = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY);
+    collapsed = storedPanelState == null ? true : storedPanelState === "1";
+  } catch {}
   atlasSetCleanLensCollapsed(collapsed, false);
 
   if (deck.dataset.cleanLensBound === "1") return;
@@ -3323,7 +3328,7 @@ function atlasHideChartRefresh() {
 
 
 const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings";
-function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend!==false,comparisonLegend:p.comparisonLegend===true,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
+function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
 function atlasWriteChartV2Settings(){try{localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify(state.chartViewV2));}catch{}}
 function atlasChartV2ComparisonMode(){return atlasComparisonActive();}
 function atlasChartV2EffectiveView(){return atlasChartV2ComparisonMode()?"base100":state.chartViewV2.view;}
@@ -3779,7 +3784,8 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
     const distance = nearest ? Math.abs(nearest.x - pricePoint.x) : Infinity;
     return {
       x: pricePoint.x,
-      y: nearest && distance <= maximumGap ? nearest.y : 0
+      y: nearest && distance <= maximumGap ? nearest.y : 0,
+      price: pricePoint.price
     };
   });
 }
@@ -3792,17 +3798,17 @@ const atlasVolumeOverlayPlugin = {
 
     const area = chart.chartArea;
     const xScale = chart.scales?.x;
-    if (!area || !xScale) return;
+    const yScale = chart.scales?.[chart.$atlasPriceAxisId || "y"];
+    if (!area || !xScale || !yScale) return;
 
     const maxVolume = Math.max(...rows.map(point => Number(point?.y)).filter(Number.isFinite), 0);
     if (!(maxVolume > 0)) return;
 
     const ctx = chart.ctx;
     const dateAxisReserve = 30;
-    const bandHeight = Math.max(38, (area.bottom - area.top) * 0.19);
     const baseline = area.bottom - dateAxisReserve;
-    const available = Math.max(22, bandHeight);
-    const barWidth = Math.max(1, Math.min(3.4, (area.right - area.left) / Math.max(72, rows.length) * 0.82));
+    const plotHeight = Math.max(1, baseline - area.top);
+    const barWidth = Math.max(1, Math.min(3.6, (area.right - area.left) / Math.max(72, rows.length) * 0.88));
     const color = chart.$atlasVolumeColor || "98,236,255";
 
     ctx.save();
@@ -3810,17 +3816,24 @@ const atlasVolumeOverlayPlugin = {
     ctx.rect(area.left, area.top, area.right - area.left, area.bottom - area.top);
     ctx.clip();
 
-    const fade = ctx.createLinearGradient(0, baseline - available, 0, baseline);
-    fade.addColorStop(0, `rgba(${color},.18)`);
-    fade.addColorStop(.55, `rgba(${color},.10)`);
-    fade.addColorStop(1, `rgba(${color},.035)`);
-
-    ctx.fillStyle = fade;
     for (const point of rows) {
+      const price = Number(point?.price);
+      if (!Number.isFinite(price) || price <= 0) continue;
       const x = xScale.getPixelForValue(point.x);
+      const priceY = yScale.getPixelForValue(price);
+      if (!Number.isFinite(x) || !Number.isFinite(priceY)) continue;
+
+      const distanceToCurve = Math.max(0, Math.min(plotHeight, baseline - priceY));
+      const height = Math.max(.75, distanceToCurve * 0.80);
       const ratio = Math.max(0, Math.min(1, Number(point.y) / maxVolume));
-      const height = Math.max(.5, ratio * available);
-      ctx.fillRect(x - barWidth / 2, baseline - height, barWidth, height);
+      const alpha = 0.035 + ratio * 0.145;
+      const top = baseline - height;
+      const fade = ctx.createLinearGradient(0, top, 0, baseline);
+      fade.addColorStop(0, `rgba(${color},${Math.max(.025, alpha * .58).toFixed(3)})`);
+      fade.addColorStop(.52, `rgba(${color},${Math.max(.018, alpha * .38).toFixed(3)})`);
+      fade.addColorStop(1, `rgba(${color},${Math.max(.012, alpha * .20).toFixed(3)})`);
+      ctx.fillStyle = fade;
+      ctx.fillRect(x - barWidth / 2, top, barWidth, height);
     }
     ctx.restore();
   }
@@ -4034,7 +4047,10 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     state.chartEngineV2.realChart.$atlasScale = scaleType;
     state.chartEngineV2.realChart.$atlasVolume = showVolume;
     state.chartEngineV2.realChart.$atlasVolumeVisible = showVolume;
-    state.chartEngineV2.realChart.$atlasVolumeRows = atlasAlignVolumeToPriceTimeline(result?.volumeSeries, rows);
+    state.chartEngineV2.realChart.$atlasVolumeRows = atlasAlignVolumeToPriceTimeline(
+      result?.volumeSeries,
+      points.map(point => ({ t: point.x, price: point.y }))
+    );
     state.chartEngineV2.realChart.$atlasVolumeColor = atlasHexToRgb(palette.primary).join(",");
     state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
@@ -6206,7 +6222,7 @@ function decisionFromScore(score) { if (score === null || score === undefined) r
 function atlasMarketOpenCoin(coin,options={}){if(!coin?.id)return;options.compare?atlasToggleComparisonCoin(coin):atlasSelectMarketCoin(coin);$("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});}
 function atlasMarketEnsureWatchCoin(coin){if(!coin?.id)return;if(!state.watchIds.includes(coin.id)){state.watchIds.push(coin.id);state.watchIds=[...new Set(state.watchIds)].slice(0,48);saveWatchIds();atlasWatchSyncProfiles();}renderWatchlist();renderAutoReader();}
 function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatchCoin(coin);renderWatchlist();const s=$("watchAlertCoin");if(s&&[...s.options].some(o=>o.value===coin.id))s.value=coin.id;atlasV2OpenAdvancedForTarget("#watchlist");setTimeout(()=>$("watchAlertThreshold")?.focus(),450);}
-function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("detailPanel")?.classList.contains("is-collapsed"))$("detailPanelToggle")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
+function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasToggleComparisonCoin(c);};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
 
@@ -9051,7 +9067,7 @@ function atlasInitRuntimeStability() {
 }
 
 const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
-const ATLAS_STORAGE_SCHEMA_VERSION = 28111;
+const ATLAS_STORAGE_SCHEMA_VERSION = 28113;
 
 function atlasStorageSafeJson(key) {
   try {
@@ -9078,12 +9094,14 @@ function atlasMigrateStorage28111() {
     ? storedChartSettings
     : {};
 
+  const previousSchema = Number(localStorage.getItem(ATLAS_STORAGE_SCHEMA_KEY) || 0);
+  const preserveLegendChoice = previousSchema >= ATLAS_STORAGE_SCHEMA_VERSION;
   const sanitizedChartSettings = {
     view: chartSettings.view === "base100" ? "base100" : "price",
     scale: chartSettings.scale === "logarithmic" ? "logarithmic" : "linear",
     volume: chartSettings.volume !== false,
-    legend: chartSettings.legend !== false,
-    comparisonLegend: chartSettings.comparisonLegend === true,
+    legend: preserveLegendChoice && chartSettings.legend === true,
+    comparisonLegend: preserveLegendChoice && chartSettings.comparisonLegend === true,
     marketColumns: chartSettings.marketColumns === "complete" ? "complete" : "essential"
   };
 
@@ -9093,8 +9111,10 @@ function atlasMigrateStorage28111() {
 
   try {
     const panelState = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY);
-    if (!["0", "1", null].includes(panelState)) {
-      localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, "0");
+    if (previousSchema < ATLAS_STORAGE_SCHEMA_VERSION) {
+      localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, "1");
+    } else if (!["0", "1", null].includes(panelState)) {
+      localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, "1");
     }
   } catch {}
 
@@ -9122,11 +9142,11 @@ function atlasMigrateStorage28111() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.12", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.12", atlasMigrateStorage28111);
+} atlasSafeBoot("release labels 28.1.13", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.13", atlasMigrateStorage28111);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.12", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.13", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
