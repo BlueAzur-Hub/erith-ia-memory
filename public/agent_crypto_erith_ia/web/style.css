@@ -10748,3 +10748,279 @@ html[data-atlas-mode="advanced"] [data-v2-group="projects"] > .atlas-collapse-su
     display: none !important;
   }
 }
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.4
+   ADVANCED DECISION / WATCH / NEWS / NO-FOMO
+   & MODULE V2 POLISH LOCK
+   ========================================================= */
+
+html[data-atlas-mode="advanced"] [data-v2-group="decision"] > .atlas-collapse-summary,
+html[data-atlas-mode="advanced"] [data-v2-group="decision"].decision-board {
+  border-left: 2px solid rgba(255,194,93,.62) !important;
+}
+
+/* Le mode Essentiel devient réellement minimal. */
+html[data-atlas-mode="essential"] .atlas-v2-nav-essential {
+  flex: 0 1 auto;
+}
+
+html[data-atlas-mode="essential"] .atlas-v2-nav-essential a {
+  min-width: 72px;
+  text-align: center;
+}
+
+/* Affinage supplémentaire du sommet. */
+.atlas-v2-mode-deck {
+  min-height: 34px !important;
+  padding: 3px 6px !important;
+}
+
+.atlas-v2-mode-btn {
+  min-width: 96px !important;
+  min-height: 26px !important;
+  padding: 4px 8px !important;
+}
+
+.atlas-v2-nav {
+  min-height: 31px !important;
+  padding: 3px 6px !important;
+}
+
+.atlas-v2-nav a {
+  min-height: 24px !important;
+  padding: 4px 8px !important;
+}
+
+.atlas-v2-module-picker select,
+.atlas-v2-module-open {
+  min-height: 27px !important;
+}
+
+/* Decision Board : toutes les zones sont cadrées, aucune colonne morte. */
+.decision-board {
+  display: grid !important;
+  grid-template-columns: minmax(0,1.45fr) minmax(280px,.75fr) !important;
+  grid-template-areas:
+    "decision-head decision-rule"
+    "decision-grid decision-news"
+    "decision-verdict decision-verdict" !important;
+  gap: 8px !important;
+  margin: 8px 0 10px !important;
+  padding: 10px !important;
+  border-radius: 15px !important;
+}
+
+.decision-board > .section-head {
+  grid-area: decision-head;
+  min-height: 0;
+  padding: 8px 10px !important;
+  border: 1px solid rgba(98,236,255,.13);
+  border-radius: 11px;
+  background: rgba(7,20,34,.55);
+}
+
+.decision-board > .decision-board-rule {
+  grid-area: decision-rule;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(98,236,255,.10);
+  border-radius: 11px;
+  background: rgba(4,15,28,.34);
+  font-size: 8.4px !important;
+  line-height: 1.3;
+}
+
+.decision-board > .decision-board-grid {
+  grid-area: decision-grid;
+  padding: 7px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 6px !important;
+  border: 1px solid rgba(98,236,255,.10);
+  border-radius: 12px;
+  background: rgba(4,15,28,.32);
+}
+
+.decision-board > .decision-news-bridge {
+  grid-area: decision-news;
+  margin: 0 !important;
+  padding: 7px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  align-content: start;
+  border: 1px solid rgba(98,236,255,.10);
+  border-radius: 12px;
+  background: rgba(4,15,28,.32);
+}
+
+.decision-card {
+  min-height: 0 !important;
+  padding: 8px 9px !important;
+  border-radius: 10px !important;
+}
+
+.decision-card b {
+  margin-bottom: 4px !important;
+  font-size: 8.8px !important;
+}
+
+.decision-card span {
+  font-size: 8.1px !important;
+  line-height: 1.34 !important;
+}
+
+.decision-news-bridge > div {
+  min-height: 0 !important;
+  padding: 8px 9px !important;
+  border-radius: 9px !important;
+}
+
+.decision-news-bridge span {
+  font-size: 7.1px !important;
+}
+
+.decision-news-bridge b {
+  margin-top: 3px !important;
+  font-size: 8.4px !important;
+  line-height: 1.24 !important;
+}
+
+.decision-board > .decision-board-verdict {
+  grid-area: decision-verdict;
+  margin: 0 !important;
+  padding: 9px 10px !important;
+  min-height: 0 !important;
+  border-radius: 10px !important;
+}
+
+.decision-verdict-title {
+  margin-bottom: 7px !important;
+  font-size: 9.2px !important;
+}
+
+.decision-verdict-body {
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 6px !important;
+}
+
+.decision-verdict-body > div {
+  min-height: 0 !important;
+  padding: 8px 9px !important;
+  border-radius: 9px !important;
+}
+
+.decision-verdict-body b {
+  margin-bottom: 4px !important;
+  font-size: 7.4px !important;
+}
+
+.decision-verdict-body span {
+  font-size: 8px !important;
+  line-height: 1.3 !important;
+}
+
+/* Rail Math court : il accompagne le Market sans prendre sa hauteur. */
+.market-workspace-grid.math-dock-rail {
+  grid-template-columns: minmax(0,1fr) 50px !important;
+  align-items: start !important;
+}
+
+.atlas-math-dock.is-rail {
+  position: sticky !important;
+  top: 8px;
+  align-self: start !important;
+  width: 50px !important;
+  min-width: 50px !important;
+  min-height: 0 !important;
+  height: 154px !important;
+  max-height: 154px !important;
+  border-radius: 12px !important;
+}
+
+.atlas-math-dock.is-rail .atlas-math-rail-trigger {
+  min-height: 154px !important;
+  height: 154px !important;
+  padding: 8px 3px !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 11px !important;
+}
+
+.atlas-math-rail-trigger span {
+  font-size: 7.2px !important;
+  letter-spacing: .12em !important;
+}
+
+.atlas-math-rail-trigger b {
+  font-size: 14px !important;
+}
+
+.atlas-math-rail-trigger small {
+  max-height: 54px;
+  overflow: hidden;
+  font-size: 6.7px !important;
+  text-overflow: ellipsis;
+}
+
+[data-atlas-math-freshness] {
+  color: #9bfff9;
+  font-weight: 850;
+}
+
+@media (max-width: 1160px) {
+  .decision-board {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "decision-head"
+      "decision-rule"
+      "decision-grid"
+      "decision-news"
+      "decision-verdict" !important;
+  }
+
+  .decision-board > .decision-board-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .decision-board > .decision-news-bridge {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .decision-board > .decision-board-grid,
+  .decision-board > .decision-news-bridge,
+  .decision-verdict-body {
+    grid-template-columns: 1fr !important;
+  }
+
+  .market-workspace-grid.math-dock-rail {
+    grid-template-columns: 1fr !important;
+  }
+
+  .atlas-math-dock.is-rail {
+    position: static !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    max-height: 42px !important;
+  }
+
+  .atlas-math-dock.is-rail .atlas-math-rail-trigger {
+    width: 100%;
+    min-height: 42px !important;
+    height: 42px !important;
+    flex-direction: row;
+  }
+
+  .atlas-math-rail-trigger span,
+  .atlas-math-rail-trigger small {
+    writing-mode: horizontal-tb !important;
+    transform: none !important;
+  }
+}

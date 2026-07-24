@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.3 — ESSENTIAL / ADVANCED FULL SECTION MIGRATION & COMPACT NAVIGATION LOCK</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.4 — ADVANCED DECISION / WATCH / NEWS / NO-FOMO & MODULE V2 POLISH LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.3-full-section-migration-compact-navigation" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.4-advanced-decision-watch-news-nofomo-polish" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.3</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.4</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -28,7 +28,7 @@
         <div class="atlas-v2-mode-copy">
           <span class="atlas-v2-kicker">INTERFACE V2</span>
           <b id="atlasV2ModeTitle">Mode essentiel</b>
-          <small id="atlasV2ModeDescription">Marché · graphique · watchlist · décision · news.</small>
+          <small id="atlasV2ModeDescription">Livecheck · marché · graphique.</small>
         </div>
         <div class="atlas-v2-mode-buttons" role="group" aria-label="Choisir le niveau d’interface">
           <button class="atlas-v2-mode-btn is-active" id="btnModeEssential" type="button" data-atlas-mode="essential" aria-pressed="true">
@@ -47,10 +47,6 @@
           <a href="#livecheck" data-v2-level="essential">Livecheck</a>
           <a href="#market-workspace" data-v2-level="essential">Marché</a>
           <a href="#analyste" data-v2-level="essential">Graphique</a>
-          <a href="#watchlist" data-v2-level="essential">Watchlist</a>
-          <a href="#decision-board" data-v2-level="essential">Décision</a>
-          <a href="#news-sentinel" data-v2-level="essential">News</a>
-          <a href="#nofomo" data-v2-level="essential">No-FOMO</a>
         </div>
         <div class="atlas-v2-nav-group atlas-v2-nav-advanced" aria-label="Navigation avancée">
           <span class="atlas-v2-nav-label">Modules V2</span>
@@ -71,6 +67,12 @@
                 <option value="github-memory">GitHub Memory</option>
                 <option value="newsSourceRegistry">Référentiel News étendu</option>
                 <option value="news-plan">Plan News Sentinel</option>
+              </optgroup>
+              <optgroup label="Décision et veille">
+                <option value="watchlist">Watchlist & alertes</option>
+                <option value="decision-board">Atlas Decision Board</option>
+                <option value="news-sentinel">News Sentinel</option>
+                <option value="nofomo">No-FOMO</option>
               </optgroup>
               <optgroup label="Atelier et décision">
                 <option value="situation">Situation du projet</option>
@@ -409,7 +411,7 @@
           </div>
         </div>
         <button class="atlas-math-rail-trigger" id="atlasMathRailTrigger" type="button" data-math-position="side" aria-label="Déployer Atlas Math Core">
-          <span>MATH</span><b id="atlasMathRailScore">—</b><small id="atlasMathRailLabel">En attente</small>
+          <span>INDICE</span><b id="atlasMathRailScore">—</b><small id="atlasMathRailLabel">En attente</small>
         </button>
         <div class="score-ring" id="scoreRing" style="--score:0">
           <span id="scoreValue">—</span>
@@ -530,7 +532,7 @@
           </div>
 
           <p class="news-sentinel-intro">
-            Atlas lit une archive GitHub alimentée par des flux RSS/Atom mondiaux, économiques, institutionnels et crypto. Il conserve uniquement les événements ayant un lien plausible avec les marchés. Impact potentiel ne signifie ni causalité prouvée ni signal d’achat.
+            Atlas lit une archive GitHub alimentée par des flux RSS/Atom mondiaux, économiques, institutionnels et crypto. Il conserve uniquement les événements ayant un lien plausible avec les marchés. Impact potentiel, causalité et réaction de prix restent trois niveaux analysés séparément.
           </p>
 
           <div class="news-live-toolbar">
@@ -560,7 +562,7 @@
             <article><span>Lecture de cette page</span><b id="newsPageReadState">Démarrage</b><small id="newsPageReadAt">Aucune lecture</small></article>
             <article><span>Génération GitHub</span><b id="newsArchiveGenerationState">Inconnue</b><small id="newsArchiveGeneratedAt">Aucune archive</small></article>
             <article><span>Depuis la dernière visite</span><b id="newsNewSinceVisit">0 nouvelle</b><small id="newsVisitTruth">Premier état local</small></article>
-            <article><span>Décision globale</span><b id="newsFeedDecision">Collecte en attente</b><small>Aucun ordre automatique</small></article>
+            <article><span>Décision globale</span><b id="newsFeedDecision">Collecte en attente</b><small>Validation humaine</small></article>
           </div>
 
           <div class="news-live-list" id="newsLiveList" aria-live="polite">
@@ -670,7 +672,7 @@
       </div>
 
       <p class="decision-board-rule">
-        Atlas ne décide pas à ta place : il réduit le bruit, compare les signaux et bloque le FOMO.
+        Atlas réduit le bruit, compare les signaux et maintient la décision sous validation humaine.
       </p>
 
       <div class="decision-board-grid" id="decisionBoardGrid">
@@ -696,7 +698,7 @@
         </article>
         <article class="decision-card decision-card-wide">
           <b>Décision froide</b>
-          <span>Observer / comparer. Aucun achat automatique.</span>
+          <span>Observer, comparer et valider humainement.</span>
         </article>
       </div>
 
@@ -756,13 +758,13 @@
           <button class="btn small" id="btnToggleAdvanced" type="button">Masquer avancé</button>
         </div>
         <p id="beginnerSummary" class="simple-summary">
-          Lance Livecheck. L’interface expliquera ensuite ce que le tableau montre, sans donner de conseil d’achat.
+          Lance Livecheck. L’interface expliquera ensuite ce que le tableau montre avec une lecture descriptive.
         </p>
         <div class="simple-grid">
           <div><b>Capitalisation</b><span>Valeur totale estimée du marché crypto.</span></div>
           <div><b>Volume 24h</b><span>Montant échangé sur 24 heures.</span></div>
           <div><b>Dominance BTC</b><span>Poids de Bitcoin dans tout le marché.</span></div>
-          <div><b>Score de veille</b><span>Signal d’observation, pas conseil d’achat.</span></div>
+          <div><b>Indice de veille</b><span>Lecture descriptive fondée sur les données chargées.</span></div>
         </div>
       </article>
 
@@ -807,7 +809,7 @@
         </div>
 
         <div class="watch-v2-note" id="watchBasketSummary">
-          Atlas Watchlist V3 : mémoire persistante, conditions locales et aucun ordre automatique.
+          Atlas Watchlist V3 : mémoire persistante, conditions locales et validation humaine.
         </div>
 
         <div class="watch-inputs watch-v3-add-row">
@@ -2366,6 +2368,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.3-full-section-migration-compact-navigation"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.4-advanced-decision-watch-news-nofomo-polish"></script>
 </body>
 </html>
