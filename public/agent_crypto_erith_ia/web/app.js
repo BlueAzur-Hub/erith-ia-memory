@@ -1,8 +1,7 @@
-/* V1.1-alpha · Build 27.1 — CHAMPAGNE LUXE PANORAMIC PENTHOUSE
-   Hérite intégralement du runtime 26.47.6.6.
-   Target Top 5 LIVE compact sur une seule ligne :
-   logo | symbole complet | prix | variation.
-   Aucun acquis supprimé.
+/* V1.1-alpha · Build 27.1.1 — CHAMPAGNE LUXE PANORAMIC PENTHOUSE
+   Math Model score color scale:
+   0–24 rouge · 25–54 orange · 55–74 turquoise · 75–100 vert.
+   Market Snapshot et couleurs d'identité crypto inchangés.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -4422,7 +4421,50 @@ function decisionFromScore(score) { if (score === null || score === undefined) r
   });
 
 } function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="10" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
-} function renderScore(coin) {
+} 
+function atlasMathScoreBand(score) {
+  const value = Number(score);
+
+  if (!Number.isFinite(value)) {
+    return {
+      id: "neutral",
+      color: "#8EA4BA",
+      label: "Analyse suspendue"
+    };
+  }
+
+  if (value < 25) {
+    return {
+      id: "red",
+      color: "#FF5C78",
+      label: "Lecture bloquée"
+    };
+  }
+
+  if (value < 55) {
+    return {
+      id: "orange",
+      color: "#FF9F1C",
+      label: "Lecture prudente"
+    };
+  }
+
+  if (value < 75) {
+    return {
+      id: "turquoise",
+      color: "#42E8E0",
+      label: "Lecture lisible"
+    };
+  }
+
+  return {
+    id: "green",
+    color: "#64EFA0",
+    label: "Lecture solide"
+  };
+}
+
+function renderScore(coin) {
   const mathShell = document.getElementById("math");
   if (mathShell && coin) {
     const palette = atlasCryptoPalette(coin, Math.max(0, Number(coin.rank || 1) - 1));
@@ -4434,7 +4476,30 @@ function decisionFromScore(score) { if (score === null || score === undefined) r
     mathShell.style.removeProperty("--crypto-gradient");
     delete mathShell.dataset.cryptoId;
   }
-  const s = scoreCoin(coin); if (!els.scoreRing || !els.scoreValue || !els.scoreLabel || !els.scoreBreakdown) return; if (s.score === null) { els.scoreRing.style.setProperty("--score", 0); els.scoreValue.textContent = "—"; els.scoreLabel.textContent = s.label || "Analyse suspendue"; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>—</b></div> <div><span>Marché</span><b>—</b></div> <div><span>Liquidité</span><b>—</b></div> <div><span>Momentum</span><b>—</b></div> <div><span>Risque</span><b>—</b></div>`; return; } els.scoreRing.style.setProperty("--score", s.score); els.scoreValue.textContent = s.score; els.scoreLabel.textContent = s.label; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>${Math.round(s.parts.information)}/15</b></div> <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div> <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div> <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div> <div><span>Risque</span><b>pénalité active</b></div> <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
+  const s = scoreCoin(coin);
+  if (!els.scoreRing || !els.scoreValue || !els.scoreLabel || !els.scoreBreakdown) return;
+
+  const scoreBand = atlasMathScoreBand(s.score);
+  if (mathShell) {
+    mathShell.style.setProperty("--math-score-color", scoreBand.color);
+    mathShell.dataset.mathScoreBand = scoreBand.id;
+  }
+  els.scoreRing.style.setProperty("--math-score-color", scoreBand.color);
+  els.scoreValue.style.setProperty("--math-score-color", scoreBand.color);
+  els.scoreLabel.style.setProperty("--math-score-color", scoreBand.color);
+
+  if (s.score === null) {
+    els.scoreRing.style.setProperty("--score", 0);
+    els.scoreValue.textContent = "—";
+    els.scoreLabel.textContent = scoreBand.label;
+    els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>—</b></div> <div><span>Marché</span><b>—</b></div> <div><span>Liquidité</span><b>—</b></div> <div><span>Momentum</span><b>—</b></div> <div><span>Risque</span><b>—</b></div>`;
+    return;
+  }
+
+  els.scoreRing.style.setProperty("--score", s.score);
+  els.scoreValue.textContent = s.score;
+  els.scoreLabel.textContent = scoreBand.label;
+  els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>${Math.round(s.parts.information)}/15</b></div> <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div> <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div> <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div> <div><span>Risque</span><b>pénalité active</b></div> <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
 } function renderWatchlist() { if (!els.watchCards) return; const selectedCount = (state.watchIds || []).length; if (els.watchBasketSummary) { els.watchBasketSummary.textContent = `Atlas Watchlist V2 auto · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers compacts.`; } if (!state.liveOk || !state.coins.length) { els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 est prêt, sans inventer de prix.</div>`; return; } const topMovers = state.coins .filter(c => typeof c.change24h === "number") .slice() .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h)) .slice(0, 6) .map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`) .join(" · "); const basketRows = ATLAS_WATCH_BASKETS.map(basket => { const coins = watchBasketCoins(basket); const status = basketStatus(coins); const leaders = coins .slice() .sort((a, b) => Math.abs(Number(b.change24h) || 0) - Math.abs(Number(a.change24h) || 0)) .slice(0, 4); const leaderText = leaders.length ? leaders.map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ") : "aucun actif dans le top chargé"; return `<article class="watch-compact-row ${status.mode}"> <div> <b>${escapeHtml(basket.label)}</b> <span>${escapeHtml(basket.role)}</span> </div> <strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong> <em>${leaderText}</em> <small>${coins.length}/${basket.ids.length} actifs visibles</small> </article>`; }).join(""); els.watchCards.innerHTML = [ `<div class="watch-v2-diagnostic compact"> <b>Lecture Atlas V2 compacte</b> <span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · mouvements : ${topMovers || "en attente"}</span> </div>`, `<div class="watch-compact-list">${basketRows}</div>` ].join("");
 } function renderRiskGrid() { if (!els.riskGrid) return; els.riskGrid.innerHTML = ` <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.sourceLock?.valid ? "Source Lock CoinGecko" : "Source canonique absente"}</b></div> <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.26.47.6</b></div> <div class="risk warn"><span>Social</span><b>Non vérifié</b></div> <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 } function renderSourceGrid() { atlasRenderDiagnostics(); if (!els.sourceGrid) { renderSourceDiagnostic(); return; } if (!state.sourceStatus.length) { els.sourceGrid.innerHTML = liveSources.map(s => `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>` ).join(""); renderSourceDiagnostic(); return; } els.sourceGrid.innerHTML = state.sourceStatus.map(s => `<div class="source-item ${s.status === "OK" ? "ok" : s.status === "BACKEND" ? "warn" : "fail"}"> <strong>${s.name}</strong> <span>${s.kind}</span> <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span> <span>${escapeHtml(s.detail || "")}</span> </div>` ).join(""); renderSourceDiagnostic();
@@ -5844,7 +5909,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha-build-27.1-panoramic-penthouse`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha-build-27.1.1-math-score-colors`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {

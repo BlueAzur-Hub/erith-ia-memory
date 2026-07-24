@@ -7548,3 +7548,51 @@ main .decision-board{
     overflow-x: auto !important;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.1.1
+   CHAMPAGNE LUXE PANORAMIC PENTHOUSE
+   MATH SCORE COLOR SCALE LOCK
+   ========================================================= */
+
+#math.score-panel {
+  --math-score-color: #8EA4BA;
+}
+
+#math .score-ring {
+  background:
+    conic-gradient(
+      var(--math-score-color) calc(var(--score) * 1%),
+      rgba(255,255,255,.10) 0
+    ) !important;
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--math-score-color) 18%, transparent) !important;
+  transition:
+    background .28s ease,
+    box-shadow .28s ease;
+}
+
+#math .score-ring::after {
+  border-color:
+    color-mix(in srgb, var(--math-score-color) 28%, var(--line)) !important;
+}
+
+#math #scoreValue {
+  color: var(--math-score-color) !important;
+  text-shadow:
+    0 0 16px color-mix(in srgb, var(--math-score-color) 18%, transparent);
+  transition: color .28s ease;
+}
+
+#math #scoreLabel {
+  color: var(--math-score-color) !important;
+  font-weight: 850;
+  transition: color .28s ease;
+}
+
+/* Crypto identity remains independent:
+   the ACTIF card keeps BTC/ETH/BNB/XRP/SOL canonical colors. */
+#math .atlas-math-card:first-child {
+  --math-score-color: initial;
+}
