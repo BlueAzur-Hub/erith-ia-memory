@@ -3750,6 +3750,10 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
   });
 }
 
+/*
+  Internal package Build 28.1.19.
+  Visible release numbers in the interface remain frozen by operator request.
+*/
 function atlasDrawCurveFollowingShadowBars({
   ctx,
   rows,
@@ -3760,38 +3764,53 @@ function atlasDrawCurveFollowingShadowBars({
   clipTop,
   clipRight,
   clipBottom,
-  color = "98,236,255"
+  color = "98,236,255",
+  opacity = 0.18,
+  heightRatio = 0.88,
+  bandStep = 6,
+  bandThickness = 2
 }) {
-  const safeRows = Array.isArray(rows) ? rows.filter(point =>
-    Number.isFinite(Number(point?.x))
-    && Number.isFinite(Number(point?.price))
-    && Number(point.price) > 0
-  ) : [];
+  const safeRows = Array.isArray(rows)
+    ? rows
+        .filter(point =>
+          Number.isFinite(Number(point?.x))
+          && Number.isFinite(Number(point?.price))
+          && Number(point.price) > 0
+        )
+        .sort((a, b) => Number(a.x) - Number(b.x))
+    : [];
+
   if (!ctx || safeRows.length < 2) return;
 
-  const volumeValues = safeRows
-    .map(point => Number(point?.y))
-    .filter(value => Number.isFinite(value) && value >= 0);
-  const maxVolume = Math.max(...volumeValues, 0);
+  const safeBaseline = Math.min(
+    Number(baseline),
+    Number(clipBottom) - 1
+  );
+  const safeRatio = Math.max(0.10, Math.min(0.96, Number(heightRatio) || 0.88));
+  const safeOpacity = Math.max(0.025, Math.min(0.42, Number(opacity) || 0.18));
+  const safeBandStep = Math.max(3, Number(bandStep) || 6);
+  const safeBandThickness = Math.max(1, Number(bandThickness) || 2);
 
-  const pixelXs = safeRows
-    .map(point => Number(xFor(point.x)))
-    .filter(Number.isFinite)
-    .sort((a, b) => a - b);
-  const pixelGaps = pixelXs
-    .slice(1)
-    .map((value, index) => value - pixelXs[index])
-    .filter(value => Number.isFinite(value) && value > 0)
-    .sort((a, b) => a - b);
+  const envelope = safeRows.map(point => {
+    const x = Number(xFor(point.x));
+    const rawCurveY = Number(yForPrice(point.price));
+    const curveY = Math.max(
+      Number(clipTop),
+      Math.min(safeBaseline - 1, rawCurveY)
+    );
+    const distanceToCurve = Math.max(1, safeBaseline - curveY);
+    const shadowTop = safeBaseline - distanceToCurve * safeRatio;
+    return { x, y: shadowTop };
+  }).filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
 
-  const medianPixelGap = pixelGaps.length
-    ? pixelGaps[Math.floor(pixelGaps.length / 2)]
-    : 3;
-  const barWidth = Math.max(1.25, Math.min(5.2, medianPixelGap * 0.80));
-  const safeBaseline = Math.min(Number(baseline), Number(clipBottom) - 1);
-  const usableHeight = Math.max(1, safeBaseline - Number(clipTop));
+  if (envelope.length < 2) return;
+
+  const first = envelope[0];
+  const last = envelope[envelope.length - 1];
+  const highestBand = Math.min(...envelope.map(point => point.y));
 
   ctx.save();
+
   ctx.beginPath();
   ctx.rect(
     Number(clipLeft),
@@ -3801,48 +3820,39 @@ function atlasDrawCurveFollowingShadowBars({
   );
   ctx.clip();
 
-  for (const point of safeRows) {
-    const x = Number(xFor(point.x));
-    const rawCurveY = Number(yForPrice(point.price));
-    if (!Number.isFinite(x) || !Number.isFinite(rawCurveY)) continue;
+  /*
+    One closed envelope under the crypto line:
+    baseline -> 88% shadow contour -> baseline.
+    Horizontal parallel bands are clipped inside this contour.
+    The remaining 12% forms the clean visual gap under the crypto line.
+  */
+  ctx.beginPath();
+  ctx.moveTo(first.x, safeBaseline);
+  ctx.lineTo(first.x, first.y);
+  for (let index = 1; index < envelope.length; index += 1) {
+    ctx.lineTo(envelope[index].x, envelope[index].y);
+  }
+  ctx.lineTo(last.x, safeBaseline);
+  ctx.closePath();
+  ctx.clip();
 
-    /*
-      Build 28.1.18 canonical geometry:
-      - one shared time axis for price and shadow bars;
-      - every bar starts from the chart baseline;
-      - the bar envelope follows the crypto line point by point;
-      - each bar reaches 80% of the baseline-to-line distance;
-      - the remaining 20% is the visible separation below the crypto line;
-      - real volume controls opacity only, never geometry.
-    */
-    const curveY = Math.max(
-      Number(clipTop),
-      Math.min(safeBaseline - 1, rawCurveY)
-    );
-    const distanceToCurve = Math.max(
-      1,
-      Math.min(usableHeight, safeBaseline - curveY)
-    );
-    const shadowHeight = distanceToCurve * 0.80;
-    const shadowTop = safeBaseline - shadowHeight;
+  const totalHeight = Math.max(1, safeBaseline - highestBand);
 
-    const volumeRatio = maxVolume > 0
-      ? Math.max(0, Math.min(1, Number(point.y || 0) / maxVolume))
-      : 0;
+  for (
+    let y = safeBaseline - safeBandThickness;
+    y >= highestBand;
+    y -= safeBandStep
+  ) {
+    const rise = Math.max(0, Math.min(1, (safeBaseline - y) / totalHeight));
+    const alpha = safeOpacity * (0.56 + rise * 0.44);
 
-    const alpha = 0.16 + volumeRatio * 0.28;
-    const fade = ctx.createLinearGradient(0, shadowTop, 0, safeBaseline);
-    fade.addColorStop(0, `rgba(${color},${Math.max(.12, alpha * .90).toFixed(3)})`);
-    fade.addColorStop(.55, `rgba(${color},${Math.max(.07, alpha * .58).toFixed(3)})`);
-    fade.addColorStop(1, `rgba(${color},${Math.max(.025, alpha * .24).toFixed(3)})`);
-
-    ctx.fillStyle = fade;
-    ctx.fillRect(
-      x - barWidth / 2,
-      shadowTop,
-      barWidth,
-      Math.max(1, shadowHeight)
-    );
+    ctx.beginPath();
+    ctx.moveTo(Number(clipLeft), y);
+    ctx.lineTo(Number(clipRight), y);
+    ctx.lineWidth = safeBandThickness;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = `rgba(${color},${alpha.toFixed(3)})`;
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -3851,8 +3861,7 @@ function atlasDrawCurveFollowingShadowBars({
 const atlasVolumeOverlayPlugin = {
   id: "atlasVolumeOverlay",
   beforeDatasetsDraw(chart) {
-    const rows = Array.isArray(chart?.$atlasVolumeRows) ? chart.$atlasVolumeRows : [];
-    if (!chart?.$atlasVolumeVisible || !rows.length) return;
+    if (!chart?.$atlasVolumeVisible) return;
 
     const area = chart.chartArea;
     const xScale = chart.scales?.x;
@@ -3861,17 +3870,41 @@ const atlasVolumeOverlayPlugin = {
 
     const dateAxisReserve = 30;
     const baseline = area.bottom - dateAxisReserve;
-    atlasDrawCurveFollowingShadowBars({
-      ctx: chart.ctx,
-      rows,
-      xFor: value => xScale.getPixelForValue(value),
-      yForPrice: value => yScale.getPixelForValue(value),
-      baseline,
-      clipLeft: area.left,
-      clipTop: area.top,
-      clipRight: area.right,
-      clipBottom: area.bottom,
-      color: chart.$atlasVolumeColor || "98,236,255"
+
+    const configuredSeries = Array.isArray(chart.$atlasShadowSeries)
+      ? chart.$atlasShadowSeries
+      : [];
+
+    const series = configuredSeries.length
+      ? configuredSeries
+      : Array.isArray(chart.$atlasVolumeRows) && chart.$atlasVolumeRows.length
+        ? [{
+            rows: chart.$atlasVolumeRows,
+            color: chart.$atlasVolumeColor || "98,236,255",
+            opacity: 0.20,
+            heightRatio: 0.88
+          }]
+        : [];
+
+    series.forEach((entry, index) => {
+      atlasDrawCurveFollowingShadowBars({
+        ctx: chart.ctx,
+        rows: entry.rows,
+        xFor: value => xScale.getPixelForValue(value),
+        yForPrice: value => yScale.getPixelForValue(value),
+        baseline,
+        clipLeft: area.left,
+        clipTop: area.top,
+        clipRight: area.right,
+        clipBottom: area.bottom,
+        color: entry.color || "98,236,255",
+        opacity: Number.isFinite(Number(entry.opacity))
+          ? Number(entry.opacity)
+          : index === 0 ? 0.18 : 0.10,
+        heightRatio: 0.88,
+        bandStep: 6,
+        bandThickness: 2
+      });
     });
   }
 };
@@ -4089,6 +4122,12 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       points.map(point => ({ t: point.x, price: point.y }))
     );
     state.chartEngineV2.realChart.$atlasVolumeColor = atlasHexToRgb(palette.primary).join(",");
+    state.chartEngineV2.realChart.$atlasShadowSeries = [{
+      rows: state.chartEngineV2.realChart.$atlasVolumeRows,
+      color: atlasHexToRgb(palette.primary).join(","),
+      opacity: 0.22,
+      heightRatio: 0.88
+    }];
     state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
     state.chartEngineV2.realChart.$atlasVolumeAxisId = null;
@@ -4504,7 +4543,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
-      plugins: [atlasOverlayAxesPlugin],
+      plugins: [atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -4574,6 +4613,15 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart.$atlasView = "base100";
     state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
+    state.chartEngineV2.realChart.$atlasVolumeVisible = state.chartViewV2.volume !== false;
+    state.chartEngineV2.realChart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
+      rows: entry.data
+        .filter(Boolean)
+        .map(point => ({ x: point.x, price: point.y, y: 1 })),
+      color: atlasHexToRgb(atlasCryptoPalette(entry.coin, index).primary).join(","),
+      opacity: index === 0 ? 0.16 : Math.max(0.065, 0.12 - index * 0.012),
+      heightRatio: 0.88
+    }));
     atlasRefreshChartScale(state.chartEngineV2.realChart);
     atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
     return normalizedEntries;
@@ -4592,6 +4640,30 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   const plotW = width - left - right, plotH = height - top - bottom;
   const xFor = time => left + ((time - startTime) / (endTime - startTime || 1)) * plotW;
   const yFor = value => top + plotH - ((value - (min - yPad)) / ((max + yPad) - (min - yPad) || 1)) * plotH;
+  if (state.chartViewV2.volume !== false) {
+    normalizedEntries.forEach((entry, index) => {
+      const palette = atlasCryptoPalette(entry.coin, index);
+      atlasDrawCurveFollowingShadowBars({
+        ctx,
+        rows: entry.data
+          .filter(Boolean)
+          .map(point => ({ x: point.x, price: point.y, y: 1 })),
+        xFor,
+        yForPrice: yFor,
+        baseline: top + plotH - 30,
+        clipLeft: left,
+        clipTop: top,
+        clipRight: left + plotW,
+        clipBottom: top + plotH,
+        color: atlasHexToRgb(palette.primary).join(","),
+        opacity: index === 0 ? 0.16 : Math.max(0.065, 0.12 - index * 0.012),
+        heightRatio: 0.88,
+        bandStep: 6,
+        bandThickness: 2
+      });
+    });
+  }
+
   normalizedEntries.forEach((entry, index) => {
     ctx.beginPath();
     entry.data.forEach((point, pointIndex) => {
@@ -8720,7 +8792,6 @@ function atlasV2SyncMathRail() {
   const rail = document.getElementById("math");
 
   setText(document.getElementById("atlasMathRailScore"), scoreText);
-  setText(document.getElementById("atlasMathRailLabel"), label);
 
   if (rail) {
     rail.dataset.mathRailBand = band.id;
