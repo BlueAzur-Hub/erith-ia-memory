@@ -7746,3 +7746,305 @@ main .decision-board{
     min-height: 54px !important;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2
+   SOURCE DOCK & MARKET PORTALS
+   ========================================================= */
+
+.atlas-source-dock {
+  --source-dock-color: #62ecff;
+  --source-dock-gradient: linear-gradient(90deg, #62ecff, #62ecff);
+  position: relative;
+  display: grid;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--source-dock-color) 34%, rgba(255,255,255,.12));
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--source-dock-color) 7%, transparent), transparent 52%),
+    rgba(3, 11, 22, .48);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.018),
+    0 0 18px color-mix(in srgb, var(--source-dock-color) 7%, transparent);
+}
+
+.atlas-source-dock::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--source-dock-gradient);
+  opacity: .86;
+}
+
+.source-dock-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.source-dock-title {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "eyebrow asset"
+    "title asset";
+  column-gap: 8px;
+  align-items: end;
+}
+
+.source-dock-title .eyebrow {
+  grid-area: eyebrow;
+  margin: 0 !important;
+  font-size: 7px !important;
+}
+
+.source-dock-title > strong {
+  grid-area: title;
+  color: #fff0c8;
+  font: 950 11px/1.05 system-ui, sans-serif;
+}
+
+.source-dock-title > small {
+  grid-area: asset;
+  min-width: 0;
+  align-self: center;
+  overflow: hidden;
+  background: var(--source-dock-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font: 900 9px/1.15 system-ui, sans-serif;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-dock-refresh {
+  min-height: 26px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--source-dock-color) 38%, rgba(255,255,255,.12));
+  border-radius: 999px;
+  background: rgba(255,255,255,.045);
+  color: #dff9ff;
+  font: 900 8px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.source-dock-refresh:hover,
+.source-dock-refresh:focus-visible {
+  background: color-mix(in srgb, var(--source-dock-color) 12%, rgba(255,255,255,.045));
+  outline: none;
+}
+
+.source-dock-status {
+  min-height: 23px;
+  padding: 5px 7px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.085);
+  border-radius: 8px;
+  background: rgba(255,255,255,.035);
+  color: #bdd0e2;
+  font: 760 8px/1.25 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-source-dock[data-status="direct"] .source-dock-status {
+  border-color: rgba(71,223,145,.24);
+  color: #c9f8df;
+}
+
+.atlas-source-dock[data-status="error"] .source-dock-status {
+  border-color: rgba(255,92,117,.24);
+  color: #ffc2cd;
+}
+
+.source-dock-portals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.source-portal {
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 7px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--source-dock-color) 28%, rgba(255,255,255,.10));
+  border-radius: 9px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--source-dock-color) 7%, transparent), transparent 68%),
+    rgba(255,255,255,.035);
+  color: #eef9ff;
+  text-decoration: none;
+  transition:
+    transform 110ms ease,
+    border-color 110ms ease,
+    background 110ms ease;
+}
+
+.source-portal b {
+  overflow: hidden;
+  color: #fff0c8;
+  font: 900 8.5px/1.1 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-portal small {
+  overflow: hidden;
+  color: rgba(187,211,229,.62);
+  font: 700 7px/1.1 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.source-portal:hover,
+a.source-portal:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--source-dock-color) 58%, rgba(255,255,255,.18));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--source-dock-color) 13%, transparent), transparent 70%),
+    rgba(255,255,255,.055);
+  outline: none;
+}
+
+.source-portal-internal {
+  border-color: rgba(255,216,122,.25);
+}
+
+.source-portal.is-disabled {
+  opacity: .38;
+  cursor: not-allowed;
+  filter: grayscale(.35);
+}
+
+.source-dock-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.source-dock-meta > span {
+  min-width: 0;
+  padding: 5px 7px;
+  display: grid;
+  gap: 2px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 8px;
+  background: rgba(0,0,0,.14);
+}
+
+.source-dock-meta b {
+  color: rgba(255,240,200,.72);
+  font: 850 7px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.source-dock-meta small {
+  overflow: hidden;
+  color: #bcd0e1;
+  font: 720 7.5px/1.15 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* User note: remove the unused vertical gap inside the chart tooltip. */
+.atlas-chart-tooltip {
+  width: min(344px, calc(100% - 20px)) !important;
+}
+
+.atlas-chart-tooltip-row {
+  grid-template-columns:
+    96px
+    minmax(72px, 86px)
+    minmax(102px, 1fr) !important;
+  column-gap: 6px !important;
+  row-gap: 0 !important;
+}
+
+.atlas-chart-tooltip-identity {
+  gap: 6px !important;
+  padding-left: 7px !important;
+}
+
+.atlas-chart-tooltip-identity img,
+.atlas-chart-tooltip-fallback {
+  width: 23px !important;
+  height: 23px !important;
+  flex-basis: 23px !important;
+}
+
+.atlas-chart-tooltip-color-bridge {
+  width: 100% !important;
+}
+
+.atlas-chart-tooltip-values {
+  min-width: 0 !important;
+  padding-left: 7px !important;
+}
+
+@media (max-width: 760px) {
+  .source-dock-portals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .atlas-chart-tooltip {
+    width: min(326px, calc(100% - 16px)) !important;
+  }
+
+  .atlas-chart-tooltip-row {
+    grid-template-columns:
+      92px
+      minmax(62px, 76px)
+      minmax(94px, 1fr) !important;
+    gap: 5px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .source-dock-title {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "eyebrow"
+      "title"
+      "asset";
+  }
+
+  .source-dock-title > small {
+    margin-top: 2px;
+    text-align: left;
+  }
+
+  .source-dock-portals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .source-dock-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-chart-tooltip-row {
+    grid-template-columns: 88px minmax(60px, 72px) minmax(88px, 1fr) !important;
+  }
+
+  .atlas-chart-tooltip-values {
+    grid-column: auto !important;
+    justify-items: end !important;
+    padding-left: 5px !important;
+  }
+}
