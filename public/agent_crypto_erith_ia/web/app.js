@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.26 — CHAMPAGNE LUXE + HOSTEL PRIVATE ROOM
+/* V2.0-alpha · Build 28.1.28 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · COMPLETE ADMIN MODE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.26";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.28";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3404,7 +3404,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.26: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.28: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3750,7 +3750,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.26.
+  Internal package Build 28.1.28.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -8732,7 +8732,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE + HOSTEL PRIVATE ROOM`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · COMPLETE ADMIN MODE`
   );
 }
 
@@ -8768,10 +8768,22 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   const title = document.getElementById("atlasV2ModeTitle");
   const description = document.getElementById("atlasV2ModeDescription");
-  if (title) title.textContent = next === "advanced" ? "Complet" : "Essentiel";
+  const administrator = next === "advanced";
+
+  document.documentElement.dataset.atlasRole =
+    administrator ? "administrator" : "operator";
+  document.body.dataset.atlasRole =
+    administrator ? "administrator" : "operator";
+
+  if (title) {
+    title.textContent = administrator
+      ? "Complet Administrateur"
+      : "Essentiel";
+  }
+
   if (description) {
-    description.textContent = next === "advanced"
-      ? "Analyse · mémoire · décision · système · projets · sources."
+    description.textContent = administrator
+      ? "Administration locale · analyse · mémoire · décision · système · projets · sources."
       : "Livecheck · marché · graphique · sources.";
   }
 
