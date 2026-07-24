@@ -746,7 +746,7 @@ tr[data-id]:hover{
 }
 
 .score-panel h2::after{
-  content:" — pas un conseil d’achat";
+  content:"";
   display:block;
   color:#ffd782;
   font-size:10px;
@@ -11405,5 +11405,281 @@ html[data-atlas-mode="advanced"] .chart-v2-one-line .chart-v2-toolbar {
 
   .metrics.metrics-prime {
     grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.6
+   MARKET SCORE RAIL · LIVE SOURCES ADAPTIVE
+   & VERSION RECOVERY LOCK
+   ========================================================= */
+
+.atlas-v2-release-badge {
+  grid-column: 1 / -1;
+  width: max-content;
+  max-width: 100%;
+  padding: 2px 6px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--v2-mode-accent) 38%, rgba(84,169,255,.18));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--v2-mode-accent) 8%, rgba(4,15,28,.70));
+  color: color-mix(in srgb, var(--v2-mode-accent) 72%, #f4fbff);
+  font: 850 6.9px/1 system-ui, sans-serif;
+  letter-spacing: .03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-atlas-mode="essential"] .atlas-v2-release-badge {
+  display: inline-flex !important;
+}
+
+/* La fusion Graphique conserve désormais tous les contrôles historiques. */
+html[data-atlas-mode="essential"] .chart-v2-toolbar-reading .chart-v2-toggle-group:nth-child(n+2),
+html[data-atlas-mode="essential"] .compare-action-group-market,
+html[data-atlas-mode="essential"] .compare-action-group-state {
+  display: flex !important;
+}
+
+html[data-atlas-mode="essential"] .period-btn[data-period="60"],
+html[data-atlas-mode="essential"] .period-btn-max,
+html[data-atlas-mode="essential"] .chart-v2-period-truth {
+  display: inline-flex !important;
+}
+
+/* Rail Indice : colonne pleine hauteur liée au Market Snapshot. */
+.market-workspace-grid.math-dock-rail {
+  grid-template-columns: minmax(0,1fr) 62px !important;
+  align-items: stretch !important;
+  column-gap: 6px !important;
+}
+
+.market-workspace-grid.math-dock-rail > .market-snapshot-panel {
+  align-self: stretch !important;
+}
+
+.atlas-math-dock.is-rail {
+  position: relative !important;
+  top: auto !important;
+  align-self: stretch !important;
+  width: 62px !important;
+  min-width: 62px !important;
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border-radius: 13px !important;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--math-rail-color, #ff9f1c) 9%, transparent), transparent 54%),
+    rgba(4,15,28,.88) !important;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--math-rail-color, #ff9f1c) 44%, rgba(84,169,255,.18)),
+    0 10px 30px rgba(0,0,0,.20);
+}
+
+.atlas-math-dock.is-rail .atlas-math-rail-trigger {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #f5fbff;
+  cursor: pointer;
+}
+
+.atlas-math-rail-content {
+  position: sticky;
+  top: 10px;
+  width: 100%;
+  min-height: 250px;
+  padding: 12px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  color: inherit;
+}
+
+.atlas-math-rail-kicker {
+  color: color-mix(in srgb, var(--math-rail-color, #ff9f1c) 76%, #ffffff);
+  font: 900 7.2px/1 system-ui, sans-serif;
+  letter-spacing: .17em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.atlas-math-rail-medallion {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  border: 5px solid color-mix(in srgb, var(--math-rail-color, #ff9f1c) 92%, #ffffff 8%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 34%, rgba(255,255,255,.09), transparent 32%),
+    rgba(9,25,40,.96);
+  color: color-mix(in srgb, var(--math-rail-color, #ff9f1c) 86%, #fff);
+  box-shadow:
+    0 0 0 5px rgba(255,255,255,.025),
+    0 0 22px color-mix(in srgb, var(--math-rail-color, #ff9f1c) 24%, transparent);
+  font: 950 17px/1 system-ui, sans-serif;
+}
+
+.atlas-math-rail-content small {
+  max-height: 112px;
+  overflow: hidden;
+  color: #f3e7bd;
+  font: 820 7px/1.25 system-ui, sans-serif;
+  text-align: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.atlas-math-rail-content i {
+  margin-top: auto;
+  color: color-mix(in srgb, var(--math-rail-color, #ff9f1c) 82%, #fff);
+  font: normal 950 13px/1 system-ui, sans-serif;
+}
+
+.atlas-math-dock.is-rail .atlas-math-rail-trigger:hover,
+.atlas-math-dock.is-rail .atlas-math-rail-trigger:focus-visible {
+  background: color-mix(in srgb, var(--math-rail-color, #ff9f1c) 7%, transparent) !important;
+  outline: 1px solid color-mix(in srgb, var(--math-rail-color, #ff9f1c) 70%, #fff);
+  outline-offset: -2px;
+}
+
+/* LIVE SOURCES : même module réel dans les deux interfaces. */
+.live-sources-collapse {
+  display: block !important;
+  margin-top: 8px !important;
+  border-color: rgba(57,230,226,.22) !important;
+}
+
+.live-sources-collapse > .atlas-collapse-summary {
+  border-left: 2px solid rgba(57,230,226,.68) !important;
+}
+
+.live-sources-collapse .panel#sources {
+  margin: 0 !important;
+}
+
+html[data-atlas-mode="essential"] .live-sources-collapse .atlas-collapse-summary {
+  min-height: 38px !important;
+  padding: 6px 9px !important;
+}
+
+html[data-atlas-mode="essential"] .live-sources-collapse .atlas-collapse-title {
+  font-size: 9.2px !important;
+}
+
+html[data-atlas-mode="essential"] .live-sources-collapse .atlas-collapse-subtitle {
+  font-size: 7.7px !important;
+}
+
+html[data-atlas-mode="essential"] #sources {
+  padding: 10px !important;
+}
+
+html[data-atlas-mode="essential"] #sources .section-head {
+  margin-bottom: 8px !important;
+}
+
+html[data-atlas-mode="essential"] #sources .source-grid {
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  gap: 6px !important;
+}
+
+html[data-atlas-mode="essential"] #sources .source-item {
+  min-height: 66px !important;
+  padding: 8px 9px !important;
+}
+
+html[data-atlas-mode="essential"] #sources .source-help {
+  margin-top: 7px !important;
+  font-size: 7.6px !important;
+}
+
+.footer {
+  gap: 6px !important;
+  padding: 8px 10px !important;
+  font-size: 7.5px !important;
+}
+
+/* Transformer Book : rail encore plus facile à activer. */
+@media (max-width: 1366px) and (min-width: 800px) {
+  .market-workspace-grid.math-dock-rail {
+    grid-template-columns: minmax(0,1fr) 66px !important;
+  }
+
+  .atlas-math-dock.is-rail {
+    width: 66px !important;
+    min-width: 66px !important;
+  }
+
+  .atlas-math-rail-medallion {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    font-size: 18px;
+  }
+
+  .atlas-math-rail-content small {
+    font-size: 7.3px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .market-workspace-grid.math-dock-rail {
+    grid-template-columns: 1fr !important;
+  }
+
+  .atlas-math-dock.is-rail {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    height: 48px !important;
+  }
+
+  .atlas-math-dock.is-rail .atlas-math-rail-trigger {
+    position: absolute !important;
+  }
+
+  .atlas-math-rail-content {
+    position: static;
+    min-height: 48px;
+    padding: 5px 10px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 9px;
+  }
+
+  .atlas-math-rail-kicker,
+  .atlas-math-rail-content small {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .atlas-math-rail-medallion {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    border-width: 4px;
+    font-size: 14px;
+  }
+
+  html[data-atlas-mode="essential"] #sources .source-grid {
+    grid-template-columns: 1fr !important;
   }
 }
