@@ -11695,3 +11695,288 @@ html[data-atlas-mode="essential"] #sources .source-item {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.8
+   RUNTIME VALIDATION · RESPONSIVE & LEGACY PURGE LOCK
+   ========================================================= */
+
+html[data-atlas-runtime="degraded"] .atlas-v2-release-badge {
+  border-color: rgba(255,188,88,.58);
+}
+
+html[data-atlas-viewport="wide"] .atlas-v2-interface-bar,
+html[data-atlas-viewport="desktop"] .atlas-v2-interface-bar {
+  grid-template-columns: auto minmax(0,1fr) auto;
+}
+
+html[data-atlas-viewport="transformer"] .atlas-v2-interface-bar {
+  grid-template-columns: auto minmax(0,1fr) auto;
+  gap: 6px;
+}
+
+html[data-atlas-viewport="transformer"] .atlas-v2-interface-bar .atlas-v2-mode-copy {
+  min-width: 126px;
+}
+
+html[data-atlas-viewport="transformer"] .atlas-v2-interface-bar .atlas-v2-mode-copy small {
+  display: none;
+}
+
+html[data-atlas-viewport="transformer"] .atlas-v2-interface-bar .atlas-v2-nav {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+html[data-atlas-viewport="transformer"] .chart-v2-recovery-line .chart-v2-toolbar {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-inline: contain;
+}
+
+html[data-atlas-viewport="transformer"] .hero .command-bar {
+  grid-template-columns:
+    minmax(136px,160px)
+    minmax(106px,126px)
+    minmax(0,1fr)
+    minmax(150px,185px) !important;
+}
+
+html[data-atlas-mode="advanced"][data-atlas-viewport="transformer"] .hero .command-bar {
+  grid-template-columns:
+    minmax(132px,156px)
+    minmax(102px,122px)
+    minmax(102px,122px)
+    minmax(165px,.78fr)
+    minmax(180px,1fr)
+    minmax(145px,175px) !important;
+}
+
+html[data-atlas-viewport="compact"] .atlas-v2-interface-bar,
+html[data-atlas-viewport="mobile"] .atlas-v2-interface-bar {
+  grid-template-columns: minmax(0,1fr) auto;
+}
+
+html[data-atlas-viewport="compact"] .atlas-v2-interface-bar .atlas-v2-nav,
+html[data-atlas-viewport="mobile"] .atlas-v2-interface-bar .atlas-v2-nav {
+  grid-column: 1 / -1;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+html[data-atlas-viewport="compact"] .hero .command-bar,
+html[data-atlas-viewport="mobile"] .hero .command-bar,
+html[data-atlas-mode="advanced"][data-atlas-viewport="compact"] .hero .command-bar,
+html[data-atlas-mode="advanced"][data-atlas-viewport="mobile"] .hero .command-bar {
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+}
+
+html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens > .chart-panel > .section-head.compact.chart-v2-recovery-line,
+html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens > .chart-panel > .section-head.compact.chart-v2-recovery-line {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-atlas-viewport="compact"] .chart-v2-recovery-line .chart-v2-toolbar,
+html[data-atlas-viewport="mobile"] .chart-v2-recovery-line .chart-v2-toolbar {
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+html[data-atlas-viewport="mobile"] .hero .command-bar,
+html[data-atlas-mode="advanced"][data-atlas-viewport="mobile"] .hero .command-bar {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-atlas-viewport="mobile"] .metrics.metrics-prime {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+}
+
+html[data-atlas-viewport="mobile"] .market-workspace-grid.math-dock-rail {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-atlas-viewport="mobile"] .atlas-math-dock.is-rail {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 50px !important;
+  height: 50px !important;
+}
+
+html[data-atlas-viewport="mobile"] .atlas-math-rail-content {
+  position: static;
+  min-height: 50px;
+  padding: 5px 10px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 9px;
+}
+
+html[data-atlas-viewport="mobile"] .atlas-math-rail-kicker,
+html[data-atlas-viewport="mobile"] .atlas-math-rail-content small {
+  writing-mode: horizontal-tb;
+  transform: none;
+}
+
+html[data-atlas-viewport="mobile"] #sources .source-grid {
+  grid-template-columns: 1fr !important;
+}
+
+/* A hidden module must never preserve geometry after a mode switch. */
+html[data-atlas-mode="essential"] .v2-advanced-section[hidden],
+html[data-atlas-mode="essential"] [data-v2-section="advanced"][hidden],
+html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
+  display: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.9
+   FULL-BLEED EXPANDED CHART & SCALE TRUTH LOCK
+   ========================================================= */
+
+#analyste.champagne-clean-lens {
+  min-height: clamp(735px, 88vh, 960px) !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+  background: rgba(2,8,18,.01) !important;
+}
+
+#analyste.champagne-clean-lens::before {
+  inset: 0 !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  transform: scale(1.01);
+}
+
+#analyste.champagne-clean-lens::after {
+  inset: 0 !important;
+  background:
+    radial-gradient(ellipse at 18% 10%, rgba(37,126,212,.08), transparent 36%),
+    radial-gradient(ellipse at 82% 22%, rgba(139,63,215,.08), transparent 34%),
+    linear-gradient(90deg, rgba(2,8,18,.20), rgba(2,8,18,.08) 62%, rgba(2,8,18,.22)),
+    linear-gradient(180deg, rgba(2,8,18,.05), rgba(2,8,18,.18)) !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel {
+  min-height: clamp(720px, 86vh, 940px) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0,1fr) auto !important;
+  background: linear-gradient(180deg, rgba(5,14,27,.08), rgba(5,14,27,.025)) !important;
+  backdrop-filter: none !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  align-self: stretch !important;
+  background:
+    linear-gradient(180deg, rgba(5,14,27,.52), rgba(5,14,27,.32)),
+    rgba(5,14,27,.20) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+}
+
+#analyste.champagne-clean-lens .chart-shell {
+  height: clamp(635px, 76vh, 835px) !important;
+  min-height: 635px !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 12px 13px 14px !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, rgba(2,8,18,.08), rgba(2,8,18,.03) 56%, rgba(2,8,18,.12)) !important;
+  backdrop-filter: none !important;
+}
+
+#analyste.champagne-clean-lens #mainChart {
+  width: 100% !important;
+  height: calc(100% - 34px) !important;
+  min-height: 590px !important;
+  max-height: none !important;
+  background: transparent !important;
+}
+
+#analyste.champagne-clean-lens .comparison-selection,
+#analyste.champagne-clean-lens .chart-v2-legend,
+#analyste.champagne-clean-lens .atlas-chart-tooltip,
+#analyste.champagne-clean-lens .atlas-chart-refresh {
+  z-index: 8 !important;
+}
+
+#analyste.champagne-clean-lens .chart-caption {
+  min-height: 34px !important;
+  margin-top: 6px !important;
+  padding: 7px 10px !important;
+  background: rgba(3,10,20,.34) !important;
+  backdrop-filter: blur(2px);
+}
+
+/* Les commandes de comparaison restent toujours atteignables. */
+#analyste.champagne-clean-lens .chart-v2-toolbar-comparison {
+  flex: 0 0 auto !important;
+}
+
+#analyste.champagne-clean-lens .compare-actions {
+  overflow: visible !important;
+}
+
+#analyste.champagne-clean-lens .compare-action-group-mode {
+  order: 0;
+}
+
+/* Transformer Book : grand graphe sans écraser le cockpit. */
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens {
+  min-height: clamp(670px, 86vh, 800px) !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-panel {
+  min-height: clamp(655px, 84vh, 785px) !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-shell {
+  height: clamp(570px, 72vh, 700px) !important;
+  min-height: 570px !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens #mainChart {
+  min-height: 525px !important;
+}
+
+/* Écrans compacts : hauteur liée au viewport, commandes conservées. */
+html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens {
+  min-height: 650px !important;
+}
+
+html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens .chart-panel {
+  min-height: 630px !important;
+}
+
+html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens .chart-shell {
+  height: 545px !important;
+  min-height: 545px !important;
+}
+
+html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens #mainChart {
+  min-height: 500px !important;
+}
+
+html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens {
+  min-height: 560px !important;
+}
+
+html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens .chart-panel {
+  min-height: 540px !important;
+}
+
+html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens .chart-shell {
+  height: 450px !important;
+  min-height: 450px !important;
+}
+
+html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens #mainChart {
+  min-height: 410px !important;
+}

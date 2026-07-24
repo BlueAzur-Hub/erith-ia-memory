@@ -1,18 +1,17 @@
-/* V2.0-alpha · Build 28.1.7 — CANONICAL UI RECOVERY & FULL FUNCTION LOCK
-   Récupération fonctionnelle cumulative.
-   - cockpit Graphique Analyste restauré intégralement ;
-   - fusion stable du titre et des commandes, sans masquage ni suppression ;
-   - barre Livecheck reconstruite sans cellule vide ni retour isolé ;
-   - navigation Essentiel / Complet conservée dans une barre unique ;
-   - modules complets réellement absents du mode Essentiel ;
-   - LIVE SOURCES visible dans les deux modes ;
-   - rail Indice pleine hauteur conservé et entièrement cliquable ;
-   - numéro de version visible en mode Essentiel ;
-   - sélecteur de module inactif tant que le bouton Ouvrir n’est pas utilisé ;
-   - comparaison atomique, Market, Math Truth, Watchlist V3, News V2,
+/* V2.0-alpha · Build 28.1.9 — FULL-BLEED EXPANDED CHART & SCALE TRUTH LOCK
+   Extension cumulative et corrective du Graphique Analyste.
+   - scène panoramique réellement agrandie sur desktop et Transformer Book ;
+   - fond du penthouse continu derrière le cockpit, le canvas et le détail actif ;
+   - axe Prix strictement isolé de l’axe Volume ;
+   - correction du défaut récent où les volumes forçaient l’axe Prix à plusieurs milliards ;
+   - synchronisation spot compatible Prix réel et Base 100 ;
+   - rejet des points de prix non finis et des ruptures manifestement aberrantes ;
+   - dernier graphe valide conservé si une nouvelle série est incohérente ;
+   - Top 3 / Top 5 et sélections longues conservés avec états indisponibles explicites ;
+   - Graphique, Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.7";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.9";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -1233,7 +1232,7 @@ function saveMarketCache() {
   try {
     localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
       schema: "atlas_market_cache_top50_v1",
-      version: "V2.0-alpha · Build 28.1.7",
+      version: ATLAS_RELEASE,
       saved_at: new Date().toISOString(),
       canonical_source: ATLAS_CANONICAL_MARKET_SOURCE,
       source_mode: state.sourceLock.mode,
@@ -1253,7 +1252,7 @@ function loadMarketCache() {
       const parsed = raw ? JSON.parse(raw) : null;
       if (!parsed || parsed.canonical_source !== ATLAS_CANONICAL_MARKET_SOURCE || !atlasCanonicalSnapshot(parsed.coins)) continue;
       if (key !== MARKET_CACHE_KEY) {
-        try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({ ...parsed, version: "V2.0-alpha · Build 28.1.7", migrated_from: key })); } catch {}
+        try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({ ...parsed, version: ATLAS_RELEASE, migrated_from: key })); } catch {}
       }
       return parsed;
     } catch {}
@@ -2677,11 +2676,16 @@ function atlasRenderChartMaxTruth(record = atlasReadChartMaxTruth()) {
 function atlasWriteChartMaxTruth(result, coin) {
   const coverageDays = atlasChartCoverageDays(result);
   if (!coverageDays) return;
+  const series = Array.isArray(result?.series) ? result.series : [];
+  const firstTimestamp = Number(series[0]?.[0] || 0);
+  const lastTimestamp = Number(series[series.length - 1]?.[0] || 0);
   const record = {
     coverageDays,
-    pointCount: Array.isArray(result?.series) ? result.series.length : 0,
+    pointCount: series.length,
     coinId: coin?.id || null,
     symbol: coin?.symbol || null,
+    firstTimestamp: Number.isFinite(firstTimestamp) && firstTimestamp > 0 ? firstTimestamp : null,
+    lastTimestamp: Number.isFinite(lastTimestamp) && lastTimestamp > 0 ? lastTimestamp : null,
     measuredAt: new Date().toISOString()
   };
   try { localStorage.setItem(ATLAS_CHART_MAX_TRUTH_KEY, JSON.stringify(record)); } catch {}
@@ -2694,6 +2698,34 @@ function atlasChartKey(c, days) {
   return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}`;
 }
 
+function atlasSanitizeChartRows(rows = []) {
+  const ordered = (Array.isArray(rows) ? rows : [])
+    .map(point => [Number(point?.[0]), Number(point?.[1])])
+    .filter(point => Number.isFinite(point[0]) && point[0] > 0 && Number.isFinite(point[1]) && point[1] > 0)
+    .sort((a, b) => a[0] - b[0]);
+
+  if (ordered.length < 3) return ordered;
+
+  const sanitized = [];
+  for (const point of ordered) {
+    const previous = sanitized[sanitized.length - 1];
+    if (!previous) {
+      sanitized.push(point);
+      continue;
+    }
+
+    const ratio = point[1] / previous[1];
+    if (!Number.isFinite(ratio) || ratio <= 0) continue;
+
+    // Une multiplication/division instantanée par 8 entre deux points adjacents
+    // est traitée comme une donnée corrompue, jamais comme une trajectoire réelle.
+    if (ratio > 8 || ratio < 0.125) continue;
+    sanitized.push(point);
+  }
+
+  return sanitized.length >= 2 ? sanitized : ordered;
+}
+
 function atlasNormalizeChartPayload(payload) {
   const raw = Array.isArray(payload?.prices) ? payload.prices : [];
   const byTimestamp = new Map();
@@ -2703,7 +2735,7 @@ function atlasNormalizeChartPayload(payload) {
     if (!Number.isFinite(timestamp) || timestamp <= 0 || !Number.isFinite(price) || price <= 0) continue;
     byTimestamp.set(timestamp, price);
   }
-  return [...byTimestamp.entries()].sort((a, b) => a[0] - b[0]);
+  return atlasSanitizeChartRows([...byTimestamp.entries()]);
 }
 function atlasNormalizeVolumePayload(payload){ const raw=Array.isArray(payload?.total_volumes)?payload.total_volumes:[]; const map=new Map(); for(const p of raw){const t=Number(p?.[0]),v=Number(p?.[1]); if(Number.isFinite(t)&&t>0&&Number.isFinite(v)&&v>=0)map.set(t,v);} return [...map.entries()].sort((a,b)=>a[0]-b[0]); }
 
@@ -3543,17 +3575,27 @@ function atlasRenderComparisonCaption(entries, period, unavailableItems = [], re
 }
 
 function atlasRenderSingleCaption(c, periodLabel, result, warning = "") {
-  const m=result?.integrity?.metrics||{},change=Number(m.changePct),series=atlasChartSeriesSummary(result?.series||[]),source=result?.source||"CoinGecko market_chart EUR",view=atlasChartV2EffectiveView()==="base100"?"Base 100":"Prix EUR",scale=atlasChartV2EffectiveScale()==="logarithmic"?"échelle logarithmique":"échelle normale",volume=state.chartViewV2.volume&&result?.volumeSeries?.length?"volume réel affiché":"volume masqué ou indisponible",changeText=Number.isFinite(change)?fmtPct(change):"—",plain=`Graphique ${c.symbol} · ${periodLabel} · ${view} · ${scale} · ${series} · ${volume} · source : ${source}${warning}.`,asset=`<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(atlasCryptoPalette(c,0).primary)}"><i></i><b>${escapeHtml(c.symbol)}</b><strong>${escapeHtml(changeText)}</strong></span>`;atlasSetChartCaptionHtml(`<span class="chart-caption-text">Graphique ${escapeHtml(periodLabel)} · ${escapeHtml(view)} · ${escapeHtml(scale)} ·</span>${asset}<span class="chart-caption-text">${escapeHtml(series)} · ${escapeHtml(volume)} · source : ${escapeHtml(source)}${escapeHtml(warning)}.</span>`,plain);
+  const metrics = result?.integrity?.metrics || {};
+  const change = Number(metrics.changePct);
+  const count = Array.isArray(result?.series) ? result.series.length : 0;
+  const source = result?.source || "CoinGecko market_chart EUR";
+  const view = atlasChartV2EffectiveView() === "base100" ? "Base 100" : "Prix EUR";
+  const scale = atlasChartV2EffectiveScale() === "logarithmic" ? "log" : "normal";
+  const changeText = Number.isFinite(change) ? fmtPct(change) : "—";
+  const plain = `${c.symbol} · ${periodLabel} · ${view} · ${changeText} · ${count} points · ${source}${warning}`;
+  const asset = `<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(atlasCryptoPalette(c,0).primary)}"><i></i><b>${escapeHtml(c.symbol)}</b><strong>${escapeHtml(changeText)}</strong></span>`;
+  atlasSetChartCaptionHtml(
+    `${asset}<span class="chart-caption-text">${escapeHtml(periodLabel)} · ${escapeHtml(view)} · ${escapeHtml(scale)} · ${count} points · ${escapeHtml(source)}${escapeHtml(warning)}</span>`,
+    plain
+  );
 }
 
 function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   if (!canvas) return;
 
   const period = Number(result?.periodDays || state.chartPeriodDays || 1);
-  const rows = (Array.isArray(series) ? series : [])
-    .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }))
-    .filter(point => Number.isFinite(point.t) && Number.isFinite(point.price) && point.price > 0)
-    .sort((a, b) => a.t - b.t);
+  const rows = atlasSanitizeChartRows(series)
+    .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }));
 
   if (rows.length < atlasChartRules(period).minPoints) {
     drawChartBlocked(canvas);
@@ -3697,11 +3739,14 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             }
           },
           yVolume: {
+            type: "linear",
             display: showVolume && volumeRows.length > 0,
             position: "left",
             beginAtZero: true,
-            grid: { display: false },
+            stacked: false,
+            grid: { display: false, drawOnChartArea: false },
             ticks: { display: false },
+            suggestedMin: 0,
             suggestedMax: volumeRows.length ? Math.max(...volumeRows.map(row => row.y)) * 3.2 : undefined
           }
         }
@@ -3713,6 +3758,9 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     state.chartEngineV2.realChart.$atlasView = view;
     state.chartEngineV2.realChart.$atlasScale = scaleType;
     state.chartEngineV2.realChart.$atlasVolume = showVolume;
+    state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
+    state.chartEngineV2.realChart.$atlasVolumeAxisId = "yVolume";
+    atlasRefreshChartScale(state.chartEngineV2.realChart);
     atlasChartV2RenderLegend([{ coin, result }], { result });
     atlasChartV2SyncControls();
     return;
@@ -3756,8 +3804,18 @@ function atlasPatchResultLastPoint(result, price, timestamp) {
   if (!result || !Array.isArray(result.series) || !result.series.length || !Number.isFinite(Number(price)) || Number(price) <= 0) return false;
   const index = result.series.length - 1;
   const previousTimestamp = Number(result.series[index]?.[0] || 0);
+  const previousPrice = Number(result.series[index]?.[1] || 0);
+  const nextPrice = Number(price);
+
+  if (Number.isFinite(previousPrice) && previousPrice > 0) {
+    const instantaneousRatio = nextPrice / previousPrice;
+    if (!Number.isFinite(instantaneousRatio) || instantaneousRatio > 1.45 || instantaneousRatio < 0.55) {
+      return false;
+    }
+  }
+
   const nextTimestamp = Math.max(previousTimestamp, Number(timestamp || Date.now()));
-  result.series[index] = [nextTimestamp, Number(price)];
+  result.series[index] = [nextTimestamp, nextPrice];
 
   const values = result.series.map(point => Number(point?.[1])).filter(value => Number.isFinite(value) && value > 0);
   const firstPrice = Number(result.series[0]?.[1]);
@@ -3780,23 +3838,64 @@ function atlasPatchResultLastPoint(result, price, timestamp) {
   return true;
 }
 
+function atlasChartPriceDatasets(chart) {
+  return (chart?.data?.datasets || []).filter(dataset =>
+    !dataset?.atlasVolumeDataset
+    && (dataset?.yAxisID || "y") === "y"
+  );
+}
+
+function atlasChartVolumeDatasets(chart) {
+  return (chart?.data?.datasets || []).filter(dataset =>
+    dataset?.atlasVolumeDataset
+    || dataset?.yAxisID === "yVolume"
+  );
+}
+
 function atlasRefreshChartScale(chart) {
   if (!chart?.data?.datasets?.length) return;
-  const values = chart.data.datasets
+
+  const priceDatasets = atlasChartPriceDatasets(chart);
+  const priceValues = priceDatasets
     .flatMap(dataset => (dataset.data || []).map(point => Number(point?.y)))
-    .filter(Number.isFinite);
-  const times = chart.data.datasets
+    .filter(value => Number.isFinite(value) && value > 0);
+
+  const times = priceDatasets
     .flatMap(dataset => (dataset.data || []).map(point => Number(point?.x)))
     .filter(Number.isFinite);
 
-  if (values.length && chart.options?.scales?.y) {
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const pad = chart.$atlasMode === "comparison"
+  const yScale = chart.options?.scales?.y;
+  if (priceValues.length && yScale) {
+    const min = Math.min(...priceValues);
+    const max = Math.max(...priceValues);
+    const comparison = chart.$atlasMode === "comparison";
+    const pad = comparison
       ? Math.max((max - min) * 0.08, 0.5)
       : Math.max((max - min) * 0.06, Math.abs(max) * 0.00035, 0.00000001);
-    chart.options.scales.y.min = min - pad;
-    chart.options.scales.y.max = max + pad;
+
+    if (String(yScale.type || "linear") === "logarithmic") {
+      delete yScale.min;
+      delete yScale.max;
+      yScale.suggestedMin = Math.max(Number.MIN_VALUE, min * 0.94);
+      yScale.suggestedMax = max * 1.06;
+    } else {
+      delete yScale.suggestedMin;
+      delete yScale.suggestedMax;
+      yScale.min = min - pad;
+      yScale.max = max + pad;
+    }
+  }
+
+  const volumeValues = atlasChartVolumeDatasets(chart)
+    .flatMap(dataset => (dataset.data || []).map(point => Number(point?.y)))
+    .filter(value => Number.isFinite(value) && value >= 0);
+
+  const volumeScale = chart.options?.scales?.yVolume;
+  if (volumeScale && volumeValues.length) {
+    const maxVolume = Math.max(...volumeValues);
+    volumeScale.beginAtZero = true;
+    volumeScale.suggestedMin = 0;
+    volumeScale.suggestedMax = maxVolume > 0 ? maxVolume * 3.2 : 1;
   }
 
   if (times.length && chart.options?.scales?.x) {
@@ -3846,11 +3945,18 @@ function atlasPatchChartLastPoint(quotes = state.dataBroker?.spotBook?.quotes ||
     const result = brokerChart.result;
 
     if (coin && result && Number.isFinite(price) && price > 0 && atlasPatchResultLastPoint(result, price, timestamp)) {
-      const dataset = chart.data.datasets?.[0];
+      const dataset = atlasChartPriceDatasets(chart)?.[0];
       const last = dataset?.data?.[dataset.data.length - 1];
+      const firstPrice = Number(dataset?.data?.[0]?.rawPrice);
       if (last) {
         last.x = timestamp;
-        last.y = price;
+        last.rawPrice = price;
+        last.baseValue = Number.isFinite(firstPrice) && firstPrice > 0
+          ? price / firstPrice * 100
+          : null;
+        last.y = chart.$atlasView === "base100" && Number.isFinite(last.baseValue)
+          ? last.baseValue
+          : price;
       }
       state.chartEngineV2.lastFingerprint = atlasChartResultFingerprint(result);
       atlasRenderSingleCaption(
@@ -3902,10 +4008,8 @@ function atlasNearestComparisonPoint(dataset, targetX) {
 }
 
 function atlasComparisonRows(entry) {
-  return (entry?.result?.series || [])
-    .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }))
-    .filter(point => Number.isFinite(point.t) && Number.isFinite(point.price) && point.price > 0)
-    .sort((a, b) => a.t - b.t);
+  return atlasSanitizeChartRows(entry?.result?.series || [])
+    .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }));
 }
 
 function atlasInterpolateComparisonPrice(rows, timestamp) {
@@ -4092,6 +4196,9 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     });
     state.chartEngineV2.realChart.$atlasMode = "comparison";
     state.chartEngineV2.realChart.$atlasTimeline = timeline;
+    state.chartEngineV2.realChart.$atlasView = "base100";
+    state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
+    atlasRefreshChartScale(state.chartEngineV2.realChart);
     return normalizedEntries;
   }
 
@@ -4697,7 +4804,7 @@ function atlasSourceDockSaveCache() {
       ATLAS_SOURCE_DOCK_CACHE_KEY,
       JSON.stringify({
         schema: "agent_crypto_source_dock_v2",
-        version: "V2.0-alpha · Build 28.1.7",
+        version: ATLAS_RELEASE,
         savedAt: new Date().toISOString(),
         records: Object.fromEntries(records.map(record => [record.coinId, record]))
       })
@@ -5366,13 +5473,13 @@ const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { 
 } function simLogTypeLabel(type) { if (type === "SIM_BUY") return "ACHAT SIMULÉ"; if (type === "SIM_SELL") return "VENTE SIMULÉE"; if (type === "REFUS") return "REFUS"; if (type === "RESET") return "RESET"; return String(type || "INFO");
 } function simLogLine(entry) { const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : ""; const label = simLogTypeLabel(entry?.type); const msg = entry?.message || ""; return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
 } function renderSimulation() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); if (els.simProfileStatus) { const profile = getSimulationProfileStatus(); els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`; } setText(els.simCash, fmtEUR.format(state.sim.cash)); setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue)); setText(els.simTotalValue, fmtEUR.format(totals.total)); if (els.simPnL) { els.simPnL.textContent = `${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`; els.simPnL.classList.toggle("pnl-pos", totals.pnl >= 0); els.simPnL.classList.toggle("pnl-neg", totals.pnl < 0); } const positions = Object.keys(state.sim.positions); if (els.simPositions) { els.simPositions.innerHTML = positions.length ? positions.map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; const pnl = value - pos.invested; return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span>${pos.qty.toFixed(8)}</span><span>${fmtEUR.format(value)}</span><span class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${fmtEUR.format(pnl)}</span></div>`; }).join("") : "Aucune position simulée."; } if (els.simLog) { els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée."; }
-} function situationPayload() { return { version: "V2.0-alpha · Build 28.1.7", active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
+} function situationPayload() { return { version: ATLAS_RELEASE, active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
 } function nextStepsPayload() { return { next_steps: [ "confirm_priority_assets", "define_virtual_simulation_amount", "define_forbidden_risks", "select_news_sources", "describe_private_machine", "choose_access_security_model" ], next_version_candidate: "V1.1-beta_local_private_preparation" };
 } function boundariesPayload() { return { hard_boundaries: [ "no_real_exchange_key_now", "no_real_wallet_connection", "no_seed_phrase_in_ui_or_files", "no_withdraw_permission", "no_real_order_from_public_frontend", "no_public_remote_access", "no_nominative_labels_in_public_interface" ] };
 } function briefingPayload() { return { mode: "preparation_session", purpose: "collect_information_before_private_backend", collect: [ "target_mode_observation_simulation_or_future_semi_auto", "priority_assets", "risk_limits", "news_sources", "private_machine_context", "remote_access_preference", "physical_security_preference" ], forbidden_during_session: [ "create_real_exchange_key", "connect_real_wallet", "enter_seed_phrase", "enable_withdraw_permission", "start_real_trading", "open_public_remote_access" ] };
 } function questionsPayload() { return { questions: [ "Quel montant virtuel utiliser pour la simulation ?", "Quelles cryptos suivre en priorité ?", "Quels risques sont interdits ?", "Quelles sources d'information surveiller ?", "Quelle machine privée est envisagée ?", "Quel accès renforcé est préféré ?", "Quelle validation humaine est obligatoire ?" ] };
 } function doNotDoPayload() { return { do_not_do: [ "Pas de clé Kraken réelle maintenant.", "Pas de wallet réel connecté maintenant.", "Pas de seed phrase dans l'interface.", "Pas de trading automatique.", "Pas d'accès distant public.", "Pas d'argent réel avant dry-run long." ] };
-} function backendBlueprintPayload() { return { version: "V2.0-alpha · Build 28.1.7", principle: "separate_public_frontend_from_private_backend", public_layer: { host: "GitHub Pages", allowed: [ "market_observation", "charts", "watchlist", "command_layer_observation", "local_paper_trading" ], forbidden: [ "private_api_keys", "withdraw_keys", "real_orders", "admin_remote_access", "wallet_connection" ] }, private_layer_future: { host: "private_machine_or_secure_local_server", allowed: [ "encrypted_api_secrets", "Kraken_read_only_client", "server_side_paper_trading", "logs", "kill_switch", "restricted_remote_access" ], access: ["authorized_operator_1", "authorized_operator_2"] }, exchange_layer_future: { primary: "Kraken", first_mode: "read_only", later_modes_locked: [ "paper_trading_server", "human_validated_order", "real_micro_transaction" ], never_allowed_initially: [ "withdraw_permission", "fully_autonomous_trading" ] } };
+} function backendBlueprintPayload() { return { version: ATLAS_RELEASE, principle: "separate_public_frontend_from_private_backend", public_layer: { host: "GitHub Pages", allowed: [ "market_observation", "charts", "watchlist", "command_layer_observation", "local_paper_trading" ], forbidden: [ "private_api_keys", "withdraw_keys", "real_orders", "admin_remote_access", "wallet_connection" ] }, private_layer_future: { host: "private_machine_or_secure_local_server", allowed: [ "encrypted_api_secrets", "Kraken_read_only_client", "server_side_paper_trading", "logs", "kill_switch", "restricted_remote_access" ], access: ["authorized_operator_1", "authorized_operator_2"] }, exchange_layer_future: { primary: "Kraken", first_mode: "read_only", later_modes_locked: [ "paper_trading_server", "human_validated_order", "real_micro_transaction" ], never_allowed_initially: [ "withdraw_permission", "fully_autonomous_trading" ] } };
 } function krakenReadonlyPlanPayload() { return { exchange: "Kraken", target_stage: "read_only_only", allowed_first: [ "account_balance_read", "ticker_read", "trade_history_read_if_needed", "open_positions_read_if_applicable" ], forbidden_first: [ "create_order", "cancel_order", "withdraw", "transfer", "margin", "leverage" ], required_before_connection: [ "backend_not_github_pages", "encrypted_secret_storage", "separate_user_accounts", "logs", "manual_disable", "test_key_permissions", "no_withdraw_permission" ] };
 } function remoteBlueprintPayload() { return { scope: "future_private_machine_only", authorized_people: ["authorized_operator_1", "authorized_operator_2"], rules: [ "no_public_admin_panel", "no_shared_cleartext_password", "unique_accounts", "strong_authentication", "admin_actions_logged", "emergency_disable_path", "regular_security_review" ], current_public_frontend: "no_remote_access_capability" };
 } function securityReviewPayload() { return { review_type: "pre_backend_security_checklist", checklist: [ { item: "GitHub Pages contains no secrets", status: "required" }, { item: "Kraken key read-only", status: "future_required" }, { item: "Withdraw permission disabled", status: "mandatory" }, { item: "Backend logs every command", status: "future_required" }, { item: "Kill switch tested", status: "future_required" }, { item: "Paper trading runs before real money", status: "mandatory" }, { item: "Human validation before any real order", status: "mandatory" }, { item: "Remote access reviewed regularly", status: "future_required" } ], conclusion: "No real-money phase without passing all mandatory items." };
@@ -6456,7 +6563,7 @@ function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead
 } function watchBasketCoins(basket) { return basket.ids.filter(id => (state.watchIds || []).includes(id)).map(watchCoinById).filter(Boolean);
 } function basketStatus(coins) { if (!coins.length) return { label: "À charger", mode: "wait", avg: null }; const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length; const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm"; const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme"; return { label, mode, avg };
 } function publicMarketSnapshot() { const wanted = SIM_PROFILE.allowedSymbols; const coins = state.coins .filter(c => wanted.includes(String(c.symbol || "").toUpperCase())) .map(c => ({ id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, price_eur: c.price, change_24h_pct: c.change24h, change_7d_pct: c.change7d, market_cap_eur: c.marketCap, volume_24h_eur: c.volume, source: state.mainSource?.name || "source live" })); return { generated_at: new Date().toISOString(), source: state.mainSource?.name || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, public_only: true, assets: coins };
-} function simulationDataSnapshot() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); return { generated_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1.7", public_only: true, warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.", profile: getSimulationProfileStatus(), simulation: simulationPayload(), totals: { cash_eur: state.sim.cash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl }, market_snapshot: publicMarketSnapshot() };
+} function simulationDataSnapshot() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); return { generated_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.", profile: getSimulationProfileStatus(), simulation: simulationPayload(), totals: { cash_eur: state.sim.cash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl }, market_snapshot: publicMarketSnapshot() };
 } function learningFactsFromLogs() { if (!state.sim) loadSimulation(); const logs = state.sim.logs || []; const hasBuy = logs.some(l => l.type === "SIM_BUY"); const hasSell = logs.some(l => l.type === "SIM_SELL"); const hasTooBig = logs.some(l => String(l.message || "").includes("maximum par opération")); const hasForbidden = logs.some(l => String(l.message || "").includes("refusé. Autorisés")); const hasReserve = logs.some(l => String(l.message || "").includes("réserve minimale")); const hasLivecheckRefusal = logs.some(l => String(l.message || "").includes("Livecheck requis")); const facts = []; if (hasBuy) facts.push("Tu as testé au moins un achat simulé : l’app sait transformer un montant virtuel en position fictive."); if (hasSell) facts.push("Tu as testé une vente simulée : l’app sait réduire une position fictive."); if (hasTooBig) facts.push("Tu as déclenché la protection “montant trop gros” : le profil bloque toute opération au-dessus de 10 €."); if (hasForbidden) facts.push("Tu as déclenché la protection “crypto non autorisée” : le profil débutant reste limité à BTC / ETH / SOL."); if (hasReserve) facts.push("Tu as déclenché la protection “réserve minimale” : l’app empêche de dépasser 30 € exposés."); if (hasLivecheckRefusal) facts.push("Tu as vérifié la règle “pas de prix inventé” : le simulateur exige Livecheck avant d’agir."); if (!facts.length) { facts.push("Aucun test pédagogique important n’est encore enregistré. Lance les boutons du Mode École guidé pour générer une vraie mémoire."); } return facts;
 } function positionLinesForMarkdown() { if (!state.sim) loadSimulation(); const positions = Object.keys(state.sim.positions || {}); if (!positions.length) return ["Aucune position simulée."]; return positions.map(sym => { const pos = state.sim.positions[sym]; const value = getPositionValue(sym); return `- ${sym} : ${fmtEUR.format(value)} simulés, quantité fictive ${Number(pos.qty || 0).toFixed(8)}.`; });
 } function marketLinesForMarkdown() { const snap = publicMarketSnapshot(); if (!snap.live_ok || !snap.assets.length) { return ["Livecheck non disponible dans le résumé courant."]; } return snap.assets.map(asset => { const price = Number.isFinite(asset.price_eur) ? fmtEUR.format(asset.price_eur) : "prix manquant"; const ch24 = typeof asset.change_24h_pct === "number" ? `${asset.change_24h_pct >= 0 ? "+" : ""}${asset.change_24h_pct.toFixed(2)} %` : "variation manquante"; return `- ${asset.symbol} : ${price}, variation 24h ${ch24}.`; });
@@ -6469,13 +6576,13 @@ function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead
 const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const raw = localStorage.getItem(COLLECTOR_STORAGE_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 } function writeCollectorMemory(records) { const safe = Array.isArray(records) ? records.slice(-COLLECTOR_MAX_RECORDS) : []; localStorage.setItem(COLLECTOR_STORAGE_KEY, JSON.stringify(safe)); renderCollectorStatus(); renderCollectionProgress(); return safe;
 } function collectorRecordReasonFromLogs(logs) { const messages = (logs || []).map(l => String(l.message || "")).join(" | "); const reasons = []; if (messages.includes("maximum par opération")) reasons.push("montant_trop_gros"); if (messages.includes("refusé. Autorisés")) reasons.push("crypto_non_autorisee"); if (messages.includes("réserve minimale")) reasons.push("plafond_ou_reserve"); if ((logs || []).some(l => l.type === "SIM_BUY")) reasons.push("achat_simule"); if ((logs || []).some(l => l.type === "SIM_SELL")) reasons.push("vente_simulee"); return reasons.length ? reasons : ["observation"];
-} function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1.7", public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
+} function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
 } function renderCollectorStatus() { const records = readCollectorMemory(); if (els.collectorCount) { els.collectorCount.textContent = records.length === 1 ? "1 snapshot enregistré" : `${records.length} snapshots enregistrés`; } const last = records[records.length - 1]; if (els.collectorLast) { els.collectorLast.textContent = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun"; }
 } function collectorPreview(records) { if (!records.length) { return [ "Mémoire locale vide.", "", "Conseil :", "1. Lance Livecheck.", "2. Lance quelques tests guidés.", "3. Clique “Enregistrer snapshot maintenant”." ].join("\n"); } const last = records[records.length - 1]; const lines = [ "MÉMOIRE LOCALE — DATA COLLECTOR", "", `Snapshots enregistrés : ${records.length}`, `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`, `Symboles : ${(last.symbols || []).join(" / ") || "—"}`, `Tags apprentissage : ${(last.learning_tags || []).join(", ")}`, "", "Derniers enregistrements :" ]; records.slice(-8).reverse().forEach((record, index) => { const totals = record?.snapshot?.totals || {}; const exposure = totals.positions_value_eur ?? record?.snapshot?.profile?.current_exposure_eur ?? 0; lines.push( `${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · exposé ${fmtEUR.format(Number(exposure) || 0)} · ${(record.learning_tags || []).join(", ")}` ); }); lines.push(""); lines.push("Sécurité : mémoire locale navigateur uniquement. Aucune clé, aucun wallet, aucun compte réel."); return lines.join("\n");
 } function showCollectorMemory() { const records = readCollectorMemory(); renderCollectorStatus(); if (els.collectorOutput) els.collectorOutput.textContent = collectorPreview(records);
 } function saveCollectorSnapshot() { const records = readCollectorMemory(); const record = makeCollectorRecord(); records.push(record); const saved = writeCollectorMemory(records); if (els.collectorOutput) { els.collectorOutput.textContent = [ "SNAPSHOT ENREGISTRÉ", "", `Heure : ${new Date(record.saved_at).toLocaleString("fr-FR")}`, `Mémoire locale : ${saved.length}/${COLLECTOR_MAX_RECORDS} snapshots`, `Symboles : ${(record.symbols || []).join(" / ") || "—"}`, `Tags : ${(record.learning_tags || []).join(", ")}`, "", "Ce snapshot contient :", "- profil 100 € ;", "- simulation locale ;", "- positions fictives ;", "- logs pédagogiques ;", "- données publiques BTC / ETH / SOL si Livecheck est actif.", "", "Il ne contient pas :", "- clé API ;", "- wallet ;", "- compte réel ;", "- seed phrase ;", "- ordre réel." ].join("\n"); }
-} function downloadCollectorJSON() { const records = readCollectorMemory(); const payload = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1.7", public_only: true, warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.", count: records.length, records }; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.json`, "application/json", JSON.stringify(payload, null, 2) ); showCollectorMemory();
-} function downloadCollectorJSONL() { const records = readCollectorMemory(); const header = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1.7", public_only: true, type: "agent_crypto_collector_memory_jsonl_header" }; const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))]; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`, "application/x-ndjson", lines.join("\n") ); showCollectorMemory();
+} function downloadCollectorJSON() { const records = readCollectorMemory(); const payload = { exported_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.", count: records.length, records }; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.json`, "application/json", JSON.stringify(payload, null, 2) ); showCollectorMemory();
+} function downloadCollectorJSONL() { const records = readCollectorMemory(); const header = { exported_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, type: "agent_crypto_collector_memory_jsonl_header" }; const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))]; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`, "application/x-ndjson", lines.join("\n") ); showCollectorMemory();
 } function clearCollectorMemory() { localStorage.removeItem(COLLECTOR_STORAGE_KEY); renderCollectorStatus(); renderCollectionProgress(); if (els.collectorOutput) { els.collectorOutput.textContent = [ "MÉMOIRE LOCALE EFFACÉE", "", "Le Data Collector local est revenu à zéro.", "Cela ne touche pas GitHub.", "Cela ne touche aucun compte réel." ].join("\n"); }
 } function safeNumber(value) { const n = Number(value); return Number.isFinite(n) ? n : null;
 } function recordAssetsMap(record) { const assets = record?.snapshot?.market_snapshot?.assets || []; const map = {}; assets.forEach(asset => { const sym = String(asset.symbol || "").toUpperCase(); if (!sym) return; map[sym] = asset; }); return map;
@@ -6517,7 +6624,7 @@ const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const 
 const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = localStorage.getItem(AUTO_MEMORY_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 } function writeAutoMemory(records) { let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : []; try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch { safe = safe.slice(Math.floor(safe.length / 2)); try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {} } return safe;
 } function compactCoinForAuto(c) { const s = scoreCoin(c); return { id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, rank: c.rank ?? null, price_eur: c.price ?? null, change_24h_pct: c.change24h ?? null, change_7d_pct: c.change7d ?? null, change_30d_pct: c.change30d ?? null, market_cap_eur: c.marketCap ?? null, volume_24h_eur: c.volume24h ?? null, category: classifyAsset(c), action: atlasActionForCoin(c), score: s.score, source: c.source || state.mainSource || null };
-} function makeAutoSnapshot() { const collectorId = getCollectorId(); const wanted = new Set(state.watchIds || []); const watch = state.coins.filter(c => wanted.has(c.id)); const leaders = state.coins.slice(0, 20); const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i); const created = new Date().toISOString(); return { id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, snapshot_id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, collector_id: collectorId, collector_type: "local_browser", saved_at: created, version: "V2.0-alpha · Build 28.1.7", source: state.mainSource || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS, global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null }, assets: merged.map(compactCoinForAuto) };
+} function makeAutoSnapshot() { const collectorId = getCollectorId(); const wanted = new Set(state.watchIds || []); const watch = state.coins.filter(c => wanted.has(c.id)); const leaders = state.coins.slice(0, 20); const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i); const created = new Date().toISOString(); return { id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, snapshot_id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, collector_id: collectorId, collector_type: "local_browser", saved_at: created, version: ATLAS_RELEASE, source: state.mainSource || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS, global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null }, assets: merged.map(compactCoinForAuto) };
 } function lastAutoSnapshot() { const records = readAutoMemory(); return records.length ? records[records.length - 1] : null;
 } function saveAutoSnapshot() {
   if (!state.liveOk || !state.coins.length) return null;
@@ -6766,7 +6873,7 @@ function atlasPersistMemoryTruth() {
       ATLAS_MEMORY_TRUTH_KEY,
       JSON.stringify({
         schema: "atlas_memory_truth_v1",
-        version: "V2.0-alpha · Build 28.1.7",
+        version: ATLAS_RELEASE,
         savedAt: new Date().toISOString(),
         github: state.memoryTruth.github
       })
@@ -7710,7 +7817,7 @@ function atlasAudiencePayload(eventName, detail = {}, context = {}) {
     schema: "erith.audience.event.v2",
     audience_engine: "v2",
     app: "agent_crypto_erith_ia",
-    version: "V2.0-alpha · Build 28.1.7",
+    version: ATLAS_RELEASE,
     event_id: context.eventId || atlasAudienceUuid("evt"),
     event: String(eventName || "event"),
     sequence: Number(context.sequence) || 0,
@@ -7881,7 +7988,7 @@ function atlasAudienceCloseSession(reason = "pagehide") {
 function atlasAudienceExportDiagnostic() {
   const payload = {
     schema: "erith.audience.client_diagnostic.v2",
-    version: "V2.0-alpha · Build 28.1.7",
+    version: ATLAS_RELEASE,
     exported_at: new Date().toISOString(),
     visitor_id: atlasAudienceVisitorId(),
     member_id: atlasAudienceMember() || null,
@@ -8217,6 +8324,8 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
 
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
+  atlasScheduleStableChartResize();
+  atlasScheduleRuntimeValidation("mode-apply");
   window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next } }));
 }
 
@@ -8273,11 +8382,8 @@ function atlasV2ApplyMathDock(position, options = {}) {
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, next);
 
-  requestAnimationFrame(() => {
-    try {
-      state.chartEngineV2?.realChart?.resize?.();
-    } catch {}
-  });
+  atlasScheduleStableChartResize();
+  atlasScheduleRuntimeValidation("math-dock");
 }
 
 function atlasV2DecisionLockRefresh() {
@@ -8441,8 +8547,205 @@ function atlasInitV2Shell() {
 }
 
 
+
+const ATLAS_RUNTIME_EXPECTED_CONTROLS = Object.freeze({
+  view: 2,
+  scale: 2,
+  display: 2,
+  period: 7,
+  compare: 8
+});
+
+const ATLAS_RUNTIME_REQUIRED_IDS = Object.freeze([
+  "atlasV2ModeTitle",
+  "atlasV2ReleaseBadge",
+  "btnModeEssential",
+  "btnModeAdvanced",
+  "livecheck",
+  "analyste",
+  "market-workspace",
+  "marketSnapshotPanel",
+  "marketWorkspaceGrid",
+  "math",
+  "atlasMathRailTrigger",
+  "sources",
+  "liveSourcesCollapse",
+  "chart",
+  "activeChartSummary"
+]);
+
+let atlasStableResizeFrame = 0;
+let atlasStableResizeTimer = 0;
+let atlasRuntimeValidationTimer = 0;
+
+function atlasRuntimeControlCounts() {
+  return {
+    view: document.querySelectorAll("[data-chart-view]").length,
+    scale: document.querySelectorAll("[data-chart-scale]").length,
+    display: document.querySelectorAll("[data-chart-display]").length,
+    period: document.querySelectorAll(".period-btn").length,
+    compare: document.querySelectorAll(".compare-btn").length
+  };
+}
+
+function atlasRuntimeViewportProfile(width = window.innerWidth) {
+  const value = Number(width) || 0;
+  if (value >= 1500) return "wide";
+  if (value >= 1180) return "desktop";
+  if (value >= 800) return "transformer";
+  if (value >= 620) return "compact";
+  return "mobile";
+}
+
+function atlasScheduleStableChartResize() {
+  if (atlasStableResizeFrame) cancelAnimationFrame(atlasStableResizeFrame);
+  if (atlasStableResizeTimer) clearTimeout(atlasStableResizeTimer);
+
+  atlasStableResizeFrame = requestAnimationFrame(() => {
+    atlasStableResizeFrame = 0;
+    try { state.chartEngineV2?.realChart?.resize?.(); } catch {}
+    try { atlasCleanLensResizeChart?.(); } catch {}
+  });
+
+  atlasStableResizeTimer = window.setTimeout(() => {
+    atlasStableResizeTimer = 0;
+    try { state.chartEngineV2?.realChart?.resize?.(); } catch {}
+    try { atlasCleanLensResizeChart?.(); } catch {}
+  }, 180);
+}
+
+function atlasSyncResponsiveRuntime() {
+  const root = document.documentElement;
+  const profile = atlasRuntimeViewportProfile();
+  const previous = root.dataset.atlasViewport || "";
+
+  root.dataset.atlasViewport = profile;
+  root.style.setProperty("--atlas-runtime-width", `${Math.max(0, window.innerWidth)}px`);
+  root.style.setProperty("--atlas-runtime-height", `${Math.max(0, window.innerHeight)}px`);
+
+  if (previous !== profile) {
+    window.dispatchEvent(new CustomEvent("atlas:viewport", {
+      detail: { previous, profile, width: window.innerWidth, height: window.innerHeight }
+    }));
+  }
+
+  atlasScheduleStableChartResize();
+}
+
+function atlasRuntimeVisibilityLeaks() {
+  if (atlasV2Mode() !== "essential") return [];
+
+  return ATLAS_V2_SECTION_MANIFEST
+    .filter(entry => !["essential", "adaptive"].includes(entry.level))
+    .filter(entry => {
+      const target = atlasV2ManifestTarget(entry);
+      if (!target) return false;
+      return target.hidden === false && getComputedStyle(target).display !== "none";
+    })
+    .map(entry => entry.id);
+}
+
+function atlasRuntimeValidate(reason = "manual") {
+  const missingIds = ATLAS_RUNTIME_REQUIRED_IDS.filter(id => !document.getElementById(id));
+  const controls = atlasRuntimeControlCounts();
+  const controlErrors = Object.entries(ATLAS_RUNTIME_EXPECTED_CONTROLS)
+    .filter(([key, expected]) => controls[key] !== expected)
+    .map(([key, expected]) => ({ key, expected, actual: controls[key] }));
+
+  const leaks = atlasRuntimeVisibilityLeaks();
+  const sources = document.getElementById("liveSourcesCollapse");
+  const sourceVisible = !!sources && sources.hidden === false && getComputedStyle(sources).display !== "none";
+  const releaseVisible = document.getElementById("atlasV2ReleaseBadge")?.textContent?.includes(ATLAS_RELEASE) === true;
+
+  const report = {
+    release: ATLAS_RELEASE,
+    checked_at: new Date().toISOString(),
+    reason,
+    mode: atlasV2Mode(),
+    viewport: document.documentElement.dataset.atlasViewport || atlasRuntimeViewportProfile(),
+    missing_ids: missingIds,
+    control_counts: controls,
+    control_errors: controlErrors,
+    advanced_leaks_in_essential: leaks,
+    live_sources_visible: sourceVisible,
+    release_visible: releaseVisible,
+    ok: !missingIds.length && !controlErrors.length && !leaks.length && sourceVisible && releaseVisible
+  };
+
+  window.__ATLAS_RUNTIME_REPORT__ = report;
+  document.documentElement.dataset.atlasRuntime = report.ok ? "ok" : "degraded";
+
+  if (!report.ok) {
+    console.warn("Atlas runtime validation", report);
+  }
+
+  return report;
+}
+
+function atlasScheduleRuntimeValidation(reason = "scheduled") {
+  if (atlasRuntimeValidationTimer) clearTimeout(atlasRuntimeValidationTimer);
+  atlasRuntimeValidationTimer = window.setTimeout(() => {
+    atlasRuntimeValidationTimer = 0;
+    atlasRuntimeValidate(reason);
+  }, 90);
+}
+
+function atlasRestoreRuntimeUi(reason = "restore") {
+  atlasV2ClassifySections();
+  atlasV2ApplyMode(atlasV2Mode(), { persist: false });
+  atlasV2ApplyMathDock(
+    atlasV2Mode() === "essential" ? "rail" : atlasV2MathDockPosition(),
+    { persist: false }
+  );
+  atlasChartV2SyncControls?.();
+  atlasSyncReleaseLabels();
+  atlasSyncResponsiveRuntime();
+  atlasScheduleRuntimeValidation(reason);
+}
+
+function atlasInitRuntimeStability() {
+  atlasSyncResponsiveRuntime();
+
+  let resizeQueued = false;
+  const onResize = () => {
+    if (resizeQueued) return;
+    resizeQueued = true;
+    requestAnimationFrame(() => {
+      resizeQueued = false;
+      atlasSyncResponsiveRuntime();
+      atlasScheduleRuntimeValidation("resize");
+    });
+  };
+
+  window.addEventListener("resize", onResize, { passive: true });
+  window.addEventListener("orientationchange", onResize, { passive: true });
+
+  window.addEventListener("pageshow", event => {
+    requestAnimationFrame(() => {
+      atlasRestoreRuntimeUi(event.persisted ? "pageshow-cache" : "pageshow");
+    });
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) atlasRestoreRuntimeUi("visibility-return");
+  });
+
+  window.addEventListener("atlas:v2mode", () => {
+    atlasScheduleStableChartResize();
+    atlasScheduleRuntimeValidation("mode-change");
+  });
+
+  window.addEventListener("atlas:viewport", () => {
+    atlasScheduleRuntimeValidation("viewport-change");
+  });
+
+  requestAnimationFrame(() => {
+    atlasScheduleRuntimeValidation("initial");
+  });
+}
+
 const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
-const ATLAS_STORAGE_SCHEMA_VERSION = 2817;
+const ATLAS_STORAGE_SCHEMA_VERSION = 2819;
 
 function atlasStorageSafeJson(key) {
   try {
@@ -8453,34 +8756,71 @@ function atlasStorageSafeJson(key) {
   }
 }
 
-function atlasMigrateStorage2817() {
+function atlasMigrateStorage2819() {
   const mode = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
-  if (!ATLAS_V2_ALLOWED_MODES.has(mode)) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
-
-  const dock = atlasV2ReadSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
-  if (!ATLAS_V2_ALLOWED_MATH_DOCKS.has(dock)) atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
-
-  const chartSettings = atlasStorageSafeJson(ATLAS_CHART_V2_SETTINGS_KEY);
-  if (chartSettings && typeof chartSettings === "object") {
-    const sanitized = {
-      view: chartSettings.view === "base100" ? "base100" : "price",
-      scale: chartSettings.scale === "logarithmic" ? "logarithmic" : "linear",
-      volume: chartSettings.volume !== false,
-      legend: chartSettings.legend !== false,
-      comparisonLegend: chartSettings.comparisonLegend === true,
-      marketColumns: chartSettings.marketColumns === "complete" ? "complete" : "essential"
-    };
-    try { localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY, JSON.stringify(sanitized)); } catch {}
+  if (!ATLAS_V2_ALLOWED_MODES.has(mode)) {
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
   }
 
-  try { localStorage.setItem(ATLAS_STORAGE_SCHEMA_KEY, String(ATLAS_STORAGE_SCHEMA_VERSION)); } catch {}
+  const dock = atlasV2ReadSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
+  if (!ATLAS_V2_ALLOWED_MATH_DOCKS.has(dock)) {
+    atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
+  }
+
+  const storedChartSettings = atlasStorageSafeJson(ATLAS_CHART_V2_SETTINGS_KEY);
+  const chartSettings = storedChartSettings && typeof storedChartSettings === "object"
+    ? storedChartSettings
+    : {};
+
+  const sanitizedChartSettings = {
+    view: chartSettings.view === "base100" ? "base100" : "price",
+    scale: chartSettings.scale === "logarithmic" ? "logarithmic" : "linear",
+    volume: chartSettings.volume !== false,
+    legend: chartSettings.legend !== false,
+    comparisonLegend: chartSettings.comparisonLegend === true,
+    marketColumns: chartSettings.marketColumns === "complete" ? "complete" : "essential"
+  };
+
+  try {
+    localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY, JSON.stringify(sanitizedChartSettings));
+  } catch {}
+
+  try {
+    const panelState = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY);
+    if (!["0", "1", null].includes(panelState)) {
+      localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, "0");
+    }
+  } catch {}
+
+  try {
+    const watchIds = JSON.parse(localStorage.getItem(WATCH_STORAGE_KEY) || "null");
+    if (watchIds !== null && !Array.isArray(watchIds)) {
+      localStorage.removeItem(WATCH_STORAGE_KEY);
+    }
+  } catch {
+    try { localStorage.removeItem(WATCH_STORAGE_KEY); } catch {}
+  }
+
+  try {
+    const alerts = JSON.parse(localStorage.getItem(WATCH_ALERT_STORAGE_KEY) || "null");
+    if (alerts !== null && !Array.isArray(alerts)) {
+      localStorage.removeItem(WATCH_ALERT_STORAGE_KEY);
+    }
+  } catch {
+    try { localStorage.removeItem(WATCH_ALERT_STORAGE_KEY); } catch {}
+  }
+
+  try {
+    localStorage.setItem(ATLAS_STORAGE_SCHEMA_KEY, String(ATLAS_STORAGE_SCHEMA_VERSION));
+  } catch {}
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.7", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.7", atlasMigrateStorage2817);
+} atlasSafeBoot("release labels 28.1.9", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.9", atlasMigrateStorage2819);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
+atlasSafeBoot("runtime responsive validation 28.1.9", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
@@ -8991,7 +9331,7 @@ function newsBuildAnalysis() {
     id: `news_${fingerprint}`,
     event_id: `news_${fingerprint}`,
     fingerprint,
-    version: "V2.0-alpha · Build 28.1.7",
+    version: ATLAS_RELEASE,
     headline,
     body,
     source_name: sourceName || source.host,
@@ -9601,7 +9941,7 @@ function newsClearForm() {
 function newsExport() {
   const events = readNewsEvents();
   const payload = {
-    version: "V2.0-alpha · Build 28.1.7",
+    version: ATLAS_RELEASE,
     exported_at: new Date().toISOString(),
     observation_only: true,
     warning: "Analyse événementielle locale. Aucun lecture décisionnelle, aucun ordre automatique.",
