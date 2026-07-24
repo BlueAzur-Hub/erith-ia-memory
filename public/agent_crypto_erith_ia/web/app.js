@@ -1,16 +1,12 @@
-/* V2.0-alpha · Build 28.0 — GLOBAL SHELL · MARKET WORKSPACE · MATH DOCK · NEWS TRUTH
-   Première architecture V2 cumulative.
-   - deux interfaces réelles : Essentielle turquoise et Avancée en bleus profonds ;
-   - champagne réservé à l’identité, la confiance et aux verdicts ;
-   - violet-bleu réservé aux projets @erith.IA, acier aux diagnostics ;
-   - navigation hiérarchisée et mode mémorisé dans Firefox ;
-   - Market Workspace V2 : Top 5 Live + Market Flow + Market Snapshot ;
-   - Atlas Math Core V2 : rail, latéral ou déployé au-dessus du marché ;
-   - News Sentinel V2 : lecture page, génération archive et nouveautés séparées ;
-   - Lecture froide et Verrou de décision renommés V2 ;
-   - comparaison atomique, Watchlist V3, 60D/90D, mémoire et gouverneur réseau préservés.
+/* V2.0-alpha · Build 28.1 — ANALYST CHART V2 & MARKET INTERACTION LOCK
+   Graphique Analyste V2 : Prix/Base 100, normale/logarithmique, volume réel,
+   légende compacte, 1 an et historique maximal réel CoinGecko.
+   Market Workspace : Top 5, Market Flow et Top 50 deviennent des entrées cohérentes
+   vers le graphe, la Watchlist, les alertes et les sources.
+   Colonnes Essentiel/Complet, en-tête fixe, ancien graphe conservé.
+   Comparaison atomique, Math Dock, News V2, Watchlist V3 et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.0";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -31,6 +27,7 @@ const state = {
   chartCache: {},
   chartRenderToken: 0,
   comparisonRenderToken: 0,
+  chartViewV2: { view: "price", scale: "linear", volume: true, legend: true, marketColumns: "essential" },
   chartEngineV2: {
     token: 0,
     controller: null,
@@ -1221,7 +1218,7 @@ function saveMarketCache() {
   try {
     localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
       schema: "atlas_market_cache_top50_v1",
-      version: "V2.0-alpha · Build 28.0",
+      version: "V2.0-alpha · Build 28.1",
       saved_at: new Date().toISOString(),
       canonical_source: ATLAS_CANONICAL_MARKET_SOURCE,
       source_mode: state.sourceLock.mode,
@@ -1241,7 +1238,7 @@ function loadMarketCache() {
       const parsed = raw ? JSON.parse(raw) : null;
       if (!parsed || parsed.canonical_source !== ATLAS_CANONICAL_MARKET_SOURCE || !atlasCanonicalSnapshot(parsed.coins)) continue;
       if (key !== MARKET_CACHE_KEY) {
-        try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({ ...parsed, version: "V2.0-alpha · Build 28.0", migrated_from: key })); } catch {}
+        try { localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({ ...parsed, version: "V2.0-alpha · Build 28.1", migrated_from: key })); } catch {}
       }
       return parsed;
     } catch {}
@@ -1865,9 +1862,7 @@ function renderBeginnerSummary() { if (!els.beginnerSummary) return; if (!state.
 } function getSelectedCoin() { if (!state.coins.length || state.graphSelectionCleared) return null; const selected = state.coins.find(c => c.id === state.selectedCoinId); return selected || state.coins[0];
 } function safeMoney(value) { return atlasFormatEUR(value);
 } function atlasChartPeriodLabel(days) {
-  const d = Number(days || 1);
-  if (d === 1) return "24h";
-  return `${d}j`;
+  const d=Number(days||1); if(d===1)return "24h"; if(d===365)return "1 an"; if(d===36500)return "Tout"; return `${d}j`;
 }
 
 
@@ -2601,12 +2596,15 @@ const ATLAS_CHART_RULES = Object.freeze({
   7: Object.freeze({ minPoints: 40, minCoverageHours: 132, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 24 * 60 * 60 * 1000, archiveMs: 14 * 24 * 60 * 60 * 1000 }),
   30: Object.freeze({ minPoints: 100, minCoverageHours: 600, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 72 * 60 * 60 * 1000, archiveMs: 60 * 24 * 60 * 60 * 1000 }),
   60: Object.freeze({ minPoints: 120, minCoverageHours: 1200, refreshMs: 15 * 60 * 1000, delayedMs: 5 * 24 * 60 * 60 * 1000, archiveMs: 120 * 24 * 60 * 60 * 1000 }),
-  90: Object.freeze({ minPoints: 180, minCoverageHours: 1800, refreshMs: 30 * 60 * 1000, delayedMs: 7 * 24 * 60 * 60 * 1000, archiveMs: 180 * 24 * 60 * 60 * 1000 })
+  90: Object.freeze({ minPoints: 180, minCoverageHours: 1800, refreshMs: 30 * 60 * 1000, delayedMs: 7 * 24 * 60 * 60 * 1000, archiveMs: 180 * 24 * 60 * 60 * 1000 }),
+  365: Object.freeze({ minPoints: 180, minCoverageHours: 7600, refreshMs: 60 * 60 * 1000, delayedMs: 14 * 24 * 60 * 60 * 1000, archiveMs: 540 * 24 * 60 * 60 * 1000 }),
+  36500: Object.freeze({ minPoints: 180, minCoverageHours: 7600, refreshMs: 6 * 60 * 60 * 1000, delayedMs: 30 * 24 * 60 * 60 * 1000, archiveMs: 900 * 24 * 60 * 60 * 1000 })
 });
 
 function atlasChartRules(days) {
   return ATLAS_CHART_RULES[Number(days || 1)] || ATLAS_CHART_RULES[1];
 }
+function atlasChartApiDays(days){ return Number(days||1)===36500 ? "max" : String(Number(days||1)); }
 
 function atlasChartKey(c, days) {
   return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}`;
@@ -2623,6 +2621,7 @@ function atlasNormalizeChartPayload(payload) {
   }
   return [...byTimestamp.entries()].sort((a, b) => a[0] - b[0]);
 }
+function atlasNormalizeVolumePayload(payload){ const raw=Array.isArray(payload?.total_volumes)?payload.total_volumes:[]; const map=new Map(); for(const p of raw){const t=Number(p?.[0]),v=Number(p?.[1]); if(Number.isFinite(t)&&t>0&&Number.isFinite(v)&&v>=0)map.set(t,v);} return [...map.entries()].sort((a,b)=>a[0]-b[0]); }
 
 function atlasChartCoverageHours(series) {
   if (!Array.isArray(series) || series.length < 2) return 0;
@@ -2822,23 +2821,13 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
 }
 
 async function fetchCoinGeckoChartDirect(c, days, options = {}) {
-  const period = Number(days || 1);
-  const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=eur&days=${encodeURIComponent(period)}&precision=full`;
-  const payload = await atlasFetchJson(url, { signal: options.signal, timeoutMs: Number(options.timeoutMs || ATLAS_CHART_DIRECT_TIMEOUT_MS) });
-  const prices = atlasNormalizeChartPayload(payload);
-  const integrity = atlasValidateChartSeries({ c, days: period, prices, payload, sourceMode: "coingecko-direct" });
-  if (!integrity.ok) throw new Error(`série CoinGecko refusée · ${integrity.reason}`);
-  return {
-    series: prices,
-    source: "CoinGecko market_chart EUR · direct",
-    blocked: false,
-    kind: "coingecko-direct",
-    sourceMode: "coingecko-direct",
-    periodDays: period,
-    pointCount: prices.length,
-    generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
-    integrity
-  };
+  const period=Number(days||1), apiDays=atlasChartApiDays(period);
+  const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=eur&days=${encodeURIComponent(apiDays)}&precision=full`;
+  const payload=await atlasFetchJson(url,{signal:options.signal,timeoutMs:Number(options.timeoutMs||ATLAS_CHART_DIRECT_TIMEOUT_MS)});
+  const prices=atlasNormalizeChartPayload(payload), volumeSeries=atlasNormalizeVolumePayload(payload);
+  const integrity=atlasValidateChartSeries({c,days:period,prices,payload,sourceMode:"coingecko-direct"});
+  if(!integrity.ok)throw new Error(`série CoinGecko refusée · ${integrity.reason}`);
+  return {series:prices,volumeSeries,source:"CoinGecko market_chart EUR · direct",blocked:false,kind:"coingecko-direct",sourceMode:"coingecko-direct",periodDays:period,apiDays,pointCount:prices.length,generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),integrity};
 }
 
 async function fetchChartSeries(c, days, options = {}) {
@@ -3168,6 +3157,19 @@ function atlasHideChartRefresh() {
   }
 }
 
+
+const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings";
+function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend!==false,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
+function atlasWriteChartV2Settings(){try{localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify(state.chartViewV2));}catch{}}
+function atlasChartV2ComparisonMode(){return atlasComparisonActive();}
+function atlasChartV2EffectiveView(){return atlasChartV2ComparisonMode()?"base100":state.chartViewV2.view;}
+function atlasChartV2EffectiveScale(){return atlasChartV2EffectiveView()==="base100"?"linear":state.chartViewV2.scale;}
+function atlasChartV2SyncControls(){const comp=atlasChartV2ComparisonMode(),view=atlasChartV2EffectiveView(),scale=atlasChartV2EffectiveScale();document.querySelectorAll("[data-chart-view]").forEach(b=>{b.classList.toggle("is-active",b.dataset.chartView===view);b.disabled=comp&&b.dataset.chartView==="price";});document.querySelectorAll("[data-chart-scale]").forEach(b=>{b.classList.toggle("is-active",b.dataset.chartScale===scale);b.disabled=view==="base100";});document.querySelectorAll("[data-chart-display='volume']").forEach(b=>{b.classList.toggle("is-active",state.chartViewV2.volume&&!comp);b.disabled=comp;});document.querySelectorAll("[data-chart-display='legend']").forEach(b=>b.classList.toggle("is-active",state.chartViewV2.legend));document.querySelectorAll("[data-market-columns]").forEach(b=>b.classList.toggle("is-active",b.dataset.marketColumns===state.chartViewV2.marketColumns));const p=$("marketSnapshotPanel");if(p)p.dataset.marketColumns=state.chartViewV2.marketColumns;}
+function atlasChartV2RenderLegend(entries=[],options={}){const n=$("chartV2Legend");if(!n)return;if(!state.chartViewV2.legend||!entries.length){n.hidden=true;n.innerHTML="";return;}n.hidden=false;n.innerHTML=entries.map((e,i)=>{const c=e.coin||e,p=atlasCryptoPalette(c,i),g=atlasCryptoGradientCss(c,i),r=e.result||options.result||null,ch=Number(r?.integrity?.metrics?.changePct);return `<span class="chart-v2-legend-item" style="--atlas-series-color:${escapeHtml(p.primary)};--atlas-series-gradient:${escapeHtml(g)}"><i></i><b>${escapeHtml(String(c.symbol||c.name||"ACTIF").toUpperCase())}</b><small>${options.comparison||atlasChartV2EffectiveView()==="base100"?"Base 100":"Prix EUR"} · ${Number.isFinite(ch)?escapeHtml(fmtPct(ch)):"—"}</small></span>`;}).join("");}
+function atlasChartV2RedrawFromBroker(){const ch=state.dataBroker?.chart;if(ch?.status!=="ready"||!atlasChartContextMatches(ch)){atlasChartV2SyncControls();return;}if(ch.result?.comparison&&Array.isArray(ch.result.entries)){const p=Number(ch.period||state.chartPeriodDays||1),drawn=drawComparisonChart(els.mainChart,ch.result.entries,p,ch.contextKey||`comparison:${p}`);atlasChartV2RenderLegend(drawn,{comparison:true});atlasRenderComparisonCaption(drawn,p,state.dataBroker.comparison.unavailableIds||[],atlasComparisonIds().length);}else{const c=getSelectedCoin();if(!c||!ch.result?.series?.length)return;const p=Number(ch.period||state.chartPeriodDays||1);drawLineChart(els.mainChart,ch.result.series,`${c.symbol} ${atlasChartPeriodLabel(p)}`,ch.result,ch.contextKey||atlasChartKey(c,p));atlasRenderSingleCaption(c,atlasChartPeriodLabel(p),ch.result);}atlasChartV2SyncControls();}
+function atlasChartV2SetOption(kind,value){if(kind==="view"){state.chartViewV2.view=value==="base100"?"base100":"price";if(state.chartViewV2.view==="base100")state.chartViewV2.scale="linear";}else if(kind==="scale")state.chartViewV2.scale=value==="logarithmic"?"logarithmic":"linear";else if(kind==="volume")state.chartViewV2.volume=!state.chartViewV2.volume;else if(kind==="legend")state.chartViewV2.legend=!state.chartViewV2.legend;else if(kind==="marketColumns")state.chartViewV2.marketColumns=value==="complete"?"complete":"essential";atlasWriteChartV2Settings();atlasChartV2SyncControls();kind==="marketColumns"?renderMarketTable():atlasChartV2RedrawFromBroker();}
+function atlasInitChartV2Controls(){atlasReadChartV2Settings();atlasChartV2SyncControls();document.querySelectorAll("[data-chart-view]").forEach(b=>b.addEventListener("click",()=>atlasChartV2SetOption("view",b.dataset.chartView)));document.querySelectorAll("[data-chart-scale]").forEach(b=>b.addEventListener("click",()=>atlasChartV2SetOption("scale",b.dataset.chartScale)));document.querySelectorAll("[data-chart-display]").forEach(b=>b.addEventListener("click",()=>atlasChartV2SetOption(b.dataset.chartDisplay,true)));document.querySelectorAll("[data-market-columns]").forEach(b=>b.addEventListener("click",()=>atlasChartV2SetOption("marketColumns",b.dataset.marketColumns)));}
+
 function atlasChartTooltipNode() {
   return document.getElementById("atlasChartTooltip");
 }
@@ -3259,8 +3261,8 @@ function atlasExternalChartTooltip(context) {
         coin: point.dataset?.atlasCoin || chart.$atlasCoin || {},
         color: point.dataset?.atlasPrimaryColor || point.dataset?.borderColor,
         gradientCss: point.dataset?.atlasGradientCss || "",
-        baseValue: null,
-        rawPrice: Number(point.parsed?.y),
+        baseValue: Number(point.raw?.baseValue),
+        rawPrice: Number(point.raw?.rawPrice ?? point.parsed?.y),
         timestamp: targetX
       }] : [];
 
@@ -3278,7 +3280,7 @@ function atlasExternalChartTooltip(context) {
     const palette = atlasCryptoPalette(row.coin, index);
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const price = Number.isFinite(row.rawPrice) ? atlasFormatEUR(row.rawPrice) : "Prix indisponible";
-    const base = comparison && Number.isFinite(row.baseValue)
+    const base = Number.isFinite(row.baseValue)
       ? `<small>Base 100 : ${row.baseValue.toFixed(2)}</small>`
       : '<small>Prix réel CoinGecko EUR</small>';
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
@@ -3334,94 +3336,214 @@ function atlasRenderComparisonCaption(entries, period, unavailableItems = [], re
 }
 
 function atlasRenderSingleCaption(c, periodLabel, result, warning = "") {
-  const metrics = result?.integrity?.metrics || {};
-  const change = Number(metrics.changePct);
-  const series = atlasChartSeriesSummary(result?.series || []);
-  const source = result?.source || "CoinGecko market_chart EUR";
-  const changeText = Number.isFinite(change) ? fmtPct(change) : "—";
-  const plain = `Graphique ${c.symbol} · période ${periodLabel} · ${series} · source : ${source}${warning}.`;
-  const asset = `<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(ATLAS_COMPARISON_COLORS[0])}"><i aria-hidden="true"></i><b>${escapeHtml(c.symbol)}</b><strong>${escapeHtml(changeText)}</strong></span>`;
-  atlasSetChartCaptionHtml(`<span class="chart-caption-text">Graphique ${escapeHtml(periodLabel)} ·</span>${asset}<span class="chart-caption-text">${escapeHtml(series)} · source : ${escapeHtml(source)}${escapeHtml(warning)}.</span>`, plain);
+  const m=result?.integrity?.metrics||{},change=Number(m.changePct),series=atlasChartSeriesSummary(result?.series||[]),source=result?.source||"CoinGecko market_chart EUR",view=atlasChartV2EffectiveView()==="base100"?"Base 100":"Prix EUR",scale=atlasChartV2EffectiveScale()==="logarithmic"?"échelle logarithmique":"échelle normale",volume=state.chartViewV2.volume&&result?.volumeSeries?.length?"volume réel affiché":"volume masqué ou indisponible",changeText=Number.isFinite(change)?fmtPct(change):"—",plain=`Graphique ${c.symbol} · ${periodLabel} · ${view} · ${scale} · ${series} · ${volume} · source : ${source}${warning}.`,asset=`<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(atlasCryptoPalette(c,0).primary)}"><i></i><b>${escapeHtml(c.symbol)}</b><strong>${escapeHtml(changeText)}</strong></span>`;atlasSetChartCaptionHtml(`<span class="chart-caption-text">Graphique ${escapeHtml(periodLabel)} · ${escapeHtml(view)} · ${escapeHtml(scale)} ·</span>${asset}<span class="chart-caption-text">${escapeHtml(series)} · ${escapeHtml(volume)} · source : ${escapeHtml(source)}${escapeHtml(warning)}.</span>`,plain);
 }
 
 function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   if (!canvas) return;
+
   const period = Number(result?.periodDays || state.chartPeriodDays || 1);
-  const rows = Array.isArray(series)
-    ? series.map(point => ({ t: Number(point[0]), price: Number(point[1]) })).filter(point => Number.isFinite(point.t) && Number.isFinite(point.price) && point.price > 0).sort((a, b) => a.t - b.t)
-    : [];
-  if (rows.length < atlasChartRules(period).minPoints) { drawChartBlocked(canvas); return; }
-  const values = rows.map(row => row.price);
+  const rows = (Array.isArray(series) ? series : [])
+    .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }))
+    .filter(point => Number.isFinite(point.t) && Number.isFinite(point.price) && point.price > 0)
+    .sort((a, b) => a.t - b.t);
+
+  if (rows.length < atlasChartRules(period).minPoints) {
+    drawChartBlocked(canvas);
+    atlasChartV2RenderLegend([]);
+    return;
+  }
+
+  const coin = result?.coin || getSelectedCoin() || {};
+  const palette = atlasCryptoPalette(coin, 0);
+  const firstPrice = rows[0].price;
+  const view = atlasChartV2EffectiveView();
+  const scaleType = atlasChartV2EffectiveScale();
+  const showVolume = state.chartViewV2.volume && !atlasChartV2ComparisonMode();
+
+  const points = rows.map(row => ({
+    x: row.t,
+    y: view === "base100" ? row.price / firstPrice * 100 : row.price,
+    rawPrice: row.price,
+    baseValue: row.price / firstPrice * 100
+  }));
+
+  const values = points.map(point => point.y).filter(Number.isFinite);
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const first = values[0];
-  const last = values[values.length - 1];
-  const changePct = first ? ((last - first) / first) * 100 : 0;
-  const yPad = Math.max((max - min) * 0.06, Math.abs(max) * 0.00035, Math.pow(10, -atlasPriceDigits(max)) * 4);
-  const sourceMode = result?.sourceMode === "browser-cache" ? "historique navigateur" : "direct";
+  const yPad = view === "base100"
+    ? Math.max((max - min) * 0.08, 0.45)
+    : Math.max((max - min) * 0.06, Math.abs(max) * 0.00035, 1e-8);
+
+  const volumeRows = (Array.isArray(result?.volumeSeries) ? result.volumeSeries : [])
+    .map(point => ({ x: Number(point?.[0]), y: Number(point?.[1]) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y >= 0)
+    .sort((a, b) => a.x - b.x);
+
   const freshness = result?.integrity?.metrics?.freshness?.level || "fresh";
-  const summary = `${label} · ${atlasFormatEUR(last)} · ${changePct >= 0 ? "+" : ""}${changePct.toFixed(2)} % · min ${atlasFormatEUR(min)} · max ${atlasFormatEUR(max)} · ${rows.length} pts · CoinGecko EUR · ${sourceMode}`;
   atlasDestroyRealChart();
-  atlasSetChartShellState(canvas, "valid", summary, freshness);
+  atlasSetChartShellState(
+    canvas,
+    "valid",
+    `${label} · ${view === "base100" ? "Base 100" : "Prix EUR"} · ${scaleType === "logarithmic" ? "log" : "normal"}`,
+    freshness
+  );
   state.chartEngineV2.lastRenderedKey = chartKey;
-  state.chartEngineV2.lastFingerprint = atlasChartResultFingerprint(result);
+  state.chartEngineV2.lastFingerprint = `${atlasChartResultFingerprint(result)}:${view}:${scaleType}:${state.chartViewV2.volume}:${state.chartViewV2.legend}`;
+
   if (window.Chart) {
-    const data = rows.map(row => ({ x: row.t, y: row.price }));
     const ctx = canvas.getContext("2d");
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight || 400);
-    gradient.addColorStop(0, "rgba(98,236,255,0.20)");
-    gradient.addColorStop(0.55, "rgba(98,236,255,0.055)");
-    gradient.addColorStop(1, "rgba(98,236,255,0.006)");
+    gradient.addColorStop(0, `${palette.primary}33`);
+    gradient.addColorStop(0.55, `${palette.primary}10`);
+    gradient.addColorStop(1, `${palette.primary}02`);
+
+    const datasets = [{
+      type: "line",
+      label: `${label} · CoinGecko EUR`,
+      atlasCoin: coin,
+      atlasPrimaryColor: palette.primary,
+      atlasGradientCss: atlasCryptoGradientCss(coin, 0),
+      data: points,
+      parsing: false,
+      yAxisID: "y",
+      borderWidth: 2.2,
+      pointRadius(context) {
+        return context.dataIndex === context.dataset.data.length - 1 ? 3.8 : 0;
+      },
+      pointHoverRadius: 5,
+      pointHitRadius: 24,
+      tension: 0.08,
+      fill: true,
+      backgroundColor: gradient,
+      borderColor: palette.primary,
+      order: 1
+    }];
+
+    if (showVolume && volumeRows.length) {
+      datasets.unshift({
+        type: "bar",
+        label: "Volume",
+        data: volumeRows,
+        parsing: false,
+        yAxisID: "yVolume",
+        backgroundColor: `${palette.primary}20`,
+        borderColor: `${palette.primary}28`,
+        borderWidth: 0,
+        barPercentage: 1,
+        categoryPercentage: 1,
+        order: 2,
+        atlasVolumeDataset: true
+      });
+    }
+
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
-      data: { datasets: [{ label: `${label} · CoinGecko EUR`, atlasCoin: { id: result?.coin?.id || state.selectedCoinId, symbol: getSelectedCoin()?.symbol || label, name: getSelectedCoin()?.name || label, image: getSelectedCoin()?.image || "" }, data, parsing: false, borderWidth: 2.1, pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 3.6 : 0; }, pointHoverRadius: 5, pointHitRadius: 24, tension: 0.08, fill: true, backgroundColor: gradient, borderColor: "rgba(112,244,255,0.96)", borderCapStyle: "round", borderJoinStyle: "round" }] },
+      data: { datasets },
       options: {
-        responsive: true, maintainAspectRatio: false, animation: false, normalized: true, parsing: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        normalized: true,
+        parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        layout: { padding: { top: 18, right: 22, bottom: 22, left: 10 } },
+        layout: { padding: { top: 18, right: 22, bottom: showVolume ? 10 : 22, left: 10 } },
         plugins: {
           legend: { display: false },
           tooltip: {
             enabled: false,
+            filter(context) { return !context.dataset?.atlasVolumeDataset; },
             external: atlasExternalChartTooltip
           }
         },
         scales: {
           x: {
-            type: "linear", min: rows[0].t, max: rows[rows.length - 1].t,
-            grid: { color: "rgba(176,236,255,0.075)", drawTicks: true },
-            ticks: { color: "rgba(226,244,255,0.84)", maxTicksLimit: period === 1 ? 9 : 10, autoSkip: true, maxRotation: 0, font: { size: 11, weight: "700" }, callback(value) { return atlasChartLabelForTime(Number(value), period); } }
+            type: "linear",
+            min: rows[0].t,
+            max: rows[rows.length - 1].t,
+            grid: { color: "rgba(176,236,255,.075)" },
+            ticks: {
+              color: "rgba(226,244,255,.84)",
+              maxTicksLimit: period >= 365 ? 8 : 10,
+              autoSkip: true,
+              maxRotation: 0,
+              callback(value) { return atlasChartLabelForTime(Number(value), period); }
+            }
           },
           y: {
-            position: "right", min: min - yPad, max: max + yPad,
-            grid: { color: "rgba(176,236,255,0.105)" },
-            ticks: { color: "rgba(226,244,255,0.86)", maxTicksLimit: 7, callback(value) { return atlasFormatEUR(Number(value)); }, font: { size: 11, weight: "700" }, padding: 8 }
+            type: scaleType,
+            position: "right",
+            min: scaleType === "linear" ? min - yPad : undefined,
+            max: scaleType === "linear" ? max + yPad : undefined,
+            grid: { color: "rgba(176,236,255,.105)" },
+            ticks: {
+              color: "rgba(226,244,255,.86)",
+              maxTicksLimit: 7,
+              callback(value) {
+                return view === "base100" ? Number(value).toFixed(1) : atlasFormatEUR(Number(value));
+              }
+            },
+            title: {
+              display: true,
+              text: view === "base100" ? "Base 100" : "Prix EUR",
+              color: "rgba(255,240,200,.76)"
+            }
+          },
+          yVolume: {
+            display: showVolume && volumeRows.length > 0,
+            position: "left",
+            beginAtZero: true,
+            grid: { display: false },
+            ticks: { display: false },
+            suggestedMax: volumeRows.length ? Math.max(...volumeRows.map(row => row.y)) * 3.2 : undefined
           }
         }
       }
     });
+
     state.chartEngineV2.realChart.$atlasMode = "single";
-    state.chartEngineV2.realChart.$atlasCoin = getSelectedCoin() || {};
+    state.chartEngineV2.realChart.$atlasCoin = coin;
+    state.chartEngineV2.realChart.$atlasView = view;
+    state.chartEngineV2.realChart.$atlasScale = scaleType;
+    state.chartEngineV2.realChart.$atlasVolume = showVolume;
+    atlasChartV2RenderLegend([{ coin, result }], { result });
+    atlasChartV2SyncControls();
     return;
   }
+
   const ctx = canvas.getContext("2d");
   const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
   const width = Math.max(560, Math.floor(rect.width || canvas.clientWidth || 980));
   const height = Math.max(300, Math.floor(rect.height || canvas.clientHeight || 320));
-  canvas.width = Math.floor(width * dpr); canvas.height = Math.floor(height * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-  const left = 52, right = 100, top = 42, bottom = 42;
-  const plotW = width - left - right, plotH = height - top - bottom;
-  const lo = min - yPad, hi = max + yPad, startTime = rows[0].t, endTime = rows[rows.length - 1].t;
-  const xFor = time => left + ((time - startTime) / (endTime - startTime || 1)) * plotW;
-  const yFor = value => top + plotH - ((value - lo) / (hi - lo || 1)) * plotH;
-  ctx.strokeStyle = "rgba(176,236,255,0.075)";
-  for (let i = 0; i <= 5; i++) { const y = top + (plotH / 5) * i; ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(left + plotW, y); ctx.stroke(); }
-  ctx.beginPath(); rows.forEach((row, index) => { const x = xFor(row.t), y = yFor(row.price); if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); });
-  ctx.strokeStyle = "rgba(112,244,255,.96)"; ctx.lineWidth = 2.1; ctx.stroke();
-}
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
 
+  const left = 52, right = 100, top = 42, bottom = 42;
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const low = min - yPad;
+  const high = max + yPad;
+  const startTime = rows[0].t;
+  const endTime = rows[rows.length - 1].t;
+  const xFor = time => left + ((time - startTime) / (endTime - startTime || 1)) * plotWidth;
+  const yFor = value => top + plotHeight - ((value - low) / (high - low || 1)) * plotHeight;
+
+  ctx.beginPath();
+  points.forEach((point, index) => {
+    const x = xFor(point.x);
+    const y = yFor(point.y);
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = palette.primary;
+  ctx.lineWidth = 2.2;
+  ctx.stroke();
+  atlasChartV2RenderLegend([{ coin, result }], { result });
+  atlasChartV2SyncControls();
+}
 
 function atlasPatchResultLastPoint(result, price, timestamp) {
   if (!result || !Array.isArray(result.series) || !result.series.length || !Number.isFinite(Number(price)) || Number(price) <= 0) return false;
@@ -4103,7 +4225,9 @@ async function renderComparisonAnalystPanel(options = {}) {
         `Comparaison ${drawnEntries.map(entry => entry.coin.symbol).join(" + ")} — Base 100`
       );
       atlasRenderComparisonDetail(drawnEntries, period);
+      atlasChartV2RenderLegend(drawnEntries, { comparison: true });
       atlasRenderComparisonCaption(drawnEntries, period, finalUnavailableIds, coins.length);
+      atlasChartV2SyncControls();
       atlasTrackAudience("chart_comparison_loaded", {
         assets: drawnEntries.map(entry => entry.coin.id),
         days: period,
@@ -4366,7 +4490,7 @@ function atlasSourceDockSaveCache() {
       ATLAS_SOURCE_DOCK_CACHE_KEY,
       JSON.stringify({
         schema: "agent_crypto_source_dock_v2",
-        version: "V2.0-alpha · Build 28.0",
+        version: "V2.0-alpha · Build 28.1",
         savedAt: new Date().toISOString(),
         records: Object.fromEntries(records.map(record => [record.coinId, record]))
       })
@@ -4780,7 +4904,8 @@ function atlasRenderChartResult(c, period, result, chartKey, forceRedraw = false
   atlasBrokerCommitChart(c, period, result, "ready");
   const periodLabel = atlasChartPeriodLabel(period);
   const fingerprint = atlasChartResultFingerprint(result);
-  const alreadyRendered = state.chartEngineV2.lastRenderedKey === chartKey && state.chartEngineV2.lastFingerprint === fingerprint && state.chartEngineV2.realChart;
+  const viewFingerprint = `${fingerprint}:${atlasChartV2EffectiveView()}:${atlasChartV2EffectiveScale()}:${state.chartViewV2.volume}:${state.chartViewV2.legend}`;
+  const alreadyRendered = state.chartEngineV2.lastRenderedKey === chartKey && state.chartEngineV2.lastFingerprint === viewFingerprint && state.chartEngineV2.realChart;
   if (forceRedraw || !alreadyRendered) drawLineChart(els.mainChart, result.series, `${c.symbol} ${periodLabel}`, result, chartKey);
   atlasRenderAssetDetail(c, period, result, "valid");
   renderMultiHorizon();
@@ -5032,13 +5157,13 @@ const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { 
 } function simLogTypeLabel(type) { if (type === "SIM_BUY") return "ACHAT SIMULÉ"; if (type === "SIM_SELL") return "VENTE SIMULÉE"; if (type === "REFUS") return "REFUS"; if (type === "RESET") return "RESET"; return String(type || "INFO");
 } function simLogLine(entry) { const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : ""; const label = simLogTypeLabel(entry?.type); const msg = entry?.message || ""; return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
 } function renderSimulation() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); if (els.simProfileStatus) { const profile = getSimulationProfileStatus(); els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`; } setText(els.simCash, fmtEUR.format(state.sim.cash)); setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue)); setText(els.simTotalValue, fmtEUR.format(totals.total)); if (els.simPnL) { els.simPnL.textContent = `${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`; els.simPnL.classList.toggle("pnl-pos", totals.pnl >= 0); els.simPnL.classList.toggle("pnl-neg", totals.pnl < 0); } const positions = Object.keys(state.sim.positions); if (els.simPositions) { els.simPositions.innerHTML = positions.length ? positions.map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; const pnl = value - pos.invested; return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span>${pos.qty.toFixed(8)}</span><span>${fmtEUR.format(value)}</span><span class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${fmtEUR.format(pnl)}</span></div>`; }).join("") : "Aucune position simulée."; } if (els.simLog) { els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée."; }
-} function situationPayload() { return { version: "V2.0-alpha · Build 28.0", active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
+} function situationPayload() { return { version: "V2.0-alpha · Build 28.1", active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
 } function nextStepsPayload() { return { next_steps: [ "confirm_priority_assets", "define_virtual_simulation_amount", "define_forbidden_risks", "select_news_sources", "describe_private_machine", "choose_access_security_model" ], next_version_candidate: "V1.1-beta_local_private_preparation" };
 } function boundariesPayload() { return { hard_boundaries: [ "no_real_exchange_key_now", "no_real_wallet_connection", "no_seed_phrase_in_ui_or_files", "no_withdraw_permission", "no_real_order_from_public_frontend", "no_public_remote_access", "no_nominative_labels_in_public_interface" ] };
 } function briefingPayload() { return { mode: "preparation_session", purpose: "collect_information_before_private_backend", collect: [ "target_mode_observation_simulation_or_future_semi_auto", "priority_assets", "risk_limits", "news_sources", "private_machine_context", "remote_access_preference", "physical_security_preference" ], forbidden_during_session: [ "create_real_exchange_key", "connect_real_wallet", "enter_seed_phrase", "enable_withdraw_permission", "start_real_trading", "open_public_remote_access" ] };
 } function questionsPayload() { return { questions: [ "Quel montant virtuel utiliser pour la simulation ?", "Quelles cryptos suivre en priorité ?", "Quels risques sont interdits ?", "Quelles sources d'information surveiller ?", "Quelle machine privée est envisagée ?", "Quel accès renforcé est préféré ?", "Quelle validation humaine est obligatoire ?" ] };
 } function doNotDoPayload() { return { do_not_do: [ "Pas de clé Kraken réelle maintenant.", "Pas de wallet réel connecté maintenant.", "Pas de seed phrase dans l'interface.", "Pas de trading automatique.", "Pas d'accès distant public.", "Pas d'argent réel avant dry-run long." ] };
-} function backendBlueprintPayload() { return { version: "V2.0-alpha · Build 28.0", principle: "separate_public_frontend_from_private_backend", public_layer: { host: "GitHub Pages", allowed: [ "market_observation", "charts", "watchlist", "command_layer_observation", "local_paper_trading" ], forbidden: [ "private_api_keys", "withdraw_keys", "real_orders", "admin_remote_access", "wallet_connection" ] }, private_layer_future: { host: "private_machine_or_secure_local_server", allowed: [ "encrypted_api_secrets", "Kraken_read_only_client", "server_side_paper_trading", "logs", "kill_switch", "restricted_remote_access" ], access: ["authorized_operator_1", "authorized_operator_2"] }, exchange_layer_future: { primary: "Kraken", first_mode: "read_only", later_modes_locked: [ "paper_trading_server", "human_validated_order", "real_micro_transaction" ], never_allowed_initially: [ "withdraw_permission", "fully_autonomous_trading" ] } };
+} function backendBlueprintPayload() { return { version: "V2.0-alpha · Build 28.1", principle: "separate_public_frontend_from_private_backend", public_layer: { host: "GitHub Pages", allowed: [ "market_observation", "charts", "watchlist", "command_layer_observation", "local_paper_trading" ], forbidden: [ "private_api_keys", "withdraw_keys", "real_orders", "admin_remote_access", "wallet_connection" ] }, private_layer_future: { host: "private_machine_or_secure_local_server", allowed: [ "encrypted_api_secrets", "Kraken_read_only_client", "server_side_paper_trading", "logs", "kill_switch", "restricted_remote_access" ], access: ["authorized_operator_1", "authorized_operator_2"] }, exchange_layer_future: { primary: "Kraken", first_mode: "read_only", later_modes_locked: [ "paper_trading_server", "human_validated_order", "real_micro_transaction" ], never_allowed_initially: [ "withdraw_permission", "fully_autonomous_trading" ] } };
 } function krakenReadonlyPlanPayload() { return { exchange: "Kraken", target_stage: "read_only_only", allowed_first: [ "account_balance_read", "ticker_read", "trade_history_read_if_needed", "open_positions_read_if_applicable" ], forbidden_first: [ "create_order", "cancel_order", "withdraw", "transfer", "margin", "leverage" ], required_before_connection: [ "backend_not_github_pages", "encrypted_secret_storage", "separate_user_accounts", "logs", "manual_disable", "test_key_permissions", "no_withdraw_permission" ] };
 } function remoteBlueprintPayload() { return { scope: "future_private_machine_only", authorized_people: ["authorized_operator_1", "authorized_operator_2"], rules: [ "no_public_admin_panel", "no_shared_cleartext_password", "unique_accounts", "strong_authentication", "admin_actions_logged", "emergency_disable_path", "regular_security_review" ], current_public_frontend: "no_remote_access_capability" };
 } function securityReviewPayload() { return { review_type: "pre_backend_security_checklist", checklist: [ { item: "GitHub Pages contains no secrets", status: "required" }, { item: "Kraken key read-only", status: "future_required" }, { item: "Withdraw permission disabled", status: "mandatory" }, { item: "Backend logs every command", status: "future_required" }, { item: "Kill switch tested", status: "future_required" }, { item: "Paper trading runs before real money", status: "mandatory" }, { item: "Human validation before any real order", status: "mandatory" }, { item: "Remote access reviewed regularly", status: "future_required" } ], conclusion: "No real-money phase without passing all mandatory items." };
@@ -5059,7 +5184,7 @@ const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { 
 } 
 
 /* =========================================================
-   V2.0-alpha · Build 28.0 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V2.0-alpha · Build 28.1 — NEWS SENTINEL SOURCE INTELLIGENCE
    Lecture décisionnelle prudente depuis marché live + mémoire locale.
    ========================================================= */
 function atlasDecisionPct(value) {
@@ -5358,7 +5483,7 @@ function atlasRenderTopFiveRibbon() {
       ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy">`
       : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
     return `
-      <span class="top5-item" data-top5-id="${escapeHtml(coin.id)}" style="${atlasRibbonStyle(coin, index)}">
+      <span class="top5-item" data-top5-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" title="Ouvrir ${escapeHtml(coin.symbol)} · Maj/Ctrl : comparer" style="${atlasRibbonStyle(coin, index)}">
         <span class="top5-identity">${image}<b>${escapeHtml(String(coin.symbol || "").toUpperCase())}</b></span>
         <strong class="top5-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</strong>
         <small class="top5-change ${variationClass}">${fmtPct(coin.change24h)}</small>
@@ -5382,7 +5507,7 @@ function atlasRenderMarketFlowRibbon() {
   const items = flow.map((coin, index) => {
     const variationClass = clsPct(coin.change24h);
     return `
-      <span class="ticker-item" data-ticker-id="${escapeHtml(coin.id)}" style="${atlasRibbonStyle(coin, index + 5)}">
+      <span class="ticker-item" data-ticker-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" title="Ouvrir ${escapeHtml(coin.symbol)} · Maj/Ctrl : comparer" style="${atlasRibbonStyle(coin, index + 5)}">
         <i class="ticker-crypto-accent" aria-hidden="true"></i>
         <span class="ticker-symbol">${escapeHtml(coin.symbol)}</span>
         <span class="ticker-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</span>
@@ -5455,63 +5580,17 @@ function scoreCoin(c) {
   return { score, label, parts };
 }
 function decisionFromScore(score) { if (score === null || score === undefined) return "Analyse suspendue"; if (score <= 40) return "Données fragiles"; if (score <= 55) return "Lecture prudente"; if (score <= 65) return "Mouvement modéré"; if (score <= 75) return "Mouvement marqué"; return "Volatilité élevée";
-} function renderMarketTable() {
-  if (!els.marketRows) return;
-  if (!atlasHasDisplayableMarket()) {
-    renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
-    return;
-  }
-  if (!state.liveOk) state.liveOk = true;
-  const q = (els.searchInput?.value || "").toLowerCase().trim();
-  const filtered = state.coins
-    .filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q))
-    .filter(matchAssetFilter);
-  const rows = sortAssets(filtered).slice(0, 50);
-  if (!rows.length) {
-    renderEmptyMarket("Aucun actif ne correspond au filtre.");
-    return;
-  }
-  const selection = atlasComparisonIds();
-  els.marketRows.innerHTML = rows.map(c => {
-    const s = scoreCoin(c);
-    const compared = selection.includes(c.id);
-    const primary = c.id === state.selectedCoinId && compared;
-    const rowAction = compared ? `Retirer ${c.symbol} du graphe` : `Ajouter ${c.symbol} au graphe`;
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name} ${c.symbol}. ${rowAction}.`)}">
-      <td>${c.rank ?? "—"}</td>
-      <td><div class="coin-cell"><i class="market-identity-rail" aria-hidden="true"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
-      <td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur ?? c.price)}</b><small>${Number.isFinite(Number(c.priceUsd)) ? atlasFormatUSD(c.priceUsd) : "USD —"}</small></div></td>
-      <td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td>
-      <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
-      <td>${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
-      <td>${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
-      <td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-graph-toggle="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" title="${compared ? `Retirer ${escapeHtml(c.symbol)}` : `Ajouter ${escapeHtml(c.symbol)}`}">${compared ? '−' : '+'}</button>${sparkSvg(c)}</div></td>
-      <td>${s.score ?? "—"}</td>
-      <td>${beginnerDecision(c)}</td>
-    </tr>`;
-  }).join("");
-  setText(els.tableNote, `${rows.length} affichés · ${state.coins.length} chargés · + ajoute / − retire · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · filtre : ${state.assetFilter} · tri : ${state.sortKey}. Source : ${state.mainSource}.`);
-  [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
-    const activateRow = event => {
-      const keyboard = event.type === "keydown";
-      if (keyboard && !["Enter", " "].includes(event.key)) return;
-      if (event.target !== row && event.target.closest("button, a, input, select")) return;
-      if (keyboard) event.preventDefault();
-      const coin = state.coins.find(c => c.id === row.dataset.id);
-      if (coin) atlasToggleComparisonCoin(coin);
-    };
-    row.addEventListener("click", activateRow);
-    row.addEventListener("keydown", activateRow);
-  });
-  els.marketRows.querySelectorAll("[data-graph-toggle]").forEach(button => {
-    button.addEventListener("click", event => {
-      event.stopPropagation();
-      const coin = state.coins.find(c => c.id === button.dataset.graphToggle);
-      if (coin) atlasToggleComparisonCoin(coin);
-    });
-  });
+} 
+function atlasMarketOpenCoin(coin,options={}){if(!coin?.id)return;options.compare?atlasToggleComparisonCoin(coin):atlasSelectMarketCoin(coin);$("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});}
+function atlasMarketEnsureWatchCoin(coin){if(!coin?.id)return;if(!state.watchIds.includes(coin.id)){state.watchIds.push(coin.id);state.watchIds=[...new Set(state.watchIds)].slice(0,48);saveWatchIds();atlasWatchSyncProfiles();}renderWatchlist();renderAutoReader();}
+function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatchCoin(coin);renderWatchlist();const s=$("watchAlertCoin");if(s&&[...s.options].some(o=>o.value===coin.id))s.value=coin.id;const d=$("watchlist")?.closest("details.atlas-collapse");if(d)d.open=true;$("watchlist")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>$("watchAlertThreshold")?.focus(),450);}
+function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("detailPanel")?.classList.contains("is-collapsed"))$("detailPanelToggle")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
+function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
+function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasMarketOpenCoin(c,{compare:!!(e.shiftKey||e.ctrlKey||e.metaKey)});};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
 
-} function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="10" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
+function renderMarketTable(){
+  if(!els.marketRows)return;atlasChartV2SyncControls();if(!atlasHasDisplayableMarket()){renderEmptyMarket("Livecheck requis. Aucun prix inventé.");return;}if(!state.liveOk)state.liveOk=true;const q=(els.searchInput?.value||"").toLowerCase().trim(),rows=sortAssets(state.coins.filter(c=>!q||c.name.toLowerCase().includes(q)||c.symbol.toLowerCase().includes(q)).filter(matchAssetFilter)).slice(0,50);if(!rows.length){renderEmptyMarket("Aucun actif ne correspond au filtre.");return;}const selection=atlasComparisonIds(),profiles=atlasWatchReadProfiles();els.marketRows.innerHTML=rows.map(c=>{const s=scoreCoin(c),compared=selection.includes(c.id),primary=c.id===state.selectedCoinId&&compared,watched=state.watchIds.includes(c.id);return `<tr class="asset-row ${primary?'is-selected':''} ${compared?'is-compared':''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c,Math.max(0,Number(c.rank||1)-1))}" tabindex="0" role="button" aria-pressed="${compared?'true':'false'}"><td>${c.rank??'—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image?`<img src="${escapeHtml(c.image)}" alt="" loading="lazy">`:''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur??c.price)}</b><small>${Number.isFinite(Number(c.priceUsd))?atlasFormatUSD(c.priceUsd):'USD —'}</small></div></td><td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared?'is-on':''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}">${compared?'−':'+'}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score??'—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Graphe</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched?'is-on':''}">${watched?'Suivi':'Watch'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note?`<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>`:''}</td></tr>`;}).join("");setText(els.tableNote,`${rows.length} affichés · ${state.coins.length} chargés · colonnes ${state.chartViewV2.marketColumns==='complete'?'complètes':'essentielles'} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · filtre : ${state.assetFilter} · tri : ${state.sortKey}. Source : ${state.mainSource}.`);[...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row=>{const act=e=>{const key=e.type==="keydown";if(key&&!['Enter',' '].includes(e.key))return;if(e.target!==row&&e.target.closest("button,a,input,select"))return;if(key)e.preventDefault();const c=state.coins.find(x=>x.id===row.dataset.id);if(c)atlasMarketOpenCoin(c,{compare:!!(e.shiftKey||e.ctrlKey||e.metaKey)});};row.addEventListener("click",act);row.addEventListener("keydown",act);});els.marketRows.querySelectorAll("[data-market-action]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();atlasMarketHandleAction(b.dataset.marketAction,state.coins.find(c=>c.id===b.dataset.coinId),e);}));
+} function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
 } 
 function atlasMathScoreBand(score) {
   const value = Number(score);
@@ -6083,7 +6162,7 @@ function renderWatchlist() {
     </div>`,
     `<div class="watch-compact-list">${basketRows}</div>`
   ].join("");
-} function renderRiskGrid() { if (!els.riskGrid) return; els.riskGrid.innerHTML = ` <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.sourceLock?.valid ? "Source Lock CoinGecko" : "Source canonique absente"}</b></div> <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V2.0-alpha · Build 28.0</b></div> <div class="risk warn"><span>Social</span><b>Non vérifié</b></div> <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
+} function renderRiskGrid() { if (!els.riskGrid) return; els.riskGrid.innerHTML = ` <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.sourceLock?.valid ? "Source Lock CoinGecko" : "Source canonique absente"}</b></div> <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V2.0-alpha · Build 28.1</b></div> <div class="risk warn"><span>Social</span><b>Non vérifié</b></div> <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 } function renderSourceGrid() { atlasRenderDiagnostics(); if (!els.sourceGrid) { renderSourceDiagnostic(); return; } if (!state.sourceStatus.length) { els.sourceGrid.innerHTML = liveSources.map(s => `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>` ).join(""); renderSourceDiagnostic(); return; } els.sourceGrid.innerHTML = state.sourceStatus.map(s => `<div class="source-item ${s.status === "OK" ? "ok" : s.status === "BACKEND" ? "warn" : "fail"}"> <strong>${s.name}</strong> <span>${s.kind}</span> <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span> <span>${escapeHtml(s.detail || "")}</span> </div>` ).join(""); renderSourceDiagnostic();
 } function atlasMarketTone() { if (!state.liveOk || !state.coins.length) return { label: "En attente", mode: "wait" }; const btc = state.coins.find(c => c.id === "bitcoin" || c.symbol === "BTC"); const eth = state.coins.find(c => c.id === "ethereum" || c.symbol === "ETH"); const avgTop = state.coins.slice(0, 10).reduce((s, c) => s + (Number(c.change24h) || 0), 0) / Math.max(1, Math.min(10, state.coins.length)); const btcMove = Number(btc?.change24h) || 0; const ethMove = Number(eth?.change24h) || 0; const momentum = (avgTop + btcMove + ethMove) / 3; if (momentum >= 4) return { label: "Marché très positif, risque FOMO élevé", mode: "hot" }; if (momentum >= 1) return { label: "Marché positif, observation active", mode: "ok" }; if (momentum <= -3) return { label: "Marché sous pression, prudence renforcée", mode: "cold" }; return { label: "Marché neutre à surveiller", mode: "calm" };
 } function atlasTopSymbols(list, limit = 4) { return list.slice(0, limit).map(c => `${c.symbol} ${fmtPct(c.change24h)}`).join(" · ");
@@ -6171,11 +6250,11 @@ function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead
 } function watchBasketCoins(basket) { return basket.ids.filter(id => (state.watchIds || []).includes(id)).map(watchCoinById).filter(Boolean);
 } function basketStatus(coins) { if (!coins.length) return { label: "À charger", mode: "wait", avg: null }; const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length; const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm"; const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme"; return { label, mode, avg };
 } function publicMarketSnapshot() { const wanted = SIM_PROFILE.allowedSymbols; const coins = state.coins .filter(c => wanted.includes(String(c.symbol || "").toUpperCase())) .map(c => ({ id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, price_eur: c.price, change_24h_pct: c.change24h, change_7d_pct: c.change7d, market_cap_eur: c.marketCap, volume_24h_eur: c.volume, source: state.mainSource?.name || "source live" })); return { generated_at: new Date().toISOString(), source: state.mainSource?.name || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, public_only: true, assets: coins };
-} function simulationDataSnapshot() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); return { generated_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.0", public_only: true, warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.", profile: getSimulationProfileStatus(), simulation: simulationPayload(), totals: { cash_eur: state.sim.cash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl }, market_snapshot: publicMarketSnapshot() };
+} function simulationDataSnapshot() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); return { generated_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1", public_only: true, warning: "Données publiques et simulation locale uniquement. Aucun compte réel, aucune clé API, aucun wallet.", profile: getSimulationProfileStatus(), simulation: simulationPayload(), totals: { cash_eur: state.sim.cash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl }, market_snapshot: publicMarketSnapshot() };
 } function learningFactsFromLogs() { if (!state.sim) loadSimulation(); const logs = state.sim.logs || []; const hasBuy = logs.some(l => l.type === "SIM_BUY"); const hasSell = logs.some(l => l.type === "SIM_SELL"); const hasTooBig = logs.some(l => String(l.message || "").includes("maximum par opération")); const hasForbidden = logs.some(l => String(l.message || "").includes("refusé. Autorisés")); const hasReserve = logs.some(l => String(l.message || "").includes("réserve minimale")); const hasLivecheckRefusal = logs.some(l => String(l.message || "").includes("Livecheck requis")); const facts = []; if (hasBuy) facts.push("Tu as testé au moins un achat simulé : l’app sait transformer un montant virtuel en position fictive."); if (hasSell) facts.push("Tu as testé une vente simulée : l’app sait réduire une position fictive."); if (hasTooBig) facts.push("Tu as déclenché la protection “montant trop gros” : le profil bloque toute opération au-dessus de 10 €."); if (hasForbidden) facts.push("Tu as déclenché la protection “crypto non autorisée” : le profil débutant reste limité à BTC / ETH / SOL."); if (hasReserve) facts.push("Tu as déclenché la protection “réserve minimale” : l’app empêche de dépasser 30 € exposés."); if (hasLivecheckRefusal) facts.push("Tu as vérifié la règle “pas de prix inventé” : le simulateur exige Livecheck avant d’agir."); if (!facts.length) { facts.push("Aucun test pédagogique important n’est encore enregistré. Lance les boutons du Mode École guidé pour générer une vraie mémoire."); } return facts;
 } function positionLinesForMarkdown() { if (!state.sim) loadSimulation(); const positions = Object.keys(state.sim.positions || {}); if (!positions.length) return ["Aucune position simulée."]; return positions.map(sym => { const pos = state.sim.positions[sym]; const value = getPositionValue(sym); return `- ${sym} : ${fmtEUR.format(value)} simulés, quantité fictive ${Number(pos.qty || 0).toFixed(8)}.`; });
 } function marketLinesForMarkdown() { const snap = publicMarketSnapshot(); if (!snap.live_ok || !snap.assets.length) { return ["Livecheck non disponible dans le résumé courant."]; } return snap.assets.map(asset => { const price = Number.isFinite(asset.price_eur) ? fmtEUR.format(asset.price_eur) : "prix manquant"; const ch24 = typeof asset.change_24h_pct === "number" ? `${asset.change_24h_pct >= 0 ? "+" : ""}${asset.change_24h_pct.toFixed(2)} %` : "variation manquante"; return `- ${asset.symbol} : ${price}, variation 24h ${ch24}.`; });
-} function buildLearningJournalMarkdown() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const profile = getSimulationProfileStatus(); const facts = learningFactsFromLogs(); const lines = [ "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA", "", `Version : V2.0-alpha · Build 28.0`, `Date locale : ${new Date().toISOString()}`, "", "## Statut sécurité", "", "- Simulation locale uniquement.", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Profil actif", "", `- Profil : ${profile.profile}`, `- Capital virtuel initial : ${fmtEUR.format(profile.start_cash_eur)}`, `- Ticket conseillé : ${fmtEUR.format(profile.default_amount_eur)}`, `- Maximum par opération : ${fmtEUR.format(profile.max_per_operation_eur)}`, `- Exposition maximale : ${fmtEUR.format(profile.max_exposure_eur)}`, `- Réserve minimale : ${fmtEUR.format(profile.min_reserve_eur)}`, `- Cryptos autorisées : ${profile.allowed_symbols.join(" / ")}`, "", "## Résumé de session", "", `- Capital virtuel restant : ${fmtEUR.format(state.sim.cash)}`, `- Valeur positions simulées : ${fmtEUR.format(totals.positionsValue)}`, `- Total simulé : ${fmtEUR.format(totals.total)}`, `- P/L virtuel : ${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`, "", "## Positions simulées", "", ...positionLinesForMarkdown(), "", "## Ce que j’ai appris", "", ...facts.map(f => `- ${f}`), "", "## Snapshot marché public", "", ...marketLinesForMarkdown(), "", "## Conclusion pédagogique", "", "Le simulateur sert à apprendre les règles de prudence avant toute connexion réelle. Les refus sont normaux : ils prouvent que le profil protège le capital virtuel.", "", "## Prochaine étape possible", "", "Construire une mémoire locale sur PC Ryzen 7 avec historique de snapshots, journaux de simulation et scoring pédagogique, sans clé réelle au départ." ]; return lines.join("\n");
+} function buildLearningJournalMarkdown() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const profile = getSimulationProfileStatus(); const facts = learningFactsFromLogs(); const lines = [ "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA", "", `Version : V2.0-alpha · Build 28.1`, `Date locale : ${new Date().toISOString()}`, "", "## Statut sécurité", "", "- Simulation locale uniquement.", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Profil actif", "", `- Profil : ${profile.profile}`, `- Capital virtuel initial : ${fmtEUR.format(profile.start_cash_eur)}`, `- Ticket conseillé : ${fmtEUR.format(profile.default_amount_eur)}`, `- Maximum par opération : ${fmtEUR.format(profile.max_per_operation_eur)}`, `- Exposition maximale : ${fmtEUR.format(profile.max_exposure_eur)}`, `- Réserve minimale : ${fmtEUR.format(profile.min_reserve_eur)}`, `- Cryptos autorisées : ${profile.allowed_symbols.join(" / ")}`, "", "## Résumé de session", "", `- Capital virtuel restant : ${fmtEUR.format(state.sim.cash)}`, `- Valeur positions simulées : ${fmtEUR.format(totals.positionsValue)}`, `- Total simulé : ${fmtEUR.format(totals.total)}`, `- P/L virtuel : ${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`, "", "## Positions simulées", "", ...positionLinesForMarkdown(), "", "## Ce que j’ai appris", "", ...facts.map(f => `- ${f}`), "", "## Snapshot marché public", "", ...marketLinesForMarkdown(), "", "## Conclusion pédagogique", "", "Le simulateur sert à apprendre les règles de prudence avant toute connexion réelle. Les refus sont normaux : ils prouvent que le profil protège le capital virtuel.", "", "## Prochaine étape possible", "", "Construire une mémoire locale sur PC Ryzen 7 avec historique de snapshots, journaux de simulation et scoring pédagogique, sans clé réelle au départ." ]; return lines.join("\n");
 } function renderLearningSummary() { const text = buildLearningJournalMarkdown(); if (els.simLearningOutput) els.simLearningOutput.textContent = text; return text;
 } function downloadTextFile(filename, mimeType, text) { const blob = new Blob([text], { type: `${mimeType};charset=utf-8` }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 } function downloadLearningJournal() { const stamp = new Date().toISOString().slice(0, 10); downloadTextFile(`agent_crypto_journal_pedagogique_${stamp}.md`, "text/markdown", buildLearningJournalMarkdown()); renderLearningSummary();
@@ -6184,13 +6263,13 @@ function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead
 const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const raw = localStorage.getItem(COLLECTOR_STORAGE_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 } function writeCollectorMemory(records) { const safe = Array.isArray(records) ? records.slice(-COLLECTOR_MAX_RECORDS) : []; localStorage.setItem(COLLECTOR_STORAGE_KEY, JSON.stringify(safe)); renderCollectorStatus(); renderCollectionProgress(); return safe;
 } function collectorRecordReasonFromLogs(logs) { const messages = (logs || []).map(l => String(l.message || "")).join(" | "); const reasons = []; if (messages.includes("maximum par opération")) reasons.push("montant_trop_gros"); if (messages.includes("refusé. Autorisés")) reasons.push("crypto_non_autorisee"); if (messages.includes("réserve minimale")) reasons.push("plafond_ou_reserve"); if ((logs || []).some(l => l.type === "SIM_BUY")) reasons.push("achat_simule"); if ((logs || []).some(l => l.type === "SIM_SELL")) reasons.push("vente_simulee"); return reasons.length ? reasons : ["observation"];
-} function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.0", public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
+} function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1", public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
 } function renderCollectorStatus() { const records = readCollectorMemory(); if (els.collectorCount) { els.collectorCount.textContent = records.length === 1 ? "1 snapshot enregistré" : `${records.length} snapshots enregistrés`; } const last = records[records.length - 1]; if (els.collectorLast) { els.collectorLast.textContent = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun"; }
 } function collectorPreview(records) { if (!records.length) { return [ "Mémoire locale vide.", "", "Conseil :", "1. Lance Livecheck.", "2. Lance quelques tests guidés.", "3. Clique “Enregistrer snapshot maintenant”." ].join("\n"); } const last = records[records.length - 1]; const lines = [ "MÉMOIRE LOCALE — DATA COLLECTOR", "", `Snapshots enregistrés : ${records.length}`, `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`, `Symboles : ${(last.symbols || []).join(" / ") || "—"}`, `Tags apprentissage : ${(last.learning_tags || []).join(", ")}`, "", "Derniers enregistrements :" ]; records.slice(-8).reverse().forEach((record, index) => { const totals = record?.snapshot?.totals || {}; const exposure = totals.positions_value_eur ?? record?.snapshot?.profile?.current_exposure_eur ?? 0; lines.push( `${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · exposé ${fmtEUR.format(Number(exposure) || 0)} · ${(record.learning_tags || []).join(", ")}` ); }); lines.push(""); lines.push("Sécurité : mémoire locale navigateur uniquement. Aucune clé, aucun wallet, aucun compte réel."); return lines.join("\n");
 } function showCollectorMemory() { const records = readCollectorMemory(); renderCollectorStatus(); if (els.collectorOutput) els.collectorOutput.textContent = collectorPreview(records);
 } function saveCollectorSnapshot() { const records = readCollectorMemory(); const record = makeCollectorRecord(); records.push(record); const saved = writeCollectorMemory(records); if (els.collectorOutput) { els.collectorOutput.textContent = [ "SNAPSHOT ENREGISTRÉ", "", `Heure : ${new Date(record.saved_at).toLocaleString("fr-FR")}`, `Mémoire locale : ${saved.length}/${COLLECTOR_MAX_RECORDS} snapshots`, `Symboles : ${(record.symbols || []).join(" / ") || "—"}`, `Tags : ${(record.learning_tags || []).join(", ")}`, "", "Ce snapshot contient :", "- profil 100 € ;", "- simulation locale ;", "- positions fictives ;", "- logs pédagogiques ;", "- données publiques BTC / ETH / SOL si Livecheck est actif.", "", "Il ne contient pas :", "- clé API ;", "- wallet ;", "- compte réel ;", "- seed phrase ;", "- ordre réel." ].join("\n"); }
-} function downloadCollectorJSON() { const records = readCollectorMemory(); const payload = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.0", public_only: true, warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.", count: records.length, records }; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.json`, "application/json", JSON.stringify(payload, null, 2) ); showCollectorMemory();
-} function downloadCollectorJSONL() { const records = readCollectorMemory(); const header = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.0", public_only: true, type: "agent_crypto_collector_memory_jsonl_header" }; const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))]; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`, "application/x-ndjson", lines.join("\n") ); showCollectorMemory();
+} function downloadCollectorJSON() { const records = readCollectorMemory(); const payload = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1", public_only: true, warning: "Export mémoire locale public-compatible. Aucun compte réel, aucune clé API, aucun wallet.", count: records.length, records }; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.json`, "application/json", JSON.stringify(payload, null, 2) ); showCollectorMemory();
+} function downloadCollectorJSONL() { const records = readCollectorMemory(); const header = { exported_at: new Date().toISOString(), version: "V2.0-alpha · Build 28.1", public_only: true, type: "agent_crypto_collector_memory_jsonl_header" }; const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))]; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`, "application/x-ndjson", lines.join("\n") ); showCollectorMemory();
 } function clearCollectorMemory() { localStorage.removeItem(COLLECTOR_STORAGE_KEY); renderCollectorStatus(); renderCollectionProgress(); if (els.collectorOutput) { els.collectorOutput.textContent = [ "MÉMOIRE LOCALE EFFACÉE", "", "Le Data Collector local est revenu à zéro.", "Cela ne touche pas GitHub.", "Cela ne touche aucun compte réel." ].join("\n"); }
 } function safeNumber(value) { const n = Number(value); return Number.isFinite(n) ? n : null;
 } function recordAssetsMap(record) { const assets = record?.snapshot?.market_snapshot?.assets || []; const map = {}; assets.forEach(asset => { const sym = String(asset.symbol || "").toUpperCase(); if (!sym) return; map[sym] = asset; }); return map;
@@ -6205,7 +6284,7 @@ const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const 
 } function refusalSummaryText(records = readCollectorMemory()) { if (!records.length) return memoryExplorerEmptyText(); const counts = countRefusalTypes(records); const total = Object.values(counts).reduce((sum, n) => sum + n, 0); const lines = [ "RÉSUMÉ DES REFUS DE SÉCURITÉ", "", `Total refus observés : ${total}`, "", `- Montant trop gros : ${counts.montant_trop_gros}`, `- Crypto non autorisée : ${counts.crypto_non_autorisee}`, `- Plafond / réserve : ${counts.plafond_ou_reserve}`, `- Livecheck requis : ${counts.livecheck_requis}`, `- Autres refus : ${counts.autres_refus}`, "", "Interprétation :" ]; if (total === 0) { lines.push("Aucun refus enregistré. Il faut tester les protections pour vérifier que le profil débutant bloque bien les actions risquées."); } else { if (counts.montant_trop_gros) lines.push("- Tu testes la limite de montant : le profil bloque les opérations supérieures à 10 €."); if (counts.crypto_non_autorisee) lines.push("- Tu testes le périmètre crypto : le profil reste limité à BTC / ETH / SOL."); if (counts.plafond_ou_reserve) lines.push("- Tu testes la réserve : le profil protège les 70 € virtuels minimum."); if (counts.livecheck_requis) lines.push("- Tu as testé la règle anti-prix inventé : Livecheck doit être OK avant simulation."); } lines.push(""); lines.push("Conclusion : un refus n’est pas un échec de l’app. C’est une preuve que la règle de sécurité fonctionne."); return lines.join("\n");
 } function memoryMarketConclusion(firstMap, lastMap) { const parts = []; SIM_PROFILE.allowedSymbols.forEach(sym => { const delta = pctChange(firstMap[sym]?.price_eur, lastMap[sym]?.price_eur); if (delta === null) return; if (delta > 1) parts.push(`${sym} monte nettement dans la mémoire courte.`); else if (delta < -1) parts.push(`${sym} baisse nettement dans la mémoire courte.`); else parts.push(`${sym} reste relativement stable dans la mémoire courte.`); }); if (!parts.length) return "Pas assez de prix exploitables pour conclure."; return parts.join("\n");
 } function memoryLearningConclusion(records) { const tags = countLearningTags(records); const refusals = countRefusalTypes(records); const totalRefusals = Object.values(refusals).reduce((sum, n) => sum + n, 0); const hasExposure = records.some(record => Number(record?.snapshot?.totals?.positions_value_eur || 0) > 0); const lines = []; if (hasExposure) { lines.push("- La mémoire contient au moins une exposition simulée : le simulateur commence à enregistrer des scénarios."); } else { lines.push("- La mémoire contient surtout des tests de refus : c’est normal au début, on valide d’abord les sécurités."); } if (totalRefusals) { lines.push("- Les refus enregistrés montrent que le profil Solo Débutant protège le capital virtuel."); } if (tags.montant_trop_gros) { lines.push("- Le tag dominant “montant_trop_gros” indique que la règle de maximum 10 € est testée."); } if (tags.crypto_non_autorisee) { lines.push("- Le tag “crypto_non_autorisee” indique que le périmètre BTC / ETH / SOL est bien contrôlé."); } if (tags.plafond_ou_reserve) { lines.push("- Le tag “plafond_ou_reserve” indique que la réserve minimale de 70 € est protégée."); } lines.push("- Cette mémoire reste locale navigateur : elle prépare la future base Ryzen 7, sans donnée sensible."); return lines.join("\n");
-} function buildMemoryReportMarkdown() { const records = readCollectorMemory(); const lines = [ "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.0", `Date : ${new Date().toISOString()}`, "", "## Statut sécurité", "", "- Mémoire locale navigateur uniquement.", "- Données public-compatible.", "- Aucun compte réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Lecture mémoire", "", exploreMemoryText(records), "", "## Comparaison premier / dernier", "", compareMemoryText(records), "", "## Refus de sécurité", "", refusalSummaryText(records), "", "## Conclusion", "", "L’explorateur transforme les snapshots en lecture pédagogique. La prochaine vraie étape sera de déplacer ce principe vers une base locale plus solide sur PC Ryzen 7." ]; return lines.join("\n");
+} function buildMemoryReportMarkdown() { const records = readCollectorMemory(); const lines = [ "# RAPPORT MÉMOIRE LOCALE — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.1", `Date : ${new Date().toISOString()}`, "", "## Statut sécurité", "", "- Mémoire locale navigateur uniquement.", "- Données public-compatible.", "- Aucun compte réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Lecture mémoire", "", exploreMemoryText(records), "", "## Comparaison premier / dernier", "", compareMemoryText(records), "", "## Refus de sécurité", "", refusalSummaryText(records), "", "## Conclusion", "", "L’explorateur transforme les snapshots en lecture pédagogique. La prochaine vraie étape sera de déplacer ce principe vers une base locale plus solide sur PC Ryzen 7." ]; return lines.join("\n");
 } function renderMemoryExplorer(text) { if (els.memoryExplorerOutput) els.memoryExplorerOutput.textContent = text;
 } function exploreMemory() { renderMemoryExplorer(exploreMemoryText()); setActionFeedback("info", "Mémoire lue", "L’Explorateur affiche les snapshots, tags et refus observés.", els.memoryExplorerOutput);
 } function compareMemory() { renderMemoryExplorer(compareMemoryText()); setActionFeedback("info", "Comparaison affichée", "L’Explorateur compare le premier et le dernier snapshot quand il y en a au moins deux.", els.memoryExplorerOutput);
@@ -6213,26 +6292,26 @@ const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const 
 } function downloadMemoryReport() { const stamp = new Date().toISOString().slice(0, 10); const report = buildMemoryReportMarkdown(); downloadTextFile(`agent_crypto_rapport_memoire_${stamp}.md`, "text/markdown", report); renderMemoryExplorer(report); setActionFeedback("ok", "Rapport téléchargé", "Le rapport mémoire .md est prêt.", els.memoryExplorerOutput);
 } function setActionFeedback(kind, title, text, target = null) { const el = els.actionFeedback || document.getElementById("actionFeedback"); if (!el) return; el.classList.remove("ok", "warn", "info", "neutral", "feedback-flash"); el.classList.add(kind || "neutral"); el.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(text)}</span>`; void el.offsetWidth; el.classList.add("feedback-flash"); if (target?.scrollIntoView) { target.scrollIntoView({ behavior: "smooth", block: "center" }); }
 } function flashPanel(panel) { if (!panel) return; panel.classList.remove("feedback-flash"); void panel.offsetWidth; panel.classList.add("feedback-flash");
-} function buildWakePlanText() { const records = readCollectorMemory(); const count = records.length; const last = records[count - 1]; const lastLine = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun snapshot"; return [ "# NOTE DE REPRISE — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.0", `Date : ${new Date().toISOString()}`, "", "## État validé avant pause", "", "- Simulateur-école Solo Débutant 100 €.", "- Mode École guidé.", "- Refus visibles.", "- Journal pédagogique.", "- Data Collector local.", "- Explorateur de mémoire.", "- Plan de collecte guidé.", "- Feedback visuel ajouté.", "", "## Mémoire locale", "", `- Snapshots enregistrés : ${count}`, `- Dernier snapshot : ${lastLine}`, "- Objectif conseillé : 3 snapshots", "", "## Reprise au réveil", "", "1. Ouvrir la page publique.", "2. Faire Ctrl + F5.", "3. Vérifier : GitHub Pack V2.0-alpha · Build 28.0.", "4. Lancer Livecheck.", "5. Aller dans Simulation.", "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.", "7. Cliquer “Comparer premier / dernier”.", "8. Lire la conclusion de l’Explorateur.", "9. Exporter le rapport mémoire .md si besoin.", "", "## Suite produit après repos", "", "Préparer V1.2-local-plan : architecture backend local Ryzen 7.", "", "## Sécurité", "", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun compte exchange.", "- Aucun ordre réel.", "- Aucun trading automatique." ].join("\n");
+} function buildWakePlanText() { const records = readCollectorMemory(); const count = records.length; const last = records[count - 1]; const lastLine = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun snapshot"; return [ "# NOTE DE REPRISE — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.1", `Date : ${new Date().toISOString()}`, "", "## État validé avant pause", "", "- Simulateur-école Solo Débutant 100 €.", "- Mode École guidé.", "- Refus visibles.", "- Journal pédagogique.", "- Data Collector local.", "- Explorateur de mémoire.", "- Plan de collecte guidé.", "- Feedback visuel ajouté.", "", "## Mémoire locale", "", `- Snapshots enregistrés : ${count}`, `- Dernier snapshot : ${lastLine}`, "- Objectif conseillé : 3 snapshots", "", "## Reprise au réveil", "", "1. Ouvrir la page publique.", "2. Faire Ctrl + F5.", "3. Vérifier : GitHub Pack V2.0-alpha · Build 28.1.", "4. Lancer Livecheck.", "5. Aller dans Simulation.", "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.", "7. Cliquer “Comparer premier / dernier”.", "8. Lire la conclusion de l’Explorateur.", "9. Exporter le rapport mémoire .md si besoin.", "", "## Suite produit après repos", "", "Préparer V1.2-local-plan : architecture backend local Ryzen 7.", "", "## Sécurité", "", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun compte exchange.", "- Aucun ordre réel.", "- Aucun trading automatique." ].join("\n");
 } function showWakePlan() { const text = buildWakePlanText(); if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text; setActionFeedback("info", "Reprise affichée", "La note de reprise au réveil est prête dans le bloc Assistant de reprise.", els.resumeAssistantOutput);
 } function downloadWakePlan() { const stamp = new Date().toISOString().slice(0, 10); const text = buildWakePlanText(); downloadTextFile(`agent_crypto_reprise_apres_pause_${stamp}.md`, "text/markdown", text); if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text; setActionFeedback("ok", "Reprise téléchargée", "Le fichier .md de reprise est prêt.", els.resumeAssistantOutput);
-} function markPauseReady() { const records = readCollectorMemory(); const text = [ "PAUSE VALIDÉE", "", "État conseillé avant coupure :", "- Version : V2.0-alpha · Build 28.0", `- Snapshots mémoire : ${records.length}`, "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.", "", "Tu peux fermer sans perdre la mémoire locale tant que tu gardes le même navigateur et que tu n’effaces pas les données du site." ].join("\n"); if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text; setActionFeedback("ok", "Prêt pour pause", "Version de reprise préparée. Tu peux couper.", els.resumeAssistantOutput);
+} function markPauseReady() { const records = readCollectorMemory(); const text = [ "PAUSE VALIDÉE", "", "État conseillé avant coupure :", "- Version : V2.0-alpha · Build 28.1", `- Snapshots mémoire : ${records.length}`, "- Prochaine action : revenir plus tard, lancer Livecheck, créer le snapshot plus tard, comparer.", "", "Tu peux fermer sans perdre la mémoire locale tant que tu gardes le même navigateur et que tu n’effaces pas les données du site." ].join("\n"); if (els.resumeAssistantOutput) els.resumeAssistantOutput.textContent = text; setActionFeedback("ok", "Prêt pour pause", "Version de reprise préparée. Tu peux couper.", els.resumeAssistantOutput);
 } function collectionCount() { return readCollectorMemory().length;
 } function renderCollectionProgress() { const count = collectionCount(); const target = 3; const pct = Math.min(100, Math.round((count / target) * 100)); if (els.collectionProgressText) { els.collectionProgressText.textContent = `${Math.min(count, target)}/${target}`; } if (els.collectionProgressBar) { els.collectionProgressBar.style.width = `${pct}%`; } if (els.collectionProgressTitle) { if (count <= 0) els.collectionProgressTitle.textContent = "Objectif : créer un premier snapshot de référence"; else if (count === 1) els.collectionProgressTitle.textContent = "Objectif : ajouter un deuxième snapshot pour comparer"; else if (count === 2) els.collectionProgressTitle.textContent = "Objectif : ajouter un troisième snapshot pour stabiliser la lecture"; else els.collectionProgressTitle.textContent = "Objectif atteint : mémoire comparable"; }
 } function collectionPlanText() { const count = collectionCount(); const records = readCollectorMemory(); const lines = [ "PLAN DE COLLECTE GUIDÉ", "", `Snapshots actuels : ${count}`, "", "Routine simple :", "1. Lancer Livecheck.", "2. Enregistrer un snapshot de référence.", "3. Lancer un test guidé : opération prudente ou refus.", "4. Enregistrer un snapshot après test.", "5. Revenir plus tard et enregistrer un troisième snapshot.", "6. Utiliser l’Explorateur pour comparer.", "", "Pourquoi 3 snapshots ?", "- 1 snapshot : on voit seulement un état.", "- 2 snapshots : on peut comparer premier / dernier.", "- 3 snapshots : on commence à voir une mini-tendance.", "", "État actuel :" ]; if (!count) { lines.push("- Aucun snapshot. Commence par “Snapshot de référence”."); } else { const last = records[records.length - 1]; lines.push(`- Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`); lines.push(`- Tags : ${(last.learning_tags || []).join(", ") || "observation"}.`); if (count === 1) lines.push("- Prochaine action : créer un snapshot après test."); else if (count === 2) lines.push("- Prochaine action : créer un snapshot plus tard pour stabiliser la lecture."); else lines.push("- Tu peux maintenant utiliser “Comparer premier / dernier”."); } lines.push(""); lines.push("Sécurité : ces snapshots restent public-compatible, sans clé, sans wallet, sans compte réel."); return lines.join("\n");
 } function saveCollectionSnapshot(kind) { const recordsBefore = collectionCount(); const record = makeCollectorRecord(); record.collection_kind = kind; record.collection_note = kind === "reference" ? "Snapshot de référence." : kind === "after_test" ? "Snapshot après test guidé." : "Snapshot plus tard pour comparaison."; const records = readCollectorMemory(); records.push(record); const saved = writeCollectorMemory(records); renderCollectionProgress(); const label = kind === "reference" ? "SNAPSHOT DE RÉFÉRENCE ENREGISTRÉ" : kind === "after_test" ? "SNAPSHOT APRÈS TEST ENREGISTRÉ" : "SNAPSHOT PLUS TARD ENREGISTRÉ"; const next = saved.length < 2 ? "Ajoute un snapshot après test pour pouvoir comparer." : saved.length < 3 ? "Tu peux déjà comparer. Un troisième snapshot donnera une lecture plus solide." : "Objectif 3 snapshots atteint : utilise l’Explorateur de mémoire."; if (els.collectionPlanOutput) { els.collectionPlanOutput.textContent = [ label, "", `Heure : ${new Date(record.saved_at).toLocaleString("fr-FR")}`, `Mémoire locale : ${saved.length}/500 snapshots`, `Progression objectif : ${Math.min(saved.length, 3)}/3`, `Type : ${record.collection_note}`, `Tags : ${(record.learning_tags || []).join(", ") || "observation"}`, "", next, "", "Rappel : aucun argent réel, aucune clé API, aucun wallet." ].join("\n"); } setActionFeedback("ok", "Snapshot enregistré", `Mémoire locale : ${saved.length}/3 pour la lecture guidée.`, els.collectionPlanOutput); if (recordsBefore === 0 && kind !== "reference") { if (els.collectionPlanOutput) { els.collectionPlanOutput.textContent += "\n\nNote : tu n’avais pas encore de référence. Ce snapshot servira quand même de premier point."; } }
-} function buildCollectionPlanMarkdown() { const records = readCollectorMemory(); const lines = [ "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.0", `Date : ${new Date().toISOString()}`, "", "## Objectif", "", "Construire une mémoire comparable avant le futur backend local Ryzen 7.", "", "## Règle", "", "- 1 snapshot : état isolé.", "- 2 snapshots : comparaison possible.", "- 3 snapshots : mini-tendance exploitable.", "", "## Routine", "", "1. Lancer Livecheck.", "2. Enregistrer un snapshot de référence.", "3. Lancer un test guidé.", "4. Enregistrer un snapshot après test.", "5. Revenir plus tard.", "6. Enregistrer un snapshot plus tard.", "7. Comparer premier / dernier dans l’Explorateur.", "", "## État actuel", "", `Snapshots enregistrés : ${records.length}`, "", ...records.slice(-10).map((record, index) => { const kind = record.collection_kind || "snapshot"; const tags = (record.learning_tags || []).join(", ") || "observation"; return `- ${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · ${kind} · ${tags}`; }), "", "## Sécurité", "", "- Données public-compatible.", "- Aucun compte réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Suite", "", "Quand la logique de collecte est claire, migrer vers une base locale plus solide : JSONL durable ou SQLite sur PC Ryzen 7." ]; return lines.join("\n");
+} function buildCollectionPlanMarkdown() { const records = readCollectorMemory(); const lines = [ "# PLAN DE COLLECTE GUIDÉ — Agent-Crypto @erith.IA", "", "Version : V2.0-alpha · Build 28.1", `Date : ${new Date().toISOString()}`, "", "## Objectif", "", "Construire une mémoire comparable avant le futur backend local Ryzen 7.", "", "## Règle", "", "- 1 snapshot : état isolé.", "- 2 snapshots : comparaison possible.", "- 3 snapshots : mini-tendance exploitable.", "", "## Routine", "", "1. Lancer Livecheck.", "2. Enregistrer un snapshot de référence.", "3. Lancer un test guidé.", "4. Enregistrer un snapshot après test.", "5. Revenir plus tard.", "6. Enregistrer un snapshot plus tard.", "7. Comparer premier / dernier dans l’Explorateur.", "", "## État actuel", "", `Snapshots enregistrés : ${records.length}`, "", ...records.slice(-10).map((record, index) => { const kind = record.collection_kind || "snapshot"; const tags = (record.learning_tags || []).join(", ") || "observation"; return `- ${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · ${kind} · ${tags}`; }), "", "## Sécurité", "", "- Données public-compatible.", "- Aucun compte réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun ordre réel.", "", "## Suite", "", "Quand la logique de collecte est claire, migrer vers une base locale plus solide : JSONL durable ou SQLite sur PC Ryzen 7." ]; return lines.join("\n");
 } function showCollectionChecklist() { renderCollectionProgress(); const text = collectionPlanText(); if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = text; flashPanel(document.getElementById("collectionPlanPanel")); setActionFeedback("info", "Routine de collecte affichée", "Lis le bloc Plan de collecte guidé : il indique la prochaine action et l’objectif 3 snapshots.", els.collectionPlanOutput);
 } function downloadCollectionPlan() { const stamp = new Date().toISOString().slice(0, 10); const text = buildCollectionPlanMarkdown(); downloadTextFile(`agent_crypto_plan_collecte_${stamp}.md`, "text/markdown", text); if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = text;
 } function setSimManualFields(symbol, amount) { if (els.simSymbol) els.simSymbol.value = symbol; if (els.simAmount) els.simAmount.value = String(amount);
 } function renderSchoolResult(kind, title, text, bullets = []) { const el = els.schoolResult || document.getElementById("schoolResult"); if (!el) return; el.classList.remove("ok", "refusal", "err", "neutral"); el.classList.add(kind || "neutral"); const items = bullets.map(item => `<li>${escapeHtml(item)}</li>`).join(""); el.innerHTML = ` <b>${escapeHtml(title)}</b> <p>${escapeHtml(text)}</p> <ul>${items}</ul> `;
 } function schoolNeedsLivecheck() { if (state.liveOk && state.coins.length) return false; renderSchoolResult("err", "Livecheck requis", "Clique d’abord sur Lancer Livecheck. Le simulateur refuse de travailler sans prix réel chargé.", [ "Aucun prix n’est inventé.", "Aucun test n’est lancé tant que la source marché n’est pas prête.", "Après Livecheck OK, recommence le test guidé." ]); return true;
 } function runSchoolTest(testName) { if (testName === "reset_100") { resetSimulation(); setSimManualFields("BTC", SIM_PROFILE.defaultAmount); renderCommandOutput(commandOk("reset_sim", simulationPayload())); renderSchoolResult("neutral", "Simulateur remis à 100 €", "Tu repars d’un portefeuille virtuel propre.", [ "Capital virtuel : 100 €.", "Position : 0 €.", "Tu peux lancer le test 1." ]); return; } if (schoolNeedsLivecheck()) return; let result = null; if (testName === "safe_btc_5") { resetSimulation(); setSimManualFields("BTC", 5); result = simulateOrder("buy", "BTC", 5); renderCommandOutput(result); renderSchoolResult(result?.ok ? "ok" : "err", result?.ok ? "Accepté : opération prudente" : "Erreur inattendue", result?.ok ? "BTC 5 € est accepté parce que le ticket conseillé est de 5 € et le maximum est de 10 €." : (result?.error || "Le test n’a pas donné le résultat attendu."), result?.ok ? [ "Tu as investi 5 € virtuels.", "Il reste 95 € virtuels.", "Ce test apprend la notion de petite opération contrôlée." ] : [ "Aucun argent réel.", "Regarde le journal pour le détail." ]); return; } if (testName === "too_big_btc_50") { resetSimulation(); setSimManualFields("BTC", 50); result = simulateOrder("buy", "BTC", 50); renderCommandOutput(result); renderSchoolResult(result?.ok === false ? "refusal" : "err", result?.ok === false ? "Refus normal : opération trop grosse" : "Erreur : ce test aurait dû être refusé", result?.ok === false ? "Tu as demandé 50 €, mais le profil débutant limite chaque opération à 10 €." : "Le test n’a pas respecté la règle attendue.", result?.ok === false ? [ "Le refus protège ton capital virtuel.", "Aucun ordre réel n’a été envoyé.", "La règle apprise : ne pas mettre trop gros d’un coup." ] : [ "Ce test doit être revu." ]); return; } if (testName === "forbidden_doge_5") { resetSimulation(); setSimManualFields("DOGE", 5); result = simulateOrder("buy", "DOGE", 5); renderCommandOutput(result); renderSchoolResult(result?.ok === false ? "refusal" : "err", result?.ok === false ? "Refus normal : crypto non autorisée" : "Erreur : DOGE aurait dû être refusé", result?.ok === false ? "Le profil débutant autorise seulement BTC, ETH et SOL. DOGE est volontairement bloqué dans cette phase." : "Le test n’a pas respecté la règle attendue.", result?.ok === false ? [ "Tu apprends à limiter le périmètre.", "Moins d’actifs = moins de confusion au début.", "Les autres cryptos pourront être surveillées plus tard, pas utilisées en simulation débutant." ] : [ "Ce test doit être revu." ]); return; } if (testName === "fill_ceiling") { resetSimulation(); setSimManualFields("SOL", 10); const r1 = simulateOrder("buy", "BTC", 10); const r2 = simulateOrder("buy", "ETH", 10); const r3 = simulateOrder("buy", "SOL", 10); renderCommandOutput(r3); const ok = r1?.ok && r2?.ok && r3?.ok; renderSchoolResult(ok ? "ok" : "err", ok ? "Plafond rempli : 30 € exposés" : "Erreur pendant le remplissage du plafond", ok ? "Le simulateur a placé 10 € virtuels sur BTC, 10 € sur ETH et 10 € sur SOL." : "Une des trois opérations n’a pas été acceptée.", ok ? [ "Capital restant : environ 70 €.", "Exposition virtuelle : environ 30 €.", "Le profil débutant a atteint son plafond de sécurité." ] : [ r1?.error || "BTC : état inconnu.", r2?.error || "ETH : état inconnu.", r3?.error || "SOL : état inconnu." ]); return; } if (testName === "exceed_ceiling") { resetSimulation(); simulateOrder("buy", "BTC", 10); simulateOrder("buy", "ETH", 10); simulateOrder("buy", "SOL", 10); setSimManualFields("BTC", 5); result = simulateOrder("buy", "BTC", 5); renderCommandOutput(result); renderSchoolResult(result?.ok === false ? "refusal" : "err", result?.ok === false ? "Refus normal : plafond déjà atteint" : "Erreur : le dépassement aurait dû être refusé", result?.ok === false ? "Après 30 € virtuels exposés, l’app bloque tout nouvel achat simulé." : "Le simulateur n’a pas bloqué le dépassement.", result?.ok === false ? [ "Exposition maximale du profil : 30 €.", "Réserve minimale conservée : 70 €.", "La règle apprise : ne pas tout exposer, même en simulation." ] : [ "Ce test doit être revu." ]); return; }
-} /* ========================================================= V2.0-alpha · Build 28.0 — Atlas Auto Reader Ouverture page -> Livecheck auto -> snapshots -> lecture marché. ========================================================= */ const AUTO_MEMORY_KEY = "agent_crypto_erith_ia_auto_reader_v1_1_alpha_13";
+} /* ========================================================= V2.0-alpha · Build 28.1 — Atlas Auto Reader Ouverture page -> Livecheck auto -> snapshots -> lecture marché. ========================================================= */ const AUTO_MEMORY_KEY = "agent_crypto_erith_ia_auto_reader_v1_1_alpha_13";
 const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = localStorage.getItem(AUTO_MEMORY_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 } function writeAutoMemory(records) { let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : []; try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch { safe = safe.slice(Math.floor(safe.length / 2)); try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {} } return safe;
 } function compactCoinForAuto(c) { const s = scoreCoin(c); return { id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, rank: c.rank ?? null, price_eur: c.price ?? null, change_24h_pct: c.change24h ?? null, change_7d_pct: c.change7d ?? null, change_30d_pct: c.change30d ?? null, market_cap_eur: c.marketCap ?? null, volume_24h_eur: c.volume24h ?? null, category: classifyAsset(c), action: atlasActionForCoin(c), score: s.score, source: c.source || state.mainSource || null };
-} function makeAutoSnapshot() { const collectorId = getCollectorId(); const wanted = new Set(state.watchIds || []); const watch = state.coins.filter(c => wanted.has(c.id)); const leaders = state.coins.slice(0, 20); const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i); const created = new Date().toISOString(); return { id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, snapshot_id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, collector_id: collectorId, collector_type: "local_browser", saved_at: created, version: "V2.0-alpha · Build 28.0", source: state.mainSource || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS, global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null }, assets: merged.map(compactCoinForAuto) };
+} function makeAutoSnapshot() { const collectorId = getCollectorId(); const wanted = new Set(state.watchIds || []); const watch = state.coins.filter(c => wanted.has(c.id)); const leaders = state.coins.slice(0, 20); const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i); const created = new Date().toISOString(); return { id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, snapshot_id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, collector_id: collectorId, collector_type: "local_browser", saved_at: created, version: "V2.0-alpha · Build 28.1", source: state.mainSource || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS, global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null }, assets: merged.map(compactCoinForAuto) };
 } function lastAutoSnapshot() { const records = readAutoMemory(); return records.length ? records[records.length - 1] : null;
 } function saveAutoSnapshot() {
   if (!state.liveOk || !state.coins.length) return null;
@@ -6296,7 +6375,7 @@ const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = loc
       : [];
 
     els.autoReaderOutput.textContent = [
-      "ATLAS AUTO READER — V2.0-alpha · Build 28.0",
+      "ATLAS AUTO READER — V2.0-alpha · Build 28.1",
       "",
       `État réel : ${runtime}.`,
       atlasPulseVisible()
@@ -6481,7 +6560,7 @@ function atlasPersistMemoryTruth() {
       ATLAS_MEMORY_TRUTH_KEY,
       JSON.stringify({
         schema: "atlas_memory_truth_v1",
-        version: "V2.0-alpha · Build 28.0",
+        version: "V2.0-alpha · Build 28.1",
         savedAt: new Date().toISOString(),
         github: state.memoryTruth.github
       })
@@ -6884,7 +6963,7 @@ function atlasRenderMemoryCoverage() {
   }
 }
 
-function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConfigured()) { migrateLocalCollectorRecords(id, true); } const records = readAutoMemory(); const stats = collectorStats(records); const configured = isCollectorConfigured(); const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire."; const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué"; const last = records[records.length - 1]; if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id; if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer"; if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`; if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`; if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`; if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport; if (els.sharedMemoryOutput) { setSharedOutputStatus(configured ? "ok" : "warn"); els.sharedMemoryOutput.textContent = [ "ATLAS SHARED MARKET MEMORY — V2.0-alpha · Build 28.0", "", configured ? `✅ Machine configurée : ${id}` : `⚠️ Machine non finalisée : ${id}`, configured ? "Configuration : gardée automatiquement dans ce Firefox." : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / yohan-machine puis clique Sauver ID une fois.", "", "ÉTAT MÉMOIRE", `Total disponible : ${records.length} snapshots fusionnés`, `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`, last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun", `Dernière opération : ${lastImport}`, `Migration : ${migrationNote}`, "", "LECTURE SIMPLE", records.length ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine." : "Aucune donnée fusionnée pour l’instant.", stats.collectors.length > 1 ? "Plusieurs collecteurs sont présents dans la mémoire. Cela ne prouve pas que leurs machines fonctionnent encore actuellement." : "Un seul collecteur est présent dans la mémoire locale pour l’instant.", "", "RÈGLE", "Export/import fusionne les relevés sans écraser. La mémoire GitHub est lue automatiquement au démarrage ; cette page publique ne peut pas écrire dans GitHub." ].join("\n"); }
+function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConfigured()) { migrateLocalCollectorRecords(id, true); } const records = readAutoMemory(); const stats = collectorStats(records); const configured = isCollectorConfigured(); const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire."; const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué"; const last = records[records.length - 1]; if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id; if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer"; if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`; if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`; if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`; if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport; if (els.sharedMemoryOutput) { setSharedOutputStatus(configured ? "ok" : "warn"); els.sharedMemoryOutput.textContent = [ "ATLAS SHARED MARKET MEMORY — V2.0-alpha · Build 28.1", "", configured ? `✅ Machine configurée : ${id}` : `⚠️ Machine non finalisée : ${id}`, configured ? "Configuration : gardée automatiquement dans ce Firefox." : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / yohan-machine puis clique Sauver ID une fois.", "", "ÉTAT MÉMOIRE", `Total disponible : ${records.length} snapshots fusionnés`, `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`, last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun", `Dernière opération : ${lastImport}`, `Migration : ${migrationNote}`, "", "LECTURE SIMPLE", records.length ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine." : "Aucune donnée fusionnée pour l’instant.", stats.collectors.length > 1 ? "Plusieurs collecteurs sont présents dans la mémoire. Cela ne prouve pas que leurs machines fonctionnent encore actuellement." : "Un seul collecteur est présent dans la mémoire locale pour l’instant.", "", "RÈGLE", "Export/import fusionne les relevés sans écraser. La mémoire GitHub est lue automatiquement au démarrage ; cette page publique ne peut pas écrire dans GitHub." ].join("\n"); }
   renderMemoryTruth();
   atlasRenderMemoryCoverage();
 } function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
@@ -7195,7 +7274,7 @@ function initAtlasCollapsibleLayout() {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.0 — Audience V2 moteur de session
+   V2.0-alpha · Build 28.1 — Audience V2 moteur de session
    Événements uniques, séquence, journal local, heartbeat,
    état de livraison honnête et compatibilité console 26.42.
    La confirmation réception/déchiffrement/archive arrive en 26.45.
@@ -7425,7 +7504,7 @@ function atlasAudiencePayload(eventName, detail = {}, context = {}) {
     schema: "erith.audience.event.v2",
     audience_engine: "v2",
     app: "agent_crypto_erith_ia",
-    version: "V2.0-alpha · Build 28.0",
+    version: "V2.0-alpha · Build 28.1",
     event_id: context.eventId || atlasAudienceUuid("evt"),
     event: String(eventName || "event"),
     sequence: Number(context.sequence) || 0,
@@ -7596,7 +7675,7 @@ function atlasAudienceCloseSession(reason = "pagehide") {
 function atlasAudienceExportDiagnostic() {
   const payload = {
     schema: "erith.audience.client_diagnostic.v2",
-    version: "V2.0-alpha · Build 28.0",
+    version: "V2.0-alpha · Build 28.1",
     exported_at: new Date().toISOString(),
     visitor_id: atlasAudienceVisitorId(),
     member_id: atlasAudienceMember() || null,
@@ -7936,6 +8015,8 @@ function atlasInitV2Shell() {
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
 } atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
+atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
+atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
 atlasSafeBoot("Champagne Luxe Clean Lens", initAtlasCleanLensPanel);
 atlasSafeBoot("collapsible layout", initAtlasCollapsibleLayout);
 atlasSafeBoot("audience module", atlasInitAudienceModule);
@@ -7979,7 +8060,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core intégré V2.0-alpha · Build 28.0 Source: modules .md Atlas Math. Exécution: traduction JS condensée. Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
+} /* Atlas-10 Crypto — Math Core intégré V2.0-alpha · Build 28.1 Source: modules .md Atlas Math. Exécution: traduction JS condensée. Lecture seule : aucun ordre réel, aucune clé API, aucun capital engagé. */
 function atlasFmtPct(n) { return typeof n === "number" && Number.isFinite(n) ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "—";
 } function atlasFmtEUR(n) { return typeof n === "number" && Number.isFinite(n) ? fmtEUR.format(n) : "—";
 } function atlasSelectedCoin() { if (!Array.isArray(state.coins) || !state.coins.length) return null; return state.coins.find(c => c.id === state.selectedCoinId) || state.coins[0] || null;
@@ -8011,7 +8092,7 @@ setInterval(renderAtlasMathCore, 5000);
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.0 — NEWS SENTINEL SOURCE INTELLIGENCE
+   V2.0-alpha · Build 28.1 — NEWS SENTINEL SOURCE INTELLIGENCE
    Analyse déterministe locale, mémoire dédupliquée, aucun ordre réel.
    ========================================================= */
 const NEWS_SENTINEL_STORAGE_KEY = "agent_crypto_erith_ia_news_sentinel_v1";
@@ -8295,7 +8376,7 @@ function newsBuildAnalysis() {
     id: `news_${fingerprint}`,
     event_id: `news_${fingerprint}`,
     fingerprint,
-    version: "V2.0-alpha · Build 28.0",
+    version: "V2.0-alpha · Build 28.1",
     headline,
     body,
     source_name: sourceName || source.host,
@@ -8905,7 +8986,7 @@ function newsClearForm() {
 function newsExport() {
   const events = readNewsEvents();
   const payload = {
-    version: "V2.0-alpha · Build 28.0",
+    version: "V2.0-alpha · Build 28.1",
     exported_at: new Date().toISOString(),
     observation_only: true,
     warning: "Analyse événementielle locale. Aucun conseil financier, aucun ordre automatique.",
@@ -8977,7 +9058,7 @@ function initNewsSentinelV1() {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.0 — HELP LAYER V1
+   V2.0-alpha · Build 28.1 — HELP LAYER V1
    Aide contextuelle, exemples de saisie, carte marché au survol/focus.
    ========================================================= */
 const ATLAS_HELP_DEFINITIONS = Object.freeze({
