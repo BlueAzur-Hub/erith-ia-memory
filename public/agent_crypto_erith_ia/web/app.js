@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.31 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · DATA TRUTH · DIRECT CACHE TIMESTAMP LOCK
+/* V2.0-alpha · Build 28.1.32 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · MARKET MOVES EMPHASIS · NEWS SENTINEL RECOVERY
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.31";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.32";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -251,6 +251,14 @@ function atlasFormatEUR(value) { return atlasFormatCurrency(value, "EUR"); }
 function atlasFormatUSD(value) { return atlasFormatCurrency(value, "USD"); }
 const fmtPct = (n) => typeof n === "number" ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "Donnée manquante";
 const clsPct = (n) => typeof n !== "number" ? "neutral" : n > 0 ? "pos" : n < 0 ? "neg" : "neutral";
+const atlasMoveStrengthClass = (value) => {
+  const magnitude = Math.abs(Number(value));
+  if (!Number.isFinite(magnitude)) return "move-unknown";
+  if (magnitude >= 5) return "move-extreme";
+  if (magnitude >= 2) return "move-strong";
+  if (magnitude >= 1) return "move-medium";
+  return "move-soft";
+};
 const clamp = (min, max, value) => Math.max(min, Math.min(max, value)); function setText(el, value) { if (el) el.textContent = value;
 } function setTableDecision(text, mode = "") { setText(els.sourceDecision, text); setText(els.tableDecision, text); for (const el of [els.sourceDecision, els.tableDecision]) { if (!el) continue; el.classList.remove("ok", "fail", "warn"); if (mode) el.classList.add(mode); }
 } function setHTML(el, value) { if (el) el.innerHTML = value;
@@ -807,7 +815,7 @@ function atlasPatchTickerSpot(changedIds = []) {
       const change = item.querySelector(".top5-change");
       if (price) price.textContent = atlasFormatEUR(coin.priceEur ?? coin.price);
       if (change) {
-        change.className = `top5-change ${clsPct(coin.change24h)}`;
+        change.className = `top5-change ${clsPct(coin.change24h)} ${atlasMoveStrengthClass(coin.change24h)}`;
         change.textContent = atlasFmtMarketPct(coin.change24h);
       }
     });
@@ -817,7 +825,7 @@ function atlasPatchTickerSpot(changedIds = []) {
       const change = item.querySelector(".ticker-change");
       if (price) price.textContent = atlasFormatEUR(coin.priceEur ?? coin.price);
       if (change) {
-        change.className = `ticker-change ${clsPct(coin.change24h)}`;
+        change.className = `ticker-change ${clsPct(coin.change24h)} ${atlasMoveStrengthClass(coin.change24h)}`;
         change.textContent = atlasFmtMarketPct(coin.change24h);
       }
     });
@@ -3721,7 +3729,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.31: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.32: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -4121,7 +4129,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.31.
+  Internal package Build 28.1.32.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -6694,7 +6702,7 @@ function atlasRenderTopFiveRibbon() {
   }
 
   const cards = atlasTopFiveCoins().map((coin, index) => {
-    const variationClass = clsPct(coin.change24h);
+    const variationClass = `${clsPct(coin.change24h)} ${atlasMoveStrengthClass(coin.change24h)}`;
     const image = coin.image
       ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy">`
       : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
@@ -6721,7 +6729,7 @@ function atlasRenderMarketFlowRibbon() {
 
   const flow = atlasMarketFlowCoins();
   const items = flow.map((coin, index) => {
-    const variationClass = clsPct(coin.change24h);
+    const variationClass = `${clsPct(coin.change24h)} ${atlasMoveStrengthClass(coin.change24h)}`;
     return `
       <span class="ticker-item" data-ticker-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ouvrir ${escapeHtml(coin.symbol)} en solo ; Maj ou Ctrl pour comparer" style="${atlasRibbonStyle(coin, index + 5)}">
         <i class="ticker-crypto-accent" aria-hidden="true"></i>
@@ -6816,7 +6824,7 @@ function renderMarketTable() {
   els.marketRows.innerHTML=rows.map(c=>{
     const s=scoreCoin(c),compared=selection.includes(c.id),primary=c.id===state.selectedCoinId&&compared,watched=state.watchIds.includes(c.id);
     const compareLabel=compared?"Retirer":"Ajouter";
-    return `<tr class="asset-row ${primary?'is-selected':''} ${compared?'is-compared':''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c,Math.max(0,Number(c.rank||1)-1))}" tabindex="0" role="button" aria-pressed="${compared?'true':'false'}" aria-label="${escapeHtml(`${c.name}. ${compared?'Retirer de':'Ajouter à'} la comparaison.`)}"><td>${c.rank??'—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image?`<img src="${escapeHtml(c.image)}" alt="" loading="lazy">`:''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur??c.price)}</b><small>${atlasHasPositiveQuote(c.priceUsd)?atlasFormatUSD(c.priceUsd):'USD —'}</small></div></td><td class="${clsPct(c.change24h)}">${atlasFmtMarketPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared?'is-on':''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared?'true':'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared?'de':'à'} la comparaison">${compareLabel}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score??'—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched?'is-on':''}">${watched?'Suivi':'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note?`<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>`:''}</td></tr>`;
+    return `<tr class="asset-row ${primary?'is-selected':''} ${compared?'is-compared':''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c,Math.max(0,Number(c.rank||1)-1))}" tabindex="0" role="button" aria-pressed="${compared?'true':'false'}" aria-label="${escapeHtml(`${c.name}. ${compared?'Retirer de':'Ajouter à'} la comparaison.`)}"><td>${c.rank??'—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image?`<img src="${escapeHtml(c.image)}" alt="" loading="lazy">`:''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur??c.price)}</b><small>${atlasHasPositiveQuote(c.priceUsd)?atlasFormatUSD(c.priceUsd):'USD —'}</small></div></td><td class="market-move-cell ${clsPct(c.change24h)} ${atlasMoveStrengthClass(c.change24h)}">${atlasFmtMarketPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared?'is-on':''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared?'true':'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared?'de':'à'} la comparaison">${compareLabel}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score??'—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched?'is-on':''}">${watched?'Suivi':'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note?`<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>`:''}</td></tr>`;
   }).join("");
   const updated=state.timestamp?new Date(state.timestamp).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"—";
   const essential=atlasV2Mode()==="essential";
@@ -9143,7 +9151,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · DATA TRUTH · DIRECT CACHE TIMESTAMP LOCK`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · MARKET MOVES EMPHASIS · NEWS SENTINEL RECOVERY`
   );
 }
 
@@ -9987,6 +9995,7 @@ window.setInterval(atlasRefreshMathFreshnessOnly, 60 * 1000);
 const NEWS_SENTINEL_STORAGE_KEY = "agent_crypto_erith_ia_news_sentinel_v1";
 const NEWS_SENTINEL_MAX_EVENTS = 120;
 const NEWS_SENTINEL_FEED_URL = "../data/news/latest.json";
+const NEWS_SENTINEL_FEED_CACHE_KEY = "agent_crypto_erith_ia_news_feed_cache_v1";
 const NEWS_SENTINEL_FEED_REFRESH_MS = 5 * 60 * 1000;
 const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
@@ -10348,6 +10357,313 @@ function newsFeedValidate(payload) {
   return payload;
 }
 
+
+function newsFeedEventTimestamp(event) {
+  const parsed = Date.parse(
+    event?.event_time
+    || event?.published_at
+    || event?.updated_at
+    || ""
+  );
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function newsFeedStemToken(token) {
+  const value = String(token || "");
+  const aliases = {
+    filing: "file",
+    files: "file",
+    filed: "file",
+    pools: "pool",
+    bankruptcy: "bankrupt",
+    bankruptcies: "bankrupt",
+    biggest: "big",
+    larger: "large",
+    largest: "large"
+  };
+  if (aliases[value]) return aliases[value];
+  if (value.length > 5 && value.endsWith("ing")) return value.slice(0, -3);
+  if (value.length > 4 && value.endsWith("ed")) return value.slice(0, -2);
+  if (value.length > 4 && value.endsWith("s")) return value.slice(0, -1);
+  return value;
+}
+
+function newsFeedEventTokens(event) {
+  const stopWords = new Set([
+    "the", "a", "an", "of", "to", "for", "and", "or", "in", "on", "at",
+    "is", "are", "was", "were", "be", "its", "it", "this", "that", "with",
+    "de", "du", "des", "la", "le", "les", "un", "une", "et", "ou", "en",
+    "sur", "pour", "dans", "est", "sont", "son", "sa", "ses", "au", "aux",
+    "now", "as", "after", "before", "from", "by", "into", "about", "once",
+    "one"
+  ]);
+
+  return new Set(
+    newsNormalize(`${event?.headline || ""} ${event?.event_label || ""}`)
+      .split(" ")
+      .map(newsFeedStemToken)
+      .filter(token =>
+        token.length >= 3
+        && !stopWords.has(token)
+      )
+  );
+}
+
+function newsFeedContainmentSimilarity(left, right) {
+  const a = newsFeedEventTokens(left);
+  const b = newsFeedEventTokens(right);
+  if (!a.size || !b.size) return 0;
+
+  let intersection = 0;
+  for (const token of a) {
+    if (b.has(token)) intersection += 1;
+  }
+
+  return intersection / Math.min(a.size, b.size);
+}
+
+function newsFeedEventsEquivalent(left, right) {
+  if (!left || !right) return false;
+
+  const leftType = String(
+    left.event_type
+    || left.event_label
+    || ""
+  ).toLowerCase();
+  const rightType = String(
+    right.event_type
+    || right.event_label
+    || ""
+  ).toLowerCase();
+
+  if (leftType && rightType && leftType !== rightType) return false;
+
+  const leftTime = newsFeedEventTimestamp(left);
+  const rightTime = newsFeedEventTimestamp(right);
+  if (
+    leftTime
+    && rightTime
+    && Math.abs(leftTime - rightTime) > 72 * 60 * 60 * 1000
+  ) {
+    return false;
+  }
+
+  const leftAssets = new Set(
+    Array.isArray(left.assets) ? left.assets : []
+  );
+  const rightAssets = new Set(
+    Array.isArray(right.assets) ? right.assets : []
+  );
+  const sharedAsset = [...leftAssets].some(asset =>
+    rightAssets.has(asset)
+  );
+
+  const similarity = newsFeedContainmentSimilarity(left, right);
+  return similarity >= 0.74 || (sharedAsset && similarity >= 0.62);
+}
+
+function newsFeedSourceLink(event) {
+  const url = newsSafeUrl(event?.source_url);
+  const host = String(
+    event?.source_host
+    || event?.source_name
+    || ""
+  ).trim();
+
+  if (!url && !host) return null;
+
+  return {
+    url,
+    host: host || (() => {
+      try {
+        return new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        return "Source";
+      }
+    })()
+  };
+}
+
+function newsMergeEquivalentEvents(primary, incoming) {
+  const leftEvidence = Number(primary?.evidence?.score || 0);
+  const rightEvidence = Number(incoming?.evidence?.score || 0);
+  const leftImpact = Number(primary?.impact?.score || 0);
+  const rightImpact = Number(incoming?.impact?.score || 0);
+
+  const preferred = (
+    rightEvidence > leftEvidence
+    || (
+      rightEvidence === leftEvidence
+      && rightImpact > leftImpact
+    )
+  )
+    ? incoming
+    : primary;
+
+  const secondary = preferred === incoming ? primary : incoming;
+  const sourceLinks = [
+    ...(Array.isArray(primary.source_links)
+      ? primary.source_links
+      : [newsFeedSourceLink(primary)]),
+    ...(Array.isArray(incoming.source_links)
+      ? incoming.source_links
+      : [newsFeedSourceLink(incoming)])
+  ].filter(Boolean);
+
+  const uniqueLinks = [];
+  const seen = new Set();
+
+  for (const link of sourceLinks) {
+    const key = `${link.host || ""}|${link.url || ""}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    uniqueLinks.push(link);
+  }
+
+  return {
+    ...secondary,
+    ...preferred,
+    assets: [
+      ...new Set([
+        ...(Array.isArray(primary.assets) ? primary.assets : []),
+        ...(Array.isArray(incoming.assets) ? incoming.assets : [])
+      ])
+    ],
+    sectors: [
+      ...new Set([
+        ...(Array.isArray(primary.sectors) ? primary.sectors : []),
+        ...(Array.isArray(incoming.sectors) ? incoming.sectors : [])
+      ])
+    ],
+    source_links: uniqueLinks,
+    source_count: Math.max(
+      Number(primary.source_count || 1),
+      Number(incoming.source_count || 1),
+      uniqueLinks.length
+    ),
+    confirmations: Math.max(
+      Number(primary.confirmations || 1),
+      Number(incoming.confirmations || 1),
+      uniqueLinks.length
+    ),
+    merged_event_ids: [
+      ...new Set([
+        ...(Array.isArray(primary.merged_event_ids)
+          ? primary.merged_event_ids
+          : [primary.id].filter(Boolean)),
+        ...(Array.isArray(incoming.merged_event_ids)
+          ? incoming.merged_event_ids
+          : [incoming.id].filter(Boolean))
+      ])
+    ],
+    deduplicated: true
+  };
+}
+
+function newsDeduplicateFeedEvents(events) {
+  const unique = [];
+
+  for (const event of [...(Array.isArray(events) ? events : [])]
+    .sort((a, b) => newsFeedEventTimestamp(b) - newsFeedEventTimestamp(a))) {
+    const duplicateIndex = unique.findIndex(candidate =>
+      newsFeedEventsEquivalent(candidate, event)
+    );
+
+    if (duplicateIndex < 0) {
+      unique.push({
+        ...event,
+        source_links: [newsFeedSourceLink(event)].filter(Boolean),
+        merged_event_ids: [event.id].filter(Boolean)
+      });
+    } else {
+      unique[duplicateIndex] = newsMergeEquivalentEvents(
+        unique[duplicateIndex],
+        event
+      );
+    }
+  }
+
+  return unique.sort((a, b) => {
+    const impact =
+      Number(b?.impact?.score || 0)
+      - Number(a?.impact?.score || 0);
+    return impact || (
+      newsFeedEventTimestamp(b)
+      - newsFeedEventTimestamp(a)
+    );
+  });
+}
+
+function newsFeedReadCache() {
+  try {
+    const cached = JSON.parse(
+      localStorage.getItem(
+        NEWS_SENTINEL_FEED_CACHE_KEY
+      ) || "null"
+    );
+    return newsFeedValidate(cached);
+  } catch {
+    return null;
+  }
+}
+
+function newsFeedWriteCache(payload) {
+  try {
+    localStorage.setItem(
+      NEWS_SENTINEL_FEED_CACHE_KEY,
+      JSON.stringify(payload)
+    );
+  } catch {}
+}
+
+function newsFeedApplyPayload(payload, options = {}) {
+  const validated = newsFeedValidate(payload);
+  const events = newsDeduplicateFeedEvents(validated.events);
+
+  const applied = {
+    ...validated,
+    events,
+    summary: {
+      ...validated.summary,
+      raw_event_count: validated.events.length,
+      unique_event_count: events.length
+    }
+  };
+
+  newsFeedState.payload = applied;
+  newsFeedState.events = events;
+  newsFeedState.status = options.cached
+    ? "partial"
+    : applied.status === "partial"
+      ? "partial"
+      : applied.status === "pending"
+        ? "pending"
+        : applied.status === "error"
+          ? "error"
+          : "ok";
+
+  if (options.cached) newsFeedState.archiveChanged = false;
+  return applied;
+}
+
+function newsFeedUniqueStats() {
+  const cutoff24h = Date.now() - 24 * 60 * 60 * 1000;
+  const recent = newsFeedState.events.filter(event => {
+    const timestamp = newsFeedEventTimestamp(event);
+    return timestamp > 0 && timestamp >= cutoff24h;
+  });
+
+  return {
+    events24: recent.length,
+    priority24: recent.filter(event =>
+      Number(event?.impact?.score || 0) >= 68
+    ).length,
+    critical24: recent.filter(event =>
+      Number(event?.impact?.score || 0) >= 85
+    ).length
+  };
+}
+
 function newsFeedLeadEvent() {
   if (!newsFeedState.events.length) return null;
   const selected = newsFeedState.selectedId
@@ -10476,9 +10792,9 @@ function newsFeedStatusText() {
 }
 
 function newsFeedTone() {
-  const summary = newsFeedState.payload?.summary || {};
-  if (Number(summary.critical_24h || 0) > 0) return "danger";
-  if (Number(summary.strong_24h || 0) > 0 || newsFeedState.status === "partial") return "warn";
+  const uniqueStats = newsFeedUniqueStats();
+  if (uniqueStats.critical24 > 0) return "danger";
+  if (uniqueStats.priority24 > 0 || newsFeedState.status === "partial") return "warn";
   if (newsFeedState.status === "ok") return "ok";
   return "neutral";
 }
@@ -10500,10 +10816,24 @@ function renderNewsFeedList() {
     return;
   }
   list.innerHTML = events.map(event => {
+    const sourceLinks = (
+      Array.isArray(event.source_links)
+        ? event.source_links
+        : [newsFeedSourceLink(event)]
+    ).filter(link => link && (link.url || link.host));
     const url = newsSafeUrl(event.source_url);
     const tone = newsToneClass(event?.decision?.tone);
-    const sourceCount = Number(event.source_count || 1);
-    const sourceLabel = sourceCount > 1 ? `${sourceCount} sources concordantes` : (event.source_name || event.source_host || "Source");
+    const sourceCount = Math.max(
+      Number(event.source_count || 1),
+      sourceLinks.length
+    );
+    const sourceLabel = sourceCount > 1
+      ? `${sourceCount} sources concordantes`
+      : (
+          event.source_name
+          || event.source_host
+          || "Source"
+        );
     const meta = [
       `${event?.impact?.level || "Impact à qualifier"} ${Number(event?.impact?.score || 0)}/100`,
       `preuve ${String(event?.evidence?.level || "inconnue").toLowerCase()}`,
@@ -10521,7 +10851,19 @@ function renderNewsFeedList() {
         </button>
         <div class="news-live-source-row">
           <small>${escapeHtml(sourceLabel)} · ${escapeHtml(event.source_class || "Source qualifiée")}</small>
-          ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Source ↗</a>` : ""}
+          <span class="news-live-source-links">
+            ${
+              sourceLinks.length
+                ? sourceLinks.slice(0, 3).map((link, index) =>
+                    link.url
+                      ? `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.host || `Source ${index + 1}`)} ↗</a>`
+                      : `<span>${escapeHtml(link.host)}</span>`
+                  ).join("")
+                : url
+                  ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Source ↗</a>`
+                  : ""
+            }
+          </span>
         </div>
       </article>`;
   }).join("");
@@ -10530,8 +10872,9 @@ function renderNewsFeedList() {
 function renderNewsFeedOverview() {
   const payload = newsFeedState.payload || {};
   const summary = payload.summary || {};
-  const events24 = Number(summary.events_24h || 0);
-  const priority24 = Number(summary.critical_24h || 0) + Number(summary.strong_24h || 0);
+  const uniqueStats = newsFeedUniqueStats();
+  const events24 = uniqueStats.events24;
+  const priority24 = uniqueStats.priority24;
   const sourcesOk = Number(summary.sources_ok || 0);
   const sourcesTotal = Number(summary.sources_total || 0);
   const sourcesFailed = Number(summary.sources_failed || 0);
@@ -10572,9 +10915,17 @@ function renderNewsFeedOverview() {
         ? "Contrôle automatique en cours"
         : `Archive vérifiée à ${checkedLabel} · prochaine relecture ${newsFeedCountdownLabel()}`
   );
-  setText($("newsSentinelFeedCount"), `Flux ${newsFeedState.events.length} événement${newsFeedState.events.length > 1 ? "s" : ""}`);
+  setText(
+    $("newsSentinelFeedCount"),
+    `Flux ${newsFeedState.events.length} événement${newsFeedState.events.length > 1 ? "s" : ""} unique${newsFeedState.events.length > 1 ? "s" : ""}`
+  );
   setText($("newsCollapseState"), newsFeedStatusText());
-  setText($("newsCollapseMeta"), generatedAt ? `${events24} sur 24 h · ${newsFeedAgeLabel(generatedAt)}` : "archive GitHub");
+  setText(
+    $("newsCollapseMeta"),
+    generatedAt
+      ? `${events24} uniques sur 24 h · ${newsFeedAgeLabel(generatedAt)}`
+      : "archive GitHub"
+  );
 
   setText(
     $("newsPageReadState"),
@@ -10629,8 +10980,9 @@ function newsCurrentEvent(manualEvent = null) {
 window.atlasNewsDecisionRiskLine = function atlasNewsDecisionRiskLine() {
   const summary = newsFeedState.payload?.summary || {};
   if (newsFeedState.status === "ok" || newsFeedState.status === "partial") {
-    const count = Number(summary.events_24h || 0);
-    const priority = Number(summary.critical_24h || 0) + Number(summary.strong_24h || 0);
+    const uniqueStats = newsFeedUniqueStats();
+    const count = uniqueStats.events24;
+    const priority = uniqueStats.priority24;
     return `News Sentinel : ${count} événement${count > 1 ? "s" : ""} qualifié${count > 1 ? "s" : ""} sur 24 h, ${priority} prioritaire${priority > 1 ? "s" : ""}. Sécurité, social et on-chain restent à confirmer.`;
   }
   if (newsFeedState.status === "error") return "News Sentinel indisponible : aucune nouvelle n’est inventée. Sécurité, social et on-chain restent à confirmer.";
@@ -10670,23 +11022,19 @@ async function loadNewsLiveFeed(options = {}) {
     );
 
     const fingerprint = newsFeedFingerprint(payload);
-    newsFeedState.archiveChanged = previousFingerprint ? fingerprint !== previousFingerprint : true;
+    newsFeedState.archiveChanged = previousFingerprint
+      ? fingerprint !== previousFingerprint
+      : true;
     newsFeedState.lastArchiveFingerprint = fingerprint;
-    newsVisitCompare(payload);
-    newsFeedState.payload = payload;
+
+    const appliedPayload = newsFeedApplyPayload(
+      payload,
+      { cached: false }
+    );
+
+    newsVisitCompare(appliedPayload);
+    newsFeedWriteCache(payload);
     newsFeedState.startupSucceeded = true;
-    newsFeedState.events = [...payload.events].sort((a, b) => {
-      const impact = Number(b?.impact?.score || 0) - Number(a?.impact?.score || 0);
-      if (impact) return impact;
-      return Date.parse(b.event_time || 0) - Date.parse(a.event_time || 0);
-    });
-    newsFeedState.status = payload.status === "partial"
-      ? "partial"
-      : payload.status === "pending"
-        ? "pending"
-        : payload.status === "error"
-          ? "error"
-          : "ok";
     newsFeedState.lastLoadedAt = new Date().toISOString();
     newsFeedState.lastCheckedAt = newsFeedState.lastLoadedAt;
     newsFeedState.consecutiveFailures = 0;
@@ -10705,10 +11053,18 @@ async function loadNewsLiveFeed(options = {}) {
     if (previousEvents.length) {
       newsFeedState.payload = previousPayload;
       newsFeedState.events = previousEvents;
-      newsFeedState.status = previousStatus === "loading" || previousStatus === "idle" ? "partial" : previousStatus;
+      newsFeedState.status = "partial";
       newsFeedState.archiveChanged = false;
     } else {
-      newsFeedState.status = "error";
+      const cachedPayload = newsFeedReadCache();
+      if (cachedPayload) {
+        newsFeedApplyPayload(
+          cachedPayload,
+          { cached: true }
+        );
+      } else {
+        newsFeedState.status = "error";
+      }
     }
 
     newsFeedSchedule(newsFeedRetryDelay());
@@ -10936,6 +11292,14 @@ function initNewsSentinelV1() {
   window.addEventListener("online", () => {
     if (newsFeedVisible()) void loadNewsLiveFeed({ automatic: true });
   });
+
+  const cachedPayload = newsFeedReadCache();
+  if (cachedPayload) {
+    newsFeedApplyPayload(
+      cachedPayload,
+      { cached: true }
+    );
+  }
 
   renderNewsFeedOverview();
   renderNewsSentinel();
