@@ -9010,3 +9010,400 @@ a.source-portal:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2.8
+   GRAPH-FIRST COMPARISON COMPLETION LOCK
+   ========================================================= */
+
+#analyste.champagne-clean-lens .compare-chip.is-pending {
+  border-color: rgba(255, 216, 122, .34);
+  opacity: 1;
+  filter: none;
+  background:
+    linear-gradient(90deg, rgba(255,216,122,.08), rgba(5,15,28,.78));
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-pending::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  margin-left: 3px;
+  border: 1px solid rgba(255,240,200,.72);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: atlasComparisonPendingSpin 1.15s linear infinite;
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-pending small {
+  color: rgba(209,224,240,.62);
+}
+
+#analyste.champagne-clean-lens .compare-chip.is-pending .compare-chip-main {
+  text-decoration: none;
+}
+
+.compare-hint-progress {
+  color: rgba(255,240,200,.82) !important;
+}
+
+.chart-caption .chart-caption-text {
+  white-space: normal;
+}
+
+@keyframes atlasComparisonPendingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #analyste.champagne-clean-lens .compare-chip.is-pending::after {
+    animation: none;
+    border-top-color: rgba(255,240,200,.72);
+  }
+}
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.3.0
+   WATCHLIST MEMORY & ALERT CONDITIONS + GITHUB RUNTIME RECOVERY
+   ========================================================= */
+
+.watch-v3-panel {
+  min-width: 0;
+}
+
+.watch-v3-status-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.watch-v3-add-row {
+  grid-template-columns: minmax(180px, 1.15fr) minmax(180px, .85fr) auto auto !important;
+}
+
+.watch-memory-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.watch-memory-kpis article {
+  min-width: 0;
+  min-height: 54px;
+  padding: 8px 9px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 10px;
+  background: rgba(2,10,20,.5);
+}
+
+.watch-memory-kpis span {
+  color: rgba(255,240,200,.63);
+  font: 800 7px/1 system-ui, sans-serif;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.watch-memory-kpis b {
+  overflow: hidden;
+  color: #eaf8ff;
+  font: 880 9px/1.15 system-ui, sans-serif;
+  text-overflow: ellipsis;
+}
+
+.watch-alert-console,
+.watch-memory-assets-disclosure,
+.watch-trigger-history {
+  margin-top: 8px;
+  border: 1px solid rgba(98,236,255,.15);
+  border-radius: 12px;
+  background: rgba(2,10,20,.42);
+}
+
+.watch-alert-console > summary,
+.watch-memory-assets-disclosure > summary,
+.watch-trigger-history > summary {
+  padding: 9px 10px;
+  cursor: pointer;
+  color: #fff0c8;
+  font: 850 9px/1.2 system-ui, sans-serif;
+}
+
+.watch-alert-editor {
+  padding: 0 10px 10px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr .85fr 1.25fr auto;
+  gap: 6px;
+  align-items: end;
+}
+
+.watch-alert-editor label {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.watch-alert-editor label > span {
+  color: rgba(255,240,200,.62);
+  font: 790 7px/1 system-ui, sans-serif;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.watch-alert-editor input,
+.watch-alert-editor select {
+  min-width: 0;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 9px;
+  background: rgba(2,10,20,.82);
+  color: #edf8ff;
+  font: 780 9px/1 system-ui, sans-serif;
+}
+
+.watch-alert-rule {
+  margin: 0;
+  padding: 0 10px 10px;
+  color: rgba(190,211,228,.67);
+  font: 730 7.5px/1.25 system-ui, sans-serif;
+}
+
+.watch-alert-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.watch-alert-card {
+  min-width: 0;
+  padding: 9px;
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 11px;
+  background: rgba(3,11,22,.58);
+}
+
+.watch-alert-card[data-state="reached"] {
+  border-color: rgba(255,184,84,.48);
+  box-shadow: inset 3px 0 0 rgba(255,184,84,.82);
+}
+
+.watch-alert-card[data-state="watching"] {
+  border-color: rgba(98,236,255,.22);
+}
+
+.watch-alert-card[data-state="disabled"] {
+  opacity: .58;
+}
+
+.watch-alert-card[data-state="unavailable"] {
+  border-style: dashed;
+}
+
+.watch-alert-card-head,
+.watch-alert-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+}
+
+.watch-alert-card-head b {
+  overflow: hidden;
+  color: #fff0c8;
+  font: 900 9px/1.1 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watch-alert-card-head span {
+  color: #8eefff;
+  font: 800 7px/1 system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.watch-alert-card strong {
+  color: #edf8ff;
+  font: 900 10px/1.1 system-ui, sans-serif;
+}
+
+.watch-alert-card small,
+.watch-alert-card em {
+  color: rgba(190,211,228,.67);
+  font: 730 7.4px/1.25 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.watch-alert-card-actions button,
+.watch-memory-asset button {
+  padding: 5px 7px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  background: rgba(5,18,32,.74);
+  color: #dff7ff;
+  font: 790 7px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.watch-memory-assets {
+  max-height: 330px;
+  padding: 0 9px 9px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 6px;
+  overflow: auto;
+}
+
+.watch-memory-asset {
+  min-width: 0;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "identity price"
+    "metrics metrics"
+    "note action";
+  gap: 5px 8px;
+  border: 1px solid rgba(255,216,122,.14);
+  border-radius: 10px;
+  background: rgba(3,11,22,.48);
+}
+
+.watch-memory-asset > div {
+  grid-area: identity;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.watch-memory-asset > div b {
+  color: #fff0c8;
+  font: 900 9px/1 system-ui, sans-serif;
+}
+
+.watch-memory-asset > div span {
+  overflow: hidden;
+  color: rgba(191,211,227,.62);
+  font: 720 7px/1 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watch-memory-asset strong {
+  grid-area: price;
+  color: #eaf8ff;
+  font: 880 9px/1 system-ui, sans-serif;
+}
+
+.watch-memory-asset small {
+  grid-area: metrics;
+  color: #8eefff;
+  font: 760 7px/1.2 system-ui, sans-serif;
+}
+
+.watch-memory-asset em {
+  grid-area: note;
+  overflow: hidden;
+  color: rgba(190,211,228,.66);
+  font: 730 7px/1.2 system-ui, sans-serif;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watch-memory-asset button {
+  grid-area: action;
+}
+
+.watch-history-actions {
+  padding: 0 9px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.watch-history-actions span {
+  color: #8eefff;
+  font: 780 8px/1 system-ui, sans-serif;
+}
+
+.watch-history-list {
+  max-height: 300px;
+  padding: 0 9px 9px;
+  display: grid;
+  gap: 6px;
+  overflow: auto;
+}
+
+.watch-history-item {
+  padding: 8px;
+  display: grid;
+  gap: 4px;
+  border: 1px solid rgba(255,184,84,.16);
+  border-radius: 9px;
+  background: rgba(3,11,22,.5);
+}
+
+.watch-history-item b {
+  color: #fff0c8;
+  font: 880 8.5px/1.1 system-ui, sans-serif;
+}
+
+.watch-history-item span {
+  color: #eaf8ff;
+  font: 790 8px/1.15 system-ui, sans-serif;
+}
+
+.watch-history-item small,
+.watch-history-item em,
+.watch-empty {
+  color: rgba(190,211,228,.66);
+  font: 720 7.3px/1.25 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.watch-empty {
+  margin: 0;
+  padding: 9px;
+}
+
+@media (max-width: 1250px) {
+  .watch-alert-editor {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .watch-v3-add-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .watch-memory-kpis,
+  .watch-alert-editor {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .watch-v3-status-stack {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 500px) {
+  .watch-memory-kpis,
+  .watch-alert-editor,
+  .watch-v3-add-row,
+  .watch-alert-list,
+  .watch-memory-assets {
+    grid-template-columns: 1fr !important;
+  }
+}

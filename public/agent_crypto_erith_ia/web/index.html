@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.7 — MEMORY HISTORY COVERAGE & DATA QUALITY</title>
+  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.3.0 — WATCHLIST MEMORY & ALERT CONDITIONS + GITHUB RUNTIME RECOVERY</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.7-memory-history-coverage-quality" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.3.0-watchlist-alerts-github-runtime-recovery" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.7</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.3.0</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -708,22 +708,99 @@
       </summary>
       <div class="atlas-collapse-body">
     <section class="layout-two">
-      <article class="panel glass" id="watchlist">
+      <article class="panel glass watch-v3-panel" id="watchlist">
         <div class="section-head compact">
           <div>
-            <p class="eyebrow">WATCHLIST</p>
-            <h2>Actifs à observer — Atlas V2</h2>
+            <p class="eyebrow">WATCHLIST MEMORY & ALERT CONDITIONS</p>
+            <h2>Actifs à observer — Atlas V3</h2>
           </div>
-          <span class="pill watch-auto-pill">Atlas V2 auto</span>
+          <div class="watch-v3-status-stack">
+            <span class="pill ok" id="watchMemoryStatus">Mémoire locale</span>
+            <span class="pill" id="watchAlertStatus">0 condition</span>
+          </div>
         </div>
-        <div class="watch-v2-note" id="watchBasketSummary">Atlas Watchlist V2 auto : 34 actifs suivis · 8 paniers compacts.</div>
-        <div class="watch-inputs">
+
+        <div class="watch-v2-note" id="watchBasketSummary">
+          Atlas Watchlist V3 : mémoire persistante, conditions locales et aucun ordre automatique.
+        </div>
+
+        <div class="watch-inputs watch-v3-add-row">
           <input id="watchInput" type="text" placeholder="Ajouter : BTC, ETH, SOL, LINK, ONDO, TAO ou id CoinGecko" />
-          <button class="btn small primary" id="btnAddWatch">Ajouter</button>
+          <input id="watchNoteInput" type="text" maxlength="120" placeholder="Note facultative pour cet actif" />
+          <button class="btn small primary" id="btnAddWatch" type="button">Ajouter</button>
+          <button class="btn small" id="btnSeedWatch" type="button">Réinitialiser les paniers</button>
         </div>
+
+        <div class="watch-memory-kpis">
+          <article><span>Actifs mémorisés</span><b id="watchMemoryCount">0</b></article>
+          <article><span>Conditions actives</span><b id="watchConditionCount">0</b></article>
+          <article><span>Conditions atteintes</span><b id="watchTriggeredCount">0</b></article>
+          <article><span>Dernière évaluation</span><b id="watchLastEvaluation">Aucune</b></article>
+        </div>
+
+        <details class="watch-alert-console" open>
+          <summary>Créer une condition de surveillance</summary>
+          <div class="watch-alert-editor">
+            <label>
+              <span>Actif</span>
+              <select id="watchAlertCoin"></select>
+            </label>
+            <label>
+              <span>Mesure</span>
+              <select id="watchAlertMetric">
+                <option value="price_eur">Prix EUR</option>
+                <option value="change_24h">Variation 24 h</option>
+                <option value="math_score">Score Math</option>
+                <option value="volume_24h">Volume 24 h EUR</option>
+              </select>
+            </label>
+            <label>
+              <span>Condition</span>
+              <select id="watchAlertOperator">
+                <option value="gte">Supérieur ou égal à</option>
+                <option value="lte">Inférieur ou égal à</option>
+              </select>
+            </label>
+            <label>
+              <span>Seuil</span>
+              <input id="watchAlertThreshold" type="number" step="any" placeholder="Ex. 50000, -5 ou 75" />
+            </label>
+            <label class="watch-alert-note-field">
+              <span>Note</span>
+              <input id="watchAlertNote" type="text" maxlength="140" placeholder="Raison de la surveillance" />
+            </label>
+            <button class="btn small primary" id="btnAddWatchAlert" type="button">Ajouter la condition</button>
+          </div>
+          <p class="watch-alert-rule">
+            Évaluation locale sur le marché déjà chargé : aucune requête CoinGecko supplémentaire, aucune transaction, aucune notification système.
+          </p>
+        </details>
+
+        <div class="watch-alert-list" id="watchAlertList">
+          <p class="watch-empty">Aucune condition enregistrée.</p>
+        </div>
+
+        <details class="watch-memory-assets-disclosure">
+          <summary>Mémoire des actifs suivis</summary>
+          <div class="watch-memory-assets" id="watchMemoryAssets">
+            <p class="watch-empty">Aucun actif mémorisé.</p>
+          </div>
+        </details>
+
         <div class="cards" id="watchCards">
           <div class="mini-card muted">Aucune donnée watchlist chargée.</div>
         </div>
+
+        <details class="watch-trigger-history">
+          <summary>Historique local des conditions atteintes</summary>
+          <div class="watch-history-actions">
+            <span id="watchHistoryCount">0 déclenchement</span>
+            <button class="btn small danger" id="btnClearWatchHistory" type="button">Vider l’historique</button>
+          </div>
+          <div class="watch-history-list" id="watchHistoryList">
+            <p class="watch-empty">Aucun déclenchement mémorisé.</p>
+          </div>
+        </details>
       </article>
 
       <article class="panel glass" id="risques">
@@ -2203,6 +2280,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha-build-27.2.7-memory-history-coverage-quality"></script>
+  <script src="./app.js?v=1.1-alpha-build-27.3.0-watchlist-alerts-github-runtime-recovery"></script>
 </body>
 </html>
