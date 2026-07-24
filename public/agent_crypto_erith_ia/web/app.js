@@ -1,7 +1,7 @@
-/* V1.1-alpha.26.47.6.3 — CHAMPAGNE LUXE PENTHOUSE XXL DUAL MARKET RIBBON LOCK
-   Bandeau 1 : Top 5 marché fixe avec logo, prix EUR et variation 24 h.
-   Bandeau 2 : Market Flow défilant, hors Top 5.
-   Couleur crypto déterministe, indépendante du rang et de la sélection.
+/* V1.1-alpha.26.47.6.4 — CHAMPAGNE LUXE HOSTEL ROOM XXL TARGET TOP COIN LOCK
+   Target Top 3 : BTC · ETH · BNB.
+   Target Top 5 : BTC · ETH · BNB · XRP · SOL.
+   Bandeau fixe Top 5 mis à jour par le spot 30 secondes.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -771,7 +771,7 @@ const SourceAdapter = {
   },
 
   async coingeckoSpotForIds(ids, options = {}) {
-    const cleanIds = [...new Set((ids || []).filter(Boolean))].slice(0, ATLAS_COMPARISON_MAX_SERIES);
+    const cleanIds = [...new Set((ids || []).filter(Boolean))].slice(0, 10);
     if (!cleanIds.length) return { quotes: Object.create(null), updatedAt: null };
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(cleanIds.join(","))}&vs_currencies=eur,usd&include_24hr_change=true&include_last_updated_at=true&precision=full`;
     const payload = await fetchJsonWithRetry(url, { signal: options.signal }, 10000, 1);
@@ -955,10 +955,13 @@ function atlasRestorePreviousSnapshot(previous, error, context = "Actualisation"
 function atlasDelay(ms) { return new Promise(resolve => setTimeout(resolve, Math.max(0, Number(ms) || 0))); }
 
 function atlasPulseSelectedIds() {
+  const fixedTopFive = atlasCuratedTopIds(5);
   const selected = atlasComparisonIds();
   const fallback = state.selectedCoinId ? [state.selectedCoinId] : [];
-  return [...new Set((selected.length ? selected : fallback).filter(id => state.coins.some(coin => coin.id === id)))]
-    .slice(0, ATLAS_COMPARISON_MAX_SERIES);
+  return [...new Set(
+    [...fixedTopFive, ...(selected.length ? selected : fallback)]
+      .filter(id => state.coins.some(coin => coin.id === id))
+  )].slice(0, 10);
 }
 
 function atlasScheduleSpotPulse(delayMs = ATLAS_SPOT_REFRESH_MS) {
@@ -1534,6 +1537,33 @@ const ATLAS_COMPARISON_COLORS = [
   "#14F195"
 ];
 
+const ATLAS_CURATED_TOP3_IDS = Object.freeze([
+  "bitcoin",
+  "ethereum",
+  "binancecoin"
+]);
+
+const ATLAS_CURATED_TOP5_IDS = Object.freeze([
+  "bitcoin",
+  "ethereum",
+  "binancecoin",
+  "ripple",
+  "solana"
+]);
+
+function atlasCuratedTopIds(limit = 5) {
+  return Number(limit) <= 3
+    ? [...ATLAS_CURATED_TOP3_IDS]
+    : [...ATLAS_CURATED_TOP5_IDS];
+}
+
+function atlasCuratedTopCoins(limit = 5) {
+  const byId = new Map((state.coins || []).map(coin => [coin.id, coin]));
+  return atlasCuratedTopIds(limit)
+    .map(id => byId.get(id))
+    .filter(Boolean);
+}
+
 function atlasCryptoPalette(coin, fallbackIndex = 0) {
   const id = String(coin?.id || "").toLowerCase();
   const symbol = String(coin?.symbol || "").toUpperCase();
@@ -1766,20 +1796,41 @@ function atlasResetComparison(coin = getSelectedCoin() || state.coins?.[0] || nu
 
 function atlasSelectTopComparison(limit = 3) {
   if (!state.liveOk || !state.coins.length) return;
-  const count = Math.max(2, Math.min(ATLAS_COMPARISON_MAX_SERIES, Number(limit) || 3));
-  const ranked = [...state.coins].sort((a, b) => Number(a.rank || 999999) - Number(b.rank || 999999));
-  const nonStable = ranked.filter(coin => classifyAsset(coin) !== "Stablecoin");
-  const pool = nonStable.length >= count ? nonStable : ranked;
-  const top = pool.slice(0, count);
-  const ids = top.map(coin => coin.id);
+
+  const count = Number(limit) <= 3 ? 3 : 5;
+  const expectedIds = atlasCuratedTopIds(count);
+  const coins = atlasCuratedTopCoins(count);
+  const ids = coins.map(coin => coin.id);
+
+  if (ids.length < 2) {
+    if (els.chartCaption) {
+      atlasSetChartCaptionText(
+        `Preset Top ${count} indisponible · ${ids.length}/${expectedIds.length} actifs canoniques reçus.`
+      );
+    }
+    return;
+  }
+
   atlasSetComparisonIds(ids, ids[0], { preset: `rank-${count}` });
   atlasBrokerSeedSpot(getSelectedCoin());
   renderScore(getSelectedCoin());
   renderMarketTable();
   renderDecisionBoard();
   renderMultiHorizon();
-  if (els.chartCaption) atlasSetChartCaptionText(`Top ${count} hors stablecoins sélectionné · comparaison Base 100 en préparation.`);
-  requestAnimationFrame(() => { void renderAnalystPanel({ topComparison: count }); });
+
+  const symbols = coins.map(coin => coin.symbol).join(" · ");
+  if (els.chartCaption) {
+    atlasSetChartCaptionText(
+      `Target Top ${count} · ${symbols} · comparaison Base 100 en préparation.`
+    );
+  }
+
+  requestAnimationFrame(() => {
+    void renderAnalystPanel({
+      topComparison: count,
+      curatedIds: ids
+    });
+  });
 }
 
 function atlasResetGraphDefaults() {
@@ -4038,10 +4089,7 @@ function renderAll(options = {}) {
 }
 
 function atlasTopFiveCoins() {
-  return [...(state.coins || [])]
-    .filter(coin => Number.isFinite(Number(coin.rank)))
-    .sort((a, b) => Number(a.rank) - Number(b.rank))
-    .slice(0, 5);
+  return atlasCuratedTopCoins(5);
 }
 
 function atlasMarketFlowCoins() {
@@ -5557,7 +5605,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.3-dual-market-ribbon`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.4-target-top-coin`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {

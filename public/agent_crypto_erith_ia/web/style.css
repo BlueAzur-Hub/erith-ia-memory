@@ -7192,3 +7192,49 @@ main .decision-board{
     padding: 6px;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6.4
+   CHAMPAGNE LUXE HOSTEL ROOM XXL
+   TARGET TOP COIN FINAL LOCK
+   ========================================================= */
+
+.top5-ribbon {
+  border-color: rgba(255, 216, 122, .24);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 216, 122, .075), transparent 36%),
+    linear-gradient(145deg, rgba(8, 16, 30, .91), rgba(7, 13, 25, .84));
+  box-shadow:
+    0 16px 42px rgba(0, 0, 0, .22),
+    inset 0 0 0 1px rgba(255,255,255,.018);
+}
+
+.market-ribbon-label span {
+  color: #ffe6a8;
+  text-shadow: 0 0 16px rgba(255, 216, 122, .14);
+}
+
+.top5-item {
+  min-width: 132px;
+}
+
+.top5-item[data-top5-id="bitcoin"] {
+  order: 1;
+}
+
+.top5-item[data-top5-id="ethereum"] {
+  order: 2;
+}
+
+.top5-item[data-top5-id="binancecoin"] {
+  order: 3;
+}
+
+.top5-item[data-top5-id="ripple"] {
+  order: 4;
+}
+
+.top5-item[data-top5-id="solana"] {
+  order: 5;
+}
