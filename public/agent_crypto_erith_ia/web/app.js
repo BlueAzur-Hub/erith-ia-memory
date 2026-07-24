@@ -1,5 +1,5 @@
-/* V2.0-alpha · Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
-   INLINE HEADER · CLEAR DETAIL DOCK · VOLUME SHADOW LOCK
+/* V2.0-alpha · Build 28.1.14 — BUTTON STATE ISOLATION · SINGLE VALUE LAYER
+   SIDE DETAIL DOCK · VOLUME SHADOW LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
    - axes Prix et Date dessinés dans le chartArea, sans manger le tracé ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.13";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.14";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3105,8 +3105,8 @@ function atlasSetCleanLensCollapsed(collapsed, persist = true) {
   toggle?.setAttribute("aria-expanded", String(!isCollapsed));
   panel?.setAttribute("aria-hidden", String(isCollapsed));
   if (panel) panel.inert = isCollapsed;
-  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ▼" : "Réduire ▲";
-  if (railArrow) railArrow.textContent = isCollapsed ? "▼" : "▲";
+  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ◀" : "Réduire ▶";
+  if (railArrow) railArrow.textContent = isCollapsed ? "◀" : "▶";
   if (toggle) {
     toggle.disabled = false;
     toggle.tabIndex = 0;
@@ -3176,8 +3176,8 @@ function initAtlasCleanLensPanel() {
   }, true);
 
   window.addEventListener("resize", () => {
-    if (!window.matchMedia("(min-width: 981px)").matches) {
-      atlasSetCleanLensCollapsed(false, false);
+    if (!window.matchMedia("(min-width: 1081px)").matches) {
+      atlasSetCleanLensCollapsed(true, false);
     } else {
       requestAnimationFrame(atlasCleanLensResizeChart);
     }
@@ -3404,48 +3404,8 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 }
 
 
-function atlasRenderChartValueOverlay(entries = [], options = {}) {
-  const node = document.getElementById("chartValueOverlay");
-  if (!node) return;
-
-  const rows = (Array.isArray(entries) ? entries : [])
-    .slice(0, ATLAS_COMPARISON_MAX_SERIES || 5)
-    .map((entry, index) => {
-      const coin = entry?.coin || entry || {};
-      const data = Array.isArray(entry?.data)
-        ? entry.data.filter(Boolean)
-        : Array.isArray(entry?.result?.series)
-          ? entry.result.series.map(point => ({ x: Number(point?.[0]), rawPrice: Number(point?.[1]) })).filter(point => Number.isFinite(point.rawPrice))
-          : [];
-      const latestPoint = [...data].reverse().find(point => Number.isFinite(Number(point?.rawPrice ?? point?.y)));
-      const firstPoint = data.find(point => Number.isFinite(Number(point?.rawPrice ?? point?.y)));
-      const latest = Number(latestPoint?.rawPrice ?? latestPoint?.y);
-      const first = Number(entry?.first ?? firstPoint?.rawPrice ?? firstPoint?.y);
-      const change = Number.isFinite(first) && first > 0 && Number.isFinite(latest)
-        ? ((latest / first) - 1) * 100
-        : Number(coin?.price_change_percentage_24h);
-      const palette = atlasCryptoPalette(coin, index);
-      const symbol = String(coin?.symbol || coin?.name || `S${index + 1}`).toUpperCase();
-      const image = coin?.image
-        ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy" decoding="async">`
-        : `<span class="chart-value-overlay-fallback">${escapeHtml(symbol.slice(0, 1))}</span>`;
-      return `<div class="chart-value-overlay-row" style="--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(atlasCryptoGradientCss(coin, index))}">
-        <span class="chart-value-overlay-swatch" aria-hidden="true"></span>
-        <span class="chart-value-overlay-identity">${image}<b>${escapeHtml(symbol)}</b></span>
-        <strong>${Number.isFinite(latest) && latest > 0 ? escapeHtml(atlasFormatEUR(latest)) : "—"}</strong>
-        <small class="${Number.isFinite(change) ? (change >= 0 ? "up" : "down") : ""}">${Number.isFinite(change) ? escapeHtml(fmtPct(change)) : "—"}</small>
-      </div>`;
-    });
-
-  if (!rows.length) {
-    node.hidden = true;
-    node.innerHTML = "";
-    return;
-  }
-
-  node.hidden = false;
-  node.dataset.mode = options.comparison ? "comparison" : "single";
-  node.innerHTML = rows.join("");
+function atlasRenderChartValueOverlay() {
+  /* Build 28.1.14: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -9142,11 +9102,11 @@ function atlasMigrateStorage28111() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.13", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.13", atlasMigrateStorage28111);
+} atlasSafeBoot("release labels 28.1.14", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.14", atlasMigrateStorage28111);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.13", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.14", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);

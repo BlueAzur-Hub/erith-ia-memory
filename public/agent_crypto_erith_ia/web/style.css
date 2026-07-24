@@ -11836,7 +11836,7 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
 }
 
 /* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.13
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.14
    CANONICAL FULL-WIDTH CHART STAGE
    TOP 5 · MARKET FLOW · OVERLAY VALUES
    & NON-DESTRUCTIVE RECOVERY LOCK
@@ -11914,99 +11914,6 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
   image-rendering: auto;
 }
 
-/* Floating values: crypto identity, current price and period variation. */
-#analyste .chart-value-overlay {
-  position: absolute;
-  z-index: 16;
-  top: 46px;
-  left: 12px;
-  width: min(286px, calc(100% - 380px));
-  min-width: 224px;
-  display: grid;
-  gap: 4px;
-  padding: 7px;
-  border: 1px solid rgba(176,236,255,.16);
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(3,12,24,.78), rgba(3,10,20,.61));
-  box-shadow: 0 12px 30px rgba(0,0,0,.24), inset 0 0 18px rgba(98,236,255,.025);
-  backdrop-filter: blur(8px) saturate(1.04);
-  pointer-events: none;
-}
-
-#analyste .chart-value-overlay[hidden] { display: none !important; }
-
-#analyste .chart-value-overlay-row {
-  position: relative;
-  min-height: 32px;
-  display: grid;
-  grid-template-columns: 5px minmax(70px,.75fr) minmax(92px,1fr) auto;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 7px 5px 5px;
-  border: 1px solid rgba(176,236,255,.09);
-  border-radius: 9px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--atlas-series-color) 12%, rgba(3,11,21,.78)), rgba(3,11,21,.54));
-}
-
-#analyste .chart-value-overlay-swatch {
-  align-self: stretch;
-  border-radius: 999px;
-  background: var(--atlas-series-gradient, var(--atlas-series-color));
-  box-shadow: 0 0 10px color-mix(in srgb, var(--atlas-series-color) 42%, transparent);
-}
-
-#analyste .chart-value-overlay-identity {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-#analyste .chart-value-overlay-identity img,
-#analyste .chart-value-overlay-fallback {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 19px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-#analyste .chart-value-overlay-fallback {
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.08);
-  color: #effaff;
-  font: 900 9px/1 system-ui,sans-serif;
-}
-
-#analyste .chart-value-overlay-identity b {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #effaff;
-  font: 900 11px/1 system-ui,sans-serif;
-}
-
-#analyste .chart-value-overlay-row strong {
-  justify-self: end;
-  color: #fff3cf;
-  font: 900 12px/1 system-ui,sans-serif;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-#analyste .chart-value-overlay-row small {
-  justify-self: end;
-  min-width: 48px;
-  color: rgba(223,237,248,.72);
-  font: 850 9px/1 system-ui,sans-serif;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-#analyste .chart-value-overlay-row small.up { color: rgba(112,255,185,.92); }
-#analyste .chart-value-overlay-row small.down { color: rgba(255,132,158,.94); }
-
 /* Detail panel floats above the same chart stage and never reduces canvas width. */
 #analyste.champagne-clean-lens .clean-lens-detail-panel {
   position: absolute !important;
@@ -12077,10 +11984,6 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-co
   min-height: 390px !important;
 }
 
-html[data-atlas-viewport="transformer"] #analyste .chart-value-overlay {
-  width: 244px;
-}
-
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-lens-detail-panel {
   width: 278px !important;
 }
@@ -12088,7 +11991,6 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 @media (max-width: 1080px) {
   #analyste.champagne-clean-lens .clean-lens-detail-panel { display: none !important; }
   #analyste.champagne-clean-lens .detail-panel-rail { display: flex !important; }
-  #analyste .chart-value-overlay { width: min(278px, calc(100% - 64px)); }
 }
 
 @media (max-width: 760px) {
@@ -12102,20 +12004,10 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
   }
   #analyste.champagne-clean-lens #mainChart,
   #analyste.champagne-clean-lens.detail-collapsed #mainChart { min-height: 365px !important; }
-  #analyste .chart-value-overlay {
-    top: 42px;
-    left: 8px;
-    width: calc(100% - 52px);
-    max-height: 142px;
-    overflow: auto;
-  }
-  #analyste .chart-value-overlay-row {
-    grid-template-columns: 4px minmax(64px,.7fr) minmax(78px,1fr) auto;
-  }
 }
 
 /* =========================================================
-   Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
+   Build 28.1.14 — CANONICAL ORDER · SINGLE VALUE LAYER
    & PRICE/VOLUME SINGLE-TIMELINE FINAL LOCK
    ========================================================= */
 
@@ -12196,7 +12088,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 
 
 /* =========================================================
-   Build 28.1.13 — CANONICAL ORDER · SINGLE VALUE LAYER
+   Build 28.1.14 — CANONICAL ORDER · SINGLE VALUE LAYER
    INLINE HEADER · CLEAR DETAIL DOCK · VOLUME SHADOW LOCK
    ========================================================= */
 
@@ -12351,11 +12243,6 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
   display: none !important;
 }
 
-/* Value board does not collide with the reserved detail rail. */
-#analyste .chart-value-overlay {
-  width: min(286px, calc(100% - 54px)) !important;
-}
-
 @media (max-width: 760px) {
   #analyste.champagne-clean-lens,
   #analyste.champagne-clean-lens.detail-collapsed,
@@ -12372,5 +12259,126 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
   }
   #analyste.champagne-clean-lens .clean-lens-detail-panel {
     max-height: 320px !important;
+  }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.14
+   BUTTON STATE ISOLATION · SINGLE VALUE LAYER
+   SIDE DETAIL DOCK · VOLUME SHADOW LOCK
+   ========================================================= */
+
+/* Active chart controls never repaint the chart stage.
+   Selection is communicated only by border, text and a restrained glow. */
+#analyste .chart-v2-toggle.is-active,
+#analyste .period-btn.active,
+#analyste .compare-btn.active,
+#analyste .compare-btn.is-active {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: rgba(98,236,255,.72) !important;
+  color: #effcff !important;
+  box-shadow:
+    inset 0 -2px 0 rgba(98,236,255,.88),
+    0 0 0 1px rgba(98,236,255,.12),
+    0 0 12px rgba(98,236,255,.08) !important;
+}
+
+/* Canonical chart stage. The background is immutable across controls/periods. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  background: rgba(2,8,18,.01) !important;
+  background-image: none !important;
+  grid-template-rows: minmax(0,1fr) !important;
+  row-gap: 0 !important;
+}
+
+#analyste.champagne-clean-lens::before {
+  background-image: url("./lounge_nocturne_luxueuse_avec_vue_sur_la_ville.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  opacity: 1 !important;
+}
+
+/* Collapsed: one narrow rail reserved outside the plot. */
+#analyste.champagne-clean-lens.detail-collapsed {
+  grid-template-columns: minmax(0,1fr) 30px !important;
+  column-gap: 4px !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
+  display: none !important;
+}
+
+/* Open: true side dock. It never overlays the canvas and never moves below it. */
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  grid-template-columns: minmax(0,1fr) clamp(300px,22vw,360px) !important;
+  column-gap: 7px !important;
+  align-items: stretch !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100% !important;
+  max-height: clamp(545px,71vh,715px) !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  display: none !important;
+}
+
+/* No chart or page background transition is tied to dock state. */
+#analyste,
+#analyste::before,
+#analyste::after,
+#analyste .chart-panel,
+#analyste .chart-shell {
+  transition-property: border-color, box-shadow, opacity !important;
+}
+
+@media (max-width: 1080px) {
+  #analyste.champagne-clean-lens:not(.detail-collapsed),
+  #analyste.champagne-clean-lens.detail-collapsed {
+    grid-template-columns: minmax(0,1fr) 28px !important;
+    column-gap: 3px !important;
+  }
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+    display: none !important;
+  }
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail,
+  #analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+    display: flex !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
   }
 }
