@@ -6719,3 +6719,56 @@ main .decision-board{
     max-height: calc(100% - 58px);
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6.1
+   CHAMPAGNE COMPACT GRAPH HEADER FINAL LOCK
+   ========================================================= */
+
+.atlas-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel > .section-head.compact {
+  min-height: 0 !important;
+  padding-block: 8px 6px !important;
+  align-items: center !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel > .section-head.compact > div:first-child {
+  display: flex !important;
+  align-items: center !important;
+  min-width: max-content;
+}
+
+#analyste.champagne-clean-lens .chart-panel > .section-head.compact .eyebrow {
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+#analyste.champagne-clean-lens .chart-head-actions {
+  align-self: center !important;
+}
+
+#analyste.champagne-clean-lens .chart-shell {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 900px) {
+  #analyste.champagne-clean-lens .chart-panel > .section-head.compact {
+    gap: 8px !important;
+  }
+
+  #analyste.champagne-clean-lens .chart-panel > .section-head.compact > div:first-child {
+    min-width: 0;
+  }
+}

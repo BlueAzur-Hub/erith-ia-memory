@@ -1,7 +1,6 @@
-/* V1.1-alpha.26.47.6 — CHAMPAGNE CRYPTO COLORS & FREE TOOLTIP LOCK
-   Tooltip entièrement libre au survol.
-   Couleurs fidèles aux identités crypto.
-   SOL : dégradé vert → cyan → violet.
+/* V1.1-alpha.26.47.6.1 — CHAMPAGNE COMPACT GRAPH HEADER FINAL LOCK
+   Titre dynamique du graphe conservé pour l’accessibilité, masqué visuellement.
+   La légende de synthèse reste uniquement dans la barre basse du graphique.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -5491,7 +5490,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6-champagne-colors`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.1-champagne-compact`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {
