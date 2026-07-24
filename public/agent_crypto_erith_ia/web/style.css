@@ -6772,3 +6772,145 @@ main .decision-board{
     min-width: 0;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6.2
+   CHAMPAGNE LUXE PENTHOUSE XXL
+   COLOR BRIDGE TOOLTIP FINAL LOCK
+   ========================================================= */
+
+.atlas-chart-tooltip {
+  width: min(380px, calc(100% - 20px)) !important;
+  padding: 12px 13px !important;
+  border-radius: 14px !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(112, 244, 255, .05), transparent 34%),
+    linear-gradient(145deg, rgba(3, 10, 20, .86), rgba(8, 14, 27, .80)) !important;
+  box-shadow:
+    0 24px 62px rgba(0, 0, 0, .50),
+    inset 0 0 0 1px rgba(255, 216, 122, .035) !important;
+  backdrop-filter: blur(15px) saturate(1.07) !important;
+}
+
+.atlas-chart-tooltip-row {
+  grid-template-columns:
+    minmax(104px, 1fr)
+    minmax(68px, 96px)
+    minmax(104px, auto) !important;
+  gap: 10px !important;
+  min-height: 44px;
+  padding: 7px 0 !important;
+}
+
+.atlas-chart-tooltip-color-bridge {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 20px;
+  align-self: center;
+  border: 1px solid color-mix(in srgb, var(--atlas-series-color) 72%, rgba(255,255,255,.28));
+  border-radius: 3px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.08),
+      rgba(255,255,255,0) 42%
+    ),
+    rgba(3, 8, 16, .70);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.035),
+    0 0 16px color-mix(in srgb, var(--atlas-series-color) 16%, transparent);
+  overflow: hidden;
+}
+
+.atlas-chart-tooltip-color-bridge::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 1px;
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  opacity: .96;
+}
+
+.atlas-chart-tooltip-color-bridge::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.24),
+      transparent 20%,
+      transparent 78%,
+      rgba(255,255,255,.10)
+    );
+  mix-blend-mode: screen;
+  opacity: .62;
+}
+
+.atlas-chart-tooltip-color-bridge i {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.28);
+}
+
+.atlas-chart-tooltip-values {
+  min-width: 104px;
+  padding-left: 10px !important;
+}
+
+.atlas-chart-tooltip-values::before {
+  width: 1px !important;
+  opacity: .58 !important;
+}
+
+.atlas-chart-tooltip-identity b,
+.atlas-chart-tooltip-values strong {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--atlas-series-color) 20%, transparent);
+}
+
+.atlas-chart-tooltip-date {
+  margin-bottom: 8px !important;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 216, 122, .11);
+}
+
+@media (max-width: 760px) {
+  .atlas-chart-tooltip {
+    width: min(340px, calc(100% - 16px)) !important;
+  }
+
+  .atlas-chart-tooltip-row {
+    grid-template-columns:
+      minmax(96px, 1fr)
+      minmax(54px, 74px)
+      minmax(94px, auto) !important;
+    gap: 8px !important;
+  }
+
+  .atlas-chart-tooltip-values {
+    min-width: 94px;
+  }
+}
+
+@media (max-width: 560px) {
+  .atlas-chart-tooltip-row {
+    grid-template-columns: minmax(0, 1fr) minmax(54px, 72px) !important;
+  }
+
+  .atlas-chart-tooltip-values {
+    grid-column: 1 / -1;
+    justify-items: end !important;
+    padding-left: 0 !important;
+  }
+
+  .atlas-chart-tooltip-values::before {
+    display: none;
+  }
+}

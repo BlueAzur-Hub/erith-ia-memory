@@ -1,6 +1,7 @@
-/* V1.1-alpha.26.47.6.1 — CHAMPAGNE COMPACT GRAPH HEADER FINAL LOCK
-   Titre dynamique du graphe conservé pour l’accessibilité, masqué visuellement.
-   La légende de synthèse reste uniquement dans la barre basse du graphique.
+/* V1.1-alpha.26.47.6.2 — CHAMPAGNE LUXE PENTHOUSE XXL COLOR BRIDGE TOOLTIP LOCK
+   Tooltip libre conservé.
+   Zone rectangulaire colorée entre identité et prix.
+   BTC / ETH / BNB / XRP / SOL utilisent leur palette canonique.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -2662,7 +2663,7 @@ function atlasExternalChartTooltip(context) {
       ? `<small>Base 100 : ${row.baseValue.toFixed(2)}</small>`
       : '<small>Prix réel CoinGecko EUR</small>';
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
-    return `<div class="atlas-chart-tooltip-row" style="${style}">${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}<span class="atlas-chart-tooltip-values"><strong>${escapeHtml(price)}</strong>${base}</span></div>`;
+    return `<div class="atlas-chart-tooltip-row" style="${style}">${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}<span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span><span class="atlas-chart-tooltip-values"><strong>${escapeHtml(price)}</strong>${base}</span></div>`;
   }).join("");
 
   node.innerHTML = `<div class="atlas-chart-tooltip-date">${escapeHtml(title)}</div>${body}`;
@@ -5490,7 +5491,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.1-champagne-compact`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.2-penthouse-xxl`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {
