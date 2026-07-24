@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.4 — ADVANCED DECISION / WATCH / NEWS / NO-FOMO & MODULE V2 POLISH LOCK</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.5 — COMPACT ESSENTIAL SHELL & ADVANCED MODULE OWNERSHIP LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.4-advanced-decision-watch-news-nofomo-polish" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.5-compact-essential-shell-advanced-module-ownership" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,36 +19,25 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.4</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
       </div>
-      <section class="atlas-v2-mode-deck" aria-label="Mode d’interface Agent-Crypto V2">
+      <section class="atlas-v2-interface-bar" aria-label="Interface Agent-Crypto V2">
         <div class="atlas-v2-mode-copy">
           <span class="atlas-v2-kicker">INTERFACE V2</span>
-          <b id="atlasV2ModeTitle">Mode essentiel</b>
+          <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Livecheck · marché · graphique.</small>
         </div>
-        <div class="atlas-v2-mode-buttons" role="group" aria-label="Choisir le niveau d’interface">
-          <button class="atlas-v2-mode-btn is-active" id="btnModeEssential" type="button" data-atlas-mode="essential" aria-pressed="true">
-            <span>Essentiel</span><small>Turquoise léger</small>
-          </button>
-          <button class="atlas-v2-mode-btn" id="btnModeAdvanced" type="button" data-atlas-mode="advanced" aria-pressed="false">
-            <span>Avancé</span><small>Bleus profonds</small>
-          </button>
-        </div>
-      </section>
 
-
-      <nav class="nav atlas-v2-nav" aria-label="Navigation Agent-Crypto V2">
-        <div class="atlas-v2-nav-group atlas-v2-nav-essential" aria-label="Navigation essentielle">
-          <span class="atlas-v2-nav-label">Essentiel</span>
-          <a href="#livecheck" data-v2-level="essential">Livecheck</a>
-          <a href="#market-workspace" data-v2-level="essential">Marché</a>
-          <a href="#analyste" data-v2-level="essential">Graphique</a>
-        </div>
-        <div class="atlas-v2-nav-group atlas-v2-nav-advanced" aria-label="Navigation avancée">
+        <nav class="nav atlas-v2-nav" aria-label="Navigation Agent-Crypto V2">
+          <div class="atlas-v2-nav-group atlas-v2-nav-essential" aria-label="Navigation essentielle">
+            <a href="#livecheck" data-v2-level="essential">Livecheck</a>
+            <a href="#market-workspace" data-v2-level="essential">Marché</a>
+            <a href="#analyste" data-v2-level="essential">Graphique</a>
+          </div>
+          <div class="atlas-v2-nav-group atlas-v2-nav-advanced" aria-label="Navigation avancée">
           <span class="atlas-v2-nav-label">Modules V2</span>
           <label class="atlas-v2-module-picker">
             <span class="atlas-visually-hidden">Choisir un module avancé</span>
@@ -102,13 +91,23 @@
           </label>
           <button class="atlas-v2-module-open" id="btnOpenAdvancedModule" type="button">Ouvrir</button>
         </div>
-      </nav>
+        </nav>
+
+        <div class="atlas-v2-mode-buttons" role="group" aria-label="Choisir le niveau d’interface">
+          <button class="atlas-v2-mode-btn is-active" id="btnModeEssential" type="button" data-atlas-mode="essential" aria-pressed="true">
+            <span>Essentiel</span>
+          </button>
+          <button class="atlas-v2-mode-btn" id="btnModeAdvanced" type="button" data-atlas-mode="advanced" aria-pressed="false">
+            <span>Complet</span>
+          </button>
+        </div>
+      </section>
 
       <section class="command-bar" id="livecheck">
         <button class="btn primary" id="btnLivecheck">Lancer Livecheck</button>
         <button class="btn" id="btnRefresh">Rafraîchir marché</button>
-        <button class="btn ghost" id="btnNoFomo">Mode No-FOMO</button>
-        <div class="source-card live-decision">
+        <button class="btn ghost" id="btnNoFomo" data-v2-complete-control>Mode No-FOMO</button>
+        <div class="source-card live-decision" data-v2-complete-control>
           <span>Décision tableau</span>
           <strong id="tableDecision">Refusé avant Livecheck</strong>
         </div>
@@ -156,8 +155,8 @@
     <section class="atlas-market-zone" id="market-zone" aria-label="Zone marché Atlas">
     <section class="analyst-deck champagne-clean-lens" id="analyste">
       <article class="panel glass chart-panel">
-        <div class="section-head compact">
-          <div>
+        <div class="section-head compact chart-v2-one-line">
+          <div class="chart-v2-title-block">
             <p class="eyebrow">GRAPHIQUE ANALYSTE</p>
             <h2 id="selectedAssetTitle" class="atlas-visually-hidden" aria-live="polite">Bitcoin — BTC</h2>
           </div>
@@ -2368,6 +2367,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.4-advanced-decision-watch-news-nofomo-polish"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.5-compact-essential-shell-advanced-module-ownership"></script>
 </body>
 </html>

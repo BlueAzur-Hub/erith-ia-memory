@@ -11024,3 +11024,386 @@ html[data-atlas-mode="essential"] .atlas-v2-nav-essential a {
     transform: none !important;
   }
 }
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.5
+   COMPACT ESSENTIAL SHELL & ADVANCED MODULE OWNERSHIP LOCK
+   ========================================================= */
+
+/* Une seule barre pour le niveau d’interface et sa navigation. */
+.atlas-v2-interface-bar {
+  min-height: 36px;
+  margin-top: 4px;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--v2-mode-accent) 34%, rgba(84,169,255,.16));
+  border-radius: 11px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--v2-mode-accent) 7%, transparent), transparent 48%),
+    rgba(4,15,28,.58);
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-copy {
+  flex: 0 0 auto;
+  min-width: 154px;
+  display: grid !important;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 1px;
+}
+
+.atlas-v2-interface-bar .atlas-v2-kicker {
+  font-size: 7px !important;
+  line-height: 1;
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-copy b {
+  font-size: 8.6px !important;
+  line-height: 1;
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-copy small {
+  grid-column: 1 / -1;
+  max-width: 190px;
+  overflow: hidden;
+  font-size: 6.9px !important;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav-group {
+  min-width: 0;
+  display: flex !important;
+  align-items: center;
+  gap: 4px !important;
+  flex-wrap: nowrap !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav-essential {
+  flex: 0 0 auto;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav-advanced {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav-label {
+  min-width: auto !important;
+  padding: 0 3px !important;
+  font-size: 6.9px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-nav a {
+  min-height: 24px !important;
+  padding: 4px 8px !important;
+  border-radius: 7px !important;
+  font-size: 7.8px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-module-picker {
+  min-width: 190px;
+  max-width: 330px;
+  flex: 1 1 250px;
+}
+
+.atlas-v2-interface-bar .atlas-v2-module-picker select {
+  min-height: 25px !important;
+  padding: 4px 28px 4px 8px !important;
+  border-radius: 7px !important;
+  font-size: 7.6px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-module-open {
+  min-height: 25px !important;
+  padding: 4px 8px !important;
+  border-radius: 7px !important;
+  font-size: 7.5px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-buttons {
+  flex: 0 0 auto;
+  display: flex !important;
+  gap: 4px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-btn {
+  min-width: 82px !important;
+  min-height: 27px !important;
+  padding: 4px 8px !important;
+  border-radius: 8px !important;
+}
+
+.atlas-v2-interface-bar .atlas-v2-mode-btn span {
+  font-size: 8px !important;
+}
+
+/* Aucune représentation des modules complets dans l’espace essentiel. */
+html[data-atlas-mode="essential"] [data-v2-complete-control] {
+  display: none !important;
+}
+
+/* Barre Livecheck plus courte. */
+.hero .command-bar {
+  min-height: 32px !important;
+  margin-top: 5px !important;
+  gap: 5px !important;
+  grid-template-columns: auto auto auto minmax(150px,.72fr) minmax(155px,.72fr) minmax(130px,.58fr) !important;
+}
+
+html[data-atlas-mode="essential"] .hero .command-bar {
+  grid-template-columns: auto auto minmax(175px,.8fr) minmax(175px,.8fr) !important;
+}
+
+.hero .command-bar > .btn {
+  min-height: 28px !important;
+  padding: 5px 9px !important;
+  font-size: 8px !important;
+}
+
+.hero .command-bar .source-card {
+  min-height: 28px !important;
+  padding: 4px 7px !important;
+  border-radius: 7px !important;
+}
+
+.hero .command-bar .source-card span {
+  margin-bottom: 1px !important;
+  font-size: 6.3px !important;
+}
+
+.hero .command-bar .source-card strong {
+  font-size: 7.8px !important;
+}
+
+/* Métriques principales plus basses. */
+.metrics.metrics-prime {
+  gap: 5px !important;
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.metrics-prime .metric {
+  min-height: 43px !important;
+  height: 43px !important;
+  padding: 4px 8px !important;
+  column-gap: 8px !important;
+  row-gap: 1px !important;
+  border-radius: 8px !important;
+}
+
+.metrics-prime .metric > span {
+  font-size: 8.1px !important;
+}
+
+.metrics-prime .metric > strong {
+  font-size: clamp(14px, .95vw, 17px) !important;
+}
+
+.metrics-prime .metric > small {
+  display: block !important;
+  overflow: hidden !important;
+  font-size: 7.1px !important;
+  line-height: 1 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: unset !important;
+}
+
+/* Graphique : titre + Lecture + Période + Comparaison sur une ligne. */
+.chart-panel > .section-head.compact.chart-v2-one-line {
+  min-height: 46px !important;
+  padding: 5px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  overflow: hidden;
+}
+
+.chart-v2-title-block {
+  flex: 0 0 auto;
+  min-width: 118px;
+  padding-right: 4px;
+}
+
+.chart-v2-title-block .eyebrow {
+  margin: 0 !important;
+  font-size: 7.6px !important;
+  white-space: nowrap;
+}
+
+.chart-v2-one-line .chart-v2-toolbar {
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0;
+  padding: 0 0 1px;
+  display: flex !important;
+  align-items: center;
+  gap: 4px !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(84,169,255,.24) transparent;
+}
+
+.chart-v2-one-line .chart-v2-toolbar::-webkit-scrollbar {
+  height: 3px;
+}
+
+.chart-v2-one-line .chart-v2-toolbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(84,169,255,.24);
+}
+
+.chart-v2-one-line .chart-v2-toolbar-row,
+.chart-v2-one-line .chart-v2-toolbar-comparison {
+  min-width: max-content;
+  min-height: 32px !important;
+  padding: 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto;
+  gap: 4px !important;
+  border-radius: 8px !important;
+}
+
+.chart-v2-one-line .chart-v2-toolbar-label {
+  flex: 0 0 auto;
+  padding: 0 2px !important;
+  font-size: 6.8px !important;
+}
+
+.chart-v2-one-line .chart-v2-control-deck,
+.chart-v2-one-line .period-tabs,
+.chart-v2-one-line .compare-actions,
+.chart-v2-one-line .compare-action-group {
+  width: auto !important;
+  min-width: 0;
+  display: flex !important;
+  align-items: center;
+  flex-wrap: nowrap !important;
+  gap: 3px !important;
+}
+
+.chart-v2-one-line .chart-v2-toggle-group {
+  width: auto !important;
+  min-height: 25px !important;
+  padding: 2px !important;
+  flex-wrap: nowrap !important;
+}
+
+.chart-v2-one-line .chart-v2-toggle-group > span {
+  padding: 0 3px;
+  font-size: 6.6px !important;
+}
+
+.chart-v2-one-line .chart-v2-toggle,
+.chart-v2-one-line .period-btn,
+.chart-v2-one-line .compare-btn {
+  min-height: 25px !important;
+  padding: 4px 7px !important;
+  border-radius: 7px !important;
+  font-size: 7.5px !important;
+  white-space: nowrap;
+}
+
+.chart-v2-one-line .chart-v2-period-truth {
+  min-width: auto !important;
+  padding: 4px 6px !important;
+  font-size: 6.7px !important;
+}
+
+html[data-atlas-mode="essential"] .chart-v2-one-line .chart-v2-toolbar-reading .chart-v2-toggle-group > span {
+  display: none !important;
+}
+
+/* L’espace complet conserve tous les outils sur une ligne défilable. */
+html[data-atlas-mode="advanced"] .chart-v2-one-line .chart-v2-toolbar {
+  overscroll-behavior-inline: contain;
+}
+
+/* Transformer Book : compacité sans réduire excessivement les libellés. */
+@media (max-width: 1366px) and (min-width: 800px) {
+  .atlas-v2-interface-bar .atlas-v2-mode-copy small {
+    display: none;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-mode-copy {
+    min-width: 112px;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-nav a,
+  .atlas-v2-interface-bar .atlas-v2-mode-btn span,
+  .chart-v2-one-line .chart-v2-toggle,
+  .chart-v2-one-line .period-btn,
+  .chart-v2-one-line .compare-btn {
+    font-size: 7.8px !important;
+  }
+}
+
+@media (max-width: 1050px) {
+  .atlas-v2-interface-bar {
+    flex-wrap: wrap;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-mode-copy {
+    flex: 1 1 auto;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-nav {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .chart-panel > .section-head.compact.chart-v2-one-line {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .chart-v2-title-block {
+    min-width: 0;
+  }
+
+  .chart-v2-one-line .chart-v2-toolbar {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .atlas-v2-interface-bar .atlas-v2-mode-copy small {
+    display: none;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-nav-essential {
+    overflow-x: auto;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-module-picker {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .metrics.metrics-prime {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
