@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.28 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · COMPLETE ADMIN MODE
+/* V2.0-alpha · Build 28.1.30 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · ACCOUNT ADMIN LINK · PRACTICAL SHORTCUTS RESTORE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.28";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.30";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3404,7 +3404,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.28: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.30: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3750,7 +3750,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.28.
+  Internal package Build 28.1.30.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -8732,7 +8732,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · COMPLETE ADMIN MODE`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · ACCOUNT ADMIN LINK · PRACTICAL SHORTCUTS RESTORE`
   );
 }
 
@@ -8787,6 +8787,24 @@ function atlasV2ApplyMode(mode, options = {}) {
       : "Livecheck · marché · graphique · sources.";
   }
 
+  const accountToggle = document.getElementById("btnAdminAccountToggle");
+  const accountText = document.getElementById("adminAccountLinkText");
+  if (accountToggle) {
+    accountToggle.classList.toggle("is-admin", administrator);
+    accountToggle.setAttribute("aria-pressed", administrator ? "true" : "false");
+    accountToggle.setAttribute(
+      "aria-label",
+      administrator
+        ? "Retourner à l’interface Essentiel"
+        : "Ouvrir le compte Administrateur"
+    );
+  }
+  if (accountText) {
+    accountText.textContent = administrator
+      ? "Retour Essentiel"
+      : "Compte Administrateur";
+  }
+
   atlasV2ApplySectionVisibility(next);
   atlasV2SyncMixedSectionLabels(next);
 
@@ -8794,7 +8812,6 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (liveSourcesCollapse) {
     liveSourcesCollapse.hidden = false;
     liveSourcesCollapse.setAttribute("aria-hidden", "false");
-    liveSourcesCollapse.open = true;
   }
 
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
@@ -8992,8 +9009,10 @@ function atlasV2SyncAdvancedSelectorFromViewport() {
 function atlasInitV2Shell() {
   atlasV2ClassifySections();
 
-  document.querySelectorAll("[data-atlas-mode]").forEach(button => {
-    button.addEventListener("click", () => atlasV2ApplyMode(button.dataset.atlasMode));
+  document.getElementById("btnAdminAccountToggle")?.addEventListener("click", () => {
+    atlasV2ApplyMode(
+      atlasV2Mode() === "advanced" ? "essential" : "advanced"
+    );
   });
 
   document.querySelectorAll("[data-math-position]").forEach(button => {
@@ -9059,8 +9078,8 @@ const ATLAS_RUNTIME_EXPECTED_CONTROLS = Object.freeze({
 const ATLAS_RUNTIME_REQUIRED_IDS = Object.freeze([
   "atlasV2ModeTitle",
   "atlasV2ReleaseBadge",
-  "btnModeEssential",
-  "btnModeAdvanced",
+  "btnAdminAccountToggle",
+  "adminAccountLinkText",
   "livecheck",
   "analyste",
   "market-workspace",

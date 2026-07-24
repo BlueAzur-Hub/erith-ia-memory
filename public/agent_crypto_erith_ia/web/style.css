@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.28
+   INTERNAL PACKAGE BUILD 28.1.30
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.28
+   INTERNAL PACKAGE BUILD 28.1.30
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.28
+   INTERNAL PACKAGE BUILD 28.1.30
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12712,7 +12712,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.28
+   V2.0-alpha · Build 28.1.30
    SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
    ========================================================= */
 
@@ -12910,7 +12910,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.28
+   V2.0-alpha · Build 28.1.30
    EXACT CHART FRAME · SUBGRAPH BOTTOM ALIGNMENT LOCK
    ========================================================= */
 
@@ -12961,7 +12961,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.28
+   V2.0-alpha · Build 28.1.30
    HIDDEN TOP50 METRICS · NO EXTRA CONTROL BAR
    ========================================================= */
 
@@ -12980,7 +12980,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 }
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.28
+   V2.0-alpha · Build 28.1.30
    COMPLETE ADMIN MODE · NO EXTRA PANEL
    ========================================================= */
 
@@ -13037,7 +13037,7 @@ html[data-atlas-role="administrator"] [data-private-key] {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.28
+   V2.0-alpha · Build 28.1.30
    ORIGINAL BLUE THEME RESTORE
    "Champagne Luxe + Hostel Private Room" is a release name only.
    ========================================================= */
@@ -13068,4 +13068,207 @@ html[data-atlas-role="administrator"] .atlas-v2-module-open,
 html[data-atlas-role="administrator"] .atlas-v2-interface-bar,
 html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
   border-color: rgba(98, 236, 255, .24) !important;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.30
+   SOURCES CLOSED BY DEFAULT · USER-CONTROLLED STATE
+   ========================================================= */
+
+#liveSourcesCollapse:not([open]) > .atlas-collapse-body {
+  display: none !important;
+}
+
+#liveSourcesCollapse:not([open]) > .atlas-collapse-summary
+.atlas-collapse-icon {
+  transform: none !important;
+}
+
+#liveSourcesCollapse[open] > .atlas-collapse-summary
+.atlas-collapse-icon {
+  transform: none !important;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.30
+   ACCOUNT ADMIN LINK · PRACTICAL SHORTCUTS RESTORE
+   ========================================================= */
+
+.brand-account-row {
+  display: flex !important;
+  align-items: baseline !important;
+  flex-wrap: wrap !important;
+  gap: 8px 14px !important;
+}
+
+.brand-account-row .brandline {
+  margin: 0 !important;
+}
+
+.atlas-account-switch {
+  appearance: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 3px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(98, 236, 255, .30) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: rgba(171, 229, 242, .82) !important;
+  font: 760 8px/1.2 system-ui, sans-serif !important;
+  letter-spacing: .025em !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+.atlas-account-switch:hover,
+.atlas-account-switch:focus-visible,
+.atlas-account-switch.is-admin {
+  color: #effcff !important;
+  border-bottom-color: rgba(98, 236, 255, .80) !important;
+  text-shadow: 0 0 10px rgba(98, 236, 255, .16) !important;
+  outline: none !important;
+}
+
+.atlas-account-switch-icon {
+  color: #62ecff !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+/* La barre n’est plus occupée par les gros boutons de mode. */
+.atlas-v2-interface-bar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  padding: 6px 8px !important;
+  overflow: hidden !important;
+}
+
+.atlas-v2-mode-copy,
+.atlas-v2-mode-buttons {
+  display: none !important;
+}
+
+.atlas-v2-nav {
+  grid-column: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin !important;
+  overscroll-behavior-inline: contain !important;
+}
+
+.atlas-v2-nav-group {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 5px !important;
+  min-width: max-content !important;
+}
+
+.atlas-v2-nav-advanced[hidden] {
+  display: none !important;
+}
+
+.atlas-quick-link {
+  display: inline-grid !important;
+  grid-template-columns: 20px auto !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-width: 65px !important;
+  min-height: 32px !important;
+  padding: 4px 7px !important;
+  border: 1px solid rgba(98, 236, 255, .16) !important;
+  border-radius: 10px !important;
+  background:
+    linear-gradient(180deg, rgba(98, 236, 255, .035), rgba(98, 236, 255, .008)),
+    rgba(4, 16, 29, .58) !important;
+  color: rgba(225, 244, 252, .88) !important;
+  text-decoration: none !important;
+  font: 760 7.5px/1 system-ui, sans-serif !important;
+  white-space: nowrap !important;
+}
+
+.atlas-quick-link:hover,
+.atlas-quick-link:focus-visible {
+  border-color: rgba(98, 236, 255, .58) !important;
+  color: #f4ffff !important;
+  background:
+    linear-gradient(180deg, rgba(98, 236, 255, .075), rgba(98, 236, 255, .018)),
+    rgba(4, 16, 29, .68) !important;
+  box-shadow:
+    inset 0 -2px 0 rgba(98, 236, 255, .48),
+    0 0 10px rgba(98, 236, 255, .07) !important;
+  outline: none !important;
+}
+
+.atlas-quick-icon {
+  display: grid !important;
+  place-items: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  color: #62ecff !important;
+  font: 900 15px/1 ui-monospace, monospace !important;
+  text-shadow: 0 0 10px rgba(98, 236, 255, .16) !important;
+}
+
+.atlas-quick-icon-code {
+  font-size: 9px !important;
+  letter-spacing: -.08em !important;
+}
+
+.atlas-admin-dock {
+  padding-inline-start: 7px !important;
+  border-inline-start: 1px solid rgba(98, 236, 255, .15) !important;
+}
+
+.atlas-admin-dock .atlas-v2-nav-label {
+  min-width: auto !important;
+  padding: 4px 5px !important;
+  color: #62ecff !important;
+}
+
+.atlas-admin-module-picker {
+  min-width: 220px !important;
+  max-width: 340px !important;
+}
+
+.atlas-admin-module-picker select {
+  min-height: 32px !important;
+}
+
+/* Aucun ancien gros sélecteur de mode ne doit réapparaître. */
+#btnModeEssential,
+#btnModeAdvanced,
+.atlas-v2-mode-buttons {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .brand-account-row {
+    align-items: flex-start !important;
+  }
+
+  .atlas-account-switch {
+    font-size: 7.5px !important;
+  }
+
+  .atlas-quick-link {
+    min-width: 56px !important;
+    grid-template-columns: 18px auto !important;
+    padding-inline: 5px !important;
+  }
+
+  .atlas-quick-icon {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 13px !important;
+  }
 }
