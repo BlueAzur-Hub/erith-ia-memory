@@ -6547,3 +6547,61 @@ main .decision-board{
     max-width: calc(100% - 20px);
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6 — GRAPH ALIGNMENT & PINNED TOOLTIP LOCK
+   ========================================================= */
+
+.atlas-market-zone #analyste .chart-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.atlas-chart-tooltip {
+  width: min(270px, calc(100% - 20px));
+  max-height: calc(100% - 74px);
+  overflow: auto;
+  scrollbar-width: thin;
+  pointer-events: none;
+  transform: none !important;
+}
+
+.atlas-chart-tooltip[data-pinned="true"] {
+  border-color: rgba(255, 216, 122, .62) !important;
+  box-shadow:
+    0 20px 52px rgba(0, 0, 0, .48),
+    inset 0 0 0 1px rgba(255, 216, 122, .12) !important;
+}
+
+.atlas-chart-tooltip-pin-state {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(255, 216, 122, .18);
+  color: #ffd97e;
+  font: 900 8px/1.25 system-ui, sans-serif;
+  letter-spacing: .11em;
+  text-align: center;
+}
+
+.compare-chip {
+  border-color: color-mix(in srgb, var(--atlas-series-color, #62ecff) 42%, transparent);
+}
+
+.compare-chip .compare-order {
+  color: var(--atlas-series-color, #62ecff);
+}
+
+@media (max-width: 700px) {
+  .atlas-chart-tooltip {
+    width: min(250px, calc(100% - 16px));
+    max-height: calc(100% - 64px);
+  }
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6 — MARKET PULSE & LIVE SPOT CANON LOCK
+   Marché 60 s · spot sélection 30 s · historique 5 min.
+   Graphes Top 3 / Top 5 alignés · infobulle ancrable.
+   ========================================================= */
