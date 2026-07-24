@@ -1,7 +1,8 @@
-/* V1.1-alpha.26.47.6.6 — CHAMPAGNE LUXE HOSTEL ROOM XXL MARKET & MATH RUNTIME RECOVERY LOCK
-   Répare la fonction scoreCoin supprimée accidentellement.
-   Restaure actualisation marché, Market Snapshot et Math Model.
-   Continuité couleur crypto : graphe, sélection, tableau et Math Model.
+/* V1.1-alpha · Build 27.1 — CHAMPAGNE LUXE PANORAMIC PENTHOUSE
+   Hérite intégralement du runtime 26.47.6.6.
+   Target Top 5 LIVE compact sur une seule ligne :
+   logo | symbole complet | prix | variation.
+   Aucun acquis supprimé.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -4268,8 +4269,7 @@ function atlasRenderTopFiveRibbon() {
       : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
     return `
       <span class="top5-item" data-top5-id="${escapeHtml(coin.id)}" style="${atlasRibbonStyle(coin, index)}">
-        <span class="top5-rank">${escapeHtml(String(coin.rank ?? index + 1))}</span>
-        <span class="top5-identity">${image}<b>${escapeHtml(coin.symbol)}</b></span>
+        <span class="top5-identity">${image}<b>${escapeHtml(String(coin.symbol || "").toUpperCase())}</b></span>
         <strong class="top5-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</strong>
         <small class="top5-change ${variationClass}">${fmtPct(coin.change24h)}</small>
       </span>`;
@@ -5844,7 +5844,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.6-market-math-runtime-recovery`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha-build-27.1-panoramic-penthouse`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {

@@ -7421,3 +7421,130 @@ main .decision-board{
 #math .breakdown > div:first-child {
   border-color: color-mix(in srgb, var(--crypto-color) 30%, var(--line));
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.1
+   CHAMPAGNE LUXE PANORAMIC PENTHOUSE
+   TARGET TOP 5 ONE-LINE POLISH LOCK
+   ========================================================= */
+
+.brandline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .22em;
+}
+
+.brandline > span {
+  color: #fff1c9;
+}
+
+.brandline > strong {
+  background: linear-gradient(90deg, #56e8ff 0%, #58f0d7 52%, #9af6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font: inherit;
+  text-shadow: 0 0 22px rgba(86, 232, 255, .10);
+}
+
+.top5-ribbon {
+  grid-template-columns: 158px minmax(0, 1fr) !important;
+  min-height: 48px;
+}
+
+.market-ribbon-label {
+  padding-right: 11px;
+}
+
+.top5-track {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+  overflow: hidden !important;
+}
+
+.top5-item {
+  display: grid !important;
+  grid-template-columns: minmax(58px, .82fr) minmax(76px, 1.18fr) minmax(52px, .62fr) !important;
+  grid-template-areas: "identity price change" !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  min-height: 34px !important;
+  padding: 5px 8px !important;
+}
+
+.top5-rank {
+  display: none !important;
+}
+
+.top5-identity {
+  grid-area: identity !important;
+  min-width: 0 !important;
+  gap: 6px !important;
+}
+
+.top5-identity img,
+.top5-fallback {
+  width: 21px !important;
+  height: 21px !important;
+  flex: 0 0 21px !important;
+}
+
+.top5-identity b {
+  overflow: visible !important;
+  min-width: 30px;
+  font-size: 10px !important;
+  letter-spacing: .015em;
+  text-overflow: clip !important;
+}
+
+.top5-price {
+  grid-area: price !important;
+  justify-self: end !important;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 9.5px !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top5-change {
+  grid-area: change !important;
+  justify-self: end !important;
+  font-size: 8.5px !important;
+  white-space: nowrap;
+}
+
+.top5-item::after {
+  left: 8px !important;
+  right: 8px !important;
+}
+
+@media (max-width: 1280px) {
+  .top5-ribbon {
+    grid-template-columns: 142px minmax(0, 1fr) !important;
+  }
+
+  .top5-item {
+    grid-template-columns: minmax(54px, .78fr) minmax(66px, 1fr) minmax(48px, .58fr) !important;
+    gap: 5px !important;
+    padding-inline: 6px !important;
+  }
+
+  .top5-price {
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .top5-ribbon {
+    grid-template-columns: 1fr !important;
+  }
+
+  .top5-track {
+    grid-template-columns: repeat(5, minmax(150px, 1fr)) !important;
+    overflow-x: auto !important;
+  }
+}
