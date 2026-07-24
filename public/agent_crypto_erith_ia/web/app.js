@@ -1,7 +1,7 @@
-/* V1.1-alpha.26.47.6.2 — CHAMPAGNE LUXE PENTHOUSE XXL COLOR BRIDGE TOOLTIP LOCK
-   Tooltip libre conservé.
-   Zone rectangulaire colorée entre identité et prix.
-   BTC / ETH / BNB / XRP / SOL utilisent leur palette canonique.
+/* V1.1-alpha.26.47.6.3 — CHAMPAGNE LUXE PENTHOUSE XXL DUAL MARKET RIBBON LOCK
+   Bandeau 1 : Top 5 marché fixe avec logo, prix EUR et variation 24 h.
+   Bandeau 2 : Market Flow défilant, hors Top 5.
+   Couleur crypto déterministe, indépendante du rang et de la sélection.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -135,7 +135,7 @@ state.marketPulse = {
   chartBusy: false
 };
 
-const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sourceDiagnosticTitle: $("sourceDiagnosticTitle"), sourceDiagnosticNote: $("sourceDiagnosticNote"), sourceDiagnosticGrid: $("sourceDiagnosticGrid"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoCadenceSelect: $("autoCadenceSelect"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"), githubMemoryLatest: $("githubMemoryLatest"), githubMemoryRecords: $("githubMemoryRecords"), githubMemoryCollectors: $("githubMemoryCollectors"), githubMemoryFusion: $("githubMemoryFusion"), githubMemoryOutput: $("githubMemoryOutput"),
+const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sourceDiagnosticTitle: $("sourceDiagnosticTitle"), sourceDiagnosticNote: $("sourceDiagnosticNote"), sourceDiagnosticGrid: $("sourceDiagnosticGrid"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoCadenceSelect: $("autoCadenceSelect"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"), githubMemoryLatest: $("githubMemoryLatest"), githubMemoryRecords: $("githubMemoryRecords"), githubMemoryCollectors: $("githubMemoryCollectors"), githubMemoryFusion: $("githubMemoryFusion"), githubMemoryOutput: $("githubMemoryOutput"),
   btnChartSolo: $("btnChartSolo"), btnChartTop3: $("btnChartTop3"), btnChartTop5: $("btnChartTop5"), btnChartGainers: $("btnChartGainers"), btnChartLosers: $("btnChartLosers"), btnChartVolume5: $("btnChartVolume5"), btnChartReset: $("btnChartReset"), btnChartClear: $("btnChartClear"), comparisonSelection: $("comparisonSelection"),
   multiHorizonTitle: $("multiHorizonTitle"), multiHorizonStatus: $("multiHorizonStatus"), multiHorizonSummary: $("multiHorizonSummary"),
   multiHorizon24Value: $("multiHorizon24Value"), multiHorizon24Label: $("multiHorizon24Label"),
@@ -412,11 +412,21 @@ function atlasPatchMarketRowSpot(coin) {
 }
 
 function atlasPatchTickerSpot(changedIds = []) {
-  if (!els.tickerTrack) return;
   const changed = new Set(changedIds);
   state.coins.forEach(coin => {
     if (changed.size && !changed.has(coin.id)) return;
-    els.tickerTrack.querySelectorAll(`[data-ticker-id="${CSS.escape(coin.id)}"]`).forEach(item => {
+
+    els.top5Track?.querySelectorAll(`[data-top5-id="${CSS.escape(coin.id)}"]`).forEach(item => {
+      const price = item.querySelector(".top5-price");
+      const change = item.querySelector(".top5-change");
+      if (price) price.textContent = atlasFormatEUR(coin.priceEur ?? coin.price);
+      if (change) {
+        change.className = `top5-change ${clsPct(coin.change24h)}`;
+        change.textContent = fmtPct(coin.change24h);
+      }
+    });
+
+    els.tickerTrack?.querySelectorAll(`[data-ticker-id="${CSS.escape(coin.id)}"]`).forEach(item => {
       const price = item.querySelector(".ticker-price");
       const change = item.querySelector(".ticker-change");
       if (price) price.textContent = atlasFormatEUR(coin.priceEur ?? coin.price);
@@ -830,7 +840,8 @@ const liveSources = [
   else if (!eurOk) setText(els.metricSourcesHint, `Marché EUR indisponible · ${escapeHtml(eur.detail || "échec")}`);
   else if (usdOk) setText(els.metricSourcesHint, "Top 50 EUR actif · prix USD directs disponibles");
   else setText(els.metricSourcesHint, "Top 50 EUR actif · USD optionnel indisponible");
-} function clearMarketDisplay(reason = "Marché live indisponible.") { state.liveOk = false; state.mainSource = null; state.timestamp = null; state.coins = []; state.global = null; atlasBrokerResetMarket(reason); setText(els.metricMarketCap, "—"); setText(els.metricMarketCapHint, "Donnée non récupérée"); setText(els.metricVolume, "—"); setText(els.metricVolumeHint, "Donnée non récupérée"); setText(els.metricBtcDom, "—"); setText(els.metricBtcDomHint, "Donnée non récupérée"); setHTML( els.tickerTrack, `<span class="ticker-meta">${escapeHtml(reason)} · aucun prix affiché · pas de tableau fictif</span>` ); renderEmptyMarket(`${reason.toUpperCase()} — aucun tableau chiffré.`); renderScore(null); renderWatchlist(); renderRiskGrid(); renderColdRead(false); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderAnalystPanel(); renderDecisionBoard();
+} function clearMarketDisplay(reason = "Marché live indisponible.") { state.liveOk = false; state.mainSource = null; state.timestamp = null; state.coins = []; state.global = null; atlasBrokerResetMarket(reason); setText(els.metricMarketCap, "—"); setText(els.metricMarketCapHint, "Donnée non récupérée"); setText(els.metricVolume, "—"); setText(els.metricVolumeHint, "Donnée non récupérée"); setText(els.metricBtcDom, "—"); setText(els.metricBtcDomHint, "Donnée non récupérée"); setHTML(els.top5Track, `<span class="market-ribbon-empty">${escapeHtml(reason)}</span>`);
+setHTML(els.tickerTrack, `<span class="ticker-meta">${escapeHtml(reason)} · aucun prix affiché · pas de tableau fictif</span>`); renderEmptyMarket(`${reason.toUpperCase()} — aucun tableau chiffré.`); renderScore(null); renderWatchlist(); renderRiskGrid(); renderColdRead(false); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderAnalystPanel(); renderDecisionBoard();
 } function atlasSetSourceLock(mode, timestamp, reason = "Source canonique CoinGecko", valid = true, snapshotId = null) {
   state.sourceLock = {
     canonical: ATLAS_CANONICAL_MARKET_SOURCE,
@@ -1549,8 +1560,24 @@ function atlasCryptoPalette(coin, fallbackIndex = 0) {
   const key = ATLAS_CRYPTO_PALETTES[id] ? id : bySymbol[symbol];
   const canonical = key ? ATLAS_CRYPTO_PALETTES[key] : null;
   if (canonical) return canonical;
-  const fallback = ATLAS_COMPARISON_COLORS[fallbackIndex % ATLAS_COMPARISON_COLORS.length];
-  return { primary: fallback, stops: [fallback, fallback] };
+  const identity = `${id}|${symbol || "CRYPTO"}`;
+  let hash = 2166136261;
+  for (let index = 0; index < identity.length; index += 1) {
+    hash ^= identity.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  const hue = Math.abs(hash) % 360;
+  const secondaryHue = (hue + 34 + (Math.abs(hash >> 8) % 44)) % 360;
+  const saturation = 68 + (Math.abs(hash >> 16) % 18);
+  const lightness = 54 + (Math.abs(hash >> 24) % 10);
+  const primary = `hsl(${hue} ${saturation}% ${lightness}%)`;
+  const secondary = `hsl(${secondaryHue} ${Math.min(92, saturation + 8)}% ${Math.min(72, lightness + 10)}%)`;
+  return {
+    primary,
+    stops: [primary, secondary],
+    deterministic: true,
+    identity
+  };
 }
 
 function atlasCryptoGradientCss(coin, fallbackIndex = 0) {
@@ -4004,43 +4031,82 @@ function renderAll(options = {}) {
   if (refreshChart) requestAnimationFrame(() => { void renderAnalystPanel({ renderAll: true }); finish(); });
   else { atlasRefreshSelectedDetailOnly(); finish(); }
 } function renderMetrics() { const g = state.global; if (g) { setText(els.metricMarketCap, num(g.total_market_cap?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricMarketCapHint, `${state.coins.length} actifs CoinGecko · somme Top 50`); setText(els.metricVolume, num(g.total_volume?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricVolumeHint, "Somme des volumes Top 50 · 24h"); const btc = g.market_cap_percentage?.btc; setText(els.metricBtcDom, typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante"); setText(els.metricBtcDomHint, "Part de BTC dans la capitalisation Top 50"); } updateSourceMetric();
-} function renderTicker() { if (!state.liveOk || !state.coins.length) { setHTML(els.tickerTrack, `<span class="ticker-meta">Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif</span>`); return; } const items = state.coins.slice(0, 18).map(c => { const cls = clsPct(c.change24h); return `<span class="ticker-item" data-ticker-id="${escapeHtml(c.id)}"> <span class="ticker-symbol">${escapeHtml(c.symbol)}</span> <span class="ticker-price">${atlasFormatEUR(c.priceEur ?? c.price)}</span> <span class="ticker-change ${cls}">${fmtPct(c.change24h)}</span> </span>`; }).join(""); const meta = `<span class="ticker-meta">Source : ${escapeHtml(state.mainSource)} · Heure : ${new Date(state.timestamp).toLocaleTimeString("fr-FR")}</span>`; setHTML(els.tickerTrack, `<span>${items}${meta}</span><span>${items}${meta}</span>`);
-} function scoreCoin(c) {
-  if (!c) return { score: null, label: "En attente", parts: {} };
-  if (!atlasAnalysisLiveReady() || !atlasCanonicalCoin(c)) return { score: null, label: state.sourceLock?.mode === "direct" ? "Données insuffisantes" : "Archive", parts: {} };
-
-  const parts = {
-    information: 12,
-    market: c.marketCap ? 14 : 6,
-    liquidity: c.volume24h && c.marketCap ? clamp(3, 15, (c.volume24h / c.marketCap) * 350) : 4,
-    momentum: typeof c.change24h === "number" ? clamp(1, 10, 8 - Math.abs(c.change24h) / 7) : 4,
-    risk: 8
-  };
-
-  const base = (
-    parts.information / 15 * 18 +
-    parts.market / 15 * 22 +
-    parts.liquidity / 15 * 22 +
-    parts.momentum / 10 * 18 +
-    parts.risk / 15 * 20
-  );
-
-  let penalty = 0;
-  if (typeof c.change24h === "number" && Math.abs(c.change24h) > 18) penalty += 12;
-  if (c.volume24h && c.marketCap && c.volume24h / c.marketCap < 0.01) penalty += 10;
-  penalty += 16;
-
-  const score = Math.round(clamp(0, 100, base - penalty));
-  let label = "Veille";
-  if (score <= 40) label = "Données fragiles";
-  else if (score <= 55) label = "Lecture prudente";
-  else if (score <= 65) label = "Mouvement modéré";
-  else if (score <= 75) label = "Mouvement marqué";
-  else label = "Volatilité élevée";
-
-  return { score, label, parts };
+} function atlasRibbonStyle(coin, fallbackIndex = 0) {
+  const palette = atlasCryptoPalette(coin, fallbackIndex);
+  const gradient = atlasCryptoGradientCss(coin, fallbackIndex);
+  return `--crypto-color:${escapeHtml(palette.primary)};--crypto-gradient:${escapeHtml(gradient)}`;
 }
 
+function atlasTopFiveCoins() {
+  return [...(state.coins || [])]
+    .filter(coin => Number.isFinite(Number(coin.rank)))
+    .sort((a, b) => Number(a.rank) - Number(b.rank))
+    .slice(0, 5);
+}
+
+function atlasMarketFlowCoins() {
+  const topFiveIds = new Set(atlasTopFiveCoins().map(coin => coin.id));
+  return [...(state.coins || [])]
+    .filter(coin => !topFiveIds.has(coin.id))
+    .sort((a, b) => Number(a.rank || 9999) - Number(b.rank || 9999))
+    .slice(0, 24);
+}
+
+function atlasRenderTopFiveRibbon() {
+  if (!els.top5Track) return;
+  if (!state.liveOk || !state.coins.length) {
+    setHTML(els.top5Track, '<span class="market-ribbon-empty">Livecheck requis</span>');
+    return;
+  }
+
+  const cards = atlasTopFiveCoins().map((coin, index) => {
+    const variationClass = clsPct(coin.change24h);
+    const image = coin.image
+      ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy">`
+      : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
+    return `
+      <span class="top5-item" data-top5-id="${escapeHtml(coin.id)}" style="${atlasRibbonStyle(coin, index)}">
+        <span class="top5-rank">${escapeHtml(String(coin.rank ?? index + 1))}</span>
+        <span class="top5-identity">${image}<b>${escapeHtml(coin.symbol)}</b></span>
+        <strong class="top5-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</strong>
+        <small class="top5-change ${variationClass}">${fmtPct(coin.change24h)}</small>
+      </span>`;
+  }).join("");
+
+  setHTML(els.top5Track, cards);
+}
+
+function atlasRenderMarketFlowRibbon() {
+  if (!els.tickerTrack) return;
+  if (!state.liveOk || !state.coins.length) {
+    setHTML(
+      els.tickerTrack,
+      '<span class="ticker-meta">Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif</span>'
+    );
+    return;
+  }
+
+  const flow = atlasMarketFlowCoins();
+  const items = flow.map((coin, index) => {
+    const variationClass = clsPct(coin.change24h);
+    return `
+      <span class="ticker-item" data-ticker-id="${escapeHtml(coin.id)}" style="${atlasRibbonStyle(coin, index + 5)}">
+        <i class="ticker-crypto-accent" aria-hidden="true"></i>
+        <span class="ticker-symbol">${escapeHtml(coin.symbol)}</span>
+        <span class="ticker-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</span>
+        <span class="ticker-change ${variationClass}">${fmtPct(coin.change24h)}</span>
+      </span>`;
+  }).join("");
+
+  const meta = `<span class="ticker-meta">Source : ${escapeHtml(state.mainSource)} · Heure : ${new Date(state.timestamp).toLocaleTimeString("fr-FR")}</span>`;
+  const sequence = `<span class="ticker-sequence">${items}${meta}</span>`;
+  setHTML(els.tickerTrack, `${sequence}${sequence}`);
+}
+
+function renderTicker() {
+  atlasRenderTopFiveRibbon();
+  atlasRenderMarketFlowRibbon();
+}
 function decisionFromScore(score) { if (score === null || score === undefined) return "Analyse suspendue"; if (score <= 40) return "Données fragiles"; if (score <= 55) return "Lecture prudente"; if (score <= 65) return "Mouvement modéré"; if (score <= 75) return "Mouvement marqué"; return "Volatilité élevée";
 } function renderMarketTable() {
   if (!els.marketRows) return;
@@ -5491,7 +5557,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.2-penthouse-xxl`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.3-dual-market-ribbon`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {
