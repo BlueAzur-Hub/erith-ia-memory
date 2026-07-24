@@ -1,7 +1,7 @@
-/* V1.1-alpha.26.47.6 — GRAPH ALIGNMENT & PINNED TOOLTIP CANON LOCK
-   Top 3 / Top 5 : axe temporel commun interpolé.
-   Clic : ancre l'infobulle. Nouveau clic : libère.
-   Dernier point visible et zone d'accroche élargie.
+/* V1.1-alpha.26.47.6 — CHAMPAGNE CRYPTO COLORS & FREE TOOLTIP LOCK
+   Tooltip entièrement libre au survol.
+   Couleurs fidèles aux identités crypto.
+   SOL : dégradé vert → cyan → violet.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -34,13 +34,7 @@ const state = {
     retryTimer: null,
     retryKey: "",
     retryAttempts: Object.create(null),
-    tooltipPin: {
-      active: false,
-      chartKey: "",
-      dataIndex: null,
-      datasetIndex: 0,
-      x: null
-    }
+    tooltipPin: null
   },
   sourceLock: {
     canonical: "CoinGecko",
@@ -1029,11 +1023,6 @@ async function atlasRefreshSpotBook(options = {}) {
 async function atlasMaybeRefreshHistoricalChart(options = {}) {
   if (!state.auto?.enabled || !state.liveOk || !state.coins.length || !atlasPulseVisible()) return false;
 
-  if (state.chartEngineV2?.tooltipPin?.active) {
-    atlasScheduleChartPulse(60 * 1000);
-    return false;
-  }
-
   if (state.chartEngineV2?.loading || state.marketPulse.chartBusy) {
     atlasScheduleChartPulse(30 * 1000);
     return false;
@@ -1505,13 +1494,84 @@ function renderBeginnerSummary() { if (!els.beginnerSummary) return; if (!state.
 }
 
 
+const ATLAS_CRYPTO_PALETTES = Object.freeze({
+  bitcoin: Object.freeze({ primary: "#F7931A", stops: ["#F7931A", "#FFB347"] }),
+  ethereum: Object.freeze({ primary: "#A7A9B6", stops: ["#73788A", "#B7BAC8", "#627EEA"] }),
+  binancecoin: Object.freeze({ primary: "#F3BA2F", stops: ["#F3BA2F", "#FFE081"] }),
+  ripple: Object.freeze({ primary: "#F7FAFC", stops: ["#FFFFFF", "#B9C3CE"] }),
+  solana: Object.freeze({ primary: "#14F195", stops: ["#14F195", "#00D1FF", "#9945FF"] }),
+  tether: Object.freeze({ primary: "#26A17B", stops: ["#26A17B", "#53D1AA"] }),
+  "usd-coin": Object.freeze({ primary: "#2775CA", stops: ["#2775CA", "#62A6E8"] }),
+  cardano: Object.freeze({ primary: "#3468D4", stops: ["#1E5AA8", "#67A7FF"] }),
+  dogecoin: Object.freeze({ primary: "#C2A633", stops: ["#B89B2C", "#E8D46A"] }),
+  tron: Object.freeze({ primary: "#FF2638", stops: ["#FF2638", "#FF6673"] }),
+  chainlink: Object.freeze({ primary: "#2A5ADA", stops: ["#2A5ADA", "#6B8FFF"] }),
+  "avalanche-2": Object.freeze({ primary: "#E84142", stops: ["#E84142", "#FF7575"] }),
+  polkadot: Object.freeze({ primary: "#E6007A", stops: ["#E6007A", "#FF62B5"] }),
+  litecoin: Object.freeze({ primary: "#B8B8B8", stops: ["#8C8C8C", "#E2E2E2"] }),
+  sui: Object.freeze({ primary: "#6FBCF0", stops: ["#4DA2E0", "#9DD6FF"] }),
+  toncoin: Object.freeze({ primary: "#0098EA", stops: ["#0098EA", "#59C7FF"] }),
+  "shiba-inu": Object.freeze({ primary: "#F26B38", stops: ["#F26B38", "#FFC14E"] }),
+  pepe: Object.freeze({ primary: "#4CAF50", stops: ["#3D8B40", "#8BD17C"] })
+});
+
 const ATLAS_COMPARISON_COLORS = [
-  "rgba(112,244,255,0.96)",
-  "rgba(255,214,122,0.96)",
-  "rgba(255,127,213,0.94)",
-  "rgba(124,255,170,0.94)",
-  "rgba(173,146,255,0.95)"
+  "#F7931A",
+  "#A7A9B6",
+  "#F3BA2F",
+  "#F7FAFC",
+  "#14F195"
 ];
+
+function atlasCryptoPalette(coin, fallbackIndex = 0) {
+  const id = String(coin?.id || "").toLowerCase();
+  const symbol = String(coin?.symbol || "").toUpperCase();
+  const bySymbol = {
+    BTC: "bitcoin",
+    ETH: "ethereum",
+    BNB: "binancecoin",
+    XRP: "ripple",
+    SOL: "solana",
+    USDT: "tether",
+    USDC: "usd-coin",
+    ADA: "cardano",
+    DOGE: "dogecoin",
+    TRX: "tron",
+    LINK: "chainlink",
+    AVAX: "avalanche-2",
+    DOT: "polkadot",
+    LTC: "litecoin",
+    SUI: "sui",
+    TON: "toncoin",
+    SHIB: "shiba-inu",
+    PEPE: "pepe"
+  };
+  const key = ATLAS_CRYPTO_PALETTES[id] ? id : bySymbol[symbol];
+  const canonical = key ? ATLAS_CRYPTO_PALETTES[key] : null;
+  if (canonical) return canonical;
+  const fallback = ATLAS_COMPARISON_COLORS[fallbackIndex % ATLAS_COMPARISON_COLORS.length];
+  return { primary: fallback, stops: [fallback, fallback] };
+}
+
+function atlasCryptoGradientCss(coin, fallbackIndex = 0) {
+  const palette = atlasCryptoPalette(coin, fallbackIndex);
+  const stops = palette.stops.map((color, index) => {
+    const position = palette.stops.length === 1 ? 0 : index / (palette.stops.length - 1) * 100;
+    return `${color} ${position.toFixed(0)}%`;
+  });
+  return `linear-gradient(90deg, ${stops.join(", ")})`;
+}
+
+function atlasCryptoCanvasGradient(ctx, coin, fallbackIndex = 0, width = 980) {
+  const palette = atlasCryptoPalette(coin, fallbackIndex);
+  if (!ctx?.createLinearGradient || palette.stops.length < 2) return palette.primary;
+  const gradient = ctx.createLinearGradient(0, 0, Math.max(1, Number(width) || 980), 0);
+  palette.stops.forEach((color, index) => {
+    const offset = palette.stops.length === 1 ? 0 : index / (palette.stops.length - 1);
+    gradient.addColorStop(offset, color);
+  });
+  return gradient;
+}
 
 function atlasExpectedChartContextKey(ids = atlasComparisonIds(), period = Number(state.chartPeriodDays || 1)) {
   const normalizedIds = Array.isArray(ids) ? ids.filter(Boolean).slice(0, ATLAS_COMPARISON_MAX_SERIES) : [];
@@ -1630,7 +1690,7 @@ function atlasRenderComparisonControls() {
       ? `Série ${atlasChartPeriodLabel(state.chartPeriodDays)} indisponible après les tentatives`
       : index === 0 ? "Actif principal" : "Définir comme actif principal";
     return `
-    <span class="compare-chip ${index === 0 ? "is-primary" : ""} ${unavailable ? "is-unavailable" : ""}" style="--atlas-series-color:${escapeHtml(ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length])}" ${unavailable ? 'data-series-state="unavailable"' : ""}>
+    <span class="compare-chip ${index === 0 ? "is-primary" : ""} ${unavailable ? "is-unavailable" : ""}" style="--atlas-series-color:${escapeHtml(atlasCryptoPalette(coin, index).primary)};--atlas-series-gradient:${escapeHtml(atlasCryptoGradientCss(coin, index))}" ${unavailable ? 'data-series-state="unavailable"' : ""}>
       <button class="compare-chip-main" type="button" data-compare-primary="${escapeHtml(coin.id)}" title="${escapeHtml(stateTitle)}">
         <span>${escapeHtml(coin.symbol)}</span><small>${stateLabel}</small>
       </button>
@@ -2314,10 +2374,7 @@ function atlasChartSeriesSummary(series) {
 }
 
 function atlasDestroyRealChart() {
-  if (state.chartEngineV2?.tooltipPin) {
-    state.chartEngineV2.tooltipPin = { active: false, chartKey: "", dataIndex: null, datasetIndex: 0, x: null };
-  }
-  atlasHideChartTooltip(true);
+  atlasHideChartTooltip();
   atlasHideChartRefresh();
   if (state.chartEngineV2?.realChart) {
     try { state.chartEngineV2.realChart.destroy(); } catch {}
@@ -2496,25 +2553,24 @@ function atlasChartTooltipNode() {
   return document.getElementById("atlasChartTooltip");
 }
 
-function atlasHideChartTooltip(force = false) {
+function atlasHideChartTooltip() {
   const node = atlasChartTooltipNode();
   if (!node) return;
-  if (!force && state.chartEngineV2?.tooltipPin?.active) return;
   node.hidden = true;
   node.setAttribute("aria-hidden", "true");
-  node.removeAttribute("data-pinned");
   node.removeAttribute("data-dock");
   node.style.removeProperty("left");
   node.style.removeProperty("top");
 }
 
-function atlasChartTooltipCoinMarkup(coin, color) {
+function atlasChartTooltipCoinMarkup(coin, color, gradientCss = "") {
   const symbol = escapeHtml(String(coin?.symbol || "ACTIF").toUpperCase());
   const name = escapeHtml(coin?.name || symbol);
   const image = coin?.image
     ? `<img src="${escapeHtml(coin.image)}" alt="" loading="eager">`
     : `<span class="atlas-chart-tooltip-fallback" aria-hidden="true">${symbol.slice(0, 1)}</span>`;
-  return `<span class="atlas-chart-tooltip-identity" style="--atlas-series-color:${escapeHtml(color || "rgba(112,244,255,.96)")}">${image}<span><b>${symbol}</b><small>${name}</small></span></span>`;
+  const style = `--atlas-series-color:${escapeHtml(color || "#F7931A")};--atlas-series-gradient:${escapeHtml(gradientCss || `linear-gradient(90deg, ${color || "#F7931A"}, ${color || "#F7931A"})`)}`;
+  return `<span class="atlas-chart-tooltip-identity" style="${style}">${image}<span><b>${symbol}</b><small>${name}</small></span></span>`;
 }
 
 function atlasComparisonTooltipRows(chart, targetX, dataIndex = null) {
@@ -2527,7 +2583,8 @@ function atlasComparisonTooltipRows(chart, targetX, dataIndex = null) {
     if (!point) return null;
     return {
       coin: dataset.atlasCoin || {},
-      color: dataset.borderColor,
+      color: dataset.atlasPrimaryColor || dataset.borderColor,
+      gradientCss: dataset.atlasGradientCss || "",
       baseValue: Number(point.y),
       rawPrice: Number(point.rawPrice),
       timestamp: Number(point.x)
@@ -2538,166 +2595,82 @@ function atlasComparisonTooltipRows(chart, targetX, dataIndex = null) {
 function atlasPositionChartTooltip(chart, tooltip, node) {
   const shell = chart?.canvas?.closest?.(".chart-shell");
   if (!shell || !node) return;
+
   const shellRect = shell.getBoundingClientRect();
   const canvasRect = chart.canvas.getBoundingClientRect();
   const measured = node.getBoundingClientRect();
+
   const anchorX = canvasRect.left - shellRect.left + Number(tooltip.caretX || 0);
+  const anchorY = canvasRect.top - shellRect.top + Number(tooltip.caretY || 0);
   const canvasLeft = canvasRect.left - shellRect.left;
-  const canvasTop = canvasRect.top - shellRect.top;
   const canvasWidth = canvasRect.width || shell.clientWidth;
-  const cursorOnRight = anchorX > canvasLeft + canvasWidth * 0.55;
-  const pinned = !!state.chartEngineV2?.tooltipPin?.active;
-  let left = cursorOnRight ? anchorX - measured.width - 20 : anchorX + 20;
+  const cursorOnRight = anchorX > canvasLeft + canvasWidth * 0.58;
+
+  let left = cursorOnRight
+    ? anchorX - measured.width - 18
+    : anchorX + 18;
+  let top = anchorY - measured.height * 0.50;
+
   left = clamp(10, Math.max(10, shell.clientWidth - measured.width - 10), left);
-  const preferredTop = canvasTop + (pinned ? 48 : 54);
-  const top = clamp(10, Math.max(10, shell.clientHeight - measured.height - 10), preferredTop);
+  top = clamp(10, Math.max(10, shell.clientHeight - measured.height - 10), top);
+
   node.dataset.dock = cursorOnRight ? "left" : "right";
-  if (pinned) node.dataset.pinned = "true";
-  else node.removeAttribute("data-pinned");
   node.style.left = `${Math.round(left)}px`;
   node.style.top = `${Math.round(top)}px`;
 }
 
 
-function atlasChartPointForEvent(chart, nativeEvent) {
-  if (!chart || !nativeEvent) return null;
-  const points = chart.getElementsAtEventForMode(nativeEvent, "index", { intersect: false, axis: "x" }, false);
-  return points?.[0] || null;
-}
-
-function atlasClearChartTooltipPin(chart = state.chartEngineV2?.realChart) {
-  if (state.chartEngineV2?.tooltipPin) {
-    state.chartEngineV2.tooltipPin = { active: false, chartKey: "", dataIndex: null, datasetIndex: 0, x: null };
-  }
-  try {
-    chart?.setActiveElements?.([]);
-    chart?.tooltip?.setActiveElements?.([], { x: 0, y: 0 });
-    chart?.update?.("none");
-  } catch {}
-  atlasHideChartTooltip(true);
-}
-
-function atlasToggleChartTooltipPin(chart, event) {
-  const current = state.chartEngineV2?.tooltipPin || {};
-  if (current.active && current.chartKey === state.chartEngineV2?.lastRenderedKey) {
-    atlasClearChartTooltipPin(chart);
-    return;
-  }
-  const nativeEvent = event?.native || event;
-  const point = atlasChartPointForEvent(chart, nativeEvent);
-  if (!point) return;
-  const datum = chart?.data?.datasets?.[point.datasetIndex]?.data?.[point.index];
-  state.chartEngineV2.tooltipPin = {
-    active: true,
-    chartKey: state.chartEngineV2?.lastRenderedKey || "",
-    dataIndex: Number(point.index),
-    datasetIndex: Number(point.datasetIndex || 0),
-    x: Number.isFinite(Number(datum?.x)) ? Number(datum.x) : null
-  };
-  const position = {
-    x: Number(event?.x ?? nativeEvent?.offsetX ?? 0),
-    y: Number(event?.y ?? nativeEvent?.offsetY ?? 0)
-  };
-  try {
-    chart.setActiveElements([{ datasetIndex: point.datasetIndex, index: point.index }]);
-    chart.tooltip?.setActiveElements?.([{ datasetIndex: point.datasetIndex, index: point.index }], position);
-    chart.update("none");
-  } catch {}
-}
-
-function atlasRefreshPinnedChartTooltip(chart = state.chartEngineV2?.realChart) {
-  const pin = state.chartEngineV2?.tooltipPin;
-  if (!pin?.active || !chart || pin.chartKey !== state.chartEngineV2?.lastRenderedKey) return false;
-  const maxIndex = Math.max(0, Number(chart.data?.datasets?.[0]?.data?.length || 1) - 1);
-  const index = clamp(0, maxIndex, Number(pin.dataIndex || 0));
-  const datasetIndex = clamp(0, Math.max(0, Number(chart.data?.datasets?.length || 1) - 1), Number(pin.datasetIndex || 0));
-  const point = chart.data?.datasets?.[datasetIndex]?.data?.[index];
-  if (!point) {
-    atlasClearChartTooltipPin(chart);
-    return false;
-  }
-  pin.dataIndex = index;
-  pin.datasetIndex = datasetIndex;
-  pin.x = Number(point.x);
-  const metaPoint = chart.getDatasetMeta?.(datasetIndex)?.data?.[index];
-  const position = {
-    x: Number(metaPoint?.x || chart.chartArea?.right || 0),
-    y: Number(metaPoint?.y || chart.chartArea?.top || 0)
-  };
-  try {
-    chart.setActiveElements([{ datasetIndex, index }]);
-    chart.tooltip?.setActiveElements?.([{ datasetIndex, index }], position);
-    chart.update("none");
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function atlasExternalChartTooltip(context) {
   const chart = context?.chart;
   const tooltip = context?.tooltip;
   const node = atlasChartTooltipNode();
-  const pin = state.chartEngineV2?.tooltipPin || {};
   if (!chart || !node) return;
-  if ((!tooltip || tooltip.opacity === 0) && !pin.active) {
-    atlasHideChartTooltip(true);
+
+  if (!tooltip || tooltip.opacity === 0) {
+    atlasHideChartTooltip();
     return;
   }
 
-  let point = tooltip?.dataPoints?.[0] || null;
-  if (pin.active && pin.chartKey === state.chartEngineV2?.lastRenderedKey) {
-    const dataset = chart.data?.datasets?.[pin.datasetIndex || 0];
-    const datum = dataset?.data?.[pin.dataIndex];
-    if (datum) {
-      point = {
-        dataIndex: pin.dataIndex,
-        datasetIndex: pin.datasetIndex || 0,
-        dataset,
-        parsed: { x: Number(datum.x), y: Number(datum.y) }
-      };
-    }
-  }
-
+  const point = tooltip.dataPoints?.[0] || null;
   const targetX = Number(point?.parsed?.x);
   const comparison = chart.$atlasMode === "comparison";
   const rows = comparison
     ? atlasComparisonTooltipRows(chart, targetX, point?.dataIndex)
     : point ? [{
         coin: point.dataset?.atlasCoin || chart.$atlasCoin || {},
-        color: point.dataset?.borderColor,
+        color: point.dataset?.atlasPrimaryColor || point.dataset?.borderColor,
+        gradientCss: point.dataset?.atlasGradientCss || "",
         baseValue: null,
         rawPrice: Number(point.parsed?.y),
         timestamp: targetX
       }] : [];
 
   if (!rows.length) {
-    atlasHideChartTooltip(true);
+    atlasHideChartTooltip();
     return;
   }
 
-  const alignedTimestamp = Number.isFinite(Number(rows[0]?.timestamp)) ? Number(rows[0].timestamp) : targetX;
+  const alignedTimestamp = Number.isFinite(Number(rows[0]?.timestamp))
+    ? Number(rows[0].timestamp)
+    : targetX;
   const title = atlasChartLabelFull(Number.isFinite(alignedTimestamp) ? alignedTimestamp : Date.now());
-  const body = rows.map(row => {
+
+  const body = rows.map((row, index) => {
+    const palette = atlasCryptoPalette(row.coin, index);
+    const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const price = Number.isFinite(row.rawPrice) ? atlasFormatEUR(row.rawPrice) : "Prix indisponible";
     const base = comparison && Number.isFinite(row.baseValue)
       ? `<small>Base 100 : ${row.baseValue.toFixed(2)}</small>`
       : '<small>Prix réel CoinGecko EUR</small>';
-    return `<div class="atlas-chart-tooltip-row">${atlasChartTooltipCoinMarkup(row.coin, row.color)}<span class="atlas-chart-tooltip-values"><strong>${escapeHtml(price)}</strong>${base}</span></div>`;
+    const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
+    return `<div class="atlas-chart-tooltip-row" style="${style}">${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}<span class="atlas-chart-tooltip-values"><strong>${escapeHtml(price)}</strong>${base}</span></div>`;
   }).join("");
 
-  node.innerHTML = `<div class="atlas-chart-tooltip-date">${escapeHtml(title)}</div>${body}${pin.active ? '<div class="atlas-chart-tooltip-pin-state">ANCRÉ · clique le graphe pour libérer</div>' : ""}`;
+  node.innerHTML = `<div class="atlas-chart-tooltip-date">${escapeHtml(title)}</div>${body}`;
   node.hidden = false;
   node.setAttribute("aria-hidden", "false");
-  if (pin.active) node.dataset.pinned = "true";
-  else node.removeAttribute("data-pinned");
 
-  const metaPoint = chart.getDatasetMeta?.(point?.datasetIndex || 0)?.data?.[point?.dataIndex || 0];
-  const syntheticTooltip = {
-    caretX: Number(tooltip?.caretX ?? metaPoint?.x ?? 0),
-    caretY: Number(tooltip?.caretY ?? metaPoint?.y ?? 0)
-  };
-  requestAnimationFrame(() => atlasPositionChartTooltip(chart, syntheticTooltip, node));
+  requestAnimationFrame(() => atlasPositionChartTooltip(chart, tooltip, node));
 }
 
 function atlasSetChartCaptionHtml(html, plainText) {
@@ -2718,8 +2691,10 @@ function atlasRenderComparisonCaption(entries, period, failures = [], requestedC
   const segments = entries.map((entry, index) => {
     const change = Number(entry?.result?.integrity?.metrics?.changePct);
     const text = Number.isFinite(change) ? fmtPct(change) : "—";
-    const color = ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length];
-    return `<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(color)}"><i aria-hidden="true"></i><b>${escapeHtml(entry.coin.symbol)}</b><strong>${escapeHtml(text)}</strong></span>`;
+    const palette = atlasCryptoPalette(entry.coin, index);
+    const color = palette.primary;
+    const gradientCss = atlasCryptoGradientCss(entry.coin, index);
+    return `<span class="chart-caption-asset" style="--atlas-series-color:${escapeHtml(color)};--atlas-series-gradient:${escapeHtml(gradientCss)}"><i aria-hidden="true"></i><b>${escapeHtml(entry.coin.symbol)}</b><strong>${escapeHtml(text)}</strong></span>`;
   }).join('<span class="chart-caption-separator">·</span>');
   const prefix = `Comparaison ${periodLabel} ${partial ? "partielle" : "complète"} · Base 100 ·`;
   const suffix = `· ${entries.length}/${requestedCount} séries valides · source CoinGecko EUR.`;
@@ -2772,7 +2747,6 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       options: {
         responsive: true, maintainAspectRatio: false, animation: false, normalized: true, parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        onClick(event, elements, chart) { atlasToggleChartTooltipPin(chart, event); },
         layout: { padding: { top: 36, right: 22, bottom: 22, left: 10 } },
         plugins: {
           legend: { display: false },
@@ -2933,7 +2907,6 @@ function atlasPatchChartLastPoint(quotes = state.dataBroker?.spotBook?.quotes ||
   brokerChart.timestamp = new Date(timestamp).toISOString();
   atlasRefreshChartScale(chart);
   chart.update("none");
-  atlasRefreshPinnedChartTooltip(chart);
   atlasRefreshSelectedDetailOnly();
   renderMultiHorizon();
   atlasRenderBrokerStrip();
@@ -3057,26 +3030,33 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   state.chartEngineV2.lastFingerprint = atlasComparisonResultFingerprint(normalizedEntries, period);
 
   if (window.Chart) {
-    const datasets = normalizedEntries.map((entry, index) => ({
-      label: `${entry.coin.symbol} · Base 100`,
-      atlasCoin: { id: entry.coin.id, symbol: entry.coin.symbol, name: entry.coin.name, image: entry.coin.image || "" },
-      data: entry.data,
-      parsing: false,
-      borderWidth: index === 0 ? 2.8 : 2.2,
-      pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 3.3 : 0; },
-      pointHoverRadius: 5,
-      pointHitRadius: 24,
-      tension: 0.08,
-      fill: false,
-      borderColor: ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length],
-      backgroundColor: ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length],
-      pointBackgroundColor: ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length],
-      pointBorderColor: "rgba(3,10,20,.92)",
-      pointBorderWidth: 1.5,
-      borderCapStyle: "round",
-      borderJoinStyle: "round"
-    }));
     const ctx = canvas.getContext("2d");
+    const gradientWidth = canvas.getBoundingClientRect().width || canvas.clientWidth || 980;
+    const datasets = normalizedEntries.map((entry, index) => {
+      const palette = atlasCryptoPalette(entry.coin, index);
+      const stroke = atlasCryptoCanvasGradient(ctx, entry.coin, index, gradientWidth);
+      return {
+        label: `${entry.coin.symbol} · Base 100`,
+        atlasCoin: { id: entry.coin.id, symbol: entry.coin.symbol, name: entry.coin.name, image: entry.coin.image || "" },
+        atlasPrimaryColor: palette.primary,
+        atlasGradientCss: atlasCryptoGradientCss(entry.coin, index),
+        data: entry.data,
+        parsing: false,
+        borderWidth: index === 0 ? 3.0 : 2.35,
+        pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 3.5 : 0; },
+        pointHoverRadius: 5,
+        pointHitRadius: 24,
+        tension: 0.08,
+        fill: false,
+        borderColor: stroke,
+        backgroundColor: palette.primary,
+        pointBackgroundColor: palette.primary,
+        pointBorderColor: "rgba(3,10,20,.92)",
+        pointBorderWidth: 1.5,
+        borderCapStyle: "round",
+        borderJoinStyle: "round"
+      };
+    });
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
@@ -3087,7 +3067,6 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        onClick(event, elements, chart) { atlasToggleChartTooltipPin(chart, event); },
         layout: { padding: { top: 62, right: 22, bottom: 22, left: 10 } },
         plugins: {
           legend: { display: true, position: "top", align: "end", labels: { color: "rgba(236,248,255,0.90)", usePointStyle: true, pointStyle: "line", boxWidth: 24, font: { size: 10, weight: "800" } } },
@@ -3133,7 +3112,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
       if (pointIndex === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     });
-    ctx.strokeStyle = ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length];
+    ctx.strokeStyle = atlasCryptoPalette(entry.coin, index).primary;
     ctx.lineWidth = index === 0 ? 2.8 : 2.2;
     ctx.stroke();
   });
@@ -5512,7 +5491,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6-champagne-colors`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {

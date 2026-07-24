@@ -6605,3 +6605,117 @@ main .decision-board{
    Marché 60 s · spot sélection 30 s · historique 5 min.
    Graphes Top 3 / Top 5 alignés · infobulle ancrable.
    ========================================================= */
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6 — CHAMPAGNE CRYPTO COLORS
+   FREE TOOLTIP FINAL LOCK
+   ========================================================= */
+
+.atlas-chart-tooltip {
+  pointer-events: none !important;
+  transform: none !important;
+  transition:
+    left 70ms linear,
+    top 70ms linear,
+    opacity 90ms ease !important;
+}
+
+.atlas-chart-tooltip[data-pinned="true"],
+.atlas-chart-tooltip-pin-state {
+  display: none !important;
+}
+
+.atlas-chart-tooltip-row {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-bottom: 1px solid rgba(255, 255, 255, .055);
+}
+
+.atlas-chart-tooltip-row:last-child {
+  border-bottom: 0;
+}
+
+.atlas-chart-tooltip-row::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  opacity: .62;
+}
+
+.atlas-chart-tooltip-row::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--atlas-series-color) 10%, transparent),
+      transparent 42%,
+      color-mix(in srgb, var(--atlas-series-color) 7%, transparent)
+    );
+  opacity: .72;
+}
+
+.atlas-chart-tooltip-identity::before {
+  background: var(--atlas-series-gradient, var(--atlas-series-color)) !important;
+}
+
+.atlas-chart-tooltip-identity b,
+.atlas-chart-tooltip-values strong {
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.atlas-chart-tooltip-values {
+  position: relative;
+  padding-left: 12px;
+}
+
+.atlas-chart-tooltip-values::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  opacity: .78;
+}
+
+.chart-caption-asset i {
+  background: var(--atlas-series-gradient, var(--atlas-series-color)) !important;
+}
+
+.chart-caption-asset b,
+.chart-caption-asset strong {
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+.compare-chip {
+  border-color: color-mix(in srgb, var(--atlas-series-color) 46%, transparent) !important;
+}
+
+.compare-chip::before {
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+}
+
+@media (max-width: 700px) {
+  .atlas-chart-tooltip {
+    width: min(250px, calc(100% - 16px));
+    max-height: calc(100% - 58px);
+  }
+}
