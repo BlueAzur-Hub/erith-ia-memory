@@ -1,21 +1,18 @@
-/* V2.0-alpha · Build 28.1.2 — MARKET WORKSPACE REFLOW & MATH TRUTH LOCK
-   Correctif cumulatif de densité, vérité et interaction.
-   - Market Workspace sans bandeau redondant ;
-   - Market Snapshot et Math Core à hauteurs indépendantes ;
-   - Math latéral sticky, Math dessus compact, Math rail en mode essentiel ;
-   - un seul indice principal et des mesures secondaires factuelles ;
-   - amplitude 24 h séparée du risque global, explicitement non évalué ;
-   - détails de l’indice fermés par défaut ;
-   - scénario ±3 % déplacé vers Simulation ;
-   - USD absent affiché « USD — » ;
-   - clic ligne = ajouter / retirer de la comparaison ;
-   - Solo = ouverture d’un actif unique ;
-   - légende désactivée par défaut en comparaison ;
-   - bulles natives title supprimées au profit de la Help Layer ;
-   - Math Core déclenché par événements avec fraîcheur minute ;
-   - graphique atomique, Watchlist V3, News V2, mémoires et gouverneur préservés.
+/* V2.0-alpha · Build 28.1.3 — ESSENTIAL / ADVANCED FULL SECTION MIGRATION & COMPACT NAVIGATION LOCK
+   Migration cumulative de l’interface complète.
+   - manifeste V2 explicite : essentiel, avancé, projet et diagnostic ;
+   - aucune section historique ne fuit plus dans le mode Essentiel ;
+   - conteneur Watchlist / Risques correctement séparé par visibilité ;
+   - référentiel News, Situation, Audience et projets réservés au mode Avancé ;
+   - sélecteur compact de modules V2 avec groupes Analyse, Mémoire,
+     Atelier, Système et Projets @erith.IA ;
+   - ouverture automatique du mode Avancé depuis une ancre ou un module ;
+   - navigation et sélecteur de mode fortement compactés sans réduire la lisibilité ;
+   - panneaux historiques repliables plus courts et plus réguliers ;
+   - graphique 28.1, comparaison atomique, Market, Math Truth,
+     Watchlist V3, News V2, mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.2";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.3";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -8003,42 +8000,151 @@ const ATLAS_V2_MATH_DOCK_KEY = "agent_crypto_erith_ia_v2_math_dock";
 const ATLAS_V2_ALLOWED_MODES = new Set(["essential", "advanced"]);
 const ATLAS_V2_ALLOWED_MATH_DOCKS = new Set(["rail", "side", "top"]);
 
-const ATLAS_V2_ADVANCED_SECTION_IDS = Object.freeze([
-  "multi-horizon",
-  "lecture-froide",
-  "risques",
-  "auto-reader",
-  "shared-memory",
-  "github-memory",
-  "planning",
-  "questionnaire",
-  "briefing",
-  "impact",
-  "physical-security",
-  "backend",
-  "safety",
-  "simulation",
-  "commandes",
-  "missions-vie",
-  "mesure-audience",
-  "sources"
+const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
+  { id: "livecheck", level: "essential", target: "self", group: "essential" },
+  { id: "marche", level: "essential", target: "self", group: "essential" },
+  { id: "market-workspace", level: "essential", target: "self", group: "essential" },
+  { id: "analyste", level: "essential", target: "self", group: "essential" },
+  { id: "watchlist", level: "essential", target: "self", group: "essential" },
+  { id: "decision-board", level: "essential", target: "self", group: "essential" },
+  { id: "news-sentinel", level: "essential", target: "self", group: "essential" },
+  { id: "nofomo", level: "essential", target: "self", group: "essential" },
+
+  { id: "math", level: "adaptive", target: "self", group: "analysis" },
+  { id: "multi-horizon", level: "advanced", target: "self", group: "analysis" },
+  { id: "lecture-froide", level: "advanced", target: "closest-collapse", group: "analysis" },
+  { id: "risques", level: "advanced", target: "self", group: "analysis" },
+  { id: "debutant", level: "advanced", target: "closest-collapse", group: "analysis" },
+
+  { id: "auto-reader", level: "advanced", target: "closest-collapse", group: "memory" },
+  { id: "shared-memory", level: "advanced", target: "closest-collapse", group: "memory" },
+  { id: "github-memory", level: "advanced", target: "closest-collapse", group: "memory" },
+  { id: "newsSourceRegistry", level: "advanced", target: "self", group: "memory" },
+  { id: "news-plan", level: "advanced", target: "closest-collapse", group: "memory" },
+
+  { id: "situation", level: "advanced", target: "closest-collapse", group: "workshop" },
+  { id: "questionnaire", level: "advanced", target: "closest-collapse", group: "workshop" },
+  { id: "briefing", level: "advanced", target: "closest-collapse", group: "workshop" },
+  { id: "impact", level: "advanced", target: "closest-collapse", group: "workshop" },
+  { id: "simulation", level: "advanced", target: "closest-collapse", group: "workshop" },
+  { id: "planning", level: "project", target: "closest-collapse", group: "workshop" },
+
+  { id: "physical-security", level: "diagnostic", target: "closest-collapse", group: "system" },
+  { id: "backend", level: "diagnostic", target: "closest-collapse", group: "system" },
+  { id: "safety", level: "diagnostic", target: "closest-collapse", group: "system" },
+  { id: "commandes", level: "diagnostic", target: "closest-collapse", group: "system" },
+  { id: "sources", level: "diagnostic", target: "closest-collapse", group: "system" },
+  { id: "mesure-audience", level: "diagnostic", target: "self", group: "system" },
+
+  { id: "missions-vie", level: "project", target: "self", group: "projects" },
+  { id: "fonds-erith-ia", level: "project", target: "closest-collapse", group: "projects" },
+  { id: "association-erith-ia", level: "project", target: "closest-collapse", group: "projects" },
+  { id: "aerith-enfance", level: "project", target: "closest-collapse", group: "projects" },
+  { id: "aerith-animaux", level: "project", target: "closest-collapse", group: "projects" },
+  { id: "aerith-terre-vivante", level: "project", target: "closest-collapse", group: "projects" }
 ]);
 
-const ATLAS_V2_PROJECT_SECTION_IDS = Object.freeze([
-  "missions-vie",
-  "planning"
-]);
+const ATLAS_V2_MANIFEST_BY_ID = new Map(
+  ATLAS_V2_SECTION_MANIFEST.map(entry => [entry.id, entry])
+);
 
-const ATLAS_V2_DIAGNOSTIC_SECTION_IDS = Object.freeze([
-  "backend",
-  "safety",
-  "simulation",
-  "commandes",
-  "sources",
-  "auto-reader",
-  "shared-memory",
-  "github-memory"
-]);
+function atlasV2ManifestEntry(idOrHash) {
+  const id = decodeURIComponent(String(idOrHash || "").replace(/^#/, ""));
+  return ATLAS_V2_MANIFEST_BY_ID.get(id) || null;
+}
+
+function atlasV2ManifestTarget(entry) {
+  if (!entry) return null;
+  const element = document.getElementById(entry.id);
+  if (!element) return null;
+  if (entry.target === "closest-collapse") {
+    return element.matches("details.atlas-collapse")
+      ? element
+      : element.closest("details.atlas-collapse") || element;
+  }
+  return element;
+}
+
+function atlasV2ClassifySections() {
+  document.querySelectorAll(".v2-managed-section").forEach(element => {
+    element.classList.remove("v2-managed-section", "v2-advanced-section");
+    delete element.dataset.v2Section;
+    delete element.dataset.v2Group;
+    delete element.dataset.v2Level;
+  });
+
+  for (const entry of ATLAS_V2_SECTION_MANIFEST) {
+    const target = atlasV2ManifestTarget(entry);
+    if (!target) continue;
+
+    target.classList.add("v2-managed-section");
+    target.dataset.v2Level = entry.level;
+    target.dataset.v2Group = entry.group;
+
+    if (!["essential", "adaptive"].includes(entry.level)) {
+      target.classList.add("v2-advanced-section");
+      target.dataset.v2Section = "advanced";
+    }
+
+    if (entry.level === "project") target.dataset.v2Accent = "project";
+    if (entry.level === "diagnostic") target.dataset.v2Accent = "diagnostic";
+  }
+}
+
+function atlasV2ApplySectionVisibility(mode) {
+  const advanced = mode === "advanced";
+  const resolved = new Map();
+
+  for (const entry of ATLAS_V2_SECTION_MANIFEST) {
+    const target = atlasV2ManifestTarget(entry);
+    if (!target || entry.level === "adaptive") continue;
+
+    const visible = entry.level === "essential" || advanced;
+    const previous = resolved.get(target);
+    resolved.set(target, previous === true ? true : visible);
+  }
+
+  for (const [target, visible] of resolved) {
+    target.hidden = !visible;
+    target.setAttribute("aria-hidden", visible ? "false" : "true");
+  }
+
+  const risk = document.getElementById("risques");
+  if (risk) {
+    risk.hidden = !advanced;
+    risk.setAttribute("aria-hidden", advanced ? "false" : "true");
+  }
+
+  const newsRegistry = document.getElementById("newsSourceRegistry");
+  if (newsRegistry) {
+    newsRegistry.hidden = !advanced;
+    newsRegistry.setAttribute("aria-hidden", advanced ? "false" : "true");
+  }
+}
+
+function atlasV2SyncMixedSectionLabels(mode) {
+  const advanced = mode === "advanced";
+  setText(
+    document.getElementById("watchRiskCollapseTitle"),
+    advanced ? "Watchlist V3 + Risques V2" : "Watchlist V3"
+  );
+  setText(
+    document.getElementById("watchRiskCollapseSubtitle"),
+    advanced
+      ? "Actifs suivis, conditions et validation croisée"
+      : "Actifs suivis et conditions locales"
+  );
+}
+
+function atlasV2ModuleGroupLabel(group) {
+  return {
+    analysis: "Analyse V2",
+    memory: "Mémoire",
+    workshop: "Atelier",
+    system: "Système",
+    projects: "Projets @erith.IA"
+  }[group] || "Module V2";
+}
 
 function atlasV2ReadSetting(key, fallback) {
   try {
@@ -8059,49 +8165,6 @@ function atlasV2Mode() {
   return ATLAS_V2_ALLOWED_MODES.has(stored) ? stored : "essential";
 }
 
-function atlasV2FindSectionContainer(id) {
-  const element = document.getElementById(id);
-  if (!element) return null;
-  if (element.matches("details.atlas-collapse")) return element;
-  const collapse = element.closest("details.atlas-collapse");
-  if (collapse && !collapse.querySelector('[data-v2-preserve-essential="true"]')) return collapse;
-  return element;
-}
-
-function atlasV2ClassifySections() {
-  document.querySelectorAll(".atlas-collapse").forEach(collapse => {
-    const hasEssential = !!collapse.querySelector(
-      "#watchlist, #nofomo, #news-sentinel, #decision-board"
-    );
-    if (hasEssential) collapse.dataset.v2PreserveEssential = "true";
-  });
-
-  for (const id of ATLAS_V2_ADVANCED_SECTION_IDS) {
-    const element = document.getElementById(id);
-    if (!element) continue;
-    const collapse = element.closest("details.atlas-collapse");
-    const target = collapse && collapse.dataset.v2PreserveEssential !== "true"
-      ? collapse
-      : element;
-    target.dataset.v2Section = target.dataset.v2Section || "advanced";
-    target.classList.add("v2-advanced-section");
-  }
-
-  for (const id of ATLAS_V2_PROJECT_SECTION_IDS) {
-    const element = document.getElementById(id);
-    if (!element) continue;
-    const target = element.closest("details.atlas-collapse") || element;
-    target.dataset.v2Accent = "project";
-  }
-
-  for (const id of ATLAS_V2_DIAGNOSTIC_SECTION_IDS) {
-    const element = document.getElementById(id);
-    if (!element) continue;
-    const target = element.closest("details.atlas-collapse") || element;
-    target.dataset.v2Accent = target.dataset.v2Accent || "diagnostic";
-  }
-}
-
 function atlasV2ApplyMode(mode, options = {}) {
   const next = ATLAS_V2_ALLOWED_MODES.has(mode) ? mode : "essential";
   document.documentElement.dataset.atlasMode = next;
@@ -8118,13 +8181,12 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (title) title.textContent = next === "advanced" ? "Mode avancé" : "Mode essentiel";
   if (description) {
     description.textContent = next === "advanced"
-      ? "Bleus profonds · toutes les options, diagnostics, mémoires et projets @erith.IA."
-      : "Lecture légère turquoise · marché, analyse, watchlist, décision et actualités.";
+      ? "Analyse · mémoire · atelier · système · projets @erith.IA."
+      : "Marché · graphique · watchlist · décision · news.";
   }
 
-  document.querySelectorAll(".v2-advanced-section, [data-v2-section='advanced']").forEach(element => {
-    element.hidden = next !== "advanced";
-  });
+  atlasV2ApplySectionVisibility(next);
+  atlasV2SyncMixedSectionLabels(next);
 
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
     element.hidden = next !== "advanced";
@@ -8224,33 +8286,157 @@ function atlasV2DecisionLockRefresh() {
   setText(document.getElementById("decisionLockHuman"), "Validation humaine");
 }
 
-function atlasV2OpenAdvancedForTarget(hash) {
-  const target = document.querySelector(hash);
-  if (!target) return;
-  const advancedContainer = target.dataset.v2Section === "advanced"
-    ? target
-    : target.closest("[data-v2-section='advanced']");
-  if (advancedContainer && atlasV2Mode() !== "advanced") {
+function atlasV2OpenAdvancedForTarget(hash, options = {}) {
+  const id = decodeURIComponent(String(hash || "").replace(/^#/, ""));
+  if (!id) return false;
+
+  const entry = atlasV2ManifestEntry(id);
+  const target = document.getElementById(id);
+  if (!target) return false;
+
+  if (entry && !["essential", "adaptive"].includes(entry.level) && atlasV2Mode() !== "advanced") {
     atlasV2ApplyMode("advanced");
   }
-  const collapse = target.closest("details.atlas-collapse");
+
+  const managed = entry ? atlasV2ManifestTarget(entry) : target;
+  if (managed) {
+    managed.hidden = false;
+    managed.setAttribute("aria-hidden", "false");
+  }
+
+  const collapse = target.matches("details.atlas-collapse")
+    ? target
+    : target.closest("details.atlas-collapse");
   if (collapse) collapse.open = true;
+
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  if (selector && [...selector.options].some(option => option.value === id)) {
+    selector.value = id;
+  }
+
+  if (options.updateHash !== false) {
+    try {
+      history.pushState(null, "", `#${encodeURIComponent(id)}`);
+    } catch {
+      location.hash = id;
+    }
+  }
+
+  if (options.scroll !== false) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: options.instant ? "auto" : "smooth", block: "start" });
+      });
+    });
+  }
+
+  return true;
+}
+
+function atlasV2OpenSelectedModule() {
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  const id = selector?.value || "";
+  if (!id) return;
+  atlasV2OpenAdvancedForTarget(`#${id}`);
+}
+
+function atlasV2HandleHashTarget(options = {}) {
+  if (!location.hash) return;
+  const id = decodeURIComponent(location.hash.slice(1));
+  const entry = atlasV2ManifestEntry(id);
+  if (!entry) return;
+
+  atlasV2OpenAdvancedForTarget(location.hash, {
+    updateHash: false,
+    scroll: options.scroll !== false,
+    instant: options.instant === true
+  });
+}
+
+function atlasV2SyncAdvancedSelectorFromViewport() {
+  if (atlasV2Mode() !== "advanced") return;
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  if (!selector) return;
+
+  const probe = window.scrollY + Math.min(window.innerHeight * 0.3, 240);
+  let current = "";
+
+  for (const entry of ATLAS_V2_SECTION_MANIFEST) {
+    if (["essential", "adaptive"].includes(entry.level)) continue;
+    const target = document.getElementById(entry.id);
+    if (!target || target.hidden) continue;
+    if (target.offsetTop <= probe) current = entry.id;
+  }
+
+  if (current && [...selector.options].some(option => option.value === current)) {
+    selector.value = current;
+  }
 }
 
 function atlasInitV2Shell() {
   atlasV2ClassifySections();
-  document.querySelectorAll("[data-atlas-mode]").forEach(button => button.addEventListener("click", () => atlasV2ApplyMode(button.dataset.atlasMode)));
-  document.querySelectorAll("[data-math-position]").forEach(button => button.addEventListener("click", () => atlasV2ApplyMathDock(button.dataset.mathPosition)));
-  document.querySelectorAll(".atlas-v2-nav a").forEach(link => link.addEventListener("click", () => atlasV2OpenAdvancedForTarget(link.getAttribute("href"))));
+
+  document.querySelectorAll("[data-atlas-mode]").forEach(button => {
+    button.addEventListener("click", () => atlasV2ApplyMode(button.dataset.atlasMode));
+  });
+
+  document.querySelectorAll("[data-math-position]").forEach(button => {
+    button.addEventListener("click", () => atlasV2ApplyMathDock(button.dataset.mathPosition));
+  });
+
+  document.querySelectorAll(".atlas-v2-nav-essential a").forEach(link => {
+    link.addEventListener("click", () => {
+      const hash = link.getAttribute("href");
+      if (hash) atlasV2OpenAdvancedForTarget(hash, { updateHash: false, scroll: false });
+    });
+  });
+
+  document.getElementById("btnOpenAdvancedModule")?.addEventListener("click", atlasV2OpenSelectedModule);
+  document.getElementById("atlasV2AdvancedModuleSelect")?.addEventListener("change", event => {
+    if (event.target.value) atlasV2OpenSelectedModule();
+  });
+
+  document.addEventListener("click", event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const hash = link.getAttribute("href");
+    const entry = atlasV2ManifestEntry(hash);
+    if (!entry || ["essential", "adaptive"].includes(entry.level)) return;
+    event.preventDefault();
+    atlasV2OpenAdvancedForTarget(hash);
+  });
+
+  window.addEventListener("hashchange", () => atlasV2HandleHashTarget({ scroll: true }));
+
+  let selectorScheduled = false;
+  const scheduleSelectorSync = () => {
+    if (selectorScheduled) return;
+    selectorScheduled = true;
+    requestAnimationFrame(() => {
+      selectorScheduled = false;
+      atlasV2SyncAdvancedSelectorFromViewport();
+    });
+  };
+  window.addEventListener("scroll", scheduleSelectorSync, { passive: true });
+  window.addEventListener("resize", scheduleSelectorSync, { passive: true });
+
   atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
   atlasV2ApplyMode(atlasV2Mode(), { persist: false });
   atlasV2DecisionLockRefresh();
-  window.setInterval(() => { atlasV2SyncMathRail(); atlasV2DecisionLockRefresh(); }, 2000);
+
+  if (location.hash) {
+    requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
+  }
+
+  window.setInterval(() => {
+    atlasV2SyncMathRail();
+    atlasV2DecisionLockRefresh();
+  }, 2000);
 }
 
 
 const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
-const ATLAS_STORAGE_SCHEMA_VERSION = 2811;
+const ATLAS_STORAGE_SCHEMA_VERSION = 2813;
 
 function atlasStorageSafeJson(key) {
   try {
@@ -8261,7 +8447,7 @@ function atlasStorageSafeJson(key) {
   }
 }
 
-function atlasMigrateStorage2811() {
+function atlasMigrateStorage2813() {
   const mode = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
   if (!ATLAS_V2_ALLOWED_MODES.has(mode)) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
 
@@ -8285,7 +8471,7 @@ function atlasMigrateStorage2811() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("storage migration 28.1.1", atlasMigrateStorage2811);
+} atlasSafeBoot("storage migration 28.1.3", atlasMigrateStorage2813);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
