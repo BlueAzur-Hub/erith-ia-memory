@@ -3751,7 +3751,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.19.
+  Internal package Build 28.1.20.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -3764,11 +3764,11 @@ function atlasDrawCurveFollowingShadowBars({
   clipTop,
   clipRight,
   clipBottom,
-  color = "98,236,255",
+  color = "#62ecff",
   opacity = 0.18,
   heightRatio = 0.88,
-  bandStep = 6,
-  bandThickness = 2
+  seriesIndex = 0,
+  seriesCount = 1
 }) {
   const safeRows = Array.isArray(rows)
     ? rows
@@ -3786,31 +3786,62 @@ function atlasDrawCurveFollowingShadowBars({
     Number(baseline),
     Number(clipBottom) - 1
   );
-  const safeRatio = Math.max(0.10, Math.min(0.96, Number(heightRatio) || 0.88));
-  const safeOpacity = Math.max(0.025, Math.min(0.42, Number(opacity) || 0.18));
-  const safeBandStep = Math.max(3, Number(bandStep) || 6);
-  const safeBandThickness = Math.max(1, Number(bandThickness) || 2);
+  const safeRatio = Math.max(
+    0.10,
+    Math.min(0.96, Number(heightRatio) || 0.88)
+  );
+  const safeOpacity = Math.max(
+    0.025,
+    Math.min(0.42, Number(opacity) || 0.18)
+  );
 
-  const envelope = safeRows.map(point => {
-    const x = Number(xFor(point.x));
-    const rawCurveY = Number(yForPrice(point.price));
-    const curveY = Math.max(
-      Number(clipTop),
-      Math.min(safeBaseline - 1, rawCurveY)
-    );
-    const distanceToCurve = Math.max(1, safeBaseline - curveY);
-    const shadowTop = safeBaseline - distanceToCurve * safeRatio;
-    return { x, y: shadowTop };
-  }).filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
+  const pixelXs = safeRows
+    .map(point => Number(xFor(point.x)))
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
 
-  if (envelope.length < 2) return;
+  const pixelGaps = pixelXs
+    .slice(1)
+    .map((value, index) => value - pixelXs[index])
+    .filter(value => Number.isFinite(value) && value > 0)
+    .sort((a, b) => a - b);
 
-  const first = envelope[0];
-  const last = envelope[envelope.length - 1];
-  const highestBand = Math.min(...envelope.map(point => point.y));
+  const medianPixelGap = pixelGaps.length
+    ? pixelGaps[Math.floor(pixelGaps.length / 2)]
+    : 4;
+
+  const safeSeriesCount = Math.max(
+    1,
+    Math.min(12, Math.round(Number(seriesCount) || 1))
+  );
+  const safeSeriesIndex = Math.max(
+    0,
+    Math.min(
+      safeSeriesCount - 1,
+      Math.round(Number(seriesIndex) || 0)
+    )
+  );
+
+  const groupWidth = Math.max(
+    1.8,
+    Math.min(6.4, medianPixelGap * 0.74)
+  );
+  const slotWidth = groupWidth / safeSeriesCount;
+  const barWidth = safeSeriesCount === 1
+    ? Math.max(1.25, Math.min(4.0, groupWidth * 0.58))
+    : Math.max(0.68, Math.min(1.8, slotWidth * 0.78));
+  const xOffset = safeSeriesCount === 1
+    ? 0
+    : (
+        safeSeriesIndex - (safeSeriesCount - 1) / 2
+      ) * slotWidth;
+
+  const volumeValues = safeRows
+    .map(point => Number(point?.y))
+    .filter(value => Number.isFinite(value) && value >= 0);
+  const maxVolume = Math.max(...volumeValues, 0);
 
   ctx.save();
-
   ctx.beginPath();
   ctx.rect(
     Number(clipLeft),
@@ -3821,38 +3852,43 @@ function atlasDrawCurveFollowingShadowBars({
   ctx.clip();
 
   /*
-    One closed envelope under the crypto line:
-    baseline -> 88% shadow contour -> baseline.
-    Horizontal parallel bands are clipped inside this contour.
-    The remaining 12% forms the clean visual gap under the crypto line.
+    Canonical geometry:
+    - bars are vertical and parallel;
+    - every bar starts from the common chart baseline;
+    - every bar follows its crypto curve point by point;
+    - every bar reaches 88% of the baseline-to-curve distance;
+    - the remaining 12% is the clean gap below the crypto line;
+    - each series uses its own crypto color;
+    - real volume only modulates opacity, never bar height.
   */
-  ctx.beginPath();
-  ctx.moveTo(first.x, safeBaseline);
-  ctx.lineTo(first.x, first.y);
-  for (let index = 1; index < envelope.length; index += 1) {
-    ctx.lineTo(envelope[index].x, envelope[index].y);
-  }
-  ctx.lineTo(last.x, safeBaseline);
-  ctx.closePath();
-  ctx.clip();
+  for (const point of safeRows) {
+    const rawX = Number(xFor(point.x));
+    const rawCurveY = Number(yForPrice(point.price));
+    if (!Number.isFinite(rawX) || !Number.isFinite(rawCurveY)) continue;
 
-  const totalHeight = Math.max(1, safeBaseline - highestBand);
+    const curveY = Math.max(
+      Number(clipTop),
+      Math.min(safeBaseline - 1, rawCurveY)
+    );
+    const distanceToCurve = Math.max(1, safeBaseline - curveY);
+    const shadowHeight = distanceToCurve * safeRatio;
+    const shadowTop = safeBaseline - shadowHeight;
 
-  for (
-    let y = safeBaseline - safeBandThickness;
-    y >= highestBand;
-    y -= safeBandStep
-  ) {
-    const rise = Math.max(0, Math.min(1, (safeBaseline - y) / totalHeight));
-    const alpha = safeOpacity * (0.56 + rise * 0.44);
+    const volumeRatio = maxVolume > 0
+      ? Math.max(
+          0,
+          Math.min(1, Number(point.y || 0) / maxVolume)
+        )
+      : 0;
 
-    ctx.beginPath();
-    ctx.moveTo(Number(clipLeft), y);
-    ctx.lineTo(Number(clipRight), y);
-    ctx.lineWidth = safeBandThickness;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = `rgba(${color},${alpha.toFixed(3)})`;
-    ctx.stroke();
+    ctx.globalAlpha = safeOpacity * (0.78 + volumeRatio * 0.22);
+    ctx.fillStyle = color;
+    ctx.fillRect(
+      rawX + xOffset - barWidth / 2,
+      shadowTop,
+      barWidth,
+      Math.max(1, shadowHeight)
+    );
   }
 
   ctx.restore();
@@ -3880,7 +3916,7 @@ const atlasVolumeOverlayPlugin = {
       : Array.isArray(chart.$atlasVolumeRows) && chart.$atlasVolumeRows.length
         ? [{
             rows: chart.$atlasVolumeRows,
-            color: chart.$atlasVolumeColor || "98,236,255",
+            color: chart.$atlasVolumeColor || "#62ecff",
             opacity: 0.20,
             heightRatio: 0.88
           }]
@@ -3897,13 +3933,13 @@ const atlasVolumeOverlayPlugin = {
         clipTop: area.top,
         clipRight: area.right,
         clipBottom: area.bottom,
-        color: entry.color || "98,236,255",
+        color: entry.color || "#62ecff",
         opacity: Number.isFinite(Number(entry.opacity))
           ? Number(entry.opacity)
           : index === 0 ? 0.18 : 0.10,
         heightRatio: 0.88,
-        bandStep: 6,
-        bandThickness: 2
+        seriesIndex: index,
+        seriesCount: series.length
       });
     });
   }
@@ -4121,10 +4157,10 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       result?.volumeSeries,
       points.map(point => ({ t: point.x, price: point.y }))
     );
-    state.chartEngineV2.realChart.$atlasVolumeColor = atlasHexToRgb(palette.primary).join(",");
+    state.chartEngineV2.realChart.$atlasVolumeColor = palette.primary;
     state.chartEngineV2.realChart.$atlasShadowSeries = [{
       rows: state.chartEngineV2.realChart.$atlasVolumeRows,
-      color: atlasHexToRgb(palette.primary).join(","),
+      color: palette.primary,
       opacity: 0.22,
       heightRatio: 0.88
     }];
@@ -4173,7 +4209,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       clipTop: top,
       clipRight: left + plotWidth,
       clipBottom: top + plotHeight,
-      color: atlasHexToRgb(palette.primary).join(",")
+      color: palette.primary
     });
   }
 
@@ -4618,7 +4654,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
       rows: entry.data
         .filter(Boolean)
         .map(point => ({ x: point.x, price: point.y, y: 1 })),
-      color: atlasHexToRgb(atlasCryptoPalette(entry.coin, index).primary).join(","),
+      color: atlasCryptoPalette(entry.coin, index).primary,
       opacity: index === 0 ? 0.16 : Math.max(0.065, 0.12 - index * 0.012),
       heightRatio: 0.88
     }));
@@ -4655,11 +4691,11 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         clipTop: top,
         clipRight: left + plotW,
         clipBottom: top + plotH,
-        color: atlasHexToRgb(palette.primary).join(","),
+        color: palette.primary,
         opacity: index === 0 ? 0.16 : Math.max(0.065, 0.12 - index * 0.012),
         heightRatio: 0.88,
-        bandStep: 6,
-        bandThickness: 2
+        seriesIndex: index,
+        seriesCount: normalizedEntries.length
       });
     });
   }
