@@ -8048,3 +8048,351 @@ a.source-portal:focus-visible {
     padding-left: 5px !important;
   }
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2.1
+   COMPACT SOURCE DOCK & COLLAPSIBLE DETAIL WINDOWS
+   ========================================================= */
+
+#analyste.champagne-clean-lens {
+  grid-template-columns: minmax(0, 3fr) minmax(292px, .82fr) !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  padding: 9px 10px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle {
+  min-height: 38px !important;
+  margin-bottom: 6px !important;
+  padding: 0 0 6px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle-title strong {
+  font-size: 14px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle-state {
+  padding: 5px 8px !important;
+  font-size: 8px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-body {
+  gap: 6px !important;
+}
+
+/* Always-visible summary, reduced to one operational strip. */
+.detail-compact-strip {
+  display: grid;
+  grid-template-columns: .72fr 1fr 1.25fr .8fr;
+  gap: 5px;
+}
+
+.detail-compact-strip > span {
+  min-width: 0;
+  min-height: 39px;
+  padding: 6px 7px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 9px;
+  background: rgba(2, 9, 18, .58);
+}
+
+.detail-compact-strip small {
+  color: rgba(177,199,219,.62);
+  font: 760 6.8px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.detail-compact-strip b {
+  overflow: hidden;
+  color: #fff0c8;
+  font: 900 8.5px/1.12 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-compact-strip b.pos { color: #64efa0; }
+.detail-compact-strip b.neg { color: #ff6d86; }
+.detail-compact-strip b.neutral { color: #9fb4c8; }
+
+/* Shared compact window. Closed by default, only one opens at a time. */
+#analyste .atlas-detail-subwindow {
+  margin: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(98,236,255,.16);
+  border-radius: 10px;
+  background: rgba(3,11,22,.44);
+}
+
+#analyste .atlas-detail-subwindow > summary {
+  min-height: 35px !important;
+  padding: 7px 9px !important;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  list-style: none;
+  color: #fff0c8;
+  background: rgba(2,9,18,.38);
+}
+
+#analyste .atlas-detail-subwindow > summary::-webkit-details-marker {
+  display: none;
+}
+
+#analyste .atlas-detail-subwindow > summary > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+#analyste .atlas-detail-subwindow > summary b {
+  color: #fff0c8;
+  font: 900 9px/1.05 system-ui, sans-serif;
+}
+
+#analyste .atlas-detail-subwindow > summary small,
+#analyste .atlas-detail-subwindow > summary i {
+  overflow: hidden;
+  color: rgba(180,202,221,.64);
+  font: 720 7.2px/1.08 system-ui, sans-serif;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#analyste .atlas-detail-subwindow > summary > em,
+#analyste .atlas-detail-subwindow > summary [data-window-state] {
+  margin-left: auto;
+  min-width: 53px;
+  overflow: hidden;
+  color: #8eefff;
+  font: 850 7.2px/1 system-ui, sans-serif;
+  font-style: normal;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#analyste .atlas-detail-subwindow > summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: #62ecff;
+  font: 950 13px/1 system-ui, sans-serif;
+}
+
+#analyste .atlas-detail-subwindow[open] > summary {
+  border-bottom: 1px solid rgba(255,216,135,.12);
+  background: rgba(98,236,255,.035);
+}
+
+#analyste .atlas-detail-subwindow[open] > summary::after {
+  content: "−";
+}
+
+.atlas-detail-subwindow-body {
+  padding: 7px;
+}
+
+/* Full technical grid is available, but never dominates the default view. */
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid > div {
+  min-height: 43px !important;
+  padding: 6px 7px !important;
+  border-radius: 8px !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid b {
+  font-size: 7.5px !important;
+  margin-bottom: 2px !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid span {
+  font-size: 8px !important;
+  line-height: 1.15 !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-why-box {
+  margin-top: 6px !important;
+  padding: 7px !important;
+  font-size: 8px !important;
+}
+
+/* Source Dock collapsed summary. */
+.atlas-source-dock {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.atlas-source-dock::before {
+  left: 7px !important;
+  right: 7px !important;
+}
+
+.source-dock-summary > span {
+  grid-template-columns: auto minmax(0,1fr) !important;
+  grid-template-areas:
+    "eyebrow title"
+    "asset asset" !important;
+  column-gap: 6px !important;
+}
+
+.source-dock-summary .eyebrow {
+  grid-area: eyebrow;
+  margin: 0 !important;
+  align-self: center;
+  font-size: 6.5px !important;
+}
+
+.source-dock-summary b {
+  grid-area: title;
+}
+
+.source-dock-summary i {
+  grid-area: asset;
+}
+
+.source-dock-body {
+  display: grid;
+  gap: 6px;
+  padding: 7px;
+}
+
+.source-dock-command {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.source-dock-status {
+  min-height: 26px !important;
+  padding: 5px 7px !important;
+  font-size: 7.3px !important;
+  line-height: 1.1 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.source-dock-refresh {
+  min-height: 26px !important;
+  height: 26px !important;
+  padding: 4px 7px !important;
+  font-size: 7px !important;
+}
+
+.source-dock-portals {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+.source-portal {
+  min-height: 31px !important;
+  padding: 5px 6px !important;
+  border-radius: 8px !important;
+}
+
+.source-portal b {
+  font-size: 7.5px !important;
+}
+
+.source-portal small {
+  font-size: 6.4px !important;
+}
+
+.source-dock-meta {
+  gap: 4px !important;
+}
+
+.source-dock-meta > span {
+  padding: 5px 6px !important;
+  border-radius: 7px !important;
+}
+
+/* Diagnostics: compact closed headers, one window at a time. */
+#analyste .clean-lens-disclosure.atlas-detail-subwindow > summary {
+  min-height: 34px !important;
+  padding: 7px 9px !important;
+  font-size: 8.5px !important;
+}
+
+#analyste .clean-lens-disclosure.atlas-detail-subwindow > summary small {
+  margin-left: auto !important;
+  font-size: 6.8px !important;
+}
+
+#analyste .clean-lens-disclosure.atlas-detail-subwindow > summary::after {
+  margin-left: 0 !important;
+}
+
+#analyste .clean-lens-disclosure.atlas-detail-subwindow .broker-strip,
+#analyste .clean-lens-disclosure.atlas-detail-subwindow .diagnostic-strip {
+  padding: 7px !important;
+  gap: 4px !important;
+}
+
+#analyste .clean-lens-disclosure.atlas-detail-subwindow .broker-strip > div,
+#analyste .clean-lens-disclosure.atlas-detail-subwindow .diagnostic-strip > div {
+  min-height: 43px !important;
+  padding: 6px !important;
+}
+
+#analyste .clean-lens-integrity.atlas-detail-subwindow p {
+  padding: 8px 9px 9px !important;
+  font-size: 8px !important;
+  line-height: 1.3 !important;
+}
+
+/* Full panel reduction remains the strongest panorama mode. */
+#analyste.champagne-clean-lens.detail-collapsed {
+  grid-template-columns: minmax(0, 1fr) 42px !important;
+}
+
+@media (max-width: 1180px) {
+  #analyste.champagne-clean-lens {
+    grid-template-columns: minmax(0, 2.5fr) minmax(280px, .9fr) !important;
+  }
+
+  .source-dock-portals {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed {
+    grid-template-columns: 1fr !important;
+  }
+
+  .detail-compact-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .source-dock-portals {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .detail-compact-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .source-dock-portals {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #analyste .atlas-primary-detail-window .clean-lens-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2 — SOURCE DOCK & MARKET PORTALS</title>
+  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.1 — COMPACT SOURCE DOCK & COLLAPSIBLE DETAIL WINDOWS</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2-source-dock-market-portals" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.1-compact-source-dock-collapsible-windows" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
           <p class="subtitle">Top 50 CoinGecko EUR · Multi-Horizon · News Sentinel · CHAMPAGNE LUXE PANORAMIC PENTHOUSE</p>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.1</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -161,42 +161,62 @@
         </button>
 
         <div class="detail-panel-body" id="detailPanelBody">
-          <div class="detail-grid clean-lens-detail-grid" id="assetDetailGrid">
-            <div><b>Actif</b><span>En attente</span></div>
-            <div><b>Type</b><span>—</span></div>
-            <div><b>Décision</b><span>—</span></div>
-            <div><b>Ratio vol/cap</b><span>—</span></div>
+          <div class="detail-compact-strip" id="detailCompactStrip" aria-label="Résumé compact de l’actif">
+            <span><small>Actif</small><b id="detailCompactAsset">En attente</b></span>
+            <span><small>Prix EUR</small><b id="detailCompactPrice">—</b></span>
+            <span><small>Décision</small><b id="detailCompactDecision">—</b></span>
+            <span><small>24 h</small><b id="detailCompactChange">—</b></span>
           </div>
-          <p class="why-box clean-lens-why-box" id="assetDetailWhy">Livecheck requis avant lecture détaillée.</p>
 
-          <section class="atlas-source-dock" id="source-dock" aria-labelledby="sourceDockTitle">
-            <div class="source-dock-head">
-              <div class="source-dock-title">
-                <span class="eyebrow">SOURCE DOCK</span>
-                <strong id="sourceDockTitle">Market Portals</strong>
-                <small id="sourceDockAsset">Aucun actif sélectionné</small>
+          <details class="atlas-detail-subwindow atlas-primary-detail-window" id="detailAssetWindow" data-detail-window="asset">
+            <summary>
+              <span><b>Fiche active</b><small>prix · source · période · intégrité</small></span>
+              <em data-window-state>Ouvrir</em>
+            </summary>
+            <div class="atlas-detail-subwindow-body">
+              <div class="detail-grid clean-lens-detail-grid" id="assetDetailGrid">
+                <div><b>Actif</b><span>En attente</span></div>
+                <div><b>Type</b><span>—</span></div>
+                <div><b>Décision</b><span>—</span></div>
+                <div><b>Ratio vol/cap</b><span>—</span></div>
               </div>
-              <button class="source-dock-refresh" id="btnSourceDockRefresh" type="button" title="Actualiser les métadonnées CoinGecko">Actualiser</button>
+              <p class="why-box clean-lens-why-box" id="assetDetailWhy">Livecheck requis avant lecture détaillée.</p>
             </div>
-            <div class="source-dock-status" id="sourceDockStatus" role="status" aria-live="polite">
-              En attente de sélection
-            </div>
-            <div class="source-dock-portals" id="sourceDockPortals" aria-label="Portails de l’actif sélectionné">
-              <span class="source-portal is-disabled">CoinGecko</span>
-              <span class="source-portal is-disabled">Site officiel</span>
-              <span class="source-portal is-disabled">Explorateur</span>
-              <span class="source-portal is-disabled">Whitepaper</span>
-              <span class="source-portal is-disabled">Code source</span>
-              <span class="source-portal is-disabled">Communauté</span>
-            </div>
-            <div class="source-dock-meta">
-              <span><b>Origine</b><small id="sourceDockOrigin">CoinGecko · en attente</small></span>
-              <span><b>Dernière lecture</b><small id="sourceDockUpdated">—</small></span>
-            </div>
-          </section>
+          </details>
 
-          <details class="clean-lens-disclosure">
-            <summary><span>Sources et fraîcheur</span><small>marché · spot · historique</small></summary>
+          <details class="atlas-source-dock atlas-detail-subwindow" id="source-dock" data-detail-window="source" aria-labelledby="sourceDockTitle">
+            <summary class="source-dock-summary">
+              <span>
+                <small class="eyebrow">SOURCE DOCK</small>
+                <b id="sourceDockTitle">Market Portals</b>
+                <i id="sourceDockAsset">Aucun actif sélectionné</i>
+              </span>
+              <em id="sourceDockCompactState">En attente</em>
+            </summary>
+            <div class="source-dock-body">
+              <div class="source-dock-command">
+                <div class="source-dock-status" id="sourceDockStatus" role="status" aria-live="polite">
+                  En attente de sélection
+                </div>
+                <button class="source-dock-refresh" id="btnSourceDockRefresh" type="button" title="Actualiser les métadonnées CoinGecko">Actualiser</button>
+              </div>
+              <div class="source-dock-portals" id="sourceDockPortals" aria-label="Portails de l’actif sélectionné">
+                <span class="source-portal is-disabled">CoinGecko</span>
+                <span class="source-portal is-disabled">Site officiel</span>
+                <span class="source-portal is-disabled">Explorateur</span>
+                <span class="source-portal is-disabled">Whitepaper</span>
+                <span class="source-portal is-disabled">Code source</span>
+                <span class="source-portal is-disabled">Communauté</span>
+              </div>
+              <div class="source-dock-meta">
+                <span><b>Origine</b><small id="sourceDockOrigin">CoinGecko · en attente</small></span>
+                <span><b>Dernière lecture</b><small id="sourceDockUpdated">—</small></span>
+              </div>
+            </div>
+          </details>
+
+          <details class="clean-lens-disclosure atlas-detail-subwindow" id="detailSourcesWindow" data-detail-window="sources">
+            <summary><span>Sources et fraîcheur</span><small>marché · spot · historique</small><em data-window-state>Ouvrir</em></summary>
             <div class="broker-strip" id="brokerStrip" aria-label="État atomique des données">
               <div><span>Marché 50</span><b id="brokerMarket">En attente</b><small id="brokerMarketTime">—</small></div>
               <div><span>Prix snapshot</span><b id="brokerSpot">En attente</b><small id="brokerSpotTime">—</small></div>
@@ -204,8 +224,8 @@
             </div>
           </details>
 
-          <details class="clean-lens-disclosure">
-            <summary><span>Réseau, cache et latence</span><small>diagnostic avancé</small></summary>
+          <details class="clean-lens-disclosure atlas-detail-subwindow" id="detailNetworkWindow" data-detail-window="network">
+            <summary><span>Réseau, cache et latence</span><small>diagnostic avancé</small><em data-window-state>Ouvrir</em></summary>
             <div class="diagnostic-strip" id="atlasDiagnosticStrip" aria-label="Diagnostic technique compact">
               <div><span>Source marché</span><b id="diagSourceMode">En attente</b><small id="diagSourceDetail">—</small></div>
               <div><span>Latence marché</span><b id="diagMarketLatency">—</b><small id="diagUsdLatency">USD : —</small></div>
@@ -214,11 +234,11 @@
             </div>
           </details>
 
-          <details class="clean-lens-disclosure clean-lens-integrity">
-            <summary><span>Intégrité graphique</span><small>devise · couverture · cohérence</small></summary>
+          <details class="clean-lens-disclosure clean-lens-integrity atlas-detail-subwindow" id="detailIntegrityWindow" data-detail-window="integrity">
+            <summary><span>Intégrité graphique</span><small>devise · couverture · cohérence</small><em data-window-state>Ouvrir</em></summary>
             <p>Le moteur conserve la courbe canonique de Multi Horizon : données CoinGecko EUR, période active, couverture réelle, dernier point et écart spot/courbe. Aucune série n’est inventée.</p>
           </details>
-        </div>
+</div>
       </article>
 
       <button class="detail-panel-rail" id="detailPanelRail" type="button" aria-label="Afficher le détail actif" title="Afficher le détail actif">
@@ -2134,6 +2154,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha-build-27.2-source-dock-market-portals"></script>
+  <script src="./app.js?v=1.1-alpha-build-27.2.1-compact-source-dock-collapsible-windows"></script>
 </body>
 </html>
