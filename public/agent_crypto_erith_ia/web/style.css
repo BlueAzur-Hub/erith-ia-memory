@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.22
+   INTERNAL PACKAGE BUILD 28.1.23
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.22
+   INTERNAL PACKAGE BUILD 28.1.23
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.22
+   INTERNAL PACKAGE BUILD 28.1.23
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12708,4 +12708,202 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 #analyste .chart-shell {
   position: relative !important;
   contain: paint !important;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.23
+   SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
+   ========================================================= */
+
+/* Structure commune : une seule ligne, aucun dock inférieur. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  position: relative !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  row-gap: 0 !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Fermé : graphique gauche + rail étroit droit. */
+#analyste.champagne-clean-lens.detail-collapsed {
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--atlas-canonical-side-rail-width) !important;
+  column-gap: 4px !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  align-self: stretch !important;
+  margin: 0 !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  max-width: var(--atlas-canonical-side-rail-width) !important;
+  height: 100% !important;
+  align-self: stretch !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
+  display: none !important;
+}
+
+/* Ouvert : graphique gauche et fenêtre détail droite sur la même ligne. */
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  grid-template-columns:
+    minmax(0, 1fr)
+    clamp(300px, 22vw, 360px) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  column-gap: 7px !important;
+  align-items: stretch !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  align-self: stretch !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
+  background:
+    linear-gradient(180deg, rgba(4,13,26,.94), rgba(3,10,21,.90)) !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  display: none !important;
+}
+
+/* Le panorama reste attaché uniquement au graphique gauche. */
+#analyste.champagne-clean-lens .chart-panel {
+  isolation: isolate !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background-image:
+    url("./lounge_nocturne_luxueuse_avec_vue_sur_la_ville.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(ellipse at 18% 10%, rgba(37,126,212,.08), transparent 36%),
+    radial-gradient(ellipse at 82% 22%, rgba(139,63,215,.08), transparent 34%),
+    linear-gradient(90deg, rgba(2,8,18,.18), rgba(2,8,18,.05) 62%, rgba(2,8,18,.18)),
+    linear-gradient(180deg, rgba(2,8,18,.04), rgba(2,8,18,.16)) !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Repère d’infobulle restauré : aucune translation ou containment parasite. */
+#analyste.champagne-clean-lens .chart-shell {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  contain: none !important;
+}
+
+#analyste.champagne-clean-lens .atlas-chart-tooltip {
+  position: absolute !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+/* Aucun déplacement géométrique animé lors de l’ouverture. */
+#analyste,
+#analyste::before,
+#analyste::after,
+#analyste .chart-panel,
+#analyste .chart-panel::before,
+#analyste .chart-panel::after,
+#analyste .chart-shell,
+#analyste .clean-lens-detail-panel {
+  transition-property:
+    border-color,
+    box-shadow,
+    opacity !important;
+}
+
+/* Écran étroit : conserver le rail sans casser le graphique. */
+@media (max-width: 1080px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    grid-template-columns:
+      minmax(0, 1fr)
+      28px !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    column-gap: 3px !important;
+  }
+
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+    display: none !important;
+  }
+
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail,
+  #analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+    display: flex !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
 }
