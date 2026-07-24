@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1 — ANALYST CHART V2 & MARKET INTERACTION LOCK</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.1 — ESSENTIAL / ADVANCED ORGANIZATION & MARKET SELECTION RECOVERY LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1-analyst-chart-v2-market-interaction" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.1-essential-advanced-market-selection-recovery" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.1</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -37,12 +37,6 @@
           <button class="atlas-v2-mode-btn" id="btnModeAdvanced" type="button" data-atlas-mode="advanced" aria-pressed="false">
             <span>Avancé</span><small>Bleus profonds</small>
           </button>
-        </div>
-        <div class="atlas-v2-palette-key" aria-label="Légende des couleurs V2">
-          <span data-key="essential">Turquoise · fonctions majeures</span>
-          <span data-key="advanced">Azur / cobalt · outils avancés</span>
-          <span data-key="projects">Indigo / violet · projets @erith.IA</span>
-          <span data-key="truth">Champagne · vérité / décision</span>
         </div>
       </section>
 
@@ -131,16 +125,31 @@
             <p class="eyebrow">GRAPHIQUE ANALYSTE</p>
             <h2 id="selectedAssetTitle" class="atlas-visually-hidden" aria-live="polite">Bitcoin — BTC</h2>
           </div>
-          <div class="chart-head-actions">
-            <div class="chart-v2-control-deck" aria-label="Options Graphique Analyste V2">
-              <div class="chart-v2-toggle-group"><span>Vue</span><button class="chart-v2-toggle is-active" type="button" data-chart-view="price">Prix</button><button class="chart-v2-toggle" type="button" data-chart-view="base100">Base 100</button></div>
-              <div class="chart-v2-toggle-group"><span>Échelle</span><button class="chart-v2-toggle is-active" type="button" data-chart-scale="linear">Normale</button><button class="chart-v2-toggle" type="button" data-chart-scale="logarithmic">Log</button></div>
-              <div class="chart-v2-toggle-group"><span>Afficher</span><button class="chart-v2-toggle is-active" type="button" data-chart-display="volume">Volume</button><button class="chart-v2-toggle is-active" type="button" data-chart-display="legend">Légende</button></div>
+          <div class="chart-head-actions chart-v2-toolbar">
+            <div class="chart-v2-toolbar-row chart-v2-toolbar-reading">
+              <span class="chart-v2-toolbar-label">Lecture</span>
+              <div class="chart-v2-control-deck" aria-label="Options Graphique Analyste V2">
+                <div class="chart-v2-toggle-group"><span>Vue</span><button class="chart-v2-toggle is-active" type="button" data-chart-view="price">Prix</button><button class="chart-v2-toggle" type="button" data-chart-view="base100">Base 100</button></div>
+                <div class="chart-v2-toggle-group"><span>Échelle</span><button class="chart-v2-toggle is-active" type="button" data-chart-scale="linear">Normale</button><button class="chart-v2-toggle" type="button" data-chart-scale="logarithmic">Log</button></div>
+                <div class="chart-v2-toggle-group"><span>Afficher</span><button class="chart-v2-toggle is-active" type="button" data-chart-display="volume">Volume</button><button class="chart-v2-toggle is-active" type="button" data-chart-display="legend">Légende</button></div>
+              </div>
             </div>
-            <div class="period-tabs" aria-label="Période graphique">
-              <button class="period-btn active" data-period="1">24h</button><button class="period-btn" data-period="7">7j</button><button class="period-btn" data-period="30">30j</button><button class="period-btn" data-period="60">60j</button><button class="period-btn" data-period="90">90j</button><button class="period-btn" data-period="365">1a</button><button class="period-btn" data-period="36500" title="Historique maximal réel disponible chez CoinGecko">Tout</button>
+            <div class="chart-v2-toolbar-row chart-v2-toolbar-period">
+              <span class="chart-v2-toolbar-label">Période</span>
+              <div class="period-tabs" aria-label="Période graphique">
+                <button class="period-btn active" data-period="1">24h</button>
+                <button class="period-btn" data-period="7">7j</button>
+                <button class="period-btn" data-period="30">30j</button>
+                <button class="period-btn" data-period="60">60j</button>
+                <button class="period-btn" data-period="90">90j</button>
+                <button class="period-btn" data-period="365">1a</button>
+                <button class="period-btn period-btn-max" id="btnChartMaxPeriod" data-period="36500" title="Couverture mesurée après réception réelle de la série CoinGecko">Max ?</button>
+              </div>
+              <small class="chart-v2-period-truth" id="chartMaxPeriodTruth">Max non mesuré</small>
             </div>
-            <div class="compare-actions" aria-label="Actions de comparaison">
+            <div class="chart-v2-toolbar-row chart-v2-toolbar-comparison">
+              <span class="chart-v2-toolbar-label">Comparaison</span>
+              <div class="compare-actions" aria-label="Actions de comparaison">
               <span class="compare-action-group compare-action-group-mode" aria-label="Mode de comparaison">
                 <button class="compare-btn active" id="btnChartSolo" type="button" title="Revenir à un seul actif">Solo</button>
                 <button class="compare-btn" id="btnChartTop3" type="button" title="Target Top 3 : BTC · ETH · BNB">Top 3</button>
@@ -155,6 +164,7 @@
                 <button class="compare-btn" id="btnChartReset" type="button" title="Réinitialiser le graphe sur Bitcoin en 24 h">Réinit.</button>
                 <button class="compare-btn compare-btn-clear" id="btnChartClear" type="button" title="Retirer toutes les cryptos du graphe">Vider</button>
               </span>
+              </div>
             </div>
           </div>
         </div>
@@ -2337,6 +2347,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1-analyst-chart-v2-market-interaction"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.1-essential-advanced-market-selection-recovery"></script>
 </body>
 </html>

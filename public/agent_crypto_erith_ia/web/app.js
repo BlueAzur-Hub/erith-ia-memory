@@ -1,12 +1,22 @@
-/* V2.0-alpha · Build 28.1 — ANALYST CHART V2 & MARKET INTERACTION LOCK
-   Graphique Analyste V2 : Prix/Base 100, normale/logarithmique, volume réel,
-   légende compacte, 1 an et historique maximal réel CoinGecko.
-   Market Workspace : Top 5, Market Flow et Top 50 deviennent des entrées cohérentes
-   vers le graphe, la Watchlist, les alertes et les sources.
-   Colonnes Essentiel/Complet, en-tête fixe, ancien graphe conservé.
-   Comparaison atomique, Math Dock, News V2, Watchlist V3 et gouverneur réseau préservés.
+/* V2.0-alpha · Build 28.1.1 — ESSENTIAL / ADVANCED ORGANIZATION & MARKET SELECTION RECOVERY LOCK
+   Version cumulative.
+   - séparation réelle entre interface Essentielle et interface Avancée ;
+   - Math Core réduit, Détail actif replié et colonnes Market allégées
+     automatiquement en mode Essentiel ;
+   - fonctions techniques, risques, mémoire et laboratoires migrés en mode Avancé ;
+   - cockpit Graphique V2 réorganisé en Lecture / Période / Comparaison ;
+   - microtextes légèrement agrandis pour le Transformer Book ;
+   - clic sur une ligne Market = ajout ou retrait de la comparaison ;
+   - bouton Graphe = ouverture solo explicite ;
+   - boutons Ajouter / Retirer explicites, sans symbole ambigu ;
+   - barre explicative de palette supprimée ;
+   - formulation négative « pas un conseil d’achat » supprimée ;
+   - collision globale newsSafeUrl supprimée ;
+   - références sourceDiagnostic historiques retirées ;
+   - historique Max affiché uniquement après mesure de la couverture reçue ;
+   - comparaison atomique, Watchlist V3, News V2, mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.1";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -191,7 +201,7 @@ state.memoryTruth = {
   }
 };
 
-const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sourceDiagnosticTitle: $("sourceDiagnosticTitle"), sourceDiagnosticNote: $("sourceDiagnosticNote"), sourceDiagnosticGrid: $("sourceDiagnosticGrid"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
+const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
   autoReaderTruth: $("autoReaderTruth"), autoVisibilityTruth: $("autoVisibilityTruth"),
   autoLastSnapshotTruth: $("autoLastSnapshotTruth"), autoCollectorTruth: $("autoCollectorTruth"),
   autoGithubWriteTruth: $("autoGithubWriteTruth"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"),
@@ -2604,6 +2614,73 @@ const ATLAS_CHART_RULES = Object.freeze({
 function atlasChartRules(days) {
   return ATLAS_CHART_RULES[Number(days || 1)] || ATLAS_CHART_RULES[1];
 }
+
+const ATLAS_CHART_MAX_TRUTH_KEY = "agent_crypto_erith_ia_chart_max_truth_v2811";
+
+function atlasChartCoverageDays(result) {
+  const series = Array.isArray(result?.series) ? result.series : [];
+  if (series.length < 2) return 0;
+  const first = Number(series[0]?.[0]);
+  const last = Number(series[series.length - 1]?.[0]);
+  if (!Number.isFinite(first) || !Number.isFinite(last) || last <= first) return 0;
+  return (last - first) / 86400000;
+}
+
+function atlasChartMaxCoverageLabel(days) {
+  const value = Number(days || 0);
+  if (!Number.isFinite(value) || value <= 0) return "Max non mesuré";
+  if (value < 45) return `${Math.max(1, Math.round(value))} j reçus`;
+  if (value < 330) return `${Math.max(1, Math.round(value / 30))} mois reçus`;
+  const years = value / 365.2425;
+  return `${years.toFixed(years < 2 ? 1 : 0)} an${years >= 1.5 ? "s" : ""} reçus`;
+}
+
+function atlasReadChartMaxTruth() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(ATLAS_CHART_MAX_TRUTH_KEY) || "null");
+    if (!parsed || !Number.isFinite(Number(parsed.coverageDays))) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function atlasRenderChartMaxTruth(record = atlasReadChartMaxTruth()) {
+  const button = document.getElementById("btnChartMaxPeriod");
+  const label = document.getElementById("chartMaxPeriodTruth");
+  if (!button || !label) return;
+
+  if (!record) {
+    button.textContent = "Max ?";
+    button.title = "Couverture mesurée après réception réelle de la série CoinGecko";
+    label.textContent = "Max non mesuré";
+    label.dataset.state = "unknown";
+    return;
+  }
+
+  const coverageLabel = atlasChartMaxCoverageLabel(record.coverageDays);
+  button.textContent = record.coverageDays >= 330
+    ? `Max ${Math.max(1, Math.round(record.coverageDays / 365.2425))}a`
+    : "Max";
+  button.title = `${coverageLabel} · ${record.pointCount || 0} points · ${record.symbol || "actif"} · mesure locale`;
+  label.textContent = coverageLabel;
+  label.dataset.state = "measured";
+}
+
+function atlasWriteChartMaxTruth(result, coin) {
+  const coverageDays = atlasChartCoverageDays(result);
+  if (!coverageDays) return;
+  const record = {
+    coverageDays,
+    pointCount: Array.isArray(result?.series) ? result.series.length : 0,
+    coinId: coin?.id || null,
+    symbol: coin?.symbol || null,
+    measuredAt: new Date().toISOString()
+  };
+  try { localStorage.setItem(ATLAS_CHART_MAX_TRUTH_KEY, JSON.stringify(record)); } catch {}
+  atlasRenderChartMaxTruth(record);
+}
+
 function atlasChartApiDays(days){ return Number(days||1)===36500 ? "max" : String(Number(days||1)); }
 
 function atlasChartKey(c, days) {
@@ -5095,6 +5172,7 @@ async function renderAnalystPanel(options = {}) {
     };
     delete cleanResult.backgroundDirect;
     atlasStoreChartResult(c, period, cleanResult);
+    if (period === 36500) atlasWriteChartMaxTruth(cleanResult, c);
     delete state.chartEngineV2.retryAttempts[chartKey];
     state.chartEngineV2.retryKey = "";
     atlasRenderChartResult(c, period, cleanResult, chartKey);
@@ -5104,6 +5182,7 @@ async function renderAnalystPanel(options = {}) {
       const upgraded = await backgroundDirect;
       if (upgraded?.ok && upgraded.value && renderToken === state.chartRenderToken && state.selectedCoinId === coinId && Number(state.chartPeriodDays || 1) === period) {
         atlasStoreChartResult(c, period, upgraded.value);
+        if (period === 36500) atlasWriteChartMaxTruth(upgraded.value, c);
         atlasRenderChartResult(c, period, upgraded.value, chartKey, true);
       }
     }
@@ -5589,7 +5668,7 @@ function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMark
 function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasMarketOpenCoin(c,{compare:!!(e.shiftKey||e.ctrlKey||e.metaKey)});};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
 
 function renderMarketTable(){
-  if(!els.marketRows)return;atlasChartV2SyncControls();if(!atlasHasDisplayableMarket()){renderEmptyMarket("Livecheck requis. Aucun prix inventé.");return;}if(!state.liveOk)state.liveOk=true;const q=(els.searchInput?.value||"").toLowerCase().trim(),rows=sortAssets(state.coins.filter(c=>!q||c.name.toLowerCase().includes(q)||c.symbol.toLowerCase().includes(q)).filter(matchAssetFilter)).slice(0,50);if(!rows.length){renderEmptyMarket("Aucun actif ne correspond au filtre.");return;}const selection=atlasComparisonIds(),profiles=atlasWatchReadProfiles();els.marketRows.innerHTML=rows.map(c=>{const s=scoreCoin(c),compared=selection.includes(c.id),primary=c.id===state.selectedCoinId&&compared,watched=state.watchIds.includes(c.id);return `<tr class="asset-row ${primary?'is-selected':''} ${compared?'is-compared':''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c,Math.max(0,Number(c.rank||1)-1))}" tabindex="0" role="button" aria-pressed="${compared?'true':'false'}"><td>${c.rank??'—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image?`<img src="${escapeHtml(c.image)}" alt="" loading="lazy">`:''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur??c.price)}</b><small>${Number.isFinite(Number(c.priceUsd))?atlasFormatUSD(c.priceUsd):'USD —'}</small></div></td><td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared?'is-on':''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}">${compared?'−':'+'}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score??'—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Graphe</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched?'is-on':''}">${watched?'Suivi':'Watch'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note?`<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>`:''}</td></tr>`;}).join("");setText(els.tableNote,`${rows.length} affichés · ${state.coins.length} chargés · colonnes ${state.chartViewV2.marketColumns==='complete'?'complètes':'essentielles'} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · filtre : ${state.assetFilter} · tri : ${state.sortKey}. Source : ${state.mainSource}.`);[...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row=>{const act=e=>{const key=e.type==="keydown";if(key&&!['Enter',' '].includes(e.key))return;if(e.target!==row&&e.target.closest("button,a,input,select"))return;if(key)e.preventDefault();const c=state.coins.find(x=>x.id===row.dataset.id);if(c)atlasMarketOpenCoin(c,{compare:!!(e.shiftKey||e.ctrlKey||e.metaKey)});};row.addEventListener("click",act);row.addEventListener("keydown",act);});els.marketRows.querySelectorAll("[data-market-action]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();atlasMarketHandleAction(b.dataset.marketAction,state.coins.find(c=>c.id===b.dataset.coinId),e);}));
+  if(!els.marketRows)return;atlasChartV2SyncControls();if(!atlasHasDisplayableMarket()){renderEmptyMarket("Livecheck requis. Aucun prix inventé.");return;}if(!state.liveOk)state.liveOk=true;const q=(els.searchInput?.value||"").toLowerCase().trim(),rows=sortAssets(state.coins.filter(c=>!q||c.name.toLowerCase().includes(q)||c.symbol.toLowerCase().includes(q)).filter(matchAssetFilter)).slice(0,50);if(!rows.length){renderEmptyMarket("Aucun actif ne correspond au filtre.");return;}const selection=atlasComparisonIds(),profiles=atlasWatchReadProfiles();els.marketRows.innerHTML=rows.map(c=>{const s=scoreCoin(c),compared=selection.includes(c.id),primary=c.id===state.selectedCoinId&&compared,watched=state.watchIds.includes(c.id);return `<tr class="asset-row ${primary?'is-selected':''} ${compared?'is-compared':''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c,Math.max(0,Number(c.rank||1)-1))}" tabindex="0" role="button" aria-pressed="${compared?'true':'false'}"><td>${c.rank??'—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image?`<img src="${escapeHtml(c.image)}" alt="" loading="lazy">`:''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur??c.price)}</b><small>${Number.isFinite(Number(c.priceUsd))?atlasFormatUSD(c.priceUsd):'USD —'}</small></div></td><td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h,fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared?'is-on':''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared?'true':'false'}" title="${compared?'Retirer du graphique comparatif':'Ajouter au graphique comparatif'}">${compared?'Retirer':'Ajouter'}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score??'—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Graphe</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched?'is-on':''}">${watched?'Suivi':'Watch'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note?`<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>`:''}</td></tr>`;}).join("");setText(els.tableNote,`${rows.length} affichés · ${state.coins.length} chargés · colonnes ${state.chartViewV2.marketColumns==='complete'?'complètes':'essentielles'} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · filtre : ${state.assetFilter} · tri : ${state.sortKey}. Source : ${state.mainSource}.`);[...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row=>{const act=e=>{const key=e.type==="keydown";if(key&&!['Enter',' '].includes(e.key))return;if(e.target!==row&&e.target.closest("button,a,input,select"))return;if(key)e.preventDefault();const c=state.coins.find(x=>x.id===row.dataset.id);if(c)atlasToggleComparisonCoin(c);};row.addEventListener("click",act);row.addEventListener("keydown",act);});els.marketRows.querySelectorAll("[data-market-action]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();atlasMarketHandleAction(b.dataset.marketAction,state.coins.find(c=>c.id===b.dataset.coinId),e);}));
 } function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
 } 
 function atlasMathScoreBand(score) {
@@ -7776,6 +7855,8 @@ const ATLAS_V2_ALLOWED_MATH_DOCKS = new Set(["rail", "side", "top"]);
 
 const ATLAS_V2_ADVANCED_SECTION_IDS = Object.freeze([
   "multi-horizon",
+  "lecture-froide",
+  "risques",
   "auto-reader",
   "shared-memory",
   "github-memory",
@@ -7840,7 +7921,7 @@ function atlasV2FindSectionContainer(id) {
 function atlasV2ClassifySections() {
   document.querySelectorAll(".atlas-collapse").forEach(collapse => {
     const hasEssential = !!collapse.querySelector(
-      "#watchlist, #risques, #lecture-froide, #nofomo, #news-sentinel, #decision-board"
+      "#watchlist, #nofomo, #news-sentinel, #decision-board"
     );
     if (hasEssential) collapse.dataset.v2PreserveEssential = "true";
   });
@@ -7902,7 +7983,24 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (next === "essential") {
     const legacy = document.querySelector("[data-collapse-key='mode-debutant-avance']");
     if (legacy) legacy.hidden = true;
+
+    atlasV2ApplyMathDock("rail", { persist: false });
+    atlasSetCleanLensCollapsed(true, false);
+
+    const marketPanel = document.getElementById("marketSnapshotPanel");
+    if (marketPanel) marketPanel.dataset.marketColumns = "essential";
+  } else {
+    atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
+
+    let detailCollapsed = false;
+    try { detailCollapsed = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY) === "1"; } catch {}
+    atlasSetCleanLensCollapsed(detailCollapsed, false);
+
+    const marketPanel = document.getElementById("marketSnapshotPanel");
+    if (marketPanel) marketPanel.dataset.marketColumns = state.chartViewV2?.marketColumns || "essential";
   }
+
+  atlasChartV2SyncControls?.();
 
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
   window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next } }));
@@ -8012,10 +8110,47 @@ function atlasInitV2Shell() {
   }, 2000);
 }
 
+
+const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
+const ATLAS_STORAGE_SCHEMA_VERSION = 2811;
+
+function atlasStorageSafeJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw == null ? null : JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function atlasMigrateStorage2811() {
+  const mode = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
+  if (!ATLAS_V2_ALLOWED_MODES.has(mode)) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
+
+  const dock = atlasV2ReadSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
+  if (!ATLAS_V2_ALLOWED_MATH_DOCKS.has(dock)) atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
+
+  const chartSettings = atlasStorageSafeJson(ATLAS_CHART_V2_SETTINGS_KEY);
+  if (chartSettings && typeof chartSettings === "object") {
+    const sanitized = {
+      view: chartSettings.view === "base100" ? "base100" : "price",
+      scale: chartSettings.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: chartSettings.volume !== false,
+      legend: chartSettings.legend !== false,
+      marketColumns: chartSettings.marketColumns === "complete" ? "complete" : "essential"
+    };
+    try { localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY, JSON.stringify(sanitized)); } catch {}
+  }
+
+  try { localStorage.setItem(ATLAS_STORAGE_SCHEMA_KEY, String(ATLAS_STORAGE_SCHEMA_VERSION)); } catch {}
+}
+
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
+} atlasSafeBoot("storage migration 28.1.1", atlasMigrateStorage2811);
+atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
+atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
 atlasSafeBoot("Champagne Luxe Clean Lens", initAtlasCleanLensPanel);
 atlasSafeBoot("collapsible layout", initAtlasCollapsibleLayout);
@@ -8190,7 +8325,7 @@ function newsHash(value) {
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
-function newsSafeUrl(raw) {
+function newsParseSourceUrl(raw) {
   const value = String(raw || "").trim();
   if (!value) return null;
   try { return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`); }
@@ -8202,7 +8337,7 @@ function newsDomainMatches(host, domain) {
 }
 
 function newsClassifySource(urlRaw, sourceName, text, declaredStatus, sourceCount) {
-  const parsed = newsSafeUrl(urlRaw);
+  const parsed = newsParseSourceUrl(urlRaw);
   const host = parsed?.hostname?.replace(/^www\./, "").toLowerCase() || "";
   let group = "unknown";
   let source = null;
@@ -9092,7 +9227,7 @@ const ATLAS_HELP_DEFINITIONS = Object.freeze({
   btnChartTop5: { title: "Top 5", body: "Charge cinq grandes capitalisations hors stablecoins. Chaque ligne du Market peut ensuite être retirée séparément." },
   btnChartGainers: { title: "Hausses 5", body: "Sélectionne les cinq plus fortes hausses du snapshot pour la période active, puis charge leurs séries réelles." },
   btnChartLosers: { title: "Baisses 5", body: "Sélectionne les cinq plus fortes baisses du snapshot pour la période active, puis charge leurs séries réelles." },
-  btnChartVolume5: { title: "Volumes 5", body: "Sélectionne les cinq plus gros volumes sur 24 heures. Ce classement n’est pas un conseil d’achat." },
+  btnChartVolume5: { title: "Volumes 5", body: "Sélectionne les cinq plus gros volumes sur 24 heures. Classement calculé à partir du volume 24 heures réellement chargé." },
   btnChartReset: { title: "Réinitialiser", body: "Revient à Bitcoin seul sur 24 heures sans effacer les autres mémoires de l’application." },
   btnChartClear: { title: "Vider le graphique", body: "Retire toutes les cryptos du graphe. Clique ensuite une ligne du MARKET SNAPSHOT pour recommencer." }
 });
@@ -9130,7 +9265,7 @@ function atlasMarketHelpDefinition(row) {
     : `<span class="atlas-help-market-fallback" aria-hidden="true">${escapeHtml(coin.symbol.slice(0, 1))}</span>`;
   return {
     rich: true,
-    liveText: `${coin.name} ${coin.symbol}. ${compared ? "Sélectionné dans le graphique, appuie pour retirer." : "Appuie pour ajouter au graphique."}`,
+    liveText: `${coin.name} ${coin.symbol}. ${compared ? "Présent dans la comparaison. Clique la ligne pour le retirer." : "Clique la ligne pour l’ajouter à la comparaison."}`,
     html: `<div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
       <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
