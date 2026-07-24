@@ -3083,6 +3083,57 @@ function atlasCanvasWrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3
 }
 
 
+const ATLAS_TOP50_METRICS_HIDDEN_KEY =
+  "agent_crypto_erith_ia_top50_metrics_hidden_v1";
+
+function atlasSetTop50MetricsHidden(hidden, persist = true) {
+  const section = document.getElementById("marche");
+  const button = document.getElementById("btnMetricsVisibility");
+  const stateLabel = document.getElementById("metricsVisibilityState");
+  if (!section || !button) return;
+
+  const isHidden = !!hidden;
+  section.hidden = isHidden;
+  section.classList.toggle("is-metrics-hidden", isHidden);
+  button.setAttribute("aria-expanded", String(!isHidden));
+  button.classList.toggle("is-open", !isHidden);
+
+  if (stateLabel) {
+    stateLabel.textContent = isHidden ? "Afficher ▼" : "Masquer ▲";
+  }
+
+  if (persist) {
+    try {
+      localStorage.setItem(
+        ATLAS_TOP50_METRICS_HIDDEN_KEY,
+        isHidden ? "1" : "0"
+      );
+    } catch {}
+  }
+}
+
+function initAtlasTop50MetricsVisibility() {
+  const button = document.getElementById("btnMetricsVisibility");
+  const section = document.getElementById("marche");
+  if (!button || !section) return;
+
+  let hidden = true;
+  try {
+    const stored = localStorage.getItem(ATLAS_TOP50_METRICS_HIDDEN_KEY);
+    hidden = stored == null ? true : stored !== "0";
+  } catch {}
+
+  atlasSetTop50MetricsHidden(hidden, false);
+
+  if (button.dataset.metricsVisibilityBound === "1") return;
+  button.dataset.metricsVisibilityBound = "1";
+  button.addEventListener("click", event => {
+    event.preventDefault();
+    const nextHidden = !section.hidden;
+    atlasSetTop50MetricsHidden(nextHidden);
+  });
+}
+
 const ATLAS_CLEAN_LENS_PANEL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v1";
 const ATLAS_DETAIL_WINDOWS_KEY = "agent_crypto_erith_ia_detail_windows_v27_2_1";
 
@@ -3097,14 +3148,19 @@ function atlasSetCleanLensCollapsed(collapsed, persist = true) {
   const panel = document.getElementById("detailPanel");
   const toggle = document.getElementById("detailPanelToggle");
   const stateLabel = document.getElementById("detailPanelToggleState");
+  const rail = document.getElementById("detailPanelRail");
   const railArrow = document.querySelector("#detailPanelRail b");
   if (!deck) return;
 
   const isCollapsed = !!collapsed;
   deck.classList.toggle("detail-collapsed", isCollapsed);
   toggle?.setAttribute("aria-expanded", String(!isCollapsed));
+  rail?.setAttribute("aria-expanded", String(!isCollapsed));
   panel?.setAttribute("aria-hidden", String(isCollapsed));
-  if (panel) panel.inert = isCollapsed;
+  if (panel) {
+    panel.inert = isCollapsed;
+    panel.hidden = isCollapsed;
+  }
   if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ▼" : "Réduire ▲";
   if (railArrow) railArrow.textContent = isCollapsed ? "▼" : "▲";
   if (toggle) {
@@ -3144,44 +3200,38 @@ function initAtlasCleanLensPanel() {
   let collapsed = true;
   try {
     const storedPanelState = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY);
-    collapsed = storedPanelState == null ? true : storedPanelState === "1";
+    collapsed = storedPanelState == null
+      ? true
+      : storedPanelState === "1";
   } catch {}
+
   atlasSetCleanLensCollapsed(collapsed, false);
 
-  if (deck.dataset.cleanLensBound === "1") return;
-  deck.dataset.cleanLensBound = "1";
+  const bindControl = control => {
+    if (!control || control.dataset.cleanLensDirectBound === "1") return;
+    control.dataset.cleanLensDirectBound = "1";
 
-  const handleAction = event => {
-    const control = event.target?.closest?.("[data-clean-lens-action]");
-    if (!control || !deck.contains(control)) return;
+    control.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    event.preventDefault();
-    event.stopPropagation();
-
-    const action = control.dataset.cleanLensAction;
-    if (action === "open") atlasToggleCleanLensPanel(true);
-    else atlasToggleCleanLensPanel();
+      const action = control.dataset.cleanLensAction || "toggle";
+      if (action === "open") atlasToggleCleanLensPanel(true);
+      else atlasToggleCleanLensPanel();
+    });
   };
 
-  deck.addEventListener("click", handleAction, true);
+  bindControl(rail);
+  bindControl(toggle);
 
-  deck.addEventListener("keydown", event => {
-    if (!["Enter", " "].includes(event.key)) return;
-    const control = event.target?.closest?.("[data-clean-lens-action]");
-    if (!control || !deck.contains(control)) return;
-    event.preventDefault();
-    const action = control.dataset.cleanLensAction;
-    if (action === "open") atlasToggleCleanLensPanel(true);
-    else atlasToggleCleanLensPanel();
-  }, true);
+  deck.dataset.cleanLensBound = "direct-v28121";
 
-  window.addEventListener("resize", () => {
-    if (!window.matchMedia("(min-width: 1081px)").matches) {
-      atlasSetCleanLensCollapsed(true, false);
-    } else {
+  if (deck.dataset.cleanLensResizeBound !== "1") {
+    deck.dataset.cleanLensResizeBound = "1";
+    window.addEventListener("resize", () => {
       requestAnimationFrame(atlasCleanLensResizeChart);
-    }
-  }, { passive: true });
+    }, { passive: true });
+  }
 }
 
 
@@ -3751,7 +3801,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.20.
+  Internal package Build 28.1.22.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -3854,7 +3904,8 @@ function atlasDrawCurveFollowingShadowBars({
   /*
     Canonical geometry:
     - bars are vertical and parallel;
-    - every bar starts from the common chart baseline;
+    - every bar starts from the exact bottom edge of the price plot;
+    - no artificial date-axis reserve shifts the bars upward;
     - every bar follows its crypto curve point by point;
     - every bar reaches 88% of the baseline-to-curve distance;
     - the remaining 12% is the clean gap below the crypto line;
@@ -3904,8 +3955,11 @@ const atlasVolumeOverlayPlugin = {
     const yScale = chart.scales?.[chart.$atlasPriceAxisId || "y"];
     if (!area || !xScale || !yScale) return;
 
-    const dateAxisReserve = 30;
-    const baseline = area.bottom - dateAxisReserve;
+    /*
+      The Chart.js chartArea already excludes the x-axis labels.
+      The shadow baseline must therefore use the true plot bottom.
+    */
+    const baseline = area.bottom;
 
     const configuredSeries = Array.isArray(chart.$atlasShadowSeries)
       ? chart.$atlasShadowSeries
@@ -4204,7 +4258,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       rows: fallbackVolumeRows,
       xFor,
       yForPrice: yFor,
-      baseline: top + plotHeight - 30,
+      baseline: top + plotHeight,
       clipLeft: left,
       clipTop: top,
       clipRight: left + plotWidth,
@@ -4686,7 +4740,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
           .map(point => ({ x: point.x, price: point.y, y: 1 })),
         xFor,
         yForPrice: yFor,
-        baseline: top + plotH - 30,
+        baseline: top + plotH,
         clipLeft: left,
         clipTop: top,
         clipRight: left + plotW,
@@ -9313,6 +9367,7 @@ atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
+atlasSafeBoot("Top 50 metrics visibility", initAtlasTop50MetricsVisibility);
 atlasSafeBoot("Champagne Luxe Clean Lens", initAtlasCleanLensPanel);
 atlasSafeBoot("collapsible layout", initAtlasCollapsibleLayout);
 atlasSafeBoot("audience module", atlasInitAudienceModule);
@@ -10750,6 +10805,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+initAtlasTop50MetricsVisibility();
 initAtlasCleanLensPanel();
 initAtlasDetailWindows();
 initNewsSentinelV1();

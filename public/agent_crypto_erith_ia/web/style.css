@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.20
+   INTERNAL PACKAGE BUILD 28.1.22
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12613,4 +12613,99 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
     min-height: 46px !important;
     margin-inline: -9px !important;
   }
+}
+
+
+/* =========================================================
+   INTERNAL PACKAGE BUILD 28.1.22
+   TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
+   Visible page release numbers intentionally unchanged.
+   ========================================================= */
+
+.metrics-visibility-control {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  min-height: 24px !important;
+  margin: 4px 2px 6px !important;
+}
+
+.metrics-visibility-toggle {
+  appearance: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-height: 28px !important;
+  padding: 5px 11px !important;
+  border: 1px solid rgba(98,236,255,.24) !important;
+  border-radius: 999px !important;
+  background: rgba(4,15,29,.72) !important;
+  color: rgba(226,245,255,.88) !important;
+  font: inherit;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .04em !important;
+  cursor: pointer !important;
+}
+
+.metrics-visibility-toggle:hover,
+.metrics-visibility-toggle:focus-visible,
+.metrics-visibility-toggle.is-open {
+  border-color: rgba(98,236,255,.62) !important;
+  box-shadow: 0 0 0 1px rgba(98,236,255,.08) !important;
+  outline: none !important;
+}
+
+.metrics.metrics-prime[hidden],
+.metrics.metrics-prime.is-metrics-hidden {
+  display: none !important;
+}
+
+/* Native hidden state has priority over every older detail-panel rule. */
+#analyste .clean-lens-detail-panel[hidden] {
+  display: none !important;
+}
+
+#analyste:not(.detail-collapsed) .clean-lens-detail-panel:not([hidden]) {
+  display: block !important;
+}
+
+/* The right rail remains the permanent direct toggle in both states. */
+#analyste.champagne-clean-lens .detail-panel-rail,
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  display: flex !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+  z-index: 80 !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail::before,
+#analyste.champagne-clean-lens .detail-panel-rail::after {
+  pointer-events: none !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail > * {
+  pointer-events: none !important;
+}
+
+
+/* =========================================================
+   INTERNAL PACKAGE BUILD 28.1.22
+   EXACT SHADOW PLOT FRAME LOCK
+   Visible page release numbers intentionally unchanged.
+   ========================================================= */
+
+#analyste .chart-shell,
+#analyste .chart-shell canvas,
+#analyste #mainChart {
+  overflow: hidden !important;
+  max-width: 100% !important;
+}
+
+#analyste .chart-shell {
+  position: relative !important;
+  contain: paint !important;
 }

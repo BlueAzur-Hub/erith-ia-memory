@@ -124,7 +124,15 @@
       </section>
     </header>
 
-    <section class="metrics metrics-prime" id="marche">
+    <section class="metrics-visibility-control" aria-label="Affichage des indicateurs Top 50">
+      <button class="metrics-visibility-toggle" id="btnMetricsVisibility" type="button"
+              aria-controls="marche" aria-expanded="false">
+        <span>Indicateurs Top 50</span>
+        <b id="metricsVisibilityState" aria-hidden="true">Afficher ▼</b>
+      </button>
+    </section>
+
+    <section class="metrics metrics-prime is-metrics-hidden" id="marche" hidden>
       <article class="metric glass">
         <span>Capitalisation Top 50</span>
         <strong id="metricMarketCap">—</strong>
