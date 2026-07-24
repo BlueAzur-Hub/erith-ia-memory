@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.24 — EXACT CHART FRAME · VERTICAL CRYPTO BARS · SIDE DETAIL DOCK
+/* V2.0-alpha · Build 28.1.25 — HIDDEN TOP50 METRICS · CLEAN HEADER FLOW · SIDE DETAIL DOCK
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.24";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.25";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3083,57 +3083,6 @@ function atlasCanvasWrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3
 }
 
 
-const ATLAS_TOP50_METRICS_HIDDEN_KEY =
-  "agent_crypto_erith_ia_top50_metrics_hidden_v1";
-
-function atlasSetTop50MetricsHidden(hidden, persist = true) {
-  const section = document.getElementById("marche");
-  const button = document.getElementById("btnMetricsVisibility");
-  const stateLabel = document.getElementById("metricsVisibilityState");
-  if (!section || !button) return;
-
-  const isHidden = !!hidden;
-  section.hidden = isHidden;
-  section.classList.toggle("is-metrics-hidden", isHidden);
-  button.setAttribute("aria-expanded", String(!isHidden));
-  button.classList.toggle("is-open", !isHidden);
-
-  if (stateLabel) {
-    stateLabel.textContent = isHidden ? "Afficher ▼" : "Masquer ▲";
-  }
-
-  if (persist) {
-    try {
-      localStorage.setItem(
-        ATLAS_TOP50_METRICS_HIDDEN_KEY,
-        isHidden ? "1" : "0"
-      );
-    } catch {}
-  }
-}
-
-function initAtlasTop50MetricsVisibility() {
-  const button = document.getElementById("btnMetricsVisibility");
-  const section = document.getElementById("marche");
-  if (!button || !section) return;
-
-  let hidden = true;
-  try {
-    const stored = localStorage.getItem(ATLAS_TOP50_METRICS_HIDDEN_KEY);
-    hidden = stored == null ? true : stored !== "0";
-  } catch {}
-
-  atlasSetTop50MetricsHidden(hidden, false);
-
-  if (button.dataset.metricsVisibilityBound === "1") return;
-  button.dataset.metricsVisibilityBound = "1";
-  button.addEventListener("click", event => {
-    event.preventDefault();
-    const nextHidden = !section.hidden;
-    atlasSetTop50MetricsHidden(nextHidden);
-  });
-}
-
 const ATLAS_CLEAN_LENS_PANEL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v1";
 const ATLAS_DETAIL_WINDOWS_KEY = "agent_crypto_erith_ia_detail_windows_v27_2_1";
 
@@ -3455,7 +3404,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.24: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.25: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3801,7 +3750,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.24.
+  Internal package Build 28.1.25.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -9367,7 +9316,6 @@ atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
-atlasSafeBoot("Top 50 metrics visibility", initAtlasTop50MetricsVisibility);
 atlasSafeBoot("Champagne Luxe Clean Lens", initAtlasCleanLensPanel);
 atlasSafeBoot("collapsible layout", initAtlasCollapsibleLayout);
 atlasSafeBoot("audience module", atlasInitAudienceModule);
@@ -10805,7 +10753,6 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-initAtlasTop50MetricsVisibility();
 initAtlasCleanLensPanel();
 initAtlasDetailWindows();
 initNewsSentinelV1();

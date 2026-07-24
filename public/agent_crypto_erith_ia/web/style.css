@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.24
+   INTERNAL PACKAGE BUILD 28.1.25
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.24
+   INTERNAL PACKAGE BUILD 28.1.25
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.24
+   INTERNAL PACKAGE BUILD 28.1.25
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12712,7 +12712,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.24
+   V2.0-alpha · Build 28.1.25
    SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
    ========================================================= */
 
@@ -12910,7 +12910,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.24
+   V2.0-alpha · Build 28.1.25
    EXACT CHART FRAME · SUBGRAPH BOTTOM ALIGNMENT LOCK
    ========================================================= */
 
@@ -12957,4 +12957,24 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 #analyste.champagne-clean-lens .chart-caption {
   position: relative !important;
   margin-top: 4px !important;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.25
+   HIDDEN TOP50 METRICS · NO EXTRA CONTROL BAR
+   ========================================================= */
+
+/* Les quatre cartes Top 50 sont masquées sans ajouter de barre UI. */
+#marche.metrics.metrics-prime,
+#marche.metrics.metrics-prime[hidden],
+#marche.metrics.metrics-prime.is-metrics-hidden {
+  display: none !important;
+}
+
+/* Toute ancienne barre de contrôle éventuelle est neutralisée. */
+.metrics-visibility-control,
+.metrics-visibility-toggle,
+#btnMetricsVisibility {
+  display: none !important;
 }
