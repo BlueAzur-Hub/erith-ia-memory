@@ -1,5 +1,5 @@
-/* V2.0-alpha · Build 28.1.14 — BUTTON STATE ISOLATION · SINGLE VALUE LAYER
-   SIDE DETAIL DOCK · VOLUME SHADOW LOCK
+/* V2.0-alpha · Build 28.1.18 — CURVE-FOLLOWING SHADOW BARS · 80 PERCENT GAP
+   SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
    - axes Prix et Date dessinés dans le chartArea, sans manger le tracé ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.14";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.18";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3105,8 +3105,8 @@ function atlasSetCleanLensCollapsed(collapsed, persist = true) {
   toggle?.setAttribute("aria-expanded", String(!isCollapsed));
   panel?.setAttribute("aria-hidden", String(isCollapsed));
   if (panel) panel.inert = isCollapsed;
-  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ◀" : "Réduire ▶";
-  if (railArrow) railArrow.textContent = isCollapsed ? "◀" : "▶";
+  if (stateLabel) stateLabel.textContent = isCollapsed ? "Afficher ▼" : "Réduire ▲";
+  if (railArrow) railArrow.textContent = isCollapsed ? "▼" : "▲";
   if (toggle) {
     toggle.disabled = false;
     toggle.tabIndex = 0;
@@ -3327,7 +3327,7 @@ function atlasHideChartRefresh() {
 }
 
 
-const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings";
+const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings_v28_1_17";
 function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
 function atlasWriteChartV2Settings(){try{localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify(state.chartViewV2));}catch{}}
 function atlasChartV2ComparisonMode(){return atlasComparisonActive();}
@@ -3405,7 +3405,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.14: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.18: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3750,6 +3750,104 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
   });
 }
 
+function atlasDrawCurveFollowingShadowBars({
+  ctx,
+  rows,
+  xFor,
+  yForPrice,
+  baseline,
+  clipLeft,
+  clipTop,
+  clipRight,
+  clipBottom,
+  color = "98,236,255"
+}) {
+  const safeRows = Array.isArray(rows) ? rows.filter(point =>
+    Number.isFinite(Number(point?.x))
+    && Number.isFinite(Number(point?.price))
+    && Number(point.price) > 0
+  ) : [];
+  if (!ctx || safeRows.length < 2) return;
+
+  const volumeValues = safeRows
+    .map(point => Number(point?.y))
+    .filter(value => Number.isFinite(value) && value >= 0);
+  const maxVolume = Math.max(...volumeValues, 0);
+
+  const pixelXs = safeRows
+    .map(point => Number(xFor(point.x)))
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
+  const pixelGaps = pixelXs
+    .slice(1)
+    .map((value, index) => value - pixelXs[index])
+    .filter(value => Number.isFinite(value) && value > 0)
+    .sort((a, b) => a - b);
+
+  const medianPixelGap = pixelGaps.length
+    ? pixelGaps[Math.floor(pixelGaps.length / 2)]
+    : 3;
+  const barWidth = Math.max(1.25, Math.min(5.2, medianPixelGap * 0.80));
+  const safeBaseline = Math.min(Number(baseline), Number(clipBottom) - 1);
+  const usableHeight = Math.max(1, safeBaseline - Number(clipTop));
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(
+    Number(clipLeft),
+    Number(clipTop),
+    Number(clipRight) - Number(clipLeft),
+    Number(clipBottom) - Number(clipTop)
+  );
+  ctx.clip();
+
+  for (const point of safeRows) {
+    const x = Number(xFor(point.x));
+    const rawCurveY = Number(yForPrice(point.price));
+    if (!Number.isFinite(x) || !Number.isFinite(rawCurveY)) continue;
+
+    /*
+      Build 28.1.18 canonical geometry:
+      - one shared time axis for price and shadow bars;
+      - every bar starts from the chart baseline;
+      - the bar envelope follows the crypto line point by point;
+      - each bar reaches 80% of the baseline-to-line distance;
+      - the remaining 20% is the visible separation below the crypto line;
+      - real volume controls opacity only, never geometry.
+    */
+    const curveY = Math.max(
+      Number(clipTop),
+      Math.min(safeBaseline - 1, rawCurveY)
+    );
+    const distanceToCurve = Math.max(
+      1,
+      Math.min(usableHeight, safeBaseline - curveY)
+    );
+    const shadowHeight = distanceToCurve * 0.80;
+    const shadowTop = safeBaseline - shadowHeight;
+
+    const volumeRatio = maxVolume > 0
+      ? Math.max(0, Math.min(1, Number(point.y || 0) / maxVolume))
+      : 0;
+
+    const alpha = 0.16 + volumeRatio * 0.28;
+    const fade = ctx.createLinearGradient(0, shadowTop, 0, safeBaseline);
+    fade.addColorStop(0, `rgba(${color},${Math.max(.12, alpha * .90).toFixed(3)})`);
+    fade.addColorStop(.55, `rgba(${color},${Math.max(.07, alpha * .58).toFixed(3)})`);
+    fade.addColorStop(1, `rgba(${color},${Math.max(.025, alpha * .24).toFixed(3)})`);
+
+    ctx.fillStyle = fade;
+    ctx.fillRect(
+      x - barWidth / 2,
+      shadowTop,
+      barWidth,
+      Math.max(1, shadowHeight)
+    );
+  }
+
+  ctx.restore();
+}
+
 const atlasVolumeOverlayPlugin = {
   id: "atlasVolumeOverlay",
   beforeDatasetsDraw(chart) {
@@ -3761,41 +3859,20 @@ const atlasVolumeOverlayPlugin = {
     const yScale = chart.scales?.[chart.$atlasPriceAxisId || "y"];
     if (!area || !xScale || !yScale) return;
 
-    const maxVolume = Math.max(...rows.map(point => Number(point?.y)).filter(Number.isFinite), 0);
-    if (!(maxVolume > 0)) return;
-
-    const ctx = chart.ctx;
     const dateAxisReserve = 30;
     const baseline = area.bottom - dateAxisReserve;
-    const plotHeight = Math.max(1, baseline - area.top);
-    const barWidth = Math.max(1, Math.min(3.6, (area.right - area.left) / Math.max(72, rows.length) * 0.88));
-    const color = chart.$atlasVolumeColor || "98,236,255";
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(area.left, area.top, area.right - area.left, area.bottom - area.top);
-    ctx.clip();
-
-    for (const point of rows) {
-      const price = Number(point?.price);
-      if (!Number.isFinite(price) || price <= 0) continue;
-      const x = xScale.getPixelForValue(point.x);
-      const priceY = yScale.getPixelForValue(price);
-      if (!Number.isFinite(x) || !Number.isFinite(priceY)) continue;
-
-      const distanceToCurve = Math.max(0, Math.min(plotHeight, baseline - priceY));
-      const height = Math.max(.75, distanceToCurve * 0.80);
-      const ratio = Math.max(0, Math.min(1, Number(point.y) / maxVolume));
-      const alpha = 0.035 + ratio * 0.145;
-      const top = baseline - height;
-      const fade = ctx.createLinearGradient(0, top, 0, baseline);
-      fade.addColorStop(0, `rgba(${color},${Math.max(.025, alpha * .58).toFixed(3)})`);
-      fade.addColorStop(.52, `rgba(${color},${Math.max(.018, alpha * .38).toFixed(3)})`);
-      fade.addColorStop(1, `rgba(${color},${Math.max(.012, alpha * .20).toFixed(3)})`);
-      ctx.fillStyle = fade;
-      ctx.fillRect(x - barWidth / 2, top, barWidth, height);
-    }
-    ctx.restore();
+    atlasDrawCurveFollowingShadowBars({
+      ctx: chart.ctx,
+      rows,
+      xFor: value => xScale.getPixelForValue(value),
+      yForPrice: value => yScale.getPixelForValue(value),
+      baseline,
+      clipLeft: area.left,
+      clipTop: area.top,
+      clipRight: area.right,
+      clipBottom: area.bottom,
+      color: chart.$atlasVolumeColor || "98,236,255"
+    });
   }
 };
 
@@ -4041,6 +4118,25 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   const endTime = rows[rows.length - 1].t;
   const xFor = time => left + ((time - startTime) / (endTime - startTime || 1)) * plotWidth;
   const yFor = value => top + plotHeight - ((value - low) / (high - low || 1)) * plotHeight;
+
+  if (showVolume) {
+    const fallbackVolumeRows = atlasAlignVolumeToPriceTimeline(
+      result?.volumeSeries,
+      points.map(point => ({ t: point.x, price: point.y }))
+    );
+    atlasDrawCurveFollowingShadowBars({
+      ctx,
+      rows: fallbackVolumeRows,
+      xFor,
+      yForPrice: yFor,
+      baseline: top + plotHeight - 30,
+      clipLeft: left,
+      clipTop: top,
+      clipRight: left + plotWidth,
+      clipBottom: top + plotHeight,
+      color: atlasHexToRgb(palette.primary).join(",")
+    });
+  }
 
   ctx.beginPath();
   points.forEach((point, index) => {
@@ -9102,11 +9198,11 @@ function atlasMigrateStorage28111() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.14", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.14", atlasMigrateStorage28111);
+} atlasSafeBoot("release labels 28.1.15", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.15", atlasMigrateStorage28111);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.14", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);

@@ -11836,7 +11836,7 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
 }
 
 /* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.14
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.15
    CANONICAL FULL-WIDTH CHART STAGE
    TOP 5 · MARKET FLOW · OVERLAY VALUES
    & NON-DESTRUCTIVE RECOVERY LOCK
@@ -12007,7 +12007,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   Build 28.1.14 — CANONICAL ORDER · SINGLE VALUE LAYER
+   Build 28.1.15 — CANONICAL ORDER · SINGLE VALUE LAYER
    & PRICE/VOLUME SINGLE-TIMELINE FINAL LOCK
    ========================================================= */
 
@@ -12088,7 +12088,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 
 
 /* =========================================================
-   Build 28.1.14 — CANONICAL ORDER · SINGLE VALUE LAYER
+   Build 28.1.15 — CANONICAL ORDER · SINGLE VALUE LAYER
    INLINE HEADER · CLEAR DETAIL DOCK · VOLUME SHADOW LOCK
    ========================================================= */
 
@@ -12264,9 +12264,9 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.14
-   BUTTON STATE ISOLATION · SINGLE VALUE LAYER
-   SIDE DETAIL DOCK · VOLUME SHADOW LOCK
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.15
+   CANONICAL COMPLETE CONTROLS · SINGLE-LINE HEADER
+   BOTTOM DETAIL DOCK · VOLUME SHADOW LOCK
    ========================================================= */
 
 /* Active chart controls never repaint the chart stage.
@@ -12380,5 +12380,415 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
     display: flex !important;
     grid-column: 2 !important;
     grid-row: 1 !important;
+  }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.15
+   CANONICAL COMPLETE CONTROLS · SINGLE-LINE HEADER
+   BOTTOM DETAIL DOCK · VOLUME SHADOW LOCK
+   ========================================================= */
+
+/* 1. The complete chart cockpit remains available in Essential and Complete.
+      No chart option is silently hidden. */
+html[data-atlas-mode="essential"] .chart-v2-toolbar-reading .chart-v2-toggle-group,
+html[data-atlas-mode="essential"] .compare-action-group-market,
+html[data-atlas-mode="essential"] .compare-action-group-state,
+html[data-atlas-mode="essential"] .period-btn[data-period="60"],
+html[data-atlas-mode="essential"] .period-btn[data-period="90"],
+html[data-atlas-mode="essential"] .period-btn[data-period="365"],
+html[data-atlas-mode="essential"] .period-btn-max,
+html[data-atlas-mode="essential"] .chart-v2-period-truth {
+  display: inline-flex !important;
+}
+
+#analyste .chart-v2-toolbar,
+#analyste .chart-v2-toolbar-row,
+#analyste .chart-v2-control-deck,
+#analyste .period-tabs,
+#analyste .compare-actions,
+#analyste .compare-action-group {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  min-width: max-content;
+}
+
+#analyste .chart-v2-toolbar {
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+}
+
+/* 2. One physical Livecheck line on desktop. No card falls below it. */
+@media (min-width: 1081px) {
+  html[data-atlas-mode="essential"] .hero .command-bar {
+    display: grid !important;
+    grid-template-columns: minmax(170px,205px) minmax(125px,160px) minmax(0,1fr) minmax(185px,225px) !important;
+    grid-template-areas: "live refresh source time" !important;
+    grid-template-rows: minmax(38px,auto) !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+  }
+  html[data-atlas-mode="essential"] #decisionCard,
+  html[data-atlas-mode="essential"] #btnNoFomo {
+    display: none !important;
+  }
+  html[data-atlas-mode="essential"] #btnLivecheck { grid-area: live !important; }
+  html[data-atlas-mode="essential"] #btnRefresh { grid-area: refresh !important; }
+  html[data-atlas-mode="essential"] #sourceActiveCard { grid-area: source !important; }
+  html[data-atlas-mode="essential"] #sourceTimeCard { grid-area: time !important; }
+
+  html[data-atlas-mode="advanced"] .hero .command-bar {
+    display: grid !important;
+    grid-template-columns: minmax(155px,185px) minmax(115px,145px) minmax(115px,145px) minmax(205px,.78fr) minmax(245px,1fr) minmax(180px,215px) !important;
+    grid-template-areas: "live refresh nofomo decision source time" !important;
+    grid-template-rows: minmax(38px,auto) !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+  }
+  html[data-atlas-mode="advanced"] #btnLivecheck { grid-area: live !important; }
+  html[data-atlas-mode="advanced"] #btnRefresh { grid-area: refresh !important; }
+  html[data-atlas-mode="advanced"] #btnNoFomo { grid-area: nofomo !important; }
+  html[data-atlas-mode="advanced"] #decisionCard { grid-area: decision !important; }
+  html[data-atlas-mode="advanced"] #sourceActiveCard { grid-area: source !important; }
+  html[data-atlas-mode="advanced"] #sourceTimeCard { grid-area: time !important; }
+
+  .hero .command-bar > .btn,
+  .hero .command-bar > .source-card {
+    min-width: 0 !important;
+    width: auto !important;
+  }
+  .hero .command-bar .source-card strong {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* Transformer keeps the same line and scrolls horizontally instead of wrapping. */
+@media (min-width: 620px) and (max-width: 1080px) {
+  .hero .command-bar,
+  html[data-atlas-mode="advanced"] .hero .command-bar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    align-items: stretch !important;
+    scrollbar-width: thin;
+  }
+  .hero .command-bar > .btn,
+  .hero .command-bar > .source-card {
+    flex: 0 0 auto !important;
+  }
+}
+
+/* 3. Single value system.
+      No permanent board at left and no selected-chip duplicate row. */
+#analyste .comparison-selection,
+#analyste .chart-value-overlay {
+  display: none !important;
+}
+
+/* 4. The graph always owns the full first row, minus the narrow rail.
+      Opening Detail Active creates a dock below the graph; it never overlays or narrows the plot. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) 30px !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 4px !important;
+  row-gap: 7px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel,
+#analyste.champagne-clean-lens.detail-collapsed .chart-panel,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail,
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  padding: 7px 3px !important;
+  overflow: hidden !important;
+  align-self: stretch !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span {
+  display: inline-block !important;
+  writing-mode: vertical-rl !important;
+  transform: rotate(180deg) !important;
+  white-space: nowrap !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span b {
+  display: inline !important;
+  margin-inline-start: 5px !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: 360px !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
+  display: none !important;
+}
+
+/* 5. Active buttons only receive a border/glow. The panoramic background is immutable. */
+#analyste .chart-v2-toggle.is-active,
+#analyste .period-btn.active,
+#analyste .compare-btn.active,
+#analyste .compare-btn.is-active {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: rgba(98,236,255,.78) !important;
+  color: #effcff !important;
+  box-shadow: inset 0 -2px 0 rgba(98,236,255,.9), 0 0 10px rgba(98,236,255,.09) !important;
+}
+
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  background-color: rgba(2,8,18,.01) !important;
+  background-image: none !important;
+}
+
+#analyste.champagne-clean-lens::before {
+  background-image: url("./lounge_nocturne_luxueuse_avec_vue_sur_la_ville.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  opacity: 1 !important;
+}
+
+/* 6. Responsive rail; the dock remains below, never over the canvas. */
+@media (max-width: 760px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    grid-template-columns: minmax(0,1fr) 28px !important;
+    column-gap: 3px !important;
+  }
+  #analyste.champagne-clean-lens .detail-panel-rail,
+  #analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+  #analyste.champagne-clean-lens .clean-lens-detail-panel,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel {
+    max-height: 320px !important;
+  }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.17
+   CURVE-FOLLOWING SHADOW BARS · 80 PERCENT GAP · SINGLE TIMELINE LOCK
+   ========================================================= */
+
+:root {
+  --atlas-canonical-side-rail-width: 30px;
+}
+
+/* Graph rail and Market rail reserve the exact same width. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--atlas-canonical-side-rail-width) !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail,
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail {
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  max-width: var(--atlas-canonical-side-rail-width) !important;
+}
+
+.market-workspace-grid.math-dock-rail {
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--atlas-canonical-side-rail-width) !important;
+  column-gap: 6px !important;
+}
+
+.atlas-math-dock.is-rail {
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  max-width: var(--atlas-canonical-side-rail-width) !important;
+  overflow: visible !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(98, 236, 255, .28) !important;
+  background:
+    linear-gradient(180deg, rgba(6, 20, 35, .84), rgba(3, 11, 22, .72)) !important;
+  box-shadow: inset 0 0 24px rgba(98, 236, 255, .045) !important;
+}
+
+.atlas-math-dock.is-rail .atlas-math-rail-trigger {
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  max-width: var(--atlas-canonical-side-rail-width) !important;
+  overflow: visible !important;
+  border-radius: 13px !important;
+}
+
+.atlas-math-rail-content {
+  position: sticky !important;
+  top: 10px !important;
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  min-height: 150px !important;
+  padding: 10px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  overflow: visible !important;
+}
+
+/* No repeated vertical wording: the score medallion is the only visible control. */
+.atlas-math-rail-kicker,
+.atlas-math-rail-content small,
+.atlas-math-rail-content i {
+  display: none !important;
+}
+
+.atlas-math-rail-medallion {
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  flex: 0 0 50px !important;
+  margin: 0 -10px !important;
+  display: grid !important;
+  place-items: center !important;
+  z-index: 2 !important;
+  cursor: pointer;
+}
+
+/* Tablet/mobile keeps both controls usable without horizontal clipping. */
+@media (max-width: 760px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    grid-template-columns: minmax(0, 1fr) 28px !important;
+  }
+
+  .market-workspace-grid.math-dock-rail {
+    grid-template-columns: minmax(0, 1fr) 28px !important;
+  }
+
+  .atlas-math-dock.is-rail,
+  .atlas-math-dock.is-rail .atlas-math-rail-trigger,
+  .atlas-math-rail-content {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+
+  .atlas-math-rail-medallion {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    flex-basis: 46px !important;
+    margin-inline: -9px !important;
+  }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.18
+   VISIBLE CURVE SHADOW BARS · HOMOGENEOUS RAILS LOCK
+   ========================================================= */
+
+:root {
+  --atlas-canonical-side-rail-width: 30px;
+}
+
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed,
+#analyste.champagne-clean-lens:not(.detail-collapsed),
+.market-workspace-grid.math-dock-rail {
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--atlas-canonical-side-rail-width) !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail,
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-rail,
+.atlas-math-dock.is-rail,
+.atlas-math-dock.is-rail .atlas-math-rail-trigger,
+.atlas-math-rail-content {
+  width: var(--atlas-canonical-side-rail-width) !important;
+  min-width: var(--atlas-canonical-side-rail-width) !important;
+  max-width: var(--atlas-canonical-side-rail-width) !important;
+}
+
+.atlas-math-rail-content {
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.atlas-math-rail-medallion {
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  margin: 0 -10px !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --atlas-canonical-side-rail-width: 28px;
+  }
+
+  .atlas-math-rail-medallion {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    margin-inline: -9px !important;
   }
 }
