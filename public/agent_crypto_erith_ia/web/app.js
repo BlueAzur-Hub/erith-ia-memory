@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.23 — VERTICAL CRYPTO SHADOW BARS · 88 PERCENT · SIDE DETAIL DOCK RESTORE
+/* V2.0-alpha · Build 28.1.24 — EXACT CHART FRAME · VERTICAL CRYPTO BARS · SIDE DETAIL DOCK
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.23";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.24";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3455,7 +3455,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.23: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.24: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3801,7 +3801,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.23.
+  Internal package Build 28.1.24.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -4153,7 +4153,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        layout: { padding: { top: 8, right: 4, bottom: 4, left: 4 } },
+        layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -4641,7 +4641,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "index", intersect: false, axis: "x" },
-        layout: { padding: { top: 8, right: 4, bottom: 4, left: 4 } },
+        layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
         plugins: {
           legend: {
             display: true,

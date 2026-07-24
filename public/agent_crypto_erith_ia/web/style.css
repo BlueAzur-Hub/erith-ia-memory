@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.23
+   INTERNAL PACKAGE BUILD 28.1.24
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.23
+   INTERNAL PACKAGE BUILD 28.1.24
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.23
+   INTERNAL PACKAGE BUILD 28.1.24
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12712,7 +12712,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.23
+   V2.0-alpha · Build 28.1.24
    SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
    ========================================================= */
 
@@ -12906,4 +12906,55 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
     min-width: 28px !important;
     max-width: 28px !important;
   }
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.24
+   EXACT CHART FRAME · SUBGRAPH BOTTOM ALIGNMENT LOCK
+   ========================================================= */
+
+/*
+  La bande vide provenait de l’ancienne règle :
+  height: calc(100% - 26px)
+  Le canvas remplit désormais exactement la zone graphique.
+*/
+#analyste.champagne-clean-lens .chart-shell,
+#analyste.champagne-clean-lens.detail-collapsed .chart-shell,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .chart-shell {
+  position: relative !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 6px !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens #mainChart,
+#analyste.champagne-clean-lens.detail-collapsed #mainChart,
+#analyste.champagne-clean-lens:not(.detail-collapsed) #mainChart {
+  display: block !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: top !important;
+  box-sizing: border-box !important;
+}
+
+/* Le graphique principal et les barres verticales partagent le même bas réel. */
+#analyste.champagne-clean-lens .chart-shell canvas {
+  transform: none !important;
+  translate: none !important;
+}
+
+/* Le statut reste sous le cadre, sans réserver 26 px dans le canvas. */
+#analyste.champagne-clean-lens .chart-caption {
+  position: relative !important;
+  margin-top: 4px !important;
 }
