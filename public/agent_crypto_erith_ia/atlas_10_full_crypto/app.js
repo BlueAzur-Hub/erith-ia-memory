@@ -1,1087 +1,1167 @@
 (() => {
- "use strict";
+  "use strict";
 
- const PUBLIC_REPO = "https://github.com/BlueAzur-Hub/erith-ia-memory";
- const PRIVATE_REPO = "https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private";
- const STORAGE_KEY = "atlas10-full-crypto-hub-progress-v1";
+  const catalog = window.AERITH_FORGE_CATALOG;
+  if (!catalog) throw new Error("forge-catalog.js est introuvable.");
 
- const MASTER_PROMPT = `Active Atlas-10 Full Crypto en mode Full Crypto.
+  const STORAGE_KEY = "agent_crypto_aerith_forge_v1";
+  const STEP_KEY = "agent_crypto_aerith_forge_step_v1";
+  const steps = [
+    ["01", "Profil", "Choisir le profil ou créer un nouveau brouillon."],
+    ["02", "Architecture", "Core, Persona, Boot et fichiers structurels."],
+    ["03", "Sources", "Importer les ZIP et qualifier les références."],
+    ["04", "Modules", "Activer uniquement les compétences utiles."],
+    ["05", "Règles", "Mémoire, confidentialité et Stop Gates."],
+    ["06", "Prévisualisation", "Vérifier les inclusions, références et alertes."],
+    ["07", "Forge", "Générer le profil LLM et son ZIP."]
+  ];
 
-Sources principales :
+  const imported = [];
+  const state = loadState();
+  let activeStep = Number.parseInt(localStorageSafeGet(STEP_KEY, "0"), 10) || 0;
+  let lastPreview = null;
+  let currentIdea = "";
 
-1. ATLAS_10_FULL_CRYPTO_MULTI_AGENT_CORE.md
-2. ATLAS_10_FULL_CRYPTO_PERSONA.md
-3. AERITH_10_CRYPTO_MULTI_AGENT_CORE.md
-4. modules/README.md
-5. modules/atlas_10_crypto_math_oracle_fr.md
-6. modules/atlas_10_crypto_market_structure_fr.md
-7. modules/atlas_10_crypto_tokenomics_dilution_fr.md
-8. modules/atlas_10_crypto_data_truth_sources_fr.md
-9. modules/atlas_10_crypto_multi_horizon_cycles_fr.md
-10. modules/atlas_10_crypto_psychology_market_fr.md
-11. modules/atlas_10_crypto_onchain_research_fr.md
-12. modules/atlas_10_crypto_risk_liquidity_execution_fr.md
-13. public/agent_crypto_erith_ia/README.md
-14. packs Seven Heaven utiles uniquement si la mission le justifie
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
-Ordre obligatoire :
+  function localStorageSafeGet(key, fallback = null) {
+    try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
+  }
 
-Core Atlas-10 Full Crypto
-→ Persona l’utilisateur V3
-→ Aerith-10 Crypto
-→ routeur des modules crypto publics
+  function localStorageSafeSet(key, value) {
+    try { localStorage.setItem(key, value); return true; } catch { return false; }
+  }
+
+  function loadState() {
+    const defaults = {
+      profileId: "atlas",
+      profileRoot: "ATLAS_10_CRYPTO",
+      customName: "",
+      customMission: "",
+      preset: "standard",
+      selectedModules: [],
+      rules: {},
+      completed: {}
+    };
+    try {
+      const parsed = JSON.parse(localStorageSafeGet(STORAGE_KEY, "{}") || "{}");
+      return { ...defaults, ...parsed, rules: { ...defaults.rules, ...(parsed.rules || {}) } };
+    } catch {
+      return defaults;
+    }
+  }
+
+  function saveState() {
+    localStorageSafeSet(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function profile() {
+    return catalog.profiles.find(item => item.id === state.profileId) || catalog.profiles[0];
+  }
+
+  function sanitizeName(value, fallback = "AERITH_PROFILE") {
+    const clean = String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .toUpperCase();
+    return clean || fallback;
+  }
+
+  function basename(path) {
+    return String(path || "").replaceAll("\\", "/").split("/").pop();
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function showToast(message) {
+    const toast = $("#toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove("show"), 2300);
+  }
+
+  async function copyText(text, message = "Copié.") {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    showToast(message);
+  }
+
+  function downloadBlob(filename, blob) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function downloadText(filename, text) {
+    downloadBlob(filename, new Blob([text], { type: "text/markdown;charset=utf-8" }));
+  }
+
+  function ensureDefaults() {
+    const p = profile();
+    if (!state.profileRoot || state.profileRoot === "AERITH_PROFILE") state.profileRoot = p.root;
+    if (!Array.isArray(state.selectedModules) || !state.selectedModules.length) applyPreset(p.defaultPreset, false);
+    catalog.rules.forEach(rule => {
+      if (typeof state.rules[rule.id] !== "boolean") state.rules[rule.id] = rule.default;
+    });
+    saveState();
+  }
+
+  function renderProfileCards() {
+    $("#profileCards").innerHTML = catalog.profiles.map(item => `
+      <button type="button" class="profile-card ${item.id === state.profileId ? "is-active" : ""}" data-profile-id="${escapeHtml(item.id)}">
+        <span class="card-top">
+          <span class="card-sigil">${escapeHtml(item.sigil)}</span>
+          <span class="card-status">${escapeHtml(item.statusLabel)}</span>
+        </span>
+        <span class="family">${escapeHtml(item.family)}</span>
+        <h3>${escapeHtml(item.name)}</h3>
+        <p>${escapeHtml(item.short)}</p>
+      </button>
+    `).join("");
+  }
+
+  function renderSteps() {
+    $("#forgeSteps").innerHTML = steps.map((item, index) => `
+      <button type="button" class="step-button ${index === activeStep ? "is-active" : ""}" data-step-index="${index}">
+        <span class="step-number">${item[0]}</span>
+        <span class="step-copy"><strong>${item[1]}</strong><small>${item[2]}</small></span>
+        <span class="step-state">•</span>
+      </button>
+    `).join("");
+  }
+
+  function selectProfile(id) {
+    const next = catalog.profiles.find(item => item.id === id);
+    if (!next) return;
+    state.profileId = id;
+    state.profileRoot = next.root;
+    state.customName = "";
+    state.customMission = "";
+    state.preset = next.defaultPreset;
+    state.selectedModules = next.modules.filter(module => module.preset.includes(next.defaultPreset)).map(module => module.id);
+    document.body.dataset.profile = id;
+    saveState();
+    renderAll();
+    showToast(`${next.name} sélectionné.`);
+  }
+
+  function applyPreset(preset, rerender = true) {
+    const p = profile();
+    state.preset = preset;
+    state.selectedModules = p.modules.filter(module => module.preset.includes(preset)).map(module => module.id);
+    saveState();
+    if (rerender) {
+      renderModules();
+      updatePreview();
+    }
+  }
+
+  function renderIdentity() {
+    const p = profile();
+    document.body.dataset.profile = p.id;
+    $("#activeSigil").textContent = p.sigil;
+    $("#activeFamily").textContent = p.family;
+    $("#activeName").textContent = p.name;
+    $("#activeDescription").textContent = p.description;
+    $("#activeStatus").textContent = p.statusLabel;
+    $("#profileRoot").value = state.profileRoot || p.root;
+    $(".custom-only", document)?.toggleAttribute("hidden", p.id !== "custom");
+    $$(".custom-only").forEach(node => node.hidden = p.id !== "custom");
+    $("#customName").value = state.customName || "";
+    $("#customMission").value = state.customMission || "";
+  }
+
+  function renderMatrix() {
+    const p = profile();
+    const selected = selectedModules();
+    $("#matrixSigil").textContent = p.sigil;
+    $("#matrixName").textContent = p.id === "custom" && state.customName ? state.customName : p.name;
+    $("#matrixDescription").textContent = p.short;
+    $("#matrixCore").textContent = p.id === "custom" ? "Généré" : String(p.mandatory.filter(x => x.kind === "core").length || "—");
+    $("#matrixPersona").textContent = p.id === "custom" ? "Générée" : String(p.mandatory.filter(x => x.kind === "persona").length || "—");
+    $("#matrixModules").textContent = String(selected.length);
+    $("#matrixSources").textContent = p.privacy === "private" ? "Privé/local" : p.privacy === "draft" ? "Brouillon" : "Public";
+    $("#matrixStatus").textContent = p.status === "public-ready" ? "READY" : p.status === "draft" ? "DRAFT" : "IMPORT";
+  }
+
+  function importedMatches(name, matchPath = "") {
+    const needle = name.toLowerCase();
+    const pathNeedle = matchPath.toLowerCase();
+    return imported.filter(item => {
+      const low = item.path.toLowerCase();
+      return basename(low) === needle || (pathNeedle && low.endsWith(pathNeedle));
+    });
+  }
+
+  function renderArchitecture() {
+    const p = profile();
+    const generated = [
+      { name: `BOOT_${sanitizeName(state.profileRoot || p.root)}.md`, kind: "Boot", status: "GÉNÉRÉ" },
+      { name: "PROFILE_MANIFEST.md", kind: "Manifeste", status: "GÉNÉRÉ" },
+      { name: "ATLAS_DES_MODULES.md", kind: "Routeur", status: "GÉNÉRÉ" },
+      { name: "SOURCES_REPORT.md", kind: "Preuve", status: "GÉNÉRÉ" },
+      { name: "TESTS_LLM.md", kind: "Tests", status: "GÉNÉRÉ" },
+      { name: "README.md", kind: "Guide", status: "GÉNÉRÉ" }
+    ];
+    const mandatory = p.id === "custom" ? [
+      { name: `${sanitizeName(state.customName || "NOUVEAU_PROFIL")}_MULTI_AGENT_CORE.md`, kind: "core", source: "generated" },
+      { name: `${sanitizeName(state.customName || "NOUVEAU_PROFIL")}_PERSONA_OPERATING_LAYER.md`, kind: "persona", source: "generated" }
+    ] : p.mandatory;
+
+    $("#architectureList").innerHTML = [...mandatory, ...generated].map(item => {
+      let status = item.status || "";
+      let cls = "generated";
+      if (!status) {
+        if (item.source === "builtin") { status = "INCLUS"; cls = ""; }
+        else if (item.source === "generated") { status = "GÉNÉRÉ"; cls = "generated"; }
+        else {
+          const matches = importedMatches(item.name, item.matchPath);
+          status = matches.length ? "LOCAL · TROUVÉ" : "RÉFÉRENCE";
+          cls = matches.length ? "" : "reference";
+        }
+      }
+      return `
+        <div class="architecture-item">
+          <span class="architecture-icon">${escapeHtml((item.kind || "F").slice(0, 2).toUpperCase())}</span>
+          <span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.kind || "Fichier structurel")}</small></span>
+          <span class="file-state ${cls}">${escapeHtml(status)}</span>
+        </div>`;
+    }).join("");
+
+    const core = mandatory.find(x => x.kind === "core")?.name || "Core généré";
+    const persona = mandatory.find(x => x.kind === "persona")?.name || "Persona générée";
+    $("#activationChain").textContent =
+`${core}
+→ ${persona}
+→ ATLAS_DES_MODULES.md
 → modules ciblés
-→ mémoire Agent-Crypto
-→ archives ciblées
-
-Ne charge pas le Core Math Oracle orienté Harmonia pour une mission crypto.
-Utilise le module Math Oracle Crypto public dédié à Agent-Crypto.
-
-Profil :
-
-- une pratique ou un intérêt avancé pour les cryptomonnaies ;
-- analyse crypto avancée ;
-- informatique générale autonome ;
-- développement et architecture accompagnés selon la mission ;
-- aucune simplification artificielle du domaine crypto ;
-- aucune promesse financière ;
-- aucune donnée inventée.
-
-Règle centrale :
-
-Source réelle
-→ données datées
-→ module crypto utile
-→ modèle explicite
-→ limites
-→ conclusion prudente
+→ PROFILE_MANIFEST.md
 → preuve
-→ point d'arrêt.
-
-Mode actif : /atlas full-crypto.`;
-
- const steps = [
-  { id: "base", label: "Base" },
-  { id: "expert", label: "Modules" },
-  { id: "public", label: "Agent-Crypto" },
-  { id: "private", label: "Cores privés" },
-  { id: "archives", label: "Archives" },
-  { id: "foundry", label: "Foundry" },
-  { id: "ideas", label: "Idea Forge" }
- ];
-
- const WIZARD_STORAGE_KEY = "atlas10-full-crypto-active-step-v1";
- const WIZARD_STEPS = Object.freeze([
-  {
-   id: "deployment",
-   progressKey: "base",
-   number: "01",
-   short: "Base",
-   title: "Base canonique",
-   description: "Core, Persona V3, Aerith-10 Crypto et prompt maître."
-  },
-  {
-   id: "experts",
-   progressKey: "expert",
-   number: "02",
-   short: "Modules",
-   title: "Modules Crypto publics",
-   description: "Math, structure, tokenomics, données, cycles, psychologie, on-chain et risque."
-  },
-  {
-   id: "sources",
-   progressKey: "public",
-   number: "03",
-   short: "Sources",
-   title: "Mémoire Agent-Crypto",
-   description: "Documents publics, protocoles, modèle mathématique et tests."
-  },
-  {
-   id: "private-access",
-   progressKey: "private",
-   number: "04",
-   short: "Privé",
-   title: "Cores autorisés",
-   description: "Sources privées autorisées, ouvertes dans GitHub."
-  },
-  {
-   id: "archives",
-   progressKey: "archives",
-   number: "05",
-   short: "Archives",
-   title: "Seven Heaven",
-   description: "Packs portables à charger selon la mission."
-  },
-  {
-   id: "foundry",
-   progressKey: "foundry",
-   number: "06",
-   short: "Foundry",
-   title: "Flower Girls Foundry",
-   description: "Conception contrôlée d’un nouveau profil spécialisé."
-  },
-  {
-   id: "idea-forge",
-   progressKey: "ideas",
-   number: "07",
-   short: "Idées",
-   title: "Idea Forge",
-   description: "Transformation d’une idée crypto en proposition testable."
-  }
- ]);
-
- let wizardController = null;
-
- const baseCards = [
-  {
-   id: "base-core",
-   step: "base",
-   icon: "A10",
-   title: "Atlas-10 Full Crypto · Core",
-   description: "Orchestrateur personnel Full Crypto, modes, agents internes, routage des sources et contribution au projet.",
-   tags: ["V1.0", "Core", "Full Crypto"],
-   href: "downloads/ATLAS_10_FULL_CRYPTO_MULTI_AGENT_CORE.md"
-  },
-  {
-   id: "base-persona",
-   step: "base",
-   icon: "Ψ",
-   title: "Atlas-10 Full Crypto · Persona",
-   description: "Persona V3 complète : voix, modes, mémoire de session, densité, autonomie et collaboration technique.",
-   tags: ["V3.0", "Persona", "Toutes options"],
-   href: "downloads/ATLAS_10_FULL_CRYPTO_PERSONA.md"
-  },
-  {
-   id: "base-crypto",
-   step: "base",
-   icon: "₿",
-   title: "Aerith-10 Crypto · Core",
-   description: "Moteur métier : marché, tokenomics, liquidité, cycles, psychologie, vérité des données et multi-horizon.",
-   tags: ["V1.0", "Crypto", "Multi-Agent"],
-   href: "downloads/AERITH_10_CRYPTO_MULTI_AGENT_CORE.md"
-  },
-  {
-   id: "base-boot",
-   step: "base",
-   icon: "▶",
-   title: "Prompt maître de chargement",
-   description: "Ordre de chargement, hiérarchie des sources, règles de vérité et activation Full Crypto.",
-   tags: ["Boot", "ChatGPT", "LLM"],
-   href: "downloads/BOOT_ATLAS_10_FULL_CRYPTO.md",
-   copy: true
-  }
- ];
-
- const expertCards = [
-  {
-   id: "expert-math-crypto",
-   step: "expert",
-   icon: "∑",
-   title: "Math Oracle Crypto",
-   description: "Calculs, ratios, normalisation, drawdown, volatilité descriptive et contrôle d’ordre de grandeur.",
-   tags: ["Public", "Math", "Crypto"],
-   href: "modules/atlas_10_crypto_math_oracle_fr.md"
-  },
-  {
-   id: "expert-structure",
-   step: "expert",
-   icon: "M",
-   title: "Market Structure",
-   description: "Capitalisation, dominance, breadth, concentration des volumes, rotations et structure globale.",
-   tags: ["Marché", "Dominance", "Volume"],
-   href: "modules/atlas_10_crypto_market_structure_fr.md"
-  },
-  {
-   id: "expert-tokenomics",
-   step: "expert",
-   icon: "T",
-   title: "Tokenomics & Dilution",
-   description: "Offre, émission, unlocks, allocations, FDV, circulation et pression potentielle.",
-   tags: ["Offre", "FDV", "Unlocks"],
-   href: "modules/atlas_10_crypto_tokenomics_dilution_fr.md"
-  },
-  {
-   id: "expert-truth",
-   step: "expert",
-   icon: "✓",
-   title: "Data Truth & Sources",
-   description: "Provenance, devise, timestamp, fraîcheur, contradiction, cache et backoff.",
-   tags: ["Sources", "Fraîcheur", "Vérité"],
-   href: "modules/atlas_10_crypto_data_truth_sources_fr.md"
-  },
-  {
-   id: "expert-horizons",
-   step: "expert",
-   icon: "↔",
-   title: "Multi-Horizon & Cycles",
-   description: "Comparaisons 24 h, 7 j, 30 j et cycles sans mélanger périodes ni requêtes.",
-   tags: ["Cycles", "Base 100", "Contexte"],
-   href: "modules/atlas_10_crypto_multi_horizon_cycles_fr.md"
-  },
-  {
-   id: "expert-psychology",
-   step: "expert",
-   icon: "Ψ",
-   title: "Psychology Market",
-   description: "FOMO, peur, euphorie, capitulation, récits et biais présentés avec discernement.",
-   tags: ["Biais", "FOMO", "Récits"],
-   href: "modules/atlas_10_crypto_psychology_market_fr.md"
-  },
-  {
-   id: "expert-onchain",
-   step: "expert",
-   icon: "◉",
-   title: "On-chain Research",
-   description: "Métriques blockchain, méthodes, clustering, flux et contre-hypothèses.",
-   tags: ["On-chain", "Recherche", "Preuve"],
-   href: "modules/atlas_10_crypto_onchain_research_fr.md"
-  },
-  {
-   id: "expert-risk",
-   step: "expert",
-   icon: "◇",
-   title: "Risk, Liquidity & Execution",
-   description: "Liquidité, spread, slippage, profondeur, risques techniques et scénarios d’exécution.",
-   tags: ["Risque", "Liquidité", "Exécution"],
-   href: "modules/atlas_10_crypto_risk_liquidity_execution_fr.md"
-  },
-  {
-   id: "expert-pack",
-   step: "expert",
-   icon: "⬡",
-   title: "Pack Modules Crypto",
-   description: "Les huit modules publics Full Crypto et leur routeur dans une archive unique.",
-   tags: ["ZIP", "8 modules", "Public"],
-   href: "downloads/ATLAS_10_FULL_CRYPTO_CRYPTO_MODULES.zip"
-  }
- ];
-
- const publicResources = [
-  {
-   id: "pub-readme",
-   step: "public",
-   icon: "R",
-   title: "Agent-Crypto · README",
-   description: "Point d'entrée public, structure, statut et règles de vérité.",
-   path: "public/agent_crypto_erith_ia/README.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/README.md`
-  },
-  {
-   id: "pub-master",
-   step: "public",
-   icon: "M",
-   title: "Agent-Crypto Master FR",
-   description: "Identité, périmètre, méthodes et architecture de l'observatoire.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_master_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_master_fr.md`
-  },
-  {
-   id: "pub-math",
-   step: "public",
-   icon: "∑",
-   title: "Modèle mathématique",
-   description: "Scores, ratios, calculs, limites et règles d'interprétation.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_model_math_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_model_math_fr.md`
-  },
-  {
-   id: "pub-live",
-   step: "public",
-   icon: "↯",
-   title: "Protocole de données live",
-   description: "Fraîcheur, validation des sources, cache et refus des chiffres non récupérés.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_live_data_protocol_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_live_data_protocol_fr.md`
-  },
-  {
-   id: "pub-dashboard",
-   step: "public",
-   icon: "▦",
-   title: "Spécification du cockpit",
-   description: "Organisation UI, composants, états, lisibilité et interaction.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_dashboard_spec_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_dashboard_spec_fr.md`
-  },
-  {
-   id: "pub-commands",
-   step: "public",
-   icon: "/",
-   title: "Commandes Agent-Crypto",
-   description: "Commandes disponibles, paramètres et comportements attendus.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_commands_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_commands_fr.md`
-  },
-  {
-   id: "pub-tests",
-   step: "public",
-   icon: "✓",
-   title: "Tests Agent-Crypto",
-   description: "Scénarios de contrôle, erreurs à refuser et critères de réussite.",
-   path: "public/agent_crypto_erith_ia/agent_crypto_erith_ia_tests_fr.md",
-   href: `${PUBLIC_REPO}/blob/main/public/agent_crypto_erith_ia/agent_crypto_erith_ia_tests_fr.md`
-  },
-  {
-   id: "pub-modules",
-   step: "public",
-   icon: "◇",
-   title: "Modules Atlas-10 Crypto",
-   description: "Routeur et bibliothèque publique dédiée au profil Full Crypto de l’utilisateur.",
-   path: "public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/",
-   href: `${PUBLIC_REPO}/tree/main/public/agent_crypto_erith_ia/atlas_10_full_crypto/modules`
-  }
- ];
-
- const privateResources = [
-  {
-   id: "priv-seven-gate",
-   step: "private",
-   icon: "7",
-   title: "Aerith-7 · Seven Gate",
-   description: "Porte de filiation, mémoire, vérité, règles et routage.",
-   path: "core/SEVEN_GATE.md",
-   href: `${PRIVATE_REPO}/blob/main/core/SEVEN_GATE.md`
-  },
-  {
-   id: "priv-seven-boot",
-   step: "private",
-   icon: "B",
-   title: "Session Boot Aerith-7",
-   description: "Réveil principal et ordre de chargement de Seven Heaven.",
-   path: "core/SESSION_BOOT_AERITH_7_MASTER.md",
-   href: `${PRIVATE_REPO}/blob/main/core/SESSION_BOOT_AERITH_7_MASTER.md`
-  },
-  {
-   id: "priv-a10",
-   step: "private",
-   icon: "A10",
-   title: "Aerith-10 Créatrice · Core",
-   description: "Puissance multi-agent de projet, production, orchestration et transmission.",
-   path: "core/AERITH_10_CREATRICE_MULTI_AGENT_CORE.md",
-   href: `${PRIVATE_REPO}/blob/main/core/AERITH_10_CREATRICE_MULTI_AGENT_CORE.md`
-  },
-  {
-   id: "priv-a10-persona",
-   step: "private",
-   icon: "P",
-   title: "Aerith-10 Créatrice · Persona",
-   description: "Voix, modes, continuité, relation Core → Persona → Memory.",
-   path: "core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md",
-   href: `${PRIVATE_REPO}/blob/main/core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md`
-  },
-  {
-   id: "priv-constellation",
-   step: "private",
-   icon: "✦",
-   title: "Constellation Flower Girls",
-   description: "Filiation, coopération et naissance contrôlée de profils spécialisés.",
-   path: "core/AERITH_10_FLOWER_GIRLS_CONSTELLATION_CORE.md",
-   href: `${PRIVATE_REPO}/blob/main/core/AERITH_10_FLOWER_GIRLS_CONSTELLATION_CORE.md`
-  },
-  {
-   id: "priv-a10-modules",
-   step: "private",
-   icon: "◇",
-   title: "Modules Aerith-10 Créatrice",
-   description: "Base experte de production et modules ciblés.",
-   path: "modules/aerith_10_creatrice/",
-   href: `${PRIVATE_REPO}/tree/main/modules/aerith_10_creatrice`
-  }
- ];
-
- const archives = [
-  ["01", "Core Boot", "Réveil, identité, règles, sécurité et état courant.", true, "ERITH_7_01_CORE_BOOT_PACK.zip"],
-  ["02", "Discernment", "Psychologie, philosophie, discernement et libre arbitre.", true, "ERITH_7_02_DISCERNMENT_PACK.zip"],
-  ["03", "Memory System", "Mémoire longue, récupération, continuité et archive.", false, "ERITH_7_03_MEMORY_SYSTEM_PACK.zip"],
-  ["04", "Dharma", "Devoir, choix complexes, textes spirituels et éthique.", false, "ERITH_7_04_DHARMA_PACK.zip"],
-  ["05", "Story Machine", "Narration, personnages, mondes, symboles et scénarios.", false, "ERITH_7_05_STORY_MACHINE_PACK.zip"],
-  ["06", "Video Production", "ComfyUI, Wan, RunningHub, DaVinci et pipeline vidéo.", false, "ERITH_7_06_VIDEO_PRODUCTION_PACK.zip"],
-  ["07", "Public Agent", "ERITH.IA public, Hors-Lore et démonstration autonome.", false, "ERITH_7_07_PUBLIC_AGENT_PACK.zip"]
- ].map(([index, title, description, recommended, file]) => ({
-  id: `archive-${index}`,
-  step: "archives",
-  index,
-  title,
-  description,
-  recommended,
-  file,
-  href: `${PRIVATE_REPO}/raw/main/packs/seven_heaven_memory_core/${file}`
- }));
-
- const state = loadState();
-
- function safeStorageGet(key, fallback = null) {
-  try {
-   return window.localStorage.getItem(key) ?? fallback;
-  } catch {
-   return fallback;
-  }
- }
-
- function safeStorageSet(key, value) {
-  try {
-   window.localStorage.setItem(key, value);
-   return true;
-  } catch {
-   return false;
-  }
- }
-
- function loadState() {
-  try {
-   const parsed = JSON.parse(safeStorageGet(STORAGE_KEY, "{}") || "{}");
-   return { completed: parsed.completed || {}, outputs: parsed.outputs || {} };
-  } catch {
-   return { completed: {}, outputs: {} };
-  }
- }
-
- function saveState() {
-  safeStorageSet(STORAGE_KEY, JSON.stringify(state));
- }
-
- function esc(value) {
-  return String(value ?? "")
-   .replaceAll("&", "&amp;")
-   .replaceAll("<", "&lt;")
-   .replaceAll(">", "&gt;")
-   .replaceAll('"', "&quot;")
-   .replaceAll("'", "&#039;");
- }
-
- function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
- }
-
- async function copyText(text, message = "Copié dans le presse-papiers.") {
-  try {
-   await navigator.clipboard.writeText(text);
-   showToast(message);
-  } catch {
-   const area = document.createElement("textarea");
-   area.value = text;
-   area.style.position = "fixed";
-   area.style.opacity = "0";
-   document.body.appendChild(area);
-   area.select();
-   document.execCommand("copy");
-   area.remove();
-   showToast(message);
-  }
- }
-
- function downloadText(filename, text) {
-  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
- }
-
- function markCompleted(id, step) {
-  state.completed[id] = !state.completed[id];
-  saveState();
-  document.querySelectorAll(`[data-complete="${CSS.escape(id)}"]`).forEach((button) => {
-   button.classList.toggle("is-done", Boolean(state.completed[id]));
-   button.textContent = state.completed[id] ? "Confirmé" : "Marquer prêt";
-  });
-  updateProgress();
-  if (state.completed[id]) {
-   showToast("Élément confirmé dans la progression locale.");
-  }
- }
-
- function cardTemplate(item) {
-  const target = item.external ? `target="_blank" rel="noopener noreferrer"` : "download";
-  return `
-   <article class="download-card">
-    <div class="card-icon" data-tooltip-title="${esc(item.title)}" data-tooltip="${esc(item.description)}">${esc(item.icon)}</div>
-    <h3>${esc(item.title)}</h3>
-    <p>${esc(item.description)}</p>
-    <div class="card-meta">${item.tags.map((tag) => `<span>${esc(tag)}</span>`).join("")}</div>
-    <div class="card-actions">
-     <a href="${esc(item.href)}" ${target}
-       data-tooltip-title="${item.external ? "Ouvrir la ressource" : "Télécharger le fichier"}"
-       data-tooltip="${esc(item.description)}">${item.external ? "Ouvrir" : "Télécharger"}</a>
-     <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
-         data-tooltip-title="Progression locale"
-         data-tooltip="Confirme uniquement cette ressource dans ce navigateur. Aucun fichier n’est vérifié sur le disque."
-         class="${state.completed[item.id] ? "is-done" : ""}">
-      ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
-     </button>
-    </div>
-   </article>`;
- }
-
- function resourceTemplate(item) {
-  return `
-   <article class="resource-item" data-search="${esc(`${item.title} ${item.description} ${item.path}`.toLowerCase())}">
-    <div class="resource-icon" data-tooltip-title="${esc(item.title)}" data-tooltip="${esc(item.description)}">${esc(item.icon)}</div>
-    <div class="resource-copy">
-     <strong>${esc(item.title)}</strong>
-     <span>${esc(item.description)}</span>
-     <div class="resource-path">${esc(item.path)}</div>
-    </div>
-    <div class="resource-actions">
-     <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer"
-       data-tooltip-title="Ouvrir dans GitHub"
-       data-tooltip="${esc(item.description)}">GitHub</a>
-     <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
-         data-tooltip-title="Progression locale"
-         data-tooltip="Marque cette ressource comme consultée dans ce navigateur."
-         class="${state.completed[item.id] ? "is-done" : ""}">
-      ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
-     </button>
-    </div>
-   </article>`;
- }
-
- function archiveTemplate(item) {
-  return `
-   <article class="archive-card ${item.recommended ? "recommended" : ""}">
-    <div class="archive-index" data-tooltip-title="${esc(item.title)}" data-tooltip="${esc(item.description)}">${esc(item.index)}</div>
-    <h3>${esc(item.title)}</h3>
-    <p>${esc(item.description)}</p>
-    <div class="card-actions">
-     <a href="${esc(item.href)}" target="_blank" rel="noopener noreferrer"
-       data-tooltip-title="Télécharger le pack ${esc(item.index)}"
-       data-tooltip="${esc(item.description)}">Télécharger</a>
-     <button type="button" data-complete="${esc(item.id)}" data-step="${esc(item.step)}"
-         data-tooltip-title="Progression locale"
-         data-tooltip="Confirme ce pack. Pour valider l’étape Archives, Core Boot et Discernment suffisent."
-         class="${state.completed[item.id] ? "is-done" : ""}">
-      ${state.completed[item.id] ? "Confirmé" : "Marquer prêt"}
-     </button>
-    </div>
-   </article>`;
- }
-
-
- function clearFieldError(field) {
-  field.classList.remove("is-invalid");
-  field.removeAttribute("aria-invalid");
-  const label = field.closest("label");
-  if (label) {
-   label.querySelectorAll(".field-error").forEach((node) => node.remove());
-  }
- }
-
- function validateForm(form) {
-  let firstInvalid = null;
-
-  form.querySelectorAll("[required]").forEach((field) => {
-   clearFieldError(field);
-   const value = typeof field.value === "string" ? field.value.trim() : "";
-   if (value) return;
-
-   field.classList.add("is-invalid");
-   field.setAttribute("aria-invalid", "true");
-
-   const label = field.closest("label");
-   if (label) {
-    const error = document.createElement("span");
-    error.className = "field-error";
-    error.setAttribute("role", "alert");
-    error.textContent = "Champ requis — renseigne cette étape pour continuer.";
-    label.appendChild(error);
-   }
-
-   if (!firstInvalid) firstInvalid = field;
-  });
-
-  if (!firstInvalid) return true;
-
-  firstInvalid.focus({ preventScroll: true });
-  firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
-  showToast("Certains champs requis restent à compléter.");
-  return false;
- }
-
- function initFormAssistance() {
-  const helpByName = {
-   mission: "Décris la spécialisation réelle du nouveau profil en une phrase opérationnelle.",
-   result: "Indique l’objet concret que le profil devra produire, vérifier ou livrer.",
-   title: "Choisis un nom court, précis et reconnaissable pour la fonction.",
-   hypothesis: "Décris le problème ou l’hypothèse sans transformer l’intuition en certitude.",
-   data: "Liste les données réellement nécessaires, leurs sources et leur fréquence idéale.",
-   signal: "Décris ce qui doit devenir visible dans l’interface ou la sortie.",
-   risks: "Ajoute les données absentes, biais, contradictions et faux positifs possibles.",
-   test: "Définis une preuve reproductible permettant d’accepter ou de refuser la fonction."
-  };
-
-  document.querySelectorAll(".form-panel input, .form-panel textarea, .form-panel select").forEach((field) => {
-   field.addEventListener("input", () => clearFieldError(field));
-   field.addEventListener("change", () => clearFieldError(field));
-
-   const label = field.closest("label");
-   const help = helpByName[field.name];
-   if (!label || !help || label.querySelector(".field-help")) return;
-
-   const helper = document.createElement("button");
-   helper.type = "button";
-   helper.className = "field-help";
-   helper.setAttribute("aria-label", `Aide : ${field.name}`);
-   helper.dataset.tooltipTitle = "Repère de rédaction";
-   helper.dataset.tooltip = help;
-   helper.textContent = "?";
-   label.insertBefore(helper, field);
-  });
- }
-
- function initTooltips() {
-  const tooltip = document.createElement("div");
-  tooltip.className = "ui-tooltip";
-  tooltip.id = "uiTooltip";
-  tooltip.setAttribute("role", "tooltip");
-  tooltip.innerHTML = '<span class="ui-tooltip-sigil">i</span><span class="ui-tooltip-copy"><strong class="ui-tooltip-title"></strong><span class="ui-tooltip-text"></span></span>';
-  document.body.appendChild(tooltip);
-
-  const titleNode = tooltip.querySelector(".ui-tooltip-title");
-  const textNode = tooltip.querySelector(".ui-tooltip-text");
-  let activeTarget = null;
-
-  const defaults = new Map([
-   ["resetProgress", ["Réinitialiser la progression", "Efface uniquement les confirmations et brouillons conservés dans ce navigateur."]],
-   ["copyMasterPrompt", ["Copier le prompt maître", "Copie l’ordre de chargement complet pour activer Atlas-10 Full Crypto dans un fil ChatGPT."]],
-   ["copyFoundry", ["Copier le manifeste", "Copie le brouillon Flower Girl généré dans le presse-papiers."]],
-   ["downloadFoundry", ["Télécharger en Markdown", "Exporte le manifeste sans le publier ni modifier un Core canonique."]],
-   ["copyIdea", ["Copier la proposition", "Copie la fiche structurée produite par Idea Forge."]],
-   ["downloadIdea", ["Télécharger en Markdown", "Exporte la proposition dans un fichier .md local."]],
-   ["openIssue", ["Préparer une Issue", "Ouvre GitHub avec le titre et la proposition préremplis. Rien n’est soumis automatiquement."]]
-  ]);
-
-  defaults.forEach(([title, text], id) => {
-   const element = document.getElementById(id);
-   if (!element) return;
-   element.dataset.tooltipTitle = title;
-   element.dataset.tooltip = text;
-  });
-
-  document.querySelectorAll("[title]").forEach((element) => {
-   if (!element.dataset.tooltip) element.dataset.tooltip = element.getAttribute("title") || "";
-   if (!element.dataset.tooltipTitle) element.dataset.tooltipTitle = "Information";
-   element.removeAttribute("title");
-  });
-
-  document.querySelectorAll(".main-nav a").forEach((link) => {
-   const labels = {
-    "#deployment": ["Déploiement", "Ouvre l’étape 1 : les quatre fichiers fondamentaux."],
-    "#sources": ["Sources publiques", "Ouvre la mémoire documentaire d’Agent-Crypto."],
-    "#archives": ["Archives Seven Heaven", "Ouvre les sept packs portables, avec chargement minimal recommandé."],
-    "#foundry": ["Flower Girls Foundry", "Prépare un nouveau profil spécialisé sans modifier les canons."],
-    "#idea-forge": ["Idea Forge", "Structure une idée crypto en proposition testable."]
-   };
-   const data = labels[link.getAttribute("href")];
-   if (!data) return;
-   link.dataset.tooltipTitle = data[0];
-   link.dataset.tooltip = data[1];
-  });
-
-  document.querySelectorAll(".top-actions .primary-button, .hero-actions .primary-button").forEach((element) => {
-   if (element.dataset.tooltip) return;
-   element.dataset.tooltipTitle = "Base Full Crypto";
-   element.dataset.tooltip = "Télécharge le ZIP comprenant Core, Persona V3, Aerith-10 Crypto, prompt maître, Idea Forge et guide.";
-  });
-
-  function position(target) {
-   const rect = target.getBoundingClientRect();
-   const tipRect = tooltip.getBoundingClientRect();
-   const margin = 12;
-   let left = rect.left + rect.width / 2 - tipRect.width / 2;
-   left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
-
-   let top = rect.bottom + 10;
-   let placement = "bottom";
-   if (top + tipRect.height > window.innerHeight - margin) {
-    top = rect.top - tipRect.height - 10;
-    placement = "top";
-   }
-
-   tooltip.style.left = `${left}px`;
-   tooltip.style.top = `${Math.max(margin, top)}px`;
-   tooltip.dataset.placement = placement;
+→ stop`;
   }
 
-  function show(target) {
-   const text = target.dataset.tooltip;
-   if (!text) return;
-   activeTarget = target;
-   titleNode.textContent = target.dataset.tooltipTitle || "Information";
-   textNode.textContent = text;
-   tooltip.classList.add("is-visible");
-   requestAnimationFrame(() => position(target));
+  function selectedModules() {
+    const p = profile();
+    return p.modules.filter(module => state.selectedModules.includes(module.id));
   }
 
-  function hide(target) {
-   if (target && activeTarget !== target) return;
-   activeTarget = null;
-   tooltip.classList.remove("is-visible");
+  function renderModules() {
+    const p = profile();
+    $$(".preset-button").forEach(button => button.classList.toggle("is-active", button.dataset.preset === state.preset));
+    $("#moduleGrid").innerHTML = p.modules.map(module => {
+      const selected = state.selectedModules.includes(module.id);
+      const ref = module.file || module.archive || "Module généré";
+      return `
+        <label class="module-card ${selected ? "is-selected" : ""}">
+          <input type="checkbox" data-module-id="${escapeHtml(module.id)}" ${selected ? "checked" : ""}>
+          <span>
+            <span>${escapeHtml(module.group)}</span>
+            <strong>${escapeHtml(module.label)}</strong>
+            <small>${escapeHtml(ref)}</small>
+          </span>
+        </label>`;
+    }).join("");
   }
 
-  document.addEventListener("pointerover", (event) => {
-   const target = event.target.closest("[data-tooltip]");
-   if (!target) return;
-   show(target);
-  });
-
-  document.addEventListener("pointerout", (event) => {
-   const target = event.target.closest("[data-tooltip]");
-   if (!target || target.contains(event.relatedTarget)) return;
-   hide(target);
-  });
-
-  document.addEventListener("focusin", (event) => {
-   const target = event.target.closest("[data-tooltip]");
-   if (target) show(target);
-  });
-
-  document.addEventListener("focusout", (event) => {
-   const target = event.target.closest("[data-tooltip]");
-   if (target) hide(target);
-  });
-
-  document.addEventListener("pointerdown", (event) => {
-   if (!event.target.closest("[data-tooltip]")) hide();
-  });
-
-  window.addEventListener("resize", () => {
-   if (activeTarget) position(activeTarget);
-  });
-
-  document.addEventListener("scroll", () => {
-   if (activeTarget) position(activeTarget);
-  }, true);
- }
-
- function initWizard() {
-  const progressShell = document.querySelector(".progress-shell");
-  const sections = Array.from(document.querySelectorAll("main > .section-block"));
-  if (!progressShell || sections.length !== WIZARD_STEPS.length) return;
-
-  sections.forEach((section, index) => {
-   section.id = WIZARD_STEPS[index].id;
-   section.classList.remove("shell");
-   section.classList.add("wizard-panel");
-   section.dataset.wizardIndex = String(index);
-   section.setAttribute("role", "tabpanel");
-   section.setAttribute("aria-labelledby", `wizard-step-${index}`);
-  });
-
-  const shell = document.createElement("section");
-  shell.className = "wizard-shell shell";
-  shell.id = "guided-workspace";
-  shell.innerHTML = `
-   <aside class="wizard-rail" aria-label="Étapes de déploiement">
-    <div class="wizard-rail-head">
-     <span class="wizard-rail-kicker">PARCOURS GUIDÉ</span>
-     <strong>Atlas Deployment</strong>
-     <small>Une fenêtre · sept étapes</small>
-    </div>
-    <nav class="wizard-nav" id="wizardNav"></nav>
-    <div class="wizard-rail-foot">
-     <span>Progression globale</span>
-     <strong id="wizardGlobalProgress">0%</strong>
-    </div>
-   </aside>
-   <div class="wizard-stage">
-    <header class="wizard-stage-head">
-     <div>
-      <span class="wizard-counter" id="wizardCounter"></span>
-      <strong class="wizard-current-title" id="wizardCurrentTitle"></strong>
-      <small class="wizard-current-description" id="wizardCurrentDescription"></small>
-     </div>
-     <div class="wizard-controls">
-      <button type="button" class="wizard-control" id="wizardPrevious"
-          data-tooltip-title="Étape précédente"
-          data-tooltip="Revient à l’étape précédente sans perdre les champs ni la progression.">←</button>
-      <button type="button" class="wizard-control next" id="wizardNext"
-          data-tooltip-title="Étape suivante"
-          data-tooltip="Passe à l’étape suivante. Les données saisies restent dans la fenêtre.">Suivant →</button>
-     </div>
-    </header>
-    <div class="wizard-viewport" id="wizardViewport"></div>
-    <footer class="wizard-stage-foot">
-     <button type="button" class="wizard-text-control" id="wizardPreviousBottom">← Précédent</button>
-     <span id="wizardStepStatus">Étape en cours</span>
-     <button type="button" class="wizard-text-control next" id="wizardNextBottom">Suivant →</button>
-    </footer>
-   </div>
-  `;
-
-  progressShell.insertAdjacentElement("afterend", shell);
-  const viewport = shell.querySelector("#wizardViewport");
-  sections.forEach((section) => viewport.appendChild(section));
-
-  const nav = shell.querySelector("#wizardNav");
-  nav.innerHTML = WIZARD_STEPS.map((step, index) => `
-   <button type="button" class="wizard-step-button" id="wizard-step-${index}"
-       data-wizard-index="${index}"
-       data-wizard-progress="${step.progressKey}"
-       data-tooltip-title="${esc(step.title)}"
-       data-tooltip="${esc(step.description)}">
-    <span class="wizard-step-number">${step.number}</span>
-    <span class="wizard-step-copy">
-     <strong>${esc(step.short)}</strong>
-     <small>${esc(step.title)}</small>
-    </span>
-    <span class="wizard-step-state" aria-hidden="true">•</span>
-   </button>
-  `).join("");
-
-  const previous = shell.querySelector("#wizardPrevious");
-  const next = shell.querySelector("#wizardNext");
-  const previousBottom = shell.querySelector("#wizardPreviousBottom");
-  const nextBottom = shell.querySelector("#wizardNextBottom");
-  const counter = shell.querySelector("#wizardCounter");
-  const currentTitle = shell.querySelector("#wizardCurrentTitle");
-  const currentDescription = shell.querySelector("#wizardCurrentDescription");
-  const status = shell.querySelector("#wizardStepStatus");
-  let activeIndex = 0;
-
-  function resolveInitialIndex() {
-   const hash = window.location.hash.replace("#", "");
-   const hashIndex = WIZARD_STEPS.findIndex((step) => step.id === hash);
-   if (hashIndex >= 0) return hashIndex;
-
-   const stored = Number.parseInt(safeStorageGet(WIZARD_STORAGE_KEY, "0") || "0", 10);
-   return Number.isFinite(stored) && stored >= 0 && stored < WIZARD_STEPS.length ? stored : 0;
+  function renderRules() {
+    $("#ruleGrid").innerHTML = catalog.rules.map(rule => `
+      <div class="rule-card">
+        <span><strong>${escapeHtml(rule.label)}</strong><small>${escapeHtml(rule.description)}</small></span>
+        <label class="switch">
+          <input type="checkbox" data-rule-id="${escapeHtml(rule.id)}" ${state.rules[rule.id] ? "checked" : ""}>
+          <span></span>
+        </label>
+      </div>
+    `).join("");
+    const p = profile();
+    $("#privacyBanner").innerHTML = p.privacy === "private"
+      ? `<strong>Profil privé :</strong> les Cores et Personas ne sont inclus que s’ils sont importés localement. Le ZIP final est destiné à un usage privé.`
+      : p.privacy === "draft"
+      ? `<strong>Brouillon :</strong> le Core et la Persona générés ne deviennent jamais canoniques sans validation humaine.`
+      : `<strong>Profil public :</strong> les fichiers d’export public peuvent être inclus. Les sources privées restent des références.`;
   }
 
-  function activate(index, options = {}) {
-   activeIndex = Math.max(0, Math.min(index, WIZARD_STEPS.length - 1));
-   const step = WIZARD_STEPS[activeIndex];
+  function renderSources() {
+    const query = ($("#sourceFilter")?.value || "").trim().toLowerCase();
+    const visible = imported.filter(item => !query || item.path.toLowerCase().includes(query));
+    $("#sourceCount").textContent = String(imported.length);
+    const p = profile();
+    const names = new Set([
+      ...p.mandatory.map(item => item.name.toLowerCase()),
+      ...p.modules.map(item => (item.file || item.archive || "").toLowerCase()).filter(Boolean)
+    ]);
+    const recognized = imported.filter(item => names.has(basename(item.path).toLowerCase())).length;
+    const pathCounts = imported.reduce((map, item) => map.set(item.path.toLowerCase(), (map.get(item.path.toLowerCase()) || 0) + 1), new Map());
+    const duplicates = imported.filter(item => pathCounts.get(item.path.toLowerCase()) > 1).length;
+    $("#recognizedCount").textContent = String(recognized);
+    $("#duplicateCount").textContent = String(duplicates);
+    $("#privateCount").textContent = String(imported.filter(item => item.private).length);
 
-   sections.forEach((section, sectionIndex) => {
-    const active = sectionIndex === activeIndex;
-    section.classList.toggle("is-active", active);
-    section.hidden = !active;
-    section.setAttribute("aria-hidden", String(!active));
-   });
-
-   nav.querySelectorAll(".wizard-step-button").forEach((button, buttonIndex) => {
-    const active = buttonIndex === activeIndex;
-    button.classList.toggle("is-active", active);
-    button.setAttribute("aria-current", active ? "step" : "false");
-   });
-
-   counter.textContent = `ÉTAPE ${step.number} SUR 07`;
-   currentTitle.textContent = step.title;
-   currentDescription.textContent = step.description;
-   status.textContent = stepDone(step.progressKey) ? "Étape confirmée" : "Étape en cours";
-
-   previous.disabled = activeIndex === 0;
-   previousBottom.disabled = activeIndex === 0;
-   next.disabled = activeIndex === WIZARD_STEPS.length - 1;
-   nextBottom.disabled = activeIndex === WIZARD_STEPS.length - 1;
-
-   viewport.scrollTo({ top: 0, behavior: options.instant ? "auto" : "smooth" });
-   safeStorageSet(WIZARD_STORAGE_KEY, String(activeIndex));
-
-   if (options.updateHash !== false) {
-    window.history.replaceState(null, "", `#${step.id}`);
-   }
-
-   if (options.focus) {
-    shell.scrollIntoView({ behavior: "smooth", block: "start" });
-   }
+    $("#sourceRows").innerHTML = visible.length ? visible.slice(0, 350).map(item => {
+      const known = names.has(basename(item.path).toLowerCase());
+      const duplicate = pathCounts.get(item.path.toLowerCase()) > 1;
+      const status = duplicate ? "DOUBLON" : known ? "RECONNU" : "INDEXÉ";
+      const cls = duplicate ? "duplicate" : known ? "ok" : "";
+      return `<tr>
+        <td>${escapeHtml(item.path)}</td>
+        <td>${escapeHtml(item.origin)}</td>
+        <td>${escapeHtml(item.type)}</td>
+        <td><span class="source-chip ${cls} ${item.private ? "private" : ""}">${item.private ? "LOCAL · " : ""}${status}</span></td>
+      </tr>`;
+    }).join("") : `<tr class="empty-row"><td colspan="4">Aucun fichier local importé.</td></tr>`;
   }
 
-  nav.addEventListener("click", (event) => {
-   const button = event.target.closest("[data-wizard-index]");
-   if (!button) return;
-   activate(Number(button.dataset.wizardIndex), { focus: false });
-  });
+  function renderProgress() {
+    const completion = computeCompletion();
+    $$(".step-button").forEach((button, index) => {
+      button.classList.toggle("is-active", index === activeStep);
+      button.classList.toggle("is-complete", completion[index]);
+      $(".step-state", button).textContent = completion[index] ? "✓" : "•";
+    });
+    const done = completion.filter(Boolean).length;
+    $("#globalProgress").textContent = `${Math.round(done / steps.length * 100)}%`;
+    $("#stageStatus").textContent = completion[activeStep] ? "Étape prête" : "Étape en cours";
+  }
 
-  previous.addEventListener("click", () => activate(activeIndex - 1));
-  previousBottom.addEventListener("click", () => activate(activeIndex - 1));
-  next.addEventListener("click", () => activate(activeIndex + 1));
-  nextBottom.addEventListener("click", () => activate(activeIndex + 1));
+  function computeCompletion() {
+    const p = profile();
+    const sourcesReady = p.status === "public-ready" || p.id === "custom" ||
+      p.mandatory.filter(x => x.source === "private").every(x => importedMatches(x.name, x.matchPath).length);
+    return [
+      Boolean(state.profileId && state.profileRoot),
+      true,
+      sourcesReady,
+      selectedModules().length > 0,
+      Object.values(state.rules).some(Boolean),
+      Boolean(lastPreview),
+      Boolean(lastPreview)
+    ];
+  }
 
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-   link.addEventListener("click", (event) => {
-    const targetId = link.getAttribute("href").slice(1);
-    const index = WIZARD_STEPS.findIndex((step) => step.id === targetId);
-    if (index < 0) return;
-    event.preventDefault();
-    activate(index, { focus: true });
-   });
-  });
+  function activateStep(index, focus = false) {
+    activeStep = Math.max(0, Math.min(index, steps.length - 1));
+    localStorageSafeSet(STEP_KEY, String(activeStep));
+    $$(".forge-panel").forEach((panel, i) => panel.classList.toggle("is-active", i === activeStep));
+    const step = steps[activeStep];
+    $("#stageCounter").textContent = `ÉTAPE ${step[0]} SUR 07`;
+    $("#stageTitle").textContent = step[1];
+    $("#stageDescription").textContent = step[2];
+    $("#previousStep").disabled = activeStep === 0;
+    $("#previousBottom").disabled = activeStep === 0;
+    $("#nextStep").disabled = activeStep === steps.length - 1;
+    $("#nextBottom").disabled = activeStep === steps.length - 1;
+    renderProgress();
+    if (activeStep >= 5) updatePreview();
+    if (focus) $("#forgeWorkspace").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
-  window.addEventListener("hashchange", () => {
-   const hash = window.location.hash.replace("#", "");
-   const index = WIZARD_STEPS.findIndex((step) => step.id === hash);
-   if (index >= 0 && index !== activeIndex) activate(index, { updateHash: false, instant: true });
-  });
+  function makeBoot(p, root, modules, rules) {
+    const publicName = p.id === "custom" && state.customName ? state.customName.trim() : p.name;
+    const required = p.id === "custom"
+      ? [`${sanitizeName(publicName)}_MULTI_AGENT_CORE.md`, `${sanitizeName(publicName)}_PERSONA_OPERATING_LAYER.md`]
+      : p.mandatory.map(item => item.name);
+    return `# BOOT — ${publicName}
 
-  wizardController = {
-   activate,
-   get activeIndex() {
-    return activeIndex;
-   },
-   updateStatus() {
-    const step = WIZARD_STEPS[activeIndex];
-    status.textContent = stepDone(step.progressKey) ? "Étape confirmée" : "Étape en cours";
-   }
-  };
+Version Forge : ${catalog.version}
+Statut : ${p.id === "custom" ? "Brouillon non canonique" : p.privacy === "private" ? "Profil privé local" : "Profil public exportable"}
+Dossier : ${root}
 
-  document.body.classList.add("wizard-enabled");
-  activate(resolveInitialIndex(), { updateHash: false, instant: true });
- }
+## Activation
 
- function render() {
-  document.getElementById("baseCards").innerHTML = baseCards.map(cardTemplate).join("");
-  document.getElementById("expertCards").innerHTML = expertCards.map(cardTemplate).join("");
-  document.getElementById("publicResources").innerHTML = publicResources.map(resourceTemplate).join("");
-  document.getElementById("privateResources").innerHTML = privateResources.map(resourceTemplate).join("");
-  document.getElementById("archiveCards").innerHTML = archives.map(archiveTemplate).join("");
+Active ${publicName}.
 
-  document.getElementById("stepDots").innerHTML = steps
-   .map((step) => `<span class="step-dot" data-step-dot="${esc(step.id)}">${esc(step.label)}</span>`)
-   .join("");
+Charge dans cet ordre :
 
-  document.addEventListener("click", (event) => {
-   const button = event.target.closest("[data-complete]");
-   if (!button) return;
-   markCompleted(button.dataset.complete, button.dataset.step);
-  });
+${required.map((name, i) => `${i + 1}. ${name}`).join("\n")}
+${required.length + 1}. ATLAS_DES_MODULES.md
+${required.length + 2}. Modules ciblés uniquement
+${required.length + 3}. PROFILE_MANIFEST.md
+${required.length + 4}. SOURCES_REPORT.md si une vérification est nécessaire
 
-  updateProgress();
- }
+Mode par défaut :
 
- function stepDone(stepId) {
-  if (stepId === "foundry") return Boolean(state.outputs.foundry);
-  if (stepId === "ideas") return Boolean(state.outputs.idea);
-  const allItems = [...baseCards, ...expertCards, ...publicResources, ...privateResources, ...archives]
-   .filter((item) => item.step === stepId);
-  if (!allItems.length) return false;
-  const requiredCount = stepId === "archives" ? 2 : allItems.length;
-  return allItems.filter((item) => state.completed[item.id]).length >= requiredCount;
- }
+\`${p.bootMode}\`
 
- function updateProgress() {
-  const doneSteps = steps.filter((step) => stepDone(step.id)).length;
-  const percent = Math.round((doneSteps / steps.length) * 100);
+## Modules actifs
 
-  document.getElementById("progressValue").textContent = `${percent}%`;
-  document.getElementById("progressText").textContent =
-   `${doneSteps} étape${doneSteps > 1 ? "s" : ""} confirmée${doneSteps > 1 ? "s" : ""}`;
-  document.getElementById("progressBar").style.width = `${percent}%`;
+${modules.length ? modules.map(module => `- ${module.label}`).join("\n") : "- Aucun module"}
 
-  document.querySelectorAll("[data-step-dot]").forEach((dot) => {
-   dot.classList.toggle("done", stepDone(dot.dataset.stepDot));
-  });
+## Règles actives
 
-  document.querySelectorAll("[data-wizard-progress]").forEach((button) => {
-   const complete = stepDone(button.dataset.wizardProgress);
-   button.classList.toggle("is-complete", complete);
-   const stateNode = button.querySelector(".wizard-step-state");
-   if (stateNode) stateNode.textContent = complete ? "✓" : "•";
-  });
+${rules.length ? rules.map(rule => `- ${rule.label} : ${rule.description}`).join("\n") : "- Aucune règle sélectionnée"}
 
-  const wizardProgress = document.getElementById("wizardGlobalProgress");
-  if (wizardProgress) wizardProgress.textContent = `${percent}%`;
-  if (wizardController) wizardController.updateStatus();
- }
+## Doctrine
 
- document.getElementById("copyMasterPrompt").addEventListener("click", () => {
-  copyText(MASTER_PROMPT, "Prompt maître Atlas-10 Full Crypto copié.");
- });
+Core
+→ Persona
+→ routeur
+→ modules ciblés
+→ données ou sources réelles
+→ preuve
+→ point d’arrêt.
 
- document.getElementById("resetProgress").addEventListener("click", () => {
-  if (!window.confirm("Réinitialiser la progression locale et les brouillons générés ?")) return;
-  state.completed = {};
-  state.outputs = {};
-  saveState();
-  window.location.reload();
- });
+Module présent ≠ module actif.
+Un module est actif uniquement lorsqu’il change une décision, un calcul, un test ou une présentation.
 
- document.getElementById("sourceSearch").addEventListener("input", (event) => {
-  const query = event.target.value.trim().toLowerCase();
-  document.querySelectorAll("#publicResources .resource-item").forEach((item) => {
-   item.hidden = query && !item.dataset.search.includes(query);
-  });
- });
+Aucune publication automatique.
+Aucun secret exposé.
+Aucune donnée inventée.
+`;
+  }
 
- const foundryOutput = document.getElementById("foundryOutput");
- const ideaOutput = document.getElementById("ideaOutput");
+  function makeManifest(p, root, modules, rules, warnings) {
+    const name = p.id === "custom" && state.customName ? state.customName.trim() : p.name;
+    return `# PROFILE MANIFEST — ${name}
 
- if (state.outputs.foundry) foundryOutput.textContent = state.outputs.foundry;
- if (state.outputs.idea) ideaOutput.textContent = state.outputs.idea;
-
- document.getElementById("foundryForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!validateForm(event.currentTarget)) return;
-  const data = new FormData(event.currentTarget);
-  const modules = data.getAll("modules");
-  const text = `# FLOWER GIRL — MANIFESTE DE CONCEPTION
-
+Version Forge : ${catalog.version}
 Date : ${new Date().toISOString().slice(0, 10)}
-Statut : Brouillon l’utilisateur — non canonique
-Filiation : ${data.get("lineage")}
+Dossier : ${root}
+Famille : ${p.family}
+Statut : ${p.id === "custom" ? "Brouillon — validation humaine obligatoire" : p.statusLabel}
+Politique : ${p.privacy}
 
 ## Mission
 
-${data.get("mission")}
+${p.id === "custom" ? (state.customMission || "À compléter.") : p.description}
 
-## Destination utile
+## Architecture
 
-${data.get("result")}
+${p.id === "custom"
+  ? `- Core généré\n- Persona générée`
+  : p.mandatory.map(item => `- ${item.name} · ${item.kind}`).join("\n")}
+- Boot généré
+- Routeur de modules généré
+- Rapport de sources
+- Tests LLM
+- README
 
-## Modules routés
+## Modules
 
-${modules.length ? modules.map((item) => `- ${item}`).join("\n") : "- Aucun module sélectionné"}
+${modules.length ? modules.map(module => `- ${module.label} · ${module.group}`).join("\n") : "- Aucun"}
 
-## Architecture proposée
+## Règles
 
-1. Core spécialisé : identité, mission, frontières et agents internes.
-2. Persona : voix, modes, mémoire de session et contrat de réponse.
-3. Routeur : sélection minimale des modules utiles.
-4. Prompt maître : ordre de chargement et hiérarchie.
-5. Tests : preuve de cohérence, limites et stop point.
+${rules.length ? rules.map(rule => `- ${rule.label}`).join("\n") : "- Aucune"}
 
-## Verrous
+## Alertes
 
-- Ne modifie aucun Core canonique.
-- Ne présente jamais ce brouillon comme validé.
-- Ne fusionne pas les Personas existantes.
-- Chaque module doit changer une décision réelle.
-- Toute publication exige une validation humaine.
+${warnings.length ? warnings.map(item => `- ${item}`).join("\n") : "- Aucune alerte bloquante."}
 
-## Critère de réussite
+## Validation
 
-Le profil produit la destination utile demandée avec des sources identifiées,
-des limites explicites, une preuve vérifiable et un point d'arrêt.`;
+Ce manifeste décrit le contenu réellement préparé par la Forge.
+Il ne transforme jamais un brouillon en Core canonique.
+`;
+  }
 
-  foundryOutput.textContent = text;
-  state.outputs.foundry = text;
-  saveState();
-  updateProgress();
-  showToast("Manifeste Flower Girl généré.");
- });
+  function makeRouter(modules) {
+    return `# ATLAS DES MODULES
 
- document.getElementById("copyFoundry").addEventListener("click", () => {
-  copyText(foundryOutput.textContent, "Manifeste copié.");
- });
+Version Forge : ${catalog.version}
 
- document.getElementById("downloadFoundry").addEventListener("click", () => {
-  downloadText("FLOWER_GIRL_MANIFESTE_.md", foundryOutput.textContent);
- });
+## Doctrine
 
- document.getElementById("ideaForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!validateForm(event.currentTarget)) return;
-  const data = new FormData(event.currentTarget);
-  const title = data.get("title").trim();
-  const text = `# ${title}
+Question
+→ contexte
+→ module utile
+→ décision changée
+→ preuve
+→ arrêt.
 
-Statut : Proposition Atlas-10
+## Modules sélectionnés
+
+${modules.length ? modules.map((module, i) => `${i + 1}. ${module.label}${module.file ? ` — \`${module.file}\`` : module.archive ? ` — \`${module.archive}\`` : ""}`).join("\n") : "Aucun module sélectionné."}
+
+## Verrou
+
+Module présent ≠ module actif.
+Un module doit être chargé uniquement lorsqu’il modifie réellement le résultat.
+`;
+  }
+
+  function makeSourcesReport(p, included, references, missing) {
+    return `# SOURCES REPORT
+
+Version Forge : ${catalog.version}
+Date : ${new Date().toISOString()}
+
+## Inclus
+
+${included.length ? included.map(item => `- ${item}`).join("\n") : "- Aucun fichier source inclus."}
+
+## Références
+
+${references.length ? references.map(item => `- ${item}`).join("\n") : "- Aucune référence."}
+
+## Manquants ou non résolus
+
+${missing.length ? missing.map(item => `- ${item}`).join("\n") : "- Aucun."}
+
+## Politique
+
+- Les fichiers importés restent locaux au navigateur.
+- Les sources privées ne sont jamais téléchargées automatiquement.
+- Un fichier privé n’est inclus qu’après import local explicite.
+- Les secrets et clés ne doivent jamais être ajoutés au ZIP.
+`;
+  }
+
+  function makeTests(p, modules) {
+    return `# TESTS LLM — ${p.name}
+
+## Test 1 — Activation
+
+- Charger le Boot.
+- Vérifier que le Core précède la Persona.
+- Vérifier que le profil annonce son identité exacte.
+
+## Test 2 — Routage
+
+- Poser une question nécessitant un module sélectionné.
+- Vérifier que le module change une décision.
+- Vérifier qu’un module non utile n’est pas simulé comme actif.
+
+## Test 3 — Limites
+
+- Demander une donnée absente.
+- Le profil doit signaler l’absence sans inventer.
+
+## Test 4 — Mémoire
+
+- Changer de contexte.
+- Vérifier que l’ancien contexte n’écrase pas le nouveau.
+
+## Test 5 — Stop
+
+- Donner une preuve suffisante ou dire Stop.
+- Le profil doit s’arrêter proprement.
+
+## Modules à tester
+
+${modules.length ? modules.map(module => `- ${module.label}`).join("\n") : "- Aucun module."}
+`;
+  }
+
+  function makeReadme(p, root, modules) {
+    return `# ${p.id === "custom" && state.customName ? state.customName : p.name}
+
+Profil assemblé avec Forge d’Aerith ${catalog.version}.
+
+## Utilisation
+
+1. Ouvrir \`BOOT_${root}.md\`.
+2. Charger les fichiers dans l’ordre indiqué.
+3. Charger uniquement les modules nécessaires.
+4. Vérifier les sources et les limites.
+5. Arrêter lorsque la preuve suffit.
+
+## Modules
+
+${modules.length ? modules.map(module => `- ${module.label}`).join("\n") : "- Aucun"}
+
+## Confidentialité
+
+${p.privacy === "private"
+  ? "Ce profil contient ou référence des sources privées. Ne pas publier le ZIP sans vérification."
+  : p.privacy === "draft"
+  ? "Ce profil est un brouillon. Il ne devient canonique qu’après validation humaine."
+  : "Ce profil utilise les fichiers publics d’export et peut conserver des références privées non incluses."}
+`;
+  }
+
+  function makeCustomCore(name, mission, modules, rules) {
+    const id = sanitizeName(name);
+    return `# ${name.toUpperCase()} — Multi-Agent Core
+
+Statut : Brouillon Forge — non canonique
+Version : V0.1
+Fichier : \`${id}_MULTI_AGENT_CORE.md\`
+Persona requise : \`${id}_PERSONA_OPERATING_LAYER.md\`
+
+## 0. Verrou
+
+Ce fichier est un brouillon.
+Toute canonisation exige une validation humaine.
+
+## 1. Identité
+
+${name} est un profil multi-agent spécialisé.
+
+## 2. Mission
+
+${mission || "À compléter."}
+
+## 3. Agents internes
+
+- Orchestrateur
+- Gardien des sources
+- Expert métier
+- Gardien du risque
+- Archiviste
+
+## 4. Modules
+
+${modules.length ? modules.map(module => `- ${module.label}`).join("\n") : "- Aucun"}
+
+## 5. Règles
+
+${rules.length ? rules.map(rule => `- ${rule.label}`).join("\n") : "- Aucune"}
+
+## 6. Doctrine
+
+D
+→ source
+→ module utile
+→ décision
+→ preuve
+→ stop.
+
+## 7. Limites
+
+- Aucun secret.
+- Aucune publication automatique.
+- Aucune donnée inventée.
+- Aucun statut canonique sans validation.
+`;
+  }
+
+  function makeCustomPersona(name, modules) {
+    const id = sanitizeName(name);
+    return `# ${name.toUpperCase()} — Persona Operating Layer
+
+Statut : Brouillon Forge — non canonique
+Version : V0.1
+Core requis : \`${id}_MULTI_AGENT_CORE.md\`
+
+## 1. Voix
+
+Clair, précis, respectueux et adapté à la mission.
+
+## 2. Modes
+
+- /profile standard
+- /profile atelier
+- /profile audit
+- /profile archive
+- /profile stop
+
+## 3. Mémoire
+
+- mémoire stable : identité et règles validées ;
+- mémoire de session : contexte utile ;
+- mémoire éphémère : hypothèses non validées.
+
+## 4. Contrat de réponse
+
+Avant chaque réponse :
+
+1. D ;
+2. source ;
+3. module utile ;
+4. limite ;
+5. preuve ;
+6. stop point.
+
+## 5. Modules
+
+${modules.length ? modules.map(module => `- ${module.label}`).join("\n") : "- Aucun"}
+
+## 6. Frontière
+
+Cette Persona ne remplace jamais le Core et ne devient pas canonique sans validation humaine.
+`;
+  }
+
+  async function fetchText(path) {
+    const response = await fetch(path, { cache: "no-store" });
+    if (!response.ok) throw new Error(`${path} · HTTP ${response.status}`);
+    return response.text();
+  }
+
+  async function extractImported(item) {
+    if (item.directFile) return new Uint8Array(await item.directFile.arrayBuffer());
+    if (!item.zipRef) throw new Error("Source locale indisponible.");
+    const data = new Uint8Array(await item.zipRef.file.arrayBuffer());
+    const entry = item.zipRef.entry;
+    const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+    const offset = entry.localOffset;
+    if (view.getUint32(offset, true) !== 0x04034b50) throw new Error("En-tête ZIP local invalide.");
+    const nameLen = view.getUint16(offset + 26, true);
+    const extraLen = view.getUint16(offset + 28, true);
+    const start = offset + 30 + nameLen + extraLen;
+    const compressed = data.slice(start, start + entry.compressedSize);
+    if (entry.method === 0) return compressed;
+    if (entry.method === 8 && "DecompressionStream" in window) {
+      const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      return new Uint8Array(await new Response(stream).arrayBuffer());
+    }
+    throw new Error(`Compression ZIP ${entry.method} non prise en charge par ce navigateur.`);
+  }
+
+  function findImported(name, matchPath = "") {
+    const matches = importedMatches(name, matchPath);
+    return matches[0] || null;
+  }
+
+  async function buildPackage(includeSources = true) {
+    const p = profile();
+    const root = sanitizeName(state.profileRoot || p.root);
+    const modules = selectedModules();
+    const rules = catalog.rules.filter(rule => state.rules[rule.id]);
+    const files = new Map();
+    const included = [];
+    const references = [];
+    const missing = [];
+    const warnings = [];
+
+    if (p.id === "custom") {
+      const name = state.customName.trim() || "Nouveau profil";
+      const id = sanitizeName(name);
+      files.set(`${root}/core/${id}_MULTI_AGENT_CORE.md`, encodeUtf8(makeCustomCore(name, state.customMission, modules, rules)));
+      files.set(`${root}/persona/${id}_PERSONA_OPERATING_LAYER.md`, encodeUtf8(makeCustomPersona(name, modules)));
+      included.push(`${id}_MULTI_AGENT_CORE.md`, `${id}_PERSONA_OPERATING_LAYER.md`);
+      if (!state.customName.trim()) warnings.push("Le nouveau profil utilise encore un nom générique.");
+      if (!state.customMission.trim()) warnings.push("La mission du nouveau profil reste à compléter.");
+    } else {
+      for (const item of p.mandatory) {
+        const folder = item.kind === "persona" ? "persona" : item.kind === "core" ? "core" : "system";
+        const target = `${root}/${folder}/${item.name}`;
+        if (item.source === "builtin") {
+          try {
+            const text = await fetchText(item.path);
+            files.set(target, encodeUtf8(text));
+            included.push(item.name);
+          } catch (error) {
+            missing.push(item.name);
+            warnings.push(`Fichier public inaccessible : ${item.name}.`);
+          }
+        } else {
+          const local = findImported(item.name, item.matchPath);
+          if (local && includeSources) {
+            try {
+              files.set(target, await extractImported(local));
+              included.push(`${item.name} · import local`);
+            } catch (error) {
+              missing.push(item.name);
+              warnings.push(`${item.name} reconnu mais non extractible : ${error.message}`);
+            }
+          } else {
+            references.push(`${item.name} · source privée`);
+            missing.push(item.name);
+          }
+        }
+      }
+    }
+
+    for (const module of modules) {
+      if (module.file) {
+        const local = findImported(module.file);
+        if (local && includeSources) {
+          try {
+            files.set(`${root}/modules/${module.file}`, await extractImported(local));
+            included.push(`${module.file} · import local`);
+            continue;
+          } catch (error) {
+            warnings.push(`${module.file} reconnu mais non extractible : ${error.message}`);
+          }
+        }
+        if (p.privacy === "public") {
+          try {
+            const text = await fetchText(`modules/${module.file}`);
+            files.set(`${root}/modules/${module.file}`, encodeUtf8(text));
+            included.push(module.file);
+            continue;
+          } catch {
+            references.push(`modules/${module.file}`);
+            warnings.push(`Module référencé mais absent du paquet local : ${module.file}. Il sera récupéré sur GitHub Pages si le dossier modules existe.`);
+          }
+        } else {
+          references.push(module.file);
+        }
+      } else if (module.archive) {
+        const local = findImported(module.archive);
+        if (local) {
+          references.push(`${module.archive} · archive locale indexée`);
+        } else {
+          references.push(module.archive);
+          warnings.push(`Archive non importée : ${module.archive}.`);
+        }
+      } else {
+        references.push(module.label);
+      }
+    }
+
+    const boot = makeBoot(p, root, modules, rules);
+    const router = makeRouter(modules);
+    const sources = makeSourcesReport(p, included, references, missing);
+    const tests = makeTests(p, modules);
+    const readme = makeReadme(p, root, modules);
+    const manifest = makeManifest(p, root, modules, rules, warnings);
+
+    files.set(`${root}/BOOT_${root}.md`, encodeUtf8(boot));
+    files.set(`${root}/PROFILE_MANIFEST.md`, encodeUtf8(manifest));
+    files.set(`${root}/ATLAS_DES_MODULES.md`, encodeUtf8(router));
+    files.set(`${root}/SOURCES_REPORT.md`, encodeUtf8(sources));
+    files.set(`${root}/TESTS_LLM.md`, encodeUtf8(tests));
+    files.set(`${root}/README.md`, encodeUtf8(readme));
+
+    return { p, root, modules, rules, files, included, references, missing, warnings, boot, manifest, router, sources, tests, readme };
+  }
+
+  function previewTree(pkg) {
+    const paths = [...pkg.files.keys()].sort();
+    const root = pkg.root;
+    const lines = [`${root}/`];
+    paths.forEach((path, index) => {
+      const rel = path.slice(root.length + 1);
+      const parts = rel.split("/");
+      const last = index === paths.length - 1;
+      lines.push(`${last ? "└──" : "├──"} ${parts.join("/")}`);
+    });
+    return lines.join("\n");
+  }
+
+  async function updatePreview() {
+    try {
+      lastPreview = await buildPackage(false);
+      const p = lastPreview.p;
+      $("#previewSummary").innerHTML = [
+        ["Profil", p.id === "custom" && state.customName ? state.customName : p.name, p.family],
+        ["Fichiers", lastPreview.files.size, "structure générée"],
+        ["Modules", lastPreview.modules.length, state.preset],
+        ["Sources", lastPreview.included.length, `${lastPreview.references.length} référence(s)`],
+        ["Manquants", lastPreview.missing.length, p.privacy === "private" ? "import local requis" : "à vérifier"],
+        ["Règles", lastPreview.rules.length, "actives"],
+        ["Diffusion", p.privacy.toUpperCase(), p.statusLabel],
+        ["Version", catalog.version, catalog.buildDate]
+      ].map(item => `<div class="preview-stat"><span>${escapeHtml(item[0])}</span><strong>${escapeHtml(item[1])}</strong><small>${escapeHtml(item[2])}</small></div>`).join("");
+      $("#treePreview").textContent = previewTree(lastPreview);
+      const notices = [
+        ...lastPreview.warnings.map(text => ({ ok: false, title: "Attention", text })),
+        ...(!lastPreview.warnings.length ? [{ ok: true, title: "Structure cohérente", text: "Aucune alerte bloquante détectée dans la prévisualisation." }] : []),
+        { ok: true, title: "Publication contrôlée", text: "La Forge ne publie rien automatiquement et n’envoie aucun fichier importé." }
+      ];
+      $("#warningList").innerHTML = notices.map(item => `<div class="warning-item ${item.ok ? "ok" : ""}"><span class="warning-icon">${item.ok ? "✓" : "!"}</span><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.text)}</small></span></div>`).join("");
+      $("#warningBadge").textContent = String(lastPreview.warnings.length);
+      $("#forgeResultName").textContent = p.id === "custom" && state.customName ? state.customName : p.name;
+      $("#forgeResultText").textContent = lastPreview.warnings.length
+        ? `${lastPreview.warnings.length} alerte(s) non bloquante(s). Les références manquantes resteront visibles dans SOURCES_REPORT.md.`
+        : `${lastPreview.files.size} fichiers préparés. La Forge peut produire le ZIP.`;
+      renderProgress();
+    } catch (error) {
+      $("#forgeLog").textContent = `Erreur de prévisualisation : ${error.message}`;
+    }
+  }
+
+  function encodeUtf8(text) {
+    return new TextEncoder().encode(String(text));
+  }
+
+  function crc32(bytes) {
+    let crc = 0xffffffff;
+    for (const byte of bytes) {
+      crc ^= byte;
+      for (let i = 0; i < 8; i++) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+
+  function concatArrays(arrays) {
+    const length = arrays.reduce((sum, array) => sum + array.length, 0);
+    const output = new Uint8Array(length);
+    let offset = 0;
+    for (const array of arrays) { output.set(array, offset); offset += array.length; }
+    return output;
+  }
+
+  function dosDateTime(date = new Date()) {
+    const year = Math.max(1980, date.getFullYear());
+    const dosTime = (date.getHours() << 11) | (date.getMinutes() << 5) | Math.floor(date.getSeconds() / 2);
+    const dosDate = ((year - 1980) << 9) | ((date.getMonth() + 1) << 5) | date.getDate();
+    return { dosTime, dosDate };
+  }
+
+  function makeZip(files) {
+    const localParts = [];
+    const centralParts = [];
+    let offset = 0;
+    const { dosTime, dosDate } = dosDateTime();
+
+    for (const [name, raw] of files.entries()) {
+      const data = raw instanceof Uint8Array ? raw : encodeUtf8(raw);
+      const nameBytes = encodeUtf8(name);
+      const crc = crc32(data);
+
+      const local = new Uint8Array(30 + nameBytes.length);
+      const lv = new DataView(local.buffer);
+      lv.setUint32(0, 0x04034b50, true);
+      lv.setUint16(4, 20, true);
+      lv.setUint16(6, 0x0800, true);
+      lv.setUint16(8, 0, true);
+      lv.setUint16(10, dosTime, true);
+      lv.setUint16(12, dosDate, true);
+      lv.setUint32(14, crc, true);
+      lv.setUint32(18, data.length, true);
+      lv.setUint32(22, data.length, true);
+      lv.setUint16(26, nameBytes.length, true);
+      lv.setUint16(28, 0, true);
+      local.set(nameBytes, 30);
+      localParts.push(local, data);
+
+      const central = new Uint8Array(46 + nameBytes.length);
+      const cv = new DataView(central.buffer);
+      cv.setUint32(0, 0x02014b50, true);
+      cv.setUint16(4, 20, true);
+      cv.setUint16(6, 20, true);
+      cv.setUint16(8, 0x0800, true);
+      cv.setUint16(10, 0, true);
+      cv.setUint16(12, dosTime, true);
+      cv.setUint16(14, dosDate, true);
+      cv.setUint32(16, crc, true);
+      cv.setUint32(20, data.length, true);
+      cv.setUint32(24, data.length, true);
+      cv.setUint16(28, nameBytes.length, true);
+      cv.setUint16(30, 0, true);
+      cv.setUint16(32, 0, true);
+      cv.setUint16(34, 0, true);
+      cv.setUint16(36, 0, true);
+      cv.setUint32(38, 0, true);
+      cv.setUint32(42, offset, true);
+      central.set(nameBytes, 46);
+      centralParts.push(central);
+
+      offset += local.length + data.length;
+    }
+
+    const localData = concatArrays(localParts);
+    const centralData = concatArrays(centralParts);
+    const end = new Uint8Array(22);
+    const ev = new DataView(end.buffer);
+    ev.setUint32(0, 0x06054b50, true);
+    ev.setUint16(4, 0, true);
+    ev.setUint16(6, 0, true);
+    ev.setUint16(8, files.size, true);
+    ev.setUint16(10, files.size, true);
+    ev.setUint32(12, centralData.length, true);
+    ev.setUint32(16, localData.length, true);
+    ev.setUint16(20, 0, true);
+    return new Blob([localData, centralData, end], { type: "application/zip" });
+  }
+
+  function parseZipEntries(file, bytes) {
+    const data = new Uint8Array(bytes);
+    const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+    let eocd = -1;
+    const min = Math.max(0, data.length - 65557);
+    for (let i = data.length - 22; i >= min; i--) {
+      if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+    }
+    if (eocd < 0) throw new Error(`${file.name} : fin ZIP introuvable.`);
+    const count = view.getUint16(eocd + 10, true);
+    const centralOffset = view.getUint32(eocd + 16, true);
+    const decoder = new TextDecoder("utf-8");
+    const entries = [];
+    let cursor = centralOffset;
+    for (let index = 0; index < count; index++) {
+      if (view.getUint32(cursor, true) !== 0x02014b50) break;
+      const method = view.getUint16(cursor + 10, true);
+      const compressedSize = view.getUint32(cursor + 20, true);
+      const uncompressedSize = view.getUint32(cursor + 24, true);
+      const nameLen = view.getUint16(cursor + 28, true);
+      const extraLen = view.getUint16(cursor + 30, true);
+      const commentLen = view.getUint16(cursor + 32, true);
+      const localOffset = view.getUint32(cursor + 42, true);
+      const name = decoder.decode(data.slice(cursor + 46, cursor + 46 + nameLen));
+      if (name && !name.endsWith("/")) entries.push({ name, method, compressedSize, uncompressedSize, localOffset });
+      cursor += 46 + nameLen + extraLen + commentLen;
+    }
+    return entries;
+  }
+
+  function classifyImported(path, origin, directFile = null, zipRef = null) {
+    const lower = path.toLowerCase();
+    const type = lower.endsWith(".md") ? "Markdown" : lower.endsWith(".json") ? "JSON" : lower.endsWith(".txt") ? "Texte" : "Fichier";
+    const privateFile = /core\/|creator_memory|aerith_10_creatrice|seven_gate|session_boot_aerith_7|seven_lessons|full_modules_boost/i.test(lower);
+    return { path, origin, type, private: privateFile, directFile, zipRef };
+  }
+
+  async function importFiles(files) {
+    $("#forgeLog").textContent = "Indexation des sources locales…";
+    for (const file of files) {
+      if (file.name.toLowerCase().endsWith(".zip")) {
+        try {
+          const bytes = await file.arrayBuffer();
+          const entries = parseZipEntries(file, bytes);
+          entries.forEach(entry => imported.push(classifyImported(entry.name, file.name, null, { file, entry })));
+        } catch (error) {
+          showToast(error.message);
+        }
+      } else {
+        imported.push(classifyImported(file.name, file.name, file, null));
+      }
+    }
+    renderSources();
+    renderArchitecture();
+    updatePreview();
+    $("#forgeLog").textContent = `${imported.length} fichier(s) indexé(s) localement.`;
+    showToast("Sources locales indexées.");
+  }
+
+  function renderAll() {
+    ensureDefaults();
+    renderProfileCards();
+    renderSteps();
+    renderIdentity();
+    renderMatrix();
+    renderArchitecture();
+    renderModules();
+    renderRules();
+    renderSources();
+    activateStep(activeStep);
+    updatePreview();
+  }
+
+  // Events
+  document.addEventListener("click", event => {
+    const profileButton = event.target.closest("[data-profile-id]");
+    if (profileButton) selectProfile(profileButton.dataset.profileId);
+
+    const stepButton = event.target.closest("[data-step-index]");
+    if (stepButton) activateStep(Number(stepButton.dataset.stepIndex));
+
+    const moduleInput = event.target.closest("[data-module-id]");
+    if (moduleInput) {
+      const id = moduleInput.dataset.moduleId;
+      state.selectedModules = moduleInput.checked
+        ? [...new Set([...state.selectedModules, id])]
+        : state.selectedModules.filter(item => item !== id);
+      saveState();
+      renderModules();
+      renderMatrix();
+      updatePreview();
+    }
+
+    const ruleInput = event.target.closest("[data-rule-id]");
+    if (ruleInput) {
+      state.rules[ruleInput.dataset.ruleId] = ruleInput.checked;
+      saveState();
+      updatePreview();
+    }
+
+    const presetButton = event.target.closest("[data-preset]");
+    if (presetButton) applyPreset(presetButton.dataset.preset);
+
+    const previewTab = event.target.closest("[data-preview-tab]");
+    if (previewTab) {
+      $$(".preview-tab").forEach(tab => tab.classList.toggle("is-active", tab === previewTab));
+      $$(".preview-panel").forEach(panel => panel.classList.toggle("is-active", panel.dataset.previewPanel === previewTab.dataset.previewTab));
+    }
+  });
+
+  $("#profileRoot").addEventListener("input", event => {
+    state.profileRoot = sanitizeName(event.target.value, profile().root);
+    event.target.value = state.profileRoot;
+    saveState();
+    renderArchitecture();
+    updatePreview();
+  });
+  $("#customName").addEventListener("input", event => { state.customName = event.target.value; saveState(); renderMatrix(); renderArchitecture(); updatePreview(); });
+  $("#customMission").addEventListener("input", event => { state.customMission = event.target.value; saveState(); updatePreview(); });
+
+  const goNext = () => activateStep(activeStep + 1);
+  const goPrevious = () => activateStep(activeStep - 1);
+  $("#nextStep").addEventListener("click", goNext);
+  $("#nextBottom").addEventListener("click", goNext);
+  $("#previousStep").addEventListener("click", goPrevious);
+  $("#previousBottom").addEventListener("click", goPrevious);
+  $("#heroStart").addEventListener("click", () => activateStep(0, true));
+  $("#jumpForge").addEventListener("click", () => activateStep(0, true));
+
+  $("#resetForge").addEventListener("click", () => {
+    if (!confirm("Réinitialiser la Forge et les choix enregistrés dans ce navigateur ?")) return;
+    try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(STEP_KEY); } catch {}
+    location.reload();
+  });
+
+  const dropZone = $("#dropZone");
+  $("#browseSources").addEventListener("click", event => { event.stopPropagation(); $("#sourceInput").click(); });
+  dropZone.addEventListener("click", event => { if (!event.target.closest("button")) $("#sourceInput").click(); });
+  dropZone.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") $("#sourceInput").click(); });
+  $("#sourceInput").addEventListener("change", event => importFiles([...event.target.files]));
+  ["dragenter", "dragover"].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.add("is-dragging"); }));
+  ["dragleave", "drop"].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.remove("is-dragging"); }));
+  dropZone.addEventListener("drop", event => importFiles([...event.dataTransfer.files]));
+  $("#sourceFilter").addEventListener("input", renderSources);
+  $("#clearSources").addEventListener("click", () => { imported.splice(0); renderSources(); renderArchitecture(); updatePreview(); showToast("Coffre local vidé."); });
+
+  $("#forgeZip").addEventListener("click", async () => {
+    const log = $("#forgeLog");
+    log.textContent = "Assemblage des fichiers…";
+    try {
+      const pkg = await buildPackage(true);
+      log.textContent = `Création de ${pkg.files.size} fichier(s)…`;
+      const blob = makeZip(pkg.files);
+      downloadBlob(`${pkg.root}_FORGE_${catalog.version.replaceAll(".", "_").replace("-", "_")}.zip`, blob);
+      lastPreview = pkg;
+      log.textContent = `${pkg.root} forgé · ${pkg.files.size} fichier(s) · ${(blob.size / 1024).toFixed(1)} Ko.`;
+      showToast("Profil ZIP forgé.");
+    } catch (error) {
+      log.textContent = `Forge interrompue : ${error.message}`;
+      showToast("La Forge a rencontré une erreur.");
+    }
+  });
+
+  $("#downloadBoot").addEventListener("click", async () => {
+    const pkg = await buildPackage(false);
+    downloadText(`BOOT_${pkg.root}.md`, pkg.boot);
+  });
+  $("#downloadManifest").addEventListener("click", async () => {
+    const pkg = await buildPackage(false);
+    downloadText("PROFILE_MANIFEST.md", pkg.manifest);
+  });
+  $("#copyPrompt").addEventListener("click", async () => {
+    const pkg = await buildPackage(false);
+    copyText(pkg.boot, "Prompt d’activation copié.");
+  });
+  $("#copyTree").addEventListener("click", async () => {
+    const pkg = await buildPackage(false);
+    copyText(previewTree(pkg), "Arborescence copiée.");
+  });
+
+  $("#ideaForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const title = String(data.get("title") || "").trim();
+    currentIdea = `# ${title}
+
+Statut : Proposition Forge d’Aerith
 Date : ${new Date().toISOString().slice(0, 10)}
-Domaine : Agent-Crypto / Atlas-10 Full Crypto
 
 ## Hypothèse ou problème
 
@@ -1091,65 +1171,36 @@ ${data.get("hypothesis")}
 
 ${data.get("data")}
 
-## Signal ou résultat attendu
+## Résultat attendu
 
-${data.get("signal")}
+${data.get("result")}
 
-## Risques, limites et faux positifs
+## Risques et faux positifs
 
-${data.get("risks") || "À compléter pendant l'audit."}
+${data.get("risks") || "À compléter pendant l’audit."}
 
 ## Test de validation
 
 ${data.get("test")}
 
-## Intégration envisagée
+## Critères d’acceptation
 
-- Source de données clairement identifiée.
-- État de fraîcheur visible.
-- Modèle mathématique explicite.
-- Affichage séparant faits, calculs et interprétations.
-- Aucun conseil d'achat ou de vente.
-- Conservation de l'ancien état valide si la source échoue.
-- Tests sur données normales, absentes, périmées et contradictoires.
-
-## Critères d'acceptation
-
+- Sources identifiées.
 - Résultat reproductible.
-- Aucune donnée inventée.
 - Limites visibles.
-- Interface stable.
 - Aucun secret exposé.
-- Validation humaine avant intégration.`;
+- Aucune publication automatique.
+- Validation humaine avant intégration.
+`;
+    $("#ideaOutput").textContent = currentIdea;
+    showToast("Proposition générée.");
+  });
+  $("#copyIdea").addEventListener("click", () => copyText(currentIdea || $("#ideaOutput").textContent, "Proposition copiée."));
+  $("#downloadIdea").addEventListener("click", () => {
+    const title = ($("#ideaForm [name=title]").value || "PROPOSITION").trim();
+    downloadText(`${sanitizeName(title)}.md`, currentIdea || $("#ideaOutput").textContent);
+  });
 
-  ideaOutput.textContent = text;
-  state.outputs.idea = text;
-  saveState();
-  updateProgress();
-
-  const issue = document.getElementById("openIssue");
-  issue.href = `${PUBLIC_REPO}/issues/new?title=${encodeURIComponent(`[l’utilisateur] ${title}`)}&body=${encodeURIComponent(text)}`;
-  showToast("Proposition Atlas-10 générée.");
- });
-
- document.getElementById("copyIdea").addEventListener("click", () => {
-  copyText(ideaOutput.textContent, "Proposition copiée.");
- });
-
- document.getElementById("downloadIdea").addEventListener("click", () => {
-  const match = ideaOutput.textContent.match(/^#\s+(.+)$/m);
-  const safe = (match?.[1] || "PROPOSITION_")
-   .normalize("NFD")
-   .replace(/[\u0300-\u036f]/g, "")
-   .replace(/[^a-zA-Z0-9]+/g, "_")
-   .replace(/^_+|_+$/g, "")
-   .toUpperCase();
-  downloadText(`${safe}.md`, ideaOutput.textContent);
- });
-
- render();
- initFormAssistance();
- initWizard();
- initTooltips();
- updateProgress();
+  ensureDefaults();
+  renderAll();
 })();
