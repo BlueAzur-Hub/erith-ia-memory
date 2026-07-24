@@ -6141,7 +6141,7 @@ main .decision-board{
 }
 
 /* =========================================================
-   V1.1-alpha.26.47.5 — INTERACTION HELP & GRAPH READABILITY CANON LOCK
+   V1.1-alpha.26.47.4 — INTERACTION HELP & GRAPH READABILITY CANON LOCK
    Périmètre : aide contextuelle, lignes Market accessibles, infobulle HTML,
    résumé coloré, suppression du doublon visuel, transparence locale du graphe.
    ========================================================= */
@@ -6487,7 +6487,7 @@ main .decision-board{
 
 
 /* =========================================================
-   V1.1-alpha.26.47.5 — CHAMPAGNE LUXE PRIVATE BEACH
+   V1.1-alpha.26.47.4 — CHAMPAGNE LUXE PRIVATE BEACH
    Canon : infobulle inchangée dans sa structure, sans phrase finale ;
    fond plus transparent ; rafraîchissement non destructif du graphe.
    ========================================================= */
@@ -6546,42 +6546,4 @@ main .decision-board{
     bottom: 10px;
     max-width: calc(100% - 20px);
   }
-}
-
-
-/* =========================================================
-   V1.1-alpha.26.47.5 — DYNAMIC TRUTH & MULTI-HORIZON CANON LOCK
-   Micro-polish : répétitions Base 100 réduites, infobulle compacte.
-   ========================================================= */
-.atlas-chart-tooltip {
-  width: min(350px, calc(100% - 16px)) !important;
-  padding: 9px 10px !important;
-  border-radius: 11px !important;
-}
-.atlas-chart-tooltip-date {
-  margin-bottom: 5px !important;
-}
-.atlas-chart-tooltip-row {
-  gap: 10px !important;
-  padding: 5px 0 !important;
-}
-.atlas-chart-tooltip-identity {
-  gap: 7px !important;
-  padding-left: 7px !important;
-}
-.atlas-chart-tooltip-identity img,
-.atlas-chart-tooltip-fallback {
-  width: 22px !important;
-  height: 22px !important;
-  flex-basis: 22px !important;
-}
-.atlas-chart-tooltip-values strong {
-  font-size: 11.5px !important;
-}
-.atlas-chart-tooltip-values small,
-.atlas-chart-tooltip-identity small {
-  font-size: 8.5px !important;
-}
-@media (max-width: 700px) {
-  .atlas-chart-tooltip { width: calc(100% - 12px) !important; }
 }
