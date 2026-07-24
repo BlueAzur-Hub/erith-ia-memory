@@ -7238,3 +7238,186 @@ main .decision-board{
 .top5-item[data-top5-id="solana"] {
   order: 5;
 }
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6.5
+   CHAMPAGNE LUXE HOSTEL ROOM XXL
+   MARKET SNAPSHOT PERSISTENCE FINAL LOCK
+   ========================================================= */
+
+#marketRows .empty {
+  min-height: 84px;
+}
+
+.market-ribbon-stack,
+.layout-two {
+  overflow-anchor: none;
+}
+
+
+/* =========================================================
+   V1.1-alpha.26.47.6.6
+   CHAMPAGNE LUXE HOSTEL ROOM XXL
+   MARKET & MATH RUNTIME RECOVERY + CRYPTO IDENTITY LOCK
+   ========================================================= */
+
+.asset-row {
+  --crypto-color: #62ecff;
+  --crypto-gradient: linear-gradient(90deg, #62ecff, #62ecff);
+}
+
+.asset-row .coin-cell {
+  position: relative;
+  padding-left: 9px;
+}
+
+.asset-row .market-identity-rail {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--crypto-gradient);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--crypto-color) 28%, transparent);
+}
+
+.asset-row .coin-cell img {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--crypto-color) 28%, transparent),
+    0 0 12px color-mix(in srgb, var(--crypto-color) 18%, transparent);
+}
+
+.asset-row .coin-cell strong {
+  color: #fff0c8;
+}
+
+.asset-row .coin-cell small {
+  background: var(--crypto-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}
+
+.asset-row .asset-badge {
+  border-color: color-mix(in srgb, var(--crypto-color) 34%, rgba(255,255,255,.10));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--crypto-color) 5%, transparent);
+}
+
+.asset-row.is-compared td {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--crypto-color) 9%, transparent),
+      rgba(255, 214, 122, .025) 55%,
+      transparent
+    ) !important;
+}
+
+.asset-row.is-compared td:first-child,
+.asset-row.is-selected td:first-child {
+  box-shadow: inset 3px 0 0 var(--crypto-color) !important;
+}
+
+.asset-row.is-selected {
+  outline-color: color-mix(in srgb, var(--crypto-color) 58%, transparent) !important;
+}
+
+.compare-chip {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-color: color-mix(in srgb, var(--atlas-series-color) 50%, transparent) !important;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--atlas-series-color) 10%, transparent),
+      rgba(3, 13, 24, .80) 48%
+    ) !important;
+}
+
+.compare-chip::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 7px;
+  right: 7px;
+  bottom: 1px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  opacity: .82;
+}
+
+.compare-chip-main > span {
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+#math.score-panel {
+  --crypto-color: var(--cyan);
+  --crypto-gradient: linear-gradient(90deg, var(--cyan), var(--cyan));
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--crypto-color) 24%, var(--line));
+}
+
+#math.score-panel::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--crypto-gradient);
+  opacity: .88;
+}
+
+#math.score-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+#math .score-ring {
+  background:
+    conic-gradient(
+      var(--crypto-color) calc(var(--score) * 1%),
+      rgba(255,255,255,.10) 0
+    );
+  box-shadow: 0 0 22px color-mix(in srgb, var(--crypto-color) 13%, transparent);
+}
+
+#math .score-ring::after {
+  border-color: color-mix(in srgb, var(--crypto-color) 28%, var(--line));
+}
+
+#math .atlas-math-card:first-child {
+  border-color: color-mix(in srgb, var(--crypto-color) 48%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--crypto-color) 11%, transparent),
+      rgba(0,0,0,.18) 55%
+    );
+  box-shadow:
+    inset 3px 0 0 var(--crypto-color),
+    0 0 18px color-mix(in srgb, var(--crypto-color) 8%, transparent);
+}
+
+#math .atlas-math-card:first-child b {
+  background: var(--crypto-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#math .atlas-summary-grid > div:first-child,
+#math .breakdown > div:first-child {
+  border-color: color-mix(in srgb, var(--crypto-color) 30%, var(--line));
+}

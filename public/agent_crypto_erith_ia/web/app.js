@@ -1,7 +1,7 @@
-/* V1.1-alpha.26.47.6.4 — CHAMPAGNE LUXE HOSTEL ROOM XXL TARGET TOP COIN LOCK
-   Target Top 3 : BTC · ETH · BNB.
-   Target Top 5 : BTC · ETH · BNB · XRP · SOL.
-   Bandeau fixe Top 5 mis à jour par le spot 30 secondes.
+/* V1.1-alpha.26.47.6.6 — CHAMPAGNE LUXE HOSTEL ROOM XXL MARKET & MATH RUNTIME RECOVERY LOCK
+   Répare la fonction scoreCoin supprimée accidentellement.
+   Restaure actualisation marché, Market Snapshot et Math Model.
+   Continuité couleur crypto : graphe, sélection, tableau et Math Model.
 */
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
@@ -133,6 +133,13 @@ state.marketPulse = {
   lastChartSuccessAt: 0,
   spotBusy: false,
   chartBusy: false
+};
+
+state.marketContinuity = {
+  lastGood: null,
+  lastGoodAt: null,
+  restoreCount: 0,
+  lastReason: null
 };
 
 const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sourceDiagnosticTitle: $("sourceDiagnosticTitle"), sourceDiagnosticNote: $("sourceDiagnosticNote"), sourceDiagnosticGrid: $("sourceDiagnosticGrid"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoCadenceSelect: $("autoCadenceSelect"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"), githubMemoryLatest: $("githubMemoryLatest"), githubMemoryRecords: $("githubMemoryRecords"), githubMemoryCollectors: $("githubMemoryCollectors"), githubMemoryFusion: $("githubMemoryFusion"), githubMemoryOutput: $("githubMemoryOutput"),
@@ -500,7 +507,7 @@ function atlasPatchMarketRowSnapshot(row, coin, selection) {
 }
 
 function atlasPatchMarketTableSnapshot() {
-  if (!els.marketRows || !state.liveOk || !state.coins.length) return;
+  if (!els.marketRows || !atlasHasDisplayableMarket()) return;
   const desired = atlasMarketRowsForCurrentView();
   const existing = [...els.marketRows.querySelectorAll("tr[data-id]")];
   const sameOrder = existing.length === desired.length
@@ -533,6 +540,7 @@ function atlasPatchSpotDom(changedIds = []) {
   renderSimulation();
   atlasRenderBrokerStrip();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
+  atlasEnsureMarketDomIntegrity();
   atlasRestoreUiContinuity(continuity);
 }
 
@@ -541,8 +549,7 @@ function atlasPatchMarketSnapshotDom() {
   atlasRenderMarketAccessNotice();
   atlasRenderBrokerStrip();
   renderMetrics();
-  renderTicker();
-  atlasPatchMarketTableSnapshot();
+  atlasRenderMarketCoreAtomic();
   renderWatchlist();
   const selected = getSelectedCoin() || state.coins[0] || null;
   renderScore(selected);
@@ -840,8 +847,152 @@ const liveSources = [
   else if (!eurOk) setText(els.metricSourcesHint, `Marché EUR indisponible · ${escapeHtml(eur.detail || "échec")}`);
   else if (usdOk) setText(els.metricSourcesHint, "Top 50 EUR actif · prix USD directs disponibles");
   else setText(els.metricSourcesHint, "Top 50 EUR actif · USD optionnel indisponible");
-} function clearMarketDisplay(reason = "Marché live indisponible.") { state.liveOk = false; state.mainSource = null; state.timestamp = null; state.coins = []; state.global = null; atlasBrokerResetMarket(reason); setText(els.metricMarketCap, "—"); setText(els.metricMarketCapHint, "Donnée non récupérée"); setText(els.metricVolume, "—"); setText(els.metricVolumeHint, "Donnée non récupérée"); setText(els.metricBtcDom, "—"); setText(els.metricBtcDomHint, "Donnée non récupérée"); setHTML(els.top5Track, `<span class="market-ribbon-empty">${escapeHtml(reason)}</span>`);
-setHTML(els.tickerTrack, `<span class="ticker-meta">${escapeHtml(reason)} · aucun prix affiché · pas de tableau fictif</span>`); renderEmptyMarket(`${reason.toUpperCase()} — aucun tableau chiffré.`); renderScore(null); renderWatchlist(); renderRiskGrid(); renderColdRead(false); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderAnalystPanel(); renderDecisionBoard();
+} 
+function atlasHasDisplayableMarket(coins = state.coins) {
+  return atlasCanonicalSnapshot(coins) && coins.length > 0;
+}
+
+function atlasRememberGoodMarket(reason = "snapshot validé") {
+  if (!atlasHasDisplayableMarket()) return false;
+  state.marketContinuity.lastGood = {
+    coins: state.coins,
+    global: state.global,
+    timestamp: state.timestamp,
+    snapshotId: state.sourceLock?.snapshotId || null,
+    mainSource: state.mainSource || ATLAS_CANONICAL_MARKET_SOURCE,
+    sourceMode: state.sourceLock?.mode || "direct"
+  };
+  state.marketContinuity.lastGoodAt = new Date().toISOString();
+  state.marketContinuity.lastReason = String(reason || "snapshot validé");
+  return true;
+}
+
+function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponible") {
+  const remembered = state.marketContinuity?.lastGood;
+  if (!remembered || !atlasCanonicalSnapshot(remembered.coins)) return false;
+
+  state.coins = remembered.coins;
+  state.global = remembered.global || null;
+  state.timestamp = remembered.timestamp || new Date().toISOString();
+  state.mainSource = remembered.mainSource || "CoinGecko · dernier snapshot valide";
+  state.liveOk = true;
+
+  atlasSetSourceLock(
+    remembered.sourceMode === "direct" && atlasMarketAgeMs() <= ATLAS_DIRECT_GRACE_MS
+      ? "direct"
+      : "local-cache",
+    state.timestamp,
+    `Snapshot conservé : ${String(reason || "réseau différé")}`,
+    true,
+    remembered.snapshotId || null
+  );
+
+  atlasBrokerCommitMarket({
+    coins: state.coins,
+    global: state.global,
+    timestamp: state.timestamp,
+    snapshotId: remembered.snapshotId || null
+  }, state.sourceLock.mode);
+
+  state.marketContinuity.restoreCount += 1;
+  state.marketContinuity.lastReason = String(reason || "réseau différé");
+
+  setLiveStatus("warn", state.sourceLock.mode === "direct" ? "Top 50 conservé" : "Mode archive");
+  setText(els.sourceName, state.sourceLock.mode === "direct"
+    ? "CoinGecko direct · dernier snapshot valide"
+    : "CoinGecko · archive locale");
+  setText(els.sourceTime, state.timestamp ? new Date(state.timestamp).toLocaleString("fr-FR") : "—");
+  setTableDecision(
+    state.sourceLock.mode === "direct"
+      ? "Top 50 valide conservé · nouvelle tentative programmée"
+      : "Archive CoinGecko conservée · analyses live suspendues",
+    "warn"
+  );
+
+  return true;
+}
+
+function atlasEnsureMarketDomIntegrity() {
+  if (!atlasHasDisplayableMarket()) return false;
+
+  if (!state.liveOk) state.liveOk = true;
+
+  const rowCount = els.marketRows?.querySelectorAll?.("tr[data-id]")?.length || 0;
+  if (!rowCount) renderMarketTable();
+
+  const topFiveCount = els.top5Track?.querySelectorAll?.("[data-top5-id]")?.length || 0;
+  if (!topFiveCount) atlasRenderTopFiveRibbon();
+
+  const flowCount = els.tickerTrack?.querySelectorAll?.("[data-ticker-id]")?.length || 0;
+  if (!flowCount) atlasRenderMarketFlowRibbon();
+
+  return true;
+}
+
+function atlasRenderMarketCoreAtomic() {
+  if (!atlasHasDisplayableMarket()) {
+    renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
+    atlasRenderTopFiveRibbon();
+    atlasRenderMarketFlowRibbon();
+    return false;
+  }
+
+  if (!state.liveOk) state.liveOk = true;
+
+  renderMarketTable();
+  renderTicker();
+
+  requestAnimationFrame(() => {
+    atlasEnsureMarketDomIntegrity();
+  });
+
+  return true;
+}
+
+function clearMarketDisplay(reason = "Marché live indisponible.", options = {}) {
+  const force = options?.force === true;
+
+  if (!force) {
+    if (atlasHasDisplayableMarket()) {
+      state.liveOk = true;
+      atlasRememberGoodMarket("état courant conservé avant effacement");
+      atlasRenderMarketCoreAtomic();
+      return false;
+    }
+
+    if (atlasRestoreRememberedMarket(reason) || applyMarketCache(reason)) {
+      atlasRenderMarketCoreAtomic();
+      return false;
+    }
+  }
+
+  state.liveOk = false;
+  state.mainSource = null;
+  state.timestamp = null;
+  state.coins = [];
+  state.global = null;
+  atlasBrokerResetMarket(reason);
+
+  setText(els.metricMarketCap, "—");
+  setText(els.metricMarketCapHint, "Donnée non récupérée");
+  setText(els.metricVolume, "—");
+  setText(els.metricVolumeHint, "Donnée non récupérée");
+  setText(els.metricBtcDom, "—");
+  setText(els.metricBtcDomHint, "Donnée non récupérée");
+  setHTML(els.top5Track, `<span class="market-ribbon-empty">${escapeHtml(reason)}</span>`);
+  setHTML(els.tickerTrack, `<span class="ticker-meta">${escapeHtml(reason)} · aucun prix affiché · pas de tableau fictif</span>`);
+
+  renderEmptyMarket(`${reason.toUpperCase()} — aucun tableau chiffré.`);
+  renderScore(null);
+  renderWatchlist();
+  renderRiskGrid();
+  renderColdRead(false);
+  renderBeginnerSummary();
+  renderMultiHorizon();
+  atlasRenderComparisonControls();
+  renderAnalystPanel();
+  renderDecisionBoard();
+  return true;
 } function atlasSetSourceLock(mode, timestamp, reason = "Source canonique CoinGecko", valid = true, snapshotId = null) {
   state.sourceLock = {
     canonical: ATLAS_CANONICAL_MARKET_SOURCE,
@@ -908,6 +1059,7 @@ function atlasApplyCanonicalSnapshot(snapshot, mode) {
   atlasBrokerCommitMarket({ ...snapshot, coins: state.coins, timestamp: state.timestamp, snapshotId: snapshot.snapshotId || null }, mode);
   if (!state.graphSelectionCleared && (!state.selectedCoinId || !state.coins.some(c => c.id === state.selectedCoinId))) state.selectedCoinId = state.coins[0]?.id || "bitcoin";
   saveMarketCache();
+  atlasRememberGoodMarket(`snapshot ${mode || "direct"} validé`);
   return true;
 }
 function applyMarketCache(reason = "CoinGecko direct indisponible : dernière lecture directe conservée en archive locale.") {
@@ -948,6 +1100,7 @@ function atlasRestorePreviousSnapshot(previous, error, context = "Actualisation"
     setTableDecision("Archive CoinGecko · analyses suspendues", "warn");
   }
   setText(els.sourceTime, state.timestamp ? new Date(state.timestamp).toLocaleString("fr-FR") : "—");
+  atlasRememberGoodMarket(`${context} : snapshot précédent restauré`);
   renderAll();
   return true;
 }
@@ -1145,15 +1298,16 @@ async function runLivecheck() {
   state.auto.lastRunMs = Date.now();
   state.sourceStatusExpectedTotal = 2;
 
-  const previousDirect = state.sourceLock?.mode === "direct" && atlasCanonicalSnapshot(state.coins)
+  const previousMarket = atlasHasDisplayableMarket()
     ? {
         coins: state.coins,
         global: state.global,
         mainSource: state.mainSource,
         timestamp: state.timestamp,
+        snapshotId: state.sourceLock?.snapshotId || null,
         sourceLock: state.sourceLock
       }
-    : null;
+    : state.marketContinuity?.lastGood;
 
   atlasAbortPulseController(state.marketPulse.marketController);
   const controller = new AbortController();
@@ -1277,8 +1431,8 @@ async function runLivecheck() {
       }
     ];
 
-    if (previousDirect && atlasRestorePreviousSnapshot(
-      { ...previousDirect, snapshotId: previousDirect.sourceLock?.snapshotId || null },
+    if (previousMarket && atlasRestorePreviousSnapshot(
+      { ...previousMarket, snapshotId: previousMarket.snapshotId || previousMarket.sourceLock?.snapshotId || null },
       error,
       "Livecheck"
     )) {
@@ -4077,7 +4231,7 @@ function renderDecisionBoard() {
 
 function renderAll(options = {}) {
   const refreshChart = options.refreshChart !== false;
-  atlasRenderMarketAccessNotice(); atlasRenderBrokerStrip(); renderMetrics(); renderTicker(); renderMarketTable(); renderWatchlist(); renderScore(getSelectedCoin() || state.coins[0] || null); renderRiskGrid(); renderColdRead(true); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderDecisionBoard(); renderSimulation();
+  atlasRenderMarketAccessNotice(); atlasRenderBrokerStrip(); renderMetrics(); atlasRenderMarketCoreAtomic(); renderWatchlist(); renderScore(getSelectedCoin() || state.coins[0] || null); renderRiskGrid(); renderColdRead(true); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderDecisionBoard(); renderSimulation();
   const finish = () => { if (els.commandOutput && !els.commandOutput.dataset.userRan) { renderCommandOutput(CryptoCommands.market_snapshot()); } };
   if (refreshChart) requestAnimationFrame(() => { void renderAnalystPanel({ renderAll: true }); finish(); });
   else { atlasRefreshSelectedDetailOnly(); finish(); }
@@ -4102,7 +4256,7 @@ function atlasMarketFlowCoins() {
 
 function atlasRenderTopFiveRibbon() {
   if (!els.top5Track) return;
-  if (!state.liveOk || !state.coins.length) {
+  if (!atlasHasDisplayableMarket()) {
     setHTML(els.top5Track, '<span class="market-ribbon-empty">Livecheck requis</span>');
     return;
   }
@@ -4126,7 +4280,7 @@ function atlasRenderTopFiveRibbon() {
 
 function atlasRenderMarketFlowRibbon() {
   if (!els.tickerTrack) return;
-  if (!state.liveOk || !state.coins.length) {
+  if (!atlasHasDisplayableMarket()) {
     setHTML(
       els.tickerTrack,
       '<span class="ticker-meta">Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif</span>'
@@ -4155,13 +4309,69 @@ function renderTicker() {
   atlasRenderTopFiveRibbon();
   atlasRenderMarketFlowRibbon();
 }
+
+function scoreCoin(c) {
+  if (!c) return { score: null, label: "En attente", parts: {} };
+
+  const usableSnapshot =
+    atlasHasDisplayableMarket()
+    && atlasCanonicalCoin(c)
+    && state.sourceLock?.valid;
+
+  if (!usableSnapshot) {
+    return {
+      score: null,
+      label: state.sourceLock?.mode === "local-cache" ? "Archive indisponible" : "Données insuffisantes",
+      parts: {}
+    };
+  }
+
+  const parts = {
+    information: 12,
+    market: c.marketCap ? 14 : 6,
+    liquidity: c.volume24h && c.marketCap
+      ? clamp(3, 15, (c.volume24h / c.marketCap) * 350)
+      : 4,
+    momentum: typeof c.change24h === "number"
+      ? clamp(1, 10, 8 - Math.abs(c.change24h) / 7)
+      : 4,
+    risk: 8
+  };
+
+  const base = (
+    parts.information / 15 * 18
+    + parts.market / 15 * 22
+    + parts.liquidity / 15 * 22
+    + parts.momentum / 10 * 18
+    + parts.risk / 15 * 20
+  );
+
+  let penalty = 16;
+  if (typeof c.change24h === "number" && Math.abs(c.change24h) > 18) penalty += 12;
+  if (c.volume24h && c.marketCap && c.volume24h / c.marketCap < 0.01) penalty += 10;
+  if (state.sourceLock?.mode !== "direct") penalty += 5;
+
+  const score = Math.round(clamp(0, 100, base - penalty));
+
+  let label = "Veille";
+  if (score <= 40) label = "Données fragiles";
+  else if (score <= 55) label = "Lecture prudente";
+  else if (score <= 65) label = "Mouvement modéré";
+  else if (score <= 75) label = "Mouvement marqué";
+  else label = "Volatilité élevée";
+
+  if (state.sourceLock?.mode !== "direct") label = `${label} · archive`;
+
+  return { score, label, parts };
+}
 function decisionFromScore(score) { if (score === null || score === undefined) return "Analyse suspendue"; if (score <= 40) return "Données fragiles"; if (score <= 55) return "Lecture prudente"; if (score <= 65) return "Mouvement modéré"; if (score <= 75) return "Mouvement marqué"; return "Volatilité élevée";
 } function renderMarketTable() {
   if (!els.marketRows) return;
-  if (!state.liveOk || !state.coins.length) {
+  if (!atlasHasDisplayableMarket()) {
     renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
     return;
   }
+  if (!state.liveOk) state.liveOk = true;
   const q = (els.searchInput?.value || "").toLowerCase().trim();
   const filtered = state.coins
     .filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q))
@@ -4177,9 +4387,9 @@ function decisionFromScore(score) { if (score === null || score === undefined) r
     const compared = selection.includes(c.id);
     const primary = c.id === state.selectedCoinId && compared;
     const rowAction = compared ? `Retirer ${c.symbol} du graphe` : `Ajouter ${c.symbol} au graphe`;
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" tabindex="0" role="button" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name} ${c.symbol}. ${rowAction}.`)}">
+    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name} ${c.symbol}. ${rowAction}.`)}">
       <td>${c.rank ?? "—"}</td>
-      <td><div class="coin-cell">${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
+      <td><div class="coin-cell"><i class="market-identity-rail" aria-hidden="true"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
       <td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur ?? c.price)}</b><small>${Number.isFinite(Number(c.priceUsd)) ? atlasFormatUSD(c.priceUsd) : "USD —"}</small></div></td>
       <td class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</td>
       <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
@@ -4212,7 +4422,19 @@ function decisionFromScore(score) { if (score === null || score === undefined) r
   });
 
 } function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="10" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
-} function renderScore(coin) { const s = scoreCoin(coin); if (!els.scoreRing || !els.scoreValue || !els.scoreLabel || !els.scoreBreakdown) return; if (s.score === null) { els.scoreRing.style.setProperty("--score", 0); els.scoreValue.textContent = "—"; els.scoreLabel.textContent = s.label || "Analyse suspendue"; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>—</b></div> <div><span>Marché</span><b>—</b></div> <div><span>Liquidité</span><b>—</b></div> <div><span>Momentum</span><b>—</b></div> <div><span>Risque</span><b>—</b></div>`; return; } els.scoreRing.style.setProperty("--score", s.score); els.scoreValue.textContent = s.score; els.scoreLabel.textContent = s.label; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>${Math.round(s.parts.information)}/15</b></div> <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div> <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div> <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div> <div><span>Risque</span><b>pénalité active</b></div> <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
+} function renderScore(coin) {
+  const mathShell = document.getElementById("math");
+  if (mathShell && coin) {
+    const palette = atlasCryptoPalette(coin, Math.max(0, Number(coin.rank || 1) - 1));
+    mathShell.style.setProperty("--crypto-color", palette.primary);
+    mathShell.style.setProperty("--crypto-gradient", atlasCryptoGradientCss(coin, Math.max(0, Number(coin.rank || 1) - 1)));
+    mathShell.dataset.cryptoId = coin.id || "";
+  } else if (mathShell) {
+    mathShell.style.removeProperty("--crypto-color");
+    mathShell.style.removeProperty("--crypto-gradient");
+    delete mathShell.dataset.cryptoId;
+  }
+  const s = scoreCoin(coin); if (!els.scoreRing || !els.scoreValue || !els.scoreLabel || !els.scoreBreakdown) return; if (s.score === null) { els.scoreRing.style.setProperty("--score", 0); els.scoreValue.textContent = "—"; els.scoreLabel.textContent = s.label || "Analyse suspendue"; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>—</b></div> <div><span>Marché</span><b>—</b></div> <div><span>Liquidité</span><b>—</b></div> <div><span>Momentum</span><b>—</b></div> <div><span>Risque</span><b>—</b></div>`; return; } els.scoreRing.style.setProperty("--score", s.score); els.scoreValue.textContent = s.score; els.scoreLabel.textContent = s.label; els.scoreBreakdown.innerHTML = ` <div><span>Information</span><b>${Math.round(s.parts.information)}/15</b></div> <div><span>Marché</span><b>${Math.round(s.parts.market)}/15</b></div> <div><span>Liquidité</span><b>${Math.round(s.parts.liquidity)}/15</b></div> <div><span>Momentum</span><b>${Math.round(s.parts.momentum)}/10</b></div> <div><span>Risque</span><b>pénalité active</b></div> <div class="why-box">${escapeHtml(whyDecision(coin))}</div>`;
 } function renderWatchlist() { if (!els.watchCards) return; const selectedCount = (state.watchIds || []).length; if (els.watchBasketSummary) { els.watchBasketSummary.textContent = `Atlas Watchlist V2 auto · ${selectedCount} actifs suivis · ${ATLAS_WATCH_BASKETS.length} paniers compacts.`; } if (!state.liveOk || !state.coins.length) { els.watchCards.innerHTML = `<div class="mini-card muted">Livecheck requis. Atlas V2 est prêt, sans inventer de prix.</div>`; return; } const topMovers = state.coins .filter(c => typeof c.change24h === "number") .slice() .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h)) .slice(0, 6) .map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`) .join(" · "); const basketRows = ATLAS_WATCH_BASKETS.map(basket => { const coins = watchBasketCoins(basket); const status = basketStatus(coins); const leaders = coins .slice() .sort((a, b) => Math.abs(Number(b.change24h) || 0) - Math.abs(Number(a.change24h) || 0)) .slice(0, 4); const leaderText = leaders.length ? leaders.map(c => `${escapeHtml(c.symbol)} <b class="${clsPct(c.change24h)}">${fmtPct(c.change24h)}</b>`).join(" · ") : "aucun actif dans le top chargé"; return `<article class="watch-compact-row ${status.mode}"> <div> <b>${escapeHtml(basket.label)}</b> <span>${escapeHtml(basket.role)}</span> </div> <strong>${status.label}${typeof status.avg === "number" ? ` · ${fmtPct(status.avg)}` : ""}</strong> <em>${leaderText}</em> <small>${coins.length}/${basket.ids.length} actifs visibles</small> </article>`; }).join(""); els.watchCards.innerHTML = [ `<div class="watch-v2-diagnostic compact"> <b>Lecture Atlas V2 compacte</b> <span>${selectedCount} actifs suivis · ${state.coins.length} actifs chargés · mouvements : ${topMovers || "en attente"}</span> </div>`, `<div class="watch-compact-list">${basketRows}</div>` ].join("");
 } function renderRiskGrid() { if (!els.riskGrid) return; els.riskGrid.innerHTML = ` <div class="risk ${state.liveOk ? "ok" : "wait"}"><span>Marché</span><b>${state.sourceLock?.valid ? "Source Lock CoinGecko" : "Source canonique absente"}</b></div> <div class="risk warn"><span>Sécurité</span><b>Non vérifiée V1.1-alpha.26.47.6</b></div> <div class="risk warn"><span>Social</span><b>Non vérifié</b></div> <div class="risk warn"><span>On-chain</span><b>Non vérifié</b></div>`;
 } function renderSourceGrid() { atlasRenderDiagnostics(); if (!els.sourceGrid) { renderSourceDiagnostic(); return; } if (!state.sourceStatus.length) { els.sourceGrid.innerHTML = liveSources.map(s => `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>` ).join(""); renderSourceDiagnostic(); return; } els.sourceGrid.innerHTML = state.sourceStatus.map(s => `<div class="source-item ${s.status === "OK" ? "ok" : s.status === "BACKEND" ? "warn" : "fail"}"> <strong>${s.name}</strong> <span>${s.kind}</span> <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span> <span>${escapeHtml(s.detail || "")}</span> </div>` ).join(""); renderSourceDiagnostic();
@@ -5074,6 +5296,10 @@ atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false)
 atlasSafeBoot("beginner summary", renderBeginnerSummary);
 atlasSafeBoot("data broker strip", atlasRenderBrokerStrip);
 atlasSafeBoot("local market archive", () => { if (!state.liveOk) applyMarketCache(); });
+requestAnimationFrame(() => atlasSafeBoot("market snapshot integrity", atlasEnsureMarketDomIntegrity));
+window.addEventListener("pageshow", () => {
+  requestAnimationFrame(() => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity));
+});
 requestAnimationFrame(() => atlasSafeBoot("analyst panel", renderAnalystPanel));
 atlasSafeBoot("auto reader start", startAutoReader); const QUESTIONNAIRE_STORAGE_KEY = "agent_crypto_erith_ia_questionnaire_v1"; function questionnaireFields() { return { objective: document.getElementById("qObjective"), assets: document.getElementById("qAssets"), virtualAmount: document.getElementById("qVirtualAmount"), risks: document.getElementById("qRisks"), news: document.getElementById("qNews"), machine: document.getElementById("qMachine"), access: document.getElementById("qAccess"), physical: document.getElementById("qPhysical") };
 } function getQuestionnaireData() { const f = questionnaireFields(); return { objective: f.objective?.value?.trim() || "", assets: f.assets?.value?.trim() || "", virtualAmount: f.virtualAmount?.value?.trim() || "", risks: f.risks?.value?.trim() || "", news: f.news?.value?.trim() || "", machine: f.machine?.value?.trim() || "", access: f.access?.value?.trim() || "", physical: f.physical?.value?.trim() || "", updatedAt: new Date().toISOString() };
@@ -5104,7 +5330,20 @@ function atlasFmtPct(n) { return typeof n === "number" && Number.isFinite(n) ? `
 } function computeAtlasExecutionMath(data, market, signal, scenario, risk, micro) { if (!data || data.status !== "ok") { return { verdict: "OBSERVER SEULEMENT", action: "lecture seule", score: 0, reason: "Livecheck requis ou données incomplètes", tone: "warn" }; } if (risk.score >= 75) { return { verdict: "SIMULATION SEULEMENT", action: "aucun ordre", score: 25, reason: risk.reason, tone: "warn" }; } const score = clamp(0, 100, (market.score + signal.score + scenario.score + micro.score) / 4 - risk.score * 0.35); if (score >= 70) { return { verdict: "SIMULATION SEULEMENT", action: "aucun ordre", score, reason: "Signal correct, mais réel verrouillé", tone: "ok" }; } if (score >= 45) { return { verdict: "OBSERVER SEULEMENT", action: "lecture seule", score, reason: "Hypothèse à surveiller", tone: "warn" }; } return { verdict: "REFUS", action: "lecture seule", score, reason: "Conditions insuffisantes", tone: "refus" };
 } function atlasHumanSummary(data, market, signal, risk, micro, execution, coin) { if (!coin) { return { verdict: "OBSERVER SEULEMENT", why: "Aucune source marché n’a encore répondu.", action: "Cliquer sur Lancer Livecheck.", data: "en attente", market: "en attente", signal: "en attente", risk: "non lu" }; } return { verdict: execution.verdict, why: `${coin.symbol} est lisible. ${market.human}. ${micro.human}.`, action: `${execution.action}. Aucun ordre réel.`, data: data.status === "ok" ? "bonnes" : "faibles", market: market.score >= 60 ? "lisible" : "fragile", signal: signal.score >= 70 ? "simulation possible" : "surveillance", risk: risk.score < 45 ? "contenu" : "prudence" };
 } function atlasMathCard(title, value, detail, human = "") { return ` <div class="atlas-math-card"> <span>${escapeHtml(title)}</span> <b>${escapeHtml(value)}</b> <small>${escapeHtml(detail || "")}</small> ${human ? `<em>${escapeHtml(human)}</em>` : ""} </div>`;
-} function renderAtlasMathCore() { const coin = atlasSelectedCoin(); const data = computeAtlasDataQuality(coin); const market = computeAtlasMarketMath(coin); const signal = computeAtlasSignalQuality(coin, market); const scenario = computeAtlasScenarioMath(coin, signal); const risk = computeAtlasRiskMath(coin, market); const micro = computeAtlasMicroTransactionMath(); const execution = computeAtlasExecutionMath(data, market, signal, scenario, risk, micro); const summary = atlasHumanSummary(data, market, signal, risk, micro, execution, coin); state.math = { asset: coin ? `${coin.name} (${coin.symbol})` : null, data, market, signal, scenario, risk, micro, execution, updated_at: new Date().toISOString() }; const human = document.getElementById("atlasHumanVerdict"); if (human) { human.classList.remove("ok", "warn", "refus"); human.classList.add(execution.tone || "warn"); human.innerHTML = `<b>Verdict :</b> ${escapeHtml(summary.verdict)}<br>` + `<b>Pourquoi :</b> ${escapeHtml(summary.why)}<br>` + `<b>Action :</b> ${escapeHtml(summary.action)}`; } const summaryGrid = document.getElementById("atlasSummaryGrid"); if (summaryGrid) { summaryGrid.innerHTML = ` <div><span>Données</span><b>${escapeHtml(summary.data)}</b></div> <div><span>Marché</span><b>${escapeHtml(summary.market)}</b></div> <div><span>Signal</span><b>${escapeHtml(summary.signal)}</b></div> <div><span>Risque</span><b>${escapeHtml(summary.risk)}</b></div>`; } const panel = document.getElementById("atlasMathCorePanel"); if (panel) { panel.innerHTML = [ atlasMathCard("Actif", coin ? `${coin.symbol}` : "—", coin ? coin.name : "Livecheck requis", coin ? `${coin.source || "source"} · ${atlasFmtEUR(coin.price)}` : ""), atlasMathCard("Data Quality", `${Math.round(data.score)}/100`, data.status, data.status === "ok" ? "données utilisables" : "données insuffisantes"), atlasMathCard("Market Math", `${Math.round(market.score)}/100`, `${atlasFmtPct(market.change24h)} 24h`, market.human), atlasMathCard("Signal Quality", `${Math.round(signal.score)}/100`, signal.reason, signal.human), atlasMathCard("Scenario Math", `${Math.round(scenario.score)}/100`, scenario.reason, scenario.human), atlasMathCard("Risk Math", `${Math.round(risk.score)}/100`, risk.reason, risk.human), atlasMathCard("Micro-Transaction", `${Math.round(micro.score)}/100`, "lecture seule", micro.human), `<div class="atlas-math-card wide"><span>Execution Math</span><b>${Math.round(execution.score)}/100</b><small>${escapeHtml(execution.verdict)}</small><em>${escapeHtml(execution.reason)}</em></div>` ].join(""); } const verdict = document.getElementById("atlasMathVerdict"); if (verdict) { verdict.classList.remove("ok", "warn", "refus"); verdict.classList.add(execution.tone || "warn"); verdict.innerHTML = `<b>Verrou :</b> aucun ordre réel · aucune clé API · aucun capital engagé`; } const riskPanel = document.getElementById("atlasRiskMathPanel"); if (riskPanel) riskPanel.innerHTML = `<b>Atlas Risk Math</b><span>Score risque : ${Math.round(risk.score)}/100 · ${escapeHtml(risk.reason)}</span>`; const noFomoPanel = document.getElementById("atlasNoFomoMathPanel"); if (noFomoPanel) { const noFomo = market.fomoPenalty ? "ralentir / simulation seulement" : "continuer en observation"; noFomoPanel.innerHTML = `<b>Atlas No-FOMO Math</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`; } const simPanel = document.getElementById("atlasSimulationMathPanel"); if (simPanel) simPanel.innerHTML = `<b>Atlas Simulation Math</b><span>Verdict : ${escapeHtml(execution.verdict)} · simulation locale uniquement · aucun ordre réel.</span>`;
+} function renderAtlasMathCore() {
+  const coin = atlasSelectedCoin();
+  const mathShell = document.getElementById("math");
+  if (mathShell && coin) {
+    const palette = atlasCryptoPalette(coin, Math.max(0, Number(coin.rank || 1) - 1));
+    mathShell.style.setProperty("--crypto-color", palette.primary);
+    mathShell.style.setProperty("--crypto-gradient", atlasCryptoGradientCss(coin, Math.max(0, Number(coin.rank || 1) - 1)));
+    mathShell.dataset.cryptoId = coin.id || "";
+  } else if (mathShell) {
+    mathShell.style.removeProperty("--crypto-color");
+    mathShell.style.removeProperty("--crypto-gradient");
+    delete mathShell.dataset.cryptoId;
+  }
+   const data = computeAtlasDataQuality(coin); const market = computeAtlasMarketMath(coin); const signal = computeAtlasSignalQuality(coin, market); const scenario = computeAtlasScenarioMath(coin, signal); const risk = computeAtlasRiskMath(coin, market); const micro = computeAtlasMicroTransactionMath(); const execution = computeAtlasExecutionMath(data, market, signal, scenario, risk, micro); const summary = atlasHumanSummary(data, market, signal, risk, micro, execution, coin); state.math = { asset: coin ? `${coin.name} (${coin.symbol})` : null, data, market, signal, scenario, risk, micro, execution, updated_at: new Date().toISOString() }; const human = document.getElementById("atlasHumanVerdict"); if (human) { human.classList.remove("ok", "warn", "refus"); human.classList.add(execution.tone || "warn"); human.innerHTML = `<b>Verdict :</b> ${escapeHtml(summary.verdict)}<br>` + `<b>Pourquoi :</b> ${escapeHtml(summary.why)}<br>` + `<b>Action :</b> ${escapeHtml(summary.action)}`; } const summaryGrid = document.getElementById("atlasSummaryGrid"); if (summaryGrid) { summaryGrid.innerHTML = ` <div><span>Données</span><b>${escapeHtml(summary.data)}</b></div> <div><span>Marché</span><b>${escapeHtml(summary.market)}</b></div> <div><span>Signal</span><b>${escapeHtml(summary.signal)}</b></div> <div><span>Risque</span><b>${escapeHtml(summary.risk)}</b></div>`; } const panel = document.getElementById("atlasMathCorePanel"); if (panel) { panel.innerHTML = [ atlasMathCard("Actif", coin ? `${coin.symbol}` : "—", coin ? coin.name : "Livecheck requis", coin ? `${coin.source || "source"} · ${atlasFmtEUR(coin.price)}` : ""), atlasMathCard("Data Quality", `${Math.round(data.score)}/100`, data.status, data.status === "ok" ? "données utilisables" : "données insuffisantes"), atlasMathCard("Market Math", `${Math.round(market.score)}/100`, `${atlasFmtPct(market.change24h)} 24h`, market.human), atlasMathCard("Signal Quality", `${Math.round(signal.score)}/100`, signal.reason, signal.human), atlasMathCard("Scenario Math", `${Math.round(scenario.score)}/100`, scenario.reason, scenario.human), atlasMathCard("Risk Math", `${Math.round(risk.score)}/100`, risk.reason, risk.human), atlasMathCard("Micro-Transaction", `${Math.round(micro.score)}/100`, "lecture seule", micro.human), `<div class="atlas-math-card wide"><span>Execution Math</span><b>${Math.round(execution.score)}/100</b><small>${escapeHtml(execution.verdict)}</small><em>${escapeHtml(execution.reason)}</em></div>` ].join(""); } const verdict = document.getElementById("atlasMathVerdict"); if (verdict) { verdict.classList.remove("ok", "warn", "refus"); verdict.classList.add(execution.tone || "warn"); verdict.innerHTML = `<b>Verrou :</b> aucun ordre réel · aucune clé API · aucun capital engagé`; } const riskPanel = document.getElementById("atlasRiskMathPanel"); if (riskPanel) riskPanel.innerHTML = `<b>Atlas Risk Math</b><span>Score risque : ${Math.round(risk.score)}/100 · ${escapeHtml(risk.reason)}</span>`; const noFomoPanel = document.getElementById("atlasNoFomoMathPanel"); if (noFomoPanel) { const noFomo = market.fomoPenalty ? "ralentir / simulation seulement" : "continuer en observation"; noFomoPanel.innerHTML = `<b>Atlas No-FOMO Math</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`; } const simPanel = document.getElementById("atlasSimulationMathPanel"); if (simPanel) simPanel.innerHTML = `<b>Atlas Simulation Math</b><span>Verdict : ${escapeHtml(execution.verdict)} · simulation locale uniquement · aucun ordre réel.</span>`;
 } renderAtlasMathCore();
 setInterval(renderAtlasMathCore, 5000);
 
@@ -5605,7 +5844,7 @@ async function loadNewsLiveFeed(options = {}) {
   renderNewsFeedOverview();
   renderNewsSentinel();
   try {
-    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.4-target-top-coin`;
+    const cacheBust = force ? `?t=${Date.now()}` : `?v=1.1-alpha.26.47.6.6-market-math-runtime-recovery`;
     const payload = newsFeedValidate(await fetchJsonWithRetry(`${NEWS_SENTINEL_FEED_URL}${cacheBust}`, {}, 12000, 2));
     newsFeedState.payload = payload;
     newsFeedState.events = [...payload.events].sort((a, b) => {
