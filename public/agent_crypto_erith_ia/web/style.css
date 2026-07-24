@@ -10080,7 +10080,6 @@ html[data-atlas-mode="advanced"] .warn-lock {
 .market-workspace-head { padding: 11px 13px; }
 .market-workspace-head h2 { font-size: 15px; }
 
-.market-workspace-head small,
 .market-workspace-badges span { font-size: 8.1px; }
 
 .market-column-mode > span,
@@ -10182,8 +10181,7 @@ html[data-atlas-mode="advanced"] .chart-v2-toolbar-row {
   .btn.small { font-size: 8.5px; }
 
   .atlas-v2-mode-copy small,
-  .market-workspace-head small,
-  .table-note,
+    .table-note,
   .chart-caption,
   .compare-hint,
   .source-dock-meta small,
@@ -10194,4 +10192,237 @@ html[data-atlas-mode="advanced"] .chart-v2-toolbar-row {
 
   .market-snapshot-panel .coin-cell strong,
   .market-snapshot-panel .price-dual b { font-size: 9.1px; }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.2
+   MARKET WORKSPACE DENSITY & MATH TRUTH LOCK
+   ========================================================= */
+
+.market-ribbon-stack {
+  margin-top: 0;
+}
+
+.market-workspace-grid {
+  align-items: start !important;
+  min-height: 0;
+}
+
+.market-workspace-grid.math-dock-side {
+  grid-template-columns: minmax(0, 72fr) minmax(300px, 28fr) !important;
+}
+
+.market-workspace-grid.math-dock-rail {
+  grid-template-columns: minmax(0, 1fr) 54px !important;
+}
+
+.market-snapshot-panel,
+.atlas-math-dock {
+  align-self: start;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.market-snapshot-panel .table-wrap {
+  max-height: min(690px, calc(100vh - 185px));
+}
+
+.atlas-math-dock.is-side {
+  position: sticky;
+  top: 8px;
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.atlas-math-dock.is-side .atlas-tech-details:not([open]) {
+  margin-bottom: 0;
+}
+
+.atlas-math-dock.is-top {
+  width: 100%;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin-bottom: 7px;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: 165px minmax(320px, 1fr) minmax(300px, .9fr);
+  grid-template-areas:
+    "head head head"
+    "score breakdown human"
+    "summary summary verdict"
+    "details details details";
+  gap: 8px 10px;
+  align-items: start;
+  overflow: visible;
+}
+
+.atlas-math-dock.is-top .atlas-math-dock-head { grid-area: head; }
+.atlas-math-dock.is-top .score-ring { grid-area: score; margin: 0 auto; }
+.atlas-math-dock.is-top .breakdown { grid-area: breakdown; margin: 0; }
+.atlas-math-dock.is-top .muted-line { display: none; }
+.atlas-math-dock.is-top .atlas-human-verdict { grid-area: human; margin: 0; min-height: 0; }
+.atlas-math-dock.is-top .atlas-summary-grid { grid-area: summary; margin: 0; grid-template-columns: repeat(4, minmax(0,1fr)); }
+.atlas-math-dock.is-top .atlas-verdict { grid-area: verdict; margin: 0; align-self: stretch; }
+.atlas-math-dock.is-top .atlas-tech-details { grid-area: details; margin: 0; }
+.atlas-math-dock.is-top .atlas-tech-details:not([open]) { padding: 0; border-color: rgba(84,169,255,.12); }
+.atlas-math-dock.is-top .atlas-tech-details:not([open]) summary { padding: 7px 9px; }
+.atlas-math-dock.is-top .atlas-tech-details[open] { max-height: 360px; overflow: auto; }
+
+.atlas-math-core {
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 6px;
+}
+
+.atlas-math-card {
+  min-height: 76px;
+}
+
+.atlas-math-card.wide {
+  grid-column: auto;
+}
+
+.atlas-human-verdict {
+  line-height: 1.42;
+}
+
+.atlas-summary-grid > div {
+  min-height: 62px;
+}
+
+.atlas-verdict {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+.graph-row-toggle {
+  min-width: 58px !important;
+  padding: 5px 7px !important;
+  font-size: 7.4px !important;
+}
+
+.market-row-actions button {
+  min-height: 27px;
+}
+
+.chart-v2-legend-item small {
+  color: rgba(215,231,242,.72);
+}
+
+html[data-atlas-mode="essential"] .atlas-math-dock.is-rail {
+  position: sticky;
+  top: 8px;
+}
+
+html[data-atlas-mode="essential"] .market-snapshot-panel .table-wrap {
+  max-height: min(720px, calc(100vh - 155px));
+}
+
+@media (max-width: 1180px) {
+  .market-workspace-grid.math-dock-side {
+    grid-template-columns: minmax(0, 1fr) minmax(270px, 34fr) !important;
+  }
+  .atlas-math-dock.is-top {
+    grid-template-columns: 150px minmax(260px,1fr);
+    grid-template-areas:
+      "head head"
+      "score breakdown"
+      "human human"
+      "summary summary"
+      "verdict verdict"
+      "details details";
+  }
+}
+
+@media (max-width: 850px) {
+  .market-workspace-grid.math-dock-side,
+  .market-workspace-grid.math-dock-rail {
+    grid-template-columns: 1fr !important;
+  }
+  .atlas-math-dock.is-side { position: static; max-height: none; }
+  .atlas-math-dock.is-top {
+    grid-template-columns: 1fr;
+    grid-template-areas: "head" "score" "breakdown" "human" "summary" "verdict" "details";
+  }
+  .atlas-math-core { grid-template-columns: 1fr; }
+}
+
+
+/* Build 28.1.2 final truth refinements */
+
+.atlas-score-components {
+  margin: 7px 0;
+  padding: 8px;
+  border: 1px solid rgba(84,169,255,.13);
+  border-radius: 10px;
+  background: rgba(3,12,23,.38);
+}
+
+.atlas-score-components h3 {
+  margin: 0 0 7px;
+  color: rgba(222,239,248,.82);
+  font: 850 8px/1 system-ui, sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.atlas-score-components .breakdown { margin: 0; }
+
+.atlas-math-dock.is-top {
+  grid-template-columns: 150px minmax(360px,1fr) minmax(310px,.9fr) !important;
+  grid-template-areas:
+    "head head head"
+    "score summary human"
+    "verdict verdict verdict"
+    "details details details" !important;
+  min-height: 0 !important;
+}
+
+.atlas-math-dock.is-top .breakdown { grid-area: auto !important; }
+
+.atlas-math-dock.is-top .atlas-summary-grid {
+  grid-area: summary;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+}
+
+.atlas-math-dock.is-top .atlas-human-verdict { grid-area: human; }
+.atlas-math-dock.is-top .atlas-verdict { grid-area: verdict; }
+.atlas-math-dock.is-top .atlas-tech-details { grid-area: details; }
+
+.atlas-math-dock.is-top .atlas-tech-details:not([open]) {
+  max-height: 38px;
+  overflow: hidden;
+}
+
+.atlas-math-dock.is-top:has(.atlas-tech-details:not([open])) {
+  max-height: 240px !important;
+  overflow: hidden;
+}
+
+.atlas-math-dock.is-side .atlas-tech-details:not([open]) {
+  max-height: 38px;
+  overflow: hidden;
+}
+
+.atlas-math-dock.is-side .atlas-human-verdict { margin-top: 8px; }
+
+.market-workspace-grid.math-dock-side { align-items: start !important; }
+.market-snapshot-panel .table-wrap { height: auto !important; }
+
+.atlas-summary-grid > div span { font-size: 7.6px; }
+.atlas-summary-grid > div b { font-size: 9px; }
+
+@media (max-width: 1180px) {
+  .atlas-math-dock.is-top {
+    grid-template-columns: 140px minmax(280px,1fr) !important;
+    grid-template-areas:
+      "head head"
+      "score summary"
+      "human human"
+      "verdict verdict"
+      "details details" !important;
+    max-height: none !important;
+  }
 }

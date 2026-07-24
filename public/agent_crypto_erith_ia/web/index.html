@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.1 — ESSENTIAL / ADVANCED ORGANIZATION & MARKET SELECTION RECOVERY LOCK</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.2 — MARKET WORKSPACE REFLOW & MATH TRUTH LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.1-essential-advanced-market-selection-recovery" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.2-market-workspace-reflow-math-truth" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.1</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.2</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -143,7 +143,7 @@
                 <button class="period-btn" data-period="60">60j</button>
                 <button class="period-btn" data-period="90">90j</button>
                 <button class="period-btn" data-period="365">1a</button>
-                <button class="period-btn period-btn-max" id="btnChartMaxPeriod" data-period="36500" title="Couverture mesurée après réception réelle de la série CoinGecko">Max ?</button>
+                <button class="period-btn period-btn-max" id="btnChartMaxPeriod" aria-label="Mesurer la couverture historique maximale réellement reçue" data-period="36500">Max ?</button>
               </div>
               <small class="chart-v2-period-truth" id="chartMaxPeriodTruth">Max non mesuré</small>
             </div>
@@ -151,18 +151,18 @@
               <span class="chart-v2-toolbar-label">Comparaison</span>
               <div class="compare-actions" aria-label="Actions de comparaison">
               <span class="compare-action-group compare-action-group-mode" aria-label="Mode de comparaison">
-                <button class="compare-btn active" id="btnChartSolo" type="button" title="Revenir à un seul actif">Solo</button>
-                <button class="compare-btn" id="btnChartTop3" type="button" title="Target Top 3 : BTC · ETH · BNB">Top 3</button>
-                <button class="compare-btn" id="btnChartTop5" type="button" title="Target Top 5 : BTC · ETH · BNB · XRP · SOL">Top 5</button>
+                <button class="compare-btn active" id="btnChartSolo" aria-label="Ouvrir uniquement l’actif principal" type="button">Solo</button>
+                <button class="compare-btn" id="btnChartTop3" aria-label="Comparer Bitcoin, Ethereum et BNB" type="button">Top 3</button>
+                <button class="compare-btn" id="btnChartTop5" aria-label="Comparer Bitcoin, Ethereum, BNB, XRP et Solana" type="button">Top 5</button>
               </span>
               <span class="compare-action-group compare-action-group-market" aria-label="Sélections automatiques du marché">
-                <button class="compare-btn compare-btn-mover" id="btnChartGainers" type="button" title="Charger les cinq plus fortes hausses de la période active">Hausses 5</button>
-                <button class="compare-btn compare-btn-mover" id="btnChartLosers" type="button" title="Charger les cinq plus fortes baisses de la période active">Baisses 5</button>
-                <button class="compare-btn" id="btnChartVolume5" type="button" title="Charger les cinq plus gros volumes 24 h">Volumes 5</button>
+                <button class="compare-btn compare-btn-mover" id="btnChartGainers" aria-label="Comparer les cinq plus fortes hausses" type="button">Hausses 5</button>
+                <button class="compare-btn compare-btn-mover" id="btnChartLosers" aria-label="Comparer les cinq plus fortes baisses" type="button">Baisses 5</button>
+                <button class="compare-btn" id="btnChartVolume5" aria-label="Comparer les cinq plus gros volumes" type="button">Volumes 5</button>
               </span>
               <span class="compare-action-group compare-action-group-state" aria-label="État du graphique">
-                <button class="compare-btn" id="btnChartReset" type="button" title="Réinitialiser le graphe sur Bitcoin en 24 h">Réinit.</button>
-                <button class="compare-btn compare-btn-clear" id="btnChartClear" type="button" title="Retirer toutes les cryptos du graphe">Vider</button>
+                <button class="compare-btn" id="btnChartReset" aria-label="Réinitialiser le graphique sur Bitcoin en 24 heures" type="button">Réinit.</button>
+                <button class="compare-btn compare-btn-clear" id="btnChartClear" aria-label="Retirer tous les actifs du graphique" type="button">Vider</button>
               </span>
               </div>
             </div>
@@ -183,7 +183,7 @@
       </article>
 
       <article class="panel glass detail-panel clean-lens-detail-panel" id="detailPanel">
-        <button class="section-head compact detail-panel-toggle" id="detailPanelToggle" type="button" data-clean-lens-action="toggle" aria-expanded="true" aria-controls="detailPanelBody" aria-label="Réduire ou afficher le détail actif" title="Réduire ou afficher le détail actif">
+        <button class="section-head compact detail-panel-toggle" id="detailPanelToggle" type="button" data-clean-lens-action="toggle" aria-expanded="true" aria-controls="detailPanelBody" aria-label="Réduire ou afficher le détail actif">
           <span class="detail-panel-toggle-title">
             <span class="eyebrow">DÉTAIL ACTIF</span>
             <strong>Lecture technique</strong>
@@ -229,7 +229,7 @@
                 <div class="source-dock-status" id="sourceDockStatus" role="status" aria-live="polite">
                   En attente de sélection
                 </div>
-                <button class="source-dock-refresh" id="btnSourceDockRefresh" type="button" title="Actualiser les métadonnées CoinGecko">Actualiser</button>
+                <button class="source-dock-refresh" id="btnSourceDockRefresh" aria-label="Actualiser les métadonnées CoinGecko" type="button">Actualiser</button>
               </div>
               <div class="source-dock-portals" id="sourceDockPortals" aria-label="Portails de l’actif sélectionné">
                 <span class="source-portal is-disabled">CoinGecko</span>
@@ -272,28 +272,11 @@
 </div>
       </article>
 
-      <button class="detail-panel-rail" id="detailPanelRail" type="button" data-clean-lens-action="open" aria-label="Afficher le détail actif" title="Afficher le détail actif">
+      <button class="detail-panel-rail" id="detailPanelRail" type="button" data-clean-lens-action="open" aria-label="Afficher le détail actif">
         <span>DÉTAIL ACTIF</span><b>▶</b>
       </button>
     </section>
-
-
-
-
-    <section class="market-workspace-head glass" id="market-workspace">
-      <div>
-        <p class="eyebrow">MARKET WORKSPACE V2</p>
-        <h2>Marché lisible, flux actif et analyse contextuelle</h2>
-        <small>Top 5 Live · bandeau dynamique · Top 50 · Atlas Math Core repositionnable</small>
-      </div>
-      <div class="market-workspace-badges">
-        <span>Top 5 canonique</span>
-        <span>Market Flow</span>
-        <span>Top 50 EUR + USD</span>
-      </div>
-    </section>
-
-    <section class="market-ribbon-stack" aria-label="Bandeaux marché V2">
+    <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">
       <section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
         <div class="market-ribbon-label">
           <span>TARGET TOP 5 LIVE</span>
@@ -365,9 +348,9 @@
                 <th>7j</th>
                 <th class="market-col-advanced">Market Cap</th>
                 <th class="market-col-advanced">Volume 24h</th>
-                <th>Graph</th>
-                <th class="market-col-advanced">Score</th>
-                <th class="market-col-advanced">Décision</th>
+                <th>Comparaison</th>
+                <th class="market-col-advanced">Indice</th>
+                <th class="market-col-advanced">Lecture</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -383,12 +366,12 @@
         <div class="atlas-math-dock-head">
           <div>
             <p class="eyebrow">ATLAS MATH CORE V2</p>
-            <h2>Math Model contextuel</h2>
+            <h2>Indice de lecture heuristique</h2>
           </div>
           <div class="atlas-math-dock-actions" role="group" aria-label="Position Atlas Math Core">
-            <button type="button" data-math-position="top" title="Déployer au-dessus du Market Snapshot">Dessus</button>
-            <button type="button" data-math-position="side" class="is-active" title="Afficher à droite du Market Snapshot">Latéral</button>
-            <button type="button" data-math-position="rail" title="Réduire en rail à droite">Réduire</button>
+            <button type="button" data-math-position="top" aria-label="Déployer Atlas Math Core au-dessus du Market Snapshot">Dessus</button>
+            <button type="button" data-math-position="side" class="is-active" aria-label="Afficher Atlas Math Core à droite du Market Snapshot">Latéral</button>
+            <button type="button" data-math-position="rail" aria-label="Réduire Atlas Math Core en rail">Réduire</button>
           </div>
         </div>
         <button class="atlas-math-rail-trigger" id="atlasMathRailTrigger" type="button" data-math-position="side" aria-label="Déployer Atlas Math Core">
@@ -398,40 +381,42 @@
           <span id="scoreValue">—</span>
           <small id="scoreLabel">En attente</small>
         </div>
-        <div class="breakdown" id="scoreBreakdown">
-          <div><span>Information</span><b>—</b></div>
-          <div><span>Marché</span><b>—</b></div>
-          <div><span>Liquidité</span><b>—</b></div>
-          <div><span>Momentum</span><b>—</b></div>
-          <div><span>Risque</span><b>—</b></div>
-        </div>
-        <p class="muted-line">Lecture humaine d’abord. Les scores techniques restent en dessous.</p>
+        <p class="muted-line">Lecture humaine d’abord · mesures factuelles et limites visibles.</p>
         <div class="atlas-human-verdict" id="atlasHumanVerdict">
-          <b>Verdict :</b> en attente du Livecheck.<br>
-          <b>Pourquoi :</b> aucune source marché n’a encore répondu.<br>
-          <b>Action :</b> lecture seule.
+          <b>Lecture factuelle :</b> en attente du Livecheck.<br>
+          <b>Faits :</b> aucune source marché n’a encore répondu.<br>
+          <b>Limites :</b> aucune conclusion sans données.
         </div>
         <div class="atlas-summary-grid" id="atlasSummaryGrid">
-          <div><span>Données</span><b>En attente</b></div>
-          <div><span>Marché</span><b>En attente</b></div>
-          <div><span>Signal</span><b>En attente</b></div>
-          <div><span>Risque</span><b>En attente</b></div>
+          <div><span>Couverture</span><b>En attente</b></div>
+          <div><span>24 h</span><b>En attente</b></div>
+          <div><span>7 j</span><b>En attente</b></div>
+          <div><span>Amplitude 24 h</span><b>En attente</b></div>
         </div>
-        <details class="atlas-tech-details" open>
-          <summary>Détails mathématiques</summary>
+        <details class="atlas-tech-details">
+          <summary>Détails de l’indice et mesures factuelles</summary>
+          <section class="atlas-score-components" aria-label="Composantes de l’indice heuristique">
+            <h3>Composantes de l’indice</h3>
+            <div class="breakdown" id="scoreBreakdown">
+              <div><span>Information</span><b>—</b></div>
+              <div><span>Marché</span><b>—</b></div>
+              <div><span>Liquidité</span><b>—</b></div>
+              <div><span>Momentum</span><b>—</b></div>
+              <div><span>Pénalité</span><b>—</b></div>
+            </div>
+          </section>
           <div class="atlas-math-core" id="atlasMathCorePanel">
-            <div class="atlas-math-card"><span>Data Quality</span><b>—</b><small>Livecheck requis</small></div>
-            <div class="atlas-math-card"><span>Market Math</span><b>—</b><small>En attente</small></div>
-            <div class="atlas-math-card"><span>Signal Quality</span><b>—</b><small>En attente</small></div>
-            <div class="atlas-math-card"><span>Scenario Math</span><b>—</b><small>En attente</small></div>
-            <div class="atlas-math-card"><span>Risk Math</span><b>—</b><small>En attente</small></div>
-            <div class="atlas-math-card"><span>Micro-Transaction</span><b>—</b><small>Lecture seule</small></div>
-            <div class="atlas-math-card wide"><span>Execution Math</span><b>—</b><small>Aucun ordre réel</small></div>
+            <div class="atlas-math-card"><span>Actif</span><b>—</b><small>Livecheck requis</small></div>
+            <div class="atlas-math-card"><span>Couverture des données</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Variation 24 h</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Variation 7 j</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Ratio volume / capitalisation</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Cohérence des horizons</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Amplitude observée 24 h</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Risque global</span><b>Non évalué</b><small>Données partielles</small></div>
           </div>
         </details>
-        <div class="atlas-verdict" id="atlasMathVerdict">
-          <b>Verrou :</b> aucun ordre réel · aucune clé API · aucun capital engagé.
-        </div>
+        <div class="atlas-verdict" id="atlasMathVerdict"><b>Mode observation</b> · aucune exécution réelle</div>
       </aside>
     </section>
 
@@ -2347,6 +2332,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.1-essential-advanced-market-selection-recovery"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.2-market-workspace-reflow-math-truth"></script>
 </body>
 </html>
