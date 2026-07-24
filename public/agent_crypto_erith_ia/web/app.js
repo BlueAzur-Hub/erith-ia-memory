@@ -1,16 +1,18 @@
-/* V2.0-alpha · Build 28.1.10 — PLOT AREA & AXIS PROPORTION RECOVERY LOCK
+/* V2.0-alpha · Build 28.1.11 — FULL-WIDTH OVERLAY AXES · VOLUME & TIMELINE RECOVERY LOCK
    Correction cumulative du Graphique Analyste.
-   - zone de tracé agrandie sans gonfler les axes ;
-   - colonne Prix limitée et labels EUR adaptatifs ;
-   - ligne de dates compacte, lisible et proportionnée ;
-   - valeurs légèrement agrandies sans réduire le graphe ;
-   - titre vertical Prix EUR retiré de l’axe pour libérer la largeur ;
-   - volume toujours superposé derrière la courbe, jamais mélangé à l’échelle Prix ;
-   - fond panoramique plein cadre, tooltip, comparaison et Détail actif préservés ;
+   - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
+   - axes Prix et Date dessinés dans le chartArea, sans manger le tracé ;
+   - ombrage de prix attaché exactement à la courbe ;
+   - volumes dessinés derrière la courbe dans le même canvas et la même chronologie ;
+   - aucune seconde zone graphique indépendante ;
+   - chronologie canonique indépendante pour 24h / 7j / 30j / 60j / 90j / 1a / Max ;
+   - Target Top 5 et Market Flow : clic simple = ajouter / retirer ;
+   - Solo reste une action distincte depuis le Market Snapshot ;
+   - protections Prix / Volume, comparaison atomique et dernier graphe valide préservés ;
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.10";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.11";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -2971,8 +2973,17 @@ async function fetchChartSeries(c, days, options = {}) {
 
 function atlasChartLabelForTime(ts, days) {
   const d = new Date(Number(ts));
-  if (Number(days || 1) === 1) return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" });
+  const period = Number(days || 1);
+  if (period <= 1) {
+    return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  }
+  if (period <= 90) {
+    return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" });
+  }
+  if (period <= 365) {
+    return d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
+  }
+  return d.toLocaleDateString("fr-FR", { year: "numeric" });
 }
 
 function atlasChartAxisMetrics() {
@@ -3626,6 +3637,208 @@ function atlasRenderSingleCaption(c, periodLabel, result, warning = "") {
   );
 }
 
+
+
+function atlasHexToRgb(hex) {
+  const normalized = String(hex || "#62ecff").replace("#", "").trim();
+  const full = normalized.length === 3
+    ? normalized.split("").map(char => char + char).join("")
+    : normalized.padEnd(6, "f").slice(0, 6);
+  const value = Number.parseInt(full, 16);
+  if (!Number.isFinite(value)) return [98, 236, 255];
+  return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+}
+
+function atlasRoundedRectPath(ctx, x, y, width, height, radius = 6) {
+  const r = Math.max(0, Math.min(radius, Math.abs(width) / 2, Math.abs(height) / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function atlasCanonicalTimelineConfig(period, start, end) {
+  const duration = Math.max(1, Number(end) - Number(start));
+  const p = Number(period || 1);
+  let target = 288;
+  if (p <= 1) target = 288;
+  else if (p <= 7) target = 336;
+  else if (p <= 30) target = 360;
+  else if (p <= 90) target = 360;
+  else if (p <= 365) target = 365;
+  else target = Math.min(560, Math.max(240, Math.round(duration / (7 * 86400000))));
+  const count = Math.max(2, target);
+  const step = duration / Math.max(1, count - 1);
+  return { count, step };
+}
+
+function atlasBuildCanonicalTimeline(period, start, end) {
+  if (!Number.isFinite(Number(start)) || !Number.isFinite(Number(end)) || Number(end) <= Number(start)) return [];
+  const { count, step } = atlasCanonicalTimelineConfig(period, start, end);
+  return Array.from({ length: count }, (_, index) =>
+    index === count - 1 ? Number(end) : Number(start) + step * index
+  );
+}
+
+function atlasMedianInterval(rows = []) {
+  if (!Array.isArray(rows) || rows.length < 2) return null;
+  const gaps = [];
+  for (let index = 1; index < rows.length; index += 1) {
+    const gap = Number(rows[index]?.t ?? rows[index]?.x) - Number(rows[index - 1]?.t ?? rows[index - 1]?.x);
+    if (Number.isFinite(gap) && gap > 0) gaps.push(gap);
+  }
+  if (!gaps.length) return null;
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+
+function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 420) {
+  const prices = Array.isArray(priceRows) ? priceRows : [];
+  const volumes = (Array.isArray(volumeSeries) ? volumeSeries : [])
+    .map(point => ({ x: Number(point?.[0]), y: Number(point?.[1]) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y >= 0)
+    .sort((a, b) => a.x - b.x);
+
+  if (prices.length < 2 || !volumes.length) return [];
+
+  const start = Number(prices[0]?.t ?? prices[0]?.x);
+  const end = Number(prices[prices.length - 1]?.t ?? prices[prices.length - 1]?.x);
+  const inRange = volumes.filter(point => point.x >= start && point.x <= end);
+  if (!inRange.length) return [];
+
+  const count = Math.max(32, Math.min(Number(maximumBars || 420), prices.length));
+  const step = (end - start) / count;
+  const buckets = Array.from({ length: count }, () => ({ total: 0, samples: 0 }));
+
+  for (const point of inRange) {
+    const rawIndex = step > 0 ? Math.floor((point.x - start) / step) : 0;
+    const index = Math.max(0, Math.min(count - 1, rawIndex));
+    buckets[index].total += point.y;
+    buckets[index].samples += 1;
+  }
+
+  return buckets.map((bucket, index) => {
+    const left = start + step * index;
+    const right = index === count - 1 ? end : left + step;
+    return {
+      x: left + (right - left) / 2,
+      y: bucket.samples ? bucket.total / bucket.samples : 0
+    };
+  });
+}
+
+const atlasVolumeOverlayPlugin = {
+  id: "atlasVolumeOverlay",
+  beforeDatasetsDraw(chart) {
+    const rows = Array.isArray(chart?.$atlasVolumeRows) ? chart.$atlasVolumeRows : [];
+    if (!chart?.$atlasVolumeVisible || !rows.length) return;
+
+    const area = chart.chartArea;
+    const xScale = chart.scales?.x;
+    if (!area || !xScale) return;
+
+    const maxVolume = Math.max(...rows.map(point => Number(point?.y)).filter(Number.isFinite), 0);
+    if (!(maxVolume > 0)) return;
+
+    const ctx = chart.ctx;
+    const bandHeight = Math.max(36, (area.bottom - area.top) * 0.21);
+    const baseline = area.bottom - 18;
+    const available = Math.max(20, bandHeight - 12);
+    const barWidth = Math.max(1, Math.min(3.2, (area.right - area.left) / Math.max(80, rows.length) * 0.72));
+    const color = chart.$atlasVolumeColor || "98,236,255";
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(area.left, area.top, area.right - area.left, area.bottom - area.top);
+    ctx.clip();
+
+    const fade = ctx.createLinearGradient(0, baseline - available, 0, baseline);
+    fade.addColorStop(0, `rgba(${color},.18)`);
+    fade.addColorStop(.55, `rgba(${color},.10)`);
+    fade.addColorStop(1, `rgba(${color},.035)`);
+
+    ctx.fillStyle = fade;
+    for (const point of rows) {
+      const x = xScale.getPixelForValue(point.x);
+      const ratio = Math.max(0, Math.min(1, Number(point.y) / maxVolume));
+      const height = Math.max(.5, ratio * available);
+      ctx.fillRect(x - barWidth / 2, baseline - height, barWidth, height);
+    }
+    ctx.restore();
+  }
+};
+
+const atlasOverlayAxesPlugin = {
+  id: "atlasOverlayAxes",
+  afterDraw(chart) {
+    const area = chart?.chartArea;
+    const xScale = chart?.scales?.x;
+    const yScale = chart?.scales?.y;
+    if (!area || !xScale || !yScale) return;
+
+    const ctx = chart.ctx;
+    const view = chart.$atlasView === "base100" || chart.$atlasMode === "comparison" ? "base100" : "price";
+    const period = Number(chart.$atlasPeriod || state.chartPeriodDays || 1);
+    const width = area.right - area.left;
+    const height = area.bottom - area.top;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(area.left, area.top, width, height);
+    ctx.clip();
+
+    const yTicks = (yScale.ticks || []).filter(tick => Number.isFinite(Number(tick.value)));
+    const visibleY = yTicks.length > 6
+      ? yTicks.filter((_, index) => index % Math.ceil(yTicks.length / 6) === 0)
+      : yTicks;
+
+    ctx.font = `750 ${atlasChartAxisMetrics().yFont}px system-ui, sans-serif`;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+
+    for (const tick of visibleY) {
+      const y = yScale.getPixelForValue(tick.value);
+      if (y < area.top + 8 || y > area.bottom - 24) continue;
+      const text = atlasChartAxisPriceLabel(tick.value, view);
+      const textWidth = ctx.measureText(text).width;
+      const boxWidth = textWidth + 16;
+      const x = area.right - 6;
+
+      atlasRoundedRectPath(ctx, x - boxWidth, y - 10, boxWidth, 20, 7);
+      ctx.fillStyle = "rgba(3,10,20,.58)";
+      ctx.fill();
+      ctx.fillStyle = "rgba(239,249,255,.94)";
+      ctx.fillText(text, x - 7, y);
+    }
+
+    const xTicks = (xScale.ticks || []).filter(tick => Number.isFinite(Number(tick.value)));
+    const visibleX = xTicks.length > atlasChartXAxisTickLimit(period)
+      ? xTicks.filter((_, index) => index % Math.ceil(xTicks.length / atlasChartXAxisTickLimit(period)) === 0)
+      : xTicks;
+
+    ctx.font = `700 ${atlasChartAxisMetrics().xFont}px system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+
+    for (const tick of visibleX) {
+      const x = xScale.getPixelForValue(tick.value);
+      if (x < area.left + 24 || x > area.right - 72) continue;
+      const text = atlasChartLabelForTime(Number(tick.value), period);
+      const textWidth = ctx.measureText(text).width;
+      atlasRoundedRectPath(ctx, x - textWidth / 2 - 6, area.bottom - 24, textWidth + 12, 20, 6);
+      ctx.fillStyle = "rgba(3,10,20,.48)";
+      ctx.fill();
+      ctx.fillStyle = "rgba(226,244,255,.92)";
+      ctx.fillText(text, x, area.bottom - 5);
+    }
+
+    ctx.restore();
+  }
+};
+
 function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   if (!canvas) return;
 
@@ -3660,10 +3873,6 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     ? Math.max((max - min) * 0.08, 0.45)
     : Math.max((max - min) * 0.06, Math.abs(max) * 0.00035, 1e-8);
 
-  const volumeRows = (Array.isArray(result?.volumeSeries) ? result.volumeSeries : [])
-    .map(point => ({ x: Number(point?.[0]), y: Number(point?.[1]) }))
-    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y >= 0)
-    .sort((a, b) => a.x - b.x);
 
   const freshness = result?.integrity?.metrics?.freshness?.level || "fresh";
   atlasDestroyRealChart();
@@ -3699,32 +3908,16 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       pointHoverRadius: 5,
       pointHitRadius: 24,
       tension: 0.08,
-      fill: true,
+      fill: { target: "start" },
       backgroundColor: gradient,
       borderColor: palette.primary,
       order: 1
     }];
 
-    if (showVolume && volumeRows.length) {
-      datasets.unshift({
-        type: "bar",
-        label: "Volume",
-        data: volumeRows,
-        parsing: false,
-        yAxisID: "yVolume",
-        backgroundColor: `${palette.primary}20`,
-        borderColor: `${palette.primary}28`,
-        borderWidth: 0,
-        barPercentage: 1,
-        categoryPercentage: 1,
-        order: 2,
-        atlasVolumeDataset: true
-      });
-    }
-
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
+      plugins: [atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -3737,7 +3930,6 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
           legend: { display: false },
           tooltip: {
             enabled: false,
-            filter(context) { return !context.dataset?.atlasVolumeDataset; },
             external: atlasExternalChartTooltip
           }
         },
@@ -3748,20 +3940,14 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             max: rows[rows.length - 1].t,
             bounds: "data",
             offset: false,
-            afterFit(scale) {
-              scale.height = Math.min(scale.height, atlasChartAxisMetrics().xHeight);
-            },
-            grid: { color: "rgba(176,236,255,.075)", drawTicks: true },
+            afterFit(scale) { scale.height = 0; },
+            border: { display: false },
+            grid: { color: "rgba(176,236,255,.075)", drawTicks: false },
             ticks: {
-              color: "rgba(226,244,255,.88)",
+              display: false,
               maxTicksLimit: atlasChartXAxisTickLimit(period),
               autoSkip: true,
-              autoSkipPadding: 16,
-              maxRotation: 0,
-              minRotation: 0,
-              padding: 5,
-              font: { size: atlasChartAxisMetrics().xFont, weight: "700" },
-              callback(value) { return atlasChartLabelForTime(Number(value), period); }
+              maxRotation: 0
             }
           },
           y: {
@@ -3769,31 +3955,19 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             position: "right",
             min: scaleType === "linear" ? min - yPad : undefined,
             max: scaleType === "linear" ? max + yPad : undefined,
-            afterFit(scale) {
-              scale.width = Math.min(scale.width, atlasChartAxisMetrics().yWidth);
-            },
-            grid: { color: "rgba(176,236,255,.105)" },
-            ticks: {
-              color: "rgba(238,248,255,.92)",
-              maxTicksLimit: 6,
-              padding: 4,
-              font: { size: atlasChartAxisMetrics().yFont, weight: "750" },
-              callback(value) {
-                return atlasChartAxisPriceLabel(value, view);
-              }
-            },
+            afterFit(scale) { scale.width = 0; },
+            border: { display: false },
+            grid: { color: "rgba(176,236,255,.105)", drawTicks: false },
+            ticks: { display: false, maxTicksLimit: 6 },
             title: { display: false }
           },
           yVolume: {
-            type: "linear",
-            display: showVolume && volumeRows.length > 0,
-            position: "left",
-            beginAtZero: true,
-            stacked: false,
-            grid: { display: false, drawOnChartArea: false },
+            display: false,
+            min: 0,
+            max: 1,
+            grid: { display: false },
             ticks: { display: false },
-            suggestedMin: 0,
-            suggestedMax: volumeRows.length ? Math.max(...volumeRows.map(row => row.y)) * 4.4 : undefined
+            border: { display: false }
           }
         }
       }
@@ -3804,8 +3978,12 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     state.chartEngineV2.realChart.$atlasView = view;
     state.chartEngineV2.realChart.$atlasScale = scaleType;
     state.chartEngineV2.realChart.$atlasVolume = showVolume;
+    state.chartEngineV2.realChart.$atlasVolumeVisible = showVolume;
+    state.chartEngineV2.realChart.$atlasVolumeRows = atlasAlignVolumeToPriceTimeline(result?.volumeSeries, rows);
+    state.chartEngineV2.realChart.$atlasVolumeColor = atlasHexToRgb(palette.primary).join(",");
+    state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
-    state.chartEngineV2.realChart.$atlasVolumeAxisId = "yVolume";
+    state.chartEngineV2.realChart.$atlasVolumeAxisId = null;
     atlasRefreshChartScale(state.chartEngineV2.realChart);
     atlasChartV2RenderLegend([{ coin, result }], { result });
     atlasChartV2SyncControls();
@@ -4058,11 +4236,12 @@ function atlasComparisonRows(entry) {
     .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }));
 }
 
-function atlasInterpolateComparisonPrice(rows, timestamp) {
+function atlasInterpolateComparisonPrice(rows, timestamp, maximumGapMs = Infinity) {
   if (!Array.isArray(rows) || !rows.length || !Number.isFinite(Number(timestamp))) return null;
   const target = Number(timestamp);
-  if (target <= rows[0].t) return rows[0].price;
-  if (target >= rows[rows.length - 1].t) return rows[rows.length - 1].price;
+  if (target < rows[0].t || target > rows[rows.length - 1].t) return null;
+  if (target === rows[0].t) return rows[0].price;
+  if (target === rows[rows.length - 1].t) return rows[rows.length - 1].price;
   let low = 0;
   let high = rows.length - 1;
   while (low + 1 < high) {
@@ -4073,7 +4252,7 @@ function atlasInterpolateComparisonPrice(rows, timestamp) {
   const left = rows[low];
   const right = rows[high];
   const span = right.t - left.t;
-  if (!Number.isFinite(span) || span <= 0) return left.price;
+  if (!Number.isFinite(span) || span <= 0 || span > Number(maximumGapMs || Infinity)) return null;
   const ratio = (target - left.t) / span;
   return left.price + (right.price - left.price) * ratio;
 }
@@ -4106,32 +4285,36 @@ function atlasBuildAlignedComparisonEntries(entries, period) {
   const commonEnd = Math.min(...prepared.map(entry => entry.rows[entry.rows.length - 1].t));
   if (!Number.isFinite(commonStart) || !Number.isFinite(commonEnd) || commonEnd <= commonStart) return [];
 
-  const reference = prepared.reduce((best, entry) => {
-    const count = entry.rows.filter(row => row.t >= commonStart && row.t <= commonEnd).length;
-    return !best || count > best.count ? { entry, count } : best;
-  }, null);
+  const timeline = atlasBuildCanonicalTimeline(period, commonStart, commonEnd);
+  const minimum = atlasChartRules(period).minPoints;
+  if (timeline.length < minimum) return [];
 
-  let timeline = reference.entry.rows
-    .map(row => row.t)
-    .filter(timestamp => timestamp >= commonStart && timestamp <= commonEnd);
+  const canonicalStep = atlasCanonicalTimelineConfig(period, commonStart, commonEnd).step;
+  const aligned = prepared.map(entry => {
+    const nativeStep = atlasMedianInterval(entry.rows) || canonicalStep;
+    const maximumGap = Math.max(canonicalStep * 4, nativeStep * 4);
+    const first = Number(atlasInterpolateComparisonPrice(entry.rows, timeline[0], maximumGap));
+    if (!Number.isFinite(first) || first <= 0) return null;
 
-  const minRequired = atlasChartRules(period).minPoints;
-  if (timeline.length < minRequired) {
-    const count = Math.max(minRequired, Math.min(240, Math.max(...prepared.map(entry => entry.rows.length))));
-    const step = (commonEnd - commonStart) / Math.max(1, count - 1);
-    timeline = Array.from({ length: count }, (_, index) => commonStart + step * index);
-  }
-
-  timeline = [...new Set(timeline.map(Number).filter(Number.isFinite))].sort((a, b) => a - b);
-
-  return prepared.map(entry => {
-    const first = Number(atlasInterpolateComparisonPrice(entry.rows, timeline[0]));
     const data = timeline.map(timestamp => {
-      const rawPrice = atlasInterpolateComparisonPrice(entry.rows, timestamp);
+      const rawPrice = atlasInterpolateComparisonPrice(entry.rows, timestamp, maximumGap);
+      if (!Number.isFinite(rawPrice) || rawPrice <= 0) return null;
       return { x: timestamp, y: rawPrice / first * 100, rawPrice };
-    }).filter(point => Number.isFinite(point.y) && Number.isFinite(point.rawPrice) && point.rawPrice > 0);
-    return { ...entry, first, data, alignedTimeline: timeline };
-  }).filter(entry => entry.data.length === timeline.length && Number.isFinite(entry.first) && entry.first > 0);
+    });
+
+    const validCount = data.filter(Boolean).length;
+    if (validCount < Math.max(minimum, Math.floor(timeline.length * .88))) return null;
+
+    return {
+      ...entry,
+      first,
+      data,
+      alignedTimeline: timeline,
+      missingPointCount: timeline.length - validCount
+    };
+  }).filter(Boolean);
+
+  return aligned;
 }
 
 function drawComparisonChart(canvas, entries, period, chartKey = "") {
@@ -4146,7 +4329,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   }
   state.dataBroker.comparison.renderedIds = normalizedEntries.map(entry => entry.coin.id);
 
-  const allValues = normalizedEntries.flatMap(entry => entry.data.map(point => point.y));
+  const allValues = normalizedEntries.flatMap(entry => entry.data.filter(Boolean).map(point => point.y));
   const min = Math.min(...allValues);
   const max = Math.max(...allValues);
   const yPad = Math.max((max - min) * 0.08, 0.5);
@@ -4178,6 +4361,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         pointHoverRadius: 5,
         pointHitRadius: 24,
         tension: 0.08,
+        spanGaps: false,
         fill: false,
         borderColor: stroke,
         backgroundColor: palette.primary,
@@ -4191,6 +4375,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
+      plugins: [atlasOverlayAxesPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -4232,37 +4417,24 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
             max: endTime,
             bounds: "data",
             offset: false,
-            afterFit(scale) {
-              scale.height = Math.min(scale.height, atlasChartAxisMetrics().xHeight);
-            },
-            grid: { color: "rgba(176,236,255,0.075)", drawTicks: true },
+            afterFit(scale) { scale.height = 0; },
+            border: { display: false },
+            grid: { color: "rgba(176,236,255,0.075)", drawTicks: false },
             ticks: {
-              color: "rgba(226,244,255,0.88)",
+              display: false,
               maxTicksLimit: atlasChartXAxisTickLimit(period),
               autoSkip: true,
-              autoSkipPadding: 16,
-              maxRotation: 0,
-              minRotation: 0,
-              padding: 5,
-              font: { size: atlasChartAxisMetrics().xFont, weight: "700" },
-              callback(value) { return atlasChartLabelForTime(Number(value), period); }
+              maxRotation: 0
             }
           },
           y: {
             position: "right",
             min: min - yPad,
             max: max + yPad,
-            afterFit(scale) {
-              scale.width = Math.min(scale.width, atlasChartAxisMetrics().yWidth);
-            },
-            grid: { color: "rgba(176,236,255,0.105)" },
-            ticks: {
-              color: "rgba(238,248,255,0.92)",
-              maxTicksLimit: 6,
-              callback(value) { return atlasChartAxisPriceLabel(value, "base100"); },
-              font: { size: atlasChartAxisMetrics().yFont, weight: "750" },
-              padding: 4
-            },
+            afterFit(scale) { scale.width = 0; },
+            border: { display: false },
+            grid: { color: "rgba(176,236,255,0.105)", drawTicks: false },
+            ticks: { display: false, maxTicksLimit: 6 },
             title: { display: false }
           }
         }
@@ -4271,6 +4443,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart.$atlasMode = "comparison";
     state.chartEngineV2.realChart.$atlasTimeline = timeline;
     state.chartEngineV2.realChart.$atlasView = "base100";
+    state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
     atlasRefreshChartScale(state.chartEngineV2.realChart);
     return normalizedEntries;
@@ -5976,7 +6149,7 @@ function atlasMarketEnsureWatchCoin(coin){if(!coin?.id)return;if(!state.watchIds
 function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatchCoin(coin);renderWatchlist();const s=$("watchAlertCoin");if(s&&[...s.options].some(o=>o.value===coin.id))s.value=coin.id;atlasV2OpenAdvancedForTarget("#watchlist");setTimeout(()=>$("watchAlertThreshold")?.focus(),450);}
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("detailPanel")?.classList.contains("is-collapsed"))$("detailPanelToggle")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
-function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasMarketOpenCoin(c,{compare:!!(e.shiftKey||e.ctrlKey||e.metaKey)});};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
+function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasToggleComparisonCoin(c);};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
 
 function renderMarketTable() {
   if(!els.marketRows)return;
@@ -8819,7 +8992,7 @@ function atlasInitRuntimeStability() {
 }
 
 const ATLAS_STORAGE_SCHEMA_KEY = "agent_crypto_erith_ia_storage_schema";
-const ATLAS_STORAGE_SCHEMA_VERSION = 28110;
+const ATLAS_STORAGE_SCHEMA_VERSION = 28111;
 
 function atlasStorageSafeJson(key) {
   try {
@@ -8830,7 +9003,7 @@ function atlasStorageSafeJson(key) {
   }
 }
 
-function atlasMigrateStorage28110() {
+function atlasMigrateStorage28111() {
   const mode = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
   if (!ATLAS_V2_ALLOWED_MODES.has(mode)) {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
@@ -8890,11 +9063,11 @@ function atlasMigrateStorage28110() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.10", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.10", atlasMigrateStorage28110);
+} atlasSafeBoot("release labels 28.1.11", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.11", atlasMigrateStorage28111);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.10", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.11", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);

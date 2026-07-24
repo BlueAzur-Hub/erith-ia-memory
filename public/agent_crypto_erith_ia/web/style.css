@@ -12041,3 +12041,158 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
     display: flex !important;
   }
 }
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.11
+   FULL-WIDTH OVERLAY AXES · VOLUME & TIMELINE RECOVERY LOCK
+   ========================================================= */
+
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed {
+  position: relative !important;
+  display: block !important;
+  min-height: clamp(570px, 76vh, 760px) !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .chart-panel {
+  width: 100% !important;
+  min-height: clamp(555px, 74vh, 745px) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+}
+
+#analyste.champagne-clean-lens .chart-shell,
+#analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  width: 100% !important;
+  height: clamp(475px, 62vh, 640px) !important;
+  min-height: 475px !important;
+  max-height: 640px !important;
+  padding: 6px !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens #mainChart,
+#analyste.champagne-clean-lens.detail-collapsed #mainChart {
+  width: 100% !important;
+  height: calc(100% - 28px) !important;
+  min-height: 440px !important;
+  max-height: none !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  position: absolute !important;
+  z-index: 12 !important;
+  top: 88px !important;
+  right: 12px !important;
+  bottom: 48px !important;
+  width: clamp(286px, 21vw, 350px) !important;
+  min-width: 0 !important;
+  max-height: calc(100% - 136px) !important;
+  overflow: auto !important;
+  border-color: rgba(98,236,255,.22) !important;
+  background:
+    linear-gradient(180deg, rgba(4,13,26,.80), rgba(3,10,21,.69)),
+    rgba(4,13,26,.64) !important;
+  backdrop-filter: blur(8px) saturate(1.05) !important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.30),
+    inset 0 0 24px rgba(98,236,255,.035) !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
+  display: none !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail {
+  position: absolute !important;
+  z-index: 13 !important;
+  top: 88px !important;
+  right: 10px !important;
+  bottom: 48px !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+  display: flex !important;
+}
+
+#analyste.champagne-clean-lens .chart-caption {
+  position: relative;
+  z-index: 9;
+  min-height: 28px !important;
+  margin: 4px 8px 7px !important;
+}
+
+/* Les axes sont peints dans le tracé : aucune colonne Prix, aucune ligne Date extérieure. */
+#analyste.champagne-clean-lens .chart-shell canvas {
+  display: block;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Légende et tooltip restent au-dessus des axes et des volumes. */
+#analyste.champagne-clean-lens .chart-v2-legend,
+#analyste.champagne-clean-lens .atlas-chart-tooltip,
+#analyste.champagne-clean-lens .comparison-selection {
+  z-index: 14 !important;
+}
+
+/* Transformer Book : plein cadre, hauteur raisonnable, panneau flottant étroit. */
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens,
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed {
+  min-height: clamp(540px, 72vh, 680px) !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-panel {
+  min-height: clamp(525px, 70vh, 665px) !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-shell,
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  height: clamp(440px, 58vh, 560px) !important;
+  min-height: 440px !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens #mainChart,
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed #mainChart {
+  min-height: 405px !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-lens-detail-panel {
+  width: 286px !important;
+}
+
+@media (max-width: 1080px) {
+  #analyste.champagne-clean-lens .clean-lens-detail-panel {
+    display: none !important;
+  }
+
+  #analyste.champagne-clean-lens .detail-panel-rail {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 760px) {
+  #analyste.champagne-clean-lens,
+  #analyste.champagne-clean-lens.detail-collapsed {
+    min-height: 520px !important;
+  }
+
+  #analyste.champagne-clean-lens .chart-panel {
+    min-height: 505px !important;
+  }
+
+  #analyste.champagne-clean-lens .chart-shell,
+  #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+    height: 420px !important;
+    min-height: 420px !important;
+  }
+
+  #analyste.champagne-clean-lens #mainChart,
+  #analyste.champagne-clean-lens.detail-collapsed #mainChart {
+    min-height: 385px !important;
+  }
+}
