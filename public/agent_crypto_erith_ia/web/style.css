@@ -8471,3 +8471,70 @@ a.source-portal:focus-visible {
 .atlas-source-dock[data-status="loading"] .source-dock-refresh {
   opacity: .58;
 }
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2.3
+   DETAIL ACTIVE CLICK RECOVERY LOCK
+   ========================================================= */
+
+#analyste .clean-lens-detail-panel {
+  position: relative !important;
+  isolation: isolate;
+}
+
+#analyste .clean-lens-detail-panel::before,
+#analyste .clean-lens-detail-panel::after {
+  pointer-events: none !important;
+}
+
+#analyste .detail-panel-toggle {
+  position: relative !important;
+  z-index: 40 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#analyste .detail-panel-toggle,
+#analyste .detail-panel-toggle * {
+  cursor: pointer !important;
+}
+
+#analyste .detail-panel-toggle > * {
+  pointer-events: none !important;
+}
+
+#analyste .detail-panel-toggle:focus-visible {
+  outline: 2px solid rgba(98,236,255,.62) !important;
+  outline-offset: 2px !important;
+  border-radius: 9px !important;
+}
+
+#analyste .detail-panel-rail {
+  position: relative !important;
+  z-index: 42 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+
+#analyste .detail-panel-rail > * {
+  pointer-events: none !important;
+}
+
+#analyste.detail-collapsed .detail-panel-rail {
+  display: flex !important;
+}
+
+#analyste:not(.detail-collapsed) .clean-lens-detail-panel {
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+#analyste:not(.detail-collapsed) .detail-panel-rail {
+  display: none !important;
+}
