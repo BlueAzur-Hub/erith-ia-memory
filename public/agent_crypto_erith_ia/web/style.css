@@ -11835,15 +11835,28 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
   padding: 0 !important;
 }
 
-
 /* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.9
-   FULL-BLEED EXPANDED CHART & SCALE TRUTH LOCK
+   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.12
+   CANONICAL FULL-WIDTH CHART STAGE
+   TOP 5 · MARKET FLOW · OVERLAY VALUES
+   & NON-DESTRUCTIVE RECOVERY LOCK
    ========================================================= */
 
-#analyste.champagne-clean-lens {
-  min-height: clamp(735px, 88vh, 960px) !important;
-  align-items: stretch !important;
+/* Market navigation remains immediately before the graph. */
+.atlas-market-zone > .market-ribbon-stack,
+.market-ribbon-stack {
+  position: relative;
+  z-index: 6;
+  margin: 10px 0 12px !important;
+}
+
+/* One full-width stage: no permanent right column and no external axis strip. */
+#analyste.champagne-clean-lens,
+#analyste.champagne-clean-lens.detail-collapsed {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: clamp(560px, 73vh, 730px) !important;
   overflow: hidden !important;
   background: rgba(2,8,18,.01) !important;
 }
@@ -11852,7 +11865,7 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
   inset: 0 !important;
   background-size: cover !important;
   background-position: center center !important;
-  transform: scale(1.01);
+  transform: scale(1.006);
 }
 
 #analyste.champagne-clean-lens::after {
@@ -11860,339 +11873,323 @@ html[data-atlas-mode="essential"] details.atlas-collapse[hidden] {
   background:
     radial-gradient(ellipse at 18% 10%, rgba(37,126,212,.08), transparent 36%),
     radial-gradient(ellipse at 82% 22%, rgba(139,63,215,.08), transparent 34%),
-    linear-gradient(90deg, rgba(2,8,18,.20), rgba(2,8,18,.08) 62%, rgba(2,8,18,.22)),
-    linear-gradient(180deg, rgba(2,8,18,.05), rgba(2,8,18,.18)) !important;
+    linear-gradient(90deg, rgba(2,8,18,.18), rgba(2,8,18,.05) 62%, rgba(2,8,18,.18)),
+    linear-gradient(180deg, rgba(2,8,18,.04), rgba(2,8,18,.16)) !important;
 }
 
 #analyste.champagne-clean-lens .chart-panel {
-  min-height: clamp(720px, 86vh, 940px) !important;
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  min-height: clamp(545px, 71vh, 715px) !important;
   display: grid !important;
   grid-template-rows: auto minmax(0,1fr) auto !important;
-  background: linear-gradient(180deg, rgba(5,14,27,.08), rgba(5,14,27,.025)) !important;
+  background: linear-gradient(180deg, rgba(5,14,27,.07), rgba(5,14,27,.02)) !important;
   backdrop-filter: none !important;
-}
-
-#analyste.champagne-clean-lens .clean-lens-detail-panel {
-  align-self: stretch !important;
-  background:
-    linear-gradient(180deg, rgba(5,14,27,.52), rgba(5,14,27,.32)),
-    rgba(5,14,27,.20) !important;
-  backdrop-filter: blur(2px) saturate(1.04) !important;
-}
-
-#analyste.champagne-clean-lens .chart-shell {
-  height: clamp(635px, 76vh, 835px) !important;
-  min-height: 635px !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 12px 13px 14px !important;
-  overflow: hidden !important;
-  background:
-    linear-gradient(180deg, rgba(2,8,18,.08), rgba(2,8,18,.03) 56%, rgba(2,8,18,.12)) !important;
-  backdrop-filter: none !important;
-}
-
-#analyste.champagne-clean-lens #mainChart {
-  width: 100% !important;
-  height: calc(100% - 34px) !important;
-  min-height: 590px !important;
-  max-height: none !important;
-  background: transparent !important;
-}
-
-#analyste.champagne-clean-lens .comparison-selection,
-#analyste.champagne-clean-lens .chart-v2-legend,
-#analyste.champagne-clean-lens .atlas-chart-tooltip,
-#analyste.champagne-clean-lens .atlas-chart-refresh {
-  z-index: 8 !important;
-}
-
-#analyste.champagne-clean-lens .chart-caption {
-  min-height: 34px !important;
-  margin-top: 6px !important;
-  padding: 7px 10px !important;
-  background: rgba(3,10,20,.34) !important;
-  backdrop-filter: blur(2px);
-}
-
-/* Les commandes de comparaison restent toujours atteignables. */
-#analyste.champagne-clean-lens .chart-v2-toolbar-comparison {
-  flex: 0 0 auto !important;
-}
-
-#analyste.champagne-clean-lens .compare-actions {
-  overflow: visible !important;
-}
-
-#analyste.champagne-clean-lens .compare-action-group-mode {
-  order: 0;
-}
-
-/* Transformer Book : grand graphe sans écraser le cockpit. */
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens {
-  min-height: clamp(670px, 86vh, 800px) !important;
-}
-
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-panel {
-  min-height: clamp(655px, 84vh, 785px) !important;
-}
-
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-shell {
-  height: clamp(570px, 72vh, 700px) !important;
-  min-height: 570px !important;
-}
-
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens #mainChart {
-  min-height: 525px !important;
-}
-
-/* Écrans compacts : hauteur liée au viewport, commandes conservées. */
-html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens {
-  min-height: 650px !important;
-}
-
-html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens .chart-panel {
-  min-height: 630px !important;
-}
-
-html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens .chart-shell {
-  height: 545px !important;
-  min-height: 545px !important;
-}
-
-html[data-atlas-viewport="compact"] #analyste.champagne-clean-lens #mainChart {
-  min-height: 500px !important;
-}
-
-html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens {
-  min-height: 560px !important;
-}
-
-html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens .chart-panel {
-  min-height: 540px !important;
-}
-
-html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens .chart-shell {
-  height: 450px !important;
-  min-height: 450px !important;
-}
-
-html[data-atlas-viewport="mobile"] #analyste.champagne-clean-lens #mainChart {
-  min-height: 410px !important;
-}
-
-
-/* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.10
-   PLOT AREA & AXIS PROPORTION RECOVERY LOCK
-   ========================================================= */
-
-#analyste.champagne-clean-lens {
-  grid-template-columns: minmax(0, 3.15fr) minmax(292px, .72fr) !important;
-}
-
-#analyste.champagne-clean-lens .chart-shell {
-  padding: 8px 8px 10px !important;
-}
-
-#analyste.champagne-clean-lens #mainChart {
-  height: calc(100% - 30px) !important;
-}
-
-#analyste.champagne-clean-lens .chart-caption {
-  min-height: 30px !important;
-  padding: 6px 9px !important;
-}
-
-#analyste.champagne-clean-lens .clean-lens-detail-panel {
-  min-width: 292px !important;
-}
-
-/* La zone Prix et la ligne de dates restent lisibles sans manger le tracé. */
-#analyste.champagne-clean-lens canvas {
-  image-rendering: auto;
-}
-
-/* Le volume reste un arrière-plan analytique, pas un second panneau. */
-#analyste.champagne-clean-lens .chart-shell[data-chart-state="valid"] {
-  background:
-    linear-gradient(180deg, rgba(2,8,18,.045), rgba(2,8,18,.015) 66%, rgba(2,8,18,.08)) !important;
-}
-
-/* Transformer Book : garder les axes compacts et le graphe large. */
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens {
-  grid-template-columns: minmax(0, 3fr) minmax(274px, .72fr) !important;
-}
-
-html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-lens-detail-panel {
-  min-width: 274px !important;
-}
-
-@media (max-width: 1080px) {
-  #analyste.champagne-clean-lens {
-    grid-template-columns: minmax(0,1fr) 42px !important;
-  }
-
-  #analyste.champagne-clean-lens .clean-lens-detail-panel {
-    display: none !important;
-  }
-
-  #analyste.champagne-clean-lens .detail-panel-rail {
-    display: flex !important;
-  }
-}
-
-
-/* =========================================================
-   Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.11
-   FULL-WIDTH OVERLAY AXES · VOLUME & TIMELINE RECOVERY LOCK
-   ========================================================= */
-
-#analyste.champagne-clean-lens,
-#analyste.champagne-clean-lens.detail-collapsed {
-  position: relative !important;
-  display: block !important;
-  min-height: clamp(570px, 76vh, 760px) !important;
-  overflow: hidden !important;
-}
-
-#analyste.champagne-clean-lens .chart-panel {
-  width: 100% !important;
-  min-height: clamp(555px, 74vh, 745px) !important;
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) auto !important;
 }
 
 #analyste.champagne-clean-lens .chart-shell,
 #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  position: relative !important;
   width: 100% !important;
-  height: clamp(475px, 62vh, 640px) !important;
-  min-height: 475px !important;
-  max-height: 640px !important;
+  height: clamp(465px, 59vh, 605px) !important;
+  min-height: 465px !important;
+  max-height: 605px !important;
+  margin: 0 !important;
   padding: 6px !important;
   overflow: hidden !important;
+  background: linear-gradient(180deg, rgba(2,8,18,.045), rgba(2,8,18,.012) 66%, rgba(2,8,18,.075)) !important;
+  backdrop-filter: none !important;
 }
 
 #analyste.champagne-clean-lens #mainChart,
 #analyste.champagne-clean-lens.detail-collapsed #mainChart {
+  display: block !important;
   width: 100% !important;
-  height: calc(100% - 28px) !important;
-  min-height: 440px !important;
+  height: calc(100% - 26px) !important;
+  min-height: 430px !important;
   max-height: none !important;
+  margin: 0 !important;
+  background: transparent !important;
+  image-rendering: auto;
 }
 
+/* Floating values: crypto identity, current price and period variation. */
+#analyste .chart-value-overlay {
+  position: absolute;
+  z-index: 16;
+  top: 46px;
+  left: 12px;
+  width: min(286px, calc(100% - 380px));
+  min-width: 224px;
+  display: grid;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid rgba(176,236,255,.16);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(3,12,24,.78), rgba(3,10,20,.61));
+  box-shadow: 0 12px 30px rgba(0,0,0,.24), inset 0 0 18px rgba(98,236,255,.025);
+  backdrop-filter: blur(8px) saturate(1.04);
+  pointer-events: none;
+}
+
+#analyste .chart-value-overlay[hidden] { display: none !important; }
+
+#analyste .chart-value-overlay-row {
+  position: relative;
+  min-height: 32px;
+  display: grid;
+  grid-template-columns: 5px minmax(70px,.75fr) minmax(92px,1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 7px 5px 5px;
+  border: 1px solid rgba(176,236,255,.09);
+  border-radius: 9px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--atlas-series-color) 12%, rgba(3,11,21,.78)), rgba(3,11,21,.54));
+}
+
+#analyste .chart-value-overlay-swatch {
+  align-self: stretch;
+  border-radius: 999px;
+  background: var(--atlas-series-gradient, var(--atlas-series-color));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--atlas-series-color) 42%, transparent);
+}
+
+#analyste .chart-value-overlay-identity {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#analyste .chart-value-overlay-identity img,
+#analyste .chart-value-overlay-fallback {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#analyste .chart-value-overlay-fallback {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  color: #effaff;
+  font: 900 9px/1 system-ui,sans-serif;
+}
+
+#analyste .chart-value-overlay-identity b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #effaff;
+  font: 900 11px/1 system-ui,sans-serif;
+}
+
+#analyste .chart-value-overlay-row strong {
+  justify-self: end;
+  color: #fff3cf;
+  font: 900 12px/1 system-ui,sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#analyste .chart-value-overlay-row small {
+  justify-self: end;
+  min-width: 48px;
+  color: rgba(223,237,248,.72);
+  font: 850 9px/1 system-ui,sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#analyste .chart-value-overlay-row small.up { color: rgba(112,255,185,.92); }
+#analyste .chart-value-overlay-row small.down { color: rgba(255,132,158,.94); }
+
+/* Detail panel floats above the same chart stage and never reduces canvas width. */
 #analyste.champagne-clean-lens .clean-lens-detail-panel {
   position: absolute !important;
-  z-index: 12 !important;
+  z-index: 15 !important;
   top: 88px !important;
   right: 12px !important;
-  bottom: 48px !important;
-  width: clamp(286px, 21vw, 350px) !important;
+  bottom: 46px !important;
+  width: clamp(282px, 20vw, 342px) !important;
   min-width: 0 !important;
-  max-height: calc(100% - 136px) !important;
+  max-height: calc(100% - 134px) !important;
   overflow: auto !important;
   border-color: rgba(98,236,255,.22) !important;
-  background:
-    linear-gradient(180deg, rgba(4,13,26,.80), rgba(3,10,21,.69)),
-    rgba(4,13,26,.64) !important;
+  background: linear-gradient(180deg, rgba(4,13,26,.80), rgba(3,10,21,.68)), rgba(4,13,26,.64) !important;
   backdrop-filter: blur(8px) saturate(1.05) !important;
-  box-shadow:
-    0 18px 42px rgba(0,0,0,.30),
-    inset 0 0 24px rgba(98,236,255,.035) !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.30), inset 0 0 24px rgba(98,236,255,.035) !important;
 }
 
-#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
-  display: none !important;
-}
+#analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel { display: none !important; }
 
 #analyste.champagne-clean-lens .detail-panel-rail {
   position: absolute !important;
-  z-index: 13 !important;
+  z-index: 17 !important;
   top: 88px !important;
   right: 10px !important;
-  bottom: 48px !important;
+  bottom: 46px !important;
   min-height: 0 !important;
   height: auto !important;
 }
 
-#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
-  display: flex !important;
-}
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail { display: flex !important; }
 
 #analyste.champagne-clean-lens .chart-caption {
   position: relative;
   z-index: 9;
   min-height: 28px !important;
   margin: 4px 8px 7px !important;
+  padding: 6px 9px !important;
 }
 
-/* Les axes sont peints dans le tracé : aucune colonne Prix, aucune ligne Date extérieure. */
-#analyste.champagne-clean-lens .chart-shell canvas {
-  display: block;
-  width: 100% !important;
-  margin: 0 !important;
-}
-
-/* Légende et tooltip restent au-dessus des axes et des volumes. */
+#analyste.champagne-clean-lens .comparison-selection,
 #analyste.champagne-clean-lens .chart-v2-legend,
 #analyste.champagne-clean-lens .atlas-chart-tooltip,
-#analyste.champagne-clean-lens .comparison-selection {
-  z-index: 14 !important;
+#analyste.champagne-clean-lens .atlas-chart-refresh {
+  z-index: 18 !important;
 }
 
-/* Transformer Book : plein cadre, hauteur raisonnable, panneau flottant étroit. */
+#analyste.champagne-clean-lens .chart-v2-toolbar-comparison { flex: 0 0 auto !important; }
+#analyste.champagne-clean-lens .compare-actions { overflow: visible !important; }
+
+/* Transformer Book: keep the same structure, only reduce height and overlays. */
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens,
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed {
-  min-height: clamp(540px, 72vh, 680px) !important;
+  min-height: clamp(525px, 69vh, 650px) !important;
 }
 
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-panel {
-  min-height: clamp(525px, 70vh, 665px) !important;
+  min-height: clamp(510px, 67vh, 635px) !important;
 }
 
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-shell,
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
-  height: clamp(440px, 58vh, 560px) !important;
-  min-height: 440px !important;
+  height: clamp(425px, 55vh, 530px) !important;
+  min-height: 425px !important;
 }
 
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens #mainChart,
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed #mainChart {
-  min-height: 405px !important;
+  min-height: 390px !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste .chart-value-overlay {
+  width: 244px;
 }
 
 html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-lens-detail-panel {
-  width: 286px !important;
+  width: 278px !important;
 }
 
 @media (max-width: 1080px) {
-  #analyste.champagne-clean-lens .clean-lens-detail-panel {
-    display: none !important;
-  }
-
-  #analyste.champagne-clean-lens .detail-panel-rail {
-    display: flex !important;
-  }
+  #analyste.champagne-clean-lens .clean-lens-detail-panel { display: none !important; }
+  #analyste.champagne-clean-lens .detail-panel-rail { display: flex !important; }
+  #analyste .chart-value-overlay { width: min(278px, calc(100% - 64px)); }
 }
 
 @media (max-width: 760px) {
   #analyste.champagne-clean-lens,
-  #analyste.champagne-clean-lens.detail-collapsed {
-    min-height: 520px !important;
-  }
-
-  #analyste.champagne-clean-lens .chart-panel {
-    min-height: 505px !important;
-  }
-
+  #analyste.champagne-clean-lens.detail-collapsed { min-height: 500px !important; }
+  #analyste.champagne-clean-lens .chart-panel { min-height: 485px !important; }
   #analyste.champagne-clean-lens .chart-shell,
   #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
-    height: 420px !important;
-    min-height: 420px !important;
+    height: 400px !important;
+    min-height: 400px !important;
   }
-
   #analyste.champagne-clean-lens #mainChart,
-  #analyste.champagne-clean-lens.detail-collapsed #mainChart {
-    min-height: 385px !important;
+  #analyste.champagne-clean-lens.detail-collapsed #mainChart { min-height: 365px !important; }
+  #analyste .chart-value-overlay {
+    top: 42px;
+    left: 8px;
+    width: calc(100% - 52px);
+    max-height: 142px;
+    overflow: auto;
+  }
+  #analyste .chart-value-overlay-row {
+    grid-template-columns: 4px minmax(64px,.7fr) minmax(78px,1fr) auto;
   }
 }
+
+/* =========================================================
+   Build 28.1.12 — DETAIL RAIL INLINE TRIANGLE
+   & PRICE/VOLUME SINGLE-TIMELINE FINAL LOCK
+   ========================================================= */
+
+/* Collapsed detail keeps a narrow reserved rail outside the plot.
+   The chart ends before the button, exactly like the Market layout. */
+#analyste.champagne-clean-lens.detail-collapsed {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 32px !important;
+  column-gap: 5px !important;
+  align-items: stretch !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .chart-panel {
+  grid-column: 1 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+#analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+  grid-column: 2 !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 7px 3px !important;
+  gap: 0 !important;
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span {
+  display: inline-block !important;
+  writing-mode: vertical-rl !important;
+  transform: rotate(180deg) !important;
+  white-space: nowrap !important;
+  font-size: 8.5px !important;
+  line-height: 1 !important;
+  letter-spacing: .105em !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-rail span b {
+  display: inline !important;
+  margin-inline-start: 5px !important;
+  color: #62ecff !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+}
+
+/* Expanded detail remains an overlay; collapsed rail is the only reserved strip. */
+#analyste.champagne-clean-lens:not(.detail-collapsed) {
+  display: block !important;
+}
+
+/* The lower volume underlay and the price curve share one plot and one x-axis. */
+#analyste.champagne-clean-lens .chart-shell {
+  isolation: isolate !important;
+}
+
+@media (max-width: 1080px) {
+  #analyste.champagne-clean-lens.detail-collapsed {
+    grid-template-columns: minmax(0, 1fr) 30px !important;
+    column-gap: 4px !important;
+  }
+
+  #analyste.champagne-clean-lens.detail-collapsed .detail-panel-rail {
+    width: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
+  }
+}
+

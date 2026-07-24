@@ -1,4 +1,5 @@
-/* V2.0-alpha · Build 28.1.11 — FULL-WIDTH OVERLAY AXES · VOLUME & TIMELINE RECOVERY LOCK
+/* V2.0-alpha · Build 28.1.12 — CANONICAL FULL-WIDTH CHART STAGE
+   TOP 5 · MARKET FLOW · OVERLAY VALUES & NON-DESTRUCTIVE RECOVERY LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
    - axes Prix et Date dessinés dans le chartArea, sans manger le tracé ;
@@ -12,7 +13,7 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.11";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.12";
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -3379,6 +3380,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
   if (!enabled || !entries.length) {
     node.hidden = true;
     node.innerHTML = "";
+    if (!entries.length) atlasRenderChartValueOverlay([]);
     return;
   }
 
@@ -3394,6 +3396,51 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
       <small>${Number.isFinite(change) ? escapeHtml(fmtPct(change)) : "—"}</small>
     </span>`;
   }).join("");
+}
+
+
+function atlasRenderChartValueOverlay(entries = [], options = {}) {
+  const node = document.getElementById("chartValueOverlay");
+  if (!node) return;
+
+  const rows = (Array.isArray(entries) ? entries : [])
+    .slice(0, ATLAS_COMPARISON_MAX_SERIES || 5)
+    .map((entry, index) => {
+      const coin = entry?.coin || entry || {};
+      const data = Array.isArray(entry?.data)
+        ? entry.data.filter(Boolean)
+        : Array.isArray(entry?.result?.series)
+          ? entry.result.series.map(point => ({ x: Number(point?.[0]), rawPrice: Number(point?.[1]) })).filter(point => Number.isFinite(point.rawPrice))
+          : [];
+      const latestPoint = [...data].reverse().find(point => Number.isFinite(Number(point?.rawPrice ?? point?.y)));
+      const firstPoint = data.find(point => Number.isFinite(Number(point?.rawPrice ?? point?.y)));
+      const latest = Number(latestPoint?.rawPrice ?? latestPoint?.y);
+      const first = Number(entry?.first ?? firstPoint?.rawPrice ?? firstPoint?.y);
+      const change = Number.isFinite(first) && first > 0 && Number.isFinite(latest)
+        ? ((latest / first) - 1) * 100
+        : Number(coin?.price_change_percentage_24h);
+      const palette = atlasCryptoPalette(coin, index);
+      const symbol = String(coin?.symbol || coin?.name || `S${index + 1}`).toUpperCase();
+      const image = coin?.image
+        ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy" decoding="async">`
+        : `<span class="chart-value-overlay-fallback">${escapeHtml(symbol.slice(0, 1))}</span>`;
+      return `<div class="chart-value-overlay-row" style="--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(atlasCryptoGradientCss(coin, index))}">
+        <span class="chart-value-overlay-swatch" aria-hidden="true"></span>
+        <span class="chart-value-overlay-identity">${image}<b>${escapeHtml(symbol)}</b></span>
+        <strong>${Number.isFinite(latest) && latest > 0 ? escapeHtml(atlasFormatEUR(latest)) : "—"}</strong>
+        <small class="${Number.isFinite(change) ? (change >= 0 ? "up" : "down") : ""}">${Number.isFinite(change) ? escapeHtml(fmtPct(change)) : "—"}</small>
+      </div>`;
+    });
+
+  if (!rows.length) {
+    node.hidden = true;
+    node.innerHTML = "";
+    return;
+  }
+
+  node.hidden = false;
+  node.dataset.mode = options.comparison ? "comparison" : "single";
+  node.innerHTML = rows.join("");
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -3696,36 +3743,43 @@ function atlasMedianInterval(rows = []) {
 }
 
 function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 420) {
-  const prices = Array.isArray(priceRows) ? priceRows : [];
+  const prices = (Array.isArray(priceRows) ? priceRows : [])
+    .map(point => ({ x: Number(point?.t ?? point?.x), price: Number(point?.price ?? point?.y) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.price) && point.price > 0)
+    .sort((a, b) => a.x - b.x);
   const volumes = (Array.isArray(volumeSeries) ? volumeSeries : [])
-    .map(point => ({ x: Number(point?.[0]), y: Number(point?.[1]) }))
+    .map(point => ({ x: Number(point?.[0] ?? point?.x), y: Number(point?.[1] ?? point?.y) }))
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y >= 0)
     .sort((a, b) => a.x - b.x);
 
   if (prices.length < 2 || !volumes.length) return [];
 
-  const start = Number(prices[0]?.t ?? prices[0]?.x);
-  const end = Number(prices[prices.length - 1]?.t ?? prices[prices.length - 1]?.x);
+  const start = prices[0].x;
+  const end = prices[prices.length - 1].x;
   const inRange = volumes.filter(point => point.x >= start && point.x <= end);
   if (!inRange.length) return [];
 
-  const count = Math.max(32, Math.min(Number(maximumBars || 420), prices.length));
-  const step = (end - start) / count;
-  const buckets = Array.from({ length: count }, () => ({ total: 0, samples: 0 }));
+  const requested = Math.max(32, Math.min(Number(maximumBars || 420), prices.length));
+  const stride = Math.max(1, Math.ceil(prices.length / requested));
+  const timeline = prices.filter((_, index) => index % stride === 0 || index === prices.length - 1);
+  const volumeStep = atlasMedianInterval(inRange) || atlasMedianInterval(prices) || Math.max(1, (end - start) / Math.max(1, timeline.length - 1));
+  const priceStep = atlasMedianInterval(prices) || volumeStep;
+  const maximumGap = Math.max(volumeStep * 2.5, priceStep * 2.5);
 
-  for (const point of inRange) {
-    const rawIndex = step > 0 ? Math.floor((point.x - start) / step) : 0;
-    const index = Math.max(0, Math.min(count - 1, rawIndex));
-    buckets[index].total += point.y;
-    buckets[index].samples += 1;
-  }
-
-  return buckets.map((bucket, index) => {
-    const left = start + step * index;
-    const right = index === count - 1 ? end : left + step;
+  let cursor = 0;
+  return timeline.map(pricePoint => {
+    while (cursor + 1 < inRange.length && inRange[cursor + 1].x <= pricePoint.x) cursor += 1;
+    const left = inRange[cursor] || null;
+    const right = inRange[cursor + 1] || null;
+    const nearest = !left
+      ? right
+      : !right
+        ? left
+        : Math.abs(left.x - pricePoint.x) <= Math.abs(right.x - pricePoint.x) ? left : right;
+    const distance = nearest ? Math.abs(nearest.x - pricePoint.x) : Infinity;
     return {
-      x: left + (right - left) / 2,
-      y: bucket.samples ? bucket.total / bucket.samples : 0
+      x: pricePoint.x,
+      y: nearest && distance <= maximumGap ? nearest.y : 0
     };
   });
 }
@@ -3744,10 +3798,11 @@ const atlasVolumeOverlayPlugin = {
     if (!(maxVolume > 0)) return;
 
     const ctx = chart.ctx;
-    const bandHeight = Math.max(36, (area.bottom - area.top) * 0.21);
-    const baseline = area.bottom - 18;
-    const available = Math.max(20, bandHeight - 12);
-    const barWidth = Math.max(1, Math.min(3.2, (area.right - area.left) / Math.max(80, rows.length) * 0.72));
+    const dateAxisReserve = 30;
+    const bandHeight = Math.max(38, (area.bottom - area.top) * 0.19);
+    const baseline = area.bottom - dateAxisReserve;
+    const available = Math.max(22, bandHeight);
+    const barWidth = Math.max(1, Math.min(3.4, (area.right - area.left) / Math.max(72, rows.length) * 0.82));
     const color = chart.$atlasVolumeColor || "98,236,255";
 
     ctx.save();
@@ -3986,6 +4041,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     state.chartEngineV2.realChart.$atlasVolumeAxisId = null;
     atlasRefreshChartScale(state.chartEngineV2.realChart);
     atlasChartV2RenderLegend([{ coin, result }], { result });
+    atlasRenderChartValueOverlay([{ coin, result, data: points, first: firstPrice }], { comparison: false, period });
     atlasChartV2SyncControls();
     return;
   }
@@ -4021,6 +4077,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   ctx.lineWidth = 2.2;
   ctx.stroke();
   atlasChartV2RenderLegend([{ coin, result }], { result });
+  atlasRenderChartValueOverlay([{ coin, result, data: points, first: firstPrice }], { comparison: false, period });
   atlasChartV2SyncControls();
 }
 
@@ -4446,6 +4503,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart.$atlasPeriod = period;
     state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
     atlasRefreshChartScale(state.chartEngineV2.realChart);
+    atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
     return normalizedEntries;
   }
 
@@ -4473,6 +4531,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     ctx.lineWidth = index === 0 ? 2.8 : 2.2;
     ctx.stroke();
   });
+  atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
   return normalizedEntries;
 }
 
@@ -9063,11 +9122,11 @@ function atlasMigrateStorage28111() {
 }
 
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
-} atlasSafeBoot("release labels 28.1.11", atlasSyncReleaseLabels);
-atlasSafeBoot("storage migration 28.1.11", atlasMigrateStorage28111);
+} atlasSafeBoot("release labels 28.1.12", atlasSyncReleaseLabels);
+atlasSafeBoot("storage migration 28.1.12", atlasMigrateStorage28111);
 atlasSafeBoot("navigation order and active section", atlasInitNavigationSpy);
 atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
-atlasSafeBoot("runtime responsive validation 28.1.11", atlasInitRuntimeStability);
+atlasSafeBoot("runtime responsive validation 28.1.12", atlasInitRuntimeStability);
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 atlasSafeBoot("Market ribbons V2 interactions", atlasInitMarketRibbonInteractions);
