@@ -8575,3 +8575,139 @@ a.source-portal:focus-visible {
 }
 
 /* The legend now contains only crypto symbols; Base 100 remains once on the axis/caption. */
+
+
+/* =========================================================
+   V1.1-alpha · Build 27.2.5
+   AUTO MEMORY & COLLECTOR TRUTH LOCK
+   ========================================================= */
+
+.memory-truth-panel .planning-intro {
+  max-width: 980px;
+}
+
+.memory-truth-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+
+.memory-truth-grid > article {
+  min-width: 0;
+  min-height: 58px !important;
+  padding: 8px 9px !important;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.095);
+  border-radius: 10px;
+  background: rgba(3,11,22,.48);
+}
+
+.memory-truth-grid > article b {
+  color: rgba(255,240,200,.72);
+  font: 820 7.5px/1.1 system-ui, sans-serif;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.memory-truth-grid > article span {
+  min-width: 0;
+  overflow: hidden;
+  color: #edf8ff;
+  font: 850 9px/1.18 system-ui, sans-serif;
+  text-overflow: ellipsis;
+}
+
+.collector-truth-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.collector-truth-card,
+.collector-truth-empty {
+  min-width: 0;
+  padding: 8px 9px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name count"
+    "latest latest"
+    "state state";
+  gap: 4px 8px;
+  border: 1px solid rgba(255,216,122,.16);
+  border-radius: 10px;
+  background: rgba(3,11,22,.50);
+}
+
+.collector-truth-card.is-current {
+  border-color: rgba(98,236,255,.34);
+  box-shadow: inset 3px 0 0 rgba(98,236,255,.72);
+}
+
+.collector-truth-card b {
+  grid-area: name;
+  overflow: hidden;
+  color: #fff0c8;
+  font: 900 9px/1.1 system-ui, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collector-truth-card span {
+  grid-area: count;
+  color: #d9f8ff;
+  font: 800 8px/1.1 system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.collector-truth-card small {
+  grid-area: latest;
+  color: rgba(184,207,225,.66);
+  font: 720 7.5px/1.15 system-ui, sans-serif;
+}
+
+.collector-truth-card em {
+  grid-area: state;
+  color: #8eefff;
+  font: 800 7.5px/1.2 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.collector-truth-empty {
+  display: block;
+  color: rgba(184,207,225,.66);
+  font: 760 8px/1.2 system-ui, sans-serif;
+}
+
+.github-memory-panel code {
+  color: #8eefff;
+  font-size: .94em;
+}
+
+.github-memory-output,
+.auto-reader-output,
+.shared-memory-output {
+  max-height: 280px;
+  overflow: auto;
+}
+
+@media (max-width: 1200px) {
+  .memory-truth-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .memory-truth-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .memory-truth-grid,
+  .collector-truth-list {
+    grid-template-columns: 1fr !important;
+  }
+}

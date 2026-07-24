@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.4 — NETWORK REQUEST GOVERNOR & CHART CONTINUITY LOCK</title>
+  <title>Agent-Crypto @erith.IA — V1.1-alpha · Build 27.2.5 — AUTO MEMORY & COLLECTOR TRUTH LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.4-network-governor-chart-continuity" />
+  <link rel="stylesheet" href="./style.css?v=1.1-alpha-build-27.2.5-auto-memory-collector-truth" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -19,7 +19,7 @@
           <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
 </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.4</span>
+          <span class="pill ok">GitHub Pack V1.1-alpha · Build 27.2.5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -741,7 +741,7 @@
 
 
 
-    <!-- Atlas collectors actifs sous le marché en alpha.26.30 -->
+    <!-- Atlas memory and collectors truth panels -->
       </div>
     </details>
 
@@ -753,39 +753,44 @@
       </summary>
       <div class="atlas-collapse-body">
 
-<section class="panel glass auto-reader-panel" id="auto-reader">
+<section class="panel glass auto-reader-panel memory-truth-panel" id="auto-reader">
       <div class="section-head">
         <div>
           <p class="eyebrow">ATLAS AUTO READER</p>
-          <h2>Collecte autonome du marché</h2>
-          <p class="planning-intro">Atlas travaille en arrière-plan. Panneau placé après la lecture marché / watchlist.</p>
+          <h2>Collecte locale vérifiable</h2>
+          <p class="planning-intro">Le navigateur collecte uniquement lorsque l’Auto Reader est actif et que cet onglet reste visible. Fermer la page arrête cette collecte locale.</p>
         </div>
-        <span class="pill ok" id="autoModeStatus">Auto ON</span>
+        <span class="pill ok" id="autoModeStatus">Auto actif</span>
       </div>
 
       <div class="auto-actions">
         <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
         <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
         <label class="sort-box auto-cadence-box">
-          <span>Cadence</span>
+          <span>Cadence marché</span>
           <select id="autoCadenceSelect">
-            <option value="adaptive" selected>Adaptative · 5 minutes</option>
-            <option value="300">5 minutes</option>
-            <option value="900">15 minutes</option>
+            <option value="adaptive" selected>Automatique · 60 secondes</option>
+            <option value="300">60 secondes</option>
+            <option value="900">60 secondes</option>
           </select>
         </label>
       </div>
 
-      <div class="auto-grid">
+      <div class="auto-grid memory-truth-grid">
+        <article><b>Auto Reader</b><span id="autoReaderTruth">ACTIF</span></article>
+        <article><b>Onglet / collecte</b><span id="autoVisibilityTruth">Visible</span></article>
         <article><b>Dernière lecture</b><span id="autoLastRead">En attente</span></article>
         <article><b>Prochaine lecture</b><span id="autoNextRead">Préparation</span></article>
-        <article><b>Cadence active</b><span id="autoActiveCadence">60 secondes</span></article>
-        <article><b>Snapshots auto</b><span id="autoSnapshots">0</span></article>
+        <article><b>Cadence marché</b><span id="autoActiveCadence">60 secondes</span></article>
+        <article><b>Snapshots locaux</b><span id="autoSnapshots">0</span></article>
+        <article><b>Dernier snapshot local</b><span id="autoLastSnapshotTruth">Aucun</span></article>
+        <article><b>Collecteur de ce Firefox</b><span id="autoCollectorTruth">En attente</span></article>
         <article><b>État marché</b><span id="autoMarketPulse">En attente</span></article>
         <article><b>Watchlist</b><span id="autoWatchStatus">BTC · ETH · SOL</span></article>
+        <article><b>Écriture GitHub</b><span id="autoGithubWriteTruth">NON · lecture seule</span></article>
       </div>
 
-      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture se lance automatiquement.</pre>
+      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture locale se lance automatiquement si l’onglet reste visible.</pre>
     </section>
       </div>
     </details>
@@ -804,7 +809,7 @@
         <div>
           <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
           <h2>Machine collectrice + export / import</h2>
-          <p class="planning-intro">Configuration à faire une seule fois par machine. Atlas garde l’ID dans Firefox, rattache les anciens snapshots locaux, puis collecte automatiquement.</p>
+          <p class="planning-intro">Configuration à faire une seule fois par machine. Les imports fusionnent les snapshots sans prouver que les autres machines collectent encore actuellement.</p>
         </div>
         <span class="pill" id="collectorIdentityBadge">Collecteur local</span>
       </div>
@@ -824,7 +829,7 @@
       <div class="shared-grid">
         <article><b>Machine configurée</b><span id="sharedCollectorId">Non défini</span></article>
         <article><b>Total disponible</b><span id="sharedLocalCount">0 snapshots fusionnés</span></article>
-        <article><b>Collecteurs fusionnés</b><span id="sharedCollectorsCount">0</span></article>
+        <article><b>Collecteurs présents</b><span id="sharedCollectorsCount">0</span></article>
         <article><b>Dernière opération</b><span id="sharedLastImport">Aucun import</span></article>
       </div>
 
@@ -842,28 +847,38 @@
       <div class="atlas-collapse-body">
 
 
-    <section class="panel glass github-memory-panel" id="github-memory">
+    <section class="panel glass github-memory-panel memory-truth-panel" id="github-memory">
       <div class="section-head">
         <div>
           <p class="eyebrow">ATLAS GITHUB SHARED MEMORY</p>
-          <h2>Mémoire commune GitHub</h2>
-          <p class="planning-intro">Atlas tente de charger automatiquement une mémoire partagée depuis le dépôt. Si elle n’existe pas encore, l’app continue avec la mémoire locale.</p>
+          <h2>Mémoire commune GitHub — vérité de chargement</h2>
+          <p class="planning-intro">Lecture automatique une fois au démarrage depuis <code>data/latest.json</code>. Le bouton ci-dessous force seulement une nouvelle lecture. Le frontend public ne peut pas écrire dans GitHub.</p>
         </div>
-        <span class="pill" id="githubMemoryStatus">À charger</span>
+        <span class="pill" id="githubMemoryStatus">Auto en attente</span>
       </div>
 
       <div class="github-actions">
-        <button class="btn small primary" id="btnLoadGithubMemory" type="button">Charger mémoire GitHub</button>
+        <button class="btn small primary" id="btnLoadGithubMemory" type="button">Forcer une nouvelle lecture GitHub</button>
       </div>
 
-      <div class="github-grid">
+      <div class="github-grid memory-truth-grid">
+        <article><b>Auto-chargement au démarrage</b><span id="githubMemoryAuto">En attente</span></article>
+        <article><b>Dernière tentative</b><span id="githubMemoryAutoAttempt">Aucune</span></article>
+        <article><b>Dernier succès</b><span id="githubMemorySuccess">Aucun</span></article>
         <article><b>Dernier relevé GitHub</b><span id="githubMemoryLatest">Non chargé</span></article>
         <article><b>Snapshots GitHub lus</b><span id="githubMemoryRecords">0</span></article>
-        <article><b>Collecteurs GitHub</b><span id="githubMemoryCollectors">Aucun</span></article>
+        <article><b>Snapshots locaux disponibles</b><span id="githubMemoryLocal">0</span></article>
+        <article><b>Nouveaux lors de la dernière fusion</b><span id="githubMemoryAdded">0</span></article>
+        <article><b>Collecteurs présents dans GitHub</b><span id="githubMemoryCollectors">Aucun</span></article>
         <article><b>Fusion locale</b><span id="githubMemoryFusion">En attente</span></article>
+        <article><b>Écriture GitHub depuis cette page</b><span id="githubMemoryWrite">NON · lecture seule</span></article>
       </div>
 
-      <pre class="github-memory-output" id="githubMemoryOutput">Mémoire GitHub non chargée. En alpha.26.30, Atlas sait déjà lire data/latest.json si le fichier existe. En alpha.26.30, GitHub Action crée ce fichier automatiquement après exécution du workflow.</pre>
+      <div class="collector-truth-list" id="collectorTruthList" aria-label="Présence réelle des collecteurs en mémoire">
+        <span class="collector-truth-empty">Aucun collecteur présent dans la mémoire locale.</span>
+      </div>
+
+      <pre class="github-memory-output" id="githubMemoryOutput">Lecture GitHub automatique en attente. La mémoire locale reste disponible même si GitHub ne répond pas.</pre>
     </section>
       </div>
     </details>
@@ -2153,6 +2168,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=1.1-alpha-build-27.2.4-network-governor-chart-continuity"></script>
+  <script src="./app.js?v=1.1-alpha-build-27.2.5-auto-memory-collector-truth"></script>
 </body>
 </html>
