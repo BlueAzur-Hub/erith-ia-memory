@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V2.0-alpha.6-creatrice-guided",
+  version: "V3.0-final",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -13,6 +13,59 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
     "Choix précis.",
     "Arrêt propre."
   ],
+  advisor: {
+    name: "Aerith-10 Créatrice Conseillère",
+    signature: "Éclairer le choix utile, préserver l’identité, conduire vers la forge.",
+    steps: [
+      {
+        title: "Choisir la bonne identité",
+        message: "Créatrice présente les profils canoniques et les spécialités préparées. Le profil actif alimente immédiatement tout l’Atelier.",
+        action: "Valider ce point de départ"
+      },
+      {
+        title: "Confirmer la mission",
+        message: "La mission, les destinataires, les sorties et la formule sont déjà inscrits. Une lecture suffit avant de poursuivre.",
+        action: "Valider la mission"
+      },
+      {
+        title: "Observer la constellation d’agents",
+        message: "Les agents sont déjà composés pour le profil choisi. Ils peuvent être conservés tels quels ou affinés sans repartir de zéro.",
+        action: "Valider les agents"
+      },
+      {
+        title: "Relier les héritages et les savoirs",
+        message: "Seven, Solaire, Lunaire et les modules sont proposés selon la fonction du profil. Chaque référence reste liée à une décision utile.",
+        action: "Valider les héritages"
+      },
+      {
+        title: "Donner sa présence au profil",
+        message: "Voix, modes, garde-fous, confidentialité et Stop Point sont prêts. Créatrice veille à la cohérence entre le Core et la Persona.",
+        action: "Valider la Persona"
+      },
+      {
+        title: "Relire la proposition",
+        message: "Le Core proposé, la Persona proposée et le brief forment le dossier de validation humaine. Le ZIP de proposition contient trois fichiers.",
+        action: "Poursuivre vers les sources"
+      },
+      {
+        title: "Réunir les sources canoniques",
+        message: "Pour un profil privé, importer le Core et la Persona validés sans suffixe PROPOSAL. Les profils publics utilisent leurs sources intégrées.",
+        action: "Vérifier les sources"
+      },
+      {
+        title: "Forger le paquet final",
+        message: "L’audit rassemble identité, sources, modules et Stop Point. Lorsque tout est prêt, le paquet canonique contient huit fichiers utiles.",
+        action: "Forger le profil"
+      }
+    ],
+    profiles: {
+      new: "Créatrice accompagne une nouvelle spécialité depuis l’intention jusqu’à sa proposition canonisable.",
+      seven: "Seven protège la mémoire, la vérité, la continuité et le routage des sources.",
+      creator: "Créatrice organise la production et réalise la destination artistique avec une architecture multi-agent.",
+      aerithcrypto: "Aerith-10 Crypto transforme l’analyse en compréhension, prudence et décision humaine.",
+      atlas: "Atlas-10 Crypto cartographie les données, les variables, les modèles et les risques."
+    }
+  },
   heritage: [
     {
       id: "seven",

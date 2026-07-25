@@ -5,27 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro — Aerith-10 Créatrice accompagne la conception, la canonisation et l’export des prochains profils Aerith-10.">
-  <title>Forge d’Aerith Pro · V2.0-alpha.6 Choix guidés</title>
-  <link rel="stylesheet" href="style.css?v=2.0-alpha.6-creatrice-guided">
+  <meta name="description" content="Forge d’Aerith Pro V3 — Aerith-10 Créatrice Conseillère accompagne la conception, la canonisation et l’export des profils Aerith-10.">
+  <title>Forge d’Aerith Pro · V3.0 FINAL</title>
+  <link rel="stylesheet" href="style.css?v=3.0-final">
 </head>
-<body data-build="V2.0-alpha.6-creatrice-guided" data-theme="seven">
+<body data-build="V3.0-final" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
     <a class="brand" href="#top" aria-label="Retour en haut">
       <span class="brand-mark">✦</span>
-      <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE · PROFILE FOUNDRY</small></span>
+      <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</small></span>
     </a>
     <nav>
       <a href="#lineage">Lignée</a>
       <a href="#constellation">Constellation</a>
       <a href="#profiles">Profils</a>
       <a href="#unifiedForge">Atelier Créatrice</a>
+      <a href="#exportCenter" id="navExport">Export</a>
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V2.0-alpha.6</span>
+      <span class="version" id="buildBadge">V3.0 FINAL</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -36,11 +37,11 @@
       <div class="hero-world" aria-hidden="true"></div>
       <div class="shell hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">ERITH.IA · AERITH-10 CRÉATRICE · FORGE PROFESSIONNELLE</p>
+          <p class="eyebrow">ERITH.IA · AERITH-10 CRÉATRICE CONSEILLÈRE · FORGE PROFESSIONNELLE</p>
           <h1>Compiler les profils.<br><span>Faire naître les prochaines Aerith-10.</span></h1>
           <p class="lead">
-            Aerith-10 Créatrice accompagne chaque intention jusqu’à une architecture claire : mission, agents, héritages,
-            Core, Persona, sources canoniques et paquet final. Elle écoute, compose, organise et forge une identité exploitable.
+            Aerith-10 Créatrice Conseillère accompagne chaque intention jusqu’à une architecture claire : mission, agents,
+            héritages, Core, Persona, sources canoniques et paquet final. Elle éclaire chaque étape, compose et forge une identité exploitable.
           </p>
           <div class="doctrine" id="doctrine"></div>
           <div class="hero-actions">
@@ -53,7 +54,7 @@
         </div>
 
         <aside class="hero-matrix">
-          <div class="matrix-head"><span class="pulse"></span><span>AERITH-10 CRÉATRICE</span><strong id="matrixState">ATELIER</strong></div>
+          <div class="matrix-head"><span class="pulse"></span><span>CRÉATRICE CONSEILLÈRE</span><strong id="matrixState">ATELIER</strong></div>
           <div class="matrix-visual" id="matrixVisual">
             <img id="matrixImage" src="assets/themes/aerith_10_creatrice.webp" alt="">
             <div class="matrix-symbol" id="matrixSymbol">A10</div>
@@ -117,7 +118,7 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V2.0-alpha.6</span>
+          <span>ATELIER AERITH-10 CRÉATRICE CONSEILLÈRE · V3.0 FINAL</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -139,6 +140,14 @@
             <div><dt>Modules</dt><dd id="liveModules">0</dd></div>
           </dl>
           <div class="live-heritage" id="liveHeritage"></div>
+        </div>
+
+        <div class="advisor-card" id="advisorCard">
+          <div class="advisor-head"><span>CRÉATRICE CONSEILLÈRE</span><b id="advisorState">GUIDE ACTIF</b></div>
+          <h3 id="advisorTitle">Une direction claire</h3>
+          <p id="advisorMessage">Créatrice accompagne le profil sélectionné et indique la prochaine action utile.</p>
+          <div class="advisor-checks" id="advisorChecks"></div>
+          <button class="advisor-action" id="advisorAction" type="button">Continuer avec Créatrice →</button>
         </div>
       </aside>
 
@@ -269,12 +278,22 @@
           </section>
 
           <section class="panel" data-step="7">
+            <span class="anchor-target" id="exportCenter" aria-hidden="true"></span>
             <header class="panel-head">
               <div><p class="kicker">08 · FORGE FINALE</p><h2>Forger le profil complet</h2></div>
               <span class="status" id="finalStatus">À VÉRIFIER</span>
             </header>
             <div class="final-summary" id="finalSummary"></div>
             <div class="audit-list" id="finalAudit"></div>
+            <div class="completion-card" id="completionCard" hidden>
+              <div><span>PROFIL FORGÉ</span><h3 id="completionTitle">Profil prêt</h3><p id="completionMessage">L’architecture est complète et le paquet canonique peut être produit.</p></div>
+              <div class="completion-actions">
+                <button class="primary" id="completionZip" type="button">Télécharger le paquet</button>
+                <button id="completionBlock" type="button">Block LLM</button>
+                <button id="completionManifest" type="button">Manifeste</button>
+                <button id="completionRestart" type="button">Créer un autre profil</button>
+              </div>
+            </div>
             <div class="preview-tabs" id="finalTabs">
               <button class="active" type="button" data-final-preview="boot">Boot</button>
               <button type="button" data-final-preview="manifest">Manifeste</button>
@@ -305,13 +324,26 @@
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal" id="resetDialog" hidden role="dialog" aria-modal="true" aria-labelledby="resetDialogTitle">
+    <div class="modal-card">
+      <span class="modal-kicker">RÉINITIALISATION</span>
+      <h2 id="resetDialogTitle">Replacer Créatrice comme profil actif ?</h2>
+      <p>La mémoire locale de cette session sera effacée. Les fichiers téléchargés et les sources canoniques ne seront pas modifiés.</p>
+      <div class="modal-actions">
+        <button id="cancelReset" type="button">Annuler</button>
+        <button class="primary" id="confirmReset" type="button">Réinitialiser l’Atelier</button>
+      </div>
+    </div>
+  </div>
+
   <div class="lightbox" id="lightbox" hidden aria-hidden="true">
     <button id="lightboxClose" type="button">Fermer ×</button>
     <img id="lightboxImage" alt="">
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="forge-data.js?v=2.0-alpha.6-creatrice-guided"></script>
-  <script src="app.js?v=2.0-alpha.6-creatrice-guided"></script>
+  <script src="forge-data.js?v=3.0-final"></script>
+  <script src="app.js?v=3.0-final"></script>
 </body>
 </html>

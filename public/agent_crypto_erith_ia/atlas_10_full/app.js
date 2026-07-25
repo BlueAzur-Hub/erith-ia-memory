@@ -7,7 +7,8 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-creatrice-v2-alpha6";
+  const STORAGE_KEY = "aerith-forge-v3-final";
+  const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
 
   const STEPS = [
     ["01", "Intention", "Choisir une identité canonique ou ouvrir une nouvelle voie."],
@@ -108,7 +109,14 @@
   function loadState() {
     const fallback = defaultState();
     try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      let rawText = localStorage.getItem(STORAGE_KEY);
+      if (!rawText) {
+        for (const legacyKey of LEGACY_STORAGE_KEYS) {
+          rawText = localStorage.getItem(legacyKey);
+          if (rawText) break;
+        }
+      }
+      const raw = JSON.parse(rawText || "null");
       if (!raw || typeof raw !== "object") return fallback;
       return {
         ...fallback,
@@ -543,6 +551,7 @@
     renderConstellation();
     renderProposal();
     renderFinal();
+    renderAdvisor();
   }
 
   function renderAgentSuggestions() {
@@ -559,6 +568,114 @@
     }).join("");
   }
 
+  function advisorModel() {
+    const guide = DATA.advisor?.steps?.[state.step] || {
+      title: "Créatrice accompagne la Forge",
+      message: "Le profil actif reste disponible pendant tout le parcours.",
+      action: "Continuer"
+    };
+    const p = profile();
+    const i = state.identity;
+    const checks = [];
+    let stateLabel = "GUIDE ACTIF";
+    let actionType = "next";
+    let actionLabel = guide.action || "Continuer";
+
+    if (state.step === 0) {
+      checks.push(["ok", p.name]);
+      checks.push(["ok", p.kind === "new" ? "Création guidée" : "Profil canonique"]);
+    } else if (state.step === 1) {
+      checks.push([i.role ? "ok" : "warn", i.role ? "Mission inscrite" : "Mission à préciser"]);
+      checks.push([i.outputs.length ? "ok" : "warn", `${i.outputs.length} sortie(s) préparée(s)`]);
+      checks.push([i.formula ? "ok" : "warn", i.formula ? "Formule centrale prête" : "Formule à préciser"]);
+    } else if (state.step === 2) {
+      checks.push([i.agents.length ? "ok" : "warn", `${i.agents.length} agent(s) interne(s)`]);
+      checks.push(["ok", "Une voix finale"]);
+    } else if (state.step === 3) {
+      checks.push([i.heritage.length ? "ok" : "warn", `${i.heritage.length} héritage(s)`]);
+      checks.push([i.modules.length ? "ok" : "warn", `${i.modules.length} module(s) référencé(s)`]);
+    } else if (state.step === 4) {
+      checks.push([i.tone ? "ok" : "warn", i.tone ? "Voix définie" : "Voix à préciser"]);
+      checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
+      checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
+    } else if (state.step === 5) {
+      checks.push(["ok", "Core Proposal"]);
+      checks.push(["ok", "Persona Proposal"]);
+      checks.push(["ok", "Brief de validation"]);
+      actionType = "next";
+      actionLabel = "Poursuivre vers les sources";
+    } else if (state.step === 6) {
+      if (p.privacy === "public") {
+        checks.push(["ok", "Core public intégré"]);
+        checks.push(["ok", "Persona publique intégrée"]);
+        stateLabel = "SOURCES PRÊTES";
+        actionType = "goto-final";
+        actionLabel = "Vérifier la Forge finale";
+      } else {
+        const core = importedKind("core");
+        const persona = importedKind("persona");
+        checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
+        checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
+        checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
+        if (core && persona && state.canonicalConfirmed) {
+          stateLabel = "SOURCES PRÊTES";
+          actionType = "goto-final";
+          actionLabel = "Vérifier la Forge finale";
+        } else {
+          stateLabel = "SOURCES À RÉUNIR";
+          actionType = "files";
+          actionLabel = "Choisir les fichiers canoniques";
+        }
+      }
+    } else if (state.step === 7) {
+      const audit = finalAudit();
+      checks.push([audit.ready ? "ok" : "warn", audit.ready ? "Architecture complète" : "Audit à compléter"]);
+      checks.push(["ok", `${i.modules.length} module(s) référencé(s)`]);
+      if (audit.ready) {
+        stateLabel = "PRÊT À FORGER";
+        actionType = "forge";
+        actionLabel = "Télécharger le paquet final";
+      } else {
+        stateLabel = "À VÉRIFIER";
+        actionType = "sources";
+        actionLabel = "Revenir aux sources";
+      }
+    }
+
+    return {
+      ...guide,
+      profileNote: DATA.advisor?.profiles?.[state.profileId] || i.role || "",
+      checks,
+      stateLabel,
+      actionType,
+      actionLabel
+    };
+  }
+
+  function renderAdvisor() {
+    const card = $("#advisorCard");
+    if (!card) return;
+    const model = advisorModel();
+    $("#advisorState").textContent = model.stateLabel;
+    $("#advisorTitle").textContent = model.title;
+    $("#advisorMessage").textContent = `${model.message} ${model.profileNote}`.trim();
+    $("#advisorChecks").innerHTML = model.checks.map(item =>
+      `<span class="${item[0]}"><i>${item[0] === "ok" ? "✓" : "◇"}</i>${esc(item[1])}</span>`
+    ).join("");
+    const action = $("#advisorAction");
+    action.textContent = `${model.actionLabel} →`;
+    action.dataset.advisorAction = model.actionType;
+  }
+
+  function renderCompletion(audit = finalAudit()) {
+    const card = $("#completionCard");
+    if (!card) return;
+    card.hidden = !audit.ready;
+    if (!audit.ready) return;
+    $("#completionTitle").textContent = `${state.identity.name} est prête`;
+    $("#completionMessage").textContent = "Identité, Core, Persona, sources, modules et Stop Point sont réunis. Le paquet canonique peut être téléchargé.";
+  }
+
   function activateStep(index, focus = false) {
     state.step = Math.max(0, Math.min(STEPS.length - 1, Number(index) || 0));
     persist();
@@ -573,6 +690,7 @@
     renderStepNav();
     renderMatrix();
     renderLiveProfile();
+    renderAdvisor();
     if (state.step === 5) renderProposal();
     if (state.step === 6) renderImports();
     if (state.step === 7) renderFinal();
@@ -1101,6 +1219,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
     $("#forgeZip").disabled = !audit.ready;
+    renderCompletion(audit);
     if (!audit.ready) $("#forgeLog").textContent = "ZIP final disponible après import du Core et de la Persona canoniques.";
   }
 
@@ -1117,6 +1236,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     renderImports();
     renderProposal();
     renderFinal();
+    renderAdvisor();
     activateStep(state.step);
   }
 
@@ -1263,7 +1383,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       const agent = agentButton.dataset.agent;
       if (!state.identity.agents.includes(agent)) state.identity.agents.push(agent);
       $("#fieldAgents").value = state.identity.agents.join("\n");
-      persist(); renderLiveProfile(); renderProposal(); renderFinal();
+      persist(); renderLiveProfile(); renderProposal(); renderFinal(); renderAdvisor();
     }
 
     const previewButton = event.target.closest("[data-preview]");
@@ -1292,7 +1412,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       state.identity.heritage = heritageInput.checked
         ? [...new Set([...state.identity.heritage, id])]
         : state.identity.heritage.filter(item => item !== id);
-      persist(); renderHeritage(); renderLiveProfile(); renderProposal(); renderFinal();
+      persist(); renderHeritage(); renderLiveProfile(); renderProposal(); renderFinal(); renderAdvisor();
     }
   });
 
@@ -1314,6 +1434,30 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   $("#nextTop").addEventListener("click", () => activateStep(state.step + 1));
   $("#nextBottom").addEventListener("click", () => activateStep(state.step + 1));
   $("#lightboxClose").addEventListener("click", closeLightbox);
+
+  $("#advisorAction").addEventListener("click", () => {
+    const action = $("#advisorAction").dataset.advisorAction || "next";
+    if (action === "next") activateStep(Math.min(STEPS.length - 1, state.step + 1), true);
+    else if (action === "files") {
+      activateStep(6, true);
+      setTimeout(() => $("#fileInput").click(), 260);
+    } else if (action === "goto-final") activateStep(7, true);
+    else if (action === "forge") $("#forgeZip").click();
+    else if (action === "sources") activateStep(6, true);
+  });
+
+  $("#navExport").addEventListener("click", event => {
+    event.preventDefault();
+    activateStep(7, true);
+  });
+
+  $("#completionZip").addEventListener("click", () => $("#forgeZip").click());
+  $("#completionBlock").addEventListener("click", () => $("#downloadBlock").click());
+  $("#completionManifest").addEventListener("click", () => $("#downloadManifest").click());
+  $("#completionRestart").addEventListener("click", () => {
+    applyProfile("new", false);
+    activateStep(0, true);
+  });
 
   $("#chooseFiles").addEventListener("click", () => $("#fileInput").click());
   $("#chooseFolder").addEventListener("click", () => $("#folderInput").click());
@@ -1356,16 +1500,63 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
     }
   });
 
-  $("#resetAll").addEventListener("click", () => {
-    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    state = defaultState();
-    persist(); renderAll(); showToast("Aerith-10 Créatrice est replacée comme profil par défaut.");
+  function openResetDialog() {
+    $("#resetDialog").hidden = false;
+    document.body.classList.add("modal-open");
+    $("#cancelReset").focus();
+  }
+
+  function closeResetDialog() {
+    $("#resetDialog").hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  $("#resetAll").addEventListener("click", openResetDialog);
+  $("#cancelReset").addEventListener("click", closeResetDialog);
+  $("#resetDialog").addEventListener("click", event => {
+    if (event.target.id === "resetDialog") closeResetDialog();
   });
+  $("#confirmReset").addEventListener("click", () => {
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      for (const legacyKey of LEGACY_STORAGE_KEYS) localStorage.removeItem(legacyKey);
+    } catch {}
+    state = defaultState();
+    persist();
+    renderAll();
+    closeResetDialog();
+    showToast("Aerith-10 Créatrice est replacée comme profil par défaut.");
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      if (!$("#resetDialog").hidden) closeResetDialog();
+      if (!$("#lightbox").hidden) closeLightbox();
+    }
+  });
+
+  function initSectionNavigation() {
+    const links = $$(".topbar nav a[href^='#']").filter(link => link.id !== "navExport");
+    const targets = links.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+    if (!("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      links.forEach(link => {
+        const active = link.getAttribute("href") === `#${visible.target.id}`;
+        link.classList.toggle("active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }, {rootMargin:"-28% 0px -58% 0px", threshold:[0.05, 0.2, 0.5]});
+    targets.forEach(target => observer.observe(target));
+  }
 
   renderDoctrine();
   renderLineage();
   renderAll();
+  initSectionNavigation();
 
   if (document.body.dataset.build !== DATA.version) {
     const diagnostic = $("#diagnostic");
