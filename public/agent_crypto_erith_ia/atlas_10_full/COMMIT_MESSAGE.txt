@@ -1,11 +1,9 @@
-release Forge d'Aerith Pro V2.0-alpha.2 raw block llm
+release Forge d'Aerith Pro V2.0-alpha.3 unified flow
 
-- prépare la migration atlas_10_full_crypto vers atlas_10_full
-- ajoute les URLs GitHub et Raw pour Core, Persona, Heart et modules
-- ajoute un Block LLM court pour ChatGPT et les LLM locaux
-- ajoute le repli obligatoire vers les fichiers locaux si une URL privée est inaccessible
-- exporte BLOCK_LLM et GITHUB_HTTP_RAW_LINKS dans les paquets de conception et de compilation
-- ajoute les prévisualisations et téléchargements HTTP / Raw
-- corrige définitivement les visages coupés avec des médias réels en object-fit contain
-- remplace les fonds recadrés des cartes profils par des images complètes
-- conserve la Forge V2 guidée et le compilateur source-fidèle
+- merge guided design and compilation into one 8-step workflow
+- replace dual JavaScript state with one persistent state
+- remove duplicate identity, heritage, module and persona inputs
+- preserve canonical modules by GitHub and Raw references
+- clarify Aerith-10 Creator, Aerith-10 Crypto and Atlas-10 Crypto roles
+- keep private canonization human-controlled
+- package deployment inside atlas_10_full wrapper directory

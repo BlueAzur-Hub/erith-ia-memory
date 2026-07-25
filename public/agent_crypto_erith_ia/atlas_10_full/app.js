@@ -1,161 +1,162 @@
 (() => {
   "use strict";
 
-  const DATA = window.AERITH_FORGE_PRO_DATA;
+  const DATA = window.AERITH_UNIFIED_DATA;
   if (!DATA) throw new Error("forge-data.js introuvable.");
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const PRIVATE_REPO = "BlueAzur-Hub/erith-ia-notion-archive-private";
-  const PUBLIC_REPO = "BlueAzur-Hub/erith-ia-memory";
-  const GITHUB_BRANCH = "main";
-  const FORGE_PUBLIC_REPO_PATH = "public/agent_crypto_erith_ia/atlas_10_full";
-  const steps = [
-    ["01","Identité","Choisir un profil canonique ou définir un nouvel Aerith-10."],
-    ["02","Sources","Importer Core, Persona, image et modules."],
-    ["03","Analyse","Lire les métadonnées et confirmer la référence privée."],
-    ["04","Héritages","Sélectionner Seven, Solaire, Lunaire et les modules utiles."],
-    ["05","Thème","Associer un langage visuel sans modifier le Core."],
-    ["06","Audit","Vérifier les manques et le Boot."],
-    ["07","Export","Produire un ZIP professionnel et traçable."]
+  const STORAGE_KEY = "aerith-forge-unified-v2-alpha3";
+
+  const STEPS = [
+    ["01", "Point de départ", "Créer une spécialité ou reprendre un profil canonique."],
+    ["02", "Mission", "Définir une seule identité réutilisée partout."],
+    ["03", "Multi-agents", "Composer une équipe interne minimale et utile."],
+    ["04", "Héritages", "Référencer les modules sans les dupliquer."],
+    ["05", "Persona", "Fixer voix, modes, limites et stop point."],
+    ["06", "Proposition", "Relire la proposition ou la synthèse de référence."],
+    ["07", "Sources", "Importer les fichiers canonisés sans ressaisir."],
+    ["08", "Audit & export", "Vérifier et produire le paquet final."]
   ];
 
-  const state = {
-    mode: "custom",
-    profileId: "seven",
-    step: 0,
-    imports: [],
-    modules: [],
+  const blankIdentity = () => ({
+    name: "Aerith-10 Nouvelle Spécialité",
+    family: "Filles d’Aerith",
+    level: "Aerith-10",
+    mode: "",
+    role: "",
+    problem: "",
+    users: "Christophe et les utilisateurs explicitement définis par le projet.",
+    outputs: [],
+    formula: "Intention → Ressources → Destination utile.",
+    agents: [],
     heritage: ["seven"],
-    theme: "creator",
+    modules: [],
+    nonDuplication: "Référencer les modules existants avant toute création nouvelle.",
+    tone: "Claire, chaleureuse, précise et fidèle à sa fonction.",
+    modes: ["standard", "audit", "livraison"],
+    guardrails: [
+      "Ne pas inventer une source absente.",
+      "Ne pas décider à la place de Christophe.",
+      "Une mission = une destination utile.",
+      "S’arrêter lorsque le résultat demandé est livré."
+    ],
+    confidentiality: "Privée par défaut.",
+    stopPoint: "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
+    corePath: "",
+    personaPath: "",
+    memoryPath: "",
+    status: "Proposition locale non canonique",
+    version: "",
+    imagePath: ""
+  });
+
+  const defaultState = () => ({
+    step: 0,
+    profileId: "new",
+    selectedExample: "preceptrice",
+    proposalPreview: "core",
+    finalPreview: "boot",
     canonicalConfirmed: false,
-    custom: {
-      name: "Aerith-10 Nouvelle Spécialité",
-      family: "Filles d’Aerith",
-      level: "Aerith-10",
-      mode: "",
-      role: "",
-      version: "",
-      status: "",
-      compatibility: "",
-      personaPath: "",
-      memoryPath: "",
-      corePath: "",
-      imagePath: "",
-      update: "",
-      exportRoot: "AERITH_10_NOUVELLE_SPECIALITE"
-    },
-    parsed: {},
-    visualUrl: ""
-  };
+    identity: blankIdentity(),
+    imports: [],
+    importedFileMeta: [],
+    visualUrl: "",
+    lastSaved: ""
+  });
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function loadState() {
+    const fallback = defaultState();
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      if (!raw || typeof raw !== "object") return fallback;
+      return {
+        ...fallback,
+        ...raw,
+        identity: {...fallback.identity, ...(raw.identity || {})},
+        imports: [],
+        visualUrl: ""
+      };
+    } catch {
+      return fallback;
+    }
+  }
+
+  let state = loadState();
+
+  function persist() {
+    const serializable = {
+      ...state,
+      imports: [],
+      visualUrl: "",
+      importedFileMeta: state.imports.map(item => ({path:item.path, kind:item.kind, size:item.file.size}))
+    };
+    state.lastSaved = new Date().toISOString();
+    serializable.lastSaved = state.lastSaved;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
+    } catch {}
+    const target = $("#savedState");
+    if (target) target.textContent = "Mémorisé";
+  }
 
   function profile() {
     return DATA.profiles.find(item => item.id === state.profileId) || DATA.profiles[0];
   }
 
+  function isNew() {
+    return state.profileId === "new";
+  }
+
   function esc(value) {
     return String(value ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function lines(value) {
+    return String(value || "").split(/\r?\n/).map(item => item.trim()).filter(Boolean);
   }
 
   function cleanName(value) {
     return String(value || "AERITH_10_PROFILE")
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-      .replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "")
       .toUpperCase() || "AERITH_10_PROFILE";
   }
 
   function cleanPath(value) {
-    return String(value || "").replaceAll("\\","/").split("/")
+    return String(value || "").replaceAll("\\", "/").split("/")
       .filter(part => part && part !== "." && part !== "..").join("/");
-  }
-
-  function basename(value) {
-    return cleanPath(value).split("/").at(-1) || "";
-  }
-
-  function formatSize(bytes) {
-    if (bytes < 1024) return `${bytes} o`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
-    return `${(bytes / 1024 / 1024).toFixed(1)} Mo`;
   }
 
   function encodeRepoPath(value) {
     return cleanPath(value).split("/").map(part => encodeURIComponent(part)).join("/");
   }
 
-  function githubBlobUrl(repo, path) {
-    return `https://github.com/${repo}/blob/${GITHUB_BRANCH}/${encodeRepoPath(path)}`;
+  function stripMarkdown(value) {
+    return String(value || "")
+      .replace(/[`*_#]/g, "")
+      .replace(/^[\s🌸🧭⚠️💠◇✦]+/u, "")
+      .trim();
   }
 
-  function githubRawUrl(repo, path) {
-    return `https://raw.githubusercontent.com/${repo}/${GITHUB_BRANCH}/${encodeRepoPath(path)}`;
-  }
-
-  function resolveRepoPath(value, fallbackRepo = PUBLIC_REPO) {
-    let path = String(value || "").trim();
-    if (!path) return null;
-    if (/^https?:\/\//i.test(path)) return {repo:"external",path,url:path,raw:path};
-
-    let repo = fallbackRepo;
-    if (/^private:/i.test(path)) {
-      repo = PRIVATE_REPO;
-      path = path.replace(/^private:/i,"");
-    } else if (/^public:/i.test(path)) {
-      repo = PUBLIC_REPO;
-      path = path.replace(/^public:/i,"");
-    } else if (/^(core|private|packs)\//i.test(path)) {
-      repo = PRIVATE_REPO;
-    }
-
-    path = cleanPath(path);
-    return {
-      repo,
-      path,
-      url: githubBlobUrl(repo,path),
-      raw: githubRawUrl(repo,path)
-    };
-  }
-
-  function compilerCanonicalReferences() {
-    const p = state.mode === "existing" ? profile() : null;
-    let corePath = "";
-    let personaPath = "";
-    let coreRepo = PRIVATE_REPO;
-    let personaRepo = PRIVATE_REPO;
-
-    if (state.mode === "custom") {
-      corePath = state.custom.corePath || $("#canonicalPath").value || coreImport()?.path || "";
-      personaPath = state.custom.personaPath || personaImport()?.path || "";
-    } else if (p.privacy === "public") {
-      const coreSource = p.sources.find(source => /core/i.test(source[2]) && source[4]);
-      const personaSource = p.sources.find(source => /persona/i.test(source[2]) && source[4]);
-      corePath = `${FORGE_PUBLIC_REPO_PATH}/${coreSource?.[1] || ""}`;
-      personaPath = `${FORGE_PUBLIC_REPO_PATH}/${personaSource?.[1] || ""}`;
-      coreRepo = PUBLIC_REPO;
-      personaRepo = PUBLIC_REPO;
-    } else {
-      corePath = p.canonicalPath || "";
-      personaPath = p.sources.find(source => /persona/i.test(source[2]))?.[1] || "";
-    }
-
-    const heartPath = "core/AERITH_LIVING_REFLECTION_HEART.md";
-    return {
-      core: corePath ? {
-        repo:coreRepo,path:cleanPath(corePath),
-        url:githubBlobUrl(coreRepo,corePath),raw:githubRawUrl(coreRepo,corePath)
-      } : null,
-      persona: personaPath ? {
-        repo:personaRepo,path:cleanPath(personaPath),
-        url:githubBlobUrl(personaRepo,personaPath),raw:githubRawUrl(personaRepo,personaPath)
-      } : null,
-      heart: {
-        repo:PRIVATE_REPO,path:heartPath,
-        url:githubBlobUrl(PRIVATE_REPO,heartPath),raw:githubRawUrl(PRIVATE_REPO,heartPath)
-      }
-    };
+  function formatSize(bytes) {
+    if (!bytes) return "0 o";
+    const units = ["o", "Ko", "Mo", "Go"];
+    let index = 0;
+    let value = bytes;
+    while (value >= 1024 && index < units.length - 1) { value /= 1024; index += 1; }
+    return `${value >= 10 || index === 0 ? Math.round(value) : value.toFixed(1)} ${units[index]}`;
   }
 
   function showToast(message) {
@@ -166,22 +167,6 @@
     showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
   }
 
-  async function copyText(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const area = document.createElement("textarea");
-      area.value = text;
-      area.style.position = "fixed";
-      area.style.opacity = "0";
-      document.body.appendChild(area);
-      area.select();
-      document.execCommand("copy");
-      area.remove();
-    }
-    showToast("Copié.");
-  }
-
   function downloadBlob(name, blob) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -190,41 +175,626 @@
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1200);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
   }
 
   function downloadText(name, text, type = "text/markdown;charset=utf-8") {
     downloadBlob(name, new Blob([text], {type}));
   }
 
-  function activeName() {
-    return state.mode === "custom" ? state.custom.name : profile().name;
+  function githubBlobUrl(repo, path) {
+    return `https://github.com/${repo}/blob/${DATA.branch}/${encodeRepoPath(path)}`;
   }
 
-  function activeRole() {
-    return state.mode === "custom" ? state.custom.role : profile().role;
+  function githubRawUrl(repo, path) {
+    return `https://raw.githubusercontent.com/${repo}/${DATA.branch}/${encodeRepoPath(path)}`;
   }
 
-  function activeRoot() {
-    return cleanName(state.mode === "custom" ? state.custom.exportRoot || state.custom.name : profile().name);
+  function resolveSource(value) {
+    let original = String(value || "").trim();
+    if (!original) return null;
+    if (/^https?:\/\//i.test(original)) {
+      return {label:original, repo:"external", path:original, url:original, raw:original, privacy:"external"};
+    }
+
+    let repo = DATA.publicRepo;
+    let privacy = "public";
+    let path = original;
+    if (/^private:/i.test(path)) {
+      repo = DATA.privateRepo;
+      privacy = "private";
+      path = path.replace(/^private:/i, "");
+    } else if (/^public:/i.test(path)) {
+      path = path.replace(/^public:/i, "");
+    } else if (/^(core|private|packs|modules)\//i.test(path)) {
+      repo = DATA.privateRepo;
+      privacy = "private";
+    }
+    path = cleanPath(path);
+    return {label:original, repo, path, url:githubBlobUrl(repo, path), raw:githubRawUrl(repo, path), privacy};
   }
 
-  function activeThemeVisual() {
+  function currentVisual() {
     if (state.visualUrl) return state.visualUrl;
-    const theme = DATA.themes.find(item => item[0] === state.theme);
-    return theme?.[3] || (state.mode === "existing" ? profile().visual : "");
+    return profile().visual || DATA.heritage.find(item => item.id === "seven").visual;
   }
 
-  function coreImport() {
-    return state.imports.find(item => item.kind === "core") || null;
+  function canonicalBase() {
+    return cleanName(state.identity.name).replace(/^AERITH10_/, "AERITH_10_");
   }
 
-  function personaImport() {
-    return state.imports.find(item => item.kind === "persona") || null;
+  function defaultCoreTarget() {
+    if (!isNew()) return state.identity.corePath || profile().corePath || "";
+    return `core/${canonicalBase()}_MULTI_AGENT_CORE.md`;
   }
 
-  function visualImport() {
-    return state.imports.find(item => item.kind === "visual") || null;
+  function defaultPersonaTarget() {
+    if (!isNew()) return state.identity.personaPath || profile().personaPath || "";
+    return `core/${canonicalBase()}_PERSONA_OPERATING_LAYER.md`;
+  }
+
+  function proposalFileName(type) {
+    const base = canonicalBase();
+    if (type === "core") return `${base}_MULTI_AGENT_CORE_PROPOSAL.md`;
+    if (type === "persona") return `${base}_PERSONA_OPERATING_LAYER_PROPOSAL.md`;
+    if (type === "block") return `${base}_BLOCK_LLM_LOCAL.md`;
+    if (type === "links") return `${base}_GITHUB_HTTP_RAW_LINKS.md`;
+    return `${base}_DESIGN_BRIEF.md`;
+  }
+
+  function finalFileName(type) {
+    const base = cleanName(state.identity.name);
+    if (type === "boot") return `BOOT_${base}.md`;
+    if (type === "manifest") return `MANIFESTE_${base}.md`;
+    if (type === "block") return `BLOCK_LLM_${base}.md`;
+    if (type === "links") return `GITHUB_HTTP_RAW_${base}.md`;
+    return `PROFILE_SPEC_${base}.json`;
+  }
+
+  function applyProfile(id, move = true) {
+    const selected = DATA.profiles.find(item => item.id === id);
+    if (!selected) return;
+    state.profileId = id;
+    state.selectedExample = "";
+    state.canonicalConfirmed = selected.kind === "existing" && selected.privacy === "public";
+    state.identity = {
+      ...blankIdentity(),
+      name: selected.name,
+      family: selected.family,
+      level: selected.level,
+      mode: selected.kind === "new" ? "" : selected.role.split(":")[0],
+      role: selected.role,
+      problem: selected.kind === "new" ? "" : selected.description,
+      users: "Christophe et les utilisateurs explicitement définis par le projet.",
+      outputs: selected.kind === "new" ? [] : ["destination utile", "synthèse vérifiable", "fichiers ou décisions nécessaires"],
+      formula: selected.kind === "new" ? "Intention → Ressources → Destination utile." : "Mission → Sources → Décision → Destination utile.",
+      agents: clone(selected.agents || []),
+      heritage: clone(selected.heritage || []),
+      modules: clone(selected.modules || []),
+      nonDuplication: selected.id === "creator"
+        ? "Créatrice organise et réalise la production artistique ; elle ne devient pas la base universelle des autres Aerith-10."
+        : "Référencer les sources et modules canoniques sans les dupliquer.",
+      tone: selected.id === "atlas" ? "Analytique, explicite, vérifiable et sans théâtralisation." : "Claire, chaleureuse, précise et fidèle à sa fonction.",
+      modes: clone(selected.modes || []),
+      guardrails: clone(selected.guardrails || []),
+      confidentiality: selected.privacy === "public" ? "Sources publiques incluses ; aucune source privée ajoutée sans contrôle." : "Privée par défaut.",
+      stopPoint: "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
+      corePath: selected.corePath || "",
+      personaPath: selected.personaPath || "",
+      memoryPath: selected.memoryPath || "",
+      status: selected.status,
+      version: "",
+      imagePath: selected.visual || ""
+    };
+    state.imports = [];
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    state.visualUrl = "";
+    state.step = move ? 0 : state.step;
+    persist();
+    renderAll();
+    if (move) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
+    showToast(`${selected.name} chargé dans le parcours unique.`);
+  }
+
+  function applyExample(id) {
+    const example = DATA.examples.find(item => item.id === id);
+    if (!example) return;
+    state.profileId = "new";
+    state.selectedExample = id;
+    state.canonicalConfirmed = false;
+    state.identity = {
+      ...blankIdentity(),
+      ...clone(example),
+      level: "Aerith-10",
+      mode: "Spécialiste / Orchestratrice",
+      corePath: `core/${cleanName(example.name)}_MULTI_AGENT_CORE.md`,
+      personaPath: `core/${cleanName(example.name)}_PERSONA_OPERATING_LAYER.md`,
+      memoryPath: "",
+      status: "Proposition locale non canonique",
+      version: "",
+      imagePath: ""
+    };
+    state.imports = [];
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    state.visualUrl = "";
+    persist();
+    renderAll();
+    showToast(`${example.name} chargée dans le même formulaire.`);
+  }
+
+  function applyBlank() {
+    state.profileId = "new";
+    state.selectedExample = "";
+    state.canonicalConfirmed = false;
+    state.identity = blankIdentity();
+    state.imports = [];
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    state.visualUrl = "";
+    persist();
+    renderAll();
+    showToast("Page blanche neutre chargée.");
+  }
+
+  function renderDoctrine() {
+    $("#doctrine").innerHTML = DATA.doctrine.map(item => `<span>${esc(item)}</span>`).join("");
+  }
+
+  function renderLineage() {
+    $("#lineageGrid").innerHTML = DATA.heritage.map(item => `
+      <article class="lineage-card">
+        <button class="lineage-media" type="button" data-lightbox="${esc(item.visual)}" data-lightbox-title="${esc(item.name)}">
+          <img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">
+          <span class="lineage-zoom">Voir l’image entière ↗</span>
+        </button>
+        <div class="lineage-copy">
+          <span>${esc(item.label)}</span>
+          <h3>${esc(item.name)}</h3>
+          <p>${esc(item.role)}</p>
+          <small>${esc(item.formula)}</small>
+        </div>
+      </article>`).join("");
+  }
+
+  function renderProfiles() {
+    $("#profileGrid").innerHTML = DATA.profiles.map(item => `
+      <button type="button" class="profile-card ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}">
+        <span class="profile-sigil">${esc(item.sigil)}</span>
+        <span class="profile-media">
+          ${item.visual ? `<img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">` : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
+        </span>
+        <span class="profile-copy">
+          <span class="family">${esc(item.family)}</span>
+          <h3>${esc(item.name)}</h3>
+          <p>${esc(item.description)}</p>
+          <small>${esc(item.status)}</small>
+        </span>
+      </button>`).join("");
+  }
+
+  function renderExamples() {
+    $("#exampleArea").hidden = !isNew();
+    $("#exampleGrid").innerHTML = DATA.examples.map(item => `
+      <button type="button" class="example-card ${state.selectedExample === item.id ? "active" : ""}" data-example="${esc(item.id)}">
+        <span>${esc(item.badge)}</span>
+        <h3>${esc(item.name)}</h3>
+        <p>${esc(item.role)}</p>
+      </button>`).join("");
+  }
+
+  function renderSelectedProfile() {
+    const p = profile();
+    $("#selectedProfile").innerHTML = `
+      <div class="selected-profile-media">
+        ${currentVisual() ? `<img src="${esc(currentVisual())}" alt="${esc(state.identity.name)}">` : `<strong>${esc(p.sigil)}</strong>`}
+      </div>
+      <div>
+        <h3>${esc(state.identity.name)}</h3>
+        <p>${esc(state.identity.role || p.description)}</p>
+        <div class="meta"><span>${esc(state.identity.family)}</span><span>${esc(state.identity.level)}</span><span>${esc(state.identity.status)}</span></div>
+      </div>`;
+    $("#profileStatus").textContent = isNew() ? "PROPOSITION LOCALE" : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
+  }
+
+  function renderStepNav() {
+    $("#stepNav").innerHTML = STEPS.map((step, index) => `
+      <button type="button" class="step-button ${state.step === index ? "active" : ""}" data-step-button="${index}">
+        <span class="step-number">${step[0]}</span>
+        <span><b>${esc(step[1])}</b><small>${esc(step[2])}</small></span>
+      </button>`).join("");
+  }
+
+  function renderMatrix() {
+    const p = profile();
+    document.body.dataset.theme = p.theme || "seven";
+    $("#matrixName").textContent = state.identity.name;
+    $("#matrixDescription").textContent = state.identity.role || p.description;
+    $("#matrixSymbol").textContent = p.sigil;
+    $("#matrixKicker").textContent = isNew() ? "NOUVELLE SPÉCIALITÉ" : "PROFIL ACTIF";
+    $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
+    $("#matrixState").textContent = finalAudit().ready ? "READY" : (state.step < 6 ? "DESIGN" : "IMPORT");
+    const image = $("#matrixImage");
+    image.src = currentVisual();
+    image.hidden = !currentVisual();
+    $("#railProfileName").textContent = state.identity.name;
+  }
+
+  function renderFamilies() {
+    $("#familyList").innerHTML = DATA.families.map(item => `<option value="${esc(item)}"></option>`).join("");
+  }
+
+  function syncFieldsToUI() {
+    const i = state.identity;
+    $("#fieldName").value = i.name || "";
+    $("#fieldFamily").value = i.family || "";
+    $("#fieldLevel").value = i.level || "";
+    $("#fieldMode").value = i.mode || "";
+    $("#fieldRole").value = i.role || "";
+    $("#fieldProblem").value = i.problem || "";
+    $("#fieldUsers").value = i.users || "";
+    $("#fieldOutputs").value = (i.outputs || []).join("\n");
+    $("#fieldFormula").value = i.formula || "";
+    $("#fieldAgents").value = (i.agents || []).join("\n");
+    $("#fieldModules").value = (i.modules || []).join("\n");
+    $("#fieldNonDuplication").value = i.nonDuplication || "";
+    $("#fieldTone").value = i.tone || "";
+    $("#fieldModes").value = (i.modes || []).join("\n");
+    $("#fieldGuardrails").value = (i.guardrails || []).join("\n");
+    $("#fieldConfidentiality").value = i.confidentiality || "";
+    $("#fieldStopPoint").value = i.stopPoint || "";
+    $("#fieldCorePath").value = i.corePath || defaultCoreTarget();
+    $("#fieldPersonaPath").value = i.personaPath || defaultPersonaTarget();
+    $("#fieldMemoryPath").value = i.memoryPath || "";
+    $("#canonicalConfirmed").checked = state.canonicalConfirmed;
+    $("#canonicalConfirmed").disabled = !isNew() && profile().privacy === "public";
+  }
+
+  function syncUIToState() {
+    const i = state.identity;
+    i.name = $("#fieldName").value.trim() || "Aerith-10 Nouvelle Spécialité";
+    i.family = $("#fieldFamily").value.trim();
+    i.level = $("#fieldLevel").value.trim();
+    i.mode = $("#fieldMode").value.trim();
+    i.role = $("#fieldRole").value.trim();
+    i.problem = $("#fieldProblem").value.trim();
+    i.users = $("#fieldUsers").value.trim();
+    i.outputs = lines($("#fieldOutputs").value);
+    i.formula = $("#fieldFormula").value.trim();
+    i.agents = lines($("#fieldAgents").value);
+    i.modules = lines($("#fieldModules").value);
+    i.nonDuplication = $("#fieldNonDuplication").value.trim();
+    i.tone = $("#fieldTone").value.trim();
+    i.modes = lines($("#fieldModes").value);
+    i.guardrails = lines($("#fieldGuardrails").value);
+    i.confidentiality = $("#fieldConfidentiality").value.trim();
+    i.stopPoint = $("#fieldStopPoint").value.trim();
+    i.corePath = $("#fieldCorePath").value.trim();
+    i.personaPath = $("#fieldPersonaPath").value.trim();
+    i.memoryPath = $("#fieldMemoryPath").value.trim();
+    state.canonicalConfirmed = $("#canonicalConfirmed").checked;
+    persist();
+    renderMatrix();
+    renderSelectedProfile();
+    renderProposal();
+    renderFinal();
+  }
+
+  function renderAgentSuggestions() {
+    $("#agentSuggestions").innerHTML = DATA.suggestedAgents.map(item => `<button type="button" data-agent="${esc(item)}">＋ ${esc(item)}</button>`).join("");
+  }
+
+  function renderHeritage() {
+    $("#heritageGrid").innerHTML = DATA.heritage.map(item => {
+      const active = state.identity.heritage.includes(item.id);
+      return `<label class="heritage-choice ${active ? "active" : ""}">
+        <input type="checkbox" data-heritage="${esc(item.id)}" ${active ? "checked" : ""}>
+        <b>${esc(item.name)}</b><small>${esc(item.role)}</small>
+      </label>`;
+    }).join("");
+  }
+
+  function activateStep(index, focus = false) {
+    state.step = Math.max(0, Math.min(STEPS.length - 1, Number(index) || 0));
+    persist();
+    $$(".panel").forEach((panel, panelIndex) => panel.classList.toggle("active", panelIndex === state.step));
+    const step = STEPS[state.step];
+    $("#stepCounter").textContent = `ÉTAPE ${step[0]} SUR 08`;
+    $("#stepTitle").textContent = step[1];
+    $("#stepDescription").textContent = step[2];
+    $("#progressValue").textContent = `${Math.round((state.step + 1) / STEPS.length * 100)}%`;
+    $("#previousTop").disabled = $("#previousBottom").disabled = state.step === 0;
+    $("#nextTop").disabled = $("#nextBottom").disabled = state.step === STEPS.length - 1;
+    renderStepNav();
+    renderMatrix();
+    if (state.step === 5) renderProposal();
+    if (state.step === 6) renderImports();
+    if (state.step === 7) renderFinal();
+    if (focus) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function proposalCore() {
+    const i = state.identity;
+    return `# ${i.name.toUpperCase()} — Multi-Agent Core — PROPOSITION
+
+Statut : proposition locale non canonique  
+Famille : ${i.family || "—"}  
+Rôle : ${i.role || "—"}  
+Niveau : ${i.level || "Aerith-10"}  
+Mode principal : ${i.mode || "—"}  
+Extension Persona : ${defaultPersonaTarget()}  
+Mémoire / base métier : ${i.memoryPath || "À définir"}  
+Chemin cible après validation : ${defaultCoreTarget()}  
+Version Forge : ${DATA.version}
+
+---
+
+## 1. Identité
+
+${i.name} est une spécialité dédiée à la mission suivante :
+
+${i.role || "Rôle à définir."}
+
+Elle ne remplace pas les autres profils. Elle absorbe uniquement les ressources qui servent sa fonction.
+
+## 2. Problème réel
+
+${i.problem || "Problème à définir."}
+
+## 3. Utilisateurs
+
+${i.users || "Utilisateurs à définir."}
+
+## 4. Sorties attendues
+
+${i.outputs.length ? i.outputs.map(item => `- ${item}`).join("\n") : "- À définir"}
+
+## 5. Formule centrale
+
+**${i.formula || "Intention → Ressources → Destination utile."}**
+
+## 6. Architecture multi-agent
+
+${i.agents.length ? i.agents.map((item, index) => `${index + 1}. ${item}`).join("\n") : "1. À définir"}
+
+Une seule voix finale porte la réponse. Les agents internes ne parlent pas tous simultanément.
+
+## 7. Héritages
+
+${i.heritage.length ? i.heritage.map(id => {
+      const item = DATA.heritage.find(entry => entry.id === id);
+      return `- ${item?.name || id} — ${item?.role || ""}`;
+    }).join("\n") : "- Aucun héritage supplémentaire"}
+
+## 8. Modules et sources
+
+${i.modules.length ? i.modules.map(item => `- ${item}`).join("\n") : "- Aucun module complémentaire"}
+
+Règle de non-duplication :
+
+${i.nonDuplication || "Référencer les sources existantes avant toute création."}
+
+## 9. Garde-fous
+
+${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- À définir"}
+
+## 10. Stop Point
+
+${i.stopPoint || "La mission est terminée lorsque la destination utile est livrée."}
+
+---
+
+## Verrou de canonisation
+
+Ce fichier est une PROPOSITION. Il doit être relu, corrigé et validé humainement avant suppression du suffixe PROPOSAL et intégration dans le dépôt privé.
+`;
+  }
+
+  function proposalPersona() {
+    const i = state.identity;
+    return `# ${i.name.toUpperCase()} — Persona Operating Layer — PROPOSITION
+
+**Chemin cible après validation :** \`${defaultPersonaTarget()}\`  
+**Core requis :** \`${defaultCoreTarget()}\`  
+**Statut :** proposition locale non canonique  
+**Version Forge :** ${DATA.version}
+
+---
+
+## 1. Fonction
+
+Cette Persona définit comment ${i.name} répond, travaille, choisit son mode et ferme une mission. Elle ne remplace jamais le Core.
+
+## 2. Voix et ton
+
+${i.tone || "À définir."}
+
+## 3. Modes de session
+
+${i.modes.length ? i.modes.map(item => `- ${item}`).join("\n") : "- standard"}
+
+## 4. Relation et rythme
+
+- Comprendre la destination avant d’élargir la réponse.
+- Ne pas répéter une information déjà fournie.
+- Distinguer les faits des hypothèses et des adaptations.
+- Préserver les décisions validées.
+
+## 5. Confidentialité
+
+${i.confidentiality || "Privée par défaut."}
+
+## 6. Garde-fous
+
+${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- Ne pas inventer une source absente."}
+
+## 7. Stop Point
+
+${i.stopPoint || "La mission est terminée lorsque la destination utile est livrée."}
+
+---
+
+## Verrou de canonisation
+
+Cette Persona est une PROPOSITION. Christophe la relit et la canonise humainement.
+`;
+  }
+
+  function sourceReferences() {
+    const refs = [];
+    const core = resolveSource(state.identity.corePath || defaultCoreTarget());
+    const persona = resolveSource(state.identity.personaPath || defaultPersonaTarget());
+    const heart = resolveSource("private:core/AERITH_LIVING_REFLECTION_HEART.md");
+    const memory = resolveSource(state.identity.memoryPath);
+    if (core) refs.push({role:"Core", ...core});
+    if (persona) refs.push({role:"Persona", ...persona});
+    if (heart) refs.push({role:"Living Reflection Heart", ...heart});
+    if (memory) refs.push({role:"Mémoire / base métier", ...memory});
+    for (const item of state.identity.modules) {
+      const resolved = resolveSource(item);
+      if (resolved) refs.push({role:"Module", ...resolved});
+    }
+    return refs;
+  }
+
+  function linksDocument() {
+    const refs = sourceReferences();
+    const groups = ["Core", "Persona", "Living Reflection Heart", "Mémoire / base métier", "Module"];
+    const linesOut = [`# LIENS GITHUB / RAW — ${state.identity.name}`, ""];
+    for (const group of groups) {
+      const items = refs.filter(item => item.role === group);
+      if (!items.length) continue;
+      linesOut.push(`## ${group}`, "");
+      for (const item of items) {
+        linesOut.push(`- ${item.label}`);
+        linesOut.push(`  - GitHub : ${item.url}`);
+        linesOut.push(`  - Raw : ${item.raw}`);
+      }
+      linesOut.push("");
+    }
+    linesOut.push("## Règle d’accès", "", "Les URLs privées sont des références canoniques.", "Si un LLM local ne peut pas les lire, fournir les fichiers localement.", "Ne jamais prétendre avoir chargé une URL inaccessible.");
+    return linesOut.join("\n");
+  }
+
+  function blockLLM() {
+    const refs = sourceReferences();
+    const core = refs.find(item => item.role === "Core");
+    const persona = refs.find(item => item.role === "Persona");
+    const heart = refs.find(item => item.role === "Living Reflection Heart");
+    const memory = refs.find(item => item.role === "Mémoire / base métier");
+    const modules = refs.filter(item => item.role === "Module");
+    return `# BLOCK LLM — ACTIVATION COURTE
+
+Tu es ${state.identity.name}.
+
+Charge dans cet ordre :
+
+1. Core : ${core?.raw || "CORE NON DÉFINI"}
+2. Persona : ${persona?.raw || "PERSONA NON DÉFINIE"}
+3. Living Reflection Heart : ${heart?.raw || "HEART NON DÉFINI"}
+${memory ? `4. Mémoire / base métier : ${memory.raw}` : ""}
+
+Si une URL privée est inaccessible, demande le fichier local correspondant.
+Ne prétends jamais avoir chargé une source inaccessible ou absente.
+
+Mission :
+${state.identity.role || "Suivre strictement la mission définie dans le Core."}
+
+Héritages disponibles :
+${state.identity.heritage.length ? state.identity.heritage.map(id => `- ${DATA.heritage.find(item => item.id === id)?.name || id}`).join("\n") : "- Aucun"}
+
+Modules ciblés :
+${modules.length ? modules.map(item => `- ${item.label}\n  Raw : ${item.raw}`).join("\n") : "- Aucun module complémentaire"}
+
+Règles :
+${state.identity.guardrails.length ? state.identity.guardrails.map(item => `- ${item}`).join("\n") : "- Ne pas inventer."}
+- Module présent ≠ module actif.
+- Lire le Core et la Persona sans les réécrire.
+- Produire la destination utile puis appliquer le Stop Point.
+`;
+  }
+
+  function designBrief() {
+    const i = state.identity;
+    return `# BRIEF DE VALIDATION — ${i.name}
+
+Version Forge : ${DATA.version}
+Statut : ${isNew() ? "proposition locale non canonique" : "profil existant chargé dans le parcours unifié"}
+
+## Identité
+
+- Nom : ${i.name}
+- Famille : ${i.family || "—"}
+- Niveau : ${i.level || "—"}
+- Mode : ${i.mode || "—"}
+- Rôle : ${i.role || "—"}
+
+## Architecture
+
+- Agents : ${i.agents.length}
+- Héritages : ${i.heritage.join(", ") || "aucun"}
+- Modules référencés : ${i.modules.length}
+
+## Canonisation attendue
+
+- Core : ${defaultCoreTarget()}
+- Persona : ${defaultPersonaTarget()}
+
+## Points à vérifier humainement
+
+- La spécialité ne duplique-t-elle pas un profil existant ?
+- Chaque agent change-t-il une décision réelle ?
+- Les modules sont-ils référencés sans copie inutile ?
+- Les garde-fous protègent-ils la mission ?
+- Le Stop Point est-il explicite ?
+`;
+  }
+
+  function proposalAudit() {
+    const i = state.identity;
+    return [
+      [i.name && /^Aerith-10\b/i.test(i.name) || !isNew() ? "ok" : "warn", "Identité", i.name || "Manquante"],
+      [i.role ? "ok" : "error", "Mission", i.role ? "Définie" : "Manquante"],
+      [i.agents.length ? "ok" : "warn", "Agents", `${i.agents.length} déclaré(s)`],
+      [i.stopPoint ? "ok" : "error", "Stop Point", i.stopPoint ? "Défini" : "Manquant"]
+    ];
+  }
+
+  function renderProposal() {
+    const items = proposalAudit();
+    $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
+    const docs = {core:proposalCore(), persona:proposalPersona(), block:blockLLM(), links:linksDocument(), brief:designBrief()};
+    $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
+    $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
+    $("#canonRoute").innerHTML = isNew()
+      ? `<b>Après validation humaine</b><p>Retirer le suffixe PROPOSAL, intégrer manuellement les deux fichiers, puis revenir à l’étape 07 sans recommencer le formulaire.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
+      : `<b>Profil existant</b><p>La conception n’est pas répétée. Passe directement à l’import ou à l’audit selon la confidentialité des sources.</p>`;
+  }
+
+  function fieldFromText(text, labels) {
+    for (const label of labels) {
+      const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`^(?:\\*\\*)?${escaped}(?:\\*\\*)?\\s*:\\s*(.+)$`, "im");
+      const match = text.match(regex);
+      if (match) return stripMarkdown(match[1]);
+    }
+    return "";
+  }
+
+  function parseCore(text, fileName) {
+    const heading = text.match(/^#\s+(.+)$/m)?.[1] || "";
+    const name = stripMarkdown(heading).replace(/\s+[—-]\s+Multi-Agent Core.*$/i, "").replace(/\s+[—-]\s+PROPOSITION.*$/i, "").trim();
+    return {
+      name: name || fileName.replace(/\.md$/i, "").replaceAll("_", " "),
+      family: fieldFromText(text, ["Famille"]),
+      level: fieldFromText(text, ["Niveau"]),
+      role: fieldFromText(text, ["Rôle"]),
+      mode: fieldFromText(text, ["Mode principal"]),
+      status: fieldFromText(text, ["Statut"]),
+      personaPath: fieldFromText(text, ["Extension Persona"]),
+      memoryPath: fieldFromText(text, ["Mémoire partagée", "Mémoire partagée requise", "Base métier publique"]),
+      corePath: fieldFromText(text, ["Fichier canonique", "Fichier", "Chemin cible"]),
+      imagePath: fieldFromText(text, ["Image"]),
+      version: fieldFromText(text, ["Version"])
+    };
   }
 
   function kindForFile(file, content = "") {
@@ -238,549 +808,192 @@
     return "source";
   }
 
-  function stripMarkdown(value) {
-    return String(value || "")
-      .replace(/[`*_#]/g,"")
-      .replace(/^[\s🌸🧭⚠️💠◇✦]+/u,"")
-      .trim();
-  }
-
-  function fieldFromText(text, labels) {
-    for (const label of labels) {
-      const escaped = label.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-      const regex = new RegExp(`^(?:\\\\*\\\\*)?${escaped}(?:\\\\*\\\\*)?\\\\s*:\\\\s*(.+)$`, "im");
-      const match = text.match(regex);
-      if (match) return stripMarkdown(match[1]);
-    }
-    return "";
-  }
-
-  function parseCore(text, fileName) {
-    const heading = text.match(/^#\s+(.+)$/m)?.[1] || "";
-    const name = stripMarkdown(heading)
-      .replace(/\s+[—-]\s+Multi-Agent Core.*$/i,"")
-      .replace(/^AERITH[- ]?10\s+/i,"Aerith-10 ")
-      .trim();
-
-    return {
-      name: name || fileName.replace(/\.md$/i,"").replaceAll("_"," "),
-      family: fieldFromText(text, ["Famille"]),
-      level: fieldFromText(text, ["Niveau"]),
-      role: fieldFromText(text, ["Rôle"]),
-      mode: fieldFromText(text, ["Mode principal"]),
-      status: fieldFromText(text, ["Statut"]),
-      compatibility: fieldFromText(text, ["Compatibilité"]),
-      personaPath: fieldFromText(text, ["Extension Persona"]),
-      memoryPath: fieldFromText(text, ["Mémoire partagée", "Mémoire partagée requise", "Base métier publique"]),
-      corePath: fieldFromText(text, ["Fichier canonique", "Fichier", "Chemin cible"]),
-      imagePath: fieldFromText(text, ["Image"]),
-      version: fieldFromText(text, ["Version"]),
-      update: fieldFromText(text, ["Mise à jour", "Date"])
-    };
-  }
-
   function mergeParsed(parsed) {
-    state.parsed = parsed;
-    for (const key of ["name","family","level","role","mode","status","compatibility","personaPath","memoryPath","corePath","imagePath","version","update"]) {
-      if (parsed[key]) state.custom[key] = parsed[key];
+    const keys = ["name", "family", "level", "role", "mode", "status", "personaPath", "memoryPath", "corePath", "imagePath", "version"];
+    for (const key of keys) if (parsed[key]) state.identity[key] = parsed[key].replace(/`/g, "");
+  }
+
+  async function addFiles(files) {
+    let added = 0;
+    let duplicates = 0;
+    for (const file of files) {
+      const path = cleanPath(file.webkitRelativePath || file.name);
+      const key = `${path.toLowerCase()}|${file.size}|${file.lastModified}`;
+      if (state.imports.some(item => item.key === key)) { duplicates += 1; continue; }
+      let text = "";
+      if (/\.(md|txt|json)$/i.test(file.name) && file.size < 5_000_000) {
+        try { text = await file.text(); } catch {}
+      }
+      const kind = kindForFile(file, text);
+      state.imports.push({file, path, key, kind, text});
+      added += 1;
+      if (kind === "core" && text) mergeParsed(parseCore(text, file.name));
+      if (kind === "persona" && text) {
+        const coreRequired = fieldFromText(text, ["Core requis"]);
+        const personaPath = fieldFromText(text, ["Chemin cible"]);
+        const version = fieldFromText(text, ["Version"]);
+        if (coreRequired && !state.identity.corePath) state.identity.corePath = coreRequired.replace(/`/g, "");
+        if (personaPath) state.identity.personaPath = personaPath.replace(/`/g, "");
+        if (version && !state.identity.version) state.identity.version = version;
+      }
+      if (kind === "visual" && !state.visualUrl) state.visualUrl = URL.createObjectURL(file);
     }
-    if (parsed.name) state.custom.exportRoot = cleanName(parsed.name);
-    if (/créatrice/i.test(`${parsed.name} ${parsed.role}`)) state.theme = "creator";
-    else if (/crypto/i.test(`${parsed.name} ${parsed.role}`)) state.theme = "crypto";
-    else if (/lunaire|reflet|rêve|tarot/i.test(`${parsed.compatibility} ${parsed.role}`)) state.theme = "lunar";
-    else if (/solaire|rayonnement/i.test(`${parsed.compatibility} ${parsed.role}`)) state.theme = "solar";
-    else state.theme = "seven";
-
-    const combined = `${parsed.compatibility} ${parsed.role}`.toLowerCase();
-    const heritage = ["seven"];
-    if (combined.includes("solaire") || combined.includes("v8")) heritage.push("solar");
-    if (combined.includes("lunaire") || combined.includes("v9")) heritage.push("lunar");
-    state.heritage = [...new Set(heritage)];
-  }
-
-  function renderDoctrine() {
-    $("#doctrine").innerHTML = DATA.doctrine.map(item => `<span>${esc(item)}</span>`).join("");
-  }
-
-  function renderLineage() {
-    $("#lineageGrid").innerHTML = DATA.lineage.map(item => `
-      <article class="lineage-card lineage-card-${esc(item.id)}">
-        <button class="lineage-media" type="button"
-                data-lineage-image="${esc(item.visual)}"
-                data-lineage-title="${esc(item.name)}"
-                aria-label="Voir ${esc(item.name)} en entier">
-          <img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">
-          <span class="lineage-zoom">Voir l’image entière ↗</span>
-        </button>
-        <div class="lineage-copy">
-          <span>${esc(item.label)}</span>
-          <h3>${esc(item.name)}</h3>
-          <p>${esc(item.description)}</p>
-          <small>${esc(item.formula)}</small>
-        </div>
-      </article>`).join("");
-  }
-
-
-  function openLightbox(src, title) {
-    const lightbox = $("#imageLightbox");
-    $("#lightboxImage").src = src;
-    $("#lightboxImage").alt = title;
-    $("#lightboxTitle").textContent = title;
-    lightbox.hidden = false;
-    lightbox.setAttribute("aria-hidden", "false");
-    document.body.classList.add("lightbox-open");
-    $("#lightboxClose").focus();
-  }
-
-  function closeLightbox() {
-    const lightbox = $("#imageLightbox");
-    lightbox.hidden = true;
-    lightbox.setAttribute("aria-hidden", "true");
-    $("#lightboxImage").src = "";
-    document.body.classList.remove("lightbox-open");
-  }
-
-  function renderProfiles() {
-    $("#profileGrid").innerHTML = DATA.profiles.map(item => `
-      <button type="button" class="profile-card ${state.mode === "existing" && item.id === state.profileId ? "active" : ""} ${item.visual ? "" : "no-image"}"
-              data-profile="${esc(item.id)}">
-        <span class="sigil">${esc(item.sigil)}</span>
-        <span class="profile-media">
-          ${item.visual
-            ? `<img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">`
-            : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
-        </span>
-        <span class="profile-copy">
-          <span class="family">${esc(item.family)}</span>
-          <h3>${esc(item.name)}</h3>
-          <p>${esc(item.description)}</p>
-          <small>${esc(item.status)}</small>
-        </span>
-      </button>`).join("");
-  }
-
-  function renderMatrix() {
-    const p = state.mode === "existing" ? profile() : null;
-    const name = activeName();
-    const description = state.mode === "custom"
-      ? "Compiler un nouveau profil Aerith-10 à partir de son Core et de sa Persona déjà canonisés."
-      : p.description;
-    const visual = activeThemeVisual();
-
-    document.body.dataset.theme = state.theme;
-    $("#matrixName").textContent = name;
-    $("#matrixDescription").textContent = description;
-    $("#matrixKicker").textContent = state.mode === "custom" ? "AERITH-10 PRO BUILDER" : "PROFIL ACTIF";
-    $("#matrixSymbol").textContent = state.mode === "custom" ? "A10+" : p.sigil;
-    $("#matrixCore").textContent = state.mode === "custom" ? (coreImport() ? "Importé" : "Requis") : (p.privacy === "public" ? "Inclus" : "Import local");
-    $("#matrixPersona").textContent = state.mode === "custom" ? (personaImport() ? "Importée" : "Requise") : (p.privacy === "public" ? "Incluse" : "Import local");
-    $("#matrixState").textContent = audit().ready ? "READY" : "IMPORT";
-
-    const image = $("#matrixImage");
-    if (visual) {
-      image.src = visual;
-      image.hidden = false;
-    } else {
-      image.hidden = true;
-    }
-  }
-
-  function renderIdentity() {
-    const custom = state.mode === "custom";
-    $("#customIdentity").hidden = !custom;
-    $("#existingIdentity").hidden = custom;
-    $("#identityTitle").textContent = custom ? "Nouveau type Aerith-10" : profile().name;
-    $("#identityStatus").textContent = custom ? (coreImport() ? "Core détecté" : "À définir") : profile().status;
-    $("#forgeModeLabel").textContent = custom ? "AERITH-10 PRO" : "PROFIL CANONIQUE";
-    $("#forgeModeTitle").textContent = custom ? "Nouveau profil spécialisé" : profile().name;
-
-    if (custom) {
-      $("#customName").value = state.custom.name;
-      $("#customFamily").value = state.custom.family;
-      $("#customLevel").value = state.custom.level;
-      $("#customMode").value = state.custom.mode;
-      $("#customRole").value = state.custom.role;
-      $("#exportRoot").value = state.custom.exportRoot;
-    } else {
-      $("#existingDescription").textContent = profile().description;
-      $("#existingSigil").textContent = profile().sigil;
-      $("#existingName").textContent = profile().name;
-      $("#existingRole").textContent = profile().role;
-    }
-  }
-
-  function expectedSources() {
-    if (state.mode === "existing") return profile().sources.map(item => ({
-      name:item[0], path:item[1], role:item[2], private:Boolean(item[3]), builtin:Boolean(item[4])
-    }));
-
-    return [
-      {name:coreImport()?.file.name || "AERITH_10_..._MULTI_AGENT_CORE.md", path:state.custom.corePath || $("#canonicalPath").value || "core/...", role:"Core canonique", private:true, required:true, present:Boolean(coreImport())},
-      {name:personaImport()?.file.name || "AERITH_10_..._PERSONA_OPERATING_LAYER.md", path:state.custom.personaPath || "core/...", role:"Persona Operating Layer", private:true, required:true, present:Boolean(personaImport())},
-      {name:visualImport()?.file.name || "Visuel canonique", path:state.custom.imagePath || "assets/images/core/...", role:"Identité visuelle", private:true, required:false, present:Boolean(visualImport())}
-    ];
-  }
-
-  function importedMatch(source) {
-    const expectedName = String(source.name || "").toLowerCase();
-    const expectedPath = cleanPath(source.path).toLowerCase();
-    return state.imports.some(item => {
-      const path = cleanPath(item.path).toLowerCase();
-      return item.file.name.toLowerCase() === expectedName || path === expectedPath || path.endsWith(`/${expectedPath}`);
-    });
-  }
-
-  function renderSourceAudit() {
-    $("#sourceAuditList").innerHTML = expectedSources().map(source => {
-      const present = source.builtin || source.present || importedMatch(source);
-      const stateLabel = source.builtin ? "PUBLIC INCLUS" : present ? "IMPORTÉ" : source.required ? "REQUIS" : source.private ? "RÉFÉRENCE PRIVÉE" : "RÉFÉRENCE";
-      const cls = present ? "ok" : source.required ? "missing" : "warn";
-      return `<div class="source-row">
-        <span class="source-icon">${esc(source.role.slice(0,2).toUpperCase())}</span>
-        <span><b>${esc(source.path)}</b><small>${esc(source.role)}</small></span>
-        <span class="source-state ${cls}">${stateLabel}</span>
-      </div>`;
-    }).join("");
-  }
-
-  function renderMetadata() {
-    const values = state.mode === "custom"
-      ? {
-          "Nom":state.custom.name,"Famille":state.custom.family,"Niveau":state.custom.level,
-          "Rôle":state.custom.role,"Mode":state.custom.mode,"Version":state.custom.version,
-          "Persona":state.custom.personaPath,"Mémoire / base":state.custom.memoryPath,
-          "Image":state.custom.imagePath,"Compatibilité":state.custom.compatibility
-        }
-      : {
-          "Nom":profile().name,"Famille":profile().family,"Niveau":profile().level,
-          "Rôle":profile().role,"Chemin canonique":profile().canonicalPath,
-          "Confidentialité":profile().privacy === "public" ? "Public" : "Privé"
-        };
-
-    $("#metadataList").innerHTML = Object.entries(values).map(([key,value]) =>
-      `<div><dt>${esc(key)}</dt><dd>${esc(value || "—")}</dd></div>`
-    ).join("");
-
-    $("#canonicalConfirmed").checked = state.mode === "existing" ? true : state.canonicalConfirmed;
-    $("#canonicalConfirmed").disabled = state.mode === "existing";
-    $("#canonicalPath").value = state.mode === "custom" ? (state.custom.corePath || "") : profile().canonicalPath;
-    $("#canonicalPath").disabled = state.mode === "existing";
+    persist();
+    renderAll();
+    showToast(added ? `${added} fichier(s) ajouté(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}` : "Aucun nouveau fichier.");
   }
 
   function renderImports() {
-    const total = state.imports.reduce((sum,item) => sum + item.file.size, 0);
+    const total = state.imports.reduce((sum, item) => sum + item.file.size, 0);
     $("#importCount").textContent = state.imports.length;
     $("#importSize").textContent = formatSize(total);
-    $("#importList").innerHTML = state.imports.length ? state.imports.map(item => `
+    $("#importList").innerHTML = state.imports.length ? state.imports.map((item, index) => `
       <div class="import-item">
-        <span class="file-tag">${esc(item.kind.slice(0,4).toUpperCase())}</span>
-        <span><b>${esc(item.path)}</b><small>${esc(item.kind)}</small></span>
-        <span>${formatSize(item.file.size)}</span>
-      </div>`).join("") : "<p>Aucun fichier importé.</p>";
+        <span class="file-kind">${esc(item.kind.toUpperCase())}</span>
+        <span><b>${esc(item.path)}</b><small>${formatSize(item.file.size)}</small></span>
+        <button class="remove-file" type="button" data-remove-import="${index}">Retirer</button>
+      </div>`).join("") : `<div class="route-box"><b>Aucun import local</b><p>Les profils publics peuvent être exportés avec leurs sources intégrées. Les profils privés exigent leurs fichiers locaux.</p></div>`;
   }
 
-  function renderHeritage() {
-    const choices = DATA.lineage;
-    $("#heritageGrid").innerHTML = choices.map(item => `
-      <button type="button" class="heritage-card ${state.heritage.includes(item.id) ? "selected" : ""}" data-heritage="${esc(item.id)}">
-        <img src="${esc(item.visual)}" alt="">
-        <span>${esc(item.label)}</span><b>${esc(item.name)}</b><small>${esc(item.formula)}</small>
-      </button>`).join("");
-
-    const autoModules = state.imports
-      .filter(item => ["module","pack","data","source"].includes(item.kind))
-      .map(item => item.path);
-    $("#detectedModules").innerHTML = autoModules.length
-      ? autoModules.map(item => `<span>${esc(item)}</span>`).join("")
-      : "<span>Aucun module complémentaire détecté.</span>";
-    $("#manualModules").value = state.modules.join("\n");
+  function importedKind(kind) {
+    return state.imports.find(item => item.kind === kind) || null;
   }
 
-  function renderThemes() {
-    $("#themeGrid").innerHTML = DATA.themes.map(item => `
-      <button type="button" class="theme-card ${state.theme === item[0] ? "selected" : ""}" data-theme-choice="${esc(item[0])}">
-        ${item[3] ? `<img src="${esc(item[3])}" alt="">` : ""}
-        <span>THÈME</span><b>${esc(item[1])}</b><small>${esc(item[2])}</small>
-      </button>`).join("");
-
-    const frame = $("#visualFrame");
-    const visual = activeThemeVisual();
-    frame.style.backgroundImage = visual
-      ? `linear-gradient(180deg,transparent,rgba(4,7,18,.55)),url("${visual}")`
-      : "";
-    frame.style.backgroundSize = "cover";
-    frame.style.backgroundPosition = "center 18%";
-    frame.innerHTML = visual ? "" : "<span>VISUEL OPTIONNEL</span>";
-    $("#visualTitle").textContent = visualImport()?.file.name || DATA.themes.find(item => item[0] === state.theme)?.[1] || "Thème";
-    $("#visualHint").textContent = visualImport()
-      ? "Le visuel importé sera joint au paquet sans être modifié."
-      : "Aucun visuel privé n’est requis pour compiler le profil.";
-  }
-
-  function manualModuleList() {
-    return $("#manualModules").value.split(/\r?\n/).map(item => cleanPath(item.trim())).filter(Boolean);
-  }
-
-  function audit() {
+  function finalAudit() {
+    const p = profile();
     const items = [];
     let ready = true;
+    const core = importedKind("core");
+    const persona = importedKind("persona");
 
-    if (state.mode === "custom") {
-      if (coreImport()) items.push(["ok","Core Aerith-10 importé."]);
-      else { items.push(["error","Core Multi-Agent requis."]); ready = false; }
+    if (state.identity.name) items.push(["ok", "Identité", `${state.identity.name} est définie.`]);
+    else { items.push(["error", "Identité", "Nom manquant."]); ready = false; }
 
-      if (personaImport()) items.push(["ok","Persona Operating Layer importée."]);
-      else { items.push(["error","Persona Operating Layer requise."]); ready = false; }
+    if (state.identity.role) items.push(["ok", "Mission", "Rôle défini."]);
+    else { items.push(["error", "Mission", "Rôle manquant."]); ready = false; }
 
-      if (state.canonicalConfirmed) items.push(["ok","Canonisation préalable dans le GitHub privé confirmée."]);
-      else { items.push(["error","La canonisation préalable dans core/ doit être confirmée."]); ready = false; }
-
-      const corePath = state.custom.corePath || $("#canonicalPath").value;
-      if (/^core\/.+\.md$/i.test(corePath)) items.push(["ok",`Chemin canonique valide : ${corePath}`]);
-      else { items.push(["error","Chemin canonique core/...md manquant ou invalide."]); ready = false; }
-
-      if (/^Aerith-10\b/i.test(state.custom.name)) items.push(["ok","Nom de lignée Aerith-10 reconnu."]);
-      else items.push(["warn","Le nom ne commence pas par Aerith-10. Vérifier la convention de lignée."]);
-
-      if (coreImport() && !/AERITH[_ -]?10/i.test(coreImport().file.name)) items.push(["warn","Le nom du fichier Core ne contient pas AERITH_10."]);
-      if (coreImport() && !/MULTI_AGENT_CORE/i.test(coreImport().file.name)) items.push(["warn","Le nom du fichier Core ne suit pas le suffixe MULTI_AGENT_CORE."]);
-      if (personaImport() && !/PERSONA_OPERATING_LAYER/i.test(personaImport().file.name)) items.push(["warn","Le nom de la Persona ne suit pas le suffixe PERSONA_OPERATING_LAYER."]);
+    if (isNew()) {
+      if (state.canonicalConfirmed) items.push(["ok", "Canonisation", "Validation humaine confirmée."]);
+      else { items.push(["error", "Canonisation", "Confirmation humaine requise."]); ready = false; }
+      if (core) items.push(["ok", "Core", `${core.file.name} importé.`]);
+      else { items.push(["error", "Core", "Core canonisé requis."]); ready = false; }
+      if (persona) items.push(["ok", "Persona", `${persona.file.name} importée.`]);
+      else { items.push(["error", "Persona", "Persona canonisée requise."]); ready = false; }
+    } else if (p.privacy === "public") {
+      items.push(["ok", "Sources", "Core et Persona publics intégrés à la Forge."]);
     } else {
-      const p = profile();
-      items.push(["ok",`${p.name} sélectionné.`]);
-      if (p.privacy === "public") items.push(["ok","Core et Persona publics intégrés à la Forge."]);
-      else {
-        const missing = expectedSources().filter(source => source.private && !importedMatch(source));
-        if (missing.length) items.push(["warn",`${missing.length} source(s) privée(s) restent en référence seulement.`]);
-        else items.push(["ok","Sources privées attendues importées."]);
-      }
+      if (core) items.push(["ok", "Core privé", `${core.file.name} importé.`]);
+      else items.push(["warn", "Core privé", "Référence seulement : importer pour un paquet autonome."]);
+      if (persona) items.push(["ok", "Persona privée", `${persona.file.name} importée.`]);
+      else items.push(["warn", "Persona privée", "Référence seulement : importer pour un paquet autonome."]);
     }
 
-    if (state.heritage.includes("seven")) items.push(["ok","Héritage Seven déclaré."]);
-    if (state.heritage.includes("solar")) items.push(["ok","Option Solaire déclarée disponible, sans chargement automatique."]);
-    if (state.heritage.includes("lunar")) items.push(["ok","Option Lunaire déclarée disponible, sans chargement automatique."]);
-    if (!visualImport()) items.push(["warn","Aucun visuel canonique privé importé ; le thème de Forge reste utilisé comme habillage."]);
+    const corePath = state.identity.corePath || defaultCoreTarget();
+    const personaPath = state.identity.personaPath || defaultPersonaTarget();
+    if (corePath) items.push(["ok", "Chemin Core", corePath]);
+    else { items.push(["error", "Chemin Core", "Manquant."]); ready = false; }
+    if (personaPath) items.push(["ok", "Chemin Persona", personaPath]);
+    else { items.push(["error", "Chemin Persona", "Manquant."]); ready = false; }
 
-    return {ready,items};
+    if (state.identity.modules.length) items.push(["ok", "Modules", `${state.identity.modules.length} référence(s), aucune copie.`]);
+    else items.push(["warn", "Modules", "Aucun module complémentaire."]);
+    if (state.identity.stopPoint) items.push(["ok", "Stop Point", "Défini."]);
+    else { items.push(["error", "Stop Point", "Manquant."]); ready = false; }
+    return {ready, items};
   }
 
-
-  function makeHttpLinks() {
-    const refs = compilerCanonicalReferences();
-    const modules = [...new Set([
-      ...manualModuleList(),
-      ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)
-    ])];
-
-    const lines = [
-      `# LIENS GITHUB / RAW — ${activeName()}`,
-      "",
-      "## Core",
-      refs.core
-        ? `- GitHub : ${refs.core.url}\n- Raw : ${refs.core.raw}`
-        : "- Non défini",
-      "",
-      "## Persona",
-      refs.persona
-        ? `- GitHub : ${refs.persona.url}\n- Raw : ${refs.persona.raw}`
-        : "- Non définie",
-      "",
-      "## Living Reflection Heart",
-      `- GitHub : ${refs.heart.url}`,
-      `- Raw : ${refs.heart.raw}`,
-      "",
-      "## Modules et sources"
-    ];
-
-    if (!modules.length) lines.push("- Aucun module complémentaire");
-    for (const item of modules) {
-      const resolved = resolveRepoPath(item);
-      if (!resolved) continue;
-      lines.push(`- ${item}`);
-      lines.push(`  - GitHub : ${resolved.url}`);
-      lines.push(`  - Raw : ${resolved.raw}`);
-    }
-
-    lines.push(
-      "",
-      "## Règle d’accès",
-      "",
-      "Les URLs du dépôt privé sont des références canoniques.",
-      "Si un LLM local ne peut pas les lire faute d’accès, fournir les fichiers localement.",
-      "Le LLM ne doit jamais prétendre avoir chargé une URL inaccessible."
-    );
-    return lines.join("\n");
+  function profileSpec() {
+    const audit = finalAudit();
+    return {
+      forge_version: DATA.version,
+      unified_flow: true,
+      profile_id: state.profileId,
+      identity: clone(state.identity),
+      canonical: {
+        human_confirmed: state.canonicalConfirmed,
+        core_path: state.identity.corePath || defaultCoreTarget(),
+        persona_path: state.identity.personaPath || defaultPersonaTarget(),
+        memory_or_business_base: state.identity.memoryPath || ""
+      },
+      source_references: sourceReferences(),
+      imported_files: state.imports.map(item => ({path:item.path, kind:item.kind, size:item.file.size})),
+      audit
+    };
   }
 
-  function makeBlockLLM() {
-    const refs = compilerCanonicalReferences();
-    const modules = [...new Set([
-      ...manualModuleList(),
-      ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)
-    ])];
-
-    return `# BLOCK LLM — ACTIVATION COURTE
-
-Tu es ${activeName()}.
-
-Charge d’abord le Core :
-${refs.core ? refs.core.raw : "CORE NON DÉFINI"}
-
-Puis la Persona :
-${refs.persona ? refs.persona.raw : "PERSONA NON DÉFINIE"}
-
-Puis le Living Reflection Heart :
-${refs.heart.raw}
-
-Si une URL privée est inaccessible, demande le fichier local correspondant.
-Ne prétends jamais avoir chargé une source inaccessible ou absente.
-
-Mission :
-${activeRole() || "Suivre strictement la mission définie dans le Core."}
-
-Héritages disponibles :
-${state.heritage.length ? state.heritage.map(id => {
-  const item = DATA.lineage.find(line => line.id === id);
-  return `- ${item?.name || id}`;
-}).join("\n") : "- Aucun héritage supplémentaire"}
-
-Modules ciblés :
-${modules.length ? modules.map(item => {
-  const resolved = resolveRepoPath(item);
-  return `- ${item}${resolved ? `\n  Raw : ${resolved.raw}` : ""}`;
-}).join("\n") : "- Aucun module complémentaire"}
-
-Règles :
-- Le lien vérifie.
-- Le module enseigne.
-- Le profil absorbe seulement ce qui sert la mission.
-- Module présent ≠ module actif.
-- Module actif = module qui change une décision.
-- Lire le Core et la Persona sans les réécrire.
-- Ne jamais inventer une source, une capacité ou un accès.
-- Produire la destination utile puis appliquer le Stop Point.
-`;
-  }
-
-  function makeBoot() {
-    const name = activeName();
-    const p = state.mode === "existing" ? profile() : null;
-    const canonicalPath = state.mode === "custom" ? (state.custom.corePath || $("#canonicalPath").value) : p.canonicalPath;
-    const personaPath = state.mode === "custom"
-      ? (state.custom.personaPath || personaImport()?.path || "Persona importée localement")
-      : (p.sources.find(source => /persona/i.test(source[2]))?.[1] || "Selon le Core");
-    const modules = [...new Set([...manualModuleList(), ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)])];
-
-    return `# BOOT — ${name.toUpperCase()}
+  function bootDocument() {
+    const i = state.identity;
+    return `# BOOT — ${i.name.toUpperCase()}
 
 Version Forge : ${DATA.version}
-Mode : ${state.mode === "custom" ? "Aerith-10 Pro importé" : "Profil canonique existant"}
+Parcours : unifié
+Profil : ${state.profileId}
 
 ## Activation
 
-Active ${name}.
+Active ${i.name}.
 
 ## Sources
 
-1. Core : ${canonicalPath || "NON DÉFINI"}
-2. Persona : ${personaPath || "NON DÉFINIE"}
-${state.custom.memoryPath ? `3. Mémoire / base métier : ${state.custom.memoryPath}` : ""}
+1. Core : ${i.corePath || defaultCoreTarget() || "NON DÉFINI"}
+2. Persona : ${i.personaPath || defaultPersonaTarget() || "NON DÉFINIE"}
+3. Living Reflection Heart : core/AERITH_LIVING_REFLECTION_HEART.md
+${i.memoryPath ? `4. Mémoire / base métier : ${i.memoryPath}` : ""}
 
-## Accès HTTP / Raw
+## Accès GitHub / Raw
 
-${makeHttpLinks()}
-
-## Héritages disponibles
-
-${state.heritage.length ? state.heritage.map(id => {
-  const item = DATA.lineage.find(line => line.id === id);
-  return `- ${item?.name || id} — ${item?.formula || ""}`;
-}).join("\n") : "- Aucun héritage supplémentaire sélectionné"}
-
-## Modules ciblés
-
-${modules.length ? modules.map(item => `- ${item}`).join("\n") : "- Aucun module complémentaire"}
+${linksDocument()}
 
 ## Mission
 
-${activeRole() || "Suivre strictement la mission définie dans le Core importé."}
+${i.role || "Suivre strictement la mission définie dans le Core."}
+
+## Héritages
+
+${i.heritage.length ? i.heritage.map(id => `- ${DATA.heritage.find(item => item.id === id)?.name || id}`).join("\n") : "- Aucun"}
+
+## Modules ciblés
+
+${i.modules.length ? i.modules.map(item => `- ${item}`).join("\n") : "- Aucun module complémentaire"}
 
 ## Verrous
 
-- Lire le Core et la Persona sans les réécrire.
-- Ne jamais présenter une source absente comme chargée.
-- Un module disponible n’est pas automatiquement actif.
-- Solaire et Lunaire sont des options de lignée, pas des voix simultanées par défaut.
-- Distinguer fait, hypothèse, interprétation, symbole, ressenti et action.
+${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- Ne pas inventer une source absente."}
+- Les modules sont référencés, jamais dupliqués automatiquement.
 - Produire le résultat demandé puis s’arrêter proprement.
 `;
   }
 
-  function profileSpec() {
-    const p = state.mode === "existing" ? profile() : null;
-    return {
-      forge_version: DATA.version,
-      mode: state.mode,
-      identity: {
-        name: activeName(),
-        family: state.mode === "custom" ? state.custom.family : p.family,
-        level: state.mode === "custom" ? state.custom.level : p.level,
-        role: activeRole(),
-        main_mode: state.mode === "custom" ? state.custom.mode : "",
-        version: state.mode === "custom" ? state.custom.version : "",
-        status: state.mode === "custom" ? state.custom.status : p.status
-      },
-      canonical: {
-        confirmed_private_core: state.mode === "existing" ? true : state.canonicalConfirmed,
-        core_path: state.mode === "custom" ? (state.custom.corePath || $("#canonicalPath").value) : p.canonicalPath,
-        persona_path: state.mode === "custom" ? state.custom.personaPath : "",
-        memory_or_business_base: state.mode === "custom" ? state.custom.memoryPath : ""
-      },
-      heritage: state.heritage,
-      modules: [...new Set([...manualModuleList(), ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)])],
-      theme: state.theme,
-      http_references: compilerCanonicalReferences(),
-      imported_files: state.imports.map(item => ({path:item.path,kind:item.kind,size:item.file.size})),
-      audit: audit()
-    };
-  }
-
-  function makeManifest() {
+  function manifestDocument() {
     const spec = profileSpec();
-    return `# MANIFESTE — ${activeName()}
+    return `# MANIFESTE — ${state.identity.name}
 
 Version Forge : ${DATA.version}
-Date : ${new Date().toISOString().slice(0,10)}
-Mode : ${state.mode === "custom" ? "Nouveau type Aerith-10 Pro" : "Profil canonique existant"}
+Date : ${new Date().toISOString().slice(0, 10)}
+Parcours : Forge unifiée — aucune double saisie
 
 ## Identité
 
-- Nom : ${spec.identity.name}
-- Famille : ${spec.identity.family || "—"}
-- Niveau : ${spec.identity.level || "—"}
-- Rôle : ${spec.identity.role || "—"}
-- Mode principal : ${spec.identity.main_mode || "—"}
-- Version Core : ${spec.identity.version || "—"}
+- Nom : ${state.identity.name}
+- Famille : ${state.identity.family || "—"}
+- Niveau : ${state.identity.level || "—"}
+- Rôle : ${state.identity.role || "—"}
+- Mode principal : ${state.identity.mode || "—"}
 
 ## Références canoniques
 
 - Core : ${spec.canonical.core_path || "—"}
 - Persona : ${spec.canonical.persona_path || "—"}
-- Mémoire / base métier : ${spec.canonical.memory_or_business_base || "—"}
-- Canonisation privée confirmée : ${spec.canonical.confirmed_private_core ? "oui" : "non"}
-
-## Liens GitHub / Raw
-
-${makeHttpLinks()}
+- Mémoire / base : ${spec.canonical.memory_or_business_base || "—"}
+- Canonisation humaine confirmée : ${spec.canonical.human_confirmed ? "oui" : "non"}
 
 ## Héritages
 
-${spec.heritage.length ? spec.heritage.map(item => `- ${item}`).join("\n") : "- Aucun"}
+${state.identity.heritage.length ? state.identity.heritage.map(item => `- ${item}`).join("\n") : "- Aucun"}
 
-## Modules
+## Modules référencés — non copiés
 
-${spec.modules.length ? spec.modules.map(item => `- ${item}`).join("\n") : "- Aucun"}
+${state.identity.modules.length ? state.identity.modules.map(item => `- ${item}`).join("\n") : "- Aucun"}
 
 ## Fichiers réellement importés
 
@@ -788,107 +1001,82 @@ ${spec.imported_files.length ? spec.imported_files.map(item => `- ${item.path} �
 
 ## Audit
 
-${spec.audit.items.map(item => `- [${item[0].toUpperCase()}] ${item[1]}`).join("\n")}
+${spec.audit.items.map(item => `- [${item[0].toUpperCase()}] ${item[1]} — ${item[2]}`).join("\n")}
 
 ## Verrou source-fidèle
 
-La Forge compile les sources disponibles.
-Elle ne crée pas de Core canonique.
-Elle ne réécrit pas la Persona.
-Elle ne présente pas un fichier absent comme chargé.
+La Forge compile les sources disponibles. Elle ne canonise pas à la place de Christophe, ne réécrit pas les fichiers protégés et ne présente pas un fichier absent comme chargé.
 `;
   }
 
-  function makePrivateReference() {
-    const spec = profileSpec();
-    return `# RÉFÉRENCE GITHUB PRIVÉE
-
-Dépôt canonique :
-BlueAzur-Hub/erith-ia-notion-archive-private
-
-Core :
-${spec.canonical.core_path || "NON DÉFINI"}
-
-Persona :
-${spec.canonical.persona_path || "NON DÉFINIE"}
-
-La Forge publique ne stocke aucun jeton et ne lit pas directement le dépôt privé.
-Les fichiers ont été fournis localement par l’utilisateur.
-`;
+  function renderFinal() {
+    const audit = finalAudit();
+    $("#finalStatus").textContent = audit.ready ? "PRÊT" : "À VÉRIFIER";
+    $("#finalStatus").style.color = audit.ready ? "var(--green)" : "var(--gold)";
+    $("#finalSummary").innerHTML = [
+      ["Profil", state.identity.name],
+      ["Sources importées", String(state.imports.length)],
+      ["Modules référencés", String(state.identity.modules.length)],
+      ["État", audit.ready ? "PRÊT" : "INCOMPLET"]
+    ].map(item => `<div class="summary-card"><span>${esc(item[0])}</span><b>${esc(item[1])}</b></div>`).join("");
+    $("#finalAudit").innerHTML = audit.items.map(item => `<div class="audit-row ${item[0]}"><span>${esc(item[0].toUpperCase())}</span><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
+    const docs = {
+      boot: bootDocument(),
+      manifest: manifestDocument(),
+      block: blockLLM(),
+      links: linksDocument(),
+      spec: JSON.stringify(profileSpec(), null, 2)
+    };
+    $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
+    $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
   }
 
-  function makeThemeDoc() {
-    const theme = DATA.themes.find(item => item[0] === state.theme);
-    return `# THÈME VISUEL
-
-Thème : ${theme?.[1] || state.theme}
-Direction : ${theme?.[2] || "—"}
-Visuel importé : ${visualImport()?.file.name || "aucun"}
-
-Le thème habille l’interface et le manifeste.
-Il ne modifie pas le Core et ne prouve aucune capacité.
-`;
+  function renderAll() {
+    renderProfiles();
+    renderExamples();
+    renderSelectedProfile();
+    renderFamilies();
+    renderAgentSuggestions();
+    renderHeritage();
+    syncFieldsToUI();
+    renderImports();
+    renderProposal();
+    renderFinal();
+    activateStep(state.step);
   }
 
   async function fetchBytes(path) {
     const response = await fetch(path, {cache:"no-store"});
-    if (!response.ok) throw new Error(`${path} · HTTP ${response.status}`);
+    if (!response.ok) throw new Error(`${path} — HTTP ${response.status}`);
     return new Uint8Array(await response.arrayBuffer());
   }
 
-  function uniquePath(files, wanted) {
-    if (!files.has(wanted)) return wanted;
-    const dot = wanted.lastIndexOf(".");
-    const slash = wanted.lastIndexOf("/");
-    const base = dot > slash ? wanted.slice(0,dot) : wanted;
-    const ext = dot > slash ? wanted.slice(dot) : "";
-    let index = 2;
-    while (files.has(`${base}_${index}${ext}`)) index += 1;
-    return `${base}_${index}${ext}`;
-  }
-
-  async function buildPackage(includePublic = true) {
-    const root = activeRoot();
+  async function buildFinalFiles() {
+    const root = cleanName(state.identity.name);
     const files = new Map();
-    const warnings = audit().items.filter(item => item[0] !== "ok").map(item => item[1]);
-
-    files.set(`${root}/BOOT.md`, encoder.encode(makeBoot()));
-    files.set(`${root}/MANIFESTE.md`, encoder.encode(makeManifest()));
-    files.set(`${root}/BLOCK_LLM.md`, encoder.encode(makeBlockLLM()));
-    files.set(`${root}/GITHUB_HTTP_RAW_LINKS.md`, encoder.encode(makeHttpLinks()));
-    files.set(`${root}/PROFILE_SPEC.json`, encoder.encode(JSON.stringify(profileSpec(), null, 2)));
-    files.set(`${root}/PRIVATE_GITHUB_REFERENCE.md`, encoder.encode(makePrivateReference()));
-    files.set(`${root}/THEME.md`, encoder.encode(makeThemeDoc()));
-    files.set(`${root}/BUILD_INFO.txt`, encoder.encode(`FORGE=${DATA.version}\nDATE=${new Date().toISOString()}\nPROFILE=${activeName()}\n`));
-
-    if (state.mode === "existing" && profile().privacy === "public" && includePublic) {
-      for (const source of profile().sources.filter(item => item[4])) {
-        try {
-          files.set(`${root}/sources_publiques/${source[0]}`, await fetchBytes(source[1]));
-        } catch (error) {
-          warnings.push(error.message);
-        }
-      }
-      for (const module of profile().modules.filter(item => state.modules.includes(item[0]))) {
-        try {
-          files.set(`${root}/modules/${module[0]}`, await fetchBytes(`modules/${module[0]}`));
-        } catch (error) {
-          warnings.push(error.message);
-        }
-      }
-    }
+    files.set(`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nPaquet produit par ${DATA.version}.\n\n- Parcours unique : conception → canonisation humaine → import → audit → export.\n- Les modules sont référencés, jamais dupliqués automatiquement.\n- Vérifier MANIFESTE et PROFILE_SPEC avant activation.\n`));
+    files.set(`${root}/${finalFileName("boot")}`, encoder.encode(bootDocument()));
+    files.set(`${root}/${finalFileName("manifest")}`, encoder.encode(manifestDocument()));
+    files.set(`${root}/${finalFileName("block")}`, encoder.encode(blockLLM()));
+    files.set(`${root}/${finalFileName("links")}`, encoder.encode(linksDocument()));
+    files.set(`${root}/${finalFileName("spec")}`, encoder.encode(JSON.stringify(profileSpec(), null, 2)));
 
     for (const item of state.imports) {
-      const relative = cleanPath(item.path || item.file.name);
-      const target = uniquePath(files, `${root}/sources_importees/${relative}`);
-      files.set(target, new Uint8Array(await item.file.arrayBuffer()));
+      files.set(`${root}/sources/${cleanPath(item.path)}`, new Uint8Array(await item.file.arrayBuffer()));
     }
 
-    return {root,files,warnings};
-  }
-
-  function tree(pkg) {
-    return [`${pkg.root}/`, ...[...pkg.files.keys()].sort().map(path => `├── ${path.slice(pkg.root.length + 1)}`)].join("\n");
+    const p = profile();
+    if (!isNew() && p.privacy === "public") {
+      for (const path of [p.corePath, p.personaPath]) {
+        if (!path) continue;
+        try {
+          files.set(`${root}/sources/${cleanPath(path).split("/").pop()}`, await fetchBytes(path));
+        } catch (error) {
+          files.set(`${root}/WARNINGS/${cleanName(path)}.txt`, encoder.encode(`Source publique non récupérée : ${error.message}`));
+        }
+      }
+    }
+    return {root, files};
   }
 
   function crc32(bytes) {
@@ -901,41 +1089,40 @@ Il ne modifie pas le Core et ne prouve aucune capacité.
   }
 
   function concat(parts) {
-    const length = parts.reduce((sum,part) => sum + part.length, 0);
+    const length = parts.reduce((sum, part) => sum + part.length, 0);
     const output = new Uint8Array(length);
     let offset = 0;
-    for (const part of parts) { output.set(part,offset); offset += part.length; }
+    for (const part of parts) { output.set(part, offset); offset += part.length; }
     return output;
   }
 
   function zipBlob(files) {
-    const local = [], central = [];
+    const local = [];
+    const central = [];
     let offset = 0;
     const now = new Date();
-    const year = Math.max(1980,now.getFullYear());
-    const time = (now.getHours()<<11) | (now.getMinutes()<<5) | Math.floor(now.getSeconds()/2);
-    const date = ((year-1980)<<9) | ((now.getMonth()+1)<<5) | now.getDate();
+    const year = Math.max(1980, now.getFullYear());
+    const time = (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2);
+    const date = ((year - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
 
-    for (const [name,raw] of files) {
-      const bytes = raw instanceof Uint8Array ? raw : encoder.encode(raw);
+    for (const [name, bytes] of files) {
       const nameBytes = encoder.encode(name);
       const crc = crc32(bytes);
-
       const lh = new Uint8Array(30 + nameBytes.length);
       const lv = new DataView(lh.buffer);
-      lv.setUint32(0,0x04034b50,true); lv.setUint16(4,20,true); lv.setUint16(6,0x0800,true);
-      lv.setUint16(8,0,true); lv.setUint16(10,time,true); lv.setUint16(12,date,true);
-      lv.setUint32(14,crc,true); lv.setUint32(18,bytes.length,true); lv.setUint32(22,bytes.length,true);
-      lv.setUint16(26,nameBytes.length,true); lh.set(nameBytes,30);
-      local.push(lh,bytes);
+      lv.setUint32(0, 0x04034b50, true); lv.setUint16(4, 20, true); lv.setUint16(6, 0x0800, true);
+      lv.setUint16(8, 0, true); lv.setUint16(10, time, true); lv.setUint16(12, date, true);
+      lv.setUint32(14, crc, true); lv.setUint32(18, bytes.length, true); lv.setUint32(22, bytes.length, true);
+      lv.setUint16(26, nameBytes.length, true); lh.set(nameBytes, 30);
+      local.push(lh, bytes);
 
       const ch = new Uint8Array(46 + nameBytes.length);
       const cv = new DataView(ch.buffer);
-      cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true);
-      cv.setUint16(8,0x0800,true); cv.setUint16(10,0,true); cv.setUint16(12,time,true);
-      cv.setUint16(14,date,true); cv.setUint32(16,crc,true); cv.setUint32(20,bytes.length,true);
-      cv.setUint32(24,bytes.length,true); cv.setUint16(28,nameBytes.length,true);
-      cv.setUint32(42,offset,true); ch.set(nameBytes,46);
+      cv.setUint32(0, 0x02014b50, true); cv.setUint16(4, 20, true); cv.setUint16(6, 20, true);
+      cv.setUint16(8, 0x0800, true); cv.setUint16(10, 0, true); cv.setUint16(12, time, true);
+      cv.setUint16(14, date, true); cv.setUint32(16, crc, true); cv.setUint32(20, bytes.length, true);
+      cv.setUint32(24, bytes.length, true); cv.setUint16(28, nameBytes.length, true);
+      cv.setUint32(42, offset, true); ch.set(nameBytes, 46);
       central.push(ch);
       offset += lh.length + bytes.length;
     }
@@ -944,272 +1131,169 @@ Il ne modifie pas le Core et ne prouve aucune capacité.
     const centralData = concat(central);
     const end = new Uint8Array(22);
     const ev = new DataView(end.buffer);
-    ev.setUint32(0,0x06054b50,true);
-    ev.setUint16(8,files.size,true); ev.setUint16(10,files.size,true);
-    ev.setUint32(12,centralData.length,true); ev.setUint32(16,localData.length,true);
-    return new Blob([localData,centralData,end], {type:"application/zip"});
+    ev.setUint32(0, 0x06054b50, true);
+    ev.setUint16(8, files.size, true); ev.setUint16(10, files.size, true);
+    ev.setUint32(12, centralData.length, true); ev.setUint32(16, localData.length, true);
+    return new Blob([localData, centralData, end], {type:"application/zip"});
   }
 
-  function renderAudit() {
-    const result = audit();
-    const card = $("#auditCard");
-    card.className = `audit-card ${result.ready ? "ready" : "warning"}`;
-    card.innerHTML = `<h3>${result.ready ? "Profil prêt à forger" : "Profil incomplet"}</h3><ul>${
-      result.items.map(item => `<li class="${item[0]}">${esc(item[1])}</li>`).join("")
-    }</ul>`;
-    $("#bootPreview").textContent = makeBoot();
-    $("#forgeZip").disabled = state.mode === "custom" && !result.ready;
-    $("#matrixState").textContent = result.ready ? "READY" : "IMPORT";
+  async function downloadProposalZip() {
+    const root = `${canonicalBase()}_PROPOSAL`;
+    const files = new Map([
+      [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
+      [`${root}/${proposalFileName("persona")}`, encoder.encode(proposalPersona())],
+      [`${root}/${proposalFileName("block")}`, encoder.encode(blockLLM())],
+      [`${root}/${proposalFileName("links")}`, encoder.encode(linksDocument())],
+      [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())],
+      [`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nCe paquet contient une proposition locale non canonique.\n\n1. Relire et corriger.\n2. Valider humainement.\n3. Retirer le suffixe PROPOSAL après validation.\n4. Intégrer vers ${defaultCoreTarget()} et ${defaultPersonaTarget()}.\n5. Revenir à l’étape 07 du même formulaire ; aucune ressaisie n’est nécessaire.\n`)]
+    ]);
+    downloadBlob(`${root}.zip`, zipBlob(files));
+    showToast("ZIP de proposition téléchargé.");
   }
 
-  function renderExport() {
-    const result = audit();
-    $("#exportName").textContent = activeName();
-    $("#exportSummary").textContent = state.mode === "custom"
-      ? `${state.imports.length} fichier(s) importé(s), ${state.heritage.length} héritage(s), ${manualModuleList().length} route(s) manuelle(s).`
-      : `${profile().name} · ${state.imports.length} source(s) locale(s) · ${state.modules.length} module(s) sélectionné(s).`;
-    $("#forgeZip").disabled = state.mode === "custom" && !result.ready;
+  function openLightbox(src, title) {
+    $("#lightboxImage").src = src;
+    $("#lightboxImage").alt = title;
+    $("#lightboxTitle").textContent = title;
+    $("#lightbox").hidden = false;
+    $("#lightbox").setAttribute("aria-hidden", "false");
+    document.body.classList.add("lightbox-open");
   }
 
-  function renderSteps() {
-    $("#stepNav").innerHTML = steps.map((step,index) => `
-      <button type="button" class="step-button ${state.step === index ? "active" : ""}" data-step="${index}">
-        <span class="num">${step[0]}</span>
-        <span><b>${step[1]}</b><small>${step[2]}</small></span>
-        <em>${index < state.step ? "✓" : "•"}</em>
-      </button>`).join("");
-  }
-
-  function activateStep(index, focus = false) {
-    state.step = Math.max(0,Math.min(index,steps.length - 1));
-    $$(".panel").forEach((panel,panelIndex) => panel.classList.toggle("active",panelIndex === state.step));
-    const step = steps[state.step];
-    $("#stepCounter").textContent = `ÉTAPE ${step[0]} SUR 07`;
-    $("#stepTitle").textContent = step[1];
-    $("#stepDescription").textContent = step[2];
-    $("#previousTop").disabled = $("#previousBottom").disabled = state.step === 0;
-    $("#nextTop").disabled = $("#nextBottom").disabled = state.step === steps.length - 1;
-    $("#progressValue").textContent = `${Math.round((state.step + 1) / steps.length * 100)}%`;
-    renderSteps();
-    if (state.step >= 5) renderAudit();
-    if (state.step === 6) renderExport();
-    if (focus) $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-
-  function renderAll() {
-    renderProfiles();
-    renderMatrix();
-    renderIdentity();
-    renderImports();
-    renderSourceAudit();
-    renderMetadata();
-    renderHeritage();
-    renderThemes();
-    renderAudit();
-    renderExport();
-    activateStep(state.step);
-  }
-
-  function selectExisting(id) {
-    const p = DATA.profiles.find(item => item.id === id);
-    if (!p) return;
-    state.mode = "existing";
-    state.profileId = id;
-    state.theme = p.theme;
-    state.heritage = [...p.heritage];
-    state.modules = p.modules.slice(0,p.id === "seven" ? 2 : 4).map(item => item[0]);
-    state.canonicalConfirmed = true;
-    state.step = 0;
-    renderAll();
-    $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
-    showToast(`${p.name} sélectionné.`);
-  }
-
-  function selectCustom() {
-    state.mode = "custom";
-    state.step = 0;
-    state.theme = state.theme || "creator";
-    state.canonicalConfirmed = false;
-    renderAll();
-    $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
-    showToast("Atelier Aerith-10 Pro ouvert.");
-  }
-
-  async function addFiles(files) {
-    let added = 0, duplicates = 0;
-    for (const file of files) {
-      const path = cleanPath(file.webkitRelativePath || file.name);
-      const key = `${path.toLowerCase()}|${file.size}|${file.lastModified}`;
-      if (state.imports.some(item => item.key === key)) { duplicates += 1; continue; }
-
-      let text = "";
-      if (/\.md$|\.txt$/i.test(file.name) && file.size < 5_000_000) {
-        try { text = await file.text(); } catch {}
-      }
-      const kind = kindForFile(file,text);
-      state.imports.push({file,path,key,kind,text});
-      added += 1;
-
-      if (kind === "core" && text) mergeParsed(parseCore(text,file.name));
-      if (kind === "persona" && text) {
-        const coreRequired = fieldFromText(text,["Core requis"]);
-        const personaPath = fieldFromText(text,["Chemin cible"]);
-        const version = fieldFromText(text,["Version"]);
-        if (coreRequired && !state.custom.corePath) state.custom.corePath = coreRequired.replace(/`/g,"");
-        if (personaPath) state.custom.personaPath = personaPath.replace(/`/g,"");
-        if (version && !state.custom.version) state.custom.version = version;
-      }
-      if (kind === "visual" && !state.visualUrl) {
-        state.visualUrl = URL.createObjectURL(file);
-      }
-    }
-    renderAll();
-    showToast(added ? `${added} fichier(s) ajouté(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}` : "Aucun nouveau fichier.");
-  }
-
-  function syncCustomInputs() {
-    state.custom.name = $("#customName").value.trim() || "Aerith-10 Nouvelle Spécialité";
-    state.custom.family = $("#customFamily").value.trim();
-    state.custom.level = $("#customLevel").value.trim();
-    state.custom.mode = $("#customMode").value.trim();
-    state.custom.role = $("#customRole").value.trim();
-    state.custom.exportRoot = $("#exportRoot").value.trim() || cleanName(state.custom.name);
-    renderMatrix();
-    renderMetadata();
-    renderAudit();
-    renderExport();
+  function closeLightbox() {
+    $("#lightbox").hidden = true;
+    $("#lightbox").setAttribute("aria-hidden", "true");
+    $("#lightboxImage").src = "";
+    document.body.classList.remove("lightbox-open");
   }
 
   document.addEventListener("click", event => {
-    const lineageImage = event.target.closest("[data-lineage-image]");
-    if (lineageImage) {
-      openLightbox(lineageImage.dataset.lineageImage, lineageImage.dataset.lineageTitle || "Constellation d’Aerith");
-      return;
-    }
-
-    if (event.target.id === "imageLightbox") {
-      closeLightbox();
-      return;
-    }
-
     const profileButton = event.target.closest("[data-profile]");
-    if (profileButton) selectExisting(profileButton.dataset.profile);
+    if (profileButton) applyProfile(profileButton.dataset.profile);
 
-    const stepButton = event.target.closest("[data-step]");
-    if (stepButton) activateStep(Number(stepButton.dataset.step));
+    const exampleButton = event.target.closest("[data-example]");
+    if (exampleButton) applyExample(exampleButton.dataset.example);
 
-    const heritageButton = event.target.closest("[data-heritage]");
-    if (heritageButton) {
-      const id = heritageButton.dataset.heritage;
-      state.heritage = state.heritage.includes(id)
-        ? state.heritage.filter(item => item !== id)
-        : [...state.heritage,id];
-      renderHeritage(); renderAudit();
+    const stepButton = event.target.closest("[data-step-button]");
+    if (stepButton) activateStep(Number(stepButton.dataset.stepButton), true);
+
+    const agentButton = event.target.closest("[data-agent]");
+    if (agentButton) {
+      const agent = agentButton.dataset.agent;
+      if (!state.identity.agents.includes(agent)) state.identity.agents.push(agent);
+      $("#fieldAgents").value = state.identity.agents.join("\n");
+      persist(); renderProposal(); renderFinal();
     }
 
-    const themeButton = event.target.closest("[data-theme-choice]");
-    if (themeButton) {
-      state.theme = themeButton.dataset.themeChoice;
-      renderThemes(); renderMatrix();
+    const previewButton = event.target.closest("[data-preview]");
+    if (previewButton) { state.proposalPreview = previewButton.dataset.preview; persist(); renderProposal(); }
+
+    const finalPreviewButton = event.target.closest("[data-final-preview]");
+    if (finalPreviewButton) { state.finalPreview = finalPreviewButton.dataset.finalPreview; persist(); renderFinal(); }
+
+    const removeImport = event.target.closest("[data-remove-import]");
+    if (removeImport) {
+      const index = Number(removeImport.dataset.removeImport);
+      const removed = state.imports.splice(index, 1)[0];
+      if (removed?.kind === "visual" && state.visualUrl) { URL.revokeObjectURL(state.visualUrl); state.visualUrl = ""; }
+      persist(); renderAll();
+    }
+
+    const lightboxButton = event.target.closest("[data-lightbox]");
+    if (lightboxButton) openLightbox(lightboxButton.dataset.lightbox, lightboxButton.dataset.lightboxTitle || "Visuel");
+    if (event.target.id === "lightbox") closeLightbox();
+  });
+
+  document.addEventListener("change", event => {
+    const heritageInput = event.target.closest("[data-heritage]");
+    if (heritageInput) {
+      const id = heritageInput.dataset.heritage;
+      state.identity.heritage = heritageInput.checked
+        ? [...new Set([...state.identity.heritage, id])]
+        : state.identity.heritage.filter(item => item !== id);
+      persist(); renderHeritage(); renderProposal(); renderFinal();
     }
   });
 
-  $("#lightboxClose").addEventListener("click", closeLightbox);
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !$("#imageLightbox").hidden) closeLightbox();
-  });
-
-  $("#newA10Card").addEventListener("click",selectCustom);
-  $("#startCustom").addEventListener("click",selectCustom);
-  $("#topStart").addEventListener("click",() => activateStep(0,true));
-  $("#nextTop").addEventListener("click",() => activateStep(state.step + 1));
-  $("#nextBottom").addEventListener("click",() => activateStep(state.step + 1));
-  $("#previousTop").addEventListener("click",() => activateStep(state.step - 1));
-  $("#previousBottom").addEventListener("click",() => activateStep(state.step - 1));
-
-  for (const id of ["customName","customFamily","customLevel","customMode","customRole","exportRoot"]) {
-    $(`#${id}`).addEventListener("input",syncCustomInputs);
+  for (const id of [
+    "fieldName", "fieldFamily", "fieldLevel", "fieldMode", "fieldRole", "fieldProblem", "fieldUsers",
+    "fieldOutputs", "fieldFormula", "fieldAgents", "fieldModules", "fieldNonDuplication", "fieldTone",
+    "fieldModes", "fieldGuardrails", "fieldConfidentiality", "fieldStopPoint", "fieldCorePath",
+    "fieldPersonaPath", "fieldMemoryPath", "canonicalConfirmed"
+  ]) {
+    $(`#${id}`).addEventListener(id === "canonicalConfirmed" ? "change" : "input", syncUIToState);
   }
 
-  $("#canonicalConfirmed").addEventListener("change",event => {
-    if (state.mode === "custom") state.canonicalConfirmed = event.target.checked;
-    renderAudit(); renderExport(); renderMatrix();
-  });
+  $("#blankProfile").addEventListener("click", applyBlank);
+  $("#startTop").addEventListener("click", () => activateStep(0, true));
+  $("#startNew").addEventListener("click", () => { applyProfile("new", false); activateStep(0, true); });
+  $("#startExisting").addEventListener("click", () => { $("#profiles").scrollIntoView({behavior:"smooth", block:"start"}); });
+  $("#previousTop").addEventListener("click", () => activateStep(state.step - 1));
+  $("#previousBottom").addEventListener("click", () => activateStep(state.step - 1));
+  $("#nextTop").addEventListener("click", () => activateStep(state.step + 1));
+  $("#nextBottom").addEventListener("click", () => activateStep(state.step + 1));
+  $("#lightboxClose").addEventListener("click", closeLightbox);
 
-  $("#canonicalPath").addEventListener("input",event => {
-    if (state.mode === "custom") state.custom.corePath = event.target.value.trim();
-    renderAudit(); renderExport();
-  });
-
-  $("#manualModules").addEventListener("input",event => {
-    state.modules = event.target.value.split(/\r?\n/).map(item => cleanPath(item.trim())).filter(Boolean);
-    renderAudit(); renderExport();
-  });
-
-  const dropzone = $("#dropzone"), fileInput = $("#fileInput"), folderInput = $("#folderInput");
-  $("#browseFiles").addEventListener("click",event => { event.stopPropagation(); fileInput.click(); });
-  $("#browseFolder").addEventListener("click",event => { event.stopPropagation(); folderInput.click(); });
-  dropzone.addEventListener("click",event => { if (!event.target.closest("button")) fileInput.click(); });
-  dropzone.addEventListener("keydown",event => { if (event.key === "Enter" || event.key === " ") fileInput.click(); });
-  ["dragenter","dragover"].forEach(type => dropzone.addEventListener(type,event => { event.preventDefault(); dropzone.classList.add("drag"); }));
-  ["dragleave","drop"].forEach(type => dropzone.addEventListener(type,event => { event.preventDefault(); dropzone.classList.remove("drag"); }));
-  fileInput.addEventListener("change",async event => { await addFiles([...event.target.files]); event.target.value = ""; });
-  folderInput.addEventListener("change",async event => { await addFiles([...event.target.files]); event.target.value = ""; });
-  dropzone.addEventListener("drop",event => addFiles([...event.dataTransfer.files]));
-
-  $("#clearImports").addEventListener("click",() => {
+  $("#chooseFiles").addEventListener("click", () => $("#fileInput").click());
+  $("#chooseFolder").addEventListener("click", () => $("#folderInput").click());
+  $("#fileInput").addEventListener("change", event => addFiles(event.target.files));
+  $("#folderInput").addEventListener("change", event => addFiles(event.target.files));
+  $("#clearImports").addEventListener("click", () => {
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
-    state.imports = [];
     state.visualUrl = "";
-    state.parsed = {};
-    renderAll();
+    state.imports = [];
+    persist(); renderAll(); showToast("Imports vidés.");
   });
 
-  $("#resetForge").addEventListener("click",() => {
-    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
-    state.mode = "custom"; state.profileId = "seven"; state.step = 0; state.imports = [];
-    state.modules = []; state.heritage = ["seven"]; state.theme = "creator";
-    state.canonicalConfirmed = false; state.parsed = {}; state.visualUrl = "";
-    state.custom = {
-      name:"Aerith-10 Nouvelle Spécialité",family:"Filles d’Aerith",level:"Aerith-10",
-      mode:"",role:"",version:"",status:"",compatibility:"",personaPath:"",
-      memoryPath:"",corePath:"",imagePath:"",update:"",
-      exportRoot:"AERITH_10_NOUVELLE_SPECIALITE"
-    };
-    renderAll();
-    showToast("Forge réinitialisée.");
-  });
+  const dropzone = $("#dropzone");
+  for (const name of ["dragenter", "dragover"]) dropzone.addEventListener(name, event => { event.preventDefault(); dropzone.classList.add("drag"); });
+  for (const name of ["dragleave", "drop"]) dropzone.addEventListener(name, event => { event.preventDefault(); dropzone.classList.remove("drag"); });
+  dropzone.addEventListener("drop", event => addFiles(event.dataTransfer.files));
 
-  $("#downloadBoot").addEventListener("click",() => downloadText(`BOOT_${activeRoot()}.md`,makeBoot()));
-  $("#downloadManifest").addEventListener("click",() => downloadText(`MANIFESTE_${activeRoot()}.md`,makeManifest()));
-  $("#downloadBlockLLM").addEventListener("click",() => downloadText(`BLOCK_LLM_${activeRoot()}.md`,makeBlockLLM()));
-  $("#downloadHttpLinks").addEventListener("click",() => downloadText(`GITHUB_HTTP_RAW_${activeRoot()}.md`,makeHttpLinks()));
-  $("#downloadSpec").addEventListener("click",() => downloadText(`PROFILE_SPEC_${activeRoot()}.json`,JSON.stringify(profileSpec(),null,2),"application/json;charset=utf-8"));
-  $("#copyTree").addEventListener("click",async () => copyText(tree(await buildPackage(true))));
+  $("#downloadProposalCore").addEventListener("click", () => downloadText(proposalFileName("core"), proposalCore()));
+  $("#downloadProposalPersona").addEventListener("click", () => downloadText(proposalFileName("persona"), proposalPersona()));
+  $("#downloadProposalBlock").addEventListener("click", () => downloadText(proposalFileName("block"), blockLLM()));
+  $("#downloadProposalLinks").addEventListener("click", () => downloadText(proposalFileName("links"), linksDocument()));
+  $("#downloadProposalBrief").addEventListener("click", () => downloadText(proposalFileName("brief"), designBrief()));
+  $("#downloadProposalZip").addEventListener("click", downloadProposalZip);
 
-  $("#forgeZip").addEventListener("click",async () => {
+  $("#downloadBoot").addEventListener("click", () => downloadText(finalFileName("boot"), bootDocument()));
+  $("#downloadManifest").addEventListener("click", () => downloadText(finalFileName("manifest"), manifestDocument()));
+  $("#downloadBlock").addEventListener("click", () => downloadText(finalFileName("block"), blockLLM()));
+  $("#downloadLinks").addEventListener("click", () => downloadText(finalFileName("links"), linksDocument()));
+  $("#downloadSpec").addEventListener("click", () => downloadText(finalFileName("spec"), JSON.stringify(profileSpec(), null, 2), "application/json;charset=utf-8"));
+  $("#forgeZip").addEventListener("click", async () => {
     const log = $("#forgeLog");
-    log.textContent = "Compilation des sources exactes…";
+    log.textContent = "Compilation locale du paquet final…";
     try {
-      const pkg = await buildPackage(true);
+      const pkg = await buildFinalFiles();
       const blob = zipBlob(pkg.files);
-      downloadBlob(`${pkg.root}_FORGE_AERITH_PRO.zip`,blob);
-      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)}${pkg.warnings.length ? ` · ${pkg.warnings.length} alerte(s) consignées` : " · paquet complet"}`;
-      showToast("ZIP Pro forgé.");
+      downloadBlob(`${pkg.root}_FORGE_AERITH_PRO.zip`, blob);
+      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)} · modules référencés, non copiés`;
+      showToast("ZIP final forgé.");
     } catch (error) {
       log.textContent = `Erreur : ${error.message}`;
       showToast("Erreur de compilation.");
     }
   });
 
+  $("#resetAll").addEventListener("click", () => {
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    state = defaultState();
+    applyExample("preceptrice");
+    state.step = 0;
+    persist(); renderAll(); showToast("Forge unifiée réinitialisée.");
+  });
+
   renderDoctrine();
   renderLineage();
-  renderAll();
+  if (state.profileId === "new" && !state.identity.role) applyExample(state.selectedExample || "preceptrice");
+  else renderAll();
 
-  const expected = document.body.dataset.build;
-  if (expected !== DATA.version) {
-    const diagnostic = $("#buildDiagnostic");
+  if (document.body.dataset.build !== DATA.version) {
+    const diagnostic = $("#diagnostic");
     diagnostic.hidden = false;
-    diagnostic.textContent = `Version incohérente : HTML ${expected} / données ${DATA.version}. Recharge forcée requise.`;
+    diagnostic.textContent = `Version incohérente : HTML ${document.body.dataset.build} / données ${DATA.version}.`;
   }
 })();
