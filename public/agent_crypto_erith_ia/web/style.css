@@ -15201,3 +15201,113 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     padding: 8px 10px !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.49
+   LEGEND LEFT · ANALYSE READABILITY · TOOLTIP STRICT LOCK
+   ========================================================= */
+
+/* Analyse remains inside the graph and becomes readable at Firefox 90%. */
+#analyste .atlas-chart-insight-overlay {
+  top: 14px !important;
+  left: 16px !important;
+  width: min(940px, calc(100% - 360px)) !important;
+  max-width: calc(100% - 34px) !important;
+  gap: 6px !important;
+  padding: 11px 108px 11px 13px !important;
+  border-left-width: 3px !important;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(2,9,19,.94) 0%,
+      rgba(2,9,19,.84) 66%,
+      rgba(2,9,19,.36) 90%,
+      transparent 100%
+    ) !important;
+}
+
+#analyste .atlas-chart-insight-overlay > strong {
+  font: 900 12px/1.22 system-ui,sans-serif !important;
+  letter-spacing: .105em !important;
+}
+
+#analyste .atlas-chart-insight-overlay > span {
+  font: 880 12px/1.30 system-ui,sans-serif !important;
+  letter-spacing: .012em !important;
+}
+
+#analyste .atlas-chart-insight-overlay > small {
+  font: 780 11px/1.32 system-ui,sans-serif !important;
+  letter-spacing: .01em !important;
+}
+
+/* Existing BTC/ETH/BNB/XRP/SOL legend moves to the left, below Analyse. */
+#analyste .chart-v2-legend {
+  position: absolute !important;
+  z-index: 10 !important;
+  top: 104px !important;
+  left: 16px !important;
+  right: auto !important;
+  max-width: min(940px, calc(100% - 34px)) !important;
+  justify-content: flex-start !important;
+  padding: 6px !important;
+  gap: 5px !important;
+  background: rgba(2,10,20,.80) !important;
+}
+
+#analyste .chart-v2-legend-item {
+  min-height: 25px !important;
+  padding: 5px 8px !important;
+  font: 800 8px/1 system-ui,sans-serif !important;
+}
+
+#analyste .chart-v2-legend-item i {
+  width: 20px !important;
+  height: 3px !important;
+}
+
+/* The detailed multi-crypto hover table is intentionally not styled here. */
+
+@media (max-width: 1180px) {
+  #analyste .atlas-chart-insight-overlay {
+    width: min(790px, calc(100% - 300px)) !important;
+    padding-right: 54px !important;
+  }
+
+  #analyste .chart-v2-legend {
+    top: 108px !important;
+    max-width: min(790px, calc(100% - 34px)) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  #analyste .atlas-chart-insight-overlay {
+    top: 10px !important;
+    left: 10px !important;
+    width: calc(100% - 20px) !important;
+    padding: 9px 10px !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > strong {
+    font-size: 11px !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > span {
+    font-size: 11px !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > small {
+    font-size: 10px !important;
+  }
+
+  #analyste .chart-v2-legend {
+    position: absolute !important;
+    top: 126px !important;
+    left: 10px !important;
+    right: auto !important;
+    max-width: calc(100% - 20px) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+}
