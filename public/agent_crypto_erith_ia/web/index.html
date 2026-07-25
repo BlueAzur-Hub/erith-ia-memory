@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.40 — ADAPTIVE COMMAND CENTER · DUAL FOCUS · FORGE PRO BRIDGE</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.41 — ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.40-adaptive-command-center-dual-focus-forge-pro" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.41-admin-graph-toggle-market-recenter-forge-pro" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.40</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.41</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -36,7 +36,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Livecheck · marché · graphique · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.40</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.41</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -66,10 +66,16 @@
               <span class="atlas-admin-command-kicker">ADMIN</span>
               <div class="atlas-admin-command-shortcuts" role="group" aria-label="Groupes du Command Center">
                 <button type="button" data-admin-cluster-target="decision" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Décision</span><b>4</b></button>
-                <button type="button" data-admin-cluster-target="analysis" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Analyse</span><b>4</b></button>
+                <button type="button" data-admin-cluster-target="analysis" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Analyse</span><b>5</b></button>
                 <button type="button" data-admin-cluster-target="system" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Système</span><b>5</b></button>
                 <button type="button" data-admin-cluster-target="projects" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Projets</span><b>2</b></button>
               </div>
+              <button class="atlas-admin-graph-toggle is-open" id="atlasAdminGraphToggle" type="button"
+                      data-admin-graph-toggle aria-pressed="true"
+                      aria-controls="analyste market-workspace"
+                      aria-label="Fermer le Graphique Analyste, Détail actif, Target Top 5 et Market Flow">
+                <span>Graphique</span><b id="atlasAdminGraphToggleState">Ouvert</b>
+              </button>
               <button class="atlas-admin-center-toggle" id="atlasAdminCenterToggle" type="button" aria-expanded="false" aria-controls="atlasAdminCenterDrawer">
                 <span>Command Center</span><b id="atlasAdminCenterToggleState">Déployer +</b>
               </button>
@@ -91,6 +97,11 @@
 
                 <section class="atlas-admin-cluster" data-admin-cluster="analysis" aria-label="Analyse avancée">
                   <span class="atlas-admin-cluster-label">Analyse</span>
+                  <button type="button" class="atlas-quick-link atlas-admin-graph-drawer-toggle is-open"
+                          data-admin-graph-toggle aria-pressed="true"
+                          aria-controls="analyste market-workspace">
+                    <span class="atlas-quick-icon" aria-hidden="true">⌇</span><span>Graphique ouvert</span>
+                  </button>
                   <a href="#math" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">Σ</span><span>Math</span></a>
                   <a href="#multi-horizon" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">≋</span><span>Horizons</span></a>
                   <a href="#lecture-froide" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">◌</span><span>Lecture</span></a>
@@ -218,19 +229,7 @@
     
 
 
-    <section class="atlas-market-zone" id="market-zone" aria-label="Zone marché Atlas" data-market-layout="cockpit">
-      <div class="atlas-layout-command glass" id="atlasLayoutCommand" aria-label="Disposition Graphique et Market">
-        <div class="atlas-layout-command-title">
-          <span>DISPOSITION</span>
-          <strong id="atlasLayoutModeLabel">Cockpit</strong>
-        </div>
-        <div class="atlas-layout-switch" role="group" aria-label="Choisir la disposition">
-          <button type="button" class="is-active" data-market-layout-mode="cockpit" aria-pressed="true">Cockpit</button>
-          <button type="button" data-market-layout-mode="graph" aria-pressed="false">Graphique ⛶</button>
-          <button type="button" data-market-layout-mode="market" aria-pressed="false">Market ↓</button>
-        </div>
-        <div class="atlas-layout-live-summary" id="atlasLayoutLiveSummary" aria-live="polite">BTC · 24 h · EUR · en attente</div>
-      </div>
+    <section class="atlas-market-zone" id="market-zone" aria-label="Zone marché Atlas">
     <section class="analyst-deck champagne-clean-lens detail-collapsed" id="analyste">
       <article class="panel glass chart-panel">
         <div class="section-head compact chart-v2-recovery-line">
@@ -391,10 +390,6 @@
     </section>
 
 
-      <div class="atlas-market-focus-strip glass" id="atlasMarketFocusStrip" hidden>
-        <div><span>GRAPHIQUE MASQUÉ</span><strong id="atlasMarketFocusState">BTC · 24 h · Solo</strong></div>
-        <button type="button" data-market-layout-mode="cockpit">Rouvrir le graphique ↑</button>
-      </div>
 
     <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">
       <section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
@@ -1331,7 +1326,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.40 · Math Core V2</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.41 · Math Core V2</span>
       </div>
 
       <div class="situation-grid">
@@ -2501,7 +2496,7 @@
     <footer class="footer atlas-release-footer" aria-label="Version Agent-Crypto">
       <span id="footerTruthRule">Pas de source live, pas de prix · Pas de risque borné, pas de position théorique</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Mesure d’audience · activité de l’application et diagnostic technique</a>
-      <span id="footerRelease">Agent-Crypto @erith.IA V2.0-alpha · Build 28.1.40 — ADAPTIVE COMMAND CENTER · DUAL FOCUS · FORGE PRO BRIDGE</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA V2.0-alpha · Build 28.1.41 — ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE</span>
     </footer>
   </main>
 
@@ -2509,6 +2504,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.40-adaptive-command-center-dual-focus-forge-pro"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.41-admin-graph-toggle-market-recenter-forge-pro"></script>
 </body>
 </html>

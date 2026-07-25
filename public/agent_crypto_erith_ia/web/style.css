@@ -13972,7 +13972,7 @@ body[data-market-truth="direct-conserved"] #liveStatus {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.40
+   V2.0-alpha · Build 28.1.41
    CRYPTO ADMIN INTERFACE · FORGE PRO BRIDGE · ESSENTIAL MODE LOCK
    Interface shell only — Graphique Analyste / Détail actif / Market untouched.
    ========================================================= */
@@ -14153,8 +14153,8 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.40
-   ADAPTIVE COMMAND CENTER · DUAL FOCUS · FORGE PRO BRIDGE
+   V2.0-alpha · Build 28.1.41
+   ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE
    Additive interface shell. Protected chart, detail and Market internals unchanged.
    ========================================================= */
 
@@ -14186,7 +14186,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 .atlas-admin-command-bar {
   display: grid !important;
-  grid-template-columns: auto minmax(0,1fr) auto !important;
+  grid-template-columns: auto minmax(0,1fr) auto auto !important;
   align-items: center !important;
   gap: 7px !important;
   min-height: 36px !important;
@@ -14212,6 +14212,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 }
 
 .atlas-admin-command-shortcuts button,
+.atlas-admin-graph-toggle,
 .atlas-admin-center-toggle {
   min-height: 32px !important;
   border: 1px solid rgba(98,236,255,.15) !important;
@@ -14235,9 +14236,70 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
   font-size: 8px !important;
 }
 
+.atlas-admin-graph-toggle {
+  display: grid !important;
+  grid-template-columns: auto auto !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  min-width: 144px !important;
+  min-height: 32px !important;
+  padding: 0 11px !important;
+  text-align: left !important;
+}
+
+.atlas-admin-graph-toggle span {
+  color: #f4d99a !important;
+  font: 880 9px/1 system-ui,sans-serif !important;
+  letter-spacing: .035em !important;
+}
+
+.atlas-admin-graph-toggle b {
+  color: #68efff !important;
+  font: 850 8px/1 system-ui,sans-serif !important;
+  white-space: nowrap !important;
+}
+
+.atlas-admin-graph-toggle:not(.is-open) {
+  border-color: rgba(244,217,154,.24) !important;
+  background: linear-gradient(135deg,rgba(244,217,154,.08),rgba(98,236,255,.025)),rgba(4,18,31,.78) !important;
+}
+
+.atlas-admin-graph-toggle:not(.is-open) b {
+  color: #f4d99a !important;
+}
+
+.atlas-admin-graph-drawer-toggle {
+  appearance: none !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.atlas-admin-graph-drawer-toggle:not(.is-open) {
+  border-color: rgba(244,217,154,.28) !important;
+  background: rgba(244,217,154,.07) !important;
+}
+
+.atlas-market-zone.atlas-graph-closed > #analyste,
+.atlas-market-zone.atlas-graph-closed > #market-workspace {
+  display: none !important;
+}
+
+.atlas-market-zone.atlas-graph-closed > #mathTopDock,
+.atlas-market-zone.atlas-graph-closed > #marketWorkspaceGrid {
+  width: 100% !important;
+}
+
+.atlas-market-zone.atlas-graph-closed {
+  padding-top: 0 !important;
+}
+
 .atlas-admin-command-shortcuts button:hover,
 .atlas-admin-command-shortcuts button:focus-visible,
 .atlas-admin-command-shortcuts button.is-selected,
+.atlas-admin-graph-toggle:hover,
+.atlas-admin-graph-toggle:focus-visible,
+.atlas-admin-graph-toggle.is-open,
 .atlas-admin-center-toggle:hover,
 .atlas-admin-center-toggle:focus-visible,
 .atlas-admin-center-toggle[aria-expanded="true"] {
@@ -14364,172 +14426,25 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 .atlas-admin-command-footer .atlas-v2-module-open { min-height: 38px !important; }
 
-/* Dual-focus layout controller around protected market components. */
-.atlas-market-zone {
-  position: relative !important;
-}
-
-.atlas-layout-command {
-  position: sticky !important;
-  top: 6px !important;
-  z-index: 105 !important;
-  display: grid !important;
-  grid-template-columns: auto auto minmax(180px,1fr) !important;
-  align-items: center !important;
-  gap: 10px !important;
-  margin: 0 0 8px !important;
-  padding: 6px 8px !important;
-  border-color: rgba(98,236,255,.20) !important;
-  background: linear-gradient(135deg,rgba(98,236,255,.055),rgba(244,217,154,.025)),rgba(3,12,23,.90) !important;
-  backdrop-filter: blur(18px) !important;
-}
-
-.atlas-layout-command-title {
-  display: grid !important;
-  gap: 2px !important;
-  min-width: 96px !important;
-  padding-right: 10px !important;
-  border-right: 1px solid rgba(98,236,255,.14) !important;
-}
-
-.atlas-layout-command-title span {
-  color: #68efff !important;
-  font: 900 7px/1 system-ui,sans-serif !important;
-  letter-spacing: .17em !important;
-}
-
-.atlas-layout-command-title strong {
-  color: #f4d99a !important;
-  font: 880 11px/1.15 system-ui,sans-serif !important;
-}
-
-.atlas-layout-switch {
-  display: grid !important;
-  grid-template-columns: repeat(3,auto) !important;
-  gap: 5px !important;
-}
-
-.atlas-layout-switch button,
-.atlas-market-focus-strip button {
-  min-height: 34px !important;
-  padding: 0 12px !important;
-  border: 1px solid rgba(98,236,255,.18) !important;
-  border-radius: 9px !important;
-  background: rgba(4,18,31,.76) !important;
-  color: rgba(238,248,255,.90) !important;
-  font: 820 9px/1 system-ui,sans-serif !important;
-  cursor: pointer !important;
-}
-
-.atlas-layout-switch button:hover,
-.atlas-layout-switch button:focus-visible,
-.atlas-layout-switch button.is-active,
-.atlas-market-focus-strip button:hover,
-.atlas-market-focus-strip button:focus-visible {
-  border-color: rgba(98,236,255,.66) !important;
-  background: linear-gradient(135deg,rgba(98,236,255,.16),rgba(244,217,154,.07)),rgba(4,18,31,.92) !important;
-  box-shadow: 0 0 0 2px rgba(98,236,255,.08) !important;
-}
-
-.atlas-layout-live-summary {
-  min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  text-align: right !important;
-  color: rgba(225,239,249,.76) !important;
-  font: 760 9px/1.2 system-ui,sans-serif !important;
-}
-
-.atlas-market-focus-strip {
-  display: none !important;
-  grid-template-columns: minmax(0,1fr) auto !important;
-  align-items: center !important;
-  gap: 10px !important;
-  margin: 0 0 8px !important;
-  padding: 8px 10px !important;
-  border-color: rgba(244,217,154,.22) !important;
-  background: linear-gradient(135deg,rgba(244,217,154,.07),rgba(98,236,255,.035)),rgba(3,12,23,.88) !important;
-}
-
-.atlas-market-focus-strip div { display: grid !important; gap: 2px !important; }
-.atlas-market-focus-strip span { color:#f4d99a !important;font:900 7px/1 system-ui,sans-serif !important;letter-spacing:.16em !important; }
-.atlas-market-focus-strip strong { color:#eef8ff !important;font:820 11px/1.15 system-ui,sans-serif !important; }
-
-.atlas-market-zone[data-market-layout="market"] > #analyste { display: none !important; }
-.atlas-market-zone[data-market-layout="market"] > .atlas-market-focus-strip { display: grid !important; }
-.atlas-market-zone[data-market-layout="market"] > #market-workspace,
-.atlas-market-zone[data-market-layout="market"] > #marketWorkspaceGrid { width: 100% !important; }
-
-.atlas-market-zone[data-market-layout="graph"] > #market-workspace,
-.atlas-market-zone[data-market-layout="graph"] > #mathTopDock,
-.atlas-market-zone[data-market-layout="graph"] > #marketWorkspaceGrid { display: none !important; }
-
-body.atlas-layout-focus-graph > .ambient,
-body.atlas-layout-focus-graph > .grid-overlay { opacity: .30 !important; }
-
-body.atlas-layout-focus-graph .hero,
-body.atlas-layout-focus-graph #marche,
-body.atlas-layout-focus-graph #offlineNotice { display: none !important; }
-
-body.atlas-layout-focus-graph .shell {
-  width: min(100%,1920px) !important;
-  max-width: none !important;
-  padding-top: 4px !important;
-}
-
-body.atlas-layout-focus-graph .atlas-market-zone[data-market-layout="graph"] #analyste {
-  min-height: calc(100vh - 74px) !important;
-}
-
-body.atlas-layout-focus-graph .atlas-market-zone[data-market-layout="graph"] #analyste .chart-shell {
-  height: calc(100vh - 166px) !important;
-  min-height: 520px !important;
-  max-height: none !important;
-}
-
-body.atlas-layout-focus-graph .atlas-market-zone[data-market-layout="graph"] #analyste #mainChart {
-  height: calc(100vh - 198px) !important;
-  min-height: 490px !important;
-  max-height: none !important;
-}
-
-body.atlas-layout-focus-graph .atlas-layout-command {
-  top: 4px !important;
-}
-
 @media (max-width: 1180px) {
-  .atlas-admin-command-bar { grid-template-columns: auto minmax(0,1fr) !important; }
+  .atlas-admin-command-bar { grid-template-columns: auto minmax(0,1fr) auto !important; }
+  .atlas-admin-graph-toggle { min-width:132px !important; }
   .atlas-admin-center-toggle { grid-column: 1 / -1 !important;min-width:0 !important;justify-content:center !important;min-height:34px !important; }
   .atlas-admin-command-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
-  .atlas-layout-command { grid-template-columns: auto minmax(0,1fr) !important; }
-  .atlas-layout-live-summary { grid-column:1/-1 !important;text-align:left !important;padding:2px 4px 0 !important; }
 }
 
 @media (max-width: 760px) {
   .atlas-admin-command-bar { grid-template-columns: 1fr !important; }
+  .atlas-admin-graph-toggle { width:100% !important;min-width:0 !important;min-height:42px !important; }
   .atlas-admin-command-kicker { min-height:26px !important;border-right:0 !important;border-bottom:1px solid rgba(98,236,255,.12) !important; }
   .atlas-admin-command-shortcuts { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
   .atlas-admin-command-drawer { position:fixed !important;top:10px !important;left:8px !important;right:8px !important;max-height:calc(100vh - 20px) !important; }
   .atlas-admin-command-grid { grid-template-columns:1fr !important; }
   .atlas-admin-command-footer { grid-template-columns:1fr !important; }
-  .atlas-layout-command { position:relative !important;top:auto !important;grid-template-columns:1fr !important; }
-  .atlas-layout-command-title { border-right:0 !important;border-bottom:1px solid rgba(98,236,255,.12) !important;padding:0 0 6px !important; }
-  .atlas-layout-switch { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
-  .atlas-layout-switch button { padding:0 7px !important;min-height:42px !important; }
-  .atlas-layout-live-summary { grid-column:auto !important;white-space:normal !important;text-align:left !important; }
-  .atlas-market-focus-strip { grid-template-columns:1fr !important; }
-  .atlas-market-focus-strip button { min-height:42px !important; }
-  body.atlas-layout-focus-graph .atlas-market-zone[data-market-layout="graph"] #analyste .chart-shell,
-  body.atlas-layout-focus-graph .atlas-market-zone[data-market-layout="graph"] #analyste #mainChart {
-    min-height:420px !important;
-    height:calc(100vh - 210px) !important;
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .atlas-admin-command-drawer:not([hidden]) { animation: atlasAdminDrawerIn .18s ease-out both; }
-  .atlas-market-focus-strip { animation: atlasFocusStripIn .18s ease-out both; }
 }
 
 @keyframes atlasAdminDrawerIn {
@@ -14537,13 +14452,9 @@ body.atlas-layout-focus-graph .atlas-layout-command {
   to { opacity:1;transform:none; }
 }
 
-@keyframes atlasFocusStripIn {
-  from { opacity:0;transform:translateY(-4px); }
-  to { opacity:1;transform:none; }
-}
 
 
-/* Build 28.1.40 visual validation patch: overlay stacking + focus anchors. */
+/* Build 28.1.41 visual validation patch: Command Center overlay + Graph toggle. */
 body.atlas-admin-center-open .hero {
   position: relative !important;
   z-index: 900 !important;
@@ -14555,11 +14466,6 @@ body.atlas-admin-center-open .atlas-admin-dock {
 }
 body.atlas-admin-center-open .atlas-admin-command-drawer {
   z-index: 1000 !important;
-}
-.atlas-market-zone[data-market-layout="market"] > .atlas-market-focus-strip {
-  position: sticky !important;
-  top: 6px !important;
-  z-index: 104 !important;
 }
 
 /* Command Center portal: fixed overlay above every cockpit stacking context. */
