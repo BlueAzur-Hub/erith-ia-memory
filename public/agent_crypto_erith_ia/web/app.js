@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.39 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH ALPHA.3 LIVE BRIDGE LOCK
+/* V2.0-alpha · Build 28.1.39 — CRYPTO ADMIN INTERFACE · FORGE PRO BRIDGE · ESSENTIAL MODE LOCK
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -9324,7 +9324,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH PROFILE BRIDGE LOCK`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CRYPTO ADMIN INTERFACE · FORGE PRO BRIDGE · ESSENTIAL MODE LOCK`
   );
 }
 
@@ -9376,7 +9376,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (description) {
     description.textContent = administrator
       ? "Administration locale · analyse · mémoire · décision · système · projets · sources."
-      : "Livecheck · marché · graphique · sources.";
+      : "Accueil · graphique · marché · Math Core · liste crypto · sources.";
   }
 
   const accountToggle = document.getElementById("btnAdminAccountToggle");
@@ -9414,7 +9414,7 @@ function atlasV2ApplyMode(mode, options = {}) {
     const legacy = document.querySelector("[data-collapse-key='mode-debutant-avance']");
     if (legacy) legacy.hidden = true;
 
-    atlasV2ApplyMathDock("rail", { persist: false });
+    atlasV2ApplyMathDock("top", { persist: false });
     atlasSetCleanLensCollapsed(true, false);
 
     const marketPanel = document.getElementById("marketSnapshotPanel");
