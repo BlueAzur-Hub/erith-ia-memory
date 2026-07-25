@@ -15009,3 +15009,112 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     white-space: normal !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.47
+   IN-CHART QUANTITATIVE OVERLAY · ZERO EXTRA ROW
+   ========================================================= */
+
+#analyste .chart-shell {
+  position: relative !important;
+}
+
+.atlas-chart-insight,
+.atlas-chart-context {
+  display: none !important;
+}
+
+.atlas-chart-insight-overlay {
+  position: absolute !important;
+  z-index: 9 !important;
+  top: 13px !important;
+  left: 15px !important;
+  display: grid !important;
+  gap: 4px !important;
+  width: min(740px, calc(100% - 360px)) !important;
+  max-width: calc(100% - 34px) !important;
+  padding: 8px 92px 8px 10px !important;
+  border: 0 !important;
+  border-left: 2px solid rgba(244,211,134,.88) !important;
+  border-radius: 2px !important;
+  background:
+    linear-gradient(90deg,
+      rgba(2,9,19,.84) 0%,
+      rgba(2,9,19,.72) 62%,
+      rgba(2,9,19,.22) 88%,
+      transparent 100%) !important;
+  box-shadow: none !important;
+  color: #f5f8ff !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.atlas-chart-insight-overlay > strong {
+  overflow: hidden !important;
+  color: #f4d99a !important;
+  font: 900 9px/1.15 system-ui,sans-serif !important;
+  letter-spacing: .14em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 8px rgba(0,0,0,.88) !important;
+}
+
+.atlas-chart-insight-overlay > span {
+  overflow: hidden !important;
+  color: rgba(240,249,255,.97) !important;
+  font: 850 9px/1.25 system-ui,sans-serif !important;
+  letter-spacing: .015em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 8px rgba(0,0,0,.92) !important;
+}
+
+.atlas-chart-insight-overlay > small {
+  overflow: hidden !important;
+  color: rgba(198,224,240,.83) !important;
+  font: 720 8px/1.25 system-ui,sans-serif !important;
+  letter-spacing: .012em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 7px rgba(0,0,0,.94) !important;
+}
+
+/* Keep the existing legend authoritative and visible at the right.
+   The overlay only provides a factual text synthesis. */
+#analyste .chart-v2-legend {
+  z-index: 10 !important;
+}
+
+/* Tooltip and refresh status must remain above the factual overlay. */
+#analyste .atlas-chart-tooltip,
+#analyste .atlas-chart-refresh {
+  z-index: 12 !important;
+}
+
+@media (max-width: 1180px) {
+  .atlas-chart-insight-overlay {
+    width: min(610px, calc(100% - 300px)) !important;
+    padding-right: 44px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .atlas-chart-insight-overlay {
+    top: 10px !important;
+    left: 10px !important;
+    width: calc(100% - 20px) !important;
+    padding: 7px 10px !important;
+    background:
+      linear-gradient(90deg,
+        rgba(2,9,19,.86) 0%,
+        rgba(2,9,19,.66) 78%,
+        transparent 100%) !important;
+  }
+
+  .atlas-chart-insight-overlay > strong,
+  .atlas-chart-insight-overlay > span,
+  .atlas-chart-insight-overlay > small {
+    white-space: normal !important;
+  }
+}
