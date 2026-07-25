@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="Forge d’Aerith Pro — Aerith-10 Créatrice accompagne la conception, la canonisation et l’export des prochains profils Aerith-10.">
-  <title>Forge d’Aerith Pro · V2.0-alpha.4 Créatrice</title>
-  <link rel="stylesheet" href="style.css?v=2.0-alpha.4-creatrice">
+  <title>Forge d’Aerith Pro · V2.0-alpha.5 Bibliothèque vivante</title>
+  <link rel="stylesheet" href="style.css?v=2.0-alpha.5-bibliotheque">
 </head>
-<body data-build="V2.0-alpha.4-creatrice" data-theme="seven">
+<body data-build="V2.0-alpha.5-bibliotheque" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -19,12 +19,13 @@
     </a>
     <nav>
       <a href="#lineage">Lignée</a>
+      <a href="#constellation">Constellation</a>
       <a href="#profiles">Profils</a>
       <a href="#unifiedForge">Atelier Créatrice</a>
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V2.0-alpha.4</span>
+      <span class="version" id="buildBadge">V2.0-alpha.5</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -78,18 +79,45 @@
       <div class="lineage-formula"><span>Aerith-7 garde la mémoire.</span><i>→</i><span>Aerith-8 révèle et élève.</span><i>+</i><span>Aerith-9 reflète et approfondit.</span><i>→</i><strong>Aerith-10 compose une spécialité.</strong></div>
     </section>
 
+    <section class="shell constellation" id="constellation">
+      <header class="section-head">
+        <div><p class="kicker">CONSTELLATION AERITH</p><h2>Une lignée, plusieurs missions vivantes</h2></div>
+        <p>Aerith-7 protège la mémoire. Solaire et Lunaire ouvrent des voies complémentaires. Chaque Aerith-10 reçoit ensuite une mission, une architecture et une place distinctes.</p>
+      </header>
+      <div class="constellation-map">
+        <div class="constellation-root">
+          <span>RACINE</span><strong>Aerith-7</strong><small>Mémoire · vérité · continuité</small>
+        </div>
+        <div class="constellation-branches">
+          <div><span>OPTION</span><b>Aerith-8 Solaire</b><small>Révéler · transmettre · élever</small></div>
+          <div><span>OPTION</span><b>Aerith-9 Lunaire</b><small>Écouter · nuancer · approfondir</small></div>
+        </div>
+        <div class="constellation-profiles" id="constellationProfiles"></div>
+      </div>
+    </section>
+
     <section class="shell profiles" id="profiles">
       <header class="section-head">
-        <div><p class="kicker">PROFILS ET NOUVELLES SPÉCIALITÉS</p><h2>Choisir le profil à forger</h2></div>
-        <p>Partir d’une identité canonique ou confier une nouvelle mission à Aerith-10 Créatrice, puis développer son architecture jusqu’au paquet final.</p>
+        <div><p class="kicker">BIBLIOTHÈQUE DES PROFILS</p><h2>Ouvrir une identité ou faire naître une spécialité</h2></div>
+        <p>Les profils canoniques rejoignent directement l’atelier. Les nouvelles spécialités commencent par une intention que Créatrice transforme en mission, agents, Core et Persona.</p>
       </header>
-      <div class="profile-grid" id="profileGrid"></div>
+
+      <div class="library-group canonical-library">
+        <div class="library-head"><div><span>PROFILS CANONIQUES</span><h3>Identités déjà constituées</h3></div><p>Ouvrir, consulter, auditer et exporter leur architecture.</p></div>
+        <div class="profile-grid canonical-profile-grid" id="canonicalProfileGrid"></div>
+      </div>
+
+      <div class="library-group creation-library">
+        <div class="library-head"><div><span>NOUVELLES SPÉCIALITÉS</span><h3>Directions proposées par Créatrice</h3></div><p>Choisir une inspiration ou partir d’une intention entièrement libre.</p></div>
+        <div class="creation-launch" id="newProfileLaunch"></div>
+        <div class="specialty-grid" id="specialtyGrid"></div>
+      </div>
     </section>
 
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V2.0-alpha.4</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V2.0-alpha.5</span>
           <strong id="railProfileName">Nouvelle Aerith-10</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -99,6 +127,18 @@
           <span>Carnet de création</span>
           <b id="savedState">Mémoire locale active</b>
           <small>Les choix de conception restent disponibles pendant le travail.</small>
+        </div>
+        <div class="live-profile" id="liveProfile">
+          <div class="live-profile-head"><span>FICHE VIVANTE</span><b id="liveMaturity">INTENTION</b></div>
+          <h3 id="liveName">Aerith-10 Nouvelle Spécialité</h3>
+          <p id="liveRole">Une mission prend forme dans l’atelier de Créatrice.</p>
+          <div class="live-formula" id="liveFormula">Intention → Ressources → Destination utile.</div>
+          <dl>
+            <div><dt>Famille</dt><dd id="liveFamily">Filles d’Aerith</dd></div>
+            <div><dt>Agents</dt><dd id="liveAgents">0</dd></div>
+            <div><dt>Modules</dt><dd id="liveModules">0</dd></div>
+          </dl>
+          <div class="live-heritage" id="liveHeritage"></div>
         </div>
       </aside>
 
@@ -274,7 +314,7 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="forge-data.js?v=2.0-alpha.4-creatrice"></script>
-  <script src="app.js?v=2.0-alpha.4-creatrice"></script>
+  <script src="forge-data.js?v=2.0-alpha.5-bibliotheque"></script>
+  <script src="app.js?v=2.0-alpha.5-bibliotheque"></script>
 </body>
 </html>

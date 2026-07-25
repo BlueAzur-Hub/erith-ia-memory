@@ -1,11 +1,7 @@
-# Installation V2.0-alpha.4 Créatrice
+# Installation — V2.0-alpha.5
 
-Déposer le dossier complet `atlas_10_full/` dans :
+Déposer le dossier complet `atlas_10_full` depuis `public/agent_crypto_erith_ia/`, puis valider le commit.
 
-`public/agent_crypto_erith_ia/`
+Message recommandé :
 
-GitHub mettra à jour les fichiers de même nom et ajoutera les nouveaux fichiers.
-
-Commit conseillé :
-
-`release Forge d'Aerith Pro V2.0-alpha.4 creatrice guided foundry`
+`release Forge d'Aerith Pro V2.0-alpha.5 living profile library`

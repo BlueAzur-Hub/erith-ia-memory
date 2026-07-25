@@ -355,30 +355,57 @@
       </article>`).join("");
   }
 
+  function profileCard(item) {
+    return `<button type="button" class="profile-card ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}">
+      <span class="profile-sigil">${esc(item.sigil)}</span>
+      <span class="profile-media">
+        ${item.visual ? `<img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">` : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
+      </span>
+      <span class="profile-copy">
+        <span class="family">${esc(item.family)}</span>
+        <h3>${esc(item.name)}</h3>
+        <p>${esc(item.description)}</p>
+        <small>${esc(item.status)}</small>
+        <b class="card-action">Ouvrir dans l’atelier →</b>
+      </span>
+    </button>`;
+  }
+
+  function exampleCard(item, compact = false) {
+    return `<button type="button" class="example-card specialty-card ${state.selectedExample === item.id ? "active" : ""} ${compact ? "compact" : ""}" data-example="${esc(item.id)}">
+      <span>${esc(item.badge)}</span>
+      <h3>${esc(item.name)}</h3>
+      <p>${esc(item.role)}</p>
+      <b>Créer avec Créatrice →</b>
+    </button>`;
+  }
+
   function renderProfiles() {
-    $("#profileGrid").innerHTML = DATA.profiles.map(item => `
-      <button type="button" class="profile-card ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}">
-        <span class="profile-sigil">${esc(item.sigil)}</span>
-        <span class="profile-media">
-          ${item.visual ? `<img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">` : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
-        </span>
-        <span class="profile-copy">
-          <span class="family">${esc(item.family)}</span>
-          <h3>${esc(item.name)}</h3>
-          <p>${esc(item.description)}</p>
-          <small>${esc(item.status)}</small>
-        </span>
-      </button>`).join("");
+    const existing = DATA.profiles.filter(item => item.kind === "existing");
+    const fresh = DATA.profiles.find(item => item.kind === "new");
+    $("#canonicalProfileGrid").innerHTML = existing.map(profileCard).join("");
+    $("#newProfileLaunch").innerHTML = fresh ? `<button type="button" class="new-profile-launch ${state.profileId === fresh.id && !state.selectedExample ? "active" : ""}" data-profile="${esc(fresh.id)}">
+      <span class="new-orbit">A10+</span>
+      <span><small>INTENTION LIBRE</small><strong>Faire naître une nouvelle Aerith-10</strong><p>${esc(fresh.description)}</p></span>
+      <b>Entrer dans l’atelier →</b>
+    </button>` : "";
+    $("#specialtyGrid").innerHTML = DATA.examples.map(item => exampleCard(item, true)).join("");
   }
 
   function renderExamples() {
     $("#exampleArea").hidden = !isNew();
-    $("#exampleGrid").innerHTML = DATA.examples.map(item => `
-      <button type="button" class="example-card ${state.selectedExample === item.id ? "active" : ""}" data-example="${esc(item.id)}">
-        <span>${esc(item.badge)}</span>
-        <h3>${esc(item.name)}</h3>
-        <p>${esc(item.role)}</p>
-      </button>`).join("");
+    $("#exampleGrid").innerHTML = DATA.examples.map(item => exampleCard(item)).join("");
+  }
+
+  function renderConstellation() {
+    const existing = DATA.profiles.filter(item => item.kind === "existing");
+    const proposals = DATA.examples.slice(0, 3);
+    $("#constellationProfiles").innerHTML = `
+      <div class="constellation-line"><span>AERITH-10 SPÉCIALISÉES</span></div>
+      <div class="constellation-node-grid">
+        ${existing.map(item => `<button type="button" class="constellation-node ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}"><b>${esc(item.name)}</b><small>${esc(item.family)}</small></button>`).join("")}
+        ${proposals.map(item => `<button type="button" class="constellation-node proposal ${state.selectedExample === item.id ? "active" : ""}" data-example="${esc(item.id)}"><b>${esc(item.name)}</b><small>Spécialité à concevoir</small></button>`).join("")}
+      </div>`;
   }
 
   function renderSelectedProfile() {
@@ -393,6 +420,36 @@
         <div class="meta"><span>${esc(state.identity.family)}</span><span>${esc(state.identity.level)}</span><span>${esc(state.identity.status)}</span></div>
       </div>`;
     $("#profileStatus").textContent = isNew() ? "CRÉATION EN COURS" : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
+  }
+
+
+  function maturityState() {
+    const i = state.identity;
+    const audit = finalAudit();
+    if (audit.ready) return "PRÊTE À ACTIVER";
+    if (state.canonicalConfirmed) return "CANONISÉE";
+    if (proposalAudit().ready && state.step >= 5) return "PRÊTE POUR VALIDATION";
+    if ((i.tone || "").trim() && (i.modes || []).length && (i.guardrails || []).length) return "IDENTITÉ VIVANTE";
+    if ((i.agents || []).length && (i.heritage || []).length) return "ARCHITECTURE";
+    if ((i.role || "").trim() && (i.problem || "").trim()) return "MISSION";
+    return "INTENTION";
+  }
+
+  function renderLiveProfile() {
+    const i = state.identity;
+    $("#liveMaturity").textContent = maturityState();
+    $("#liveName").textContent = i.name || "Aerith-10 Nouvelle Spécialité";
+    $("#liveRole").textContent = i.role || "Une mission prend forme dans l’atelier de Créatrice.";
+    $("#liveFormula").textContent = i.formula || "Intention → Ressources → Destination utile.";
+    $("#liveFamily").textContent = i.family || "Filles d’Aerith";
+    $("#liveAgents").textContent = String((i.agents || []).length);
+    $("#liveModules").textContent = String((i.modules || []).length);
+    $("#liveHeritage").innerHTML = (i.heritage || []).length
+      ? i.heritage.map(id => {
+          const h = DATA.heritage.find(item => item.id === id);
+          return `<span>${esc(h?.name || id)}</span>`;
+        }).join("")
+      : "<span>Héritage à choisir</span>";
   }
 
   function renderStepNav() {
@@ -474,6 +531,8 @@
     persist();
     renderMatrix();
     renderSelectedProfile();
+    renderLiveProfile();
+    renderConstellation();
     renderProposal();
     renderFinal();
   }
@@ -505,6 +564,7 @@
     $("#nextTop").disabled = $("#nextBottom").disabled = state.step === STEPS.length - 1;
     renderStepNav();
     renderMatrix();
+    renderLiveProfile();
     if (state.step === 5) renderProposal();
     if (state.step === 6) renderImports();
     if (state.step === 7) renderFinal();
@@ -1034,7 +1094,9 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
   function renderAll() {
     renderProfiles();
     renderExamples();
+    renderConstellation();
     renderSelectedProfile();
+    renderLiveProfile();
     renderFamilies();
     renderAgentSuggestions();
     renderHeritage();
@@ -1182,7 +1244,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
       const agent = agentButton.dataset.agent;
       if (!state.identity.agents.includes(agent)) state.identity.agents.push(agent);
       $("#fieldAgents").value = state.identity.agents.join("\n");
-      persist(); renderProposal(); renderFinal();
+      persist(); renderLiveProfile(); renderProposal(); renderFinal();
     }
 
     const previewButton = event.target.closest("[data-preview]");
@@ -1211,7 +1273,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
       state.identity.heritage = heritageInput.checked
         ? [...new Set([...state.identity.heritage, id])]
         : state.identity.heritage.filter(item => item !== id);
-      persist(); renderHeritage(); renderProposal(); renderFinal();
+      persist(); renderHeritage(); renderLiveProfile(); renderProposal(); renderFinal();
     }
   });
 
