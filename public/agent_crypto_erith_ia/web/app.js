@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.38 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH PROFILE BRIDGE LOCK
+/* V2.0-alpha · Build 28.1.39 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH ALPHA.3 LIVE BRIDGE LOCK
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.38";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.39";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -4252,7 +4252,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.38.
+  Internal package Build 28.1.39.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
