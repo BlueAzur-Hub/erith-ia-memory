@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.45 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.46 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.45";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.46";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -11890,53 +11890,198 @@ initAtlasAdminCommandCenter();
 initAtlasAdminGraphToggle();
 
 
+
+
 /* =========================================================
-   Build 28.1.45 — Canonical chart context line
+   Build 28.1.46 — Quantitative chart insight
    ========================================================= */
-function atlasChartContextModeLabel() {
-  const ids = atlasComparisonIds();
+function atlasChartInsightModeLabel() {
+  const count = atlasComparisonIds().length;
   const preset = String(state.dataBroker?.comparison?.preset || "solo");
-  if (!ids.length) return "Aucune série";
-  if (ids.length === 1) return "Solo";
-  if (preset === "rank-3") return "Top 3";
-  if (preset === "rank-5") return "Top 5";
-  if (preset === "gainers") return "Hausses 5";
-  if (preset === "losers") return "Baisses 5";
-  if (preset === "volume") return "Volumes 5";
-  return `${ids.length} séries`;
+  if (!count) return "AUCUNE SÉRIE";
+  if (count === 1) return "SOLO";
+  if (preset === "rank-3") return "TOP 3";
+  if (preset === "rank-5") return "TOP 5";
+  if (preset === "gainers") return "HAUSSES 5";
+  if (preset === "losers") return "BAISSES 5";
+  if (preset === "volume") return "VOLUMES 5";
+  return `${count} SÉRIES`;
 }
 
-function atlasChartContextSourceLabel() {
-  const raw = String(els.sourceName?.textContent || state.mainSource || "").trim();
-  if (!raw) return "Source en attente";
-  if (/direct/i.test(raw)) return "Direct";
-  if (/cache récent/i.test(raw)) return "Cache récent";
-  if (/archive|cache daté|datée/i.test(raw)) return "Archive";
-  return raw.replace(/^CoinGecko\s*[·-]?\s*/i, "").slice(0, 34) || "CoinGecko";
+function atlasChartInsightTruth(result, period) {
+  try {
+    return atlasChartTruth(result, period);
+  } catch {
+    return { label: "source non mesurée", exact: "horodatage inconnu" };
+  }
 }
 
-function atlasChartContextUpdate() {
-  const node = document.getElementById("atlasChartContextState");
-  if (!node) return;
-  const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
+function atlasChartInsightComparisonEntries(chartResult) {
+  const order = atlasComparisonIds();
+  const rows = Array.isArray(chartResult?.entries) ? chartResult.entries : [];
+  return [...rows].sort((a, b) => {
+    const ai = order.indexOf(a?.coin?.id);
+    const bi = order.indexOf(b?.coin?.id);
+    return (ai < 0 ? 999 : ai) - (bi < 0 ? 999 : bi);
+  });
+}
+
+function atlasChartInsightChip(entry, index, preset) {
+  const coin = entry?.coin || {};
+  const symbol = String(coin?.symbol || coin?.name || "ACTIF").toUpperCase();
+  const palette = atlasCryptoPalette(coin, index);
+  const gradient = atlasCryptoGradientCss(coin, index);
+  const metrics = entry?.result?.integrity?.metrics || {};
+  const marketCoin = state.coins.find(item => item.id === coin?.id) || coin;
+  const volume = Number(marketCoin?.volume24h);
+  const change = Number(metrics.changePct);
+
+  const value = preset === "volume" && Number.isFinite(volume)
+    ? fmtCompactEUR.format(volume)
+    : Number.isFinite(change)
+      ? fmtPct(change)
+      : "non mesuré";
+
+  const detail = preset === "volume" ? "volume 24 h" : "courbe";
+  return `<span class="atlas-chart-insight-chip" style="--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradient)}"><b>${escapeHtml(symbol)}</b><strong>${escapeHtml(value)}</strong><small>${escapeHtml(detail)}</small></span>`;
+}
+
+function atlasChartInsightSet(title, meta, chips, summary) {
+  const titleNode = document.getElementById("atlasChartInsightTitle");
+  const metaNode = document.getElementById("atlasChartInsightMeta");
+  const seriesNode = document.getElementById("atlasChartInsightSeries");
+  const summaryNode = document.getElementById("atlasChartInsightSummary");
+  if (!titleNode || !metaNode || !seriesNode || !summaryNode) return;
+
+  titleNode.textContent = title;
+  metaNode.textContent = meta;
+  seriesNode.innerHTML = chips || '<span class="atlas-chart-insight-empty">Mesures indisponibles.</span>';
+  summaryNode.textContent = summary;
+}
+
+function atlasChartInsightRenderComparison(chart, period) {
+  const result = chart?.result || {};
+  const entries = atlasChartInsightComparisonEntries(result);
+  const selectedCount = atlasComparisonIds().length || entries.length;
+  const preset = String(state.dataBroker?.comparison?.preset || "manual");
+  const mode = atlasChartInsightModeLabel();
+  const periodLabel = atlasChartPeriodLabel(period);
+  const truthResult = { comparison: true, entries, sourceMode: "comparison-base100" };
+  const truth = atlasChartInsightTruth(truthResult, period);
+  const chips = entries.map((entry, index) => atlasChartInsightChip(entry, index, preset)).join("");
+
+  const rows = entries.map(entry => ({
+    symbol: String(entry?.coin?.symbol || entry?.coin?.name || "ACTIF").toUpperCase(),
+    value: Number(entry?.result?.integrity?.metrics?.changePct),
+    volume: Number((state.coins.find(coin => coin.id === entry?.coin?.id) || entry?.coin || {})?.volume24h),
+    timestamp: Number(entry?.result?.integrity?.metrics?.lastTimestamp || 0)
+  }));
+
+  const validChange = rows.filter(row => Number.isFinite(row.value));
+  const validVolume = rows.filter(row => Number.isFinite(row.volume));
+  const oldest = rows.map(row => row.timestamp).filter(value => value > 0);
+  const oldestText = oldest.length ? atlasExactTimestampLabel(Math.min(...oldest)) : "horodatage inconnu";
+
+  let summary = `${entries.length}/${selectedCount} séries réellement chargées · série la plus ancienne ${oldestText}.`;
+
+  if (preset === "volume" && validVolume.length) {
+    const sorted = [...validVolume].sort((a, b) => b.volume - a.volume);
+    summary = `Volume 24 h le plus élevé : ${sorted[0].symbol} ${fmtCompactEUR.format(sorted[0].volume)}`
+      + (sorted.length > 1 ? ` · plus faible du groupe : ${sorted[sorted.length - 1].symbol} ${fmtCompactEUR.format(sorted[sorted.length - 1].volume)}` : "")
+      + ` · ${entries.length}/${selectedCount} séries historiques chargées.`;
+  } else if (validChange.length) {
+    const sorted = [...validChange].sort((a, b) => b.value - a.value);
+    const max = sorted[0].value;
+    const min = sorted[sorted.length - 1].value;
+    const leaders = sorted.filter(row => Math.abs(row.value - max) < 0.005).map(row => row.symbol).join("/");
+    const laggards = sorted.filter(row => Math.abs(row.value - min) < 0.005).map(row => row.symbol).join("/");
+    const gap = max - min;
+    summary = `Variation de la courbe ${periodLabel} · leader ${leaders} ${fmtPct(max)}`
+      + ` · retard ${laggards} ${fmtPct(min)}`
+      + ` · écart ${gap.toFixed(2)} point${Math.abs(gap) >= 2 ? "s" : ""}`
+      + ` · série la plus ancienne ${oldestText}.`;
+  }
+
+  atlasChartInsightSet(
+    `${mode} — ANALYSE DU MARCHÉ`,
+    `${periodLabel} · Base 100 · EUR · ${entries.length}/${selectedCount} séries · ${truth.label}`,
+    chips,
+    summary
+  );
+}
+
+function atlasChartInsightRenderSolo(chart, period) {
+  const result = chart?.result || {};
+  const coin = result?.coin || getSelectedCoin() || {};
+  const metrics = result?.integrity?.metrics || {};
+  const periodLabel = atlasChartPeriodLabel(period);
   const view = atlasChartV2EffectiveView() === "base100" ? "Base 100" : "Prix";
-  const series = atlasComparisonIds().length;
-  const seriesText = series ? `${series} série${series > 1 ? "s" : ""}` : "aucune série";
-  node.textContent = `${atlasChartContextModeLabel()} · ${period} · ${view} · EUR · ${seriesText} · ${atlasChartContextSourceLabel()}`;
+  const truth = atlasChartInsightTruth(result, period);
+
+  const first = Number(metrics.firstPrice);
+  const last = Number(metrics.lastPrice);
+  const min = Number(metrics.minPrice);
+  const max = Number(metrics.maxPrice);
+  const change = Number(metrics.changePct);
+  const points = Number(metrics.pointCount || result?.series?.length || 0);
+  const amplitude = Number.isFinite(min) && min > 0 && Number.isFinite(max)
+    ? (max - min) / min * 100
+    : null;
+
+  const chips = atlasChartInsightChip({ coin, result }, 0, "solo");
+  const values = [];
+  if (Number.isFinite(first)) values.push(`départ ${atlasFormatEUR(first)}`);
+  if (Number.isFinite(last)) values.push(`dernière ${atlasFormatEUR(last)}`);
+  if (Number.isFinite(min)) values.push(`plus bas ${atlasFormatEUR(min)}`);
+  if (Number.isFinite(max)) values.push(`plus haut ${atlasFormatEUR(max)}`);
+  if (Number.isFinite(amplitude)) values.push(`amplitude ${amplitude.toFixed(2)} %`);
+  if (points) values.push(`${points} points`);
+
+  atlasChartInsightSet(
+    `${String(coin?.symbol || "ACTIF").toUpperCase()} — ${coin?.name || "Analyse du marché"}`,
+    `${periodLabel} · ${view} · EUR · ${Number.isFinite(change) ? fmtPct(change) : "variation non mesurée"} · ${truth.label}`,
+    chips,
+    values.length ? values.join(" · ") : "Mesures historiques non disponibles."
+  );
 }
 
-const atlasChartContextObserver = new MutationObserver(() => atlasChartContextUpdate());
-if (els.sourceName) atlasChartContextObserver.observe(els.sourceName, { childList: true, characterData: true, subtree: true });
-if (els.sourceTime) atlasChartContextObserver.observe(els.sourceTime, { childList: true, characterData: true, subtree: true });
+function atlasChartInsightUpdate() {
+  const chart = state.dataBroker?.chart;
+  const period = Number(state.chartPeriodDays || 1);
+
+  if (!chart || chart.status !== "ready" || !atlasChartContextMatches(chart) || !chart.result) {
+    atlasChartInsightSet(
+      "ANALYSE DU MARCHÉ",
+      `${atlasChartPeriodLabel(period)} · historique en attente`,
+      "",
+      "Aucune mesure historique réelle disponible."
+    );
+    return;
+  }
+
+  if (chart.result?.comparison && Array.isArray(chart.result.entries)) {
+    atlasChartInsightRenderComparison(chart, period);
+  } else {
+    atlasChartInsightRenderSolo(chart, period);
+  }
+}
+
+const atlasChartInsightCaption = document.getElementById("chartCaption");
+if (atlasChartInsightCaption) {
+  new MutationObserver(() => atlasChartInsightUpdate()).observe(
+    atlasChartInsightCaption,
+    { childList: true, characterData: true, subtree: true }
+  );
+}
 
 document.addEventListener("click", event => {
   if (event.target.closest(".period-btn, [data-chart-view], .compare-btn, [data-compare-remove], [data-compare-primary]")) {
-    window.setTimeout(atlasChartContextUpdate, 0);
-    window.setTimeout(atlasChartContextUpdate, 320);
+    window.setTimeout(atlasChartInsightUpdate, 0);
+    window.setTimeout(atlasChartInsightUpdate, 360);
   }
 });
 
-window.addEventListener("atlas:admin-graph", () => atlasChartContextUpdate());
-window.addEventListener("atlas:v2mode", () => atlasChartContextUpdate());
-window.setTimeout(atlasChartContextUpdate, 0);
-window.setTimeout(atlasChartContextUpdate, 700);
+window.addEventListener("atlas:admin-graph", () => atlasChartInsightUpdate());
+window.addEventListener("atlas:v2mode", () => atlasChartInsightUpdate());
+window.setTimeout(atlasChartInsightUpdate, 0);
+window.setTimeout(atlasChartInsightUpdate, 800);
