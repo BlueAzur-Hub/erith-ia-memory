@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#060914">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="Forge d’Aerith Pro — assembler les profils canoniques et compiler de nouveaux types Aerith-10">
-  <title>Forge d’Aerith Pro · V1.0-alpha.5</title>
-  <link rel="stylesheet" href="style.css?v=1.0-alpha.5-pro">
+  <title>Forge d’Aerith Pro · V2.0-alpha.1</title>
+  <link rel="stylesheet" href="style.css?v=2.0-alpha.1-pro">
 </head>
-<body data-theme="seven" data-build="V1.0-alpha.5-pro">
+<body data-theme="seven" data-build="V2.0-alpha.1-pro">
   <div class="diagnostic" id="buildDiagnostic" hidden></div>
 
   <header class="topbar">
@@ -20,11 +20,12 @@
     <nav>
       <a href="#lineage">Lignée</a>
       <a href="#profiles">Profils</a>
-      <a href="#forge">Forge Pro</a>
+      <a href="#designer">Conception</a>
+      <a href="#forge">Compilation</a>
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V1.0-alpha.5</span>
+      <span class="version" id="buildBadge">V2.0-alpha.1</span>
       <button class="ghost" id="resetForge" type="button">Réinitialiser</button>
       <button class="primary compact" id="topStart" type="button">Commencer</button>
     </div>
@@ -43,8 +44,8 @@
           </p>
           <div class="doctrine" id="doctrine"></div>
           <div class="hero-actions">
-            <button class="primary" id="startCustom" type="button">Créer un type Aerith-10</button>
-            <a class="secondary" href="#profiles">Assembler un profil existant</a>
+            <button class="primary" id="startDesigner" type="button">Concevoir une Aerith-10</button>
+            <button class="secondary" id="startCustom" type="button">Compiler un Core validé</button>
           </div>
           <div class="hero-badges">
             <span>4 profils canoniques</span><span>Lignée 7 → 8 / 9</span><span>Nouveaux Aerith-10</span><span>ZIP local réel</span>
@@ -89,6 +90,170 @@
         <span><b>Nouveau type Aerith-10 Pro</b><small>Importer un Core et sa Persona déjà canonisés dans le GitHub privé.</small></span>
         <strong>Ouvrir →</strong>
       </button>
+    </section>
+
+
+    <section class="shell designer-shell" id="designer">
+      <header class="section-head designer-head">
+        <div>
+          <p class="kicker">FORGE V2 · CONCEPTION GUIDÉE</p>
+          <h2>Créer une proposition Aerith-10 sans copier Créatrice</h2>
+        </div>
+        <p>
+          Aerith-10 Créatrice est une spécialisation d’organisation et de réalisation artistique.
+          La base commune est un contrat neutre : Core, Persona, Living Reflection Heart, héritages,
+          multi-agents, modules, garde-fous et destination utile.
+        </p>
+      </header>
+
+      <div class="designer-route">
+        <span><b>1</b> Conception locale</span><i>→</i>
+        <span><b>2</b> Relecture humaine</span><i>→</i>
+        <span><b>3</b> Upload manuel dans <code>core/</code></span><i>→</i>
+        <span><b>4</b> Compilation dans la Forge</span>
+      </div>
+
+      <div class="designer-workspace">
+        <aside class="designer-rail">
+          <div class="designer-rail-title">
+            <span>PROPOSITION NON CANONIQUE</span>
+            <strong>Assistant de conception</strong>
+            <small>Six étapes par texte</small>
+          </div>
+          <nav id="designerStepNav"></nav>
+          <div class="designer-progress">
+            <span>Conception</span>
+            <strong id="designerProgressValue">17%</strong>
+          </div>
+        </aside>
+
+        <div class="designer-stage">
+          <header class="designer-stage-head">
+            <div>
+              <span id="designerStepCounter">ÉTAPE 01 SUR 06</span>
+              <strong id="designerStepTitle">Point de départ</strong>
+              <small id="designerStepDescription"></small>
+            </div>
+            <div>
+              <button id="designerPreviousTop" type="button">←</button>
+              <button class="next" id="designerNextTop" type="button">Suivant →</button>
+            </div>
+          </header>
+
+          <div class="designer-stage-body">
+            <section class="designer-panel active" data-designer-step="0">
+              <header class="panel-head">
+                <div><p class="kicker">01 · EXEMPLE OU PAGE BLANCHE</p><h2>Quelle fonction mérite son propre Core ?</h2></div>
+                <p>Une Aerith-10 existe si elle réduit le chaos, protège la mémoire, clarifie le sens ou rend une mission plus autonome.</p>
+              </header>
+              <div class="designer-example-grid" id="designerExampleGrid"></div>
+              <button class="blank-template" id="designerBlank" type="button">
+                <span>＋</span>
+                <b>Commencer sans exemple</b>
+                <small>Le modèle reste neutre ; Créatrice n’est pas utilisée comme base universelle.</small>
+              </button>
+            </section>
+
+            <section class="designer-panel" data-designer-step="1">
+              <header class="panel-head">
+                <div><p class="kicker">02 · MISSION ET IDENTITÉ</p><h2>Définir le D réel</h2></div>
+                <p>Nommer la spécialité, le problème qu’elle résout et les résultats qu’elle doit réellement produire.</p>
+              </header>
+              <div class="designer-form-grid">
+                <label><span>Nom complet</span><input id="designName" placeholder="Aerith-10 ..."></label>
+                <label><span>Famille</span><input id="designFamily" list="designerFamilies"></label>
+                <label class="wide"><span>Rôle en une phrase</span><textarea id="designRole" rows="3"></textarea></label>
+                <label class="wide"><span>Problème réel à résoudre</span><textarea id="designProblem" rows="3"></textarea></label>
+                <label class="wide"><span>Pour qui travaille-t-elle ?</span><textarea id="designUsers" rows="2"></textarea></label>
+                <label class="wide"><span>Sorties attendues — une par ligne</span><textarea id="designOutputs" rows="5"></textarea></label>
+                <label class="wide"><span>Formule centrale</span><input id="designFormula" placeholder="A → B → D"></label>
+              </div>
+              <datalist id="designerFamilies"></datalist>
+            </section>
+
+            <section class="designer-panel" data-designer-step="2">
+              <header class="panel-head">
+                <div><p class="kicker">03 · MULTI-AGENTS</p><h2>Composer une équipe interne minimale</h2></div>
+                <p>Chaque agent interne doit changer une décision ou une sortie. Une liste décorative n’est pas un système multi-agent.</p>
+              </header>
+              <label class="designer-field">
+                <span>Agents internes — un par ligne</span>
+                <textarea id="designAgents" rows="10"></textarea>
+              </label>
+              <div class="suggestion-strip" id="designerAgentSuggestions"></div>
+              <div class="designer-rule-box">
+                <b>Test utile</b>
+                <p>Pour chaque agent : quelle entrée reçoit-il, quelle décision prend-il, quelle sortie transmet-il, et quand s’arrête-t-il ?</p>
+              </div>
+            </section>
+
+            <section class="designer-panel" data-designer-step="3">
+              <header class="panel-head">
+                <div><p class="kicker">04 · HÉRITAGES ET SOURCES</p><h2>Hériter sans fusionner</h2></div>
+                <p>Seven, Solaire et Lunaire restent des couches sélectionnées. Les modules existants sont référencés avant toute duplication.</p>
+              </header>
+              <div class="designer-heritage-grid" id="designerHeritageGrid"></div>
+              <label class="designer-field">
+                <span>Modules ou fichiers sources — un chemin par ligne</span>
+                <textarea id="designModules" rows="8"></textarea>
+              </label>
+              <label class="designer-field">
+                <span>Règle de non-duplication</span>
+                <textarea id="designNonDuplication" rows="3"></textarea>
+              </label>
+            </section>
+
+            <section class="designer-panel" data-designer-step="4">
+              <header class="panel-head">
+                <div><p class="kicker">05 · PERSONA ET LIMITES</p><h2>Définir comment elle travaille</h2></div>
+                <p>Le Core fixe qui elle est. La Persona fixe sa voix, son rythme, ses modes et ses limites.</p>
+              </header>
+              <div class="designer-form-grid">
+                <label class="wide"><span>Voix et ton</span><textarea id="designTone" rows="3"></textarea></label>
+                <label class="wide"><span>Modes de session — un par ligne</span><textarea id="designModes" rows="5"></textarea></label>
+                <label class="wide"><span>Garde-fous absolus — un par ligne</span><textarea id="designGuardrails" rows="7"></textarea></label>
+                <label class="wide"><span>Confidentialité</span><textarea id="designConfidentiality" rows="3"></textarea></label>
+                <label class="wide"><span>Stop point</span><textarea id="designStopPoint" rows="3"></textarea></label>
+              </div>
+            </section>
+
+            <section class="designer-panel" data-designer-step="5">
+              <header class="panel-head">
+                <div><p class="kicker">06 · PROPOSITION LOCALE</p><h2>Relire avant toute canonisation</h2></div>
+                <p>Les fichiers générés portent explicitement le statut PROPOSITION. Ils doivent être relus, corrigés puis uploadés manuellement dans le GitHub privé.</p>
+              </header>
+
+              <div class="designer-audit" id="designerAudit"></div>
+
+              <div class="designer-preview-tabs">
+                <button class="active" type="button" data-preview-tab="core">Core proposé</button>
+                <button type="button" data-preview-tab="persona">Persona proposée</button>
+                <button type="button" data-preview-tab="brief">Brief de validation</button>
+              </div>
+              <pre class="designer-preview" id="designerPreview"></pre>
+
+              <div class="designer-export-grid">
+                <button id="downloadCoreProposal" type="button"><span>CORE PROPOSAL</span><b>Télécharger</b></button>
+                <button id="downloadPersonaProposal" type="button"><span>PERSONA PROPOSAL</span><b>Télécharger</b></button>
+                <button id="downloadDesignBrief" type="button"><span>BRIEF</span><b>Télécharger</b></button>
+                <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LE ZIP DE PROPOSITION</button>
+              </div>
+
+              <div class="designer-next-route">
+                <b>Après validation humaine :</b>
+                <code id="designerCanonicalTarget">core/AERITH_10_..._MULTI_AGENT_CORE.md</code>
+                <button id="openCompiler" type="button">Passer ensuite à la compilation →</button>
+              </div>
+            </section>
+          </div>
+
+          <footer class="designer-stage-foot">
+            <button id="designerPreviousBottom" type="button">← Précédent</button>
+            <span>La Forge propose ; Christophe canonise.</span>
+            <button class="next" id="designerNextBottom" type="button">Suivant →</button>
+          </footer>
+        </div>
+      </div>
     </section>
 
     <section class="shell forge-shell" id="forge">
@@ -232,7 +397,7 @@
   </main>
 
   <footer class="footer shell">
-    <div><strong>FORGE D’AERITH PRO</strong><span id="footerVersion">V1.0-alpha.5-pro</span></div>
+    <div><strong>FORGE D’AERITH PRO</strong><span id="footerVersion">V2.0-alpha.1-pro</span></div>
     <p>GitHub privé canonise. La Forge importe localement. Le ZIP transporte. Le LLM charge seulement ce qui sert la mission.</p>
   </footer>
 
@@ -246,7 +411,9 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="forge-data.js?v=1.0-alpha.5-pro"></script>
-  <script src="app.js?v=1.0-alpha.5-pro"></script>
+  <script src="forge-data.js?v=2.0-alpha.1-pro"></script>
+  <script src="designer-data.js?v=2.0-alpha.1-pro"></script>
+  <script src="app.js?v=2.0-alpha.1-pro"></script>
+  <script src="designer.js?v=2.0-alpha.1-pro"></script>
 </body>
 </html>
