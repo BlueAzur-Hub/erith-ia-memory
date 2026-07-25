@@ -13708,3 +13708,53 @@ canvas {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.37
+   SOURCE TRUTH · NATIVE TIMELINE · FIXED STATUS OVERLAY LOCK
+   ========================================================= */
+
+/* Temporary network/chart messages never change document geometry. */
+#analyste.champagne-clean-lens .chart-caption {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  min-height: 28px !important;
+  height: 28px !important;
+  max-height: 28px !important;
+  overflow: hidden !important;
+}
+
+#analyste.champagne-clean-lens .chart-caption > *,
+#analyste.champagne-clean-lens .chart-caption .chart-caption-text {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#analyste.champagne-clean-lens .atlas-chart-refresh {
+  position: absolute !important;
+  right: 14px !important;
+  bottom: 14px !important;
+  margin: 0 !important;
+  max-width: min(360px, calc(100% - 28px)) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  pointer-events: none !important;
+}
+
+/* A conserved direct response remains usable but is never styled as a new live answer. */
+html[data-market-truth="direct-conserved"] #liveStatus,
+body[data-market-truth="direct-conserved"] #liveStatus {
+  border-color: rgba(98,236,255,.34) !important;
+  background: rgba(98,236,255,.09) !important;
+  color: #d9f9ff !important;
+}
+
+/* The custom premium legend is the only visible legend layer. */
+#analyste .chart-v2-legend {
+  pointer-events: none !important;
+}
+
