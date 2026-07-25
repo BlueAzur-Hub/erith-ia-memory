@@ -14747,3 +14747,115 @@ html[data-atlas-mode="advanced"] .atlas-admin-center-toggle {
     border-bottom: 0 !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.45
+   CANONICAL VIEW HARMONY · CHART CONTEXT LINE
+   One interface skeleton for Essential, Normal and Focus.
+   The text is integrated into the existing graph envelope:
+   no new window, card or autonomous subsection.
+   ========================================================= */
+
+.atlas-chart-context {
+  grid-column: 1 / -1 !important;
+  position: relative !important;
+  z-index: 4 !important;
+  display: grid !important;
+  grid-template-columns: minmax(290px, .9fr) minmax(300px, 1.1fr) !important;
+  align-items: end !important;
+  gap: 5px 18px !important;
+  min-height: 44px !important;
+  margin: -2px 2px 1px !important;
+  padding: 0 8px 7px !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(98,236,255,.14) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.atlas-chart-context-copy {
+  display: grid !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+.atlas-chart-context-copy > span {
+  color: #f4d99a !important;
+  font: 900 8px/1 system-ui,sans-serif !important;
+  letter-spacing: .18em !important;
+}
+
+.atlas-chart-context-copy > strong {
+  overflow: hidden !important;
+  color: rgba(241,249,255,.92) !important;
+  font: 760 11px/1.25 system-ui,sans-serif !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.atlas-chart-context-state {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  color: #73edff !important;
+  font: 800 9px/1.2 system-ui,sans-serif !important;
+  letter-spacing: .02em !important;
+  text-align: right !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.atlas-chart-context > p {
+  grid-column: 1 / -1 !important;
+  margin: 0 !important;
+  color: rgba(214,226,240,.62) !important;
+  font: 650 8px/1.25 system-ui,sans-serif !important;
+  letter-spacing: .025em !important;
+}
+
+/* The parent skeleton remains identical in Essential, Normal and Focus.
+   Focus changes only the available chart height. */
+.atlas-market-zone #analyste {
+  align-items: stretch !important;
+  column-gap: 8px !important;
+  row-gap: 8px !important;
+}
+
+html[data-atlas-mode="essential"] .atlas-market-zone #analyste,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-normal #analyste,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus #analyste {
+  padding-top: 12px !important;
+  margin-top: 0 !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus .atlas-chart-context,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-normal .atlas-chart-context,
+html[data-atlas-mode="essential"] .atlas-chart-context {
+  min-height: 44px !important;
+  margin-bottom: 1px !important;
+}
+
+@media (max-width: 980px) {
+  .atlas-chart-context {
+    grid-template-columns: 1fr !important;
+    align-items: start !important;
+    gap: 4px !important;
+  }
+
+  .atlas-chart-context-state {
+    text-align: left !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .atlas-chart-context {
+    min-height: 0 !important;
+    padding-inline: 4px !important;
+  }
+
+  .atlas-chart-context-copy > strong,
+  .atlas-chart-context-state {
+    white-space: normal !important;
+  }
+}

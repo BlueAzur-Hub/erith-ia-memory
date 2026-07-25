@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.44 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.45 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.44";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.45";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -11888,3 +11888,55 @@ function initAtlasAdminGraphToggle() {
 
 initAtlasAdminCommandCenter();
 initAtlasAdminGraphToggle();
+
+
+/* =========================================================
+   Build 28.1.45 — Canonical chart context line
+   ========================================================= */
+function atlasChartContextModeLabel() {
+  const ids = atlasComparisonIds();
+  const preset = String(state.dataBroker?.comparison?.preset || "solo");
+  if (!ids.length) return "Aucune série";
+  if (ids.length === 1) return "Solo";
+  if (preset === "rank-3") return "Top 3";
+  if (preset === "rank-5") return "Top 5";
+  if (preset === "gainers") return "Hausses 5";
+  if (preset === "losers") return "Baisses 5";
+  if (preset === "volume") return "Volumes 5";
+  return `${ids.length} séries`;
+}
+
+function atlasChartContextSourceLabel() {
+  const raw = String(els.sourceName?.textContent || state.mainSource || "").trim();
+  if (!raw) return "Source en attente";
+  if (/direct/i.test(raw)) return "Direct";
+  if (/cache récent/i.test(raw)) return "Cache récent";
+  if (/archive|cache daté|datée/i.test(raw)) return "Archive";
+  return raw.replace(/^CoinGecko\s*[·-]?\s*/i, "").slice(0, 34) || "CoinGecko";
+}
+
+function atlasChartContextUpdate() {
+  const node = document.getElementById("atlasChartContextState");
+  if (!node) return;
+  const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
+  const view = atlasChartV2EffectiveView() === "base100" ? "Base 100" : "Prix";
+  const series = atlasComparisonIds().length;
+  const seriesText = series ? `${series} série${series > 1 ? "s" : ""}` : "aucune série";
+  node.textContent = `${atlasChartContextModeLabel()} · ${period} · ${view} · EUR · ${seriesText} · ${atlasChartContextSourceLabel()}`;
+}
+
+const atlasChartContextObserver = new MutationObserver(() => atlasChartContextUpdate());
+if (els.sourceName) atlasChartContextObserver.observe(els.sourceName, { childList: true, characterData: true, subtree: true });
+if (els.sourceTime) atlasChartContextObserver.observe(els.sourceTime, { childList: true, characterData: true, subtree: true });
+
+document.addEventListener("click", event => {
+  if (event.target.closest(".period-btn, [data-chart-view], .compare-btn, [data-compare-remove], [data-compare-primary]")) {
+    window.setTimeout(atlasChartContextUpdate, 0);
+    window.setTimeout(atlasChartContextUpdate, 320);
+  }
+});
+
+window.addEventListener("atlas:admin-graph", () => atlasChartContextUpdate());
+window.addEventListener("atlas:v2mode", () => atlasChartContextUpdate());
+window.setTimeout(atlasChartContextUpdate, 0);
+window.setTimeout(atlasChartContextUpdate, 700);
