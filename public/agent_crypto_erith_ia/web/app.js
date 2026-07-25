@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.33 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · NO-FOMO ADMIN ROUTING LOCK
+/* V2.0-alpha · Build 28.1.35 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · CHART STABILITY · HISTORICAL TRUTH LOCK · DIRECT-FIRST STARTUP
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,7 +13,19 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.33";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.35";
+/* DIRECT-FIRST STARTUP LOCK
+   Le cache local est seulement préparé au démarrage. Il n'est rendu visible
+   qu'après l'échec confirmé de la tentative CoinGecko directe.
+*/
+const atlasStartup = {
+  started: false,
+  completed: false,
+  directAttemptAt: 0,
+  cacheAvailable: false,
+  cacheTimestamp: null,
+  promise: null
+};
 /* MARKET PULSE & LIVE SPOT CANON LOCK
    Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
@@ -1075,14 +1087,15 @@ function atlasRenderBrokerStrip() {
   );
 
   const chartTimestamp = chart.seriesTimestamp || chart.timestamp;
-  const spotPatch = chart.spotPatchedAt
-    ? ` · spot direct ${atlasExactTimestampLabel(chart.spotPatchedAt)}`
-    : "";
+  const spotObservation =
+    chart.spotObservedAt
+      ? ` · spot observé ${atlasExactTimestampLabel(chart.spotObservedAt)}`
+      : "";
 
   setText(
     els.brokerChartTime,
     chartReady
-      ? `${chart.pointCount || 0} pts · série ${atlasExactTimestampLabel(chartTimestamp)}${spotPatch}`
+      ? `${chart.pointCount || 0} pts · série ${atlasExactTimestampLabel(chartTimestamp)}${spotObservation}`
       : "—"
   );
 
@@ -1534,6 +1547,44 @@ function atlasApplyCanonicalSnapshot(snapshot, mode) {
   atlasRememberGoodMarket(`snapshot ${mode || "direct"} validé`);
   return true;
 }
+function atlasPrimeMarketCacheSilently() {
+  const cache = loadMarketCache();
+  atlasStartup.cacheAvailable = !!cache;
+  atlasStartup.cacheTimestamp = cache?.timestamp || null;
+  return !!cache;
+}
+
+function atlasRenderDirectFirstStartup() {
+  atlasSetSourceLock("none", null, "Vérification CoinGecko directe en cours", false);
+  setLiveStatus("warn", "Vérification CoinGecko");
+  setText(els.sourceName, "CoinGecko direct · vérification en cours");
+  setText(els.sourceTime, "—");
+  setTableDecision(
+    atlasStartup.cacheAvailable
+      ? "Vérification directe en cours · archive locale gardée en secours silencieux"
+      : "Vérification directe en cours · aucun cache affiché avant échec confirmé",
+    "warn"
+  );
+}
+
+async function atlasRunStartupLivecheck() {
+  if (atlasStartup.started) return atlasStartup.promise || false;
+
+  atlasStartup.started = true;
+  atlasStartup.directAttemptAt = Date.now();
+  atlasRenderDirectFirstStartup();
+
+  atlasStartup.promise = (async () => {
+    try {
+      return await runLivecheck();
+    } finally {
+      atlasStartup.completed = true;
+    }
+  })();
+
+  return atlasStartup.promise;
+}
+
 function applyMarketCache(reason = "CoinGecko direct indisponible : dernière lecture directe conservée en archive locale.") {
   const cache = loadMarketCache();
   if (!cache) return false;
@@ -3200,7 +3251,34 @@ function atlasGetStoredChartResult(c, days) {
 
 function atlasChartResultFingerprint(result) {
   const metrics = result?.integrity?.metrics || {};
-  return `${Number(metrics.lastTimestamp || 0)}:${Number(metrics.pointCount || result?.series?.length || 0)}:${String(result?.sourceMode || "")}`;
+  const firstPoint = result?.series?.[0] || [];
+  const lastPoint = result?.series?.[
+    Math.max(0, Number(result?.series?.length || 1) - 1)
+  ] || [];
+
+  const firstPrice = Number(
+    metrics.firstPrice
+    ?? firstPoint[1]
+    ?? 0
+  );
+  const lastPrice = Number(
+    metrics.lastPrice
+    ?? lastPoint[1]
+    ?? 0
+  );
+
+  return [
+    Number(metrics.firstTimestamp || firstPoint[0] || 0),
+    Number(metrics.lastTimestamp || lastPoint[0] || 0),
+    Number(metrics.pointCount || result?.series?.length || 0),
+    Number.isFinite(firstPrice)
+      ? firstPrice.toPrecision(12)
+      : "0",
+    Number.isFinite(lastPrice)
+      ? lastPrice.toPrecision(12)
+      : "0",
+    String(result?.sourceMode || "")
+  ].join(":");
 }
 
 function atlasChartNeedsRefresh(result, days) {
@@ -3729,7 +3807,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.33: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.35: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -4129,7 +4207,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.33.
+  Internal package Build 28.1.35.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -4272,6 +4350,46 @@ function atlasDrawCurveFollowingShadowBars({
 
   ctx.restore();
 }
+
+const atlasChartMetadataPlugin = {
+  id: "atlasChartMetadata",
+
+  beforeInit(chart, _args, options = {}) {
+    chart.$atlasMode = options.mode || "single";
+    chart.$atlasCoin = options.coin || null;
+    chart.$atlasView = options.view || (
+      options.mode === "comparison"
+        ? "base100"
+        : "price"
+    );
+    chart.$atlasScale = options.scale || "linear";
+    chart.$atlasPeriod = Number(
+      options.period || state.chartPeriodDays || 1
+    );
+    chart.$atlasPriceAxisId =
+      options.priceAxisId || "y";
+    chart.$atlasVolumeAxisId =
+      options.volumeAxisId || null;
+    chart.$atlasVolume =
+      options.volumeVisible === true;
+    chart.$atlasVolumeVisible =
+      options.volumeVisible === true;
+    chart.$atlasVolumeRows =
+      Array.isArray(options.volumeRows)
+        ? options.volumeRows
+        : [];
+    chart.$atlasVolumeColor =
+      options.volumeColor || "#62ecff";
+    chart.$atlasShadowSeries =
+      Array.isArray(options.shadowSeries)
+        ? options.shadowSeries
+        : [];
+    chart.$atlasTimeline =
+      Array.isArray(options.timeline)
+        ? options.timeline
+        : [];
+  }
+};
 
 const atlasVolumeOverlayPlugin = {
   id: "atlasVolumeOverlay",
@@ -4471,10 +4589,26 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       order: 1
     }];
 
+    const volumeRows =
+      atlasAlignVolumeToPriceTimeline(
+        result?.volumeSeries,
+        points.map(point => ({
+          t: point.x,
+          price: point.y
+        }))
+      );
+
+    const shadowSeries = [{
+      rows: volumeRows,
+      color: palette.primary,
+      opacity: 0.22,
+      heightRatio: 0.88
+    }];
+
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
-      plugins: [atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
+      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -4484,6 +4618,19 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
         interaction: { mode: "index", intersect: false, axis: "x" },
         layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
         plugins: {
+          atlasChartMetadata: {
+            mode: "single",
+            coin,
+            view,
+            scale: scaleType,
+            period,
+            priceAxisId: "y",
+            volumeAxisId: null,
+            volumeVisible: showVolume,
+            volumeRows,
+            volumeColor: palette.primary,
+            shadowSeries
+          },
           legend: { display: false },
           tooltip: {
             enabled: false,
@@ -4530,27 +4677,10 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       }
     });
 
-    state.chartEngineV2.realChart.$atlasMode = "single";
-    state.chartEngineV2.realChart.$atlasCoin = coin;
-    state.chartEngineV2.realChart.$atlasView = view;
-    state.chartEngineV2.realChart.$atlasScale = scaleType;
-    state.chartEngineV2.realChart.$atlasVolume = showVolume;
-    state.chartEngineV2.realChart.$atlasVolumeVisible = showVolume;
-    state.chartEngineV2.realChart.$atlasVolumeRows = atlasAlignVolumeToPriceTimeline(
-      result?.volumeSeries,
-      points.map(point => ({ t: point.x, price: point.y }))
+    atlasRefreshChartScale(
+      state.chartEngineV2.realChart
     );
-    state.chartEngineV2.realChart.$atlasVolumeColor = palette.primary;
-    state.chartEngineV2.realChart.$atlasShadowSeries = [{
-      rows: state.chartEngineV2.realChart.$atlasVolumeRows,
-      color: palette.primary,
-      opacity: 0.22,
-      heightRatio: 0.88
-    }];
-    state.chartEngineV2.realChart.$atlasPeriod = period;
-    state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
-    state.chartEngineV2.realChart.$atlasVolumeAxisId = null;
-    atlasRefreshChartScale(state.chartEngineV2.realChart);
+    state.chartEngineV2.realChart.update("none");
     atlasChartV2RenderLegend([{ coin, result }], { result });
     atlasRenderChartValueOverlay([{ coin, result, data: points, first: firstPrice }], { comparison: false, period });
     atlasChartV2SyncControls();
@@ -4609,44 +4739,6 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   atlasChartV2RenderLegend([{ coin, result }], { result });
   atlasRenderChartValueOverlay([{ coin, result, data: points, first: firstPrice }], { comparison: false, period });
   atlasChartV2SyncControls();
-}
-
-function atlasPatchResultLastPoint(result, price, timestamp) {
-  if (!result || !Array.isArray(result.series) || !result.series.length || !Number.isFinite(Number(price)) || Number(price) <= 0) return false;
-  const index = result.series.length - 1;
-  const previousTimestamp = Number(result.series[index]?.[0] || 0);
-  const previousPrice = Number(result.series[index]?.[1] || 0);
-  const nextPrice = Number(price);
-
-  if (Number.isFinite(previousPrice) && previousPrice > 0) {
-    const instantaneousRatio = nextPrice / previousPrice;
-    if (!Number.isFinite(instantaneousRatio) || instantaneousRatio > 1.45 || instantaneousRatio < 0.55) {
-      return false;
-    }
-  }
-
-  const nextTimestamp = Math.max(previousTimestamp, Number(timestamp || Date.now()));
-  result.series[index] = [nextTimestamp, nextPrice];
-
-  const values = result.series.map(point => Number(point?.[1])).filter(value => Number.isFinite(value) && value > 0);
-  const firstPrice = Number(result.series[0]?.[1]);
-  const integrity = result.integrity || (result.integrity = { ok: true, warnings: [], metrics: {} });
-  const metrics = integrity.metrics || (integrity.metrics = {});
-  metrics.lastTimestamp = nextTimestamp;
-  metrics.lastPrice = Number(price);
-  metrics.pointCount = result.series.length;
-  metrics.minPrice = Math.min(...values);
-  metrics.maxPrice = Math.max(...values);
-  metrics.changePct = Number.isFinite(firstPrice) && firstPrice > 0
-    ? (Number(price) - firstPrice) / firstPrice * 100
-    : null;
-  metrics.freshness = {
-    level: "fresh",
-    ageMs: Math.max(0, Date.now() - nextTimestamp),
-    label: atlasChartAgeLabel(nextTimestamp)
-  };
-  result.generatedAt = new Date(nextTimestamp).toISOString();
-  return true;
 }
 
 function atlasChartPriceDatasets(chart) {
@@ -4715,89 +4807,70 @@ function atlasRefreshChartScale(chart) {
   }
 }
 
-function atlasPatchChartLastPoint(quotes = state.dataBroker?.spotBook?.quotes || {}, sharedTimestamp = Date.now()) {
-  const chart = state.chartEngineV2?.realChart;
-  const brokerChart = state.dataBroker?.chart;
-  if (!chart || brokerChart?.status !== "ready" || !atlasChartContextMatches(brokerChart)) return false;
+function atlasPatchChartLastPoint(
+  quotes = state.dataBroker?.spotBook?.quotes || {},
+  sharedTimestamp = Date.now()
+) {
+  const brokerChart =
+    state.dataBroker?.chart;
 
-  const timestamp = Number(sharedTimestamp || Date.now());
-  let changed = false;
-
-  if (chart.$atlasMode === "comparison" && brokerChart.result?.comparison) {
-    for (const entry of brokerChart.result.entries || []) {
-      const quote = quotes[entry?.coin?.id];
-      const price = Number(quote?.eur);
-      if (
-        !atlasSpotQuoteIsFreshDirect(entry?.coin?.id)
-        || !Number.isFinite(price)
-        || price <= 0
-      ) continue;
-
-      atlasPatchResultLastPoint(entry.result, price, timestamp);
-      const dataset = chart.data.datasets.find(item => item?.atlasCoin?.id === entry.coin.id);
-      const firstPrice = Number(dataset?.data?.[0]?.rawPrice);
-      const last = dataset?.data?.[dataset.data.length - 1];
-      if (last && Number.isFinite(firstPrice) && firstPrice > 0) {
-        last.x = timestamp;
-        last.y = price / firstPrice * 100;
-        last.rawPrice = price;
-      }
-      changed = true;
-    }
-
-    if (changed) {
-      atlasRenderComparisonCaption(
-        brokerChart.result.entries || [],
-        Number(state.chartPeriodDays || 1),
-        state.dataBroker.comparison.unavailableIds || [],
-        atlasComparisonIds().length
-      );
-    }
-  } else {
-    const coin = getSelectedCoin();
-    const quote = coin ? quotes[coin.id] : null;
-    const price = Number(quote?.eur);
-    const result = brokerChart.result;
-
-    if (
-      coin
-      && result
-      && atlasSpotQuoteIsFreshDirect(coin.id)
-      && Number.isFinite(price)
-      && price > 0
-      && atlasPatchResultLastPoint(result, price, timestamp)
-    ) {
-      const dataset = atlasChartPriceDatasets(chart)?.[0];
-      const last = dataset?.data?.[dataset.data.length - 1];
-      const firstPrice = Number(dataset?.data?.[0]?.rawPrice);
-      if (last) {
-        last.x = timestamp;
-        last.rawPrice = price;
-        last.baseValue = Number.isFinite(firstPrice) && firstPrice > 0
-          ? price / firstPrice * 100
-          : null;
-        last.y = chart.$atlasView === "base100" && Number.isFinite(last.baseValue)
-          ? last.baseValue
-          : price;
-      }
-      state.chartEngineV2.lastFingerprint = atlasChartResultFingerprint(result);
-      atlasRenderSingleCaption(
-        coin,
-        atlasChartPeriodLabel(Number(state.chartPeriodDays || 1)),
-        result,
-        ` · dernier point recalé sur spot direct ${atlasExactTimestampLabel(timestamp)}`
-      );
-      changed = true;
-    }
+  if (
+    brokerChart?.status !== "ready"
+    || !atlasChartContextMatches(
+      brokerChart
+    )
+  ) {
+    return false;
   }
 
-  if (!changed) return false;
-  brokerChart.spotPatchedAt = new Date(timestamp).toISOString();
-  atlasRefreshChartScale(chart);
-  chart.update("none");
+  const relevantIds =
+    brokerChart.result?.comparison
+      ? (
+          brokerChart.result.entries || []
+        )
+          .map(entry => entry?.coin?.id)
+          .filter(Boolean)
+      : [state.selectedCoinId]
+          .filter(Boolean);
+
+  const hasFreshDirectSpot =
+    relevantIds.some(id => {
+      const price =
+        Number(quotes?.[id]?.eur);
+
+      return (
+        atlasSpotQuoteIsFreshDirect(id)
+        && Number.isFinite(price)
+        && price > 0
+      );
+    });
+
+  if (!hasFreshDirectSpot) {
+    return false;
+  }
+
+  /*
+    Le spot direct continue d'alimenter
+    les rubans, le tableau et le détail.
+    Il ne réécrit jamais market_chart :
+    - aucun déplacement de l'axe X ;
+    - aucune fausse fraîcheur ;
+    - aucune déformation Base 100 ;
+    - aucun saut toutes les 30 secondes.
+  */
+  brokerChart.spotObservedAt =
+    new Date(
+      Number(
+        sharedTimestamp || Date.now()
+      )
+    ).toISOString();
+
+  brokerChart.spotPatchedAt = null;
+
   atlasRefreshSelectedDetailOnly();
   renderMultiHorizon();
   atlasRenderBrokerStrip();
+
   return true;
 }
 
@@ -4947,7 +5020,20 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   );
   const comparisonOrigin = atlasChartSourceMode(comparisonTruthResult);
 
-  atlasDestroyRealChart();
+  const comparisonFingerprint =
+    atlasComparisonResultFingerprint(
+      normalizedEntries,
+      period
+    );
+
+  const alreadyRendered =
+    state.chartEngineV2.lastRenderedKey === chartKey
+    && state.chartEngineV2.lastFingerprint
+      === comparisonFingerprint
+    && state.chartEngineV2.realChart
+    && state.chartEngineV2.realChart.$atlasMode
+      === "comparison";
+
   atlasSetChartShellState(
     canvas,
     "valid",
@@ -4955,8 +5041,17 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     comparisonFreshness,
     comparisonOrigin
   );
-  state.chartEngineV2.lastRenderedKey = chartKey;
-  state.chartEngineV2.lastFingerprint = atlasComparisonResultFingerprint(normalizedEntries, period);
+
+  if (alreadyRendered) {
+    return normalizedEntries;
+  }
+
+  atlasDestroyRealChart();
+
+  state.chartEngineV2.lastRenderedKey =
+    chartKey;
+  state.chartEngineV2.lastFingerprint =
+    comparisonFingerprint;
 
   if (window.Chart) {
     const ctx = canvas.getContext("2d");
@@ -4990,7 +5085,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
-      plugins: [atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
+      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -5000,6 +5095,42 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         interaction: { mode: "index", intersect: false, axis: "x" },
         layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
         plugins: {
+          atlasChartMetadata: {
+            mode: "comparison",
+            view: "base100",
+            scale: "linear",
+            period,
+            priceAxisId: "y",
+            volumeAxisId: null,
+            volumeVisible:
+              state.chartViewV2.volume !== false,
+            timeline,
+            shadowSeries:
+              normalizedEntries.map(
+                (entry, index) => ({
+                  rows: entry.data
+                    .filter(Boolean)
+                    .map(point => ({
+                      x: point.x,
+                      price: point.y,
+                      y: 1
+                    })),
+                  color:
+                    atlasCryptoPalette(
+                      entry.coin,
+                      index
+                    ).primary,
+                  opacity:
+                    index === 0
+                      ? 0.16
+                      : Math.max(
+                          0.065,
+                          0.12 - index * 0.012
+                        ),
+                  heightRatio: 0.88
+                })
+              )
+          },
           legend: {
             display: true,
             position: "top",
@@ -5055,21 +5186,10 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         }
       }
     });
-    state.chartEngineV2.realChart.$atlasMode = "comparison";
-    state.chartEngineV2.realChart.$atlasTimeline = timeline;
-    state.chartEngineV2.realChart.$atlasView = "base100";
-    state.chartEngineV2.realChart.$atlasPeriod = period;
-    state.chartEngineV2.realChart.$atlasPriceAxisId = "y";
-    state.chartEngineV2.realChart.$atlasVolumeVisible = state.chartViewV2.volume !== false;
-    state.chartEngineV2.realChart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
-      rows: entry.data
-        .filter(Boolean)
-        .map(point => ({ x: point.x, price: point.y, y: 1 })),
-      color: atlasCryptoPalette(entry.coin, index).primary,
-      opacity: index === 0 ? 0.16 : Math.max(0.065, 0.12 - index * 0.012),
-      heightRatio: 0.88
-    }));
-    atlasRefreshChartScale(state.chartEngineV2.realChart);
+    atlasRefreshChartScale(
+      state.chartEngineV2.realChart
+    );
+    state.chartEngineV2.realChart.update("none");
     atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
     return normalizedEntries;
   }
@@ -7709,14 +7829,15 @@ function startAutoReader() {
   loadWatchIds();
 
   state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
-  const restored = applyMarketCache("Dernier snapshot CoinGecko restauré pendant la vérification directe.");
+  atlasPrimeMarketCacheSilently();
+  atlasRenderDirectFirstStartup();
   renderAutoReader();
 
   if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
   state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
 
-  if (state.auto.enabled && atlasPulseVisible()) {
-    setTimeout(() => void runLivecheck(), restored ? 1800 : 900);
+  if (atlasPulseVisible()) {
+    setTimeout(() => void atlasRunStartupLivecheck(), 50);
   }
 }
 
@@ -9150,7 +9271,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · NO-FOMO ADMIN ROUTING LOCK`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · CHART STABILITY · HISTORICAL TRUTH LOCK`
   );
 }
 
@@ -9786,7 +9907,7 @@ atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 atlasSafeBoot("beginner summary", renderBeginnerSummary);
 atlasSafeBoot("data broker strip", atlasRenderBrokerStrip);
-atlasSafeBoot("local market archive", () => { if (!state.liveOk) applyMarketCache(); });
+atlasSafeBoot("silent local market fallback", atlasPrimeMarketCacheSilently);
 requestAnimationFrame(() => atlasSafeBoot("market snapshot integrity", atlasEnsureMarketDomIntegrity));
 window.addEventListener("pageshow", () => {
   requestAnimationFrame(() => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity));

@@ -12263,7 +12263,7 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .clean-le
 }
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.33
+   INTERNAL PACKAGE BUILD 28.1.35
    VISIBLE UI VERSION FROZEN BY OPERATOR REQUEST
    HORIZONTAL CRYPTO COLOR BANDS · 88% GAP
    STATIC CHART BACKGROUND · NON-DESTRUCTIVE BOTTOM DETAIL DOCK
@@ -12617,7 +12617,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.33
+   INTERNAL PACKAGE BUILD 28.1.35
    TOP-50 METRICS OPTIONAL · DETAIL RAIL DIRECT CLICK LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12693,7 +12693,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   INTERNAL PACKAGE BUILD 28.1.33
+   INTERNAL PACKAGE BUILD 28.1.35
    EXACT SHADOW PLOT FRAME LOCK
    Visible page release numbers intentionally unchanged.
    ========================================================= */
@@ -12712,7 +12712,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    SIDE DETAIL DOCK RESTORE · LEFT GRAPH ALIGNMENT LOCK
    ========================================================= */
 
@@ -12910,7 +12910,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    EXACT CHART FRAME · SUBGRAPH BOTTOM ALIGNMENT LOCK
    ========================================================= */
 
@@ -12961,7 +12961,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    HIDDEN TOP50 METRICS · NO EXTRA CONTROL BAR
    ========================================================= */
 
@@ -12980,7 +12980,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 }
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    COMPLETE ADMIN MODE · NO EXTRA PANEL
    ========================================================= */
 
@@ -13037,7 +13037,7 @@ html[data-atlas-role="administrator"] [data-private-key] {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    ORIGINAL BLUE THEME RESTORE
    "Champagne Luxe + Hostel Private Room" is a release name only.
    ========================================================= */
@@ -13072,7 +13072,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    SOURCES CLOSED BY DEFAULT · USER-CONTROLLED STATE
    ========================================================= */
 
@@ -13092,7 +13092,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    ACCOUNT ADMIN LINK · PRACTICAL SHORTCUTS RESTORE
    ========================================================= */
 
@@ -13275,7 +13275,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    DATA TRUTH · DIRECT / CACHE / TIMESTAMP LOCK
    ========================================================= */
 
@@ -13323,7 +13323,7 @@ html[data-market-truth="stale-cache"] .top5-change {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    MARKET MOVES EMPHASIS · NEWS SENTINEL RECOVERY
    ========================================================= */
 
@@ -13666,7 +13666,7 @@ html[data-atlas-mode="advanced"]
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.33
+   V2.0-alpha · Build 28.1.35
    NO-FOMO ADMIN ROUTING LOCK
    ========================================================= */
 
@@ -13689,4 +13689,22 @@ html[data-atlas-mode="advanced"] .hero .command-bar {
 /* Dans le compte Administrateur, No-FOMO garde son accès compact. */
 .atlas-v2-nav-advanced a[href="#nofomo"] {
   display: inline-grid !important;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.35
+   CHART STABILITY · HISTORICAL TRUTH LOCK
+   ========================================================= */
+
+/*
+  La série historique reste immuable entre deux réponses
+  market_chart complètes. Les pulses spot ne déplacent plus
+  l'axe du temps et ne recalculent plus le Base 100.
+*/
+#analyste
+.chart-shell[data-chart-state="valid"]
+canvas {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
