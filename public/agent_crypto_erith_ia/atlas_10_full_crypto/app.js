@@ -224,14 +224,41 @@
 
   function renderLineage() {
     $("#lineageGrid").innerHTML = DATA.lineage.map(item => `
-      <article class="lineage-card" style="--lineage-image:url('${esc(item.visual)}')">
-        <div>
+      <article class="lineage-card lineage-card-${esc(item.id)}">
+        <button class="lineage-media" type="button"
+                data-lineage-image="${esc(item.visual)}"
+                data-lineage-title="${esc(item.name)}"
+                aria-label="Voir ${esc(item.name)} en entier">
+          <img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">
+          <span class="lineage-zoom">Voir l’image entière ↗</span>
+        </button>
+        <div class="lineage-copy">
           <span>${esc(item.label)}</span>
           <h3>${esc(item.name)}</h3>
           <p>${esc(item.description)}</p>
           <small>${esc(item.formula)}</small>
         </div>
       </article>`).join("");
+  }
+
+
+  function openLightbox(src, title) {
+    const lightbox = $("#imageLightbox");
+    $("#lightboxImage").src = src;
+    $("#lightboxImage").alt = title;
+    $("#lightboxTitle").textContent = title;
+    lightbox.hidden = false;
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("lightbox-open");
+    $("#lightboxClose").focus();
+  }
+
+  function closeLightbox() {
+    const lightbox = $("#imageLightbox");
+    lightbox.hidden = true;
+    lightbox.setAttribute("aria-hidden", "true");
+    $("#lightboxImage").src = "";
+    document.body.classList.remove("lightbox-open");
   }
 
   function renderProfiles() {
@@ -858,6 +885,17 @@ Il ne modifie pas le Core et ne prouve aucune capacité.
   }
 
   document.addEventListener("click", event => {
+    const lineageImage = event.target.closest("[data-lineage-image]");
+    if (lineageImage) {
+      openLightbox(lineageImage.dataset.lineageImage, lineageImage.dataset.lineageTitle || "Constellation d’Aerith");
+      return;
+    }
+
+    if (event.target.id === "imageLightbox") {
+      closeLightbox();
+      return;
+    }
+
     const profileButton = event.target.closest("[data-profile]");
     if (profileButton) selectExisting(profileButton.dataset.profile);
 
@@ -878,6 +916,11 @@ Il ne modifie pas le Core et ne prouve aucune capacité.
       state.theme = themeButton.dataset.themeChoice;
       renderThemes(); renderMatrix();
     }
+  });
+
+  $("#lightboxClose").addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !$("#imageLightbox").hidden) closeLightbox();
   });
 
   $("#newA10Card").addEventListener("click",selectCustom);

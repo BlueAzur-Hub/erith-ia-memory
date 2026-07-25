@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#060914">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="Forge d’Aerith Pro — assembler les profils canoniques et compiler de nouveaux types Aerith-10">
-  <title>Forge d’Aerith Pro · V1.0-alpha.4</title>
-  <link rel="stylesheet" href="style.css?v=1.0-alpha.4-pro">
+  <title>Forge d’Aerith Pro · V1.0-alpha.5</title>
+  <link rel="stylesheet" href="style.css?v=1.0-alpha.5-pro">
 </head>
-<body data-theme="seven" data-build="V1.0-alpha.4-pro">
+<body data-theme="seven" data-build="V1.0-alpha.5-pro">
   <div class="diagnostic" id="buildDiagnostic" hidden></div>
 
   <header class="topbar">
@@ -24,7 +24,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V1.0-alpha.4</span>
+      <span class="version" id="buildBadge">V1.0-alpha.5</span>
       <button class="ghost" id="resetForge" type="button">Réinitialiser</button>
       <button class="primary compact" id="topStart" type="button">Commencer</button>
     </div>
@@ -232,12 +232,21 @@
   </main>
 
   <footer class="footer shell">
-    <div><strong>FORGE D’AERITH PRO</strong><span id="footerVersion">V1.0-alpha.4-pro</span></div>
+    <div><strong>FORGE D’AERITH PRO</strong><span id="footerVersion">V1.0-alpha.5-pro</span></div>
     <p>GitHub privé canonise. La Forge importe localement. Le ZIP transporte. Le LLM charge seulement ce qui sert la mission.</p>
   </footer>
 
+
+  <div class="image-lightbox" id="imageLightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+    <button class="image-lightbox-close" id="lightboxClose" type="button" aria-label="Fermer l’image">×</button>
+    <figure>
+      <img id="lightboxImage" src="" alt="">
+      <figcaption id="lightboxTitle"></figcaption>
+    </figure>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="forge-data.js?v=1.0-alpha.4-pro"></script>
-  <script src="app.js?v=1.0-alpha.4-pro"></script>
+  <script src="forge-data.js?v=1.0-alpha.5-pro"></script>
+  <script src="app.js?v=1.0-alpha.5-pro"></script>
 </body>
 </html>

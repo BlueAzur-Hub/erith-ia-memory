@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_FORGE_PRO_DATA = Object.freeze({
-  version: "V1.0-alpha.4-pro",
+  version: "V1.0-alpha.5-pro",
   doctrine: [
     "Puissance maximale.",
     "Chargement minimal.",
