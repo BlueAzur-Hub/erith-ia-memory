@@ -2,334 +2,162 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#060914">
-  <meta name="description" content="Forge d’Aerith — création, assemblage et export de profils LLM">
-  <title>Forge d’Aerith · Aerith Profile Foundry</title>
-  <link rel="stylesheet" href="style.css?v=1.0-alpha.1">
+  <meta name="description" content="Forge d’Aerith — assemblage fidèle de profils LLM à partir des sources canoniques">
+  <title>Forge d’Aerith · Sources canoniques</title>
+  <link rel="stylesheet" href="style.css?v=1.0-alpha.2-source-fidele">
 </head>
 <body data-profile="atlas">
-  <div class="ambient ambient-left" aria-hidden="true"></div>
-  <div class="ambient ambient-right" aria-hidden="true"></div>
-
-  <header class="topbar" id="top">
-    <a class="brand" href="#forgeWorkspace" aria-label="Ouvrir la Forge">
-      <span class="brand-sigil" aria-hidden="true">✦</span>
-      <span class="brand-copy">
-        <strong>FORGE D’AERITH</strong>
-        <small>AERITH PROFILE FOUNDRY</small>
-      </span>
-    </a>
-
-    <nav class="topnav" aria-label="Navigation principale">
-      <a href="#forgeWorkspace">Forge</a>
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">✦</span><span><strong>FORGE D’AERITH</strong><small>SOURCES CANONIQUES · ASSEMBLAGE LLM</small></span></a>
+    <nav>
       <a href="#profiles">Profils</a>
-      <a href="#sourceVault">Sources</a>
-      <a href="#ideaForge">Idea Forge</a>
-      <a class="external" href="../web/index.html" target="_blank" rel="noopener noreferrer">Agent-Crypto ↗</a>
+      <a href="#workspace">Forge</a>
+      <a href="#flowerGirls">Flower Girls</a>
+      <a href="../web/index.html" target="_blank" rel="noopener noreferrer">Agent-Crypto ↗</a>
     </nav>
-
-    <div class="top-actions">
-      <span class="build-badge">V1.0-alpha.1</span>
-      <button class="button ghost compact" id="resetForge" type="button">Réinitialiser</button>
-      <button class="button primary compact" id="jumpForge" type="button">Commencer</button>
-    </div>
+    <span class="version">V1.0-alpha.2</span>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
-      <div class="hero-backdrop" aria-hidden="true"></div>
-      <div class="hero-content shell">
-        <div class="hero-copy">
-          <p class="eyebrow">ERITH.IA · PROFILS LLM · ASSEMBLAGE LOCAL</p>
-          <h1>Forger un profil.<br><span>Préserver son identité.</span></h1>
-          <p class="hero-lead">
-            Assemble Core, Persona, modules, règles et sources dans un ZIP clair.
-            Les fichiers privés restent locaux ou référencés. Rien n’est publié automatiquement.
-          </p>
-          <div class="hero-actions">
-            <button class="button primary" id="heroStart" type="button">Ouvrir la Forge</button>
-            <a class="button secondary" href="#profiles">Voir les profils</a>
-          </div>
-          <div class="hero-badges">
-            <span>4 profils de base</span>
-            <span>Import ZIP local</span>
-            <span>Core + Persona</span>
-            <span>Export réel .zip</span>
-          </div>
-        </div>
-
-        <div class="profile-matrix" aria-label="État du profil actif">
-          <div class="matrix-head">
-            <span class="pulse"></span>
-            <span>PROFILE MATRIX</span>
-            <strong id="matrixStatus">READY</strong>
-          </div>
-          <div class="matrix-sigil" id="matrixSigil">AT</div>
-          <h2 id="matrixName">Atlas-10 Crypto</h2>
-          <p id="matrixDescription">Carte, math, psychologie et risque.</p>
-          <dl class="matrix-stats">
-            <div><dt>Core</dt><dd id="matrixCore">1</dd></div>
-            <div><dt>Persona</dt><dd id="matrixPersona">1</dd></div>
-            <div><dt>Modules</dt><dd id="matrixModules">6</dd></div>
-            <div><dt>Sources</dt><dd id="matrixSources">Public</dd></div>
-          </dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="profile-strip shell" id="profiles" aria-labelledby="profilesTitle">
-      <div class="strip-heading">
+      <div class="hero-image" aria-hidden="true"></div>
+      <div class="hero-inner shell">
         <div>
-          <p class="section-kicker">PROFILS DE BASE</p>
-          <h2 id="profilesTitle">Choisir une filiation</h2>
+          <p class="eyebrow">SEVEN HEAVEN · AERITH-10 · ATLAS-10 · FLOWER GIRLS</p>
+          <h1>Assembler les sources.<br><span>Ne rien inventer.</span></h1>
+          <p class="lead">
+            Cette Forge ne crée pas de faux Core ou de fausse Persona. Elle prépare un Boot,
+            un manifeste et un ZIP à partir des fichiers réellement présents, des références
+            privées importées localement et des modules publics existants.
+          </p>
+          <div class="doctrine"><span>Puissance maximale.</span><span>Chargement minimal.</span><span>Choix précis.</span><span>Arrêt propre.</span></div>
+          <button class="primary" id="startForge" type="button">Ouvrir la Forge</button>
         </div>
-        <p>Les profils publics sont prêts. Les Cores privés exigent un import local et ne sont jamais exposés automatiquement.</p>
+        <aside class="hero-panel">
+          <span class="panel-label">PROFIL ACTIF</span>
+          <div class="hero-sigil" id="heroSigil">AT</div>
+          <h2 id="heroName">Atlas-10 Crypto</h2>
+          <p id="heroDescription"></p>
+          <dl>
+            <div><dt>Core</dt><dd id="heroCore">Inclus</dd></div>
+            <div><dt>Persona</dt><dd id="heroPersona">Incluse</dd></div>
+            <div><dt>Sources</dt><dd id="heroPrivacy">Public</dd></div>
+          </dl>
+        </aside>
       </div>
-      <div class="profile-card-grid" id="profileCards"></div>
     </section>
 
-    <section class="forge-shell shell" id="forgeWorkspace">
-      <aside class="forge-rail">
-        <div class="rail-head">
-          <span>PARCOURS GUIDÉ</span>
-          <strong>Forge d’Aerith</strong>
-          <small>Une fenêtre · sept étapes</small>
-        </div>
-        <nav class="forge-steps" id="forgeSteps" aria-label="Étapes de la Forge"></nav>
-        <div class="rail-foot">
-          <span>Préparation</span>
-          <strong id="globalProgress">0%</strong>
-        </div>
+    <section class="shell profiles" id="profiles">
+      <header class="section-head">
+        <div><p class="kicker">PROFILS DE BASE</p><h2>Quatre assemblages réels</h2></div>
+        <p>Chaque carte correspond à des sources existantes. Les fichiers privés restent des références tant qu’ils ne sont pas importés localement.</p>
+      </header>
+      <div class="profile-grid" id="profileGrid"></div>
+    </section>
+
+    <section class="shell workspace" id="workspace">
+      <aside class="rail">
+        <div class="rail-title"><span>PARCOURS GUIDÉ</span><strong>Forge source-fidèle</strong><small>Sept étapes</small></div>
+        <nav id="stepNav"></nav>
+        <div class="rail-progress"><span>État</span><strong id="progressValue">0%</strong></div>
       </aside>
 
-      <div class="forge-stage">
+      <div class="stage">
         <header class="stage-head">
-          <div>
-            <span class="stage-counter" id="stageCounter">ÉTAPE 01 SUR 07</span>
-            <strong id="stageTitle">Profil</strong>
-            <small id="stageDescription">Choisir le profil ou créer un nouveau brouillon.</small>
-          </div>
-          <div class="stage-controls">
-            <button class="stage-button" id="previousStep" type="button" aria-label="Étape précédente">←</button>
-            <button class="stage-button next" id="nextStep" type="button">Suivant →</button>
-          </div>
+          <div><span id="stepCounter">ÉTAPE 01 SUR 07</span><strong id="stepTitle">Profil</strong><small id="stepDescription"></small></div>
+          <div><button id="previousTop" type="button">←</button><button class="next" id="nextTop" type="button">Suivant →</button></div>
         </header>
 
-        <div class="stage-viewport">
-          <section class="forge-panel is-active" data-step-panel="0">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">01 · IDENTITÉ</p>
-                <h2>Profil actif</h2>
-              </div>
-              <p>Le choix détermine le Core, la Persona, les modules et la politique de diffusion.</p>
-            </div>
-            <div class="active-profile-card">
-              <div class="active-sigil" id="activeSigil">AT</div>
-              <div class="active-copy">
-                <span id="activeFamily">Atlas</span>
-                <h3 id="activeName">Atlas-10 Crypto</h3>
-                <p id="activeDescription"></p>
-              </div>
-              <span class="status-chip" id="activeStatus">PUBLIC · PRÊT</span>
-            </div>
-            <div class="form-grid two">
-              <label class="field">
-                <span>Nom du dossier exporté</span>
-                <input id="profileRoot" type="text" maxlength="72" autocomplete="off">
-                <small>Le nom est normalisé automatiquement pour le ZIP.</small>
-              </label>
-              <label class="field custom-only" hidden>
-                <span>Nom public du nouveau profil</span>
-                <input id="customName" type="text" placeholder="Ex. Aerith-10 Histoire de l’Art" maxlength="90">
-                <small>Le résultat reste un brouillon non canonique.</small>
-              </label>
-            </div>
-            <label class="field custom-only" hidden>
-              <span>Mission du nouveau profil</span>
-              <textarea id="customMission" rows="5" placeholder="Décris précisément ce que le profil doit produire, vérifier ou accompagner."></textarea>
-            </label>
-          </section>
-
-          <section class="forge-panel" data-step-panel="1">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">02 · ARCHITECTURE</p>
-                <h2>Core, Persona et fichiers structurels</h2>
-              </div>
-              <p>Les éléments canoniques sont verrouillés. La Forge génère seulement les fichiers d’activation et de traçabilité.</p>
-            </div>
-            <div class="architecture-layout">
-              <div class="architecture-list" id="architectureList"></div>
-              <aside class="architecture-summary">
-                <span>CHAÎNE D’ACTIVATION</span>
-                <pre id="activationChain"></pre>
-              </aside>
+        <div class="stage-body">
+          <section class="panel active" data-step="0">
+            <header class="panel-head"><div><p class="kicker">01 · PROFIL</p><h2 id="selectedProfileName">Atlas-10 Crypto</h2></div><span class="status" id="selectedProfileStatus"></span></header>
+            <p class="profile-description" id="selectedProfileDescription"></p>
+            <div class="truth-box">
+              <strong>Règle de cette version</strong>
+              <p>La Forge assemble. Elle ne réécrit pas les Core canoniques, ne fusionne pas les Personas et ne prétend pas posséder un fichier absent.</p>
             </div>
           </section>
 
-          <section class="forge-panel" data-step-panel="2" id="sourceVault">
-            <div class="panel-heading">
+          <section class="panel" data-step="1">
+            <header class="panel-head"><div><p class="kicker">02 · SOURCES</p><h2>Ordre canonique et fichiers</h2></div><p>Les chemins affichés viennent des sources fournies.</p></header>
+            <div class="sources-layout">
               <div>
-                <p class="section-kicker">03 · SOURCES</p>
-                <h2>Coffre local et références</h2>
+                <h3>Ordre de chargement</h3>
+                <ol class="order-list" id="canonicalOrder"></ol>
               </div>
-              <p>Les fichiers sont lus dans le navigateur. Aucun import n’est envoyé sur un serveur.</p>
-            </div>
-            <div class="source-layout">
-              <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Importer des fichiers ZIP ou Markdown">
-                <input id="sourceInput" type="file" multiple accept=".zip,.md,.txt,.json" hidden>
-                <span class="drop-icon">⇩</span>
-                <strong>Déposer les ZIP et fichiers ici</strong>
-                <p>Archives Seven Heaven, export Agent-Crypto, Core, Persona ou modules.</p>
-                <button class="button secondary compact" id="browseSources" type="button">Choisir les fichiers</button>
+              <div>
+                <h3>Fichiers attendus</h3>
+                <div class="source-list" id="sourceList"></div>
               </div>
-              <div class="source-summary">
-                <div><span>Fichiers indexés</span><strong id="sourceCount">0</strong></div>
-                <div><span>Fichiers reconnus</span><strong id="recognizedCount">0</strong></div>
-                <div><span>Doublons</span><strong id="duplicateCount">0</strong></div>
-                <div><span>Privés locaux</span><strong id="privateCount">0</strong></div>
-              </div>
-            </div>
-            <div class="source-toolbar">
-              <label class="search-field">
-                <span>⌕</span>
-                <input id="sourceFilter" type="search" placeholder="Filtrer les fichiers importés…">
-              </label>
-              <button class="button ghost compact" id="clearSources" type="button">Vider le coffre local</button>
-            </div>
-            <div class="source-table-wrap">
-              <table class="source-table">
-                <thead><tr><th>Fichier</th><th>Origine</th><th>Type</th><th>Statut</th></tr></thead>
-                <tbody id="sourceRows">
-                  <tr class="empty-row"><td colspan="4">Aucun fichier local importé.</td></tr>
-                </tbody>
-              </table>
             </div>
           </section>
 
-          <section class="forge-panel" data-step-panel="3">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">04 · MODULES</p>
-                <h2>Charger seulement ce qui change une décision</h2>
-              </div>
-              <p>Minimal, Standard ou Full ciblé. Full ne signifie jamais tout charger sans raison.</p>
+          <section class="panel" data-step="2">
+            <header class="panel-head"><div><p class="kicker">03 · IMPORT LOCAL</p><h2>Ajouter les sources que tu possèdes</h2></div><p>Aucun fichier n’est envoyé sur un serveur. Les imports disparaissent au rechargement.</p></header>
+            <div class="dropzone" id="dropzone" tabindex="0">
+              <input type="file" id="fileInput" multiple hidden>
+              <span>⇩</span><strong>Déposer Core, Persona, modules ou packs ZIP</strong>
+              <p>La Forge conserve les fichiers tels quels dans le ZIP final. Elle ne les modifie pas.</p>
+              <button type="button" id="browseFiles">Choisir les fichiers</button>
             </div>
-            <div class="preset-bar" role="group" aria-label="Niveau de modules">
-              <button class="preset-button" data-preset="minimal" type="button">Minimal</button>
-              <button class="preset-button" data-preset="standard" type="button">Standard</button>
-              <button class="preset-button" data-preset="full" type="button">Full ciblé</button>
-            </div>
-            <div class="module-grid" id="moduleGrid"></div>
+            <div class="import-summary"><span>Importés <strong id="importCount">0</strong></span><button type="button" id="clearImports">Vider</button></div>
+            <div class="import-list" id="importList"><p>Aucun fichier local importé.</p></div>
           </section>
 
-          <section class="forge-panel" data-step-panel="4">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">05 · RÈGLES ET MÉMOIRE</p>
-                <h2>Définir les garde-fous du profil</h2>
-              </div>
-              <p>Ces règles alimentent le Boot, le manifeste et les tests du ZIP final.</p>
-            </div>
-            <div class="rule-grid" id="ruleGrid"></div>
-            <div class="privacy-banner" id="privacyBanner"></div>
+          <section class="panel" data-step="3">
+            <header class="panel-head"><div><p class="kicker">04 · PACKS ET MODULES</p><h2>Choisir seulement ce qui sert la mission</h2></div><p id="moduleInstruction"></p></header>
+            <div class="choice-grid" id="moduleChoices"></div>
           </section>
 
-          <section class="forge-panel" data-step-panel="5">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">06 · PRÉVISUALISATION</p>
-                <h2>Vérifier avant de forger</h2>
-              </div>
-              <p>La prévisualisation distingue les fichiers inclus, générés, référencés et manquants.</p>
+          <section class="panel" data-step="4" id="flowerGirls">
+            <header class="panel-head"><div><p class="kicker">05 · FLOWER GIRLS</p><h2>Carte de routage 28 / 28</h2></div><p>Une principale, jusqu’à trois soutiens. La carte ne remplace pas leurs Core canoniques.</p></header>
+            <div class="fg-toolbar">
+              <input id="fgSearch" type="search" placeholder="Rechercher une fonction…">
+              <span id="fgCount">0 sélectionnée</span>
             </div>
-            <div class="preview-tabs" role="tablist">
-              <button class="preview-tab is-active" data-preview-tab="summary" type="button">Résumé</button>
-              <button class="preview-tab" data-preview-tab="tree" type="button">Arborescence</button>
-              <button class="preview-tab" data-preview-tab="warnings" type="button">Alertes <span id="warningBadge">0</span></button>
-            </div>
-            <div class="preview-panel is-active" data-preview-panel="summary">
-              <div class="preview-summary-grid" id="previewSummary"></div>
-            </div>
-            <div class="preview-panel" data-preview-panel="tree">
-              <pre class="tree-preview" id="treePreview"></pre>
-            </div>
-            <div class="preview-panel" data-preview-panel="warnings">
-              <div class="warning-list" id="warningList"></div>
-            </div>
+            <div class="fg-grid" id="fgGrid"></div>
+            <div class="combo-row" id="comboRow"></div>
           </section>
 
-          <section class="forge-panel" data-step-panel="6">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">07 · FORGE</p>
-                <h2>Produire le profil LLM</h2>
+          <section class="panel" data-step="5">
+            <header class="panel-head"><div><p class="kicker">06 · BOOT</p><h2>Prévisualisation de l’activation</h2></div><p>Le texte reprend l’ordre canonique, les modules choisis et le routage Flower Girls.</p></header>
+            <pre class="boot-preview" id="bootPreview"></pre>
+          </section>
+
+          <section class="panel" data-step="6">
+            <header class="panel-head"><div><p class="kicker">07 · EXPORT</p><h2>Produire le paquet LLM</h2></div><p>Le ZIP contient uniquement les sources publiques récupérées, tes imports locaux et les fichiers de routage générés.</p></header>
+            <div class="export-layout">
+              <div class="export-main">
+                <div class="export-sigil">✦</div>
+                <h3 id="exportName">Atlas-10 Crypto</h3>
+                <p id="exportSummary"></p>
+                <button class="primary large" id="forgeZip" type="button">FORGER LE ZIP</button>
               </div>
-              <p>Le ZIP est construit localement. Aucun fichier n’est publié ou envoyé automatiquement.</p>
-            </div>
-            <div class="forge-result">
-              <div class="forge-core">
-                <div class="forge-emblem">✦</div>
-                <span>PROFIL PRÊT À ASSEMBLER</span>
-                <h3 id="forgeResultName">Atlas-10 Crypto</h3>
-                <p id="forgeResultText">Vérifie la prévisualisation puis lance la Forge.</p>
-                <button class="button primary forge-button" id="forgeZip" type="button">FORGER LE PROFIL .ZIP</button>
-              </div>
-              <div class="export-actions">
-                <button class="export-card" id="downloadBoot" type="button"><span>BOOT</span><strong>Télécharger</strong></button>
-                <button class="export-card" id="downloadManifest" type="button"><span>MANIFESTE</span><strong>Télécharger</strong></button>
-                <button class="export-card" id="copyPrompt" type="button"><span>PROMPT</span><strong>Copier</strong></button>
-                <button class="export-card" id="copyTree" type="button"><span>ARBRE</span><strong>Copier</strong></button>
+              <div class="export-tools">
+                <button id="downloadBoot" type="button"><span>BOOT</span><strong>Télécharger</strong></button>
+                <button id="downloadManifest" type="button"><span>MANIFESTE</span><strong>Télécharger</strong></button>
+                <button id="copyBoot" type="button"><span>PROMPT</span><strong>Copier</strong></button>
+                <button id="copyTree" type="button"><span>ARBRE</span><strong>Copier</strong></button>
               </div>
             </div>
-            <div class="forge-log" id="forgeLog" aria-live="polite">En attente.</div>
+            <div class="log" id="forgeLog">En attente.</div>
           </section>
         </div>
 
-        <footer class="stage-foot">
-          <button class="text-button" id="previousBottom" type="button">← Précédent</button>
-          <span id="stageStatus">Étape en cours</span>
-          <button class="text-button next" id="nextBottom" type="button">Suivant →</button>
-        </footer>
-      </div>
-    </section>
-
-    <section class="idea-forge shell" id="ideaForge">
-      <div class="idea-heading">
-        <div>
-          <p class="section-kicker">IDEA FORGE</p>
-          <h2>Transformer une idée en proposition testable</h2>
-        </div>
-        <p>Cette forge produit une spécification Markdown. Elle ne modifie ni le Core actif ni le dépôt.</p>
-      </div>
-      <div class="idea-workbench">
-        <form class="idea-form" id="ideaForm">
-          <label class="field"><span>Titre</span><input name="title" required placeholder="Nom court de la fonction"></label>
-          <label class="field"><span>Hypothèse ou problème</span><textarea name="hypothesis" rows="3" required></textarea></label>
-          <label class="field"><span>Données nécessaires</span><textarea name="data" rows="3" required></textarea></label>
-          <label class="field"><span>Résultat attendu</span><textarea name="result" rows="3" required></textarea></label>
-          <label class="field"><span>Risques et faux positifs</span><textarea name="risks" rows="3"></textarea></label>
-          <label class="field"><span>Test de validation</span><textarea name="test" rows="3" required></textarea></label>
-          <button class="button primary" type="submit">Construire la proposition</button>
-        </form>
-        <div class="idea-output">
-          <div class="output-head"><span>PROPOSITION</span><div><button id="copyIdea" type="button">Copier</button><button id="downloadIdea" type="button">.md</button></div></div>
-          <pre id="ideaOutput">Décris une idée pour générer une proposition complète.</pre>
-        </div>
+        <footer class="stage-foot"><button id="previousBottom" type="button">← Précédent</button><span id="stageStatus">Étape en cours</span><button class="next" id="nextBottom" type="button">Suivant →</button></footer>
       </div>
     </section>
   </main>
 
   <footer class="footer shell">
-    <div><strong>FORGE D’AERITH</strong><span>V1.0-alpha.1 · GitHub Pages · Firefox</span></div>
-    <p>Création locale de profils LLM. Aucune donnée inventée, aucun secret exposé, aucune publication automatique.</p>
+    <div><strong>FORGE D’AERITH</strong><span>V1.0-alpha.2 · source-fidèle</span></div>
+    <p>GitHub conserve la mémoire machine. Notion explique les usages. Les ZIP transportent les compétences. Le LLM charge seulement ce qui sert la demande.</p>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="forge-catalog.js?v=1.0-alpha.1"></script>
-  <script src="app.js?v=1.0-alpha.1"></script>
+  <script src="forge-sources.js?v=1.0-alpha.2-source-fidele"></script>
+  <script src="app.js?v=1.0-alpha.2-source-fidele"></script>
 </body>
 </html>
