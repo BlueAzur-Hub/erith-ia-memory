@@ -15118,3 +15118,86 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     white-space: normal !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.48
+   ANALYSE TOGGLE · ENRICHED IN-CHART OVERLAY
+   ========================================================= */
+
+.atlas-chart-insight-overlay[hidden] {
+  display: none !important;
+}
+
+.atlas-chart-insight-overlay {
+  width: min(860px, calc(100% - 350px)) !important;
+  gap: 5px !important;
+  padding: 9px 104px 9px 11px !important;
+  border-left-width: 3px !important;
+  background:
+    linear-gradient(90deg,
+      rgba(2,9,19,.90) 0%,
+      rgba(2,9,19,.78) 64%,
+      rgba(2,9,19,.28) 89%,
+      transparent 100%) !important;
+}
+
+.atlas-chart-insight-overlay > strong {
+  font: 900 10px/1.18 system-ui,sans-serif !important;
+  letter-spacing: .13em !important;
+}
+
+.atlas-chart-insight-overlay > span {
+  font: 880 10px/1.28 system-ui,sans-serif !important;
+}
+
+.atlas-chart-insight-overlay > small {
+  font: 760 9px/1.28 system-ui,sans-serif !important;
+}
+
+/* Source truth is encoded on the existing overlay, without another badge. */
+.atlas-chart-insight-overlay[data-truth="direct"] {
+  border-left-color: rgba(82,241,174,.95) !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="direct"] > strong {
+  color: #80f6c0 !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="cache"] {
+  border-left-color: rgba(244,211,134,.96) !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="cache"] > strong {
+  color: #f4d386 !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="archive"] {
+  border-left-color: rgba(184,197,216,.86) !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="archive"] > strong {
+  color: #c8d3e2 !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="unavailable"] {
+  border-left-color: rgba(255,111,132,.96) !important;
+}
+
+.atlas-chart-insight-overlay[data-truth="unavailable"] > strong {
+  color: #ff91a5 !important;
+}
+
+@media (max-width: 1180px) {
+  .atlas-chart-insight-overlay {
+    width: min(720px, calc(100% - 292px)) !important;
+    padding-right: 48px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .atlas-chart-insight-overlay {
+    width: calc(100% - 20px) !important;
+    padding: 8px 10px !important;
+  }
+}
