@@ -14596,3 +14596,154 @@ body > .atlas-admin-command-drawer {
     max-height: 440px !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.44
+   SINGLE-LINE HOME + ADMIN COMMAND BAR
+   Essential navigation and administrator controls share
+   one horizontal command line. No function is removed.
+   Protected Graphique, Détail actif, Top 5, Market Flow,
+   Market and Math internals remain untouched.
+   ========================================================= */
+
+html[data-atlas-mode="advanced"] .atlas-v2-interface-bar {
+  padding-block: 6px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-v2-nav {
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  gap: 7px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(98,236,255,.28) transparent !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-v2-nav::-webkit-scrollbar {
+  height: 4px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-v2-nav::-webkit-scrollbar-thumb {
+  border-radius: 999px !important;
+  background: rgba(98,236,255,.25) !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-quick-dock {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  gap: 5px !important;
+  width: auto !important;
+  min-width: max-content !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-dock {
+  display: flex !important;
+  flex: 1 0 auto !important;
+  align-items: center !important;
+  width: auto !important;
+  min-width: max-content !important;
+  min-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 0 0 8px !important;
+  border: 0 !important;
+  border-left: 1px solid rgba(98,236,255,.18) !important;
+  border-radius: 0 !important;
+  background: none !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-command-bar {
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  gap: 5px !important;
+  width: auto !important;
+  min-width: max-content !important;
+  min-height: 36px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-command-kicker {
+  flex: 0 0 auto !important;
+  min-width: 44px !important;
+  min-height: 32px !important;
+  padding-inline: 7px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-command-shortcuts {
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-width: max-content !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-command-shortcuts button {
+  flex: 0 0 auto !important;
+  min-width: 88px !important;
+  padding-inline: 9px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-graph-toggle {
+  flex: 0 0 auto !important;
+  min-width: 116px !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-admin-center-toggle {
+  flex: 0 0 auto !important;
+  grid-column: auto !important;
+  min-width: 164px !important;
+  min-height: 32px !important;
+  justify-content: space-between !important;
+}
+
+/* At Transformer Book widths, retain one line and allow discreet horizontal
+   scrolling rather than creating a second visible navigation row. */
+@media (max-width: 1180px) {
+  html[data-atlas-mode="advanced"] .atlas-v2-nav,
+  html[data-atlas-mode="advanced"] .atlas-admin-command-bar {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+  }
+
+  html[data-atlas-mode="advanced"] .atlas-admin-center-toggle {
+    grid-column: auto !important;
+    min-width: 150px !important;
+    justify-content: space-between !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-atlas-mode="advanced"] .atlas-v2-nav {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: center !important;
+  }
+
+  html[data-atlas-mode="advanced"] .atlas-quick-dock {
+    display: flex !important;
+    grid-template-columns: none !important;
+    width: auto !important;
+  }
+
+  html[data-atlas-mode="advanced"] .atlas-admin-command-bar {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+  }
+
+  html[data-atlas-mode="advanced"] .atlas-admin-graph-toggle {
+    width: auto !important;
+    min-width: 112px !important;
+    min-height: 38px !important;
+  }
+
+  html[data-atlas-mode="advanced"] .atlas-admin-command-kicker {
+    min-height: 32px !important;
+    border-right: 1px solid rgba(98,236,255,.16) !important;
+    border-bottom: 0 !important;
+  }
+}

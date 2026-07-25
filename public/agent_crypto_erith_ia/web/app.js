@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.43 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.44 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.43";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.44";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -11711,7 +11711,7 @@ initAtlasHelpLayerV1();
 
 
 /* =========================================================
-   Build 28.1.43 — Clean Home + Inline Data Status + Admin Graph Toggle
+   Build 28.1.44 — Single-Line Home + Admin Command Bar + Graph Three-State
    Interface envelope only. Protected Graphique, Détail actif,
    Target Top 5, Market Flow and Market internals stay unchanged.
    ========================================================= */
@@ -11817,7 +11817,7 @@ function atlasAdminGraphSyncControls(mode) {
     const compactState = cycle.querySelector("b");
     if (compactState) compactState.textContent = label;
     const nextLabel = atlasAdminGraphLabel(atlasAdminGraphNext(mode));
-    cycle.setAttribute("aria-label", `Graphique en mode ${label}. Passer au mode ${nextLabel}.`);
+    cycle.setAttribute("aria-label", `Vue graphique en mode ${label}. Passer au mode ${nextLabel}.`);
   }
   document.querySelectorAll("[data-admin-graph-mode]").forEach(button => {
     const active = button.dataset.adminGraphMode === mode;
