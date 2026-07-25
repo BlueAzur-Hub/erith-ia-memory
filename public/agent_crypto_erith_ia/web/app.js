@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.35 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · CHART STABILITY · HISTORICAL TRUTH LOCK · DIRECT-FIRST STARTUP
+/* V2.0-alpha · Build 28.1.36 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · CHART STABILITY · HISTORICAL TRUTH LOCK · DIRECT-FIRST STARTUP · STATUS HARMONIZATION
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -13,8 +13,9 @@
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
      mémoires et gouverneur réseau préservés.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.35";
-/* DIRECT-FIRST STARTUP LOCK
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.36";
+const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
+/* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
    qu'après l'échec confirmé de la tentative CoinGecko directe.
 */
@@ -1317,7 +1318,57 @@ const liveSources = [
   { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 50 marché · requis" },
   { key: "coingecko-usd", name: "CoinGecko USD", kind: "Enrichissement Top 50 · optionnel" }
 ]; function setLiveStatus(mode, text) { if (!els.liveStatus) return; els.liveStatus.className = `pill ${mode}`; els.liveStatus.textContent = text;
-} function cleanError(error) { return String(error?.message || error || "Erreur inconnue") .replace(/AbortError/i, "Timeout") .slice(0, 72);
+}
+function atlasSetStableDirectMarketStatus() {
+  const assetCount = Number(state.coins?.length || 0);
+  setLiveStatus("ok", "Marché Top 50 EUR actualisé");
+  setText(els.sourceName, "CoinGecko direct · Top 50 EUR");
+  setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
+  setTableDecision(`${assetCount} actifs EUR directs · pulse 60 s`, "ok");
+}
+
+function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = "Actualisation") {
+  if (!previous || !atlasCanonicalSnapshot(previous.coins)) return false;
+  if (Number(state.marketPulse.marketFailures || 0) >= ATLAS_MARKET_DEGRADE_AFTER_FAILURES) return false;
+
+  const previousTime = Date.parse(previous.timestamp || "");
+  const age = Number.isFinite(previousTime) ? Math.max(0, Date.now() - previousTime) : Infinity;
+  if (age > ATLAS_DIRECT_GRACE_MS) return false;
+
+  state.coins = previous.coins;
+  state.global = previous.global;
+  state.timestamp = previous.timestamp;
+  state.mainSource = previous.mainSource || "CoinGecko direct · dernière lecture";
+  state.liveOk = true;
+
+  atlasSetSourceLock(
+    "direct",
+    state.timestamp,
+    `${context} différée · nouvelle tentative programmée · ${cleanError(error)}`,
+    true,
+    previous.snapshotId || previous.sourceLock?.snapshotId || null
+  );
+
+  atlasBrokerCommitMarket(
+    {
+      coins: state.coins,
+      global: state.global,
+      timestamp: state.timestamp,
+      snapshotId: state.sourceLock.snapshotId
+    },
+    "direct"
+  );
+
+  setLiveStatus("ok", "Marché direct conservé · nouvel essai");
+  setText(els.sourceName, "CoinGecko direct · dernière lecture");
+  setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
+  setTableDecision(`${state.coins.length} actifs EUR directs · actualisation différée`, "ok");
+
+  atlasSyncTruthDatasets();
+  atlasPatchMarketSnapshotDom();
+  return true;
+}
+ function cleanError(error) { return String(error?.message || error || "Erreur inconnue") .replace(/AbortError/i, "Timeout") .slice(0, 72);
 } function detailFromResult(result) { if (!result) return "OK"; if (result.backendRequired) return result.detail || "Backend requis"; if (result.diagnosticOnly) return result.detail || "Diagnostic uniquement"; if (result.markets) return `${result.markets.length} actifs EUR + USD fusionnés`; if (result.pairs !== undefined) return `${result.pairs} paires`; if (result.networks !== undefined) return `${result.networks} réseaux`; if (result.protocols !== undefined) return `${result.protocols} protocoles`; if (result.symbol) return result.symbol; return "OK";
 } function normalizeSourceStatusList(list = state.sourceStatus) { const map = new Map(); for (const item of list || []) { if (!item || !item.key) continue; map.set(item.key, item); } return [...map.values()];
 } function pushSourceStatus(record) { if (!record || !record.key) return; state.sourceStatus = normalizeSourceStatusList(state.sourceStatus).filter(item => item.key !== record.key); state.sourceStatus.push(record);
@@ -1905,11 +1956,9 @@ async function runLivecheck() {
     state.marketPulse.lastMarketSuccessAt = Date.now();
     succeeded = true;
 
-    setLiveStatus("ok", "Livecheck Top 50 EUR OK");
+    atlasSetStableDirectMarketStatus();
     atlasTrackAudience("market_loaded", { assets: state.coins.length, mode: "direct" });
-    setText(els.sourceName, state.mainSource);
     setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-    setTableDecision(`${state.coins.length} actifs EUR directs · pulse 60 s`, "ok");
 
     renderSourceGrid();
     updateSourceMetric(1);
@@ -1944,8 +1993,7 @@ async function runLivecheck() {
         }
       ];
 
-      setText(els.sourceName, "CoinGecko direct · Top 50 EUR + USD");
-      setTableDecision(`${state.coins.length} actifs directs · EUR + USD · pulse 60 s`, "ok");
+      atlasSetStableDirectMarketStatus();
       atlasPatchMarketSnapshotDom();
     } catch (usdError) {
       if (usdError?.name === "AbortError") return false;
@@ -1961,8 +2009,7 @@ async function runLivecheck() {
         }
       ];
 
-      setLiveStatus("warn", "Top 50 EUR OK · USD indisponible");
-      setTableDecision(`${state.coins.length} actifs EUR directs · USD indisponible`, "warn");
+      atlasSetStableDirectMarketStatus();
       atlasPatchMarketSnapshotDom();
     }
 
@@ -1991,7 +2038,9 @@ async function runLivecheck() {
       }
     ];
 
-    if (previousMarket && atlasRestorePreviousSnapshot(
+    if (atlasKeepDirectStatusDuringTransientFailure(previousMarket, error, "Livecheck")) {
+      atlasMergeSpotBookIntoCoins();
+    } else if (previousMarket && atlasRestorePreviousSnapshot(
       { ...previousMarket, snapshotId: previousMarket.snapshotId || previousMarket.sourceLock?.snapshotId || null },
       error,
       "Livecheck"
@@ -2066,10 +2115,7 @@ async function refreshMarketOnly(options = {}) {
     state.marketPulse.marketFailures = 0;
     state.marketPulse.lastMarketSuccessAt = Date.now();
 
-    setLiveStatus("ok", "Marché Top 50 EUR actualisé");
-    setText(els.sourceName, state.mainSource);
-    setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-    setTableDecision(`${state.coins.length} actifs EUR directs · pulse 60 s`, "ok");
+    atlasSetStableDirectMarketStatus();
     atlasPatchMarketSnapshotDom();
 
     if (!state.chartEngineV2?.realChart && state.dataBroker.chart?.status !== "loading") {
@@ -2102,8 +2148,7 @@ async function refreshMarketOnly(options = {}) {
         }
       ];
 
-      setText(els.sourceName, "CoinGecko direct · Top 50 EUR + USD");
-      setTableDecision(`${state.coins.length} actifs directs · EUR + USD · pulse 60 s`, "ok");
+      atlasSetStableDirectMarketStatus();
       atlasPatchMarketSnapshotDom();
     } catch (usdError) {
       if (usdError?.name === "AbortError") return false;
@@ -2119,8 +2164,7 @@ async function refreshMarketOnly(options = {}) {
         }
       ];
 
-      setLiveStatus("warn", "Top 50 EUR actualisé · USD indisponible");
-      setTableDecision(`${state.coins.length} actifs EUR directs · USD indisponible`, "warn");
+      atlasSetStableDirectMarketStatus();
       atlasPatchMarketSnapshotDom();
     }
 
@@ -2147,7 +2191,9 @@ async function refreshMarketOnly(options = {}) {
       }
     ];
 
-    if (previous && atlasRestorePreviousSnapshot(
+    if (atlasKeepDirectStatusDuringTransientFailure(previous, error, "Rafraîchissement")) {
+      atlasMergeSpotBookIntoCoins();
+    } else if (previous && atlasRestorePreviousSnapshot(
       { ...previous, mainSource: previous.mainSource || "CoinGecko · dernière lecture directe" },
       error,
       "Rafraîchissement"
@@ -3807,7 +3853,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.35: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.36: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -4207,7 +4253,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.35.
+  Internal package Build 28.1.36.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
