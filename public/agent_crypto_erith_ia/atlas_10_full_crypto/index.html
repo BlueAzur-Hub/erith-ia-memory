@@ -4,20 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#060914">
-  <meta name="description" content="Forge d’Aerith — assemblage fidèle de profils LLM à partir des sources canoniques">
-  <title>Forge d’Aerith · Sources canoniques</title>
-  <link rel="stylesheet" href="style.css?v=1.0-alpha.2-source-fidele">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="description" content="Forge d’Aerith — assemblage local et source-fidèle de profils LLM">
+  <title>Forge d’Aerith · Aerith Profile Foundry</title>
+  <link rel="stylesheet" href="style.css?v=1.0-alpha.3-source-fidele">
 </head>
-<body data-profile="atlas">
+<body data-profile="atlas" data-build="V1.0-alpha.3-source-fidele">
+  <div class="diagnostic" id="buildDiagnostic" hidden></div>
+
   <header class="topbar">
-    <a class="brand" href="#top"><span class="brand-mark">✦</span><span><strong>FORGE D’AERITH</strong><small>SOURCES CANONIQUES · ASSEMBLAGE LLM</small></span></a>
+    <a class="brand" href="#top">
+      <span class="brand-mark">✦</span>
+      <span><strong>FORGE D’AERITH</strong><small>AERITH PROFILE FOUNDRY</small></span>
+    </a>
     <nav>
-      <a href="#profiles">Profils</a>
       <a href="#workspace">Forge</a>
+      <a href="#profiles">Profils</a>
+      <a href="#workspace">Sources</a>
       <a href="#flowerGirls">Flower Girls</a>
       <a href="../web/index.html" target="_blank" rel="noopener noreferrer">Agent-Crypto ↗</a>
     </nav>
-    <span class="version">V1.0-alpha.2</span>
+    <div class="top-actions">
+      <span class="version" id="buildBadge">V1.0-alpha.3</span>
+      <button class="ghost-button" id="resetForge" type="button">Réinitialiser</button>
+      <button class="primary compact" id="topStart" type="button">Commencer</button>
+    </div>
   </header>
 
   <main id="top">
@@ -25,18 +38,32 @@
       <div class="hero-image" aria-hidden="true"></div>
       <div class="hero-inner shell">
         <div>
-          <p class="eyebrow">SEVEN HEAVEN · AERITH-10 · ATLAS-10 · FLOWER GIRLS</p>
-          <h1>Assembler les sources.<br><span>Ne rien inventer.</span></h1>
+          <p class="eyebrow">ERITH.IA · PROFILS LLM · ASSEMBLAGE LOCAL</p>
+          <h1>Forger un profil.<br><span>Préserver son identité.</span></h1>
           <p class="lead">
-            Cette Forge ne crée pas de faux Core ou de fausse Persona. Elle prépare un Boot,
-            un manifeste et un ZIP à partir des fichiers réellement présents, des références
-            privées importées localement et des modules publics existants.
+            Assemble Core, Persona, modules, règles et sources dans un ZIP clair.
+            Les fichiers privés restent locaux ou référencés. Rien n’est publié automatiquement.
           </p>
-          <div class="doctrine"><span>Puissance maximale.</span><span>Chargement minimal.</span><span>Choix précis.</span><span>Arrêt propre.</span></div>
-          <button class="primary" id="startForge" type="button">Ouvrir la Forge</button>
+          <div class="doctrine">
+            <span>Puissance maximale.</span>
+            <span>Chargement minimal.</span>
+            <span>Choix précis.</span>
+            <span>Arrêt propre.</span>
+          </div>
+          <div class="hero-actions">
+            <button class="primary" id="startForge" type="button">Ouvrir la Forge</button>
+            <a class="secondary-link" href="#profiles">Voir les profils</a>
+          </div>
+          <div class="hero-badges">
+            <span>4 profils réels</span>
+            <span>Import local</span>
+            <span>Core + Persona</span>
+            <span>Export ZIP réel</span>
+          </div>
         </div>
+
         <aside class="hero-panel">
-          <span class="panel-label">PROFIL ACTIF</span>
+          <div class="matrix-head"><span class="pulse"></span><span>PROFILE MATRIX</span><strong id="matrixStatus">READY</strong></div>
           <div class="hero-sigil" id="heroSigil">AT</div>
           <h2 id="heroName">Atlas-10 Crypto</h2>
           <p id="heroDescription"></p>
@@ -59,9 +86,9 @@
 
     <section class="shell workspace" id="workspace">
       <aside class="rail">
-        <div class="rail-title"><span>PARCOURS GUIDÉ</span><strong>Forge source-fidèle</strong><small>Sept étapes</small></div>
+        <div class="rail-title"><span>PARCOURS GUIDÉ</span><strong>Forge source-fidèle</strong><small>Une fenêtre · sept étapes</small></div>
         <nav id="stepNav"></nav>
-        <div class="rail-progress"><span>État</span><strong id="progressValue">0%</strong></div>
+        <div class="rail-progress"><span>Préparation</span><strong id="progressValue">0%</strong></div>
       </aside>
 
       <div class="stage">
@@ -72,16 +99,24 @@
 
         <div class="stage-body">
           <section class="panel active" data-step="0">
-            <header class="panel-head"><div><p class="kicker">01 · PROFIL</p><h2 id="selectedProfileName">Atlas-10 Crypto</h2></div><span class="status" id="selectedProfileStatus"></span></header>
+            <header class="panel-head">
+              <div><p class="kicker">01 · PROFIL</p><h2 id="selectedProfileName">Atlas-10 Crypto</h2></div>
+              <span class="status" id="selectedProfileStatus"></span>
+            </header>
             <p class="profile-description" id="selectedProfileDescription"></p>
+            <label class="field">
+              <span>Nom du dossier exporté</span>
+              <input id="profileRoot" type="text" maxlength="72" autocomplete="off">
+              <small>Le nom est normalisé dans le ZIP sans modifier le profil canonique.</small>
+            </label>
             <div class="truth-box">
-              <strong>Règle de cette version</strong>
+              <strong>Verrou source-fidèle</strong>
               <p>La Forge assemble. Elle ne réécrit pas les Core canoniques, ne fusionne pas les Personas et ne prétend pas posséder un fichier absent.</p>
             </div>
           </section>
 
           <section class="panel" data-step="1">
-            <header class="panel-head"><div><p class="kicker">02 · SOURCES</p><h2>Ordre canonique et fichiers</h2></div><p>Les chemins affichés viennent des sources fournies.</p></header>
+            <header class="panel-head"><div><p class="kicker">02 · SOURCES</p><h2>Ordre canonique et fichiers</h2></div><p>Le statut distingue maintenant clairement : inclus, importé, référence privée et manquant.</p></header>
             <div class="sources-layout">
               <div>
                 <h3>Ordre de chargement</h3>
@@ -95,14 +130,23 @@
           </section>
 
           <section class="panel" data-step="2">
-            <header class="panel-head"><div><p class="kicker">03 · IMPORT LOCAL</p><h2>Ajouter les sources que tu possèdes</h2></div><p>Aucun fichier n’est envoyé sur un serveur. Les imports disparaissent au rechargement.</p></header>
+            <header class="panel-head"><div><p class="kicker">03 · IMPORT LOCAL</p><h2>Ajouter les sources possédées</h2></div><p>Aucun fichier n’est envoyé sur un serveur. Les imports disparaissent au rechargement.</p></header>
             <div class="dropzone" id="dropzone" tabindex="0">
               <input type="file" id="fileInput" multiple hidden>
-              <span>⇩</span><strong>Déposer Core, Persona, modules ou packs ZIP</strong>
-              <p>La Forge conserve les fichiers tels quels dans le ZIP final. Elle ne les modifie pas.</p>
-              <button type="button" id="browseFiles">Choisir les fichiers</button>
+              <input type="file" id="folderInput" multiple webkitdirectory directory hidden>
+              <span>⇩</span>
+              <strong>Déposer Core, Persona, modules ou packs ZIP</strong>
+              <p>La Forge conserve les fichiers tels quels et préserve le chemin d’un dossier importé.</p>
+              <div class="import-actions">
+                <button type="button" id="browseFiles">Choisir des fichiers</button>
+                <button type="button" id="browseFolder">Choisir un dossier</button>
+              </div>
             </div>
-            <div class="import-summary"><span>Importés <strong id="importCount">0</strong></span><button type="button" id="clearImports">Vider</button></div>
+            <div class="import-summary">
+              <span>Importés <strong id="importCount">0</strong></span>
+              <span>Volume <strong id="importSize">0 Ko</strong></span>
+              <button type="button" id="clearImports">Vider</button>
+            </div>
             <div class="import-list" id="importList"><p>Aucun fichier local importé.</p></div>
           </section>
 
@@ -112,7 +156,7 @@
           </section>
 
           <section class="panel" data-step="4" id="flowerGirls">
-            <header class="panel-head"><div><p class="kicker">05 · FLOWER GIRLS</p><h2>Carte de routage 28 / 28</h2></div><p>Une principale, jusqu’à trois soutiens. La carte ne remplace pas leurs Core canoniques.</p></header>
+            <header class="panel-head"><div><p class="kicker">05 · FLOWER GIRLS</p><h2>Carte de routage 28 / 28</h2></div><p>Une principale et jusqu’à deux soutiens. La carte ne remplace pas leurs Core canoniques.</p></header>
             <div class="fg-toolbar">
               <input id="fgSearch" type="search" placeholder="Rechercher une fonction…">
               <span id="fgCount">0 sélectionnée</span>
@@ -122,12 +166,12 @@
           </section>
 
           <section class="panel" data-step="5">
-            <header class="panel-head"><div><p class="kicker">06 · BOOT</p><h2>Prévisualisation de l’activation</h2></div><p>Le texte reprend l’ordre canonique, les modules choisis et le routage Flower Girls.</p></header>
+            <header class="panel-head"><div><p class="kicker">06 · BOOT</p><h2>Prévisualisation de l’activation</h2></div><p>Le Boot reprend l’ordre canonique, les modules choisis et le routage Flower Girls.</p></header>
             <pre class="boot-preview" id="bootPreview"></pre>
           </section>
 
           <section class="panel" data-step="6">
-            <header class="panel-head"><div><p class="kicker">07 · EXPORT</p><h2>Produire le paquet LLM</h2></div><p>Le ZIP contient uniquement les sources publiques récupérées, tes imports locaux et les fichiers de routage générés.</p></header>
+            <header class="panel-head"><div><p class="kicker">07 · EXPORT</p><h2>Produire le paquet LLM</h2></div><p>Le ZIP contient les sources publiques récupérées, les imports locaux et les fichiers de traçabilité générés.</p></header>
             <div class="export-layout">
               <div class="export-main">
                 <div class="export-sigil">✦</div>
@@ -139,9 +183,10 @@
                 <button id="downloadBoot" type="button"><span>BOOT</span><strong>Télécharger</strong></button>
                 <button id="downloadManifest" type="button"><span>MANIFESTE</span><strong>Télécharger</strong></button>
                 <button id="copyBoot" type="button"><span>PROMPT</span><strong>Copier</strong></button>
-                <button id="copyTree" type="button"><span>ARBRE</span><strong>Copier</strong></button>
+                <button id="copyTree" type="button"><span>ARBRE RÉEL</span><strong>Copier</strong></button>
               </div>
             </div>
+            <div class="audit-box" id="exportAudit"></div>
             <div class="log" id="forgeLog">En attente.</div>
           </section>
         </div>
@@ -152,12 +197,12 @@
   </main>
 
   <footer class="footer shell">
-    <div><strong>FORGE D’AERITH</strong><span>V1.0-alpha.2 · source-fidèle</span></div>
+    <div><strong>FORGE D’AERITH</strong><span id="footerVersion">V1.0-alpha.3 · source-fidèle</span></div>
     <p>GitHub conserve la mémoire machine. Notion explique les usages. Les ZIP transportent les compétences. Le LLM charge seulement ce qui sert la demande.</p>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="forge-sources.js?v=1.0-alpha.2-source-fidele"></script>
-  <script src="app.js?v=1.0-alpha.2-source-fidele"></script>
+  <script src="forge-sources.js?v=1.0-alpha.3-source-fidele"></script>
+  <script src="app.js?v=1.0-alpha.3-source-fidele"></script>
 </body>
 </html>

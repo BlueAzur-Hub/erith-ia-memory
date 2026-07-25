@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_FORGE_SOURCES = Object.freeze({
-  version: "V1.0-alpha.2-source-fidele",
+  version: "V1.0-alpha.3-source-fidele",
   doctrine: [
     "Puissance maximale.",
     "Chargement minimal.",
