@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.42 — CLEAN HOME · INLINE DATA STATUS · ZERO EXTRA PANELS · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.43 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.42";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.43";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -1155,7 +1155,7 @@ function atlasRenderDiagnostics() {
 }
 
 function atlasRenderMarketAccessNotice() {
-  /* Build 28.1.42 — ZERO EXTRA PANELS LOCK
+  /* Build 28.1.43 — GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE LOCK
      Source truth is already exposed by the existing header controls:
      liveStatus, tableDecision, sourceName and sourceTime.
      No standalone notice is rendered between Home and Graphique. */
@@ -4224,7 +4224,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.42.
+  Internal package Build 28.1.43.
   Release numbers are synchronized across the interface package.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -9296,7 +9296,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CLEAN HOME · INLINE DATA STATUS · ZERO EXTRA PANELS · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE`
   );
 }
 
@@ -11711,12 +11711,13 @@ initAtlasHelpLayerV1();
 
 
 /* =========================================================
-   Build 28.1.42 — Clean Home + Inline Data Status + Admin Graph Toggle
+   Build 28.1.43 — Clean Home + Inline Data Status + Admin Graph Toggle
    Interface envelope only. Protected Graphique, Détail actif,
    Target Top 5, Market Flow and Market internals stay unchanged.
    ========================================================= */
 const ATLAS_ADMIN_CENTER_KEY = "atlas.admin.command.center.open.v1";
-const ATLAS_ADMIN_GRAPH_KEY = "atlas.admin.graph.open.v1";
+const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
+const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
 
 function atlasAdminCenterElements() {
   return {
@@ -11789,68 +11790,85 @@ function initAtlasAdminCommandCenter() {
 }
 
 function atlasAdminGraphRead() {
-  try { return localStorage.getItem(ATLAS_ADMIN_GRAPH_KEY) !== "0"; }
-  catch { return true; }
+  try {
+    const saved = localStorage.getItem(ATLAS_ADMIN_GRAPH_MODE_KEY);
+    if (ATLAS_ADMIN_GRAPH_MODES.includes(saved)) return saved;
+    const legacy = localStorage.getItem("atlas.admin.graph.open.v1");
+    return legacy === "0" ? "closed" : "normal";
+  } catch { return "normal"; }
 }
 
-function atlasAdminGraphSyncControls(open) {
-  document.querySelectorAll("[data-admin-graph-toggle]").forEach(button => {
-    button.classList.toggle("is-open", open);
-    button.setAttribute("aria-pressed", open ? "true" : "false");
-    const compactState = button.querySelector("b");
-    if (compactState) compactState.textContent = open ? "Ouvert" : "Fermé";
-    const drawerText = button.querySelector("span:last-child");
-    if (button.classList.contains("atlas-admin-graph-drawer-toggle") && drawerText) {
-      drawerText.textContent = open ? "Graphique ouvert" : "Graphique fermé";
-    }
-    button.setAttribute(
-      "aria-label",
-      open
-        ? "Fermer le Graphique Analyste, Détail actif, Target Top 5 et Market Flow"
-        : "Rouvrir le Graphique Analyste, Détail actif, Target Top 5 et Market Flow"
-    );
+function atlasAdminGraphLabel(mode) {
+  return mode === "focus" ? "Focus" : mode === "closed" ? "Fermé" : "Normal";
+}
+
+function atlasAdminGraphNext(mode) {
+  const index = ATLAS_ADMIN_GRAPH_MODES.indexOf(mode);
+  return ATLAS_ADMIN_GRAPH_MODES[(index + 1 + ATLAS_ADMIN_GRAPH_MODES.length) % ATLAS_ADMIN_GRAPH_MODES.length];
+}
+
+function atlasAdminGraphSyncControls(mode) {
+  const label = atlasAdminGraphLabel(mode);
+  const cycle = document.querySelector("[data-admin-graph-cycle]");
+  if (cycle) {
+    cycle.classList.remove("is-normal", "is-focus", "is-closed", "is-open");
+    cycle.classList.add(`is-${mode}`);
+    cycle.setAttribute("aria-pressed", mode === "closed" ? "false" : "true");
+    const compactState = cycle.querySelector("b");
+    if (compactState) compactState.textContent = label;
+    const nextLabel = atlasAdminGraphLabel(atlasAdminGraphNext(mode));
+    cycle.setAttribute("aria-label", `Graphique en mode ${label}. Passer au mode ${nextLabel}.`);
+  }
+  document.querySelectorAll("[data-admin-graph-mode]").forEach(button => {
+    const active = button.dataset.adminGraphMode === mode;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
   });
 }
 
-function atlasAdminGraphSet(open, options = {}) {
+function atlasAdminGraphSet(mode, options = {}) {
   const zone = document.getElementById("market-zone");
   if (!zone) return;
-  const next = !!open;
-  zone.classList.toggle("atlas-graph-closed", !next);
-  zone.dataset.graphOpen = next ? "true" : "false";
+  const next = ATLAS_ADMIN_GRAPH_MODES.includes(mode) ? mode : "normal";
+  zone.classList.remove("atlas-graph-closed", "atlas-graph-mode-normal", "atlas-graph-mode-focus", "atlas-graph-mode-closed");
+  zone.classList.add(`atlas-graph-mode-${next}`);
+  zone.dataset.graphMode = next;
+  zone.dataset.graphOpen = next === "closed" ? "false" : "true";
   atlasAdminGraphSyncControls(next);
-  atlasAdminCenterSet(false, { persist: false });
-  if (options.persist !== false) {
-    try { localStorage.setItem(ATLAS_ADMIN_GRAPH_KEY, next ? "1" : "0"); } catch {}
+  if (options.closeCenter !== false) atlasAdminCenterSet(false, { persist: false });
+  if (options.persist !== false && atlasV2Mode() === "advanced") {
+    try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, next); } catch {}
   }
   if (options.scroll !== false) window.requestAnimationFrame(() => {
     const behavior = options.instant ? "auto" : "smooth";
-    if (next) {
+    if (next === "closed") {
+      document.getElementById("market-workspace")?.scrollIntoView({ block: "start", behavior });
+    } else {
       document.getElementById("analyste")?.scrollIntoView({ block: "start", behavior });
       try { atlasScheduleStableChartResize(); } catch {}
-      window.setTimeout(() => { try { atlasScheduleStableChartResize(); } catch {} }, 220);
-    } else {
-      document.getElementById("marketSnapshotPanel")?.scrollIntoView({ block: "start", behavior });
+      window.setTimeout(() => { try { atlasScheduleStableChartResize(); } catch {} }, 240);
     }
   });
-  window.dispatchEvent(new CustomEvent("atlas:admin-graph", { detail: { open: next } }));
+  window.dispatchEvent(new CustomEvent("atlas:admin-graph", { detail: { mode: next, open: next !== "closed" } }));
 }
 
 function initAtlasAdminGraphToggle() {
   const zone = document.getElementById("market-zone");
   if (!zone) return;
 
-  document.querySelectorAll("[data-admin-graph-toggle]").forEach(button => {
-    button.addEventListener("click", () => {
-      const currentlyOpen = !zone.classList.contains("atlas-graph-closed");
-      atlasAdminGraphSet(!currentlyOpen);
-    });
+  document.querySelector("[data-admin-graph-cycle]")?.addEventListener("click", () => {
+    const current = zone.dataset.graphMode || "normal";
+    atlasAdminGraphSet(atlasAdminGraphNext(current));
+  });
+
+  document.querySelectorAll("[data-admin-graph-mode]").forEach(button => {
+    button.addEventListener("click", () => atlasAdminGraphSet(button.dataset.adminGraphMode || "normal"));
   });
 
   document.querySelectorAll('a[href="#analyste"]').forEach(link => {
     link.addEventListener("click", () => {
-      if (zone.classList.contains("atlas-graph-closed")) {
-        atlasAdminGraphSet(true, { persist: atlasV2Mode() === "advanced", instant: true });
+      if ((zone.dataset.graphMode || "normal") === "closed") {
+        atlasAdminGraphSet("normal", { persist: atlasV2Mode() === "advanced", instant: true });
       }
     });
   });
@@ -11858,14 +11876,14 @@ function initAtlasAdminGraphToggle() {
   window.addEventListener("atlas:v2mode", event => {
     const mode = event.detail?.mode;
     if (mode === "essential") {
-      atlasAdminGraphSet(true, { persist: false, instant: true, scroll: false });
+      atlasAdminGraphSet("normal", { persist: false, instant: true, scroll: false, closeCenter: false });
     } else if (mode === "advanced") {
-      atlasAdminGraphSet(atlasAdminGraphRead(), { persist: false, instant: true, scroll: false });
+      atlasAdminGraphSet(atlasAdminGraphRead(), { persist: false, instant: true, scroll: false, closeCenter: false });
     }
   });
 
-  const initialOpen = atlasV2Mode() === "advanced" ? atlasAdminGraphRead() : true;
-  atlasAdminGraphSet(initialOpen, { persist: false, instant: true, scroll: false });
+  const initialMode = atlasV2Mode() === "advanced" ? atlasAdminGraphRead() : "normal";
+  atlasAdminGraphSet(initialMode, { persist: false, instant: true, scroll: false, closeCenter: false });
 }
 
 initAtlasAdminCommandCenter();

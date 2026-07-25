@@ -13972,7 +13972,7 @@ body[data-market-truth="direct-conserved"] #liveStatus {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.42
+   V2.0-alpha · Build 28.1.43
    CRYPTO ADMIN INTERFACE · FORGE PRO BRIDGE · ESSENTIAL MODE LOCK
    Interface shell only — Graphique Analyste / Détail actif / Market untouched.
    ========================================================= */
@@ -14153,7 +14153,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.42
+   V2.0-alpha · Build 28.1.43
    ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE
    Additive interface shell. Protected chart, detail and Market internals unchanged.
    ========================================================= */
@@ -14260,38 +14260,107 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
   white-space: nowrap !important;
 }
 
-.atlas-admin-graph-toggle:not(.is-open) {
+.atlas-admin-graph-toggle.is-focus {
+  border-color: rgba(244,217,154,.52) !important;
+  background: linear-gradient(135deg,rgba(244,217,154,.13),rgba(98,236,255,.045)),rgba(4,18,31,.82) !important;
+}
+
+.atlas-admin-graph-toggle.is-focus b { color: #fff0bf !important; }
+
+.atlas-admin-graph-toggle.is-closed {
   border-color: rgba(244,217,154,.24) !important;
   background: linear-gradient(135deg,rgba(244,217,154,.08),rgba(98,236,255,.025)),rgba(4,18,31,.78) !important;
 }
 
-.atlas-admin-graph-toggle:not(.is-open) b {
-  color: #f4d99a !important;
+.atlas-admin-graph-toggle.is-closed b { color: #f4d99a !important; }
+
+.atlas-admin-graph-mode-control {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(88px,.7fr) minmax(0,1.6fr) !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  padding: 5px !important;
+  border: 1px solid rgba(98,236,255,.15) !important;
+  border-radius: 10px !important;
+  background: rgba(4,18,31,.62) !important;
 }
 
-.atlas-admin-graph-drawer-toggle {
-  appearance: none !important;
-  text-align: left !important;
+.atlas-admin-graph-mode-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 7px !important;
+  color: #eaf9ff !important;
+  font: 820 9px/1 system-ui,sans-serif !important;
+}
+
+.atlas-admin-graph-mode-title i {
+  color: #62ecff !important;
+  font-style: normal !important;
+  font-size: 13px !important;
+}
+
+.atlas-admin-graph-mode-buttons {
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 4px !important;
+}
+
+.atlas-admin-graph-mode-buttons button {
+  min-height: 29px !important;
+  border: 1px solid rgba(98,236,255,.14) !important;
+  border-radius: 8px !important;
+  background: rgba(2,12,24,.66) !important;
+  color: rgba(230,245,255,.78) !important;
+  font: 800 8px/1 system-ui,sans-serif !important;
   cursor: pointer !important;
 }
 
-.atlas-admin-graph-drawer-toggle:not(.is-open) {
-  border-color: rgba(244,217,154,.28) !important;
-  background: rgba(244,217,154,.07) !important;
+.atlas-admin-graph-mode-buttons button:hover,
+.atlas-admin-graph-mode-buttons button:focus-visible,
+.atlas-admin-graph-mode-buttons button.is-active {
+  border-color: rgba(98,236,255,.58) !important;
+  color: #fff7dc !important;
+  background: linear-gradient(135deg,rgba(98,236,255,.14),rgba(244,217,154,.07)),rgba(3,15,28,.88) !important;
+  box-shadow: inset 0 -2px 0 rgba(98,236,255,.55) !important;
 }
 
-.atlas-market-zone.atlas-graph-closed > #analyste,
-.atlas-market-zone.atlas-graph-closed > #market-workspace {
+/* Fermé : seul le couple Graphique Analyste + Détail actif disparaît.
+   Target Top 5 et Market Flow restent visibles et le Market remonte naturellement. */
+.atlas-market-zone.atlas-graph-mode-closed > #analyste {
   display: none !important;
 }
 
-.atlas-market-zone.atlas-graph-closed > #mathTopDock,
-.atlas-market-zone.atlas-graph-closed > #marketWorkspaceGrid {
+.atlas-market-zone.atlas-graph-mode-closed > #market-workspace {
+  display: block !important;
+  margin-top: 0 !important;
+}
+
+.atlas-market-zone.atlas-graph-mode-closed > #mathTopDock,
+.atlas-market-zone.atlas-graph-mode-closed > #marketWorkspaceGrid {
   width: 100% !important;
 }
 
-.atlas-market-zone.atlas-graph-closed {
-  padding-top: 0 !important;
+.atlas-market-zone.atlas-graph-mode-closed { padding-top: 0 !important; }
+
+/* Focus : agrandir uniquement l’enveloppe validée du graphique.
+   Les contrôles, courbes, rail Détail actif et bandeaux marché restent inchangés. */
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed {
+  min-height: clamp(690px,82vh,920px) !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-panel {
+  min-height: clamp(675px,80vh,905px) !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-shell,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  height: clamp(590px,68vh,790px) !important;
+  min-height: 590px !important;
+  max-height: 790px !important;
 }
 
 .atlas-admin-command-shortcuts button:hover,
@@ -14299,7 +14368,8 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 .atlas-admin-command-shortcuts button.is-selected,
 .atlas-admin-graph-toggle:hover,
 .atlas-admin-graph-toggle:focus-visible,
-.atlas-admin-graph-toggle.is-open,
+.atlas-admin-graph-toggle.is-normal,
+.atlas-admin-graph-toggle.is-focus,
 .atlas-admin-center-toggle:hover,
 .atlas-admin-center-toggle:focus-visible,
 .atlas-admin-center-toggle[aria-expanded="true"] {
@@ -14454,7 +14524,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 
 
-/* Build 28.1.42 visual validation patch: clean Home, inline status, Command Center overlay + Graph toggle. */
+/* Build 28.1.43 visual validation patch: clean Home, inline status, Command Center overlay + Graph toggle. */
 body.atlas-admin-center-open .hero {
   position: relative !important;
   z-index: 900 !important;
@@ -14482,6 +14552,47 @@ body > .atlas-admin-command-drawer {
 }
 
 
-/* Build 28.1.42 — Clean Home / zero extra panels.
+/* Build 28.1.43 — Clean Home / zero extra panels.
    Defensive lock: a legacy notice must never reappear between Home and Graphique. */
 #offlineNotice { display: none !important; }
+
+
+/* =========================================================
+   Build 28.1.43 — GRAPH THREE-STATE · TOP5/FLOW PERSISTENCE
+   No extra panel. Normal / Focus / Fermé are controlled only
+   from the Administrator Command Center.
+   ========================================================= */
+@media (max-width: 1180px) {
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens,
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed {
+    min-height: clamp(600px,78vh,780px) !important;
+  }
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-panel {
+    min-height: clamp(585px,76vh,765px) !important;
+  }
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-shell,
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+    height: clamp(500px,63vh,650px) !important;
+    min-height: 500px !important;
+    max-height: 650px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .atlas-admin-graph-mode-control { grid-template-columns: 1fr !important; }
+  .atlas-admin-graph-mode-title { min-height: 28px !important; }
+  .atlas-admin-graph-mode-buttons button { min-height: 40px !important; }
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens,
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed {
+    min-height: 540px !important;
+  }
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-panel {
+    min-height: 525px !important;
+  }
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-shell,
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+    height: 440px !important;
+    min-height: 440px !important;
+    max-height: 440px !important;
+  }
+}
