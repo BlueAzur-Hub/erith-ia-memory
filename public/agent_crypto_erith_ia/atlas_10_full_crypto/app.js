@@ -1,44 +1,53 @@
 (() => {
   "use strict";
 
-  const data = window.AERITH_FORGE_SOURCES;
-  if (!data) throw new Error("forge-sources.js introuvable.");
+  const DATA = window.AERITH_FORGE_PRO_DATA;
+  if (!DATA) throw new Error("forge-data.js introuvable.");
 
-  const EXPECTED_BUILD = document.body.dataset.build || "";
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-
   const steps = [
-    ["01","Profil","Choisir un assemblage réel."],
-    ["02","Sources","Lire l’ordre canonique et les fichiers attendus."],
-    ["03","Import local","Ajouter les fichiers privés ou les packs possédés."],
-    ["04","Packs / modules","Sélectionner uniquement ce qui sert la mission."],
-    ["05","Flower Girls","Router une fonction principale et deux soutiens maximum."],
-    ["06","Boot","Vérifier le prompt d’activation."],
-    ["07","Export","Produire un ZIP fidèle aux sources disponibles."]
+    ["01","Identité","Choisir un profil canonique ou définir un nouvel Aerith-10."],
+    ["02","Sources","Importer Core, Persona, image et modules."],
+    ["03","Analyse","Lire les métadonnées et confirmer la référence privée."],
+    ["04","Héritages","Sélectionner Seven, Solaire, Lunaire et les modules utiles."],
+    ["05","Thème","Associer un langage visuel sans modifier le Core."],
+    ["06","Audit","Vérifier les manques et le Boot."],
+    ["07","Export","Produire un ZIP professionnel et traçable."]
   ];
 
-  function safeJSON(key, fallback) {
-    try {
-      const value = JSON.parse(localStorage.getItem(key));
-      return value ?? fallback;
-    } catch {
-      return fallback;
-    }
-  }
-
   const state = {
-    profileId: localStorage.getItem("aerith-forge-source-profile") || "atlas",
-    step: Number(localStorage.getItem("aerith-forge-source-step") || 0),
-    choices: safeJSON("aerith-forge-source-choices", {}),
-    flowerGirls: safeJSON("aerith-forge-source-flower-girls", []),
-    rootNames: safeJSON("aerith-forge-source-root-names", {}),
-    imported: []
+    mode: "custom",
+    profileId: "seven",
+    step: 0,
+    imports: [],
+    modules: [],
+    heritage: ["seven"],
+    theme: "creator",
+    canonicalConfirmed: false,
+    custom: {
+      name: "Aerith-10 Nouvelle Spécialité",
+      family: "Filles d’Aerith",
+      level: "Aerith-10",
+      mode: "",
+      role: "",
+      version: "",
+      status: "",
+      compatibility: "",
+      personaPath: "",
+      memoryPath: "",
+      corePath: "",
+      imagePath: "",
+      update: "",
+      exportRoot: "AERITH_10_NOUVELLE_SPECIALITE"
+    },
+    parsed: {},
+    visualUrl: ""
   };
 
   function profile() {
-    return data.profiles.find(item => item.id === state.profileId) || data.profiles[0];
+    return DATA.profiles.find(item => item.id === state.profileId) || DATA.profiles[0];
   }
 
   function esc(value) {
@@ -48,37 +57,25 @@
   }
 
   function cleanName(value) {
-    return String(value || "AERITH_PROFILE")
+    return String(value || "AERITH_10_PROFILE")
       .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
       .replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"")
-      .toUpperCase() || "AERITH_PROFILE";
+      .toUpperCase() || "AERITH_10_PROFILE";
   }
 
   function cleanPath(value) {
-    return String(value || "")
-      .replaceAll("\\","/")
-      .split("/")
-      .filter(part => part && part !== "." && part !== "..")
-      .join("/");
+    return String(value || "").replaceAll("\\","/").split("/")
+      .filter(part => part && part !== "." && part !== "..").join("/");
   }
 
   function basename(value) {
-    const parts = cleanPath(value).split("/");
-    return parts.at(-1) || "";
+    return cleanPath(value).split("/").at(-1) || "";
   }
 
   function formatSize(bytes) {
     if (bytes < 1024) return `${bytes} o`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
     return `${(bytes / 1024 / 1024).toFixed(1)} Mo`;
-  }
-
-  function persist() {
-    localStorage.setItem("aerith-forge-source-profile", state.profileId);
-    localStorage.setItem("aerith-forge-source-step", String(state.step));
-    localStorage.setItem("aerith-forge-source-choices", JSON.stringify(state.choices));
-    localStorage.setItem("aerith-forge-source-flower-girls", JSON.stringify(state.flowerGirls));
-    localStorage.setItem("aerith-forge-source-root-names", JSON.stringify(state.rootNames));
   }
 
   function showToast(message) {
@@ -113,85 +110,134 @@
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(url), 1200);
   }
 
-  function downloadText(name, text) {
-    downloadBlob(name, new Blob([text], {type:"text/markdown;charset=utf-8"}));
+  function downloadText(name, text, type = "text/markdown;charset=utf-8") {
+    downloadBlob(name, new Blob([text], {type}));
   }
 
-  function importedPath(item) {
-    return cleanPath(item.path || item.file.webkitRelativePath || item.file.name);
+  function activeName() {
+    return state.mode === "custom" ? state.custom.name : profile().name;
   }
 
-  function exactImportedMatch(source) {
-    const expectedPath = cleanPath(source.path).toLowerCase();
-    const expectedName = String(source.name || basename(source.path)).toLowerCase();
-    const currentSources = profile().sourceFiles;
-    const sameNameCount = currentSources.filter(item =>
-      String(item.name || basename(item.path)).toLowerCase() === expectedName
-    ).length;
-
-    return state.imported.some(item => {
-      const path = importedPath(item).toLowerCase();
-      const name = item.file.name.toLowerCase();
-      if (path === expectedPath || path.endsWith(`/${expectedPath}`)) return true;
-      return sameNameCount === 1 && name === expectedName;
-    });
+  function activeRole() {
+    return state.mode === "custom" ? state.custom.role : profile().role;
   }
 
-  function packImported(fileName) {
-    const expected = fileName.toLowerCase();
-    return state.imported.some(item => item.file.name.toLowerCase() === expected);
+  function activeRoot() {
+    return cleanName(state.mode === "custom" ? state.custom.exportRoot || state.custom.name : profile().name);
   }
 
-  function sourceState(source) {
-    if (source.builtin) return {found:true,label:"PUBLIC INCLUS",className:"public"};
-    if (exactImportedMatch(source)) return {found:true,label:"IMPORTÉ",className:"public"};
-    if (source.private) return {found:false,label:"RÉFÉRENCE PRIVÉE",className:""};
-    return {found:false,label:"RÉFÉRENCE",className:""};
+  function activeThemeVisual() {
+    if (state.visualUrl) return state.visualUrl;
+    const theme = DATA.themes.find(item => item[0] === state.theme);
+    return theme?.[3] || (state.mode === "existing" ? profile().visual : "");
   }
 
-  function requiredAudit() {
-    const p = profile();
-    const warnings = [];
+  function coreImport() {
+    return state.imports.find(item => item.kind === "core") || null;
+  }
 
-    if (p.id === "seven") {
-      const corePack = packImported("ERITH_7_01_CORE_BOOT_PACK.zip");
-      const gate = state.imported.some(item => item.file.name.toLowerCase() === "seven_gate.md");
-      const boot = state.imported.some(item => item.file.name.toLowerCase() === "session_boot_aerith_7_master.md");
-      if (!corePack && !(gate && boot)) {
-        warnings.push("Seven Heaven reste un paquet de références : importer Core Boot, ou SEVEN_GATE + SESSION_BOOT.");
-      }
-      for (const choice of chosenItems()) {
-        if (!packImported(choice.file)) warnings.push(`${choice.title} sélectionné mais archive non importée : ${choice.file}`);
-      }
+  function personaImport() {
+    return state.imports.find(item => item.kind === "persona") || null;
+  }
+
+  function visualImport() {
+    return state.imports.find(item => item.kind === "visual") || null;
+  }
+
+  function kindForFile(file, content = "") {
+    const name = file.name.toUpperCase();
+    if (file.type.startsWith("image/")) return "visual";
+    if (name.includes("MULTI_AGENT_CORE") || /MULTI[- ]AGENT CORE/i.test(content)) return "core";
+    if (name.includes("PERSONA_OPERATING_LAYER") || /PERSONA OPERATING LAYER/i.test(content)) return "persona";
+    if (name.endsWith(".ZIP")) return "pack";
+    if (name.endsWith(".MD")) return "module";
+    if (name.endsWith(".JSON")) return "data";
+    return "source";
+  }
+
+  function stripMarkdown(value) {
+    return String(value || "")
+      .replace(/[`*_#]/g,"")
+      .replace(/^[\s🌸🧭⚠️💠◇✦]+/u,"")
+      .trim();
+  }
+
+  function fieldFromText(text, labels) {
+    for (const label of labels) {
+      const escaped = label.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      const regex = new RegExp(`^(?:\\\\*\\\\*)?${escaped}(?:\\\\*\\\\*)?\\\\s*:\\\\s*(.+)$`, "im");
+      const match = text.match(regex);
+      if (match) return stripMarkdown(match[1]);
     }
+    return "";
+  }
 
-    if (p.id === "creator") {
-      for (const required of [
-        "AERITH_10_CREATRICE_MULTI_AGENT_CORE.md",
-        "AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md"
-      ]) {
-        if (!state.imported.some(item => item.file.name.toLowerCase() === required.toLowerCase())) {
-          warnings.push(`Source privée requise non importée : ${required}`);
-        }
-      }
-      if (chosenItems().length) {
-        warnings.push("Les groupes Créatrice sont des routes de modules : seuls les fichiers réellement importés seront joints.");
-      }
+  function parseCore(text, fileName) {
+    const heading = text.match(/^#\s+(.+)$/m)?.[1] || "";
+    const name = stripMarkdown(heading)
+      .replace(/\s+[—-]\s+Multi-Agent Core.*$/i,"")
+      .replace(/^AERITH[- ]?10\s+/i,"Aerith-10 ")
+      .trim();
+
+    return {
+      name: name || fileName.replace(/\.md$/i,"").replaceAll("_"," "),
+      family: fieldFromText(text, ["Famille"]),
+      level: fieldFromText(text, ["Niveau"]),
+      role: fieldFromText(text, ["Rôle"]),
+      mode: fieldFromText(text, ["Mode principal"]),
+      status: fieldFromText(text, ["Statut"]),
+      compatibility: fieldFromText(text, ["Compatibilité"]),
+      personaPath: fieldFromText(text, ["Extension Persona"]),
+      memoryPath: fieldFromText(text, ["Mémoire partagée", "Mémoire partagée requise", "Base métier publique"]),
+      corePath: fieldFromText(text, ["Fichier canonique", "Fichier", "Chemin cible"]),
+      imagePath: fieldFromText(text, ["Image"]),
+      version: fieldFromText(text, ["Version"]),
+      update: fieldFromText(text, ["Mise à jour", "Date"])
+    };
+  }
+
+  function mergeParsed(parsed) {
+    state.parsed = parsed;
+    for (const key of ["name","family","level","role","mode","status","compatibility","personaPath","memoryPath","corePath","imagePath","version","update"]) {
+      if (parsed[key]) state.custom[key] = parsed[key];
     }
+    if (parsed.name) state.custom.exportRoot = cleanName(parsed.name);
+    if (/créatrice/i.test(`${parsed.name} ${parsed.role}`)) state.theme = "creator";
+    else if (/crypto/i.test(`${parsed.name} ${parsed.role}`)) state.theme = "crypto";
+    else if (/lunaire|reflet|rêve|tarot/i.test(`${parsed.compatibility} ${parsed.role}`)) state.theme = "lunar";
+    else if (/solaire|rayonnement/i.test(`${parsed.compatibility} ${parsed.role}`)) state.theme = "solar";
+    else state.theme = "seven";
 
-    if (p.privacy === "public" && !p.sourceFiles.some(item => item.builtin)) {
-      warnings.push("Aucun Core ou Persona public intégré au catalogue.");
-    }
+    const combined = `${parsed.compatibility} ${parsed.role}`.toLowerCase();
+    const heritage = ["seven"];
+    if (combined.includes("solaire") || combined.includes("v8")) heritage.push("solar");
+    if (combined.includes("lunaire") || combined.includes("v9")) heritage.push("lunar");
+    state.heritage = [...new Set(heritage)];
+  }
 
-    return warnings;
+  function renderDoctrine() {
+    $("#doctrine").innerHTML = DATA.doctrine.map(item => `<span>${esc(item)}</span>`).join("");
+  }
+
+  function renderLineage() {
+    $("#lineageGrid").innerHTML = DATA.lineage.map(item => `
+      <article class="lineage-card" style="--lineage-image:url('${esc(item.visual)}')">
+        <div>
+          <span>${esc(item.label)}</span>
+          <h3>${esc(item.name)}</h3>
+          <p>${esc(item.description)}</p>
+          <small>${esc(item.formula)}</small>
+        </div>
+      </article>`).join("");
   }
 
   function renderProfiles() {
-    $("#profileGrid").innerHTML = data.profiles.map(item => `
-      <button type="button" class="profile-card ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}">
+    $("#profileGrid").innerHTML = DATA.profiles.map(item => `
+      <button type="button" class="profile-card ${state.mode === "existing" && item.id === state.profileId ? "active" : ""} ${item.visual ? "" : "no-image"}"
+              data-profile="${esc(item.id)}" style="--card-image:url('${esc(item.visual || "")}')">
         <span class="sigil">${esc(item.sigil)}</span>
         <span class="family">${esc(item.family)}</span>
         <h3>${esc(item.name)}</h3>
@@ -200,290 +246,366 @@
       </button>`).join("");
   }
 
-  function renderHero() {
-    const p = profile();
-    document.body.dataset.profile = p.id;
-    $("#heroSigil").textContent = p.sigil;
-    $("#heroName").textContent = p.name;
-    $("#heroDescription").textContent = p.description;
-    $("#heroCore").textContent = p.privacy === "public" ? "Inclus" : "Import / référence";
-    $("#heroPersona").textContent = p.id === "seven" ? "Selon Core" : p.privacy === "public" ? "Incluse" : "Import / référence";
-    $("#heroPrivacy").textContent = p.privacy === "public" ? "Public" : "Privé local";
-    $("#matrixStatus").textContent = requiredAudit().length ? "IMPORT" : "READY";
+  function renderMatrix() {
+    const p = state.mode === "existing" ? profile() : null;
+    const name = activeName();
+    const description = state.mode === "custom"
+      ? "Compiler un nouveau profil Aerith-10 à partir de son Core et de sa Persona déjà canonisés."
+      : p.description;
+    const visual = activeThemeVisual();
+
+    document.body.dataset.theme = state.theme;
+    $("#matrixName").textContent = name;
+    $("#matrixDescription").textContent = description;
+    $("#matrixKicker").textContent = state.mode === "custom" ? "AERITH-10 PRO BUILDER" : "PROFIL ACTIF";
+    $("#matrixSymbol").textContent = state.mode === "custom" ? "A10+" : p.sigil;
+    $("#matrixCore").textContent = state.mode === "custom" ? (coreImport() ? "Importé" : "Requis") : (p.privacy === "public" ? "Inclus" : "Import local");
+    $("#matrixPersona").textContent = state.mode === "custom" ? (personaImport() ? "Importée" : "Requise") : (p.privacy === "public" ? "Incluse" : "Import local");
+    $("#matrixState").textContent = audit().ready ? "READY" : "IMPORT";
+
+    const image = $("#matrixImage");
+    if (visual) {
+      image.src = visual;
+      image.hidden = false;
+    } else {
+      image.hidden = true;
+    }
   }
 
-  function renderSteps() {
-    $("#stepNav").innerHTML = steps.map((step,index) => `
-      <button class="step-button ${index === state.step ? "active" : ""}" type="button" data-step-button="${index}">
-        <span class="num">${step[0]}</span>
-        <span><strong>${step[1]}</strong><small>${step[2]}</small></span>
-        <span class="done">${index < state.step ? "✓" : "•"}</span>
-      </button>`).join("");
+  function renderIdentity() {
+    const custom = state.mode === "custom";
+    $("#customIdentity").hidden = !custom;
+    $("#existingIdentity").hidden = custom;
+    $("#identityTitle").textContent = custom ? "Nouveau type Aerith-10" : profile().name;
+    $("#identityStatus").textContent = custom ? (coreImport() ? "Core détecté" : "À définir") : profile().status;
+    $("#forgeModeLabel").textContent = custom ? "AERITH-10 PRO" : "PROFIL CANONIQUE";
+    $("#forgeModeTitle").textContent = custom ? "Nouveau profil spécialisé" : profile().name;
+
+    if (custom) {
+      $("#customName").value = state.custom.name;
+      $("#customFamily").value = state.custom.family;
+      $("#customLevel").value = state.custom.level;
+      $("#customMode").value = state.custom.mode;
+      $("#customRole").value = state.custom.role;
+      $("#exportRoot").value = state.custom.exportRoot;
+    } else {
+      $("#existingDescription").textContent = profile().description;
+      $("#existingSigil").textContent = profile().sigil;
+      $("#existingName").textContent = profile().name;
+      $("#existingRole").textContent = profile().role;
+    }
   }
 
-  function renderSelected() {
-    const p = profile();
-    $("#selectedProfileName").textContent = p.name;
-    $("#selectedProfileStatus").textContent = p.status;
-    $("#selectedProfileDescription").textContent = p.description;
-    if (!state.rootNames[p.id]) state.rootNames[p.id] = cleanName(p.name);
-    $("#profileRoot").value = state.rootNames[p.id];
+  function expectedSources() {
+    if (state.mode === "existing") return profile().sources.map(item => ({
+      name:item[0], path:item[1], role:item[2], private:Boolean(item[3]), builtin:Boolean(item[4])
+    }));
+
+    return [
+      {name:coreImport()?.file.name || "AERITH_10_..._MULTI_AGENT_CORE.md", path:state.custom.corePath || $("#canonicalPath").value || "core/...", role:"Core canonique", private:true, required:true, present:Boolean(coreImport())},
+      {name:personaImport()?.file.name || "AERITH_10_..._PERSONA_OPERATING_LAYER.md", path:state.custom.personaPath || "core/...", role:"Persona Operating Layer", private:true, required:true, present:Boolean(personaImport())},
+      {name:visualImport()?.file.name || "Visuel canonique", path:state.custom.imagePath || "assets/images/core/...", role:"Identité visuelle", private:true, required:false, present:Boolean(visualImport())}
+    ];
   }
 
-  function renderSources() {
-    const p = profile();
-    $("#canonicalOrder").innerHTML = p.canonicalOrder.map(item => `<li>${esc(item)}</li>`).join("");
-    $("#sourceList").innerHTML = p.sourceFiles.map(source => {
-      const status = sourceState(source);
-      return `<div class="source-item">
-        <span class="icon">${esc(source.role.slice(0,2).toUpperCase())}</span>
-        <span><strong>${esc(source.path)}</strong><small>${esc(source.role)}</small></span>
-        <em class="${status.className}">${status.label}</em>
+  function importedMatch(source) {
+    const expectedName = String(source.name || "").toLowerCase();
+    const expectedPath = cleanPath(source.path).toLowerCase();
+    return state.imports.some(item => {
+      const path = cleanPath(item.path).toLowerCase();
+      return item.file.name.toLowerCase() === expectedName || path === expectedPath || path.endsWith(`/${expectedPath}`);
+    });
+  }
+
+  function renderSourceAudit() {
+    $("#sourceAuditList").innerHTML = expectedSources().map(source => {
+      const present = source.builtin || source.present || importedMatch(source);
+      const stateLabel = source.builtin ? "PUBLIC INCLUS" : present ? "IMPORTÉ" : source.required ? "REQUIS" : source.private ? "RÉFÉRENCE PRIVÉE" : "RÉFÉRENCE";
+      const cls = present ? "ok" : source.required ? "missing" : "warn";
+      return `<div class="source-row">
+        <span class="source-icon">${esc(source.role.slice(0,2).toUpperCase())}</span>
+        <span><b>${esc(source.path)}</b><small>${esc(source.role)}</small></span>
+        <span class="source-state ${cls}">${stateLabel}</span>
       </div>`;
     }).join("");
   }
 
-  function ensureChoices() {
-    const p = profile();
-    if (Array.isArray(state.choices[p.id])) return;
-    if (p.packs) state.choices[p.id] = p.packs.filter(item => item.recommended).map(item => item.id);
-    else if (p.moduleGroups) state.choices[p.id] = [p.moduleGroups[0].id];
-    else state.choices[p.id] = p.cryptoModules.slice(0,4).map(item => item[0]);
-    persist();
-  }
+  function renderMetadata() {
+    const values = state.mode === "custom"
+      ? {
+          "Nom":state.custom.name,"Famille":state.custom.family,"Niveau":state.custom.level,
+          "Rôle":state.custom.role,"Mode":state.custom.mode,"Version":state.custom.version,
+          "Persona":state.custom.personaPath,"Mémoire / base":state.custom.memoryPath,
+          "Image":state.custom.imagePath,"Compatibilité":state.custom.compatibility
+        }
+      : {
+          "Nom":profile().name,"Famille":profile().family,"Niveau":profile().level,
+          "Rôle":profile().role,"Chemin canonique":profile().canonicalPath,
+          "Confidentialité":profile().privacy === "public" ? "Public" : "Privé"
+        };
 
-  function renderChoices() {
-    ensureChoices();
-    const p = profile();
-    const selected = state.choices[p.id] || [];
-    let items = [];
+    $("#metadataList").innerHTML = Object.entries(values).map(([key,value]) =>
+      `<div><dt>${esc(key)}</dt><dd>${esc(value || "—")}</dd></div>`
+    ).join("");
 
-    if (p.packs) {
-      $("#moduleInstruction").textContent = "Commencer par Core Boot. Ajouter Discernment seulement si la mission le justifie. Une archive sélectionnée n’est incluse que si elle est importée localement.";
-      items = p.packs.map(item => ({
-        id:item.id, group:"Seven Heaven", title:item.title,
-        detail:`${item.file} — ${item.role}`,
-        available:packImported(item.file)
-      }));
-    } else if (p.moduleGroups) {
-      $("#moduleInstruction").textContent = "Les groupes reprennent les priorités du Core Créatrice. Ils routent les modules, mais ne fabriquent aucun fichier absent.";
-      items = p.moduleGroups.map(item => ({
-        id:item.id, group:"Base experte", title:item.title,
-        detail:item.files.join(" · "), available:null
-      }));
-    } else {
-      $("#moduleInstruction").textContent = "Module présent ≠ module actif. Un module est actif uniquement lorsqu’il change une décision, un calcul, un test ou une présentation.";
-      items = p.cryptoModules.map(item => ({
-        id:item[0], group:"Crypto public", title:item[1],
-        detail:item[0], available:true
-      }));
-    }
-
-    $("#moduleChoices").innerHTML = items.map(item => `
-      <label class="choice-card ${selected.includes(item.id) ? "selected" : ""}">
-        <input type="checkbox" data-choice="${esc(item.id)}" ${selected.includes(item.id) ? "checked" : ""}>
-        <span>
-          <span>${esc(item.group)}${item.available === true ? " · DISPONIBLE" : item.available === false ? " · NON IMPORTÉ" : ""}</span>
-          <strong>${esc(item.title)}</strong>
-          <small>${esc(item.detail)}</small>
-        </span>
-      </label>`).join("");
+    $("#canonicalConfirmed").checked = state.mode === "existing" ? true : state.canonicalConfirmed;
+    $("#canonicalConfirmed").disabled = state.mode === "existing";
+    $("#canonicalPath").value = state.mode === "custom" ? (state.custom.corePath || "") : profile().canonicalPath;
+    $("#canonicalPath").disabled = state.mode === "existing";
   }
 
   function renderImports() {
-    const total = state.imported.reduce((sum,item) => sum + item.file.size, 0);
-    $("#importCount").textContent = state.imported.length;
+    const total = state.imports.reduce((sum,item) => sum + item.file.size, 0);
+    $("#importCount").textContent = state.imports.length;
     $("#importSize").textContent = formatSize(total);
-    $("#importList").innerHTML = state.imported.length
-      ? state.imported.map(item => `
-          <div class="import-item">
-            <strong>${esc(importedPath(item))}</strong>
-            <span>${formatSize(item.file.size)}</span>
-          </div>`).join("")
-      : "<p>Aucun fichier local importé.</p>";
-    renderSources();
-    renderChoices();
-    renderHero();
+    $("#importList").innerHTML = state.imports.length ? state.imports.map(item => `
+      <div class="import-item">
+        <span class="file-tag">${esc(item.kind.slice(0,4).toUpperCase())}</span>
+        <span><b>${esc(item.path)}</b><small>${esc(item.kind)}</small></span>
+        <span>${formatSize(item.file.size)}</span>
+      </div>`).join("") : "<p>Aucun fichier importé.</p>";
   }
 
-  function renderFlowerGirls() {
-    const query = ($("#fgSearch").value || "").trim().toLowerCase();
-    const filtered = data.flowerGirls
-      .map((item,index) => ({item,index}))
-      .filter(({item}) => !query || item.join(" ").toLowerCase().includes(query));
-
-    $("#fgGrid").innerHTML = filtered.map(({item,index}) => `
-      <button type="button" class="fg-card ${state.flowerGirls.includes(index) ? "selected" : ""}" data-fg="${index}">
-        <span>${esc(item[1])}</span>
-        <strong>Aerith-10 ${esc(item[0])}</strong>
-        <small>${esc(item[2])}</small>
+  function renderHeritage() {
+    const choices = DATA.lineage;
+    $("#heritageGrid").innerHTML = choices.map(item => `
+      <button type="button" class="heritage-card ${state.heritage.includes(item.id) ? "selected" : ""}" data-heritage="${esc(item.id)}">
+        <img src="${esc(item.visual)}" alt="">
+        <span>${esc(item.label)}</span><b>${esc(item.name)}</b><small>${esc(item.formula)}</small>
       </button>`).join("");
 
-    $("#fgCount").textContent = `${state.flowerGirls.length} sélectionnée${state.flowerGirls.length > 1 ? "s" : ""} / 3`;
-    $("#comboRow").innerHTML = data.combinations.map((combo,index) =>
-      `<button type="button" class="combo-button" data-combo="${index}">${esc(combo[0])}</button>`
-    ).join("");
+    const autoModules = state.imports
+      .filter(item => ["module","pack","data","source"].includes(item.kind))
+      .map(item => item.path);
+    $("#detectedModules").innerHTML = autoModules.length
+      ? autoModules.map(item => `<span>${esc(item)}</span>`).join("")
+      : "<span>Aucun module complémentaire détecté.</span>";
+    $("#manualModules").value = state.modules.join("\n");
   }
 
-  function chosenItems() {
-    ensureChoices();
-    const p = profile();
-    const ids = state.choices[p.id] || [];
-    if (p.packs) return p.packs.filter(item => ids.includes(item.id)).map(item => ({title:item.title,file:item.file,role:item.role}));
-    if (p.moduleGroups) return p.moduleGroups.filter(item => ids.includes(item.id)).map(item => ({title:item.title,file:item.files.join(", "),files:item.files,role:"Groupe canonique"}));
-    return p.cryptoModules.filter(item => ids.includes(item[0])).map(item => ({title:item[1],file:item[0],role:"Module public"}));
+  function renderThemes() {
+    $("#themeGrid").innerHTML = DATA.themes.map(item => `
+      <button type="button" class="theme-card ${state.theme === item[0] ? "selected" : ""}" data-theme-choice="${esc(item[0])}">
+        ${item[3] ? `<img src="${esc(item[3])}" alt="">` : ""}
+        <span>THÈME</span><b>${esc(item[1])}</b><small>${esc(item[2])}</small>
+      </button>`).join("");
+
+    const frame = $("#visualFrame");
+    const visual = activeThemeVisual();
+    frame.style.backgroundImage = visual
+      ? `linear-gradient(180deg,transparent,rgba(4,7,18,.55)),url("${visual}")`
+      : "";
+    frame.style.backgroundSize = "cover";
+    frame.style.backgroundPosition = "center 18%";
+    frame.innerHTML = visual ? "" : "<span>VISUEL OPTIONNEL</span>";
+    $("#visualTitle").textContent = visualImport()?.file.name || DATA.themes.find(item => item[0] === state.theme)?.[1] || "Thème";
+    $("#visualHint").textContent = visualImport()
+      ? "Le visuel importé sera joint au paquet sans être modifié."
+      : "Aucun visuel privé n’est requis pour compiler le profil.";
+  }
+
+  function manualModuleList() {
+    return $("#manualModules").value.split(/\r?\n/).map(item => cleanPath(item.trim())).filter(Boolean);
+  }
+
+  function audit() {
+    const items = [];
+    let ready = true;
+
+    if (state.mode === "custom") {
+      if (coreImport()) items.push(["ok","Core Aerith-10 importé."]);
+      else { items.push(["error","Core Multi-Agent requis."]); ready = false; }
+
+      if (personaImport()) items.push(["ok","Persona Operating Layer importée."]);
+      else { items.push(["error","Persona Operating Layer requise."]); ready = false; }
+
+      if (state.canonicalConfirmed) items.push(["ok","Canonisation préalable dans le GitHub privé confirmée."]);
+      else { items.push(["error","La canonisation préalable dans core/ doit être confirmée."]); ready = false; }
+
+      const corePath = state.custom.corePath || $("#canonicalPath").value;
+      if (/^core\/.+\.md$/i.test(corePath)) items.push(["ok",`Chemin canonique valide : ${corePath}`]);
+      else { items.push(["error","Chemin canonique core/...md manquant ou invalide."]); ready = false; }
+
+      if (/^Aerith-10\b/i.test(state.custom.name)) items.push(["ok","Nom de lignée Aerith-10 reconnu."]);
+      else items.push(["warn","Le nom ne commence pas par Aerith-10. Vérifier la convention de lignée."]);
+
+      if (coreImport() && !/AERITH[_ -]?10/i.test(coreImport().file.name)) items.push(["warn","Le nom du fichier Core ne contient pas AERITH_10."]);
+      if (coreImport() && !/MULTI_AGENT_CORE/i.test(coreImport().file.name)) items.push(["warn","Le nom du fichier Core ne suit pas le suffixe MULTI_AGENT_CORE."]);
+      if (personaImport() && !/PERSONA_OPERATING_LAYER/i.test(personaImport().file.name)) items.push(["warn","Le nom de la Persona ne suit pas le suffixe PERSONA_OPERATING_LAYER."]);
+    } else {
+      const p = profile();
+      items.push(["ok",`${p.name} sélectionné.`]);
+      if (p.privacy === "public") items.push(["ok","Core et Persona publics intégrés à la Forge."]);
+      else {
+        const missing = expectedSources().filter(source => source.private && !importedMatch(source));
+        if (missing.length) items.push(["warn",`${missing.length} source(s) privée(s) restent en référence seulement.`]);
+        else items.push(["ok","Sources privées attendues importées."]);
+      }
+    }
+
+    if (state.heritage.includes("seven")) items.push(["ok","Héritage Seven déclaré."]);
+    if (state.heritage.includes("solar")) items.push(["ok","Option Solaire déclarée disponible, sans chargement automatique."]);
+    if (state.heritage.includes("lunar")) items.push(["ok","Option Lunaire déclarée disponible, sans chargement automatique."]);
+    if (!visualImport()) items.push(["warn","Aucun visuel canonique privé importé ; le thème de Forge reste utilisé comme habillage."]);
+
+    return {ready,items};
   }
 
   function makeBoot() {
-    const p = profile();
-    const choices = chosenItems();
-    const girls = state.flowerGirls.map(index => data.flowerGirls[index]);
-    const lines = [
-      `# BOOT — ${p.name.toUpperCase()}`,
-      "",
-      `Version Forge : ${data.version}`,
-      `Statut : ${p.status}`,
-      "",
-      "## Activation",
-      ""
-    ];
+    const name = activeName();
+    const p = state.mode === "existing" ? profile() : null;
+    const canonicalPath = state.mode === "custom" ? (state.custom.corePath || $("#canonicalPath").value) : p.canonicalPath;
+    const personaPath = state.mode === "custom"
+      ? (state.custom.personaPath || personaImport()?.path || "Persona importée localement")
+      : (p.sources.find(source => /persona/i.test(source[2]))?.[1] || "Selon le Core");
+    const modules = [...new Set([...manualModuleList(), ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)])];
 
-    if (p.id === "seven") {
-      lines.push("Active Aerith-7 Seven Heaven.","","Mode Full Modules Boost intelligent.","","Règle centrale:",...data.doctrine.map(item => `- ${item}`),"");
-    } else if (p.id === "creator") {
-      lines.push("Active Aerith-10 Créatrice.","",`Mode principal : \`${p.defaultMode}\``,"","Une seule Aerith-10. Un seul mode principal à la fois.","");
-    } else if (p.id === "atlas") {
-      lines.push("Active Atlas-10 Crypto.","",`Mode principal : \`${p.defaultMode}\``,"","Tu n’es pas un oracle de prix, un conseiller financier ou un vendeur de signaux.","");
-    } else {
-      lines.push("Active Aerith-10 Crypto.","",`Mode principal : \`${p.defaultMode}\``,"","Tu ne donnes aucun ordre d’achat ou de vente.","");
-    }
+    return `# BOOT — ${name.toUpperCase()}
 
-    lines.push(
-      "## Ordre canonique","",
-      ...p.canonicalOrder.map((item,index) => `${index + 1}. ${item}`),
-      "","## Packs ou modules ciblés","",
-      ...(choices.length ? choices.map(item => `- ${item.title} — ${item.file}`) : ["- Aucun"]),
-      "","## Routage Flower Girls","",
-      ...(girls.length ? girls.map((girl,index) => `- ${index === 0 ? "Principale" : "Soutien"} : Aerith-10 ${girl[0]} — ${girl[2]}`) : ["- Aucun routage Flower Girl"]),
-      "","## Garde-fous","",
-      "- Module présent ≠ module actif.",
-      "- Ne pas charger tout le dépôt ou tous les packs par réflexe.",
-      "- Ne pas mélanger automatiquement public et privé.",
-      "- Distinguer fait, hypothèse, interprétation, symbole, ressenti et action.",
-      "- Les Flower Girls assistent ; elles ne décident pas à la place de Christophe.",
-      "- Si une source manque, le dire au lieu d’inventer.",
-      "- Produire le résultat demandé puis s’arrêter proprement."
-    );
-    return lines.join("\n");
+Version Forge : ${DATA.version}
+Mode : ${state.mode === "custom" ? "Aerith-10 Pro importé" : "Profil canonique existant"}
+
+## Activation
+
+Active ${name}.
+
+## Sources
+
+1. Core : ${canonicalPath || "NON DÉFINI"}
+2. Persona : ${personaPath || "NON DÉFINIE"}
+${state.custom.memoryPath ? `3. Mémoire / base métier : ${state.custom.memoryPath}` : ""}
+
+## Héritages disponibles
+
+${state.heritage.length ? state.heritage.map(id => {
+  const item = DATA.lineage.find(line => line.id === id);
+  return `- ${item?.name || id} — ${item?.formula || ""}`;
+}).join("\n") : "- Aucun héritage supplémentaire sélectionné"}
+
+## Modules ciblés
+
+${modules.length ? modules.map(item => `- ${item}`).join("\n") : "- Aucun module complémentaire"}
+
+## Mission
+
+${activeRole() || "Suivre strictement la mission définie dans le Core importé."}
+
+## Verrous
+
+- Lire le Core et la Persona sans les réécrire.
+- Ne jamais présenter une source absente comme chargée.
+- Un module disponible n’est pas automatiquement actif.
+- Solaire et Lunaire sont des options de lignée, pas des voix simultanées par défaut.
+- Distinguer fait, hypothèse, interprétation, symbole, ressenti et action.
+- Produire le résultat demandé puis s’arrêter proprement.
+`;
   }
 
-  function sourceStatusLines() {
-    const p = profile();
-    return p.sourceFiles.map(source => {
-      const status = sourceState(source);
-      return `- [${status.found ? "INCLUS/IMPORTÉ" : "RÉFÉRENCE"}] ${source.path} — ${source.role}`;
-    });
+  function profileSpec() {
+    const p = state.mode === "existing" ? profile() : null;
+    return {
+      forge_version: DATA.version,
+      mode: state.mode,
+      identity: {
+        name: activeName(),
+        family: state.mode === "custom" ? state.custom.family : p.family,
+        level: state.mode === "custom" ? state.custom.level : p.level,
+        role: activeRole(),
+        main_mode: state.mode === "custom" ? state.custom.mode : "",
+        version: state.mode === "custom" ? state.custom.version : "",
+        status: state.mode === "custom" ? state.custom.status : p.status
+      },
+      canonical: {
+        confirmed_private_core: state.mode === "existing" ? true : state.canonicalConfirmed,
+        core_path: state.mode === "custom" ? (state.custom.corePath || $("#canonicalPath").value) : p.canonicalPath,
+        persona_path: state.mode === "custom" ? state.custom.personaPath : "",
+        memory_or_business_base: state.mode === "custom" ? state.custom.memoryPath : ""
+      },
+      heritage: state.heritage,
+      modules: [...new Set([...manualModuleList(), ...state.imports.filter(item => ["module","pack","data","source"].includes(item.kind)).map(item => item.path)])],
+      theme: state.theme,
+      imported_files: state.imports.map(item => ({path:item.path,kind:item.kind,size:item.file.size})),
+      audit: audit()
+    };
   }
 
   function makeManifest() {
-    const p = profile();
-    const choices = chosenItems();
-    const girls = state.flowerGirls.map(index => data.flowerGirls[index]);
-    const warnings = requiredAudit();
+    const spec = profileSpec();
+    return `# MANIFESTE — ${activeName()}
 
-    return `# MANIFESTE — ${p.name}
-
-Version Forge : ${data.version}
-Politique : ${p.privacy === "public" ? "Sources publiques incluses" : "Sources privées : référence ou import local"}
+Version Forge : ${DATA.version}
 Date : ${new Date().toISOString().slice(0,10)}
+Mode : ${state.mode === "custom" ? "Nouveau type Aerith-10 Pro" : "Profil canonique existant"}
 
-## Sources canoniques et statut réel
+## Identité
 
-${sourceStatusLines().join("\n")}
+- Nom : ${spec.identity.name}
+- Famille : ${spec.identity.family || "—"}
+- Niveau : ${spec.identity.level || "—"}
+- Rôle : ${spec.identity.role || "—"}
+- Mode principal : ${spec.identity.main_mode || "—"}
+- Version Core : ${spec.identity.version || "—"}
 
-## Packs ou modules choisis
+## Références canoniques
 
-${choices.length ? choices.map(item => `- ${item.title} — ${item.file}`).join("\n") : "- Aucun"}
+- Core : ${spec.canonical.core_path || "—"}
+- Persona : ${spec.canonical.persona_path || "—"}
+- Mémoire / base métier : ${spec.canonical.memory_or_business_base || "—"}
+- Canonisation privée confirmée : ${spec.canonical.confirmed_private_core ? "oui" : "non"}
 
-## Flower Girls routées
+## Héritages
 
-${girls.length ? girls.map((girl,index) => `- ${index === 0 ? "Principale" : "Soutien"} : Aerith-10 ${girl[0]} — ${girl[2]}`).join("\n") : "- Aucune"}
+${spec.heritage.length ? spec.heritage.map(item => `- ${item}`).join("\n") : "- Aucun"}
 
-## Sources locales jointes
+## Modules
 
-${state.imported.length ? state.imported.map(item => `- ${importedPath(item)}`).join("\n") : "- Aucune"}
+${spec.modules.length ? spec.modules.map(item => `- ${item}`).join("\n") : "- Aucun"}
+
+## Fichiers réellement importés
+
+${spec.imported_files.length ? spec.imported_files.map(item => `- ${item.path} — ${item.kind} — ${item.size} octets`).join("\n") : "- Aucun"}
 
 ## Audit
 
-${warnings.length ? warnings.map(item => `- ATTENTION : ${item}`).join("\n") : "- Paquet complet selon les exigences minimales du profil."}
+${spec.audit.items.map(item => `- [${item[0].toUpperCase()}] ${item[1]}`).join("\n")}
 
-## Verrou
+## Verrou source-fidèle
 
-La Forge assemble les sources disponibles.
+La Forge compile les sources disponibles.
 Elle ne crée pas de Core canonique.
-Elle ne réécrit pas une Persona.
+Elle ne réécrit pas la Persona.
 Elle ne présente pas un fichier absent comme chargé.
 `;
   }
 
-  function makeRouting() {
-    const girls = state.flowerGirls.map(index => data.flowerGirls[index]);
-    return `# FLOWER GIRLS — ROUTAGE
+  function makePrivateReference() {
+    const spec = profileSpec();
+    return `# RÉFÉRENCE GITHUB PRIVÉE
 
-Principe :
+Dépôt canonique :
+BlueAzur-Hub/erith-ia-notion-archive-private
 
-1 Flower Girl = mission claire.
-2 Flower Girls = duo opérationnel.
-3 Flower Girls = constellation courte.
-Plus de 3 = seulement sur demande explicite de Christophe.
+Core :
+${spec.canonical.core_path || "NON DÉFINI"}
 
-${girls.length ? girls.map((girl,index) => `## ${index === 0 ? "Principale" : "Soutien"} — Aerith-10 ${girl[0]}
+Persona :
+${spec.canonical.persona_path || "NON DÉFINIE"}
 
-Famille : ${girl[1]}
-
-Fonction : ${girl[2]}
-`).join("\n") : "Aucune Flower Girl sélectionnée."}
-
-## Garde-fou
-
-Fait = ce qui est vérifié.
-Hypothèse = ce qui est possible.
-Symbole = ce qui éclaire.
-Ressenti = ce qui est vécu.
-Action = ce qui reste libre.
+La Forge publique ne stocke aucun jeton et ne lit pas directement le dépôt privé.
+Les fichiers ont été fournis localement par l’utilisateur.
 `;
   }
 
-  function makeReadme() {
-    const p = profile();
-    return `# ${p.name}
+  function makeThemeDoc() {
+    const theme = DATA.themes.find(item => item[0] === state.theme);
+    return `# THÈME VISUEL
 
-Paquet assemblé par Forge d’Aerith ${data.version}.
+Thème : ${theme?.[1] || state.theme}
+Direction : ${theme?.[2] || "—"}
+Visuel importé : ${visualImport()?.file.name || "aucun"}
 
-## Utilisation
-
-1. Lire BOOT.md.
-2. Lire MANIFESTE.md et vérifier les statuts réels.
-3. Charger les sources dans l’ordre indiqué.
-4. Activer seulement les packs ou modules utiles.
-5. Utiliser FLOWER_GIRLS_ROUTING.md uniquement comme carte de routage.
-6. Si une source manque, ne pas l’inventer.
-7. Arrêter quand le résultat est livré.
-
-## Confidentialité
-
-${p.privacy === "public"
-  ? "Les Core et Persona publics du profil peuvent être inclus."
-  : "Les sources privées sont incluses uniquement si elles ont été importées localement par l’utilisateur."}
-`;
-  }
-
-  function makeBuildInfo() {
-    return `FORGE D'AERITH
-BUILD=${data.version}
-HTML_EXPECTED=${EXPECTED_BUILD}
-DATE=${new Date().toISOString()}
-PROFILE=${profile().name}
+Le thème habille l’interface et le manifeste.
+Il ne modifie pas le Core et ne prouve aucune capacité.
 `;
   }
 
@@ -493,56 +615,53 @@ PROFILE=${profile().name}
     return new Uint8Array(await response.arrayBuffer());
   }
 
-  function uniqueOutputPath(files, requestedPath) {
-    if (!files.has(requestedPath)) return requestedPath;
-    const dot = requestedPath.lastIndexOf(".");
-    const base = dot > requestedPath.lastIndexOf("/") ? requestedPath.slice(0,dot) : requestedPath;
-    const ext = dot > requestedPath.lastIndexOf("/") ? requestedPath.slice(dot) : "";
+  function uniquePath(files, wanted) {
+    if (!files.has(wanted)) return wanted;
+    const dot = wanted.lastIndexOf(".");
+    const slash = wanted.lastIndexOf("/");
+    const base = dot > slash ? wanted.slice(0,dot) : wanted;
+    const ext = dot > slash ? wanted.slice(dot) : "";
     let index = 2;
     while (files.has(`${base}_${index}${ext}`)) index += 1;
     return `${base}_${index}${ext}`;
   }
 
   async function buildPackage(includePublic = true) {
-    const p = profile();
-    const root = cleanName(state.rootNames[p.id] || p.name);
+    const root = activeRoot();
     const files = new Map();
-    const warnings = [...requiredAudit()];
+    const warnings = audit().items.filter(item => item[0] !== "ok").map(item => item[1]);
 
     files.set(`${root}/BOOT.md`, encoder.encode(makeBoot()));
     files.set(`${root}/MANIFESTE.md`, encoder.encode(makeManifest()));
-    files.set(`${root}/FLOWER_GIRLS_ROUTING.md`, encoder.encode(makeRouting()));
-    files.set(`${root}/README.md`, encoder.encode(makeReadme()));
-    files.set(`${root}/BUILD_INFO.txt`, encoder.encode(makeBuildInfo()));
+    files.set(`${root}/PROFILE_SPEC.json`, encoder.encode(JSON.stringify(profileSpec(), null, 2)));
+    files.set(`${root}/PRIVATE_GITHUB_REFERENCE.md`, encoder.encode(makePrivateReference()));
+    files.set(`${root}/THEME.md`, encoder.encode(makeThemeDoc()));
+    files.set(`${root}/BUILD_INFO.txt`, encoder.encode(`FORGE=${DATA.version}\nDATE=${new Date().toISOString()}\nPROFILE=${activeName()}\n`));
 
-    for (const source of p.sourceFiles.filter(item => item.builtin)) {
-      if (!includePublic) continue;
-      try {
-        const output = uniqueOutputPath(files, `${root}/sources_publiques/${source.name}`);
-        files.set(output, await fetchBytes(source.path));
-      } catch (error) {
-        warnings.push(error.message);
-      }
-    }
-
-    if (includePublic && p.cryptoModules) {
-      for (const choice of chosenItems()) {
+    if (state.mode === "existing" && profile().privacy === "public" && includePublic) {
+      for (const source of profile().sources.filter(item => item[4])) {
         try {
-          files.set(`${root}/modules/${choice.file}`, await fetchBytes(`modules/${choice.file}`));
+          files.set(`${root}/sources_publiques/${source[0]}`, await fetchBytes(source[1]));
+        } catch (error) {
+          warnings.push(error.message);
+        }
+      }
+      for (const module of profile().modules.filter(item => state.modules.includes(item[0]))) {
+        try {
+          files.set(`${root}/modules/${module[0]}`, await fetchBytes(`modules/${module[0]}`));
         } catch (error) {
           warnings.push(error.message);
         }
       }
     }
 
-    for (const item of state.imported) {
-      const relative = cleanPath(importedPath(item)) || item.file.name;
-      const requested = `${root}/sources_locales/${relative}`;
-      const output = uniqueOutputPath(files, requested);
-      files.set(output, new Uint8Array(await item.file.arrayBuffer()));
+    for (const item of state.imports) {
+      const relative = cleanPath(item.path || item.file.name);
+      const target = uniquePath(files, `${root}/sources_importees/${relative}`);
+      files.set(target, new Uint8Array(await item.file.arrayBuffer()));
     }
 
-    return {p,root,files,warnings};
+    return {root,files,warnings};
   }
 
   function tree(pkg) {
@@ -562,44 +681,40 @@ PROFILE=${profile().name}
     const length = parts.reduce((sum,part) => sum + part.length, 0);
     const output = new Uint8Array(length);
     let offset = 0;
-    for (const part of parts) {
-      output.set(part, offset);
-      offset += part.length;
-    }
+    for (const part of parts) { output.set(part,offset); offset += part.length; }
     return output;
   }
 
   function zipBlob(files) {
-    const local = [];
-    const central = [];
+    const local = [], central = [];
     let offset = 0;
     const now = new Date();
-    const year = Math.max(1980, now.getFullYear());
-    const time = (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2);
-    const date = ((year - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    const year = Math.max(1980,now.getFullYear());
+    const time = (now.getHours()<<11) | (now.getMinutes()<<5) | Math.floor(now.getSeconds()/2);
+    const date = ((year-1980)<<9) | ((now.getMonth()+1)<<5) | now.getDate();
 
     for (const [name,raw] of files) {
       const bytes = raw instanceof Uint8Array ? raw : encoder.encode(raw);
       const nameBytes = encoder.encode(name);
       const crc = crc32(bytes);
 
-      const localHeader = new Uint8Array(30 + nameBytes.length);
-      const lv = new DataView(localHeader.buffer);
+      const lh = new Uint8Array(30 + nameBytes.length);
+      const lv = new DataView(lh.buffer);
       lv.setUint32(0,0x04034b50,true); lv.setUint16(4,20,true); lv.setUint16(6,0x0800,true);
       lv.setUint16(8,0,true); lv.setUint16(10,time,true); lv.setUint16(12,date,true);
       lv.setUint32(14,crc,true); lv.setUint32(18,bytes.length,true); lv.setUint32(22,bytes.length,true);
-      lv.setUint16(26,nameBytes.length,true); localHeader.set(nameBytes,30);
-      local.push(localHeader,bytes);
+      lv.setUint16(26,nameBytes.length,true); lh.set(nameBytes,30);
+      local.push(lh,bytes);
 
-      const centralHeader = new Uint8Array(46 + nameBytes.length);
-      const cv = new DataView(centralHeader.buffer);
+      const ch = new Uint8Array(46 + nameBytes.length);
+      const cv = new DataView(ch.buffer);
       cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true);
       cv.setUint16(8,0x0800,true); cv.setUint16(10,0,true); cv.setUint16(12,time,true);
       cv.setUint16(14,date,true); cv.setUint32(16,crc,true); cv.setUint32(20,bytes.length,true);
       cv.setUint32(24,bytes.length,true); cv.setUint16(28,nameBytes.length,true);
-      cv.setUint32(42,offset,true); centralHeader.set(nameBytes,46);
-      central.push(centralHeader);
-      offset += localHeader.length + bytes.length;
+      cv.setUint32(42,offset,true); ch.set(nameBytes,46);
+      central.push(ch);
+      offset += lh.length + bytes.length;
     }
 
     const localData = concat(local);
@@ -607,245 +722,253 @@ PROFILE=${profile().name}
     const end = new Uint8Array(22);
     const ev = new DataView(end.buffer);
     ev.setUint32(0,0x06054b50,true);
-    ev.setUint16(8,files.size,true);
-    ev.setUint16(10,files.size,true);
-    ev.setUint32(12,centralData.length,true);
-    ev.setUint32(16,localData.length,true);
+    ev.setUint16(8,files.size,true); ev.setUint16(10,files.size,true);
+    ev.setUint32(12,centralData.length,true); ev.setUint32(16,localData.length,true);
     return new Blob([localData,centralData,end], {type:"application/zip"});
   }
 
-  function renderExportAudit() {
-    const warnings = requiredAudit();
-    const box = $("#exportAudit");
-    box.className = `audit-box ${warnings.length ? "warning" : "ready"}`;
-    box.innerHTML = warnings.length
-      ? `<strong>Paquet exportable, mais incomplet</strong><ul>${warnings.map(item => `<li>${esc(item)}</li>`).join("")}</ul>`
-      : `<strong>Paquet complet selon les exigences minimales du profil</strong><ul><li>Les sources publiques ou locales nécessaires sont disponibles.</li></ul>`;
+  function renderAudit() {
+    const result = audit();
+    const card = $("#auditCard");
+    card.className = `audit-card ${result.ready ? "ready" : "warning"}`;
+    card.innerHTML = `<h3>${result.ready ? "Profil prêt à forger" : "Profil incomplet"}</h3><ul>${
+      result.items.map(item => `<li class="${item[0]}">${esc(item[1])}</li>`).join("")
+    }</ul>`;
+    $("#bootPreview").textContent = makeBoot();
+    $("#forgeZip").disabled = state.mode === "custom" && !result.ready;
+    $("#matrixState").textContent = result.ready ? "READY" : "IMPORT";
   }
 
-  function updatePreview() {
-    $("#bootPreview").textContent = makeBoot();
-    const p = profile();
-    const count = chosenItems().length;
-    $("#exportName").textContent = p.name;
-    $("#exportSummary").textContent = `${count} pack(s) ou module(s), ${state.flowerGirls.length} Flower Girl(s) routée(s), ${state.imported.length} source(s) locale(s).`;
-    renderExportAudit();
+  function renderExport() {
+    const result = audit();
+    $("#exportName").textContent = activeName();
+    $("#exportSummary").textContent = state.mode === "custom"
+      ? `${state.imports.length} fichier(s) importé(s), ${state.heritage.length} héritage(s), ${manualModuleList().length} route(s) manuelle(s).`
+      : `${profile().name} · ${state.imports.length} source(s) locale(s) · ${state.modules.length} module(s) sélectionné(s).`;
+    $("#forgeZip").disabled = state.mode === "custom" && !result.ready;
+  }
+
+  function renderSteps() {
+    $("#stepNav").innerHTML = steps.map((step,index) => `
+      <button type="button" class="step-button ${state.step === index ? "active" : ""}" data-step="${index}">
+        <span class="num">${step[0]}</span>
+        <span><b>${step[1]}</b><small>${step[2]}</small></span>
+        <em>${index < state.step ? "✓" : "•"}</em>
+      </button>`).join("");
   }
 
   function activateStep(index, focus = false) {
-    state.step = Math.max(0, Math.min(index, steps.length - 1));
-    persist();
-    $$(".panel").forEach((panel,panelIndex) => panel.classList.toggle("active", panelIndex === state.step));
+    state.step = Math.max(0,Math.min(index,steps.length - 1));
+    $$(".panel").forEach((panel,panelIndex) => panel.classList.toggle("active",panelIndex === state.step));
     const step = steps[state.step];
     $("#stepCounter").textContent = `ÉTAPE ${step[0]} SUR 07`;
     $("#stepTitle").textContent = step[1];
     $("#stepDescription").textContent = step[2];
     $("#previousTop").disabled = $("#previousBottom").disabled = state.step === 0;
     $("#nextTop").disabled = $("#nextBottom").disabled = state.step === steps.length - 1;
-    $("#stageStatus").textContent = "Étape en cours";
     $("#progressValue").textContent = `${Math.round((state.step + 1) / steps.length * 100)}%`;
     renderSteps();
-    if (state.step >= 5) updatePreview();
-    if (focus) $("#workspace").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-
-  function selectProfile(id) {
-    state.profileId = id;
-    ensureChoices();
-    persist();
-    renderAll();
-    showToast(`${profile().name} sélectionné.`);
+    if (state.step >= 5) renderAudit();
+    if (state.step === 6) renderExport();
+    if (focus) $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
   }
 
   function renderAll() {
     renderProfiles();
-    renderHero();
-    renderSelected();
-    renderSources();
+    renderMatrix();
+    renderIdentity();
     renderImports();
-    renderChoices();
-    renderFlowerGirls();
+    renderSourceAudit();
+    renderMetadata();
+    renderHeritage();
+    renderThemes();
+    renderAudit();
+    renderExport();
     activateStep(state.step);
-    updatePreview();
   }
 
-  function addFiles(files) {
-    let added = 0;
-    let duplicates = 0;
+  function selectExisting(id) {
+    const p = DATA.profiles.find(item => item.id === id);
+    if (!p) return;
+    state.mode = "existing";
+    state.profileId = id;
+    state.theme = p.theme;
+    state.heritage = [...p.heritage];
+    state.modules = p.modules.slice(0,p.id === "seven" ? 2 : 4).map(item => item[0]);
+    state.canonicalConfirmed = true;
+    state.step = 0;
+    renderAll();
+    $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
+    showToast(`${p.name} sélectionné.`);
+  }
 
+  function selectCustom() {
+    state.mode = "custom";
+    state.step = 0;
+    state.theme = state.theme || "creator";
+    state.canonicalConfirmed = false;
+    renderAll();
+    $("#forge").scrollIntoView({behavior:"smooth",block:"start"});
+    showToast("Atelier Aerith-10 Pro ouvert.");
+  }
+
+  async function addFiles(files) {
+    let added = 0, duplicates = 0;
     for (const file of files) {
       const path = cleanPath(file.webkitRelativePath || file.name);
       const key = `${path.toLowerCase()}|${file.size}|${file.lastModified}`;
-      const exists = state.imported.some(item => item.key === key);
-      if (exists) {
-        duplicates += 1;
-        continue;
-      }
-      state.imported.push({file,path,key});
-      added += 1;
-    }
+      if (state.imports.some(item => item.key === key)) { duplicates += 1; continue; }
 
-    renderImports();
-    updatePreview();
-    if (added) showToast(`${added} fichier(s) ajouté(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}`);
-    else showToast("Aucun nouveau fichier.");
+      let text = "";
+      if (/\.md$|\.txt$/i.test(file.name) && file.size < 5_000_000) {
+        try { text = await file.text(); } catch {}
+      }
+      const kind = kindForFile(file,text);
+      state.imports.push({file,path,key,kind,text});
+      added += 1;
+
+      if (kind === "core" && text) mergeParsed(parseCore(text,file.name));
+      if (kind === "persona" && text) {
+        const coreRequired = fieldFromText(text,["Core requis"]);
+        const personaPath = fieldFromText(text,["Chemin cible"]);
+        const version = fieldFromText(text,["Version"]);
+        if (coreRequired && !state.custom.corePath) state.custom.corePath = coreRequired.replace(/`/g,"");
+        if (personaPath) state.custom.personaPath = personaPath.replace(/`/g,"");
+        if (version && !state.custom.version) state.custom.version = version;
+      }
+      if (kind === "visual" && !state.visualUrl) {
+        state.visualUrl = URL.createObjectURL(file);
+      }
+    }
+    renderAll();
+    showToast(added ? `${added} fichier(s) ajouté(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}` : "Aucun nouveau fichier.");
+  }
+
+  function syncCustomInputs() {
+    state.custom.name = $("#customName").value.trim() || "Aerith-10 Nouvelle Spécialité";
+    state.custom.family = $("#customFamily").value.trim();
+    state.custom.level = $("#customLevel").value.trim();
+    state.custom.mode = $("#customMode").value.trim();
+    state.custom.role = $("#customRole").value.trim();
+    state.custom.exportRoot = $("#exportRoot").value.trim() || cleanName(state.custom.name);
+    renderMatrix();
+    renderMetadata();
+    renderAudit();
+    renderExport();
   }
 
   document.addEventListener("click", event => {
     const profileButton = event.target.closest("[data-profile]");
-    if (profileButton) selectProfile(profileButton.dataset.profile);
+    if (profileButton) selectExisting(profileButton.dataset.profile);
 
-    const stepButton = event.target.closest("[data-step-button]");
-    if (stepButton) activateStep(Number(stepButton.dataset.stepButton));
+    const stepButton = event.target.closest("[data-step]");
+    if (stepButton) activateStep(Number(stepButton.dataset.step));
 
-    const flowerButton = event.target.closest("[data-fg]");
-    if (flowerButton) {
-      const index = Number(flowerButton.dataset.fg);
-      if (state.flowerGirls.includes(index)) {
-        state.flowerGirls = state.flowerGirls.filter(item => item !== index);
-      } else if (state.flowerGirls.length < 3) {
-        state.flowerGirls.push(index);
-      } else {
-        showToast("Maximum : une principale et deux soutiens.");
-        return;
-      }
-      persist();
-      renderFlowerGirls();
-      updatePreview();
+    const heritageButton = event.target.closest("[data-heritage]");
+    if (heritageButton) {
+      const id = heritageButton.dataset.heritage;
+      state.heritage = state.heritage.includes(id)
+        ? state.heritage.filter(item => item !== id)
+        : [...state.heritage,id];
+      renderHeritage(); renderAudit();
     }
 
-    const comboButton = event.target.closest("[data-combo]");
-    if (comboButton) {
-      const combo = data.combinations[Number(comboButton.dataset.combo)];
-      state.flowerGirls = combo[1]
-        .map(name => data.flowerGirls.findIndex(item => item[0] === name))
-        .filter(index => index >= 0)
-        .slice(0,3);
-      persist();
-      renderFlowerGirls();
-      updatePreview();
-      showToast(combo[0]);
-    }
-
-    const choice = event.target.closest("[data-choice]");
-    if (choice) {
-      const id = choice.dataset.choice;
-      const p = profile();
-      const selected = state.choices[p.id] || [];
-      state.choices[p.id] = choice.checked
-        ? [...new Set([...selected,id])]
-        : selected.filter(item => item !== id);
-      persist();
-      renderChoices();
-      updatePreview();
+    const themeButton = event.target.closest("[data-theme-choice]");
+    if (themeButton) {
+      state.theme = themeButton.dataset.themeChoice;
+      renderThemes(); renderMatrix();
     }
   });
 
-  $("#startForge").addEventListener("click", () => activateStep(0,true));
-  $("#topStart").addEventListener("click", () => activateStep(0,true));
-  $("#nextTop").addEventListener("click", () => activateStep(state.step + 1));
-  $("#nextBottom").addEventListener("click", () => activateStep(state.step + 1));
-  $("#previousTop").addEventListener("click", () => activateStep(state.step - 1));
-  $("#previousBottom").addEventListener("click", () => activateStep(state.step - 1));
-  $("#fgSearch").addEventListener("input", renderFlowerGirls);
+  $("#newA10Card").addEventListener("click",selectCustom);
+  $("#startCustom").addEventListener("click",selectCustom);
+  $("#topStart").addEventListener("click",() => activateStep(0,true));
+  $("#nextTop").addEventListener("click",() => activateStep(state.step + 1));
+  $("#nextBottom").addEventListener("click",() => activateStep(state.step + 1));
+  $("#previousTop").addEventListener("click",() => activateStep(state.step - 1));
+  $("#previousBottom").addEventListener("click",() => activateStep(state.step - 1));
 
-  $("#profileRoot").addEventListener("input", event => {
-    state.rootNames[profile().id] = event.target.value;
-    persist();
-    updatePreview();
-  });
+  for (const id of ["customName","customFamily","customLevel","customMode","customRole","exportRoot"]) {
+    $(`#${id}`).addEventListener("input",syncCustomInputs);
+  }
 
-  const dropzone = $("#dropzone");
-  const fileInput = $("#fileInput");
-  const folderInput = $("#folderInput");
-
-  $("#browseFiles").addEventListener("click", event => {
-    event.stopPropagation();
-    fileInput.click();
-  });
-  $("#browseFolder").addEventListener("click", event => {
-    event.stopPropagation();
-    folderInput.click();
-  });
-  dropzone.addEventListener("click", event => {
-    if (!event.target.closest("button")) fileInput.click();
-  });
-  dropzone.addEventListener("keydown", event => {
-    if (event.key === "Enter" || event.key === " ") fileInput.click();
-  });
-  ["dragenter","dragover"].forEach(type => dropzone.addEventListener(type,event => {
-    event.preventDefault();
-    dropzone.classList.add("drag");
-  }));
-  ["dragleave","drop"].forEach(type => dropzone.addEventListener(type,event => {
-    event.preventDefault();
-    dropzone.classList.remove("drag");
-  }));
-
-  fileInput.addEventListener("change", event => {
-    addFiles([...event.target.files]);
-    event.target.value = "";
-  });
-  folderInput.addEventListener("change", event => {
-    addFiles([...event.target.files]);
-    event.target.value = "";
-  });
-  dropzone.addEventListener("drop", event => addFiles([...event.dataTransfer.files]));
-
-  $("#clearImports").addEventListener("click", () => {
-    state.imported = [];
-    renderImports();
-    updatePreview();
+  $("#canonicalConfirmed").addEventListener("change",event => {
+    if (state.mode === "custom") state.canonicalConfirmed = event.target.checked;
+    renderAudit(); renderExport(); renderMatrix();
   });
 
-  $("#resetForge").addEventListener("click", () => {
-    for (const key of [
-      "aerith-forge-source-profile",
-      "aerith-forge-source-step",
-      "aerith-forge-source-choices",
-      "aerith-forge-source-flower-girls",
-      "aerith-forge-source-root-names"
-    ]) localStorage.removeItem(key);
-    state.profileId = "atlas";
-    state.step = 0;
-    state.choices = {};
-    state.flowerGirls = [];
-    state.rootNames = {};
-    state.imported = [];
-    ensureChoices();
+  $("#canonicalPath").addEventListener("input",event => {
+    if (state.mode === "custom") state.custom.corePath = event.target.value.trim();
+    renderAudit(); renderExport();
+  });
+
+  $("#manualModules").addEventListener("input",event => {
+    state.modules = event.target.value.split(/\r?\n/).map(item => cleanPath(item.trim())).filter(Boolean);
+    renderAudit(); renderExport();
+  });
+
+  const dropzone = $("#dropzone"), fileInput = $("#fileInput"), folderInput = $("#folderInput");
+  $("#browseFiles").addEventListener("click",event => { event.stopPropagation(); fileInput.click(); });
+  $("#browseFolder").addEventListener("click",event => { event.stopPropagation(); folderInput.click(); });
+  dropzone.addEventListener("click",event => { if (!event.target.closest("button")) fileInput.click(); });
+  dropzone.addEventListener("keydown",event => { if (event.key === "Enter" || event.key === " ") fileInput.click(); });
+  ["dragenter","dragover"].forEach(type => dropzone.addEventListener(type,event => { event.preventDefault(); dropzone.classList.add("drag"); }));
+  ["dragleave","drop"].forEach(type => dropzone.addEventListener(type,event => { event.preventDefault(); dropzone.classList.remove("drag"); }));
+  fileInput.addEventListener("change",async event => { await addFiles([...event.target.files]); event.target.value = ""; });
+  folderInput.addEventListener("change",async event => { await addFiles([...event.target.files]); event.target.value = ""; });
+  dropzone.addEventListener("drop",event => addFiles([...event.dataTransfer.files]));
+
+  $("#clearImports").addEventListener("click",() => {
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    state.imports = [];
+    state.visualUrl = "";
+    state.parsed = {};
+    renderAll();
+  });
+
+  $("#resetForge").addEventListener("click",() => {
+    if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
+    state.mode = "custom"; state.profileId = "seven"; state.step = 0; state.imports = [];
+    state.modules = []; state.heritage = ["seven"]; state.theme = "creator";
+    state.canonicalConfirmed = false; state.parsed = {}; state.visualUrl = "";
+    state.custom = {
+      name:"Aerith-10 Nouvelle Spécialité",family:"Filles d’Aerith",level:"Aerith-10",
+      mode:"",role:"",version:"",status:"",compatibility:"",personaPath:"",
+      memoryPath:"",corePath:"",imagePath:"",update:"",
+      exportRoot:"AERITH_10_NOUVELLE_SPECIALITE"
+    };
     renderAll();
     showToast("Forge réinitialisée.");
   });
 
-  $("#downloadBoot").addEventListener("click", () => downloadText(`BOOT_${cleanName(profile().name)}.md`, makeBoot()));
-  $("#downloadManifest").addEventListener("click", () => downloadText(`MANIFESTE_${cleanName(profile().name)}.md`, makeManifest()));
-  $("#copyBoot").addEventListener("click", () => copyText(makeBoot()));
-  $("#copyTree").addEventListener("click", async () => copyText(tree(await buildPackage(true))));
+  $("#downloadBoot").addEventListener("click",() => downloadText(`BOOT_${activeRoot()}.md`,makeBoot()));
+  $("#downloadManifest").addEventListener("click",() => downloadText(`MANIFESTE_${activeRoot()}.md`,makeManifest()));
+  $("#downloadSpec").addEventListener("click",() => downloadText(`PROFILE_SPEC_${activeRoot()}.json`,JSON.stringify(profileSpec(),null,2),"application/json;charset=utf-8"));
+  $("#copyTree").addEventListener("click",async () => copyText(tree(await buildPackage(true))));
 
-  $("#forgeZip").addEventListener("click", async () => {
+  $("#forgeZip").addEventListener("click",async () => {
     const log = $("#forgeLog");
-    log.textContent = "Assemblage et vérification des sources disponibles…";
+    log.textContent = "Compilation des sources exactes…";
     try {
       const pkg = await buildPackage(true);
       const blob = zipBlob(pkg.files);
-      downloadBlob(`${pkg.root}_FORGE_V1_0_ALPHA_3.zip`, blob);
-      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)}${pkg.warnings.length ? ` · ${pkg.warnings.length} alerte(s) consignées dans le manifeste` : " · paquet complet"}`;
-      showToast("ZIP forgé.");
+      downloadBlob(`${pkg.root}_FORGE_AERITH_PRO.zip`,blob);
+      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)}${pkg.warnings.length ? ` · ${pkg.warnings.length} alerte(s) consignées` : " · paquet complet"}`;
+      showToast("ZIP Pro forgé.");
     } catch (error) {
       log.textContent = `Erreur : ${error.message}`;
-      showToast("Erreur de Forge.");
+      showToast("Erreur de compilation.");
     }
   });
 
-  $("#buildBadge").textContent = data.version.replace("-source-fidele","");
-  $("#footerVersion").textContent = `${data.version.replace("-source-fidele","")} · source-fidèle`;
+  renderDoctrine();
+  renderLineage();
+  renderAll();
 
-  if (EXPECTED_BUILD !== data.version) {
+  const expected = document.body.dataset.build;
+  if (expected !== DATA.version) {
     const diagnostic = $("#buildDiagnostic");
     diagnostic.hidden = false;
-    diagnostic.textContent = `Version incohérente : HTML ${EXPECTED_BUILD || "inconnu"} / catalogue ${data.version}. Recharge forcée nécessaire.`;
+    diagnostic.textContent = `Version incohérente : HTML ${expected} / données ${DATA.version}. Recharge forcée requise.`;
   }
-
-  ensureChoices();
-  renderAll();
 })();
