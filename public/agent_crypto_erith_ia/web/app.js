@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.41 — ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.42 — CLEAN HOME · INLINE DATA STATUS · ZERO EXTRA PANELS · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.41";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.42";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -1155,40 +1155,12 @@ function atlasRenderDiagnostics() {
 }
 
 function atlasRenderMarketAccessNotice() {
-  if (!els.offlineNotice) return;
-
-  const market = state.dataBroker.market || {};
-  const truth = atlasMarketTruth();
-
-  if (!state.liveOk || market.status !== "ready") {
-    els.offlineNotice.style.display = "block";
-    els.offlineNotice.innerHTML =
-      '<strong>ACCÈS MARCHÉ EN ATTENTE</strong>'
-      + '<p>Aucun snapshot CoinGecko canonique n’est disponible. '
-      + 'Atlas n’injecte aucune autre source de prix.</p>';
-    return;
-  }
-
-  if (["direct", "direct-conserved"].includes(truth.level)) {
-    els.offlineNotice.style.display = "none";
-    return;
-  }
-
-  els.offlineNotice.style.display = "block";
-
-  if (truth.level === "recent-cache") {
-    els.offlineNotice.innerHTML =
-      `<strong>CACHE RÉCENT COINGECKO</strong>`
-      + `<p>Snapshot exact : ${escapeHtml(truth.exact)} · ${escapeHtml(truth.age)}. `
-      + `Les prix et variations 24 h sont conservés mais marqués comme retardés. `
-      + `Les analyses dépendant d’un flux direct restent suspendues.</p>`;
-    return;
-  }
-
-  els.offlineNotice.innerHTML =
-    `<strong>ARCHIVE DATÉE COINGECKO</strong>`
-    + `<p>Snapshot exact : ${escapeHtml(truth.exact)} · ${escapeHtml(truth.age)}. `
-    + `Valeurs consultables uniquement comme archive ; analyses et simulation suspendues.</p>`;
+  /* Build 28.1.42 — ZERO EXTRA PANELS LOCK
+     Source truth is already exposed by the existing header controls:
+     liveStatus, tableDecision, sourceName and sourceTime.
+     No standalone notice is rendered between Home and Graphique. */
+  const legacyNotice = els.offlineNotice;
+  if (legacyNotice) legacyNotice.hidden = true;
 }
 
 async function atlasRefreshSelectedSpot(coin) {
@@ -4252,7 +4224,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.41.
+  Internal package Build 28.1.42.
   Release numbers are synchronized across the interface package.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -9324,7 +9296,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CLEAN HOME · INLINE DATA STATUS · ZERO EXTRA PANELS · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE`
   );
 }
 
@@ -11739,7 +11711,7 @@ initAtlasHelpLayerV1();
 
 
 /* =========================================================
-   Build 28.1.41 — Adaptive Command Center + Admin Graph Toggle
+   Build 28.1.42 — Clean Home + Inline Data Status + Admin Graph Toggle
    Interface envelope only. Protected Graphique, Détail actif,
    Target Top 5, Market Flow and Market internals stay unchanged.
    ========================================================= */

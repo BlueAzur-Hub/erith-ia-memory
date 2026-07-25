@@ -13972,7 +13972,7 @@ body[data-market-truth="direct-conserved"] #liveStatus {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.41
+   V2.0-alpha · Build 28.1.42
    CRYPTO ADMIN INTERFACE · FORGE PRO BRIDGE · ESSENTIAL MODE LOCK
    Interface shell only — Graphique Analyste / Détail actif / Market untouched.
    ========================================================= */
@@ -14153,7 +14153,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.41
+   V2.0-alpha · Build 28.1.42
    ADMIN GRAPH TOGGLE · MARKET RECENTER · NO EXTRA SECTION LOCK · FORGE PRO BRIDGE
    Additive interface shell. Protected chart, detail and Market internals unchanged.
    ========================================================= */
@@ -14454,7 +14454,7 @@ html[data-atlas-mode="essential"] .atlas-quick-dock .atlas-quick-link {
 
 
 
-/* Build 28.1.41 visual validation patch: Command Center overlay + Graph toggle. */
+/* Build 28.1.42 visual validation patch: clean Home, inline status, Command Center overlay + Graph toggle. */
 body.atlas-admin-center-open .hero {
   position: relative !important;
   z-index: 900 !important;
@@ -14480,3 +14480,8 @@ body > .atlas-admin-command-drawer {
 @media (max-width:760px) {
   body > .atlas-admin-command-drawer { top:10px !important;left:8px !important;right:8px !important; }
 }
+
+
+/* Build 28.1.42 — Clean Home / zero extra panels.
+   Defensive lock: a legacy notice must never reappear between Home and Graphique. */
+#offlineNotice { display: none !important; }
