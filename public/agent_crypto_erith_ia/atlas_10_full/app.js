@@ -7,7 +7,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-creatrice-v2-alpha4";
+  const STORAGE_KEY = "aerith-forge-creatrice-v2-alpha6";
 
   const STEPS = [
     ["01", "Intention", "Choisir une identité canonique ou ouvrir une nouvelle voie."],
@@ -52,19 +52,54 @@
     imagePath: ""
   });
 
-  const defaultState = () => ({
-    step: 0,
-    profileId: "new",
-    selectedExample: "",
-    proposalPreview: "core",
-    finalPreview: "boot",
-    canonicalConfirmed: false,
-    identity: blankIdentity(),
-    imports: [],
-    importedFileMeta: [],
-    visualUrl: "",
-    lastSaved: ""
-  });
+  function identityFromProfile(selected) {
+    return {
+      ...blankIdentity(),
+      name: selected.name,
+      family: selected.family,
+      level: selected.level,
+      mode: selected.kind === "new" ? "Spécialiste / Orchestratrice" : selected.role.split(":")[0],
+      role: selected.role || "",
+      problem: selected.problem || selected.description || "",
+      users: selected.users || "Christophe et les utilisateurs explicitement définis par le projet.",
+      outputs: clone(selected.outputs || (selected.kind === "new" ? [] : ["destination utile", "synthèse vérifiable", "fichiers ou décisions nécessaires"])),
+      formula: selected.formula || (selected.kind === "new" ? "Intention → Ressources → Destination utile." : "Mission → Sources → Décision → Destination utile."),
+      agents: clone(selected.agents || []),
+      heritage: clone(selected.heritage || []),
+      modules: clone(selected.modules || []),
+      nonDuplication: selected.id === "creator"
+        ? "Créatrice relie organisation, réalisation et mémoire de production autour du D artistique."
+        : "Relier chaque source et chaque module à une décision précise de la mission.",
+      tone: selected.id === "atlas" ? "Analytique, explicite, vérifiable et centrée sur les modèles." : "Claire, chaleureuse, précise et fidèle à sa fonction.",
+      modes: clone(selected.modes || []),
+      guardrails: clone(selected.guardrails || []),
+      confidentiality: selected.privacy === "public" ? "Sources publiques intégrées ; toute source privée reste sous contrôle humain." : "Privée par défaut.",
+      stopPoint: selected.stopPoint || "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
+      corePath: selected.corePath || "",
+      personaPath: selected.personaPath || "",
+      memoryPath: selected.memoryPath || "",
+      status: selected.status,
+      version: "",
+      imagePath: selected.visual || ""
+    };
+  }
+
+  const defaultState = () => {
+    const selected = DATA.profiles.find(item => item.id === "creator") || DATA.profiles[0];
+    return {
+      step: 0,
+      profileId: selected.id,
+      selectedExample: "",
+      proposalPreview: "core",
+      finalPreview: "boot",
+      canonicalConfirmed: selected.privacy === "public",
+      identity: identityFromProfile(selected),
+      imports: [],
+      importedFileMeta: [],
+      visualUrl: "",
+      lastSaved: ""
+    };
+  };
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -257,35 +292,7 @@
     state.profileId = id;
     state.selectedExample = "";
     state.canonicalConfirmed = selected.kind === "existing" && selected.privacy === "public";
-    state.identity = {
-      ...blankIdentity(),
-      name: selected.name,
-      family: selected.family,
-      level: selected.level,
-      mode: selected.kind === "new" ? "" : selected.role.split(":")[0],
-      role: selected.role,
-      problem: selected.kind === "new" ? "" : selected.description,
-      users: "Christophe et les utilisateurs explicitement définis par le projet.",
-      outputs: selected.kind === "new" ? [] : ["destination utile", "synthèse vérifiable", "fichiers ou décisions nécessaires"],
-      formula: selected.kind === "new" ? "Intention → Ressources → Destination utile." : "Mission → Sources → Décision → Destination utile.",
-      agents: clone(selected.agents || []),
-      heritage: clone(selected.heritage || []),
-      modules: clone(selected.modules || []),
-      nonDuplication: selected.id === "creator"
-        ? "Créatrice relie organisation, réalisation et mémoire de production autour du D artistique."
-        : "Relier chaque source et chaque module à une décision précise de la mission.",
-      tone: selected.id === "atlas" ? "Analytique, explicite, vérifiable et centrée sur les modèles." : "Claire, chaleureuse, précise et fidèle à sa fonction.",
-      modes: clone(selected.modes || []),
-      guardrails: clone(selected.guardrails || []),
-      confidentiality: selected.privacy === "public" ? "Sources publiques intégrées ; toute source privée reste sous contrôle humain." : "Privée par défaut.",
-      stopPoint: "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
-      corePath: selected.corePath || "",
-      personaPath: selected.personaPath || "",
-      memoryPath: selected.memoryPath || "",
-      status: selected.status,
-      version: "",
-      imagePath: selected.visual || ""
-    };
+    state.identity = identityFromProfile(selected);
     state.imports = [];
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
@@ -323,16 +330,17 @@
   }
 
   function applyBlank() {
+    const selected = DATA.profiles.find(item => item.id === "new") || DATA.profiles[0];
     state.profileId = "new";
     state.selectedExample = "";
     state.canonicalConfirmed = false;
-    state.identity = blankIdentity();
+    state.identity = identityFromProfile(selected);
     state.imports = [];
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     persist();
     renderAll();
-    showToast("Intention libre ouverte dans l’atelier de Créatrice.");
+    showToast("Base libre préremplie par Créatrice.");
   }
 
   function renderDoctrine() {
@@ -821,7 +829,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
   function renderProposal() {
     const items = proposalAudit();
     $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
-    const docs = {core:proposalCore(), persona:proposalPersona(), block:blockLLM(), links:linksDocument(), brief:designBrief()};
+    const docs = {core:proposalCore(), persona:proposalPersona(), brief:designBrief()};
     $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
     $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
     $("#canonRoute").innerHTML = isNew()
@@ -859,9 +867,10 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
   function kindForFile(file, content = "") {
     const name = file.name.toUpperCase();
+    const proposal = name.includes("PROPOSAL") || /proposition locale non canonique/i.test(content);
     if (file.type.startsWith("image/")) return "visual";
-    if (name.includes("MULTI_AGENT_CORE") || /MULTI[- ]AGENT CORE/i.test(content)) return "core";
-    if (name.includes("PERSONA_OPERATING_LAYER") || /PERSONA OPERATING LAYER/i.test(content)) return "persona";
+    if (name.includes("PERSONA_OPERATING_LAYER") || /^#.+Persona Operating Layer/im.test(content)) return proposal ? "persona-proposal" : "persona";
+    if (name.includes("MULTI_AGENT_CORE") || /^#.+Multi-Agent Core/im.test(content)) return proposal ? "core-proposal" : "core";
     if (name.endsWith(".ZIP")) return "pack";
     if (name.endsWith(".MD")) return "module";
     if (name.endsWith(".JSON")) return "data";
@@ -925,6 +934,8 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     let ready = true;
     const core = importedKind("core");
     const persona = importedKind("persona");
+    const coreProposal = importedKind("core-proposal");
+    const personaProposal = importedKind("persona-proposal");
 
     if (state.identity.name) items.push(["ok", "Identité", `${state.identity.name} est définie.`]);
     else { items.push(["error", "Identité", "Nom manquant."]); ready = false; }
@@ -932,20 +943,20 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     if (state.identity.role) items.push(["ok", "Mission", "Rôle défini."]);
     else { items.push(["error", "Mission", "Rôle manquant."]); ready = false; }
 
-    if (isNew()) {
+    if (p.privacy === "public") {
+      items.push(["ok", "Sources canoniques", "Core et Persona publics intégrés à la Forge."]);
+    } else {
       if (state.canonicalConfirmed) items.push(["ok", "Canonisation", "Validation humaine confirmée."]);
       else { items.push(["error", "Canonisation", "Confirmation humaine requise."]); ready = false; }
-      if (core) items.push(["ok", "Core", `${core.file.name} importé.`]);
-      else { items.push(["error", "Core", "Core canonisé requis."]); ready = false; }
-      if (persona) items.push(["ok", "Persona", `${persona.file.name} importée.`]);
-      else { items.push(["error", "Persona", "Persona canonisée requise."]); ready = false; }
-    } else if (p.privacy === "public") {
-      items.push(["ok", "Sources", "Core et Persona publics intégrés à la Forge."]);
-    } else {
-      if (core) items.push(["ok", "Core privé", `${core.file.name} importé.`]);
-      else items.push(["warn", "Core privé", "Référence seulement : importer pour un paquet autonome."]);
-      if (persona) items.push(["ok", "Persona privée", `${persona.file.name} importée.`]);
-      else items.push(["warn", "Persona privée", "Référence seulement : importer pour un paquet autonome."]);
+
+      if (core) items.push(["ok", "Core canonique", `${core.file.name} importé.`]);
+      else { items.push(["error", "Core canonique", "Importer le Core validé sans suffixe PROPOSAL."]); ready = false; }
+
+      if (persona) items.push(["ok", "Persona canonique", `${persona.file.name} importée.`]);
+      else { items.push(["error", "Persona canonique", "Importer la Persona validée sans suffixe PROPOSAL."]); ready = false; }
+
+      if (coreProposal) items.push(["warn", "Core Proposal", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`]);
+      if (personaProposal) items.push(["warn", "Persona Proposal", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`]);
     }
 
     const corePath = state.identity.corePath || defaultCoreTarget();
@@ -1089,6 +1100,8 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     };
     $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
+    $("#forgeZip").disabled = !audit.ready;
+    if (!audit.ready) $("#forgeLog").textContent = "ZIP final disponible après import du Core et de la Persona canoniques.";
   }
 
   function renderAll() {
@@ -1114,30 +1127,39 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
   }
 
   async function buildFinalFiles() {
+    const audit = finalAudit();
+    if (!audit.ready) throw new Error("Le Core et la Persona canoniques sont requis avant la forge finale.");
+
     const root = cleanName(state.identity.name);
     const files = new Map();
-    files.set(`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nPaquet produit par ${DATA.version}.\n\n- Atelier Aerith-10 Créatrice : intention → architecture → Core + Persona → sources → forge finale.\n- Chaque module reste relié à une décision précise de la mission.\n- Relire le MANIFESTE et le PROFILE_SPEC avant activation.\n`));
+    files.set(`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}
+
+Paquet canonique produit par ${DATA.version}.
+
+Contenu : Core, Persona, Boot, Block LLM, Manifeste, liens GitHub / Raw et Profile Spec.
+
+Les modules restent référencés à leur emplacement canonique et ne sont pas recopiés.
+`));
     files.set(`${root}/${finalFileName("boot")}`, encoder.encode(bootDocument()));
     files.set(`${root}/${finalFileName("manifest")}`, encoder.encode(manifestDocument()));
     files.set(`${root}/${finalFileName("block")}`, encoder.encode(blockLLM()));
     files.set(`${root}/${finalFileName("links")}`, encoder.encode(linksDocument()));
     files.set(`${root}/${finalFileName("spec")}`, encoder.encode(JSON.stringify(profileSpec(), null, 2)));
 
-    for (const item of state.imports) {
-      files.set(`${root}/sources/${cleanPath(item.path)}`, new Uint8Array(await item.file.arrayBuffer()));
+    const p = profile();
+    const coreTargetName = cleanPath(state.identity.corePath || defaultCoreTarget()).split("/").pop();
+    const personaTargetName = cleanPath(state.identity.personaPath || defaultPersonaTarget()).split("/").pop();
+
+    if (p.privacy === "public") {
+      files.set(`${root}/CORE/${coreTargetName}`, await fetchBytes(p.corePath));
+      files.set(`${root}/CORE/${personaTargetName}`, await fetchBytes(p.personaPath));
+    } else {
+      const core = importedKind("core");
+      const persona = importedKind("persona");
+      files.set(`${root}/CORE/${coreTargetName}`, new Uint8Array(await core.file.arrayBuffer()));
+      files.set(`${root}/CORE/${personaTargetName}`, new Uint8Array(await persona.file.arrayBuffer()));
     }
 
-    const p = profile();
-    if (!isNew() && p.privacy === "public") {
-      for (const path of [p.corePath, p.personaPath]) {
-        if (!path) continue;
-        try {
-          files.set(`${root}/sources/${cleanPath(path).split("/").pop()}`, await fetchBytes(path));
-        } catch (error) {
-          files.set(`${root}/WARNINGS/${cleanName(path)}.txt`, encoder.encode(`Source publique non récupérée : ${error.message}`));
-        }
-      }
-    }
     return {root, files};
   }
 
@@ -1204,13 +1226,10 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     const files = new Map([
       [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
       [`${root}/${proposalFileName("persona")}`, encoder.encode(proposalPersona())],
-      [`${root}/${proposalFileName("block")}`, encoder.encode(blockLLM())],
-      [`${root}/${proposalFileName("links")}`, encoder.encode(linksDocument())],
-      [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())],
-      [`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nCe paquet contient une proposition locale non canonique.\n\n1. Relire et corriger.\n2. Valider humainement.\n3. Retirer le suffixe PROPOSAL après validation.\n4. Intégrer vers ${defaultCoreTarget()} et ${defaultPersonaTarget()}.\n5. Réunir ensuite les sources canoniques à l’étape 07 et poursuivre vers la forge finale.\n`)]
+      [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())]
     ]);
     downloadBlob(`${root}.zip`, zipBlob(files));
-    showToast("ZIP de proposition téléchargé.");
+    showToast("ZIP de proposition téléchargé — 3 fichiers.");
   }
 
   function openLightbox(src, title) {
@@ -1314,8 +1333,6 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
 
   $("#downloadProposalCore").addEventListener("click", () => downloadText(proposalFileName("core"), proposalCore()));
   $("#downloadProposalPersona").addEventListener("click", () => downloadText(proposalFileName("persona"), proposalPersona()));
-  $("#downloadProposalBlock").addEventListener("click", () => downloadText(proposalFileName("block"), blockLLM()));
-  $("#downloadProposalLinks").addEventListener("click", () => downloadText(proposalFileName("links"), linksDocument()));
   $("#downloadProposalBrief").addEventListener("click", () => downloadText(proposalFileName("brief"), designBrief()));
   $("#downloadProposalZip").addEventListener("click", downloadProposalZip);
 
@@ -1343,9 +1360,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     state = defaultState();
-    applyBlank();
-    state.step = 0;
-    persist(); renderAll(); showToast("Atelier Aerith-10 Créatrice réinitialisé.");
+    persist(); renderAll(); showToast("Aerith-10 Créatrice est replacée comme profil par défaut.");
   });
 
   renderDoctrine();

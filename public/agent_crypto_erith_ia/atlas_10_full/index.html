@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="Forge d’Aerith Pro — Aerith-10 Créatrice accompagne la conception, la canonisation et l’export des prochains profils Aerith-10.">
-  <title>Forge d’Aerith Pro · V2.0-alpha.5 Bibliothèque vivante</title>
-  <link rel="stylesheet" href="style.css?v=2.0-alpha.5-bibliotheque">
+  <title>Forge d’Aerith Pro · V2.0-alpha.6 Choix guidés</title>
+  <link rel="stylesheet" href="style.css?v=2.0-alpha.6-creatrice-guided">
 </head>
-<body data-build="V2.0-alpha.5-bibliotheque" data-theme="seven">
+<body data-build="V2.0-alpha.6-creatrice-guided" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -25,7 +25,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V2.0-alpha.5</span>
+      <span class="version" id="buildBadge">V2.0-alpha.6</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -55,11 +55,11 @@
         <aside class="hero-matrix">
           <div class="matrix-head"><span class="pulse"></span><span>AERITH-10 CRÉATRICE</span><strong id="matrixState">ATELIER</strong></div>
           <div class="matrix-visual" id="matrixVisual">
-            <img id="matrixImage" src="assets/themes/aerith_7_hud.webp" alt="">
-            <div class="matrix-symbol" id="matrixSymbol">7</div>
+            <img id="matrixImage" src="assets/themes/aerith_10_creatrice.webp" alt="">
+            <div class="matrix-symbol" id="matrixSymbol">A10</div>
           </div>
           <p class="matrix-kicker" id="matrixKicker">PROFIL ACTIF</p>
-          <h2 id="matrixName">Aerith-7 Seven Heaven</h2>
+          <h2 id="matrixName">Aerith-10 Créatrice</h2>
           <p id="matrixDescription"></p>
           <dl>
             <div><dt>Guide</dt><dd>Créatrice</dd></div>
@@ -117,8 +117,8 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V2.0-alpha.5</span>
-          <strong id="railProfileName">Nouvelle Aerith-10</strong>
+          <span>ATELIER AERITH-10 CRÉATRICE · V2.0-alpha.6</span>
+          <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
         <nav id="stepNav"></nav>
@@ -130,8 +130,8 @@
         </div>
         <div class="live-profile" id="liveProfile">
           <div class="live-profile-head"><span>FICHE VIVANTE</span><b id="liveMaturity">INTENTION</b></div>
-          <h3 id="liveName">Aerith-10 Nouvelle Spécialité</h3>
-          <p id="liveRole">Une mission prend forme dans l’atelier de Créatrice.</p>
+          <h3 id="liveName">Aerith-10 Créatrice</h3>
+          <p id="liveRole">Organisatrice de production et Réalisatrice multi-agent.</p>
           <div class="live-formula" id="liveFormula">Intention → Ressources → Destination utile.</div>
           <dl>
             <div><dt>Famille</dt><dd id="liveFamily">Filles d’Aerith</dd></div>
@@ -165,25 +165,26 @@
             <div id="exampleArea">
               <div class="subhead"><h3>Inspirations de nouvelles spécialités</h3><p>Chaque exemple ouvre une direction créative que vous pouvez transformer librement.</p></div>
               <div class="example-grid" id="exampleGrid"></div>
-              <button class="blank-template" id="blankProfile" type="button"><span>＋</span><b>Partir d’une intention libre</b><small>Aerith-10 Créatrice vous aide à transformer une mission en identité, agents, Core et Persona.</small></button>
+              <button class="blank-template" id="blankProfile" type="button"><span>＋</span><b>Ouvrir une base libre préremplie</b><small>Créatrice inscrit une base complète que vous pouvez conserver telle quelle ou personnaliser.</small></button>
             </div>
           </section>
 
           <section class="panel" data-step="1">
             <header class="panel-head">
-              <div><p class="kicker">02 · MISSION ET IDENTITÉ</p><h2>Donner un centre à la nouvelle Aerith-10</h2></div>
-              <p>Créatrice clarifie le D, la fonction, les destinataires et les productions attendues avant de composer l’architecture.</p>
+              <div><p class="kicker">02 · MISSION ET IDENTITÉ</p><h2>Valider les choix préparés par Créatrice</h2></div>
+              <p>Le profil sélectionné arrive avec sa mission, ses destinataires, ses sorties et sa formule déjà inscrits. Les champs restent modifiables seulement pour une personnalisation précise.</p>
             </header>
+            <div class="route-box"><b>Choix guidés actifs</b><p>Sélectionner un profil canonique ou une spécialité remplit automatiquement toutes les étapes. Vous pouvez avancer avec « Suivant » sans rien saisir.</p></div>
             <div class="form-grid">
-              <label><span>Nom complet</span><input id="fieldName" placeholder="Aerith-10 ..."></label>
-              <label><span>Famille</span><input id="fieldFamily" list="familyList"></label>
-              <label><span>Niveau</span><input id="fieldLevel" placeholder="Aerith-10"></label>
-              <label><span>Mode principal</span><input id="fieldMode" placeholder="Spécialiste / Orchestratrice"></label>
-              <label class="wide"><span>Rôle en une phrase</span><textarea id="fieldRole" rows="3"></textarea></label>
-              <label class="wide"><span>Problème réel à résoudre</span><textarea id="fieldProblem" rows="3"></textarea></label>
-              <label class="wide"><span>Pour qui travaille ce profil ?</span><textarea id="fieldUsers" rows="2"></textarea></label>
-              <label class="wide"><span>Sorties attendues — une par ligne</span><textarea id="fieldOutputs" rows="6"></textarea></label>
-              <label class="wide"><span>Formule centrale</span><input id="fieldFormula" placeholder="Intention → Ressources → Destination utile"></label>
+              <label><span>Nom complet · prérempli</span><input id="fieldName" placeholder="Aerith-10 ..."></label>
+              <label><span>Famille · préremplie</span><input id="fieldFamily" list="familyList"></label>
+              <label><span>Niveau · prérempli</span><input id="fieldLevel" placeholder="Aerith-10"></label>
+              <label><span>Mode principal · prérempli</span><input id="fieldMode" placeholder="Spécialiste / Orchestratrice"></label>
+              <label class="wide"><span>Rôle en une phrase · prérempli</span><textarea id="fieldRole" rows="3"></textarea></label>
+              <label class="wide"><span>Problème réel à résoudre · prérempli</span><textarea id="fieldProblem" rows="3"></textarea></label>
+              <label class="wide"><span>Pour qui travaille ce profil ? · prérempli</span><textarea id="fieldUsers" rows="2"></textarea></label>
+              <label class="wide"><span>Sorties attendues · préremplies</span><textarea id="fieldOutputs" rows="6"></textarea></label>
+              <label class="wide"><span>Formule centrale · préremplie</span><input id="fieldFormula" placeholder="Intention → Ressources → Destination utile"></label>
             </div>
             <datalist id="familyList"></datalist>
           </section>
@@ -226,24 +227,20 @@
           <section class="panel" data-step="5">
             <header class="panel-head">
               <div><p class="kicker">06 · CORE ET PERSONA</p><h2>Découvrir la proposition de Créatrice</h2></div>
-              <p>Créatrice rassemble les décisions prises et produit une proposition structurée de Core, de Persona, de Block LLM et de brief de validation.</p>
+              <p>Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
             </header>
             <div class="audit-grid" id="proposalAudit"></div>
             <div class="preview-tabs" id="proposalTabs">
               <button class="active" type="button" data-preview="core">Core</button>
               <button type="button" data-preview="persona">Persona</button>
-              <button type="button" data-preview="block">Block LLM</button>
-              <button type="button" data-preview="links">Liens</button>
               <button type="button" data-preview="brief">Brief</button>
             </div>
             <pre class="preview" id="proposalPreview"></pre>
             <div class="export-grid">
               <button id="downloadProposalCore" type="button"><span>CORE</span><b>Télécharger</b></button>
               <button id="downloadProposalPersona" type="button"><span>PERSONA</span><b>Télécharger</b></button>
-              <button id="downloadProposalBlock" type="button"><span>BLOCK LLM</span><b>Télécharger</b></button>
-              <button id="downloadProposalLinks" type="button"><span>HTTP / RAW</span><b>Télécharger</b></button>
               <button id="downloadProposalBrief" type="button"><span>BRIEF</span><b>Télécharger</b></button>
-              <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LE ZIP DE PROPOSITION</button>
+              <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LE ZIP DE PROPOSITION · 3 FICHIERS</button>
             </div>
             <div class="route-box" id="canonRoute"></div>
           </section>
@@ -251,14 +248,14 @@
           <section class="panel" data-step="6">
             <header class="panel-head">
               <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2>Réunir les fichiers validés</h2></div>
-              <p>Déposer le Core, la Persona, le visuel et les sources qui donnent au profil sa forme canonique et sa mémoire exploitable.</p>
+              <p>Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.</p>
             </header>
             <div class="dropzone" id="dropzone">
               <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
               <input id="folderInput" type="file" webkitdirectory directory multiple>
               <span class="drop-icon">⇩</span>
-              <h3>Déposer Core, Persona, visuel et sources</h3>
-              <p>Traitement local dans le navigateur. Aucun jeton GitHub n’est demandé.</p>
+              <h3>Déposer le Core et la Persona canoniques</h3>
+              <p>Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.</p>
               <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
             </div>
             <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
@@ -292,7 +289,7 @@
               <button id="downloadBlock" type="button"><span>BLOCK LLM</span><b>Télécharger</b></button>
               <button id="downloadLinks" type="button"><span>HTTP / RAW</span><b>Télécharger</b></button>
               <button id="downloadSpec" type="button"><span>PROFILE SPEC</span><b>Télécharger</b></button>
-              <button class="primary" id="forgeZip" type="button">FORGER LE ZIP FINAL</button>
+              <button class="primary" id="forgeZip" type="button">FORGER LE ZIP FINAL · 8 FICHIERS</button>
             </div>
             <div class="forge-log" id="forgeLog">Prêt.</div>
           </section>
@@ -314,7 +311,7 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="forge-data.js?v=2.0-alpha.5-bibliotheque"></script>
-  <script src="app.js?v=2.0-alpha.5-bibliotheque"></script>
+  <script src="forge-data.js?v=2.0-alpha.6-creatrice-guided"></script>
+  <script src="app.js?v=2.0-alpha.6-creatrice-guided"></script>
 </body>
 </html>
