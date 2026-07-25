@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.37 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · SOURCE TRUTH · NATIVE TIMELINE · FIXED STATUS OVERLAY LOCK
+/* V2.0-alpha · Build 28.1.38 — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH PROFILE BRIDGE LOCK
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.37";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.38";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -3874,7 +3874,7 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
 
 
 function atlasRenderChartValueOverlay() {
-  /* Build 28.1.37: fixed value board removed; tooltip and optional legend remain canonical. */
+  /* Build 28.1.38: fixed value board removed; tooltip and optional legend remain canonical. */
 }
 
 function atlasChartV2RedrawFromBroker() {
@@ -4252,7 +4252,7 @@ function atlasAlignVolumeToPriceTimeline(volumeSeries, priceRows, maximumBars = 
 }
 
 /*
-  Internal package Build 28.1.37.
+  Internal package Build 28.1.38.
   Visible release numbers in the interface remain frozen by operator request.
 */
 function atlasDrawCurveFollowingShadowBars({
@@ -9204,6 +9204,7 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "mesure-audience", level: "diagnostic", target: "self", group: "system" },
 
   { id: "missions-vie", level: "project", target: "self", group: "projects" },
+  { id: "forge-aerith", level: "project", target: "self", group: "projects" },
   { id: "fonds-erith-ia", level: "project", target: "closest-collapse", group: "projects" },
   { id: "association-erith-ia", level: "project", target: "closest-collapse", group: "projects" },
   { id: "aerith-enfance", level: "project", target: "closest-collapse", group: "projects" },
@@ -9323,7 +9324,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · CHART STABILITY · HISTORICAL TRUTH LOCK`
+    `Agent-Crypto @erith.IA ${ATLAS_RELEASE} — CHAMPAGNE LUXE · HOSTEL PRIVATE ROOM · FORGE D’AERITH PROFILE BRIDGE LOCK`
   );
 }
 

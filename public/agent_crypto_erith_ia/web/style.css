@@ -13758,3 +13758,214 @@ body[data-market-truth="direct-conserved"] #liveStatus {
   pointer-events: none !important;
 }
 
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.38 — FORGE D’AERITH PROFILE BRIDGE LOCK
+   Périmètre strict : nouvelle section Administrateur indépendante.
+   Graphique Analyste, rail Détail actif, Market et Math Core inchangés.
+   ========================================================= */
+.forge-aerith-collapse {
+  border-color: rgba(239, 221, 113, .24);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(239, 221, 113, .07), transparent 18rem),
+    linear-gradient(115deg, rgba(20, 43, 65, .78), rgba(7, 14, 29, .92) 62%, rgba(32, 21, 67, .76));
+}
+
+.forge-aerith-collapse > .atlas-collapse-summary {
+  border-color: rgba(239, 221, 113, .18);
+}
+
+.forge-aerith-collapse .atlas-collapse-title {
+  color: #fff3b2;
+}
+
+.forge-aerith-panel {
+  display: grid;
+  gap: 14px;
+  padding: clamp(16px, 2vw, 24px);
+  border-color: rgba(117, 236, 218, .18);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(118, 93, 255, .13), transparent 22rem),
+    radial-gradient(circle at 16% 0%, rgba(83, 232, 213, .08), transparent 18rem),
+    rgba(4, 12, 26, .82);
+}
+
+.forge-aerith-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.forge-aerith-medallion {
+  width: 66px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(239, 221, 113, .52);
+  border-radius: 50%;
+  color: #111626;
+  background: linear-gradient(145deg, #efe178, #ffe7a0);
+  box-shadow: 0 0 28px rgba(239, 221, 113, .15);
+  font: 950 24px/1 system-ui, sans-serif;
+}
+
+.forge-aerith-copy {
+  min-width: 0;
+}
+
+.forge-aerith-copy h2 {
+  margin: 3px 0 7px;
+  color: #f7fbff;
+  font-size: clamp(22px, 2.5vw, 38px);
+  line-height: 1.05;
+}
+
+.forge-aerith-copy p:last-child {
+  max-width: 980px;
+  margin: 0;
+  color: rgba(214, 228, 241, .78);
+  line-height: 1.55;
+}
+
+.forge-aerith-version {
+  align-self: start;
+  padding: 8px 11px;
+  border: 1px solid rgba(239, 221, 113, .25);
+  border-radius: 999px;
+  color: #fff2ad;
+  background: rgba(239, 221, 113, .07);
+  white-space: nowrap;
+  font: 850 11px/1 system-ui, sans-serif;
+}
+
+.forge-aerith-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.forge-aerith-grid article {
+  min-width: 0;
+  min-height: 122px;
+  padding: 14px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  border: 1px solid rgba(123, 161, 219, .17);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(21, 39, 70, .78), rgba(8, 17, 37, .78));
+}
+
+.forge-aerith-card-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(104, 236, 214, .24);
+  border-radius: 10px;
+  color: #7ff0db;
+  background: rgba(76, 218, 196, .06);
+  font: 900 11px/1 system-ui, sans-serif;
+}
+
+.forge-aerith-grid b {
+  color: #f7fbff;
+  font-size: 13px;
+}
+
+.forge-aerith-grid small {
+  color: rgba(190, 210, 229, .72);
+  line-height: 1.45;
+}
+
+.forge-aerith-status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.forge-aerith-status span {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(239, 221, 113, .13);
+  border-radius: 11px;
+  color: rgba(215, 229, 241, .78);
+  background: rgba(8, 17, 34, .58);
+}
+
+.forge-aerith-status b {
+  display: block;
+  margin-bottom: 4px;
+  color: #f5df79;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.forge-aerith-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 2px;
+}
+
+.forge-aerith-open {
+  min-width: 180px;
+  justify-content: center;
+  text-decoration: none;
+  color: #111626 !important;
+  background: linear-gradient(100deg, #e8dc6f, #ffe6a4) !important;
+  border-color: rgba(255, 238, 160, .58) !important;
+  box-shadow: 0 10px 30px rgba(239, 221, 113, .12);
+}
+
+.forge-aerith-actions > span {
+  color: rgba(180, 203, 222, .64);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.atlas-forge-quick-link {
+  border-color: rgba(239, 221, 113, .22) !important;
+}
+
+.atlas-forge-quick-link .atlas-quick-icon,
+.atlas-forge-quick-link:hover span {
+  color: #f4df7f;
+}
+
+@media (max-width: 1050px) {
+  .forge-aerith-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forge-aerith-status {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .forge-aerith-hero {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .forge-aerith-version {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .forge-aerith-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .forge-aerith-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .forge-aerith-open {
+    width: 100%;
+  }
+}
