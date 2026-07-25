@@ -7,17 +7,17 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-unified-v2-alpha3";
+  const STORAGE_KEY = "aerith-forge-creatrice-v2-alpha4";
 
   const STEPS = [
-    ["01", "Point de départ", "Créer une spécialité ou reprendre un profil canonique."],
-    ["02", "Mission", "Définir une seule identité réutilisée partout."],
-    ["03", "Multi-agents", "Composer une équipe interne minimale et utile."],
-    ["04", "Héritages", "Référencer les modules sans les dupliquer."],
-    ["05", "Persona", "Fixer voix, modes, limites et stop point."],
-    ["06", "Proposition", "Relire la proposition ou la synthèse de référence."],
-    ["07", "Sources", "Importer les fichiers canonisés sans ressaisir."],
-    ["08", "Audit & export", "Vérifier et produire le paquet final."]
+    ["01", "Intention", "Choisir une identité canonique ou ouvrir une nouvelle voie."],
+    ["02", "Mission", "Donner un centre, une fonction et une destination utile."],
+    ["03", "Multi-agents", "Composer une constellation d’agents spécialisés."],
+    ["04", "Héritages", "Relier les couches Seven et les savoirs utiles."],
+    ["05", "Persona", "Donner une voix, des modes et un rythme de travail."],
+    ["06", "Core + Persona", "Découvrir la proposition structurée par Créatrice."],
+    ["07", "Sources", "Réunir les fichiers canoniques et le visuel."],
+    ["08", "Forge finale", "Vérifier l’architecture et forger le paquet complet."]
   ];
 
   const blankIdentity = () => ({
@@ -33,21 +33,21 @@
     agents: [],
     heritage: ["seven"],
     modules: [],
-    nonDuplication: "Référencer les modules existants avant toute création nouvelle.",
+    nonDuplication: "Relier les modules existants à une décision précise de la mission.",
     tone: "Claire, chaleureuse, précise et fidèle à sa fonction.",
     modes: ["standard", "audit", "livraison"],
     guardrails: [
-      "Ne pas inventer une source absente.",
-      "Ne pas décider à la place de Christophe.",
-      "Une mission = une destination utile.",
-      "S’arrêter lorsque le résultat demandé est livré."
+      "Fonder chaque affirmation sur une source réelle ou une hypothèse déclarée.",
+      "Préserver la décision finale de Christophe.",
+      "Conduire chaque mission vers une destination utile.",
+      "Appliquer le Stop Point lorsque la preuve et le livrable sont prêts."
     ],
     confidentiality: "Privée par défaut.",
     stopPoint: "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
     corePath: "",
     personaPath: "",
     memoryPath: "",
-    status: "Proposition locale non canonique",
+    status: "Création guidée par Aerith-10 Créatrice",
     version: "",
     imagePath: ""
   });
@@ -55,7 +55,7 @@
   const defaultState = () => ({
     step: 0,
     profileId: "new",
-    selectedExample: "preceptrice",
+    selectedExample: "",
     proposalPreview: "core",
     finalPreview: "boot",
     canonicalConfirmed: false,
@@ -102,7 +102,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
     } catch {}
     const target = $("#savedState");
-    if (target) target.textContent = "Mémorisé";
+    if (target) target.textContent = "Mémoire active";
   }
 
   function profile() {
@@ -272,12 +272,12 @@
       heritage: clone(selected.heritage || []),
       modules: clone(selected.modules || []),
       nonDuplication: selected.id === "creator"
-        ? "Créatrice organise et réalise la production artistique ; elle ne devient pas la base universelle des autres Aerith-10."
-        : "Référencer les sources et modules canoniques sans les dupliquer.",
-      tone: selected.id === "atlas" ? "Analytique, explicite, vérifiable et sans théâtralisation." : "Claire, chaleureuse, précise et fidèle à sa fonction.",
+        ? "Créatrice relie organisation, réalisation et mémoire de production autour du D artistique."
+        : "Relier chaque source et chaque module à une décision précise de la mission.",
+      tone: selected.id === "atlas" ? "Analytique, explicite, vérifiable et centrée sur les modèles." : "Claire, chaleureuse, précise et fidèle à sa fonction.",
       modes: clone(selected.modes || []),
       guardrails: clone(selected.guardrails || []),
-      confidentiality: selected.privacy === "public" ? "Sources publiques incluses ; aucune source privée ajoutée sans contrôle." : "Privée par défaut.",
+      confidentiality: selected.privacy === "public" ? "Sources publiques intégrées ; toute source privée reste sous contrôle humain." : "Privée par défaut.",
       stopPoint: "La mission est terminée lorsque la destination utile est livrée et vérifiable.",
       corePath: selected.corePath || "",
       personaPath: selected.personaPath || "",
@@ -293,7 +293,7 @@
     persist();
     renderAll();
     if (move) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
-    showToast(`${selected.name} chargé dans le parcours unique.`);
+    showToast(`${selected.name} rejoint l’atelier de Créatrice.`);
   }
 
   function applyExample(id) {
@@ -310,7 +310,7 @@
       corePath: `core/${cleanName(example.name)}_MULTI_AGENT_CORE.md`,
       personaPath: `core/${cleanName(example.name)}_PERSONA_OPERATING_LAYER.md`,
       memoryPath: "",
-      status: "Proposition locale non canonique",
+      status: "Proposition en création",
       version: "",
       imagePath: ""
     };
@@ -319,7 +319,7 @@
     state.visualUrl = "";
     persist();
     renderAll();
-    showToast(`${example.name} chargée dans le même formulaire.`);
+    showToast(`${example.name} devient le point de départ de la création.`);
   }
 
   function applyBlank() {
@@ -332,7 +332,7 @@
     state.visualUrl = "";
     persist();
     renderAll();
-    showToast("Page blanche neutre chargée.");
+    showToast("Intention libre ouverte dans l’atelier de Créatrice.");
   }
 
   function renderDoctrine() {
@@ -392,7 +392,7 @@
         <p>${esc(state.identity.role || p.description)}</p>
         <div class="meta"><span>${esc(state.identity.family)}</span><span>${esc(state.identity.level)}</span><span>${esc(state.identity.status)}</span></div>
       </div>`;
-    $("#profileStatus").textContent = isNew() ? "PROPOSITION LOCALE" : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
+    $("#profileStatus").textContent = isNew() ? "CRÉATION EN COURS" : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
   }
 
   function renderStepNav() {
@@ -409,9 +409,9 @@
     $("#matrixName").textContent = state.identity.name;
     $("#matrixDescription").textContent = state.identity.role || p.description;
     $("#matrixSymbol").textContent = p.sigil;
-    $("#matrixKicker").textContent = isNew() ? "NOUVELLE SPÉCIALITÉ" : "PROFIL ACTIF";
+    $("#matrixKicker").textContent = isNew() ? "CRÉATION ACCOMPAGNÉE" : "PROFIL CANONIQUE";
     $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
-    $("#matrixState").textContent = finalAudit().ready ? "READY" : (state.step < 6 ? "DESIGN" : "IMPORT");
+    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
     const image = $("#matrixImage");
     image.src = currentVisual();
     image.hidden = !currentVisual();
@@ -765,8 +765,8 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
     $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
     $("#canonRoute").innerHTML = isNew()
-      ? `<b>Après validation humaine</b><p>Retirer le suffixe PROPOSAL, intégrer manuellement les deux fichiers, puis revenir à l’étape 07 sans recommencer le formulaire.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
-      : `<b>Profil existant</b><p>La conception n’est pas répétée. Passe directement à l’import ou à l’audit selon la confidentialité des sources.</p>`;
+      ? `<b>Étape de canonisation</b><p>Relire la proposition, valider les deux fichiers, puis les intégrer aux chemins canoniques indiqués avant de réunir les sources finales.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
+      : `<b>Profil canonique prêt</b><p>Réunir les sources disponibles, vérifier l’architecture et préparer l’export adapté à la mission.</p>`;
   }
 
   function fieldFromText(text, labels) {
@@ -970,7 +970,7 @@ ${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- Ne
 
 Version Forge : ${DATA.version}
 Date : ${new Date().toISOString().slice(0, 10)}
-Parcours : Forge unifiée — aucune double saisie
+Parcours : Atelier Aerith-10 Créatrice — conception, canonisation et forge
 
 ## Identité
 
@@ -1054,7 +1054,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
   async function buildFinalFiles() {
     const root = cleanName(state.identity.name);
     const files = new Map();
-    files.set(`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nPaquet produit par ${DATA.version}.\n\n- Parcours unique : conception → canonisation humaine → import → audit → export.\n- Les modules sont référencés, jamais dupliqués automatiquement.\n- Vérifier MANIFESTE et PROFILE_SPEC avant activation.\n`));
+    files.set(`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nPaquet produit par ${DATA.version}.\n\n- Atelier Aerith-10 Créatrice : intention → architecture → Core + Persona → sources → forge finale.\n- Chaque module reste relié à une décision précise de la mission.\n- Relire le MANIFESTE et le PROFILE_SPEC avant activation.\n`));
     files.set(`${root}/${finalFileName("boot")}`, encoder.encode(bootDocument()));
     files.set(`${root}/${finalFileName("manifest")}`, encoder.encode(manifestDocument()));
     files.set(`${root}/${finalFileName("block")}`, encoder.encode(blockLLM()));
@@ -1145,7 +1145,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
       [`${root}/${proposalFileName("block")}`, encoder.encode(blockLLM())],
       [`${root}/${proposalFileName("links")}`, encoder.encode(linksDocument())],
       [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())],
-      [`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nCe paquet contient une proposition locale non canonique.\n\n1. Relire et corriger.\n2. Valider humainement.\n3. Retirer le suffixe PROPOSAL après validation.\n4. Intégrer vers ${defaultCoreTarget()} et ${defaultPersonaTarget()}.\n5. Revenir à l’étape 07 du même formulaire ; aucune ressaisie n’est nécessaire.\n`)]
+      [`${root}/README_FIRST.md`, encoder.encode(`# ${state.identity.name}\n\nCe paquet contient une proposition locale non canonique.\n\n1. Relire et corriger.\n2. Valider humainement.\n3. Retirer le suffixe PROPOSAL après validation.\n4. Intégrer vers ${defaultCoreTarget()} et ${defaultPersonaTarget()}.\n5. Réunir ensuite les sources canoniques à l’étape 07 et poursuivre vers la forge finale.\n`)]
     ]);
     downloadBlob(`${root}.zip`, zipBlob(files));
     showToast("ZIP de proposition téléchargé.");
@@ -1269,7 +1269,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
       const pkg = await buildFinalFiles();
       const blob = zipBlob(pkg.files);
       downloadBlob(`${pkg.root}_FORGE_AERITH_PRO.zip`, blob);
-      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)} · modules référencés, non copiés`;
+      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)} · paquet complet forgé par l’atelier Créatrice`;
       showToast("ZIP final forgé.");
     } catch (error) {
       log.textContent = `Erreur : ${error.message}`;
@@ -1281,15 +1281,14 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     state = defaultState();
-    applyExample("preceptrice");
+    applyBlank();
     state.step = 0;
-    persist(); renderAll(); showToast("Forge unifiée réinitialisée.");
+    persist(); renderAll(); showToast("Atelier Aerith-10 Créatrice réinitialisé.");
   });
 
   renderDoctrine();
   renderLineage();
-  if (state.profileId === "new" && !state.identity.role) applyExample(state.selectedExample || "preceptrice");
-  else renderAll();
+  renderAll();
 
   if (document.body.dataset.build !== DATA.version) {
     const diagnostic = $("#diagnostic");

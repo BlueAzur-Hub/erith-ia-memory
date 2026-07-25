@@ -1,33 +1,11 @@
-# Installation — V2.0-alpha.3 Unified
+# Installation V2.0-alpha.4 Créatrice
 
-## Destination
-
-Extraire le ZIP dans le dossier local du dépôt :
+Déposer le dossier complet `atlas_10_full/` dans :
 
 `public/agent_crypto_erith_ia/`
 
-L’archive contient déjà le dossier enveloppe :
+GitHub mettra à jour les fichiers de même nom et ajoutera les nouveaux fichiers.
 
-`atlas_10_full/`
+Commit conseillé :
 
-Windows fusionnera ce dossier avec le dossier existant et remplacera les fichiers de la Forge.
-
-## Vérification avant commit
-
-Dans GitHub Desktop, tous les chemins modifiés doivent commencer par :
-
-`public/agent_crypto_erith_ia/atlas_10_full/`
-
-Aucun fichier ne doit apparaître directement sous :
-
-`public/agent_crypto_erith_ia/`
-
-## Modules
-
-Ne copier aucun dossier `modules/`.
-
-Les modules restent dans leurs emplacements canoniques et sont référencés par URL GitHub / Raw.
-
-## Commit conseillé
-
-`release Forge d'Aerith Pro V2.0-alpha.3 unified flow`
+`release Forge d'Aerith Pro V2.0-alpha.4 creatrice guided foundry`

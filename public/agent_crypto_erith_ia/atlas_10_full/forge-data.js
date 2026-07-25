@@ -1,17 +1,17 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V2.0-alpha.3-unified",
+  version: "V2.0-alpha.4-creatrice",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
   forgePath: "public/agent_crypto_erith_ia/atlas_10_full",
   cryptoModulesRoot: "public/agent_crypto_erith_ia/atlas_10_full_crypto/modules",
   doctrine: [
-    "Un seul parcours.",
-    "Une seule mémoire d’état.",
-    "Aucune double saisie.",
-    "Canonisation humaine obligatoire."
+    "Puissance maximale.",
+    "Chargement minimal.",
+    "Choix précis.",
+    "Arrêt propre."
   ],
   heritage: [
     {
@@ -51,9 +51,9 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       sigil: "A10+",
       kind: "new",
       privacy: "private",
-      status: "Proposition locale non canonique",
-      role: "Créer une spécialité Aerith-10 à partir d’une mission réelle.",
-      description: "Parcours guidé complet, puis canonisation humaine, import, audit et export.",
+      status: "Création guidée par Aerith-10 Créatrice",
+      role: "Transformer une intention en spécialité Aerith-10 cohérente, vivante et exploitable.",
+      description: "Aerith-10 Créatrice accompagne la naissance du profil, de la mission initiale jusqu’au Core, à la Persona et au paquet final.",
       visual: "assets/themes/aerith_10_creatrice.webp",
       theme: "creator",
       heritage: ["seven"]
@@ -99,7 +99,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       privacy: "private",
       status: "Core et Persona privés · import local",
       role: "Organisatrice de production et Réalisatrice multi-agent : elle orchestre la création vidéo, la musique, l’image clé, Wan, DaVinci et la mémoire de production.",
-      description: "Spécialisation Organisatrice / Réalisatrice. Elle n’est pas la base universelle des autres Aerith-10.",
+      description: "Spécialisation Organisatrice / Réalisatrice : elle transforme une intention artistique en chaîne de production complète et maîtrisée.",
       visual: "assets/themes/aerith_10_creatrice.webp",
       theme: "creator",
       corePath: "core/AERITH_10_CREATRICE_MULTI_AGENT_CORE.md",
@@ -134,7 +134,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       privacy: "public",
       status: "Core et Persona publics inclus",
       role: "Analyste-pédagogue crypto : elle traduit l’analyse en compréhension, prudence, No-FOMO et décision humaine.",
-      description: "Couche relationnelle et pédagogique utilisant les outils analytiques d’Atlas-10 Crypto sans se confondre avec lui.",
+      description: "Couche relationnelle et pédagogique : elle traduit l’analyse d’Atlas-10 Crypto en compréhension, prudence et décision humaine.",
       visual: "",
       theme: "crypto",
       corePath: "downloads/AERITH_10_CRYPTO_MULTI_AGENT_CORE.md",
@@ -170,7 +170,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       privacy: "public",
       status: "Core et Persona publics inclus",
       role: "Moteur cartographique et analytique : il structure données, variables, modèles, scénarios, risque et vérification.",
-      description: "Couche d’analyse et de cartographie. Aerith-10 Crypto peut l’utiliser pour expliquer, mais Atlas ne joue pas son rôle relationnel.",
+      description: "Couche d’analyse et de cartographie : Atlas structure les données, les modèles, les scénarios et le risque pour soutenir la décision.",
       visual: "",
       theme: "atlas",
       corePath: "downloads/ATLAS_10_CRYPTO_MULTI_AGENT_CORE.md",
