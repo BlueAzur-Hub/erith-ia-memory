@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.64 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.65 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.64";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.65";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -628,13 +628,13 @@ function atlasMarketChangeIsDelayed() {
 }
 
 
-const ATLAS_LIVE_ACTIONABLE_TTL_MS = 75_000;
-const ATLAS_LIVE_VISIBLE_TTL_MS = 180_000;
+const ATLAS_TOP5_DIRECT_FRESH_MS = 90_000;
+const ATLAS_TOP5_DIRECT_VISIBLE_MS = 180_000;
 
-function atlasLiveTimestampMs(value) {
-  const number = Number(value);
-  if (Number.isFinite(number) && number > 0) {
-    return number > 10_000_000_000 ? number : number * 1000;
+function atlasDirectQuoteTimestampMs(value) {
+  const numeric = Number(value);
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return numeric > 10_000_000_000 ? numeric : numeric * 1000;
   }
   const parsed = Date.parse(value || "");
   return Number.isFinite(parsed) ? parsed : 0;
@@ -657,7 +657,7 @@ function atlasLivePriceQuoteForCoin(coinOrId) {
     && spotBook.mode === "direct"
     && Number.isFinite(spotPrice)
     && spotPrice > 0
-    && atlasLiveTimestampMs(spotTimestamp) > 0
+    && atlasDirectQuoteTimestampMs(spotTimestamp) > 0
   ) {
     candidates.push({
       coin,
@@ -666,8 +666,7 @@ function atlasLivePriceQuoteForCoin(coinOrId) {
         ? Number(spotQuote.change24hEur)
         : Number(coin.change24h),
       timestamp: spotTimestamp,
-      source: "CoinGecko spot direct",
-      mode: "direct"
+      source: "CoinGecko spot direct"
     });
   }
 
@@ -682,7 +681,7 @@ function atlasLivePriceQuoteForCoin(coinOrId) {
     ["direct", "direct-conserved"].includes(marketTruth.level)
     && Number.isFinite(marketPrice)
     && marketPrice > 0
-    && atlasLiveTimestampMs(marketTimestamp) > 0
+    && atlasDirectQuoteTimestampMs(marketTimestamp) > 0
   ) {
     candidates.push({
       coin,
@@ -691,13 +690,12 @@ function atlasLivePriceQuoteForCoin(coinOrId) {
       timestamp: marketTimestamp,
       source: marketTruth.level === "direct"
         ? "CoinGecko Market direct"
-        : "Dernière lecture directe conservée",
-      mode: marketTruth.level === "direct" ? "direct" : "direct-conserved"
+        : "Dernière lecture directe conservée"
     });
   }
 
   candidates.sort(
-    (a, b) => atlasLiveTimestampMs(b.timestamp) - atlasLiveTimestampMs(a.timestamp)
+    (a, b) => atlasDirectQuoteTimestampMs(b.timestamp) - atlasDirectQuoteTimestampMs(a.timestamp)
   );
 
   const quote = candidates[0] || null;
@@ -708,76 +706,29 @@ function atlasLivePriceQuoteForCoin(coinOrId) {
       change24h: null,
       timestamp: null,
       source: "Flux direct indisponible",
-      mode: "blocked",
-      ageMs: Number.POSITIVE_INFINITY,
-      actionable: false,
-      visible: false
+      state: "blocked",
+      ageMs: Number.POSITIVE_INFINITY
     };
   }
 
   const ageMs = atlasTimestampAgeMs(quote.timestamp);
-  const actionable = quote.mode === "direct" && ageMs <= ATLAS_LIVE_ACTIONABLE_TTL_MS;
-  const visible = ageMs <= ATLAS_LIVE_VISIBLE_TTL_MS;
+  const stateLabel = ageMs <= ATLAS_TOP5_DIRECT_FRESH_MS
+    ? "fresh"
+    : ageMs <= ATLAS_TOP5_DIRECT_VISIBLE_MS
+      ? "conserved"
+      : "blocked";
 
   return {
     ...quote,
+    state: stateLabel,
     ageMs,
-    actionable,
-    visible
+    visible: stateLabel !== "blocked",
+    fresh: stateLabel === "fresh"
   };
 }
 
 function atlasLivePriceFreshness(quote) {
-  if (!quote || !quote.visible) return "blocked";
-  if (quote.actionable) return "fresh";
-  return "non-actionable";
-}
-
-function atlasLivePriceGate() {
-  const truth = atlasMarketTruth();
-  const topQuotes = atlasTopFiveCoins()
-    .map(coin => atlasLivePriceQuoteForCoin(coin))
-    .filter(Boolean);
-  const actionableCount = topQuotes.filter(quote => quote.actionable).length;
-  const newestTimestamp = topQuotes
-    .map(quote => atlasLiveTimestampMs(quote.timestamp))
-    .filter(value => value > 0)
-    .sort((a, b) => b - a)[0] || 0;
-
-  return {
-    actionable: truth.level === "direct"
-      && truth.ageMs <= ATLAS_LIVE_ACTIONABLE_TTL_MS
-      && actionableCount >= 3,
-    actionableCount,
-    total: topQuotes.length,
-    timestamp: newestTimestamp || truth.timestamp || null,
-    truth
-  };
-}
-
-function atlasMarketPriceCell(coin) {
-  const quote = atlasLivePriceQuoteForCoin(coin);
-  if (quote?.actionable && Number.isFinite(Number(quote.price))) {
-    return `<div class="price-dual" data-live-market-price="${escapeHtml(coin.id)}">
-      <b>${escapeHtml(atlasFormatEUR(quote.price))}</b>
-      <small>${atlasHasPositiveQuote(coin.priceUsd) ? escapeHtml(atlasFormatUSD(coin.priceUsd)) : "USD —"} · DIRECT</small>
-    </div>`;
-  }
-
-  return `<div class="price-dual is-live-blocked" data-live-market-price="${escapeHtml(coin.id)}">
-    <b>—</b><small>FLUX DIRECT INDISPONIBLE</small>
-  </div>`;
-}
-
-function atlasRefreshVisibleLivePriceCells() {
-  document.querySelectorAll("[data-live-market-price]").forEach(node => {
-    const coin = state.coins.find(item => item.id === node.dataset.liveMarketPrice);
-    if (!coin) return;
-    const replacement = document.createElement("div");
-    replacement.innerHTML = atlasMarketPriceCell(coin);
-    const next = replacement.firstElementChild;
-    if (next) node.replaceWith(next);
-  });
+  return quote?.state || "blocked";
 }
 
 function atlasLivePriceHistoricalPoint(coinId) {
@@ -814,85 +765,6 @@ function atlasLivePriceHistoricalPoint(coinId) {
         truth: atlasChartTruth(result, Number(chart.period || state.chartPeriodDays || 1))
       }
     : null;
-}
-
-function atlasLivePriceVerificationText() {
-  const btc = state.coins.find(coin => coin.id === "bitcoin" || coin.symbol === "BTC");
-  const quote = atlasLivePriceQuoteForCoin(btc);
-  const historical = atlasLivePriceHistoricalPoint(btc?.id);
-
-  if (!quote?.actionable) {
-    return historical
-      ? `BTC ACTUEL INDISPONIBLE · point historique ${atlasFormatEUR(historical.price)}`
-        + ` · ${atlasExactTimestampLabel(historical.timestamp)} · aucune décision.`
-      : "BTC ACTUEL INDISPONIBLE · aucune réponse directe fraîche · aucune décision.";
-  }
-
-  const currentText = `BTC DIRECT ${atlasFormatEUR(quote.price)} · ${atlasExactTimestampLabel(quote.timestamp)}`;
-  if (!historical) return `${currentText} · historique en cours de chargement.`;
-
-  const delta = quote.price - historical.price;
-  const deltaPct = historical.price > 0 ? delta / historical.price * 100 : null;
-  const deltaText = `${delta >= 0 ? "+" : ""}${atlasFormatEUR(delta)}`
-    + (Number.isFinite(deltaPct)
-      ? ` · ${deltaPct >= 0 ? "+" : ""}${deltaPct.toFixed(3)} %`
-      : "");
-
-  return `${currentText} · POINT HISTORIQUE ${atlasFormatEUR(historical.price)}`
-    + ` · ${atlasExactTimestampLabel(historical.timestamp)} · ÉCART ${deltaText}.`;
-}
-
-function atlasRenderLivePriceBoard() {
-  const board = document.getElementById("atlasLivePriceBoard");
-  const cardsNode = document.getElementById("atlasLivePriceCards");
-  const statusNode = document.getElementById("atlasLivePriceStatus");
-  const timeNode = document.getElementById("atlasLivePriceTime");
-  const verificationNode = document.getElementById("atlasLivePriceVerification");
-  if (!board || !cardsNode || !statusNode || !timeNode || !verificationNode) return;
-
-  const coins = atlasTopFiveCoins();
-  const gate = atlasLivePriceGate();
-  document.documentElement.dataset.atlasLiveGate = gate.actionable ? "open" : "closed";
-
-  if (!coins.length) {
-    board.dataset.truth = "waiting";
-    statusNode.textContent = "CONNEXION AUTOMATIQUE…";
-    timeNode.textContent = "RÉFÉRENCE — PAS UN PRIX D’EXÉCUTION";
-    cardsNode.innerHTML = '<span class="atlas-live-price-empty">BTC · ETH · BNB · XRP · SOL en attente</span>';
-    verificationNode.textContent = "Aucune valeur ne sera affichée sans réponse directe fraîche.";
-    return;
-  }
-
-  board.dataset.truth = gate.actionable ? "fresh" : "blocked";
-  statusNode.textContent = gate.actionable
-    ? "COINGECKO DIRECT"
-    : "FLUX DIRECT INDISPONIBLE — AUCUNE DÉCISION";
-  timeNode.textContent = gate.actionable
-    ? `${atlasExactTimestampLabel(gate.timestamp)} · prix de référence, pas prix d’exécution`
-    : "Valeurs masquées jusqu’à une nouvelle réponse directe fraîche";
-
-  cardsNode.innerHTML = coins.map((coin, index) => {
-    const quote = atlasLivePriceQuoteForCoin(coin);
-    const palette = atlasCryptoPalette(coin, index);
-    const gradient = atlasCryptoGradientCss(coin, index);
-    const allowed = quote?.actionable && Number.isFinite(Number(quote.price));
-    const change = allowed ? Number(quote.change24h) : NaN;
-
-    return `<article class="atlas-live-price-card"
-                    data-live-price-id="${escapeHtml(coin.id)}"
-                    data-freshness="${allowed ? "fresh" : "blocked"}"
-                    style="--live-color:${escapeHtml(palette.primary)};--live-gradient:${escapeHtml(gradient)}">
-      <span class="atlas-live-price-symbol">${escapeHtml(String(coin.symbol || "").toUpperCase())}</span>
-      <strong>${allowed ? escapeHtml(atlasFormatEUR(quote.price)) : "—"}</strong>
-      <small class="${Number.isFinite(change) ? clsPct(change) : ""}">
-        ${Number.isFinite(change) ? escapeHtml(atlasFmtMarketPct(change)) : "aucune valeur"}
-      </small>
-      <em>${allowed ? `DIRECT · ${escapeHtml(atlasBrokerAgeLabel(quote.timestamp))}` : "NON ACTIONNABLE"}</em>
-    </article>`;
-  }).join("");
-
-  verificationNode.textContent = atlasLivePriceVerificationText();
-  atlasRefreshVisibleLivePriceCells();
 }
 
 function atlasFmtMarketPct(value) {
@@ -1159,7 +1031,6 @@ function atlasPatchTickerSpot(changedIds = []) {
       }
     });
   });
-  atlasRenderLivePriceBoard();
 }
 
 function atlasMarketRowsForCurrentView() {
@@ -1622,7 +1493,6 @@ function atlasSetStableDirectMarketStatus() {
   setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
   setTableDecision(`${assetCount} actifs EUR directs · pulse 60 s`, "ok");
   atlasSetLivecheckButtonBusy(false);
-  atlasRenderLivePriceBoard();
 }
 
 function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = "Actualisation") {
@@ -2856,17 +2726,6 @@ function atlasRenderComparisonControls() {
     button.classList.toggle("is-scanner-pending", requested && ["waiting-direct", "warming", "running"].includes(scannerUiStatus));
     button.classList.toggle("is-scanner-failed", requested && scannerUiStatus === "failed");
     button.dataset.scannerState = requested ? scannerUiStatus : "idle";
-  });
-  const liveGateOpen = atlasLivePriceGate().actionable;
-  [els.btnChartGainers, els.btnChartLosers, els.btnChartVolume5].forEach(button => {
-    if (!button) return;
-    button.disabled = !liveGateOpen;
-    button.setAttribute(
-      "aria-label",
-      liveGateOpen
-        ? button.textContent.trim()
-        : `${button.textContent.trim()} indisponible : flux direct frais requis`
-    );
   });
   if (els.btnChartReset) els.btnChartReset.classList.remove("active");
   if (els.btnChartClear) els.btnChartClear.classList.toggle("active", !coins.length && state.graphSelectionCleared);
@@ -4402,7 +4261,7 @@ function atlasExternalChartTooltip(context) {
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const historicalPrice = Number(row.rawPrice);
     const liveQuote = atlasLivePriceQuoteForCoin(row.coin?.id || row.coin);
-    const currentPrice = liveQuote?.actionable ? Number(liveQuote.price) : NaN;
+    const currentPrice = Number(liveQuote?.price);
     const delta = Number.isFinite(currentPrice) && Number.isFinite(historicalPrice)
       ? currentPrice - historicalPrice
       : NaN;
@@ -4412,7 +4271,7 @@ function atlasExternalChartTooltip(context) {
 
     const currentText = Number.isFinite(currentPrice)
       ? atlasFormatEUR(currentPrice)
-      : "FLUX DIRECT INDISPONIBLE";
+      : "Prix actuel indisponible";
     const historicalText = Number.isFinite(historicalPrice)
       ? atlasFormatEUR(historicalPrice)
       : "Point indisponible";
@@ -7240,27 +7099,72 @@ function atlasMarketFlowCoins() {
 
 function atlasRenderTopFiveRibbon() {
   if (!els.top5Track) return;
+
+  const truthNode = document.getElementById("top5LiveTruth");
+
   if (!atlasHasDisplayableMarket()) {
     setHTML(els.top5Track, '<span class="market-ribbon-empty">Livecheck requis</span>');
-    atlasRenderLivePriceBoard();
+    if (truthNode) truthNode.textContent = "Connexion automatique…";
     return;
   }
 
-  const cards = atlasTopFiveCoins().map((coin, index) => {
-    const variationClass = `${clsPct(coin.change24h)} ${atlasMoveStrengthClass(coin.change24h)}`;
+  const coins = atlasTopFiveCoins();
+  const quotes = coins.map(coin => atlasLivePriceQuoteForCoin(coin));
+  const freshCount = quotes.filter(quote => quote?.state === "fresh").length;
+  const conservedCount = quotes.filter(quote => quote?.state === "conserved").length;
+  const newestTimestamp = quotes
+    .map(quote => atlasDirectQuoteTimestampMs(quote?.timestamp))
+    .filter(value => value > 0)
+    .sort((a, b) => b - a)[0] || 0;
+
+  if (truthNode) {
+    truthNode.textContent = freshCount === coins.length
+      ? `DIRECT · ${atlasExactTimestampLabel(newestTimestamp)}`
+      : freshCount + conservedCount > 0
+        ? `LECTURE DIRECTE CONSERVÉE · ${atlasExactTimestampLabel(newestTimestamp)}`
+        : "FLUX DIRECT INDISPONIBLE · PRIX MASQUÉS";
+  }
+
+  const cards = coins.map((coin, index) => {
+    const quote = quotes[index];
+    const liveState = quote?.state || "blocked";
+    const visible = quote?.visible && Number.isFinite(Number(quote.price));
+    const change = visible ? Number(quote.change24h) : NaN;
+    const variationClass = Number.isFinite(change)
+      ? `${clsPct(change)} ${atlasMoveStrengthClass(change)}`
+      : "";
     const image = coin.image
       ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy">`
       : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
+    const priceText = visible
+      ? `${liveState === "conserved" ? "≈ " : ""}${atlasFormatEUR(quote.price)}`
+      : "—";
+    const changeText = Number.isFinite(change)
+      ? atlasFmtMarketPct(change)
+      : "NON DIRECT";
+    const sourceText = liveState === "fresh"
+      ? `DIRECT · ${atlasBrokerAgeLabel(quote.timestamp)}`
+      : liveState === "conserved"
+        ? `CONSERVÉ · ${atlasBrokerAgeLabel(quote.timestamp)}`
+        : "PRIX ACTUEL INDISPONIBLE";
+
     return `
-      <span class="top5-item" data-top5-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison" style="${atlasRibbonStyle(coin, index)}">
+      <span class="top5-item"
+            data-top5-id="${escapeHtml(coin.id)}"
+            data-market-open="${escapeHtml(coin.id)}"
+            data-live-state="${escapeHtml(liveState)}"
+            role="button"
+            tabindex="0"
+            aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison"
+            style="${atlasRibbonStyle(coin, index)}">
         <span class="top5-identity">${image}<b>${escapeHtml(String(coin.symbol || "").toUpperCase())}</b></span>
-        <strong class="top5-price">${atlasFormatEUR(coin.priceEur ?? coin.price)}</strong>
-        <small class="top5-change ${variationClass}">${atlasFmtMarketPct(coin.change24h)}</small>
+        <strong class="top5-price">${escapeHtml(priceText)}</strong>
+        <small class="top5-change ${variationClass}">${escapeHtml(changeText)}</small>
+        <em class="top5-source-state">${escapeHtml(sourceText)}</em>
       </span>`;
   }).join("");
 
   setHTML(els.top5Track, cards);
-  atlasRenderLivePriceBoard();
 }
 
 function atlasRenderMarketFlowRibbon() {
@@ -7382,7 +7286,7 @@ function renderMarketTable() {
   els.marketRows.innerHTML = rows.map(c => {
     const s = scoreCoin(c), compared = selection.includes(c.id), primary = c.id === state.selectedCoinId && compared, watched = state.watchIds.includes(c.id);
     const compareLabel = compared ? "Retirer" : "Ajouter";
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer de' : 'Ajouter à'} la comparaison.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasMarketPriceCell(c)}</td><td class="market-move-cell ${clsPct(c.change24h)} ${atlasMoveStrengthClass(c.change24h)}">${atlasFmtMarketPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
+    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer de' : 'Ajouter à'} la comparaison.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur ?? c.price)}</b><small>${atlasHasPositiveQuote(c.priceUsd) ? atlasFormatUSD(c.priceUsd) : 'USD —'}</small></div></td><td class="market-move-cell ${clsPct(c.change24h)} ${atlasMoveStrengthClass(c.change24h)}">${atlasFmtMarketPct(c.change24h)}</td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
   }).join("");
 
   const updated = state.timestamp ? new Date(state.timestamp).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
@@ -12005,7 +11909,7 @@ function atlasMarketHelpDefinition(row) {
     html: `<div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
       <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
-        <span><small>Prix EUR</small><strong>${escapeHtml(atlasLivePriceQuoteForCoin(coin)?.actionable ? atlasFormatEUR(atlasLivePriceQuoteForCoin(coin).price) : "—")}</strong></span>
+        <span><small>Prix EUR</small><strong>${escapeHtml(atlasFormatEUR(coin.priceEur ?? coin.price))}</strong></span>
         <span><small>Prix USD</small><strong>${escapeHtml(priceUsd)}</strong></span>
         <span><small>24 h</small><strong class="${clsPct(coin.change24h)}">${escapeHtml(atlasFmtMarketPct(coin.change24h))}</strong></span>
         <span><small>7 j</small><strong class="${clsPct(coin.change7d)}">${escapeHtml(fmtPct(coin.change7d))}</strong></span>
@@ -12593,10 +12497,13 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
   });
 
   const seriesLine = rows.map((row, index) => {
+    const priceText = Number.isFinite(row.currentPrice)
+      ? atlasFormatEUR(row.currentPrice)
+      : "prix actuel —";
     const metricText = preset === "volume"
       ? (Number.isFinite(row.volume) ? `vol. ${fmtCompactEUR.format(row.volume)}` : "volume non mesuré")
       : (Number.isFinite(row.change) ? fmtPct(row.change) : "variation non mesurée");
-    return atlasChartOverlayCoinHtml(row, index, metricText);
+    return atlasChartOverlayCoinHtml(row, index, `${priceText} · ${metricText}`);
   }).join("");
 
   const oldest = rows.map(row => row.timestamp).filter(value => value > 0);
@@ -12739,7 +12646,6 @@ function atlasChartOverlaySolo(chart, period, options = {}) {
 }
 
 function atlasChartOverlayUpdate() {
-  atlasRenderLivePriceBoard();
   const chart = state.dataBroker?.chart;
   const requestedPeriod = Number(state.chartPeriodDays || 1);
   const chartReady = !!chart
@@ -13960,20 +13866,6 @@ async function atlasScannerRun(tx) {
 function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
   if (!state.liveOk || !state.coins.length || !ATLAS_SCANNER_PRESETS.has(preset)) return false;
 
-  if (!atlasLivePriceGate().actionable) {
-    const label = atlasScannerLabel(preset);
-    atlasScannerSetUiState(
-      preset,
-      "failed",
-      `${label} verrouillé · flux direct frais requis`
-    );
-    atlasSetChartCaptionText(
-      `${label} NON DISPONIBLE · aucune décision ou sélection actuelle sans Market direct frais.`
-    );
-    atlasRenderComparisonControls();
-    return false;
-  }
-
   atlasScannerCancel("nouvelle demande", { keepUi: true });
 
   const period = Number(options.period || state.chartPeriodDays || 1);
@@ -14073,13 +13965,12 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 
 /* =========================================================
-   Build 28.1.64 — live freshness clock
+   Build 28.1.65 — Target Top 5 freshness clock
    ========================================================= */
 window.setInterval(() => {
   try {
-    atlasRenderLivePriceBoard();
-    atlasRenderComparisonControls();
+    atlasRenderTopFiveRibbon();
   } catch (error) {
-    console.warn("Horloge de fraîcheur live :", error);
+    console.warn("Actualisation Target Top 5 :", error);
   }
 }, 10_000);
