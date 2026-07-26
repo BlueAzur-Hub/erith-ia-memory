@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.0-final",
+  version: "V3.1-flower-girls",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -14,7 +14,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
     "Arrêt propre."
   ],
   advisor: {
-    name: "Aerith-10 Créatrice Conseillère",
+    name: "Aerith-10 Créatrice",
     signature: "Éclairer le choix utile, préserver l’identité, conduire vers la forge.",
     steps: [
       {

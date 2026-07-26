@@ -2,6 +2,7 @@
   "use strict";
 
   const DATA = window.AERITH_UNIFIED_DATA;
+  const FLOWER = window.AERITH_FLOWER_GIRLS;
   if (!DATA) throw new Error("forge-data.js introuvable.");
 
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -413,6 +414,97 @@
     $("#exampleGrid").innerHTML = DATA.examples.map(item => exampleCard(item)).join("");
   }
 
+
+  const flowerView = {family:"all", facet:"all", search:""};
+
+  function flowerIdentity(item) {
+    return {
+      name:item.name,
+      family:item.family,
+      level:"Aerith-10",
+      mode:item.badge || "Spécialiste",
+      role:item.role,
+      problem:item.problem,
+      users:item.users,
+      outputs:[...(item.outputs || [])],
+      formula:item.formula,
+      agents:[...(item.agents || [])],
+      heritage:[...(item.heritage || ["seven"])],
+      modules:[...(item.modules || [])],
+      nonDuplication:`${item.name} — ${item.difference}`,
+      tone:item.tone || "Claire, chaleureuse, précise et fidèle à sa fonction.",
+      modes:[...(item.modes || ["standard","audit","livraison"])],
+      guardrails:[...(item.guardrails || [])],
+      confidentiality:item.confidentiality || "Privée par défaut.",
+      stopPoint:item.stopPoint || "La mission est terminée lorsque la sortie attendue est livrée et vérifiable.",
+      corePath:item.corePath || `core/${cleanName(item.name)}_MULTI_AGENT_CORE.md`,
+      personaPath:item.personaPath || `core/${cleanName(item.name)}_PERSONA_OPERATING_LAYER.md`,
+      memoryPath:item.memoryPath || "core/ATLAS_DES_MODULES.md",
+      status:item.status || "PROPOSITION STRUCTURÉE",
+      version:FLOWER?.version || DATA.version,
+      imagePath:""
+    };
+  }
+
+  function applyFlowerGirl(id, scroll = true) {
+    if (!FLOWER) return;
+    const item = FLOWER.profiles.find(profile => profile.id === id);
+    if (!item) return;
+    if (id === "creatrice") {
+      applyProfile("creator", scroll);
+      showToast("Aerith-10 Créatrice chargée.");
+      return;
+    }
+    state.profileId = "new";
+    state.selectedExample = `flower:${id}`;
+    state.identity = flowerIdentity(item);
+    state.canonicalConfirmed = false;
+    state.imports = [];
+    state.visualUrl = "";
+    state.step = 0;
+    state.proposalPreview = "core";
+    state.finalPreview = "boot";
+    persist();
+    renderAll();
+    if (scroll) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
+    showToast(`${item.name} chargée dans l’Atelier.`);
+  }
+
+  function renderFlowerGirls() {
+    if (!FLOWER || !$("#flowerGrid")) return;
+    $("#flowerFacetGrid").innerHTML = FLOWER.facets.map(item => `
+      <button type="button" class="flower-facet ${flowerView.facet === item.id ? "active" : ""}" data-flower-facet="${esc(item.id)}">
+        <span>${esc(item.name)}</span><small>${esc(item.description)}</small>
+      </button>`).join("");
+
+    const familyButtons = [{id:"all",name:"Toutes"}, ...FLOWER.families.map(item => ({id:item.id,name:item.short}))];
+    $("#flowerFamilyFilters").innerHTML = familyButtons.map(item => `
+      <button type="button" class="${flowerView.family === item.id ? "active" : ""}" data-flower-family="${esc(item.id)}">${esc(item.name)}</button>`).join("");
+
+    const query = flowerView.search.trim().toLowerCase();
+    const filtered = FLOWER.profiles.filter(item => {
+      if (flowerView.family !== "all" && item.familyId !== flowerView.family) return false;
+      if (flowerView.facet !== "all" && !(item.facet || []).includes(flowerView.facet)) return false;
+      if (!query) return true;
+      return [item.name,item.family,item.role,item.uniqueValue,item.difference,...(item.agents || [])].join(" ").toLowerCase().includes(query);
+    });
+
+    const canonical = FLOWER.profiles.filter(item => item.status === "CANONIQUE").length;
+    const signaled = FLOWER.profiles.filter(item => item.status === "CORE INDIVIDUEL SIGNALÉ").length;
+    $("#flowerSummary").innerHTML = `<span><b>${filtered.length}</b> profil(s) affiché(s)</span><span><b>${canonical}</b> canonique</span><span><b>${signaled}</b> Core individuel signalé</span><span><b>${FLOWER.profiles.length - canonical - signaled}</b> propositions structurées</span>`;
+
+    $("#flowerGrid").innerHTML = filtered.map(item => `
+      <article class="flower-card family-${esc(item.familyId)}">
+        <header><span>${esc(item.badge)}</span><b>${esc(item.status)}</b></header>
+        <div class="flower-sigil">${esc(item.sigil || "A10")}</div>
+        <h3>${esc(item.name)}</h3>
+        <p>${esc(item.role)}</p>
+        <dl><div><dt>Valeur propre</dt><dd>${esc(item.uniqueValue)}</dd></div><div><dt>Profil voisin</dt><dd>${esc(item.nearestProfile)}</dd></div></dl>
+        <div class="flower-tags">${(item.heritage || []).map(x => `<span>${esc(x)}</span>`).join("")}<span>${(item.agents || []).length} agents</span></div>
+        <button type="button" data-flower-load="${esc(item.id)}">Charger dans l’Atelier →</button>
+      </article>`).join("") || `<div class="flower-empty">Aucun profil ne correspond à ce filtre.</div>`;
+  }
+
   function renderConstellation() {
     const existing = DATA.profiles.filter(item => item.kind === "existing");
     const proposals = DATA.examples.slice(0, 3);
@@ -549,6 +641,7 @@
     renderSelectedProfile();
     renderLiveProfile();
     renderConstellation();
+    renderFlowerGirls();
     renderProposal();
     renderFinal();
     renderAdvisor();
@@ -1227,6 +1320,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     renderProfiles();
     renderExamples();
     renderConstellation();
+    renderFlowerGirls();
     renderSelectedProfile();
     renderLiveProfile();
     renderFamilies();
@@ -1369,6 +1463,12 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   document.addEventListener("click", event => {
+    const flowerLoad = event.target.closest("[data-flower-load]");
+    if (flowerLoad) { applyFlowerGirl(flowerLoad.dataset.flowerLoad, true); return; }
+    const flowerFamily = event.target.closest("[data-flower-family]");
+    if (flowerFamily) { flowerView.family = flowerFamily.dataset.flowerFamily; renderFlowerGirls(); return; }
+    const flowerFacet = event.target.closest("[data-flower-facet]");
+    if (flowerFacet) { flowerView.facet = flowerView.facet === flowerFacet.dataset.flowerFacet ? "all" : flowerFacet.dataset.flowerFacet; renderFlowerGirls(); return; }
     const profileButton = event.target.closest("[data-profile]");
     if (profileButton) applyProfile(profileButton.dataset.profile);
 
@@ -1424,6 +1524,8 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   ]) {
     $(`#${id}`).addEventListener(id === "canonicalConfirmed" ? "change" : "input", syncUIToState);
   }
+
+  $("#flowerSearch")?.addEventListener("input", event => { flowerView.search = event.target.value; renderFlowerGirls(); });
 
   $("#blankProfile").addEventListener("click", applyBlank);
   $("#startTop").addEventListener("click", () => activateStep(0, true));
