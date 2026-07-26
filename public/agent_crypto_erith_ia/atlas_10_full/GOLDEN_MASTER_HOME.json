@@ -1,10 +1,10 @@
 {
-  "build": "V3.3R2-candidate-locale",
+  "build": "V3.3R2",
   "required_home_strings": [
-    "AERITH-10 CRÉATRICE · CONSEILLÈRE DE LA FORGE",
+    "AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY",
     "Compiler les profils.",
     "Faire naître les prochaines Aerith.",
-    "Aerith-10 Créatrice, dans son rôle de Conseillère de la Forge",
+    "Aerith-10 Créatrice Conseillère accompagne chaque intention",
     "CRÉATRICE CONSEILLÈRE",
     "Aerith-7 porte les options Solaire et Lunaire"
   ],
@@ -16,13 +16,13 @@
   ],
   "default_profile_id": "creator",
   "existing_profile_contract": {
-    "step_6_title": "Vérifier le Core et la Persona existants",
-    "no_proposal_message": "Aucun fichier PROPOSAL pour un profil existant"
+    "step_6_title": "Réunir le Core et la Persona",
+    "profile_panel": "Fichiers du profil"
   },
   "new_profile_contract": {
     "name": "Nouvelle Aerith",
     "level": "À définir",
-    "step_6_title": "Découvrir la proposition de Créatrice Conseillère"
+    "step_6_title": "Découvrir le Core et la Persona préparés par Créatrice"
   },
   "routeuse": {
     "core": "core/AERITH_10_ROUTEUSE_MULTI_AGENT_CORE.md",
@@ -30,5 +30,6 @@
     "profile_status": "PROFIL EXISTANT",
     "persona": "core/AERITH_10_ROUTEUSE_PERSONA_OPERATING_LAYER.md",
     "persona_status": "PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER"
-  }
+  },
+  "version": "V3.3R2"
 }

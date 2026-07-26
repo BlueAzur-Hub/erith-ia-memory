@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R2-candidate-locale",
+  version: "V3.3R2",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -14,7 +14,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
     "Arrêt propre."
   ],
   advisor: {
-    name: "Aerith-10 Créatrice — Conseillère de la Forge",
+    name: "Aerith-10 Créatrice Conseillère",
     signature: "Éclairer le choix utile, préserver l’identité, conduire vers la forge.",
     steps: [
       {
@@ -44,7 +44,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Relire la proposition",
-        message: "Pour une nouvelle Aerith, la Forge présente les propositions. Pour un profil existant, elle présente ses sources sans régénérer son Core ni sa Persona.",
+        message: "Créatrice rassemble le Core, la Persona et le brief de la nouvelle Aerith, ou prépare les fichiers du profil sélectionné.",
         action: "Poursuivre vers les sources"
       },
       {
@@ -59,7 +59,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       }
     ],
     profiles: {
-      new: "Créatrice Conseillère accompagne une nouvelle Aerith depuis l’intention jusqu’à sa proposition canonisable.",
+      new: "Créatrice Conseillère accompagne une nouvelle Aerith depuis l’intention jusqu’à son Core, sa Persona et son paquet de création.",
       seven: "Seven protège la mémoire, la vérité, la continuité et le routage des sources.",
       creator: "Créatrice organise la production et réalise la destination artistique avec une architecture multi-agent.",
       aerithcrypto: "Aerith-10 Crypto transforme l’analyse en compréhension, prudence et décision humaine.",
@@ -104,7 +104,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       sigil: "A+",
       kind: "new",
       privacy: "private",
-      status: "Création guidée par Créatrice Conseillère",
+      status: "Création guidée par Aerith-10 Créatrice Conseillère",
       coreStatus: "CORE À CONSTRUIRE",
       coreVersion: "—",
       coreProtection: "STANDARD",
@@ -112,7 +112,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       personaStatus: "PERSONA À CONSTRUIRE",
       githubChecked: "",
       role: "Transformer une intention en profil Aerith cohérent, vivant et exploitable.",
-      description: "Créatrice Conseillère accompagne la naissance du profil, sans imposer son niveau, sa branche ni son environnement d’utilisation.",
+      description: "Aerith-10 Créatrice Conseillère accompagne la naissance du profil, de l’intention initiale jusqu’au Core, à la Persona et au paquet final.",
       visual: "assets/themes/aerith_10_creatrice.webp",
       theme: "creator",
       heritage: ["seven"]

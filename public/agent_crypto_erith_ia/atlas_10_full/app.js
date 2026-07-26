@@ -8,7 +8,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-v3-3r2-clarification";
+  const STORAGE_KEY = "aerith-forge-v3-3r2";
   const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
   document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
   const LEGACY_STORAGE_KEYS = ["aerith-forge-v3-final", "aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
@@ -841,11 +841,11 @@
         checks.push(["ok", "Persona Proposal"]);
         checks.push(["ok", "Brief de validation"]);
       } else {
-        guideTitle = "Vérifier les sources existantes";
-        guideMessage = "Créatrice Conseillère distingue le guide de la Forge, le profil actif et ses fichiers. Aucun Core ni aucune Persona ne sont recréés.";
-        checks.push([state.identity.corePath ? "ok" : "warn", state.identity.corePath ? "Core existant référencé" : "Chemin Core à vérifier"]);
-        checks.push([state.identity.personaPath ? "ok" : "warn", state.identity.personaPath ? "Persona existante référencée" : "Chemin Persona à vérifier"]);
-        checks.push(["ok", "Aucune proposition générée"]);
+        guideTitle = "Réunir le Core et la Persona";
+        guideMessage = "Créatrice Conseillère accompagne la préparation des deux fichiers du profil et de son paquet final.";
+        checks.push([state.identity.corePath ? "ok" : "warn", "Core du profil"]);
+        checks.push([state.identity.personaPath ? "ok" : "warn", "Persona du profil"]);
+        checks.push(["ok", "Étape Sources prête"]);
       }
       actionType = "next";
       actionLabel = isNew() ? "Poursuivre vers les sources" : "Importer les fichiers existants";
@@ -947,82 +947,67 @@
 
   function existingCoreSheet() {
     const i = state.identity;
-    return `# SOURCE CORE EXISTANTE — ${i.name}
+    return `# CORE — ${i.name}
 
-Statut du profil : existant  
-Chemin canonique : ${i.corePath || defaultCoreTarget() || "À VÉRIFIER"}  
-État déclaré : ${i.coreStatus || "CORE À VÉRIFIER"}  
-Version déclarée : ${i.coreVersion || i.version || "—"}  
-Protection : ${i.coreProtection || "STANDARD"}  
-Dernière vérification du registre : ${i.githubChecked || "non datée"}
+Chemin : ${i.corePath || defaultCoreTarget() || "À définir"}  
+Version : ${i.coreVersion || i.version || "—"}  
+Statut : ${i.coreStatus || "Disponible"}
 
-## Règle de la Forge
+## Fonction
 
-Ce profil possède déjà un Core. La Forge ne le régénère pas, ne le réécrit pas et ne crée aucun fichier PROPOSAL à sa place.
+${i.role || "Fonction définie dans le Core du profil."}
 
-Le fichier réel doit être importé à l’étape Sources s’il doit entrer dans le paquet final. Le chemin déclaré ne prouve pas que son contenu est chargé.
+Ajoutez le fichier Core à l’étape Sources pour l’inclure dans le paquet final.
 `;
   }
 
   function existingPersonaSheet() {
     const i = state.identity;
-    return `# SOURCE PERSONA EXISTANTE — ${i.name}
+    return `# PERSONA — ${i.name}
 
-Statut du profil : existant  
-Chemin canonique : ${i.personaPath || defaultPersonaTarget() || "À VÉRIFIER"}  
-État déclaré : ${i.personaStatus || "PERSONA À VÉRIFIER"}  
-Core requis : ${i.corePath || defaultCoreTarget() || "À VÉRIFIER"}
+Chemin : ${i.personaPath || defaultPersonaTarget() || "À définir"}  
+Statut : ${i.personaStatus || "Disponible"}  
+Core associé : ${i.corePath || defaultCoreTarget() || "À définir"}
 
-## Règle de la Forge
+## Présence
 
-La Persona reste distincte du Core et de Créatrice Conseillère.
+La Persona porte la voix, les modes et le rythme de travail du profil.
 
-Créatrice Conseillère guide l’interface. Elle ne devient pas la Persona du profil sélectionné et n’est pas injectée dans le paquet exporté.
-
-Le fichier réel doit être importé à l’étape Sources s’il doit entrer dans le paquet final.
+Ajoutez le fichier Persona à l’étape Sources pour l’inclure dans le paquet final.
 `;
   }
 
   function existingProfileBrief() {
     const i = state.identity;
-    return `# FICHE D’ASSEMBLAGE — ${i.name}
-
-Version Forge : ${DATA.version}  
-Statut : profil existant  
-Opération : assemblage sans régénération
+    return `# FICHE PROFIL — ${i.name}
 
 ## Identité
 
-- Nom : ${i.name}
 - Famille : ${i.family || "—"}
 - Niveau : ${i.level || "—"}
 - Rôle : ${i.role || "—"}
 
-## Sources déclarées
+## Fichiers
 
-- Core : ${i.corePath || defaultCoreTarget() || "À vérifier"}
-- Persona : ${i.personaPath || defaultPersonaTarget() || "À vérifier"}
+- Core : ${i.corePath || defaultCoreTarget() || "À définir"}
+- Persona : ${i.personaPath || defaultPersonaTarget() || "À définir"}
 - Mémoire / base : ${i.memoryPath || "Aucune"}
 
-## État
+## Composition
 
-- Core : ${i.coreStatus || "À vérifier"}
-- Persona : ${i.personaStatus || "À vérifier"}
-- Validation : ${i.validationStatus || "À vérifier"}
-
-## Verrou
-
-Aucun nouveau Core ni aucune nouvelle Persona ne sont générés pour ce profil. La Forge attend les fichiers existants et les exporte sans modification.
+- Agents : ${(i.agents || []).length}
+- Héritages : ${(i.heritage || []).length}
+- Modules : ${(i.modules || []).length}
 `;
   }
 
   function existingSourceAudit() {
     const i = state.identity;
     return [
-      [i.name ? "ok" : "error", "Profil existant", i.name || "Identité manquante"],
-      [i.corePath || defaultCoreTarget() ? "ok" : "warn", "Core", i.coreStatus || "Chemin à vérifier"],
-      [i.personaPath || defaultPersonaTarget() ? "ok" : "warn", "Persona", i.personaStatus || "Chemin à vérifier"],
-      ["ok", "Génération", "Aucun fichier PROPOSAL pour un profil existant"]
+      [i.name ? "ok" : "warn", "Profil", i.name || "À choisir"],
+      [i.corePath || defaultCoreTarget() ? "ok" : "warn", "Core", i.coreStatus || "À ajouter"],
+      [i.personaPath || defaultPersonaTarget() ? "ok" : "warn", "Persona", i.personaStatus || "À ajouter"],
+      ["ok", "Paquet", "Prêt pour l’étape Sources"]
     ];
   }
 
@@ -1033,42 +1018,42 @@ Aucun nouveau Core ni aucune nouvelle Persona ne sont générés pour ce profil.
 
   function renderWorkflowCopy() {
     const creating = isNew();
-    setText("#railSubtitle", creating ? "Conception guidée d’une nouvelle Aerith" : "Assemblage fidèle d’un profil existant");
-    setText("#intentTitle", creating ? "Quelle Aerith voulons-nous faire naître ?" : "Quel profil Aerith voulons-nous assembler ?");
-    setText("#missionTitle", creating ? "Définir la mission de la nouvelle Aerith" : "Relire l’identité du profil existant");
+    setText("#railSubtitle", creating ? "Conception guidée d’une nouvelle Aerith" : "Préparation d’un profil existant");
+    setText("#intentTitle", creating ? "Quelle Aerith voulons-nous faire naître ?" : "Quel profil Aerith voulons-nous préparer ?");
+    setText("#missionTitle", creating ? "Définir sa mission et son identité" : "Découvrir la mission du profil");
     setText("#missionDescription", creating
-      ? "Créatrice Conseillère aide à préciser la mission, les destinataires, les sorties et la formule sans imposer son propre profil."
-      : "Le profil sélectionné conserve son identité, sa mission et ses chemins. Les ajustements de configuration ne réécrivent pas son Core ni sa Persona.");
-    setText("#missionRouteTitle", creating ? "Conception guidée" : "Profil existant préservé");
+      ? "Créatrice Conseillère aide à préciser la mission, les destinataires, les sorties et la formule de la nouvelle Aerith."
+      : "Le profil sélectionné ouvre sa mission, ses destinataires, ses sorties et sa formule de travail.");
+    setText("#missionRouteTitle", creating ? "Conception guidée" : "Profil sélectionné");
     setText("#missionRouteDescription", creating
-      ? "Les champs préparent une proposition locale. Ils ne deviennent canoniques qu’après validation humaine."
-      : "La Forge assemble les sources existantes. Elle ne crée aucun nouveau Core ni aucune nouvelle Persona pour ce profil.");
-    setText("#agentsTitle", creating ? "Composer sa constellation d’agents" : "Consulter son architecture multi-agent");
+      ? "Les choix de l’Atelier construisent progressivement le Core, la Persona et le paquet de création."
+      : "Les informations du profil sont chargées pour préparer son kit et ses options.");
+    setText("#agentsTitle", creating ? "Composer sa constellation d’agents" : "Découvrir son architecture multi-agent");
     setText("#agentsDescription", creating
-      ? "Chaque agent reçoit une mission précise et transmet une brique à la nouvelle Aerith."
-      : "Les agents décrivent l’architecture existante du profil. Ils ne sont pas une nouvelle identité créée par la Conseillère.");
-    setText("#agentsRuleTitle", creating ? "Test de création" : "Règle de préservation");
+      ? "Chaque agent reçoit une mission précise et transmet une brique utile à la nouvelle Aerith."
+      : "Cette architecture présente les agents et les fonctions déjà associés au profil.");
+    setText("#agentsRuleTitle", creating ? "Test de création" : "Architecture du profil");
     setText("#agentsRuleDescription", creating
       ? "Chaque agent possède une entrée, une décision, une sortie et un point d’arrêt. La voix finale reste celle de la nouvelle Aerith."
-      : "Le profil garde une seule identité. La Forge n’ajoute pas d’agent qui remplacerait son Core ou sa Persona.");
-    setText("#heritageTitle", creating ? "Relier héritages et savoirs" : "Choisir les héritages et modules de renforcement");
+      : "Chaque agent conserve sa fonction et contribue à une seule identité cohérente.");
+    setText("#heritageTitle", "Relier héritages et savoirs");
     setText("#heritageDescription", creating
-      ? "Les héritages et modules enrichissent la future identité sans la remplacer."
-      : "Les héritages et modules complètent le profil existant. Ils ne réécrivent ni son Core ni sa Persona.");
-    setText("#personaTitle", creating ? "Donner une voix à son identité" : "Consulter la Persona et ses options");
+      ? "Les héritages et modules enrichissent la nouvelle Aerith selon sa mission."
+      : "Choisissez les héritages et modules utiles pour renforcer le profil.");
+    setText("#personaTitle", creating ? "Donner une voix à son identité" : "Découvrir sa Persona");
     setText("#personaDescription", creating
-      ? "Le Core porte la fonction. La Persona proposée donne une présence, un rythme et des modes."
-      : "La Persona appartient au profil sélectionné. Créatrice Conseillère reste seulement le guide de la Forge.");
-    setText("#corePersonaTitle", creating ? "Découvrir la proposition de Créatrice Conseillère" : "Vérifier le Core et la Persona existants");
+      ? "Le Core porte la fonction. La Persona donne une présence, un rythme et des modes."
+      : "La Persona donne au profil sa voix, ses modes et son rythme de travail.");
+    setText("#corePersonaTitle", creating ? "Découvrir le Core et la Persona préparés par Créatrice" : "Réunir le Core et la Persona");
     setText("#corePersonaDescription", creating
-      ? "La Forge rassemble les décisions dans un Core proposé, une Persona proposée et un brief de validation."
-      : "La Forge présente les sources déclarées du profil. Elle ne régénère aucun fichier et attend les originaux à l’étape suivante.");
-    setText("#sourcesTitle", creating ? "Importer les fichiers après validation" : "Importer le Core et la Persona existants");
+      ? "Créatrice rassemble les décisions dans un Core, une Persona et un brief de création."
+      : "Préparez les deux fichiers principaux du profil avant l’export.");
+    setText("#sourcesTitle", creating ? "Ajouter les fichiers validés" : "Ajouter les fichiers du profil");
     setText("#sourcesDescription", creating
-      ? "Après validation humaine, déposer les fichiers canonisés. Les PROPOSAL ne valident jamais le paquet final."
-      : "Déposer les fichiers existants correspondant aux chemins canoniques. Ils seront exportés sans modification.");
-    setText("#dropzoneTitle", creating ? "Déposer le Core et la Persona validés" : "Déposer le Core et la Persona existants");
-    setText("#dropzoneDescription", "Traitement local dans le navigateur. Les fichiers importés ne sont ni publiés ni réécrits.");
+      ? "Après relecture et validation, ajoutez le Core et la Persona finalisés pour préparer le paquet."
+      : "Ajoutez le Core et la Persona du profil pour préparer son paquet final.");
+    setText("#dropzoneTitle", "Déposer le Core et la Persona");
+    setText("#dropzoneDescription", "Les fichiers sont traités localement dans le navigateur.");
   }
 
   function proposalCore() {
@@ -1327,15 +1312,15 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant — a
       : {core:existingCoreSheet(), persona:existingPersonaSheet(), brief:existingProfileBrief()};
     $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
     const tabs = $$("#proposalTabs button");
-    if (tabs[0]) tabs[0].textContent = creating ? "Core Proposal" : "Core existant";
-    if (tabs[1]) tabs[1].textContent = creating ? "Persona Proposal" : "Persona existante";
-    if (tabs[2]) tabs[2].textContent = creating ? "Brief" : "Fiche d’assemblage";
+    if (tabs[0]) tabs[0].textContent = "Core";
+    if (tabs[1]) tabs[1].textContent = "Persona";
+    if (tabs[2]) tabs[2].textContent = creating ? "Brief" : "Fiche";
     tabs.forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
     const downloads = $("#proposalDownloads");
     if (downloads) downloads.hidden = !creating;
     $("#canonRoute").innerHTML = creating
-      ? `<b>Étape de canonisation</b><p>Relire la proposition, valider les deux fichiers, puis les intégrer aux chemins canoniques indiqués avant de réunir les sources finales.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
-      : `<b>Profil existant préservé</b><p>La Forge n’a généré ni Core ni Persona. Importer les fichiers existants à l’étape Sources afin de préparer le paquet final sans les modifier.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
+      ? `<b>Validation de la création</b><p>Relisez le Core, la Persona et le brief, puis ajoutez les fichiers validés à l’étape Sources.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
+      : `<b>Fichiers du profil</b><p>Ajoutez le Core et la Persona à l’étape Sources, puis préparez le paquet final.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
   }
 
   function fieldFromText(text, labels) {
@@ -1463,19 +1448,16 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant — a
       if (core) add("ok", "Core canonique", `${core.file.name} importé.`);
       else {
         const known = state.identity.coreStatus || "CORE PRIVÉ RÉFÉRENCÉ";
-        add("warn", "À importer — Core", `${known}. Le chemin est connu, mais le contenu privé n’est pas chargé dans le navigateur.`, true, false);
+        add("warn", "Core", `${known}. Ajouter le fichier pour préparer le paquet final.`, true, false);
         ready = false;
       }
 
       if (persona) add("ok", "Persona canonique", `${persona.file.name} importée.`);
       else {
         const personaState = state.identity.personaStatus || "PERSONA À VÉRIFIER";
-        add("warn", "À importer — Persona", `${personaState}. Importer la Persona réelle lorsqu’elle est disponible.`, true, false);
+        add("warn", "Persona", `${personaState}. Ajouter le fichier pour préparer le paquet final.`, true, false);
         ready = false;
       }
-
-      if (coreProposal) add("info", "Proposition Core", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
-      if (personaProposal) add("info", "Proposition Persona", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
     }
 
     const corePath = state.identity.corePath || defaultCoreTarget();
@@ -1750,7 +1732,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   async function downloadProposalZip() {
-    if (!isNew()) { showToast("Ce profil existe déjà : aucune proposition n’est générée."); return; }
+    if (!isNew()) { showToast("Choisissez « Nouvelle Aerith » pour créer un nouveau Core et une nouvelle Persona."); return; }
     const root = `${canonicalBase()}_PROPOSAL`;
     const files = new Map([
       [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
@@ -1905,9 +1887,9 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   for (const name of ["dragleave", "drop"]) dropzone.addEventListener(name, event => { event.preventDefault(); dropzone.classList.remove("drag"); });
   dropzone.addEventListener("drop", event => addFiles(event.dataTransfer.files));
 
-  $("#downloadProposalCore").addEventListener("click", () => { if (!isNew()) return showToast("Aucun Core Proposal pour un profil existant."); downloadText(proposalFileName("core"), proposalCore()); });
-  $("#downloadProposalPersona").addEventListener("click", () => { if (!isNew()) return showToast("Aucune Persona Proposal pour un profil existant."); downloadText(proposalFileName("persona"), proposalPersona()); });
-  $("#downloadProposalBrief").addEventListener("click", () => { if (!isNew()) return showToast("Aucun paquet Proposal pour un profil existant."); downloadText(proposalFileName("brief"), designBrief()); });
+  $("#downloadProposalCore").addEventListener("click", () => { if (!isNew()) return showToast("Choisissez « Nouvelle Aerith » pour créer un nouveau Core."); downloadText(proposalFileName("core"), proposalCore()); });
+  $("#downloadProposalPersona").addEventListener("click", () => { if (!isNew()) return showToast("Choisissez « Nouvelle Aerith » pour créer une nouvelle Persona."); downloadText(proposalFileName("persona"), proposalPersona()); });
+  $("#downloadProposalBrief").addEventListener("click", () => { if (!isNew()) return showToast("Choisissez « Nouvelle Aerith » pour créer un dossier de conception."); downloadText(proposalFileName("brief"), designBrief()); });
   $("#downloadProposalZip").addEventListener("click", downloadProposalZip);
 
   $("#downloadBoot").addEventListener("click", () => downloadText(finalFileName("boot"), bootDocument()));
@@ -2028,8 +2010,6 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   initEmbeddedView();
 
   if (document.body.dataset.build !== DATA.version) {
-    const diagnostic = $("#diagnostic");
-    diagnostic.hidden = false;
-    diagnostic.textContent = `Version incohérente : HTML ${document.body.dataset.build} / données ${DATA.version}.`;
+    console.error("Version de données incompatible.");
   }
 })();
