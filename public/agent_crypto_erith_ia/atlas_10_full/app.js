@@ -167,8 +167,22 @@
     return DATA.profiles.find(item => item.id === state.profileId) || DATA.profiles[0];
   }
 
+  function selectedFlowerGirl() {
+    const marker = String(state.selectedExample || "");
+    if (!marker.startsWith("flower:")) return null;
+    const id = marker.slice("flower:".length);
+    return FLOWER?.profiles?.find(item => item.id === id) || null;
+  }
+
+  function isExistingFlowerGirl() {
+    const item = selectedFlowerGirl();
+    if (!item) return false;
+    const status = `${item.status || ""} ${item.coreStatus || ""}`;
+    return /PROFIL EXISTANT|CORE INDIVIDUEL EXISTANT|CORE CANONIQUE PROTÉGÉ|CANONIQUE/.test(status);
+  }
+
   function isNew() {
-    return state.profileId === "new";
+    return state.profileId === "new" && !isExistingFlowerGirl();
   }
 
   function esc(value) {
@@ -487,7 +501,7 @@
     persist();
     renderAll();
     if (scroll) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
-    showToast(`${item.name} chargée dans l’Atelier.`);
+    showToast(`${item.name} — profil existant chargé dans l’Atelier.`);
   }
 
   function renderFlowerDetail(item, scroll = false) {

@@ -18,7 +18,7 @@
 | 1 | Aerith-10 Gardienne / Vault | Système & Coffre | V6 renforcée | CORE INDIVIDUEL EXISTANT | PILIER VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
 | 2 | Aerith-10 Archiviste | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | PILIER VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
 | 3 | Aerith-10 Sentinelle | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | GARDE-FOU VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
-| 4 | Aerith-10 Routeuse | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À CRÉER / RELIER |
+| 4 | Aerith-10 Routeuse | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER |
 | 5 | Aerith-10 Opératrice | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
 | 6 | Aerith-10 Intendante | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
 | 7 | Aerith-10 Guérisseuse | Sens, Discernement & Transmission | V3.0 | CORE INDIVIDUEL EXISTANT | VALIDATION HUMAINE À CONFIRMER | PERSONA À VÉRIFIER |
@@ -94,7 +94,7 @@
 - **État Core :** CORE INDIVIDUEL EXISTANT
 - **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
 - **Persona :** `core/AERITH_10_ROUTEUSE_PERSONA_OPERATING_LAYER.md`
-- **État Persona :** PERSONA À CRÉER / RELIER
+- **État Persona :** PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER
 - **Formule :** Intention → Capacité → Route → Chargement minimal.
 - **Frontière :** Routeuse choisit la destination et la séquence ; Opératrice exécute la procédure retenue.
 
