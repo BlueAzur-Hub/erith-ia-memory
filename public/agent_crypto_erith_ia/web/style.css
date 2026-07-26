@@ -15750,3 +15750,61 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     min-height: 980px !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.52
+   FORGE WORKSHOP ONLY · HEADER PLUS 8 STEPS
+   ========================================================= */
+
+.forge-workshop-only-panel {
+  gap: 10px !important;
+  padding: 12px !important;
+}
+
+.forge-workshop-toolbar {
+  min-height: 48px !important;
+  padding: 0 4px !important;
+}
+
+.forge-workshop-identity {
+  display: flex !important;
+  align-items: baseline !important;
+  flex-wrap: wrap !important;
+  gap: 6px 12px !important;
+}
+
+.forge-workshop-identity > strong {
+  color: #fff0a4 !important;
+  font: 900 clamp(15px, 1.45vw, 21px)/1.15 system-ui, sans-serif !important;
+}
+
+.forge-workshop-identity > span {
+  color: rgba(116, 234, 217, .82) !important;
+  font: 780 10px/1.3 system-ui, sans-serif !important;
+  letter-spacing: .025em !important;
+}
+
+.forge-workshop-stage {
+  border-radius: 14px !important;
+}
+
+.forge-workshop-embedded {
+  min-height: 940px !important;
+  border-radius: 14px !important;
+}
+
+@media (max-width: 760px) {
+  .forge-workshop-toolbar {
+    min-height: 0 !important;
+  }
+
+  .forge-workshop-identity {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .forge-workshop-embedded {
+    min-height: 860px !important;
+  }
+}

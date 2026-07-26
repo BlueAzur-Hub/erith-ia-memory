@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.51 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.52 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.51";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.52";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -12193,91 +12193,216 @@ window.setTimeout(atlasChartOverlayUpdate, 0);
 window.setTimeout(atlasChartOverlayUpdate, 800);
 
 
+
+
 /* =========================================================
-   Build 28.1.51 — Forge V3 complete same-origin embed
+   Build 28.1.52 — Forge header + 8-step workshop only
+   The autonomous Forge remains complete in atlas_10_full.
    ========================================================= */
 const atlasForgeFrame = document.getElementById("forgeAerithEmbedded");
 const atlasForgeStage = document.getElementById("forgeEmbeddedStage");
 const atlasForgeCollapse = document.getElementById("forge-aerith");
+const atlasForgeStatus = document.getElementById("forgeEmbeddedStatus");
+const atlasForgeTitle = document.getElementById("forge-aerith-title");
 
 let atlasForgeResizeObserver = null;
 let atlasForgeMutationObserver = null;
+let atlasForgeResizeTimer = 0;
 let atlasForgeLastHeight = 0;
+let atlasForgePrepared = false;
 
-function atlasResizeForgeFrame() {
+function atlasForgeSetStatus(message, state = "loading") {
+  if (atlasForgeStatus) atlasForgeStatus.textContent = message;
+  if (atlasForgeStage) atlasForgeStage.dataset.state = state;
+}
+
+function atlasForgeInjectWorkshopMode() {
+  if (!atlasForgeFrame) return null;
+
+  const forgeDocument = atlasForgeFrame.contentDocument;
+  if (!forgeDocument?.head || !forgeDocument?.body) return null;
+
+  forgeDocument.body.classList.add("agent-crypto-workshop-embed");
+
+  let styleNode = forgeDocument.getElementById("agentCryptoWorkshopEmbedStyle");
+  if (!styleNode) {
+    styleNode = forgeDocument.createElement("style");
+    styleNode.id = "agentCryptoWorkshopEmbedStyle";
+    styleNode.textContent = `
+      html {
+        scroll-behavior: auto !important;
+        background: #060914 !important;
+        overflow-x: hidden !important;
+      }
+
+      body.agent-crypto-workshop-embed {
+        margin: 0 !important;
+        min-height: 0 !important;
+        background: #060914 !important;
+        overflow: hidden !important;
+      }
+
+      body.agent-crypto-workshop-embed > .diagnostic {
+        display: none !important;
+      }
+
+      body.agent-crypto-workshop-embed > header.topbar {
+        position: relative !important;
+        inset: auto !important;
+        z-index: 30 !important;
+        width: 100% !important;
+      }
+
+      body.agent-crypto-workshop-embed > main#top {
+        min-height: 0 !important;
+        padding-top: 0 !important;
+      }
+
+      body.agent-crypto-workshop-embed > main#top > section:not(#unifiedForge) {
+        display: none !important;
+      }
+
+      body.agent-crypto-workshop-embed #unifiedForge {
+        display: grid !important;
+        min-height: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 10px !important;
+      }
+
+      body.agent-crypto-workshop-embed footer {
+        display: none !important;
+      }
+    `;
+    forgeDocument.head.appendChild(styleNode);
+  }
+
+  const fullForgeUrl = new URL("../atlas_10_full/index.html", window.location.href);
+
+  forgeDocument.querySelectorAll('header.topbar nav a[href="#lineage"], header.topbar nav a[href="#constellation"], header.topbar nav a[href="#profiles"]').forEach(link => {
+    const hash = link.getAttribute("href") || "";
+    link.href = `${fullForgeUrl.href}${hash}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.setAttribute("aria-label", `${link.textContent?.trim() || "Section"} — ouvrir dans la Forge complète`);
+  });
+
+  const agentCryptoLink = forgeDocument.querySelector('header.topbar nav a[href="../web/index.html"]');
+  if (agentCryptoLink) {
+    agentCryptoLink.target = "_top";
+    agentCryptoLink.rel = "noopener";
+  }
+
+  const workshopLink = forgeDocument.querySelector('header.topbar nav a[href="#unifiedForge"]');
+  if (workshopLink) workshopLink.removeAttribute("target");
+
+  const exportLink = forgeDocument.querySelector('header.topbar nav a[href="#exportCenter"]');
+  if (exportLink) exportLink.removeAttribute("target");
+
+  const buildBadge = forgeDocument.getElementById("buildBadge");
+  const forgeVersion = String(buildBadge?.textContent || "V3").trim();
+
+  if (atlasForgeTitle) {
+    atlasForgeTitle.textContent = `Forge d’Aerith Pro · Atelier Créatrice · ${forgeVersion}`;
+  }
+  atlasForgeSetStatus(`Atelier prêt · 8 étapes · ${forgeVersion}`, "ready");
+
+  atlasForgePrepared = true;
+  return forgeDocument;
+}
+
+function atlasMeasureForgeWorkshop() {
   if (!atlasForgeFrame) return;
 
   try {
     const forgeDocument = atlasForgeFrame.contentDocument;
     if (!forgeDocument) return;
 
+    const header = forgeDocument.querySelector("body > header.topbar");
+    const workshop = forgeDocument.getElementById("unifiedForge");
     const body = forgeDocument.body;
     const root = forgeDocument.documentElement;
-    const measuredHeight = Math.max(
-      root?.scrollHeight || 0,
-      root?.offsetHeight || 0,
-      root?.clientHeight || 0,
+
+    const visibleBottom = Math.max(
+      header?.getBoundingClientRect().bottom || 0,
+      workshop?.getBoundingClientRect().bottom || 0,
       body?.scrollHeight || 0,
-      body?.offsetHeight || 0,
-      body?.clientHeight || 0,
-      1200
+      root?.scrollHeight || 0,
+      940
     );
 
-    if (Math.abs(measuredHeight - atlasForgeLastHeight) > 2) {
+    const measuredHeight = Math.ceil(visibleBottom + 4);
+
+    if (Math.abs(measuredHeight - atlasForgeLastHeight) > 3) {
       atlasForgeLastHeight = measuredHeight;
       atlasForgeFrame.style.height = `${measuredHeight}px`;
     }
   } catch (error) {
-    console.warn("Redimensionnement Forge indisponible :", error);
+    atlasForgeSetStatus("Atelier chargé · hauteur automatique indisponible", "warning");
+    console.warn("Redimensionnement Atelier Forge indisponible :", error);
   }
 }
 
-function atlasScheduleForgeResize() {
-  window.requestAnimationFrame(atlasResizeForgeFrame);
-  window.setTimeout(atlasResizeForgeFrame, 120);
-  window.setTimeout(atlasResizeForgeFrame, 500);
-  window.setTimeout(atlasResizeForgeFrame, 1200);
+function atlasScheduleForgeResize(delay = 70) {
+  window.clearTimeout(atlasForgeResizeTimer);
+  atlasForgeResizeTimer = window.setTimeout(() => {
+    window.requestAnimationFrame(atlasMeasureForgeWorkshop);
+  }, delay);
 }
 
-function atlasObserveForgeDocument() {
-  if (!atlasForgeFrame) return;
+function atlasObserveForgeWorkshop(forgeDocument) {
+  atlasForgeResizeObserver?.disconnect();
+  atlasForgeMutationObserver?.disconnect();
 
-  try {
-    const forgeDocument = atlasForgeFrame.contentDocument;
-    if (!forgeDocument) return;
+  const workshop = forgeDocument?.getElementById("unifiedForge");
+  if (!workshop) return;
 
-    atlasForgeResizeObserver?.disconnect();
-    atlasForgeMutationObserver?.disconnect();
-
-    if ("ResizeObserver" in window) {
-      atlasForgeResizeObserver = new ResizeObserver(atlasScheduleForgeResize);
-      if (forgeDocument.documentElement) atlasForgeResizeObserver.observe(forgeDocument.documentElement);
-      if (forgeDocument.body) atlasForgeResizeObserver.observe(forgeDocument.body);
-    }
-
-    atlasForgeMutationObserver = new MutationObserver(atlasScheduleForgeResize);
-    if (forgeDocument.body) {
-      atlasForgeMutationObserver.observe(forgeDocument.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: false,
-      });
-    }
-  } catch (error) {
-    console.warn("Observation Forge indisponible :", error);
+  if ("ResizeObserver" in window) {
+    atlasForgeResizeObserver = new ResizeObserver(() => atlasScheduleForgeResize(50));
+    atlasForgeResizeObserver.observe(workshop);
+    const topbar = forgeDocument.querySelector("body > header.topbar");
+    if (topbar) atlasForgeResizeObserver.observe(topbar);
   }
+
+  atlasForgeMutationObserver = new MutationObserver(() => atlasScheduleForgeResize(90));
+  atlasForgeMutationObserver.observe(workshop, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    characterData: false,
+  });
+
+  forgeDocument.addEventListener("click", () => atlasScheduleForgeResize(130), true);
+  forgeDocument.addEventListener("change", () => atlasScheduleForgeResize(130), true);
+  forgeDocument.addEventListener("input", () => atlasScheduleForgeResize(180), true);
 }
 
 atlasForgeFrame?.addEventListener("load", () => {
-  atlasForgeStage?.classList.add("is-ready");
-  atlasObserveForgeDocument();
-  atlasScheduleForgeResize();
+  try {
+    const forgeDocument = atlasForgeInjectWorkshopMode();
+    if (!forgeDocument) {
+      atlasForgeSetStatus("Source Forge indisponible", "error");
+      return;
+    }
+
+    atlasForgeStage?.classList.add("is-ready");
+    atlasObserveForgeWorkshop(forgeDocument);
+
+    atlasScheduleForgeResize(0);
+    window.setTimeout(() => atlasScheduleForgeResize(0), 240);
+    window.setTimeout(() => atlasScheduleForgeResize(0), 800);
+    window.setTimeout(() => atlasScheduleForgeResize(0), 1600);
+  } catch (error) {
+    atlasForgeSetStatus("Source Forge indisponible · ouvrir la Forge complète", "error");
+    console.warn("Préparation de l’Atelier Forge indisponible :", error);
+  }
 });
 
 atlasForgeCollapse?.addEventListener("toggle", () => {
-  if (atlasForgeCollapse.open) atlasScheduleForgeResize();
+  if (atlasForgeCollapse.open) {
+    if (!atlasForgePrepared) atlasForgeSetStatus("Chargement de l’atelier en huit étapes…", "loading");
+    atlasScheduleForgeResize(40);
+  }
 });
 
-window.addEventListener("resize", atlasScheduleForgeResize);
-window.addEventListener("orientationchange", atlasScheduleForgeResize);
+window.addEventListener("resize", () => atlasScheduleForgeResize(90));
+window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180));
