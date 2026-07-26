@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R1-reprise-canonique",
+  version: "V3.3R2-candidate-locale",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -14,7 +14,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
     "Arrêt propre."
   ],
   advisor: {
-    name: "Aerith-10 Créatrice Conseillère",
+    name: "Aerith-10 Créatrice — Conseillère de la Forge",
     signature: "Éclairer le choix utile, préserver l’identité, conduire vers la forge.",
     steps: [
       {
@@ -44,7 +44,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Relire la proposition",
-        message: "Le Core proposé, la Persona proposée et le brief forment le dossier de validation humaine. Le ZIP de proposition contient trois fichiers.",
+        message: "Pour une nouvelle Aerith, la Forge présente les propositions. Pour un profil existant, elle présente ses sources sans régénérer son Core ni sa Persona.",
         action: "Poursuivre vers les sources"
       },
       {
@@ -59,7 +59,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       }
     ],
     profiles: {
-      new: "Créatrice accompagne une nouvelle spécialité depuis l’intention jusqu’à sa proposition canonisable.",
+      new: "Créatrice Conseillère accompagne une nouvelle Aerith depuis l’intention jusqu’à sa proposition canonisable.",
       seven: "Seven protège la mémoire, la vérité, la continuité et le routage des sources.",
       creator: "Créatrice organise la production et réalise la destination artistique avec une architecture multi-agent.",
       aerithcrypto: "Aerith-10 Crypto transforme l’analyse en compréhension, prudence et décision humaine.",
@@ -98,21 +98,21 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
   profiles: [
     {
       id: "new",
-      name: "Nouvelle Aerith-10",
-      family: "Filles d’Aerith",
-      level: "Aerith-10",
-      sigil: "A10+",
+      name: "Nouvelle Aerith",
+      family: "Constellation Aerith",
+      level: "À définir",
+      sigil: "A+",
       kind: "new",
       privacy: "private",
-      status: "Création guidée par Aerith-10 Créatrice",
+      status: "Création guidée par Créatrice Conseillère",
       coreStatus: "CORE À CONSTRUIRE",
       coreVersion: "—",
       coreProtection: "STANDARD",
       validationStatus: "À CONCEVOIR",
       personaStatus: "PERSONA À CONSTRUIRE",
       githubChecked: "",
-      role: "Transformer une intention en spécialité Aerith-10 cohérente, vivante et exploitable.",
-      description: "Aerith-10 Créatrice accompagne la naissance du profil, de la mission initiale jusqu’au Core, à la Persona et au paquet final.",
+      role: "Transformer une intention en profil Aerith cohérent, vivant et exploitable.",
+      description: "Créatrice Conseillère accompagne la naissance du profil, sans imposer son niveau, sa branche ni son environnement d’utilisation.",
       visual: "assets/themes/aerith_10_creatrice.webp",
       theme: "creator",
       heritage: ["seven"]

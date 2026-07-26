@@ -8,26 +8,26 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-v3-final";
+  const STORAGE_KEY = "aerith-forge-v3-3r2-clarification";
   const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
   document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
-  const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
+  const LEGACY_STORAGE_KEYS = ["aerith-forge-v3-final", "aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
 
   const STEPS = [
-    ["01", "Intention", "Choisir une identité canonique ou ouvrir une nouvelle voie."],
+    ["01", "Intention", "Choisir un profil existant ou ouvrir une nouvelle voie."],
     ["02", "Mission", "Donner un centre, une fonction et une destination utile."],
     ["03", "Multi-agents", "Composer une constellation d’agents spécialisés."],
     ["04", "Héritages", "Relier les couches Seven et les savoirs utiles."],
     ["05", "Persona", "Donner une voix, des modes et un rythme de travail."],
-    ["06", "Core + Persona", "Découvrir la proposition structurée par Créatrice."],
+    ["06", "Core + Persona", "Vérifier les sources existantes ou découvrir une nouvelle proposition."],
     ["07", "Sources", "Réunir les fichiers canoniques et le visuel."],
     ["08", "Forge finale", "Vérifier l’architecture et forger le paquet complet."]
   ];
 
   const blankIdentity = () => ({
-    name: "Aerith-10 Nouvelle Spécialité",
-    family: "Filles d’Aerith",
-    level: "Aerith-10",
+    name: "Nouvelle Aerith",
+    family: "Constellation Aerith",
+    level: "À définir",
     mode: "",
     role: "",
     problem: "",
@@ -51,7 +51,7 @@
     corePath: "",
     personaPath: "",
     memoryPath: "",
-    status: "Création guidée par Aerith-10 Créatrice",
+    status: "Création guidée par Créatrice Conseillère",
     version: "",
     coreStatus: "CORE À CONSTRUIRE",
     coreVersion: "—",
@@ -68,7 +68,7 @@
       name: selected.name,
       family: selected.family,
       level: selected.level,
-      mode: selected.kind === "new" ? "Spécialiste / Orchestratrice" : selected.role.split(":")[0],
+      mode: selected.kind === "new" ? "" : selected.role.split(":")[0],
       role: selected.role || "",
       problem: selected.problem || selected.description || "",
       users: selected.users || "Christophe et les utilisateurs explicitement définis par le projet.",
@@ -199,11 +199,11 @@
   }
 
   function cleanName(value) {
-    return String(value || "AERITH_10_PROFILE")
+    return String(value || "AERITH_PROFILE")
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-zA-Z0-9]+/g, "_")
       .replace(/^_+|_+$/g, "")
-      .toUpperCase() || "AERITH_10_PROFILE";
+      .toUpperCase() || "AERITH_PROFILE";
   }
 
   function cleanPath(value) {
@@ -292,7 +292,7 @@
   }
 
   function canonicalBase() {
-    return cleanName(state.identity.name).replace(/^AERITH10_/, "AERITH_10_");
+    return cleanName(state.identity.name).replace(/^AERITH_?([0-9]+)_?/, "AERITH_$1_");
   }
 
   function defaultCoreTarget() {
@@ -337,7 +337,7 @@
     persist();
     renderAll();
     if (move) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
-    showToast(`${selected.name} rejoint l’atelier de Créatrice.`);
+    showToast(`${selected.name} est ouvert dans la Forge.`);
   }
 
   function applyExample(id) {
@@ -377,7 +377,7 @@
     state.visualUrl = "";
     persist();
     renderAll();
-    showToast("Base libre préremplie par Créatrice.");
+    showToast("Base libre ouverte avec l’aide de Créatrice Conseillère.");
   }
 
   function renderDoctrine() {
@@ -430,8 +430,8 @@
     const fresh = DATA.profiles.find(item => item.kind === "new");
     $("#canonicalProfileGrid").innerHTML = existing.map(profileCard).join("");
     $("#newProfileLaunch").innerHTML = fresh ? `<button type="button" class="new-profile-launch ${state.profileId === fresh.id && !state.selectedExample ? "active" : ""}" data-profile="${esc(fresh.id)}">
-      <span class="new-orbit">A10+</span>
-      <span><small>INTENTION LIBRE</small><strong>Faire naître une nouvelle Aerith-10</strong><p>${esc(fresh.description)}</p></span>
+      <span class="new-orbit">A+</span>
+      <span><small>INTENTION LIBRE</small><strong>Faire naître une nouvelle Aerith</strong><p>${esc(fresh.description)}</p></span>
       <b>Entrer dans l’atelier →</b>
     </button>` : "";
     $("#specialtyGrid").innerHTML = DATA.examples.map(item => exampleCard(item, true)).join("");
@@ -661,7 +661,7 @@
     if (audit.ready) return "PRÊTE À ACTIVER";
     if (state.canonicalConfirmed && importedKind("core") && importedKind("persona")) return "SOURCES VALIDÉES";
     if (state.canonicalConfirmed) return "VALIDATION HUMAINE";
-    if (proposalAudit().ready && state.step >= 5) return "PRÊTE POUR VALIDATION";
+    if (isNew() && proposalAudit().every(item => item[0] !== "error") && state.step >= 5) return "PRÊTE POUR VALIDATION";
     if ((i.tone || "").trim() && (i.modes || []).length && (i.guardrails || []).length) return "IDENTITÉ VIVANTE";
     if ((i.agents || []).length && (i.heritage || []).length) return "ARCHITECTURE";
     if ((i.role || "").trim() && (i.problem || "").trim()) return "MISSION";
@@ -671,10 +671,10 @@
   function renderLiveProfile() {
     const i = state.identity;
     $("#liveMaturity").textContent = maturityState();
-    $("#liveName").textContent = i.name || "Aerith-10 Nouvelle Spécialité";
-    $("#liveRole").textContent = i.role || "Une mission prend forme dans l’atelier de Créatrice.";
+    $("#liveName").textContent = i.name || "Nouvelle Aerith";
+    $("#liveRole").textContent = i.role || "Une mission prend forme dans la Forge.";
     $("#liveFormula").textContent = i.formula || "Intention → Ressources → Destination utile.";
-    $("#liveFamily").textContent = i.family || "Filles d’Aerith";
+    $("#liveFamily").textContent = i.family || "Constellation Aerith";
     $("#liveAgents").textContent = String((i.agents || []).length);
     $("#liveModules").textContent = String((i.modules || []).length);
     $("#liveHeritage").innerHTML = (i.heritage || []).length
@@ -685,11 +685,26 @@
       : "<span>Héritage à choisir</span>";
   }
 
+  function workflowStepDescription(index) {
+    if (isNew()) return STEPS[index]?.[2] || "";
+    const existing = [
+      "Choisir le profil existant à assembler.",
+      "Relire sa mission et son identité sans les recréer.",
+      "Consulter son architecture multi-agent existante.",
+      "Choisir les héritages et modules qui le renforcent.",
+      "Consulter sa Persona et ses options de travail.",
+      "Vérifier le Core et la Persona sans générer de proposition.",
+      "Importer les fichiers canoniques existants.",
+      "Auditer puis exporter le paquet sans modifier les sources."
+    ];
+    return existing[index] || STEPS[index]?.[2] || "";
+  }
+
   function renderStepNav() {
     $("#stepNav").innerHTML = STEPS.map((step, index) => `
       <button type="button" class="step-button ${state.step === index ? "active" : ""}" data-step-button="${index}">
         <span class="step-number">${step[0]}</span>
-        <span><b>${esc(step[1])}</b><small>${esc(step[2])}</small></span>
+        <span><b>${esc(step[1])}</b><small>${esc(workflowStepDescription(index))}</small></span>
       </button>`).join("");
   }
 
@@ -698,10 +713,10 @@
     document.body.dataset.theme = p.theme || "seven";
     $("#matrixName").textContent = state.identity.name;
     $("#matrixDescription").textContent = state.identity.role || p.description;
-    $("#matrixSymbol").textContent = p.sigil;
+    $("#matrixSymbol").textContent = selectedFlowerGirl()?.sigil || p.sigil;
     $("#matrixKicker").textContent = isNew() ? "CRÉATION ACCOMPAGNÉE" : "PROFIL CANONIQUE";
     $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
-    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
+    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? (isNew() ? "CRÉATION" : "ASSEMBLAGE") : "SOURCES");
     const image = $("#matrixImage");
     image.src = currentVisual();
     image.hidden = !currentVisual();
@@ -740,7 +755,7 @@
 
   function syncUIToState() {
     const i = state.identity;
-    i.name = $("#fieldName").value.trim() || "Aerith-10 Nouvelle Spécialité";
+    i.name = $("#fieldName").value.trim() || "Nouvelle Aerith";
     i.family = $("#fieldFamily").value.trim();
     i.level = $("#fieldLevel").value.trim();
     i.mode = $("#fieldMode").value.trim();
@@ -798,10 +813,12 @@
     let stateLabel = "GUIDE ACTIF";
     let actionType = "next";
     let actionLabel = guide.action || "Continuer";
+    let guideTitle = guide.title;
+    let guideMessage = guide.message;
 
     if (state.step === 0) {
       checks.push(["ok", p.name]);
-      checks.push(["ok", p.kind === "new" ? "Création guidée" : "Profil canonique"]);
+      checks.push(["ok", isNew() ? "Nouvelle Aerith · proposition" : "Profil existant"]);
     } else if (state.step === 1) {
       checks.push([i.role ? "ok" : "warn", i.role ? "Mission inscrite" : "Mission à préciser"]);
       checks.push([i.outputs.length ? "ok" : "warn", `${i.outputs.length} sortie(s) préparée(s)`]);
@@ -817,11 +834,21 @@
       checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
       checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
     } else if (state.step === 5) {
-      checks.push(["ok", "Core Proposal"]);
-      checks.push(["ok", "Persona Proposal"]);
-      checks.push(["ok", "Brief de validation"]);
+      if (isNew()) {
+        guideTitle = "Relire la proposition";
+        guideMessage = "Créatrice Conseillère présente le Core proposé, la Persona proposée et le brief de validation de la nouvelle Aerith.";
+        checks.push(["ok", "Core Proposal"]);
+        checks.push(["ok", "Persona Proposal"]);
+        checks.push(["ok", "Brief de validation"]);
+      } else {
+        guideTitle = "Vérifier les sources existantes";
+        guideMessage = "Créatrice Conseillère distingue le guide de la Forge, le profil actif et ses fichiers. Aucun Core ni aucune Persona ne sont recréés.";
+        checks.push([state.identity.corePath ? "ok" : "warn", state.identity.corePath ? "Core existant référencé" : "Chemin Core à vérifier"]);
+        checks.push([state.identity.personaPath ? "ok" : "warn", state.identity.personaPath ? "Persona existante référencée" : "Chemin Persona à vérifier"]);
+        checks.push(["ok", "Aucune proposition générée"]);
+      }
       actionType = "next";
-      actionLabel = "Poursuivre vers les sources";
+      actionLabel = isNew() ? "Poursuivre vers les sources" : "Importer les fichiers existants";
     } else if (state.step === 6) {
       if (p.privacy === "public") {
         checks.push(["ok", "Core public intégré"]);
@@ -862,7 +889,9 @@
 
     return {
       ...guide,
-      profileNote: DATA.advisor?.profiles?.[state.profileId] || i.role || "",
+      title: guideTitle,
+      message: guideMessage,
+      profileNote: state.step === 5 ? "" : (DATA.advisor?.profiles?.[state.profileId] || i.role || ""),
       checks,
       stateLabel,
       actionType,
@@ -901,11 +930,12 @@
     const step = STEPS[state.step];
     $("#stepCounter").textContent = `ÉTAPE ${step[0]} SUR 08`;
     $("#stepTitle").textContent = step[1];
-    $("#stepDescription").textContent = step[2];
+    $("#stepDescription").textContent = workflowStepDescription(state.step);
     $("#progressValue").textContent = `${Math.round((state.step + 1) / STEPS.length * 100)}%`;
     $("#previousTop").disabled = $("#previousBottom").disabled = state.step === 0;
     $("#nextTop").disabled = $("#nextBottom").disabled = state.step === STEPS.length - 1;
     renderStepNav();
+    renderWorkflowCopy();
     renderMatrix();
     renderLiveProfile();
     renderAdvisor();
@@ -913,6 +943,132 @@
     if (state.step === 6) renderImports();
     if (state.step === 7) renderFinal();
     if (focus) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function existingCoreSheet() {
+    const i = state.identity;
+    return `# SOURCE CORE EXISTANTE — ${i.name}
+
+Statut du profil : existant  
+Chemin canonique : ${i.corePath || defaultCoreTarget() || "À VÉRIFIER"}  
+État déclaré : ${i.coreStatus || "CORE À VÉRIFIER"}  
+Version déclarée : ${i.coreVersion || i.version || "—"}  
+Protection : ${i.coreProtection || "STANDARD"}  
+Dernière vérification du registre : ${i.githubChecked || "non datée"}
+
+## Règle de la Forge
+
+Ce profil possède déjà un Core. La Forge ne le régénère pas, ne le réécrit pas et ne crée aucun fichier PROPOSAL à sa place.
+
+Le fichier réel doit être importé à l’étape Sources s’il doit entrer dans le paquet final. Le chemin déclaré ne prouve pas que son contenu est chargé.
+`;
+  }
+
+  function existingPersonaSheet() {
+    const i = state.identity;
+    return `# SOURCE PERSONA EXISTANTE — ${i.name}
+
+Statut du profil : existant  
+Chemin canonique : ${i.personaPath || defaultPersonaTarget() || "À VÉRIFIER"}  
+État déclaré : ${i.personaStatus || "PERSONA À VÉRIFIER"}  
+Core requis : ${i.corePath || defaultCoreTarget() || "À VÉRIFIER"}
+
+## Règle de la Forge
+
+La Persona reste distincte du Core et de Créatrice Conseillère.
+
+Créatrice Conseillère guide l’interface. Elle ne devient pas la Persona du profil sélectionné et n’est pas injectée dans le paquet exporté.
+
+Le fichier réel doit être importé à l’étape Sources s’il doit entrer dans le paquet final.
+`;
+  }
+
+  function existingProfileBrief() {
+    const i = state.identity;
+    return `# FICHE D’ASSEMBLAGE — ${i.name}
+
+Version Forge : ${DATA.version}  
+Statut : profil existant  
+Opération : assemblage sans régénération
+
+## Identité
+
+- Nom : ${i.name}
+- Famille : ${i.family || "—"}
+- Niveau : ${i.level || "—"}
+- Rôle : ${i.role || "—"}
+
+## Sources déclarées
+
+- Core : ${i.corePath || defaultCoreTarget() || "À vérifier"}
+- Persona : ${i.personaPath || defaultPersonaTarget() || "À vérifier"}
+- Mémoire / base : ${i.memoryPath || "Aucune"}
+
+## État
+
+- Core : ${i.coreStatus || "À vérifier"}
+- Persona : ${i.personaStatus || "À vérifier"}
+- Validation : ${i.validationStatus || "À vérifier"}
+
+## Verrou
+
+Aucun nouveau Core ni aucune nouvelle Persona ne sont générés pour ce profil. La Forge attend les fichiers existants et les exporte sans modification.
+`;
+  }
+
+  function existingSourceAudit() {
+    const i = state.identity;
+    return [
+      [i.name ? "ok" : "error", "Profil existant", i.name || "Identité manquante"],
+      [i.corePath || defaultCoreTarget() ? "ok" : "warn", "Core", i.coreStatus || "Chemin à vérifier"],
+      [i.personaPath || defaultPersonaTarget() ? "ok" : "warn", "Persona", i.personaStatus || "Chemin à vérifier"],
+      ["ok", "Génération", "Aucun fichier PROPOSAL pour un profil existant"]
+    ];
+  }
+
+  function setText(selector, value) {
+    const target = $(selector);
+    if (target) target.textContent = value;
+  }
+
+  function renderWorkflowCopy() {
+    const creating = isNew();
+    setText("#railSubtitle", creating ? "Conception guidée d’une nouvelle Aerith" : "Assemblage fidèle d’un profil existant");
+    setText("#intentTitle", creating ? "Quelle Aerith voulons-nous faire naître ?" : "Quel profil Aerith voulons-nous assembler ?");
+    setText("#missionTitle", creating ? "Définir la mission de la nouvelle Aerith" : "Relire l’identité du profil existant");
+    setText("#missionDescription", creating
+      ? "Créatrice Conseillère aide à préciser la mission, les destinataires, les sorties et la formule sans imposer son propre profil."
+      : "Le profil sélectionné conserve son identité, sa mission et ses chemins. Les ajustements de configuration ne réécrivent pas son Core ni sa Persona.");
+    setText("#missionRouteTitle", creating ? "Conception guidée" : "Profil existant préservé");
+    setText("#missionRouteDescription", creating
+      ? "Les champs préparent une proposition locale. Ils ne deviennent canoniques qu’après validation humaine."
+      : "La Forge assemble les sources existantes. Elle ne crée aucun nouveau Core ni aucune nouvelle Persona pour ce profil.");
+    setText("#agentsTitle", creating ? "Composer sa constellation d’agents" : "Consulter son architecture multi-agent");
+    setText("#agentsDescription", creating
+      ? "Chaque agent reçoit une mission précise et transmet une brique à la nouvelle Aerith."
+      : "Les agents décrivent l’architecture existante du profil. Ils ne sont pas une nouvelle identité créée par la Conseillère.");
+    setText("#agentsRuleTitle", creating ? "Test de création" : "Règle de préservation");
+    setText("#agentsRuleDescription", creating
+      ? "Chaque agent possède une entrée, une décision, une sortie et un point d’arrêt. La voix finale reste celle de la nouvelle Aerith."
+      : "Le profil garde une seule identité. La Forge n’ajoute pas d’agent qui remplacerait son Core ou sa Persona.");
+    setText("#heritageTitle", creating ? "Relier héritages et savoirs" : "Choisir les héritages et modules de renforcement");
+    setText("#heritageDescription", creating
+      ? "Les héritages et modules enrichissent la future identité sans la remplacer."
+      : "Les héritages et modules complètent le profil existant. Ils ne réécrivent ni son Core ni sa Persona.");
+    setText("#personaTitle", creating ? "Donner une voix à son identité" : "Consulter la Persona et ses options");
+    setText("#personaDescription", creating
+      ? "Le Core porte la fonction. La Persona proposée donne une présence, un rythme et des modes."
+      : "La Persona appartient au profil sélectionné. Créatrice Conseillère reste seulement le guide de la Forge.");
+    setText("#corePersonaTitle", creating ? "Découvrir la proposition de Créatrice Conseillère" : "Vérifier le Core et la Persona existants");
+    setText("#corePersonaDescription", creating
+      ? "La Forge rassemble les décisions dans un Core proposé, une Persona proposée et un brief de validation."
+      : "La Forge présente les sources déclarées du profil. Elle ne régénère aucun fichier et attend les originaux à l’étape suivante.");
+    setText("#sourcesTitle", creating ? "Importer les fichiers après validation" : "Importer le Core et la Persona existants");
+    setText("#sourcesDescription", creating
+      ? "Après validation humaine, déposer les fichiers canonisés. Les PROPOSAL ne valident jamais le paquet final."
+      : "Déposer les fichiers existants correspondant aux chemins canoniques. Ils seront exportés sans modification.");
+    setText("#dropzoneTitle", creating ? "Déposer le Core et la Persona validés" : "Déposer le Core et la Persona existants");
+    setText("#dropzoneDescription", "Traitement local dans le navigateur. Les fichiers importés ne sont ni publiés ni réécrits.");
   }
 
   function proposalCore() {
@@ -933,11 +1089,11 @@ Version Forge : ${DATA.version}
 
 ## 1. Identité
 
-${i.name} est une spécialité dédiée à la mission suivante :
+${i.name} est un profil Aerith dédié à la mission suivante :
 
 ${i.role || "Rôle à définir."}
 
-Elle ne remplace pas les autres profils. Elle absorbe uniquement les ressources qui servent sa fonction.
+Elle ne remplace pas les autres profils. Elle mobilise uniquement les ressources qui servent sa fonction.
 
 ## 2. Problème réel
 
@@ -1121,7 +1277,7 @@ ${state.identity.guardrails.length ? state.identity.guardrails.map(item => `- ${
     return `# BRIEF DE VALIDATION — ${i.name}
 
 Version Forge : ${DATA.version}
-Statut : ${isNew() ? "proposition locale non canonique" : "profil existant chargé dans le parcours unifié"}
+Statut : ${isNew() ? "proposition locale non canonique" : "profil existant — aucune proposition générée"}
 
 ## Identité
 
@@ -1144,7 +1300,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
 ## Points à vérifier humainement
 
-- La spécialité ne duplique-t-elle pas un profil existant ?
+- La nouvelle Aerith ne duplique-t-elle pas un profil existant ?
 - Chaque agent change-t-il une décision réelle ?
 - Les modules sont-ils référencés sans copie inutile ?
 - Les garde-fous protègent-ils la mission ?
@@ -1155,7 +1311,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
   function proposalAudit() {
     const i = state.identity;
     return [
-      [i.name && /^Aerith-10\b/i.test(i.name) || !isNew() ? "ok" : "warn", "Identité", i.name || "Manquante"],
+      [i.name && /\bAerith\b/i.test(i.name) ? "ok" : "warn", "Identité", i.name || "Manquante"],
       [i.role ? "ok" : "error", "Mission", i.role ? "Définie" : "Manquante"],
       [i.agents.length ? "ok" : "warn", "Agents", `${i.agents.length} déclaré(s)`],
       [i.stopPoint ? "ok" : "error", "Stop Point", i.stopPoint ? "Défini" : "Manquant"]
@@ -1163,14 +1319,23 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
   }
 
   function renderProposal() {
-    const items = proposalAudit();
+    const creating = isNew();
+    const items = creating ? proposalAudit() : existingSourceAudit();
     $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
-    const docs = {core:proposalCore(), persona:proposalPersona(), brief:designBrief()};
+    const docs = creating
+      ? {core:proposalCore(), persona:proposalPersona(), brief:designBrief()}
+      : {core:existingCoreSheet(), persona:existingPersonaSheet(), brief:existingProfileBrief()};
     $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
-    $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
-    $("#canonRoute").innerHTML = isNew()
+    const tabs = $$("#proposalTabs button");
+    if (tabs[0]) tabs[0].textContent = creating ? "Core Proposal" : "Core existant";
+    if (tabs[1]) tabs[1].textContent = creating ? "Persona Proposal" : "Persona existante";
+    if (tabs[2]) tabs[2].textContent = creating ? "Brief" : "Fiche d’assemblage";
+    tabs.forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
+    const downloads = $("#proposalDownloads");
+    if (downloads) downloads.hidden = !creating;
+    $("#canonRoute").innerHTML = creating
       ? `<b>Étape de canonisation</b><p>Relire la proposition, valider les deux fichiers, puis les intégrer aux chemins canoniques indiqués avant de réunir les sources finales.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
-      : `<b>Profil canonique prêt</b><p>Réunir les sources disponibles, vérifier l’architecture et préparer l’export adapté à la mission.</p>`;
+      : `<b>Profil existant préservé</b><p>La Forge n’a généré ni Core ni Persona. Importer les fichiers existants à l’étape Sources afin de préparer le paquet final sans les modifier.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
   }
 
   function fieldFromText(text, labels) {
@@ -1178,7 +1343,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
       const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const regex = new RegExp(`^(?:\\*\\*)?${escaped}(?:\\*\\*)?\\s*:\\s*(.+)$`, "im");
       const match = text.match(regex);
-      if (match) return stripMarkdown(match[1]);
+      if (match) return String(match[1]).replace(/[`*#]/g, "").trim();
     }
     return "";
   }
@@ -1215,7 +1380,11 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
   function mergeParsed(parsed) {
     const keys = ["name", "family", "level", "role", "mode", "status", "personaPath", "memoryPath", "corePath", "imagePath", "version"];
-    for (const key of keys) if (parsed[key]) state.identity[key] = parsed[key].replace(/`/g, "");
+    for (const key of keys) {
+      if (!parsed[key]) continue;
+      if (!isNew() && state.identity[key]) continue;
+      state.identity[key] = parsed[key].replace(/`/g, "");
+    }
   }
 
   async function addFiles(files) {
@@ -1238,7 +1407,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
         const personaPath = fieldFromText(text, ["Chemin cible"]);
         const version = fieldFromText(text, ["Version"]);
         if (coreRequired && !state.identity.corePath) state.identity.corePath = coreRequired.replace(/`/g, "");
-        if (personaPath) state.identity.personaPath = personaPath.replace(/`/g, "");
+        if (personaPath && (isNew() || !state.identity.personaPath)) state.identity.personaPath = personaPath.replace(/`/g, "");
         if (version && !state.identity.version) state.identity.version = version;
       }
       if (kind === "visual" && !state.visualUrl) state.visualUrl = URL.createObjectURL(file);
@@ -1349,7 +1518,7 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     return `# BOOT — ${i.name.toUpperCase()}
 
 Version Forge : ${DATA.version}
-Parcours : unifié
+Parcours : ${isNew() ? "conception d’une nouvelle Aerith" : "assemblage d’un profil existant"}
 Profil : ${state.profileId}
 
 ## Activation
@@ -1393,7 +1562,7 @@ ${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- Ne
 
 Version Forge : ${DATA.version}
 Date : ${new Date().toISOString().slice(0, 10)}
-Parcours : Atelier Aerith-10 Créatrice — conception, canonisation et forge
+Parcours : ${isNew() ? "conception d’une nouvelle Aerith" : "assemblage d’un profil existant"}
 
 ## Identité
 
@@ -1461,6 +1630,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
   }
 
   function renderAll() {
+    renderWorkflowCopy();
     renderProfiles();
     renderExamples();
     renderConstellation();
@@ -1580,6 +1750,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   async function downloadProposalZip() {
+    if (!isNew()) { showToast("Ce profil existe déjà : aucune proposition n’est générée."); return; }
     const root = `${canonicalBase()}_PROPOSAL`;
     const files = new Map([
       [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
@@ -1734,9 +1905,9 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   for (const name of ["dragleave", "drop"]) dropzone.addEventListener(name, event => { event.preventDefault(); dropzone.classList.remove("drag"); });
   dropzone.addEventListener("drop", event => addFiles(event.dataTransfer.files));
 
-  $("#downloadProposalCore").addEventListener("click", () => downloadText(proposalFileName("core"), proposalCore()));
-  $("#downloadProposalPersona").addEventListener("click", () => downloadText(proposalFileName("persona"), proposalPersona()));
-  $("#downloadProposalBrief").addEventListener("click", () => downloadText(proposalFileName("brief"), designBrief()));
+  $("#downloadProposalCore").addEventListener("click", () => { if (!isNew()) return showToast("Aucun Core Proposal pour un profil existant."); downloadText(proposalFileName("core"), proposalCore()); });
+  $("#downloadProposalPersona").addEventListener("click", () => { if (!isNew()) return showToast("Aucune Persona Proposal pour un profil existant."); downloadText(proposalFileName("persona"), proposalPersona()); });
+  $("#downloadProposalBrief").addEventListener("click", () => { if (!isNew()) return showToast("Aucun paquet Proposal pour un profil existant."); downloadText(proposalFileName("brief"), designBrief()); });
   $("#downloadProposalZip").addEventListener("click", downloadProposalZip);
 
   $("#downloadBoot").addEventListener("click", () => downloadText(finalFileName("boot"), bootDocument()));
@@ -1751,7 +1922,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       const pkg = await buildFinalFiles();
       const blob = zipBlob(pkg.files);
       downloadBlob(`${pkg.root}_FORGE_AERITH_PRO.zip`, blob);
-      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)} · paquet complet forgé par l’atelier Créatrice`;
+      log.textContent = `${pkg.files.size} fichier(s) · ${formatSize(blob.size)} · paquet complet forgé par la Forge d’Aerith`;
       showToast("ZIP final forgé.");
     } catch (error) {
       log.textContent = `Erreur : ${error.message}`;
@@ -1785,7 +1956,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
     persist();
     renderAll();
     closeResetDialog();
-    showToast("Aerith-10 Créatrice est replacée comme profil par défaut.");
+    showToast("Aerith-10 Créatrice est replacée comme profil actif par défaut.");
   });
 
   document.addEventListener("keydown", event => {
