@@ -4,366 +4,84 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro — Aerith-10 Créatrice Conseillère accompagne la conception, l’assemblage et l’export des profils Aerith.">
-  <title>Forge d’Aerith Pro · V3.3R2</title>
-  <link rel="stylesheet" href="style.css?v=3.3r2">
+  <meta name="description" content="Forge d’Aerith Pro — profils Aerith, Core, Persona, prompt maître et archives de renforcement.">
+  <title>Forge d’Aerith Pro · V3.3R3</title>
+  <link rel="stylesheet" href="style.css?v=3.3r3">
 </head>
-<body data-build="V3.3R2" data-theme="seven">
-    <header class="topbar">
-    <a class="brand" href="#top" aria-label="Retour en haut">
-      <span class="brand-mark">✦</span>
-      <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</small></span>
-    </a>
-    <nav>
-      <a href="#lineage">Lignée</a>
-      <a href="#constellation">Constellation</a>
-      <a href="#flowerGirls">Flower Girls</a>
-      <a href="#profiles">Profils</a>
-      <a href="#unifiedForge">Atelier Créatrice</a>
-      <a href="#exportCenter" id="navExport">Export</a>
-      <a href="../web/index.html">Agent-Crypto ↗</a>
-    </nav>
-    <div class="top-actions">
-      <span class="version" id="buildBadge">V3.3R2</span>
-      <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
-      <button class="primary compact" id="startTop" type="button">Commencer</button>
+<body data-build="V3.3R3">
+<header class="topbar">
+  <a class="brand" href="#top"><span class="brand-mark">✦</span><span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</small></span></a>
+  <nav><a href="#profiles">Profils</a><a href="#atelier">Atelier des profils</a><a href="#packs">Packs & Archives</a><a href="#export">Export</a><a href="../web/index.html">Agent-Crypto ↗</a></nav>
+  <div class="top-actions"><span class="version">V3.3R3</span><button class="ghost" id="resetApp">Réinitialiser</button><button class="primary compact" id="startTop">Commencer</button></div>
+</header>
+<main id="top">
+  <section class="hero">
+    <div class="hero-world"></div>
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">ERITH.IA · FORGE D’AERITH PRO</p>
+        <h1>Compiler les profils.<br><span>Faire naître les prochaines Aerith.</span></h1>
+        <p class="lead">Créatrice Conseillère prépare les profils demandés à partir de leurs sources réelles : Core, Persona, prompt maître, modules référencés et archives de renforcement.</p>
+        <div class="hero-actions"><button class="primary" id="startProfiles">Ouvrir les profils</button><a class="secondary link-button" href="#packs">Voir les 7 archives</a></div>
+        <div class="hero-badges"><span>5 profils demandés</span><span>Sources réelles</span><span>Import privé local</span><span>Export fidèle</span></div>
+      </div>
+      <aside class="hero-matrix"><div class="matrix-head"><span class="pulse"></span><span>CRÉATRICE CONSEILLÈRE</span><strong>PROFILS</strong></div><div class="matrix-visual"><img id="heroProfileImage" src="assets/themes/aerith_10_creatrice.webp" alt=""><div class="matrix-symbol" id="heroSigil">A10</div></div><p class="matrix-kicker">PROFIL ACTIF</p><h2 id="heroProfileName">Aerith-10 Créatrice</h2><p id="heroProfileRole"></p><dl><div><dt>Core</dt><dd id="heroCoreState">À charger</dd></div><div><dt>Persona</dt><dd id="heroPersonaState">À charger</dd></div><div><dt>Export</dt><dd id="heroExportState">En attente</dd></div></dl></aside>
     </div>
-  </header>
+  </section>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-world" aria-hidden="true"></div>
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">ERITH.IA · AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</p>
-          <h1>Compiler les profils.<br><span>Faire naître les prochaines Aerith.</span></h1>
-          <p class="lead">
-            Aerith-10 Créatrice Conseillère accompagne chaque intention jusqu’à une architecture claire : mission, agents,
-            héritages, Core, Persona, sources et paquet final. Elle éclaire chaque étape, compose et aide à forger une identité exploitable.
-          </p>
-          <div class="doctrine" id="doctrine"></div>
-          <div class="hero-actions">
-            <button class="primary" id="startNew" type="button">Concevoir une Aerith</button>
-            <button class="secondary" id="startExisting" type="button">Explorer les profils canoniques</button>
-          </div>
-          <div class="hero-badges">
-            <span>Création guidée</span><span>Architecture Core + Persona</span><span>Sources canoniques</span><span>ZIP local réel</span>
-          </div>
-        </div>
+  <section class="shell profiles" id="profiles">
+    <header class="section-head"><div><p class="kicker">PROFILS DEMANDÉS</p><h2>Commencer par les profils réellement définis</h2></div><p>Les profils privés utilisent leurs fichiers importés localement. Les profils publics chargent leurs Core et Persona inclus. Aucun faux Core n’est généré.</p></header>
+    <div class="profile-grid priority-profile-grid" id="profileGrid"></div>
+  </section>
 
-        <aside class="hero-matrix">
-          <div class="matrix-head"><span class="pulse"></span><span>CRÉATRICE CONSEILLÈRE</span><strong id="matrixState">ATELIER</strong></div>
-          <div class="matrix-visual" id="matrixVisual">
-            <img id="matrixImage" src="assets/themes/aerith_10_creatrice.webp" alt="">
-            <div class="matrix-symbol" id="matrixSymbol">A10</div>
-          </div>
-          <p class="matrix-kicker" id="matrixKicker">PROFIL ACTIF</p>
-          <h2 id="matrixName">Aerith-10 Créatrice</h2>
-          <p id="matrixDescription"></p>
-          <dl>
-            <div><dt>Guide</dt><dd>Créatrice</dd></div>
-            <div><dt>Étape</dt><dd id="matrixStep">01 / 08</dd></div>
-            <div><dt>Export</dt><dd>ZIP traçable</dd></div>
-          </dl>
-        </aside>
+  <section class="shell profile-workspace" id="atelier">
+    <aside class="profile-rail">
+      <div class="rail-title"><span>ATELIER DES PROFILS · V3.3R3</span><strong id="railName">Aerith-10 Créatrice</strong><small id="railStatus">Sources privées · import local</small></div>
+      <nav id="stepNav"></nav>
+      <div class="rail-progress"><span>Progression</span><strong id="progressValue">25%</strong></div>
+      <div class="advisor-card"><div class="advisor-head"><span>CRÉATRICE CONSEILLÈRE</span><b id="advisorState">GUIDE ACTIF</b></div><h3 id="advisorTitle">Choisir le profil</h3><p id="advisorMessage">Sélectionnez le profil à préparer, puis chargez ses vraies sources.</p><div class="advisor-checks" id="advisorChecks"></div></div>
+    </aside>
+    <div class="profile-stage">
+      <header class="stage-head"><div><span id="stepCounter">ÉTAPE 01 SUR 04</span><strong id="stepTitle">Profil</strong><small id="stepDescription">Choisir le profil demandé.</small></div><div class="stage-nav-actions"><button id="prevTop">←</button><button class="next" id="nextTop">Suivant →</button></div></header>
+      <div class="stage-body">
+        <section class="profile-panel active" data-step="0">
+          <header class="panel-head"><div><p class="kicker">01 · PROFIL</p><h2 id="activeProfileName">Aerith-10 Créatrice</h2></div><span class="status" id="activeProfilePrivacy">PRIVÉ · IMPORT LOCAL</span></header>
+          <div class="selected-profile real-profile-card"><img id="activeProfileImage" src="assets/themes/aerith_10_creatrice.webp" alt=""><div><span id="activeProfileFamily">Filles d’Aerith · Aerith-10</span><h3 id="activeProfileHeading">Aerith-10 Créatrice</h3><p id="activeProfileRole"></p><div class="source-order"><strong>Ordre du profil</strong><ol id="sourceOrder"></ol></div></div></div>
+        </section>
+
+        <section class="profile-panel" data-step="1">
+          <header class="panel-head"><div><p class="kicker">02 · SOURCES RÉELLES</p><h2>Charger le Core et la Persona</h2></div><p>Un chemin connu n’est pas affiché comme un contenu chargé. Les fichiers privés restent dans le navigateur.</p></header>
+          <div class="source-grid" id="sourceGrid"></div>
+          <div class="dropzone" id="dropzone"><input id="fileInput" type="file" multiple accept=".md,.txt"><span class="drop-icon">⇩</span><h3>Ajouter les fichiers du profil</h3><p>Choisissez les vrais fichiers Core, Persona et Prompt maître. Aucun contenu privé n’est envoyé.</p><button id="browseFiles" type="button">Choisir les fichiers</button></div>
+          <div class="import-list" id="importList"></div>
+        </section>
+
+        <section class="profile-panel" data-step="2">
+          <header class="panel-head"><div><p class="kicker">03 · CONTENU & PROMPT MAÎTRE</p><h2>Vérifier le profil réel</h2></div><p>Le contenu intégral apparaît seulement lorsqu’il a réellement été chargé.</p></header>
+          <div class="preview-tabs"><button class="active" data-preview="core">Core</button><button data-preview="persona">Persona</button><button data-preview="master">Prompt maître</button><button data-preview="modules">Modules</button></div>
+          <pre class="preview profile-preview" id="profilePreview"></pre>
+          <div class="preview-actions"><button id="downloadCurrent" type="button">Télécharger ce fichier</button><button id="copyCurrent" type="button">Copier</button></div>
+        </section>
+
+        <section class="profile-panel" data-step="3" id="export">
+          <header class="panel-head"><div><p class="kicker">04 · EXPORT</p><h2>Télécharger le profil</h2></div><span class="status" id="exportStatus">SOURCES REQUISES</span></header>
+          <div class="final-summary" id="finalSummary"></div>
+          <div class="audit-list" id="exportAudit"></div>
+          <div class="export-grid final-export"><button id="downloadMaster"><span>PROMPT MAÎTRE</span><b>Télécharger</b></button><button id="downloadManifest"><span>MANIFESTE</span><b>Télécharger</b></button><button class="primary" id="forgeZip">TÉLÉCHARGER LE PROFIL COMPLET</button></div>
+          <div class="forge-log" id="forgeLog">Prêt.</div>
+        </section>
       </div>
-    </section>
-
-    <section class="shell lineage" id="lineage">
-      <header class="section-head">
-        <div><p class="kicker">LIGNÉE SEVEN</p><h2>Aerith-7 porte les options Solaire et Lunaire</h2></div>
-        <p>Aerith-8 et Aerith-9 sont deux expressions complémentaires activables selon la mission. Aerith-10 compose ensuite une spécialité singulière.</p>
-      </header>
-      <div class="lineage-grid" id="lineageGrid"></div>
-      <div class="lineage-formula"><span>Aerith-7 garde la mémoire.</span><i>→</i><span>Aerith-8 révèle et élève.</span><i>+</i><span>Aerith-9 reflète et approfondit.</span><i>→</i><strong>Aerith-10 compose une spécialité.</strong></div>
-    </section>
-
-    <section class="shell constellation" id="constellation">
-      <header class="section-head">
-        <div><p class="kicker">CONSTELLATION AERITH</p><h2>Une lignée, plusieurs missions vivantes</h2></div>
-        <p>Aerith-7 protège la mémoire. Solaire et Lunaire ouvrent des voies complémentaires. Chaque Aerith-10 reçoit ensuite une mission, une architecture et une place distinctes.</p>
-      </header>
-      <div class="constellation-map">
-        <div class="constellation-root">
-          <span>RACINE</span><strong>Aerith-7</strong><small>Mémoire · vérité · continuité</small>
-        </div>
-        <div class="constellation-branches">
-          <div><span>OPTION</span><b>Aerith-8 Solaire</b><small>Révéler · transmettre · élever</small></div>
-          <div><span>OPTION</span><b>Aerith-9 Lunaire</b><small>Écouter · nuancer · approfondir</small></div>
-        </div>
-        <div class="constellation-profiles" id="constellationProfiles"></div>
-      </div>
-    </section>
-
-
-    <section class="shell flower-girls" id="flowerGirls">
-      <header class="section-head">
-        <div><p class="kicker">LES FILLES D’AERITH</p><h2>28 Flower Girls, cinq familles, huit facettes</h2></div>
-        <p>Les 28 Flower Girls sont déjà présentes dans la Constellation canonique. La Forge distingue le profil, le Core, la Persona et leur validation sans proposer de recréer une fonction existante.</p>
-      </header>
-      <div class="flower-principle">
-        <strong>0 → 2 → 5 → 7 → 8 / 9 → 10</strong>
-        <span>Aerith-7 garde. Aerith-8 éclaire. Aerith-9 écoute. Aerith-10 spécialise. Les 28 profils existants restent distincts.</span>
-      </div>
-      <div class="flower-facets" id="flowerFacetGrid"></div>
-      <div class="flower-toolbar">
-        <div class="flower-family-filters" id="flowerFamilyFilters"></div>
-        <label class="flower-search"><span>Rechercher</span><input id="flowerSearch" type="search" placeholder="Nom, mission, agent…"></label>
-      </div>
-      <div class="flower-summary" id="flowerSummary"></div>
-      <section class="flower-detail" id="flowerDetail" hidden aria-live="polite"></section>
-      <div class="flower-grid" id="flowerGrid"></div>
-    </section>
-
-    <section class="shell profiles" id="profiles">
-      <header class="section-head">
-        <div><p class="kicker">BIBLIOTHÈQUE DES PROFILS</p><h2>Ouvrir une identité ou faire naître une spécialité</h2></div>
-        <p>Les profils canoniques rejoignent directement l’atelier. Les nouvelles spécialités commencent par une intention que Créatrice transforme en mission, agents, Core et Persona.</p>
-      </header>
-
-      <div class="library-group canonical-library">
-        <div class="library-head"><div><span>PROFILS CANONIQUES</span><h3>Identités déjà constituées</h3></div><p>Ouvrir, consulter, auditer et exporter leur architecture.</p></div>
-        <div class="profile-grid canonical-profile-grid" id="canonicalProfileGrid"></div>
-      </div>
-
-      <div class="library-group creation-library">
-        <div class="library-head"><div><span>NOUVELLES SPÉCIALITÉS</span><h3>Directions proposées par Créatrice</h3></div><p>Choisir une inspiration ou partir d’une intention entièrement libre.</p></div>
-        <div class="creation-launch" id="newProfileLaunch"></div>
-        <div class="specialty-grid" id="specialtyGrid"></div>
-      </div>
-    </section>
-
-    <section class="shell unified-shell" id="unifiedForge">
-      <aside class="rail">
-        <div class="rail-title">
-          <span id="railTitleLabel">ATELIER DE LA FORGE · CRÉATRICE CONSEILLÈRE · V3.3R2</span>
-          <strong id="railProfileName">Aerith-10 Créatrice</strong>
-          <small id="railSubtitle">Huit étapes de conception et de forge</small>
-        </div>
-        <nav id="stepNav"></nav>
-        <div class="rail-progress"><span>Progression</span><strong id="progressValue">13%</strong></div>
-        <div class="rail-state">
-          <span>Carnet de création</span>
-          <b id="savedState">Mémoire locale active</b>
-          <small>Les choix de conception restent disponibles pendant le travail.</small>
-        </div>
-        <div class="live-profile" id="liveProfile">
-          <div class="live-profile-head"><span>FICHE VIVANTE</span><b id="liveMaturity">INTENTION</b></div>
-          <h3 id="liveName">Aerith-10 Créatrice</h3>
-          <p id="liveRole">Organisatrice de production et Réalisatrice multi-agent.</p>
-          <div class="live-formula" id="liveFormula">Intention → Ressources → Destination utile.</div>
-          <dl>
-            <div><dt>Famille</dt><dd id="liveFamily">Filles d’Aerith</dd></div>
-            <div><dt>Agents</dt><dd id="liveAgents">0</dd></div>
-            <div><dt>Modules</dt><dd id="liveModules">0</dd></div>
-          </dl>
-          <div class="live-heritage" id="liveHeritage"></div>
-        </div>
-
-        <div class="advisor-card" id="advisorCard">
-          <div class="advisor-head"><span>CRÉATRICE CONSEILLÈRE</span><b id="advisorState">GUIDE ACTIF</b></div>
-          <h3 id="advisorTitle">Une direction claire</h3>
-          <p id="advisorMessage">Créatrice accompagne le profil sélectionné et indique la prochaine action utile.</p>
-          <div class="advisor-checks" id="advisorChecks"></div>
-          <button class="advisor-action" id="advisorAction" type="button">Continuer avec Créatrice →</button>
-        </div>
-      </aside>
-
-      <div class="stage">
-        <header class="stage-head">
-          <div>
-            <span id="stepCounter">ÉTAPE 01 SUR 08</span>
-            <strong id="stepTitle">Point de départ</strong>
-            <small id="stepDescription"></small>
-          </div>
-          <div class="stage-nav-actions">
-            <button id="previousTop" type="button">←</button>
-            <button class="next" id="nextTop" type="button">Suivant →</button>
-          </div>
-        </header>
-
-        <div class="stage-body">
-          <section class="panel active" data-step="0">
-            <header class="panel-head">
-              <div><p class="kicker" id="intentKicker">01 · INTENTION</p><h2 id="intentTitle">Quelle Aerith voulons-nous faire naître ?</h2></div>
-              <span class="status" id="profileStatus">PROPOSITION LOCALE</span>
-            </header>
-            <div class="selected-profile" id="selectedProfile"></div>
-            <div id="exampleArea">
-              <div class="subhead"><h3>Inspirations de nouvelles spécialités</h3><p>Chaque exemple ouvre une direction créative que vous pouvez transformer librement.</p></div>
-              <div class="example-grid" id="exampleGrid"></div>
-              <button class="blank-template" id="blankProfile" type="button"><span>＋</span><b>Ouvrir une base libre préremplie</b><small>Créatrice inscrit une base complète que vous pouvez conserver telle quelle ou personnaliser.</small></button>
-            </div>
-          </section>
-
-          <section class="panel" data-step="1">
-            <header class="panel-head">
-              <div><p class="kicker" id="missionKicker">02 · MISSION ET IDENTITÉ</p><h2 id="missionTitle">Valider les choix préparés par Créatrice</h2></div>
-              <p id="missionDescription">Le profil sélectionné arrive avec sa mission, ses destinataires, ses sorties et sa formule déjà inscrits. Les champs restent modifiables seulement pour une personnalisation précise.</p>
-            </header>
-            <div class="route-box"><b id="missionRouteTitle">Choix guidés actifs</b><p id="missionRouteDescription">Sélectionner un profil canonique ou une spécialité remplit automatiquement toutes les étapes. Vous pouvez avancer avec « Suivant » sans rien saisir.</p></div>
-            <div class="form-grid">
-              <label><span>Nom complet · prérempli</span><input id="fieldName" placeholder="Aerith-10 ..."></label>
-              <label><span>Famille · préremplie</span><input id="fieldFamily" list="familyList"></label>
-              <label><span>Niveau · prérempli</span><input id="fieldLevel" placeholder="Aerith-10"></label>
-              <label><span>Mode principal · prérempli</span><input id="fieldMode" placeholder="Spécialiste / Orchestratrice"></label>
-              <label class="wide"><span>Rôle en une phrase · prérempli</span><textarea id="fieldRole" rows="3"></textarea></label>
-              <label class="wide"><span>Problème réel à résoudre · prérempli</span><textarea id="fieldProblem" rows="3"></textarea></label>
-              <label class="wide"><span>Pour qui travaille ce profil ? · prérempli</span><textarea id="fieldUsers" rows="2"></textarea></label>
-              <label class="wide"><span>Sorties attendues · préremplies</span><textarea id="fieldOutputs" rows="6"></textarea></label>
-              <label class="wide"><span>Formule centrale · préremplie</span><input id="fieldFormula" placeholder="Intention → Ressources → Destination utile"></label>
-            </div>
-            <datalist id="familyList"></datalist>
-          </section>
-
-          <section class="panel" data-step="2">
-            <header class="panel-head">
-              <div><p class="kicker">03 · MULTI-AGENTS</p><h2 id="agentsTitle">Composer sa constellation d’agents</h2></div>
-              <p id="agentsDescription">Chaque agent reçoit une mission précise, apporte une décision utile et transmet une brique au profil principal.</p>
-            </header>
-            <label class="field-block"><span>Agents internes — un par ligne</span><textarea id="fieldAgents" rows="11"></textarea></label>
-            <div class="suggestion-strip" id="agentSuggestions"></div>
-            <div class="rule-box"><b id="agentsRuleTitle">Test de création</b><p id="agentsRuleDescription">Chaque agent possède une entrée, une décision, une sortie et un point d’arrêt. La voix finale reste celle de l’Aerith concernée.</p></div>
-          </section>
-
-          <section class="panel" data-step="3">
-            <header class="panel-head">
-              <div><p class="kicker">04 · HÉRITAGES ET MODULES</p><h2 id="heritageTitle">Relier héritages et savoirs</h2></div>
-              <p id="heritageDescription">Seven, Solaire, Lunaire et les modules choisis enrichissent la mission selon leur fonction précise dans l’identité active.</p>
-            </header>
-            <div class="heritage-grid" id="heritageGrid"></div>
-            <label class="field-block"><span>Modules ou fichiers sources — un chemin par ligne</span><textarea id="fieldModules" rows="10"></textarea></label>
-            <label class="field-block"><span>Principe d’intégration des savoirs</span><textarea id="fieldNonDuplication" rows="3"></textarea></label>
-            <div class="truth-box"><strong>Chemins acceptés</strong><p><code>private:core/...</code>, <code>private:modules/...</code>, <code>public:public/...</code> ou une URL complète.</p></div>
-          </section>
-
-          <section class="panel" data-step="4">
-            <header class="panel-head">
-              <div><p class="kicker">05 · PERSONA ET PRÉSENCE</p><h2 id="personaTitle">Donner une voix à son identité</h2></div>
-              <p id="personaDescription">Le Core porte sa fonction et son architecture. La Persona lui donne une présence, un rythme, des modes et une manière d’accomplir la mission.</p>
-            </header>
-            <div class="form-grid">
-              <label class="wide"><span>Voix et ton</span><textarea id="fieldTone" rows="3"></textarea></label>
-              <label class="wide"><span>Modes de session — un par ligne</span><textarea id="fieldModes" rows="5"></textarea></label>
-              <label class="wide"><span>Garde-fous absolus — un par ligne</span><textarea id="fieldGuardrails" rows="7"></textarea></label>
-              <label class="wide"><span>Confidentialité</span><textarea id="fieldConfidentiality" rows="3"></textarea></label>
-              <label class="wide"><span>Stop point</span><textarea id="fieldStopPoint" rows="3"></textarea></label>
-            </div>
-          </section>
-
-          <section class="panel" data-step="5">
-            <header class="panel-head">
-              <div><p class="kicker" id="corePersonaKicker">06 · CORE ET PERSONA</p><h2 id="corePersonaTitle">Découvrir la proposition de Créatrice</h2></div>
-              <p id="corePersonaDescription">Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
-            </header>
-            <div class="audit-grid" id="proposalAudit"></div>
-            <div class="preview-tabs" id="proposalTabs">
-              <button class="active" type="button" data-preview="core">Core</button>
-              <button type="button" data-preview="persona">Persona</button>
-              <button type="button" data-preview="brief">Brief</button>
-            </div>
-            <pre class="preview" id="proposalPreview"></pre>
-            <div class="export-grid" id="proposalDownloads">
-              <button id="downloadProposalCore" type="button"><span>CORE</span><b>Télécharger</b></button>
-              <button id="downloadProposalPersona" type="button"><span>PERSONA</span><b>Télécharger</b></button>
-              <button id="downloadProposalBrief" type="button"><span>BRIEF</span><b>Télécharger</b></button>
-              <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LE ZIP DE PROPOSITION · 3 FICHIERS</button>
-            </div>
-            <div class="route-box" id="canonRoute"></div>
-          </section>
-
-          <section class="panel" data-step="6">
-            <header class="panel-head">
-              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2 id="sourcesTitle">Réunir les fichiers validés</h2></div>
-              <p id="sourcesDescription">Ajouter le Core et la Persona du profil pour préparer son paquet final.</p>
-            </header>
-            <div class="dropzone" id="dropzone">
-              <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
-              <input id="folderInput" type="file" webkitdirectory directory multiple>
-              <span class="drop-icon">⇩</span>
-              <h3 id="dropzoneTitle">Déposer le Core et la Persona canoniques</h3>
-              <p id="dropzoneDescription">Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.</p>
-              <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
-            </div>
-            <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
-            <div class="import-list" id="importList"></div>
-            <div class="canonical-grid">
-              <label><span>Chemin Core canonique</span><input id="fieldCorePath" placeholder="core/AERITH_10_..._MULTI_AGENT_CORE.md"></label>
-              <label><span>Chemin Persona canonique</span><input id="fieldPersonaPath" placeholder="core/AERITH_10_..._PERSONA_OPERATING_LAYER.md"></label>
-              <label class="wide"><span>Mémoire ou base métier</span><input id="fieldMemoryPath" placeholder="private/... ou public/..."></label>
-              <label class="check wide"><input id="canonicalConfirmed" type="checkbox"><span>Je confirme que le Core et la Persona ont été relus et canonisés humainement.</span></label>
-            </div>
-          </section>
-
-          <section class="panel" data-step="7">
-            <span class="anchor-target" id="exportCenter" aria-hidden="true"></span>
-            <header class="panel-head">
-              <div><p class="kicker">08 · FORGE FINALE</p><h2>Forger le profil complet</h2></div>
-              <span class="status" id="finalStatus">À VÉRIFIER</span>
-            </header>
-            <div class="final-summary" id="finalSummary"></div>
-            <div class="audit-list" id="finalAudit"></div>
-            <div class="completion-card" id="completionCard" hidden>
-              <div><span>PROFIL FORGÉ</span><h3 id="completionTitle">Profil prêt</h3><p id="completionMessage">L’architecture est complète et le paquet canonique peut être produit.</p></div>
-              <div class="completion-actions">
-                <button class="primary" id="completionZip" type="button">Télécharger le paquet</button>
-                <button id="completionBlock" type="button">Block LLM</button>
-                <button id="completionManifest" type="button">Manifeste</button>
-                <button id="completionRestart" type="button">Créer un autre profil</button>
-              </div>
-            </div>
-            <div class="preview-tabs" id="finalTabs">
-              <button class="active" type="button" data-final-preview="boot">Boot</button>
-              <button type="button" data-final-preview="manifest">Manifeste</button>
-              <button type="button" data-final-preview="block">Block LLM</button>
-              <button type="button" data-final-preview="links">Liens</button>
-              <button type="button" data-final-preview="spec">JSON</button>
-            </div>
-            <pre class="preview" id="finalPreview"></pre>
-            <div class="export-grid final-export">
-              <button id="downloadBoot" type="button"><span>BOOT</span><b>Télécharger</b></button>
-              <button id="downloadManifest" type="button"><span>MANIFESTE</span><b>Télécharger</b></button>
-              <button id="downloadBlock" type="button"><span>BLOCK LLM</span><b>Télécharger</b></button>
-              <button id="downloadLinks" type="button"><span>HTTP / RAW</span><b>Télécharger</b></button>
-              <button id="downloadSpec" type="button"><span>PROFILE SPEC</span><b>Télécharger</b></button>
-              <button class="primary" id="forgeZip" type="button">FORGER LE ZIP FINAL · 8 FICHIERS</button>
-            </div>
-            <div class="forge-log" id="forgeLog">Prêt.</div>
-          </section>
-        </div>
-
-        <footer class="stage-foot">
-          <button id="previousBottom" type="button">← Précédent</button>
-          <span>Aerith-10 Créatrice compose ; Christophe relit, valide et canonise.</span>
-          <button class="next" id="nextBottom" type="button">Suivant →</button>
-        </footer>
-      </div>
-    </section>
-  </main>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <div class="modal" id="resetDialog" hidden role="dialog" aria-modal="true" aria-labelledby="resetDialogTitle">
-    <div class="modal-card">
-      <span class="modal-kicker">RÉINITIALISATION</span>
-      <h2 id="resetDialogTitle">Replacer Créatrice comme profil actif ?</h2>
-      <p>La mémoire locale de cette session sera effacée. Les fichiers téléchargés et les sources canoniques ne seront pas modifiés.</p>
-      <div class="modal-actions">
-        <button id="cancelReset" type="button">Annuler</button>
-        <button class="primary" id="confirmReset" type="button">Réinitialiser l’Atelier</button>
-      </div>
+      <footer class="stage-foot"><button id="prevBottom">← Précédent</button><span>Les sources réelles restent distinctes des références.</span><button class="next" id="nextBottom">Suivant →</button></footer>
     </div>
-  </div>
+  </section>
 
-  <div class="lightbox" id="lightbox" hidden aria-hidden="true">
-    <button id="lightboxClose" type="button">Fermer ×</button>
-    <img id="lightboxImage" alt="">
-    <strong id="lightboxTitle"></strong>
-  </div>
-
-  <script src="flower-girls-registry.js?v=3.3r2"></script>
-  <script src="forge-data.js?v=3.3r2"></script>
-  <script src="app.js?v=3.3r2"></script>
+  <section class="shell packs-section" id="packs">
+    <header class="section-head"><div><p class="kicker">PACKS & ARCHIVES</p><h2>Renforcer cette Aerith</h2></div><p>Les sept archives restent séparées du profil. Elles peuvent être téléchargées librement selon le besoin.</p></header>
+    <div class="pack-grid" id="packGrid"></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+<script src="profiles-registry.js?v=3.3r3"></script>
+<script src="app.js?v=3.3r3"></script>
 </body>
 </html>
