@@ -15808,3 +15808,89 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     min-height: 860px !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.53
+   COMPACT CRYSTAL HUD · LEGEND CONTENT WIDTH
+   FORGE WORKSHOP ONLY · TOOLTIP ABSOLUTE LOCK
+   ========================================================= */
+
+#analyste .atlas-chart-insight-overlay {
+  width: min(760px, calc(100% - 390px)) !important;
+  max-width: calc(100% - 34px) !important;
+  padding: 11px 15px 11px 14px !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(
+      112deg,
+      rgba(10, 27, 49, .84) 0%,
+      rgba(8, 22, 42, .72) 70%,
+      rgba(11, 31, 54, .34) 94%,
+      rgba(11, 31, 54, .10) 100%
+    ) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-layout="solo"] {
+  width: min(660px, calc(100% - 390px)) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-layout="empty"] {
+  width: min(580px, calc(100% - 390px)) !important;
+}
+
+#analyste .atlas-chart-insight-overlay > strong,
+#analyste .atlas-chart-insight-overlay > span,
+#analyste .atlas-chart-insight-overlay > small {
+  white-space: normal !important;
+}
+
+#analyste .atlas-chart-insight-overlay > span {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: baseline !important;
+  column-gap: 2px !important;
+  row-gap: 3px !important;
+}
+
+#analyste .chart-v2-legend {
+  width: max-content !important;
+  max-width: min(760px, calc(100% - 34px)) !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(8,25,45,.78),
+      rgba(7,20,38,.56) 80%,
+      rgba(7,20,38,.22)
+    ) !important;
+}
+
+/* Tooltip détaillé multi-crypto : aucun style et aucune logique modifiés. */
+
+@media (max-width: 1220px) {
+  #analyste .atlas-chart-insight-overlay,
+  #analyste .atlas-chart-insight-overlay[data-layout="solo"],
+  #analyste .atlas-chart-insight-overlay[data-layout="empty"] {
+    width: min(690px, calc(100% - 310px)) !important;
+  }
+
+  #analyste .chart-v2-legend {
+    max-width: min(690px, calc(100% - 24px)) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #analyste .atlas-chart-insight-overlay,
+  #analyste .atlas-chart-insight-overlay[data-layout="solo"],
+  #analyste .atlas-chart-insight-overlay[data-layout="empty"] {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+  }
+
+  #analyste .chart-v2-legend {
+    width: max-content !important;
+    max-width: calc(100% - 20px) !important;
+  }
+}

@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.52 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.53 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.52";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.53";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -11923,7 +11923,7 @@ function atlasChartOverlayTruthKey(label) {
   return "archive";
 }
 
-function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "") {
+function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "", layout = "comparison") {
   const overlay = document.getElementById("atlasChartInsightOverlay");
   const titleNode = document.getElementById("atlasChartInsightOverlayTitle");
   const seriesNode = document.getElementById("atlasChartInsightOverlaySeries");
@@ -11934,6 +11934,7 @@ function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "
   seriesNode.innerHTML = seriesHtml;
   summaryNode.innerHTML = summaryHtml;
   overlay.dataset.truth = atlasChartOverlayTruthKey(truthLabel);
+  overlay.dataset.layout = layout;
   overlay.hidden = state.chartViewV2.analysis === false;
   overlay.setAttribute("aria-hidden", overlay.hidden ? "true" : "false");
 }
@@ -12082,7 +12083,8 @@ function atlasChartOverlayComparison(chart, period) {
     titleHtml,
     seriesLine || '<span class="atlas-hud-detail">Mesures non disponibles</span>',
     summaryHtml,
-    truthLabel
+    truthLabel,
+    "comparison"
   );
 }
 
@@ -12138,7 +12140,8 @@ function atlasChartOverlaySolo(chart, period) {
     soloTitleHtml,
     soloSeriesHtml,
     `<span class="atlas-hud-detail">${escapeHtml(summaryParts.join(" · "))}</span>`,
-    truthLabel
+    truthLabel,
+    "solo"
   );
 }
 
@@ -12160,7 +12163,8 @@ function atlasChartOverlayUpdate() {
       `<span class="atlas-hud-context">ANALYSE DU MARCHÉ</span> · <span class="atlas-hud-mode">${escapeHtml(atlasChartPeriodLabel(period))}</span><span class="atlas-hud-truth">INDISPONIBLE</span>`,
       '<span class="atlas-hud-detail">Historique réel en attente</span>',
       '<span class="atlas-hud-detail">Aucune mesure calculée · CoinGecko EUR</span>',
-      "indisponible"
+      "indisponible",
+      "empty"
     );
     return;
   }
