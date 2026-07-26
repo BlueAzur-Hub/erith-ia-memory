@@ -16310,7 +16310,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.65
+   V2.0-alpha · Build 28.1.66
    SCANNER CORE REBUILD · MARKET 250 CLEAN
    ========================================================= */
 .market-universe-mode{display:inline-flex!important;align-items:center!important;gap:5px!important;min-height:38px!important;padding:4px 6px!important;border:1px solid rgba(98,236,255,.16)!important;border-radius:11px!important;background:rgba(4,15,28,.72)!important}.market-universe-mode>span{padding:0 4px!important;color:rgba(180,210,231,.72)!important;font:850 9px/1 system-ui,sans-serif!important;letter-spacing:.08em!important;text-transform:uppercase!important;white-space:nowrap!important}.market-universe-mode button{min-width:38px!important;min-height:29px!important;padding:5px 8px!important;border:1px solid rgba(98,236,255,.17)!important;border-radius:8px!important;color:#d7e8f4!important;background:rgba(255,255,255,.035)!important;font:900 10px/1 system-ui,sans-serif!important;cursor:pointer!important}.market-universe-mode button.is-active{border-color:rgba(98,236,255,.72)!important;color:#07131e!important;background:linear-gradient(135deg,#6beeff,#f2d883)!important}.market-universe-mode small{min-width:132px!important;padding:0 5px!important;color:rgba(116,234,217,.76)!important;font:760 9px/1.15 system-ui,sans-serif!important;white-space:nowrap!important}
@@ -16319,7 +16319,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.65
+   V2.0-alpha · Build 28.1.66
    Honest pending state for source-coherent scanners.
    ========================================================= */
 .compare-btn.is-scanner-pending,
@@ -16351,7 +16351,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.65
+   V2.0-alpha · Build 28.1.66
    Graph transaction integrity.
    ========================================================= */
 #analyste[data-scanner-transaction="running"] .atlas-chart-insight-overlay {
@@ -16366,55 +16366,5 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
   display: none !important;
 }
 
-
-/* =========================================================
-   V2.0-alpha · Build 28.1.65
-   RESTORE ORIGINAL TARGET TOP 5 · NO REPLACEMENT BOARD
-   ========================================================= */
-
-.market-ribbon-label em {
-  max-width: 190px;
-  overflow: hidden;
-  color: rgba(196, 222, 238, .70);
-  font: 800 7px/1.15 system-ui, sans-serif;
-  font-style: normal;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.top5-item[data-live-state="fresh"] {
-  border-color: color-mix(in srgb, var(--crypto-color) 50%, rgba(255,255,255,.12));
-}
-
-.top5-item[data-live-state="conserved"] {
-  border-color: rgba(246, 205, 116, .46);
-  background:
-    linear-gradient(90deg, rgba(246, 205, 116, .07), transparent 48%),
-    rgba(255, 255, 255, .025);
-}
-
-.top5-item[data-live-state="blocked"] {
-  border-style: dashed;
-  opacity: .66;
-}
-
-.top5-item[data-live-state="blocked"] .top5-price {
-  color: #ffb7c3;
-}
-
-.top5-item .top5-source-state {
-  grid-column: 2 / -1;
-  min-width: 0;
-  overflow: hidden;
-  color: rgba(192, 215, 231, .58);
-  font: 760 6.5px/1 system-ui, sans-serif;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 760px) {
-  .market-ribbon-label em {
-    max-width: 135px;
-  }
-}
+/* V2.0-alpha · Build 28.1.66 — SINGLE QUOTE CORE · ZERO UI ADDITION */
+.top5-item.quote-conserved,.ticker-item.quote-conserved,.price-dual.quote-conserved{border-color:rgba(246,207,119,.48)!important}.top5-item.quote-unavailable,.ticker-item.quote-unavailable,.price-dual.quote-unavailable{opacity:.62;border-style:dashed!important}.top5-item.quote-unavailable .top5-price,.ticker-item.quote-unavailable .ticker-price,.price-dual.quote-unavailable b{color:#ffb4c2!important}
