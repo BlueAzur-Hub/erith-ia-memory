@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro V4.0 — créer une fonction nouvelle sans dupliquer une Aerith existante.">
-  <title>Forge d’Aerith Pro · V4.0 NOUVELLE CONSTELLATION</title>
-  <link rel="stylesheet" href="style.css?v=4.0-nouvelle-constellation">
+  <meta name="description" content="Forge d’Aerith Pro V4.1 — atelier visible, contrôle anti-doublon guidé et création accessible.">
+  <title>Forge d’Aerith Pro · V4.1 ATELIER OUVERT</title>
+  <link rel="stylesheet" href="style.css?v=4.1-atelier-ouvert">
 </head>
-<body data-build="V4.0-nouvelle-constellation" data-theme="seven">
+<body data-build="V4.1-atelier-ouvert" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -26,7 +26,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V4.0 NOUVELLE CONSTELLATION</span>
+      <span class="version" id="buildBadge">V4.1 ATELIER OUVERT</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -161,9 +161,17 @@
     </section>
 
     <section class="shell unified-shell" id="unifiedForge">
+      <div class="forge-access-panel" id="forgeAccessPanel">
+        <div>
+          <span>ATELIER VISIBLE · CONTRÔLE GUIDÉ</span>
+          <strong>La Forge reste ouverte.</strong>
+          <small id="forgeAccessMessage">Décris la fonction nouvelle, compare-la au registre, puis poursuis directement dans l’Atelier.</small>
+        </div>
+        <button class="primary" id="openForgeCheck" type="button">Décrire la fonction →</button>
+      </div>
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V4.0 NOUVELLE CONSTELLATION</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V4.1 ATELIER OUVERT</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -388,9 +396,9 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="flower-girls-registry.js?v=4.0-nouvelle-constellation"></script>
-  <script src="forge-data.js?v=4.0-nouvelle-constellation"></script>
-  <script src="app.js?v=4.0-nouvelle-constellation"></script>
-  <script src="v4-foundry.js?v=4.0-nouvelle-constellation"></script>
+  <script src="flower-girls-registry.js?v=4.1-atelier-ouvert"></script>
+  <script src="forge-data.js?v=4.1-atelier-ouvert"></script>
+  <script src="app.js?v=4.1-atelier-ouvert"></script>
+  <script src="v4-foundry.js?v=4.1-atelier-ouvert"></script>
 </body>
 </html>

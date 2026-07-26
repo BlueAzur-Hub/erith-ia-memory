@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_FLOWER_GIRLS = Object.freeze({
-  "version": "V4.0-nouvelle-constellation",
+  "version": "V4.1-atelier-ouvert",
   "title": "Constellation Aerith — registre local de fonctions",
   "principle": "Ce registre local sert au contrôle anti-doublon et à la consultation. Il ne constitue pas une synchronisation avec le dépôt privé et ne déduit aucun fichier manquant.",
   "facets": [

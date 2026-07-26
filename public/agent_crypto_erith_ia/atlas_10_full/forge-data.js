@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V4.0-nouvelle-constellation",
+  version: "V4.1-atelier-ouvert",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",

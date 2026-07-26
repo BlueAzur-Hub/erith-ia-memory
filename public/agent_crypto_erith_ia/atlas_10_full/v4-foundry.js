@@ -77,7 +77,29 @@
   }
 
   function setLocked(value) {
-    document.body.classList.toggle("v4-creation-locked", Boolean(value));
+    const required = Boolean(value);
+    document.body.classList.toggle("v4-precheck-required", required);
+    const panel = $("#forgeAccessPanel");
+    if (panel) panel.hidden = !required;
+    const message = $("#forgeAccessMessage");
+    if (message && required) {
+      const result = window.AERITH_V4_DUPLICATE;
+      message.textContent = result?.status === "existing"
+        ? "Cette fonction ressemble fortement à un profil existant. Reformule la différence avant de poursuivre."
+        : result?.status === "close"
+          ? "Une fonction voisine a été détectée. Précise la sortie réellement nouvelle avant de poursuivre."
+          : "Décris la fonction nouvelle, compare-la au registre, puis poursuis directement dans l’Atelier.";
+    }
+  }
+
+  function creationReady() {
+    const result = window.AERITH_V4_DUPLICATE;
+    return Boolean(result?.checked && result.status === "clear");
+  }
+
+  function requestPrecheck() {
+    openGate("create");
+    setTimeout(() => $("#missionIntent")?.focus(), 120);
   }
 
   function openGate(kind) {
@@ -86,7 +108,7 @@
     document.body.dataset.v4Workflow = kind;
     if (kind === "complete") setLocked(false);
     if(kind === "create") setTimeout(()=>$("#missionIntent")?.focus(),80);
-    $("#entryGate")?.scrollIntoView({behavior:"smooth",block:"start"});
+    $("#entryGate")?.scrollIntoView({behavior:"smooth",block:"center"});
   }
 
   function renderResult(result) {
@@ -168,8 +190,14 @@
     if(bypass) return;
     const t=event.target.closest("button,a");
     if(!t) return;
-    if(t.id==="startTop" || t.id==="startNew" || t.id==="doorCreate") {
-      event.preventDefault(); event.stopImmediatePropagation(); openGate("create"); return;
+    if(t.id==="startTop" || t.id==="startNew" || t.id==="doorCreate" || t.id==="openForgeCheck") {
+      event.preventDefault(); event.stopImmediatePropagation(); requestPrecheck(); return;
+    }
+    if(t.id==="confirmReset") {
+      try { localStorage.removeItem(STORE); } catch {}
+      window.AERITH_V4_DUPLICATE = null;
+      setLocked(true);
+      return;
     }
     if(t.id==="startExisting" || t.id==="doorConsult") {
       event.preventDefault(); event.stopImmediatePropagation(); document.body.dataset.v4Workflow="consult"; $("#flowerGirls")?.scrollIntoView({behavior:"smooth",block:"start"}); return;
@@ -182,6 +210,9 @@
     }
     if(t.id==="checkDuplicate") { event.preventDefault(); runCheck(); return; }
     if(t.id==="continueCreation") { event.preventDefault(); fillMission(); return; }
+    if(!creationReady() && (t.id==="nextTop" || t.id==="nextBottom" || t.id==="blankProfile" || t.closest(".step-button"))) {
+      event.preventDefault(); event.stopImmediatePropagation(); requestPrecheck(); return;
+    }
     const ex=t.closest("[data-example]");
     if(ex) {
       event.preventDefault(); event.stopImmediatePropagation();
@@ -216,6 +247,6 @@
     $("#missionIntent").value=window.AERITH_V4_DUPLICATE.mission||"";
     renderResult(window.AERITH_V4_DUPLICATE);
   }
-  setLocked(!(window.AERITH_V4_DUPLICATE?.checked && window.AERITH_V4_DUPLICATE?.status === "clear"));
+  setLocked(!creationReady());
   enforceV4Labels();
 })();
