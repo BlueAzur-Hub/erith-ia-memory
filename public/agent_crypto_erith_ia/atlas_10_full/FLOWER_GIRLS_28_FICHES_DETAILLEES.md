@@ -210,7 +210,7 @@ La mission est terminée lorsque la sortie attendue est livrée, vérifiable et 
 **Protection :** STANDARD  
 **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE  
 **Persona :** `core/AERITH_10_ROUTEUSE_PERSONA_OPERATING_LAYER.md`  
-**État Persona :** PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER  
+**État Persona :** PERSONA À CRÉER / RELIER  
 
 ### Mission
 

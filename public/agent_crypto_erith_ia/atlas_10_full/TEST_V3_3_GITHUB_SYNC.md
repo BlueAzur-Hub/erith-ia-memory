@@ -1,12 +1,12 @@
-# Tests — V3.3R1 Reprise canonique
+# TESTS V3.3
 
-1. Le badge affiche `V3.3R1 CANONIQUE`.
-2. L’Accueil affiche exactement `Compiler les profils. Faire naître les prochaines Aerith-10.`
-3. L’identité affiche `Aerith-10 Créatrice Conseillère`.
-4. Aerith-10 Créatrice est sélectionnée par défaut.
-5. La section Flower Girls affiche 28 profils.
-6. Routeuse affiche `PROFIL EXISTANT` et `PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER`.
-7. Charger Routeuse dans l’Atelier doit afficher `PROFIL CANONIQUE`, pas `CRÉATION EN COURS`.
-8. Les profils Aerith-7, Aerith-10 Créatrice, Aerith-10 Crypto et Atlas-10 Crypto restent disponibles.
-9. Aucun texte V4 `Créer une fonction nouvelle` ne doit être présent.
-10. Aucun push GitHub n’est inclus dans ce paquet.
+1. Le badge affiche `V3.3 GITHUB SYNC`.
+2. La page parle de `Constellation Aerith` pour la lignée générale.
+3. Flower Girls affiche 28 Core individuels confirmés.
+4. Ouvrir Routeuse : Core V4 renforcée et Persona à créer / relier.
+5. Ouvrir Créatrice : Core canonique protégé et Persona liée.
+6. Ouvrir Guérisseuse : Core V3.0 et validation humaine à confirmer.
+7. Ouvrir Story Machine : Core V4 augmentée protégé.
+8. Étape 08 sans imports : lignes orange `À FAIRE`, aucune erreur rouge normale.
+9. Vérifier `Parcours : 100 %` et `Validation` séparée.
+10. Tester `index.html?view=atelier` : aucune grande zone vide finale.

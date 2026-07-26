@@ -1,27 +1,22 @@
-# Forge d’Aerith Pro — V3.3R1 Reprise canonique
+# Forge d’Aerith Pro — V3.3 GitHub Sync
 
-Cette reprise conserve les fonctions V3.3 et restaure l’Accueil validé de la V3.0 FINAL.
+Cette version synchronise la Constellation Flower Girls avec le dépôt privé lu le 26 juillet 2026.
 
-## Verrous restaurés
+## Changements majeurs
 
-- `Aerith-10 Créatrice Conseillère` dans l’identité de la Forge ;
-- `Compiler les profils. Faire naître les prochaines Aerith-10.` ;
-- texte d’accueil V3.0 ;
-- Aerith-10 Créatrice sélectionnée par défaut ;
-- navigation Lignée / Constellation / Profils / Atelier Créatrice / Export ;
-- mise en page et visuels existants.
+- 28 Core individuels reconnus dans le registre.
+- version, statut, protection, validation et chemin Core affichés pour chaque Flower Girl ;
+- Persona déclarée liée uniquement lorsqu’elle est réellement confirmée ;
+- distinction entre Constellation Aerith générale et Flower Girls Aerith-10 ;
+- audit final orange pour les opérations normales attendues ;
+- rouge réservé aux erreurs réelles ;
+- `Parcours` et `Validation` affichés séparément ;
+- fin de page compacte conservée en `?view=atelier`.
 
-La section Flower Girls est conservée comme ajout fonctionnel. Elle ne remplace pas l’Accueil.
+## Périmètre privé
 
-## Routeuse
+Sun, Night et Rose ne sont ni affichées, ni analysées, ni ajoutées au registre de cette version.
 
-Aerith-10 Routeuse est un profil existant de la constellation 28/28. Son Core V4 renforcé est présent. Sa Persona V1 est présente avec le statut `candidate à relire et valider`. La Forge ne doit plus la présenter comme une Flower Girl à créer.
+## Suite
 
-## Profils de travail actuels
-
-- Aerith-7 Seven Heaven ;
-- Aerith-10 Créatrice ;
-- Aerith-10 Crypto ;
-- Atlas-10 Crypto.
-
-La création d’une nouvelle spécialité reste une option, jamais le profil chargé par défaut.
+Le prochain chantier prévu est Aerith-10 Routeuse : Persona Operating Layer, Boot et Block LLM, après validation de Christophe.

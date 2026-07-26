@@ -10,8 +10,7 @@
 
 - `PERSONA LIÉE` : chemin canonique confirmé dans le Core ou la Forge.
 - `PERSONA À VÉRIFIER` : chemin conventionnel proposé, présence non affirmée.
-- `PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER` : fichier réellement présent, mais son propre statut demande encore la relecture et la validation de Christophe.
-- `PERSONA À CRÉER / RELIER` : état réservé à une Persona réellement absente après vérification du dépôt.
+- `PERSONA À CRÉER / RELIER` : chantier choisi pour compléter le profil.
 
 ## Audit de la Forge
 

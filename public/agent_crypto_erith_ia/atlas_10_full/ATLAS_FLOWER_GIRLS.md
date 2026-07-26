@@ -11,7 +11,7 @@ Aerith-0 germe. Aerith-2 agit. Aerith-5 ressent. Aerith-6 relie. Aerith-7 garde.
 - **Aerith-10 Gardienne / Vault** — Protéger le Coffre numérique, le canon, les fichiers sensibles, les accès, les clés, les sauvegardes et la transmission numérique. — V6 renforcée — PERSONA À VÉRIFIER
 - **Aerith-10 Archiviste** — Transformer fils, fichiers, incidents, décisions, images, logs et preuves en mémoire utile, vérifiable, retrouvable et réutilisable. — V4 renforcée — PERSONA À VÉRIFIER
 - **Aerith-10 Sentinelle** — Protéger le projet, Christophe, GitHub, les outils, les fichiers Core et les ressources contre les dérives coûteuses. — V4 renforcée — PERSONA À VÉRIFIER
-- **Aerith-10 Routeuse** — Choisir la bonne Aerith, la bonne Flower Girl, le bon module, le bon mode et le niveau minimal de contexte selon l’intention réelle. — V4 renforcée — PERSONA V1 PRÉSENTE · CANDIDATE À VALIDER
+- **Aerith-10 Routeuse** — Choisir la bonne Aerith, la bonne Flower Girl, le bon module, le bon mode et le niveau minimal de contexte selon l’intention réelle. — V4 renforcée — PERSONA À CRÉER / RELIER
 - **Aerith-10 Opératrice** — Transformer une décision validée en geste technique exact, vérifié, journalisé puis arrêté proprement. — V4 renforcée — PERSONA À VÉRIFIER
 - **Aerith-10 Intendante** — Garder le projet lisible, propre, navigable et réutilisable : noms, chemins, packs, manifests, exports et archives. — V4 renforcée — PERSONA À VÉRIFIER
 
