@@ -16037,3 +16037,61 @@ html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-co
     height: calc(100% - 58px) !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.55
+   TRUE IN-CHART REPRISE · FULL CANVAS HEIGHT
+   PRESERVED ANALYSIS TRUTH
+   ========================================================= */
+
+/* The graph uses the complete enlarged frame again.
+   Chart.js reserves 46 px internally for the memory HUD. */
+#analyste.champagne-clean-lens #mainChart,
+#analyste.champagne-clean-lens.detail-collapsed #mainChart,
+#analyste.champagne-clean-lens:not(.detail-collapsed) #mainChart {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+/* The memory strip is now genuinely superimposed on the canvas,
+   immediately above the existing historical caption. */
+#analyste .atlas-workspace-reprise {
+  bottom: 7px !important;
+  min-height: 36px !important;
+  background:
+    linear-gradient(90deg,
+      rgba(3, 13, 26, .84),
+      rgba(5, 20, 37, .68) 62%,
+      rgba(8, 25, 43, .46)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 8px 24px rgba(0,0,0,.14) !important;
+}
+
+/* Preserved analysis is valid cached history, not an unavailable state. */
+#analyste .atlas-chart-insight-overlay[data-truth="cache"] .atlas-hud-truth {
+  color: #f4d386 !important;
+  border-color: rgba(244, 211, 134, .42) !important;
+  background: rgba(244, 211, 134, .10) !important;
+}
+
+@media (max-width: 760px) {
+  #analyste .atlas-workspace-reprise {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    min-height: 38px !important;
+    gap: 6px 8px !important;
+  }
+
+  #analyste .atlas-workspace-reprise > small {
+    display: none !important;
+  }
+
+  #analyste.champagne-clean-lens #mainChart,
+  #analyste.champagne-clean-lens.detail-collapsed #mainChart,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) #mainChart {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+}

@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.54 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.55 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.54";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.55";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -4662,7 +4662,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
         normalized: true,
         parsing: false,
         interaction: { mode: "nearest", intersect: false, axis: "x" },
-        layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
+        layout: { padding: { top: 8, right: 4, bottom: 46, left: 4 } },
         plugins: {
           atlasChartMetadata: {
             mode: "single",
@@ -5144,7 +5144,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         normalized: false,
         parsing: false,
         interaction: { mode: "nearest", intersect: false, axis: "x" },
-        layout: { padding: { top: 8, right: 4, bottom: 0, left: 4 } },
+        layout: { padding: { top: 8, right: 4, bottom: 46, left: 4 } },
         plugins: {
           atlasChartMetadata: {
             mode: "comparison",
@@ -11929,6 +11929,41 @@ initAtlasAdminGraphToggle();
 /* =========================================================
    Build 28.1.48 — Toggleable enriched quantitative overlay
    ========================================================= */
+let atlasChartOverlayLastReady = null;
+
+function atlasChartOverlayModeLabelFor(preset, count) {
+  if (count <= 1) return "SOLO";
+  if (preset === "rank-3") return "TOP 3";
+  if (preset === "rank-5") return "TOP 5";
+  if (preset === "gainers") return "HAUSSES 5";
+  if (preset === "losers") return "BAISSES 5";
+  if (preset === "volume") return "VOLUMES 5";
+  return `${count} SÉRIES`;
+}
+
+function atlasChartOverlayCaptureReady(chart) {
+  if (!chart?.result || chart.status !== "ready") return null;
+
+  const comparison = chart.result?.comparison && Array.isArray(chart.result.entries);
+  const entries = comparison ? chart.result.entries : [];
+  const preset = String(state.dataBroker?.comparison?.preset || (comparison ? "manual" : "solo"));
+  const ids = comparison
+    ? entries.map(entry => entry?.coin?.id).filter(Boolean)
+    : [chart.result?.coin?.id || chart.coinId].filter(Boolean);
+
+  atlasChartOverlayLastReady = {
+    chart: { ...chart, result: chart.result },
+    period: Number(chart.period || state.chartPeriodDays || 1),
+    preset,
+    count: ids.length || (comparison ? entries.length : 1),
+    modeLabel: atlasChartOverlayModeLabelFor(preset, ids.length || entries.length || 1),
+    viewLabel: comparison || atlasChartV2EffectiveView() === "base100" ? "BASE 100" : "PRIX EUR",
+    scaleLabel: comparison || atlasChartV2EffectiveScale() !== "logarithmic" ? "NORMALE" : "LOG",
+  };
+
+  return atlasChartOverlayLastReady;
+}
+
 function atlasChartOverlayTruthKey(label) {
   const value = String(label || "").toLowerCase();
   if (/indisponible|échec|aucune|attente|non mesur/.test(value)) return "unavailable";
@@ -11957,13 +11992,7 @@ function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "
 function atlasChartOverlayModeLabel() {
   const count = atlasComparisonIds().length;
   const preset = String(state.dataBroker?.comparison?.preset || "solo");
-  if (count <= 1) return "SOLO";
-  if (preset === "rank-3") return "TOP 3";
-  if (preset === "rank-5") return "TOP 5";
-  if (preset === "gainers") return "HAUSSES 5";
-  if (preset === "losers") return "BAISSES 5";
-  if (preset === "volume") return "VOLUMES 5";
-  return `${count} SÉRIES`;
+  return atlasChartOverlayModeLabelFor(preset, count);
 }
 
 function atlasChartOverlayTruth(result, period) {
@@ -12012,17 +12041,17 @@ function atlasChartOverlayTitleHtml(context, mode, truthLabel) {
     + `<span class="atlas-hud-truth">${escapeHtml(String(truthLabel || "source non mesurée").toUpperCase())}</span>`;
 }
 
-function atlasChartOverlayComparison(chart, period) {
+function atlasChartOverlayComparison(chart, period, options = {}) {
   const result = chart?.result || {};
   const entries = atlasChartOverlayOrderedEntries(result);
-  const selectedCount = atlasComparisonIds().length || entries.length;
+  const selectedCount = Number(options.selectedCount || atlasComparisonIds().length || entries.length);
   const periodLabel = atlasChartPeriodLabel(period);
-  const preset = String(state.dataBroker?.comparison?.preset || "manual");
+  const preset = String(options.preset || state.dataBroker?.comparison?.preset || "manual");
   const truth = atlasChartOverlayTruth(
     { comparison: true, entries, sourceMode: "comparison-base100" },
     period
   );
-  const scaleLabel = atlasChartV2EffectiveScale() === "logarithmic" ? "LOG" : "NORMALE";
+  const scaleLabel = String(options.scaleLabel || (atlasChartV2EffectiveScale() === "logarithmic" ? "LOG" : "NORMALE"));
 
   const rows = entries.map(entry => {
     const coin = entry?.coin || {};
@@ -12082,11 +12111,17 @@ function atlasChartOverlayComparison(chart, period) {
   }
 
   const truthLabel = String(truth.label || "source non mesurée");
+  const displayedTruthLabel = options.preserved ? "historique conservé" : truthLabel;
+  const displayedModeLabel = String(options.modeLabel || atlasChartOverlayModeLabel());
   const titleHtml = atlasChartOverlayTitleHtml(
-    `${atlasChartOverlayModeLabel()} · ${periodLabel} · BASE 100`,
+    `${displayedModeLabel} · ${periodLabel} · BASE 100`,
     `${scaleLabel} · ${entries.length}/${selectedCount} SÉRIES`,
-    truthLabel
+    displayedTruthLabel
   );
+
+  if (options.preserved) {
+    summary += ` · mise à jour ${atlasChartPeriodLabel(Number(options.requestedPeriod || state.chartPeriodDays || period))} en cours`;
+  }
 
   let summaryHtml = escapeHtml(summary);
   summaryHtml = summaryHtml
@@ -12098,18 +12133,18 @@ function atlasChartOverlayComparison(chart, period) {
     titleHtml,
     seriesLine || '<span class="atlas-hud-detail">Mesures non disponibles</span>',
     summaryHtml,
-    truthLabel,
+    options.preserved ? "cache retardé" : truthLabel,
     "comparison"
   );
 }
 
-function atlasChartOverlaySolo(chart, period) {
+function atlasChartOverlaySolo(chart, period, options = {}) {
   const result = chart?.result || {};
   const coin = result?.coin || getSelectedCoin() || {};
   const metrics = result?.integrity?.metrics || {};
   const periodLabel = atlasChartPeriodLabel(period);
-  const view = atlasChartV2EffectiveView() === "base100" ? "BASE 100" : "PRIX EUR";
-  const scaleLabel = atlasChartV2EffectiveScale() === "logarithmic" ? "LOG" : "NORMALE";
+  const view = String(options.viewLabel || (atlasChartV2EffectiveView() === "base100" ? "BASE 100" : "PRIX EUR"));
+  const scaleLabel = String(options.scaleLabel || (atlasChartV2EffectiveScale() === "logarithmic" ? "LOG" : "NORMALE"));
   const truth = atlasChartOverlayTruth(result, period);
 
   const first = Number(metrics.firstPrice);
@@ -12126,6 +12161,7 @@ function atlasChartOverlaySolo(chart, period) {
   const symbol = String(coin?.symbol || "ACTIF").toUpperCase();
   const name = String(coin?.name || "Analyse du marché");
   const truthLabel = String(truth.label || "source non mesurée");
+  const displayedTruthLabel = options.preserved ? "historique conservé" : truthLabel;
 
   const seriesParts = [];
   if (Number.isFinite(last)) seriesParts.push(atlasFormatEUR(last));
@@ -12144,25 +12180,37 @@ function atlasChartOverlaySolo(chart, period) {
   const soloTitleHtml = atlasChartOverlayTitleHtml(
     `${symbol} · ${name} · ${periodLabel}`,
     `${view} · ${scaleLabel}`,
-    truthLabel
+    displayedTruthLabel
   );
 
   const soloColor = atlasChartOverlayCoinColor(coin, 0);
   const soloSeriesHtml = `<span class="atlas-hud-coin" style="--coin-color:${escapeHtml(soloColor)}">`
     + `<b>${escapeHtml(symbol)}</b><em>${escapeHtml(seriesParts.join(" · ") || "Mesures historiques non disponibles")}</em></span>`;
 
+  if (options.preserved) {
+    summaryParts.push(`mise à jour ${atlasChartPeriodLabel(Number(options.requestedPeriod || state.chartPeriodDays || period))} en cours`);
+  }
+
   atlasChartOverlaySet(
     soloTitleHtml,
     soloSeriesHtml,
     `<span class="atlas-hud-detail">${escapeHtml(summaryParts.join(" · "))}</span>`,
-    truthLabel,
+    options.preserved ? "cache retardé" : truthLabel,
     "solo"
   );
 }
 
 function atlasChartOverlayUpdate() {
   const chart = state.dataBroker?.chart;
-  const period = Number(state.chartPeriodDays || 1);
+  const requestedPeriod = Number(state.chartPeriodDays || 1);
+  const chartReady = !!chart
+    && chart.status === "ready"
+    && atlasChartContextMatches(chart)
+    && !!chart.result;
+
+  if (chartReady) {
+    atlasChartOverlayCaptureReady(chart);
+  }
 
   if (state.chartViewV2.analysis === false) {
     const overlay = document.getElementById("atlasChartInsightOverlay");
@@ -12173,22 +12221,44 @@ function atlasChartOverlayUpdate() {
     return;
   }
 
-  if (!chart || chart.status !== "ready" || !atlasChartContextMatches(chart) || !chart.result) {
-    atlasChartOverlaySet(
-      `<span class="atlas-hud-context">ANALYSE DU MARCHÉ</span> · <span class="atlas-hud-mode">${escapeHtml(atlasChartPeriodLabel(period))}</span><span class="atlas-hud-truth">INDISPONIBLE</span>`,
-      '<span class="atlas-hud-detail">Historique réel en attente</span>',
-      '<span class="atlas-hud-detail">Aucune mesure calculée · CoinGecko EUR</span>',
-      "indisponible",
-      "empty"
-    );
+  if (chartReady) {
+    if (chart.result?.comparison && Array.isArray(chart.result.entries)) {
+      atlasChartOverlayComparison(chart, Number(chart.period || requestedPeriod));
+    } else {
+      atlasChartOverlaySolo(chart, Number(chart.period || requestedPeriod));
+    }
     return;
   }
 
-  if (chart.result?.comparison && Array.isArray(chart.result.entries)) {
-    atlasChartOverlayComparison(chart, period);
-  } else {
-    atlasChartOverlaySolo(chart, period);
+  const displayedChartStillVisible = !!state.chartEngineV2?.realChart;
+  const preserved = displayedChartStillVisible ? atlasChartOverlayLastReady : null;
+
+  if (preserved?.chart?.result) {
+    const options = {
+      preserved: true,
+      requestedPeriod,
+      preset: preserved.preset,
+      selectedCount: preserved.count,
+      modeLabel: preserved.modeLabel,
+      viewLabel: preserved.viewLabel,
+      scaleLabel: preserved.scaleLabel,
+    };
+
+    if (preserved.chart.result?.comparison && Array.isArray(preserved.chart.result.entries)) {
+      atlasChartOverlayComparison(preserved.chart, preserved.period, options);
+    } else {
+      atlasChartOverlaySolo(preserved.chart, preserved.period, options);
+    }
+    return;
   }
+
+  atlasChartOverlaySet(
+    `<span class="atlas-hud-context">ANALYSE DU MARCHÉ</span> · <span class="atlas-hud-mode">${escapeHtml(atlasChartPeriodLabel(requestedPeriod))}</span><span class="atlas-hud-truth">EN ATTENTE</span>`,
+    '<span class="atlas-hud-detail">Première série réelle en cours de chargement</span>',
+    '<span class="atlas-hud-detail">Aucune courbe valide n’est encore affichée · CoinGecko EUR</span>',
+    "attente",
+    "empty"
+  );
 }
 
 const atlasChartOverlayCaption = document.getElementById("chartCaption");
