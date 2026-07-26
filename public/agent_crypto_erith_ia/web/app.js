@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.49 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.50 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.49";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.50";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -11923,16 +11923,16 @@ function atlasChartOverlayTruthKey(label) {
   return "archive";
 }
 
-function atlasChartOverlaySet(title, seriesLine, summaryLine, truthLabel = "") {
+function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "") {
   const overlay = document.getElementById("atlasChartInsightOverlay");
   const titleNode = document.getElementById("atlasChartInsightOverlayTitle");
   const seriesNode = document.getElementById("atlasChartInsightOverlaySeries");
   const summaryNode = document.getElementById("atlasChartInsightOverlaySummary");
   if (!overlay || !titleNode || !seriesNode || !summaryNode) return;
 
-  titleNode.textContent = title;
-  seriesNode.textContent = seriesLine;
-  summaryNode.textContent = summaryLine;
+  titleNode.innerHTML = titleHtml;
+  seriesNode.innerHTML = seriesHtml;
+  summaryNode.innerHTML = summaryHtml;
   overlay.dataset.truth = atlasChartOverlayTruthKey(truthLabel);
   overlay.hidden = state.chartViewV2.analysis === false;
   overlay.setAttribute("aria-hidden", overlay.hidden ? "true" : "false");
@@ -11976,6 +11976,26 @@ function atlasChartOverlayPointCoverage(rows) {
   return min === max ? `${min} pts/série` : `${min}–${max} pts/série`;
 }
 
+function atlasChartOverlayCoinColor(coin, index = 0) {
+  try {
+    return atlasCryptoPalette(coin || {}, index).primary || "#eaf8ff";
+  } catch {
+    return "#eaf8ff";
+  }
+}
+
+function atlasChartOverlayCoinHtml(row, index, value) {
+  const color = atlasChartOverlayCoinColor(row.coin, index);
+  return `<span class="atlas-hud-coin" style="--coin-color:${escapeHtml(color)}">`
+    + `<b>${escapeHtml(row.symbol)}</b><em>${escapeHtml(value)}</em></span>`;
+}
+
+function atlasChartOverlayTitleHtml(context, mode, truthLabel) {
+  return `<span class="atlas-hud-context">${escapeHtml(context)}</span>`
+    + ` · <span class="atlas-hud-mode">${escapeHtml(mode)}</span>`
+    + `<span class="atlas-hud-truth">${escapeHtml(String(truthLabel || "source non mesurée").toUpperCase())}</span>`;
+}
+
 function atlasChartOverlayComparison(chart, period) {
   const result = chart?.result || {};
   const entries = atlasChartOverlayOrderedEntries(result);
@@ -11993,6 +12013,7 @@ function atlasChartOverlayComparison(chart, period) {
     const marketCoin = state.coins.find(item => item.id === coin.id) || coin;
     const metrics = entry?.result?.integrity?.metrics || {};
     return {
+      coin,
       symbol: String(coin.symbol || coin.name || "ACTIF").toUpperCase(),
       change: Number(metrics.changePct),
       volume: Number(marketCoin?.volume24h),
@@ -12001,12 +12022,12 @@ function atlasChartOverlayComparison(chart, period) {
     };
   });
 
-  const seriesLine = rows.map(row => {
-    if (preset === "volume") {
-      return `${row.symbol} ${Number.isFinite(row.volume) ? fmtCompactEUR.format(row.volume) : "non mesuré"}`;
-    }
-    return `${row.symbol} ${Number.isFinite(row.change) ? fmtPct(row.change) : "non mesuré"}`;
-  }).join(" · ");
+  const seriesLine = rows.map((row, index) => {
+    const value = preset === "volume"
+      ? (Number.isFinite(row.volume) ? fmtCompactEUR.format(row.volume) : "non mesuré")
+      : (Number.isFinite(row.change) ? fmtPct(row.change) : "non mesuré");
+    return atlasChartOverlayCoinHtml(row, index, value);
+  }).join("");
 
   const oldest = rows.map(row => row.timestamp).filter(value => value > 0);
   const oldestText = oldest.length
@@ -12045,10 +12066,22 @@ function atlasChartOverlayComparison(chart, period) {
   }
 
   const truthLabel = String(truth.label || "source non mesurée");
+  const titleHtml = atlasChartOverlayTitleHtml(
+    `${atlasChartOverlayModeLabel()} · ${periodLabel} · BASE 100`,
+    `${scaleLabel} · ${entries.length}/${selectedCount} SÉRIES`,
+    truthLabel
+  );
+
+  let summaryHtml = escapeHtml(summary);
+  summaryHtml = summaryHtml
+    .replace(/^Leader ([^·]+)/, '<span class="atlas-hud-leader">Leader $1</span>')
+    .replace(/ · retard ([^·]+)/, ' · <span class="atlas-hud-laggard">retard $1</span>')
+    .replace(/( · écart .*)$/, '<span class="atlas-hud-detail">$1</span>');
+
   atlasChartOverlaySet(
-    `${atlasChartOverlayModeLabel()} · ${periodLabel} · BASE 100 · ${scaleLabel} · ${entries.length}/${selectedCount} SÉRIES · ${truthLabel.toUpperCase()}`,
-    seriesLine || "Mesures non disponibles",
-    summary,
+    titleHtml,
+    seriesLine || '<span class="atlas-hud-detail">Mesures non disponibles</span>',
+    summaryHtml,
     truthLabel
   );
 }
@@ -12091,10 +12124,20 @@ function atlasChartOverlaySolo(chart, period) {
   if (lastTimestamp > 0) summaryParts.push(`série ${atlasExactTimestampLabel(lastTimestamp)}`);
   summaryParts.push("CoinGecko EUR");
 
+  const soloTitleHtml = atlasChartOverlayTitleHtml(
+    `${symbol} · ${name} · ${periodLabel}`,
+    `${view} · ${scaleLabel}`,
+    truthLabel
+  );
+
+  const soloColor = atlasChartOverlayCoinColor(coin, 0);
+  const soloSeriesHtml = `<span class="atlas-hud-coin" style="--coin-color:${escapeHtml(soloColor)}">`
+    + `<b>${escapeHtml(symbol)}</b><em>${escapeHtml(seriesParts.join(" · ") || "Mesures historiques non disponibles")}</em></span>`;
+
   atlasChartOverlaySet(
-    `${symbol} · ${name} · ${periodLabel} · ${view} · ${scaleLabel} · ${truthLabel.toUpperCase()}`,
-    seriesParts.join(" · ") || "Mesures historiques non disponibles",
-    summaryParts.join(" · "),
+    soloTitleHtml,
+    soloSeriesHtml,
+    `<span class="atlas-hud-detail">${escapeHtml(summaryParts.join(" · "))}</span>`,
     truthLabel
   );
 }
@@ -12114,9 +12157,9 @@ function atlasChartOverlayUpdate() {
 
   if (!chart || chart.status !== "ready" || !atlasChartContextMatches(chart) || !chart.result) {
     atlasChartOverlaySet(
-      `ANALYSE DU MARCHÉ · ${atlasChartPeriodLabel(period)}`,
-      "Historique réel en attente",
-      "Aucune mesure calculée · CoinGecko EUR",
+      `<span class="atlas-hud-context">ANALYSE DU MARCHÉ</span> · <span class="atlas-hud-mode">${escapeHtml(atlasChartPeriodLabel(period))}</span><span class="atlas-hud-truth">INDISPONIBLE</span>`,
+      '<span class="atlas-hud-detail">Historique réel en attente</span>',
+      '<span class="atlas-hud-detail">Aucune mesure calculée · CoinGecko EUR</span>',
       "indisponible"
     );
     return;
