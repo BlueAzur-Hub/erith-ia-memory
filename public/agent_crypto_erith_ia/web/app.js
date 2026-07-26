@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.55 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.56 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.55";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.56";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -9539,6 +9539,11 @@ function atlasV2OpenAdvancedForTarget(hash, options = {}) {
   const selector = document.getElementById("atlasV2AdvancedModuleSelect");
   if (selector && [...selector.options].some(option => option.value === id)) {
     selector.value = id;
+    atlasAdminLastModuleWrite(id);
+    const cluster = atlasAdminClusterForModule(id);
+    if (cluster) {
+      try { localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, cluster); } catch {}
+    }
   }
 
   if (options.updateHash !== false) {
@@ -11746,8 +11751,43 @@ initAtlasHelpLayerV1();
    Target Top 5, Market Flow and Market internals stay unchanged.
    ========================================================= */
 const ATLAS_ADMIN_CENTER_KEY = "atlas.admin.command.center.open.v1";
+const ATLAS_ADMIN_CENTER_TARGET_KEY = "atlas.admin.command.center.target.v1";
+const ATLAS_ADMIN_MODULE_KEY = "atlas.admin.last.module.v1";
 const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
 const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
+const ATLAS_ADMIN_CLUSTERS = Object.freeze(["decision", "analysis", "system", "projects"]);
+
+function atlasAdminCenterSavedOpen() {
+  try { return localStorage.getItem(ATLAS_ADMIN_CENTER_KEY) === "1"; }
+  catch { return false; }
+}
+
+function atlasAdminCenterSavedTarget() {
+  try {
+    const target = localStorage.getItem(ATLAS_ADMIN_CENTER_TARGET_KEY) || "";
+    return ATLAS_ADMIN_CLUSTERS.includes(target) ? target : "";
+  } catch { return ""; }
+}
+
+function atlasAdminLastModuleRead() {
+  try { return localStorage.getItem(ATLAS_ADMIN_MODULE_KEY) || ""; }
+  catch { return ""; }
+}
+
+function atlasAdminLastModuleWrite(id) {
+  const value = String(id || "").replace(/^#/, "");
+  if (!value || !document.getElementById(value)) return;
+  try { localStorage.setItem(ATLAS_ADMIN_MODULE_KEY, value); } catch {}
+}
+
+function atlasAdminClusterForModule(id) {
+  const value = String(id || "").replace(/^#/, "");
+  if (["watchlist", "decision-board", "news-sentinel", "nofomo"].includes(value)) return "decision";
+  if (["math", "multi-horizon", "lecture-froide", "risques", "debutant"].includes(value)) return "analysis";
+  if (["auto-reader", "shared-memory", "github-memory", "safety", "simulation", "commandes", "newsSourceRegistry", "news-plan"].includes(value)) return "system";
+  if (["missions-vie", "forge-aerith"].includes(value)) return "projects";
+  return "";
+}
 
 function atlasAdminCenterElements() {
   return {
@@ -11762,39 +11802,78 @@ function atlasAdminCenterElements() {
 function atlasAdminCenterSet(open, options = {}) {
   const { drawer, toggle, state } = atlasAdminCenterElements();
   if (!drawer || !toggle) return;
+
   const next = !!open && atlasV2Mode() === "advanced";
+  const requestedTarget = String(options.target || "");
+  const target = ATLAS_ADMIN_CLUSTERS.includes(requestedTarget)
+    ? requestedTarget
+    : next
+      ? atlasAdminCenterSavedTarget()
+      : "";
+
   drawer.hidden = !next;
   toggle.setAttribute("aria-expanded", next ? "true" : "false");
   if (state) state.textContent = next ? "Replier −" : "Déployer +";
+
   document.querySelectorAll("[data-admin-cluster-target]").forEach(button => {
+    const selected = next && !!target && button.dataset.adminClusterTarget === target;
     button.setAttribute("aria-expanded", next ? "true" : "false");
+    button.classList.toggle("is-selected", selected);
   });
+
+  document.querySelectorAll("[data-admin-cluster]").forEach(cluster => {
+    cluster.classList.toggle("is-targeted", next && !!target && cluster.dataset.adminCluster === target);
+  });
+
+  if (target) drawer.dataset.activeCluster = target;
   document.body.classList.toggle("atlas-admin-center-open", next);
+
   if (options.persist !== false) {
-    try { localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, next ? "1" : "0"); } catch {}
+    try {
+      localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, next ? "1" : "0");
+      if (target) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, target);
+    } catch {}
   }
-  if (next && options.target) {
-    document.querySelectorAll("[data-admin-cluster]").forEach(cluster => {
-      cluster.classList.toggle("is-targeted", cluster.dataset.adminCluster === options.target);
-    });
-    document.querySelectorAll("[data-admin-cluster-target]").forEach(button => {
-      button.classList.toggle("is-selected", button.dataset.adminClusterTarget === options.target);
-    });
-    const cluster = drawer.querySelector(`[data-admin-cluster="${options.target}"]`);
-    if (cluster) window.setTimeout(() => cluster.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" }), 30);
-  } else if (!next) {
-    document.querySelectorAll("[data-admin-cluster], [data-admin-cluster-target]").forEach(element => {
-      element.classList.remove("is-targeted", "is-selected");
-    });
+
+  if (next && target && options.scrollTarget !== false) {
+    const cluster = drawer.querySelector(`[data-admin-cluster="${target}"]`);
+    if (cluster) {
+      window.setTimeout(() => {
+        cluster.scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+          behavior: options.instant ? "auto" : "smooth"
+        });
+      }, 30);
+    }
   }
+
+  window.dispatchEvent(new CustomEvent("atlas:admin-center", {
+    detail: { open: next, target: target || drawer.dataset.activeCluster || "" }
+  }));
 }
 
 function initAtlasAdminCommandCenter() {
   const { drawer, toggle, close } = atlasAdminCenterElements();
   if (!drawer || !toggle) return;
   if (drawer.parentElement !== document.body) document.body.appendChild(drawer);
+
+  const restoreCenter = () => {
+    if (atlasV2Mode() !== "advanced") {
+      atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
+      return;
+    }
+    atlasAdminCenterSet(atlasAdminCenterSavedOpen(), {
+      persist: false,
+      target: atlasAdminCenterSavedTarget(),
+      scrollTarget: false,
+      instant: true
+    });
+  };
+
   toggle.addEventListener("click", () => atlasAdminCenterSet(drawer.hidden));
   close?.addEventListener("click", () => atlasAdminCenterSet(false));
+
   document.querySelectorAll("[data-admin-cluster-target]").forEach(button => {
     button.addEventListener("click", () => {
       const target = button.dataset.adminClusterTarget || "";
@@ -11804,19 +11883,40 @@ function initAtlasAdminCommandCenter() {
       else atlasAdminCenterSet(true, { target });
     });
   });
-  drawer.addEventListener("click", event => {
-    if (event.target.closest("a[href^='#']")) atlasAdminCenterSet(false);
+
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  selector?.addEventListener("change", () => {
+    if (selector.value) atlasAdminLastModuleWrite(selector.value);
   });
+
+  drawer.addEventListener("click", event => {
+    const link = event.target.closest("a[href^='#']");
+    if (!link) return;
+    const id = String(link.getAttribute("href") || "").replace(/^#/, "");
+    if (id) atlasAdminLastModuleWrite(id);
+    atlasAdminCenterSet(false);
+  });
+
   document.addEventListener("pointerdown", event => {
     const { dock } = atlasAdminCenterElements();
-    if (!drawer.hidden && dock && !dock.contains(event.target) && !drawer.contains(event.target)) atlasAdminCenterSet(false);
+    if (!drawer.hidden && dock && !dock.contains(event.target) && !drawer.contains(event.target)) {
+      atlasAdminCenterSet(false);
+    }
   });
+
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !drawer.hidden) atlasAdminCenterSet(false);
   });
+
   window.addEventListener("atlas:v2mode", event => {
-    if (event.detail?.mode !== "advanced") atlasAdminCenterSet(false, { persist: false });
+    if (event.detail?.mode !== "advanced") {
+      atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
+    } else {
+      window.requestAnimationFrame(restoreCenter);
+    }
   });
+
+  window.requestAnimationFrame(restoreCenter);
 }
 
 function atlasAdminGraphRead() {
@@ -11985,6 +12085,8 @@ function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "
   summaryNode.innerHTML = summaryHtml;
   overlay.dataset.truth = atlasChartOverlayTruthKey(truthLabel);
   overlay.dataset.layout = layout;
+  const chartShell = overlay.closest(".chart-shell");
+  if (chartShell) chartShell.dataset.analysisLayout = layout;
   overlay.hidden = state.chartViewV2.analysis === false;
   overlay.setAttribute("aria-hidden", overlay.hidden ? "true" : "false");
 }
@@ -12526,12 +12628,22 @@ function atlasWorkspaceCurrentGraphMode() {
 }
 
 function atlasWorkspaceCapture() {
+  const drawer = document.getElementById("atlasAdminCenterDrawer");
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  const detailCollapsed = document.getElementById("analyste")?.classList.contains("detail-collapsed") === true;
+
   return {
-    schema: "agent_crypto_workspace_v1",
+    schema: "agent_crypto_workspace_v2",
     release: ATLAS_RELEASE,
     savedAt: new Date().toISOString(),
     interfaceMode: atlasV2Mode(),
     graphMode: atlasWorkspaceCurrentGraphMode(),
+    detailCollapsed,
+    adminWorkspace: {
+      centerOpen: atlasV2Mode() === "advanced" && !!drawer && !drawer.hidden,
+      activeCluster: drawer?.dataset?.activeCluster || atlasAdminCenterSavedTarget(),
+      lastModule: selector?.value || atlasAdminLastModuleRead(),
+    },
     period: Number(state.chartPeriodDays || 1),
     selectedCoinId: state.selectedCoinId || null,
     comparisonIds: atlasComparisonIds(),
@@ -12635,6 +12747,15 @@ function atlasWorkspaceRestoreAfterMarket() {
     return false;
   }
 
+  const savedInterfaceMode = ATLAS_V2_ALLOWED_MODES.has(saved.interfaceMode)
+    ? saved.interfaceMode
+    : atlasV2Mode();
+
+  if (savedInterfaceMode !== atlasV2Mode()) {
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, savedInterfaceMode);
+    atlasV2ApplyMode(savedInterfaceMode, { persist: false });
+  }
+
   const validIds = new Set(state.coins.map(coin => coin.id));
   const period = ATLAS_WORKSPACE_PERIODS.includes(Number(saved.period))
     ? Number(saved.period)
@@ -12694,6 +12815,39 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   const savedGraphMode = ATLAS_ADMIN_GRAPH_MODES.includes(saved.graphMode) ? saved.graphMode : "normal";
   try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, savedGraphMode); } catch {}
+
+  const detailCollapsed = saved.detailCollapsed === true;
+  try { localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, detailCollapsed ? "1" : "0"); } catch {}
+  atlasSetCleanLensCollapsed(
+    atlasV2Mode() === "advanced" ? detailCollapsed : true,
+    false
+  );
+
+  const adminWorkspace = saved.adminWorkspace && typeof saved.adminWorkspace === "object"
+    ? saved.adminWorkspace
+    : {};
+
+  const savedModule = String(adminWorkspace.lastModule || "");
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  if (savedModule && document.getElementById(savedModule)) {
+    atlasAdminLastModuleWrite(savedModule);
+    if (selector && [...selector.options].some(option => option.value === savedModule)) {
+      selector.value = savedModule;
+    }
+  }
+
+  const savedClusterCandidate = String(
+    adminWorkspace.activeCluster || atlasAdminClusterForModule(savedModule) || ""
+  );
+  const savedCluster = ATLAS_ADMIN_CLUSTERS.includes(savedClusterCandidate)
+    ? savedClusterCandidate
+    : "";
+
+  try {
+    if (savedCluster) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, savedCluster);
+    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, adminWorkspace.centerOpen === true ? "1" : "0");
+  } catch {}
+
   if (atlasV2Mode() === "advanced") {
     atlasAdminGraphSet(savedGraphMode, {
       persist: false,
@@ -12701,10 +12855,21 @@ function atlasWorkspaceRestoreAfterMarket() {
       scroll: false,
       closeCenter: false,
     });
+
+    window.setTimeout(() => {
+      atlasAdminCenterSet(adminWorkspace.centerOpen === true, {
+        persist: false,
+        target: savedCluster,
+        scrollTarget: false,
+        instant: true
+      });
+    }, 60);
+  } else {
+    atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
   }
 
   atlasWorkspaceRenderStrip({ restored: true });
-  atlasWorkspaceScheduleSave(120);
+  atlasWorkspaceScheduleSave(180);
   return true;
 }
 
@@ -12712,7 +12877,9 @@ document.addEventListener("click", event => {
   const control = event.target.closest(
     ".period-btn, [data-chart-view], [data-chart-scale], [data-chart-display], "
     + ".compare-btn, [data-compare-primary], [data-compare-remove], [data-market-open], "
-    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-atlas-mode], [data-market-columns]"
+    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-atlas-mode], [data-market-columns], "
+    + "#detailPanelToggle, #detailPanelRail, #atlasAdminCenterToggle, #atlasAdminCenterClose, "
+    + "[data-admin-cluster-target], #btnOpenAdvancedModule"
   );
   if (!control) return;
   atlasWorkspaceScheduleSave(760);
@@ -12727,6 +12894,15 @@ window.addEventListener("atlas:admin-graph", () => {
 
 window.addEventListener("atlas:v2mode", () => {
   atlasWorkspaceRenderStrip();
+  atlasWorkspaceScheduleSave(180);
+});
+
+window.addEventListener("atlas:admin-center", () => {
+  atlasWorkspaceScheduleSave(160);
+});
+
+document.getElementById("atlasV2AdvancedModuleSelect")?.addEventListener("change", event => {
+  if (event.target.value) atlasAdminLastModuleWrite(event.target.value);
   atlasWorkspaceScheduleSave(180);
 });
 
