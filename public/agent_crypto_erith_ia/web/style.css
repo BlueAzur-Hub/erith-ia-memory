@@ -16307,3 +16307,129 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
     top: 128px !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.57
+   MARKET UNIVERSE 250 · SMART 5-SERIES SCANNERS
+   REQUESTED / DISPLAYED TRUTH · MEMORY HARD LOCK
+   ========================================================= */
+
+.market-universe-mode {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-height: 38px !important;
+  padding: 4px 6px !important;
+  border: 1px solid rgba(98,236,255,.16) !important;
+  border-radius: 11px !important;
+  background: rgba(4,15,28,.72) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.market-universe-mode > span {
+  padding: 0 4px !important;
+  color: rgba(180,210,231,.72) !important;
+  font: 850 9px/1 system-ui, sans-serif !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.market-universe-mode button {
+  min-width: 38px !important;
+  min-height: 29px !important;
+  padding: 5px 8px !important;
+  border: 1px solid rgba(98,236,255,.17) !important;
+  border-radius: 8px !important;
+  color: #d7e8f4 !important;
+  background: rgba(255,255,255,.035) !important;
+  font: 900 10px/1 system-ui, sans-serif !important;
+  cursor: pointer !important;
+}
+
+.market-universe-mode button:hover,
+.market-universe-mode button:focus-visible {
+  border-color: rgba(98,236,255,.55) !important;
+  color: #fff4ca !important;
+}
+
+.market-universe-mode button.is-active {
+  border-color: rgba(98,236,255,.72) !important;
+  color: #07131e !important;
+  background: linear-gradient(135deg, #6beeff, #f2d883) !important;
+  box-shadow: 0 0 18px rgba(98,236,255,.16) !important;
+}
+
+.market-universe-mode small {
+  min-width: 132px !important;
+  padding: 0 5px !important;
+  color: rgba(116,234,217,.76) !important;
+  font: 760 9px/1.15 system-ui, sans-serif !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-scanner-truth {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  gap: 3px 8px !important;
+  margin: 3px 0 5px !important;
+  padding: 6px 8px !important;
+  border: 1px solid rgba(98,236,255,.14) !important;
+  border-radius: 8px !important;
+  background: rgba(4,16,29,.42) !important;
+}
+
+#analyste .atlas-scanner-truth b {
+  color: #76efff !important;
+  font: 920 8px/1.25 system-ui, sans-serif !important;
+  letter-spacing: .10em !important;
+}
+
+#analyste .atlas-scanner-truth span {
+  overflow: hidden !important;
+  color: #f4ead3 !important;
+  font: 800 9px/1.25 system-ui, sans-serif !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-scanner-truth .is-rejected {
+  color: rgba(255,171,188,.84) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-scanner-state="loading"],
+#analyste .atlas-chart-insight-overlay[data-scanner-state="backfill"] {
+  border-color: rgba(98,236,255,.38) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-scanner-state="partial"] {
+  border-color: rgba(244,211,134,.48) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-scanner-state="blocked"] {
+  border-color: rgba(255,102,136,.46) !important;
+}
+
+@media (max-width: 1120px) {
+  .market-universe-mode small {
+    display: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .market-universe-mode {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+  }
+
+  .market-universe-mode button {
+    min-width: 46px !important;
+    min-height: 36px !important;
+  }
+
+  #analyste .atlas-scanner-truth span {
+    white-space: normal !important;
+  }
+}

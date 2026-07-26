@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.56 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.57 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.56";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.57";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -31,7 +31,7 @@ const atlasStartup = {
   promise: null
 };
 /* MARKET PULSE & LIVE SPOT CANON LOCK
-   Top 50: 60 s · spot sélection: 30 s · historique: 5 min.
+   Top 250: 60 s · spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
    Backoff: 60 / 120 / 300 s · ancien état valide conservé.
 */
@@ -236,8 +236,8 @@ const $ = (id) => document.getElementById(id); const els = { liveStatus: $("live
   multiHorizon7Value: $("multiHorizon7Value"), multiHorizon7Label: $("multiHorizon7Label"),
   multiHorizon30Value: $("multiHorizon30Value"), multiHorizon30Label: $("multiHorizon30Label"),
   multiHorizonMeta: $("multiHorizonMeta"), multiHorizonTechnical: $("multiHorizonTechnical")
-}; const MARKET_CACHE_KEY = "agent_crypto_erith_ia_market_cache_top50_v2";
-const LEGACY_MARKET_CACHE_KEYS = ["agent_crypto_erith_ia_market_cache_v1_1_alpha_26_37_top50", "agent_crypto_erith_ia_market_cache_v1_1_alpha_26_36_atomic_250", "agent_crypto_erith_ia_market_cache_cmc_top50_v2"];
+}; const MARKET_CACHE_KEY = "agent_crypto_erith_ia_market_cache_top250_v3";
+const LEGACY_MARKET_CACHE_KEYS = ["agent_crypto_erith_ia_market_cache_top50_v2", "agent_crypto_erith_ia_market_cache_v1_1_alpha_26_37_top50", "agent_crypto_erith_ia_market_cache_v1_1_alpha_26_36_atomic_250", "agent_crypto_erith_ia_market_cache_cmc_top50_v2"];
 const ATLAS_SOURCE_DOCK_CACHE_KEY = "agent_crypto_erith_ia_source_dock_v27_2";
 const ATLAS_SOURCE_DOCK_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const ATLAS_SOURCE_DOCK_STALE_MAX_MS = 7 * 24 * 60 * 60 * 1000;
@@ -1212,7 +1212,7 @@ const SourceAdapter = {
       };
     }).filter(Boolean).sort((a, b) => (a.rank || 999999) - (b.rank || 999999));
 
-    if (markets.length < ATLAS_MARKET_MIN_ASSETS) throw new Error(`Top 50 EUR incomplet : ${markets.length}/50`);
+    if (markets.length < ATLAS_MARKET_MIN_ASSETS) throw new Error(`Top 250 EUR incomplet : ${markets.length}/50`);
     const totalMarketCapEur = markets.reduce((sum, coin) => sum + (Number(coin.marketCap) || 0), 0);
     const totalVolumeEur = markets.reduce((sum, coin) => sum + (Number(coin.volume24h) || 0), 0);
     const btc = markets.find(coin => coin.id === "bitcoin" || coin.symbol === "BTC");
@@ -1228,7 +1228,7 @@ const SourceAdapter = {
       },
       generatedAt: completedAt,
       snapshotId: `coingecko-top50-eur_${completedAt}`,
-      leg: { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 50 marché", status: "OK", detail: `${markets.length} actifs` }
+      leg: { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 250 marché", status: "OK", detail: `${markets.length} actifs` }
     };
   },
 
@@ -1304,14 +1304,14 @@ function atlasApplyUsdEnrichment(result) {
 }
 
 const liveSources = [
-  { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 50 marché · requis" },
-  { key: "coingecko-usd", name: "CoinGecko USD", kind: "Enrichissement Top 50 · optionnel" }
+  { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 250 marché · requis" },
+  { key: "coingecko-usd", name: "CoinGecko USD", kind: "Enrichissement des lignes visibles · optionnel" }
 ]; function setLiveStatus(mode, text) { if (!els.liveStatus) return; els.liveStatus.className = `pill ${mode}`; els.liveStatus.textContent = text;
 }
 function atlasSetStableDirectMarketStatus() {
   const assetCount = Number(state.coins?.length || 0);
-  setLiveStatus("ok", "Marché Top 50 EUR actualisé");
-  setText(els.sourceName, "CoinGecko direct · Top 50 EUR");
+  setLiveStatus("ok", "Marché Top 250 EUR actualisé");
+  setText(els.sourceName, "CoinGecko direct · Top 250 EUR");
   setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
   setTableDecision(`${assetCount} actifs EUR directs · pulse 60 s`, "ok");
 }
@@ -1370,8 +1370,8 @@ function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = 
   setText(els.metricSources, eurOk ? (usdOk ? "EUR + USD" : "EUR OK") : "—");
   if (!eur) setText(els.metricSourcesHint, "Marché EUR en attente");
   else if (!eurOk) setText(els.metricSourcesHint, `Marché EUR indisponible · ${escapeHtml(eur.detail || "échec")}`);
-  else if (usdOk) setText(els.metricSourcesHint, "Top 50 EUR actif · prix USD directs disponibles");
-  else setText(els.metricSourcesHint, "Top 50 EUR actif · USD optionnel indisponible");
+  else if (usdOk) setText(els.metricSourcesHint, "Top 250 EUR actif · prix USD directs disponibles");
+  else setText(els.metricSourcesHint, "Top 250 EUR actif · USD optionnel indisponible");
 } 
 function atlasHasDisplayableMarket(coins = state.coins) {
   return atlasCanonicalSnapshot(coins) && coins.length > 0;
@@ -1433,7 +1433,7 @@ function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponi
   setText(els.sourceTime, state.timestamp ? atlasExactTimestampLabel(state.timestamp) : "—");
   setTableDecision(
     conservedDirect
-      ? "Top 50 conservé · nouvelle tentative programmée"
+      ? "Top 250 conservé · nouvelle tentative programmée"
       : "Archive CoinGecko conservée · analyses live suspendues",
     "warn"
   );
@@ -1549,7 +1549,7 @@ function saveMarketCache() {
   if (!state.coins?.length || state.sourceLock?.mode !== "direct" || !atlasCanonicalSnapshot(state.coins)) return;
   try {
     localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
-      schema: "atlas_market_cache_top50_v1",
+      schema: "atlas_market_cache_top250_v1",
       version: ATLAS_RELEASE,
       saved_at: new Date().toISOString(),
       canonical_source: ATLAS_CANONICAL_MARKET_SOURCE,
@@ -1935,9 +1935,9 @@ async function runLivecheck() {
   let succeeded = false;
 
   try {
-    setLiveStatus("warn", "Chargement Top 50 EUR");
+    setLiveStatus("warn", "Chargement Top 250 EUR");
     setTableDecision("Marché EUR en cours", "warn");
-    setText(els.sourceName, "CoinGecko · Top 50 EUR");
+    setText(els.sourceName, "CoinGecko · Top 250 EUR");
     state.sourceStatus = [];
     renderSourceGrid();
     updateSourceMetric(0);
@@ -1954,9 +1954,9 @@ async function runLivecheck() {
       global: result.global,
       timestamp: result.generatedAt,
       snapshotId: result.snapshotId,
-      sourceLabel: "CoinGecko direct · Top 50 EUR"
+      sourceLabel: "CoinGecko direct · Top 250 EUR"
     }, "direct");
-    if (!loaded) throw new Error("Snapshot Top 50 EUR refusé");
+    if (!loaded) throw new Error("Snapshot Top 250 EUR refusé");
 
     atlasMergeSpotBookIntoCoins();
     state.marketPulse.marketFailures = 0;
@@ -1993,7 +1993,7 @@ async function runLivecheck() {
         {
           key: "coingecko-usd",
           name: "CoinGecko USD",
-          kind: "Enrichissement Top 50",
+          kind: "Enrichissement des lignes visibles",
           status: "OK",
           ms: usdLatencyMs,
           detail: `${enriched}/${state.coins.length} prix USD`
@@ -2010,7 +2010,7 @@ async function runLivecheck() {
         {
           key: "coingecko-usd",
           name: "CoinGecko USD",
-          kind: "Enrichissement Top 50",
+          kind: "Enrichissement des lignes visibles",
           status: "INDISPONIBLE",
           detail: cleanError(usdError)
         }
@@ -2031,7 +2031,7 @@ async function runLivecheck() {
       {
         key: "coingecko-eur",
         name: "CoinGecko EUR",
-        kind: "Top 50 marché",
+        kind: "Top 250 marché",
         status: "ÉCHEC",
         ms: eurStartedAt ? Math.round(performance.now() - eurStartedAt) : null,
         detail: cleanError(error)
@@ -2039,7 +2039,7 @@ async function runLivecheck() {
       {
         key: "coingecko-usd",
         name: "CoinGecko USD",
-        kind: "Enrichissement Top 50",
+        kind: "Enrichissement des lignes visibles",
         status: "NON LANCÉ",
         detail: "Le marché EUR requis a échoué"
       }
@@ -2114,9 +2114,9 @@ async function refreshMarketOnly(options = {}) {
       global: result.global,
       timestamp: result.generatedAt,
       snapshotId: result.snapshotId,
-      sourceLabel: "CoinGecko direct · Top 50 EUR"
+      sourceLabel: "CoinGecko direct · Top 250 EUR"
     }, "direct");
-    if (!refreshed) throw new Error("Snapshot Top 50 EUR refusé");
+    if (!refreshed) throw new Error("Snapshot Top 250 EUR refusé");
 
     atlasMergeSpotBookIntoCoins();
     state.marketPulse.marketFailures = 0;
@@ -2148,7 +2148,7 @@ async function refreshMarketOnly(options = {}) {
         {
           key: "coingecko-usd",
           name: "CoinGecko USD",
-          kind: "Enrichissement Top 50",
+          kind: "Enrichissement des lignes visibles",
           status: "OK",
           ms: usdLatencyMs,
           detail: `${enriched}/${state.coins.length} prix USD`
@@ -2165,7 +2165,7 @@ async function refreshMarketOnly(options = {}) {
         {
           key: "coingecko-usd",
           name: "CoinGecko USD",
-          kind: "Enrichissement Top 50",
+          kind: "Enrichissement des lignes visibles",
           status: "INDISPONIBLE",
           detail: cleanError(usdError)
         }
@@ -2184,7 +2184,7 @@ async function refreshMarketOnly(options = {}) {
       {
         key: "coingecko-eur",
         name: "CoinGecko EUR",
-        kind: "Top 50 marché",
+        kind: "Top 250 marché",
         status: "ÉCHEC",
         ms: eurStartedAt ? Math.round(performance.now() - eurStartedAt) : null,
         detail: cleanError(error)
@@ -2192,7 +2192,7 @@ async function refreshMarketOnly(options = {}) {
       {
         key: "coingecko-usd",
         name: "CoinGecko USD",
-        kind: "Enrichissement Top 50",
+        kind: "Enrichissement des lignes visibles",
         status: "NON LANCÉ",
         detail: "Le marché EUR requis a échoué"
       }
@@ -2934,7 +2934,7 @@ function renderMultiHorizon() {
       setText(labelEl, best ? `Meilleur sur ${periodLabel} · ${atlasHorizonSourceShort(best.metric)}` : "Donnée manquante");
       valueEl?.closest?.(".horizon-card")?.setAttribute("data-source", best?.metric?.source || "missing");
     }
-    setHTML(els.multiHorizonMeta, `<span>Mode : Base 100</span><span>Période active : ${escapeHtml(atlasChartPeriodLabel(activeDays))} · ${context.ready ? "market_chart EUR" : "mise à jour"}</span><span>Autres horizons : snapshot Top 50</span><span>Verrou contexte : ${context.ready ? "validé" : "ancien résultat ignoré"}</span>`);
+    setHTML(els.multiHorizonMeta, `<span>Mode : Base 100</span><span>Période active : ${escapeHtml(atlasChartPeriodLabel(activeDays))} · ${context.ready ? "market_chart EUR" : "mise à jour"}</span><span>Autres horizons : snapshot Top 250</span><span>Verrou contexte : ${context.ready ? "validé" : "ancien résultat ignoré"}</span>`);
     const rows = coins.map(coin => {
       const metrics = horizons.map(([days, , , label]) => {
         const metric = atlasHorizonMetricForCoin(coin, days);
@@ -6426,7 +6426,7 @@ async function renderAnalystPanel(options = {}) {
   state.selectedCoinId = c.id;
   atlasBrokerSeedSpot(c);
   atlasRenderBrokerStrip();
-  // Le snapshot Top 50 alimente déjà le détail. Aucun appel spot concurrent au graphique.
+  // Le snapshot Top 250 alimente déjà le détail. Aucun appel spot concurrent au graphique.
 
   const coinId = c.id;
   const period = Number(state.chartPeriodDays || 1);
@@ -6534,7 +6534,7 @@ function getSourceRecord(key) { return state.sourceStatus.find(s => s.key === ke
 } function normalizeSymbol(value) { return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase();
 } function findCoinByQuery(query) { const q = normalizeSymbol(query); if (!q) return null; return state.coins.find(c => String(c.symbol || "").toUpperCase() === q || String(c.id || "").toUpperCase() === q || String(c.name || "").toUpperCase() === q ) || null;
 } function coinPayload(c) { if (!c) return null; const s = scoreCoin(c); const ratio = c.volume24h && c.marketCap ? c.volume24h / c.marketCap : null; return { id: c.id, rank: c.rank ?? null, name: c.name, symbol: c.symbol, type: classifyAsset(c), price_eur: c.price ?? null, change_24h_pct: c.change24h ?? null, change_7d_pct: c.change7d ?? null, change_30d_pct: c.change30d ?? null, market_cap_eur: c.marketCap ?? null, volume_24h_eur: c.volume24h ?? null, volume_marketcap_ratio: ratio, score: s.score, score_label: s.label, decision: beginnerDecision(c), limits: ["no_contract_security", "no_social_validation", "no_onchain_validation", "not_financial_advice"] };
-} function sourceHealthPayload() { const total = liveSources.length; const status = liveSources.map(src => { const rec = state.sourceStatus.find(s => s.key === src.key); return { key: src.key, name: src.name, role: "atomic_market_leg", kind: src.kind, status: rec ? rec.status : "WAIT", ms: rec?.ms ?? null, detail: rec?.detail ?? "not_tested" }; }); const ok = status.filter(s => s.status === "OK").length; const fail = status.filter(s => s.status === "ÉCHEC").length; return { live_ok: atlasAnalysisLiveReady(), market_visible: state.liveOk, main_source: state.mainSource, total_flows: total, successful_flows: ok, failed_flows: fail, tested_flows: state.sourceStatus.length, critical_rule: "Le flux CoinGecko EUR Top 50 suffit au marché. Le flux USD est un enrichissement optionnel et ne peut jamais bloquer l’application.", sources: status };
+} function sourceHealthPayload() { const total = liveSources.length; const status = liveSources.map(src => { const rec = state.sourceStatus.find(s => s.key === src.key); return { key: src.key, name: src.name, role: "atomic_market_leg", kind: src.kind, status: rec ? rec.status : "WAIT", ms: rec?.ms ?? null, detail: rec?.detail ?? "not_tested" }; }); const ok = status.filter(s => s.status === "OK").length; const fail = status.filter(s => s.status === "ÉCHEC").length; return { live_ok: atlasAnalysisLiveReady(), market_visible: state.liveOk, main_source: state.mainSource, total_flows: total, successful_flows: ok, failed_flows: fail, tested_flows: state.sourceStatus.length, critical_rule: "Le flux CoinGecko EUR Top 250 suffit au marché. Le flux USD est un enrichissement optionnel et ne peut jamais bloquer l’application.", sources: status };
 } const SIM_PROFILE = { key: "solo_beginner_100_v1_1_alpha_13", label: "Solo Débutant 100 €", startCash: 100, allowedSymbols: ["BTC", "ETH", "SOL"], defaultAmount: 5, maxPerOperation: 10, maxExposure: 30, minReserve: 70
 };
 const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_13";
@@ -6847,7 +6847,7 @@ function renderAll(options = {}) {
   const finish = () => { if (els.commandOutput && !els.commandOutput.dataset.userRan) { renderCommandOutput(CryptoCommands.market_snapshot()); } };
   if (refreshChart) requestAnimationFrame(() => { void renderAnalystPanel({ renderAll: true }); finish(); });
   else { atlasRefreshSelectedDetailOnly(); finish(); }
-} function renderMetrics() { const g = state.global; if (g) { setText(els.metricMarketCap, num(g.total_market_cap?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricMarketCapHint, `${state.coins.length} actifs CoinGecko · somme Top 50`); setText(els.metricVolume, num(g.total_volume?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricVolumeHint, "Somme des volumes Top 50 · 24h"); const btc = g.market_cap_percentage?.btc; setText(els.metricBtcDom, typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante"); setText(els.metricBtcDomHint, "Part de BTC dans la capitalisation Top 50"); } updateSourceMetric();
+} function renderMetrics() { const g = state.global; if (g) { setText(els.metricMarketCap, num(g.total_market_cap?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricMarketCapHint, `${state.coins.length} actifs CoinGecko · somme Top 250`); setText(els.metricVolume, num(g.total_volume?.eur, fmtCompactEUR.format.bind(fmtCompactEUR))); setText(els.metricVolumeHint, "Somme des volumes Top 250 · 24h"); const btc = g.market_cap_percentage?.btc; setText(els.metricBtcDom, typeof btc === "number" ? `${btc.toFixed(2)} %` : "Donnée manquante"); setText(els.metricBtcDomHint, "Part de BTC dans la capitalisation Top 250"); } updateSourceMetric();
 } function atlasRibbonStyle(coin, fallbackIndex = 0) {
   const palette = atlasCryptoPalette(coin, fallbackIndex);
   const gradient = atlasCryptoGradientCss(coin, fallbackIndex);
@@ -7573,7 +7573,7 @@ function renderWatchlist() {
   return [
     "ATLAS DECISION BRIEF",
     `État : ${tone.label}.`,
-    `Snapshot marché : CoinGecko Top 50 EUR ; USD en enrichissement optionnel · ${atlasExactTimestampLabel(state.timestamp)}.`,
+    `Snapshot marché : CoinGecko Top 250 EUR ; USD en enrichissement optionnel · ${atlasExactTimestampLabel(state.timestamp)}.`,
     "Prix EUR : marché CoinGecko direct. Prix USD : enrichissement CoinGecko optionnel, jamais estimé.",
     "Graphique : CoinGecko market_chart EUR direct uniquement ; dernier historique direct du navigateur conservé en secours.",
     `À observer : ${hotText}.`,
@@ -12603,7 +12603,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
    Build 28.1.54 — Complete workspace memory
    Stores interface choices only. Never stores or fabricates prices.
    ========================================================= */
-const ATLAS_WORKSPACE_STATE_KEY = "agent_crypto_erith_ia_workspace_state_v28_1_54";
+const ATLAS_WORKSPACE_STATE_KEY = "agent_crypto_erith_ia_workspace_state_v2";
 const ATLAS_WORKSPACE_PERIODS = Object.freeze([1, 7, 30, 60, 90, 365, 36500]);
 const ATLAS_WORKSPACE_PRESETS = Object.freeze([
   "solo", "rank-3", "rank-5", "gainers", "losers", "volume", "manual", "empty"
@@ -12911,3 +12911,1267 @@ window.addEventListener("pagehide", atlasWorkspaceWrite);
 
 window.setTimeout(atlasWorkspaceRenderStrip, 0);
 window.setTimeout(atlasWorkspaceRenderStrip, 900);
+
+
+/* =========================================================
+   Build 28.1.57 — Market Universe 250 + Smart Scanner Engine
+   ========================================================= */
+
+const ATLAS_MARKET_UNIVERSE_SIZE = 250;
+const ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
+const ATLAS_SCANNER_PRESETS = Object.freeze(["gainers", "losers", "volume"]);
+const ATLAS_SCANNER_TARGET_COUNT = 5;
+const ATLAS_SCANNER_CANDIDATE_LIMIT = 30;
+const ATLAS_SCANNER_MIN_VOLUME_EUR = 50_000;
+const ATLAS_WORKSPACE_LEGACY_KEYS = Object.freeze([
+  "agent_crypto_erith_ia_workspace_state_v28_1_54"
+]);
+
+state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit))
+  ? Number(state.marketVisibleLimit)
+  : 50;
+state.marketUsdBusy = false;
+state.dataBroker.comparison.scanner = state.dataBroker.comparison.scanner || {
+  active: false,
+  preset: "",
+  universeSize: 0,
+  targetCount: ATLAS_SCANNER_TARGET_COUNT,
+  candidateIds: [],
+  requestedIds: [],
+  attemptedIds: [],
+  displayedIds: [],
+  rejected: [],
+  status: "idle",
+  requestedPeriod: 1,
+  requestedAt: null
+};
+
+function atlasScannerState() {
+  const comparison = state.dataBroker.comparison;
+  if (!comparison.scanner || typeof comparison.scanner !== "object") {
+    comparison.scanner = {
+      active: false,
+      preset: "",
+      universeSize: 0,
+      targetCount: ATLAS_SCANNER_TARGET_COUNT,
+      candidateIds: [],
+      requestedIds: [],
+      attemptedIds: [],
+      displayedIds: [],
+      rejected: [],
+      status: "idle",
+      requestedPeriod: Number(state.chartPeriodDays || 1),
+      requestedAt: null
+    };
+  }
+  return comparison.scanner;
+}
+
+function atlasScannerPresetLabel(preset = atlasScannerState().preset) {
+  if (preset === "gainers") return "Hausses 5";
+  if (preset === "losers") return "Baisses 5";
+  if (preset === "volume") return "Volumes 5";
+  return "Scanner 5";
+}
+
+function atlasScannerCoinSymbols(ids = []) {
+  return ids
+    .map(id => state.coins.find(coin => coin.id === id)?.symbol)
+    .filter(Boolean)
+    .map(symbol => String(symbol).toUpperCase());
+}
+
+function atlasScannerReset() {
+  state.dataBroker.comparison.scanner = {
+    active: false,
+    preset: "",
+    universeSize: state.coins.length,
+    targetCount: ATLAS_SCANNER_TARGET_COUNT,
+    candidateIds: [],
+    requestedIds: [],
+    attemptedIds: [],
+    displayedIds: [],
+    rejected: [],
+    status: "idle",
+    requestedPeriod: Number(state.chartPeriodDays || 1),
+    requestedAt: null
+  };
+}
+
+function atlasScannerCandidatePool(kind, period = Number(state.chartPeriodDays || 1)) {
+  let candidates = [...(state.coins || [])]
+    .filter(coin => Number(coin?.rank || Infinity) <= ATLAS_MARKET_UNIVERSE_SIZE)
+    .filter(coin => Number.isFinite(Number(coin?.priceEur ?? coin?.price)))
+    .filter(coin => Number.isFinite(Number(coin?.volume24h)) && Number(coin.volume24h) >= ATLAS_SCANNER_MIN_VOLUME_EUR);
+
+  if (kind !== "volume") {
+    candidates = candidates.filter(coin => classifyAsset(coin) !== "Stablecoin");
+    candidates = candidates.filter(coin => Number.isFinite(atlasComparisonPeriodMetric(coin, period)));
+    candidates.sort((a, b) => kind === "losers"
+      ? atlasComparisonPeriodMetric(a, period) - atlasComparisonPeriodMetric(b, period)
+      : atlasComparisonPeriodMetric(b, period) - atlasComparisonPeriodMetric(a, period));
+  } else {
+    candidates.sort((a, b) => Number(b.volume24h) - Number(a.volume24h));
+  }
+
+  return candidates.slice(0, ATLAS_SCANNER_CANDIDATE_LIMIT);
+}
+
+function atlasScannerRejectReason(item, aligned = false) {
+  const message = String(
+    item?.result?.technicalReason
+    || item?.result?.reason
+    || item?.error?.message
+    || item?.error
+    || ""
+  ).toLowerCase();
+
+  if (aligned) return "historique non aligné";
+  if (message.includes("429") || message.includes("too many")) return "limitation temporaire";
+  if (message.includes("timeout") || message.includes("network") || message.includes("fetch")) return "réseau indisponible";
+  if (message.includes("intégrité") || message.includes("integrity")) return "historique incomplet";
+  if (message.includes("blocked") || message.includes("indisponible")) return "historique indisponible";
+  return "série non exploitable";
+}
+
+function atlasScannerTruthHtml() {
+  const scanner = atlasScannerState();
+  if (!scanner.active) return "";
+
+  const requested = atlasScannerCoinSymbols(scanner.requestedIds);
+  const displayed = atlasScannerCoinSymbols(
+    scanner.displayedIds?.length
+      ? scanner.displayedIds
+      : state.dataBroker.comparison.renderedIds || []
+  );
+  const rejected = (scanner.rejected || []).slice(0, 4).map(row => {
+    const symbol = state.coins.find(coin => coin.id === row.id)?.symbol || row.id;
+    return `${String(symbol).toUpperCase()} : ${row.reason}`;
+  });
+
+  const progress = scanner.status === "loading" || scanner.status === "backfill"
+    ? ` · ${scanner.attemptedIds.length}/${scanner.candidateIds.length} candidats · ${displayed.length}/${scanner.targetCount} validés`
+    : "";
+
+  return `
+    <span class="atlas-scanner-truth">
+      <b>DEMANDÉ</b>
+      <span>${escapeHtml(`${atlasScannerPresetLabel(scanner.preset)} · ${atlasChartPeriodLabel(scanner.requestedPeriod)} · univers ${scanner.universeSize}${progress}`)}</span>
+      <b>AFFICHÉ</b>
+      <span>${escapeHtml(displayed.length ? displayed.join(" / ") : "ancien graphique conservé ou aucune courbe")}</span>
+      ${rejected.length ? `<b>ÉCARTÉS</b><span class="is-rejected">${escapeHtml(rejected.join(" · "))}</span>` : ""}
+    </span>`;
+}
+
+/* Source EUR canonique : 250 actifs en une page. */
+SourceAdapter.coingeckoTop250Eur = async function(options = {}) {
+  const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=250&page=1&locale=fr&precision=full&sparkline=false&price_change_percentage=1h,24h,7d,30d";
+  const rows = await fetchJsonWithRetry(url, { signal: options.signal, networkKind: "market" }, 18000, 1);
+
+  if (!Array.isArray(rows) || rows.length < ATLAS_MARKET_MIN_ASSETS) {
+    throw new Error(`Flux EUR incomplet : ${Array.isArray(rows) ? rows.length : 0}/250`);
+  }
+
+  const completedAt = new Date().toISOString();
+  const markets = rows.map(coin => {
+    const priceEur = Number(coin.current_price);
+    if (!coin?.id || !Number.isFinite(priceEur) || priceEur <= 0) return null;
+    const lastUpdated = Number.isFinite(Date.parse(coin.last_updated || "")) ? coin.last_updated : completedAt;
+
+    return {
+      id: coin.id,
+      rank: Number(coin.market_cap_rank),
+      name: coin.name,
+      symbol: String(coin.symbol || "").toUpperCase(),
+      image: coin.image,
+      price: priceEur,
+      priceEur,
+      priceUsd: null,
+      change1h: Number.isFinite(Number(coin.price_change_percentage_1h_in_currency)) ? Number(coin.price_change_percentage_1h_in_currency) : null,
+      change24h: Number.isFinite(Number(coin.price_change_percentage_24h_in_currency ?? coin.price_change_percentage_24h)) ? Number(coin.price_change_percentage_24h_in_currency ?? coin.price_change_percentage_24h) : null,
+      change7d: Number.isFinite(Number(coin.price_change_percentage_7d_in_currency)) ? Number(coin.price_change_percentage_7d_in_currency) : null,
+      change30d: Number.isFinite(Number(coin.price_change_percentage_30d_in_currency)) ? Number(coin.price_change_percentage_30d_in_currency) : null,
+      high24h: Number.isFinite(Number(coin.high_24h)) ? Number(coin.high_24h) : null,
+      low24h: Number.isFinite(Number(coin.low_24h)) ? Number(coin.low_24h) : null,
+      marketCap: Number.isFinite(Number(coin.market_cap)) ? Number(coin.market_cap) : null,
+      marketCapUsd: null,
+      volume24h: Number.isFinite(Number(coin.total_volume)) ? Number(coin.total_volume) : null,
+      volume24hUsd: null,
+      sparkline7d: [],
+      lastUpdated,
+      source: ATLAS_CANONICAL_MARKET_SOURCE,
+      sourceMode: "direct",
+      quoteCurrencies: ["EUR"],
+      timestamp: completedAt
+    };
+  }).filter(Boolean).sort((a, b) => (a.rank || 999999) - (b.rank || 999999));
+
+  if (markets.length < ATLAS_MARKET_MIN_ASSETS) {
+    throw new Error(`Top 250 EUR incomplet : ${markets.length}/250`);
+  }
+
+  const totalMarketCapEur = markets.reduce((sum, coin) => sum + (Number(coin.marketCap) || 0), 0);
+  const totalVolumeEur = markets.reduce((sum, coin) => sum + (Number(coin.volume24h) || 0), 0);
+  const btc = markets.find(coin => coin.id === "bitcoin" || coin.symbol === "BTC");
+  const btcShare = totalMarketCapEur > 0 && btc?.marketCap
+    ? Number(btc.marketCap) / totalMarketCapEur * 100
+    : null;
+
+  return {
+    markets,
+    global: {
+      total_market_cap: { eur: totalMarketCapEur },
+      total_volume: { eur: totalVolumeEur },
+      market_cap_percentage: { btc: btcShare },
+      scope: "top250"
+    },
+    generatedAt: completedAt,
+    snapshotId: `coingecko-top250-eur_${completedAt}`,
+    leg: {
+      key: "coingecko-eur",
+      name: "CoinGecko EUR",
+      kind: "Top 250 marché",
+      status: "OK",
+      detail: `${markets.length} actifs`
+    }
+  };
+};
+SourceAdapter.coingeckoTop50Eur = SourceAdapter.coingeckoTop250Eur;
+
+/* USD : enrichissement progressif seulement lorsque la vue 100/250 est demandée. */
+async function atlasEnrichUsdForMarketView(limit = state.marketVisibleLimit) {
+  if (state.marketUsdBusy || !state.liveOk || !state.coins.length) return;
+  const wanted = Math.min(
+    ATLAS_MARKET_UNIVERSE_SIZE,
+    ATLAS_MARKET_VIEW_LIMITS.includes(Number(limit)) ? Number(limit) : 50
+  );
+  const missing = state.coins.slice(0, wanted).filter(coin => !atlasHasPositiveQuote(coin.priceUsd));
+  if (!missing.length) return;
+
+  state.marketUsdBusy = true;
+  try {
+    for (let offset = 0; offset < missing.length; offset += 50) {
+      const batch = missing.slice(offset, offset + 50);
+      const result = await SourceAdapter.coingeckoUsdForIds(batch.map(coin => coin.id));
+      for (const coin of batch) {
+        const usd = result.prices.get(coin.id);
+        if (atlasHasPositiveQuote(usd)) coin.priceUsd = Number(usd);
+      }
+      renderMarketTable();
+      if (offset + 50 < missing.length) await atlasWaitWithSignal(850);
+    }
+  } catch (error) {
+    console.warn("Enrichissement USD visible différé :", error);
+  } finally {
+    state.marketUsdBusy = false;
+  }
+}
+
+/* Vue Market 50 / 100 / 250. */
+function atlasSyncMarketUniverseControls() {
+  const limit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit))
+    ? Number(state.marketVisibleLimit)
+    : 50;
+
+  document.querySelectorAll("[data-market-limit]").forEach(button => {
+    const active = Number(button.dataset.marketLimit) === limit;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  const status = document.getElementById("marketUniverseStatus");
+  if (status) status.textContent = `Univers CoinGecko : ${state.coins.length || 0} actifs`;
+}
+
+function renderMarketTable() {
+  if (!els.marketRows) return;
+  atlasChartV2SyncControls();
+  atlasSyncMarketUniverseControls();
+
+  if (!atlasHasDisplayableMarket()) {
+    renderEmptyMarket("Livecheck requis. Aucun prix inventé.");
+    return;
+  }
+
+  if (!state.liveOk) state.liveOk = true;
+  const q = (els.searchInput?.value || "").toLowerCase().trim();
+  const filtered = sortAssets(
+    state.coins
+      .filter(coin => !q || coin.name.toLowerCase().includes(q) || coin.symbol.toLowerCase().includes(q))
+      .filter(matchAssetFilter)
+  );
+
+  const limit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit))
+    ? Number(state.marketVisibleLimit)
+    : 50;
+  const rows = filtered.slice(0, limit);
+
+  if (!rows.length) {
+    renderEmptyMarket("Aucun actif ne correspond au filtre.");
+    return;
+  }
+
+  const selection = atlasComparisonIds();
+  const profiles = atlasWatchReadProfiles();
+
+  els.marketRows.innerHTML = rows.map(c => {
+    const s = scoreCoin(c);
+    const compared = selection.includes(c.id);
+    const primary = c.id === state.selectedCoinId && compared;
+    const watched = state.watchIds.includes(c.id);
+    const compareLabel = compared ? "Retirer" : "Ajouter";
+
+    return `<tr class="asset-row ${primary ? "is-selected" : ""} ${compared ? "is-compared" : ""}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-pressed="${compared ? "true" : "false"}" aria-label="${escapeHtml(`${c.name}. ${compared ? "Retirer de" : "Ajouter à"} la comparaison.`)}">
+      <td>${c.rank ?? "—"}</td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ""}<div><strong>${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td>
+      <td><div class="price-dual"><b>${atlasFormatEUR(c.priceEur ?? c.price)}</b><small>${atlasHasPositiveQuote(c.priceUsd) ? atlasFormatUSD(c.priceUsd) : "USD —"}</small></div></td>
+      <td class="market-move-cell ${clsPct(c.change24h)} ${atlasMoveStrengthClass(c.change24h)}">${atlasFmtMarketPct(c.change24h)}</td>
+      <td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td>
+      <td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
+      <td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td>
+      <td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? "is-on" : ""}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? "true" : "false"}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? "de" : "à"} la comparaison">${compareLabel}</button>${sparkSvg(c)}</div></td>
+      <td class="market-col-advanced">${s.score ?? "—"}</td>
+      <td class="market-col-advanced">${beginnerDecision(c)}</td>
+      <td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? "is-on" : ""}">${watched ? "Suivi" : "Suivre"}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ""}</td>
+    </tr>`;
+  }).join("");
+
+  const updated = state.timestamp
+    ? new Date(state.timestamp).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })
+    : "—";
+  const essential = atlasV2Mode() === "essential";
+  const note = essential
+    ? `${rows.length}/${filtered.length} affichés · univers ${state.coins.length} · ${selection.length} sélectionnés · ${state.mainSource} · ${updated}`
+    : `${rows.length}/${filtered.length} affichés · univers ${state.coins.length} · colonnes ${state.chartViewV2.marketColumns === "complete" ? "complètes" : "essentielles"} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}`;
+  setText(els.tableNote, note);
+
+  [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
+    const action = event => {
+      const keyboard = event.type === "keydown";
+      if (keyboard && !["Enter", " "].includes(event.key)) return;
+      if (event.target !== row && event.target.closest("button,a,input,select")) return;
+      if (keyboard) event.preventDefault();
+      const coin = state.coins.find(item => item.id === row.dataset.id);
+      if (coin) atlasToggleComparisonCoin(coin);
+    };
+    row.addEventListener("click", action);
+    row.addEventListener("keydown", action);
+  });
+
+  els.marketRows.querySelectorAll("[data-market-action]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.stopPropagation();
+      atlasMarketHandleAction(
+        button.dataset.marketAction,
+        state.coins.find(coin => coin.id === button.dataset.coinId),
+        event
+      );
+    });
+  });
+}
+
+/* Scanner commun Hausses / Baisses / Volumes. */
+function atlasSelectMarketPreset(kind = "gainers", limit = 5, options = {}) {
+  if (!state.liveOk || !state.coins.length || !ATLAS_SCANNER_PRESETS.includes(kind)) return;
+
+  const count = Math.max(2, Math.min(ATLAS_COMPARISON_MAX_SERIES, Number(limit) || 5));
+  const period = Number(state.chartPeriodDays || 1);
+  const pool = atlasScannerCandidatePool(kind, period);
+
+  if (pool.length < 2) {
+    if (els.chartCaption) {
+      atlasSetChartCaptionText(
+        `${atlasScannerPresetLabel(kind)} indisponible · moins de deux candidats mesurés dans l’univers ${state.coins.length}.`
+      );
+    }
+    return;
+  }
+
+  const requested = pool.slice(0, count);
+  atlasSetComparisonIds(requested.map(coin => coin.id), requested[0].id, { preset: kind });
+
+  state.dataBroker.comparison.scanner = {
+    active: true,
+    preset: kind,
+    universeSize: state.coins.length,
+    targetCount: count,
+    candidateIds: pool.map(coin => coin.id),
+    requestedIds: requested.map(coin => coin.id),
+    attemptedIds: [],
+    displayedIds: [],
+    rejected: [],
+    status: "queued",
+    requestedPeriod: period,
+    requestedAt: new Date().toISOString()
+  };
+
+  atlasBrokerSeedSpot(getSelectedCoin());
+  renderScore(getSelectedCoin());
+  renderMarketTable();
+  renderDecisionBoard();
+  renderMultiHorizon();
+
+  if (els.chartCaption) {
+    atlasSetChartCaptionText(
+      `${atlasScannerPresetLabel(kind)} demandées · univers ${state.coins.length} · réserve ${pool.length} candidats · recherche de ${count} historiques cohérents.`
+    );
+  }
+
+  atlasWorkspaceWrite();
+  requestAnimationFrame(() => {
+    void renderAnalystPanel({
+      marketPreset: kind,
+      smartScanner: true,
+      workspaceRestore: options.workspaceRestore === true
+    });
+  });
+}
+
+function atlasScannerProgressCaption(scanner, validCount, currentCoin = null) {
+  const attempted = scanner.attemptedIds.length;
+  const candidateTotal = scanner.candidateIds.length;
+  const current = currentCoin?.symbol ? ` · ${currentCoin.symbol}` : "";
+  return `${atlasScannerPresetLabel(scanner.preset)} · ${validCount}/${scanner.targetCount} validées · candidat ${attempted}/${candidateTotal}${current}`;
+}
+
+async function renderSmartScannerAnalystPanel(options = {}) {
+  const scanner = atlasScannerState();
+  const candidateCoins = scanner.candidateIds
+    .map(id => state.coins.find(coin => coin.id === id))
+    .filter(Boolean);
+
+  if (!scanner.active || candidateCoins.length < 2) {
+    scanner.active = false;
+    return renderComparisonAnalystPanel({ ...options, bypassSmartScanner: true });
+  }
+
+  atlasClearChartRetryTimer();
+  atlasClearComparisonCompletionTimer();
+
+  const renderToken = ++state.comparisonRenderToken;
+  if (state.chartEngineV2?.controller) {
+    try { state.chartEngineV2.controller.abort(); } catch {}
+  }
+
+  const controller = new AbortController();
+  state.chartEngineV2.controller = controller;
+  state.chartEngineV2.loading = true;
+
+  const period = Number(state.chartPeriodDays || 1);
+  const periodLabel = atlasChartPeriodLabel(period);
+  const previousChartState = state.dataBroker.chart;
+  const previousRenderedIds = [...(state.dataBroker.comparison.renderedIds || [])];
+
+  scanner.status = "loading";
+  scanner.requestedPeriod = period;
+  scanner.attemptedIds = [];
+  scanner.displayedIds = [];
+  scanner.rejected = [];
+
+  state.dataBroker.comparison.status = "loading";
+  state.dataBroker.comparison.pendingIds = [...scanner.requestedIds];
+  state.dataBroker.comparison.unavailableIds = [];
+  state.dataBroker.comparison.results = {};
+  state.dataBroker.comparison.renderedIds = previousRenderedIds;
+  state.dataBroker.comparison.error = null;
+
+  state.dataBroker.chart = {
+    status: "loading",
+    coinId: state.selectedCoinId,
+    period,
+    source: ATLAS_CANONICAL_MARKET_SOURCE,
+    mode: "comparison-base100",
+    timestamp: null,
+    pointCount: 0,
+    contextKey: `scanner:${scanner.preset}:${period}:${scanner.requestedIds.join(",")}`,
+    result: null,
+    error: null
+  };
+
+  atlasChartSetPeriodButtons(period, true);
+  setText(els.selectedAssetTitle, `${atlasScannerPresetLabel(scanner.preset)} · univers ${scanner.universeSize}`);
+
+  const preservedChart = drawChartLoading(
+    els.mainChart,
+    `${atlasScannerPresetLabel(scanner.preset)} ${periodLabel} · 0/${scanner.targetCount}`,
+    "Le graphe précédent reste visible pendant la recherche et le remplacement des séries indisponibles."
+  );
+
+  if (!preservedChart) atlasChartV2RenderLegend([], { comparison: true });
+  atlasRenderComparisonControls();
+  atlasChartOverlayUpdate();
+
+  const rawEntries = [];
+  const fetched = [];
+  let normalizedEntries = [];
+
+  for (const coin of candidateCoins) {
+    if (renderToken !== state.comparisonRenderToken || controller.signal.aborted) return;
+    if (!atlasScannerState().active || atlasScannerState().preset !== scanner.preset) return;
+
+    scanner.attemptedIds.push(coin.id);
+    scanner.status = normalizedEntries.length ? "backfill" : "loading";
+    state.dataBroker.comparison.pendingIds = [coin.id];
+
+    const progress = atlasScannerProgressCaption(scanner, normalizedEntries.length, coin);
+    if (preservedChart) atlasUpdateChartRefresh(progress);
+    if (els.chartCaption) atlasSetChartCaptionText(`${progress} · le graphe affiché reste inchangé jusqu’à validation.`);
+    atlasRenderComparisonControls();
+    atlasChartOverlayUpdate();
+
+    let item;
+    try {
+      item = await atlasFetchComparisonSeriesResilient(coin, period, { signal: controller.signal });
+    } catch (error) {
+      if (atlasComparisonAbortError(error)) return;
+      item = {
+        coin,
+        result: { series: [], blocked: true, reason: String(error?.message || error) },
+        error
+      };
+    }
+
+    fetched.push(item);
+
+    if (
+      item?.result
+      && !item.result.blocked
+      && Array.isArray(item.result.series)
+      && item.result.series.length
+    ) {
+      rawEntries.push(item);
+      normalizedEntries = atlasBuildAlignedComparisonEntries(rawEntries, period)
+        .sort((a, b) => scanner.candidateIds.indexOf(a.coin.id) - scanner.candidateIds.indexOf(b.coin.id));
+
+      scanner.displayedIds = normalizedEntries.slice(0, scanner.targetCount).map(entry => entry.coin.id);
+    } else {
+      scanner.rejected.push({
+        id: coin.id,
+        reason: atlasScannerRejectReason(item)
+      });
+    }
+
+    if (normalizedEntries.length >= scanner.targetCount) break;
+  }
+
+  if (renderToken !== state.comparisonRenderToken || controller.signal.aborted) return;
+
+  const finalEntries = normalizedEntries.slice(0, scanner.targetCount);
+  const finalIds = new Set(finalEntries.map(entry => entry.coin.id));
+
+  for (const item of rawEntries) {
+    if (!finalIds.has(item.coin.id) && !scanner.rejected.some(row => row.id === item.coin.id)) {
+      scanner.rejected.push({
+        id: item.coin.id,
+        reason: atlasScannerRejectReason(item, true)
+      });
+    }
+  }
+
+  scanner.displayedIds = finalEntries.map(entry => entry.coin.id);
+  scanner.status = finalEntries.length >= scanner.targetCount
+    ? "ready"
+    : finalEntries.length >= 2
+      ? "partial"
+      : "blocked";
+
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = scanner.rejected.map(row => row.id);
+  state.dataBroker.comparison.error = scanner.status === "ready"
+    ? null
+    : `${scanner.targetCount - finalEntries.length} série(s) manquante(s)`;
+
+  if (finalEntries.length >= 2) {
+    const finalChartKey = `scanner:${scanner.preset}:${finalEntries.map(entry => entry.coin.id).join(",")}:${period}`;
+    const drawnEntries = drawComparisonChart(els.mainChart, finalEntries, period, finalChartKey);
+
+    if (drawnEntries.length >= 2) {
+      const drawnIds = drawnEntries.map(entry => entry.coin.id);
+      scanner.displayedIds = drawnIds;
+      scanner.status = drawnEntries.length >= scanner.targetCount ? "ready" : "partial";
+
+      state.dataBroker.comparison.ids = drawnIds;
+      state.dataBroker.comparison.renderedIds = drawnIds;
+      state.dataBroker.comparison.results = Object.fromEntries(
+        drawnEntries.map(entry => [entry.coin.id, entry.result])
+      );
+      state.dataBroker.comparison.mode = "compare";
+      state.dataBroker.comparison.status = scanner.status;
+      state.selectedCoinId = drawnIds[0];
+
+      const latestTimestamp = Math.max(...drawnEntries.map(entry =>
+        Number(entry.result?.integrity?.metrics?.lastTimestamp || 0)
+      ));
+      const pointCount = drawnEntries.reduce(
+        (sum, entry) => sum + Number(entry.result?.series?.length || 0),
+        0
+      );
+      const comparisonResult = {
+        comparison: true,
+        entries: drawnEntries,
+        periodDays: period,
+        sourceMode: "comparison-base100",
+        source: "CoinGecko market_chart EUR · Base 100",
+        scanner: {
+          preset: scanner.preset,
+          universeSize: scanner.universeSize,
+          requestedIds: [...scanner.requestedIds],
+          displayedIds: [...drawnIds],
+          rejected: [...scanner.rejected]
+        }
+      };
+
+      state.dataBroker.chart = {
+        status: "ready",
+        coinId: state.selectedCoinId,
+        period,
+        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        mode: "comparison-base100",
+        timestamp: Number.isFinite(latestTimestamp) && latestTimestamp > 0
+          ? new Date(latestTimestamp).toISOString()
+          : null,
+        pointCount,
+        latencyMs: null,
+        retryCount: fetched.reduce(
+          (sum, item) => sum + Math.max(0, Number(item?.attempts || 0) - 1),
+          0
+        ),
+        contextKey: finalChartKey,
+        result: comparisonResult,
+        error: scanner.status === "partial"
+          ? `${scanner.targetCount - drawnEntries.length} série(s) non remplacée(s)`
+          : null
+      };
+
+      setText(els.selectedAssetTitle, `${atlasScannerPresetLabel(scanner.preset)} · ${drawnEntries.map(entry => entry.coin.symbol).join(" + ")}`);
+      atlasRenderComparisonDetail(drawnEntries, period);
+      atlasChartV2RenderLegend(drawnEntries, { comparison: true });
+
+      const rejectedSymbols = scanner.rejected.slice(0, 6).map(row => {
+        const symbol = state.coins.find(coin => coin.id === row.id)?.symbol || row.id;
+        return `${String(symbol).toUpperCase()} (${row.reason})`;
+      });
+
+      atlasSetChartCaptionText(
+        `${atlasScannerPresetLabel(scanner.preset)} ${periodLabel} ${scanner.status === "ready" ? "complètes" : "partielles"} · ${drawnEntries.length}/${scanner.targetCount} séries · univers ${scanner.universeSize} · affichées ${drawnEntries.map(entry => entry.coin.symbol).join("/")} ${rejectedSymbols.length ? `· écartées ${rejectedSymbols.join(", ")}` : ""}.`
+      );
+
+      atlasChartV2SyncControls();
+      atlasTrackAudience("chart_comparison_loaded", {
+        preset: scanner.preset,
+        assets: drawnIds,
+        days: period,
+        displayed: drawnIds.length,
+        attempted: scanner.attemptedIds.length,
+        rejected: scanner.rejected.length,
+        universe: scanner.universeSize
+      });
+    } else {
+      scanner.status = "blocked";
+    }
+  }
+
+  if (scanner.status === "blocked") {
+    state.dataBroker.comparison.status = "blocked";
+    state.dataBroker.comparison.error = "aucune comparaison exploitable";
+
+    if (previousChartState?.status === "ready" && state.chartEngineV2?.realChart) {
+      state.dataBroker.chart = previousChartState;
+      state.dataBroker.comparison.renderedIds = previousRenderedIds;
+      atlasUpdateChartRefresh(`${atlasScannerPresetLabel(scanner.preset)} refusées · graphe précédent conservé`);
+      window.setTimeout(atlasHideChartRefresh, 3600);
+      atlasSetChartCaptionText(
+        `DEMANDÉ : ${atlasScannerPresetLabel(scanner.preset)} ${periodLabel} · univers ${scanner.universeSize} · 0/${scanner.targetCount}. AFFICHÉ : dernier graphe valide conservé.`
+      );
+    } else {
+      state.dataBroker.chart = {
+        status: "blocked",
+        coinId: state.selectedCoinId,
+        period,
+        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        mode: "comparison-base100",
+        timestamp: null,
+        pointCount: 0,
+        contextKey: `scanner:${scanner.preset}:${period}:blocked`,
+        result: null,
+        error: "aucune série cohérente"
+      };
+      state.dataBroker.comparison.renderedIds = [];
+      atlasChartV2RenderLegend([], { comparison: true });
+      drawChartBlocked(els.mainChart);
+      atlasSetChartCaptionText(
+        `${atlasScannerPresetLabel(scanner.preset)} ${periodLabel} · ÉCHEC 0/${scanner.targetCount} après ${scanner.attemptedIds.length} candidats · aucune ancienne courbe présentée comme nouveau résultat.`
+      );
+    }
+  }
+
+  atlasRenderComparisonControls();
+  atlasChartSetPeriodButtons(period, false);
+  state.chartEngineV2.loading = false;
+  atlasRenderBrokerStrip();
+  renderMarketTable();
+  renderMultiHorizon();
+  atlasChartOverlayUpdate();
+  atlasWorkspaceWrite();
+}
+
+async function renderComparisonAnalystPanel(options = {}) {
+  const scanner = atlasScannerState();
+  if (
+    options.bypassSmartScanner !== true
+    && scanner.active
+    && ATLAS_SCANNER_PRESETS.includes(scanner.preset)
+  ) {
+    return renderSmartScannerAnalystPanel(options);
+  }
+
+  /* Ancien moteur conservé pour Top 3, Top 5 et sélection manuelle. */
+  const coins = atlasComparisonCoins();
+  if (coins.length < 2) {
+    state.dataBroker.comparison.mode = "single";
+    return renderAnalystPanel({ ...options, forceSingle: true });
+  }
+
+  atlasClearChartRetryTimer();
+  atlasClearComparisonCompletionTimer();
+
+  const renderToken = ++state.comparisonRenderToken;
+  if (state.chartEngineV2?.controller) {
+    try { state.chartEngineV2.controller.abort(); } catch {}
+  }
+
+  const controller = new AbortController();
+  state.chartEngineV2.controller = controller;
+  state.chartEngineV2.loading = true;
+
+  const period = Number(state.chartPeriodDays || 1);
+  const periodLabel = atlasChartPeriodLabel(period);
+  const ids = coins.map(coin => coin.id);
+  const chartKey = `comparison:${ids.join(",")}:${period}`;
+  const previousChartState = state.dataBroker.chart;
+  const previousRenderedIds = [...(state.dataBroker.comparison.renderedIds || [])];
+
+  state.dataBroker.comparison.status = "loading";
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = [];
+  state.dataBroker.comparison.results = {};
+  state.dataBroker.comparison.renderedIds = previousRenderedIds;
+  state.dataBroker.comparison.error = null;
+  state.dataBroker.comparison.completionAttempt = 0;
+  state.dataBroker.comparison.completionKey = null;
+
+  state.dataBroker.chart = {
+    status: "loading",
+    coinId: state.selectedCoinId,
+    period,
+    source: ATLAS_CANONICAL_MARKET_SOURCE,
+    mode: "comparison-base100",
+    timestamp: null,
+    pointCount: 0,
+    contextKey: chartKey,
+    result: null,
+    error: null
+  };
+
+  atlasChartSetPeriodButtons(period, true);
+  setText(els.selectedAssetTitle, `Comparaison ${coins.map(coin => coin.symbol).join(" + ")}`);
+
+  const preservedChart = drawChartLoading(
+    els.mainChart,
+    `Comparaison ${periodLabel} · 0/${coins.length}`,
+    "Le graphe précédent reste visible jusqu’à disposer d’au moins deux courbes cohérentes."
+  );
+
+  if (!preservedChart && els.chartCaption) {
+    atlasSetChartCaptionText(
+      `Comparaison ${periodLabel} en préparation atomique · aucune courbe partielle ne remplacera le graphe.`
+    );
+  }
+  atlasRenderComparisonControls();
+
+  const fetched = [];
+  for (let index = 0; index < coins.length; index += 1) {
+    if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
+    const coin = coins[index];
+
+    if (preservedChart) {
+      atlasUpdateChartRefresh(`Série ${index + 1}/${coins.length} · ${coin.symbol}`);
+    } else if (els.chartCaption) {
+      atlasSetChartCaptionText(
+        `Comparaison ${periodLabel} · lecture ${index + 1}/${coins.length} · ${coin.symbol}.`
+      );
+    }
+
+    try {
+      fetched.push(await atlasFetchComparisonSeriesResilient(coin, period, { signal: controller.signal }));
+    } catch (error) {
+      if (atlasComparisonAbortError(error)) return;
+      fetched.push({
+        coin,
+        result: { series: [], blocked: true, reason: String(error?.message || error) },
+        error
+      });
+    }
+  }
+
+  if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
+
+  const rawEntries = fetched.filter(item =>
+    item?.coin
+    && item?.result
+    && !item.result.blocked
+    && Array.isArray(item.result.series)
+    && item.result.series.length
+  );
+
+  const normalizedEntries = atlasBuildAlignedComparisonEntries(rawEntries, period);
+  const normalizedIds = new Set(normalizedEntries.map(entry => entry.coin.id));
+  const networkFailures = fetched.filter(item => item?.error || item?.result?.blocked);
+  const alignmentFailures = rawEntries.filter(entry => !normalizedIds.has(entry.coin.id));
+  const unavailableIds = [...new Set([
+    ...networkFailures.map(item => item?.coin?.id),
+    ...alignmentFailures.map(item => item?.coin?.id)
+  ].filter(Boolean))];
+
+  state.dataBroker.comparison.results = Object.fromEntries(
+    normalizedEntries.map(entry => [entry.coin.id, entry.result])
+  );
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = unavailableIds;
+  state.dataBroker.comparison.error = null;
+
+  if (normalizedEntries.length >= 2) {
+    const drawnEntries = drawComparisonChart(els.mainChart, normalizedEntries, period, chartKey);
+    if (drawnEntries.length >= 2) {
+      const drawnIds = new Set(drawnEntries.map(entry => entry.coin.id));
+      const finalUnavailableIds = [...new Set([
+        ...unavailableIds,
+        ...normalizedEntries.filter(entry => !drawnIds.has(entry.coin.id)).map(entry => entry.coin.id)
+      ])];
+
+      state.dataBroker.comparison.renderedIds = drawnEntries.map(entry => entry.coin.id);
+      state.dataBroker.comparison.unavailableIds = finalUnavailableIds;
+      state.dataBroker.comparison.results = Object.fromEntries(
+        drawnEntries.map(entry => [entry.coin.id, entry.result])
+      );
+      state.dataBroker.comparison.status = finalUnavailableIds.length ? "partial" : "ready";
+
+      const latestTimestamp = Math.max(...drawnEntries.map(entry =>
+        Number(entry.result?.integrity?.metrics?.lastTimestamp || 0)
+      ));
+      const pointCount = drawnEntries.reduce(
+        (sum, entry) => sum + Number(entry.result?.series?.length || 0),
+        0
+      );
+      const comparisonResult = {
+        comparison: true,
+        entries: drawnEntries,
+        periodDays: period,
+        sourceMode: "comparison-base100",
+        source: "CoinGecko market_chart EUR · Base 100"
+      };
+
+      state.dataBroker.chart = {
+        status: "ready",
+        coinId: state.selectedCoinId,
+        period,
+        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        mode: "comparison-base100",
+        timestamp: Number.isFinite(latestTimestamp) && latestTimestamp > 0
+          ? new Date(latestTimestamp).toISOString()
+          : null,
+        pointCount,
+        latencyMs: null,
+        retryCount: fetched.reduce((sum, item) => sum + Math.max(0, Number(item?.attempts || 0) - 1), 0),
+        contextKey: chartKey,
+        result: comparisonResult,
+        error: finalUnavailableIds.length ? `${finalUnavailableIds.length} série(s) non affichable(s)` : null
+      };
+
+      setText(els.selectedAssetTitle, `Comparaison ${drawnEntries.map(entry => entry.coin.symbol).join(" + ")}`);
+      atlasRenderComparisonDetail(drawnEntries, period);
+      atlasChartV2RenderLegend(drawnEntries, { comparison: true });
+      atlasRenderComparisonCaption(drawnEntries, period, finalUnavailableIds, coins.length);
+      atlasChartV2SyncControls();
+    } else {
+      state.dataBroker.comparison.renderedIds = previousRenderedIds;
+      state.dataBroker.comparison.status = "blocked";
+    }
+  } else {
+    state.dataBroker.comparison.renderedIds = previousRenderedIds;
+    state.dataBroker.comparison.status = "blocked";
+  }
+
+  if (state.dataBroker.comparison.status === "blocked") {
+    state.dataBroker.comparison.error = "moins de deux courbes cohérentes";
+    if (previousChartState?.status === "ready") {
+      state.dataBroker.chart = previousChartState;
+      atlasUpdateChartRefresh("Nouvelle comparaison refusée · graphe précédent conservé");
+      window.setTimeout(atlasHideChartRefresh, 3400);
+      atlasSetChartCaptionText(
+        `Comparaison ${periodLabel} non remplacée : ${normalizedEntries.length}/${coins.length} courbe(s) cohérente(s). Le graphe précédent reste affiché.`
+      );
+    } else {
+      state.dataBroker.chart = {
+        status: "blocked",
+        coinId: state.selectedCoinId,
+        period,
+        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        mode: "comparison-base100",
+        timestamp: null,
+        pointCount: 0,
+        contextKey: chartKey,
+        result: null,
+        error: "moins de deux courbes cohérentes"
+      };
+      state.dataBroker.comparison.renderedIds = [];
+      atlasChartV2RenderLegend([], { comparison: true });
+      drawChartBlocked(els.mainChart);
+      atlasSetChartCaptionText(
+        `Comparaison ${periodLabel} indisponible : moins de deux séries réelles cohérentes.`
+      );
+    }
+  }
+
+  atlasRenderComparisonControls();
+  atlasChartSetPeriodButtons(period, false);
+  state.chartEngineV2.loading = false;
+  atlasRenderBrokerStrip();
+  renderMultiHorizon();
+}
+
+/* Progression et état demandés / affichés dans le HUD Analyse. */
+const atlasChartOverlaySetV28157 = atlasChartOverlaySet;
+atlasChartOverlaySet = function(titleHtml, seriesHtml, summaryHtml, truthLabel = "", layout = "comparison") {
+  atlasChartOverlaySetV28157(titleHtml, seriesHtml, summaryHtml, truthLabel, layout);
+  const overlay = document.getElementById("atlasChartInsightOverlay");
+  const summaryNode = document.getElementById("atlasChartInsightOverlaySummary");
+  const scanner = atlasScannerState();
+
+  if (!overlay || !summaryNode) return;
+  overlay.dataset.scannerState = scanner.active ? scanner.status : "idle";
+
+  const truth = atlasScannerTruthHtml();
+  if (truth) summaryNode.innerHTML = `${truth}${summaryNode.innerHTML}`;
+};
+
+/* Contrôles comparatifs : progression scanner explicite. */
+const atlasRenderComparisonControlsV28157 = atlasRenderComparisonControls;
+atlasRenderComparisonControls = function() {
+  atlasRenderComparisonControlsV28157();
+  const scanner = atlasScannerState();
+  if (!scanner.active || !els.comparisonSelection) return;
+
+  const hint = els.comparisonSelection.querySelector(".compare-hint");
+  if (!hint) return;
+
+  const displayed = scanner.displayedIds.length;
+  if (scanner.status === "loading" || scanner.status === "backfill") {
+    hint.className = "compare-hint compare-hint-progress";
+    hint.textContent = `Scanner ${atlasScannerPresetLabel(scanner.preset)} · ${displayed}/${scanner.targetCount} validées · ${scanner.attemptedIds.length}/${scanner.candidateIds.length} candidats`;
+  } else if (scanner.status === "ready") {
+    hint.className = "compare-hint";
+    hint.textContent = `${displayed}/${scanner.targetCount} courbes · scanner univers ${scanner.universeSize} complet`;
+  } else if (scanner.status === "partial") {
+    hint.className = "compare-hint";
+    hint.textContent = `PARTIEL ${displayed}/${scanner.targetCount} · réserve épuisée ou réseau différé`;
+  } else if (scanner.status === "blocked") {
+    hint.className = "compare-hint compare-hint-error";
+    hint.textContent = `ÉCHEC 0/${scanner.targetCount} · ancien graphe conservé s’il existe`;
+  }
+};
+
+/* Période : les trois scanners sont recalculés. */
+function atlasApplyRequestedPeriod(period) {
+  const coin = getSelectedCoin();
+  if (!coin) return;
+
+  state.chartPeriodDays = Number(period || 1);
+  atlasChartSetPeriodButtons(state.chartPeriodDays, true);
+
+  const preset = state.dataBroker.comparison.preset;
+  if (ATLAS_SCANNER_PRESETS.includes(preset)) {
+    atlasSelectMarketPreset(preset, ATLAS_SCANNER_TARGET_COUNT);
+  } else if (atlasComparisonActive()) {
+    if (state.chartEngineV2?.controller) {
+      try { state.chartEngineV2.controller.abort(); } catch {}
+    }
+    requestAnimationFrame(() => { void renderAnalystPanel({ periodChange: true }); });
+  } else {
+    atlasPrepareChartSelection(coin, state.chartPeriodDays);
+    requestAnimationFrame(() => {
+      void renderAnalystPanel({ periodChange: true, forceSingle: true });
+    });
+  }
+
+  atlasWorkspaceWrite();
+}
+
+/* Mémoire stable entre les Builds, avec migration. */
+function atlasWorkspaceRead() {
+  const keys = [ATLAS_WORKSPACE_STATE_KEY, ...ATLAS_WORKSPACE_LEGACY_KEYS];
+  for (const key of keys) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || "null");
+      if (!parsed || typeof parsed !== "object") continue;
+      if (key !== ATLAS_WORKSPACE_STATE_KEY) {
+        try { localStorage.setItem(ATLAS_WORKSPACE_STATE_KEY, JSON.stringify(parsed)); } catch {}
+      }
+      return parsed;
+    } catch {}
+  }
+  return null;
+}
+
+function atlasWorkspaceCapture() {
+  const drawer = document.getElementById("atlasAdminCenterDrawer");
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  const detailCollapsed = document.getElementById("analyste")?.classList.contains("detail-collapsed") === true;
+  const scanner = atlasScannerState();
+
+  return {
+    schema: "agent_crypto_workspace_v3",
+    release: ATLAS_RELEASE,
+    savedAt: new Date().toISOString(),
+    interfaceMode: atlasV2Mode(),
+    graphMode: atlasWorkspaceCurrentGraphMode(),
+    detailCollapsed,
+    marketVisibleLimit: state.marketVisibleLimit,
+    adminWorkspace: {
+      centerOpen: atlasV2Mode() === "advanced" && !!drawer && !drawer.hidden,
+      activeCluster: drawer?.dataset?.activeCluster || atlasAdminCenterSavedTarget(),
+      lastModule: selector?.value || atlasAdminLastModuleRead()
+    },
+    period: Number(state.chartPeriodDays || 1),
+    selectedCoinId: state.selectedCoinId || null,
+    comparisonIds: atlasComparisonIds(),
+    comparisonPreset: state.dataBroker?.comparison?.preset || "solo",
+    scannerPreset: scanner.active ? scanner.preset : null,
+    selectionCleared: state.graphSelectionCleared === true,
+    chartView: {
+      view: state.chartViewV2.view === "base100" ? "base100" : "price",
+      scale: state.chartViewV2.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: state.chartViewV2.volume !== false,
+      legend: state.chartViewV2.legend === true,
+      comparisonLegend: state.chartViewV2.comparisonLegend === true,
+      analysis: state.chartViewV2.analysis !== false,
+      marketColumns: state.chartViewV2.marketColumns === "complete" ? "complete" : "essential"
+    }
+  };
+}
+
+function atlasWorkspaceRestoreAfterMarket() {
+  if (atlasWorkspaceRestored || !Array.isArray(state.coins) || !state.coins.length) return false;
+
+  atlasWorkspaceRestored = true;
+  const saved = atlasWorkspaceRead();
+
+  if (!saved) {
+    state.marketVisibleLimit = 50;
+    atlasSyncMarketUniverseControls();
+    atlasWorkspaceRenderStrip();
+    atlasWorkspaceScheduleSave(80);
+    return false;
+  }
+
+  const savedInterfaceMode = ATLAS_V2_ALLOWED_MODES.has(saved.interfaceMode)
+    ? saved.interfaceMode
+    : atlasV2Mode();
+
+  if (savedInterfaceMode !== atlasV2Mode()) {
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, savedInterfaceMode);
+    atlasV2ApplyMode(savedInterfaceMode, { persist: false });
+  }
+
+  state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(saved.marketVisibleLimit))
+    ? Number(saved.marketVisibleLimit)
+    : 50;
+  atlasSyncMarketUniverseControls();
+
+  const validIds = new Set(state.coins.map(coin => coin.id));
+  const period = ATLAS_WORKSPACE_PERIODS.includes(Number(saved.period))
+    ? Number(saved.period)
+    : 1;
+  const preset = ATLAS_WORKSPACE_PRESETS.includes(saved.comparisonPreset)
+    ? saved.comparisonPreset
+    : "solo";
+
+  const rawIds = Array.isArray(saved.comparisonIds) ? saved.comparisonIds : [];
+  let ids = rawIds
+    .filter(id => validIds.has(id))
+    .filter((id, index, list) => list.indexOf(id) === index)
+    .slice(0, ATLAS_COMPARISON_MAX_SERIES);
+
+  const savedPrimary = validIds.has(saved.selectedCoinId) ? saved.selectedCoinId : null;
+  if (!ids.length && savedPrimary) ids = [savedPrimary];
+  if (!ids.length && saved.selectionCleared !== true) {
+    const fallback = state.coins.find(coin => coin.id === "bitcoin") || state.coins[0];
+    if (fallback?.id) ids = [fallback.id];
+  }
+
+  const primary = savedPrimary && ids.includes(savedPrimary)
+    ? savedPrimary
+    : ids[0] || null;
+  if (primary && ids[0] !== primary) ids = [primary, ...ids.filter(id => id !== primary)];
+
+  state.chartPeriodDays = period;
+  state.graphSelectionCleared = saved.selectionCleared === true && !ids.length;
+  state.selectedCoinId = primary;
+  state.dataBroker.comparison.ids = ids;
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = [];
+  state.dataBroker.comparison.results = {};
+  state.dataBroker.comparison.renderedIds = [];
+  state.dataBroker.comparison.mode = ids.length > 1 ? "compare" : ids.length === 1 ? "single" : "empty";
+  state.dataBroker.comparison.preset = preset;
+  state.dataBroker.comparison.status = "idle";
+  state.dataBroker.comparison.error = null;
+  atlasScannerReset();
+
+  const savedView = saved.chartView && typeof saved.chartView === "object" ? saved.chartView : {};
+  state.chartViewV2 = {
+    ...state.chartViewV2,
+    view: savedView.view === "base100" ? "base100" : "price",
+    scale: savedView.scale === "logarithmic" ? "logarithmic" : "linear",
+    volume: savedView.volume !== false,
+    legend: savedView.legend === true,
+    comparisonLegend: savedView.comparisonLegend === true,
+    analysis: savedView.analysis !== false,
+    marketColumns: savedView.marketColumns === "complete" ? "complete" : "essential"
+  };
+
+  atlasWriteChartV2Settings();
+  atlasChartSetPeriodButtons(period, false);
+  atlasRenderComparisonControls();
+  atlasChartV2SyncControls();
+
+  const savedGraphMode = ATLAS_ADMIN_GRAPH_MODES.includes(saved.graphMode) ? saved.graphMode : "normal";
+  try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, savedGraphMode); } catch {}
+
+  const detailCollapsed = saved.detailCollapsed === true;
+  try { localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, detailCollapsed ? "1" : "0"); } catch {}
+  atlasSetCleanLensCollapsed(atlasV2Mode() === "advanced" ? detailCollapsed : true, false);
+
+  const adminWorkspace = saved.adminWorkspace && typeof saved.adminWorkspace === "object"
+    ? saved.adminWorkspace
+    : {};
+  const savedModule = String(adminWorkspace.lastModule || "");
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+
+  if (savedModule && document.getElementById(savedModule)) {
+    atlasAdminLastModuleWrite(savedModule);
+    if (selector && [...selector.options].some(option => option.value === savedModule)) {
+      selector.value = savedModule;
+    }
+  }
+
+  const savedClusterCandidate = String(
+    adminWorkspace.activeCluster || atlasAdminClusterForModule(savedModule) || ""
+  );
+  const savedCluster = ATLAS_ADMIN_CLUSTERS.includes(savedClusterCandidate)
+    ? savedClusterCandidate
+    : "";
+
+  try {
+    if (savedCluster) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, savedCluster);
+    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, adminWorkspace.centerOpen === true ? "1" : "0");
+  } catch {}
+
+  if (atlasV2Mode() === "advanced") {
+    atlasAdminGraphSet(savedGraphMode, {
+      persist: false,
+      instant: true,
+      scroll: false,
+      closeCenter: false
+    });
+
+    window.setTimeout(() => {
+      atlasAdminCenterSet(adminWorkspace.centerOpen === true, {
+        persist: false,
+        target: savedCluster,
+        scrollTarget: false,
+        instant: true
+      });
+    }, 60);
+  } else {
+    atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
+  }
+
+  atlasWorkspaceRenderStrip({ restored: true });
+
+  if (ATLAS_SCANNER_PRESETS.includes(preset)) {
+    window.setTimeout(() => {
+      atlasSelectMarketPreset(preset, ATLAS_SCANNER_TARGET_COUNT, { workspaceRestore: true });
+    }, 120);
+  }
+
+  atlasWorkspaceScheduleSave(240);
+  return true;
+}
+
+/* Hard lock : aucune initialisation Livecheck ne force BTC · Solo · 24 h. */
+function atlasStartSelectedChart(delayMs = 180) {
+  if (!state.liveOk || !state.coins.length) return;
+  if (state.chartEngineV2?.bootTimer) clearTimeout(state.chartEngineV2.bootTimer);
+
+  state.chartEngineV2.bootTimer = setTimeout(() => {
+    state.chartEngineV2.bootTimer = null;
+
+    const scanner = atlasScannerState();
+    if (scanner.active && ["queued", "loading", "backfill"].includes(scanner.status)) return;
+    if (state.chartEngineV2?.loading) return;
+
+    const coin = getSelectedCoin();
+    if (!coin) return;
+    const period = Number(state.chartPeriodDays || 1);
+
+    if (atlasComparisonActive()) {
+      atlasChartSetPeriodButtons(period, true);
+      void renderAnalystPanel({ autoStart: true, workspaceRestore: atlasWorkspaceRestored });
+      return;
+    }
+
+    const key = atlasChartKey(coin, period);
+    const chartReady =
+      state.dataBroker.chart?.status === "ready"
+      && state.dataBroker.chart?.coinId === coin.id
+      && Number(state.dataBroker.chart?.period || 1) === period;
+    const requestAlreadyActive =
+      state.chartEngineV2?.loading
+      && state.chartEngineV2?.activeRequestKey === key;
+
+    if (chartReady || requestAlreadyActive) return;
+
+    atlasPrepareChartSelection(coin, period, {
+      preserveComparison: true,
+      preset: state.dataBroker.comparison.preset || "solo"
+    });
+    void renderAnalystPanel({ autoStart: true, workspaceRestore: atlasWorkspaceRestored });
+  }, Math.max(0, Number(delayMs) || 0));
+}
+
+/* Sauvegarde immédiate des choix structurants. */
+document.addEventListener("click", event => {
+  const control = event.target.closest(
+    "[data-market-limit], .period-btn, .compare-btn, [data-chart-view], "
+    + "[data-chart-scale], [data-chart-display], [data-admin-graph-cycle], "
+    + "[data-admin-graph-mode], [data-atlas-mode]"
+  );
+  if (!control) return;
+  window.setTimeout(atlasWorkspaceWrite, 80);
+}, true);
+
+document.querySelectorAll("[data-market-limit]").forEach(button => {
+  button.addEventListener("click", () => {
+    const limit = Number(button.dataset.marketLimit);
+    if (!ATLAS_MARKET_VIEW_LIMITS.includes(limit)) return;
+    state.marketVisibleLimit = limit;
+    atlasSyncMarketUniverseControls();
+    renderMarketTable();
+    atlasWorkspaceWrite();
+    void atlasEnrichUsdForMarketView(limit);
+  });
+});
+
+window.setTimeout(atlasSyncMarketUniverseControls, 0);
+window.setTimeout(atlasSyncMarketUniverseControls, 900);
