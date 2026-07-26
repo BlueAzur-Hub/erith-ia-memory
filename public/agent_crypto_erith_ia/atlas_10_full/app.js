@@ -147,6 +147,83 @@
 
   let state = loadState();
 
+  const canonicalDocumentCache = new Map();
+
+  function pathFileName(value) {
+    const parts = cleanPath(value).split("/");
+    return parts[parts.length - 1] || "";
+  }
+
+  function normalizeDownloadedFileName(value) {
+    return String(value || "")
+      .replace(/\s*\(\d+\)(?=\.[^.]+$)/, "")
+      .toUpperCase();
+  }
+
+  function expectedCanonicalFileName(kind) {
+    const p = profile();
+    const path = kind === "core" ? p.corePath : p.personaPath;
+    return normalizeDownloadedFileName(pathFileName(path));
+  }
+
+  function importedCanonical(kind) {
+    if (isNew()) return state.imports.find(item => item.kind === kind) || null;
+    const expected = expectedCanonicalFileName(kind);
+    if (!expected) return null;
+    return state.imports.find(item => item.kind === kind && normalizeDownloadedFileName(pathFileName(item.path)) === expected) || null;
+  }
+
+  function canonicalCacheKey(kind, selected = profile()) {
+    return `${selected.id}:${kind}`;
+  }
+
+  function canonicalPath(kind, selected = profile()) {
+    return kind === "core" ? selected.corePath : selected.personaPath;
+  }
+
+  function ensurePublicCanonicalDocument(kind) {
+    const selected = profile();
+    if (isNew() || selected.privacy !== "public") return;
+    const key = canonicalCacheKey(kind, selected);
+    if (canonicalDocumentCache.has(key)) return;
+    canonicalDocumentCache.set(key, {status:"loading", text:"", error:""});
+    fetch(canonicalPath(kind, selected), {cache:"no-store"})
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then(content => canonicalDocumentCache.set(key, {status:"ready", text:content, error:""}))
+      .catch(error => canonicalDocumentCache.set(key, {status:"error", text:"", error:error.message || String(error)}))
+      .finally(() => {
+        if (profile().id === selected.id) renderProposal();
+      });
+  }
+
+  function canonicalDocumentState(kind) {
+    const selected = profile();
+    if (isNew()) return {status:"proposal", text:kind === "core" ? proposalCore() : proposalPersona(), error:""};
+    if (selected.privacy === "public") {
+      ensurePublicCanonicalDocument(kind);
+      return canonicalDocumentCache.get(canonicalCacheKey(kind, selected)) || {status:"loading", text:"", error:""};
+    }
+    const imported = importedCanonical(kind);
+    if (imported?.text) return {status:"ready", text:imported.text, error:"", imported};
+    return {status:"missing", text:"", error:"", imported:null};
+  }
+
+  async function canonicalDocumentText(kind) {
+    if (isNew()) return kind === "core" ? proposalCore() : proposalPersona();
+    const selected = profile();
+    if (selected.privacy === "public") {
+      const response = await fetch(canonicalPath(kind, selected), {cache:"no-store"});
+      if (!response.ok) throw new Error(`${canonicalPath(kind, selected)} — HTTP ${response.status}`);
+      return response.text();
+    }
+    const imported = importedCanonical(kind);
+    if (!imported) throw new Error(`${kind === "core" ? "Core" : "Persona"} canonique non chargé.`);
+    return imported.text || imported.file.text();
+  }
+
   function persist() {
     const serializable = {
       ...state,
@@ -274,7 +351,7 @@
 
   function currentVisual() {
     if (state.visualUrl) return state.visualUrl;
-    return profile().visual || DATA.heritage.find(item => item.id === "seven").visual;
+    return profile().visual || "";
   }
 
   function canonicalBase() {
@@ -314,6 +391,7 @@
     if (!selected) return;
     state.profileId = id;
     state.selectedExample = "";
+    state.proposalPreview = "core";
     state.canonicalConfirmed = selected.kind === "existing" && selected.privacy === "public";
     state.identity = identityFromProfile(selected);
     state.imports = [];
@@ -645,7 +723,7 @@
     const i = state.identity;
     const audit = finalAudit();
     if (audit.ready) return "PRÊTE À ACTIVER";
-    if (state.canonicalConfirmed && importedKind("core") && importedKind("persona")) return "SOURCES VALIDÉES";
+    if (state.canonicalConfirmed && importedCanonical("core") && importedCanonical("persona")) return "SOURCES VALIDÉES";
     if (state.canonicalConfirmed) return "VALIDATION HUMAINE";
     if (proposalAudit().ready && state.step >= 5) return "PRÊTE POUR VALIDATION";
     if ((i.tone || "").trim() && (i.modes || []).length && (i.guardrails || []).length) return "IDENTITÉ VIVANTE";
@@ -803,9 +881,17 @@
       checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
       checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
     } else if (state.step === 5) {
-      checks.push(["ok", "Core Proposal"]);
-      checks.push(["ok", "Persona Proposal"]);
-      checks.push(["ok", "Brief de validation"]);
+      if (isNew()) {
+        checks.push(["ok", "Core Proposal"]);
+        checks.push(["ok", "Persona Proposal"]);
+        checks.push(["ok", "Brief de validation"]);
+      } else {
+        const core = canonicalDocumentState("core");
+        const persona = canonicalDocumentState("persona");
+        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core réel chargé" : "Core réel non chargé"]);
+        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona réelle chargée" : "Persona réelle non chargée"]);
+        checks.push(["ok", "Aucun document de remplacement"]);
+      }
       actionType = "next";
       actionLabel = "Poursuivre vers les sources";
     } else if (state.step === 6) {
@@ -816,8 +902,8 @@
         actionType = "goto-final";
         actionLabel = "Vérifier la Forge finale";
       } else {
-        const core = importedKind("core");
-        const persona = importedKind("persona");
+        const core = importedCanonical("core");
+        const persona = importedCanonical("persona");
         checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
         checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
         checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
@@ -1140,23 +1226,120 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
   function proposalAudit() {
     const i = state.identity;
+    if (isNew()) {
+      return [
+        [i.name && /^Aerith-10/i.test(i.name) ? "ok" : "warn", "Identité", i.name || "Manquante"],
+        [i.role ? "ok" : "error", "Mission", i.role ? "Définie" : "Manquante"],
+        [i.agents.length ? "ok" : "warn", "Agents", `${i.agents.length} déclaré(s)`],
+        [i.stopPoint ? "ok" : "error", "Stop Point", i.stopPoint ? "Défini" : "Manquant"]
+      ];
+    }
+    const core = canonicalDocumentState("core");
+    const persona = canonicalDocumentState("persona");
+    const label = state => state.status === "ready" ? "Chargé intégralement" : state.status === "loading" ? "Chargement…" : state.status === "error" ? "Erreur de chargement" : "Non chargé";
     return [
-      [i.name && /^Aerith-10\b/i.test(i.name) || !isNew() ? "ok" : "warn", "Identité", i.name || "Manquante"],
-      [i.role ? "ok" : "error", "Mission", i.role ? "Définie" : "Manquante"],
-      [i.agents.length ? "ok" : "warn", "Agents", `${i.agents.length} déclaré(s)`],
-      [i.stopPoint ? "ok" : "error", "Stop Point", i.stopPoint ? "Défini" : "Manquant"]
+      ["ok", "Profil", i.name],
+      [core.status === "ready" ? "ok" : core.status === "error" ? "error" : "warn", "Core réel", label(core)],
+      [persona.status === "ready" ? "ok" : persona.status === "error" ? "error" : "warn", "Persona réelle", label(persona)],
+      ["ok", "Génération", "Aucun faux Core ni fausse Persona"]
     ];
   }
 
+  function existingProfileBrief() {
+    const p = profile();
+    const core = canonicalDocumentState("core");
+    const persona = canonicalDocumentState("persona");
+    const stateLabel = value => value.status === "ready" ? "contenu chargé" : value.status === "loading" ? "chargement en cours" : value.status === "error" ? `erreur : ${value.error}` : "contenu non chargé";
+    return `FICHE FACTUELLE DU PROFIL — ${state.identity.name}
+
+Cette fiche n’est ni le Core ni la Persona.
+Elle décrit uniquement l’état des sources dans la Forge.
+
+Profil : ${state.identity.name}
+Type : profil existant
+Core : ${state.identity.corePath || defaultCoreTarget() || "chemin non défini"}
+État Core : ${stateLabel(core)}
+Persona : ${state.identity.personaPath || defaultPersonaTarget() || "chemin non défini"}
+État Persona : ${stateLabel(persona)}
+Modules : ${state.identity.modules.length} référence(s)
+
+Règle : aucun contenu de remplacement n’est généré pour ce profil.
+`;
+  }
+
+  function canonicalPreview(kind) {
+    const documentState = canonicalDocumentState(kind);
+    if (documentState.status === "ready" || documentState.status === "proposal") return documentState.text;
+    const label = kind === "core" ? "CORE" : "PERSONA";
+    const path = kind === "core" ? (state.identity.corePath || defaultCoreTarget()) : (state.identity.personaPath || defaultPersonaTarget());
+    if (documentState.status === "loading") return `${label} CANONIQUE — CHARGEMENT EN COURS
+
+Source incluse : ${path}`;
+    if (documentState.status === "error") return `${label} CANONIQUE — ERREUR DE CHARGEMENT
+
+Source : ${path}
+Erreur : ${documentState.error}
+
+Aucun texte de remplacement n’est généré.`;
+    return `${label} CANONIQUE — CONTENU NON CHARGÉ
+
+Profil : ${state.identity.name}
+Source attendue : ${path}
+
+Importer le fichier réel à l’étape 07.
+Aucun texte de remplacement n’est généré.`;
+  }
+
   function renderProposal() {
+    const panel = document.querySelector('.panel[data-step="5"]');
+    const heading = panel?.querySelector(".panel-head h2");
+    const description = panel?.querySelector(".panel-head p:last-child");
+    const tabs = $$("#proposalTabs button");
+    const coreButton = $("#downloadProposalCore");
+    const personaButton = $("#downloadProposalPersona");
+    const briefButton = $("#downloadProposalBrief");
+    const zipButton = $("#downloadProposalZip");
     const items = proposalAudit();
     $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
-    const docs = {core:proposalCore(), persona:proposalPersona(), brief:designBrief()};
-    $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
+
+    if (isNew()) {
+      if (heading) heading.textContent = "Découvrir la proposition de Créatrice";
+      if (description) description.textContent = "Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.";
+      if (tabs[0]) tabs[0].textContent = "Core";
+      if (tabs[1]) tabs[1].textContent = "Persona";
+      if (tabs[2]) tabs[2].textContent = "Brief";
+      const docs = {core:proposalCore(), persona:proposalPersona(), brief:designBrief()};
+      $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
+      coreButton.disabled = personaButton.disabled = briefButton.disabled = zipButton.disabled = false;
+      coreButton.querySelector("b").textContent = "Télécharger";
+      personaButton.querySelector("b").textContent = "Télécharger";
+      briefButton.querySelector("b").textContent = "Télécharger";
+      zipButton.textContent = "TÉLÉCHARGER LE ZIP DE PROPOSITION · 3 FICHIERS";
+      $("#canonRoute").innerHTML = `<b>Étape de canonisation</b><p>Relire la proposition, valider les deux fichiers, puis les intégrer aux chemins canoniques indiqués avant de réunir les sources finales.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
+    } else {
+      if (heading) heading.textContent = "Consulter le Core et la Persona réels";
+      if (description) description.textContent = "La Forge affiche uniquement les fichiers réellement inclus ou importés. Elle ne fabrique aucun Core ni aucune Persona de remplacement.";
+      if (tabs[0]) tabs[0].textContent = "Core réel";
+      if (tabs[1]) tabs[1].textContent = "Persona réelle";
+      if (tabs[2]) tabs[2].textContent = "Fiche";
+      const core = canonicalDocumentState("core");
+      const persona = canonicalDocumentState("persona");
+      const docs = {core:canonicalPreview("core"), persona:canonicalPreview("persona"), brief:existingProfileBrief()};
+      $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
+      coreButton.disabled = core.status !== "ready";
+      personaButton.disabled = persona.status !== "ready";
+      briefButton.disabled = false;
+      zipButton.disabled = core.status !== "ready" || persona.status !== "ready";
+      coreButton.querySelector("b").textContent = core.status === "ready" ? "Télécharger le fichier réel" : "Fichier non chargé";
+      personaButton.querySelector("b").textContent = persona.status === "ready" ? "Télécharger le fichier réel" : "Fichier non chargé";
+      briefButton.querySelector("b").textContent = "Télécharger la fiche";
+      zipButton.textContent = "TÉLÉCHARGER LES SOURCES DU PROFIL · 3 FICHIERS";
+      const access = profile().privacy === "public"
+        ? "Les deux sources publiques sont incluses dans cette Forge."
+        : "Importer les deux fichiers privés réels à l’étape 07 pour les consulter et les exporter.";
+      $("#canonRoute").innerHTML = `<b>Profil existant — lecture source-fidèle</b><p>${esc(access)} Aucun document PROPOSAL n’est produit.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
+    }
     $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
-    $("#canonRoute").innerHTML = isNew()
-      ? `<b>Étape de canonisation</b><p>Relire la proposition, valider les deux fichiers, puis les intégrer aux chemins canoniques indiqués avant de réunir les sources finales.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`
-      : `<b>Profil canonique prêt</b><p>Réunir les sources disponibles, vérifier l’architecture et préparer l’export adapté à la mission.</p>`;
   }
 
   function fieldFromText(text, labels) {
@@ -1189,8 +1372,11 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
   function kindForFile(file, content = "") {
     const name = file.name.toUpperCase();
+    const normalizedName = normalizeDownloadedFileName(file.name);
     const proposal = name.includes("PROPOSAL") || /proposition locale non canonique/i.test(content);
     if (file.type.startsWith("image/")) return "visual";
+    if (!isNew() && normalizedName === expectedCanonicalFileName("persona")) return proposal ? "persona-proposal" : "persona";
+    if (!isNew() && normalizedName === expectedCanonicalFileName("core")) return proposal ? "core-proposal" : "core";
     if (name.includes("PERSONA_OPERATING_LAYER") || /^#.+Persona Operating Layer/im.test(content)) return proposal ? "persona-proposal" : "persona";
     if (name.includes("MULTI_AGENT_CORE") || /^#.+Multi-Agent Core/im.test(content)) return proposal ? "core-proposal" : "core";
     if (name.endsWith(".ZIP")) return "pack";
@@ -1218,8 +1404,8 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
       const kind = kindForFile(file, text);
       state.imports.push({file, path, key, kind, text});
       added += 1;
-      if (kind === "core" && text) mergeParsed(parseCore(text, file.name));
-      if (kind === "persona" && text) {
+      if (isNew() && kind === "core" && text) mergeParsed(parseCore(text, file.name));
+      if (isNew() && kind === "persona" && text) {
         const coreRequired = fieldFromText(text, ["Core requis"]);
         const personaPath = fieldFromText(text, ["Chemin cible"]);
         const version = fieldFromText(text, ["Version"]);
@@ -1256,8 +1442,8 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     let ready = true;
     let completed = 0;
     let total = 0;
-    const core = importedKind("core");
-    const persona = importedKind("persona");
+    const core = importedCanonical("core");
+    const persona = importedCanonical("persona");
     const coreProposal = importedKind("core-proposal");
     const personaProposal = importedKind("persona-proposal");
     const add = (type, title, detail, counts = true, done = type === "ok") => {
@@ -1498,8 +1684,8 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       files.set(`${root}/CORE/${coreTargetName}`, await fetchBytes(p.corePath));
       files.set(`${root}/CORE/${personaTargetName}`, await fetchBytes(p.personaPath));
     } else {
-      const core = importedKind("core");
-      const persona = importedKind("persona");
+      const core = importedCanonical("core");
+      const persona = importedCanonical("persona");
       files.set(`${root}/CORE/${coreTargetName}`, new Uint8Array(await core.file.arrayBuffer()));
       files.set(`${root}/CORE/${personaTargetName}`, new Uint8Array(await persona.file.arrayBuffer()));
     }
@@ -1565,15 +1751,49 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
     return new Blob([localData, centralData, end], {type:"application/zip"});
   }
 
+  async function downloadStep6Document(kind) {
+    if (kind === "brief") {
+      const name = isNew() ? proposalFileName("brief") : `${cleanName(state.identity.name)}_FICHE_SOURCES.md`;
+      downloadText(name, isNew() ? designBrief() : existingProfileBrief());
+      return;
+    }
+    try {
+      const content = await canonicalDocumentText(kind);
+      const name = isNew()
+        ? proposalFileName(kind)
+        : pathFileName(kind === "core" ? (state.identity.corePath || defaultCoreTarget()) : (state.identity.personaPath || defaultPersonaTarget()));
+      downloadText(name, content);
+    } catch (error) {
+      showToast(error.message || "Source non chargée.");
+    }
+  }
+
   async function downloadProposalZip() {
-    const root = `${canonicalBase()}_PROPOSAL`;
-    const files = new Map([
-      [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
-      [`${root}/${proposalFileName("persona")}`, encoder.encode(proposalPersona())],
-      [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())]
-    ]);
-    downloadBlob(`${root}.zip`, zipBlob(files));
-    showToast("ZIP de proposition téléchargé — 3 fichiers.");
+    if (isNew()) {
+      const root = `${canonicalBase()}_PROPOSAL`;
+      const files = new Map([
+        [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
+        [`${root}/${proposalFileName("persona")}`, encoder.encode(proposalPersona())],
+        [`${root}/${proposalFileName("brief")}`, encoder.encode(designBrief())]
+      ]);
+      downloadBlob(`${root}.zip`, zipBlob(files));
+      showToast("ZIP de proposition téléchargé — 3 fichiers.");
+      return;
+    }
+    try {
+      const root = `${cleanName(state.identity.name)}_SOURCES_REELLES`;
+      const coreName = pathFileName(state.identity.corePath || defaultCoreTarget());
+      const personaName = pathFileName(state.identity.personaPath || defaultPersonaTarget());
+      const files = new Map([
+        [`${root}/${coreName}`, encoder.encode(await canonicalDocumentText("core"))],
+        [`${root}/${personaName}`, encoder.encode(await canonicalDocumentText("persona"))],
+        [`${root}/${cleanName(state.identity.name)}_FICHE_SOURCES.md`, encoder.encode(existingProfileBrief())]
+      ]);
+      downloadBlob(`${root}.zip`, zipBlob(files));
+      showToast("Sources réelles téléchargées — 3 fichiers.");
+    } catch (error) {
+      showToast(error.message || "Sources non chargées.");
+    }
   }
 
   function openLightbox(src, title) {
@@ -1720,9 +1940,9 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   for (const name of ["dragleave", "drop"]) dropzone.addEventListener(name, event => { event.preventDefault(); dropzone.classList.remove("drag"); });
   dropzone.addEventListener("drop", event => addFiles(event.dataTransfer.files));
 
-  $("#downloadProposalCore").addEventListener("click", () => downloadText(proposalFileName("core"), proposalCore()));
-  $("#downloadProposalPersona").addEventListener("click", () => downloadText(proposalFileName("persona"), proposalPersona()));
-  $("#downloadProposalBrief").addEventListener("click", () => downloadText(proposalFileName("brief"), designBrief()));
+  $("#downloadProposalCore").addEventListener("click", () => downloadStep6Document("core"));
+  $("#downloadProposalPersona").addEventListener("click", () => downloadStep6Document("persona"));
+  $("#downloadProposalBrief").addEventListener("click", () => downloadStep6Document("brief"));
   $("#downloadProposalZip").addEventListener("click", downloadProposalZip);
 
   $("#downloadBoot").addEventListener("click", () => downloadText(finalFileName("boot"), bootDocument()));
