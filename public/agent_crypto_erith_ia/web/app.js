@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.67 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.68 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.67";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.68";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -1011,6 +1011,75 @@ function atlasPatchCurrentQuoteBox(priceBox, coin) {
   const sourceNode = priceBox.querySelector("small");
   if (priceNode) priceNode.textContent = atlasCurrentQuotePriceText(quote);
   if (sourceNode) sourceNode.textContent = quote.status === "live" ? quote.source : "PRIX DIRECT INDISPONIBLE";
+}
+
+function atlasQuoteMarketPair(quote, coinOrId) {
+  const coinId = typeof coinOrId === "string" ? coinOrId : coinOrId?.id;
+  const config = ATLAS_EXCHANGE_PRODUCT_MAP[coinId] || null;
+
+  if (quote?.kind === "exchange-direct-eur" && config?.direct) {
+    const base = config.direct.replace(/EUR$/, "");
+    return {
+      provider: "Binance Spot",
+      pair: `${base}/EUR`,
+      route: `${base}_EUR`,
+      unit: "EUR",
+      method: "Dernier prix négocié",
+      url: `https://www.binance.com/fr/trade/${encodeURIComponent(base)}_EUR?type=spot`
+    };
+  }
+
+  if (quote?.kind === "exchange-derived-eur" && config?.usdt) {
+    const base = config.usdt.replace(/USDT$/, "");
+    return {
+      provider: "Binance Spot",
+      pair: `${base}/USDT ÷ EUR/USDT`,
+      route: `${base}_USDT`,
+      unit: "EUR",
+      method: "Conversion de deux flux live",
+      url: `https://www.binance.com/fr/trade/${encodeURIComponent(base)}_USDT?type=spot`
+    };
+  }
+
+  if (String(quote?.kind || "").startsWith("coingecko")) {
+    const coinIdSafe = String(coinId || "").trim();
+    return {
+      provider: "CoinGecko",
+      pair: "EUR",
+      route: coinIdSafe,
+      unit: "EUR",
+      method: "Prix direct CoinGecko",
+      url: coinIdSafe
+        ? `https://www.coingecko.com/fr/coins/${encodeURIComponent(coinIdSafe)}`
+        : "https://www.coingecko.com/fr"
+    };
+  }
+
+  return {
+    provider: "Source indisponible",
+    pair: "—",
+    route: "",
+    unit: "EUR",
+    method: "Aucun prix actuel",
+    url: ""
+  };
+}
+
+function atlasQuoteReferenceLabel(quote, coinOrId) {
+  const reference = atlasQuoteMarketPair(quote, coinOrId);
+  return `${reference.provider} · ${reference.pair} · unité ${reference.unit}`;
+}
+
+function atlasQuoteReferenceLinkMarkup(quote, coinOrId) {
+  const reference = atlasQuoteMarketPair(quote, coinOrId);
+  if (!reference.url) return "";
+  return `<a class="atlas-chart-source-link"
+             href="${escapeHtml(reference.url)}"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Ouvrir la source ${escapeHtml(reference.provider)} ${escapeHtml(reference.pair)}">
+    Ouvrir ${escapeHtml(reference.provider)} ${escapeHtml(reference.pair)} ↗
+  </a>`;
 }
 
 function atlasExchangeRecount() {
@@ -4576,16 +4645,40 @@ function atlasExternalChartTooltip(context) {
     const palette = atlasCryptoPalette(row.coin, index);
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const current = atlasCurrentQuoteForCoin(row.coin?.id || row.coin);
-    const historical = Number.isFinite(row.rawPrice) ? atlasFormatEUR(row.rawPrice) : "indisponible";
-    const currentText = current.status === "live"
-      ? `ACTUEL ${atlasCurrentQuotePriceText(current)}`
-      : "PRIX DIRECT INDISPONIBLE";
-    const source = current.status === "live" ? current.source : "aucune source directe fraîche";
+    const reference = atlasQuoteMarketPair(current, row.coin?.id || row.coin);
+    const historical = Number.isFinite(row.rawPrice)
+      ? atlasFormatEUR(row.rawPrice)
+      : "indisponible";
+    const currentPrice = current.status === "live"
+      ? atlasCurrentQuotePriceText(current)
+      : "—";
+    const currentStatus = current.status === "live"
+      ? `PRIX LIVE · ${reference.provider} · ${reference.pair}`
+      : "PRIX ACTUEL INDISPONIBLE";
+    const method = current.status === "live"
+      ? `${reference.method} · unité ${reference.unit} · reçu ${atlasExactTimestampLabel(current.timestamp)}`
+      : "Aucune source directe fraîche";
+    const sourceLink = current.status === "live"
+      ? atlasQuoteReferenceLinkMarkup(current, row.coin?.id || row.coin)
+      : "";
     const base = Number.isFinite(row.baseValue)
-      ? `<small>Base 100 : ${row.baseValue.toFixed(2)}</small>`
+      ? `<small class="atlas-chart-base-value">Base 100 : ${row.baseValue.toFixed(2)}</small>`
       : "";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
-    return `<div class="atlas-chart-tooltip-row" style="${style}">${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}<span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span><span class="atlas-chart-tooltip-values"><strong>${escapeHtml(currentText)}</strong><small>${escapeHtml(source)}</small><small>POINT HISTORIQUE ${escapeHtml(historical)}</small>${base}</span></div>`;
+
+    return `<div class="atlas-chart-tooltip-row atlas-chart-tooltip-row-source" style="${style}">
+      ${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}
+      <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
+      <span class="atlas-chart-tooltip-values">
+        <small class="atlas-live-source-label">${escapeHtml(currentStatus)}</small>
+        <strong class="atlas-live-source-price">${escapeHtml(currentPrice)}</strong>
+        <small class="atlas-live-source-method">${escapeHtml(method)}</small>
+        ${sourceLink}
+        <small class="atlas-history-source-label">HISTORIQUE COINGECKO · POINT SURVOLÉ</small>
+        <strong class="atlas-history-source-price">${escapeHtml(historical)}</strong>
+        ${base}
+      </span>
+    </div>`;
   }).join("");
 
   node.innerHTML = `<div class="atlas-chart-tooltip-date">POINT HISTORIQUE · ${escapeHtml(title)}</div>${body}`;
@@ -7403,7 +7496,7 @@ function atlasRenderTopFiveRibbon() {
       ? `<img src="${escapeHtml(coin.image)}" alt="" loading="lazy">`
       : `<span class="top5-fallback">${escapeHtml(String(coin.symbol || "?").slice(0, 1))}</span>`;
     return `
-      <span class="top5-item ${quote.status === "live" ? "quote-live" : "quote-unavailable"}" data-top5-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison · ${escapeHtml(atlasCurrentQuoteTitle(quote))}" title="${escapeHtml(atlasCurrentQuoteTitle(quote))}" style="${atlasRibbonStyle(coin, index)}">
+      <span class="top5-item ${quote.status === "live" ? "quote-live" : "quote-unavailable"}" data-top5-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison · ${escapeHtml(atlasQuoteReferenceLabel(quote, coin))} · ${escapeHtml(atlasCurrentQuoteTitle(quote))}" title="${escapeHtml(atlasQuoteReferenceLabel(quote, coin))} · ${escapeHtml(atlasCurrentQuoteTitle(quote))}" style="${atlasRibbonStyle(coin, index)}">
         <span class="top5-identity">${image}<b>${escapeHtml(String(coin.symbol || "").toUpperCase())}</b></span>
         <strong class="top5-price">${escapeHtml(atlasCurrentQuotePriceText(quote))}</strong>
         <small class="top5-change ${variationClass}">${escapeHtml(atlasCurrentQuoteChangeText(quote))}</small>
@@ -7431,7 +7524,7 @@ function atlasRenderMarketFlowRibbon() {
       ? `${clsPct(variation)} ${atlasMoveStrengthClass(variation)}`
       : "";
     return `
-      <span class="ticker-item ${quote.status === "live" ? "quote-live" : "quote-unavailable"}" data-ticker-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison" title="${escapeHtml(atlasCurrentQuoteTitle(quote))}" style="${atlasRibbonStyle(coin, index + 5)}">
+      <span class="ticker-item ${quote.status === "live" ? "quote-live" : "quote-unavailable"}" data-ticker-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison · ${escapeHtml(atlasQuoteReferenceLabel(quote, coin))}" title="${escapeHtml(atlasQuoteReferenceLabel(quote, coin))} · ${escapeHtml(atlasCurrentQuoteTitle(quote))}" style="${atlasRibbonStyle(coin, index + 5)}">
         <i class="ticker-crypto-accent" aria-hidden="true"></i>
         <span class="ticker-symbol">${escapeHtml(coin.symbol)}</span>
         <span class="ticker-price">${escapeHtml(atlasCurrentQuotePriceText(quote))}</span>
