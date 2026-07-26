@@ -15632,3 +15632,121 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
 }
 
 /* Tableau crypto de survol : aucun sélecteur ni override dans ce patch. */
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.51
+   FORGE V3 COMPLETE EMBED · AUTONOMOUS SOURCE LOCK
+   ========================================================= */
+
+.forge-aerith-embedded-collapse {
+  overflow: clip !important;
+}
+
+.forge-aerith-embedded-panel {
+  gap: 16px !important;
+  padding: clamp(12px, 1.5vw, 20px) !important;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(112, 91, 255, .12), transparent 28rem),
+    radial-gradient(circle at 10% 0%, rgba(82, 239, 208, .075), transparent 24rem),
+    rgba(4, 10, 23, .88) !important;
+}
+
+.forge-embedded-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  min-width: 0 !important;
+  padding: 2px 2px 0 !important;
+}
+
+.forge-embedded-identity {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+.forge-embedded-identity .eyebrow {
+  margin: 0 !important;
+  color: #74ead9 !important;
+}
+
+.forge-embedded-identity > strong {
+  color: #fff1a8 !important;
+  font: 900 clamp(18px, 2vw, 28px)/1.12 system-ui, sans-serif !important;
+}
+
+.forge-embedded-identity > span {
+  color: rgba(195, 216, 234, .70) !important;
+  font: 650 11px/1.4 system-ui, sans-serif !important;
+}
+
+.forge-embedded-fullscreen {
+  flex: 0 0 auto !important;
+  min-height: 42px !important;
+  padding-inline: 16px !important;
+  border-color: rgba(242, 220, 116, .30) !important;
+  color: #fff0a4 !important;
+  background: linear-gradient(135deg, rgba(242,220,116,.12), rgba(86,232,255,.055)) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+.forge-embedded-stage {
+  position: relative !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(120, 165, 255, .22) !important;
+  border-radius: 18px !important;
+  background: #060914 !important;
+  box-shadow:
+    0 22px 58px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+.forge-embedded-loading {
+  position: absolute !important;
+  z-index: 1 !important;
+  inset: 0 auto auto 0 !important;
+  margin: 14px !important;
+  padding: 8px 11px !important;
+  border: 1px solid rgba(105, 237, 218, .20) !important;
+  border-radius: 999px !important;
+  color: #80efdc !important;
+  background: rgba(4, 15, 28, .86) !important;
+  font: 800 10px/1 system-ui, sans-serif !important;
+  letter-spacing: .04em !important;
+  pointer-events: none !important;
+  transition: opacity .22s ease, visibility .22s ease !important;
+}
+
+.forge-embedded-stage.is-ready .forge-embedded-loading {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.forge-embedded {
+  display: block !important;
+  width: 100% !important;
+  min-height: 1200px !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  background: #060914 !important;
+}
+
+@media (max-width: 760px) {
+  .forge-embedded-toolbar {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .forge-embedded-fullscreen {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .forge-embedded {
+    min-height: 980px !important;
+  }
+}

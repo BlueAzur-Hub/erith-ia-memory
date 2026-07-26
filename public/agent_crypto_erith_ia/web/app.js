@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.50 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.51 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.50";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.51";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -12191,3 +12191,93 @@ window.addEventListener("atlas:admin-graph", () => atlasChartOverlayUpdate());
 window.addEventListener("atlas:v2mode", () => atlasChartOverlayUpdate());
 window.setTimeout(atlasChartOverlayUpdate, 0);
 window.setTimeout(atlasChartOverlayUpdate, 800);
+
+
+/* =========================================================
+   Build 28.1.51 — Forge V3 complete same-origin embed
+   ========================================================= */
+const atlasForgeFrame = document.getElementById("forgeAerithEmbedded");
+const atlasForgeStage = document.getElementById("forgeEmbeddedStage");
+const atlasForgeCollapse = document.getElementById("forge-aerith");
+
+let atlasForgeResizeObserver = null;
+let atlasForgeMutationObserver = null;
+let atlasForgeLastHeight = 0;
+
+function atlasResizeForgeFrame() {
+  if (!atlasForgeFrame) return;
+
+  try {
+    const forgeDocument = atlasForgeFrame.contentDocument;
+    if (!forgeDocument) return;
+
+    const body = forgeDocument.body;
+    const root = forgeDocument.documentElement;
+    const measuredHeight = Math.max(
+      root?.scrollHeight || 0,
+      root?.offsetHeight || 0,
+      root?.clientHeight || 0,
+      body?.scrollHeight || 0,
+      body?.offsetHeight || 0,
+      body?.clientHeight || 0,
+      1200
+    );
+
+    if (Math.abs(measuredHeight - atlasForgeLastHeight) > 2) {
+      atlasForgeLastHeight = measuredHeight;
+      atlasForgeFrame.style.height = `${measuredHeight}px`;
+    }
+  } catch (error) {
+    console.warn("Redimensionnement Forge indisponible :", error);
+  }
+}
+
+function atlasScheduleForgeResize() {
+  window.requestAnimationFrame(atlasResizeForgeFrame);
+  window.setTimeout(atlasResizeForgeFrame, 120);
+  window.setTimeout(atlasResizeForgeFrame, 500);
+  window.setTimeout(atlasResizeForgeFrame, 1200);
+}
+
+function atlasObserveForgeDocument() {
+  if (!atlasForgeFrame) return;
+
+  try {
+    const forgeDocument = atlasForgeFrame.contentDocument;
+    if (!forgeDocument) return;
+
+    atlasForgeResizeObserver?.disconnect();
+    atlasForgeMutationObserver?.disconnect();
+
+    if ("ResizeObserver" in window) {
+      atlasForgeResizeObserver = new ResizeObserver(atlasScheduleForgeResize);
+      if (forgeDocument.documentElement) atlasForgeResizeObserver.observe(forgeDocument.documentElement);
+      if (forgeDocument.body) atlasForgeResizeObserver.observe(forgeDocument.body);
+    }
+
+    atlasForgeMutationObserver = new MutationObserver(atlasScheduleForgeResize);
+    if (forgeDocument.body) {
+      atlasForgeMutationObserver.observe(forgeDocument.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: false,
+      });
+    }
+  } catch (error) {
+    console.warn("Observation Forge indisponible :", error);
+  }
+}
+
+atlasForgeFrame?.addEventListener("load", () => {
+  atlasForgeStage?.classList.add("is-ready");
+  atlasObserveForgeDocument();
+  atlasScheduleForgeResize();
+});
+
+atlasForgeCollapse?.addEventListener("toggle", () => {
+  if (atlasForgeCollapse.open) atlasScheduleForgeResize();
+});
+
+window.addEventListener("resize", atlasScheduleForgeResize);
+window.addEventListener("orientationchange", atlasScheduleForgeResize);
