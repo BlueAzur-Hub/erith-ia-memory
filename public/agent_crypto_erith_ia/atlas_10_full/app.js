@@ -8,10 +8,10 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-v3-final";
+  const STORAGE_KEY = "aerith-forge-v3-4-existing-profile-sync";
   const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
   document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
-  const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
+  const LEGACY_STORAGE_KEYS = [];
 
   const STEPS = [
     ["01", "Intention", "Choisir une identité canonique ou ouvrir une nouvelle voie."],
@@ -59,7 +59,19 @@
     validationStatus: "À CONCEVOIR",
     personaStatus: "PERSONA À CONSTRUIRE",
     githubChecked: "",
-    imagePath: ""
+    imagePath: "",
+    repositoryProfile: false,
+    repositoryComplete: false,
+    humanConfirmed: false,
+    coreRepositoryConfirmed: false,
+    personaRepositoryConfirmed: false,
+    personaVersion: "",
+    bootPath: "",
+    blockPath: "",
+    bootStatus: "",
+    blockStatus: "",
+    repositoryStatus: "",
+    repositorySyncNote: ""
   });
 
   function identityFromProfile(selected) {
@@ -96,7 +108,19 @@
       validationStatus: selected.validationStatus || "À VÉRIFIER",
       personaStatus: selected.personaStatus || (selected.privacy === "public" ? "PERSONA PUBLIQUE INCLUSE" : "PERSONA À VÉRIFIER"),
       githubChecked: selected.githubChecked || "",
-      imagePath: selected.visual || ""
+      imagePath: selected.visual || "",
+      repositoryProfile: Boolean(selected.repositoryProfile),
+      repositoryComplete: Boolean(selected.repositoryComplete),
+      humanConfirmed: Boolean(selected.humanConfirmed),
+      coreRepositoryConfirmed: Boolean(selected.coreRepositoryConfirmed),
+      personaRepositoryConfirmed: Boolean(selected.personaRepositoryConfirmed),
+      personaVersion: selected.personaVersion || "",
+      bootPath: selected.bootPath || "",
+      blockPath: selected.blockPath || "",
+      bootStatus: selected.bootStatus || "",
+      blockStatus: selected.blockStatus || "",
+      repositoryStatus: selected.repositoryStatus || "",
+      repositorySyncNote: selected.repositorySyncNote || ""
     };
   }
 
@@ -168,7 +192,15 @@
   }
 
   function isNew() {
-    return state.profileId === "new";
+    return state.profileId === "new" && !state.identity.repositoryProfile;
+  }
+
+  function isRepositoryProfile() {
+    return Boolean(state.identity.repositoryProfile);
+  }
+
+  function isRepositoryComplete() {
+    return Boolean(state.identity.repositoryComplete);
   }
 
   function esc(value) {
@@ -462,7 +494,19 @@
       validationStatus:item.validationStatus || "À VÉRIFIER",
       personaStatus:item.personaStatus || "PERSONA À VÉRIFIER",
       githubChecked:item.githubChecked || "",
-      imagePath:""
+      imagePath:"",
+      repositoryProfile:Boolean(item.repositoryProfile || item.coreRepositoryConfirmed),
+      repositoryComplete:Boolean(item.repositoryComplete),
+      humanConfirmed:Boolean(item.humanConfirmed),
+      coreRepositoryConfirmed:Boolean(item.coreRepositoryConfirmed),
+      personaRepositoryConfirmed:Boolean(item.personaRepositoryConfirmed),
+      personaVersion:item.personaVersion || "",
+      bootPath:item.bootPath || "",
+      blockPath:item.blockPath || "",
+      bootStatus:item.bootStatus || "",
+      blockStatus:item.blockStatus || "",
+      repositoryStatus:item.repositoryStatus || "",
+      repositorySyncNote:item.repositorySyncNote || ""
     };
   }
 
@@ -478,7 +522,7 @@
     state.profileId = "new";
     state.selectedExample = `flower:${id}`;
     state.identity = flowerIdentity(item);
-    state.canonicalConfirmed = false;
+    state.canonicalConfirmed = Boolean(item.humanConfirmed);
     state.imports = [];
     state.visualUrl = "";
     state.step = 0;
@@ -637,14 +681,20 @@
         <p>${esc(state.identity.role || p.description)}</p>
         <div class="meta"><span>${esc(state.identity.family)}</span><span>${esc(state.identity.level)}</span><span>${esc(state.identity.status)}</span></div>
       </div>`;
-    $("#profileStatus").textContent = isNew() ? "CRÉATION EN COURS" : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
+    $("#profileStatus").textContent = isRepositoryComplete()
+      ? "PROFIL EXISTANT COMPLET"
+      : isRepositoryProfile()
+        ? "PROFIL EXISTANT · À COMPLÉTER"
+        : isNew()
+          ? "CRÉATION EN COURS"
+          : (p.privacy === "public" ? "PUBLIC INCLUS" : "PRIVÉ · IMPORT LOCAL");
   }
 
 
   function maturityState() {
     const i = state.identity;
     const audit = finalAudit();
-    if (audit.ready) return "PRÊTE À ACTIVER";
+    if (audit.profileReady) return "PRÊTE À ACTIVER";
     if (state.canonicalConfirmed && importedKind("core") && importedKind("persona")) return "SOURCES VALIDÉES";
     if (state.canonicalConfirmed) return "VALIDATION HUMAINE";
     if (proposalAudit().ready && state.step >= 5) return "PRÊTE POUR VALIDATION";
@@ -687,7 +737,7 @@
     $("#matrixSymbol").textContent = p.sigil;
     $("#matrixKicker").textContent = isNew() ? "CRÉATION ACCOMPAGNÉE" : "PROFIL CANONIQUE";
     $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
-    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
+    $("#matrixState").textContent = finalAudit().profileReady ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
     const image = $("#matrixImage");
     image.src = currentVisual();
     image.hidden = !currentVisual();
@@ -803,9 +853,15 @@
       checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
       checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
     } else if (state.step === 5) {
-      checks.push(["ok", "Core Proposal"]);
-      checks.push(["ok", "Persona Proposal"]);
-      checks.push(["ok", "Brief de validation"]);
+      if (isRepositoryComplete()) {
+        checks.push(["ok", "Core existant confirmé"]);
+        checks.push(["ok", state.identity.personaStatus || "Persona liée"]);
+        checks.push(["ok", "Aucun fichier PROPOSAL requis"]);
+      } else {
+        checks.push(["ok", "Core Proposal"]);
+        checks.push(["ok", "Persona Proposal"]);
+        checks.push(["ok", "Brief de validation"]);
+      }
       actionType = "next";
       actionLabel = "Poursuivre vers les sources";
     } else if (state.step === 6) {
@@ -818,30 +874,39 @@
       } else {
         const core = importedKind("core");
         const persona = importedKind("persona");
-        checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
-        checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
-        checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
-        if (core && persona && state.canonicalConfirmed) {
-          stateLabel = "SOURCES PRÊTES";
+        if (isRepositoryComplete()) {
+          checks.push(["ok", "Profil complet dans le dépôt privé"]);
+          checks.push([core && persona ? "ok" : "warn", core && persona ? "Core et Persona chargés localement" : "Imports locaux facultatifs pour le ZIP"]);
+          checks.push(["ok", "Validation humaine confirmée"]);
+          stateLabel = core && persona ? "ZIP LOCAL PRÊT" : "DÉPÔT SYNCHRONISÉ";
           actionType = "goto-final";
           actionLabel = "Vérifier la Forge finale";
         } else {
-          stateLabel = "SOURCES À RÉUNIR";
-          actionType = "files";
-          actionLabel = "Choisir les fichiers canoniques";
+          checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
+          checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
+          checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
+          if (core && persona && state.canonicalConfirmed) {
+            stateLabel = "SOURCES PRÊTES";
+            actionType = "goto-final";
+            actionLabel = "Vérifier la Forge finale";
+          } else {
+            stateLabel = "SOURCES À RÉUNIR";
+            actionType = "files";
+            actionLabel = "Choisir les fichiers canoniques";
+          }
         }
       }
     } else if (state.step === 7) {
       const audit = finalAudit();
-      checks.push([audit.ready ? "ok" : "warn", audit.ready ? "Architecture complète" : "Audit à compléter"]);
+      checks.push([audit.profileReady ? "ok" : "warn", audit.profileReady ? "Profil complet" : "Audit à compléter"]);
       checks.push(["ok", `${i.modules.length} module(s) référencé(s)`]);
-      if (audit.ready) {
-        stateLabel = "PRÊT À FORGER";
-        actionType = "forge";
-        actionLabel = "Télécharger le paquet final";
+      if (audit.profileReady) {
+        stateLabel = audit.packageReady ? "PRÊT À FORGER" : "PROFIL COMPLET";
+        actionType = audit.packageReady ? "forge" : "files";
+        actionLabel = audit.packageReady ? "Télécharger le paquet final" : "Importer seulement pour le ZIP";
       } else {
         stateLabel = "À VÉRIFIER";
-        actionType = "sources";
+        actionType = "files";
         actionLabel = "Revenir aux sources";
       }
     }
@@ -874,10 +939,13 @@
   function renderCompletion(audit = finalAudit()) {
     const card = $("#completionCard");
     if (!card) return;
-    card.hidden = !audit.ready;
-    if (!audit.ready) return;
-    $("#completionTitle").textContent = `${state.identity.name} est prête`;
-    $("#completionMessage").textContent = "Identité, Core, Persona, sources, modules et Stop Point sont réunis. Le paquet canonique peut être téléchargé.";
+    card.hidden = !audit.profileReady;
+    if (!audit.profileReady) return;
+    $("#completionTitle").textContent = `${state.identity.name} est complète`;
+    $("#completionMessage").textContent = audit.packageReady
+      ? "Le profil est synchronisé et les contenus locaux permettent de produire le paquet complet."
+      : "Le profil est complet dans le dépôt privé. L’import local du Core et de la Persona n’est requis que pour reconstruire le ZIP final.";
+    $("#completionZip").disabled = !audit.packageReady;
   }
 
   function activateStep(index, focus = false) {
@@ -1148,9 +1216,26 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     ];
   }
 
+  function existingProfileReport() {
+    const i = state.identity;
+    return `# ${i.name} — PROFIL EXISTANT\n\nStatut dépôt : ${i.repositoryStatus || "PROFIL EXISTANT"}\nCore : ${i.coreVersion || "Version connue"} — ${i.corePath || defaultCoreTarget()}\nPersona : ${i.personaVersion || "Version liée"} — ${i.personaPath || defaultPersonaTarget()}\nBoot : ${i.bootStatus || "À vérifier"}${i.bootPath ? ` — ${i.bootPath}` : ""}\nBlock LLM : ${i.blockStatus || "À vérifier"}${i.blockPath ? ` — ${i.blockPath}` : ""}\n\n${i.repositorySyncNote || "Le profil est relié au dépôt privé."}\n\nAucune proposition Core ou Persona n’est nécessaire. L’import local sert seulement à reconstruire un ZIP complet contenant les fichiers privés.`;
+  }
+
   function renderProposal() {
     const items = proposalAudit();
     $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
+    const completeExisting = isRepositoryComplete();
+    $("#proposalTitle").textContent = completeExisting ? "Vérifier le profil existant" : "Découvrir la proposition de Créatrice";
+    $("#proposalIntro").textContent = completeExisting
+      ? "Le Core, la Persona, le Boot et le Block LLM sont déjà reliés dans le dépôt privé. La Forge affiche leur état sans générer de faux fichiers PROPOSAL."
+      : "Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.";
+    $("#proposalTabs").hidden = completeExisting;
+    $("#proposalExportGrid").hidden = completeExisting;
+    if (completeExisting) {
+      $("#proposalPreview").textContent = existingProfileReport();
+      $("#canonRoute").innerHTML = `<b>Profil existant synchronisé</b><p>Aucune nouvelle proposition n’est requise. Passez aux sources seulement si vous souhaitez reconstruire un ZIP local avec les fichiers privés.</p><code>${esc(defaultCoreTarget())}</code><code>${esc(defaultPersonaTarget())}</code>`;
+      return;
+    }
     const docs = {core:proposalCore(), persona:proposalPersona(), brief:designBrief()};
     $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
     $$("#proposalTabs button").forEach(button => button.classList.toggle("active", button.dataset.preview === state.proposalPreview));
@@ -1238,12 +1323,20 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     const total = state.imports.reduce((sum, item) => sum + item.file.size, 0);
     $("#importCount").textContent = state.imports.length;
     $("#importSize").textContent = formatSize(total);
+    $("#sourcesTitle").textContent = isRepositoryComplete() ? "Sources locales facultatives" : "Réunir les fichiers validés";
+    $("#sourcesIntro").textContent = isRepositoryComplete()
+      ? "Le profil est déjà complet dans le dépôt privé. Importer le Core et la Persona uniquement pour reconstruire un ZIP local contenant leur contenu."
+      : "Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.";
+    $("#dropzoneTitle").textContent = isRepositoryComplete() ? "Importer pour reconstruire le ZIP local" : "Déposer le Core et la Persona canoniques";
+    $("#dropzoneIntro").textContent = isRepositoryComplete()
+      ? "Aucun import n’est nécessaire pour reconnaître le profil comme complet. Le traitement reste local dans le navigateur."
+      : "Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.";
     $("#importList").innerHTML = state.imports.length ? state.imports.map((item, index) => `
       <div class="import-item">
         <span class="file-kind">${esc(item.kind.toUpperCase())}</span>
         <span><b>${esc(item.path)}</b><small>${formatSize(item.file.size)}</small></span>
         <button class="remove-file" type="button" data-remove-import="${index}">Retirer</button>
-      </div>`).join("") : `<div class="route-box"><b>Aucun import local</b><p>Les profils publics peuvent être exportés avec leurs sources intégrées. Les profils privés exigent leurs fichiers locaux.</p></div>`;
+      </div>`).join("") : `<div class="route-box"><b>Aucun import local</b><p>${isRepositoryComplete() ? "Le profil reste complet dans le dépôt. Importez seulement le Core et la Persona pour produire un ZIP local à huit fichiers." : "Les profils publics peuvent être exportés avec leurs sources intégrées. Les profils privés exigent leurs fichiers locaux."}</p></div>`;
   }
 
   function importedKind(kind) {
@@ -1253,62 +1346,70 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
   function finalAudit() {
     const p = profile();
     const items = [];
-    let ready = true;
+    let profileReady = true;
     let completed = 0;
     let total = 0;
     const core = importedKind("core");
     const persona = importedKind("persona");
     const coreProposal = importedKind("core-proposal");
     const personaProposal = importedKind("persona-proposal");
-    const add = (type, title, detail, counts = true, done = type === "ok") => {
+    const add = (type, title, detail, counts = true, done = ["ok","repo"].includes(type)) => {
       items.push([type, title, detail]);
       if (counts) { total += 1; if (done) completed += 1; }
     };
 
     if (state.identity.name) add("ok", "Identité", `${state.identity.name} est définie.`);
-    else { add("error", "Identité", "Nom manquant.", true, false); ready = false; }
+    else { add("error", "Identité", "Nom manquant.", true, false); profileReady = false; }
 
     if (state.identity.role) add("ok", "Mission", "Rôle défini.");
-    else { add("error", "Mission", "Rôle manquant.", true, false); ready = false; }
+    else { add("error", "Mission", "Rôle manquant.", true, false); profileReady = false; }
 
     if (p.privacy === "public") {
       add("ok", "Sources canoniques", "Core et Persona publics intégrés à la Forge.");
     } else {
-      if (state.canonicalConfirmed) add("ok", "Validation humaine", "Confirmation enregistrée.");
-      else { add("warn", "À valider", "Confirmation humaine attendue.", true, false); ready = false; }
+      if (state.canonicalConfirmed || state.identity.humanConfirmed) add("ok", "Validation humaine", "Confirmation enregistrée.");
+      else { add("warn", "À valider", "Confirmation humaine attendue.", true, false); profileReady = false; }
 
-      if (core) add("ok", "Core canonique", `${core.file.name} importé.`);
-      else {
-        const known = state.identity.coreStatus || "CORE PRIVÉ RÉFÉRENCÉ";
-        add("warn", "À importer — Core", `${known}. Le chemin est connu, mais le contenu privé n’est pas chargé dans le navigateur.`, true, false);
-        ready = false;
+      if (core) add("ok", "Core local chargé", `${core.file.name} importé.`);
+      else if (state.identity.coreRepositoryConfirmed) {
+        add("repo", "Core confirmé dans le dépôt", `${state.identity.coreVersion || "Version connue"} · ${state.identity.corePath || defaultCoreTarget()}`);
+        add("local", "Contenu local Core", "Non chargé. Requis uniquement pour reconstruire le ZIP complet.", false);
+      } else {
+        add("warn", "Core à importer ou confirmer", `${state.identity.coreStatus || "CORE PRIVÉ RÉFÉRENCÉ"}.`, true, false);
+        profileReady = false;
       }
 
-      if (persona) add("ok", "Persona canonique", `${persona.file.name} importée.`);
-      else {
-        const personaState = state.identity.personaStatus || "PERSONA À VÉRIFIER";
-        add("warn", "À importer — Persona", `${personaState}. Importer la Persona réelle lorsqu’elle est disponible.`, true, false);
-        ready = false;
+      if (persona) add("ok", "Persona locale chargée", `${persona.file.name} importée.`);
+      else if (state.identity.personaRepositoryConfirmed) {
+        add("repo", "Persona confirmée dans le dépôt", `${state.identity.personaStatus || "PERSONA LIÉE"} · ${state.identity.personaPath || defaultPersonaTarget()}`);
+        add("local", "Contenu local Persona", "Non chargé. Requis uniquement pour reconstruire le ZIP complet.", false);
+      } else {
+        add("warn", "Persona à importer ou relier", `${state.identity.personaStatus || "PERSONA À VÉRIFIER"}.`, true, false);
+        profileReady = false;
       }
 
-      if (coreProposal) add("info", "Proposition Core", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
-      if (personaProposal) add("info", "Proposition Persona", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
+      if (state.identity.bootPath) add("repo", "Boot lié", `${state.identity.bootStatus || "BOOT LIÉ"} · ${state.identity.bootPath}`);
+      if (state.identity.blockPath) add("repo", "Block LLM lié", `${state.identity.blockStatus || "BLOCK LLM LIÉ"} · ${state.identity.blockPath}`);
+
+      if (coreProposal) add("info", "Proposition Core ignorée", `${coreProposal.file.name} reste un document de travail et n’entre jamais dans le ZIP final.`, false);
+      if (personaProposal) add("info", "Proposition Persona ignorée", `${personaProposal.file.name} reste un document de travail et n’entre jamais dans le ZIP final.`, false);
     }
 
     const corePath = state.identity.corePath || defaultCoreTarget();
     const personaPath = state.identity.personaPath || defaultPersonaTarget();
     if (corePath) add("ok", "Chemin Core", corePath);
-    else { add("error", "Chemin Core", "Chemin manquant.", true, false); ready = false; }
+    else { add("error", "Chemin Core", "Chemin manquant.", true, false); profileReady = false; }
     if (personaPath) add("ok", "Chemin Persona", personaPath);
-    else { add("error", "Chemin Persona", "Chemin manquant.", true, false); ready = false; }
+    else { add("error", "Chemin Persona", "Chemin manquant.", true, false); profileReady = false; }
 
     if (state.identity.modules.length) add("ok", "Modules", `${state.identity.modules.length} référence(s), sans copie.`);
     else add("info", "Modules", "Aucun module complémentaire.", false);
     if (state.identity.stopPoint) add("ok", "Stop Point", "Défini.");
-    else { add("error", "Stop Point", "Manquant.", true, false); ready = false; }
+    else { add("error", "Stop Point", "Manquant.", true, false); profileReady = false; }
 
+    const packageReady = p.privacy === "public" ? profileReady : profileReady && Boolean(core && persona);
     const validationPercent = total ? Math.round(completed / total * 100) : 0;
-    return {ready, items, validationPercent, completed, total};
+    return {ready: profileReady, profileReady, packageReady, items, validationPercent, completed, total};
   }
 
   function profileSpec() {
@@ -1318,6 +1419,14 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
       unified_flow: true,
       profile_id: state.profileId,
       identity: clone(state.identity),
+      repository: {
+        profile_complete: Boolean(state.identity.repositoryComplete),
+        core_confirmed: Boolean(state.identity.coreRepositoryConfirmed),
+        persona_confirmed: Boolean(state.identity.personaRepositoryConfirmed),
+        boot_path: state.identity.bootPath || "",
+        block_path: state.identity.blockPath || "",
+        sync_note: state.identity.repositorySyncNote || ""
+      },
       canonical: {
         human_confirmed: state.canonicalConfirmed,
         core_path: state.identity.corePath || defaultCoreTarget(),
@@ -1420,17 +1529,18 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
 
   function renderFinal() {
     const audit = finalAudit();
-    $("#finalStatus").textContent = audit.ready ? "PRÊT" : "À COMPLÉTER";
-    $("#finalStatus").style.color = audit.ready ? "var(--green)" : "var(--gold)";
+    $("#finalStatus").textContent = audit.profileReady ? "PROFIL COMPLET" : "À COMPLÉTER";
+    $("#finalStatus").style.color = audit.profileReady ? "var(--green)" : "var(--gold)";
     $("#finalSummary").innerHTML = [
       ["Profil", state.identity.name],
       ["Parcours", "100 %"],
       ["Validation", `${audit.validationPercent} %`],
-      ["Sources importées", String(state.imports.length)],
+      ["Dépôt privé", audit.profileReady ? "SYNCHRONISÉ" : "À COMPLÉTER"],
+      ["Contenu local", importedKind("core") && importedKind("persona") ? "CHARGÉ" : "NON CHARGÉ"],
       ["Modules référencés", String(state.identity.modules.length)],
-      ["État", audit.ready ? "PRÊT" : "À COMPLÉTER"]
+      ["ZIP local", audit.packageReady ? "DISPONIBLE" : "IMPORTS REQUIS"]
     ].map(item => `<div class="summary-card"><span>${esc(item[0])}</span><b>${esc(item[1])}</b></div>`).join("");
-    const labels = {ok:"PRÊT", warn:"À FAIRE", info:"INFO", error:"ERREUR"};
+    const labels = {ok:"PRÊT", repo:"DÉPÔT", local:"LOCAL", warn:"À FAIRE", info:"INFO", error:"ERREUR"};
     $("#finalAudit").innerHTML = audit.items.map(item => `<div class="audit-row ${item[0]}"><span>${esc(labels[item[0]] || item[0].toUpperCase())}</span><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
     const docs = {
       boot: bootDocument(),
@@ -1441,9 +1551,11 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     };
     $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
-    $("#forgeZip").disabled = !audit.ready;
+    $("#forgeZip").disabled = !audit.packageReady;
     renderCompletion(audit);
-    if (!audit.ready) $("#forgeLog").textContent = "Paquet final disponible après les éléments « À valider » et « À importer ».";
+    if (audit.profileReady && !audit.packageReady) $("#forgeLog").textContent = "Profil complet dans le dépôt privé. Importer localement le Core et la Persona seulement pour reconstruire le ZIP final.";
+    else if (!audit.profileReady) $("#forgeLog").textContent = "Profil à compléter avant validation.";
+    else $("#forgeLog").textContent = "Profil complet et contenu local prêt pour le ZIP final.";
   }
 
   function renderAll() {
@@ -1472,7 +1584,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
 
   async function buildFinalFiles() {
     const audit = finalAudit();
-    if (!audit.ready) throw new Error("Le Core et la Persona canoniques sont requis avant la forge finale.");
+    if (!audit.packageReady) throw new Error("Le profil est complet dans le dépôt, mais le Core et la Persona doivent être importés localement pour reconstruire le ZIP final.");
 
     const root = cleanName(state.identity.name);
     const files = new Map();

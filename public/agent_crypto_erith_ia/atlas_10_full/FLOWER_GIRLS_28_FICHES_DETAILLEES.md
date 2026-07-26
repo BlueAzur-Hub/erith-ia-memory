@@ -1,4 +1,4 @@
-# 28 FLOWER GIRLS — FICHES DÉTAILLÉES V3.3
+# 28 FLOWER GIRLS — FICHES DÉTAILLÉES V3.4
 
 Ces fiches alimentent directement l’Atelier Créatrice. Les statuts GitHub sont séparés des propositions de Persona.
 
@@ -210,7 +210,10 @@ La mission est terminée lorsque la sortie attendue est livrée, vérifiable et 
 **Protection :** STANDARD  
 **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE  
 **Persona :** `core/AERITH_10_ROUTEUSE_PERSONA_OPERATING_LAYER.md`  
-**État Persona :** PERSONA À CRÉER / RELIER  
+**État Persona :** PERSONA LIÉE V1  
+**Boot :** `core/AERITH_10_ROUTEUSE_BOOT.md`  
+**Block LLM :** `core/AERITH_10_ROUTEUSE_BLOCK_LLM.md`  
+**État dépôt :** PROFIL EXISTANT COMPLET  
 
 ### Mission
 

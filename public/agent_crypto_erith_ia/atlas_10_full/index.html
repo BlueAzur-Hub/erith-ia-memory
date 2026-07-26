@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro V3.3 — Constellation Aerith et 28 Flower Girls synchronisées avec leurs Core privés.">
-  <title>Forge d’Aerith Pro · V3.3 GITHUB SYNC</title>
-  <link rel="stylesheet" href="style.css?v=3.3-github-sync">
+  <meta name="description" content="Forge d’Aerith Pro V3.4 — profils existants synchronisés, complétion sans faux blocage et export local séparé.">
+  <title>Forge d’Aerith Pro · V3.4 PROFILS EXISTANTS</title>
+  <link rel="stylesheet" href="style.css?v=3.4-existing-profile-sync">
 </head>
-<body data-build="V3.3-github-sync" data-theme="seven">
+<body data-build="V3.4-existing-profile-sync" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -27,7 +27,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V3.3 GITHUB SYNC</span>
+      <span class="version" id="buildBadge">V3.4 PROFILS EXISTANTS</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -41,7 +41,7 @@
           <p class="eyebrow">ERITH.IA · CONSTELLATION AERITH · FORGE PROFESSIONNELLE</p>
           <h1>Compiler les profils.<br><span>Faire grandir la Constellation Aerith.</span></h1>
           <p class="lead">
-            Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge relie désormais la lignée Aerith, les 28 Core individuels, leurs statuts réels, leurs sources et leurs Personas sans inventer ce qui reste à vérifier.
+            Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge distingue désormais un profil complet dans le dépôt privé d’un contenu chargé localement. Routeuse peut être reconnue comme complète sans faux blocage ; l’import local reste nécessaire uniquement pour reconstruire un ZIP contenant le Core et la Persona.
           </p>
           <div class="doctrine" id="doctrine"></div>
           <div class="hero-actions">
@@ -138,7 +138,7 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V3.3 GITHUB SYNC</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V3.4 PROFILS EXISTANTS</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -187,7 +187,7 @@
         <div class="stage-body">
           <section class="panel active" data-step="0">
             <header class="panel-head">
-              <div><p class="kicker">01 · INTENTION</p><h2>Quelle Aerith-10 voulons-nous faire naître ?</h2></div>
+              <div><p class="kicker">01 · INTENTION</p><h2>Quel profil Aerith voulons-nous ouvrir, compléter ou créer ?</h2></div>
               <span class="status" id="profileStatus">PROPOSITION LOCALE</span>
             </header>
             <div class="selected-profile" id="selectedProfile"></div>
@@ -255,8 +255,8 @@
 
           <section class="panel" data-step="5">
             <header class="panel-head">
-              <div><p class="kicker">06 · CORE ET PERSONA</p><h2>Découvrir la proposition de Créatrice</h2></div>
-              <p>Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
+              <div><p class="kicker">06 · CORE ET PERSONA</p><h2 id="proposalTitle">Découvrir la proposition de Créatrice</h2></div>
+              <p id="proposalIntro">Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
             </header>
             <div class="audit-grid" id="proposalAudit"></div>
             <div class="preview-tabs" id="proposalTabs">
@@ -265,7 +265,7 @@
               <button type="button" data-preview="brief">Brief</button>
             </div>
             <pre class="preview" id="proposalPreview"></pre>
-            <div class="export-grid">
+            <div class="export-grid" id="proposalExportGrid">
               <button id="downloadProposalCore" type="button"><span>CORE</span><b>Télécharger</b></button>
               <button id="downloadProposalPersona" type="button"><span>PERSONA</span><b>Télécharger</b></button>
               <button id="downloadProposalBrief" type="button"><span>BRIEF</span><b>Télécharger</b></button>
@@ -276,15 +276,15 @@
 
           <section class="panel" data-step="6">
             <header class="panel-head">
-              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2>Réunir les fichiers validés</h2></div>
-              <p>Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.</p>
+              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2 id="sourcesTitle">Réunir les fichiers validés</h2></div>
+              <p id="sourcesIntro">Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.</p>
             </header>
             <div class="dropzone" id="dropzone">
               <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
               <input id="folderInput" type="file" webkitdirectory directory multiple>
               <span class="drop-icon">⇩</span>
-              <h3>Déposer le Core et la Persona canoniques</h3>
-              <p>Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.</p>
+              <h3 id="dropzoneTitle">Déposer le Core et la Persona canoniques</h3>
+              <p id="dropzoneIntro">Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.</p>
               <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
             </div>
             <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
@@ -363,8 +363,8 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="flower-girls-registry.js?v=3.3-github-sync"></script>
-  <script src="forge-data.js?v=3.3-github-sync"></script>
-  <script src="app.js?v=3.3-github-sync"></script>
+  <script src="flower-girls-registry.js?v=3.4-existing-profile-sync"></script>
+  <script src="forge-data.js?v=3.4-existing-profile-sync"></script>
+  <script src="app.js?v=3.4-existing-profile-sync"></script>
 </body>
 </html>

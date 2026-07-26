@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3-github-sync",
+  version: "V3.4-existing-profile-sync",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -49,12 +49,12 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Réunir les sources canoniques",
-        message: "Pour un profil privé, la Forge distingue désormais le Core individuel existant, sa validation humaine et la Persona réellement reliée. Importer seulement les fichiers canoniques disponibles.",
+        message: "Pour un profil privé existant, la Forge distingue désormais l’état du dépôt et le contenu local. Un profil confirmé dans le dépôt peut être complet sans que ses fichiers soient chargés dans le navigateur ; l’import local sert uniquement à reconstruire un ZIP complet.",
         action: "Vérifier les sources"
       },
       {
         title: "Forger le paquet final",
-        message: "L’audit rassemble identité, sources, modules et Stop Point. Lorsque tout est prêt, le paquet canonique contient huit fichiers utiles.",
+        message: "L’audit sépare maintenant le profil complet dans le dépôt du paquet local exportable. Le profil peut être prêt même si le Core et la Persona ne sont pas chargés localement.",
         action: "Forger le profil"
       }
     ],
