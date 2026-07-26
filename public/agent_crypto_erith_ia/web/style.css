@@ -15894,3 +15894,146 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
     max-width: calc(100% - 20px) !important;
   }
 }
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.54
+   WORKSPACE MEMORY · IN-CHART BOTTOM REPRISE
+   GRAPH HEIGHT GROWTH · FORGE LOCK
+   ========================================================= */
+
+#analyste .atlas-workspace-reprise {
+  position: absolute !important;
+  z-index: 13 !important;
+  left: 8px !important;
+  right: 8px !important;
+  bottom: 7px !important;
+  min-height: 36px !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 7px 10px !important;
+  border: 1px solid rgba(98, 236, 255, .18) !important;
+  border-radius: 11px !important;
+  background:
+    linear-gradient(90deg,
+      rgba(3, 13, 26, .91),
+      rgba(5, 20, 37, .78) 62%,
+      rgba(8, 25, 43, .56)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 8px 24px rgba(0,0,0,.18) !important;
+  backdrop-filter: blur(9px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(118%) !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+#analyste .atlas-workspace-reprise[data-state="restored"] {
+  border-color: rgba(244, 211, 134, .42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    inset 3px 0 0 rgba(244,211,134,.82),
+    0 10px 28px rgba(0,0,0,.20) !important;
+}
+
+#analyste .atlas-workspace-reprise-kicker {
+  color: #72ecff !important;
+  font: 900 9px/1 system-ui, sans-serif !important;
+  letter-spacing: .12em !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-workspace-reprise[data-state="restored"] .atlas-workspace-reprise-kicker {
+  color: #f4d386 !important;
+}
+
+#analyste .atlas-workspace-reprise > b {
+  overflow: hidden !important;
+  color: #f7ead0 !important;
+  font: 880 10px/1.2 system-ui, sans-serif !important;
+  letter-spacing: .018em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-workspace-reprise > small {
+  overflow: hidden !important;
+  max-width: 520px !important;
+  color: rgba(189, 218, 237, .78) !important;
+  font: 740 9px/1.2 system-ui, sans-serif !important;
+  text-align: right !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Grow the frame, then reserve the new lower band.
+   The plot keeps its previous usable height. */
+#analyste.champagne-clean-lens .chart-shell,
+#analyste.champagne-clean-lens.detail-collapsed .chart-shell,
+#analyste.champagne-clean-lens:not(.detail-collapsed) .chart-shell {
+  height: clamp(507px, calc(59vh + 42px), 647px) !important;
+  min-height: 507px !important;
+  max-height: 647px !important;
+}
+
+#analyste.champagne-clean-lens #mainChart,
+#analyste.champagne-clean-lens.detail-collapsed #mainChart,
+#analyste.champagne-clean-lens:not(.detail-collapsed) #mainChart {
+  height: calc(100% - 42px) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-shell,
+html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  height: clamp(632px, calc(68vh + 42px), 832px) !important;
+  min-height: 632px !important;
+  max-height: 832px !important;
+}
+
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens .chart-shell,
+html[data-atlas-viewport="transformer"] #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+  height: clamp(467px, calc(55vh + 42px), 572px) !important;
+  min-height: 467px !important;
+  max-height: 572px !important;
+}
+
+@media (max-width: 1180px) {
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens .chart-shell,
+  html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus > #analyste.champagne-clean-lens.detail-collapsed .chart-shell {
+    height: clamp(542px, calc(63vh + 42px), 692px) !important;
+    min-height: 542px !important;
+    max-height: 692px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  #analyste .atlas-workspace-reprise {
+    grid-template-columns: 1fr !important;
+    gap: 3px !important;
+    min-height: 52px !important;
+    padding: 7px 9px !important;
+  }
+
+  #analyste .atlas-workspace-reprise > b,
+  #analyste .atlas-workspace-reprise > small {
+    max-width: none !important;
+    text-align: left !important;
+  }
+
+  #analyste.champagne-clean-lens .chart-shell,
+  #analyste.champagne-clean-lens.detail-collapsed .chart-shell,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) .chart-shell {
+    height: 458px !important;
+    min-height: 458px !important;
+    max-height: 458px !important;
+  }
+
+  #analyste.champagne-clean-lens #mainChart,
+  #analyste.champagne-clean-lens.detail-collapsed #mainChart,
+  #analyste.champagne-clean-lens:not(.detail-collapsed) #mainChart {
+    height: calc(100% - 58px) !important;
+  }
+}

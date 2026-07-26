@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.53 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.54 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.53";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.54";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 /* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
    Le cache local est seulement préparé au démarrage. Il n'est rendu visible
@@ -1589,6 +1589,7 @@ function atlasApplyCanonicalSnapshot(snapshot, mode) {
   if (!state.graphSelectionCleared && (!state.selectedCoinId || !state.coins.some(c => c.id === state.selectedCoinId))) state.selectedCoinId = state.coins[0]?.id || "bitcoin";
   saveMarketCache();
   atlasRememberGoodMarket(`snapshot ${mode || "direct"} validé`);
+  atlasWorkspaceRestoreAfterMarket();
   return true;
 }
 function atlasPrimeMarketCacheSilently() {
@@ -1879,13 +1880,26 @@ function atlasStartSelectedChart(delayMs = 180, force24h = false) {
     state.chartEngineV2.bootTimer = null;
     const coin = getSelectedCoin();
     if (!coin) return;
-    const period = force24h ? 1 : Number(state.chartPeriodDays || 1);
+
+    const period = atlasWorkspaceRestored
+      ? Number(state.chartPeriodDays || 1)
+      : force24h
+        ? 1
+        : Number(state.chartPeriodDays || 1);
+
+    if (atlasComparisonActive()) {
+      atlasChartSetPeriodButtons(period, true);
+      void renderAnalystPanel({ autoStart: true, workspaceRestore: atlasWorkspaceRestored });
+      return;
+    }
+
     const key = atlasChartKey(coin, period);
     const chartReady = state.dataBroker.chart?.status === "ready" && state.dataBroker.chart?.coinId === coin.id && Number(state.dataBroker.chart?.period || 1) === period;
     const requestAlreadyActive = state.chartEngineV2?.loading && state.chartEngineV2?.activeRequestKey === key;
     if (chartReady || requestAlreadyActive) return;
-    atlasPrepareChartSelection(coin, period);
-    void renderAnalystPanel({ autoStart: true });
+
+    atlasPrepareChartSelection(coin, period, { preserveComparison: true, preset: "solo" });
+    void renderAnalystPanel({ autoStart: true, workspaceRestore: atlasWorkspaceRestored });
   }, Math.max(0, Number(delayMs) || 0));
 }
 
@@ -6827,6 +6841,7 @@ function renderDecisionBoard() {
 }
 
 function renderAll(options = {}) {
+  atlasWorkspaceRestoreAfterMarket();
   const refreshChart = options.refreshChart !== false;
   atlasRenderMarketAccessNotice(); atlasRenderBrokerStrip(); renderMetrics(); atlasRenderMarketCoreAtomic(); renderWatchlist(); renderScore(getSelectedCoin() || state.coins[0] || null); atlasEnsureSourceDock(getSelectedCoin() || state.coins[0] || null); renderRiskGrid(); renderColdRead(true); renderBeginnerSummary(); renderMultiHorizon(); atlasRenderComparisonControls(); renderDecisionBoard(); renderSimulation();
   const finish = () => { if (els.commandOutput && !els.commandOutput.dataset.userRan) { renderCommandOutput(CryptoCommands.market_snapshot()); } };
@@ -12410,3 +12425,243 @@ atlasForgeCollapse?.addEventListener("toggle", () => {
 
 window.addEventListener("resize", () => atlasScheduleForgeResize(90));
 window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180));
+
+
+/* =========================================================
+   Build 28.1.54 — Complete workspace memory
+   Stores interface choices only. Never stores or fabricates prices.
+   ========================================================= */
+const ATLAS_WORKSPACE_STATE_KEY = "agent_crypto_erith_ia_workspace_state_v28_1_54";
+const ATLAS_WORKSPACE_PERIODS = Object.freeze([1, 7, 30, 60, 90, 365, 36500]);
+const ATLAS_WORKSPACE_PRESETS = Object.freeze([
+  "solo", "rank-3", "rank-5", "gainers", "losers", "volume", "manual", "empty"
+]);
+
+let atlasWorkspaceRestored = false;
+let atlasWorkspaceSaveTimer = 0;
+let atlasWorkspaceRestoredFlashTimer = 0;
+
+function atlasWorkspaceRead() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(ATLAS_WORKSPACE_STATE_KEY) || "null");
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function atlasWorkspaceCurrentGraphMode() {
+  const mode = document.getElementById("market-zone")?.dataset?.graphMode;
+  return ATLAS_ADMIN_GRAPH_MODES.includes(mode) ? mode : atlasAdminGraphRead();
+}
+
+function atlasWorkspaceCapture() {
+  return {
+    schema: "agent_crypto_workspace_v1",
+    release: ATLAS_RELEASE,
+    savedAt: new Date().toISOString(),
+    interfaceMode: atlasV2Mode(),
+    graphMode: atlasWorkspaceCurrentGraphMode(),
+    period: Number(state.chartPeriodDays || 1),
+    selectedCoinId: state.selectedCoinId || null,
+    comparisonIds: atlasComparisonIds(),
+    comparisonPreset: state.dataBroker?.comparison?.preset || "solo",
+    selectionCleared: state.graphSelectionCleared === true,
+    chartView: {
+      view: state.chartViewV2.view === "base100" ? "base100" : "price",
+      scale: state.chartViewV2.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: state.chartViewV2.volume !== false,
+      legend: state.chartViewV2.legend === true,
+      comparisonLegend: state.chartViewV2.comparisonLegend === true,
+      analysis: state.chartViewV2.analysis !== false,
+      marketColumns: state.chartViewV2.marketColumns === "complete" ? "complete" : "essential",
+    },
+  };
+}
+
+function atlasWorkspaceWrite() {
+  const snapshot = atlasWorkspaceCapture();
+  try {
+    localStorage.setItem(ATLAS_WORKSPACE_STATE_KEY, JSON.stringify(snapshot));
+  } catch {}
+  atlasWorkspaceRenderStrip();
+  return snapshot;
+}
+
+function atlasWorkspaceScheduleSave(delay = 240) {
+  window.clearTimeout(atlasWorkspaceSaveTimer);
+  atlasWorkspaceSaveTimer = window.setTimeout(atlasWorkspaceWrite, Math.max(0, Number(delay) || 0));
+}
+
+function atlasWorkspacePresetLabel() {
+  const ids = atlasComparisonIds();
+  const preset = String(state.dataBroker?.comparison?.preset || "solo");
+  if (!ids.length) return "Sélection vide";
+  if (ids.length === 1) return "Solo";
+  if (preset === "rank-3") return "Top 3";
+  if (preset === "rank-5") return "Top 5";
+  if (preset === "gainers") return "Hausses 5";
+  if (preset === "losers") return "Baisses 5";
+  if (preset === "volume") return "Volumes 5";
+  return `${ids.length} séries`;
+}
+
+function atlasWorkspaceSelectionLabel() {
+  const ids = atlasComparisonIds();
+  if (!ids.length) return "aucun actif";
+  const symbols = ids
+    .map(id => state.coins.find(coin => coin.id === id)?.symbol)
+    .filter(Boolean)
+    .map(symbol => String(symbol).toUpperCase());
+  return symbols.length ? symbols.join("/") : `${ids.length} actifs`;
+}
+
+function atlasWorkspaceRenderStrip(options = {}) {
+  const root = document.getElementById("atlasWorkspaceReprise");
+  const kicker = document.getElementById("atlasWorkspaceRepriseKicker");
+  const primary = document.getElementById("atlasWorkspaceReprisePrimary");
+  const secondary = document.getElementById("atlasWorkspaceRepriseSecondary");
+  if (!root || !kicker || !primary || !secondary) return;
+
+  const comparison = atlasComparisonActive();
+  const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
+  const view = comparison || state.chartViewV2.view === "base100" ? "Base 100" : "Prix EUR";
+  const scale = comparison || state.chartViewV2.view === "base100"
+    ? "Normale"
+    : state.chartViewV2.scale === "logarithmic"
+      ? "Log"
+      : "Normale";
+  const graphMode = atlasAdminGraphLabel(atlasWorkspaceCurrentGraphMode());
+
+  const displays = [
+    state.chartViewV2.volume !== false && !comparison ? "Volume" : null,
+    (comparison ? state.chartViewV2.comparisonLegend : state.chartViewV2.legend) ? "Légende" : "Légende masquée",
+    state.chartViewV2.analysis !== false ? "Analyse" : "Analyse masquée",
+  ].filter(Boolean);
+
+  const restored = options.restored === true;
+  root.dataset.state = restored ? "restored" : "current";
+  kicker.textContent = restored ? "SESSION RESTAURÉE" : "ESPACE MÉMORISÉ";
+  primary.textContent = `${atlasWorkspacePresetLabel()} · ${period} · ${view} · ${scale} · ${atlasWorkspaceSelectionLabel()}`;
+  secondary.textContent = `${displays.join(" · ")} · Vue ${graphMode} · choix locaux uniquement`;
+
+  if (restored) {
+    window.clearTimeout(atlasWorkspaceRestoredFlashTimer);
+    atlasWorkspaceRestoredFlashTimer = window.setTimeout(() => {
+      root.dataset.state = "current";
+      kicker.textContent = "ESPACE MÉMORISÉ";
+    }, 4800);
+  }
+}
+
+function atlasWorkspaceRestoreAfterMarket() {
+  if (atlasWorkspaceRestored || !Array.isArray(state.coins) || !state.coins.length) return false;
+
+  atlasWorkspaceRestored = true;
+  const saved = atlasWorkspaceRead();
+  if (!saved) {
+    atlasWorkspaceRenderStrip();
+    atlasWorkspaceScheduleSave(80);
+    return false;
+  }
+
+  const validIds = new Set(state.coins.map(coin => coin.id));
+  const period = ATLAS_WORKSPACE_PERIODS.includes(Number(saved.period))
+    ? Number(saved.period)
+    : 1;
+
+  const rawIds = Array.isArray(saved.comparisonIds) ? saved.comparisonIds : [];
+  let ids = rawIds.filter(id => validIds.has(id)).filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
+
+  const savedPrimary = validIds.has(saved.selectedCoinId) ? saved.selectedCoinId : null;
+  if (!ids.length && savedPrimary) ids = [savedPrimary];
+  if (!ids.length && saved.selectionCleared !== true) {
+    const fallback = state.coins.find(coin => coin.id === "bitcoin") || state.coins[0];
+    if (fallback?.id) ids = [fallback.id];
+  }
+
+  const primary = savedPrimary && ids.includes(savedPrimary) ? savedPrimary : ids[0] || null;
+  if (primary && ids[0] !== primary) {
+    ids = [primary, ...ids.filter(id => id !== primary)];
+  }
+
+  state.chartPeriodDays = period;
+  state.graphSelectionCleared = saved.selectionCleared === true && !ids.length;
+  state.selectedCoinId = primary;
+  state.dataBroker.comparison.ids = ids;
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = [];
+  state.dataBroker.comparison.results = {};
+  state.dataBroker.comparison.renderedIds = [];
+  state.dataBroker.comparison.completionAttempt = 0;
+  state.dataBroker.comparison.mode = ids.length > 1 ? "compare" : ids.length === 1 ? "single" : "empty";
+  state.dataBroker.comparison.preset = ATLAS_WORKSPACE_PRESETS.includes(saved.comparisonPreset)
+    ? saved.comparisonPreset
+    : ids.length > 1
+      ? "manual"
+      : ids.length === 1
+        ? "solo"
+        : "empty";
+  state.dataBroker.comparison.status = "idle";
+  state.dataBroker.comparison.error = null;
+
+  const savedView = saved.chartView && typeof saved.chartView === "object" ? saved.chartView : {};
+  state.chartViewV2 = {
+    ...state.chartViewV2,
+    view: savedView.view === "base100" ? "base100" : "price",
+    scale: savedView.scale === "logarithmic" ? "logarithmic" : "linear",
+    volume: savedView.volume !== false,
+    legend: savedView.legend === true,
+    comparisonLegend: savedView.comparisonLegend === true,
+    analysis: savedView.analysis !== false,
+    marketColumns: savedView.marketColumns === "complete" ? "complete" : "essential",
+  };
+
+  atlasWriteChartV2Settings();
+  atlasChartSetPeriodButtons(period, false);
+  atlasRenderComparisonControls();
+  atlasChartV2SyncControls();
+
+  const savedGraphMode = ATLAS_ADMIN_GRAPH_MODES.includes(saved.graphMode) ? saved.graphMode : "normal";
+  try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, savedGraphMode); } catch {}
+  if (atlasV2Mode() === "advanced") {
+    atlasAdminGraphSet(savedGraphMode, {
+      persist: false,
+      instant: true,
+      scroll: false,
+      closeCenter: false,
+    });
+  }
+
+  atlasWorkspaceRenderStrip({ restored: true });
+  atlasWorkspaceScheduleSave(120);
+  return true;
+}
+
+document.addEventListener("click", event => {
+  const control = event.target.closest(
+    ".period-btn, [data-chart-view], [data-chart-scale], [data-chart-display], "
+    + ".compare-btn, [data-compare-primary], [data-compare-remove], [data-market-open], "
+    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-atlas-mode], [data-market-columns]"
+  );
+  if (!control) return;
+  atlasWorkspaceScheduleSave(760);
+  window.setTimeout(atlasWorkspaceRenderStrip, 90);
+  window.setTimeout(atlasWorkspaceRenderStrip, 860);
+}, true);
+
+window.addEventListener("atlas:admin-graph", () => {
+  atlasWorkspaceRenderStrip();
+  atlasWorkspaceScheduleSave(140);
+});
+
+window.addEventListener("atlas:v2mode", () => {
+  atlasWorkspaceRenderStrip();
+  atlasWorkspaceScheduleSave(180);
+});
+
+window.addEventListener("beforeunload", atlasWorkspaceWrite);
+window.addEventListener("pagehide", atlasWorkspaceWrite);
+
+window.setTimeout(atlasWorkspaceRenderStrip, 0);
+window.setTimeout(atlasWorkspaceRenderStrip, 900);
