@@ -4296,7 +4296,7 @@ main .decision-board{
   text-shadow:0 2px 8px rgba(0,0,0,.92);
 }
 .chart-shell[data-real-chart="coingecko"]::before{
-  content:"GRAPHE RÉEL · COINGECKO";
+  content:"HISTORIQUE · COINGECKO";
   position:absolute;
   right:22px;
   top:18px;
@@ -4478,7 +4478,7 @@ main .decision-board{
 }
 
 .atlas-market-zone #analyste .chart-shell[data-real-chart="coingecko"]::before{
-  content:"GRAPHE RÉEL · COINGECKO" !important;
+  content:"HISTORIQUE · COINGECKO" !important;
   top:14px !important;
   right:16px !important;
   z-index:6 !important;
@@ -4568,7 +4568,7 @@ main .decision-board{
 }
 
 .atlas-market-zone #analyste .chart-shell[data-chart-state="loading"]::before{
-  content:"CHARGEMENT DU GRAPHE RÉEL" !important;
+  content:"CHARGEMENT DE L’HISTORIQUE" !important;
   color:#fff0c8 !important;
   background:rgba(38,48,68,.58) !important;
   border:1px solid rgba(255,216,135,.22) !important;
@@ -4582,21 +4582,21 @@ main .decision-board{
 }
 
 .atlas-market-zone #analyste .chart-shell[data-chart-state="valid"][data-chart-freshness="fresh"]::before{
-  content:"GRAPHE RÉEL · COINGECKO" !important;
+  content:"HISTORIQUE · COINGECKO" !important;
   color:#dcffeb !important;
   background:rgba(3,58,47,.58) !important;
   border:1px solid rgba(115,255,177,.34) !important;
 }
 
 .atlas-market-zone #analyste .chart-shell[data-chart-state="valid"][data-chart-freshness="delayed"]::before{
-  content:"GRAPHE RÉEL · MAJ RETARDÉE" !important;
+  content:"HISTORIQUE · MAJ RETARDÉE" !important;
   color:#fff0c8 !important;
   background:rgba(86,61,18,.60) !important;
   border:1px solid rgba(255,216,135,.32) !important;
 }
 
 .atlas-market-zone #analyste .chart-shell[data-chart-state="valid"][data-chart-freshness="archive"]::before{
-  content:"GRAPHE RÉEL · ARCHIVE DATÉE" !important;
+  content:"HISTORIQUE · ARCHIVE DATÉE" !important;
   color:#ffe7bd !important;
   background:rgba(76,52,26,.62) !important;
   border:1px solid rgba(255,190,110,.30) !important;
@@ -13283,7 +13283,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 .atlas-market-zone #analyste
 .chart-shell[data-chart-state="valid"][data-chart-origin="direct"]
 [data-chart-freshness="fresh"]::before {
-  content: "GRAPHE RÉEL · COINGECKO DIRECT" !important;
+  content: "HISTORIQUE · COINGECKO DIRECT" !important;
   border-color: rgba(92, 221, 156, .44) !important;
   background: rgba(17, 85, 63, .78) !important;
 }
@@ -13291,7 +13291,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 .atlas-market-zone #analyste
 .chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
 [data-chart-freshness="fresh"]::before {
-  content: "GRAPHE RÉEL · CACHE RÉCENT" !important;
+  content: "HISTORIQUE · CACHE RÉCENT" !important;
   border-color: rgba(244, 217, 154, .50) !important;
   background: rgba(92, 68, 26, .82) !important;
 }
@@ -13299,7 +13299,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 .atlas-market-zone #analyste
 .chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
 [data-chart-freshness="delayed"]::before {
-  content: "GRAPHE RÉEL · CACHE RETARDÉ" !important;
+  content: "HISTORIQUE · CACHE RETARDÉ" !important;
   border-color: rgba(244, 178, 83, .55) !important;
   background: rgba(94, 54, 18, .84) !important;
 }
@@ -13307,7 +13307,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
 .atlas-market-zone #analyste
 .chart-shell[data-chart-state="valid"][data-chart-origin="cache"]
 [data-chart-freshness="archive"]::before {
-  content: "GRAPHE RÉEL · ARCHIVE DATÉE" !important;
+  content: "HISTORIQUE · ARCHIVE DATÉE" !important;
   border-color: rgba(255, 126, 96, .48) !important;
   background: rgba(91, 34, 27, .84) !important;
 }
@@ -16310,9 +16310,41 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.60
+   V2.0-alpha · Build 28.1.61
    SCANNER CORE REBUILD · MARKET 250 CLEAN
    ========================================================= */
 .market-universe-mode{display:inline-flex!important;align-items:center!important;gap:5px!important;min-height:38px!important;padding:4px 6px!important;border:1px solid rgba(98,236,255,.16)!important;border-radius:11px!important;background:rgba(4,15,28,.72)!important}.market-universe-mode>span{padding:0 4px!important;color:rgba(180,210,231,.72)!important;font:850 9px/1 system-ui,sans-serif!important;letter-spacing:.08em!important;text-transform:uppercase!important;white-space:nowrap!important}.market-universe-mode button{min-width:38px!important;min-height:29px!important;padding:5px 8px!important;border:1px solid rgba(98,236,255,.17)!important;border-radius:8px!important;color:#d7e8f4!important;background:rgba(255,255,255,.035)!important;font:900 10px/1 system-ui,sans-serif!important;cursor:pointer!important}.market-universe-mode button.is-active{border-color:rgba(98,236,255,.72)!important;color:#07131e!important;background:linear-gradient(135deg,#6beeff,#f2d883)!important}.market-universe-mode small{min-width:132px!important;padding:0 5px!important;color:rgba(116,234,217,.76)!important;font:760 9px/1.15 system-ui,sans-serif!important;white-space:nowrap!important}
 #analyste .atlas-chart-insight-overlay,#analyste:not(.detail-collapsed) .atlas-chart-insight-overlay,#analyste.detail-collapsed .atlas-chart-insight-overlay{width:max-content!important;inline-size:max-content!important;min-width:0!important;max-width:min(720px,calc(100% - 52px))!important;padding:10px 13px 9px 12px!important}#analyste .atlas-chart-insight-overlay[data-layout="solo"]{max-width:min(640px,calc(100% - 52px))!important}#analyste .atlas-chart-insight-overlay[data-layout="empty"]{max-width:min(560px,calc(100% - 52px))!important}#analyste .chart-v2-legend{width:max-content!important;inline-size:max-content!important;max-width:min(720px,calc(100% - 52px))!important}
 @media(max-width:900px){#analyste .atlas-chart-insight-overlay,#analyste:not(.detail-collapsed) .atlas-chart-insight-overlay,#analyste.detail-collapsed .atlas-chart-insight-overlay{width:calc(100% - 20px)!important;inline-size:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important}.market-universe-mode small{display:none!important}}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.61
+   Honest pending state for source-coherent scanners.
+   ========================================================= */
+.compare-btn.is-scanner-pending,
+#btnChartGainers.is-scanner-pending,
+#btnChartLosers.is-scanner-pending,
+#btnChartVolume5.is-scanner-pending {
+  border-color: rgba(88, 232, 255, .78) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(88, 232, 255, .16),
+    0 0 16px rgba(88, 232, 255, .14) !important;
+  background:
+    linear-gradient(180deg, rgba(12, 48, 66, .96), rgba(7, 27, 44, .96)) !important;
+}
+
+.compare-btn.is-scanner-failed,
+#btnChartGainers.is-scanner-failed,
+#btnChartLosers.is-scanner-failed,
+#btnChartVolume5.is-scanner-failed {
+  border-color: rgba(255, 126, 147, .72) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 126, 147, .12),
+    0 0 13px rgba(255, 126, 147, .10) !important;
+}
+
+#btnLivecheck[aria-busy="true"] {
+  cursor: progress !important;
+  opacity: .78;
+}
