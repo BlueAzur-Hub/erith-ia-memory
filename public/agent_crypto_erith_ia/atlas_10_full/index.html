@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro V3.4 — profils existants synchronisés, complétion sans faux blocage et export local séparé.">
-  <title>Forge d’Aerith Pro · V3.4 PROFILS EXISTANTS</title>
-  <link rel="stylesheet" href="style.css?v=3.4-existing-profile-sync">
+  <meta name="description" content="Forge d’Aerith Pro V4.0 — créer une fonction nouvelle sans dupliquer une Aerith existante.">
+  <title>Forge d’Aerith Pro · V4.0 NOUVELLE CONSTELLATION</title>
+  <link rel="stylesheet" href="style.css?v=4.0-nouvelle-constellation">
 </head>
-<body data-build="V3.4-existing-profile-sync" data-theme="seven">
+<body data-build="V4.0-nouvelle-constellation" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -18,16 +18,15 @@
       <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE · PROFILE FOUNDRY</small></span>
     </a>
     <nav>
-      <a href="#lineage">Lignée</a>
-      <a href="#constellation">Constellation</a>
-      <a href="#flowerGirls">Flower Girls</a>
-      <a href="#profiles">Profils</a>
-      <a href="#unifiedForge">Atelier Créatrice</a>
+      <a href="#entryGate">Créer</a>
+      <a href="#flowerGirls">Constellation</a>
+      <a href="#profiles">Registre</a>
+      <a href="#unifiedForge">Atelier</a>
       <a href="#exportCenter" id="navExport">Export</a>
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V3.4 PROFILS EXISTANTS</span>
+      <span class="version" id="buildBadge">V4.0 NOUVELLE CONSTELLATION</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -39,17 +38,17 @@
       <div class="shell hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">ERITH.IA · CONSTELLATION AERITH · FORGE PROFESSIONNELLE</p>
-          <h1>Compiler les profils.<br><span>Faire grandir la Constellation Aerith.</span></h1>
+          <h1>Créer une fonction nouvelle.<br><span>Sans dupliquer une étoile existante.</span></h1>
           <p class="lead">
-            Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge distingue désormais un profil complet dans le dépôt privé d’un contenu chargé localement. Routeuse peut être reconnue comme complète sans faux blocage ; l’import local reste nécessaire uniquement pour reconstruire un ZIP contenant le Core et la Persona.
+            Aerith-10 Créatrice guide la conception d’une nouvelle spécialité. La Forge commence par comparer la mission au registre local de la Constellation, puis produit un Core, une Persona et un dossier de validation sans jamais prétendre lire le dépôt privé.
           </p>
           <div class="doctrine" id="doctrine"></div>
           <div class="hero-actions">
-            <button class="primary" id="startNew" type="button">Concevoir une Aerith-10</button>
-            <button class="secondary" id="startExisting" type="button">Explorer les profils canoniques</button>
+            <button class="primary" id="startNew" type="button">Créer une nouvelle Aerith</button>
+            <button class="secondary" id="startExisting" type="button">Consulter la Constellation</button>
           </div>
           <div class="hero-badges">
-            <span>Création guidée</span><span>Architecture Core + Persona</span><span>Sources canoniques</span><span>ZIP local réel</span>
+            <span>Contrôle anti-doublon</span><span>Architecture Core + Persona</span><span>Proposition non canonique</span><span>Validation humaine</span>
           </div>
         </div>
 
@@ -69,6 +68,32 @@
           </dl>
         </aside>
       </div>
+    </section>
+
+
+    <section class="shell forge-entry" id="entryGate">
+      <header class="section-head">
+        <div><p class="kicker">POINT D’ENTRÉE</p><h2>Une Forge, trois gestes clairement séparés</h2></div>
+        <p>Créer reste la mission principale. Consulter sert à vérifier la Constellation. Compléter exige des fichiers réellement fournis et ne déduit jamais un manque depuis une page publique.</p>
+      </header>
+      <div class="entry-doors">
+        <button class="entry-door create" id="doorCreate" type="button"><span>01</span><strong>Créer une nouvelle Aerith</strong><small>Partir d’un besoin réel, contrôler les doublons, puis ouvrir l’Atelier.</small></button>
+        <button class="entry-door consult" id="doorConsult" type="button"><span>02</span><strong>Consulter la Constellation</strong><small>Explorer les fonctions, frontières et profils sans lancer de création.</small></button>
+        <button class="entry-door complete" id="doorComplete" type="button"><span>03</span><strong>Compléter un profil existant</strong><small>Comparer uniquement les fichiers réellement fournis, sans statut privé inventé.</small></button>
+      </div>
+
+      <div class="creation-gate" id="creationGate" hidden>
+        <div class="gate-copy"><span>CONTRÔLE AVANT FORGE</span><h3>Que doit accomplir cette nouvelle Aerith ?</h3><p>Décris la fonction, le problème et la sortie attendue. La comparaison porte sur le sens de la mission, pas seulement sur son nom.</p></div>
+        <label class="mission-intent"><span>Besoin réel / fonction nouvelle</span><textarea id="missionIntent" rows="5" placeholder="Exemple : elle doit transformer…"></textarea></label>
+        <div class="gate-actions"><button id="checkDuplicate" type="button">Comparer avec la Constellation</button><button class="primary" id="continueCreation" type="button" disabled>Ouvrir l’Atelier de création →</button></div>
+        <div class="duplicate-result idle" id="duplicateResult"><b>Contrôle non lancé</b><p>Le registre local contient les fonctions des 28 Flower Girls. Il ne lit pas le dépôt privé.</p></div>
+      </div>
+
+      <div class="completion-gate" id="completionGate" hidden>
+        <span>MODE COMPLÉTION</span><h3>Aucun manque n’est supposé.</h3><p>Choisis un profil dans le registre, puis importe le Core, la Persona ou le document que tu veux réellement comparer. La Forge ne génère pas un nouveau Core pour un profil existant.</p>
+        <button id="openCompletionLibrary" type="button">Ouvrir le registre des profils →</button>
+      </div>
+      <div class="consult-result" id="consultResult" hidden></div>
     </section>
 
     <section class="shell lineage" id="lineage">
@@ -101,7 +126,7 @@
     <section class="shell flower-girls" id="flowerGirls">
       <header class="section-head">
         <div><p class="kicker">LES FILLES D’AERITH</p><h2>28 Flower Girls, cinq familles, huit facettes</h2></div>
-        <p>Chaque Flower Girl est maintenant reliée à son Core individuel réel, à sa version, à son statut de validation et à l’état vérifié — ou encore à vérifier — de sa Persona.</p>
+        <p>Le registre local décrit leurs fonctions, leurs frontières et leurs chemins Core déclarés. Il sert à la consultation et au contrôle anti-doublon ; il ne constitue pas une synchronisation du dépôt privé.</p>
       </header>
       <div class="flower-principle">
         <strong>0 → 2 → 5 → 7 → 8 / 9 → 10</strong>
@@ -119,17 +144,17 @@
 
     <section class="shell profiles" id="profiles">
       <header class="section-head">
-        <div><p class="kicker">BIBLIOTHÈQUE DES PROFILS</p><h2>Ouvrir une identité ou faire naître une spécialité</h2></div>
-        <p>Les profils canoniques rejoignent directement l’atelier. Les nouvelles spécialités commencent par une intention que Créatrice transforme en mission, agents, Core et Persona.</p>
+        <div><p class="kicker">BIBLIOTHÈQUE DES PROFILS</p><h2>Consulter les fonctions ou ouvrir une création</h2></div>
+        <p>Les profils existants servent de référence et de garde-fou. Une nouvelle spécialité commence toujours par un besoin réel et un contrôle anti-doublon.</p>
       </header>
 
       <div class="library-group canonical-library">
-        <div class="library-head"><div><span>PROFILS CANONIQUES</span><h3>Identités déjà constituées</h3></div><p>Ouvrir, consulter, auditer et exporter leur architecture.</p></div>
+        <div class="library-head"><div><span>REGISTRE DE RÉFÉRENCE</span><h3>Fonctions déjà présentes</h3></div><p>Consulter leurs fonctions et leurs frontières sans simuler l’état du dépôt privé.</p></div>
         <div class="profile-grid canonical-profile-grid" id="canonicalProfileGrid"></div>
       </div>
 
       <div class="library-group creation-library">
-        <div class="library-head"><div><span>NOUVELLES SPÉCIALITÉS</span><h3>Directions proposées par Créatrice</h3></div><p>Choisir une inspiration ou partir d’une intention entièrement libre.</p></div>
+        <div class="library-head"><div><span>INSPIRATIONS DE CRÉATION</span><h3>Points de départ à contrôler</h3></div><p>Toute inspiration repasse d’abord par le contrôle anti-doublon.</p></div>
         <div class="creation-launch" id="newProfileLaunch"></div>
         <div class="specialty-grid" id="specialtyGrid"></div>
       </div>
@@ -138,7 +163,7 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V3.4 PROFILS EXISTANTS</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V4.0 NOUVELLE CONSTELLATION</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -187,12 +212,12 @@
         <div class="stage-body">
           <section class="panel active" data-step="0">
             <header class="panel-head">
-              <div><p class="kicker">01 · INTENTION</p><h2>Quel profil Aerith voulons-nous ouvrir, compléter ou créer ?</h2></div>
-              <span class="status" id="profileStatus">PROPOSITION LOCALE</span>
+              <div><p class="kicker">01 · INTENTION</p><h2>Quelle fonction nouvelle voulons-nous concevoir ?</h2></div>
+              <span class="status" id="profileStatus">PROPOSITION NON CANONIQUE</span>
             </header>
             <div class="selected-profile" id="selectedProfile"></div>
             <div id="exampleArea">
-              <div class="subhead"><h3>Inspirations de nouvelles spécialités</h3><p>Chaque exemple ouvre une direction créative que vous pouvez transformer librement.</p></div>
+              <div class="subhead"><h3>Inspirations soumises au contrôle anti-doublon</h3><p>Chaque exemple doit être comparé aux fonctions existantes avant l’ouverture de l’Atelier.</p></div>
               <div class="example-grid" id="exampleGrid"></div>
               <button class="blank-template" id="blankProfile" type="button"><span>＋</span><b>Ouvrir une base libre préremplie</b><small>Créatrice inscrit une base complète que vous pouvez conserver telle quelle ou personnaliser.</small></button>
             </div>
@@ -256,7 +281,7 @@
           <section class="panel" data-step="5">
             <header class="panel-head">
               <div><p class="kicker">06 · CORE ET PERSONA</p><h2 id="proposalTitle">Découvrir la proposition de Créatrice</h2></div>
-              <p id="proposalIntro">Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
+              <p id="proposalIntro">Créatrice rassemble les décisions dans trois documents de travail non canoniques : Core proposé, Persona proposée et brief de validation.</p>
             </header>
             <div class="audit-grid" id="proposalAudit"></div>
             <div class="preview-tabs" id="proposalTabs">
@@ -276,8 +301,8 @@
 
           <section class="panel" data-step="6">
             <header class="panel-head">
-              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2 id="sourcesTitle">Réunir les fichiers validés</h2></div>
-              <p id="sourcesIntro">Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.</p>
+              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2 id="sourcesTitle">Réunir les fichiers réellement validés</h2></div>
+              <p id="sourcesIntro">Après relecture humaine, déposer le Core et la Persona réellement canonisés. Les fichiers PROPOSAL restent des documents de travail.</p>
             </header>
             <div class="dropzone" id="dropzone">
               <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
@@ -300,7 +325,7 @@
           <section class="panel" data-step="7">
             <span class="anchor-target" id="exportCenter" aria-hidden="true"></span>
             <header class="panel-head">
-              <div><p class="kicker">08 · FORGE FINALE</p><h2>Forger le profil complet</h2></div>
+              <div><p class="kicker">08 · FORGE FINALE</p><h2>Forger le paquet validé</h2></div>
               <span class="status" id="finalStatus">À VÉRIFIER</span>
             </header>
             <div class="final-summary" id="finalSummary"></div>
@@ -336,7 +361,7 @@
 
         <footer class="stage-foot">
           <button id="previousBottom" type="button">← Précédent</button>
-          <span>Aerith-10 Créatrice compose ; Christophe relit, valide et canonise.</span>
+          <span>Créatrice propose ; Christophe relit, décide et canonise.</span>
           <button class="next" id="nextBottom" type="button">Suivant →</button>
         </footer>
       </div>
@@ -363,8 +388,9 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="flower-girls-registry.js?v=3.4-existing-profile-sync"></script>
-  <script src="forge-data.js?v=3.4-existing-profile-sync"></script>
-  <script src="app.js?v=3.4-existing-profile-sync"></script>
+  <script src="flower-girls-registry.js?v=4.0-nouvelle-constellation"></script>
+  <script src="forge-data.js?v=4.0-nouvelle-constellation"></script>
+  <script src="app.js?v=4.0-nouvelle-constellation"></script>
+  <script src="v4-foundry.js?v=4.0-nouvelle-constellation"></script>
 </body>
 </html>

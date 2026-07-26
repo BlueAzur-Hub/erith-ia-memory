@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.4-existing-profile-sync",
+  version: "V4.0-nouvelle-constellation",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -49,12 +49,12 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Réunir les sources canoniques",
-        message: "Pour un profil privé existant, la Forge distingue désormais l’état du dépôt et le contenu local. Un profil confirmé dans le dépôt peut être complet sans que ses fichiers soient chargés dans le navigateur ; l’import local sert uniquement à reconstruire un ZIP complet.",
+        message: "La Forge publique ne déduit aucun état du dépôt privé. Pour compléter un profil, importer uniquement les fichiers réellement fournis et comparer leur contenu sans supposer ce qui manque.",
         action: "Vérifier les sources"
       },
       {
         title: "Forger le paquet final",
-        message: "L’audit sépare maintenant le profil complet dans le dépôt du paquet local exportable. Le profil peut être prêt même si le Core et la Persona ne sont pas chargés localement.",
+        message: "L’audit final vérifie la proposition, le contrôle anti-doublon, la validation humaine et les fichiers réellement importés. Aucun statut privé n’est simulé.",
         action: "Forger le profil"
       }
     ],
