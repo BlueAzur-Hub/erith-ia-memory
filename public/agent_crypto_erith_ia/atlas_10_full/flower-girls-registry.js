@@ -1,7 +1,7 @@
 "use strict";
 
 window.AERITH_FLOWER_GIRLS = Object.freeze({
-  "version": "V3.1-flower-girls",
+  "version": "V3.2-flower-girls-detail",
   "title": "Les Filles d’Aerith — Flower Girls",
   "principle": "Chaque Flower Girl est une Aerith-10 spécialisée : une mission, des garde-fous, des agents internes et des modules hérités.",
   "facets": [

@@ -9,6 +9,8 @@
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
   const STORAGE_KEY = "aerith-forge-v3-final";
+  const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
+  document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
   const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
 
   const STEPS = [
@@ -415,7 +417,7 @@
   }
 
 
-  const flowerView = {family:"all", facet:"all", search:""};
+  const flowerView = {family:"all", facet:"all", search:"", selected:""};
 
   function flowerIdentity(item) {
     return {
@@ -470,6 +472,76 @@
     showToast(`${item.name} chargée dans l’Atelier.`);
   }
 
+  function renderFlowerDetail(item, scroll = false) {
+    const detail = $("#flowerDetail");
+    if (!detail) return;
+    if (!item) {
+      detail.hidden = true;
+      detail.innerHTML = "";
+      return;
+    }
+
+    flowerView.selected = item.id;
+    const heritage = (item.heritage || []).map(id => {
+      const source = DATA.heritage.find(entry => entry.id === id);
+      return `<span>${esc(source?.name || id)}</span>`;
+    }).join("") || "<span>Aucun héritage supplémentaire</span>";
+
+    const list = values => (values || []).map(value => `<li>${esc(value)}</li>`).join("") || "<li>À préciser</li>";
+    const modules = (item.modules || []).map(value => `<li><code>${esc(value)}</code></li>`).join("") || "<li>Aucun module ciblé</li>";
+
+    detail.innerHTML = `
+      <header class="flower-detail-head">
+        <div>
+          <p class="kicker">FICHE FLOWER GIRL · ${esc(item.family)}</p>
+          <h3>${esc(item.name)}</h3>
+          <p>${esc(item.role)}</p>
+        </div>
+        <div class="flower-detail-head-actions">
+          <span class="flower-detail-status">${esc(item.status)}</span>
+          <button type="button" data-flower-close aria-label="Fermer la fiche">Fermer ×</button>
+        </div>
+      </header>
+
+      <div class="flower-detail-core">
+        <article class="flower-detail-highlight">
+          <span>FONCTION PROPRE</span>
+          <strong>${esc(item.uniqueValue)}</strong>
+        </article>
+        <article class="flower-detail-highlight comparison">
+          <span>FRONTIÈRE FONCTIONNELLE</span>
+          <strong>${esc(item.nearestProfile)}</strong>
+          <p>${esc(item.difference)}</p>
+        </article>
+        <article class="flower-detail-highlight formula">
+          <span>FORMULE CENTRALE</span>
+          <strong>${esc(item.formula)}</strong>
+        </article>
+      </div>
+
+      <div class="flower-detail-grid">
+        <article><h4>Sorties attendues</h4><ul>${list(item.outputs)}</ul></article>
+        <article><h4>Constellation d’agents</h4><ul>${list(item.agents)}</ul></article>
+        <article><h4>Persona & modes</h4><p>${esc(item.tone || "À préciser")}</p><div class="flower-detail-tags">${(item.modes || []).map(value => `<span>${esc(value)}</span>`).join("")}</div></article>
+        <article><h4>Héritages</h4><div class="flower-detail-tags">${heritage}</div><h4 class="second-title">Garde-fous</h4><ul>${list(item.guardrails)}</ul></article>
+        <article class="wide"><h4>Modules et sources ciblés</h4><ul class="module-list">${modules}</ul></article>
+        <article class="wide path-card"><h4>Destinations canoniques proposées</h4><dl>
+          <div><dt>Core</dt><dd><code>${esc(item.corePath)}</code></dd></div>
+          <div><dt>Persona</dt><dd><code>${esc(item.personaPath)}</code></dd></div>
+          <div><dt>Mémoire</dt><dd><code>${esc(item.memoryPath)}</code></dd></div>
+          <div><dt>Stop Point</dt><dd>${esc(item.stopPoint)}</dd></div>
+        </dl></article>
+      </div>
+
+      <footer class="flower-detail-actions">
+        <button type="button" data-flower-close>Retour à la constellation</button>
+        <button class="primary" type="button" data-flower-load="${esc(item.id)}">Charger cette Flower Girl dans l’Atelier →</button>
+      </footer>`;
+    detail.hidden = false;
+    if (scroll) detail.scrollIntoView({behavior:"smooth", block:"start"});
+    notifyParentHeight();
+  }
+
   function renderFlowerGirls() {
     if (!FLOWER || !$("#flowerGrid")) return;
     $("#flowerFacetGrid").innerHTML = FLOWER.facets.map(item => `
@@ -500,9 +572,17 @@
         <h3>${esc(item.name)}</h3>
         <p>${esc(item.role)}</p>
         <dl><div><dt>Valeur propre</dt><dd>${esc(item.uniqueValue)}</dd></div><div><dt>Profil voisin</dt><dd>${esc(item.nearestProfile)}</dd></div></dl>
-        <div class="flower-tags">${(item.heritage || []).map(x => `<span>${esc(x)}</span>`).join("")}<span>${(item.agents || []).length} agents</span></div>
-        <button type="button" data-flower-load="${esc(item.id)}">Charger dans l’Atelier →</button>
+        <div class="flower-tags">${(item.heritage || []).map(x => `<span>${esc(x)}</span>`).join("")}<span>${(item.agents || []).length} agents</span><span>${(item.modules || []).length} modules</span></div>
+        <div class="flower-card-actions">
+          <button type="button" data-flower-detail="${esc(item.id)}">Voir la fiche complète</button>
+          <button class="primary" type="button" data-flower-load="${esc(item.id)}">Charger dans l’Atelier →</button>
+        </div>
       </article>`).join("") || `<div class="flower-empty">Aucun profil ne correspond à ce filtre.</div>`;
+
+    if (flowerView.selected) {
+      const selected = FLOWER.profiles.find(item => item.id === flowerView.selected);
+      renderFlowerDetail(selected || null, false);
+    }
   }
 
   function renderConstellation() {
@@ -1463,6 +1543,19 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   document.addEventListener("click", event => {
+    const flowerDetailButton = event.target.closest("[data-flower-detail]");
+    if (flowerDetailButton) {
+      const item = FLOWER?.profiles.find(profile => profile.id === flowerDetailButton.dataset.flowerDetail);
+      renderFlowerDetail(item || null, true);
+      return;
+    }
+    const flowerClose = event.target.closest("[data-flower-close]");
+    if (flowerClose) {
+      flowerView.selected = "";
+      renderFlowerDetail(null);
+      $("#flowerGirls")?.scrollIntoView({behavior:"smooth", block:"start"});
+      return;
+    }
     const flowerLoad = event.target.closest("[data-flower-load]");
     if (flowerLoad) { applyFlowerGirl(flowerLoad.dataset.flowerLoad, true); return; }
     const flowerFamily = event.target.closest("[data-flower-family]");
@@ -1638,6 +1731,44 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
     }
   });
 
+  function activeForgeHeight() {
+    if (document.body.dataset.view !== "atelier") {
+      return Math.ceil(document.documentElement.scrollHeight);
+    }
+    const shell = $("#unifiedForge");
+    if (!shell) return Math.ceil(document.documentElement.scrollHeight);
+    return Math.ceil(shell.getBoundingClientRect().height);
+  }
+
+  let heightFrame = 0;
+  function notifyParentHeight() {
+    if (window.parent === window) return;
+    cancelAnimationFrame(heightFrame);
+    heightFrame = requestAnimationFrame(() => {
+      window.parent.postMessage({
+        type: "aerith-forge-height",
+        view: document.body.dataset.view,
+        height: activeForgeHeight()
+      }, window.location.origin);
+    });
+  }
+
+  function initEmbeddedView() {
+    if (document.body.dataset.view !== "atelier") return;
+    const observer = "ResizeObserver" in window
+      ? new ResizeObserver(notifyParentHeight)
+      : null;
+    observer?.observe(document.body);
+    const shell = $("#unifiedForge");
+    if (shell) observer?.observe(shell);
+    window.addEventListener("load", notifyParentHeight);
+    window.addEventListener("resize", notifyParentHeight);
+    document.addEventListener("input", notifyParentHeight);
+    document.addEventListener("change", notifyParentHeight);
+    document.addEventListener("click", () => setTimeout(notifyParentHeight, 40));
+    notifyParentHeight();
+  }
+
   function initSectionNavigation() {
     const links = $$(".topbar nav a[href^='#']").filter(link => link.id !== "navExport");
     const targets = links.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
@@ -1659,6 +1790,7 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   renderLineage();
   renderAll();
   initSectionNavigation();
+  initEmbeddedView();
 
   if (document.body.dataset.build !== DATA.version) {
     const diagnostic = $("#diagnostic");

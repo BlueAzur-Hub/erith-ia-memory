@@ -1,6 +1,6 @@
 # FLOWER GIRLS — REGISTRE MAÎTRE DES 28 PROFILS
 
-**Version :** V3.1 — Constellation Flower Girls
+**Version :** V3.2 — Fiches détaillées Flower Girls
 **Statut :** registre de travail structuré ; la canonisation de chaque Core et Persona reste une validation humaine distincte.
 
 ## Principe
