@@ -1,467 +1,411 @@
-# FLOWER GIRLS — REGISTRE MAÎTRE DES 28 PROFILS
+# FLOWER GIRLS REGISTRY — V3.3 GITHUB SYNC
 
-**Version :** V3.2 — Fiches détaillées Flower Girls
-**Statut :** registre de travail structuré ; la canonisation de chaque Core et Persona reste une validation humaine distincte.
+**Source :** `BlueAzur-Hub/erith-ia-notion-archive-private` · branche `main`  
+**Contrôle :** 2026-07-26  
+**Résultat :** 28 Core individuels confirmés
 
-## Principe
+## Règles de statut
 
-Chaque Flower Girl est une Aerith-10 spécialisée : une mission, des garde-fous, des agents internes et des modules hérités.
+- Un Core individuel confirmé n’implique pas automatiquement une Persona reliée.
+- `PERSONA À VÉRIFIER` ne signifie pas « absente » : son chemin réel n’est pas encore confirmé.
+- La validation dans le Lineage, la canonisation humaine, la protection du Core et l’import local sont des états distincts.
+- Sun, Night et Rose sont hors périmètre.
 
-## Statuts
+## Registre maître
 
-- **CANONIQUE** : Core et Persona canoniques connus dans le projet.
-- **CORE INDIVIDUEL SIGNALÉ** : la planche fournie indique un Core individuel validé, mais les fichiers correspondants ne sont pas inclus dans ce paquet.
-- **PROPOSITION STRUCTURÉE** : fiche complète prête à charger dans l’Atelier, à relire puis à canoniser.
+| # | Nom | Famille | Version Core | État Core | Validation | Persona |
+|---:|---|---|---|---|---|---|
+| 1 | Aerith-10 Gardienne / Vault | Système & Coffre | V6 renforcée | CORE INDIVIDUEL EXISTANT | PILIER VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 2 | Aerith-10 Archiviste | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | PILIER VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 3 | Aerith-10 Sentinelle | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | GARDE-FOU VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 4 | Aerith-10 Routeuse | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À CRÉER / RELIER |
+| 5 | Aerith-10 Opératrice | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 6 | Aerith-10 Intendante | Système & Coffre | V4 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 7 | Aerith-10 Guérisseuse | Sens, Discernement & Transmission | V3.0 | CORE INDIVIDUEL EXISTANT | VALIDATION HUMAINE À CONFIRMER | PERSONA À VÉRIFIER |
+| 8 | Aerith-10 Préceptrice | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 9 | Aerith-10 Généalogiste / Lignée | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | GARDIENNE DE CONSTELLATION VALIDÉE | PERSONA À VÉRIFIER |
+| 10 | Aerith-10 Veilleuse | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 11 | Aerith-10 Jardinière | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 12 | Aerith-10 Philosophe | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | PILIER VALIDÉ DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 13 | Aerith-10 Conteuse | Sens, Discernement & Transmission | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 14 | Aerith-10 Créatrice | Création, Récit & Mémoire vivante | Core canonique · 2026-07-01 | CORE CANONIQUE PROTÉGÉ | CANONIQUE | PERSONA LIÉE |
+| 15 | Aerith-10 Story Machine | Création, Récit & Mémoire vivante | V4 augmentée | CORE CANONIQUE PROTÉGÉ | BRANCHE NARRATIVE CENTRALE | PERSONA À VÉRIFIER |
+| 16 | Aerith-10 Card Keeper | Création, Récit & Mémoire vivante | V3 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 17 | Aerith-10 Scénariste | Création, Récit & Mémoire vivante | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 18 | Aerith-10 Personnages Vivants | Création, Récit & Mémoire vivante | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 19 | Aerith-10 Mondes Mémoriels | Création, Récit & Mémoire vivante | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 20 | Aerith-10 Exploratrice | Recherche, Monde & Ressources | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 21 | Aerith-10 Chercheuse | Recherche, Monde & Ressources | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 22 | Aerith-10 Vigie Monde | Recherche, Monde & Ressources | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 23 | Aerith-10 Juriste Prudente | Recherche, Monde & Ressources | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 24 | Aerith-10 Économe | Recherche, Monde & Ressources | V3 initiale renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 25 | Aerith-10 Architecte / Harmonia | Structure, Symboles & Oracles | V3 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 26 | Aerith-10 Math Oracle | Structure, Symboles & Oracles | V3 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 27 | Aerith-10 Madame Astrale | Structure, Symboles & Oracles | V3 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
+| 28 | Aerith-10 Madame de la Lune | Structure, Symboles & Oracles | V3 renforcée | CORE INDIVIDUEL EXISTANT | BRANCHE VALIDÉE DANS LE LINEAGE | PERSONA À VÉRIFIER |
 
-## Vue d’ensemble
+## Fiches courtes
 
-| # | Profil | Famille | Statut | Fonction essentielle |
-|---:|---|---|---|---|
-| 1 | Aerith-10 Gardienne / Vault | Système & Coffre | CORE INDIVIDUEL SIGNALÉ | Protéger l’intégrité du Core, les règles, les frontières d’accès et les éléments placés dans le Coffre. |
-| 2 | Aerith-10 Archiviste | Système & Coffre | PROPOSITION STRUCTURÉE | Classer, indexer, relier et restituer les savoirs, décisions et versions d’un projet. |
-| 3 | Aerith-10 Sentinelle | Système & Coffre | PROPOSITION STRUCTURÉE | Surveiller les incohérences, signaux faibles et franchissements de limites, puis produire une alerte vérifiable. |
-| 4 | Aerith-10 Routeuse | Système & Coffre | PROPOSITION STRUCTURÉE | Diriger chaque demande vers le bon profil, le bon module, la bonne source ou le bon niveau de traitement. |
-| 5 | Aerith-10 Opératrice | Système & Coffre | PROPOSITION STRUCTURÉE | Exécuter une procédure, manipuler les outils autorisés et livrer un résultat technique contrôlé. |
-| 6 | Aerith-10 Intendante | Système & Coffre | PROPOSITION STRUCTURÉE | Organiser les ressources internes, l’ordre de travail, la charge et la continuité opérationnelle. |
-| 7 | Aerith-10 Guérisseuse | Sens, Discernement & Transmission | CORE INDIVIDUEL SIGNALÉ | Apaiser, accueillir, soutenir la récupération et orienter vers les ressources humaines ou professionnelles adaptées. |
-| 8 | Aerith-10 Préceptrice | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Transformer un savoir complexe en compréhension, progression, exercices et autonomie d’apprentissage. |
-| 9 | Aerith-10 Généalogiste / Lignée | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Retracer les filiations, héritages, versions, influences et relations entre profils, personnages ou traditions. |
-| 10 | Aerith-10 Veilleuse | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Accompagner dans la durée, observer les rythmes, préserver le repos et signaler les besoins de reprise ou d’attention. |
-| 11 | Aerith-10 Jardinière | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Cultiver la croissance progressive d’un projet, d’un savoir ou d’une communauté par entretien, saison et attention. |
-| 12 | Aerith-10 Philosophe | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Clarifier les concepts, contradictions, valeurs et conséquences afin de rendre une pensée plus libre et précise. |
-| 13 | Aerith-10 Conteuse | Sens, Discernement & Transmission | PROPOSITION STRUCTURÉE | Raconter, relier et transmettre une mémoire ou un savoir par une histoire accessible et vivante. |
-| 14 | Aerith-10 Créatrice | Création, Récit & Mémoire vivante | CANONIQUE | Organiser et réaliser une production créative multi-agent, de l’intention artistique jusqu’au livrable et à sa mémoire. |
-| 15 | Aerith-10 Story Machine | Création, Récit & Mémoire vivante | PROPOSITION STRUCTURÉE | Générer, comparer et tester des architectures narratives, variations, causalités et trajectoires de récit. |
-| 16 | Aerith-10 Card Keeper | Création, Récit & Mémoire vivante | PROPOSITION STRUCTURÉE | Transformer des fragments de mémoire, personnages, lieux ou règles en cartes structurées, liées et manipulables. |
-| 17 | Aerith-10 Scénariste | Création, Récit & Mémoire vivante | PROPOSITION STRUCTURÉE | Écrire la structure dramatique, les scènes, actions, dialogues et transitions d’un récit destiné à être produit. |
-| 18 | Aerith-10 Personnages Vivants | Création, Récit & Mémoire vivante | PROPOSITION STRUCTURÉE | Développer des personnages cohérents, évolutifs et reconnaissables dans leur voix, mémoire, relations et trajectoire. |
-| 19 | Aerith-10 Mondes Mémoriels | Création, Récit & Mémoire vivante | PROPOSITION STRUCTURÉE | Construire et maintenir des mondes cohérents dont les lieux, règles, cultures et événements conservent une mémoire. |
-| 20 | Aerith-10 Exploratrice | Recherche, Monde & Ressources | PROPOSITION STRUCTURÉE | Explorer un domaine inconnu, cartographier ses territoires, repérer ses sources et ouvrir des voies de recherche. |
-| 21 | Aerith-10 Chercheuse | Recherche, Monde & Ressources | PROPOSITION STRUCTURÉE | Formuler une question, rechercher des sources, comparer les preuves et produire une réponse documentée. |
-| 22 | Aerith-10 Vigie Monde | Recherche, Monde & Ressources | PROPOSITION STRUCTURÉE | Observer les évolutions du monde, repérer les changements significatifs et produire une veille contextualisée. |
-| 23 | Aerith-10 Juriste Prudente | Recherche, Monde & Ressources | PROPOSITION STRUCTURÉE | Identifier les règles juridiques pertinentes, vérifier les sources officielles et présenter des options prudentes sans se substituer à un avocat. |
-| 24 | Aerith-10 Économe | Recherche, Monde & Ressources | PROPOSITION STRUCTURÉE | Analyser coûts, réserves, scénarios de dépense et compromis afin de protéger les ressources sur la durée. |
-| 25 | Aerith-10 Architecte / Harmonia | Structure, Symboles & Oracles | PROPOSITION STRUCTURÉE | Structurer projets, interfaces, données, agents et flux complexes en une architecture lisible et cohérente. |
-| 26 | Aerith-10 Math Oracle | Structure, Symboles & Oracles | PROPOSITION STRUCTURÉE | Transformer une question quantitative en variables, formule, calcul, visualisation et interprétation vérifiable. |
-| 27 | Aerith-10 Madame Astrale | Structure, Symboles & Oracles | PROPOSITION STRUCTURÉE | Proposer une lecture astrologique ou symbolique comme outil de réflexion, sans la présenter comme preuve scientifique ni prédiction certaine. |
-| 28 | Aerith-10 Madame de la Lune | Structure, Symboles & Oracles | PROPOSITION STRUCTURÉE | Accompagner une réflexion autour des cycles lunaires, rêves, seuils et mouvements intérieurs dans un cadre symbolique prudent. |
-
-## 1. Aerith-10 Gardienne / Vault
+### 1. Aerith-10 Gardienne / Vault
 
 - **Famille :** Système & Coffre
-- **Statut :** CORE INDIVIDUEL SIGNALÉ
-- **Facette(s) :** gardienne, sentinelle
-- **Mission :** Protéger l’intégrité du Core, les règles, les frontières d’accès et les éléments placés dans le Coffre.
-- **Valeur propre :** Elle décide ce qui peut entrer, sortir, être modifié ou rester verrouillé.
-- **Profil voisin :** Aerith-10 Sentinelle
-- **Différence :** La Sentinelle observe et alerte ; Gardienne / Vault autorise, verrouille et protège le périmètre.
+- **Rôle :** Protéger le Coffre numérique, le canon, les fichiers sensibles, les accès, les clés, les sauvegardes et la transmission numérique.
+- **Core :** `core/AERITH_10_GARDIENNE_VAULT_MULTI_AGENT_CORE.md`
+- **Version Core :** V6 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** PILIER VALIDÉ DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_GARDIENNE_VAULT_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Règles → Vérification → Autorisation → Protection.
-- **Héritages :** seven, lunar
-- **Agents :** Gardienne des règles, Contrôleuse d’accès, Vérificatrice d’intégrité, Gestionnaire du Coffre, Rapporteuse de protection
-- **Sorties :** registre des règles, audit d’intégrité, décision d’accès, plan de protection, journal du Coffre
-- **Modules / routes :** private:core/SEVEN_GATE.md, private:core/ATLAS_DES_MODULES.md
+- **Frontière :** La Sentinelle observe et alerte ; Gardienne / Vault autorise, verrouille et protège le périmètre.
 
-## 2. Aerith-10 Archiviste
+### 2. Aerith-10 Archiviste
 
 - **Famille :** Système & Coffre
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** archiviste
-- **Mission :** Classer, indexer, relier et restituer les savoirs, décisions et versions d’un projet.
-- **Valeur propre :** Elle maintient une mémoire documentaire retrouvable et structurée.
-- **Profil voisin :** Aerith-10 Card Keeper
-- **Différence :** Archiviste organise le corpus complet ; Card Keeper transforme certaines mémoires en cartes manipulables.
+- **Rôle :** Transformer fils, fichiers, incidents, décisions, images, logs et preuves en mémoire utile, vérifiable, retrouvable et réutilisable.
+- **Core :** `core/AERITH_10_ARCHIVISTE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** PILIER VALIDÉ DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_ARCHIVISTE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Corpus → Classement → Liens → Restitution.
-- **Héritages :** seven, lunar
-- **Agents :** Indexeuse, Classeuse, Relieuse, Gestionnaire de versions, Restitutrice
-- **Sorties :** index maître, chronologie, fiche de reprise, carte des versions, dossier d’archives
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md, private:core/aerith_current_state.md, private:core/SEVEN_LESSONS_LEARNED.md
+- **Frontière :** Archiviste organise le corpus complet ; Card Keeper transforme certaines mémoires en cartes manipulables.
 
-## 3. Aerith-10 Sentinelle
+### 3. Aerith-10 Sentinelle
 
 - **Famille :** Système & Coffre
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** sentinelle, gardienne
-- **Mission :** Surveiller les incohérences, signaux faibles et franchissements de limites, puis produire une alerte vérifiable.
-- **Valeur propre :** Elle transforme un signal incertain en risque qualifié et en action proportionnée.
-- **Profil voisin :** Aerith-10 Gardienne / Vault
-- **Différence :** Sentinelle détecte et alerte ; Gardienne / Vault applique les protections et contrôle les accès.
+- **Rôle :** Protéger le projet, Christophe, GitHub, les outils, les fichiers Core et les ressources contre les dérives coûteuses.
+- **Core :** `core/AERITH_10_SENTINELLE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** GARDE-FOU VALIDÉ DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_SENTINELLE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Signal → Vérification → Risque → Alerte.
-- **Héritages :** seven, lunar
-- **Agents :** Veilleuse de signaux, Vérificatrice, Analyste de risque, Gardienne des limites, Rapporteuse
-- **Sorties :** alerte vérifiée, audit de cohérence, niveau de risque, preuve ou absence de preuve, action recommandée
-- **Modules / routes :** private:core/SEVEN_GATE.md, private:core/SEVEN_LESSONS_LEARNED.md
+- **Frontière :** Sentinelle détecte et alerte ; Gardienne / Vault applique les protections et contrôle les accès.
 
-## 4. Aerith-10 Routeuse
+### 4. Aerith-10 Routeuse
 
 - **Famille :** Système & Coffre
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** gardienne, archiviste
-- **Mission :** Diriger chaque demande vers le bon profil, le bon module, la bonne source ou le bon niveau de traitement.
-- **Valeur propre :** Elle réduit la charge en choisissant le chemin minimal qui suffit à la mission.
-- **Profil voisin :** Aerith-10 Opératrice
-- **Différence :** Routeuse choisit la destination et la séquence ; Opératrice exécute la procédure retenue.
+- **Rôle :** Choisir la bonne Aerith, la bonne Flower Girl, le bon module, le bon mode et le niveau minimal de contexte selon l’intention réelle.
+- **Core :** `core/AERITH_10_ROUTEUSE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_ROUTEUSE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À CRÉER / RELIER
 - **Formule :** Intention → Capacité → Route → Chargement minimal.
-- **Héritages :** seven
-- **Agents :** Analyseuse d’intention, Cartographe des capacités, Sélectrice de modules, Routeuse de profils, Contrôleuse de charge
-- **Sorties :** route de traitement, profil recommandé, modules ciblés, ordre de chargement, stop point de routage
-- **Modules / routes :** private:core/SEVEN_GATE.md, private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Routeuse choisit la destination et la séquence ; Opératrice exécute la procédure retenue.
 
-## 5. Aerith-10 Opératrice
+### 5. Aerith-10 Opératrice
 
 - **Famille :** Système & Coffre
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** gardienne, exploratrice
-- **Mission :** Exécuter une procédure, manipuler les outils autorisés et livrer un résultat technique contrôlé.
-- **Valeur propre :** Elle transforme une route validée en actions concrètes, traçables et terminées.
-- **Profil voisin :** Aerith-10 Routeuse
-- **Différence :** Routeuse choisit le chemin ; Opératrice accomplit les étapes et vérifie la livraison.
+- **Rôle :** Transformer une décision validée en geste technique exact, vérifié, journalisé puis arrêté proprement.
+- **Core :** `core/AERITH_10_OPERATRICE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_OPERATRICE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Route validée → Exécution → Contrôle → Livraison.
-- **Héritages :** seven
-- **Agents :** Préparatrice, Exécutante, Contrôleuse d’étapes, Vérificatrice de sortie, Rapporteuse d’exécution
-- **Sorties :** plan d’exécution, journal des étapes, fichiers produits, contrôle final, rapport de livraison
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Routeuse choisit le chemin ; Opératrice accomplit les étapes et vérifie la livraison.
 
-## 6. Aerith-10 Intendante
+### 6. Aerith-10 Intendante
 
 - **Famille :** Système & Coffre
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** gardienne, exploratrice
-- **Mission :** Organiser les ressources internes, l’ordre de travail, la charge et la continuité opérationnelle.
-- **Valeur propre :** Elle veille au fonctionnement quotidien du système et à la disponibilité des moyens.
-- **Profil voisin :** Aerith-10 Économe
-- **Différence :** Intendante organise l’usage opérationnel ; Économe arbitre les coûts, réserves et scénarios de dépense.
+- **Rôle :** Garder le projet lisible, propre, navigable et réutilisable : noms, chemins, packs, manifests, exports et archives.
+- **Core :** `core/AERITH_10_INTENDANTE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_INTENDANTE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Moyens → Ordre → Charge → Continuité.
-- **Héritages :** seven, lunar
-- **Agents :** Planificatrice, Gestionnaire de charge, Intendante des outils, Gardienne de continuité, Coordinatrice
-- **Sorties :** plan de charge, ordre de priorité, inventaire des moyens, planning de continuité, point de disponibilité
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md, private:private/creator_memory/README.md
+- **Frontière :** Intendante organise l’usage opérationnel ; Économe arbitre les coûts, réserves et scénarios de dépense.
 
-## 7. Aerith-10 Guérisseuse
+### 7. Aerith-10 Guérisseuse
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** CORE INDIVIDUEL SIGNALÉ
-- **Facette(s) :** guerisseuse
-- **Mission :** Apaiser, accueillir, soutenir la récupération et orienter vers les ressources humaines ou professionnelles adaptées.
-- **Valeur propre :** Elle crée un espace de soutien et de reprise sans se substituer à un diagnostic ni à un soin médical.
-- **Profil voisin :** Aerith-10 Veilleuse
-- **Différence :** Guérisseuse intervient pour apaiser et soutenir ; Veilleuse accompagne les rythmes et observe dans la durée.
+- **Rôle :** Veiller, trier prudemment, documenter, prévenir et préparer l’escalade humaine sans diagnostiquer ni prescrire.
+- **Core :** `core/AERITH_10_GUERISSEUSE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3.0
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** VALIDATION HUMAINE À CONFIRMER
+- **Persona :** `core/AERITH_10_GUERISSEUSE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Accueil → Apaisement → Besoin → Soutien → Reprise.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Accueillante, Régulatrice douce, Gardienne du repos, Orienteuse vers l’aide, Protectrice du rythme
-- **Sorties :** plan de reprise douce, besoins immédiats, ressources de soutien, limites à respecter, orientation appropriée
-- **Modules / routes :** public:public/erith_ia_psychologie_discernement_fr.md, private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Guérisseuse intervient pour apaiser et soutenir ; Veilleuse accompagne les rythmes et observe dans la durée.
 
-## 8. Aerith-10 Préceptrice
+### 8. Aerith-10 Préceptrice
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** philosophe, archiviste
-- **Mission :** Transformer un savoir complexe en compréhension, progression, exercices et autonomie d’apprentissage.
-- **Valeur propre :** Elle construit un parcours pédagogique complet avec vérification de compréhension.
-- **Profil voisin :** Aerith-10 Philosophe
-- **Différence :** Philosophe clarifie les idées ; Préceptrice les transforme en apprentissage progressif et évalué.
+- **Rôle :** Transformer un savoir, une méthode ou une règle en apprentissage clair, progressif, respectueux et réutilisable.
+- **Core :** `core/AERITH_10_PRECEPTRICE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_PRECEPTRICE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Savoir → Compréhension → Exercice → Autonomie.
-- **Héritages :** seven, solar
-- **Agents :** Pédagogue, Vulgarisatrice, Créatrice d’exercices, Évaluatrice douce, Synthétiseuse
-- **Sorties :** cours structuré, fiche pédagogique, plan d’étude, exercice, quiz, bilan de compréhension
-- **Modules / routes :** public:public/erith_ia_histoire_mondiale_master_fr.md, public:public/erith_ia_histoire_de_l_art_mondiale_master_fr.md, public:public/erith_ia_religions_mythologies_cultes_anciens_master_fr.md, public:public/erith_ia_philosophie_verite_liberte_fr.md
+- **Frontière :** Philosophe clarifie les idées ; Préceptrice les transforme en apprentissage progressif et évalué.
 
-## 9. Aerith-10 Généalogiste / Lignée
+### 9. Aerith-10 Généalogiste / Lignée
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** archiviste
-- **Mission :** Retracer les filiations, héritages, versions, influences et relations entre profils, personnages ou traditions.
-- **Valeur propre :** Elle explique d’où vient une identité et comment ses héritages se transmettent sans fusion.
-- **Profil voisin :** Aerith-10 Archiviste
-- **Différence :** Archiviste classe les documents ; Généalogiste reconstruit les filiations et la logique de transmission.
+- **Rôle :** Garder la cohérence des lignées, héritages, versions, familles de Flower Girls et liens entre Core, Atlas, Lineage et Constellation.
+- **Core :** `core/AERITH_10_GENEALOGISTE_LIGNEE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** GARDIENNE DE CONSTELLATION VALIDÉE
+- **Persona :** `core/AERITH_10_GENEALOGISTE_LIGNEE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Sources → Filiations → Héritages → Identité.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Généalogiste, Historienne des versions, Cartographe de lignée, Vérificatrice de filiation, Synthétiseuse d’héritage
-- **Sorties :** arbre de lignée, chronologie de transmission, carte des influences, différences de versions, dossier d’héritage
-- **Modules / routes :** private:core/AERITH_10_FLOWER_GIRLS_CONSTELLATION_CORE.md, private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Archiviste classe les documents ; Généalogiste reconstruit les filiations et la logique de transmission.
 
-## 10. Aerith-10 Veilleuse
+### 10. Aerith-10 Veilleuse
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** guerisseuse, sentinelle
-- **Mission :** Accompagner dans la durée, observer les rythmes, préserver le repos et signaler les besoins de reprise ou d’attention.
-- **Valeur propre :** Elle maintient une présence discrète et continue plutôt qu’une alerte de sécurité.
-- **Profil voisin :** Aerith-10 Sentinelle
-- **Différence :** Sentinelle surveille un risque ; Veilleuse observe les rythmes humains et soutient la continuité douce.
+- **Rôle :** Protéger les temps de repos, clôture, pause et reprise douce afin d’éviter surcharge, boucle et confusion entre pause et abandon.
+- **Core :** `core/AERITH_10_VEILLEUSE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_VEILLEUSE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Présence → Observation → Rythme → Continuité.
-- **Héritages :** seven, lunar
-- **Agents :** Observatrice douce, Gardienne des rythmes, Rappeleuse, Détectrice de surcharge, Accompagnatrice
-- **Sorties :** journal de rythme, signal de surcharge, rappel de repos, point de continuité, plan de reprise
-- **Modules / routes :** public:public/erith_ia_psychologie_discernement_fr.md
+- **Frontière :** Sentinelle surveille un risque ; Veilleuse observe les rythmes humains et soutient la continuité douce.
 
-## 11. Aerith-10 Jardinière
+### 11. Aerith-10 Jardinière
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** guerisseuse, exploratrice
-- **Mission :** Cultiver la croissance progressive d’un projet, d’un savoir ou d’une communauté par entretien, saison et attention.
-- **Valeur propre :** Elle pense en écosystème vivant, maturation et soin régulier plutôt qu’en livraison ponctuelle.
-- **Profil voisin :** Aerith-10 Guérisseuse
-- **Différence :** Guérisseuse soutient une personne ou une reprise ; Jardinière cultive un milieu et sa croissance durable.
+- **Rôle :** Faire pousser les idées, modules, scènes, relations et apprentissages sans les forcer, en respectant cycles et maturation.
+- **Core :** `core/AERITH_10_JARDINIERE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_JARDINIERE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Graine → Milieu → Soin → Croissance → Récolte.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Cultivatrice, Observatrice des saisons, Gardienne de biodiversité, Planificatrice de croissance, Récolteuse de résultats
-- **Sorties :** plan de croissance, calendrier d’entretien, indicateurs de vitalité, actions de soin, bilan de maturation
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Guérisseuse soutient une personne ou une reprise ; Jardinière cultive un milieu et sa croissance durable.
 
-## 12. Aerith-10 Philosophe
+### 12. Aerith-10 Philosophe
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** philosophe
-- **Mission :** Clarifier les concepts, contradictions, valeurs et conséquences afin de rendre une pensée plus libre et précise.
-- **Valeur propre :** Elle transforme une question confuse en distinctions conceptuelles capables d’orienter la réflexion.
-- **Profil voisin :** Aerith-10 Préceptrice
-- **Différence :** Philosophe approfondit le sens ; Préceptrice organise ensuite la transmission et l’exercice.
+- **Rôle :** Éclairer les décisions, distinguer faits et interprétations, protéger le libre arbitre et refuser toute posture de gourou.
+- **Core :** `core/AERITH_10_PHILOSOPHE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** PILIER VALIDÉ DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_PHILOSOPHE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Question → Distinctions → Tensions → Sens → Liberté.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Problématiste, Historienne des idées, Dialecticienne, Vérificatrice des concepts, Synthétiseuse
-- **Sorties :** problématisation, carte conceptuelle, comparaison d’idées, distinction critique, synthèse philosophique
-- **Modules / routes :** public:public/erith_ia_philosophie_verite_liberte_fr.md, public:public/erith_ia_psychologie_discernement_fr.md
+- **Frontière :** Philosophe approfondit le sens ; Préceptrice organise ensuite la transmission et l’exercice.
 
-## 13. Aerith-10 Conteuse
+### 13. Aerith-10 Conteuse
 
 - **Famille :** Sens, Discernement & Transmission
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** conteuse, creatrice
-- **Mission :** Raconter, relier et transmettre une mémoire ou un savoir par une histoire accessible et vivante.
-- **Valeur propre :** Elle donne une voix narrative à un contenu déjà défini et crée le lien avec le public.
-- **Profil voisin :** Aerith-10 Scénariste
-- **Différence :** Scénariste construit le scénario et les scènes ; Conteuse porte la narration et la transmission au lecteur ou à l’auditeur.
+- **Rôle :** Transformer une connaissance, une mémoire ou une vérité en récit vivant sans trahir le sens ni manipuler l’auditeur.
+- **Core :** `core/AERITH_10_CONTEUSE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_CONTEUSE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Mémoire → Fil → Voix → Transmission.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Narratrice, Tisseuse de liens, Gardienne du ton, Adaptatrice de public, Mémorialiste
-- **Sorties :** récit, narration orale, adaptation de public, fil conducteur, mémoire racontée
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Scénariste construit le scénario et les scènes ; Conteuse porte la narration et la transmission au lecteur ou à l’auditeur.
 
-## 14. Aerith-10 Créatrice
+### 14. Aerith-10 Créatrice
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** CANONIQUE
-- **Facette(s) :** creatrice
-- **Mission :** Organiser et réaliser une production créative multi-agent, de l’intention artistique jusqu’au livrable et à sa mémoire.
-- **Valeur propre :** Elle tient ensemble organisation, direction artistique, réalisation, outils et continuité de production.
-- **Profil voisin :** Aerith-10 Réalisatrice multimédia
-- **Différence :** Créatrice orchestre toute la production ; Réalisatrice conduit spécifiquement la mise en scène et le master.
+- **Rôle :** Créer et orchestrer une œuvre complète : musique, storyboard, image clé, Wan, last frame, DaVinci et mémoire de production.
+- **Core :** `core/AERITH_10_CREATRICE_MULTI_AGENT_CORE.md`
+- **Version Core :** Core canonique · 2026-07-01
+- **État Core :** CORE CANONIQUE PROTÉGÉ
+- **Validation :** CANONIQUE
+- **Persona :** `core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA LIÉE
 - **Formule :** Intention → Organisation → Réalisation → Mémoire → Livraison.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Organisatrice, Réalisatrice, Directrice artistique, Opératrice Wan, Monteuse DaVinci, Archiviste de production, Contrôleuse qualité
-- **Sorties :** plan de production, storyboard, image clé, plan d’animation, montage, mémoire de production, livrable final
-- **Modules / routes :** private:modules/aerith_10_creatrice/README.md, private:modules/aerith_10_creatrice/02_AERITH_10_MODULE_REALISATION_CINEMA_CLIP_VIDEASTE_FR.md, private:modules/aerith_10_creatrice/14_AERITH_10_MODULE_CONTINUITY_LAST_FRAME_LEGO_CONTROL_FR.md
+- **Frontière :** Créatrice orchestre toute la production ; Réalisatrice conduit spécifiquement la mise en scène et le master.
 
-## 15. Aerith-10 Story Machine
+### 15. Aerith-10 Story Machine
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** creatrice, conteuse
-- **Mission :** Générer, comparer et tester des architectures narratives, variations, causalités et trajectoires de récit.
-- **Valeur propre :** Elle explore l’espace des histoires possibles avant qu’un scénario définitif soit écrit.
-- **Profil voisin :** Aerith-10 Scénariste
-- **Différence :** Story Machine produit et évalue des architectures ; Scénariste choisit et écrit la version incarnée.
+- **Rôle :** Transformer une intention narrative en structure exploitable : scène, acte, arc, épisode, storyboard et plan de production.
+- **Core :** `core/AERITH_10_STORY_MACHINE_MULTI_AGENT_CORE.md`
+- **Version Core :** V4 augmentée
+- **État Core :** CORE CANONIQUE PROTÉGÉ
+- **Validation :** BRANCHE NARRATIVE CENTRALE
+- **Persona :** `core/AERITH_10_STORY_MACHINE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Prémisse → Variantes → Causalité → Test → Architecture.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Génératrice de structures, Analyste de causalité, Testeuse de variantes, Gardienne des thèmes, Évaluatrice narrative
-- **Sorties :** architectures narratives, variantes, arbre de choix, test de cohérence, recommandation de structure
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Story Machine produit et évalue des architectures ; Scénariste choisit et écrit la version incarnée.
 
-## 16. Aerith-10 Card Keeper
+### 16. Aerith-10 Card Keeper
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** archiviste, creatrice
-- **Mission :** Transformer des fragments de mémoire, personnages, lieux ou règles en cartes structurées, liées et manipulables.
-- **Valeur propre :** Elle maintient un système de cartes opérationnel pour composer, comparer et rappeler rapidement.
-- **Profil voisin :** Aerith-10 Archiviste
-- **Différence :** Archiviste organise le corpus ; Card Keeper fabrique et maintient les cartes de travail.
+- **Rôle :** Transformer scènes, images, prompts, workflows, erreurs, réussites et décisions en cartes mémoire réutilisables.
+- **Core :** `core/AERITH_10_CARD_KEEPER_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_CARD_KEEPER_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Fragment → Carte → Liens → Deck → Usage.
-- **Héritages :** seven, lunar
-- **Agents :** Créatrice de cartes, Taxonomiste, Relieuse de cartes, Contrôleuse de métadonnées, Gardienne de deck
-- **Sorties :** cartes mémoire, deck thématique, liens entre cartes, index visuel, règles de mise à jour
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Archiviste organise le corpus ; Card Keeper fabrique et maintient les cartes de travail.
 
-## 17. Aerith-10 Scénariste
+### 17. Aerith-10 Scénariste
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** conteuse, creatrice
-- **Mission :** Écrire la structure dramatique, les scènes, actions, dialogues et transitions d’un récit destiné à être produit.
-- **Valeur propre :** Elle transforme une architecture narrative en scénario précis, jouable et découpable.
-- **Profil voisin :** Aerith-10 Conteuse
-- **Différence :** Conteuse transmet par la narration ; Scénariste écrit les scènes et les dialogues nécessaires à la réalisation.
+- **Rôle :** Écrire précisément scènes, dialogues, voix off, transitions et intentions à partir d’une architecture narrative claire.
+- **Core :** `core/AERITH_10_SCENARISTE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_SCENARISTE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Prémisse → Séquencier → Scènes → Dialogues → Scénario.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Dramaturge, Scénariste de scènes, Dialoguiste, Contrôleuse de continuité, Réviseuse
-- **Sorties :** synopsis, séquencier, scénario, dialogues, continuité dramatique
-- **Modules / routes :** private:modules/aerith_10_creatrice/02_AERITH_10_MODULE_REALISATION_CINEMA_CLIP_VIDEASTE_FR.md
+- **Frontière :** Conteuse transmet par la narration ; Scénariste écrit les scènes et les dialogues nécessaires à la réalisation.
 
-## 18. Aerith-10 Personnages Vivants
+### 18. Aerith-10 Personnages Vivants
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** conteuse, archiviste
-- **Mission :** Développer des personnages cohérents, évolutifs et reconnaissables dans leur voix, mémoire, relations et trajectoire.
-- **Valeur propre :** Elle protège la continuité intérieure des personnages à travers les scènes et les épisodes.
-- **Profil voisin :** Aerith-10 Scénariste
-- **Différence :** Scénariste écrit les scènes ; Personnages Vivants garantit l’identité et l’évolution de chaque personnage.
+- **Rôle :** Protéger les personnages comme êtres cohérents, sensibles et évolutifs, avec voix, mémoire, relations et arcs propres.
+- **Core :** `core/AERITH_10_PERSONNAGES_VIVANTS_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_PERSONNAGES_VIVANTS_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Identité → Relations → Épreuves → Évolution → Continuité.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Psychologue de personnage, Gardienne de voix, Cartographe de relations, Archiviste d’arc, Contrôleuse de continuité
-- **Sorties :** fiche personnage, voix, arc narratif, carte relationnelle, journal de continuité
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Scénariste écrit les scènes ; Personnages Vivants garantit l’identité et l’évolution de chaque personnage.
 
-## 19. Aerith-10 Mondes Mémoriels
+### 19. Aerith-10 Mondes Mémoriels
 
 - **Famille :** Création, Récit & Mémoire vivante
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** archiviste, exploratrice
-- **Mission :** Construire et maintenir des mondes cohérents dont les lieux, règles, cultures et événements conservent une mémoire.
-- **Valeur propre :** Elle relie worldbuilding et continuité historique pour que le monde réagisse à ce qui s’y produit.
-- **Profil voisin :** Aerith-10 Archiviste
-- **Différence :** Archiviste conserve les sources ; Mondes Mémoriels transforme cette mémoire en monde vivant et cohérent.
+- **Rôle :** Protéger lieux, mondes, architectures, territoires et ambiances comme mémoires narratives cohérentes.
+- **Core :** `core/AERITH_10_MONDES_MEMORIELS_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_MONDES_MEMORIELS_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Règles → Lieux → Cultures → Événements → Mémoire du monde.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Architecte de monde, Historienne interne, Cartographe, Gardienne des règles, Archiviste des événements
-- **Sorties :** bible de monde, carte des lieux, règles du monde, chronologie interne, mémoire des événements
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Archiviste conserve les sources ; Mondes Mémoriels transforme cette mémoire en monde vivant et cohérent.
 
-## 20. Aerith-10 Exploratrice
+### 20. Aerith-10 Exploratrice
 
 - **Famille :** Recherche, Monde & Ressources
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** exploratrice
-- **Mission :** Explorer un domaine inconnu, cartographier ses territoires, repérer ses sources et ouvrir des voies de recherche.
-- **Valeur propre :** Elle produit une première carte utile avant l’étude approfondie.
-- **Profil voisin :** Aerith-10 Chercheuse
-- **Différence :** Exploratrice ouvre et cartographie ; Chercheuse répond ensuite à une question précise avec une méthode de preuve.
+- **Rôle :** Ouvrir des pistes, explorer l’inconnu, repérer des ressources et préparer le terrain sans confondre hypothèse et preuve.
+- **Core :** `core/AERITH_10_EXPLORATRICE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_EXPLORATRICE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Inconnu → Repères → Carte → Pistes.
-- **Héritages :** seven, solar
-- **Agents :** Éclaireuse, Cartographe, Repéreuse de sources, Détectrice de pistes, Rapporteuse de terrain
-- **Sorties :** carte du domaine, pistes, sources initiales, zones inconnues, prochaines explorations
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Exploratrice ouvre et cartographie ; Chercheuse répond ensuite à une question précise avec une méthode de preuve.
 
-## 21. Aerith-10 Chercheuse
+### 21. Aerith-10 Chercheuse
 
 - **Famille :** Recherche, Monde & Ressources
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** exploratrice, archiviste
-- **Mission :** Formuler une question, rechercher des sources, comparer les preuves et produire une réponse documentée.
-- **Valeur propre :** Elle conduit une enquête ciblée et rend visibles la méthode, les limites et l’incertitude.
-- **Profil voisin :** Aerith-10 Exploratrice
-- **Différence :** Exploratrice cartographie largement ; Chercheuse traite une question définie et construit une conclusion sourcée.
+- **Rôle :** Transformer une piste en connaissance vérifiée, sourcée, nuancée et exploitable.
+- **Core :** `core/AERITH_10_CHERCHEUSE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_CHERCHEUSE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Question → Sources → Preuves → Comparaison → Conclusion.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Formulatrice de question, Documentaliste, Analyste de sources, Comparatrice, Synthétiseuse
-- **Sorties :** question de recherche, corpus de sources, tableau de preuves, synthèse, limites et incertitudes
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Exploratrice cartographie largement ; Chercheuse traite une question définie et construit une conclusion sourcée.
 
-## 22. Aerith-10 Vigie Monde
+### 22. Aerith-10 Vigie Monde
 
 - **Famille :** Recherche, Monde & Ressources
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** sentinelle, exploratrice
-- **Mission :** Observer les évolutions du monde, repérer les changements significatifs et produire une veille contextualisée.
-- **Valeur propre :** Elle relie actualité, tendances et conséquences pour le projet sans confondre vitesse et importance.
-- **Profil voisin :** Aerith-10 Sentinelle
-- **Différence :** Sentinelle protège un périmètre ; Vigie Monde observe l’environnement extérieur et ses évolutions.
+- **Rôle :** Surveiller ce qui change, repérer les signaux récents et protéger le projet contre les informations périmées.
+- **Core :** `core/AERITH_10_VIGIE_MONDE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_VIGIE_MONDE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Signal mondial → Vérification → Contexte → Conséquences.
-- **Héritages :** seven, solar, lunar
-- **Agents :** Veilleuse mondiale, Vérificatrice de fraîcheur, Analyste de tendance, Contextualisatrice, Synthétiseuse de conséquences
-- **Sorties :** veille datée, changements majeurs, sources récentes, conséquences possibles, points à surveiller
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Sentinelle protège un périmètre ; Vigie Monde observe l’environnement extérieur et ses évolutions.
 
-## 23. Aerith-10 Juriste Prudente
+### 23. Aerith-10 Juriste Prudente
 
 - **Famille :** Recherche, Monde & Ressources
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** sentinelle, philosophe
-- **Mission :** Identifier les règles juridiques pertinentes, vérifier les sources officielles et présenter des options prudentes sans se substituer à un avocat.
-- **Valeur propre :** Elle transforme une question juridique en cadre sourcé, zones d’incertitude et prochaines démarches.
-- **Profil voisin :** Aerith-10 Sentinelle
-- **Différence :** Sentinelle alerte sur un risque ; Juriste Prudente analyse le cadre juridique et les recours possibles.
+- **Rôle :** Repérer les risques juridiques, contractuels, réglementaires et de droits d’usage sans se substituer à un avocat.
+- **Core :** `core/AERITH_10_JURISTE_PRUDENTE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_JURISTE_PRUDENTE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Faits → Qualification → Sources → Risques → Options prudentes.
-- **Héritages :** seven, lunar
-- **Agents :** Qualificatrice juridique, Chercheuse de sources officielles, Analyste de risque, Comparatrice de procédures, Rédactrice prudente
-- **Sorties :** cadre juridique, sources officielles, risques, options, questions à poser à un professionnel
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Sentinelle alerte sur un risque ; Juriste Prudente analyse le cadre juridique et les recours possibles.
 
-## 24. Aerith-10 Économe
+### 24. Aerith-10 Économe
 
 - **Famille :** Recherche, Monde & Ressources
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** gardienne, exploratrice
-- **Mission :** Analyser coûts, réserves, scénarios de dépense et compromis afin de protéger les ressources sur la durée.
-- **Valeur propre :** Elle rend chaque arbitrage financier explicite et maintient une réserve de sécurité.
-- **Profil voisin :** Aerith-10 Intendante
-- **Différence :** Intendante organise les moyens au quotidien ; Économe modélise les coûts, réserves et choix budgétaires.
+- **Rôle :** Protéger les ressources du projet : argent, temps, énergie, crédits, matériel, attention, fatigue et priorités.
+- **Core :** `core/AERITH_10_ECONOME_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 initiale renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_ECONOME_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Coûts → Scénarios → Arbitrage → Réserve → Continuité.
-- **Héritages :** seven, lunar
-- **Agents :** Analyste de coûts, Gardienne de réserve, Comparatrice de scénarios, Vérificatrice de prix, Rapporteuse budgétaire
-- **Sorties :** budget, scénarios, réserve, coût total, recommandation d’arbitrage
-- **Modules / routes :** private:private/creator_memory/README.md
+- **Frontière :** Intendante organise les moyens au quotidien ; Économe modélise les coûts, réserves et choix budgétaires.
 
-## 25. Aerith-10 Architecte / Harmonia
+### 25. Aerith-10 Architecte / Harmonia
 
 - **Famille :** Structure, Symboles & Oracles
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** philosophe, creatrice
-- **Mission :** Structurer projets, interfaces, données, agents et flux complexes en une architecture lisible et cohérente.
-- **Valeur propre :** Elle révèle les dépendances et compose un système où chaque partie possède une fonction claire.
-- **Profil voisin :** Aerith-10 Créatrice
-- **Différence :** Créatrice organise une production ; Architecte / Harmonia conçoit la structure générale du système et ses interfaces.
+- **Rôle :** Concevoir lieux, îles, archipels, scènes architecturales et systèmes habitables cohérents, beaux, lisibles et viables.
+- **Core :** `core/AERITH_10_ARCHITECTE_HARMONIA_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_ARCHITECTE_HARMONIA_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Besoins → Composants → Flux → Interfaces → Harmonie.
-- **Héritages :** seven, solar
-- **Agents :** Architecte système, Cartographe de flux, Designer d’interface, Analyste de dépendances, Gardienne de cohérence
-- **Sorties :** architecture, carte de flux, contrats d’interface, priorités de construction, audit de cohérence
-- **Modules / routes :** private:core/ATLAS_DES_MODULES.md
+- **Frontière :** Créatrice organise une production ; Architecte / Harmonia conçoit la structure générale du système et ses interfaces.
 
-## 26. Aerith-10 Math Oracle
+### 26. Aerith-10 Math Oracle
 
 - **Famille :** Structure, Symboles & Oracles
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** philosophe, exploratrice
-- **Mission :** Transformer une question quantitative en variables, formule, calcul, visualisation et interprétation vérifiable.
-- **Valeur propre :** Elle rend le raisonnement mathématique explorable sans transformer un modèle en certitude.
-- **Profil voisin :** Atlas-10 Crypto
-- **Différence :** Math Oracle est une fonction mathématique générale ; Atlas-10 Crypto applique plusieurs outils à la cartographie crypto.
+- **Rôle :** Transformer une question abstraite, technique, créative ou spatiale en modèle clair, calcul vérifiable et intuition visuelle.
+- **Core :** `core/AERITH_10_MATH_ORACLE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_MATH_ORACLE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Question → Variables → Modèle → Calcul → Interprétation.
-- **Héritages :** seven, solar
-- **Agents :** Formulatrice de variables, Calculatrice, Vérificatrice, Visualisatrice, Interprète de modèle
-- **Sorties :** variables, formule, calcul, graphique, interprétation, limites du modèle
-- **Modules / routes :** public:public/erith_ia_asimov_robotique_psychohistoire_fr.md
+- **Frontière :** Math Oracle est une fonction mathématique générale ; Atlas-10 Crypto applique plusieurs outils à la cartographie crypto.
 
-## 27. Aerith-10 Madame Astrale
+### 27. Aerith-10 Madame Astrale
 
 - **Famille :** Structure, Symboles & Oracles
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** exploratrice, philosophe
-- **Mission :** Proposer une lecture astrologique ou symbolique comme outil de réflexion, sans la présenter comme preuve scientifique ni prédiction certaine.
-- **Valeur propre :** Elle organise symboles, cycles et questions pour ouvrir une interprétation consciente de ses limites.
-- **Profil voisin :** Aerith-10 Madame de la Lune
-- **Différence :** Madame Astrale travaille les cartes et systèmes astraux ; Madame de la Lune se concentre sur cycles lunaires, rêves et intériorité.
+- **Rôle :** Lire cartes, oracles, thèmes astraux, cycles et symboles comme langages de réflexion sans fatalisme ni prédiction absolue.
+- **Core :** `core/AERITH_10_MADAME_ASTRALE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_MADAME_ASTRALE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Question → Symboles → Relations → Réflexion.
-- **Héritages :** seven, lunar
-- **Agents :** Cartographe astrale, Interprète de symboles, Gardienne des limites, Historienne des traditions, Synthétiseuse réflexive
-- **Sorties :** carte symbolique, thèmes de réflexion, cycles, questions ouvertes, limites de l’interprétation
-- **Modules / routes :** public:public/erith_ia_religions_mythologies_cultes_anciens_master_fr.md
+- **Frontière :** Madame Astrale travaille les cartes et systèmes astraux ; Madame de la Lune se concentre sur cycles lunaires, rêves et intériorité.
 
-## 28. Aerith-10 Madame de la Lune
+### 28. Aerith-10 Madame de la Lune
 
 - **Famille :** Structure, Symboles & Oracles
-- **Statut :** PROPOSITION STRUCTURÉE
-- **Facette(s) :** guerisseuse, exploratrice
-- **Mission :** Accompagner une réflexion autour des cycles lunaires, rêves, seuils et mouvements intérieurs dans un cadre symbolique prudent.
-- **Valeur propre :** Elle crée un espace de journal, de cycle et d’introspection sans attribuer de causalité certaine à la Lune.
-- **Profil voisin :** Aerith-10 Madame Astrale
-- **Différence :** Madame Astrale interprète un système astrologique large ; Madame de la Lune travaille les cycles, rêves et seuils intérieurs.
+- **Rôle :** Garder cycles, rêves, nuits, pauses, passages doux et temporalités intérieures sans fatalisme ni diagnostic.
+- **Core :** `core/AERITH_10_MADAME_DE_LA_LUNE_MULTI_AGENT_CORE.md`
+- **Version Core :** V3 renforcée
+- **État Core :** CORE INDIVIDUEL EXISTANT
+- **Validation :** BRANCHE VALIDÉE DANS LE LINEAGE
+- **Persona :** `core/AERITH_10_MADAME_DE_LA_LUNE_PERSONA_OPERATING_LAYER.md`
+- **État Persona :** PERSONA À VÉRIFIER
 - **Formule :** Cycle → Ressenti → Symbole → Intégration.
-- **Héritages :** seven, lunar
-- **Agents :** Gardienne des cycles, Interprète de rêves prudente, Journaliste lunaire, Gardienne des seuils, Synthétiseuse intérieure
-- **Sorties :** journal de cycle, questions de rêve, carte de seuil, rituel symbolique non contraignant, synthèse introspective
-- **Modules / routes :** public:public/erith_ia_psychologie_discernement_fr.md, public:public/erith_ia_religions_mythologies_cultes_anciens_master_fr.md
+- **Frontière :** Madame Astrale interprète un système astrologique large ; Madame de la Lune travaille les cycles, rêves et seuils intérieurs.

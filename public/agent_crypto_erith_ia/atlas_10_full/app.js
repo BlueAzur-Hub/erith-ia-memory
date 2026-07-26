@@ -53,6 +53,12 @@
     memoryPath: "",
     status: "Création guidée par Aerith-10 Créatrice",
     version: "",
+    coreStatus: "CORE À CONSTRUIRE",
+    coreVersion: "—",
+    coreProtection: "STANDARD",
+    validationStatus: "À CONCEVOIR",
+    personaStatus: "PERSONA À CONSTRUIRE",
+    githubChecked: "",
     imagePath: ""
   });
 
@@ -83,7 +89,13 @@
       personaPath: selected.personaPath || "",
       memoryPath: selected.memoryPath || "",
       status: selected.status,
-      version: "",
+      version: selected.coreVersion || "",
+      coreStatus: selected.coreStatus || (selected.privacy === "public" ? "CORE PUBLIC INCLUS" : "CORE À VÉRIFIER"),
+      coreVersion: selected.coreVersion || "—",
+      coreProtection: selected.coreProtection || "STANDARD",
+      validationStatus: selected.validationStatus || "À VÉRIFIER",
+      personaStatus: selected.personaStatus || (selected.privacy === "public" ? "PERSONA PUBLIQUE INCLUSE" : "PERSONA À VÉRIFIER"),
+      githubChecked: selected.githubChecked || "",
       imagePath: selected.visual || ""
     };
   }
@@ -442,8 +454,14 @@
       corePath:item.corePath || `core/${cleanName(item.name)}_MULTI_AGENT_CORE.md`,
       personaPath:item.personaPath || `core/${cleanName(item.name)}_PERSONA_OPERATING_LAYER.md`,
       memoryPath:item.memoryPath || "core/ATLAS_DES_MODULES.md",
-      status:item.status || "PROPOSITION STRUCTURÉE",
-      version:FLOWER?.version || DATA.version,
+      status:item.coreStatus || item.status || "CORE À VÉRIFIER",
+      version:item.coreVersion || FLOWER?.version || DATA.version,
+      coreStatus:item.coreStatus || "CORE À VÉRIFIER",
+      coreVersion:item.coreVersion || "—",
+      coreProtection:item.coreProtection || "STANDARD",
+      validationStatus:item.validationStatus || "À VÉRIFIER",
+      personaStatus:item.personaStatus || "PERSONA À VÉRIFIER",
+      githubChecked:item.githubChecked || "",
       imagePath:""
     };
   }
@@ -498,10 +516,17 @@
           <p>${esc(item.role)}</p>
         </div>
         <div class="flower-detail-head-actions">
-          <span class="flower-detail-status">${esc(item.status)}</span>
+          <span class="flower-detail-status">${esc(item.coreStatus || item.status)}</span>
           <button type="button" data-flower-close aria-label="Fermer la fiche">Fermer ×</button>
         </div>
       </header>
+
+      <div class="flower-source-status">
+        <article><span>CORE PRIVÉ</span><strong>${esc(item.coreVersion || "Version à vérifier")}</strong><small>${esc(item.coreStatus || item.status)}</small></article>
+        <article><span>VALIDATION</span><strong>${esc(item.validationStatus || "À vérifier")}</strong><small>${esc(item.coreProtection === "PROTÉGÉ" ? "Lecture autorisée · écriture directe interdite" : "Source individuelle confirmée")}</small></article>
+        <article><span>PERSONA</span><strong>${esc(item.personaStatus || "PERSONA À VÉRIFIER")}</strong><small>Ne jamais déclarer une Persona absente sans contrôle de son chemin réel.</small></article>
+        <article><span>SCAN GITHUB</span><strong>${esc(item.githubChecked || "Non daté")}</strong><small>${esc(item.githubRepo || "Dépôt privé")}</small></article>
+      </div>
 
       <div class="flower-detail-core">
         <article class="flower-detail-highlight">
@@ -525,9 +550,9 @@
         <article><h4>Persona & modes</h4><p>${esc(item.tone || "À préciser")}</p><div class="flower-detail-tags">${(item.modes || []).map(value => `<span>${esc(value)}</span>`).join("")}</div></article>
         <article><h4>Héritages</h4><div class="flower-detail-tags">${heritage}</div><h4 class="second-title">Garde-fous</h4><ul>${list(item.guardrails)}</ul></article>
         <article class="wide"><h4>Modules et sources ciblés</h4><ul class="module-list">${modules}</ul></article>
-        <article class="wide path-card"><h4>Destinations canoniques proposées</h4><dl>
-          <div><dt>Core</dt><dd><code>${esc(item.corePath)}</code></dd></div>
-          <div><dt>Persona</dt><dd><code>${esc(item.personaPath)}</code></dd></div>
+        <article class="wide path-card"><h4>Sources canoniques et état de liaison</h4><dl>
+          <div><dt>Core</dt><dd><code>${esc(item.corePath)}</code><small>${esc(item.coreVersion || "")}</small></dd></div>
+          <div><dt>Persona</dt><dd><code>${esc(item.personaPath)}</code><small>${esc(item.personaStatus || "À vérifier")}</small></dd></div>
           <div><dt>Mémoire</dt><dd><code>${esc(item.memoryPath)}</code></dd></div>
           <div><dt>Stop Point</dt><dd>${esc(item.stopPoint)}</dd></div>
         </dl></article>
@@ -561,16 +586,21 @@
       return [item.name,item.family,item.role,item.uniqueValue,item.difference,...(item.agents || [])].join(" ").toLowerCase().includes(query);
     });
 
-    const canonical = FLOWER.profiles.filter(item => item.status === "CANONIQUE").length;
-    const signaled = FLOWER.profiles.filter(item => item.status === "CORE INDIVIDUEL SIGNALÉ").length;
-    $("#flowerSummary").innerHTML = `<span><b>${filtered.length}</b> profil(s) affiché(s)</span><span><b>${canonical}</b> canonique</span><span><b>${signaled}</b> Core individuel signalé</span><span><b>${FLOWER.profiles.length - canonical - signaled}</b> propositions structurées</span>`;
+    const existingCores = FLOWER.profiles.filter(item => /EXISTANT|CANONIQUE/.test(item.coreStatus || "")).length;
+    const protectedCores = FLOWER.profiles.filter(item => item.coreProtection === "PROTÉGÉ").length;
+    const linkedPersonas = FLOWER.profiles.filter(item => item.personaStatus === "PERSONA LIÉE").length;
+    $("#flowerSummary").innerHTML = `<span><b>${filtered.length}</b> profil(s) affiché(s)</span><span><b>${existingCores}</b> Core individuels confirmés</span><span><b>${protectedCores}</b> Core protégés</span><span><b>${linkedPersonas}</b> Persona liée</span><span><b>${FLOWER.profiles.length - linkedPersonas}</b> Persona à vérifier / relier</span>`;
 
     $("#flowerGrid").innerHTML = filtered.map(item => `
       <article class="flower-card family-${esc(item.familyId)}">
-        <header><span>${esc(item.badge)}</span><b>${esc(item.status)}</b></header>
+        <header><span>${esc(item.badge)}</span><b>${esc(item.coreVersion || item.status)}</b></header>
         <div class="flower-sigil">${esc(item.sigil || "A10")}</div>
         <h3>${esc(item.name)}</h3>
         <p>${esc(item.role)}</p>
+        <div class="flower-core-meta">
+          <span class="core">${esc(item.coreStatus || item.status)}</span>
+          <span class="persona">${esc(item.personaStatus || "PERSONA À VÉRIFIER")}</span>
+        </div>
         <dl><div><dt>Valeur propre</dt><dd>${esc(item.uniqueValue)}</dd></div><div><dt>Profil voisin</dt><dd>${esc(item.nearestProfile)}</dd></div></dl>
         <div class="flower-tags">${(item.heritage || []).map(x => `<span>${esc(x)}</span>`).join("")}<span>${(item.agents || []).length} agents</span><span>${(item.modules || []).length} modules</span></div>
         <div class="flower-card-actions">
@@ -615,7 +645,8 @@
     const i = state.identity;
     const audit = finalAudit();
     if (audit.ready) return "PRÊTE À ACTIVER";
-    if (state.canonicalConfirmed) return "CANONISÉE";
+    if (state.canonicalConfirmed && importedKind("core") && importedKind("persona")) return "SOURCES VALIDÉES";
+    if (state.canonicalConfirmed) return "VALIDATION HUMAINE";
     if (proposalAudit().ready && state.step >= 5) return "PRÊTE POUR VALIDATION";
     if ((i.tone || "").trim() && (i.modes || []).length && (i.guardrails || []).length) return "IDENTITÉ VIVANTE";
     if ((i.agents || []).length && (i.heritage || []).length) return "ARCHITECTURE";
@@ -1223,45 +1254,61 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
     const p = profile();
     const items = [];
     let ready = true;
+    let completed = 0;
+    let total = 0;
     const core = importedKind("core");
     const persona = importedKind("persona");
     const coreProposal = importedKind("core-proposal");
     const personaProposal = importedKind("persona-proposal");
+    const add = (type, title, detail, counts = true, done = type === "ok") => {
+      items.push([type, title, detail]);
+      if (counts) { total += 1; if (done) completed += 1; }
+    };
 
-    if (state.identity.name) items.push(["ok", "Identité", `${state.identity.name} est définie.`]);
-    else { items.push(["error", "Identité", "Nom manquant."]); ready = false; }
+    if (state.identity.name) add("ok", "Identité", `${state.identity.name} est définie.`);
+    else { add("error", "Identité", "Nom manquant.", true, false); ready = false; }
 
-    if (state.identity.role) items.push(["ok", "Mission", "Rôle défini."]);
-    else { items.push(["error", "Mission", "Rôle manquant."]); ready = false; }
+    if (state.identity.role) add("ok", "Mission", "Rôle défini.");
+    else { add("error", "Mission", "Rôle manquant.", true, false); ready = false; }
 
     if (p.privacy === "public") {
-      items.push(["ok", "Sources canoniques", "Core et Persona publics intégrés à la Forge."]);
+      add("ok", "Sources canoniques", "Core et Persona publics intégrés à la Forge.");
     } else {
-      if (state.canonicalConfirmed) items.push(["ok", "Canonisation", "Validation humaine confirmée."]);
-      else { items.push(["error", "Canonisation", "Confirmation humaine requise."]); ready = false; }
+      if (state.canonicalConfirmed) add("ok", "Validation humaine", "Confirmation enregistrée.");
+      else { add("warn", "À valider", "Confirmation humaine attendue.", true, false); ready = false; }
 
-      if (core) items.push(["ok", "Core canonique", `${core.file.name} importé.`]);
-      else { items.push(["error", "Core canonique", "Importer le Core validé sans suffixe PROPOSAL."]); ready = false; }
+      if (core) add("ok", "Core canonique", `${core.file.name} importé.`);
+      else {
+        const known = state.identity.coreStatus || "CORE PRIVÉ RÉFÉRENCÉ";
+        add("warn", "À importer — Core", `${known}. Le chemin est connu, mais le contenu privé n’est pas chargé dans le navigateur.`, true, false);
+        ready = false;
+      }
 
-      if (persona) items.push(["ok", "Persona canonique", `${persona.file.name} importée.`]);
-      else { items.push(["error", "Persona canonique", "Importer la Persona validée sans suffixe PROPOSAL."]); ready = false; }
+      if (persona) add("ok", "Persona canonique", `${persona.file.name} importée.`);
+      else {
+        const personaState = state.identity.personaStatus || "PERSONA À VÉRIFIER";
+        add("warn", "À importer — Persona", `${personaState}. Importer la Persona réelle lorsqu’elle est disponible.`, true, false);
+        ready = false;
+      }
 
-      if (coreProposal) items.push(["warn", "Core Proposal", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`]);
-      if (personaProposal) items.push(["warn", "Persona Proposal", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`]);
+      if (coreProposal) add("info", "Proposition Core", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
+      if (personaProposal) add("info", "Proposition Persona", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
     }
 
     const corePath = state.identity.corePath || defaultCoreTarget();
     const personaPath = state.identity.personaPath || defaultPersonaTarget();
-    if (corePath) items.push(["ok", "Chemin Core", corePath]);
-    else { items.push(["error", "Chemin Core", "Manquant."]); ready = false; }
-    if (personaPath) items.push(["ok", "Chemin Persona", personaPath]);
-    else { items.push(["error", "Chemin Persona", "Manquant."]); ready = false; }
+    if (corePath) add("ok", "Chemin Core", corePath);
+    else { add("error", "Chemin Core", "Chemin manquant.", true, false); ready = false; }
+    if (personaPath) add("ok", "Chemin Persona", personaPath);
+    else { add("error", "Chemin Persona", "Chemin manquant.", true, false); ready = false; }
 
-    if (state.identity.modules.length) items.push(["ok", "Modules", `${state.identity.modules.length} référence(s), aucune copie.`]);
-    else items.push(["warn", "Modules", "Aucun module complémentaire."]);
-    if (state.identity.stopPoint) items.push(["ok", "Stop Point", "Défini."]);
-    else { items.push(["error", "Stop Point", "Manquant."]); ready = false; }
-    return {ready, items};
+    if (state.identity.modules.length) add("ok", "Modules", `${state.identity.modules.length} référence(s), sans copie.`);
+    else add("info", "Modules", "Aucun module complémentaire.", false);
+    if (state.identity.stopPoint) add("ok", "Stop Point", "Défini.");
+    else { add("error", "Stop Point", "Manquant.", true, false); ready = false; }
+
+    const validationPercent = total ? Math.round(completed / total * 100) : 0;
+    return {ready, items, validationPercent, completed, total};
   }
 
   function profileSpec() {
@@ -1373,15 +1420,18 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
 
   function renderFinal() {
     const audit = finalAudit();
-    $("#finalStatus").textContent = audit.ready ? "PRÊT" : "À VÉRIFIER";
+    $("#finalStatus").textContent = audit.ready ? "PRÊT" : "À COMPLÉTER";
     $("#finalStatus").style.color = audit.ready ? "var(--green)" : "var(--gold)";
     $("#finalSummary").innerHTML = [
       ["Profil", state.identity.name],
+      ["Parcours", "100 %"],
+      ["Validation", `${audit.validationPercent} %`],
       ["Sources importées", String(state.imports.length)],
       ["Modules référencés", String(state.identity.modules.length)],
-      ["État", audit.ready ? "PRÊT" : "INCOMPLET"]
+      ["État", audit.ready ? "PRÊT" : "À COMPLÉTER"]
     ].map(item => `<div class="summary-card"><span>${esc(item[0])}</span><b>${esc(item[1])}</b></div>`).join("");
-    $("#finalAudit").innerHTML = audit.items.map(item => `<div class="audit-row ${item[0]}"><span>${esc(item[0].toUpperCase())}</span><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
+    const labels = {ok:"PRÊT", warn:"À FAIRE", info:"INFO", error:"ERREUR"};
+    $("#finalAudit").innerHTML = audit.items.map(item => `<div class="audit-row ${item[0]}"><span>${esc(labels[item[0]] || item[0].toUpperCase())}</span><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
     const docs = {
       boot: bootDocument(),
       manifest: manifestDocument(),
@@ -1393,7 +1443,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
     $("#forgeZip").disabled = !audit.ready;
     renderCompletion(audit);
-    if (!audit.ready) $("#forgeLog").textContent = "ZIP final disponible après import du Core et de la Persona canoniques.";
+    if (!audit.ready) $("#forgeLog").textContent = "Paquet final disponible après les éléments « À valider » et « À importer ».";
   }
 
   function renderAll() {

@@ -1,8 +1,6 @@
-# MATRICE DE DIFFÉRENCIATION — FLOWER GIRLS
+# MATRICE DE DIFFÉRENCIATION — FLOWER GIRLS V3.3
 
-**Objectif :** empêcher les doublons fonctionnels et rendre visible ce que chaque profil accomplit qu’un profil voisin n’accomplit pas.
-
-| Profil | Profil voisin | Frontière fonctionnelle |
+| Flower Girl | Profil voisin | Différence fonctionnelle |
 |---|---|---|
 | Aerith-10 Gardienne / Vault | Aerith-10 Sentinelle | La Sentinelle observe et alerte ; Gardienne / Vault autorise, verrouille et protège le périmètre. |
 | Aerith-10 Archiviste | Aerith-10 Card Keeper | Archiviste organise le corpus complet ; Card Keeper transforme certaines mémoires en cartes manipulables. |
@@ -32,8 +30,3 @@
 | Aerith-10 Math Oracle | Atlas-10 Crypto | Math Oracle est une fonction mathématique générale ; Atlas-10 Crypto applique plusieurs outils à la cartographie crypto. |
 | Aerith-10 Madame Astrale | Aerith-10 Madame de la Lune | Madame Astrale travaille les cartes et systèmes astraux ; Madame de la Lune se concentre sur cycles lunaires, rêves et intériorité. |
 | Aerith-10 Madame de la Lune | Aerith-10 Madame Astrale | Madame Astrale interprète un système astrologique large ; Madame de la Lune travaille les cycles, rêves et seuils intérieurs. |
-
-## Règle de décision
-
-Un nouveau profil est justifié lorsque sa mission, ses sorties, ses agents et son Stop Point forment une responsabilité autonome.
-Lorsqu’une capacité ne change qu’une étape d’un profil existant, elle doit rester un agent interne ou un module.
