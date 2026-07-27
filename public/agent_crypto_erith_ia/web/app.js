@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.82 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.83 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.82";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.83";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10025,45 +10025,234 @@ function atlasAccessLock() {
   document.getElementById("analyste")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-async function atlasLocalBridgeProbe() {
-  const badge = document.getElementById("localBridgeStatus");
-  const detail = document.getElementById("localBridgeDetail");
-  const button = document.getElementById("btnLocalBridgeProbe");
-  if (button) button.disabled = true;
-  if (badge) { badge.textContent = "Test du Bridge local…"; badge.className = "pill warn"; }
-  atlasLocalDialogueSetConnection(false, "Test du Bridge local…");
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), 3500);
-  try {
-    const response = await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}/health`, { cache: "no-store", signal: controller.signal, headers: { "Accept": "application/json" } });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok || payload?.ok === false) throw new Error(payload?.error || `HTTP ${response.status}`);
-    atlasLocalDialogueState.provider = payload.provider || null;
-    atlasLocalDialogueState.model = payload.model || payload.required_model || null;
-    if (payload.ready === false || payload.model_ready === false) {
-      atlasLocalDialogueState.connected = false;
-      const required = payload.required_model || "llama3.2";
-      if (badge) { badge.textContent = `${required} requis`; badge.className = "pill warn"; }
-      if (detail) detail.textContent = `Bridge connecté · modèle ${required} absent. Lance INSTALL_LLAMA32.bat ou : ollama pull ${required}`;
-      atlasLocalDialogueSetConnection(false, `Bridge détecté, mais ${required} doit être installé dans Ollama.`);
-      return payload;
+/* =========================================================
+   Build 28.1.83 — Bridge Auto Health
+   Vérification locale uniquement en administration privée.
+   ========================================================= */
+
+const ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS = 60000;
+let atlasLocalBridgeAutoTimer = 0;
+let atlasLocalBridgeProbePending = null;
+let atlasLocalBridgeLastAutoProbeAt = 0;
+
+function atlasLocalBridgeAdministratorActive() {
+  return atlasAccessIsAuthorized() && atlasV2Mode() === "advanced";
+}
+
+function atlasLocalBridgeAutoEligible() {
+  return atlasLocalBridgeAdministratorActive()
+    && !document.hidden
+    && navigator.onLine !== false
+    && !atlasLocalDialogueState.busy;
+}
+
+function atlasLocalBridgeAutoStop() {
+  if (atlasLocalBridgeAutoTimer) {
+    window.clearInterval(atlasLocalBridgeAutoTimer);
+    atlasLocalBridgeAutoTimer = 0;
+  }
+}
+
+function atlasLocalBridgeAutoTick(reason = "interval") {
+  if (!atlasLocalBridgeAutoEligible()) return false;
+
+  const now = Date.now();
+  if (
+    reason !== "interval"
+    && atlasLocalBridgeLastAutoProbeAt
+    && now - atlasLocalBridgeLastAutoProbeAt < 2500
+  ) {
+    return false;
+  }
+
+  atlasLocalBridgeLastAutoProbeAt = now;
+  void atlasLocalBridgeProbe({ silent: true, reason });
+  return true;
+}
+
+function atlasLocalBridgeAutoStart(options = {}) {
+  atlasLocalBridgeAutoStop();
+  if (!atlasLocalBridgeAdministratorActive()) return false;
+
+  if (options.immediate !== false) {
+    window.setTimeout(
+      () => atlasLocalBridgeAutoTick(options.reason || "administration-open"),
+      120
+    );
+  }
+
+  atlasLocalBridgeAutoTimer = window.setInterval(() => {
+    atlasLocalBridgeAutoTick("interval");
+  }, ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS);
+
+  return true;
+}
+
+function atlasLocalBridgeAutoSync(reason = "sync") {
+  if (atlasLocalBridgeAdministratorActive()) {
+    return atlasLocalBridgeAutoStart({ immediate: true, reason });
+  }
+  atlasLocalBridgeAutoStop();
+  return false;
+}
+
+function atlasInitLocalBridgeAutoHealth() {
+  window.addEventListener("atlas:v2mode", event => {
+    const administrator = event?.detail?.role === "owner"
+      && event?.detail?.mode === "advanced";
+
+    if (administrator) {
+      atlasLocalBridgeAutoStart({
+        immediate: true,
+        reason: "administration-open"
+      });
+    } else {
+      atlasLocalBridgeAutoStop();
     }
-    atlasLocalDialogueState.connected = true;
-    if (badge) { badge.textContent = "Bridge Ryzen connecté"; badge.className = "pill ok"; }
-    if (detail) detail.textContent = `Lecture seule · ${payload.provider || "ollama"} · ${payload.model || "llama3.2"}`;
-    atlasLocalDialogueSetConnection(true, "Dialogue local prêt avec le moteur neutre llama3.2.");
-    return payload;
-  } catch (error) {
-    atlasLocalDialogueState.connected = false;
-    atlasLocalDialogueState.provider = null;
-    atlasLocalDialogueState.model = null;
-    if (badge) { badge.textContent = "Bridge local non connecté"; badge.className = "pill warn"; }
-    if (detail) detail.textContent = "Le cockpit reste fonctionnel. Lance START_BRIDGE.bat et autorise l’accès local dans Firefox.";
-    atlasLocalDialogueSetConnection(false, error?.name === "AbortError" ? "Bridge local sans réponse." : "Bridge local non connecté.");
-    return null;
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      atlasLocalBridgeAutoStop();
+      return;
+    }
+    atlasLocalBridgeAutoSync("visibility-return");
+  });
+
+  window.addEventListener("focus", () => {
+    atlasLocalBridgeAutoSync("window-focus");
+  });
+
+  window.addEventListener("online", () => {
+    atlasLocalBridgeAutoSync("network-online");
+  });
+
+  window.addEventListener("pagehide", atlasLocalBridgeAutoStop);
+
+  window.setTimeout(() => {
+    atlasLocalBridgeAutoSync("initial");
+  }, 0);
+}
+
+
+async function atlasLocalBridgeProbe(options = {}) {
+  const silent = options?.silent === true;
+
+  if (atlasLocalBridgeProbePending) {
+    return atlasLocalBridgeProbePending;
+  }
+
+  const run = async () => {
+    const badge = document.getElementById("localBridgeStatus");
+    const detail = document.getElementById("localBridgeDetail");
+    const button = document.getElementById("btnLocalBridgeProbe");
+    const wasConnected = atlasLocalDialogueState.connected === true;
+
+    if (!silent) {
+      if (button) button.disabled = true;
+      if (badge) {
+        badge.textContent = "Test du Bridge local…";
+        badge.className = "pill warn";
+      }
+      atlasLocalDialogueSetConnection(false, "Test du Bridge local…");
+    }
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 3500);
+
+    try {
+      const response = await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}/health`, {
+        cache: "no-store",
+        signal: controller.signal,
+        headers: { "Accept": "application/json" }
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || payload?.ok === false) {
+        throw new Error(payload?.error || `HTTP ${response.status}`);
+      }
+
+      atlasLocalDialogueState.provider = payload.provider || null;
+      atlasLocalDialogueState.model =
+        payload.model || payload.required_model || null;
+
+      if (payload.ready === false || payload.model_ready === false) {
+        atlasLocalDialogueState.connected = false;
+        const required = payload.required_model || "llama3.2";
+
+        if (badge) {
+          badge.textContent = `${required} requis`;
+          badge.className = "pill warn";
+        }
+        if (detail) {
+          detail.textContent =
+            `Bridge connecté · modèle ${required} absent. `
+            + `Lance INSTALL_LLAMA32.bat ou : ollama pull ${required}`;
+        }
+
+        atlasLocalDialogueSetConnection(
+          false,
+          `Bridge détecté, mais ${required} doit être installé dans Ollama.`
+        );
+        return payload;
+      }
+
+      atlasLocalDialogueState.connected = true;
+
+      if (badge) {
+        badge.textContent = "Bridge Ryzen connecté";
+        badge.className = "pill ok";
+      }
+      if (detail) {
+        detail.textContent =
+          `Lecture seule · ${payload.provider || "ollama"} · `
+          + `${payload.model || "llama3.2"}`;
+      }
+
+      atlasLocalDialogueSetConnection(
+        true,
+        silent && wasConnected
+          ? ""
+          : "Dialogue local prêt avec le moteur neutre llama3.2."
+      );
+
+      return payload;
+    } catch (error) {
+      atlasLocalDialogueState.connected = false;
+      atlasLocalDialogueState.provider = null;
+      atlasLocalDialogueState.model = null;
+
+      if (badge) {
+        badge.textContent = "Bridge local non connecté";
+        badge.className = "pill warn";
+      }
+      if (detail) {
+        detail.textContent =
+          "Le cockpit reste fonctionnel. Lance START_BRIDGE.bat "
+          + "et autorise l’accès local dans Firefox.";
+      }
+
+      atlasLocalDialogueSetConnection(
+        false,
+        error?.name === "AbortError"
+          ? "Bridge local sans réponse."
+          : "Bridge local non connecté."
+      );
+
+      return null;
+    } finally {
+      window.clearTimeout(timer);
+      if (!silent && button) button.disabled = false;
+    }
+  };
+
+  atlasLocalBridgeProbePending = run();
+
+  try {
+    return await atlasLocalBridgeProbePending;
   } finally {
-    window.clearTimeout(timer);
-    if (button) button.disabled = false;
+    atlasLocalBridgeProbePending = null;
   }
 }
 
@@ -10082,7 +10271,8 @@ function atlasInitLocalAccess() {
   const question = document.getElementById("atlasLocalQuestion");
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
-  atlasLocalDialogueSetConnection(false, "Teste le Bridge du Ryzen. Modèle requis : Ollama llama3.2.");
+  atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
+  atlasInitLocalBridgeAutoHealth();
 }
 
 
