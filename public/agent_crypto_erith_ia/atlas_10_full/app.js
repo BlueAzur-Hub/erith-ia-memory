@@ -4,6 +4,7 @@
   const DATA = window.AERITH_UNIFIED_DATA;
   const FLOWER = window.AERITH_FLOWER_GIRLS;
   if (!DATA) throw new Error("forge-data.js introuvable.");
+  const CANONICAL_PROFILE_IDS = new Set(["seven", "creator", "aerithcrypto", "atlas"]);
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
@@ -147,7 +148,8 @@
 
   let state = loadState();
 
-  const canonicalDocumentCache = new Map();
+  const canonicalSourceCache = new Map();
+  const decoder = new TextDecoder("utf-8");
 
   function pathFileName(value) {
     const parts = cleanPath(value).split("/");
@@ -160,64 +162,83 @@
       .toUpperCase();
   }
 
+  function canonicalPath(kind, selected = profile()) {
+    return kind === "core" ? selected.corePath : selected.personaPath;
+  }
+
   function expectedCanonicalFileName(kind) {
-    const p = profile();
-    const path = kind === "core" ? p.corePath : p.personaPath;
-    return normalizeDownloadedFileName(pathFileName(path));
+    return normalizeDownloadedFileName(pathFileName(canonicalPath(kind)));
   }
 
   function importedCanonical(kind) {
-    if (isNew()) return state.imports.find(item => item.kind === kind) || null;
+    if (!isCanonicalProfile()) return null;
     const expected = expectedCanonicalFileName(kind);
     if (!expected) return null;
-    return state.imports.find(item => item.kind === kind && normalizeDownloadedFileName(pathFileName(item.path)) === expected) || null;
+    return state.imports.find(item =>
+      item.kind === kind && normalizeDownloadedFileName(pathFileName(item.path)) === expected
+    ) || null;
   }
 
   function canonicalCacheKey(kind, selected = profile()) {
     return `${selected.id}:${kind}`;
   }
 
-  function canonicalPath(kind, selected = profile()) {
-    return kind === "core" ? selected.corePath : selected.personaPath;
-  }
-
-  function ensurePublicCanonicalDocument(kind) {
+  function ensurePublicCanonicalSource(kind) {
     const selected = profile();
-    if (isNew() || selected.privacy !== "public") return;
+    if (!isCanonicalProfile() || selected.privacy !== "public") return;
     const key = canonicalCacheKey(kind, selected);
-    if (canonicalDocumentCache.has(key)) return;
-    canonicalDocumentCache.set(key, {status:"loading", text:"", error:""});
+    if (canonicalSourceCache.has(key)) return;
+    canonicalSourceCache.set(key, {status:"loading", bytes:null, text:"", error:""});
     fetch(canonicalPath(kind, selected), {cache:"no-store"})
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.text();
+        return response.arrayBuffer();
       })
-      .then(content => canonicalDocumentCache.set(key, {status:"ready", text:content, error:""}))
-      .catch(error => canonicalDocumentCache.set(key, {status:"error", text:"", error:error.message || String(error)}))
+      .then(buffer => {
+        const bytes = new Uint8Array(buffer);
+        canonicalSourceCache.set(key, {status:"ready", bytes, text:decoder.decode(bytes), error:""});
+      })
+      .catch(error => canonicalSourceCache.set(key, {status:"error", bytes:null, text:"", error:error.message || String(error)}))
       .finally(() => {
-        if (profile().id === selected.id) renderProposal();
+        if (profile().id === selected.id) {
+          renderProposal();
+          renderFinal();
+          renderAdvisor();
+        }
       });
   }
 
-  function canonicalDocumentState(kind) {
+  function canonicalSourceState(kind) {
     const selected = profile();
-    if (isNew()) return {status:"proposal", text:kind === "core" ? proposalCore() : proposalPersona(), error:""};
+    if (!isCanonicalProfile()) return {status:"not-applicable", bytes:null, text:"", error:""};
     if (selected.privacy === "public") {
-      ensurePublicCanonicalDocument(kind);
-      return canonicalDocumentCache.get(canonicalCacheKey(kind, selected)) || {status:"loading", text:"", error:""};
+      ensurePublicCanonicalSource(kind);
+      return canonicalSourceCache.get(canonicalCacheKey(kind, selected)) || {status:"loading", bytes:null, text:"", error:""};
     }
     const imported = importedCanonical(kind);
-    if (imported?.text) return {status:"ready", text:imported.text, error:"", imported};
-    return {status:"missing", text:"", error:"", imported:null};
+    if (!imported) return {status:"missing", bytes:null, text:"", error:"", imported:null};
+    return {status:"ready", bytes:null, text:imported.text || "", error:"", imported};
   }
 
-  async function canonicalDocumentText(kind) {
-    if (isNew()) return kind === "core" ? proposalCore() : proposalPersona();
+  async function canonicalSourceBytes(kind) {
+    if (!isCanonicalProfile()) throw new Error("Profil canonique non sélectionné.");
     const selected = profile();
     if (selected.privacy === "public") {
       const response = await fetch(canonicalPath(kind, selected), {cache:"no-store"});
       if (!response.ok) throw new Error(`${canonicalPath(kind, selected)} — HTTP ${response.status}`);
-      return response.text();
+      return new Uint8Array(await response.arrayBuffer());
+    }
+    const imported = importedCanonical(kind);
+    if (!imported) throw new Error(`${kind === "core" ? "Core" : "Persona"} canonique non chargé.`);
+    return new Uint8Array(await imported.file.arrayBuffer());
+  }
+
+  async function canonicalSourceText(kind) {
+    const selected = profile();
+    if (selected.privacy === "public") {
+      const stateValue = canonicalSourceState(kind);
+      if (stateValue.status === "ready") return stateValue.text;
+      return decoder.decode(await canonicalSourceBytes(kind));
     }
     const imported = importedCanonical(kind);
     if (!imported) throw new Error(`${kind === "core" ? "Core" : "Persona"} canonique non chargé.`);
@@ -246,6 +267,10 @@
 
   function isNew() {
     return state.profileId === "new";
+  }
+
+  function isCanonicalProfile() {
+    return CANONICAL_PROFILE_IDS.has(state.profileId);
   }
 
   function esc(value) {
@@ -351,7 +376,8 @@
 
   function currentVisual() {
     if (state.visualUrl) return state.visualUrl;
-    return profile().visual || "";
+    if (isCanonicalProfile()) return profile().visual || "";
+    return profile().visual || DATA.heritage.find(item => item.id === "seven").visual;
   }
 
   function canonicalBase() {
@@ -749,12 +775,21 @@
       : "<span>Héritage à choisir</span>";
   }
 
+  function stepModel(index) {
+    const step = [...STEPS[index]];
+    if (index === 5 && isCanonicalProfile()) step[2] = "Consulter les vrais fichiers Core et Persona.";
+    return step;
+  }
+
   function renderStepNav() {
-    $("#stepNav").innerHTML = STEPS.map((step, index) => `
+    $("#stepNav").innerHTML = STEPS.map((_, index) => {
+      const step = stepModel(index);
+      return `
       <button type="button" class="step-button ${state.step === index ? "active" : ""}" data-step-button="${index}">
         <span class="step-number">${step[0]}</span>
         <span><b>${esc(step[1])}</b><small>${esc(step[2])}</small></span>
-      </button>`).join("");
+      </button>`;
+    }).join("");
   }
 
   function renderMatrix() {
@@ -862,6 +897,8 @@
     let stateLabel = "GUIDE ACTIF";
     let actionType = "next";
     let actionLabel = guide.action || "Continuer";
+    let title = guide.title;
+    let message = guide.message;
 
     if (state.step === 0) {
       checks.push(["ok", p.name]);
@@ -881,29 +918,54 @@
       checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
       checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
     } else if (state.step === 5) {
-      if (isNew()) {
+      if (isCanonicalProfile()) {
+        const core = canonicalSourceState("core");
+        const persona = canonicalSourceState("persona");
+        title = "Lire les sources canoniques";
+        message = "La Forge affiche les vrais fichiers disponibles. Elle ne fabrique aucun Core ni aucune Persona de remplacement.";
+        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core réel chargé" : "Core réel non chargé"]);
+        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona réelle chargée" : "Persona réelle non chargée"]);
+        checks.push(["ok", "Aucun document PROPOSAL"]);
+      } else {
         checks.push(["ok", "Core Proposal"]);
         checks.push(["ok", "Persona Proposal"]);
         checks.push(["ok", "Brief de validation"]);
-      } else {
-        const core = canonicalDocumentState("core");
-        const persona = canonicalDocumentState("persona");
-        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core réel chargé" : "Core réel non chargé"]);
-        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona réelle chargée" : "Persona réelle non chargée"]);
-        checks.push(["ok", "Aucun document de remplacement"]);
       }
       actionType = "next";
       actionLabel = "Poursuivre vers les sources";
     } else if (state.step === 6) {
-      if (p.privacy === "public") {
-        checks.push(["ok", "Core public intégré"]);
-        checks.push(["ok", "Persona publique intégrée"]);
-        stateLabel = "SOURCES PRÊTES";
-        actionType = "goto-final";
-        actionLabel = "Vérifier la Forge finale";
-      } else {
+      if (isCanonicalProfile() && p.privacy === "public") {
+        const core = canonicalSourceState("core");
+        const persona = canonicalSourceState("persona");
+        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core public réel chargé" : "Core public en chargement"]);
+        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona publique réelle chargée" : "Persona publique en chargement"]);
+        if (core.status === "ready" && persona.status === "ready") {
+          stateLabel = "SOURCES PRÊTES";
+          actionType = "goto-final";
+          actionLabel = "Vérifier la Forge finale";
+        } else {
+          stateLabel = "SOURCES EN CHARGEMENT";
+          actionType = "next";
+          actionLabel = "Attendre les sources";
+        }
+      } else if (isCanonicalProfile()) {
         const core = importedCanonical("core");
         const persona = importedCanonical("persona");
+        checks.push([core ? "ok" : "warn", core ? "Core canonique exact importé" : "Core canonique exact attendu"]);
+        checks.push([persona ? "ok" : "warn", persona ? "Persona canonique exacte importée" : "Persona canonique exacte attendue"]);
+        checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
+        if (core && persona && state.canonicalConfirmed) {
+          stateLabel = "SOURCES PRÊTES";
+          actionType = "goto-final";
+          actionLabel = "Vérifier la Forge finale";
+        } else {
+          stateLabel = "SOURCES À RÉUNIR";
+          actionType = "files";
+          actionLabel = "Choisir les fichiers canoniques";
+        }
+      } else {
+        const core = importedKind("core");
+        const persona = importedKind("persona");
         checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
         checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
         checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
@@ -934,6 +996,8 @@
 
     return {
       ...guide,
+      title,
+      message,
       profileNote: DATA.advisor?.profiles?.[state.profileId] || i.role || "",
       checks,
       stateLabel,
@@ -970,7 +1034,7 @@
     state.step = Math.max(0, Math.min(STEPS.length - 1, Number(index) || 0));
     persist();
     $$(".panel").forEach((panel, panelIndex) => panel.classList.toggle("active", panelIndex === state.step));
-    const step = STEPS[state.step];
+    const step = stepModel(state.step);
     $("#stepCounter").textContent = `ÉTAPE ${step[0]} SUR 08`;
     $("#stepTitle").textContent = step[1];
     $("#stepDescription").textContent = step[2];
@@ -1226,17 +1290,17 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
 
   function proposalAudit() {
     const i = state.identity;
-    if (isNew()) {
+    if (!isCanonicalProfile()) {
       return [
-        [i.name && /^Aerith-10/i.test(i.name) ? "ok" : "warn", "Identité", i.name || "Manquante"],
+        [i.name && /^Aerith-10\b/i.test(i.name) ? "ok" : "warn", "Identité", i.name || "Manquante"],
         [i.role ? "ok" : "error", "Mission", i.role ? "Définie" : "Manquante"],
         [i.agents.length ? "ok" : "warn", "Agents", `${i.agents.length} déclaré(s)`],
         [i.stopPoint ? "ok" : "error", "Stop Point", i.stopPoint ? "Défini" : "Manquant"]
       ];
     }
-    const core = canonicalDocumentState("core");
-    const persona = canonicalDocumentState("persona");
-    const label = state => state.status === "ready" ? "Chargé intégralement" : state.status === "loading" ? "Chargement…" : state.status === "error" ? "Erreur de chargement" : "Non chargé";
+    const core = canonicalSourceState("core");
+    const persona = canonicalSourceState("persona");
+    const label = value => value.status === "ready" ? "Chargé intégralement" : value.status === "loading" ? "Chargement…" : value.status === "error" ? "Erreur de chargement" : "Non chargé";
     return [
       ["ok", "Profil", i.name],
       [core.status === "ready" ? "ok" : core.status === "error" ? "error" : "warn", "Core réel", label(core)],
@@ -1246,48 +1310,33 @@ Statut : ${isNew() ? "proposition locale non canonique" : "profil existant charg
   }
 
   function existingProfileBrief() {
-    const p = profile();
-    const core = canonicalDocumentState("core");
-    const persona = canonicalDocumentState("persona");
+    const core = canonicalSourceState("core");
+    const persona = canonicalSourceState("persona");
     const stateLabel = value => value.status === "ready" ? "contenu chargé" : value.status === "loading" ? "chargement en cours" : value.status === "error" ? `erreur : ${value.error}` : "contenu non chargé";
-    return `FICHE FACTUELLE DU PROFIL — ${state.identity.name}
+    return `# FICHE FACTUELLE DU PROFIL — ${state.identity.name}
 
-Cette fiche n’est ni le Core ni la Persona.
-Elle décrit uniquement l’état des sources dans la Forge.
+Cette fiche n’est ni le Core ni la Persona. Elle décrit uniquement l’état des sources dans la Forge.
 
-Profil : ${state.identity.name}
-Type : profil existant
-Core : ${state.identity.corePath || defaultCoreTarget() || "chemin non défini"}
-État Core : ${stateLabel(core)}
-Persona : ${state.identity.personaPath || defaultPersonaTarget() || "chemin non défini"}
-État Persona : ${stateLabel(persona)}
-Modules : ${state.identity.modules.length} référence(s)
+- Profil : ${state.identity.name}
+- Type : profil existant
+- Core : ${state.identity.corePath || defaultCoreTarget() || "chemin non défini"}
+- État Core : ${stateLabel(core)}
+- Persona : ${state.identity.personaPath || defaultPersonaTarget() || "chemin non défini"}
+- État Persona : ${stateLabel(persona)}
+- Modules : ${state.identity.modules.length} référence(s)
 
 Règle : aucun contenu de remplacement n’est généré pour ce profil.
 `;
   }
 
   function canonicalPreview(kind) {
-    const documentState = canonicalDocumentState(kind);
-    if (documentState.status === "ready" || documentState.status === "proposal") return documentState.text;
+    const source = canonicalSourceState(kind);
+    if (source.status === "ready") return source.text;
     const label = kind === "core" ? "CORE" : "PERSONA";
-    const path = kind === "core" ? (state.identity.corePath || defaultCoreTarget()) : (state.identity.personaPath || defaultPersonaTarget());
-    if (documentState.status === "loading") return `${label} CANONIQUE — CHARGEMENT EN COURS
-
-Source incluse : ${path}`;
-    if (documentState.status === "error") return `${label} CANONIQUE — ERREUR DE CHARGEMENT
-
-Source : ${path}
-Erreur : ${documentState.error}
-
-Aucun texte de remplacement n’est généré.`;
-    return `${label} CANONIQUE — CONTENU NON CHARGÉ
-
-Profil : ${state.identity.name}
-Source attendue : ${path}
-
-Importer le fichier réel à l’étape 07.
-Aucun texte de remplacement n’est généré.`;
+    const path = canonicalPath(kind) || (kind === "core" ? defaultCoreTarget() : defaultPersonaTarget());
+    if (source.status === "loading") return `${label} CANONIQUE — CHARGEMENT EN COURS\n\nSource incluse : ${path}`;
+    if (source.status === "error") return `${label} CANONIQUE — ERREUR DE CHARGEMENT\n\nSource : ${path}\nErreur : ${source.error}\n\nAucun texte de remplacement n’est généré.`;
+    return `${label} CANONIQUE — CONTENU NON CHARGÉ\n\nProfil : ${state.identity.name}\nSource attendue : ${path}\n\nImporter le fichier réel à l’étape 07.\nAucun texte de remplacement n’est généré.`;
   }
 
   function renderProposal() {
@@ -1302,7 +1351,7 @@ Aucun texte de remplacement n’est généré.`;
     const items = proposalAudit();
     $("#proposalAudit").innerHTML = items.map(item => `<div class="audit-tile ${item[0]}"><span>${esc(item[1])}</span><b>${esc(item[2])}</b></div>`).join("");
 
-    if (isNew()) {
+    if (!isCanonicalProfile()) {
       if (heading) heading.textContent = "Découvrir la proposition de Créatrice";
       if (description) description.textContent = "Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.";
       if (tabs[0]) tabs[0].textContent = "Core";
@@ -1322,8 +1371,8 @@ Aucun texte de remplacement n’est généré.`;
       if (tabs[0]) tabs[0].textContent = "Core réel";
       if (tabs[1]) tabs[1].textContent = "Persona réelle";
       if (tabs[2]) tabs[2].textContent = "Fiche";
-      const core = canonicalDocumentState("core");
-      const persona = canonicalDocumentState("persona");
+      const core = canonicalSourceState("core");
+      const persona = canonicalSourceState("persona");
       const docs = {core:canonicalPreview("core"), persona:canonicalPreview("persona"), brief:existingProfileBrief()};
       $("#proposalPreview").textContent = docs[state.proposalPreview] || docs.core;
       coreButton.disabled = core.status !== "ready";
@@ -1333,7 +1382,7 @@ Aucun texte de remplacement n’est généré.`;
       coreButton.querySelector("b").textContent = core.status === "ready" ? "Télécharger le fichier réel" : "Fichier non chargé";
       personaButton.querySelector("b").textContent = persona.status === "ready" ? "Télécharger le fichier réel" : "Fichier non chargé";
       briefButton.querySelector("b").textContent = "Télécharger la fiche";
-      zipButton.textContent = "TÉLÉCHARGER LES SOURCES DU PROFIL · 3 FICHIERS";
+      zipButton.textContent = "TÉLÉCHARGER LES SOURCES RÉELLES · 3 FICHIERS";
       const access = profile().privacy === "public"
         ? "Les deux sources publiques sont incluses dans cette Forge."
         : "Importer les deux fichiers privés réels à l’étape 07 pour les consulter et les exporter.";
@@ -1375,8 +1424,8 @@ Aucun texte de remplacement n’est généré.`;
     const normalizedName = normalizeDownloadedFileName(file.name);
     const proposal = name.includes("PROPOSAL") || /proposition locale non canonique/i.test(content);
     if (file.type.startsWith("image/")) return "visual";
-    if (!isNew() && normalizedName === expectedCanonicalFileName("persona")) return proposal ? "persona-proposal" : "persona";
-    if (!isNew() && normalizedName === expectedCanonicalFileName("core")) return proposal ? "core-proposal" : "core";
+    if (isCanonicalProfile() && normalizedName === expectedCanonicalFileName("persona")) return proposal ? "persona-proposal" : "persona";
+    if (isCanonicalProfile() && normalizedName === expectedCanonicalFileName("core")) return proposal ? "core-proposal" : "core";
     if (name.includes("PERSONA_OPERATING_LAYER") || /^#.+Persona Operating Layer/im.test(content)) return proposal ? "persona-proposal" : "persona";
     if (name.includes("MULTI_AGENT_CORE") || /^#.+Multi-Agent Core/im.test(content)) return proposal ? "core-proposal" : "core";
     if (name.endsWith(".ZIP")) return "pack";
@@ -1404,8 +1453,8 @@ Aucun texte de remplacement n’est généré.`;
       const kind = kindForFile(file, text);
       state.imports.push({file, path, key, kind, text});
       added += 1;
-      if (isNew() && kind === "core" && text) mergeParsed(parseCore(text, file.name));
-      if (isNew() && kind === "persona" && text) {
+      if (!isCanonicalProfile() && kind === "core" && text) mergeParsed(parseCore(text, file.name));
+      if (!isCanonicalProfile() && kind === "persona" && text) {
         const coreRequired = fieldFromText(text, ["Core requis"]);
         const personaPath = fieldFromText(text, ["Chemin cible"]);
         const version = fieldFromText(text, ["Version"]);
@@ -1442,8 +1491,6 @@ Aucun texte de remplacement n’est généré.`;
     let ready = true;
     let completed = 0;
     let total = 0;
-    const core = importedCanonical("core");
-    const persona = importedCanonical("persona");
     const coreProposal = importedKind("core-proposal");
     const personaProposal = importedKind("persona-proposal");
     const add = (type, title, detail, counts = true, done = type === "ok") => {
@@ -1457,26 +1504,33 @@ Aucun texte de remplacement n’est généré.`;
     if (state.identity.role) add("ok", "Mission", "Rôle défini.");
     else { add("error", "Mission", "Rôle manquant.", true, false); ready = false; }
 
-    if (p.privacy === "public") {
-      add("ok", "Sources canoniques", "Core et Persona publics intégrés à la Forge.");
+    if (isCanonicalProfile()) {
+      if (p.privacy === "public") {
+        const core = canonicalSourceState("core");
+        const persona = canonicalSourceState("persona");
+        if (core.status === "ready") add("ok", "Core canonique réel", `${pathFileName(p.corePath)} chargé intégralement.`);
+        else { add(core.status === "error" ? "error" : "warn", "Core canonique réel", core.status === "error" ? core.error : "Chargement en cours.", true, false); ready = false; }
+        if (persona.status === "ready") add("ok", "Persona canonique réelle", `${pathFileName(p.personaPath)} chargée intégralement.`);
+        else { add(persona.status === "error" ? "error" : "warn", "Persona canonique réelle", persona.status === "error" ? persona.error : "Chargement en cours.", true, false); ready = false; }
+      } else {
+        const core = importedCanonical("core");
+        const persona = importedCanonical("persona");
+        if (state.canonicalConfirmed) add("ok", "Validation humaine", "Confirmation enregistrée.");
+        else { add("warn", "À valider", "Confirmation humaine attendue.", true, false); ready = false; }
+        if (core) add("ok", "Core canonique exact", `${core.file.name} importé sans réécriture.`);
+        else { add("warn", "À importer — Core", `${pathFileName(p.corePath)} est requis. Aucun texte de remplacement n’est généré.`, true, false); ready = false; }
+        if (persona) add("ok", "Persona canonique exacte", `${persona.file.name} importée sans réécriture.`);
+        else { add("warn", "À importer — Persona", `${pathFileName(p.personaPath)} est requise. Aucun texte de remplacement n’est généré.`, true, false); ready = false; }
+      }
     } else {
+      const core = importedKind("core");
+      const persona = importedKind("persona");
       if (state.canonicalConfirmed) add("ok", "Validation humaine", "Confirmation enregistrée.");
       else { add("warn", "À valider", "Confirmation humaine attendue.", true, false); ready = false; }
-
       if (core) add("ok", "Core canonique", `${core.file.name} importé.`);
-      else {
-        const known = state.identity.coreStatus || "CORE PRIVÉ RÉFÉRENCÉ";
-        add("warn", "À importer — Core", `${known}. Le chemin est connu, mais le contenu privé n’est pas chargé dans le navigateur.`, true, false);
-        ready = false;
-      }
-
+      else { add("warn", "À importer — Core", "Le Core validé est requis avant la forge finale.", true, false); ready = false; }
       if (persona) add("ok", "Persona canonique", `${persona.file.name} importée.`);
-      else {
-        const personaState = state.identity.personaStatus || "PERSONA À VÉRIFIER";
-        add("warn", "À importer — Persona", `${personaState}. Importer la Persona réelle lorsqu’elle est disponible.`, true, false);
-        ready = false;
-      }
-
+      else { add("warn", "À importer — Persona", "La Persona validée est requise avant la forge finale.", true, false); ready = false; }
       if (coreProposal) add("info", "Proposition Core", `${coreProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
       if (personaProposal) add("info", "Proposition Persona", `${personaProposal.file.name} reste une proposition et n’entre pas dans le ZIP final.`, false);
     }
@@ -1680,12 +1734,15 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
     const coreTargetName = cleanPath(state.identity.corePath || defaultCoreTarget()).split("/").pop();
     const personaTargetName = cleanPath(state.identity.personaPath || defaultPersonaTarget()).split("/").pop();
 
-    if (p.privacy === "public") {
+    if (isCanonicalProfile()) {
+      files.set(`${root}/CORE/${coreTargetName}`, await canonicalSourceBytes("core"));
+      files.set(`${root}/CORE/${personaTargetName}`, await canonicalSourceBytes("persona"));
+    } else if (p.privacy === "public") {
       files.set(`${root}/CORE/${coreTargetName}`, await fetchBytes(p.corePath));
       files.set(`${root}/CORE/${personaTargetName}`, await fetchBytes(p.personaPath));
     } else {
-      const core = importedCanonical("core");
-      const persona = importedCanonical("persona");
+      const core = importedKind("core");
+      const persona = importedKind("persona");
       files.set(`${root}/CORE/${coreTargetName}`, new Uint8Array(await core.file.arrayBuffer()));
       files.set(`${root}/CORE/${personaTargetName}`, new Uint8Array(await persona.file.arrayBuffer()));
     }
@@ -1752,24 +1809,27 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   async function downloadStep6Document(kind) {
+    if (!isCanonicalProfile()) {
+      if (kind === "core") downloadText(proposalFileName("core"), proposalCore());
+      else if (kind === "persona") downloadText(proposalFileName("persona"), proposalPersona());
+      else downloadText(proposalFileName("brief"), designBrief());
+      return;
+    }
     if (kind === "brief") {
-      const name = isNew() ? proposalFileName("brief") : `${cleanName(state.identity.name)}_FICHE_SOURCES.md`;
-      downloadText(name, isNew() ? designBrief() : existingProfileBrief());
+      downloadText(`${cleanName(state.identity.name)}_FICHE_SOURCES.md`, existingProfileBrief());
       return;
     }
     try {
-      const content = await canonicalDocumentText(kind);
-      const name = isNew()
-        ? proposalFileName(kind)
-        : pathFileName(kind === "core" ? (state.identity.corePath || defaultCoreTarget()) : (state.identity.personaPath || defaultPersonaTarget()));
-      downloadText(name, content);
+      const name = pathFileName(canonicalPath(kind));
+      const bytes = await canonicalSourceBytes(kind);
+      downloadBlob(name, new Blob([bytes], {type:"text/markdown"}));
     } catch (error) {
       showToast(error.message || "Source non chargée.");
     }
   }
 
   async function downloadProposalZip() {
-    if (isNew()) {
+    if (!isCanonicalProfile()) {
       const root = `${canonicalBase()}_PROPOSAL`;
       const files = new Map([
         [`${root}/${proposalFileName("core")}`, encoder.encode(proposalCore())],
@@ -1781,16 +1841,16 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       return;
     }
     try {
-      const root = `${cleanName(state.identity.name)}_SOURCES_REELLES`;
-      const coreName = pathFileName(state.identity.corePath || defaultCoreTarget());
-      const personaName = pathFileName(state.identity.personaPath || defaultPersonaTarget());
+      const root = `${cleanName(state.identity.name)}_SOURCES_CANONIQUES`;
+      const coreName = pathFileName(canonicalPath("core"));
+      const personaName = pathFileName(canonicalPath("persona"));
       const files = new Map([
-        [`${root}/${coreName}`, encoder.encode(await canonicalDocumentText("core"))],
-        [`${root}/${personaName}`, encoder.encode(await canonicalDocumentText("persona"))],
+        [`${root}/${coreName}`, await canonicalSourceBytes("core")],
+        [`${root}/${personaName}`, await canonicalSourceBytes("persona")],
         [`${root}/${cleanName(state.identity.name)}_FICHE_SOURCES.md`, encoder.encode(existingProfileBrief())]
       ]);
       downloadBlob(`${root}.zip`, zipBlob(files));
-      showToast("Sources réelles téléchargées — 3 fichiers.");
+      showToast("Sources canoniques téléchargées — fichiers réels préservés.");
     } catch (error) {
       showToast(error.message || "Sources non chargées.");
     }
