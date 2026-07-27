@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.77 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.78 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.77-public-private-local-profiles" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.78-local-atlas-aerith-dialogue-read-only" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.77</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.78</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -36,7 +36,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.77</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.78</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1386,7 +1386,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.77 · Math Core V2</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.78 · Math Core V2</span>
       </div>
 
       <div class="situation-grid">
@@ -2363,6 +2363,62 @@
             <button class="btn" id="btnLocalBridgeProbe" type="button">Tester le Bridge du Ryzen</button>
             <span id="localBridgeDetail">Lecture seule préparée · aucune action exchange · aucun wallet.</span>
           </div>
+
+          <section class="atlas-local-dialogue" id="atlasLocalDialogue" aria-labelledby="atlasLocalDialogueTitle">
+            <div class="atlas-local-dialogue-head">
+              <div>
+                <p class="eyebrow">DIALOGUE LOCAL · SNAPSHOT AGENT-CRYPTO</p>
+                <h3 id="atlasLocalDialogueTitle">Interroger Atlas-10 ou Aerith-10</h3>
+                <p>La page transmet un état structuré du marché au Bridge local. Aucun HTML brut, aucune clé, aucun ordre financier.</p>
+              </div>
+              <span class="pill warn" id="atlasLocalDialogueBadge">Bridge à tester</span>
+            </div>
+
+            <div class="atlas-local-profile-switch" role="group" aria-label="Choisir le profil local">
+              <button type="button" class="is-active" data-atlas-local-profile="atlas" aria-pressed="true">
+                <b>Atlas-10</b><span>Vérité des données · Math · contradictions</span>
+              </button>
+              <button type="button" data-atlas-local-profile="aerith" aria-pressed="false">
+                <b>Aerith-10</b><span>Explication · discernement · No-FOMO</span>
+              </button>
+              <small id="atlasLocalRuntime">Lecture seule · moteur local en attente</small>
+            </div>
+
+            <div class="atlas-local-quick-actions" aria-label="Analyses locales rapides">
+              <button type="button" data-atlas-local-summary="market">Résumer le marché</button>
+              <button type="button" data-atlas-local-summary="top5">Analyser le Top 5</button>
+              <button type="button" data-atlas-local-summary="math">Expliquer le Math Core</button>
+              <button type="button" data-atlas-local-summary="contradictions">Contrôler les contradictions</button>
+            </div>
+
+            <div class="atlas-local-dialogue-grid">
+              <div class="atlas-local-question-panel">
+                <label for="atlasLocalQuestion">Question libre</label>
+                <textarea id="atlasLocalQuestion" rows="7" maxlength="4000"
+                  placeholder="Exemple : explique-moi la situation actuelle en distinguant Binance, CoinGecko, le graphique, le Math Core et les limites."></textarea>
+                <div class="atlas-local-question-actions">
+                  <button class="btn primary" id="btnAtlasLocalAsk" type="button">Interroger Atlas-10</button>
+                  <button class="btn" id="btnAtlasLocalClear" type="button">Vider</button>
+                </div>
+                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Teste d’abord le Bridge, puis choisis une analyse.</p>
+              </div>
+
+              <article class="atlas-local-response-panel" aria-live="polite">
+                <div class="atlas-local-response-head">
+                  <div>
+                    <span>RÉPONSE LOCALE</span>
+                    <b id="atlasLocalResponseTitle">Aucune synthèse générée</b>
+                  </div>
+                  <div>
+                    <button type="button" id="btnAtlasLocalCopy" disabled>Copier</button>
+                    <button type="button" id="btnAtlasLocalExport" disabled>Exporter .md</button>
+                  </div>
+                </div>
+                <pre id="atlasLocalResponse">Le résultat Atlas-10 ou Aerith-10 apparaîtra ici.</pre>
+                <small id="atlasLocalResponseMeta">Lecture seule · validation humaine · aucune exécution réelle</small>
+              </article>
+            </div>
+          </section>
         </section>
       </div>
     </details>
@@ -2609,6 +2665,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.77-public-private-local-profiles"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.78-local-atlas-aerith-dialogue-read-only"></script>
 </body>
 </html>
