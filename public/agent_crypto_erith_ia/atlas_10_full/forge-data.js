@@ -47,7 +47,7 @@ const CRYPTO_PRESETS = Object.freeze([
 
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R6-routeur-modules-reels",
+  version: "V3.3R7-aide-creation-guidee",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",

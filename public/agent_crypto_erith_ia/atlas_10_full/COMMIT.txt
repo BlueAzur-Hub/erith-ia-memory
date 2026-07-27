@@ -1,11 +1,12 @@
-forge: add real module router and source-faithful module packaging
+forge: replace R6 with guided private-pack workflow
 
-- expose the complete 15-module Aerith-10 Créatrice catalogue
-- add mission presets from the canonical Core routing
-- distinguish referenced, loaded, active and included states
-- keep privacy metadata separate from canonical paths
-- preserve private imported files byte-for-byte
-- fetch public modules as raw bytes
-- include only explicitly selected real modules and their router README in final ZIP
-- keep Core and Persona source-faithful
-- preserve the V3.3 interface and assets
+- accept one private ZIP containing Core, Persona, router README and modules
+- unpack ZIP sources locally in the browser without network transfer
+- default existing module profiles to complete packaging
+- distinguish complete, minimal and targeted package modes
+- require 18/18 Creator sources for the complete 24-file package
+- block final compilation when the expected file list is incomplete
+- preview every output path and verify the generated file count
+- place source loading before Core and Persona verification
+- add explicit next-action guidance and high-contrast status cards
+- preserve the V3.3 interface, profile content and source bytes

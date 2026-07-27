@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro V3.3R6 — routeur réel des modules, sources canoniques et ZIP source-fidèle.">
-  <title>Forge d’Aerith Pro · V3.3R6 ROUTEUR MODULES RÉELS</title>
-  <link rel="stylesheet" href="style.css?v=3.3r6-routeur-modules-reels">
+  <meta name="description" content="Forge d’Aerith Pro V3.3R7 — aide de création guidée, pack privé unique et ZIP final vérifiable.">
+  <title>Forge d’Aerith Pro · V3.3R7 AIDE CRÉATION GUIDÉE</title>
+  <link rel="stylesheet" href="style.css?v=3.3r6-aide-creation-guidee">
 </head>
-<body data-build="V3.3R6-routeur-modules-reels" data-theme="seven">
+<body data-build="V3.3R7-aide-creation-guidee" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
     <a class="brand" href="#top" aria-label="Retour en haut">
       <span class="brand-mark">✦</span>
-      <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE · PROFILE FOUNDRY</small></span>
+      <span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</small></span>
     </a>
     <nav>
       <a href="#lineage">Lignée</a>
@@ -27,7 +27,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V3.3R6 ROUTEUR MODULES RÉELS</span>
+      <span class="version" id="buildBadge">V3.3R7 AIDE CRÉATION GUIDÉE</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -39,7 +39,7 @@
       <div class="shell hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">ERITH.IA · CONSTELLATION AERITH · FORGE PROFESSIONNELLE</p>
-          <h1>Compiler les profils.<br><span>Faire grandir la Constellation Aerith.</span></h1>
+          <h1>Compiler les profils.<br><span>Faire naître les prochaines Aerith.</span></h1>
           <p class="lead">
             Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge relie désormais la lignée Aerith, les 28 Core individuels, leurs statuts réels, leurs sources et leurs Personas sans inventer ce qui reste à vérifier.
           </p>
@@ -138,7 +138,7 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V3.3R6 ROUTEUR MODULES RÉELS</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V3.3R7 AIDE CRÉATION GUIDÉE</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -237,7 +237,7 @@
             <div id="moduleRouterPanel" class="module-router-panel" hidden></div>
             <label class="field-block"><span id="fieldModulesLabel">Modules ou fichiers sources — un chemin par ligne</span><textarea id="fieldModules" rows="10"></textarea></label>
             <label class="field-block"><span>Principe d’intégration des savoirs</span><textarea id="fieldNonDuplication" rows="3"></textarea></label>
-            <div class="truth-box"><strong>Chemins acceptés</strong><p><code>private:core/...</code>, <code>private:modules/...</code>, <code>public:public/...</code> ou une URL complète.</p></div>
+            <details class="advanced-details"><summary>Détails techniques des chemins</summary><div class="truth-box"><strong>Chemins canoniques</strong><p>Les chemins réels restent visibles pour l’audit. Ils ne sont pas à modifier pour un profil existant.</p></div></details>
           </section>
 
           <section class="panel" data-step="4">
@@ -256,46 +256,84 @@
 
           <section class="panel" data-step="5">
             <header class="panel-head">
-              <div><p class="kicker">06 · CORE ET PERSONA</p><h2>Découvrir la proposition de Créatrice</h2></div>
-              <p>Créatrice rassemble les décisions prises dans trois documents de travail : Core proposé, Persona proposée et brief de validation.</p>
+              <div><p class="kicker">06 · SOURCES ET PACK PRIVÉ</p><h2>Charger une seule fois les fichiers réels</h2></div>
+              <span class="status" id="sourceStepStatus">PACK ATTENDU</span>
             </header>
-            <div class="audit-grid" id="proposalAudit"></div>
-            <div class="preview-tabs" id="proposalTabs">
-              <button class="active" type="button" data-preview="core">Core</button>
-              <button type="button" data-preview="persona">Persona</button>
-              <button type="button" data-preview="brief">Brief</button>
+
+            <div class="next-action-card" id="privatePackGuide">
+              <div class="next-action-number">1</div>
+              <div class="next-action-copy">
+                <span>ACTION RECOMMANDÉE</span>
+                <h3>Charger le pack privé complet du profil</h3>
+                <p>Un seul ZIP suffit. La Forge l’ouvre localement, reconnaît le Core, la Persona, le README du routeur et les 15 modules. Aucun fichier privé n’est envoyé sur Internet.</p>
+                <div class="next-action-buttons">
+                  <input id="packInput" type="file" accept=".zip,application/zip" hidden>
+                  <button class="primary" id="choosePrivatePack" type="button">CHARGER LE PACK PRIVÉ COMPLET (.ZIP)</button>
+                  <button id="showAdvancedImports" type="button">Autres méthodes</button>
+                </div>
+              </div>
+              <div class="pack-score" id="packScore"><b>0 / 18</b><span>sources reconnues</span></div>
             </div>
-            <pre class="preview" id="proposalPreview"></pre>
-            <div class="export-grid">
-              <button id="downloadProposalCore" type="button"><span>CORE</span><b>Télécharger</b></button>
-              <button id="downloadProposalPersona" type="button"><span>PERSONA</span><b>Télécharger</b></button>
-              <button id="downloadProposalBrief" type="button"><span>BRIEF</span><b>Télécharger</b></button>
-              <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LE ZIP DE PROPOSITION · 3 FICHIERS</button>
+
+            <div class="package-mode-panel">
+              <div class="package-mode-head"><span>2</span><div><h3>Choisir le paquet final</h3><p>Le mode complet est recommandé pour conserver toute la base canonique.</p></div></div>
+              <div class="package-mode-grid" id="packageModeGrid">
+                <button type="button" data-package-mode="complete"><span>RECOMMANDÉ</span><b>Profil complet</b><small>Core + Persona + routeur + tous les modules</small><strong id="completePackageCount">24 fichiers</strong></button>
+                <button type="button" data-package-mode="minimal"><span>SIMPLE</span><b>Profil minimal</b><small>Core + Persona, sans modules</small><strong>8 fichiers</strong></button>
+                <button type="button" data-package-mode="targeted"><span>AVANCÉ</span><b>Profil ciblé</b><small>Modules de la route choisie uniquement</small><strong id="targetedPackageCount">À calculer</strong></button>
+              </div>
             </div>
-            <div class="route-box" id="canonRoute"></div>
+
+            <div class="source-checklist" id="sourceChecklist"></div>
+
+            <details class="advanced-details" id="advancedImports">
+              <summary>Autres méthodes d’import</summary>
+              <div class="dropzone" id="dropzone">
+                <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
+                <input id="folderInput" type="file" webkitdirectory directory multiple>
+                <span class="drop-icon">⇩</span>
+                <h3>Fichiers séparés ou dossier décompressé</h3>
+                <p>Cette zone reste disponible pour un contrôle manuel. Le bouton ZIP complet ci-dessus est la voie normale.</p>
+                <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
+              </div>
+            </details>
+
+            <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
+            <div class="import-list" id="importList"></div>
+
+            <details class="advanced-details">
+              <summary>Chemins canoniques et validation humaine</summary>
+              <div class="canonical-grid">
+                <label><span>Chemin Core canonique</span><input id="fieldCorePath" placeholder="core/AERITH_10_..._MULTI_AGENT_CORE.md"></label>
+                <label><span>Chemin Persona canonique</span><input id="fieldPersonaPath" placeholder="core/AERITH_10_..._PERSONA_OPERATING_LAYER.md"></label>
+                <label class="wide"><span>Mémoire ou base métier</span><input id="fieldMemoryPath" placeholder="private/... ou public/..."></label>
+              </div>
+            </details>
+
+            <label class="human-confirmation"><input id="canonicalConfirmed" type="checkbox"><span><b>3 · Confirmation humaine</b> Je confirme que le Core et la Persona sont bien les fichiers canoniques du profil.</span></label>
+            <div class="source-next" id="sourceNext"><b>Prochaine action :</b><span>charger le pack privé complet.</span></div>
           </section>
 
           <section class="panel" data-step="6">
             <header class="panel-head">
-              <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2>Réunir les fichiers validés</h2></div>
-              <p>Déposer le Core, la Persona et, pour un profil privé, le dossier réel des modules à inclure. Les fichiers PROPOSAL restent des documents de travail.</p>
+              <div><p class="kicker">07 · VÉRIFICATION DES SOURCES</p><h2>Consulter le vrai Core et la vraie Persona</h2></div>
+              <span class="status" id="verificationStepStatus">À CHARGER</span>
             </header>
-            <div class="dropzone" id="dropzone">
-              <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
-              <input id="folderInput" type="file" webkitdirectory directory multiple>
-              <span class="drop-icon">⇩</span>
-              <h3>Déposer les sources canoniques réelles</h3>
-              <p>Core, Persona et modules privés sont lus localement. Aucun fichier protégé n’est réécrit ; les octets d’origine sont conservés dans le ZIP.</p>
-              <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
+            <div class="route-box verification-intro"><b>Aucun fichier de remplacement</b><p>Cette étape s’ouvre après le chargement. Elle affiche uniquement les fichiers réels reconnus dans la session.</p></div>
+            <div class="audit-grid" id="proposalAudit"></div>
+            <div class="preview-tabs" id="proposalTabs">
+              <button class="active" type="button" data-preview="core">Core réel</button>
+              <button type="button" data-preview="persona">Persona réelle</button>
+              <button type="button" data-preview="brief">Fiche factuelle</button>
             </div>
-            <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
-            <div class="import-list" id="importList"></div>
-            <div class="canonical-grid">
-              <label><span>Chemin Core canonique</span><input id="fieldCorePath" placeholder="core/AERITH_10_..._MULTI_AGENT_CORE.md"></label>
-              <label><span>Chemin Persona canonique</span><input id="fieldPersonaPath" placeholder="core/AERITH_10_..._PERSONA_OPERATING_LAYER.md"></label>
-              <label class="wide"><span>Mémoire ou base métier</span><input id="fieldMemoryPath" placeholder="private/... ou public/..."></label>
-              <label class="check wide"><input id="canonicalConfirmed" type="checkbox"><span>Je confirme que le Core et la Persona ont été relus et canonisés humainement.</span></label>
+            <pre class="preview" id="proposalPreview"></pre>
+            <div class="export-grid">
+              <button id="downloadProposalCore" type="button"><span>CORE</span><b>Télécharger le fichier réel</b></button>
+              <button id="downloadProposalPersona" type="button"><span>PERSONA</span><b>Télécharger le fichier réel</b></button>
+              <button id="downloadProposalBrief" type="button"><span>FICHE</span><b>Télécharger</b></button>
+              <button class="primary" id="downloadProposalZip" type="button">TÉLÉCHARGER LES SOURCES RÉELLES</button>
             </div>
+            <div class="route-box" id="canonRoute"></div>
           </section>
 
           <section class="panel" data-step="7">
@@ -364,8 +402,8 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="flower-girls-registry.js?v=3.3r6-routeur-modules-reels"></script>
-  <script src="forge-data.js?v=3.3r6-routeur-modules-reels"></script>
-  <script src="app.js?v=3.3r6-routeur-modules-reels"></script>
+  <script src="flower-girls-registry.js?v=3.3r6-aide-creation-guidee"></script>
+  <script src="forge-data.js?v=3.3r6-aide-creation-guidee"></script>
+  <script src="app.js?v=3.3r6-aide-creation-guidee"></script>
 </body>
 </html>

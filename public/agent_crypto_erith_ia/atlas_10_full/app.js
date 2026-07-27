@@ -9,7 +9,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-v3-3r6-modules";
+  const STORAGE_KEY = "aerith-forge-v3-3r7-guided-pack";
   const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
   document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
   const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
@@ -20,9 +20,9 @@
     ["03", "Multi-agents", "Composer une constellation d’agents spécialisés."],
     ["04", "Héritages", "Relier les couches Seven et les savoirs utiles."],
     ["05", "Persona", "Donner une voix, des modes et un rythme de travail."],
-    ["06", "Core + Persona", "Découvrir la proposition structurée par Créatrice."],
-    ["07", "Sources", "Réunir les fichiers canoniques et le visuel."],
-    ["08", "Forge finale", "Vérifier l’architecture et forger le paquet complet."]
+    ["06", "Sources", "Charger un pack complet ou les sources canoniques."],
+    ["07", "Core + Persona", "Vérifier les vrais fichiers après leur chargement."],
+    ["08", "Forge finale", "Contrôler la liste exacte puis forger le paquet."]
   ];
 
   const blankIdentity = () => ({
@@ -124,6 +124,45 @@
     };
   }
 
+  function defaultPackageMode(selected) {
+    return selected?.moduleRouter ? "complete" : "minimal";
+  }
+
+  function fullPreset(selected) {
+    const router = selected?.moduleRouter;
+    if (!router) return null;
+    return (router.presets || []).find(item => item.id === "full" || item.id === "full-crypto") || (router.presets || []).at(-1) || null;
+  }
+
+  function defaultModuleRouting(selected) {
+    const router = selected?.moduleRouter;
+    const preset = fullPreset(selected);
+    if (!router || !preset) return emptyModuleRouting();
+    const paths = preset.modules.map(id => router.catalog.find(item => item.id === id)?.path).filter(Boolean);
+    return {routeId:preset.id, active:[...paths], included:[...paths]};
+  }
+
+  function selectedPackageEntries() {
+    const catalog = moduleCatalog();
+    if (!catalog.length || state.packageMode === "minimal") return [];
+    if (state.packageMode === "complete") return [...catalog];
+    const active = new Set(state.moduleRouting.active || []);
+    return catalog.filter(item => active.has(item.path));
+  }
+
+  function syncPackageInclusion() {
+    const catalog = moduleCatalog();
+    state.moduleRouting = sanitizeModuleRouting(state.moduleRouting);
+    if (!catalog.length || state.packageMode === "minimal") state.moduleRouting.included = [];
+    else if (state.packageMode === "complete") state.moduleRouting.included = catalog.map(item => item.path);
+    else state.moduleRouting.included = [...state.moduleRouting.active];
+  }
+
+  function expectedPackageCount() {
+    const included = selectedPackageEntries().length;
+    return 8 + (included ? included + 1 : 0);
+  }
+
   const defaultState = () => {
     const selected = DATA.profiles.find(item => item.id === "creator") || DATA.profiles[0];
     return {
@@ -136,7 +175,9 @@
       identity: identityFromProfile(selected),
       imports: [],
       importedFileMeta: [],
-      moduleRouting: emptyModuleRouting(),
+      moduleRouting: defaultModuleRouting(selected),
+      packageMode: defaultPackageMode(selected),
+      packInfo: {name:"", entries:0, error:""},
       visualUrl: "",
       lastSaved: ""
     };
@@ -164,7 +205,9 @@
         identity: {...fallback.identity, ...(raw.identity || {})},
         imports: [],
         visualUrl: "",
-        moduleRouting: sanitizeModuleRouting(raw.moduleRouting, DATA.profiles.find(item => item.id === (raw.profileId || fallback.profileId)) || DATA.profiles[0])
+        moduleRouting: sanitizeModuleRouting(raw.moduleRouting, DATA.profiles.find(item => item.id === (raw.profileId || fallback.profileId)) || DATA.profiles[0]),
+        packageMode: ["complete","minimal","targeted"].includes(raw.packageMode) ? raw.packageMode : fallback.packageMode,
+        packInfo: {name:"", entries:0, error:""}
       };
     } catch {
       return fallback;
@@ -316,6 +359,7 @@
       .catch(error => moduleSourceCache.set(key, {status:"error", bytes:null, text:"", error:error.message || String(error)}))
       .finally(() => {
         renderModuleRouter();
+        renderSourceGuide();
         renderFinal();
         renderAdvisor();
       });
@@ -533,7 +577,9 @@
     state.canonicalConfirmed = selected.kind === "existing" && selected.privacy === "public";
     state.identity = identityFromProfile(selected);
     state.imports = [];
-    state.moduleRouting = emptyModuleRouting();
+    state.moduleRouting = defaultModuleRouting(selected);
+    state.packageMode = defaultPackageMode(selected);
+    state.packInfo = {name:"", entries:0, error:""};
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     state.step = move ? 0 : state.step;
@@ -563,6 +609,8 @@
     };
     state.imports = [];
     state.moduleRouting = emptyModuleRouting();
+    state.packageMode = "minimal";
+    state.packInfo = {name:"", entries:0, error:""};
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     persist();
@@ -578,6 +626,8 @@
     state.identity = identityFromProfile(selected);
     state.imports = [];
     state.moduleRouting = emptyModuleRouting();
+    state.packageMode = "minimal";
+    state.packInfo = {name:"", entries:0, error:""};
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     persist();
@@ -699,6 +749,9 @@
     state.identity = flowerIdentity(item);
     state.canonicalConfirmed = false;
     state.imports = [];
+    state.moduleRouting = emptyModuleRouting();
+    state.packageMode = "minimal";
+    state.packInfo = {name:"", entries:0, error:""};
     state.visualUrl = "";
     state.step = 0;
     state.proposalPreview = "core";
@@ -892,7 +945,7 @@
 
   function stepModel(index) {
     const step = [...STEPS[index]];
-    if (index === 5 && isCanonicalProfile()) step[2] = "Consulter les vrais fichiers Core et Persona.";
+    if (index === 6 && isCanonicalProfile()) step[2] = "Consulter les vrais fichiers Core et Persona.";
     return step;
   }
 
@@ -984,6 +1037,7 @@
     renderConstellation();
     renderFlowerGirls();
     renderProposal();
+    renderSourceGuide();
     renderFinal();
     renderAdvisor();
   }
@@ -1010,157 +1064,136 @@
     if (!router) { panel.hidden = true; panel.innerHTML = ""; return; }
     panel.hidden = false;
     state.moduleRouting = sanitizeModuleRouting(state.moduleRouting);
+    syncPackageInclusion();
     const metrics = moduleMetrics();
     const route = (router.presets || []).find(item => item.id === metrics.routing.routeId);
     const source = routerEntry();
     const sourceState = moduleSourceState(source);
-    const stateLabel = value => value.status === "ready" ? "CHARGÉ" : value.status === "loading" ? "CHARGEMENT" : value.status === "error" ? "ERREUR" : "À CHARGER";
+    const packageLabel = state.packageMode === "complete" ? "PROFIL COMPLET" : state.packageMode === "minimal" ? "PROFIL MINIMAL" : "PROFIL CIBLÉ";
+    const packageCount = expectedPackageCount();
     panel.innerHTML = `
       <div class="module-router-head">
-        <div><p class="kicker">ROUTEUR DE MODULES RÉELS</p><h3>${esc(state.identity.name)} · catalogue canonique</h3><p>Le catalogue reste référencé. Une route choisit les modules actifs ; seuls les modules cochés « ZIP » sont copiés, octet pour octet, dans le paquet final.</p></div>
-        <div class="module-router-counts">
-          <span><b>${metrics.referenced}</b> référencés</span><span><b>${metrics.loaded.length}</b> chargés</span><span><b>${metrics.active}</b> actifs</span><span><b>${metrics.included}</b> inclus</span>
-        </div>
+        <div><p class="kicker">COMPÉTENCES DU PROFIL</p><h3>${esc(state.identity.name)} · catalogue canonique</h3><p>Choisir une route règle les compétences actives. Le mode du paquet décide ce qui sera copié dans le ZIP final.</p></div>
+        <div class="module-router-counts"><span><b>${metrics.referenced}</b> modules</span><span><b>${metrics.loaded.length}</b> chargés</span><span><b>${metrics.active}</b> actifs</span></div>
       </div>
+      <div class="module-package-summary"><div><b>${packageLabel}</b><small> · ${metrics.routing.included.length} module(s) inclus</small></div><span>${packageCount} fichiers attendus</span></div>
       <div class="module-route-presets">${(router.presets || []).map(item => `<button type="button" class="${item.id === metrics.routing.routeId ? "active" : ""}" data-module-preset="${esc(item.id)}">${esc(item.label)}</button>`).join("")}</div>
-      <div class="module-router-source">
-        <div><b>Routeur canonique · ${stateLabel(sourceState)}</b><code>${esc(source.path)}</code></div>
-        <span class="status">${source.privacy === "private" ? "PRIVÉ · IMPORT LOCAL" : "PUBLIC · FETCH RÉEL"}</span>
-      </div>
-      <div class="module-catalog">${metrics.catalog.map(entry => {
-        const loaded = moduleSourceState(entry).status === "ready";
-        const active = metrics.routing.active.includes(entry.path);
-        const included = metrics.routing.included.includes(entry.path);
-        return `<article class="module-card ${active ? "active" : ""} ${included ? "included" : ""}">
-          <div class="module-card-title"><span class="module-number">${esc(entry.id)}</span><div><b>${esc(entry.label)}</b><code>${esc(entry.path)}</code></div></div>
-          <div class="module-state-badges"><span>RÉFÉRENCÉ</span><span class="${loaded ? "ready" : ""}">${loaded ? "CHARGÉ" : entry.privacy === "public" ? "CHARGEMENT" : "À CHARGER"}</span>${active ? '<span class="active">ACTIF</span>' : ''}${included ? '<span class="included">INCLUS ZIP</span>' : ''}</div>
-          <div class="module-card-controls"><label><input type="checkbox" data-module-active="${esc(entry.path)}" ${active ? "checked" : ""}> Actif</label><label><input type="checkbox" data-module-include="${esc(entry.path)}" ${included ? "checked" : ""}> ZIP</label></div>
-        </article>`;
-      }).join("")}</div>
-      <div class="module-router-actions"><button type="button" data-module-action="include-active">Inclure les actifs</button><button type="button" data-module-action="clear-included">Retirer du ZIP</button><button type="button" data-module-action="clear-route">Effacer la route</button></div>
-      ${route ? `<div class="rule-box"><b>Route active · ${esc(route.label)}</b><p>${route.modules.length} module(s) actifs et présélectionnés pour le ZIP.</p></div>` : `<div class="truth-box"><strong>Aucune route active</strong><p>Le catalogue est complet. Choisir une route ne modifie aucun Core ni aucune Persona.</p></div>`}
-    `;
+      ${route ? `<div class="rule-box"><b>Route active · ${esc(route.label)}</b><p>${route.modules.length} compétence(s) active(s). Le profil complet conserve néanmoins tout le catalogue.</p></div>` : `<div class="truth-box"><strong>Aucune route active</strong><p>Choisir une route pour préparer une mission ciblée.</p></div>`}
+      <details class="advanced-details module-advanced">
+        <summary>Voir les ${metrics.referenced} modules et les états techniques</summary>
+        <div class="module-router-source"><div><b>README du routeur · ${sourceState.status === "ready" ? "CHARGÉ" : source.privacy === "public" ? "CHARGEMENT" : "À CHARGER"}</b><code>${esc(source.path)}</code></div><span class="status">${source.privacy === "private" ? "PACK PRIVÉ" : "SOURCE PUBLIQUE"}</span></div>
+        <div class="module-catalog">${metrics.catalog.map(entry => {
+          const loaded = moduleSourceState(entry).status === "ready";
+          const active = metrics.routing.active.includes(entry.path);
+          const included = metrics.routing.included.includes(entry.path);
+          return `<article class="module-card ${active ? "active" : ""} ${included ? "included" : ""}">
+            <div class="module-card-title"><span class="module-number">${esc(entry.id)}</span><div><b>${esc(entry.label)}</b><code>${esc(entry.path)}</code></div></div>
+            <div class="module-state-badges"><span>RÉFÉRENCÉ</span><span class="${loaded ? "ready" : ""}">${loaded ? "CHARGÉ" : entry.privacy === "public" ? "CHARGEMENT" : "À CHARGER"}</span>${active ? '<span class="active">ACTIF</span>' : ''}${included ? '<span class="included">INCLUS</span>' : ''}</div>
+            <div class="module-card-controls"><label><input type="checkbox" data-module-active="${esc(entry.path)}" ${active ? "checked" : ""}> Actif</label>${state.packageMode === "targeted" ? `<label><input type="checkbox" data-module-include="${esc(entry.path)}" ${included ? "checked" : ""}> Inclure</label>` : ""}</div>
+          </article>`;
+        }).join("")}</div>
+      </details>`;
+  }
+
+  function creatorPackMetrics() {
+    const core = isCanonicalProfile() ? importedCanonical("core") : importedKind("core");
+    const persona = isCanonicalProfile() ? importedCanonical("persona") : importedKind("persona");
+    const router = profileModuleRouter() ? moduleSourceState(routerEntry()).status === "ready" : true;
+    const catalog = moduleCatalog();
+    const loadedModules = catalog.filter(item => moduleSourceState(item).status === "ready");
+    return {core:Boolean(core), persona:Boolean(persona), router, loadedModules, expected:2 + (catalog.length ? catalog.length + 1 : 0)};
+  }
+
+  function renderSourceGuide() {
+    const grid = $("#packageModeGrid");
+    if (!grid) return;
+    syncPackageInclusion();
+    const metrics = creatorPackMetrics();
+    const hasRouter = Boolean(profileModuleRouter());
+    const recognized = Number(metrics.core) + Number(metrics.persona) + (hasRouter ? Number(metrics.router) + metrics.loadedModules.length : 0);
+    const expectedSources = hasRouter ? metrics.expected : 2;
+    const completeCount = 8 + (hasRouter ? moduleCatalog().length + 1 : 0);
+    const targetedCount = 8 + (state.moduleRouting.active.length ? state.moduleRouting.active.length + 1 : 0);
+    $("#completePackageCount").textContent = `${completeCount} fichiers`;
+    $("#targetedPackageCount").textContent = `${targetedCount} fichiers`;
+    $$("[data-package-mode]", grid).forEach(button => button.classList.toggle("active", button.dataset.packageMode === state.packageMode));
+    const score = $("#packScore");
+    score.innerHTML = `<b>${recognized} / ${expectedSources}</b><span>sources reconnues</span>`;
+    score.classList.toggle("ready", recognized === expectedSources);
+    $("#sourceStepStatus").textContent = recognized === expectedSources ? "PACK COMPLET" : recognized ? "PACK INCOMPLET" : "PACK ATTENDU";
+    $("#sourceStepStatus").style.color = recognized === expectedSources ? "var(--green)" : "var(--gold)";
+    $("#sourceChecklist").innerHTML = [
+      [metrics.core, "Core", metrics.core ? "reconnu" : "manquant"],
+      [metrics.persona, "Persona", metrics.persona ? "reconnue" : "manquante"],
+      [metrics.router, "Routeur", metrics.router ? "README reconnu" : hasRouter ? "manquant" : "non requis"],
+      [!hasRouter || metrics.loadedModules.length === moduleCatalog().length, "Modules", hasRouter ? `${metrics.loadedModules.length} / ${moduleCatalog().length}` : "non requis"]
+    ].map(item => `<div class="source-check ${item[0] ? "ok" : "warn"}"><i>${item[0] ? "✓" : "!"}</i><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
+    let next = "charger le pack privé complet.";
+    if (recognized === expectedSources && !state.canonicalConfirmed) next = "cocher la confirmation humaine ci-dessus.";
+    else if (recognized === expectedSources && state.canonicalConfirmed) next = "ouvrir l’étape 07 pour vérifier le Core et la Persona.";
+    $("#sourceNext").innerHTML = `<b>Prochaine action :</b><span>${esc(next)}</span>`;
+  }
+
+  function packagePreviewFiles() {
+    const root = cleanName(state.identity.name);
+    const list = [
+      `${root}/README_FIRST.md`, finalFileName("boot"), finalFileName("manifest"), finalFileName("block"), finalFileName("links"), finalFileName("spec"),
+      `CORE/${pathFileName(state.identity.corePath || defaultCoreTarget())}`,
+      `CORE/${pathFileName(state.identity.personaPath || defaultPersonaTarget())}`
+    ];
+    const included = selectedPackageEntries();
+    if (included.length) {
+      list.push(`SOURCES/${routerEntry().path}`);
+      for (const entry of included) list.push(`SOURCES/${entry.path}`);
+    }
+    return list;
   }
 
   function advisorModel() {
-    const guide = DATA.advisor?.steps?.[state.step] || {
-      title: "Créatrice accompagne la Forge",
-      message: "Le profil actif reste disponible pendant tout le parcours.",
-      action: "Continuer"
-    };
+    const guide = DATA.advisor?.steps?.[state.step] || {title:"Créatrice accompagne la Forge",message:"Le profil actif reste disponible.",action:"Continuer"};
     const p = profile();
     const i = state.identity;
     const checks = [];
-    let stateLabel = "GUIDE ACTIF";
-    let actionType = "next";
-    let actionLabel = guide.action || "Continuer";
-    let title = guide.title;
-    let message = guide.message;
-
+    let stateLabel = "GUIDE ACTIF", actionType = "next", actionLabel = guide.action || "Continuer", title = guide.title, message = guide.message;
     if (state.step === 0) {
-      checks.push(["ok", p.name]);
-      checks.push(["ok", p.kind === "new" ? "Création guidée" : "Profil canonique"]);
+      checks.push(["ok", p.name]); checks.push(["ok", p.kind === "new" ? "Création guidée" : "Profil canonique"]);
     } else if (state.step === 1) {
-      checks.push([i.role ? "ok" : "warn", i.role ? "Mission inscrite" : "Mission à préciser"]);
-      checks.push([i.outputs.length ? "ok" : "warn", `${i.outputs.length} sortie(s) préparée(s)`]);
-      checks.push([i.formula ? "ok" : "warn", i.formula ? "Formule centrale prête" : "Formule à préciser"]);
+      checks.push([i.role ? "ok" : "warn", i.role ? "Mission inscrite" : "Mission à préciser"]); checks.push([i.outputs.length ? "ok" : "warn", `${i.outputs.length} sortie(s) préparée(s)`]);
     } else if (state.step === 2) {
-      checks.push([i.agents.length ? "ok" : "warn", `${i.agents.length} agent(s) interne(s)`]);
-      checks.push(["ok", "Une voix finale"]);
+      checks.push([i.agents.length ? "ok" : "warn", `${i.agents.length} agent(s) interne(s)`]); checks.push(["ok", "Une voix finale"]);
     } else if (state.step === 3) {
-      checks.push([i.heritage.length ? "ok" : "warn", `${i.heritage.length} héritage(s)`]);
-      checks.push([i.modules.length ? "ok" : "warn", `${i.modules.length} module(s) référencé(s)`]);
+      checks.push([i.heritage.length ? "ok" : "warn", `${i.heritage.length} héritage(s)`]); checks.push([i.modules.length ? "ok" : "warn", `${i.modules.length} module(s) canoniques`]);
     } else if (state.step === 4) {
-      checks.push([i.tone ? "ok" : "warn", i.tone ? "Voix définie" : "Voix à préciser"]);
-      checks.push([i.guardrails.length ? "ok" : "warn", `${i.guardrails.length} garde-fou(x)`]);
-      checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
+      checks.push([i.tone ? "ok" : "warn", i.tone ? "Voix définie" : "Voix à préciser"]); checks.push([i.stopPoint ? "ok" : "warn", i.stopPoint ? "Stop Point défini" : "Stop Point à préciser"]);
     } else if (state.step === 5) {
-      if (isCanonicalProfile()) {
-        const core = canonicalSourceState("core");
-        const persona = canonicalSourceState("persona");
-        title = "Lire les sources canoniques";
-        message = "La Forge affiche les vrais fichiers disponibles. Elle ne fabrique aucun Core ni aucune Persona de remplacement.";
-        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core réel chargé" : "Core réel non chargé"]);
-        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona réelle chargée" : "Persona réelle non chargée"]);
-        checks.push(["ok", "Aucun document PROPOSAL"]);
-      } else {
-        checks.push(["ok", "Core Proposal"]);
-        checks.push(["ok", "Persona Proposal"]);
-        checks.push(["ok", "Brief de validation"]);
-      }
-      actionType = "next";
-      actionLabel = "Poursuivre vers les sources";
+      title = "Une seule action : charger le pack";
+      message = p.privacy === "private" && profileModuleRouter() ? "Le ZIP privé complet réunit les 18 sources. La Forge l’ouvre elle-même et prépare le profil complet." : "Réunir les sources réelles du profil.";
+      const m = creatorPackMetrics();
+      const expected = profileModuleRouter() ? m.expected : 2;
+      const recognized = Number(m.core) + Number(m.persona) + (profileModuleRouter() ? Number(m.router) + m.loadedModules.length : 0);
+      checks.push([m.core ? "ok" : "warn", m.core ? "Core reconnu" : "Core attendu"]);
+      checks.push([m.persona ? "ok" : "warn", m.persona ? "Persona reconnue" : "Persona attendue"]);
+      if (profileModuleRouter()) checks.push([recognized === expected ? "ok" : "warn", `${recognized} / ${expected} sources reconnues`]);
+      checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Confirmation humaine" : "Confirmation à cocher"]);
+      if (recognized < expected && p.privacy === "private") { stateLabel = "PACK À CHARGER"; actionType = "pack"; actionLabel = "Charger le pack privé"; }
+      else if (!state.canonicalConfirmed) { stateLabel = "CONFIRMATION ATTENDUE"; actionType = "confirm"; actionLabel = "Voir la confirmation"; }
+      else { stateLabel = "SOURCES PRÊTES"; actionType = "goto-verify"; actionLabel = "Vérifier Core + Persona"; }
     } else if (state.step === 6) {
-      if (isCanonicalProfile() && p.privacy === "public") {
-        const core = canonicalSourceState("core");
-        const persona = canonicalSourceState("persona");
-        checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core public réel chargé" : "Core public en chargement"]);
-        checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona publique réelle chargée" : "Persona publique en chargement"]);
-        if (core.status === "ready" && persona.status === "ready") {
-          stateLabel = "SOURCES PRÊTES";
-          actionType = "goto-final";
-          actionLabel = "Vérifier la Forge finale";
-        } else {
-          stateLabel = "SOURCES EN CHARGEMENT";
-          actionType = "next";
-          actionLabel = "Attendre les sources";
-        }
-      } else if (isCanonicalProfile()) {
-        const core = importedCanonical("core");
-        const persona = importedCanonical("persona");
-        checks.push([core ? "ok" : "warn", core ? "Core canonique exact importé" : "Core canonique exact attendu"]);
-        checks.push([persona ? "ok" : "warn", persona ? "Persona canonique exacte importée" : "Persona canonique exacte attendue"]);
-        checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
-        if (core && persona && state.canonicalConfirmed) {
-          stateLabel = "SOURCES PRÊTES";
-          actionType = "goto-final";
-          actionLabel = "Vérifier la Forge finale";
-        } else {
-          stateLabel = "SOURCES À RÉUNIR";
-          actionType = "files";
-          actionLabel = "Choisir les fichiers canoniques";
-        }
-      } else {
-        const core = importedKind("core");
-        const persona = importedKind("persona");
-        checks.push([core ? "ok" : "warn", core ? "Core canonique importé" : "Core canonique attendu"]);
-        checks.push([persona ? "ok" : "warn", persona ? "Persona canonique importée" : "Persona canonique attendue"]);
-        checks.push([state.canonicalConfirmed ? "ok" : "warn", state.canonicalConfirmed ? "Validation humaine confirmée" : "Validation humaine à confirmer"]);
-        if (core && persona && state.canonicalConfirmed) {
-          stateLabel = "SOURCES PRÊTES";
-          actionType = "goto-final";
-          actionLabel = "Vérifier la Forge finale";
-        } else {
-          stateLabel = "SOURCES À RÉUNIR";
-          actionType = "files";
-          actionLabel = "Choisir les fichiers canoniques";
-        }
-      }
+      title = "Vérification des vrais fichiers";
+      message = "Le contenu affiché doit correspondre au Core et à la Persona canoniques. Aucun texte de remplacement n’est généré.";
+      const core = canonicalSourceState("core"), persona = canonicalSourceState("persona");
+      checks.push([core.status === "ready" ? "ok" : "warn", core.status === "ready" ? "Core réel chargé" : "Core réel non chargé"]);
+      checks.push([persona.status === "ready" ? "ok" : "warn", persona.status === "ready" ? "Persona réelle chargée" : "Persona réelle non chargée"]);
+      if (core.status === "ready" && persona.status === "ready" && state.canonicalConfirmed) { stateLabel = "VÉRIFIÉ"; actionType = "goto-final"; actionLabel = "Contrôler le paquet final"; }
+      else { stateLabel = "SOURCES INCOMPLÈTES"; actionType = "sources"; actionLabel = "Revenir au chargement"; }
     } else if (state.step === 7) {
       const audit = finalAudit();
-      checks.push([audit.ready ? "ok" : "warn", audit.ready ? "Architecture complète" : "Audit à compléter"]);
-      checks.push(["ok", `${i.modules.length} module(s) référencé(s)`]);
-      if (audit.ready) {
-        stateLabel = "PRÊT À FORGER";
-        actionType = "forge";
-        actionLabel = "Télécharger le paquet final";
-      } else {
-        stateLabel = "À VÉRIFIER";
-        actionType = "sources";
-        actionLabel = "Revenir aux sources";
-      }
+      checks.push([audit.ready ? "ok" : "warn", audit.ready ? `${expectedPackageCount()} fichiers prêts` : "Paquet incomplet"]);
+      checks.push(["ok", state.packageMode === "complete" ? "Profil complet" : state.packageMode === "minimal" ? "Profil minimal" : "Profil ciblé"]);
+      if (audit.ready) { stateLabel = "PRÊT À FORGER"; actionType = "forge"; actionLabel = `Télécharger ${expectedPackageCount()} fichiers`; }
+      else { stateLabel = "À COMPLÉTER"; actionType = "sources"; actionLabel = "Corriger les sources"; }
     }
-
-    return {
-      ...guide,
-      title,
-      message,
-      profileNote: DATA.advisor?.profiles?.[state.profileId] || i.role || "",
-      checks,
-      stateLabel,
-      actionType,
-      actionLabel
-    };
+    return {...guide,title,message,profileNote:DATA.advisor?.profiles?.[state.profileId] || i.role || "",checks,stateLabel,actionType,actionLabel};
   }
 
   function renderAdvisor() {
@@ -1184,7 +1217,7 @@
     card.hidden = !audit.ready;
     if (!audit.ready) return;
     $("#completionTitle").textContent = `${state.identity.name} est prête`;
-    $("#completionMessage").textContent = "Identité, Core, Persona, sources, modules et Stop Point sont réunis. Le paquet canonique peut être téléchargé.";
+    $("#completionMessage").textContent = `${expectedPackageCount()} fichiers ont été contrôlés avant compilation. Le paquet peut être téléchargé.`;
   }
 
   function activateStep(index, focus = false) {
@@ -1202,10 +1235,14 @@
     renderMatrix();
     renderLiveProfile();
     renderAdvisor();
-    if (state.step === 5) renderProposal();
-    if (state.step === 6) renderImports();
+    if (state.step === 5) { renderImports(); renderSourceGuide(); }
+    if (state.step === 6) renderProposal();
     if (state.step === 7) renderFinal();
-    if (focus) $("#unifiedForge").scrollIntoView({behavior:"smooth", block:"start"});
+    if (focus) requestAnimationFrame(() => {
+      const activePanel = $$(".panel")[state.step];
+      activePanel?.scrollIntoView({behavior:"smooth", block:"start"});
+      setTimeout(() => window.scrollBy({top:-105, behavior:"smooth"}), 280);
+    });
   }
 
   function proposalCore() {
@@ -1493,11 +1530,11 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
     const path = canonicalPath(kind) || (kind === "core" ? defaultCoreTarget() : defaultPersonaTarget());
     if (source.status === "loading") return `${label} CANONIQUE — CHARGEMENT EN COURS\n\nSource incluse : ${path}`;
     if (source.status === "error") return `${label} CANONIQUE — ERREUR DE CHARGEMENT\n\nSource : ${path}\nErreur : ${source.error}\n\nAucun texte de remplacement n’est généré.`;
-    return `${label} CANONIQUE — CONTENU NON CHARGÉ\n\nProfil : ${state.identity.name}\nSource attendue : ${path}\n\nImporter le fichier réel à l’étape 07.\nAucun texte de remplacement n’est généré.`;
+    return `${label} CANONIQUE — CONTENU NON CHARGÉ\n\nProfil : ${state.identity.name}\nSource attendue : ${path}\n\nImporter le fichier réel à l’étape 06.\nAucun texte de remplacement n’est généré.`;
   }
 
   function renderProposal() {
-    const panel = document.querySelector('.panel[data-step="5"]');
+    const panel = document.querySelector('.panel[data-step="6"]');
     const heading = panel?.querySelector(".panel-head h2");
     const description = panel?.querySelector(".panel-head p:last-child");
     const tabs = $$("#proposalTabs button");
@@ -1540,6 +1577,8 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
       personaButton.querySelector("b").textContent = persona.status === "ready" ? "Télécharger le fichier réel" : "Fichier non chargé";
       briefButton.querySelector("b").textContent = "Télécharger la fiche";
       zipButton.textContent = "TÉLÉCHARGER LES SOURCES RÉELLES · 3 FICHIERS";
+      const verificationStatus = $("#verificationStepStatus");
+      if (verificationStatus) { verificationStatus.textContent = core.status === "ready" && persona.status === "ready" ? "SOURCES RÉELLES" : "À CHARGER"; verificationStatus.style.color = core.status === "ready" && persona.status === "ready" ? "var(--green)" : "var(--gold)"; }
       const access = profile().privacy === "public"
         ? "Les deux sources publiques sont incluses dans cette Forge."
         : "Importer les deux fichiers privés réels à l’étape 07 pour les consulter et les exporter.";
@@ -1596,11 +1635,11 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
     for (const key of keys) if (parsed[key]) state.identity[key] = parsed[key].replace(/`/g, "");
   }
 
-  async function addFiles(files) {
+  async function addRawFiles(files) {
     let added = 0;
     let duplicates = 0;
     for (const file of files) {
-      const path = cleanPath(file.webkitRelativePath || file.name);
+      const path = cleanPath(file.__forgePath || file.webkitRelativePath || file.name);
       const key = `${path.toLowerCase()}|${file.size}|${file.lastModified}`;
       if (state.imports.some(item => item.key === key)) { duplicates += 1; continue; }
       let text = "";
@@ -1623,19 +1662,51 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
     }
     persist();
     renderAll();
-    showToast(added ? `${added} fichier(s) ajouté(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}` : "Aucun nouveau fichier.");
+    showToast(added ? `${added} fichier(s) reconnu(s).${duplicates ? ` ${duplicates} doublon(s) ignoré(s).` : ""}` : "Aucun nouveau fichier.");
+  }
+
+  async function expandZipFile(file) {
+    if (!window.JSZip) throw new Error("Lecteur ZIP local indisponible.");
+    const zip = await window.JSZip.loadAsync(file);
+    const extracted = [];
+    for (const [path, entry] of Object.entries(zip.files)) {
+      if (entry.dir || path.startsWith("__MACOSX/") || path.endsWith("/.DS_Store")) continue;
+      const bytes = await entry.async("uint8array");
+      const name = pathFileName(path);
+      const type = /\.md$/i.test(name) ? "text/markdown" : /\.json$/i.test(name) ? "application/json" : /\.txt$/i.test(name) ? "text/plain" : "application/octet-stream";
+      const extractedFile = new File([bytes], name, {type, lastModified:file.lastModified || Date.now()});
+      Object.defineProperty(extractedFile, "__forgePath", {value:cleanPath(path), configurable:false});
+      extracted.push(extractedFile);
+    }
+    state.packInfo = {name:file.name, entries:extracted.length, error:""};
+    return extracted;
+  }
+
+  async function addFiles(files) {
+    const expanded = [];
+    try {
+      for (const file of Array.from(files || [])) {
+        if (/\.zip$/i.test(file.name)) expanded.push(...await expandZipFile(file));
+        else expanded.push(file);
+      }
+      await addRawFiles(expanded);
+    } catch (error) {
+      state.packInfo = {name:"", entries:0, error:error.message || String(error)};
+      persist(); renderAll(); showToast(`ZIP non lu : ${state.packInfo.error}`);
+    }
   }
 
   function renderImports() {
     const total = state.imports.reduce((sum, item) => sum + item.file.size, 0);
     $("#importCount").textContent = state.imports.length;
     $("#importSize").textContent = formatSize(total);
-    $("#importList").innerHTML = state.imports.length ? state.imports.map((item, index) => `
+    const packNotice = state.packInfo?.name ? `<div class="route-box"><b>Pack chargé : ${esc(state.packInfo.name)}</b><p>${state.packInfo.entries} entrée(s) ouvertes localement et contrôlées par la Forge.</p></div>` : "";
+    $("#importList").innerHTML = packNotice + (state.imports.length ? state.imports.map((item, index) => `
       <div class="import-item">
         <span class="file-kind">${esc(item.kind.toUpperCase())}</span>
         <span><b>${esc(item.path)}</b><small>${formatSize(item.file.size)}</small></span>
         <button class="remove-file" type="button" data-remove-import="${index}">Retirer</button>
-      </div>`).join("") : `<div class="route-box"><b>Aucun import local</b><p>Les profils publics peuvent être exportés avec leurs sources intégrées. Les profils privés exigent leurs fichiers locaux.</p></div>`;
+      </div>`).join("") : `<div class="route-box"><b>Aucun import local</b><p>Charger le pack privé complet pour réunir automatiquement les sources.</p></div>`);
   }
 
   function importedKind(kind) {
@@ -1700,18 +1771,26 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
     else { add("error", "Chemin Persona", "Chemin manquant.", true, false); ready = false; }
 
     if (profileModuleRouter()) {
+      syncPackageInclusion();
       const metrics = moduleMetrics();
-      add("ok", "Modules référencés", `${metrics.referenced} source(s) canonique(s) dans le catalogue.`);
-      add(metrics.active ? "ok" : "info", "Modules actifs", metrics.active ? `${metrics.active} module(s) actif(s).` : "Aucune route active.", false);
-      if (metrics.included) {
-        const includedEntries = metrics.catalog.filter(item => metrics.routing.included.includes(item.path));
-        const missing = includedEntries.filter(item => moduleSourceState(item).status !== "ready");
-        const routerState = moduleSourceState(routerEntry());
-        if (routerState.status === "ready") add("ok", "Routeur réel", `${pathFileName(routerEntry().path)} chargé.`);
-        else { add(routerState.status === "error" ? "error" : "warn", "Routeur à charger", `${routerEntry().path} est requis pour inclure des modules.`, true, false); ready = false; }
-        if (missing.length) { add("warn", "Modules inclus non chargés", missing.map(item => pathFileName(item.path)).join(", "), true, false); ready = false; }
-        else add("ok", "Modules inclus", `${includedEntries.length} fichier(s) réel(s) prêt(s) pour le ZIP.`);
-      } else add("info", "Modules inclus", "Aucun module ne sera copié dans le ZIP.", false);
+      const includedEntries = selectedPackageEntries();
+      const missing = includedEntries.filter(item => moduleSourceState(item).status !== "ready");
+      const routerState = includedEntries.length ? moduleSourceState(routerEntry()) : {status:"ready"};
+      add("ok", "Catalogue canonique", `${metrics.referenced} module(s) référencé(s).`);
+      add(metrics.active ? "ok" : "warn", "Route active", metrics.active ? `${metrics.active} compétence(s) active(s).` : "Aucune compétence active.", state.packageMode === "targeted", Boolean(metrics.active));
+      if (state.packageMode === "complete") {
+        if (includedEntries.length !== metrics.referenced) { add("error", "Profil complet incomplet", `${includedEntries.length} / ${metrics.referenced} modules inclus.`, true, false); ready = false; }
+        else add("ok", "Profil complet", `${includedEntries.length} / ${metrics.referenced} modules inclus.`);
+      } else if (state.packageMode === "minimal") add("info", "Profil minimal", "Aucun module n’est copié dans ce mode.", false);
+      else if (!includedEntries.length) { add("error", "Profil ciblé vide", "Choisir une route contenant au moins un module.", true, false); ready = false; }
+      else add("ok", "Profil ciblé", `${includedEntries.length} module(s) de la route seront inclus.`);
+      if (includedEntries.length) {
+        if (routerState.status !== "ready") { add("error", "README du routeur manquant", `${routerEntry().path} doit être chargé.`, true, false); ready = false; }
+        else add("ok", "README du routeur", pathFileName(routerEntry().path));
+        if (missing.length) { add("error", "Modules manquants", `${missing.length} fichier(s) ne sont pas chargés.`, true, false); ready = false; }
+        else add("ok", "Modules réels", `${includedEntries.length} fichier(s) prêts, octet pour octet.`);
+      }
+      add(ready ? "ok" : "warn", "Total attendu", `${expectedPackageCount()} fichiers dans le ZIP final.`, false);
     } else if (state.identity.modules.length) add("ok", "Modules", `${state.identity.modules.length} référence(s).`);
     else add("info", "Modules", "Aucun module complémentaire.", false);
     if (state.identity.stopPoint) add("ok", "Stop Point", "Défini.");
@@ -1736,6 +1815,8 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
       },
       source_references: sourceReferences(),
       imported_files: state.imports.map(item => ({path:item.path, kind:item.kind, size:item.file.size})),
+      package_mode: state.packageMode,
+      expected_package_files: expectedPackageCount(),
       module_routing: profileModuleRouter() ? {
         route_id: state.moduleRouting.routeId || "",
         router_path: profileModuleRouter().routerPath,
@@ -1851,33 +1932,29 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
   }
 
   function renderFinal() {
+    syncPackageInclusion();
     const audit = finalAudit();
-    $("#finalStatus").textContent = audit.ready ? "PRÊT" : "À COMPLÉTER";
+    const expected = expectedPackageCount();
+    $("#finalStatus").textContent = audit.ready ? `PRÊT · ${expected} FICHIERS` : "À COMPLÉTER";
     $("#finalStatus").style.color = audit.ready ? "var(--green)" : "var(--gold)";
     $("#finalSummary").innerHTML = [
-      ["Profil", state.identity.name],
-      ["Parcours", "100 %"],
-      ["Validation", `${audit.validationPercent} %`],
-      ["Sources importées", String(state.imports.length)],
-      ["Modules référencés", String(state.identity.modules.length)],
-      ["Modules inclus", String(profileModuleRouter() ? state.moduleRouting.included.length : 0)],
-      ["État", audit.ready ? "PRÊT" : "À COMPLÉTER"]
+      ["Profil", state.identity.name], ["Mode du paquet", state.packageMode === "complete" ? "Complet" : state.packageMode === "minimal" ? "Minimal" : "Ciblé"],
+      ["Validation", `${audit.validationPercent} %`], ["Sources importées", String(state.imports.length)], ["Modules inclus", String(selectedPackageEntries().length)], ["Total attendu", String(expected)], ["État", audit.ready ? "PRÊT" : "À COMPLÉTER"]
     ].map(item => `<div class="summary-card"><span>${esc(item[0])}</span><b>${esc(item[1])}</b></div>`).join("");
-    const labels = {ok:"PRÊT", warn:"À FAIRE", info:"INFO", error:"ERREUR"};
+    const labels = {ok:"PRÊT", warn:"À FAIRE", info:"INFO", error:"BLOQUANT"};
     $("#finalAudit").innerHTML = audit.items.map(item => `<div class="audit-row ${item[0]}"><span>${esc(labels[item[0]] || item[0].toUpperCase())}</span><div><b>${esc(item[1])}</b><small>${esc(item[2])}</small></div></div>`).join("");
-    const docs = {
-      boot: bootDocument(),
-      manifest: manifestDocument(),
-      block: blockLLM(),
-      links: linksDocument(),
-      spec: JSON.stringify(profileSpec(), null, 2)
-    };
+    const preview = packagePreviewFiles();
+    const auditNode = $("#finalAudit");
+    auditNode.insertAdjacentHTML("beforebegin", `<div class="package-preview" id="packagePreview"><h3>Contenu exact du ZIP · ${preview.length} fichiers</h3><p>Cette liste est calculée avant le téléchargement. Aucun fichier caché n’est ajouté.</p><div class="package-preview-grid">${preview.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>`);
+    const previews = $$("#packagePreview");
+    if (previews.length > 1) previews.slice(0,-1).forEach(node => node.remove());
+    const docs = {boot:bootDocument(),manifest:manifestDocument(),block:blockLLM(),links:linksDocument(),spec:JSON.stringify(profileSpec(),null,2)};
     $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
     $("#forgeZip").disabled = !audit.ready;
-    $("#forgeZip").textContent = `FORGER LE ZIP FINAL · ${8 + (profileModuleRouter() && state.moduleRouting.included.length ? state.moduleRouting.included.length + 1 : 0)} FICHIERS`;
+    $("#forgeZip").textContent = `FORGER LE ZIP FINAL · ${expected} FICHIERS`;
     renderCompletion(audit);
-    if (!audit.ready) $("#forgeLog").textContent = "Paquet final disponible après les éléments « À valider » et « À importer ».";
+    if (!audit.ready) $("#forgeLog").textContent = "La Forge reste bloquée tant que la liste attendue n’est pas complète.";
   }
 
   function renderAll() {
@@ -1893,6 +1970,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     syncFieldsToUI();
     renderModuleRouter();
     renderImports();
+    renderSourceGuide();
     renderProposal();
     renderFinal();
     renderAdvisor();
@@ -1942,14 +2020,16 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
       files.set(`${root}/CORE/${personaTargetName}`, new Uint8Array(await persona.file.arrayBuffer()));
     }
 
-    if (profileModuleRouter() && state.moduleRouting.included.length) {
+    const packageEntries = selectedPackageEntries();
+    if (profileModuleRouter() && packageEntries.length) {
       const router = routerEntry();
       files.set(`${root}/SOURCES/${router.path}`, await moduleSourceBytes(router));
-      for (const entry of moduleCatalog().filter(item => state.moduleRouting.included.includes(item.path))) {
+      for (const entry of packageEntries) {
         files.set(`${root}/SOURCES/${entry.path}`, await moduleSourceBytes(entry));
       }
     }
 
+    if (files.size !== expectedPackageCount()) throw new Error(`Contrôle final refusé : ${files.size} fichiers produits au lieu de ${expectedPackageCount()}.`);
     return {root, files};
   }
 
@@ -2076,15 +2156,24 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
   }
 
   document.addEventListener("click", event => {
+    const packageMode = event.target.closest("[data-package-mode]");
+    if (packageMode) {
+      state.packageMode = packageMode.dataset.packageMode;
+      syncPackageInclusion();
+      persist(); renderModuleRouter(); renderSourceGuide(); renderFinal(); renderAdvisor();
+      showToast(state.packageMode === "complete" ? `Profil complet · ${expectedPackageCount()} fichiers.` : state.packageMode === "minimal" ? "Profil minimal · 8 fichiers." : `Profil ciblé · ${expectedPackageCount()} fichiers.`);
+      return;
+    }
     const preset = event.target.closest("[data-module-preset]");
     if (preset) {
       const router = profileModuleRouter();
       const selected = router?.presets?.find(item => item.id === preset.dataset.modulePreset);
       if (selected) {
         const paths = selected.modules.map(id => router.catalog.find(item => item.id === id)?.path).filter(Boolean);
-        state.moduleRouting = {routeId:selected.id, active:[...paths], included:[...paths]};
+        state.moduleRouting = {routeId:selected.id, active:[...paths], included:[]};
+        syncPackageInclusion();
         persist(); renderModuleRouter(); renderFinal(); renderAdvisor(); renderLiveProfile();
-        showToast(`${selected.label} · ${paths.length} module(s) actifs et inclus.`);
+        showToast(`${selected.label} · ${paths.length} compétence(s) active(s).`);
       }
       return;
     }
@@ -2165,6 +2254,8 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
       else values.delete(target.dataset[activeBox ? "moduleActive" : "moduleInclude"]);
       state.moduleRouting[listName] = [...values];
       state.moduleRouting.routeId = "custom";
+      if (includeBox) state.packageMode = "targeted";
+      syncPackageInclusion();
       persist(); renderModuleRouter(); renderFinal(); renderAdvisor(); renderLiveProfile();
       return;
     }
@@ -2203,12 +2294,13 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
   $("#advisorAction").addEventListener("click", () => {
     const action = $("#advisorAction").dataset.advisorAction || "next";
     if (action === "next") activateStep(Math.min(STEPS.length - 1, state.step + 1), true);
-    else if (action === "files") {
-      activateStep(6, true);
-      setTimeout(() => $("#fileInput").click(), 260);
-    } else if (action === "goto-final") activateStep(7, true);
+    else if (action === "files") { activateStep(5, true); setTimeout(() => $("#fileInput").click(), 260); }
+    else if (action === "pack") { activateStep(5, true); setTimeout(() => $("#packInput").click(), 260); }
+    else if (action === "confirm") { activateStep(5, true); setTimeout(() => $("#canonicalConfirmed").focus(), 300); }
+    else if (action === "goto-verify") activateStep(6, true);
+    else if (action === "goto-final") activateStep(7, true);
     else if (action === "forge") $("#forgeZip").click();
-    else if (action === "sources") activateStep(6, true);
+    else if (action === "sources") activateStep(5, true);
   });
 
   $("#navExport").addEventListener("click", event => {
@@ -2224,6 +2316,9 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
     activateStep(0, true);
   });
 
+  $("#choosePrivatePack").addEventListener("click", () => $("#packInput").click());
+  $("#packInput").addEventListener("change", event => addFiles(event.target.files));
+  $("#showAdvancedImports").addEventListener("click", () => { const details = $("#advancedImports"); details.open = true; details.scrollIntoView({behavior:"smooth",block:"center"}); });
   $("#chooseFiles").addEventListener("click", () => $("#fileInput").click());
   $("#chooseFolder").addEventListener("click", () => $("#folderInput").click());
   $("#fileInput").addEventListener("change", event => addFiles(event.target.files));
@@ -2232,6 +2327,7 @@ Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     state.imports = [];
+    state.packInfo = {name:"", entries:0, error:""};
     persist(); renderAll(); showToast("Imports vidés.");
   });
 
