@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.78 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.79 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.78";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.79";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10035,19 +10035,23 @@ async function atlasLocalBridgeProbe() {
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 3500);
   try {
-    const response = await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}/health`, {
-      cache: "no-store",
-      signal: controller.signal,
-      headers: { "Accept": "application/json" }
-    });
+    const response = await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}/health`, { cache: "no-store", signal: controller.signal, headers: { "Accept": "application/json" } });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || payload?.ok === false) throw new Error(payload?.error || `HTTP ${response.status}`);
-    atlasLocalDialogueState.connected = true;
     atlasLocalDialogueState.provider = payload.provider || null;
-    atlasLocalDialogueState.model = payload.model || null;
+    atlasLocalDialogueState.model = payload.model || payload.required_model || null;
+    if (payload.ready === false || payload.model_ready === false) {
+      atlasLocalDialogueState.connected = false;
+      const required = payload.required_model || "llama3.2";
+      if (badge) { badge.textContent = `${required} requis`; badge.className = "pill warn"; }
+      if (detail) detail.textContent = `Bridge connecté · modèle ${required} absent. Lance INSTALL_LLAMA32.bat ou : ollama pull ${required}`;
+      atlasLocalDialogueSetConnection(false, `Bridge détecté, mais ${required} doit être installé dans Ollama.`);
+      return payload;
+    }
+    atlasLocalDialogueState.connected = true;
     if (badge) { badge.textContent = "Bridge Ryzen connecté"; badge.className = "pill ok"; }
-    if (detail) detail.textContent = `Lecture seule · ${payload.provider || "moteur local"} · ${payload.model || "modèle à sélectionner"}`;
-    atlasLocalDialogueSetConnection(true);
+    if (detail) detail.textContent = `Lecture seule · ${payload.provider || "ollama"} · ${payload.model || "llama3.2"}`;
+    atlasLocalDialogueSetConnection(true, "Dialogue local prêt avec le moteur neutre llama3.2.");
     return payload;
   } catch (error) {
     atlasLocalDialogueState.connected = false;
@@ -10067,24 +10071,18 @@ function atlasInitLocalAccess() {
   document.getElementById("atlasAccessForm")?.addEventListener("submit", atlasAccessSubmit);
   document.getElementById("atlasAccessClose")?.addEventListener("click", atlasAccessClose);
   document.getElementById("atlasAccessCancel")?.addEventListener("click", atlasAccessClose);
-  document.getElementById("atlasAccessDialog")?.addEventListener("click", event => {
-    if (event.target === event.currentTarget) atlasAccessClose();
-  });
+  document.getElementById("atlasAccessDialog")?.addEventListener("click", event => { if (event.target === event.currentTarget) atlasAccessClose(); });
   document.getElementById("btnLocalBridgeProbe")?.addEventListener("click", atlasLocalBridgeProbe);
-
-  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => {
-    button.addEventListener("click", () => atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile));
-  });
-  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => {
-    button.addEventListener("click", () => atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary));
-  });
+  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)); });
+  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)); });
   document.getElementById("btnAtlasLocalAsk")?.addEventListener("click", atlasLocalDialogueAsk);
   document.getElementById("btnAtlasLocalClear")?.addEventListener("click", atlasLocalDialogueClear);
   document.getElementById("btnAtlasLocalCopy")?.addEventListener("click", atlasLocalDialogueCopy);
   document.getElementById("btnAtlasLocalExport")?.addEventListener("click", atlasLocalDialogueExport);
-
+  const question = document.getElementById("atlasLocalQuestion");
+  if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
-  atlasLocalDialogueSetConnection(false, "Teste le Bridge du Ryzen pour activer le dialogue.");
+  atlasLocalDialogueSetConnection(false, "Teste le Bridge du Ryzen. Modèle requis : Ollama llama3.2.");
 }
 
 
