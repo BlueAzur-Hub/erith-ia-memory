@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.72 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.73 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.72";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.73";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -1373,20 +1373,6 @@ function atlasPatchTickerSpot(changedIds = []) {
       if (change) {
         const variation = Number(quote.change24h);
         change.className = `top5-change ${Number.isFinite(variation) ? `${clsPct(variation)} ${atlasMoveStrengthClass(variation)}` : ""}`;
-        change.textContent = atlasCurrentQuoteChangeText(quote);
-      }
-    });
-
-    els.tickerTrack?.querySelectorAll(`[data-ticker-id="${CSS.escape(coin.id)}"]`).forEach(item => {
-      item.classList.toggle("quote-live", quote.status === "live");
-      item.classList.toggle("quote-unavailable", quote.status !== "live");
-      item.title = atlasCurrentQuoteTitle(quote);
-      const price = item.querySelector(".ticker-price");
-      const change = item.querySelector(".ticker-change");
-      if (price) price.textContent = atlasCurrentQuotePriceText(quote);
-      if (change) {
-        const variation = Number(quote.change24h);
-        change.className = `ticker-change ${Number.isFinite(variation) ? `${clsPct(variation)} ${atlasMoveStrengthClass(variation)}` : ""}`;
         change.textContent = atlasCurrentQuoteChangeText(quote);
       }
     });
@@ -7450,29 +7436,42 @@ function atlasRenderMarketFlowRibbon() {
   if (!atlasHasDisplayableMarket()) {
     setHTML(
       els.tickerTrack,
-      '<span class="ticker-meta">Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif</span>'
+      '<span class="ticker-meta">Marché global CoinGecko en attente</span>'
     );
     return;
   }
 
+  const truth = atlasMarketTruth();
+  const truthLabel = truth.level === "direct"
+    ? "CoinGecko direct"
+    : truth.level === "direct-conserved"
+      ? "CoinGecko · dernière lecture directe conservée"
+      : "CoinGecko · archive datée";
+
   const flow = atlasMarketFlowCoins();
   const items = flow.map((coin, index) => {
-    const quote = atlasCurrentQuoteForCoin(coin);
-    const variation = Number(quote.change24h);
-    const variationClass = Number.isFinite(variation)
-      ? `${clsPct(variation)} ${atlasMoveStrengthClass(variation)}`
+    const price = Number(coin.priceEur ?? coin.price);
+    const change = Number(coin.change24h);
+    const variationClass = Number.isFinite(change)
+      ? `${clsPct(change)} ${atlasMoveStrengthClass(change)}`
       : "";
     return `
-      <span class="ticker-item ${quote.status === "live" ? "quote-live" : "quote-unavailable"}" data-ticker-id="${escapeHtml(coin.id)}" data-market-open="${escapeHtml(coin.id)}" role="button" tabindex="0" aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison" title="${escapeHtml(atlasCurrentQuoteTitle(quote))}" style="${atlasRibbonStyle(coin, index + 5)}">
+      <span class="ticker-item"
+            data-ticker-id="${escapeHtml(coin.id)}"
+            data-market-open="${escapeHtml(coin.id)}"
+            role="button"
+            tabindex="0"
+            aria-label="Ajouter ou retirer ${escapeHtml(coin.symbol)} de la comparaison"
+            title="${escapeHtml(`${truthLabel} · ${atlasExactTimestampLabel(state.timestamp)}`)}"
+            style="${atlasRibbonStyle(coin, index + 5)}">
         <i class="ticker-crypto-accent" aria-hidden="true"></i>
         <span class="ticker-symbol">${escapeHtml(coin.symbol)}</span>
-        <span class="ticker-price">${escapeHtml(atlasCurrentQuotePriceText(quote))}</span>
-        <span class="ticker-change ${variationClass}">${escapeHtml(atlasCurrentQuoteChangeText(quote))}</span>
+        <span class="ticker-price">${Number.isFinite(price) && price > 0 ? escapeHtml(atlasFormatEUR(price)) : "—"}</span>
+        <span class="ticker-change ${variationClass}">${Number.isFinite(change) ? escapeHtml(atlasFmtMarketPct(change)) : "—"}</span>
       </span>`;
   }).join("");
 
-  const feed = state.dataBroker.exchangeFeed || {};
-  const meta = `<span class="ticker-meta">Prix actuels : Binance WebSocket · Marché/historique : ${escapeHtml(state.mainSource || "CoinGecko")} · ${feed.lastMessageAt ? new Date(feed.lastMessageAt).toLocaleTimeString("fr-FR") : "en attente"}</span>`;
+  const meta = `<span class="ticker-meta">Market Flow · ${escapeHtml(truthLabel)} · ${escapeHtml(atlasExactTimestampLabel(state.timestamp))}</span>`;
   const sequence = `<span class="ticker-sequence">${items}${meta}</span>`;
   setHTML(els.tickerTrack, `${sequence}${sequence}`);
 }
