@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.81 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.82 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.81";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.82";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10689,6 +10689,20 @@ function atlasLocalSetReport(node, markdown) {
 }
 
 
+/* =========================================================
+   Build 28.1.82 — Statut de filtre local lisible
+   Les motifs techniques restent internes au Bridge.
+   ========================================================= */
+
+function atlasLocalCommentFilterStatus(warnings) {
+  const items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
+  if (!items.length) {
+    return "Rapport factuel terminé. Commentaire local accepté et validation humaine requise.";
+  }
+  return "Rapport factuel terminé. Le commentaire local n’a pas passé le filtre et a été remplacé par le repli sûr.";
+}
+
+
 function atlasLocalDialogueRender(result, label) {
   const answer = String(result?.answer || "").trim();
   atlasLocalDialogueState.connected = true;
@@ -10735,9 +10749,7 @@ function atlasLocalDialogueRender(result, label) {
 
   atlasLocalDialogueSetConnection(
     true,
-    warnings.length
-      ? `Rapport factuel terminé. Commentaire local remplacé : ${warnings.join(" · ")}`
-      : "Rapport factuel terminé. Commentaire local accepté et validation humaine requise."
+    atlasLocalCommentFilterStatus(warnings)
   );
 }
 
