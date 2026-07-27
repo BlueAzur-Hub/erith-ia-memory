@@ -16310,7 +16310,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    SCANNER CORE REBUILD · MARKET 250 CLEAN
    ========================================================= */
 .market-universe-mode{display:inline-flex!important;align-items:center!important;gap:5px!important;min-height:38px!important;padding:4px 6px!important;border:1px solid rgba(98,236,255,.16)!important;border-radius:11px!important;background:rgba(4,15,28,.72)!important}.market-universe-mode>span{padding:0 4px!important;color:rgba(180,210,231,.72)!important;font:850 9px/1 system-ui,sans-serif!important;letter-spacing:.08em!important;text-transform:uppercase!important;white-space:nowrap!important}.market-universe-mode button{min-width:38px!important;min-height:29px!important;padding:5px 8px!important;border:1px solid rgba(98,236,255,.17)!important;border-radius:8px!important;color:#d7e8f4!important;background:rgba(255,255,255,.035)!important;font:900 10px/1 system-ui,sans-serif!important;cursor:pointer!important}.market-universe-mode button.is-active{border-color:rgba(98,236,255,.72)!important;color:#07131e!important;background:linear-gradient(135deg,#6beeff,#f2d883)!important}.market-universe-mode small{min-width:132px!important;padding:0 5px!important;color:rgba(116,234,217,.76)!important;font:760 9px/1.15 system-ui,sans-serif!important;white-space:nowrap!important}
@@ -16319,7 +16319,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    Honest pending state for source-coherent scanners.
    ========================================================= */
 .compare-btn.is-scanner-pending,
@@ -16351,7 +16351,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    Graph transaction integrity.
    ========================================================= */
 #analyste[data-scanner-transaction="running"] .atlas-chart-insight-overlay {
@@ -16368,7 +16368,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    BINANCE WEBSOCKET LIVE · ORIGINAL MODULES PRESERVED
    ========================================================= */
 .top5-item.quote-live,
@@ -16390,7 +16390,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    COMPACT SUMMARY RESTORE · SOURCE OUTSIDE TOOLTIP
    ========================================================= */
 
@@ -16467,7 +16467,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.70
+   V2.0-alpha · Build 28.1.71
    TOOLTIP LABEL CLEANUP
    ========================================================= */
 
@@ -16476,4 +16476,63 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
   font-size: 7px !important;
   font-weight: 800 !important;
   letter-spacing: .02em;
+}
+
+
+/* =========================================================
+   V2.0-alpha · Build 28.1.71
+   PRICE ONLY TOOLTIP
+   ========================================================= */
+
+#analyste .atlas-chart-tooltip {
+  width: min(350px, calc(100% - 20px)) !important;
+  max-height: calc(100% - 66px) !important;
+  padding: 10px 12px !important;
+  pointer-events: none !important;
+}
+
+#analyste .atlas-chart-tooltip-row-price-only {
+  grid-template-columns:
+    minmax(104px, 1fr)
+    minmax(62px, 92px)
+    minmax(116px, auto) !important;
+  min-height: 44px !important;
+  gap: 10px !important;
+  padding: 7px 0 !important;
+  align-items: center !important;
+}
+
+#analyste .atlas-chart-tooltip-price-only {
+  min-width: 116px;
+  color: #fff0c8 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-chart-tooltip-row-price-only .atlas-chart-tooltip-values,
+#analyste .atlas-chart-tooltip-row-price-only small,
+#analyste .atlas-chart-tooltip-row-price-only .atlas-chart-tooltip-base100 {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  #analyste .atlas-chart-tooltip {
+    width: min(320px, calc(100% - 14px)) !important;
+  }
+
+  #analyste .atlas-chart-tooltip-row-price-only {
+    grid-template-columns:
+      minmax(88px, 1fr)
+      56px
+      minmax(104px, auto) !important;
+    gap: 7px !important;
+  }
+
+  #analyste .atlas-chart-tooltip-price-only {
+    min-width: 104px;
+    font-size: 13px !important;
+  }
 }

@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.70 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.71 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.70";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.71";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4594,10 +4594,7 @@ function atlasExternalChartTooltip(context) {
     : point ? [{
         coin: point.dataset?.atlasCoin || chart.$atlasCoin || {},
         color: point.dataset?.atlasPrimaryColor || point.dataset?.borderColor,
-        gradientCss: point.dataset?.atlasGradientCss || "",
-        baseValue: Number(point.raw?.baseValue),
-        rawPrice: Number(point.raw?.rawPrice ?? point.parsed?.y),
-        timestamp: targetX
+        gradientCss: point.dataset?.atlasGradientCss || ""
       }] : [];
 
   if (!rows.length) {
@@ -4605,52 +4602,23 @@ function atlasExternalChartTooltip(context) {
     return;
   }
 
-  const alignedTimestamp = Number.isFinite(Number(rows[0]?.timestamp))
-    ? Number(rows[0].timestamp)
-    : targetX;
-  const resolvedTimestamp = Number.isFinite(alignedTimestamp)
-    ? alignedTimestamp
-    : Date.now();
-  const title = atlasChartLabelFull(resolvedTimestamp);
-  const hoverTime = new Date(resolvedTimestamp).toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-  const showBase100 = chart.$atlasView === "base100" || chart.$atlasMode === "comparison";
-
   const body = rows.map((row, index) => {
     const palette = atlasCryptoPalette(row.coin, index);
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const current = atlasCurrentQuoteForCoin(row.coin?.id || row.coin);
-    const reference = atlasCompactMarketReference(current, row.coin?.id || row.coin);
     const currentPrice = current.status === "live"
       ? atlasCurrentQuotePriceText(current)
       : "—";
-    const historical = Number.isFinite(row.rawPrice)
-      ? atlasFormatEUR(row.rawPrice)
-      : "—";
-    const source = current.status === "live"
-      ? reference.label
-      : "Prix direct indisponible";
-    const baseLine = showBase100 && Number.isFinite(row.baseValue)
-      ? `<small class="atlas-chart-tooltip-base100">Base 100 · ${row.baseValue.toFixed(2)}</small>`
-      : "";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
-    return `<div class="atlas-chart-tooltip-row atlas-chart-tooltip-row-compact" style="${style}">
+    return `<div class="atlas-chart-tooltip-row atlas-chart-tooltip-row-price-only" style="${style}">
       ${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
-      <span class="atlas-chart-tooltip-values atlas-chart-tooltip-values-compact"
-            title="${escapeHtml(current.status === "live" ? `${reference.label} · ${atlasExactTimestampLabel(current.timestamp)}` : source)}">
-        <strong>${escapeHtml(currentPrice)}</strong>
-        <small>${escapeHtml(source)}</small>
-        <small>À ${escapeHtml(hoverTime)} · ${escapeHtml(historical)}</small>
-        ${baseLine}
-      </span>
+      <span class="atlas-chart-tooltip-price-only">${escapeHtml(currentPrice)}</span>
     </div>`;
   }).join("");
 
-  node.innerHTML = `<div class="atlas-chart-tooltip-date">SURVOL · ${escapeHtml(title)}</div>${body}`;
+  node.innerHTML = `<div class="atlas-chart-tooltip-date">PRIX LIVE BINANCE</div>${body}`;
   node.hidden = false;
   node.setAttribute("aria-hidden", "false");
 
