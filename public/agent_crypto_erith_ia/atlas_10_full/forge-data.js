@@ -47,7 +47,7 @@ const CRYPTO_PRESETS = Object.freeze([
 
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R8-cartes-crypto-lisibles",
+  version: "V3.3R9-cartes-profils-uniformisees",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
