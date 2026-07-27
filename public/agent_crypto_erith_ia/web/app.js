@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.73 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.74 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.73";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.74";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -650,6 +650,63 @@ function atlasFmtMarketPct(value) {
     : formatted;
 }
 
+const ATLAS_BINANCE_CHART_ENDPOINTS = Object.freeze([
+  "https://data-api.binance.vision",
+  "https://api.binance.com",
+  "https://api-gcp.binance.com"
+]);
+
+const ATLAS_BINANCE_CHART_PERIODS = Object.freeze({
+  1: Object.freeze({ interval: "5m", limit: 300 }),
+  7: Object.freeze({ interval: "30m", limit: 350 }),
+  30: Object.freeze({ interval: "2h", limit: 370 }),
+  60: Object.freeze({ interval: "4h", limit: 370 }),
+  90: Object.freeze({ interval: "4h", limit: 550 }),
+  365: Object.freeze({ interval: "12h", limit: 740 }),
+  36500: Object.freeze({ interval: "1d", limit: 1000 })
+});
+
+function atlasBinanceChartSupported(coinOrId) {
+  const coinId = typeof coinOrId === "string" ? coinOrId : coinOrId?.id;
+  return !!ATLAS_EXCHANGE_PRODUCT_MAP[coinId];
+}
+
+function atlasChartPreferredSourceFamily(coinOrId) {
+  return atlasBinanceChartSupported(coinOrId) ? "binance" : "coingecko";
+}
+
+function atlasChartResultSourceFamily(result = null) {
+  const mode = String(result?.originalSourceMode || result?.sourceMode || "").toLowerCase();
+  if (mode.includes("binance")) return "binance";
+  if (result?.comparison && Array.isArray(result.entries)) {
+    const families = new Set(result.entries.map(entry => atlasChartResultSourceFamily(entry?.result)));
+    return families.size === 1 ? [...families][0] : "mixed";
+  }
+  return "coingecko";
+}
+
+function atlasChartProviderLabel(result = null) {
+  const family = atlasChartResultSourceFamily(result);
+  if (family === "binance") return "Binance";
+  if (family === "mixed") return "Sources mixtes";
+  return "CoinGecko";
+}
+
+function atlasChartPreferredProviderLabel(coinOrId) {
+  return atlasChartPreferredSourceFamily(coinOrId) === "binance" ? "Binance" : "CoinGecko";
+}
+
+function atlasComparisonPreferredSourceFamily() {
+  const coins = atlasComparisonCoins();
+  return coins.length && coins.every(coin => atlasBinanceChartSupported(coin))
+    ? "binance"
+    : "coingecko";
+}
+
+function atlasChartStorageKey(c, days, family = atlasChartPreferredSourceFamily(c)) {
+  return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}:${family}`;
+}
+
 function atlasChartSourceMode(result = null) {
   const mode = String(
     result?.sourceMode
@@ -658,16 +715,14 @@ function atlasChartSourceMode(result = null) {
     || "none"
   );
 
-  if (mode === "coingecko-direct") return "direct";
+  if (["coingecko-direct", "binance-direct-klines", "binance-derived-klines"].includes(mode)) return "direct";
   if (mode === "comparison-base100") {
     const entries = result?.entries || state.dataBroker?.chart?.result?.entries || [];
     return entries.some(entry => atlasChartSourceMode(entry?.result) !== "direct")
       ? "cache"
       : "direct";
   }
-  if (["browser-cache", "local-cache", "github-cache", "recent-cache"].includes(mode)) {
-    return "cache";
-  }
+  if (["browser-cache", "local-cache", "github-cache", "recent-cache"].includes(mode)) return "cache";
   return "unknown";
 }
 
@@ -690,26 +745,20 @@ function atlasChartWorstFreshness(result = null, period = Number(state.chartPeri
 function atlasChartTruth(result = null, period = Number(state.chartPeriodDays || 1)) {
   const source = atlasChartSourceMode(result);
   const freshness = atlasChartWorstFreshness(result, period);
+  const provider = atlasChartProviderLabel(result);
   const metrics = result?.integrity?.metrics || {};
   const timestamp = Number.isFinite(Number(metrics.lastTimestamp))
     ? Number(metrics.lastTimestamp)
     : result?.generatedAt || state.dataBroker?.chart?.timestamp || null;
 
   let label = "Historique indisponible";
-  if (source === "direct" && freshness === "fresh") label = "Historique direct CoinGecko";
-  else if (source === "direct") label = "Historique direct retardé";
-  else if (source === "cache" && freshness === "fresh") label = "Historique en cache récent";
-  else if (source === "cache" && freshness === "delayed") label = "Historique en cache retardé";
-  else if (source === "cache") label = "Historique en archive datée";
+  if (source === "direct" && freshness === "fresh") label = `Historique direct ${provider}`;
+  else if (source === "direct") label = `Historique ${provider} retardé`;
+  else if (source === "cache" && freshness === "fresh") label = `Historique ${provider} en cache récent`;
+  else if (source === "cache" && freshness === "delayed") label = `Historique ${provider} en cache retardé`;
+  else if (source === "cache") label = `Historique ${provider} en archive datée`;
 
-  return {
-    source,
-    freshness,
-    timestamp,
-    exact: atlasExactTimestampLabel(timestamp),
-    age: atlasBrokerAgeLabel(timestamp),
-    label
-  };
+  return { source, provider, freshness, timestamp, exact: atlasExactTimestampLabel(timestamp), age: atlasBrokerAgeLabel(timestamp), label };
 }
 
 function atlasSpotQuoteIsFreshDirect(coinId) {
@@ -1547,7 +1596,7 @@ function atlasBrokerCommitChart(coin, period, result, status = "ready") {
     status,
     coinId: coin?.id || null,
     period: Number(period || 1),
-    source: ATLAS_CANONICAL_MARKET_SOURCE,
+    source: atlasChartProviderLabel(result),
     mode: result?.sourceMode || "none",
     timestamp: Number.isFinite(metrics.lastTimestamp) ? new Date(metrics.lastTimestamp).toISOString() : result?.generatedAt || null,
     seriesTimestamp: Number.isFinite(metrics.lastTimestamp) ? new Date(metrics.lastTimestamp).toISOString() : result?.generatedAt || null,
@@ -3462,7 +3511,7 @@ function renderMultiHorizon() {
       setText(labelEl, best ? `Meilleur sur ${periodLabel} · ${atlasHorizonSourceShort(best.metric)}` : "Donnée manquante");
       valueEl?.closest?.(".horizon-card")?.setAttribute("data-source", best?.metric?.source || "missing");
     }
-    setHTML(els.multiHorizonMeta, `<span>Mode : Base 100</span><span>Période active : ${escapeHtml(atlasChartPeriodLabel(activeDays))} · ${context.ready ? "market_chart EUR" : "mise à jour"}</span><span>Autres horizons : snapshot Top 250</span><span>Verrou contexte : ${context.ready ? "validé" : "ancien résultat ignoré"}</span>`);
+    setHTML(els.multiHorizonMeta, `<span>Mode : Base 100</span><span>Période active : ${escapeHtml(atlasChartPeriodLabel(activeDays))} · ${context.ready ? `${atlasChartProviderLabel(state.dataBroker.chart?.result)} EUR` : "mise à jour"}</span><span>Autres horizons : snapshot Top 250</span><span>Verrou contexte : ${context.ready ? "validé" : "ancien résultat ignoré"}</span>`);
     const rows = coins.map(coin => {
       const metrics = horizons.map(([days, , , label]) => {
         const metric = atlasHorizonMetricForCoin(coin, days);
@@ -3619,7 +3668,7 @@ function atlasWriteChartMaxTruth(result, coin) {
 function atlasChartApiDays(days){ return Number(days||1)===36500 ? "max" : String(Number(days||1)); }
 
 function atlasChartKey(c, days) {
-  return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}`;
+  return atlasChartStorageKey(c, days, atlasChartPreferredSourceFamily(c));
 }
 
 function atlasSanitizeChartRows(rows = []) {
@@ -3780,53 +3829,37 @@ function atlasWriteLocalChartStore(store) {
   try { localStorage.setItem(ATLAS_CHART_LOCAL_CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
-function atlasStoreChartResult(c, days, result) {
+function atlasStoreChartResult(c, days, result, familyOverride = null) {
   if (!result || result.blocked || !Array.isArray(result.series) || !result.series.length) return;
-  const key = atlasChartKey(c, days);
+  const family = familyOverride || atlasChartResultSourceFamily(result) || atlasChartPreferredSourceFamily(c);
+  const key = atlasChartStorageKey(c, days, family);
   const savedAt = Date.now();
   const stored = { ...result, savedAt };
   state.chartCache[key] = { createdAt: savedAt, result: stored };
   const local = atlasReadLocalChartStore();
   local[key] = stored;
   const keys = Object.keys(local).sort((a, b) => Number(local[b]?.savedAt || 0) - Number(local[a]?.savedAt || 0));
-  for (const staleKey of keys.slice(60)) delete local[staleKey];
+  for (const staleKey of keys.slice(80)) delete local[staleKey];
   atlasWriteLocalChartStore(local);
 }
 
-function atlasGetStoredChartResult(c, days) {
-  const key = atlasChartKey(c, days);
+function atlasGetStoredChartResult(c, days, family = atlasChartPreferredSourceFamily(c)) {
+  const key = atlasChartStorageKey(c, days, family);
   const memory = state.chartCache[key]?.result;
   const candidates = [];
-  if (memory) {
-    candidates.push({
-      ...memory,
-      originalSourceMode: memory.sourceMode || null,
-      sourceMode: "browser-cache",
-      source: "Cache récent navigateur · série CoinGecko"
-    });
-  }
+  const cacheLabel = family === "binance"
+    ? "Cache navigateur · chandelles Binance"
+    : "Cache navigateur · série CoinGecko";
+
+  if (memory) candidates.push({ ...memory, originalSourceMode: memory.sourceMode || memory.originalSourceMode || null, sourceMode: "browser-cache", source: cacheLabel });
   const local = atlasReadLocalChartStore()[key];
-  if (local) {
-    candidates.push({
-      ...local,
-      originalSourceMode: local.sourceMode || null,
-      sourceMode: "browser-cache",
-      source: "Cache navigateur · série CoinGecko"
-    });
-  }
+  if (local) candidates.push({ ...local, originalSourceMode: local.sourceMode || local.originalSourceMode || null, sourceMode: "browser-cache", source: cacheLabel });
+
   for (const candidate of candidates) {
     const prices = atlasNormalizeChartPayload({ prices: candidate?.series });
     const integrity = atlasValidateChartSeries({ c, days, prices, sourceMode: "browser-cache" });
     if (!integrity.ok) continue;
-    return {
-      ...candidate,
-      series: prices,
-      blocked: false,
-      integrity,
-      periodDays: Number(days || 1),
-      sourceMode: "browser-cache",
-      source: candidate.source || "Cache navigateur · série CoinGecko"
-    };
+    return { ...candidate, series: prices, blocked: false, integrity, periodDays: Number(days || 1), sourceMode: "browser-cache", source: candidate.source || cacheLabel };
   }
   return null;
 }
@@ -3909,6 +3942,121 @@ async function atlasFetchJson(url, { signal = null, timeoutMs = ATLAS_CHART_DIRE
   }
 }
 
+function atlasBinanceChartPeriodConfig(days) {
+  return ATLAS_BINANCE_CHART_PERIODS[Number(days || 1)] || ATLAS_BINANCE_CHART_PERIODS[1];
+}
+
+function atlasNormalizeBinanceKlines(rows = []) {
+  const series = [];
+  const volumeSeries = [];
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const timestamp = Number(row?.[0]);
+    const close = Number(row?.[4]);
+    const quoteVolume = Number(row?.[7]);
+    if (!Number.isFinite(timestamp) || timestamp <= 0 || !Number.isFinite(close) || close <= 0) continue;
+    series.push([timestamp, close]);
+    if (Number.isFinite(quoteVolume) && quoteVolume >= 0) volumeSeries.push([timestamp, quoteVolume]);
+  }
+  return { series: atlasSanitizeChartRows(series), volumeSeries };
+}
+
+function atlasNormalizeDerivedBinanceKlines(cryptoRows = [], eurRows = []) {
+  const eurByTime = new Map();
+  for (const row of Array.isArray(eurRows) ? eurRows : []) {
+    const timestamp = Number(row?.[0]);
+    const close = Number(row?.[4]);
+    if (Number.isFinite(timestamp) && timestamp > 0 && Number.isFinite(close) && close > 0) eurByTime.set(timestamp, close);
+  }
+  const series = [];
+  const volumeSeries = [];
+  for (const row of Array.isArray(cryptoRows) ? cryptoRows : []) {
+    const timestamp = Number(row?.[0]);
+    const cryptoClose = Number(row?.[4]);
+    const quoteVolumeUsdt = Number(row?.[7]);
+    const eurUsdt = eurByTime.get(timestamp);
+    if (!Number.isFinite(timestamp) || timestamp <= 0 || !Number.isFinite(cryptoClose) || cryptoClose <= 0 || !Number.isFinite(eurUsdt) || eurUsdt <= 0) continue;
+    series.push([timestamp, cryptoClose / eurUsdt]);
+    if (Number.isFinite(quoteVolumeUsdt) && quoteVolumeUsdt >= 0) volumeSeries.push([timestamp, quoteVolumeUsdt / eurUsdt]);
+  }
+  return { series: atlasSanitizeChartRows(series), volumeSeries };
+}
+
+async function atlasFetchBinanceKlineRows(symbol, interval, limit, options = {}) {
+  let lastError = null;
+  for (const base of ATLAS_BINANCE_CHART_ENDPOINTS) {
+    const url = `${base}/api/v3/klines?symbol=${encodeURIComponent(symbol)}&interval=${encodeURIComponent(interval)}&limit=${encodeURIComponent(limit)}`;
+    try {
+      const payload = await atlasFetchJson(url, { signal: options.signal, timeoutMs: Number(options.timeoutMs || ATLAS_CHART_DIRECT_TIMEOUT_MS) });
+      if (!Array.isArray(payload) || !payload.length) throw new Error(`chandelles Binance absentes pour ${symbol}`);
+      return payload;
+    } catch (error) {
+      if (error?.name === "AbortError") throw error;
+      lastError = error;
+    }
+  }
+  throw lastError || new Error(`chandelles Binance indisponibles pour ${symbol}`);
+}
+
+async function fetchBinanceChartDirect(c, days, options = {}) {
+  const config = ATLAS_EXCHANGE_PRODUCT_MAP[c?.id];
+  if (!config) throw new Error("actif non pris en charge par le graphique Binance");
+  const period = Number(days || 1);
+  const chartConfig = atlasBinanceChartPeriodConfig(period);
+  let directError = null;
+
+  try {
+    const rows = await atlasFetchBinanceKlineRows(config.direct, chartConfig.interval, chartConfig.limit, options);
+    const normalized = atlasNormalizeBinanceKlines(rows);
+    const integrity = atlasValidateChartSeries({ c, days: period, prices: normalized.series, payload: null, sourceMode: "binance-direct-klines" });
+    if (!integrity.ok) throw new Error(`chandelles ${config.direct} refusées · ${integrity.reason}`);
+    return {
+      series: normalized.series,
+      volumeSeries: normalized.volumeSeries,
+      source: `Binance Spot ${config.direct.replace(/EUR$/, "/EUR")} · chandelles`,
+      blocked: false,
+      kind: "binance-direct-klines",
+      sourceMode: "binance-direct-klines",
+      periodDays: period,
+      apiDays: period,
+      interval: chartConfig.interval,
+      pointCount: normalized.series.length,
+      generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
+      integrity
+    };
+  } catch (error) {
+    if (error?.name === "AbortError") throw error;
+    directError = error;
+  }
+
+  const [cryptoRows, eurRows] = await Promise.all([
+    atlasFetchBinanceKlineRows(config.usdt, chartConfig.interval, chartConfig.limit, options),
+    atlasFetchBinanceKlineRows("EURUSDT", chartConfig.interval, chartConfig.limit, options)
+  ]);
+  const normalized = atlasNormalizeDerivedBinanceKlines(cryptoRows, eurRows);
+  const integrity = atlasValidateChartSeries({ c, days: period, prices: normalized.series, payload: null, sourceMode: "binance-derived-klines" });
+  if (!integrity.ok) throw new Error(`chandelles dérivées ${config.usdt} ÷ EURUSDT refusées · ${integrity.reason} · direct: ${String(directError?.message || directError || "indisponible")}`);
+  return {
+    series: normalized.series,
+    volumeSeries: normalized.volumeSeries,
+    source: `Binance Spot ${config.usdt.replace(/USDT$/, "/USDT")} ÷ EUR/USDT · chandelles`,
+    blocked: false,
+    kind: "binance-derived-klines",
+    sourceMode: "binance-derived-klines",
+    periodDays: period,
+    apiDays: period,
+    interval: chartConfig.interval,
+    pointCount: normalized.series.length,
+    generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
+    integrity
+  };
+}
+
+async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
+  return family === "binance"
+    ? fetchBinanceChartDirect(c, days, options)
+    : fetchCoinGeckoChartDirect(c, days, options);
+}
+
 async function fetchCoinGeckoChartDirect(c, days, options = {}) {
   const period=Number(days||1), apiDays=atlasChartApiDays(period);
   const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=eur&days=${encodeURIComponent(apiDays)}&precision=full`;
@@ -3922,26 +4070,16 @@ async function fetchCoinGeckoChartDirect(c, days, options = {}) {
 async function fetchChartSeries(c, days, options = {}) {
   if (!c?.id) return { series: [], blocked: true, reason: "actif absent" };
   const period = Number(days || 1);
-  const stored = options.fallback || atlasGetStoredChartResult(c, period);
+  const family = atlasChartPreferredSourceFamily(c);
+  const stored = options.fallback || atlasGetStoredChartResult(c, period, family);
+  const provider = family === "binance" ? "Binance" : "CoinGecko";
   try {
-    return await fetchCoinGeckoChartDirect(c, period, options);
+    return await atlasFetchChartDirectForFamily(c, period, family, options);
   } catch (error) {
     if (stored) {
-      return {
-        ...stored,
-        sourceMode: "browser-cache",
-        source: "Cache navigateur · série CoinGecko",
-        blocked: false,
-        refreshWarning: `Actualisation directe indisponible · cache exact du ${atlasExactTimestampLabel(stored?.integrity?.metrics?.lastTimestamp || stored?.generatedAt)}`,
-        technicalReason: String(error?.message || error)
-      };
+      return { ...stored, sourceMode: "browser-cache", source: family === "binance" ? "Cache navigateur · chandelles Binance" : "Cache navigateur · série CoinGecko", blocked: false, refreshWarning: `Actualisation ${provider} indisponible · cache exact du ${atlasExactTimestampLabel(stored?.integrity?.metrics?.lastTimestamp || stored?.generatedAt)}`, technicalReason: String(error?.message || error) };
     }
-    return {
-      series: [],
-      blocked: true,
-      reason: "Historique CoinGecko direct temporairement indisponible.",
-      technicalReason: String(error?.message || error)
-    };
+    return { series: [], blocked: true, reason: `Historique ${provider} temporairement indisponible.`, technicalReason: String(error?.message || error) };
   }
 }
 
@@ -5884,10 +6022,10 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
 
 async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const signal = options.signal || null;
-  const stored = atlasGetStoredChartResult(coin, period);
-  if (stored && !atlasChartNeedsRefresh(stored, period)) {
-    return { coin, result: stored, attempts: 0, source: "fresh-cache" };
-  }
+  const family = atlasComparisonPreferredSourceFamily();
+  const provider = family === "binance" ? "Binance" : "CoinGecko";
+  const stored = atlasGetStoredChartResult(coin, period, family);
+  if (stored && !atlasChartNeedsRefresh(stored, period)) return { coin, result: stored, attempts: 0, source: "fresh-cache" };
 
   let lastError = null;
   for (let attempt = 0; attempt < ATLAS_COMPARISON_RETRY_DELAYS_MS.length; attempt += 1) {
@@ -5896,11 +6034,8 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     if (retryDelay) await atlasWaitWithSignal(retryDelay, signal);
     await atlasRespectComparisonRequestSpacing(signal, period);
     try {
-      const result = await fetchCoinGeckoChartDirect(coin, period, {
-        signal,
-        timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
-      });
-      atlasStoreChartResult(coin, period, result);
+      const result = await atlasFetchChartDirectForFamily(coin, period, family, { signal, timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS });
+      atlasStoreChartResult(coin, period, result, family);
       return { coin, result, attempts: attempt + 1, source: "direct" };
     } catch (error) {
       if (atlasComparisonAbortError(error)) throw error;
@@ -5909,38 +6044,10 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
     }
   }
 
-  if (stored) {
-    return {
-      coin,
-      result: {
-        ...stored,
-        sourceMode: "browser-cache",
-        source: "Cache navigateur · série CoinGecko",
-        blocked: false,
-        refreshWarning: `Actualisation directe indisponible · cache exact du ${atlasExactTimestampLabel(stored?.integrity?.metrics?.lastTimestamp || stored?.generatedAt)}`,
-        technicalReason: String(lastError?.message || lastError || "réseau indisponible")
-      },
-      attempts: ATLAS_COMPARISON_RETRY_DELAYS_MS.length,
-      source: "stored-fallback"
-    };
-  }
+  if (stored) return { coin, result: { ...stored, sourceMode: "browser-cache", source: family === "binance" ? "Cache navigateur · chandelles Binance" : "Cache navigateur · série CoinGecko", blocked: false, refreshWarning: `Actualisation ${provider} indisponible · cache exact du ${atlasExactTimestampLabel(stored?.integrity?.metrics?.lastTimestamp || stored?.generatedAt)}`, technicalReason: String(lastError?.message || lastError || "réseau indisponible") }, attempts: ATLAS_COMPARISON_RETRY_DELAYS_MS.length, source: "stored-fallback" };
 
-  return {
-    coin,
-    result: {
-      series: [],
-      blocked: true,
-      reason: "Historique CoinGecko direct temporairement indisponible après nouvelles tentatives.",
-      technicalReason: String(lastError?.message || lastError || "réseau indisponible")
-    },
-    error: lastError || new Error("série indisponible"),
-    attempts: ATLAS_COMPARISON_RETRY_DELAYS_MS.length,
-    source: "blocked"
-  };
+  return { coin, result: { series: [], blocked: true, reason: `Historique ${provider} temporairement indisponible après nouvelles tentatives.`, technicalReason: String(lastError?.message || lastError || "réseau indisponible") }, error: lastError || new Error("série indisponible"), attempts: ATLAS_COMPARISON_RETRY_DELAYS_MS.length, source: "blocked" };
 }
-
-
-/* Comparaison atomique : aucun complément ni retry silencieux. */
 
 function atlasRenderComparisonDetail(entries, period) {
   const coins = entries.map(entry => entry.coin);
@@ -5963,7 +6070,7 @@ function atlasRenderComparisonDetail(entries, period) {
       <div><b>Période</b><span>${escapeHtml(atlasChartPeriodLabel(period))}</span></div>
       <div><b>Meilleure trajectoire</b><span>${ranked[0] ? `${escapeHtml(ranked[0].coin.symbol)} · ${fmtPct(ranked[0].change)}` : "—"}</span></div>
       <div><b>Trajectoire la plus faible</b><span>${ranked.at(-1) ? `${escapeHtml(ranked.at(-1).coin.symbol)} · ${fmtPct(ranked.at(-1).change)}` : "—"}</span></div>
-      <div><b>Source</b><span>${entries.some(entry => entry?.atlasMarketMetricLabel) ? "Classement Market + historiques CoinGecko EUR" : "CoinGecko market_chart EUR"}</span></div>
+      <div><b>Source</b><span>${escapeHtml(atlasChartProviderLabel({ comparison: true, entries }))} · historiques EUR</span></div>
       <div><b>Échelle</b><span>Chaque actif commence à 100</span></div>
       <div><b>Prix absolus</b><span>Visibles dans les infobulles</span></div>
       <div><b>Décision</b><span>Observation comparative uniquement</span></div>`;
@@ -6011,7 +6118,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     status: "loading",
     coinId: state.selectedCoinId,
     period,
-    source: ATLAS_CANONICAL_MARKET_SOURCE,
+    source: atlasComparisonPreferredSourceFamily() === "binance" ? "Binance" : "CoinGecko",
     mode: "comparison-base100",
     timestamp: null,
     pointCount: 0,
@@ -6116,7 +6223,7 @@ async function renderComparisonAnalystPanel(options = {}) {
         entries: drawnEntries,
         periodDays: period,
         sourceMode: "comparison-base100",
-        source: "CoinGecko market_chart EUR · Base 100"
+        source: `${atlasChartProviderLabel({ comparison: true, entries: drawnEntries })} · historiques EUR · Base 100`
       };
       const retryCount = fetched.reduce(
         (sum, item) => sum + Math.max(0, Number(item?.attempts || 0) - 1),
@@ -6127,7 +6234,7 @@ async function renderComparisonAnalystPanel(options = {}) {
         status: "ready",
         coinId: state.selectedCoinId,
         period,
-        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        source: atlasComparisonPreferredSourceFamily() === "binance" ? "Binance" : "CoinGecko",
         mode: "comparison-base100",
         timestamp: Number.isFinite(latestTimestamp) && latestTimestamp > 0
           ? new Date(latestTimestamp).toISOString()
@@ -6181,7 +6288,7 @@ async function renderComparisonAnalystPanel(options = {}) {
         status: "blocked",
         coinId: state.selectedCoinId,
         period,
-        source: ATLAS_CANONICAL_MARKET_SOURCE,
+        source: atlasComparisonPreferredSourceFamily() === "binance" ? "Binance" : "CoinGecko",
         mode: "comparison-base100",
         timestamp: null,
         pointCount: 0,
@@ -6876,7 +6983,7 @@ function atlasScheduleChartAutoRetry(c, period, reason = "réponse réseau tardi
   state.chartEngineV2.retryKey = key;
   state.chartEngineV2.retryAttempts[key] = attempts + 1;
   state.dataBroker.chart = {
-    status: "loading", coinId: c.id, period: Number(period || 1), source: ATLAS_CANONICAL_MARKET_SOURCE,
+    status: "loading", coinId: c.id, period: Number(period || 1), source: atlasChartPreferredProviderLabel(c),
     mode: "none", timestamp: null, pointCount: 0, latencyMs: null, retryCount: attempts + 1,
     contextKey: atlasExpectedChartContextKey([c.id], Number(period || 1)), result: null, error: String(reason || "")
   };
@@ -6910,7 +7017,7 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
   const key = atlasChartKey(coin, normalizedPeriod);
   atlasResetChartRetry(key);
   state.dataBroker.chart = {
-    status: "loading", coinId: coin.id, period: normalizedPeriod, source: ATLAS_CANONICAL_MARKET_SOURCE,
+    status: "loading", coinId: coin.id, period: normalizedPeriod, source: atlasChartPreferredProviderLabel(c),
     mode: "none", timestamp: null, pointCount: 0,
     contextKey: atlasExpectedChartContextKey([coin.id], normalizedPeriod), result: null, error: null
   };
@@ -6990,10 +7097,10 @@ async function renderAnalystPanel(options = {}) {
     atlasChartSetPeriodButtons(period, true);
     atlasShowChartRefresh(els.mainChart, `${c.symbol} ${periodLabel} · actualisation discrète`);
   } else {
-    state.dataBroker.chart = { status: "loading", coinId, period, source: ATLAS_CANONICAL_MARKET_SOURCE, mode: "none", timestamp: null, pointCount: 0, contextKey: atlasExpectedChartContextKey([coinId], period), result: null, error: null };
+    state.dataBroker.chart = { status: "loading", coinId, period, source: atlasChartPreferredProviderLabel(c), mode: "none", timestamp: null, pointCount: 0, contextKey: atlasExpectedChartContextKey([coinId], period), result: null, error: null };
     atlasRenderAssetDetail(c, period, null, "loading");
     atlasChartSetPeriodButtons(period, true);
-    drawChartLoading(els.mainChart, `${c.symbol} ${periodLabel} · chargement`, "Atlas interroge CoinGecko pour cette série historique réelle.");
+    drawChartLoading(els.mainChart, `${c.symbol} ${periodLabel} · chargement`, `Atlas interroge ${atlasChartPreferredProviderLabel(c)} pour cette série historique réelle.`);
     if (els.chartCaption) atlasSetChartCaptionText(`Graphique ${c.symbol} · période ${periodLabel} · première série réelle en cours.`);
   }
 
@@ -7005,7 +7112,7 @@ async function renderAnalystPanel(options = {}) {
     if (result.blocked || !Array.isArray(result.series) || !result.series.length) {
       if (stored) atlasRenderChartResult(c, period, { ...stored, refreshWarning: "Actualisation indisponible. Dernière série réelle conservée." }, chartKey);
       else if (!atlasScheduleChartAutoRetry(c, period, result.technicalReason || result.reason || "réponse réseau tardive")) {
-        state.dataBroker.chart = { status: "blocked", coinId, period, source: ATLAS_CANONICAL_MARKET_SOURCE, mode: "none", timestamp: null, pointCount: 0, latencyMs: chartLatencyMs, retryCount: Number(state.chartEngineV2.retryAttempts[chartKey] || 0), contextKey: atlasExpectedChartContextKey([coinId], period), result, error: result.technicalReason || result.reason || null };
+        state.dataBroker.chart = { status: "blocked", coinId, period, source: atlasChartPreferredProviderLabel(c), mode: "none", timestamp: null, pointCount: 0, latencyMs: chartLatencyMs, retryCount: Number(state.chartEngineV2.retryAttempts[chartKey] || 0), contextKey: atlasExpectedChartContextKey([coinId], period), result, error: result.technicalReason || result.reason || null };
         drawChartBlocked(els.mainChart);
         atlasRenderAssetDetail(c, period, result, "blocked");
         if (els.chartCaption) atlasSetChartCaptionText(`Graphique ${c.symbol} · période ${periodLabel} · temporairement indisponible après nouvelle tentative automatique.`);
@@ -7045,7 +7152,7 @@ async function renderAnalystPanel(options = {}) {
     if (renderToken !== state.chartRenderToken || state.selectedCoinId !== coinId || Number(state.chartPeriodDays || 1) !== period) return;
     if (stored) atlasRenderChartResult(c, period, { ...stored, refreshWarning: "Actualisation indisponible. Dernière série réelle conservée." }, chartKey);
     else if (!atlasScheduleChartAutoRetry(c, period, String(error?.message || error))) {
-      state.dataBroker.chart = { status: "blocked", coinId, period, source: ATLAS_CANONICAL_MARKET_SOURCE, mode: "none", timestamp: null, pointCount: 0, latencyMs: Math.round(performance.now() - chartStartedAt), retryCount: Number(state.chartEngineV2.retryAttempts[chartKey] || 0), contextKey: atlasExpectedChartContextKey([coinId], period), result: null, error: String(error?.message || error) };
+      state.dataBroker.chart = { status: "blocked", coinId, period, source: atlasChartPreferredProviderLabel(c), mode: "none", timestamp: null, pointCount: 0, latencyMs: Math.round(performance.now() - chartStartedAt), retryCount: Number(state.chartEngineV2.retryAttempts[chartKey] || 0), contextKey: atlasExpectedChartContextKey([coinId], period), result: null, error: String(error?.message || error) };
       drawChartBlocked(els.mainChart);
       atlasRenderAssetDetail(c, period, { reason: "indisponibilité réseau" }, "blocked");
       if (els.chartCaption) atlasSetChartCaptionText(`Graphique ${c.symbol} · période ${periodLabel} · temporairement indisponible après nouvelle tentative automatique.`);
@@ -8164,7 +8271,7 @@ function renderWatchlist() {
     `État : ${tone.label}.`,
     `Snapshot marché : CoinGecko Top 250 EUR ; USD en enrichissement optionnel · ${atlasExactTimestampLabel(state.timestamp)}.`,
     "Prix EUR : marché CoinGecko direct. Prix USD : enrichissement CoinGecko optionnel, jamais estimé.",
-    "Graphique : CoinGecko market_chart EUR direct uniquement ; dernier historique direct du navigateur conservé en secours.",
+    "Graphique Top 5 : chandelles Binance EUR ; autres actifs : historique CoinGecko EUR. Dernier historique de même source conservé en secours.",
     `À observer : ${hotText}.`,
     `À protéger : ${coldText}.`,
     "Décision de travail : observer / comparer. Pas d’achat automatique, pas de FOMO, pas d’ordre réel."
@@ -8178,7 +8285,7 @@ function renderTrustLock(live = false) {
   if (locked) {
     els.trustLockText.textContent = `SOURCE CANONIQUE · CoinGecko uniquement. Marché EUR : ${state.dataBroker.market?.mode || state.sourceLock.mode}. ` +
       "Prix EUR fournis par le marché CoinGecko ; USD ajouté seulement s’il est disponible, sans estimation. " +
-      "Les sources secondaires servent au diagnostic, jamais au calcul des prix, du score, de la simulation ou du graphique. " +
+      "Binance alimente les prix et graphiques du Top 5 ; CoinGecko alimente le marché global, les scanners et les autres historiques. " +
       "En cas de panne, le dernier snapshot CoinGecko daté est conservé.";
   } else {
     els.trustLockText.textContent = "Marché EUR direct absent : prix archivés consultables, scores Atlas et simulation suspendus. Le flux USD reste optionnel.";
@@ -12143,7 +12250,7 @@ function atlasHelpDefinitionFor(target) {
   if (!target) return null;
   if (target.matches?.(".period-btn[data-period]")) {
     const label = atlasChartPeriodLabel(Number(target.dataset.period || 1));
-    return { title: `Période ${label}`, body: `Charge les séries CoinGecko réelles sur ${label}. En comparaison, chaque actif est normalisé à 100 au premier point disponible.` };
+    return { title: `Période ${label}`, body: `Charge les chandelles Binance pour le Top 5, sinon les séries CoinGecko, sur ${label}. En comparaison, chaque actif est normalisé à 100 au premier point disponible.` };
   }
   if (target.matches?.("[data-math-position]")) {
     const position = target.dataset.mathPosition;
@@ -13790,7 +13897,7 @@ async function atlasScannerFetchDirect(tx, coin) {
       signal: tx.controller.signal,
       timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
     });
-    atlasStoreChartResult(coin, tx.period, result);
+    atlasStoreChartResult(coin, tx.period, result, "coingecko");
     return { result, source: "direct" };
   } catch (error) {
     if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
@@ -14035,7 +14142,7 @@ async function atlasScannerRun(tx) {
     tx.examined += 1;
     atlasScannerProgress(tx, coin.symbol);
 
-    const stored = atlasGetStoredChartResult(coin, tx.period);
+    const stored = atlasGetStoredChartResult(coin, tx.period, "coingecko");
 
     /*
       Un historique existant, même daté, reste une illustration valable.
