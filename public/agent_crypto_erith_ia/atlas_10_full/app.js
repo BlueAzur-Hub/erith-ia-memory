@@ -9,7 +9,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const encoder = new TextEncoder();
-  const STORAGE_KEY = "aerith-forge-v3-final";
+  const STORAGE_KEY = "aerith-forge-v3-3r6-modules";
   const VIEW_MODE = new URLSearchParams(window.location.search).get("view") || "full";
   document.body.dataset.view = VIEW_MODE === "atelier" ? "atelier" : "full";
   const LEGACY_STORAGE_KEYS = ["aerith-forge-creatrice-v2-alpha6", "aerith-forge-creatrice-v2-alpha5"];
@@ -101,6 +101,29 @@
     };
   }
 
+
+  function profileModuleRouter(selected = profile()) {
+    return selected?.moduleRouter || null;
+  }
+
+  function moduleCatalog(selected = profile()) {
+    return profileModuleRouter(selected)?.catalog || [];
+  }
+
+  function emptyModuleRouting() {
+    return {routeId:"", active:[], included:[]};
+  }
+
+  function sanitizeModuleRouting(value, selected = profile()) {
+    const allowed = new Set(moduleCatalog(selected).map(item => item.path));
+    const source = value && typeof value === "object" ? value : emptyModuleRouting();
+    return {
+      routeId: String(source.routeId || ""),
+      active: Array.from(new Set((source.active || []).filter(path => allowed.has(path)))),
+      included: Array.from(new Set((source.included || []).filter(path => allowed.has(path))))
+    };
+  }
+
   const defaultState = () => {
     const selected = DATA.profiles.find(item => item.id === "creator") || DATA.profiles[0];
     return {
@@ -113,6 +136,7 @@
       identity: identityFromProfile(selected),
       imports: [],
       importedFileMeta: [],
+      moduleRouting: emptyModuleRouting(),
       visualUrl: "",
       lastSaved: ""
     };
@@ -139,7 +163,8 @@
         ...raw,
         identity: {...fallback.identity, ...(raw.identity || {})},
         imports: [],
-        visualUrl: ""
+        visualUrl: "",
+        moduleRouting: sanitizeModuleRouting(raw.moduleRouting, DATA.profiles.find(item => item.id === (raw.profileId || fallback.profileId)) || DATA.profiles[0])
       };
     } catch {
       return fallback;
@@ -149,6 +174,7 @@
   let state = loadState();
 
   const canonicalSourceCache = new Map();
+  const moduleSourceCache = new Map();
   const decoder = new TextDecoder("utf-8");
 
   function pathFileName(value) {
@@ -243,6 +269,92 @@
     const imported = importedCanonical(kind);
     if (!imported) throw new Error(`${kind === "core" ? "Core" : "Persona"} canonique non chargé.`);
     return imported.text || imported.file.text();
+  }
+
+
+  function normalizedMatchPath(value) {
+    return cleanPath(value).toLowerCase();
+  }
+
+  function importedSourceForPath(canonicalPathValue) {
+    const target = normalizedMatchPath(canonicalPathValue);
+    const withoutModules = target.replace(/^modules\//, "");
+    const publicModuleTail = target.replace(/^public\/agent_crypto_erith_ia\/atlas_10_full_crypto\/modules\//, "");
+    const expectedName = pathFileName(target).toLowerCase();
+    const exact = state.imports.find(item => {
+      const imported = normalizedMatchPath(item.path);
+      return imported === target || imported.endsWith(`/${target}`) ||
+        (withoutModules !== target && (imported === withoutModules || imported.endsWith(`/${withoutModules}`))) ||
+        (publicModuleTail !== target && imported.endsWith(`/atlas_10_full_crypto/modules/${publicModuleTail}`));
+    });
+    if (exact) return exact;
+    const sameName = state.imports.filter(item => normalizeDownloadedFileName(pathFileName(item.path)).toLowerCase() === normalizeDownloadedFileName(expectedName).toLowerCase());
+    if (expectedName !== "readme.md") return sameName.length === 1 ? sameName[0] : null;
+    const expectedParent = withoutModules.split("/").slice(0, -1).join("/");
+    const parentMatch = sameName.find(item => normalizedMatchPath(item.path).includes(expectedParent));
+    return parentMatch || (sameName.length === 1 ? sameName[0] : null);
+  }
+
+  function moduleCacheKey(entry) {
+    return `${entry.privacy || "public"}:${entry.path}`;
+  }
+
+  function ensurePublicModuleSource(entry) {
+    if (!entry || entry.privacy !== "public") return;
+    const key = moduleCacheKey(entry);
+    if (moduleSourceCache.has(key)) return;
+    moduleSourceCache.set(key, {status:"loading", bytes:null, text:"", error:""});
+    fetch(githubRawUrl(DATA.publicRepo, entry.path), {cache:"no-store"})
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.arrayBuffer();
+      })
+      .then(buffer => {
+        const bytes = new Uint8Array(buffer);
+        moduleSourceCache.set(key, {status:"ready", bytes, text:decoder.decode(bytes), error:""});
+      })
+      .catch(error => moduleSourceCache.set(key, {status:"error", bytes:null, text:"", error:error.message || String(error)}))
+      .finally(() => {
+        renderModuleRouter();
+        renderFinal();
+        renderAdvisor();
+      });
+  }
+
+  function moduleSourceState(entry) {
+    if (!entry) return {status:"missing", bytes:null, text:"", error:""};
+    if (entry.privacy === "public") {
+      ensurePublicModuleSource(entry);
+      return moduleSourceCache.get(moduleCacheKey(entry)) || {status:"loading", bytes:null, text:"", error:""};
+    }
+    const imported = importedSourceForPath(entry.path);
+    return imported ? {status:"ready", bytes:null, text:imported.text || "", error:"", imported} : {status:"missing", bytes:null, text:"", error:""};
+  }
+
+  async function moduleSourceBytes(entry) {
+    if (entry.privacy === "public") {
+      const cached = moduleSourceCache.get(moduleCacheKey(entry));
+      if (cached?.status === "ready" && cached.bytes) return cached.bytes;
+      const response = await fetch(githubRawUrl(DATA.publicRepo, entry.path), {cache:"no-store"});
+      if (!response.ok) throw new Error(`${entry.path} — HTTP ${response.status}`);
+      return new Uint8Array(await response.arrayBuffer());
+    }
+    const imported = importedSourceForPath(entry.path);
+    if (!imported) throw new Error(`${entry.path} — source privée non chargée.`);
+    return new Uint8Array(await imported.file.arrayBuffer());
+  }
+
+  function routerEntry(selected = profile()) {
+    const router = profileModuleRouter(selected);
+    if (!router?.routerPath) return null;
+    return {id:"router", label:"README — routeur canonique", path:router.routerPath, privacy:router.routerPrivacy || "private"};
+  }
+
+  function moduleMetrics() {
+    const catalog = moduleCatalog();
+    const routing = sanitizeModuleRouting(state.moduleRouting);
+    const loaded = catalog.filter(item => moduleSourceState(item).status === "ready");
+    return {catalog, routing, referenced:catalog.length, loaded, active:routing.active.length, included:routing.included.length};
   }
 
   function persist() {
@@ -421,6 +533,7 @@
     state.canonicalConfirmed = selected.kind === "existing" && selected.privacy === "public";
     state.identity = identityFromProfile(selected);
     state.imports = [];
+    state.moduleRouting = emptyModuleRouting();
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     state.step = move ? 0 : state.step;
@@ -449,6 +562,7 @@
       imagePath: ""
     };
     state.imports = [];
+    state.moduleRouting = emptyModuleRouting();
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     persist();
@@ -463,6 +577,7 @@
     state.canonicalConfirmed = false;
     state.identity = identityFromProfile(selected);
     state.imports = [];
+    state.moduleRouting = emptyModuleRouting();
     if (state.visualUrl) URL.revokeObjectURL(state.visualUrl);
     state.visualUrl = "";
     persist();
@@ -824,6 +939,8 @@
     $("#fieldFormula").value = i.formula || "";
     $("#fieldAgents").value = (i.agents || []).join("\n");
     $("#fieldModules").value = (i.modules || []).join("\n");
+    $("#fieldModules").readOnly = Boolean(profileModuleRouter());
+    $("#fieldModulesLabel").textContent = profileModuleRouter() ? "Catalogue canonique référencé — piloté par le routeur ci-dessus" : "Modules ou fichiers sources — un chemin par ligne";
     $("#fieldNonDuplication").value = i.nonDuplication || "";
     $("#fieldTone").value = i.tone || "";
     $("#fieldModes").value = (i.modes || []).join("\n");
@@ -849,7 +966,7 @@
     i.outputs = lines($("#fieldOutputs").value);
     i.formula = $("#fieldFormula").value.trim();
     i.agents = lines($("#fieldAgents").value);
-    i.modules = lines($("#fieldModules").value);
+    if (!profileModuleRouter()) i.modules = lines($("#fieldModules").value);
     i.nonDuplication = $("#fieldNonDuplication").value.trim();
     i.tone = $("#fieldTone").value.trim();
     i.modes = lines($("#fieldModes").value);
@@ -883,6 +1000,46 @@
         <b>${esc(item.name)}</b><small>${esc(item.role)}</small>
       </label>`;
     }).join("");
+  }
+
+
+  function renderModuleRouter() {
+    const panel = $("#moduleRouterPanel");
+    if (!panel) return;
+    const router = profileModuleRouter();
+    if (!router) { panel.hidden = true; panel.innerHTML = ""; return; }
+    panel.hidden = false;
+    state.moduleRouting = sanitizeModuleRouting(state.moduleRouting);
+    const metrics = moduleMetrics();
+    const route = (router.presets || []).find(item => item.id === metrics.routing.routeId);
+    const source = routerEntry();
+    const sourceState = moduleSourceState(source);
+    const stateLabel = value => value.status === "ready" ? "CHARGÉ" : value.status === "loading" ? "CHARGEMENT" : value.status === "error" ? "ERREUR" : "À CHARGER";
+    panel.innerHTML = `
+      <div class="module-router-head">
+        <div><p class="kicker">ROUTEUR DE MODULES RÉELS</p><h3>${esc(state.identity.name)} · catalogue canonique</h3><p>Le catalogue reste référencé. Une route choisit les modules actifs ; seuls les modules cochés « ZIP » sont copiés, octet pour octet, dans le paquet final.</p></div>
+        <div class="module-router-counts">
+          <span><b>${metrics.referenced}</b> référencés</span><span><b>${metrics.loaded.length}</b> chargés</span><span><b>${metrics.active}</b> actifs</span><span><b>${metrics.included}</b> inclus</span>
+        </div>
+      </div>
+      <div class="module-route-presets">${(router.presets || []).map(item => `<button type="button" class="${item.id === metrics.routing.routeId ? "active" : ""}" data-module-preset="${esc(item.id)}">${esc(item.label)}</button>`).join("")}</div>
+      <div class="module-router-source">
+        <div><b>Routeur canonique · ${stateLabel(sourceState)}</b><code>${esc(source.path)}</code></div>
+        <span class="status">${source.privacy === "private" ? "PRIVÉ · IMPORT LOCAL" : "PUBLIC · FETCH RÉEL"}</span>
+      </div>
+      <div class="module-catalog">${metrics.catalog.map(entry => {
+        const loaded = moduleSourceState(entry).status === "ready";
+        const active = metrics.routing.active.includes(entry.path);
+        const included = metrics.routing.included.includes(entry.path);
+        return `<article class="module-card ${active ? "active" : ""} ${included ? "included" : ""}">
+          <div class="module-card-title"><span class="module-number">${esc(entry.id)}</span><div><b>${esc(entry.label)}</b><code>${esc(entry.path)}</code></div></div>
+          <div class="module-state-badges"><span>RÉFÉRENCÉ</span><span class="${loaded ? "ready" : ""}">${loaded ? "CHARGÉ" : entry.privacy === "public" ? "CHARGEMENT" : "À CHARGER"}</span>${active ? '<span class="active">ACTIF</span>' : ''}${included ? '<span class="included">INCLUS ZIP</span>' : ''}</div>
+          <div class="module-card-controls"><label><input type="checkbox" data-module-active="${esc(entry.path)}" ${active ? "checked" : ""}> Actif</label><label><input type="checkbox" data-module-include="${esc(entry.path)}" ${included ? "checked" : ""}> ZIP</label></div>
+        </article>`;
+      }).join("")}</div>
+      <div class="module-router-actions"><button type="button" data-module-action="include-active">Inclure les actifs</button><button type="button" data-module-action="clear-included">Retirer du ZIP</button><button type="button" data-module-action="clear-route">Effacer la route</button></div>
+      ${route ? `<div class="rule-box"><b>Route active · ${esc(route.label)}</b><p>${route.modules.length} module(s) actifs et présélectionnés pour le ZIP.</p></div>` : `<div class="truth-box"><strong>Aucune route active</strong><p>Le catalogue est complet. Choisir une route ne modifie aucun Core ni aucune Persona.</p></div>`}
+    `;
   }
 
   function advisorModel() {
@@ -1542,7 +1699,20 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
     if (personaPath) add("ok", "Chemin Persona", personaPath);
     else { add("error", "Chemin Persona", "Chemin manquant.", true, false); ready = false; }
 
-    if (state.identity.modules.length) add("ok", "Modules", `${state.identity.modules.length} référence(s), sans copie.`);
+    if (profileModuleRouter()) {
+      const metrics = moduleMetrics();
+      add("ok", "Modules référencés", `${metrics.referenced} source(s) canonique(s) dans le catalogue.`);
+      add(metrics.active ? "ok" : "info", "Modules actifs", metrics.active ? `${metrics.active} module(s) actif(s).` : "Aucune route active.", false);
+      if (metrics.included) {
+        const includedEntries = metrics.catalog.filter(item => metrics.routing.included.includes(item.path));
+        const missing = includedEntries.filter(item => moduleSourceState(item).status !== "ready");
+        const routerState = moduleSourceState(routerEntry());
+        if (routerState.status === "ready") add("ok", "Routeur réel", `${pathFileName(routerEntry().path)} chargé.`);
+        else { add(routerState.status === "error" ? "error" : "warn", "Routeur à charger", `${routerEntry().path} est requis pour inclure des modules.`, true, false); ready = false; }
+        if (missing.length) { add("warn", "Modules inclus non chargés", missing.map(item => pathFileName(item.path)).join(", "), true, false); ready = false; }
+        else add("ok", "Modules inclus", `${includedEntries.length} fichier(s) réel(s) prêt(s) pour le ZIP.`);
+      } else add("info", "Modules inclus", "Aucun module ne sera copié dans le ZIP.", false);
+    } else if (state.identity.modules.length) add("ok", "Modules", `${state.identity.modules.length} référence(s).`);
     else add("info", "Modules", "Aucun module complémentaire.", false);
     if (state.identity.stopPoint) add("ok", "Stop Point", "Défini.");
     else { add("error", "Stop Point", "Manquant.", true, false); ready = false; }
@@ -1566,6 +1736,13 @@ Règle : aucun contenu de remplacement n’est généré pour ce profil.
       },
       source_references: sourceReferences(),
       imported_files: state.imports.map(item => ({path:item.path, kind:item.kind, size:item.file.size})),
+      module_routing: profileModuleRouter() ? {
+        route_id: state.moduleRouting.routeId || "",
+        router_path: profileModuleRouter().routerPath,
+        referenced: moduleCatalog().map(item => ({id:item.id, label:item.label, path:item.path, privacy:item.privacy})),
+        active: [...state.moduleRouting.active],
+        included: [...state.moduleRouting.included]
+      } : null,
       audit
     };
   }
@@ -1601,14 +1778,23 @@ ${i.role || "Suivre strictement la mission définie dans le Core."}
 
 ${i.heritage.length ? i.heritage.map(id => `- ${DATA.heritage.find(item => item.id === id)?.name || id}`).join("\n") : "- Aucun"}
 
-## Modules ciblés
+## Modules référencés
 
 ${i.modules.length ? i.modules.map(item => `- ${item}`).join("\n") : "- Aucun module complémentaire"}
+
+## Route active
+
+${profileModuleRouter() ? (state.moduleRouting.active.length ? state.moduleRouting.active.map(item => `- ${item}`).join("\n") : "- Aucune") : "- Routeur non applicable"}
+
+## Modules inclus dans le ZIP
+
+${profileModuleRouter() ? (state.moduleRouting.included.length ? state.moduleRouting.included.map(item => `- ${item}`).join("\n") : "- Aucun") : "- Non applicable"}
 
 ## Verrous
 
 ${i.guardrails.length ? i.guardrails.map(item => `- ${item}`).join("\n") : "- Ne pas inventer une source absente."}
-- Les modules sont référencés, jamais dupliqués automatiquement.
+- Module présent ≠ module actif.
+- Seuls les modules explicitement inclus sont copiés depuis leur source réelle.
 - Produire le résultat demandé puis s’arrêter proprement.
 `;
   }
@@ -1640,9 +1826,15 @@ Parcours : Atelier Aerith-10 Créatrice — conception, canonisation et forge
 
 ${state.identity.heritage.length ? state.identity.heritage.map(item => `- ${item}`).join("\n") : "- Aucun"}
 
-## Modules référencés — non copiés
+## Modules référencés
 
 ${state.identity.modules.length ? state.identity.modules.map(item => `- ${item}`).join("\n") : "- Aucun"}
+
+## Routage réel
+
+- Route : ${profileModuleRouter() ? (state.moduleRouting.routeId || "personnalisée / aucune") : "non applicable"}
+- Actifs : ${profileModuleRouter() ? state.moduleRouting.active.length : 0}
+- Inclus dans le ZIP : ${profileModuleRouter() ? state.moduleRouting.included.length : 0}
 
 ## Fichiers réellement importés
 
@@ -1668,6 +1860,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
       ["Validation", `${audit.validationPercent} %`],
       ["Sources importées", String(state.imports.length)],
       ["Modules référencés", String(state.identity.modules.length)],
+      ["Modules inclus", String(profileModuleRouter() ? state.moduleRouting.included.length : 0)],
       ["État", audit.ready ? "PRÊT" : "À COMPLÉTER"]
     ].map(item => `<div class="summary-card"><span>${esc(item[0])}</span><b>${esc(item[1])}</b></div>`).join("");
     const labels = {ok:"PRÊT", warn:"À FAIRE", info:"INFO", error:"ERREUR"};
@@ -1682,6 +1875,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     $("#finalPreview").textContent = docs[state.finalPreview] || docs.boot;
     $$("#finalTabs button").forEach(button => button.classList.toggle("active", button.dataset.finalPreview === state.finalPreview));
     $("#forgeZip").disabled = !audit.ready;
+    $("#forgeZip").textContent = `FORGER LE ZIP FINAL · ${8 + (profileModuleRouter() && state.moduleRouting.included.length ? state.moduleRouting.included.length + 1 : 0)} FICHIERS`;
     renderCompletion(audit);
     if (!audit.ready) $("#forgeLog").textContent = "Paquet final disponible après les éléments « À valider » et « À importer ».";
   }
@@ -1697,6 +1891,7 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
     renderAgentSuggestions();
     renderHeritage();
     syncFieldsToUI();
+    renderModuleRouter();
     renderImports();
     renderProposal();
     renderFinal();
@@ -1720,9 +1915,9 @@ La Forge compile les sources disponibles. Elle ne canonise pas à la place de Ch
 
 Paquet canonique produit par ${DATA.version}.
 
-Contenu : Core, Persona, Boot, Block LLM, Manifeste, liens GitHub / Raw et Profile Spec.
+Contenu : Core, Persona, Boot, Block LLM, Manifeste, liens GitHub / Raw, Profile Spec et, lorsqu’ils sont sélectionnés, les modules réels avec leur README routeur.
 
-Les modules restent référencés à leur emplacement canonique et ne sont pas recopiés.
+Aucun Core, Persona ou module protégé n’est réécrit par la Forge.
 `));
     files.set(`${root}/${finalFileName("boot")}`, encoder.encode(bootDocument()));
     files.set(`${root}/${finalFileName("manifest")}`, encoder.encode(manifestDocument()));
@@ -1745,6 +1940,14 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
       const persona = importedKind("persona");
       files.set(`${root}/CORE/${coreTargetName}`, new Uint8Array(await core.file.arrayBuffer()));
       files.set(`${root}/CORE/${personaTargetName}`, new Uint8Array(await persona.file.arrayBuffer()));
+    }
+
+    if (profileModuleRouter() && state.moduleRouting.included.length) {
+      const router = routerEntry();
+      files.set(`${root}/SOURCES/${router.path}`, await moduleSourceBytes(router));
+      for (const entry of moduleCatalog().filter(item => state.moduleRouting.included.includes(item.path))) {
+        files.set(`${root}/SOURCES/${entry.path}`, await moduleSourceBytes(entry));
+      }
     }
 
     return {root, files};
@@ -1873,6 +2076,28 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   }
 
   document.addEventListener("click", event => {
+    const preset = event.target.closest("[data-module-preset]");
+    if (preset) {
+      const router = profileModuleRouter();
+      const selected = router?.presets?.find(item => item.id === preset.dataset.modulePreset);
+      if (selected) {
+        const paths = selected.modules.map(id => router.catalog.find(item => item.id === id)?.path).filter(Boolean);
+        state.moduleRouting = {routeId:selected.id, active:[...paths], included:[...paths]};
+        persist(); renderModuleRouter(); renderFinal(); renderAdvisor(); renderLiveProfile();
+        showToast(`${selected.label} · ${paths.length} module(s) actifs et inclus.`);
+      }
+      return;
+    }
+    const moduleAction = event.target.closest("[data-module-action]");
+    if (moduleAction) {
+      state.moduleRouting = sanitizeModuleRouting(state.moduleRouting);
+      if (moduleAction.dataset.moduleAction === "include-active") state.moduleRouting.included = [...state.moduleRouting.active];
+      if (moduleAction.dataset.moduleAction === "clear-included") state.moduleRouting.included = [];
+      if (moduleAction.dataset.moduleAction === "clear-route") state.moduleRouting = emptyModuleRouting();
+      state.moduleRouting.routeId = moduleAction.dataset.moduleAction === "clear-route" ? "" : "custom";
+      persist(); renderModuleRouter(); renderFinal(); renderAdvisor();
+      return;
+    }
     const flowerDetailButton = event.target.closest("[data-flower-detail]");
     if (flowerDetailButton) {
       const item = FLOWER?.profiles.find(profile => profile.id === flowerDetailButton.dataset.flowerDetail);
@@ -1929,6 +2154,21 @@ Les modules restent référencés à leur emplacement canonique et ne sont pas r
   });
 
   document.addEventListener("change", event => {
+    const activeBox = event.target.closest("[data-module-active]");
+    const includeBox = event.target.closest("[data-module-include]");
+    if (activeBox || includeBox) {
+      state.moduleRouting = sanitizeModuleRouting(state.moduleRouting);
+      const target = activeBox || includeBox;
+      const listName = activeBox ? "active" : "included";
+      const values = new Set(state.moduleRouting[listName]);
+      if (target.checked) values.add(target.dataset[activeBox ? "moduleActive" : "moduleInclude"]);
+      else values.delete(target.dataset[activeBox ? "moduleActive" : "moduleInclude"]);
+      state.moduleRouting[listName] = [...values];
+      state.moduleRouting.routeId = "custom";
+      persist(); renderModuleRouter(); renderFinal(); renderAdvisor(); renderLiveProfile();
+      return;
+    }
+
     const heritageInput = event.target.closest("[data-heritage]");
     if (heritageInput) {
       const id = heritageInput.dataset.heritage;

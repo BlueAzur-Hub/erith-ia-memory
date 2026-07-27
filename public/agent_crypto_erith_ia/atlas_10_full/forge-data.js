@@ -1,7 +1,53 @@
 "use strict";
 
+const CREATOR_MODULES = Object.freeze([
+  {id:"01", label:"Scénographie live & stars", path:"modules/aerith_10_creatrice/01_AERITH_10_MODULE_SCENOGRAPHIE_LIVE_STARS_FR.md", privacy:"private"},
+  {id:"02", label:"Réalisation cinéma / clip / vidéaste", path:"modules/aerith_10_creatrice/02_AERITH_10_MODULE_REALISATION_CINEMA_CLIP_VIDEASTE_FR.md", privacy:"private"},
+  {id:"03", label:"Grammaire du music video", path:"modules/aerith_10_creatrice/03_AERITH_10_MODULE_MUSIC_VIDEO_GRAMMAR_FR.md", privacy:"private"},
+  {id:"04", label:"Synchronisation audio-visuelle & lumière musicale", path:"modules/aerith_10_creatrice/04_AERITH_10_MODULE_AUDIO_VISUAL_SYNC_LUMIERE_MUSICALE_FR.md", privacy:"private"},
+  {id:"05", label:"Architecture scénique & espaces spectaculaires", path:"modules/aerith_10_creatrice/05_AERITH_10_MODULE_ARCHITECTURE_SCENIQUE_ESPACES_SPECTACULAIRES_FR.md", privacy:"private"},
+  {id:"06", label:"Caméra live verticale & impact", path:"modules/aerith_10_creatrice/06_AERITH_10_MODULE_LIVE_CAMERA_VERTICAL_IMPACT_FR.md", privacy:"private"},
+  {id:"07", label:"Direction du mouvement, corps & foule", path:"modules/aerith_10_creatrice/07_AERITH_10_MODULE_MOVEMENT_DIRECTION_CORPS_FOULE_FR.md", privacy:"private"},
+  {id:"08", label:"Anti-AI slop & qualité humaine", path:"modules/aerith_10_creatrice/08_AERITH_10_MODULE_ANTI_AI_SLOP_QUALITE_HUMAINE_FR.md", privacy:"private"},
+  {id:"09", label:"Style Lock Paradise / Lifestyle premium", path:"modules/aerith_10_creatrice/09_AERITH_10_STYLE_LOCK_PARADISE_LIFESTYLE_PREMIUM_FR.md", privacy:"private"},
+  {id:"10", label:"Esprit de création & destination", path:"modules/aerith_10_creatrice/10_AERITH_10_MODULE_ESPRIT_D_CREATION_DESTINATION_FR.md", privacy:"private"},
+  {id:"11", label:"Star, silhouette, costume & présence", path:"modules/aerith_10_creatrice/11_AERITH_10_MODULE_STAR_SILHOUETTE_COSTUME_PRESENCE_FR.md", privacy:"private"},
+  {id:"12", label:"DaVinci, montage & rythme musical", path:"modules/aerith_10_creatrice/12_AERITH_10_MODULE_DAVINCI_MONTAGE_RYTHME_MUSICAL_FR.md", privacy:"private"},
+  {id:"13", label:"Look Bible & color grading", path:"modules/aerith_10_creatrice/13_AERITH_10_MODULE_LOOK_BIBLE_COLOR_GRADING_FR.md", privacy:"private"},
+  {id:"14", label:"Continuité, last frame & LEGO control", path:"modules/aerith_10_creatrice/14_AERITH_10_MODULE_CONTINUITY_LAST_FRAME_LEGO_CONTROL_FR.md", privacy:"private"},
+  {id:"15", label:"ComfyUI / RunningHub — règle visuelle des workflows", path:"modules/aerith_10_creatrice/15_AERITH_10_MODULE_COMFYUI_WORKFLOW_VISUAL_RULE_FR.md", privacy:"private"}
+]);
+
+const CREATOR_PRESETS = Object.freeze([
+  {id:"music", label:"Production musicale", modules:["01","03","04","12","14"]},
+  {id:"video", label:"Vidéo / action", modules:["02","06","12","14"]},
+  {id:"keyframe", label:"Image clé", modules:["01","05","11","13"]},
+  {id:"quality", label:"Contrôle qualité", modules:["08"]},
+  {id:"wan", label:"Wan / last frame", modules:["14"]},
+  {id:"workflow", label:"ComfyUI / RunningHub", modules:["15"]},
+  {id:"workflow-continuity", label:"Workflow + continuité", modules:["14","15"]},
+  {id:"full", label:"Full Dense · 15", modules:CREATOR_MODULES.map(item => item.id)}
+]);
+
+const CRYPTO_MODULES = Object.freeze([
+  {id:"math", label:"Math Oracle", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_math_oracle_fr.md", privacy:"public"},
+  {id:"market", label:"Structure de marché", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_market_structure_fr.md", privacy:"public"},
+  {id:"tokenomics", label:"Tokenomics & dilution", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_tokenomics_dilution_fr.md", privacy:"public"},
+  {id:"data-truth", label:"Data Truth & sources", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_data_truth_sources_fr.md", privacy:"public"},
+  {id:"multi-horizon", label:"Multi-horizon & cycles", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_multi_horizon_cycles_fr.md", privacy:"public"},
+  {id:"psychology", label:"Psychologie de marché", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_psychology_market_fr.md", privacy:"public"},
+  {id:"onchain", label:"Recherche on-chain", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_onchain_research_fr.md", privacy:"public"},
+  {id:"risk", label:"Risque, liquidité & exécution", path:"public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_risk_liquidity_execution_fr.md", privacy:"public"}
+]);
+
+const CRYPTO_PRESETS = Object.freeze([
+  ...CRYPTO_MODULES.map(item => ({id:item.id, label:item.label, modules:[item.id]})),
+  {id:"full-crypto", label:"Full Crypto · 8", modules:CRYPTO_MODULES.map(item => item.id)}
+]);
+
+
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R5-profils-canoniques",
+  version: "V3.3R6-routeur-modules-reels",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -34,7 +80,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Relier les héritages et les savoirs",
-        message: "Seven, Solaire, Lunaire et les modules sont proposés selon la fonction du profil. Chaque référence reste liée à une décision utile.",
+        message: "Seven, Solaire, Lunaire et le catalogue réel des modules sont proposés selon la fonction du profil. Le routeur distingue référencé, chargé, actif et inclus.",
         action: "Valider les héritages"
       },
       {
@@ -54,7 +100,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       },
       {
         title: "Forger le paquet final",
-        message: "L’audit rassemble identité, sources, modules et Stop Point. Lorsque tout est prêt, le paquet canonique contient huit fichiers utiles.",
+        message: "L’audit rassemble identité, sources, modules et Stop Point. Le paquet contient huit fichiers de base, puis le README routeur et les modules réels explicitement inclus.",
         action: "Forger le profil"
       }
     ],
@@ -168,11 +214,11 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       privacy: "private",
       status: "Core et Persona privés · import local",
       coreStatus: "CORE CANONIQUE PROTÉGÉ",
-      coreVersion: "Core canonique · 2026-07-01",
+      coreVersion: "Core canonique · 2026-07-27 · 15 modules",
       coreProtection: "PROTÉGÉ",
       validationStatus: "CANONIQUE",
       personaStatus: "PERSONA LIÉE",
-      githubChecked: "2026-07-26",
+      githubChecked: "2026-07-27",
       role: "Organisatrice de production et Réalisatrice multi-agent : elle orchestre la création vidéo, la musique, l’image clé, Wan, DaVinci et la mémoire de production.",
       description: "Spécialisation Organisatrice / Réalisatrice : elle transforme une intention artistique en chaîne de production complète et maîtrisée.",
       problem: "Transformer une intention artistique en production cohérente, maîtrisée et mémorisée, de la préparation jusqu’au montage final.",
@@ -194,14 +240,13 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
         "Protéger le temps, le coût, les crédits et la fatigue.",
         "Livrer la destination utile puis fermer proprement la production."
       ],
-      modules: [
-        "private:modules/aerith_10_creatrice/README.md",
-        "private:modules/aerith_10_creatrice/01_AERITH_10_MODULE_SCENOGRAPHIE_LIVE_STARS_FR.md",
-        "private:modules/aerith_10_creatrice/02_AERITH_10_MODULE_REALISATION_CINEMA_CLIP_VIDEASTE_FR.md",
-        "private:modules/aerith_10_creatrice/08_AERITH_10_MODULE_ANTI_AI_SLOP_QUALITE_HUMAINE_FR.md",
-        "private:modules/aerith_10_creatrice/12_AERITH_10_MODULE_DAVINCI_MONTAGE_RYTHME_MUSICAL_FR.md",
-        "private:modules/aerith_10_creatrice/14_AERITH_10_MODULE_CONTINUITY_LAST_FRAME_LEGO_CONTROL_FR.md"
-      ]
+      modules: CREATOR_MODULES.map(item => item.path),
+      moduleRouter: {
+        routerPath: "modules/aerith_10_creatrice/README.md",
+        routerPrivacy: "private",
+        catalog: CREATOR_MODULES,
+        presets: CREATOR_PRESETS
+      }
     },
     {
       id: "aerithcrypto",
@@ -238,16 +283,13 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
         "Ne jamais promettre un rendement.",
         "La décision finale reste humaine."
       ],
-      modules: [
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_math_oracle_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_market_structure_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_tokenomics_dilution_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_data_truth_sources_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_multi_horizon_cycles_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_psychology_market_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_onchain_research_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_risk_liquidity_execution_fr.md"
-      ]
+      modules: CRYPTO_MODULES.map(item => item.path),
+      moduleRouter: {
+        routerPath: "public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/README.md",
+        routerPrivacy: "public",
+        catalog: CRYPTO_MODULES,
+        presets: CRYPTO_PRESETS
+      }
     },
     {
       id: "atlas",
@@ -284,16 +326,13 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
         "Aucun modèle ne devient une certitude.",
         "Le risque doit rester visible."
       ],
-      modules: [
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_math_oracle_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_market_structure_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_tokenomics_dilution_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_data_truth_sources_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_multi_horizon_cycles_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_psychology_market_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_onchain_research_fr.md",
-        "public:public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/atlas_10_crypto_risk_liquidity_execution_fr.md"
-      ]
+      modules: CRYPTO_MODULES.map(item => item.path),
+      moduleRouter: {
+        routerPath: "public/agent_crypto_erith_ia/atlas_10_full_crypto/modules/README.md",
+        routerPrivacy: "public",
+        catalog: CRYPTO_MODULES,
+        presets: CRYPTO_PRESETS
+      }
     }
   ],
   examples: [

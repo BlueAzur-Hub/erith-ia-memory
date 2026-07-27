@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070a16">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta name="description" content="Forge d’Aerith Pro V3.3R5 — profils canoniques reliés à leurs vrais Core et Personas.">
-  <title>Forge d’Aerith Pro · V3.3R5 PROFILS CANONIQUES</title>
-  <link rel="stylesheet" href="style.css?v=3.3r5-profils-canoniques">
+  <meta name="description" content="Forge d’Aerith Pro V3.3R6 — routeur réel des modules, sources canoniques et ZIP source-fidèle.">
+  <title>Forge d’Aerith Pro · V3.3R6 ROUTEUR MODULES RÉELS</title>
+  <link rel="stylesheet" href="style.css?v=3.3r6-routeur-modules-reels">
 </head>
-<body data-build="V3.3R5-profils-canoniques" data-theme="seven">
+<body data-build="V3.3R6-routeur-modules-reels" data-theme="seven">
   <div class="diagnostic" id="diagnostic" hidden></div>
 
   <header class="topbar">
@@ -27,7 +27,7 @@
       <a href="../web/index.html">Agent-Crypto ↗</a>
     </nav>
     <div class="top-actions">
-      <span class="version" id="buildBadge">V3.3R5 PROFILS CANONIQUES</span>
+      <span class="version" id="buildBadge">V3.3R6 ROUTEUR MODULES RÉELS</span>
       <button class="ghost" id="resetAll" type="button">Réinitialiser</button>
       <button class="primary compact" id="startTop" type="button">Commencer</button>
     </div>
@@ -138,7 +138,7 @@
     <section class="shell unified-shell" id="unifiedForge">
       <aside class="rail">
         <div class="rail-title">
-          <span>ATELIER AERITH-10 CRÉATRICE · V3.3R5 PROFILS CANONIQUES</span>
+          <span>ATELIER AERITH-10 CRÉATRICE · V3.3R6 ROUTEUR MODULES RÉELS</span>
           <strong id="railProfileName">Aerith-10 Créatrice</strong>
           <small>Huit étapes de conception et de forge</small>
         </div>
@@ -234,7 +234,8 @@
               <p>Seven, Solaire, Lunaire et les modules choisis enrichissent la mission selon leur fonction précise dans la future identité.</p>
             </header>
             <div class="heritage-grid" id="heritageGrid"></div>
-            <label class="field-block"><span>Modules ou fichiers sources — un chemin par ligne</span><textarea id="fieldModules" rows="10"></textarea></label>
+            <div id="moduleRouterPanel" class="module-router-panel" hidden></div>
+            <label class="field-block"><span id="fieldModulesLabel">Modules ou fichiers sources — un chemin par ligne</span><textarea id="fieldModules" rows="10"></textarea></label>
             <label class="field-block"><span>Principe d’intégration des savoirs</span><textarea id="fieldNonDuplication" rows="3"></textarea></label>
             <div class="truth-box"><strong>Chemins acceptés</strong><p><code>private:core/...</code>, <code>private:modules/...</code>, <code>public:public/...</code> ou une URL complète.</p></div>
           </section>
@@ -277,14 +278,14 @@
           <section class="panel" data-step="6">
             <header class="panel-head">
               <div><p class="kicker">07 · SOURCES CANONIQUES</p><h2>Réunir les fichiers validés</h2></div>
-              <p>Déposer le Core et la Persona réellement canonisés. Les fichiers portant encore le suffixe PROPOSAL restent des documents de travail et ne valident pas la Forge finale.</p>
+              <p>Déposer le Core, la Persona et, pour un profil privé, le dossier réel des modules à inclure. Les fichiers PROPOSAL restent des documents de travail.</p>
             </header>
             <div class="dropzone" id="dropzone">
               <input id="fileInput" type="file" multiple accept=".md,.txt,.json,.zip,image/*">
               <input id="folderInput" type="file" webkitdirectory directory multiple>
               <span class="drop-icon">⇩</span>
-              <h3>Déposer le Core et la Persona canoniques</h3>
-              <p>Traitement local dans le navigateur. Les autres sources et modules restent référencés par leurs chemins canoniques.</p>
+              <h3>Déposer les sources canoniques réelles</h3>
+              <p>Core, Persona et modules privés sont lus localement. Aucun fichier protégé n’est réécrit ; les octets d’origine sont conservés dans le ZIP.</p>
               <div><button id="chooseFiles" type="button">Choisir des fichiers</button><button id="chooseFolder" type="button">Choisir un dossier</button></div>
             </div>
             <div class="import-summary"><span><b id="importCount">0</b> fichier(s)</span><span><b id="importSize">0 o</b></span><button id="clearImports" type="button">Vider les imports</button></div>
@@ -328,7 +329,7 @@
               <button id="downloadBlock" type="button"><span>BLOCK LLM</span><b>Télécharger</b></button>
               <button id="downloadLinks" type="button"><span>HTTP / RAW</span><b>Télécharger</b></button>
               <button id="downloadSpec" type="button"><span>PROFILE SPEC</span><b>Télécharger</b></button>
-              <button class="primary" id="forgeZip" type="button">FORGER LE ZIP FINAL · 8 FICHIERS</button>
+              <button class="primary" id="forgeZip" type="button">FORGER LE ZIP FINAL · SOURCES RÉELLES</button>
             </div>
             <div class="forge-log" id="forgeLog">Prêt.</div>
           </section>
@@ -363,8 +364,8 @@
     <strong id="lightboxTitle"></strong>
   </div>
 
-  <script src="flower-girls-registry.js?v=3.3r5-profils-canoniques"></script>
-  <script src="forge-data.js?v=3.3r5-profils-canoniques"></script>
-  <script src="app.js?v=3.3r5-profils-canoniques"></script>
+  <script src="flower-girls-registry.js?v=3.3r6-routeur-modules-reels"></script>
+  <script src="forge-data.js?v=3.3r6-routeur-modules-reels"></script>
+  <script src="app.js?v=3.3r6-routeur-modules-reels"></script>
 </body>
 </html>

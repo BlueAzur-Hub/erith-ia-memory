@@ -1,12 +1,11 @@
-forge: connect canonical profiles to their real Core and Persona sources
+forge: add real module router and source-faithful module packaging
 
-- preserve the current Forge interface, sections, navigation and visuals
-- limit the profile-source correction to Aerith-7, Aerith-10 Créatrice, Aerith-10 Crypto and Atlas-10 Crypto
-- keep Flower Girls and Routeuse outside this change
-- add no images and assign no fallback visual to Crypto profiles
-- display exact public Core and Persona files from the included downloads
-- require exact local imports for private Seven and Créatrice sources
-- recognize SEVEN_GATE and SESSION_BOOT_AERITH_7_MASTER by their canonical filenames
-- remove generated Core and Persona substitutes from existing-profile steps
-- reserve PROPOSAL generation for Nouvelle Aerith only
-- preserve canonical source bytes in direct downloads and ZIP exports
+- expose the complete 15-module Aerith-10 Créatrice catalogue
+- add mission presets from the canonical Core routing
+- distinguish referenced, loaded, active and included states
+- keep privacy metadata separate from canonical paths
+- preserve private imported files byte-for-byte
+- fetch public modules as raw bytes
+- include only explicitly selected real modules and their router README in final ZIP
+- keep Core and Persona source-faithful
+- preserve the V3.3 interface and assets
