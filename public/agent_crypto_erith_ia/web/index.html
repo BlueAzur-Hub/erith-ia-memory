@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.76 — TARGETED TYPOGRAPHY READABILITY PASS · 100 PERCENT BROWSER SCALE · GRAPH UNCHANGED · DATA ENGINES UNCHANGED</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.77 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.76-compact-public-footer-only" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.77-public-private-local-profiles" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -20,14 +20,14 @@
             <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
             <button class="atlas-account-switch" id="btnAdminAccountToggle"
                     type="button" aria-pressed="false"
-                    aria-label="Ouvrir le compte Administrateur">
+                    aria-label="Ouvrir l’accès privé local">
               <span class="atlas-account-switch-icon" aria-hidden="true">⌘</span>
-              <span id="adminAccountLinkText">Compte Administrateur</span>
+              <span id="adminAccountLinkText">Accès privé</span>
             </button>
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.76</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.77</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -35,8 +35,8 @@
       <section class="atlas-v2-interface-bar" aria-label="Raccourcis Agent-Crypto V2">
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
-          <small id="atlasV2ModeDescription">Livecheck · marché · graphique · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.76</span>
+          <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.77</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -67,7 +67,7 @@
               <div class="atlas-admin-command-shortcuts" role="group" aria-label="Groupes du Command Center">
                 <button type="button" data-admin-cluster-target="decision" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Décision</span><b>4</b></button>
                 <button type="button" data-admin-cluster-target="analysis" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Analyse</span><b>5</b></button>
-                <button type="button" data-admin-cluster-target="system" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Système</span><b>5</b></button>
+                <button type="button" data-admin-cluster-target="system" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Système</span><b>6</b></button>
                 <button type="button" data-admin-cluster-target="projects" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Projets</span><b>2</b></button>
               </div>
               <button class="atlas-admin-graph-toggle is-normal" id="atlasAdminGraphToggle" type="button"
@@ -118,6 +118,7 @@
                   <a href="#safety" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">⌾</span><span>Sécurité</span></a>
                   <a href="#simulation" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">◫</span><span>Simulation</span></a>
                   <a href="#commandes" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon atlas-quick-icon-code" aria-hidden="true">&gt;_</span><span>Tests</span></a>
+                  <a href="#local-ai-hub" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">✦</span><span>IA locale</span></a>
                 </section>
 
                 <section class="atlas-admin-cluster atlas-admin-cluster-projects" data-admin-cluster="projects" aria-label="Projets ERITH.IA">
@@ -166,6 +167,7 @@
                   <option value="commandes">Tests</option>
                   <option value="sources">Sources</option>
                   <option value="mesure-audience">Audience</option>
+                  <option value="local-ai-hub">Atlas / Aerith local</option>
                 </optgroup>
                 <optgroup label="Projets @erith.IA">
                   <option value="missions-vie">Registre des projets</option>
@@ -202,6 +204,42 @@
         </div>
       </section>
     </header>
+
+    <dialog class="atlas-access-dialog" id="atlasAccessDialog" aria-labelledby="atlasAccessTitle">
+      <form class="atlas-access-card" id="atlasAccessForm" method="dialog">
+        <div class="atlas-access-head">
+          <div>
+            <p class="eyebrow">ACCÈS LOCAL · RYZEN 7</p>
+            <h2 id="atlasAccessTitle">Accès privé Agent-Crypto</h2>
+          </div>
+          <button class="atlas-access-close" id="atlasAccessClose" type="button" aria-label="Fermer">×</button>
+        </div>
+        <div class="atlas-access-profiles" aria-label="Profils d’accès">
+          <article class="is-active">
+            <span>Propriétaire</span><b>Christophe</b><small>Administration complète · Atlas · Aerith</small>
+          </article>
+          <article class="is-planned" aria-disabled="true">
+            <span>Opérateur futur</span><b>Yohan</b><small>Rôle secondaire prévu avec le Bridge local</small>
+          </article>
+        </div>
+        <p class="atlas-access-intro" id="atlasAccessIntro">Crée un mot de passe local pour ce navigateur. Il ne sera jamais enregistré en clair.</p>
+        <label class="atlas-access-field">
+          <span>Mot de passe local</span>
+          <input id="atlasAccessSecret" type="password" minlength="6" autocomplete="current-password" required />
+        </label>
+        <label class="atlas-access-field" id="atlasAccessConfirmField">
+          <span>Confirmer le mot de passe</span>
+          <input id="atlasAccessConfirm" type="password" minlength="6" autocomplete="new-password" />
+        </label>
+        <p class="atlas-access-status" id="atlasAccessStatus" role="status" aria-live="polite">Configuration locale en attente.</p>
+        <div class="atlas-access-actions">
+          <button class="btn primary" id="atlasAccessSubmit" type="submit">Créer l’accès Christophe</button>
+          <button class="btn" id="atlasAccessCancel" type="button">Annuler</button>
+        </div>
+        <p class="atlas-access-warning"><b>Verrou d’interface local V1.</b> Il masque l’administration dans ce navigateur, sans remplacer le futur Bridge privé du Ryzen.</p>
+      </form>
+    </dialog>
+
 <section class="metrics metrics-prime is-metrics-hidden" id="marche" hidden aria-hidden="true">
       <article class="metric glass">
         <span>Capitalisation Top 250</span>
@@ -1348,7 +1386,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.76 · Math Core V2</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.77 · Math Core V2</span>
       </div>
 
       <div class="situation-grid">
@@ -2271,6 +2309,64 @@
 
 
 
+
+
+    <details class="atlas-collapse glass atlas-local-ai-collapse" data-collapse-key="local-ai-hub">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Atlas-10 + Aerith-10 Crypto</span>
+        <span class="atlas-collapse-subtitle">Profils locaux du Ryzen · Ollama / LM Studio / AnythingLLM</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass atlas-local-ai-hub" id="local-ai-hub" aria-labelledby="local-ai-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">LOCAL AI PROFILES · RYZEN 7</p>
+              <h2 id="local-ai-title">Deux présences complémentaires</h2>
+              <p class="planning-intro">Atlas cartographie, vérifie et structure. Aerith explique, accompagne et protège le discernement. Aucun appel API OpenAI payant.</p>
+            </div>
+            <span class="pill warn" id="localBridgeStatus">Bridge local non connecté</span>
+          </div>
+
+          <div class="atlas-local-profile-grid">
+            <article class="atlas-local-profile atlas-profile-emperor">
+              <div class="atlas-local-profile-visual" role="img" aria-label="Atlas-10 Crypto, Empereur solaire"></div>
+              <div class="atlas-local-profile-copy">
+                <span class="atlas-local-profile-kicker">CARTOGRAPHE ANALYTIQUE</span>
+                <h3>Atlas-10 Crypto</h3>
+                <p>Data Truth, Math Oracle, contradiction, risque, interface et synthèse factuelle.</p>
+                <div class="atlas-local-profile-tags"><span>Atlas</span><span>Math</span><span>Risque</span></div>
+                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/ATLAS_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Atlas-10</a>
+              </div>
+            </article>
+
+            <article class="atlas-local-profile atlas-profile-aerith">
+              <div class="atlas-local-profile-visual" role="img" aria-label="Aerith-10 Crypto, analyste et pédagogue"></div>
+              <div class="atlas-local-profile-copy">
+                <span class="atlas-local-profile-kicker">ANALYSTE · PÉDAGOGUE · NO-FOMO</span>
+                <h3>Aerith-10 Crypto</h3>
+                <p>Lecture humaine, explication, psychologie prudente, No-FOMO et libre arbitre.</p>
+                <div class="atlas-local-profile-tags"><span>Aerith</span><span>Pédagogie</span><span>Discernement</span></div>
+                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/AERITH_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Aerith-10</a>
+              </div>
+            </article>
+          </div>
+
+          <div class="atlas-local-runtime-grid">
+            <article><span>Moteur principal</span><b>Ollama</b><small>127.0.0.1:11434</small></article>
+            <article><span>Moteur alternatif</span><b>LM Studio</b><small>127.0.0.1:1234/v1</small></article>
+            <article><span>Bibliothèque optionnelle</span><b>AnythingLLM</b><small>RAG et documentation</small></article>
+            <article><span>Accès secondaire</span><b>Yohan</b><small>Prévu pour le Bridge local V2</small></article>
+          </div>
+
+          <div class="atlas-local-bridge-actions">
+            <button class="btn" id="btnLocalBridgeProbe" type="button">Tester le Bridge du Ryzen</button>
+            <span id="localBridgeDetail">Lecture seule préparée · aucune action exchange · aucun wallet.</span>
+          </div>
+        </section>
+      </div>
+    </details>
+
     <section class="life-missions-intro glass" id="missions-vie" aria-labelledby="missions-vie-title">
       <div>
         <p class="eyebrow">✦ ERITH.IA · MISSIONS DE VIE</p>
@@ -2513,6 +2609,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.76-compact-public-footer-only"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.77-public-private-local-profiles"></script>
 </body>
 </html>
