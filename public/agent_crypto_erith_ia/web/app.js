@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.79 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.80 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.79";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.80";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10162,6 +10162,312 @@ function atlasLocalCompactNews() {
   };
 }
 
+/* =========================================================
+   Build 28.1.80 — Contrat factuel déterministe V2
+   Le modèle local explique ; Agent-Crypto fixe les faits.
+   ========================================================= */
+
+function atlasStrictNumber(value, digits = 2) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  const factor = 10 ** Math.max(0, Number(digits) || 0);
+  return Math.round(number * factor) / factor;
+}
+
+function atlasStrictTimestamp(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(value);
+  const date = Number.isFinite(numeric)
+    ? new Date(numeric)
+    : new Date(String(value));
+  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+}
+
+function atlasStrictCoinBySymbol(symbol) {
+  const target = String(symbol || "").toUpperCase();
+  return (state.coins || []).find(
+    coin => String(coin?.symbol || "").toUpperCase() === target
+  ) || null;
+}
+
+function atlasStrictCanonicalTop5() {
+  const symbols = ["BTC", "ETH", "BNB", "XRP", "SOL"];
+  const rows = symbols.map(symbol => {
+    const coin = atlasStrictCoinBySymbol(symbol);
+    if (!coin) return { symbol, available: false };
+
+    const quote = atlasCurrentQuoteForCoin(coin);
+    return {
+      symbol,
+      name: coin.name || symbol,
+      available: Number.isFinite(Number(quote?.price)),
+      price_eur: atlasStrictNumber(quote?.price, Number(quote?.price) < 1 ? 6 : 2),
+      change_24h_pct: atlasStrictNumber(
+        Number.isFinite(Number(quote?.change24h)) ? quote.change24h : coin.change24h,
+        2
+      ),
+      source: quote?.source || coin.source || null,
+      quote_status: quote?.status || null,
+      quote_time: atlasStrictTimestamp(quote?.timestamp),
+      rank: atlasStrictNumber(coin.rank, 0)
+    };
+  });
+
+  return {
+    definition: "Target Top 5 canonique Agent-Crypto",
+    symbols,
+    complete: rows.every(row => row.available),
+    missing_symbols: rows.filter(row => !row.available).map(row => row.symbol),
+    assets: rows
+  };
+}
+
+function atlasStrictMarketBreadth() {
+  const changes = (state.coins || [])
+    .map(coin => Number(coin?.change24h))
+    .filter(Number.isFinite);
+
+  const positive = changes.filter(value => value > 0.05).length;
+  const negative = changes.filter(value => value < -0.05).length;
+  const stable = changes.length - positive - negative;
+  const balance = changes.length ? (positive - negative) / changes.length : null;
+
+  let classification = "indéterminée";
+  if (changes.length >= 20 && Number.isFinite(balance)) {
+    if (balance >= 0.15) classification = "largeur positive";
+    else if (balance <= -0.15) classification = "largeur négative";
+    else classification = "largeur mixte";
+  }
+
+  return {
+    basis: "Variations 24 h du Market Snapshot CoinGecko chargé",
+    assets_measured: changes.length,
+    positive,
+    negative,
+    stable,
+    balance_ratio: atlasStrictNumber(balance, 4),
+    classification,
+    rule: "positive si équilibre >= +0,15 ; négative si <= -0,15 ; sinon mixte ; minimum 20 actifs"
+  };
+}
+
+function atlasStrictGraphContract(period, chart, chartResult, comparisonIds, chartTruth) {
+  const rows = [];
+
+  if (chartResult?.comparison && Array.isArray(chartResult.entries)) {
+    chartResult.entries.forEach(entry => {
+      const coin = entry?.coin || {};
+      const metrics = entry?.result?.integrity?.metrics || {};
+      rows.push({
+        symbol: String(coin.symbol || coin.name || "").toUpperCase() || null,
+        series_change_pct: atlasStrictNumber(metrics.changePct, 2),
+        points: atlasStrictNumber(metrics.pointCount ?? entry?.result?.series?.length, 0),
+        first_time: atlasStrictTimestamp(metrics.firstTimestamp),
+        last_time: atlasStrictTimestamp(metrics.lastTimestamp),
+        source_mode: entry?.result?.sourceMode || null
+      });
+    });
+  } else if (chartResult) {
+    const coin = atlasSelectedCoin();
+    const metrics = chartResult?.integrity?.metrics || {};
+    rows.push({
+      symbol: String(coin?.symbol || coin?.name || "").toUpperCase() || null,
+      series_change_pct: atlasStrictNumber(metrics.changePct, 2),
+      points: atlasStrictNumber(metrics.pointCount ?? chartResult?.series?.length, 0),
+      first_time: atlasStrictTimestamp(metrics.firstTimestamp),
+      last_time: atlasStrictTimestamp(metrics.lastTimestamp),
+      source_mode: chartResult?.sourceMode || null
+    });
+  }
+
+  const comparable = rows.filter(row => Number.isFinite(row.series_change_pct));
+  const ordered = [...comparable].sort((a, b) => b.series_change_pct - a.series_change_pct);
+
+  return {
+    period_days: period,
+    period_label: (() => {
+      try { return atlasChartPeriodLabel(period); }
+      catch { return `${period} j`; }
+    })(),
+    view: state.chartViewV2?.view || null,
+    scale: state.chartViewV2?.scale || null,
+    selected_ids: comparisonIds,
+    selected_symbols: rows.map(row => row.symbol).filter(Boolean),
+    status: chart?.status || null,
+    provider: chartTruth?.provider || null,
+    truth_label: chartTruth?.label || null,
+    truth_source: chartTruth?.source || null,
+    freshness: chartTruth?.freshness || null,
+    timestamp: atlasStrictTimestamp(chartTruth?.timestamp || chart?.timestamp),
+    series: rows,
+    leader: ordered[0] || null,
+    laggard: ordered.length ? ordered[ordered.length - 1] : null,
+    overall_direction: null,
+    interpretation_rule: "La position verticale à l’écran ne prouve aucune tendance. Utiliser seulement series_change_pct."
+  };
+}
+
+function atlasStrictMathContract() {
+  const math = state.math || {};
+  return {
+    asset: math.asset || null,
+    heuristic_score: atlasStrictNumber(math.heuristicScore, 0),
+    coverage: math.coverage || null,
+    horizon_coherence: math.coherence || null,
+    amplitude_24h: math.amplitude24h || null,
+    volume_market_cap_ratio: math.ratioVolumeMarketCap || null,
+    source: math.source || null,
+    freshness: math.freshness || null,
+    risk_global: math.riskGlobal || "Non évalué",
+    updated_at: atlasStrictTimestamp(math.updated_at),
+    calculated_measures: [
+      "score heuristique",
+      "couverture des données",
+      "cohérence 24 h / 7 j / 30 j",
+      "amplitude 24 h",
+      "ratio volume / capitalisation"
+    ],
+    explicitly_not_calculated: [
+      "ratio de Sharpe",
+      "Value at Risk",
+      "Expected Shortfall",
+      "volatilité réalisée",
+      "corrélation",
+      "bêta",
+      "drawdown maximal"
+    ]
+  };
+}
+
+function atlasStrictNewsContract() {
+  const compact = atlasLocalCompactNews();
+  return {
+    status: compact?.status || null,
+    archive_time: atlasStrictTimestamp(compact?.archive_time),
+    counts_24h: compact?.counts_24h || null,
+    lead_event: compact?.lead || null,
+    rule: "Les limites générales de données ne constituent pas une actualité ni une alerte News Sentinel."
+  };
+}
+
+function atlasStrictContradictions(contract) {
+  const issues = [];
+
+  if (!contract.canonical_top5.complete) {
+    issues.push({
+      level: "confirmé",
+      code: "top5_incomplet",
+      text: `Target Top 5 incomplet : ${contract.canonical_top5.missing_symbols.join(", ")}`
+    });
+  }
+
+  if (contract.market.assets_loaded !== null && contract.market.assets_loaded < contract.market.target_assets) {
+    issues.push({
+      level: "confirmé",
+      code: "univers_partiel",
+      text: `Univers CoinGecko partiel : ${contract.market.assets_loaded}/${contract.market.target_assets} actifs`
+    });
+  }
+
+  if (!contract.graph.status || contract.graph.status !== "ready") {
+    issues.push({
+      level: "confirmé",
+      code: "graph_non_pret",
+      text: "Le graphique actif n’est pas dans l’état ready."
+    });
+  }
+
+  if (contract.graph.truth_source !== "direct") {
+    issues.push({
+      level: "à vérifier",
+      code: "graph_non_direct",
+      text: `Historique graphique non direct : ${contract.graph.truth_label || "état inconnu"}`
+    });
+  }
+
+  if (contract.math.risk_global === "Non évalué") {
+    issues.push({
+      level: "confirmé",
+      code: "risque_global_absent",
+      text: "Le risque global n’est pas évalué par Math Core."
+    });
+  }
+
+  if (!contract.news.lead_event) {
+    issues.push({
+      level: "à vérifier",
+      code: "news_sans_evenement_directeur",
+      text: "Aucun événement directeur News Sentinel n’est disponible dans le contrat."
+    });
+  }
+
+  return issues;
+}
+
+function atlasBuildStrictFactContract(period, chart, chartResult, comparisonIds, chartTruth) {
+  const market = {
+    source: state.dataBroker?.market?.source || "CoinGecko",
+    mode: state.dataBroker?.market?.mode || null,
+    status: state.dataBroker?.market?.status || null,
+    timestamp: atlasStrictTimestamp(state.dataBroker?.market?.timestamp || state.timestamp),
+    assets_loaded: atlasStrictNumber(
+      state.dataBroker?.market?.assetsCount ?? state.coins?.length,
+      0
+    ),
+    target_assets: 250,
+    quote_currency: "EUR",
+    breadth_24h: atlasStrictMarketBreadth()
+  };
+
+  const contract = {
+    schema: "atlas_crypto_fact_contract_v2",
+    generated_at: new Date().toISOString(),
+    release: ATLAS_RELEASE,
+    rules: {
+      market_list_is_not_portfolio: true,
+      canonical_top5_symbols: ["BTC", "ETH", "BNB", "XRP", "SOL"],
+      no_missing_value_to_zero: true,
+      no_visual_position_inference: true,
+      no_unlisted_math_measure: true,
+      no_news_from_generic_limit: true,
+      no_financial_instruction: true
+    },
+    sources: {
+      binance: {
+        role: "prix live et historiques compatibles du Target Top 5",
+        feed_status: state.dataBroker?.exchangeFeed?.status || null,
+        source: state.dataBroker?.exchangeFeed?.source || "Binance WebSocket",
+        last_message_at: atlasStrictTimestamp(state.dataBroker?.exchangeFeed?.lastMessageAt),
+        direct_pairs: atlasStrictNumber(state.dataBroker?.exchangeFeed?.directCount, 0),
+        derived_pairs: atlasStrictNumber(state.dataBroker?.exchangeFeed?.derivedCount, 0)
+      },
+      coingecko: {
+        role: "marché global, Market Flow, classement et historiques non-Binance",
+        status: market.status,
+        mode: market.mode,
+        timestamp: market.timestamp
+      }
+    },
+    canonical_top5: atlasStrictCanonicalTop5(),
+    market,
+    graph: atlasStrictGraphContract(period, chart, chartResult, comparisonIds, chartTruth),
+    math: atlasStrictMathContract(),
+    news: atlasStrictNewsContract(),
+    watchlist: {
+      configured_count: atlasStrictNumber((state.watchIds || []).length, 0),
+      note: "Une watchlist est une liste d’observation, pas un portefeuille."
+    },
+    stop_point: {
+      meaning: "Arrêter l’analyse lorsque les données ne soutiennent plus une conclusion.",
+      duration_days: null
+    }
+  };
+
+  contract.contradictions = atlasStrictContradictions(contract);
+  return contract;
+}
+
+
 function atlasBuildCryptoPageSnapshot() {
   const period = Number(state.chartPeriodDays || 1);
   const chart = state.dataBroker?.chart || {};
@@ -10175,13 +10481,8 @@ function atlasBuildCryptoPageSnapshot() {
     comparisonIds = Array.isArray(comparison.ids) ? comparison.ids : [];
   }
 
-  const top5 = atlasTopFiveCoins().map(coin => atlasLocalCompactCoin(coin, { quote: true })).filter(Boolean);
-  const marketLeaders = (state.coins || []).slice(0, 12).map(coin => atlasLocalCompactCoin(coin)).filter(Boolean);
-  const watchSet = new Set(state.watchIds || []);
-  const watchlist = (state.coins || [])
-    .filter(coin => watchSet.has(coin.id))
-    .slice(0, 40)
-    .map(coin => atlasLocalCompactCoin(coin))
+  const top5 = atlasTopFiveCoins()
+    .map(coin => atlasLocalCompactCoin(coin, { quote: true }))
     .filter(Boolean);
 
   const sourceStatus = Array.isArray(state.sourceStatus)
@@ -10193,30 +10494,25 @@ function atlasBuildCryptoPageSnapshot() {
       }))
     : [];
 
-  const autoMemory = (() => {
-    try {
-      const records = readAutoMemory();
-      const last = records[records.length - 1] || null;
-      return {
-        count: records.length,
-        last_saved_at: last?.saved_at || null,
-        collectors_visible: [...new Set(records.map(record => record?.collector_id).filter(Boolean))].slice(0, 12)
-      };
-    } catch {
-      return { count: 0, last_saved_at: null, collectors_visible: [] };
-    }
-  })();
-
   const selectedCoin = atlasSelectedCoin();
+  const strictContract = atlasBuildStrictFactContract(
+    period,
+    chart,
+    chartResult,
+    comparisonIds,
+    chartTruth
+  );
 
   const snapshot = {
-    schema: "atlas_crypto_page_snapshot_v1",
+    schema: "atlas_crypto_page_snapshot_v2",
     generated_at: new Date().toISOString(),
     application: {
       release: ATLAS_RELEASE,
       mode: "private_local_read_only",
       page_url: location.href,
-      selected_asset: selectedCoin ? `${selectedCoin.name} (${String(selectedCoin.symbol || "").toUpperCase()})` : null
+      selected_asset: selectedCoin
+        ? `${selectedCoin.name} (${String(selectedCoin.symbol || "").toUpperCase()})`
+        : null
     },
     safety: {
       observation_only: true,
@@ -10226,72 +10522,21 @@ function atlasBuildCryptoPageSnapshot() {
       automatic_orders: false,
       human_validation_required: true
     },
-    source_status: {
-      live_ok: !!state.liveOk,
-      main_source: state.mainSource || null,
-      market_timestamp: state.timestamp || null,
-      source_lock: {
-        canonical: state.sourceLock?.canonical || null,
-        valid: !!state.sourceLock?.valid,
-        mode: state.sourceLock?.mode || null,
-        timestamp: state.sourceLock?.timestamp || null,
-        reason: state.sourceLock?.reason || null
+    strict_contract: strictContract,
+    raw_context: {
+      source_status: {
+        live_ok: !!state.liveOk,
+        main_source: state.mainSource || null,
+        market_timestamp: state.timestamp || null,
+        diagnostics: sourceStatus
       },
-      diagnostics: sourceStatus
-    },
-    binance_top5: {
-      feed_status: state.dataBroker?.exchangeFeed?.status || null,
-      source: state.dataBroker?.exchangeFeed?.source || "Binance WebSocket",
-      connected_at: state.dataBroker?.exchangeFeed?.connectedAt || null,
-      last_message_at: state.dataBroker?.exchangeFeed?.lastMessageAt || null,
-      direct_pairs: atlasLocalFinite(state.dataBroker?.exchangeFeed?.directCount),
-      derived_pairs: atlasLocalFinite(state.dataBroker?.exchangeFeed?.derivedCount),
-      assets: top5
-    },
-    graph_context: {
-      period_days: period,
-      period_label: (() => { try { return atlasChartPeriodLabel(period); } catch { return `${period} j`; } })(),
-      selected_ids: comparisonIds,
-      preset: comparison.preset || "solo",
-      view: state.chartViewV2?.view || null,
-      scale: state.chartViewV2?.scale || null,
-      volume_visible: !!state.chartViewV2?.volume,
-      status: chart.status || null,
-      source: chart.source || null,
-      source_mode: chart.mode || null,
-      point_count: atlasLocalFinite(chart.pointCount),
-      timestamp: chart.timestamp || null,
-      truth: chartTruth
-    },
-    coingecko_market: {
-      status: state.dataBroker?.market?.status || null,
-      source: state.dataBroker?.market?.source || "CoinGecko",
-      mode: state.dataBroker?.market?.mode || null,
-      timestamp: state.dataBroker?.market?.timestamp || state.timestamp || null,
-      assets_loaded: atlasLocalFinite(state.dataBroker?.market?.assetsCount ?? state.coins?.length),
-      target_assets: 250,
-      quote_currencies: state.dataBroker?.market?.quoteCurrencies || [],
-      global: {
-        market_cap_eur: atlasLocalFinite(state.global?.total_market_cap?.eur),
-        volume_24h_eur: atlasLocalFinite(state.global?.total_volume?.eur),
-        btc_dominance_pct: atlasLocalFinite(state.global?.market_cap_percentage?.btc)
-      },
-      leaders: marketLeaders
-    },
-    math_core: state.math ? JSON.parse(JSON.stringify(state.math)) : null,
-    watchlist: {
-      configured_count: (state.watchIds || []).length,
-      loaded_count: watchlist.length,
-      assets: watchlist
-    },
-    news_sentinel: atlasLocalCompactNews(),
-    local_memory: autoMemory,
-    data_limits: [
-      "Sécurité des protocoles non vérifiée par le marché.",
-      "Données sociales et on-chain non garanties.",
-      "Une archive ou un cache ne doit jamais être présenté comme direct.",
-      "Le modèle local explique le snapshot ; il ne remplace pas les calculs déterministes."
-    ]
+      binance_top5: {
+        feed_status: state.dataBroker?.exchangeFeed?.status || null,
+        source: state.dataBroker?.exchangeFeed?.source || "Binance WebSocket",
+        last_message_at: state.dataBroker?.exchangeFeed?.lastMessageAt || null,
+        assets: top5
+      }
+    }
   };
 
   atlasLocalDialogueState.lastSnapshot = snapshot;
@@ -10380,18 +10625,42 @@ function atlasLocalDialogueRender(result, label) {
     provider: atlasLocalDialogueState.provider,
     model: atlasLocalDialogueState.model,
     time: result?.time || new Date().toISOString(),
-    label
+    label,
+    quality: result?.quality || "strict_contract_v2",
+    modelCommentUsed: result?.model_comment_used === true
   };
 
   setText(document.getElementById("atlasLocalResponseTitle"), label);
   setText(document.getElementById("atlasLocalResponse"), answer || "Réponse locale vide.");
+
+  const quality = result?.quality === "strict_contract_v2"
+    ? "contrat factuel V2"
+    : (result?.quality || "lecture locale");
+
+  const comment = result?.model_comment_used === true
+    ? "commentaire local validé"
+    : "repli déterministe";
+
   setText(
     document.getElementById("atlasLocalResponseMeta"),
-    `${result?.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · ${atlasLocalDialogueState.provider || "local"} · ${atlasLocalDialogueState.model || "modèle"} · lecture seule`
+    `${result?.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · `
+    + `${atlasLocalDialogueState.provider || "local"} · `
+    + `${atlasLocalDialogueState.model || "modèle"} · ${quality} · ${comment}`
   );
+
   document.getElementById("btnAtlasLocalCopy")?.removeAttribute("disabled");
   document.getElementById("btnAtlasLocalExport")?.removeAttribute("disabled");
-  atlasLocalDialogueSetConnection(true, "Analyse locale terminée. Validation humaine requise.");
+
+  const warnings = Array.isArray(result?.validation_warnings)
+    ? result.validation_warnings.filter(Boolean)
+    : [];
+
+  atlasLocalDialogueSetConnection(
+    true,
+    warnings.length
+      ? `Analyse terminée avec repli sûr : ${warnings.join(" · ")}`
+      : "Analyse terminée sur contrat factuel V2. Validation humaine requise."
+  );
 }
 
 async function atlasLocalDialogueRunSummary(mode = "market") {
