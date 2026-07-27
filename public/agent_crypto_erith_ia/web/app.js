@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.80 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.81 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.80";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.81";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10614,6 +10614,81 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = 135000) {
   }
 }
 
+/* =========================================================
+   Build 28.1.81 — Rendu lisible du rapport local
+   Le texte brut reste conservé pour Copier et Exporter.
+   ========================================================= */
+
+function atlasLocalEscapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function atlasLocalInlineMarkup(value) {
+  return atlasLocalEscapeHtml(value)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`(.+?)`/g, "<code>$1</code>");
+}
+
+function atlasLocalReportHtml(markdown) {
+  const source = String(markdown || "").replace(/\r\n?/g, "\n").trim();
+  if (!source) {
+    return '<p class="atlas-local-response-empty">Réponse locale vide.</p>';
+  }
+
+  const lines = source.split("\n");
+  const html = [];
+  let listOpen = false;
+
+  const closeList = () => {
+    if (listOpen) {
+      html.push("</ul>");
+      listOpen = false;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!line) {
+      closeList();
+      continue;
+    }
+
+    const heading = line.match(/^\*\*(.+?)\*\*$/);
+    if (heading) {
+      closeList();
+      html.push(`<h4>${atlasLocalInlineMarkup(heading[1])}</h4>`);
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(line)) {
+      if (!listOpen) {
+        html.push("<ul>");
+        listOpen = true;
+      }
+      html.push(`<li>${atlasLocalInlineMarkup(line.replace(/^[-*]\s+/, ""))}</li>`);
+      continue;
+    }
+
+    closeList();
+    html.push(`<p>${atlasLocalInlineMarkup(line)}</p>`);
+  }
+
+  closeList();
+  return html.join("");
+}
+
+function atlasLocalSetReport(node, markdown) {
+  if (!node) return;
+  node.innerHTML = atlasLocalReportHtml(markdown);
+}
+
+
 function atlasLocalDialogueRender(result, label) {
   const answer = String(result?.answer || "").trim();
   atlasLocalDialogueState.connected = true;
@@ -10631,14 +10706,17 @@ function atlasLocalDialogueRender(result, label) {
   };
 
   setText(document.getElementById("atlasLocalResponseTitle"), label);
-  setText(document.getElementById("atlasLocalResponse"), answer || "Réponse locale vide.");
+  atlasLocalSetReport(
+    document.getElementById("atlasLocalResponse"),
+    answer || "Réponse locale vide."
+  );
 
   const quality = result?.quality === "strict_contract_v2"
     ? "contrat factuel V2"
     : (result?.quality || "lecture locale");
 
   const comment = result?.model_comment_used === true
-    ? "commentaire local validé"
+    ? "commentaire local accepté"
     : "repli déterministe";
 
   setText(
@@ -10658,8 +10736,8 @@ function atlasLocalDialogueRender(result, label) {
   atlasLocalDialogueSetConnection(
     true,
     warnings.length
-      ? `Analyse terminée avec repli sûr : ${warnings.join(" · ")}`
-      : "Analyse terminée sur contrat factuel V2. Validation humaine requise."
+      ? `Rapport factuel terminé. Commentaire local remplacé : ${warnings.join(" · ")}`
+      : "Rapport factuel terminé. Commentaire local accepté et validation humaine requise."
   );
 }
 
@@ -10730,7 +10808,10 @@ function atlasLocalDialogueClear() {
   if (input) input.value = "";
   atlasLocalDialogueState.lastResponse = null;
   setText(document.getElementById("atlasLocalResponseTitle"), "Aucune synthèse générée");
-  setText(document.getElementById("atlasLocalResponse"), "Le résultat Atlas-10 ou Aerith-10 apparaîtra ici.");
+  atlasLocalSetReport(
+    document.getElementById("atlasLocalResponse"),
+    "Le résultat Atlas-10 ou Aerith-10 apparaîtra ici."
+  );
   setText(document.getElementById("atlasLocalResponseMeta"), "Lecture seule · validation humaine · aucune exécution réelle");
   document.getElementById("btnAtlasLocalCopy")?.setAttribute("disabled", "");
   document.getElementById("btnAtlasLocalExport")?.setAttribute("disabled", "");
