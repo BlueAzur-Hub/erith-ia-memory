@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.69 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.70 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.69";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.70";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4608,7 +4608,15 @@ function atlasExternalChartTooltip(context) {
   const alignedTimestamp = Number.isFinite(Number(rows[0]?.timestamp))
     ? Number(rows[0].timestamp)
     : targetX;
-  const title = atlasChartLabelFull(Number.isFinite(alignedTimestamp) ? alignedTimestamp : Date.now());
+  const resolvedTimestamp = Number.isFinite(alignedTimestamp)
+    ? alignedTimestamp
+    : Date.now();
+  const title = atlasChartLabelFull(resolvedTimestamp);
+  const hoverTime = new Date(resolvedTimestamp).toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+  const showBase100 = chart.$atlasView === "base100" || chart.$atlasMode === "comparison";
 
   const body = rows.map((row, index) => {
     const palette = atlasCryptoPalette(row.coin, index);
@@ -4624,8 +4632,8 @@ function atlasExternalChartTooltip(context) {
     const source = current.status === "live"
       ? reference.label
       : "Prix direct indisponible";
-    const base = Number.isFinite(row.baseValue)
-      ? ` · B100 ${row.baseValue.toFixed(2)}`
+    const baseLine = showBase100 && Number.isFinite(row.baseValue)
+      ? `<small class="atlas-chart-tooltip-base100">Base 100 · ${row.baseValue.toFixed(2)}</small>`
       : "";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
@@ -4634,14 +4642,15 @@ function atlasExternalChartTooltip(context) {
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
       <span class="atlas-chart-tooltip-values atlas-chart-tooltip-values-compact"
             title="${escapeHtml(current.status === "live" ? `${reference.label} · ${atlasExactTimestampLabel(current.timestamp)}` : source)}">
-        <strong>ACTUEL ${escapeHtml(currentPrice)}</strong>
+        <strong>${escapeHtml(currentPrice)}</strong>
         <small>${escapeHtml(source)}</small>
-        <small>POINT ${escapeHtml(historical)}${escapeHtml(base)}</small>
+        <small>À ${escapeHtml(hoverTime)} · ${escapeHtml(historical)}</small>
+        ${baseLine}
       </span>
     </div>`;
   }).join("");
 
-  node.innerHTML = `<div class="atlas-chart-tooltip-date">POINT HISTORIQUE · ${escapeHtml(title)}</div>${body}`;
+  node.innerHTML = `<div class="atlas-chart-tooltip-date">SURVOL · ${escapeHtml(title)}</div>${body}`;
   node.hidden = false;
   node.setAttribute("aria-hidden", "false");
 
