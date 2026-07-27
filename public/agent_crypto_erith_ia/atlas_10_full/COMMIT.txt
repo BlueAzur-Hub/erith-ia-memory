@@ -1,12 +1,6 @@
-forge: replace R6 with guided private-pack workflow
+forge: improve Crypto profile card readability
 
-- accept one private ZIP containing Core, Persona, router README and modules
-- unpack ZIP sources locally in the browser without network transfer
-- default existing module profiles to complete packaging
-- distinguish complete, minimal and targeted package modes
-- require 18/18 Creator sources for the complete 24-file package
-- block final compilation when the expected file list is incomplete
-- preview every output path and verify the generated file count
-- place source loading before Core and Persona verification
-- add explicit next-action guidance and high-contrast status cards
-- preserve the V3.3 interface, profile content and source bytes
+- add dedicated card visuals for Aerith-10 Crypto and Atlas-10 Crypto
+- apply profile-specific framing and dark text panels
+- preserve full visuals inside the Atelier
+- keep Seven, Creator, Core, Persona, modules and packaging unchanged

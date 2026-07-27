@@ -231,3 +231,93 @@ body[data-view="atelier"] .unified-shell{margin-bottom:0!important}body[data-vie
 .audit-row.warn{border-color:color-mix(in srgb,var(--gold) 50%,var(--line))}.audit-row.error{border-color:#ff687b}.audit-row.ok{border-color:color-mix(in srgb,var(--green) 50%,var(--line))}
 @media(max-width:1000px){.package-mode-grid{grid-template-columns:1fr}.source-checklist{grid-template-columns:repeat(2,minmax(0,1fr))}.next-action-card{grid-template-columns:auto 1fr}.pack-score{grid-column:1/-1}}
 @media(max-width:620px){.source-checklist,.package-preview-grid{grid-template-columns:1fr}.next-action-card{grid-template-columns:1fr}.next-action-number{width:38px;height:38px}}
+
+
+/* V3.3R8 — lisibilité ciblée des cartes Crypto, sans modifier les autres profils */
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"],
+.canonical-profile-grid .profile-card[data-profile="atlas"]{
+  isolation:isolate;
+  min-height:520px;
+  background:#050817;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-media,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-media{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#050817;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-media img,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:saturate(.96) contrast(1.03);
+  transition:transform .28s ease,filter .28s ease;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-media img{object-position:50% 34%}
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-media img{object-position:50% 28%}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"]:hover .profile-media img,
+.canonical-profile-grid .profile-card[data-profile="atlas"]:hover .profile-media img{
+  transform:scale(1.015);
+  filter:saturate(1) contrast(1.04) brightness(1.03);
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-copy,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-copy{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:2;
+  min-height:218px;
+  padding:72px 18px 18px;
+  background:linear-gradient(180deg,rgba(3,6,16,0) 0%,rgba(3,6,16,.73) 28%,rgba(3,6,16,.96) 58%,#050817 100%);
+  text-shadow:0 2px 8px rgba(0,0,0,.88);
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-copy .family,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-copy .family{
+  color:#f2a9d0;
+  font-weight:800;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-copy h3,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-copy h3{
+  margin:5px 0 7px;
+  color:#fff;
+  font-size:19px;
+  line-height:1.15;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-copy p,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-copy p{
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  color:#dce5f4;
+  font-size:11.5px;
+  line-height:1.45;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-copy small,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-copy small{
+  margin-top:10px;
+  color:#fff;
+  font-size:9.5px;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .card-action,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .card-action{
+  margin-top:9px;
+  color:#f2a9d0;
+  font-weight:800;
+}
+.canonical-profile-grid .profile-card[data-profile="aerithcrypto"] .profile-sigil,
+.canonical-profile-grid .profile-card[data-profile="atlas"] .profile-sigil{
+  z-index:4;
+  background:rgba(4,7,17,.9);
+  box-shadow:0 6px 20px rgba(0,0,0,.32);
+}
+@media(max-width:680px){
+  .canonical-profile-grid .profile-card[data-profile="aerithcrypto"],
+  .canonical-profile-grid .profile-card[data-profile="atlas"]{min-height:520px}
+}

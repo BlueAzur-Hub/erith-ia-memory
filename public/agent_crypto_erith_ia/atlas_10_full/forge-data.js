@@ -47,7 +47,7 @@ const CRYPTO_PRESETS = Object.freeze([
 
 
 window.AERITH_UNIFIED_DATA = Object.freeze({
-  version: "V3.3R7-aide-creation-guidee",
+  version: "V3.3R8-cartes-crypto-lisibles",
   publicRepo: "BlueAzur-Hub/erith-ia-memory",
   privateRepo: "BlueAzur-Hub/erith-ia-notion-archive-private",
   branch: "main",
@@ -270,6 +270,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       outputs: ["explication pédagogique", "comparaison", "audit de risque", "synthèse No-FOMO", "scénarios conditionnels"],
       formula: "Données → Compréhension → Risque visible → Décision humaine.",
       visual: "assets/themes/aerith_10_crypto_orchestratrice_des_flux.jpg",
+      cardVisual: "assets/themes/aerith_10_crypto_orchestratrice_des_flux_card.jpg",
       theme: "crypto",
       corePath: "downloads/AERITH_10_CRYPTO_MULTI_AGENT_CORE.md",
       personaPath: "downloads/AERITH_10_CRYPTO_PERSONA_OPERATING_LAYER.md",
@@ -313,6 +314,7 @@ window.AERITH_UNIFIED_DATA = Object.freeze({
       outputs: ["carte de marché", "modèle explicite", "scénarios", "audit de données", "matrice de risque"],
       formula: "Données → Variables → Modèle → Scénarios → Risque.",
       visual: "assets/themes/atlas_10_crypto_empereur_solaire.jpg",
+      cardVisual: "assets/themes/atlas_10_crypto_empereur_solaire_card.jpg",
       theme: "atlas",
       corePath: "downloads/ATLAS_10_CRYPTO_MULTI_AGENT_CORE.md",
       personaPath: "downloads/ATLAS_10_CRYPTO_PERSONA_OPERATING_LAYER.md",

@@ -656,10 +656,11 @@
   }
 
   function profileCard(item) {
+    const cardVisual = item.cardVisual || item.visual || "";
     return `<button type="button" class="profile-card ${item.id === state.profileId ? "active" : ""}" data-profile="${esc(item.id)}">
       <span class="profile-sigil">${esc(item.sigil)}</span>
       <span class="profile-media">
-        ${item.visual ? `<img src="${esc(item.visual)}" alt="${esc(item.name)}" loading="lazy">` : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
+        ${cardVisual ? `<img src="${esc(cardVisual)}" alt="${esc(item.name)}" loading="lazy">` : `<span class="profile-abstract">${esc(item.sigil)}</span>`}
       </span>
       <span class="profile-copy">
         <span class="family">${esc(item.family)}</span>
