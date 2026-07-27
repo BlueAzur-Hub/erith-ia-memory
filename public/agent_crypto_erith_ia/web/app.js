@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.71 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.72 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.71";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.72";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4611,10 +4611,12 @@ function atlasExternalChartTooltip(context) {
       : "—";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
-    return `<div class="atlas-chart-tooltip-row atlas-chart-tooltip-row-price-only" style="${style}">
+    return `<div class="atlas-chart-tooltip-row" style="${style}">
       ${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
-      <span class="atlas-chart-tooltip-price-only">${escapeHtml(currentPrice)}</span>
+      <span class="atlas-chart-tooltip-values">
+        <strong>${escapeHtml(currentPrice)}</strong>
+      </span>
     </div>`;
   }).join("");
 
