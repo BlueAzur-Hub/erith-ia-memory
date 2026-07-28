@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.85 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.85R1 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.85";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.85R1";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10028,7 +10028,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.85 — Bridge Auto Health Quiet Status
+   Build 28.1.85R1 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -11921,10 +11921,79 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.85
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.85R1
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
+   Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
 */
+function atlasFmtPct(n) {
+  return typeof n === "number" && Number.isFinite(n)
+    ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %`
+    : "—";
+}
+
+function atlasFmtEUR(n) {
+  return typeof n === "number" && Number.isFinite(n) ? fmtEUR.format(n) : "—";
+}
+
+function atlasSelectedCoin() {
+  if (!Array.isArray(state.coins) || !state.coins.length) return null;
+  return state.coins.find(coin => coin.id === state.selectedCoinId) || state.coins[0] || null;
+}
+
+function computeAtlasDataQuality(coin) {
+  const missing = [];
+  if (!coin) missing.push("actif");
+  if (coin && typeof coin.price !== "number") missing.push("prix EUR");
+  if (coin && typeof coin.volume24h !== "number") missing.push("volume 24h");
+  if (coin && !atlasCanonicalCoin(coin)) missing.push("source canonique");
+  if (!state.sourceLock?.valid) missing.push("Source Lock");
+  if (coin && !coin.timestamp) missing.push("timestamp");
+  const score = clamp(0, 100, 100 - missing.length * 24);
+  return {
+    score,
+    status: score >= 80 ? "ok" : score >= 50 ? "faible" : "refus",
+    missing
+  };
+}
+
+function computeAtlasMarketMath(coin) {
+  if (!coin) {
+    return {
+      score: 0,
+      reason: "Livecheck requis",
+      human: "aucune lecture marché sans source",
+      change24h: null,
+      change7d: null,
+      fomoPenalty: 0
+    };
+  }
+  const change24h = typeof coin.change24h === "number" ? coin.change24h : null;
+  const change7d = typeof coin.change7d === "number" ? coin.change7d : null;
+  const volumeScore = typeof coin.volume24h === "number" && coin.volume24h > 0 ? 20 : 0;
+  const momentumScore = change24h === null ? 0 : clamp(0, 35, 18 + change24h * 2);
+  const fomoPenalty = change24h !== null && Math.abs(change24h) > 12 ? 20 : 0;
+  const score = clamp(0, 100, 35 + volumeScore + momentumScore - fomoPenalty);
+  return {
+    score,
+    reason: fomoPenalty ? "Mouvement fort : prudence" : "Marché lisible en observation",
+    human: fomoPenalty ? "marché actif, entrée possiblement tardive" : "marché lisible en observation",
+    change24h,
+    change7d,
+    fomoPenalty
+  };
+}
+
+function computeAtlasScenarioMath(coin) {
+  if (!coin || typeof coin.price !== "number" || !Number.isFinite(coin.price) || coin.price <= 0) {
+    return { reason: "Scénario indisponible sans prix réel", human: "Aucune projection locale" };
+  }
+  return {
+    reason: "Hypothèse locale ±3 %",
+    human: `+3 % : ${atlasFmtEUR(coin.price * 1.03)} · −3 % : ${atlasFmtEUR(coin.price * 0.97)}`
+  };
+}
+
 const ATLAS_MATH_V3_EWMA_LAMBDA = 0.94;
 const ATLAS_MATH_V3_BOOTSTRAP_SAMPLES = 240;
 const ATLAS_MATH_V3_MIN_RETURNS = 20;
