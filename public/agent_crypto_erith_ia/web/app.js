@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.87 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R1 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.87";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R1";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4058,7 +4058,7 @@ async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
 }
 
 /* =========================================================
-   Build 28.1.87 — Scanner history transport fallback
+   Build 28.1.88R1 — Scanner history transport fallback
    CoinGecko reste la source du classement Market.
    Binance peut fournir uniquement la série historique,
    afin d'éviter qu'un blocage CORS/rate-limit CoinGecko
@@ -7354,7 +7354,7 @@ const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { 
 } function krakenReadonlyPlanPayload() { return { exchange: "Kraken", target_stage: "read_only_only", allowed_first: [ "account_balance_read", "ticker_read", "trade_history_read_if_needed", "open_positions_read_if_applicable" ], forbidden_first: [ "create_order", "cancel_order", "withdraw", "transfer", "margin", "leverage" ], required_before_connection: [ "backend_not_github_pages", "encrypted_secret_storage", "separate_user_accounts", "logs", "manual_disable", "test_key_permissions", "no_withdraw_permission" ] };
 } function remoteBlueprintPayload() { return { scope: "future_private_machine_only", authorized_people: ["authorized_operator_1", "authorized_operator_2"], rules: [ "no_public_admin_panel", "no_shared_cleartext_password", "unique_accounts", "strong_authentication", "admin_actions_logged", "emergency_disable_path", "regular_security_review" ], current_public_frontend: "no_remote_access_capability" };
 } function securityReviewPayload() { return { review_type: "pre_backend_security_checklist", checklist: [ { item: "GitHub Pages contains no secrets", status: "required" }, { item: "Kraken key read-only", status: "future_required" }, { item: "Withdraw permission disabled", status: "mandatory" }, { item: "Backend logs every command", status: "future_required" }, { item: "Kill switch tested", status: "future_required" }, { item: "Paper trading runs before real money", status: "mandatory" }, { item: "Human validation before any real order", status: "mandatory" }, { item: "Remote access reviewed regularly", status: "future_required" } ], conclusion: "No real-money phase without passing all mandatory items." };
-} function safetyPlanPayload() { return { mode: "safety_first", confirmed_context: { yohan_requires_sandbox: true, remote_access_for_christophe_and_yohan_only: true, human_validation_required: true, simulation_before_real_money: true, modification_possible_if_failure: true }, sandbox_boundaries: [ "public_frontend_observation_only", "paper_trading_local_only", "no_real_exchange_order", "no_wallet_connection", "no_private_api_key_in_github_pages", "no_withdraw_permission" ], required_before_real_backend: [ "separate_machine_or_backend", "restricted_remote_access", "encrypted_secret_storage", "read_only_kraken_key_first", "paper_trading_logs", "kill_switch", "human_confirmation_flow", "regular_security_review" ] };
+} function safetyPlanPayload() { return { mode: "safety_first", confirmed_context: { operator_requires_sandbox: true, remote_access_for_owner_and_operator_only: true, human_validation_required: true, simulation_before_real_money: true, modification_possible_if_failure: true }, sandbox_boundaries: [ "public_frontend_observation_only", "paper_trading_local_only", "no_real_exchange_order", "no_wallet_connection", "no_private_api_key_in_github_pages", "no_withdraw_permission" ], required_before_real_backend: [ "separate_machine_or_backend", "restricted_remote_access", "encrypted_secret_storage", "read_only_kraken_key_first", "paper_trading_logs", "kill_switch", "human_confirmation_flow", "regular_security_review" ] };
 } function killSwitchPayload() { return { status: "planned_not_active_in_github_pages", purpose: "Stop the future backend/agent if abnormal behavior appears.", manual_steps_future: [ "disable_backend_service", "revoke_exchange_api_keys", "disable_remote_access_temporarily", "freeze_paper_trading_state", "export_logs", "review_last_commands", "human_restart_only" ], current_public_app_limits: [ "no_real_orders_possible", "no_api_keys_present", "simulation_only" ] };
 } function accessPlanPayload() { return { access_model: "two_people_only", authorized_people: ["authorized_operator_1", "authorized_operator_2"], public_app: "no_remote_admin_capability", future_backend_requirements: [ "strong_authentication", "unique_accounts", "no_shared_cleartext_password", "logs_for_admin_actions", "regular_access_review", "no_public_open_admin_panel", "emergency_disable_path" ], warning: "Remote access must be configured outside GitHub Pages." };
 } function gatesPayload() { return { current_gate: "G3_paper_trading", gates: [ { id: "G1", name: "observatory_public", status: "done" }, { id: "G2", name: "crypto_command_layer", status: "done" }, { id: "G3", name: "paper_trading_sandbox", status: "active" }, { id: "G4", name: "kraken_read_only_connection", status: "locked" }, { id: "G5", name: "semi_auto_human_validation", status: "locked" }, { id: "G6", name: "real_micro_transactions", status: "locked" } ], unlock_rule: "No gate opens without logs, tests, explicit human validation, and security review." };
@@ -9207,7 +9207,7 @@ function atlasRenderMemoryCoverage() {
   }
 }
 
-function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConfigured()) { migrateLocalCollectorRecords(id, true); } const records = readAutoMemory(); const stats = collectorStats(records); const configured = isCollectorConfigured(); const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire."; const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué"; const last = records[records.length - 1]; if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id; if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer"; if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`; if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`; if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`; if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport; if (els.sharedMemoryOutput) { setSharedOutputStatus(configured ? "ok" : "warn"); els.sharedMemoryOutput.textContent = [ `ATLAS SHARED MARKET MEMORY — ${ATLAS_RELEASE}`, "", configured ? `✅ Machine configurée : ${id}` : `⚠️ Machine non finalisée : ${id}`, configured ? "Configuration : gardée automatiquement dans ce Firefox." : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / yohan-machine puis clique Sauver ID une fois.", "", "ÉTAT MÉMOIRE", `Total disponible : ${records.length} snapshots fusionnés`, `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`, last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun", `Dernière opération : ${lastImport}`, `Migration : ${migrationNote}`, "", "LECTURE SIMPLE", records.length ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine." : "Aucune donnée fusionnée pour l’instant.", stats.collectors.length > 1 ? "Plusieurs collecteurs sont présents dans la mémoire. Cela ne prouve pas que leurs machines fonctionnent encore actuellement." : "Un seul collecteur est présent dans la mémoire locale pour l’instant.", "", "RÈGLE", "Export/import fusionne les relevés sans écraser. La mémoire GitHub est lue automatiquement au démarrage ; cette page publique ne peut pas écrire dans GitHub." ].join("\n"); }
+function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConfigured()) { migrateLocalCollectorRecords(id, true); } const records = readAutoMemory(); const stats = collectorStats(records); const configured = isCollectorConfigured(); const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire."; const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué"; const last = records[records.length - 1]; if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id; if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer"; if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`; if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`; if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`; if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport; if (els.sharedMemoryOutput) { setSharedOutputStatus(configured ? "ok" : "warn"); els.sharedMemoryOutput.textContent = [ `ATLAS SHARED MARKET MEMORY — ${ATLAS_RELEASE}`, "", configured ? `✅ Machine configurée : ${id}` : `⚠️ Machine non finalisée : ${id}`, configured ? "Configuration : gardée automatiquement dans ce Firefox." : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / operator-machine puis clique Sauver ID une fois.", "", "ÉTAT MÉMOIRE", `Total disponible : ${records.length} snapshots fusionnés`, `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`, last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun", `Dernière opération : ${lastImport}`, `Migration : ${migrationNote}`, "", "LECTURE SIMPLE", records.length ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine." : "Aucune donnée fusionnée pour l’instant.", stats.collectors.length > 1 ? "Plusieurs collecteurs sont présents dans la mémoire. Cela ne prouve pas que leurs machines fonctionnent encore actuellement." : "Un seul collecteur est présent dans la mémoire locale pour l’instant.", "", "RÈGLE", "Export/import fusionne les relevés sans écraser. La mémoire GitHub est lue automatiquement au démarrage ; cette page publique ne peut pas écrire dans GitHub." ].join("\n"); }
   renderMemoryTruth();
   atlasRenderMemoryCoverage();
 } function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
@@ -9470,17 +9470,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.87" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R1" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.87" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R1" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.87" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R1" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -10105,6 +10105,10 @@ function atlasAccessSyncDialog() {
 
 function atlasAccessOpen(pendingHash = "") {
   atlasAccessPendingHash = pendingHash || atlasAccessPendingHash || "";
+  const currentMode = atlasV2Mode();
+  if (currentMode === "essential" || currentMode === "intermediate") {
+    try { sessionStorage.setItem(ATLAS_ACCESS_RETURN_MODE_KEY, currentMode); } catch {}
+  }
   const dialog = document.getElementById("atlasAccessDialog");
   atlasAccessSyncDialog();
   if (dialog?.showModal) dialog.showModal();
@@ -10148,7 +10152,7 @@ async function atlasAccessSubmit(event) {
         created_at: new Date().toISOString(),
         profiles: {
           owner: { id: "christophe", role: "owner", salt, hash },
-          operator_yohan: { id: "yohan", role: "operator", enabled: false }
+          secondary_operator: { id: "operator", role: "operator", enabled: false }
         }
       };
       if (!atlasAccessWriteConfig(next)) throw new Error("Impossible d’enregistrer la configuration locale.");
@@ -10162,6 +10166,7 @@ async function atlasAccessSubmit(event) {
 
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
     atlasAccessSetStatus("Accès Christophe validé.", "ok");
+    atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
     /* R4 : le déverrouillage doit ouvrir réellement l’espace administrateur.
        La fenêtre de forçage empêche la restauration d’un ancien état public/fermé
@@ -10185,16 +10190,23 @@ async function atlasAccessSubmit(event) {
 
 function atlasAccessLock() {
   atlasAdminForceWorkspaceRelease();
+  let returnMode = "essential";
+  try {
+    const storedReturnMode = sessionStorage.getItem(ATLAS_ACCESS_RETURN_MODE_KEY);
+    if (storedReturnMode === "intermediate") returnMode = "intermediate";
+    sessionStorage.removeItem(ATLAS_ACCESS_RETURN_MODE_KEY);
+  } catch {}
   atlasAccessClearSession();
   atlasAccessPendingHash = "";
-  atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
-  atlasV2ApplyMode("essential", { persist: false, silentAuth: true });
-  try { history.replaceState(null, "", "#analyste"); } catch {}
+  atlasV2WriteSetting(ATLAS_V2_MODE_KEY, returnMode);
+  atlasV2SyncShareableUrl(returnMode);
+  atlasV2ApplyMode(returnMode, { persist: false, silentAuth: true });
+  try { history.replaceState(null, "", `${location.pathname}${location.search}#analyste`); } catch {}
   document.getElementById("analyste")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* =========================================================
-   Build 28.1.87 — Bridge Auto Health Quiet Status
+   Build 28.1.88R1 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -11294,8 +11306,18 @@ function atlasLocalDialogueExport() {
    ========================================================= */
 const ATLAS_V2_MODE_KEY = "agent_crypto_erith_ia_v2_interface_mode";
 const ATLAS_V2_MATH_DOCK_KEY = "agent_crypto_erith_ia_v2_math_dock";
-const ATLAS_V2_ALLOWED_MODES = new Set(["essential", "advanced"]);
+const ATLAS_V2_ALLOWED_MODES = new Set(["essential", "intermediate", "advanced"]);
 const ATLAS_V2_ALLOWED_MATH_DOCKS = new Set(["rail", "side", "top"]);
+const ATLAS_V2_INTERMEDIATE_HIDDEN_IDS = new Set([
+  "missions-vie",
+  "fonds-erith-ia",
+  "association-erith-ia",
+  "aerith-enfance",
+  "aerith-animaux",
+  "aerith-terre-vivante"
+]);
+const ATLAS_V2_INTERMEDIATE_QUERY_VALUE = "intermediate";
+const ATLAS_ACCESS_RETURN_MODE_KEY = "agent_crypto_erith_ia_access_return_mode";
 
 const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "livecheck", level: "essential", target: "self", group: "essential" },
@@ -11390,15 +11412,31 @@ function atlasV2ClassifySections() {
   }
 }
 
+function atlasV2IsExpandedMode(mode = atlasV2Mode()) {
+  return mode === "intermediate" || mode === "advanced";
+}
+
+function atlasV2IntermediateAllowsEntry(entry) {
+  return !!entry && !ATLAS_V2_INTERMEDIATE_HIDDEN_IDS.has(entry.id);
+}
+
+function atlasV2EntryVisibleInMode(entry, mode) {
+  if (!entry) return false;
+  if (entry.level === "adaptive" || entry.level === "essential") return true;
+  if (mode === "advanced") return true;
+  if (mode === "intermediate") return atlasV2IntermediateAllowsEntry(entry);
+  return false;
+}
+
 function atlasV2ApplySectionVisibility(mode) {
-  const advanced = mode === "advanced";
+  const expanded = atlasV2IsExpandedMode(mode);
   const resolved = new Map();
 
   for (const entry of ATLAS_V2_SECTION_MANIFEST) {
     const target = atlasV2ManifestTarget(entry);
     if (!target || entry.level === "adaptive") continue;
 
-    const visible = entry.level === "essential" || advanced;
+    const visible = atlasV2EntryVisibleInMode(entry, mode);
     const previous = resolved.get(target);
     resolved.set(target, previous === true ? true : visible);
   }
@@ -11410,19 +11448,18 @@ function atlasV2ApplySectionVisibility(mode) {
 
   const risk = document.getElementById("risques");
   if (risk) {
-    risk.hidden = !advanced;
-    risk.setAttribute("aria-hidden", advanced ? "false" : "true");
+    risk.hidden = !expanded;
+    risk.setAttribute("aria-hidden", expanded ? "false" : "true");
   }
 
   const newsRegistry = document.getElementById("newsSourceRegistry");
   if (newsRegistry) {
-    newsRegistry.hidden = !advanced;
-    newsRegistry.setAttribute("aria-hidden", advanced ? "false" : "true");
+    newsRegistry.hidden = !expanded;
+    newsRegistry.setAttribute("aria-hidden", expanded ? "false" : "true");
   }
 }
-
 function atlasV2SyncMixedSectionLabels(mode) {
-  const advanced = mode === "advanced";
+  const advanced = atlasV2IsExpandedMode(mode);
   setText(
     document.getElementById("watchRiskCollapseTitle"),
     advanced ? "Watchlist V3 + Risques V2" : "Watchlist V3"
@@ -11473,7 +11510,29 @@ function atlasV2WriteSetting(key, value) {
   } catch {}
 }
 
+function atlasV2ModeFromUrl() {
+  try {
+    const value = new URL(window.location.href).searchParams.get("view");
+    return value === ATLAS_V2_INTERMEDIATE_QUERY_VALUE ? "intermediate" : "";
+  } catch {
+    return "";
+  }
+}
+
+function atlasV2SyncShareableUrl(mode, options = {}) {
+  try {
+    const url = new URL(window.location.href);
+    if (mode === "intermediate") url.searchParams.set("view", ATLAS_V2_INTERMEDIATE_QUERY_VALUE);
+    else url.searchParams.delete("view");
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    if (options.push === true) history.pushState(null, "", next);
+    else history.replaceState(null, "", next);
+  } catch {}
+}
+
 function atlasV2Mode() {
+  const urlMode = atlasV2ModeFromUrl();
+  if (urlMode) return urlMode;
   const stored = atlasV2ReadSetting(ATLAS_V2_MODE_KEY, "essential");
   const mode = ATLAS_V2_ALLOWED_MODES.has(stored) ? stored : "essential";
   return mode === "advanced" && !atlasAccessIsAuthorized() ? "essential" : mode;
@@ -11486,35 +11545,61 @@ function atlasV2ApplyMode(mode, options = {}) {
     mode = "essential";
   }
   const next = ATLAS_V2_ALLOWED_MODES.has(mode) ? mode : "essential";
-  document.documentElement.dataset.atlasMode = next;
-  document.body.dataset.atlasMode = next;
+  const visualMode = next === "intermediate" ? "advanced" : next;
+  const administrator = next === "advanced" && atlasAccessIsAuthorized();
+  const operator = next === "intermediate";
+  const expanded = administrator || operator;
 
-  document.querySelectorAll("[data-atlas-mode]").forEach(button => {
-    const active = button.dataset.atlasMode === next;
+  document.documentElement.dataset.atlasMode = visualMode;
+  document.body.dataset.atlasMode = visualMode;
+  document.documentElement.dataset.atlasView = next;
+  document.body.dataset.atlasView = next;
+
+  document.querySelectorAll("[data-atlas-view-mode]").forEach(button => {
+    const active = button.dataset.atlasViewMode === next;
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", active ? "true" : "false");
   });
 
   const title = document.getElementById("atlasV2ModeTitle");
   const description = document.getElementById("atlasV2ModeDescription");
-  const administrator = next === "advanced" && atlasAccessIsAuthorized();
 
-  document.documentElement.dataset.atlasRole = administrator ? "administrator" : "public";
-  document.body.dataset.atlasRole = administrator ? "administrator" : "public";
+  const role = administrator ? "administrator" : operator ? "operator" : "public";
+  document.documentElement.dataset.atlasRole = role;
+  document.body.dataset.atlasRole = role;
 
-  if (title) title.textContent = administrator ? "Privé Christophe" : "Marché public";
+  if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
   if (description) description.textContent = administrator
     ? "Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets."
-    : "Graphique · Target Top 5 · Market Flow · Market Snapshot · Sources.";
+    : operator
+      ? "Analyse · décision · mémoire · opérations · système · audience · sources. Missions de vie masquées."
+      : "Graphique · Target Top 5 · Market Flow · Market Snapshot · Sources.";
 
   const accountToggle = document.getElementById("btnAdminAccountToggle");
   const accountText = document.getElementById("adminAccountLinkText");
   if (accountToggle) {
     accountToggle.classList.toggle("is-admin", administrator);
     accountToggle.setAttribute("aria-pressed", administrator ? "true" : "false");
-    accountToggle.setAttribute("aria-label", administrator ? "Verrouiller l’administration locale" : "Ouvrir l’accès privé local");
+    accountToggle.setAttribute("aria-label", administrator
+      ? "Verrouiller l’administration locale"
+      : atlasAccessIsAuthorized()
+        ? "Revenir à l’administration Christophe"
+        : "Ouvrir l’accès privé local");
   }
-  if (accountText) accountText.textContent = administrator ? "Christophe · Verrouiller" : "Accès privé";
+  if (accountText) accountText.textContent = administrator
+    ? "Christophe · Verrouiller"
+    : atlasAccessIsAuthorized()
+      ? "Christophe · Administration"
+      : "Accès privé";
+
+  const intermediateToggle = document.getElementById("btnIntermediateViewToggle");
+  const intermediateToggleText = document.getElementById("intermediateViewToggleText");
+  if (intermediateToggle) {
+    intermediateToggle.classList.toggle("is-intermediate", operator);
+    intermediateToggle.setAttribute("aria-pressed", operator ? "true" : "false");
+    intermediateToggle.setAttribute("aria-label", operator ? "Revenir à la vue basique" : "Ouvrir la vue intermédiaire");
+  }
+  if (intermediateToggleText) intermediateToggleText.textContent = operator ? "Vue Basique" : "Vue intermédiaire";
 
   atlasV2ApplySectionVisibility(next);
   atlasV2SyncMixedSectionLabels(next);
@@ -11526,10 +11611,29 @@ function atlasV2ApplyMode(mode, options = {}) {
   }
 
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
-    element.hidden = !administrator;
+    element.hidden = !expanded;
   });
 
-  if (!administrator) {
+  const commandKicker = document.getElementById("atlasCommandKicker");
+  const commandTitle = document.getElementById("atlasCommandTitle");
+  if (commandKicker) commandKicker.textContent = operator ? "INTERMÉDIAIRE" : "ADMIN";
+  if (commandTitle) commandTitle.textContent = operator ? "Vue intermédiaire Agent-Crypto" : "Administration Agent-Crypto";
+
+  const missionsQuickLink = document.getElementById("atlasMissionsQuickLink");
+  if (missionsQuickLink) missionsQuickLink.hidden = operator;
+  const privateMissionsGroup = document.getElementById("atlasPrivateMissionsOptionGroup");
+  if (privateMissionsGroup) {
+    privateMissionsGroup.hidden = operator;
+    privateMissionsGroup.disabled = operator;
+  }
+  setText(document.getElementById("atlasProjectsClusterLabel"), operator ? "Création" : "Projets");
+  setText(document.getElementById("atlasProjectsShortcutLabel"), operator ? "Création" : "Projets");
+  setText(document.getElementById("atlasProjectsShortcutCount"), operator ? "1" : "2");
+
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  if (operator && selector && ATLAS_V2_INTERMEDIATE_HIDDEN_IDS.has(selector.value)) selector.value = "";
+
+  if (!expanded) {
     const legacy = document.querySelector("[data-collapse-key='mode-debutant-avance']");
     if (legacy) legacy.hidden = true;
     /* Public contract: Math Core V3 always remains visible beside Market.
@@ -11556,12 +11660,12 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
 
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
+  if (options.syncUrl === true) atlasV2SyncShareableUrl(next, { push: options.pushUrl === true });
   atlasScheduleStableChartResize();
   atlasScheduleRuntimeValidation("mode-apply");
-  window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next, role: administrator ? "owner" : "public" } }));
-  return administrator || next === "essential";
+  window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next, role } }));
+  return next !== "advanced" || administrator;
 }
-
 function atlasV2MathDockPosition() {
   const stored = atlasV2ReadSetting(ATLAS_V2_MATH_DOCK_KEY, "side");
   return ATLAS_V2_ALLOWED_MATH_DOCKS.has(stored) ? stored : "side";
@@ -11641,11 +11745,15 @@ function atlasV2OpenAdvancedForTarget(hash, options = {}) {
   const target = document.getElementById(id);
   if (!target) return false;
 
-  if (entry && !["essential", "adaptive"].includes(entry.level) && !atlasAccessIsAuthorized()) {
-    atlasAccessOpen(`#${id}`);
+  const currentMode = atlasV2Mode();
+  if (entry && currentMode === "intermediate" && !atlasV2IntermediateAllowsEntry(entry)) {
     return false;
   }
-  if (entry && !["essential", "adaptive"].includes(entry.level) && atlasV2Mode() !== "advanced") {
+  if (entry && !["essential", "adaptive"].includes(entry.level) && currentMode === "essential") {
+    if (!atlasAccessIsAuthorized()) {
+      atlasAccessOpen(`#${id}`);
+      return false;
+    }
     atlasV2ApplyMode("advanced", { pendingHash: `#${id}` });
   }
 
@@ -11694,7 +11802,7 @@ function atlasV2HandleHashTarget(options = {}) {
 }
 
 function atlasV2SyncAdvancedSelectorFromViewport() {
-  if (atlasV2Mode() !== "advanced") return;
+  if (!atlasV2IsExpandedMode()) return;
   const selector = document.getElementById("atlasV2AdvancedModuleSelect");
   if (!selector) return;
 
@@ -11718,8 +11826,23 @@ function atlasInitV2Shell() {
   atlasInitLocalAccess();
 
   document.getElementById("btnAdminAccountToggle")?.addEventListener("click", () => {
-    if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") atlasAccessLock();
-    else atlasAccessOpen();
+    if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {
+      atlasAccessLock();
+    } else if (atlasAccessIsAuthorized()) {
+      atlasV2SyncShareableUrl("advanced");
+      atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
+      atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
+      window.setTimeout(() => atlasAdminOpenWorkspace({ source: "owner-return" }), 40);
+    } else {
+      atlasAccessOpen();
+    }
+  });
+
+  document.getElementById("btnIntermediateViewToggle")?.addEventListener("click", () => {
+    const next = atlasV2Mode() === "intermediate" ? "essential" : "intermediate";
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
+    atlasV2ApplyMode(next, { persist: false, syncUrl: true });
+    window.requestAnimationFrame(() => document.getElementById("accueil")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   });
 
   document.querySelectorAll("[data-math-position]").forEach(button => {
@@ -11758,7 +11881,9 @@ function atlasInitV2Shell() {
   window.addEventListener("resize", scheduleSelectorSync, { passive: true });
 
   if (atlasAccessIsAuthorized()) atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
-  atlasV2ApplyMode(atlasV2Mode(), { persist: false, silentAuth: true });
+  const initialV2Mode = atlasV2Mode();
+  if (initialV2Mode === "intermediate") atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
+  atlasV2ApplyMode(initialV2Mode, { persist: false, silentAuth: true });
   atlasV2DecisionLockRefresh();
 
   if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
@@ -12090,7 +12215,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.87
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.88R1
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
    Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
@@ -14370,7 +14495,7 @@ const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
 const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
 const ATLAS_ADMIN_CLUSTERS = Object.freeze(["decision", "analysis", "system", "projects"]);
 
-/* Build 28.1.87 — restauration de l’entrée Administration.
+/* Build 28.1.88R1 — restauration de l’entrée Administration.
    Un ancien workspace public ne doit jamais annuler l’ouverture demandée
    juste après la validation du mot de passe Christophe. */
 let atlasAdminForceWorkspacePending = false;
@@ -14440,7 +14565,7 @@ function atlasAdminCenterSet(open, options = {}) {
   const { drawer, toggle, state } = atlasAdminCenterElements();
   if (!drawer || !toggle) return;
 
-  const next = !!open && atlasV2Mode() === "advanced";
+  const next = !!open && atlasV2IsExpandedMode();
   const requestedTarget = String(options.target || "");
   const target = ATLAS_ADMIN_CLUSTERS.includes(requestedTarget)
     ? requestedTarget
@@ -14524,7 +14649,7 @@ function initAtlasAdminCommandCenter() {
   if (drawer.parentElement !== document.body) document.body.appendChild(drawer);
 
   const restoreCenter = () => {
-    if (atlasV2Mode() !== "advanced") {
+    if (!atlasV2IsExpandedMode()) {
       atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
       return;
     }
@@ -14577,7 +14702,7 @@ function initAtlasAdminCommandCenter() {
   });
 
   window.addEventListener("atlas:v2mode", event => {
-    if (event.detail?.mode !== "advanced") {
+    if (!atlasV2IsExpandedMode(event.detail?.mode)) {
       atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
     } else {
       window.requestAnimationFrame(restoreCenter);
@@ -14634,7 +14759,7 @@ function atlasAdminGraphSet(mode, options = {}) {
   zone.dataset.graphOpen = next === "closed" ? "false" : "true";
   atlasAdminGraphSyncControls(next);
   if (options.closeCenter !== false) atlasAdminCenterSet(false, { persist: false });
-  if (options.persist !== false && atlasV2Mode() === "advanced") {
+  if (options.persist !== false && atlasV2IsExpandedMode()) {
     try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, next); } catch {}
   }
   if (options.scroll !== false) window.requestAnimationFrame(() => {
@@ -14666,7 +14791,7 @@ function initAtlasAdminGraphToggle() {
   document.querySelectorAll('a[href="#analyste"]').forEach(link => {
     link.addEventListener("click", () => {
       if ((zone.dataset.graphMode || "normal") === "closed") {
-        atlasAdminGraphSet("normal", { persist: atlasV2Mode() === "advanced", instant: true });
+        atlasAdminGraphSet("normal", { persist: atlasV2IsExpandedMode(), instant: true });
       }
     });
   });
@@ -14675,12 +14800,12 @@ function initAtlasAdminGraphToggle() {
     const mode = event.detail?.mode;
     if (mode === "essential") {
       atlasAdminGraphSet("normal", { persist: false, instant: true, scroll: false, closeCenter: false });
-    } else if (mode === "advanced") {
+    } else if (atlasV2IsExpandedMode(mode)) {
       atlasAdminGraphSet(atlasAdminGraphRead(), { persist: false, instant: true, scroll: false, closeCenter: false });
     }
   });
 
-  const initialMode = atlasV2Mode() === "advanced" ? atlasAdminGraphRead() : "normal";
+  const initialMode = atlasV2IsExpandedMode() ? atlasAdminGraphRead() : "normal";
   atlasAdminGraphSet(initialMode, { persist: false, instant: true, scroll: false, closeCenter: false });
 }
 
@@ -15063,7 +15188,7 @@ window.setTimeout(atlasChartOverlayUpdate, 800);
 
 
 
-/* Build 28.1.87 — failed ChatGPT iframe experiment removed. */
+/* Build 28.1.88R1 — failed ChatGPT iframe experiment removed. */
 
 
 /* =========================================================
@@ -15361,7 +15486,7 @@ function atlasWorkspaceCapture() {
     detailCollapsed,
     marketVisibleLimit: ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit)) ? Number(state.marketVisibleLimit) : 50,
     adminWorkspace: {
-      centerOpen: atlasV2Mode() === "advanced" && !!drawer && !drawer.hidden,
+      centerOpen: atlasV2IsExpandedMode() && !!drawer && !drawer.hidden,
       activeCluster: drawer?.dataset?.activeCluster || atlasAdminCenterSavedTarget(),
       lastModule: selector?.value || atlasAdminLastModuleRead(),
     },
@@ -15501,9 +15626,12 @@ function atlasWorkspaceRestoreAfterMarket() {
   /* R4 critical recovery: a stale workspace saved while public must never
      demote a just-authenticated owner back to the public interface. */
   const forceAdminWorkspace = atlasAdminForceWorkspaceIsActive();
-  const requestedInterfaceMode = ATLAS_V2_ALLOWED_MODES.has(saved.interfaceMode)
-    ? saved.interfaceMode
-    : atlasV2Mode();
+  const activeInterfaceMode = atlasV2Mode();
+  const requestedInterfaceMode = activeInterfaceMode === "intermediate"
+    ? "intermediate"
+    : ATLAS_V2_ALLOWED_MODES.has(saved.interfaceMode)
+      ? saved.interfaceMode
+      : activeInterfaceMode;
   const savedInterfaceMode = forceAdminWorkspace
     ? "advanced"
     : requestedInterfaceMode === "advanced" && !atlasAccessIsAuthorized()
@@ -15583,7 +15711,7 @@ function atlasWorkspaceRestoreAfterMarket() {
     : true;
   try { localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, detailCollapsed ? "1" : "0"); } catch {}
   atlasSetCleanLensCollapsed(
-    atlasV2Mode() === "advanced" ? detailCollapsed : true,
+    atlasV2IsExpandedMode() ? detailCollapsed : true,
     false
   );
 
@@ -15618,7 +15746,7 @@ function atlasWorkspaceRestoreAfterMarket() {
     localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, restoredAdminCenterOpen ? "1" : "0");
   } catch {}
 
-  if (atlasV2Mode() === "advanced") {
+  if (atlasV2IsExpandedMode()) {
     atlasAdminGraphSet(savedGraphMode, {
       persist: false,
       instant: true,
@@ -15648,7 +15776,7 @@ document.addEventListener("click", event => {
   const control = event.target.closest(
     ".period-btn, [data-chart-view], [data-chart-scale], [data-chart-display], "
     + ".compare-btn, [data-compare-primary], [data-compare-remove], [data-market-open], "
-    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-atlas-mode], [data-market-columns], "
+    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-atlas-view-mode], [data-market-columns], "
     + "#detailPanelToggle, #detailPanelRail, #atlasAdminCenterToggle, #atlasAdminCenterClose, "
     + "[data-admin-cluster-target], #btnOpenAdvancedModule"
   );
@@ -15685,7 +15813,7 @@ window.setTimeout(atlasWorkspaceRenderStrip, 900);
 
 
 /* =========================================================
-   Build 28.1.87 — Hausses 5 Transaction Rebuild
+   Build 28.1.88R1 — Hausses 5 Transaction Rebuild
    Market-first scanners. History never decides the ranking.
    ========================================================= */
 const ATLAS_SCANNER_POOL_SIZE = 24;
@@ -15721,7 +15849,7 @@ function atlasScannerSetUiState(preset, status, message = "") {
 }
 
 /* =========================================================
-   Build 28.1.87 — Hausses 5 Rebuild
+   Build 28.1.88R1 — Hausses 5 Rebuild
    Aucun clic silencieux : toute attente, réussite ou erreur
    devient visible sans remplacer le graphique validé.
    ========================================================= */
@@ -15951,7 +16079,7 @@ function atlasScannerProgress(tx, symbol = "") {
 
 
 /* =========================================================
-   Build 28.1.87 — Bridge Ryzen V1.6 history proxy
+   Build 28.1.88R1 — Bridge Ryzen V1.6 history proxy + generic intermediate view
    Priorité scanner : Bridge local lecture seule, puis transports navigateur.
    CoinGecko reste la source du classement Market ; le Bridge ne décide jamais
    quels actifs entrent dans Hausses 5, Baisses 5 ou Volumes 5.
@@ -16330,7 +16458,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.1.87 annulée :", error);
+    console.warn("Transaction scanner 28.1.88R1 annulée :", error);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     atlasScannerRestoreSnapshot(snapshot);
@@ -16458,7 +16586,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Hausses 5 / scanner 28.1.87 :", error);
+    console.error("Hausses 5 / scanner 28.1.88R1 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -16532,7 +16660,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.1.87 non capturé :", error);
+      console.error("Scanner 28.1.88R1 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -16542,7 +16670,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage Hausses 5 28.1.87 :", error);
+    console.error("Démarrage Hausses 5 28.1.88R1 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -16556,7 +16684,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.1.87"
+    source: "button-28.1.88R1"
   });
 }
 
@@ -16613,7 +16741,7 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 
 /* =========================================================
-   Build 28.1.87 — NON-REGRESSION GUARD
+   Build 28.1.88R1 — NON-REGRESSION GUARD
    Public: Math Core V3 visible in side dock.
    Administration: saved Math dock restored, Command Center untouched.
    ========================================================= */
@@ -16621,8 +16749,8 @@ function atlasR3EnsureMathPresence() {
   const math = document.getElementById("math");
   const grid = document.getElementById("marketWorkspaceGrid");
   if (!math || !grid) return;
-  const administrator = atlasAccessIsAuthorized() && atlasV2Mode() === "advanced";
-  if (!administrator) {
+  const essential = atlasV2Mode() === "essential";
+  if (essential) {
     math.hidden = false;
     math.setAttribute("aria-hidden", "false");
     if (math.parentElement !== grid || math.dataset.mathDock !== "side") {
@@ -16637,7 +16765,7 @@ window.setTimeout(atlasR3EnsureMathPresence, 900);
 
 
 /* =========================================================
-   Build 28.1.87 — ADMIN WORKSPACE RECOVERY GUARD
+   Build 28.1.88R1 — ADMIN WORKSPACE RECOVERY GUARD
    Ne touche ni au Math Core, ni aux scanners, ni au Market.
    ========================================================= */
 window.addEventListener("atlas:v2mode", event => {
