@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R7 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R8 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r7-section-order-cleanup" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r8-visual-hierarchy" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R7</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R8</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -36,7 +36,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R7</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R8</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -132,51 +132,47 @@
                   <span class="atlas-visually-hidden">Choisir un module administrateur</span>
                   <select id="atlasV2AdvancedModuleSelect" aria-label="Choisir un module administrateur">
                 <option value="">Tous les modules administrateur…</option>
-                <optgroup label="Analyse V2">
+                <optgroup label="Analyse & décision">
                   <option value="math">Math — indice et mesures</option>
                   <option value="multi-horizon">Multi-Horizon</option>
+                  <option value="news-sentinel">News Sentinel</option>
+                  <option value="news-plan">Référentiel News étendu</option>
+                  <option value="decision-board">Atlas Decision Board</option>
                   <option value="lecture-froide">Lecture froide</option>
-                  <option value="risques">Risques</option>
                   <option value="debutant">Guides de lecture</option>
+                  <option value="watchlist">Watchlist &amp; alertes</option>
+                  <option value="impact">Impact / risques</option>
+                  <option value="nofomo">No-FOMO</option>
                 </optgroup>
-                <optgroup label="Mémoire et information">
+                <optgroup label="Intelligence, mémoire & création">
+                  <option value="local-ai-hub">Atlas / Aerith local</option>
+                  <option value="forge-aerith">Forge d’Aerith Pro</option>
                   <option value="auto-reader">Auto Reader</option>
                   <option value="shared-memory">Shared Memory</option>
                   <option value="github-memory">GitHub Memory</option>
-                  <option value="newsSourceRegistry">Référentiel News étendu</option>
-                  <option value="news-plan">Plan News Sentinel</option>
                 </optgroup>
-                <optgroup label="Décision et veille">
-                  <option value="watchlist">Watchlist &amp; alertes</option>
-                  <option value="decision-board">Atlas Decision Board</option>
-                  <option value="news-sentinel">News Sentinel</option>
-                  <option value="nofomo">No-FOMO</option>
-                </optgroup>
-                <optgroup label="Atelier et décision">
+                <optgroup label="Préparation & opérations">
                   <option value="situation">Situation du projet</option>
                   <option value="questionnaire">Questionnaire</option>
                   <option value="briefing">Briefing</option>
-                  <option value="impact">Impact</option>
-                  <option value="simulation">Simulation</option>
                   <option value="planning">Plan exchange</option>
                 </optgroup>
-                <optgroup label="Système et sécurité">
-                  <option value="physical-security">Protection physique</option>
-                  <option value="backend">Backend</option>
+                <optgroup label="Expérimentation & système">
+                  <option value="simulation">Simulation</option>
+                  <option value="commandes">Tests / Commandes</option>
+                  <option value="backend">Backend / API</option>
                   <option value="safety">Sécurité</option>
-                  <option value="commandes">Tests</option>
-                  <option value="sources">Sources</option>
-                  <option value="mesure-audience">Audience</option>
-                  <option value="local-ai-hub">Atlas / Aerith local</option>
+                  <option value="physical-security">Protection physique</option>
                 </optgroup>
-                <optgroup label="Projets @erith.IA">
+                <optgroup label="Missions @erith.IA — fin de page">
                   <option value="missions-vie">Registre des projets</option>
-                  <option value="forge-aerith">Forge d’Aerith Pro</option>
                   <option value="fonds-erith-ia">Fonds ERITH.IA</option>
                   <option value="association-erith-ia">Association ERITH.IA</option>
                   <option value="aerith-enfance">Aerith Enfance</option>
                   <option value="aerith-animaux">Aerith Animaux</option>
                   <option value="aerith-terre-vivante">Aerith Terre Vivante</option>
+                  <option value="mesure-audience">Audience</option>
+                  <option value="sources">Sources</option>
                 </optgroup>
               </select>
                 </label>
@@ -601,8 +597,17 @@
 
 
     </section>
+    <section class="atlas-layout-family atlas-layout-family-analysis" aria-labelledby="atlasLayoutFamily01">
+      <span class="atlas-layout-family-index" aria-hidden="true">01</span>
+      <div class="atlas-layout-family-copy">
+        <p>PARCOURS ADMINISTRATEUR</p>
+        <h2 id="atlasLayoutFamily01">Analyse & décision</h2>
+        <span>Comprendre les horizons, les événements, les risques et les limites avant toute conclusion.</span>
+      </div>
+      <span class="atlas-layout-family-signal" aria-hidden="true"></span>
+    </section>
 
-    <section class="multi-horizon glass" id="multi-horizon" aria-labelledby="multiHorizonTitle">
+    <section class="multi-horizon glass atlas-family-member atlas-tone-analysis" id="multi-horizon" aria-labelledby="multiHorizonTitle" data-layout-family="analysis">
       <div class="section-head compact multi-horizon-head">
         <div>
           <p class="eyebrow">RÉSUMÉ DYNAMIQUE MULTI-HORIZON</p>
@@ -645,162 +650,7 @@
       </details>
     </section>
 
-
-    <details class="atlas-collapse glass atlas-local-ai-collapse" data-collapse-key="local-ai-hub">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Atlas-10 + Aerith-10 Crypto</span>
-        <span class="atlas-collapse-subtitle">Profils locaux du Ryzen · Ollama / LM Studio / AnythingLLM</span>
-      </summary>
-      <div class="atlas-collapse-body">
-        <section class="panel glass atlas-local-ai-hub" id="local-ai-hub" aria-labelledby="local-ai-title">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">LOCAL AI PROFILES · RYZEN 7</p>
-              <h2 id="local-ai-title">Deux présences complémentaires</h2>
-              <p class="planning-intro">Atlas cartographie, vérifie et structure. Aerith explique, accompagne et protège le discernement. Aucun appel API OpenAI payant.</p>
-            </div>
-            <span class="pill warn" id="localBridgeStatus">Bridge local non connecté</span>
-          </div>
-
-          <div class="atlas-local-profile-grid">
-            <article class="atlas-local-profile atlas-profile-emperor">
-              <div class="atlas-local-profile-visual" role="img" aria-label="Atlas-10 Crypto, Empereur solaire"></div>
-              <div class="atlas-local-profile-copy">
-                <span class="atlas-local-profile-kicker">CARTOGRAPHE ANALYTIQUE</span>
-                <h3>Atlas-10 Crypto</h3>
-                <p>Data Truth, Math Oracle, contradiction, risque, interface et synthèse factuelle.</p>
-                <div class="atlas-local-profile-tags"><span>Atlas</span><span>Math</span><span>Risque</span></div>
-                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/ATLAS_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Atlas-10</a>
-              </div>
-            </article>
-
-            <article class="atlas-local-profile atlas-profile-aerith">
-              <div class="atlas-local-profile-visual" role="img" aria-label="Aerith-10 Crypto, analyste et pédagogue"></div>
-              <div class="atlas-local-profile-copy">
-                <span class="atlas-local-profile-kicker">ANALYSTE · PÉDAGOGUE · NO-FOMO</span>
-                <h3>Aerith-10 Crypto</h3>
-                <p>Lecture humaine, explication, psychologie prudente, No-FOMO et libre arbitre.</p>
-                <div class="atlas-local-profile-tags"><span>Aerith</span><span>Pédagogie</span><span>Discernement</span></div>
-                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/AERITH_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Aerith-10</a>
-              </div>
-            </article>
-          </div>
-
-          <div class="atlas-local-runtime-grid">
-            <article><span>Moteur principal</span><b>Ollama · llama3.2</b><small>Modèle neutre requis · 127.0.0.1:11434</small></article>
-            <article><span>Moteur alternatif</span><b>LM Studio</b><small>Optionnel · activation manuelle dans le Bridge</small></article>
-            <article><span>Bibliothèque optionnelle</span><b>AnythingLLM</b><small>RAG et documentation, non requis</small></article>
-            <article><span>Autre ordinateur</span><b>Yohan / second PC</b><small>Installer Ollama + llama3.2 + Bridge local</small></article>
-          </div>
-
-          <div class="atlas-local-bridge-actions">
-            <button class="btn" id="btnLocalBridgeProbe" type="button">Tester le Bridge du Ryzen</button>
-            <span id="localBridgeDetail">Lecture seule préparée · aucune action exchange · aucun wallet.</span>
-          </div>
-
-          <section class="atlas-local-dialogue" id="atlasLocalDialogue" aria-labelledby="atlasLocalDialogueTitle">
-            <div class="atlas-local-dialogue-head">
-              <div>
-                <p class="eyebrow">DIALOGUE LOCAL · SNAPSHOT AGENT-CRYPTO</p>
-                <h3 id="atlasLocalDialogueTitle">Interroger Atlas-10 ou Aerith-10</h3>
-                <p>La page transmet un contrat factuel déterministe au Bridge local. Le rapport reste calculé par Agent-Crypto ; Atlas et Aerith ajoutent seulement un commentaire local contrôlé.</p>
-              </div>
-              <span class="pill warn" id="atlasLocalDialogueBadge">Contrat factuel V2</span>
-            </div>
-
-            <div class="atlas-local-profile-switch" role="group" aria-label="Choisir le profil local">
-              <button type="button" class="is-active" data-atlas-local-profile="atlas" aria-pressed="true">
-                <b>Atlas-10</b><span>Vérité des données · Math · contradictions</span>
-              </button>
-              <button type="button" data-atlas-local-profile="aerith" aria-pressed="false">
-                <b>Aerith-10</b><span>Explication · discernement · No-FOMO</span>
-              </button>
-              <small id="atlasLocalRuntime">Lecture seule · moteur local en attente</small>
-            </div>
-
-            <div class="atlas-local-quick-actions" aria-label="Analyses locales rapides">
-              <button type="button" data-atlas-local-summary="market">Résumer le marché</button>
-              <button type="button" data-atlas-local-summary="top5">Analyser le Top 5</button>
-              <button type="button" data-atlas-local-summary="math">Expliquer le Math Core</button>
-              <button type="button" data-atlas-local-summary="contradictions">Contrôler les contradictions</button>
-            </div>
-
-            <div class="atlas-local-dialogue-grid">
-              <div class="atlas-local-question-panel">
-                <label for="atlasLocalQuestion">Question libre</label>
-                <textarea id="atlasLocalQuestion" rows="7" maxlength="4000"
-                  placeholder="Écris ou adapte ta question locale.">Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.</textarea>
-                <div class="atlas-local-question-actions">
-                  <button class="btn primary" id="btnAtlasLocalAsk" type="button">Interroger Atlas-10</button>
-                  <button class="btn" id="btnAtlasLocalClear" type="button">Vider</button>
-                </div>
-                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Teste d’abord le Bridge, puis choisis une analyse.</p>
-              </div>
-
-              <article class="atlas-local-response-panel" aria-live="polite">
-                <div class="atlas-local-response-head">
-                  <div>
-                    <span>RÉPONSE LOCALE</span>
-                    <b id="atlasLocalResponseTitle">Aucune synthèse générée</b>
-                  </div>
-                  <div>
-                    <button type="button" id="btnAtlasLocalCopy" disabled>Copier</button>
-                    <button type="button" id="btnAtlasLocalExport" disabled>Exporter .md</button>
-                  </div>
-                </div>
-                <div class="atlas-local-response-content" id="atlasLocalResponse"><p class="atlas-local-response-empty">Le résultat Atlas-10 ou Aerith-10 apparaîtra ici.</p></div>
-                <small id="atlasLocalResponseMeta">Lecture seule · validation humaine · aucune exécution réelle</small>
-              </article>
-            </div>
-          </section>
-        </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse" data-collapse-key="forge-aerith" id="forge-aerith">
-  <summary class="atlas-collapse-summary">
-    <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-    <span class="atlas-collapse-title">✦ Forge d’Aerith Pro</span>
-    <span class="atlas-collapse-subtitle">Atelier Créatrice · huit étapes · imports · audit · exports</span>
-  </summary>
-
-  <div class="atlas-collapse-body">
-    <section class="panel glass forge-aerith-panel forge-aerith-embedded-panel forge-workshop-only-panel" aria-labelledby="forge-aerith-title">
-      <div class="forge-embedded-toolbar forge-workshop-toolbar">
-        <div class="forge-embedded-identity forge-workshop-identity">
-          <strong id="forge-aerith-title">Forge d’Aerith Pro · Atelier Créatrice</strong>
-          <span id="forgeEmbeddedStatus">Chargement de l’atelier en huit étapes…</span>
-        </div>
-
-        <a
-          class="btn secondary forge-embedded-fullscreen"
-          href="../atlas_10_full/index.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Ouvrir la Forge complète ↗
-        </a>
-      </div>
-
-      <div class="forge-embedded-stage forge-workshop-stage" id="forgeEmbeddedStage">
-        <div class="forge-embedded-loading" id="forgeEmbeddedLoading" role="status">
-          Préparation de l’Atelier Créatrice…
-        </div>
-
-        <iframe
-          id="forgeAerithEmbedded"
-          class="forge-embedded forge-workshop-embedded"
-          src="../atlas_10_full/index.html#unifiedForge"
-          title="Forge d’Aerith Pro — Atelier Créatrice en huit étapes"
-          loading="lazy">
-        </iframe>
-      </div>
-    </section>
-  </div>
-</details>
-
-    <details class="atlas-collapse glass news-sentinel-collapse" id="news-sentinel" data-collapse-key="news-sentinel">
+    <details class="atlas-collapse glass news-sentinel-collapse atlas-family-member atlas-tone-analysis" id="news-sentinel" data-collapse-key="news-sentinel" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-copy">
           <span class="atlas-collapse-title">News Sentinel — veille événementielle</span>
@@ -957,7 +807,43 @@
       </div>
     </details>
 
-    <section class="decision-board glass" id="decision-board" aria-label="Atlas Decision Board">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="news-plan" data-layout-family="analysis">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">News Sentinel — référentiel étendu</span>
+        <span class="atlas-collapse-subtitle">Sources d’information à surveiller</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+    <section class="panel glass news-plan" id="news-plan">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">NEWS SENTINEL — RÉFÉRENTIEL ÉTENDU</p>
+          <h2>Sources d’information à surveiller</h2>
+          <p class="planning-intro">
+            Les nouvelles ne déclenchent aucun achat. Elles classent seulement l’information : fiable, à vérifier, risquée, rumeur.
+          </p>
+        </div>
+        <span class="pill">Analyse, pas signal achat</span>
+      </div>
+
+      <div class="news-source-grid">
+        <div><b>Monde</b><span>Reuters · AP · AFP · BBC · Le Monde · Financial Times</span></div>
+        <div><b>Crypto</b><span>CoinDesk · The Block · Decrypt · Cointelegraph avec prudence</span></div>
+        <div><b>Institutions</b><span>AMF · ESMA · BCE · SEC · CFTC · banques centrales</span></div>
+        <div><b>Exchanges</b><span>Kraken · Bybit · Binance · status pages · maintenances API</span></div>
+      </div>
+
+      <div class="news-classifier-help">
+        <b>Lecture future :</b>
+        <span>source identifiée → fiabilité → impact possible → données à vérifier → action : attendre / surveiller / ignorer.</span>
+      </div>
+    </section>
+      </div>
+    </details>
+
+    <section class="decision-board glass atlas-family-member atlas-tone-analysis" id="decision-board" aria-label="Atlas Decision Board" data-layout-family="analysis">
       <div class="section-head compact">
         <div>
           <p class="eyebrow">ATLAS DECISION BOARD</p>
@@ -1008,7 +894,7 @@
       </div>
     </section>
 
-<details class="atlas-collapse glass" data-collapse-key="lecture-verrou" id="lecture-froide">
+<details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="lecture-verrou" id="lecture-froide" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Lecture froide + verrou</span>
@@ -1036,7 +922,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass v2-advanced-only" data-collapse-key="mode-debutant-avance" data-v2-section="advanced">
+    <details class="atlas-collapse glass v2-advanced-only atlas-family-member atlas-tone-analysis" data-collapse-key="mode-debutant-avance" data-v2-section="advanced" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Guides de lecture V2</span>
@@ -1083,7 +969,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="watch-risques">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="watch-risques" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title" id="watchRiskCollapseTitle">Watchlist V3</span>
@@ -1209,7 +1095,254 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="auto-reader">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="impact" data-layout-family="analysis">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Impact / risques</span>
+        <span class="atlas-collapse-subtitle">Lecture prudente</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+
+    <section class="panel glass impact-layer" id="impact">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">IMPACT CONCRET</p>
+          <h2>Ce que l’app fait vraiment maintenant</h2>
+          <p class="impact-intro">
+            Lecture simple : cette version explique le rôle de chaque bloc. Elle ne connecte aucun wallet, ne passe aucun ordre et ne manipule aucun argent réel.
+          </p>
+        </div>
+        <span class="pill">Compréhension d’abord</span>
+      </div>
+
+      <div class="impact-grid">
+        <article>
+          <b>Marché live</b>
+          <span>Observe prix, volume, capitalisation et graphiques depuis des sources publiques.</span>
+          <em>Impact : comprendre le marché sans agir.</em>
+        </article>
+        <article>
+          <b>Tests simples</b>
+          <span>Explique les plans, la sécurité, les sources et la simulation avec une carte humaine.</span>
+          <em>Impact : éviter le jargon développeur.</em>
+        </article>
+        <article>
+          <b>Simulation</b>
+          <span>Teste des achats / ventes fictifs avec un portefeuille virtuel local.</span>
+          <em>Impact : apprendre sans perdre d’argent.</em>
+        </article>
+        <article>
+          <b>Sécurité</b>
+          <span>Fige les règles : pas de clé privée, pas de retrait, pas d’ordre réel depuis la page publique.</span>
+          <em>Impact : empêcher les erreurs dangereuses.</em>
+        </article>
+      </div>
+
+      <div class="impact-status">
+        <div class="status-ok"><b>Déjà actif</b><span>Observation · graphiques · sources · commandes humaines · simulation locale.</span></div>
+        <div class="status-wait"><b>Pas encore actif</b><span>Connexion Kraken · wallet réel · accès distant · trading réel.</span></div>
+        <div class="status-lock"><b>Verrouillé</b><span>Tout passage argent réel exige backend privé, logs, validation humaine et sécurité physique.</span></div>
+      </div>
+    </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="nofomo-news" data-layout-family="analysis">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">No-FOMO</span>
+        <span class="atlas-collapse-subtitle">Refroidissement de décision</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+    <section class="layout-one nofomo-only">
+<article class="panel glass" id="nofomo">
+        <p class="eyebrow">NO-FOMO</p>
+        <h2>Refroidissement de décision</h2>
+        <blockquote>
+          Une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.
+        </blockquote>
+        <textarea id="fomoInput" placeholder="Exemple : ce token a fait +300 %, j’ai peur de rater la suite..."></textarea>
+        <button class="btn primary" id="btnAnalyzeFomo">Analyser la FOMO</button>
+        <div class="analysis-box" id="fomoOutput">Aucune analyse lancée.</div>
+
+        <div class="atlas-subpanel" id="atlasNoFomoMathPanel">
+          <b>Atlas No-FOMO Math</b>
+          <span>Le signal peut être réel, mais l’entrée peut être trop tardive.</span>
+        </div>
+      </article>
+    </section>
+      </div>
+    </details>
+
+    <section class="atlas-layout-family atlas-layout-family-intelligence" aria-labelledby="atlasLayoutFamily02">
+      <span class="atlas-layout-family-index" aria-hidden="true">02</span>
+      <div class="atlas-layout-family-copy">
+        <p>PARCOURS ADMINISTRATEUR</p>
+        <h2 id="atlasLayoutFamily02">Intelligence, mémoire & création</h2>
+        <span>Interroger Atlas et Aerith, conserver les repères, puis ouvrir la Forge sans quitter le parcours.</span>
+      </div>
+      <span class="atlas-layout-family-signal" aria-hidden="true"></span>
+    </section>
+
+    <details class="atlas-collapse glass atlas-local-ai-collapse atlas-family-member atlas-tone-intelligence" data-collapse-key="local-ai-hub" data-layout-family="intelligence">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Atlas-10 + Aerith-10 Crypto</span>
+        <span class="atlas-collapse-subtitle">Profils locaux du Ryzen · Ollama / LM Studio / AnythingLLM</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass atlas-local-ai-hub" id="local-ai-hub" aria-labelledby="local-ai-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">LOCAL AI PROFILES · RYZEN 7</p>
+              <h2 id="local-ai-title">Deux présences complémentaires</h2>
+              <p class="planning-intro">Atlas cartographie, vérifie et structure. Aerith explique, accompagne et protège le discernement. Aucun appel API OpenAI payant.</p>
+            </div>
+            <span class="pill warn" id="localBridgeStatus">Bridge local non connecté</span>
+          </div>
+
+          <div class="atlas-local-profile-grid">
+            <article class="atlas-local-profile atlas-profile-emperor">
+              <div class="atlas-local-profile-visual" role="img" aria-label="Atlas-10 Crypto, Empereur solaire"></div>
+              <div class="atlas-local-profile-copy">
+                <span class="atlas-local-profile-kicker">CARTOGRAPHE ANALYTIQUE</span>
+                <h3>Atlas-10 Crypto</h3>
+                <p>Data Truth, Math Oracle, contradiction, risque, interface et synthèse factuelle.</p>
+                <div class="atlas-local-profile-tags"><span>Atlas</span><span>Math</span><span>Risque</span></div>
+                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/ATLAS_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Atlas-10</a>
+              </div>
+            </article>
+
+            <article class="atlas-local-profile atlas-profile-aerith">
+              <div class="atlas-local-profile-visual" role="img" aria-label="Aerith-10 Crypto, analyste et pédagogue"></div>
+              <div class="atlas-local-profile-copy">
+                <span class="atlas-local-profile-kicker">ANALYSTE · PÉDAGOGUE · NO-FOMO</span>
+                <h3>Aerith-10 Crypto</h3>
+                <p>Lecture humaine, explication, psychologie prudente, No-FOMO et libre arbitre.</p>
+                <div class="atlas-local-profile-tags"><span>Aerith</span><span>Pédagogie</span><span>Discernement</span></div>
+                <a class="btn primary atlas-local-download" href="../atlas_10_full_crypto/downloads/AERITH_10_CRYPTO_LOCAL_PACK_V1_0.zip" download>Télécharger Aerith-10</a>
+              </div>
+            </article>
+          </div>
+
+          <div class="atlas-local-runtime-grid">
+            <article><span>Moteur principal</span><b>Ollama · llama3.2</b><small>Modèle neutre requis · 127.0.0.1:11434</small></article>
+            <article><span>Moteur alternatif</span><b>LM Studio</b><small>Optionnel · activation manuelle dans le Bridge</small></article>
+            <article><span>Bibliothèque optionnelle</span><b>AnythingLLM</b><small>RAG et documentation, non requis</small></article>
+            <article><span>Autre ordinateur</span><b>Yohan / second PC</b><small>Installer Ollama + llama3.2 + Bridge local</small></article>
+          </div>
+
+          <div class="atlas-local-bridge-actions">
+            <button class="btn" id="btnLocalBridgeProbe" type="button">Tester le Bridge du Ryzen</button>
+            <span id="localBridgeDetail">Lecture seule préparée · aucune action exchange · aucun wallet.</span>
+          </div>
+
+          <section class="atlas-local-dialogue" id="atlasLocalDialogue" aria-labelledby="atlasLocalDialogueTitle">
+            <div class="atlas-local-dialogue-head">
+              <div>
+                <p class="eyebrow">DIALOGUE LOCAL · SNAPSHOT AGENT-CRYPTO</p>
+                <h3 id="atlasLocalDialogueTitle">Interroger Atlas-10 ou Aerith-10</h3>
+                <p>La page transmet un contrat factuel déterministe au Bridge local. Le rapport reste calculé par Agent-Crypto ; Atlas et Aerith ajoutent seulement un commentaire local contrôlé.</p>
+              </div>
+              <span class="pill warn" id="atlasLocalDialogueBadge">Contrat factuel V2</span>
+            </div>
+
+            <div class="atlas-local-profile-switch" role="group" aria-label="Choisir le profil local">
+              <button type="button" class="is-active" data-atlas-local-profile="atlas" aria-pressed="true">
+                <b>Atlas-10</b><span>Vérité des données · Math · contradictions</span>
+              </button>
+              <button type="button" data-atlas-local-profile="aerith" aria-pressed="false">
+                <b>Aerith-10</b><span>Explication · discernement · No-FOMO</span>
+              </button>
+              <small id="atlasLocalRuntime">Lecture seule · moteur local en attente</small>
+            </div>
+
+            <div class="atlas-local-quick-actions" aria-label="Analyses locales rapides">
+              <button type="button" data-atlas-local-summary="market">Résumer le marché</button>
+              <button type="button" data-atlas-local-summary="top5">Analyser le Top 5</button>
+              <button type="button" data-atlas-local-summary="math">Expliquer le Math Core</button>
+              <button type="button" data-atlas-local-summary="contradictions">Contrôler les contradictions</button>
+            </div>
+
+            <div class="atlas-local-dialogue-grid">
+              <div class="atlas-local-question-panel">
+                <label for="atlasLocalQuestion">Question libre</label>
+                <textarea id="atlasLocalQuestion" rows="7" maxlength="4000"
+                  placeholder="Écris ou adapte ta question locale.">Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.</textarea>
+                <div class="atlas-local-question-actions">
+                  <button class="btn primary" id="btnAtlasLocalAsk" type="button">Interroger Atlas-10</button>
+                  <button class="btn" id="btnAtlasLocalClear" type="button">Vider</button>
+                </div>
+                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Teste d’abord le Bridge, puis choisis une analyse.</p>
+              </div>
+
+              <article class="atlas-local-response-panel" aria-live="polite">
+                <div class="atlas-local-response-head">
+                  <div>
+                    <span>RÉPONSE LOCALE</span>
+                    <b id="atlasLocalResponseTitle">Aucune synthèse générée</b>
+                  </div>
+                  <div>
+                    <button type="button" id="btnAtlasLocalCopy" disabled>Copier</button>
+                    <button type="button" id="btnAtlasLocalExport" disabled>Exporter .md</button>
+                  </div>
+                </div>
+                <div class="atlas-local-response-content" id="atlasLocalResponse"><p class="atlas-local-response-empty">Le résultat Atlas-10 ou Aerith-10 apparaîtra ici.</p></div>
+                <small id="atlasLocalResponseMeta">Lecture seule · validation humaine · aucune exécution réelle</small>
+              </article>
+            </div>
+          </section>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse atlas-family-member atlas-tone-creation" data-collapse-key="forge-aerith" id="forge-aerith" data-layout-family="creation">
+  <summary class="atlas-collapse-summary">
+    <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+    <span class="atlas-collapse-title">✦ Forge d’Aerith Pro</span>
+    <span class="atlas-collapse-subtitle">Atelier Créatrice · huit étapes · imports · audit · exports</span>
+  </summary>
+
+  <div class="atlas-collapse-body">
+    <section class="panel glass forge-aerith-panel forge-aerith-embedded-panel forge-workshop-only-panel" aria-labelledby="forge-aerith-title">
+      <div class="forge-embedded-toolbar forge-workshop-toolbar">
+        <div class="forge-embedded-identity forge-workshop-identity">
+          <strong id="forge-aerith-title">Forge d’Aerith Pro · Atelier Créatrice</strong>
+          <span id="forgeEmbeddedStatus">Chargement de l’atelier en huit étapes…</span>
+        </div>
+
+        <a
+          class="btn secondary forge-embedded-fullscreen"
+          href="../atlas_10_full/index.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ouvrir la Forge complète ↗
+        </a>
+      </div>
+
+      <div class="forge-embedded-stage forge-workshop-stage" id="forgeEmbeddedStage">
+        <div class="forge-embedded-loading" id="forgeEmbeddedLoading" role="status">
+          Préparation de l’Atelier Créatrice…
+        </div>
+
+        <iframe
+          id="forgeAerithEmbedded"
+          class="forge-embedded forge-workshop-embedded"
+          src="../atlas_10_full/index.html#unifiedForge"
+          title="Forge d’Aerith Pro — Atelier Créatrice en huit étapes"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
+  </div>
+</details>
+
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="auto-reader" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Atlas Auto Reader</span>
@@ -1256,7 +1389,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="shared-memory">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="shared-memory" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Shared Memory</span>
@@ -1333,7 +1466,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="github-memory">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="github-memory" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">GitHub Memory</span>
@@ -1378,144 +1511,17 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="nofomo-news">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">No-FOMO</span>
-        <span class="atlas-collapse-subtitle">Refroidissement de décision</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-    <section class="layout-one nofomo-only">
-<article class="panel glass" id="nofomo">
-        <p class="eyebrow">NO-FOMO</p>
-        <h2>Refroidissement de décision</h2>
-        <blockquote>
-          Une occasion ratée ne coûte rien. Une mauvaise position peut coûter très cher.
-        </blockquote>
-        <textarea id="fomoInput" placeholder="Exemple : ce token a fait +300 %, j’ai peur de rater la suite..."></textarea>
-        <button class="btn primary" id="btnAnalyzeFomo">Analyser la FOMO</button>
-        <div class="analysis-box" id="fomoOutput">Aucune analyse lancée.</div>
-
-        <div class="atlas-subpanel" id="atlasNoFomoMathPanel">
-          <b>Atlas No-FOMO Math</b>
-          <span>Le signal peut être réel, mais l’entrée peut être trop tardive.</span>
-        </div>
-      </article>
+    <section class="atlas-layout-family atlas-layout-family-operations" aria-labelledby="atlasLayoutFamily03">
+      <span class="atlas-layout-family-index" aria-hidden="true">03</span>
+      <div class="atlas-layout-family-copy">
+        <p>PARCOURS ADMINISTRATEUR</p>
+        <h2 id="atlasLayoutFamily03">Préparation & opérations</h2>
+        <span>Suivre l’état du projet, cadrer l’opérateur et préparer les accès sans action financière réelle.</span>
+      </div>
+      <span class="atlas-layout-family-signal" aria-hidden="true"></span>
     </section>
-      </div>
-    </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="planning">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Plan exchange / accès déporté</span>
-        <span class="atlas-collapse-subtitle">Préparation hors GitHub Pages</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-
-    <section class="planning-deck" id="planning">
-      <article class="panel glass exchange-plan">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">EXCHANGE & WALLET PLAN</p>
-            <h2>Kraken d’abord · Bybit en référence API</h2>
-            <p class="planning-intro">
-              Plan validé avec opérateur autorisé : semi-automatique, simulation avant réel, accès réservé à deux personnes.
-            </p>
-          </div>
-          <span class="pill warn">Aucun ordre réel</span>
-        </div>
-
-        <div class="exchange-grid">
-          <div class="exchange-card primary">
-            <b>Kraken</b>
-            <span>Référence wallet / compte / sécurité.</span>
-            <em>Priorité : lecture seule, sandbox, paper trading.</em>
-          </div>
-          <div class="exchange-card">
-            <b>Bybit</b>
-            <span>Référence API trading à comparer.</span>
-            <em>À étudier avant intégration.</em>
-          </div>
-          <div class="exchange-card">
-            <b>Binance</b>
-            <span>Inspiration command layer / données marché.</span>
-            <em>Pas de clé privée dans le frontend.</em>
-          </div>
-        </div>
-
-        <div class="phase-track">
-          <div class="phase done"><b>1</b><span>Observer</span></div>
-          <div class="phase active"><b>2</b><span>Commander</span></div>
-          <div class="phase"><b>3</b><span>Simuler</span></div>
-          <div class="phase"><b>4</b><span>Valider humain</span></div>
-          <div class="phase locked"><b>5</b><span>Réel verrouillé</span></div>
-        </div>
-      </article>
-
-      <article class="panel glass remote-plan">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">ACCÈS DÉPORTÉ</p>
-            <h2>À préparer hors GitHub Pages</h2>
-          </div>
-        </div>
-        <div class="remote-checklist">
-          <div><b>Accès</b><span>2 opérateurs autorisés uniquement</span></div>
-          <div><b>Clés</b><span>jamais dans le dépôt public</span></div>
-          <div><b>Mode</b><span>lecture seule puis simulation</span></div>
-          <div><b>Sécurité</b><span>logs + arrêt urgence</span></div>
-        </div>
-        <p class="rule-line warn-lock">
-          L’accès distant et les clés exchange exigent un backend local ou serveur sécurisé. GitHub Pages reste public et observation-only.
-        </p>
-      </article>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass" data-collapse-key="news-plan">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">News Sentinel — référentiel étendu</span>
-        <span class="atlas-collapse-subtitle">Sources d’information à surveiller</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-    <section class="panel glass news-plan" id="news-plan">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">NEWS SENTINEL — RÉFÉRENTIEL ÉTENDU</p>
-          <h2>Sources d’information à surveiller</h2>
-          <p class="planning-intro">
-            Les nouvelles ne déclenchent aucun achat. Elles classent seulement l’information : fiable, à vérifier, risquée, rumeur.
-          </p>
-        </div>
-        <span class="pill">Analyse, pas signal achat</span>
-      </div>
-
-      <div class="news-source-grid">
-        <div><b>Monde</b><span>Reuters · AP · AFP · BBC · Le Monde · Financial Times</span></div>
-        <div><b>Crypto</b><span>CoinDesk · The Block · Decrypt · Cointelegraph avec prudence</span></div>
-        <div><b>Institutions</b><span>AMF · ESMA · BCE · SEC · CFTC · banques centrales</span></div>
-        <div><b>Exchanges</b><span>Kraken · Bybit · Binance · status pages · maintenances API</span></div>
-      </div>
-
-      <div class="news-classifier-help">
-        <b>Lecture future :</b>
-        <span>source identifiée → fiabilité → impact possible → données à vérifier → action : attendre / surveiller / ignorer.</span>
-      </div>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass" data-collapse-key="situation">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="situation" data-layout-family="operations">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Situation du projet</span>
@@ -1540,7 +1546,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R7 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R8 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -1608,7 +1614,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="questionnaire">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="questionnaire" data-layout-family="operations">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Questionnaire opérateur</span>
@@ -1696,7 +1702,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="briefing">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="briefing" data-layout-family="operations">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Briefing opérateur</span>
@@ -1779,265 +1785,89 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="impact">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="planning" data-layout-family="operations">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Impact / risques</span>
-        <span class="atlas-collapse-subtitle">Lecture prudente</span>
+        <span class="atlas-collapse-title">Plan exchange / accès déporté</span>
+        <span class="atlas-collapse-subtitle">Préparation hors GitHub Pages</span>
       </summary>
       <div class="atlas-collapse-body">
 
 
 
-    <section class="panel glass impact-layer" id="impact">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">IMPACT CONCRET</p>
-          <h2>Ce que l’app fait vraiment maintenant</h2>
-          <p class="impact-intro">
-            Lecture simple : cette version explique le rôle de chaque bloc. Elle ne connecte aucun wallet, ne passe aucun ordre et ne manipule aucun argent réel.
-          </p>
+
+    <section class="planning-deck" id="planning">
+      <article class="panel glass exchange-plan">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">EXCHANGE & WALLET PLAN</p>
+            <h2>Kraken d’abord · Bybit en référence API</h2>
+            <p class="planning-intro">
+              Plan validé avec opérateur autorisé : semi-automatique, simulation avant réel, accès réservé à deux personnes.
+            </p>
+          </div>
+          <span class="pill warn">Aucun ordre réel</span>
         </div>
-        <span class="pill">Compréhension d’abord</span>
-      </div>
 
-      <div class="impact-grid">
-        <article>
-          <b>Marché live</b>
-          <span>Observe prix, volume, capitalisation et graphiques depuis des sources publiques.</span>
-          <em>Impact : comprendre le marché sans agir.</em>
-        </article>
-        <article>
-          <b>Tests simples</b>
-          <span>Explique les plans, la sécurité, les sources et la simulation avec une carte humaine.</span>
-          <em>Impact : éviter le jargon développeur.</em>
-        </article>
-        <article>
-          <b>Simulation</b>
-          <span>Teste des achats / ventes fictifs avec un portefeuille virtuel local.</span>
-          <em>Impact : apprendre sans perdre d’argent.</em>
-        </article>
-        <article>
-          <b>Sécurité</b>
-          <span>Fige les règles : pas de clé privée, pas de retrait, pas d’ordre réel depuis la page publique.</span>
-          <em>Impact : empêcher les erreurs dangereuses.</em>
-        </article>
-      </div>
+        <div class="exchange-grid">
+          <div class="exchange-card primary">
+            <b>Kraken</b>
+            <span>Référence wallet / compte / sécurité.</span>
+            <em>Priorité : lecture seule, sandbox, paper trading.</em>
+          </div>
+          <div class="exchange-card">
+            <b>Bybit</b>
+            <span>Référence API trading à comparer.</span>
+            <em>À étudier avant intégration.</em>
+          </div>
+          <div class="exchange-card">
+            <b>Binance</b>
+            <span>Inspiration command layer / données marché.</span>
+            <em>Pas de clé privée dans le frontend.</em>
+          </div>
+        </div>
 
-      <div class="impact-status">
-        <div class="status-ok"><b>Déjà actif</b><span>Observation · graphiques · sources · commandes humaines · simulation locale.</span></div>
-        <div class="status-wait"><b>Pas encore actif</b><span>Connexion Kraken · wallet réel · accès distant · trading réel.</span></div>
-        <div class="status-lock"><b>Verrouillé</b><span>Tout passage argent réel exige backend privé, logs, validation humaine et sécurité physique.</span></div>
-      </div>
+        <div class="phase-track">
+          <div class="phase done"><b>1</b><span>Observer</span></div>
+          <div class="phase active"><b>2</b><span>Commander</span></div>
+          <div class="phase"><b>3</b><span>Simuler</span></div>
+          <div class="phase"><b>4</b><span>Valider humain</span></div>
+          <div class="phase locked"><b>5</b><span>Réel verrouillé</span></div>
+        </div>
+      </article>
+
+      <article class="panel glass remote-plan">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">ACCÈS DÉPORTÉ</p>
+            <h2>À préparer hors GitHub Pages</h2>
+          </div>
+        </div>
+        <div class="remote-checklist">
+          <div><b>Accès</b><span>2 opérateurs autorisés uniquement</span></div>
+          <div><b>Clés</b><span>jamais dans le dépôt public</span></div>
+          <div><b>Mode</b><span>lecture seule puis simulation</span></div>
+          <div><b>Sécurité</b><span>logs + arrêt urgence</span></div>
+        </div>
+        <p class="rule-line warn-lock">
+          L’accès distant et les clés exchange exigent un backend local ou serveur sécurisé. GitHub Pages reste public et observation-only.
+        </p>
+      </article>
     </section>
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="physical-security">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Sécurité physique</span>
-        <span class="atlas-collapse-subtitle">Accès réel et poste local</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-    <section class="panel glass physical-layer" id="physical-security">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">PHYSICAL SECURITY LAYER</p>
-          <h2>Ledger / clé physique / validation humaine</h2>
-          <p class="impact-intro">
-            Ledger peut servir de coffre matériel ou de validation physique future, mais ne remplace pas Kraken ni le backend sécurisé.
-          </p>
-        </div>
-        <span class="pill warn">Coffre, pas pilote IA</span>
+    <section class="atlas-layout-family atlas-layout-family-system" aria-labelledby="atlasLayoutFamily04">
+      <span class="atlas-layout-family-index" aria-hidden="true">04</span>
+      <div class="atlas-layout-family-copy">
+        <p>PARCOURS ADMINISTRATEUR</p>
+        <h2 id="atlasLayoutFamily04">Expérimentation & système</h2>
+        <span>Simuler, tester, préparer le backend et vérifier les verrous de sécurité.</span>
       </div>
-
-      <div class="physical-grid">
-        <article class="physical-card ok">
-          <b>Ledger</b>
-          <span>Wallet matériel / coffre froid / validation physique possible.</span>
-          <em>Ne doit jamais donner une liberté totale à l’IA.</em>
-        </article>
-        <article class="physical-card">
-          <b>Kraken</b>
-          <span>Exchange de référence : lecture seule d’abord, aucune clé de retrait.</span>
-          <em>Connexion réelle plus tard, via backend privé.</em>
-        </article>
-        <article class="physical-card">
-          <b>Clé physique</b>
-          <span>Peut renforcer l’accès machine ou l’autorisation humaine.</span>
-          <em>À préparer hors GitHub Pages.</em>
-        </article>
-        <article class="physical-card danger">
-          <b>Interdit</b>
-          <span>Seed phrase, clé privée, clé de retrait ou ordre réel dans le frontend public.</span>
-          <em>Blocage permanent.</em>
-        </article>
-      </div>
-
-      <div class="physical-rule">
-        <b>Règle simple :</b>
-        <span>L’IA peut observer et simuler. L’humain valide. Le matériel protège. Le réel reste verrouillé.</span>
-      </div>
+      <span class="atlas-layout-family-signal" aria-hidden="true"></span>
     </section>
-      </div>
-    </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="backend">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Backend / API</span>
-        <span class="atlas-collapse-subtitle">Architecture future</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-    <section class="panel glass backend-layer" id="backend">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ARCHITECTURE PRIVÉE</p>
-          <h2>Architecture public / privé / Kraken</h2>
-          <p class="backend-intro">
-            Plan de séparation : le site public reste sans clé et sans ordre réel. La future machine privée portera les accès, les logs, le kill switch et la simulation avancée.
-          </p>
-        </div>
-        <span class="pill warn">Plan, pas connexion réelle</span>
-      </div>
-
-      <div class="blueprint-flow">
-        <div class="blueprint-node public">
-          <b>Public</b>
-          <span>GitHub Pages</span>
-          <em>Observation · graphiques · commandes dry-run · aucune clé</em>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="blueprint-node private">
-          <b>Privé</b>
-          <span>Machine privée / backend local</span>
-          <em>Accès renforcé · logs · secrets chiffrés · kill switch</em>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="blueprint-node exchange">
-          <b>Exchange</b>
-          <span>Kraken d’abord</span>
-          <em>Lecture seule → simulation → validation humaine → réel verrouillé</em>
-        </div>
-      </div>
-
-      <div class="blueprint-grid">
-        <article>
-          <b>Ce qui reste public</b>
-          <span>Marché live, graphiques, watchlist, commandes IA observation, paper trading local.</span>
-        </article>
-        <article>
-          <b>Ce qui devient privé</b>
-          <span>Clés API, backend Kraken, accès distant, logs, moteur de simulation avancée.</span>
-        </article>
-        <article>
-          <b>Accès autorisés</b>
-          <span>2 opérateurs autorisés uniquement, comptes séparés, pas de mot de passe partagé en clair.</span>
-        </article>
-        <article>
-          <b>Interdits</b>
-          <span>Clé privée dans GitHub, clé de retrait, ordre réel depuis frontend, panneau admin public.</span>
-        </article>
-      </div>
-
-      <div class="backend-gates">
-        <div class="backend-gate done"><b>B1</b><span>Plan public/privé</span></div>
-        <div class="backend-gate active"><b>B2</b><span>Backend local</span></div>
-        <div class="backend-gate locked"><b>B3</b><span>Kraken lecture seule</span></div>
-        <div class="backend-gate locked"><b>B4</b><span>Logs + kill switch</span></div>
-        <div class="backend-gate locked"><b>B5</b><span>Simulation serveur</span></div>
-        <div class="backend-gate locked"><b>B6</b><span>Réel humain</span></div>
-      </div>
-
-      <div class="blueprint-actions">
-        <button class="cmd-preset" data-command="plan architecture">Plan architecture</button>
-        <button class="cmd-preset" data-command="kraken_readonly_plan">Plan Kraken lecture seule</button>
-        <button class="cmd-preset" data-command="remote_access_plan">Plan accès distant</button>
-        <button class="cmd-preset" data-command="security_review">Contrôle sécurité</button>
-      </div>
-
-      <p class="rule-line warn-lock">
-        Prochaine étape réelle : continuer la préparation sans clé réelle. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
-      </p>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass" data-collapse-key="safety">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Sécurité</span>
-        <span class="atlas-collapse-subtitle">Verrous et limites</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-    <section class="panel glass safety-layer" id="safety">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">SÉCURITÉ</p>
-          <h2>Bac à sable · accès renforcé · arrêt d’urgence</h2>
-          <p class="safety-intro">
-            Cadrage confirmé avec opérateur autorisé : deux accès seulement, simulation obligatoire, aucune clé de retrait, modification possible en cas de défaillance.
-          </p>
-        </div>
-        <span class="pill warn">Sécurité d’abord</span>
-      </div>
-
-      <div class="safety-grid">
-        <article class="safety-card ok">
-          <b>Bac à sable</b>
-          <span>Simulation locale uniquement avant toute connexion réelle.</span>
-          <em>État : obligatoire</em>
-        </article>
-        <article class="safety-card">
-          <b>Accès renforcé</b>
-          <span>2 opérateurs autorisés uniquement. Aucun accès public.</span>
-          <em>À faire côté machine/backend</em>
-        </article>
-        <article class="safety-card">
-          <b>Clés API</b>
-          <span>Lecture seule d’abord. Aucune clé de retrait.</span>
-          <em>Jamais dans GitHub Pages</em>
-        </article>
-        <article class="safety-card danger">
-          <b>Kill switch</b>
-          <span>Arrêt manuel, révocation clés, gel simulation, export logs.</span>
-          <em>À préparer avant réel</em>
-        </article>
-      </div>
-
-      <div class="gate-grid">
-        <div class="gate done"><b>G1</b><span>Observatoire public</span></div>
-        <div class="gate done"><b>G2</b><span>Tests simples</span></div>
-        <div class="gate active"><b>G3</b><span>Paper trading</span></div>
-        <div class="gate locked"><b>G4</b><span>Lecture seule Kraken</span></div>
-        <div class="gate locked"><b>G5</b><span>Semi-auto humain</span></div>
-        <div class="gate locked"><b>G6</b><span>Réel micro verrouillé</span></div>
-      </div>
-
-      <div class="safety-actions">
-        <button class="cmd-preset" data-command="safety_plan">Plan sécurité</button>
-        <button class="cmd-preset" data-command="kill_switch">Arrêt urgence</button>
-        <button class="cmd-preset" data-command="access_plan">Plan accès</button>
-        <button class="cmd-preset" data-command="gates">Étapes sécurité</button>
-      </div>
-
-      <p class="rule-line warn-lock">
-        GitHub Pages reste observation + simulation. L’accès distant réel, les clés Kraken et les logs doivent vivre dans un backend ou une machine sécurisée hors dépôt public.
-      </p>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass" data-collapse-key="simulation">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-experiment" data-collapse-key="simulation" data-layout-family="experiment">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Simulation</span>
@@ -2383,7 +2213,7 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass" data-collapse-key="commandes">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-experiment" data-collapse-key="commandes" data-layout-family="experiment">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Tests / Commandes</span>
@@ -2460,6 +2290,211 @@
     </section>
       </div>
     </details>
+
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-system" data-collapse-key="backend" data-layout-family="system">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Backend / API</span>
+        <span class="atlas-collapse-subtitle">Architecture future</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+
+    <section class="panel glass backend-layer" id="backend">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ARCHITECTURE PRIVÉE</p>
+          <h2>Architecture public / privé / Kraken</h2>
+          <p class="backend-intro">
+            Plan de séparation : le site public reste sans clé et sans ordre réel. La future machine privée portera les accès, les logs, le kill switch et la simulation avancée.
+          </p>
+        </div>
+        <span class="pill warn">Plan, pas connexion réelle</span>
+      </div>
+
+      <div class="blueprint-flow">
+        <div class="blueprint-node public">
+          <b>Public</b>
+          <span>GitHub Pages</span>
+          <em>Observation · graphiques · commandes dry-run · aucune clé</em>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="blueprint-node private">
+          <b>Privé</b>
+          <span>Machine privée / backend local</span>
+          <em>Accès renforcé · logs · secrets chiffrés · kill switch</em>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="blueprint-node exchange">
+          <b>Exchange</b>
+          <span>Kraken d’abord</span>
+          <em>Lecture seule → simulation → validation humaine → réel verrouillé</em>
+        </div>
+      </div>
+
+      <div class="blueprint-grid">
+        <article>
+          <b>Ce qui reste public</b>
+          <span>Marché live, graphiques, watchlist, commandes IA observation, paper trading local.</span>
+        </article>
+        <article>
+          <b>Ce qui devient privé</b>
+          <span>Clés API, backend Kraken, accès distant, logs, moteur de simulation avancée.</span>
+        </article>
+        <article>
+          <b>Accès autorisés</b>
+          <span>2 opérateurs autorisés uniquement, comptes séparés, pas de mot de passe partagé en clair.</span>
+        </article>
+        <article>
+          <b>Interdits</b>
+          <span>Clé privée dans GitHub, clé de retrait, ordre réel depuis frontend, panneau admin public.</span>
+        </article>
+      </div>
+
+      <div class="backend-gates">
+        <div class="backend-gate done"><b>B1</b><span>Plan public/privé</span></div>
+        <div class="backend-gate active"><b>B2</b><span>Backend local</span></div>
+        <div class="backend-gate locked"><b>B3</b><span>Kraken lecture seule</span></div>
+        <div class="backend-gate locked"><b>B4</b><span>Logs + kill switch</span></div>
+        <div class="backend-gate locked"><b>B5</b><span>Simulation serveur</span></div>
+        <div class="backend-gate locked"><b>B6</b><span>Réel humain</span></div>
+      </div>
+
+      <div class="blueprint-actions">
+        <button class="cmd-preset" data-command="plan architecture">Plan architecture</button>
+        <button class="cmd-preset" data-command="kraken_readonly_plan">Plan Kraken lecture seule</button>
+        <button class="cmd-preset" data-command="remote_access_plan">Plan accès distant</button>
+        <button class="cmd-preset" data-command="security_review">Contrôle sécurité</button>
+      </div>
+
+      <p class="rule-line warn-lock">
+        Prochaine étape réelle : continuer la préparation sans clé réelle. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
+      </p>
+    </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-system" data-collapse-key="safety" data-layout-family="system">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Sécurité</span>
+        <span class="atlas-collapse-subtitle">Verrous et limites</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+
+    <section class="panel glass safety-layer" id="safety">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">SÉCURITÉ</p>
+          <h2>Bac à sable · accès renforcé · arrêt d’urgence</h2>
+          <p class="safety-intro">
+            Cadrage confirmé avec opérateur autorisé : deux accès seulement, simulation obligatoire, aucune clé de retrait, modification possible en cas de défaillance.
+          </p>
+        </div>
+        <span class="pill warn">Sécurité d’abord</span>
+      </div>
+
+      <div class="safety-grid">
+        <article class="safety-card ok">
+          <b>Bac à sable</b>
+          <span>Simulation locale uniquement avant toute connexion réelle.</span>
+          <em>État : obligatoire</em>
+        </article>
+        <article class="safety-card">
+          <b>Accès renforcé</b>
+          <span>2 opérateurs autorisés uniquement. Aucun accès public.</span>
+          <em>À faire côté machine/backend</em>
+        </article>
+        <article class="safety-card">
+          <b>Clés API</b>
+          <span>Lecture seule d’abord. Aucune clé de retrait.</span>
+          <em>Jamais dans GitHub Pages</em>
+        </article>
+        <article class="safety-card danger">
+          <b>Kill switch</b>
+          <span>Arrêt manuel, révocation clés, gel simulation, export logs.</span>
+          <em>À préparer avant réel</em>
+        </article>
+      </div>
+
+      <div class="gate-grid">
+        <div class="gate done"><b>G1</b><span>Observatoire public</span></div>
+        <div class="gate done"><b>G2</b><span>Tests simples</span></div>
+        <div class="gate active"><b>G3</b><span>Paper trading</span></div>
+        <div class="gate locked"><b>G4</b><span>Lecture seule Kraken</span></div>
+        <div class="gate locked"><b>G5</b><span>Semi-auto humain</span></div>
+        <div class="gate locked"><b>G6</b><span>Réel micro verrouillé</span></div>
+      </div>
+
+      <div class="safety-actions">
+        <button class="cmd-preset" data-command="safety_plan">Plan sécurité</button>
+        <button class="cmd-preset" data-command="kill_switch">Arrêt urgence</button>
+        <button class="cmd-preset" data-command="access_plan">Plan accès</button>
+        <button class="cmd-preset" data-command="gates">Étapes sécurité</button>
+      </div>
+
+      <p class="rule-line warn-lock">
+        GitHub Pages reste observation + simulation. L’accès distant réel, les clés Kraken et les logs doivent vivre dans un backend ou une machine sécurisée hors dépôt public.
+      </p>
+    </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-system" data-collapse-key="physical-security" data-layout-family="system">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">Sécurité physique</span>
+        <span class="atlas-collapse-subtitle">Accès réel et poste local</span>
+      </summary>
+      <div class="atlas-collapse-body">
+
+
+    <section class="panel glass physical-layer" id="physical-security">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PHYSICAL SECURITY LAYER</p>
+          <h2>Ledger / clé physique / validation humaine</h2>
+          <p class="impact-intro">
+            Ledger peut servir de coffre matériel ou de validation physique future, mais ne remplace pas Kraken ni le backend sécurisé.
+          </p>
+        </div>
+        <span class="pill warn">Coffre, pas pilote IA</span>
+      </div>
+
+      <div class="physical-grid">
+        <article class="physical-card ok">
+          <b>Ledger</b>
+          <span>Wallet matériel / coffre froid / validation physique possible.</span>
+          <em>Ne doit jamais donner une liberté totale à l’IA.</em>
+        </article>
+        <article class="physical-card">
+          <b>Kraken</b>
+          <span>Exchange de référence : lecture seule d’abord, aucune clé de retrait.</span>
+          <em>Connexion réelle plus tard, via backend privé.</em>
+        </article>
+        <article class="physical-card">
+          <b>Clé physique</b>
+          <span>Peut renforcer l’accès machine ou l’autorisation humaine.</span>
+          <em>À préparer hors GitHub Pages.</em>
+        </article>
+        <article class="physical-card danger">
+          <b>Interdit</b>
+          <span>Seed phrase, clé privée, clé de retrait ou ordre réel dans le frontend public.</span>
+          <em>Blocage permanent.</em>
+        </article>
+      </div>
+
+      <div class="physical-rule">
+        <b>Règle simple :</b>
+        <span>L’IA peut observer et simuler. L’humain valide. Le matériel protège. Le réel reste verrouillé.</span>
+      </div>
+    </section>
+      </div>
+    </details>
+
 
 
 
@@ -2655,7 +2690,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R7</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R8</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2665,6 +2700,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.86r7-section-order-cleanup"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.86r8-visual-hierarchy"></script>
 </body>
 </html>
