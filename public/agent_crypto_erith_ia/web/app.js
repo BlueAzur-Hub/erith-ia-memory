@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R14 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R15 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R14";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R15";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11076,6 +11076,10 @@ function atlasInitLocalAccess() {
   document.getElementById("btnAtlasLocalClear")?.addEventListener("click", atlasLocalDialogueClear);
   document.getElementById("btnAtlasLocalCopy")?.addEventListener("click", atlasLocalDialogueCopy);
   document.getElementById("btnAtlasLocalExport")?.addEventListener("click", atlasLocalDialogueExport);
+  document.getElementById("btnAtlasLocalConclusion")?.addEventListener("click", () => atlasLocalConclusionRun({ automatic: false, force: true }));
+  document.querySelectorAll("[data-atlas-response-tab]").forEach(button => {
+    button.addEventListener("click", () => atlasLocalResponseSelectView(button.dataset.atlasResponseTab));
+  });
   document.getElementById("btnAtlasLocalRunAll")?.addEventListener("click", () => atlasLocalReportsRunAll({ automatic: false, openFirst: true }));
   document.querySelectorAll("[data-atlas-report-copy]").forEach(button => {
     button.addEventListener("click", () => atlasLocalReportsCopy(button.dataset.atlasReportCopy));
@@ -11086,6 +11090,7 @@ function atlasInitLocalAccess() {
   const question = document.getElementById("atlasLocalQuestion");
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
+  atlasLocalResponseSelectView("conclusion");
   atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
   atlasInitLocalBridgeAutoHealth();
 }
@@ -11102,11 +11107,21 @@ const atlasLocalDialogueState = {
   provider: null,
   model: null,
   lastResponse: null,
+  questionResponse: null,
+  conclusionResponse: null,
+  activeResponseView: "conclusion",
   lastSnapshot: null
 };
 
+const atlasLocalConclusionState = {
+  running: false,
+  lastFingerprint: "",
+  lastAttemptFingerprint: "",
+  lastAttemptAt: 0
+};
+
 /* =========================================================
-   Build 28.1.88R14 — Atlas Reports Reliability
+   Build 28.1.88R15 — Atlas Reports Reliability
    Four sequential read-only summaries, one validated snapshot.
    ========================================================= */
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
@@ -11132,7 +11147,9 @@ const atlasLocalReportsState = {
   pendingReason: "",
   pendingSince: 0,
   autoRetryCount: 0,
-  autoTimer: 0
+  autoTimer: 0,
+  lastCompletedSnapshot: null,
+  lastCompletedFingerprint: ""
 };
 
 function atlasLocalFinite(value) {
@@ -12004,9 +12021,7 @@ async function atlasLocalReportsRunAll(options = {}) {
         atlasLocalDialogueState.connected = true;
         atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
         atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
-        const stored = atlasLocalReportStore(mode, result, snapshot, {
-          open: options.openFirst === true && index === 0
-        });
+        const stored = atlasLocalReportStore(mode, result, snapshot, { open: true });
         if (stored) completed += 1;
         else throw new Error("Rapport local vide ou non affichable");
       } catch (error) {
@@ -12031,7 +12046,19 @@ async function atlasLocalReportsRunAll(options = {}) {
     if (completed === ATLAS_LOCAL_REPORT_MODES.length) {
       if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
       atlasLocalReportsSetSuiteStatus("4/4 rapports prêts.", "ready");
-      atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. Validation humaine requise.");
+      atlasLocalReportsState.lastCompletedSnapshot = snapshot;
+      atlasLocalReportsState.lastCompletedFingerprint = fingerprint;
+      atlasLocalReportsOpenAll();
+      document.getElementById("btnAtlasLocalConclusion")?.removeAttribute("disabled");
+      atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. Conclusion Aerith-10 Crypto en préparation.");
+      window.setTimeout(() => {
+        atlasLocalConclusionRun({
+          automatic: true,
+          snapshot,
+          fingerprint,
+          force: options.automatic !== true
+        });
+      }, 80);
       return true;
     }
 
@@ -12144,22 +12171,177 @@ function atlasLocalReportsExport(mode) {
   atlasLocalReportsSetSuiteStatus(`${report.label} exporté.`, "ready");
 }
 
-function atlasLocalDialogueRender(result, label) {
+
+function atlasLocalReportsOpenAll() {
+  document.querySelectorAll("[data-atlas-report-card]").forEach(card => card.setAttribute("open", ""));
+}
+
+function atlasLocalReportsReadyForFingerprint(fingerprint = "") {
+  return ATLAS_LOCAL_REPORT_MODES.every(mode => {
+    const report = atlasLocalReportResult(mode);
+    return !!report?.answer && (!fingerprint || report.fingerprint === fingerprint);
+  });
+}
+
+function atlasLocalResponseStored(view) {
+  return view === "question"
+    ? atlasLocalDialogueState.questionResponse
+    : atlasLocalDialogueState.conclusionResponse;
+}
+
+function atlasLocalResponsePlaceholder(view) {
+  if (view === "question") {
+    return {
+      eyebrow: "RÉPONSE À LA QUESTION LIBRE",
+      title: "Aucune réponse libre générée",
+      body: "Interroge Atlas-10 ou Aerith-10 depuis la zone de gauche.",
+      meta: "Lecture seule · validation humaine · aucune exécution réelle"
+    };
+  }
+  return {
+    eyebrow: "CONCLUSION AERITH-10 CRYPTO",
+    title: atlasLocalConclusionState.running ? "Conclusion locale en cours…" : "En attente des quatre rapports Atlas-10",
+    body: atlasLocalConclusionState.running
+      ? "Aerith-10 Crypto lit les quatre rapports Atlas-10 validés."
+      : "La conclusion Aerith-10 Crypto apparaîtra automatiquement ici lorsque les quatre rapports Atlas-10 seront prêts.",
+    meta: "Lecture seule · conclusion après validation des quatre rapports · aucune exécution réelle"
+  };
+}
+
+function atlasLocalResponseRenderStored(view) {
+  const response = atlasLocalResponseStored(view);
+  const placeholder = atlasLocalResponsePlaceholder(view);
+  const panel = document.querySelector(".atlas-local-response-panel");
+  if (panel) panel.dataset.atlasResponseView = view;
+  setText(document.getElementById("atlasLocalResponseEyebrow"), response?.eyebrow || placeholder.eyebrow);
+  setText(document.getElementById("atlasLocalResponseTitle"), response?.label || placeholder.title);
+  atlasLocalSetReport(document.getElementById("atlasLocalResponse"), response?.answer || placeholder.body);
+  setText(document.getElementById("atlasLocalResponseMeta"), response?.meta || placeholder.meta);
+  atlasLocalDialogueState.lastResponse = response || null;
+  const hasAnswer = !!String(response?.answer || "").trim();
+  document.getElementById("btnAtlasLocalCopy")?.toggleAttribute("disabled", !hasAnswer);
+  document.getElementById("btnAtlasLocalExport")?.toggleAttribute("disabled", !hasAnswer);
+  document.querySelectorAll("[data-atlas-response-tab]").forEach(button => {
+    const active = button.dataset.atlasResponseTab === view;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+}
+
+function atlasLocalResponseSelectView(view = "conclusion") {
+  const next = view === "question" ? "question" : "conclusion";
+  atlasLocalDialogueState.activeResponseView = next;
+  atlasLocalResponseRenderStored(next);
+}
+
+function atlasLocalConclusionSetBusy(busy) {
+  atlasLocalConclusionState.running = !!busy;
+  const button = document.getElementById("btnAtlasLocalConclusion");
+  if (button) {
+    button.disabled = !!busy || !atlasLocalReportsReadyForFingerprint();
+    button.setAttribute("aria-busy", busy ? "true" : "false");
+    button.textContent = busy ? "Conclusion…" : "Régénérer";
+  }
+  if (atlasLocalDialogueState.activeResponseView === "conclusion") atlasLocalResponseRenderStored("conclusion");
+}
+
+function atlasLocalConclusionMeaningful(result) {
+  const answer = String(result?.answer || "").trim();
+  if (answer.length < 160) return false;
+  const lower = answer.toLocaleLowerCase("fr-FR");
+  return lower.includes("situation générale")
+    && lower.includes("points de vigilance")
+    && lower.includes("limites et stop point");
+}
+
+async function atlasLocalConclusionRun(options = {}) {
+  if (!atlasAccessIsAuthorized()) {
+    atlasAccessOpen("#local-ai-hub");
+    return false;
+  }
+  if (atlasLocalConclusionState.running || !atlasLocalDialogueState.connected) return false;
+  const snapshot = options.snapshot || atlasLocalReportsState.lastCompletedSnapshot || atlasBuildCryptoPageSnapshot();
+  const fingerprint = options.fingerprint || atlasLocalReportsState.lastCompletedFingerprint || atlasLocalReportSnapshotFingerprint(snapshot);
+  if (!fingerprint || !atlasLocalReportsReadyForFingerprint(fingerprint)) {
+    atlasLocalResponseSelectView("conclusion");
+    setText(document.getElementById("atlasLocalResponseTitle"), "Quatre rapports Atlas-10 requis");
+    return false;
+  }
+  if (!options.force && fingerprint === atlasLocalConclusionState.lastFingerprint) {
+    atlasLocalResponseSelectView("conclusion");
+    return true;
+  }
+  if (
+    !options.force
+    && fingerprint === atlasLocalConclusionState.lastAttemptFingerprint
+    && (Date.now() - atlasLocalConclusionState.lastAttemptAt) < 90000
+  ) return false;
+
+  atlasLocalConclusionState.lastAttemptFingerprint = fingerprint;
+  atlasLocalConclusionState.lastAttemptAt = Date.now();
+  atlasLocalResponseSelectView("conclusion");
+  atlasLocalConclusionSetBusy(true);
+  try {
+    const result = await atlasLocalBridgeRequest("/conclusion", {
+      profile: "aerith",
+      snapshot,
+      report_fingerprint: fingerprint,
+      report_modes: ATLAS_LOCAL_REPORT_MODES.slice()
+    });
+    if (!atlasLocalConclusionMeaningful(result)) throw new Error("Conclusion locale vide ou incomplète");
+    const answer = String(result.answer || "").trim();
+    const response = {
+      answer,
+      profile: "aerith",
+      provider: result?.provider || atlasLocalDialogueState.provider || "local",
+      model: result?.model || atlasLocalDialogueState.model || "modèle local",
+      time: result?.time || new Date().toISOString(),
+      label: "Conclusion Aerith-10 Crypto",
+      eyebrow: "CONCLUSION AERITH-10 CRYPTO",
+      quality: result?.quality || "strict_contract_v2",
+      modelCommentUsed: result?.model_comment_used === true,
+      fingerprint,
+      meta: `Aerith-10 · ${result?.provider || atlasLocalDialogueState.provider || "local"} · ${result?.model || atlasLocalDialogueState.model || "modèle local"} · snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · 4 rapports Atlas-10`
+    };
+    atlasLocalDialogueState.conclusionResponse = response;
+    atlasLocalConclusionState.lastFingerprint = fingerprint;
+    atlasLocalResponseSelectView("conclusion");
+    atlasLocalDialogueSetConnection(true, "Conclusion Aerith-10 Crypto terminée. Validation humaine requise.");
+    return true;
+  } catch (error) {
+    atlasLocalDialogueState.conclusionResponse = null;
+    atlasLocalResponseSelectView("conclusion");
+    setText(document.getElementById("atlasLocalResponseTitle"), "Conclusion à relancer");
+    atlasLocalSetReport(document.getElementById("atlasLocalResponse"), "La conclusion locale n’a pas été générée. Les quatre rapports Atlas-10 restent disponibles et inchangés.");
+    setText(document.getElementById("atlasLocalResponseMeta"), "Lecture seule · rapports Atlas-10 conservés · relance manuelle disponible");
+    atlasLocalDialogueSetConnection(true, `Conclusion locale non générée : ${error?.message || "Bridge indisponible"}`);
+    return false;
+  } finally {
+    atlasLocalConclusionSetBusy(false);
+  }
+}
+
+function atlasLocalDialogueRender(result, label, options = {}) {
   const answer = String(result?.answer || "").trim();
   atlasLocalDialogueState.connected = true;
   atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
   atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
-  atlasLocalDialogueState.lastResponse = {
+  const response = {
     answer,
     profile: result?.profile || atlasLocalDialogueState.profile,
     provider: atlasLocalDialogueState.provider,
     model: atlasLocalDialogueState.model,
     time: result?.time || new Date().toISOString(),
     label,
+    eyebrow: "RÉPONSE À LA QUESTION LIBRE",
     quality: result?.quality || "strict_contract_v2",
     modelCommentUsed: result?.model_comment_used === true
   };
+  atlasLocalDialogueState.questionResponse = response;
+  atlasLocalDialogueState.lastResponse = response;
+  atlasLocalDialogueState.activeResponseView = "question";
 
+  setText(document.getElementById("atlasLocalResponseEyebrow"), response.eyebrow);
   setText(document.getElementById("atlasLocalResponseTitle"), label);
   atlasLocalSetReport(
     document.getElementById("atlasLocalResponse"),
@@ -12174,15 +12356,14 @@ function atlasLocalDialogueRender(result, label) {
     ? "commentaire local accepté"
     : "repli déterministe";
 
-  setText(
-    document.getElementById("atlasLocalResponseMeta"),
-    `${result?.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · `
+  response.meta = `${result?.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · `
     + `${atlasLocalDialogueState.provider || "local"} · `
-    + `${atlasLocalDialogueState.model || "modèle"} · ${quality} · ${comment}`
-  );
+    + `${atlasLocalDialogueState.model || "modèle"} · ${quality} · ${comment}`;
+  setText(document.getElementById("atlasLocalResponseMeta"), response.meta);
 
   document.getElementById("btnAtlasLocalCopy")?.removeAttribute("disabled");
   document.getElementById("btnAtlasLocalExport")?.removeAttribute("disabled");
+  atlasLocalResponseSelectView("question");
 
   const warnings = Array.isArray(result?.validation_warnings)
     ? result.validation_warnings.filter(Boolean)
@@ -12266,16 +12447,9 @@ async function atlasLocalDialogueAsk() {
 function atlasLocalDialogueClear() {
   const input = document.getElementById("atlasLocalQuestion");
   if (input) input.value = "";
-  atlasLocalDialogueState.lastResponse = null;
-  setText(document.getElementById("atlasLocalResponseTitle"), "Aucune synthèse générée");
-  atlasLocalSetReport(
-    document.getElementById("atlasLocalResponse"),
-    "Le résultat Atlas-10 ou Aerith-10 apparaîtra ici."
-  );
-  setText(document.getElementById("atlasLocalResponseMeta"), "Lecture seule · validation humaine · aucune exécution réelle");
-  document.getElementById("btnAtlasLocalCopy")?.setAttribute("disabled", "");
-  document.getElementById("btnAtlasLocalExport")?.setAttribute("disabled", "");
-  setText(document.getElementById("atlasLocalDialogueStatus"), "Dialogue vidé. Le snapshot du marché n’a pas été modifié.");
+  atlasLocalDialogueState.questionResponse = null;
+  atlasLocalResponseSelectView("question");
+  setText(document.getElementById("atlasLocalDialogueStatus"), "Question libre vidée. La conclusion Aerith-10 Crypto est conservée.");
 }
 
 async function atlasLocalDialogueCopy() {
@@ -17953,7 +18127,7 @@ window.addEventListener("atlas:v2mode", event => {
 });
 
 /* =========================================================
-   Build 28.1.88R14 — Scanner Live Collector
+   Build 28.1.88R15 — Scanner Live Collector
    Collecte silencieuse et horodatée de quatre paniers :
    Target Top 5, Hausses 5, Baisses 5 et Volumes 5.
    - Le classement reste exclusivement CoinGecko Market Snapshot.
