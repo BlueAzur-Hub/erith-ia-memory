@@ -17917,7 +17917,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — Build 28.1.88R10
+   Agent-Crypto @erith.IA — Build 28.1.88R11
    LIVE ENDPOINT + VISIBLE TARGET CYCLE CONTROL
    Aucun changement de dimensions du ruban.
    ========================================================= */
@@ -17975,7 +17975,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — Build 28.1.88R10
+   Agent-Crypto @erith.IA — Build 28.1.88R11
    VISIBLE VIEW BUTTONS + CLICKABLE TARGET / MARKET FLOW
    Existing layout and card interactions preserved.
    ========================================================= */
@@ -18131,7 +18131,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — Build 28.1.88R10
+   Agent-Crypto @erith.IA — Build 28.1.88R11
    RIBBON CONTROL HIT AREA + MARKET FLOW CLIP RESTORE
    Full controls preserved; ticker motion remains active.
    ========================================================= */
@@ -18253,3 +18253,55 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
     touch-action: pan-x !important;
   }
 }
+
+/* =========================================================
+   Agent-Crypto @erith.IA — Build 28.1.88R11
+   TOOLTIP PERIOD CHANGE READABILITY
+   Existing panel and dimensions preserved.
+   Positive = green. Negative = red text on the existing pink family.
+   ========================================================= */
+#analyste .atlas-chart-tooltip-values {
+  gap: 3px !important;
+}
+
+#analyste .atlas-chart-tooltip-change {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 58px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 2px 5px !important;
+  border: 1px solid rgba(184, 211, 229, .22) !important;
+  border-radius: 6px !important;
+  background: rgba(133, 155, 178, .09) !important;
+  color: rgba(221, 235, 246, .84) !important;
+  font: 950 9px/1.05 system-ui, sans-serif !important;
+  letter-spacing: .012em !important;
+  text-align: center !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+#analyste .atlas-chart-tooltip-change.is-positive {
+  color: #52f0a7 !important;
+  border-color: rgba(75, 238, 164, .42) !important;
+  background: linear-gradient(180deg, rgba(30, 202, 126, .18), rgba(16, 104, 77, .10)) !important;
+  box-shadow: inset 0 0 0 1px rgba(90, 255, 188, .035), 0 0 10px rgba(45, 222, 145, .07) !important;
+}
+
+#analyste .atlas-chart-tooltip-change.is-negative {
+  color: #ff3e48 !important;
+  border-color: rgba(255, 93, 157, .46) !important;
+  background: linear-gradient(180deg, rgba(235, 56, 130, .19), rgba(119, 24, 74, .12)) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 139, 184, .04), 0 0 11px rgba(255, 50, 90, .09) !important;
+  text-shadow: 0 0 9px rgba(255, 35, 55, .20) !important;
+}
+
+#analyste .atlas-chart-tooltip-change.is-neutral,
+#analyste .atlas-chart-tooltip-change.is-missing {
+  color: rgba(211, 226, 238, .72) !important;
+  border-color: rgba(177, 203, 222, .20) !important;
+  background: rgba(128, 150, 170, .08) !important;
+}
+

@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R10 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R11 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R10";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R11";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4884,7 +4884,27 @@ function atlasComparisonTooltipRows(chart, targetX) {
 }
 
 /* =========================================================
-   Build 28.1.88R10 — STABLE CURSOR TOOLTIP TRACKING
+   Build 28.1.88R11 — PERIOD CHANGE INSIDE THE EXISTING PANEL
+   The percentage is derived from the displayed series itself:
+   Base 100 minus 100. It therefore follows the hovered point and
+   becomes the current period variation on the synchronized live point.
+   No extra panel, no extra column, no layout expansion.
+   ========================================================= */
+function atlasChartTooltipChangeMarkup(baseValue) {
+  const normalized = Number(baseValue);
+  if (!Number.isFinite(normalized)) {
+    return '<small class="atlas-chart-tooltip-change is-missing" title="Variation indisponible">—</small>';
+  }
+
+  const change = Math.abs(normalized - 100) < 0.005 ? 0 : normalized - 100;
+  const stateClass = change > 0 ? 'is-positive' : change < 0 ? 'is-negative' : 'is-neutral';
+  const arrow = change > 0 ? '▲' : change < 0 ? '▼' : '•';
+  const value = `${change > 0 ? '+' : ''}${change.toFixed(2)} %`;
+  return `<small class="atlas-chart-tooltip-change ${stateClass}" title="Variation depuis le début de la période">${arrow} ${escapeHtml(value)}</small>`;
+}
+
+/* =========================================================
+   Build 28.1.88R11 — STABLE CURSOR TOOLTIP TRACKING
    Le panneau suit la souris réelle. Il ne suit plus le caretY
    du point de courbe voisin, qui pouvait changer de série et
    provoquer une oscillation haut/bas. Le changement de côté
@@ -5012,6 +5032,7 @@ function atlasExternalChartTooltip(context) {
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
       <span class="atlas-chart-tooltip-values">
         <strong>${escapeHtml(currentPrice)}</strong>
+        ${atlasChartTooltipChangeMarkup(row.baseValue)}
       </span>
     </div>`;
   }).join("");
@@ -5866,7 +5887,7 @@ function atlasPatchChartLastPoint(
 
 
 /* =========================================================
-   Build 28.1.88R10 — SYNCHRONIZED LIVE TERMINAL POINTS
+   Build 28.1.88R11 — SYNCHRONIZED LIVE TERMINAL POINTS
    Tous les points live visibles partagent le même X terminal.
    Une cotation qui arrive plus vite qu'une autre ne peut donc
    plus faire "sauter" le point de droite d'une courbe à l'autre.
@@ -8219,7 +8240,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R10 — TARGET TOP 5 LIVE cycle
+   Build 28.1.88R11 — TARGET TOP 5 LIVE cycle
    Le cartouche seul fait défiler les presets. Les cinq cartes
    et le Market Flow conservent exactement leur ajout/retrait.
    ========================================================= */
@@ -8291,7 +8312,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.1.88R10"
+      source: "target-top5-cycle-28.1.88R11"
     });
   }
 
