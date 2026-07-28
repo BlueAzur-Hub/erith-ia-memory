@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.86R3 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.86R4 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86R3";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86R4";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4058,7 +4058,7 @@ async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
 }
 
 /* =========================================================
-   Build 28.1.86R3 — Scanner history transport fallback
+   Build 28.1.86R4 — Scanner history transport fallback
    CoinGecko reste la source du classement Market.
    Binance peut fournir uniquement la série historique,
    afin d'éviter qu'un blocage CORS/rate-limit CoinGecko
@@ -9470,17 +9470,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R3" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R4" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R3" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R4" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R3" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R4" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -10163,11 +10163,19 @@ async function atlasAccessSubmit(event) {
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
     atlasAccessSetStatus("Accès Christophe validé.", "ok");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
+    /* R4 : le déverrouillage doit ouvrir réellement l’espace administrateur.
+       La fenêtre de forçage empêche la restauration d’un ancien état public/fermé
+       de refermer le Command Center quelques millisecondes plus tard. */
+    atlasAdminForceWorkspaceOpen();
     atlasAccessClose();
     atlasV2ApplyMode("advanced", { persist: false });
     const pending = atlasAccessPendingHash;
     atlasAccessPendingHash = "";
-    if (pending) window.setTimeout(() => atlasV2OpenAdvancedForTarget(pending), 60);
+    if (pending) {
+      window.setTimeout(() => atlasV2OpenAdvancedForTarget(pending), 60);
+    } else {
+      window.setTimeout(() => atlasAdminOpenWorkspace({ source: "unlock" }), 60);
+    }
     return true;
   } catch (error) {
     atlasAccessSetStatus(error?.message || "Échec du verrou local.", "error");
@@ -10176,6 +10184,7 @@ async function atlasAccessSubmit(event) {
 }
 
 function atlasAccessLock() {
+  atlasAdminForceWorkspaceRelease();
   atlasAccessClearSession();
   atlasAccessPendingHash = "";
   atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
@@ -10185,7 +10194,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.86R3 — Bridge Auto Health Quiet Status
+   Build 28.1.86R4 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -12081,7 +12090,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86R3
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86R4
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
    Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
@@ -14361,6 +14370,30 @@ const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
 const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
 const ATLAS_ADMIN_CLUSTERS = Object.freeze(["decision", "analysis", "system", "projects"]);
 
+/* Build 28.1.86R4 — restauration de l’entrée Administration.
+   Un ancien workspace public ne doit jamais annuler l’ouverture demandée
+   juste après la validation du mot de passe Christophe. */
+let atlasAdminForceWorkspacePending = false;
+let atlasAdminForceWorkspaceTimer = 0;
+
+function atlasAdminForceWorkspaceOpen(durationMs = 120000) {
+  atlasAdminForceWorkspacePending = true;
+  window.clearTimeout(atlasAdminForceWorkspaceTimer);
+  atlasAdminForceWorkspaceTimer = window.setTimeout(() => {
+    atlasAdminForceWorkspacePending = false;
+  }, Math.max(10000, Number(durationMs) || 120000));
+}
+
+function atlasAdminForceWorkspaceIsActive() {
+  return atlasAdminForceWorkspacePending && atlasAccessIsAuthorized();
+}
+
+function atlasAdminForceWorkspaceRelease() {
+  atlasAdminForceWorkspacePending = false;
+  window.clearTimeout(atlasAdminForceWorkspaceTimer);
+  atlasAdminForceWorkspaceTimer = 0;
+}
+
 function atlasAdminCenterSavedOpen() {
   try { return localStorage.getItem(ATLAS_ADMIN_CENTER_KEY) === "1"; }
   catch { return false; }
@@ -14457,6 +14490,34 @@ function atlasAdminCenterSet(open, options = {}) {
   }));
 }
 
+function atlasAdminOpenWorkspace(options = {}) {
+  if (!atlasAccessIsAuthorized()) return false;
+
+  if (atlasV2Mode() !== "advanced") {
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
+    atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
+  }
+
+  const lastModule = atlasAdminLastModuleRead();
+  const target = atlasAdminClusterForModule(lastModule)
+    || atlasAdminCenterSavedTarget()
+    || "analysis";
+
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  if (selector && lastModule && [...selector.options].some(option => option.value === lastModule)) {
+    selector.value = lastModule;
+  }
+
+  atlasAdminCenterSet(true, {
+    persist: true,
+    target,
+    scrollTarget: false,
+    instant: true
+  });
+
+  return true;
+}
+
 function initAtlasAdminCommandCenter() {
   const { drawer, toggle, close } = atlasAdminCenterElements();
   if (!drawer || !toggle) return;
@@ -14467,9 +14528,12 @@ function initAtlasAdminCommandCenter() {
       atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
       return;
     }
-    atlasAdminCenterSet(atlasAdminCenterSavedOpen(), {
-      persist: false,
-      target: atlasAdminCenterSavedTarget(),
+    const forcedOpen = atlasAdminForceWorkspaceIsActive();
+    atlasAdminCenterSet(forcedOpen || atlasAdminCenterSavedOpen(), {
+      persist: forcedOpen,
+      target: forcedOpen
+        ? (atlasAdminClusterForModule(atlasAdminLastModuleRead()) || atlasAdminCenterSavedTarget() || "analysis")
+        : atlasAdminCenterSavedTarget(),
       scrollTarget: false,
       instant: true
     });
@@ -15396,12 +15460,17 @@ function atlasWorkspaceRestoreAfterMarket() {
     return false;
   }
 
+  /* R4 critical recovery: a stale workspace saved while public must never
+     demote a just-authenticated owner back to the public interface. */
+  const forceAdminWorkspace = atlasAdminForceWorkspaceIsActive();
   const requestedInterfaceMode = ATLAS_V2_ALLOWED_MODES.has(saved.interfaceMode)
     ? saved.interfaceMode
     : atlasV2Mode();
-  const savedInterfaceMode = requestedInterfaceMode === "advanced" && !atlasAccessIsAuthorized()
-    ? "essential"
-    : requestedInterfaceMode;
+  const savedInterfaceMode = forceAdminWorkspace
+    ? "advanced"
+    : requestedInterfaceMode === "advanced" && !atlasAccessIsAuthorized()
+      ? "essential"
+      : requestedInterfaceMode;
 
   if (savedInterfaceMode !== atlasV2Mode()) {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, savedInterfaceMode);
@@ -15500,9 +15569,15 @@ function atlasWorkspaceRestoreAfterMarket() {
     ? savedClusterCandidate
     : "";
 
+  const forceAdminCenter = forceAdminWorkspace;
+  const restoredAdminCluster = forceAdminCenter
+    ? (atlasAdminClusterForModule(savedModule) || savedCluster || "analysis")
+    : savedCluster;
+  const restoredAdminCenterOpen = forceAdminCenter || adminWorkspace.centerOpen === true;
+
   try {
-    if (savedCluster) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, savedCluster);
-    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, adminWorkspace.centerOpen === true ? "1" : "0");
+    if (restoredAdminCluster) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, restoredAdminCluster);
+    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, restoredAdminCenterOpen ? "1" : "0");
   } catch {}
 
   if (atlasV2Mode() === "advanced") {
@@ -15514,12 +15589,13 @@ function atlasWorkspaceRestoreAfterMarket() {
     });
 
     window.setTimeout(() => {
-      atlasAdminCenterSet(adminWorkspace.centerOpen === true, {
-        persist: false,
-        target: savedCluster,
+      atlasAdminCenterSet(restoredAdminCenterOpen, {
+        persist: forceAdminCenter,
+        target: restoredAdminCluster,
         scrollTarget: false,
         instant: true
       });
+      if (forceAdminCenter) atlasAdminForceWorkspaceRelease();
     }, 60);
   } else {
     atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
@@ -15571,7 +15647,7 @@ window.setTimeout(atlasWorkspaceRenderStrip, 900);
 
 
 /* =========================================================
-   Build 28.1.86R3 — Hausses 5 Transaction Rebuild
+   Build 28.1.86R4 — Hausses 5 Transaction Rebuild
    Market-first scanners. History never decides the ranking.
    ========================================================= */
 const ATLAS_SCANNER_POOL_SIZE = 24;
@@ -15607,7 +15683,7 @@ function atlasScannerSetUiState(preset, status, message = "") {
 }
 
 /* =========================================================
-   Build 28.1.86R3 — Hausses 5 Rebuild
+   Build 28.1.86R4 — Hausses 5 Rebuild
    Aucun clic silencieux : toute attente, réussite ou erreur
    devient visible sans remplacer le graphique validé.
    ========================================================= */
@@ -16069,7 +16145,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.1.86R3 annulée :", error);
+    console.warn("Transaction scanner 28.1.86R4 annulée :", error);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     atlasScannerRestoreSnapshot(snapshot);
@@ -16197,7 +16273,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Hausses 5 / scanner 28.1.86R3 :", error);
+    console.error("Hausses 5 / scanner 28.1.86R4 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -16271,7 +16347,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.1.86R3 non capturé :", error);
+      console.error("Scanner 28.1.86R4 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -16281,7 +16357,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage Hausses 5 28.1.86R3 :", error);
+    console.error("Démarrage Hausses 5 28.1.86R4 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -16295,7 +16371,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.1.86R3"
+    source: "button-28.1.86R4"
   });
 }
 
@@ -16352,7 +16428,7 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 
 /* =========================================================
-   Build 28.1.86R3 — NON-REGRESSION GUARD
+   Build 28.1.86R4 — NON-REGRESSION GUARD
    Public: Math Core V3 visible in side dock.
    Administration: saved Math dock restored, Command Center untouched.
    ========================================================= */
@@ -16373,3 +16449,14 @@ window.addEventListener("atlas:v2mode", atlasR3EnsureMathPresence);
 window.addEventListener("pageshow", () => window.requestAnimationFrame(atlasR3EnsureMathPresence));
 window.setTimeout(atlasR3EnsureMathPresence, 0);
 window.setTimeout(atlasR3EnsureMathPresence, 900);
+
+
+/* =========================================================
+   Build 28.1.86R4 — ADMIN WORKSPACE RECOVERY GUARD
+   Ne touche ni au Math Core, ni aux scanners, ni au Market.
+   ========================================================= */
+window.addEventListener("atlas:v2mode", event => {
+  if (event?.detail?.mode === "advanced" && atlasAdminForceWorkspaceIsActive()) {
+    window.setTimeout(() => atlasAdminOpenWorkspace({ source: "mode-event" }), 0);
+  }
+});
