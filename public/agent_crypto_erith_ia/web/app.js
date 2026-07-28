@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R4 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R5 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -7,7 +7,8 @@
    - volumes dessinés derrière la courbe dans le même canvas et la même chronologie ;
    - aucune seconde zone graphique indépendante ;
    - chronologie canonique indépendante pour 24h / 7j / 30j / 60j / 90j / 1a / Max ;
-   - Target Top 5 et Market Flow : clic simple = ajouter / retirer ;
+   - cartes Target Top 5 et Market Flow : clic simple = ajouter / retirer ;
+   - cartouche TARGET TOP 5 LIVE : cycle Top 5 → Hausses 5 → Baisses 5 → Volumes 5 → Top 3 → Top 5 ;
    - Solo reste une action distincte depuis le Market Snapshot ;
    - protections Prix / Volume, comparaison atomique et dernier graphe valide préservés ;
    - Market, Math Rail, LIVE SOURCES, Watchlist V3, News V2,
@@ -16,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R4";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R5";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -7986,7 +7987,72 @@ function atlasMarketEnsureWatchCoin(coin){if(!coin?.id)return;if(!state.watchIds
 function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatchCoin(coin);renderWatchlist();const s=$("watchAlertCoin");if(s&&[...s.options].some(o=>o.value===coin.id))s.value=coin.id;atlasV2OpenAdvancedForTarget("#watchlist");setTimeout(()=>$("watchAlertThreshold")?.focus(),450);}
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
-function atlasInitMarketRibbonInteractions(){const act=e=>{const t=e.target.closest("[data-market-open]");if(!t)return;if(e.type==="keydown"&&!['Enter',' '].includes(e.key))return;const c=state.coins.find(x=>x.id===t.dataset.marketOpen);if(!c)return;if(e.type==="keydown")e.preventDefault();atlasToggleComparisonCoin(c);};els.top5Track?.addEventListener("click",act);els.top5Track?.addEventListener("keydown",act);els.tickerTrack?.addEventListener("click",act);els.tickerTrack?.addEventListener("keydown",act);}
+/* =========================================================
+   Build 28.1.88R5 — TARGET TOP 5 LIVE cycle
+   Le cartouche seul fait défiler les presets. Les cinq cartes
+   et le Market Flow conservent exactement leur ajout/retrait.
+   ========================================================= */
+function atlasTargetTopFiveCyclePreset() {
+  const current = String(
+    atlasScannerTransaction?.preset
+    || atlasScannerQueuedRequest?.preset
+    || state.dataBroker?.comparison?.preset
+    || ""
+  );
+
+  if (current === "gainers") return "losers";
+  if (current === "losers") return "volume";
+  if (current === "volume") return "rank-3";
+  if (current === "rank-3") return "rank-5";
+  return "gainers";
+}
+
+function atlasActivateTargetTopFiveCycle() {
+  if (!state.liveOk || !Array.isArray(state.coins) || !state.coins.length) return false;
+
+  const next = atlasTargetTopFiveCyclePreset();
+  const period = Number(state.chartPeriodDays || 1);
+
+  if (next === "gainers" || next === "losers" || next === "volume") {
+    return atlasScannerStart(next, 5, {
+      period,
+      source: "target-top5-cycle-28.1.88R5"
+    });
+  }
+
+  atlasScannerCancel("target top 5 cycle", { keepUi: false, keepOverlay: false });
+  atlasSelectTopComparison(next === "rank-3" ? 3 : 5);
+  return true;
+}
+
+function atlasInitMarketRibbonInteractions() {
+  const act = event => {
+    const target = event.target.closest("[data-market-open]");
+    if (!target) return;
+    if (event.type === "keydown" && !["Enter", " "].includes(event.key)) return;
+    const coin = state.coins.find(item => item.id === target.dataset.marketOpen);
+    if (!coin) return;
+    if (event.type === "keydown") event.preventDefault();
+    atlasToggleComparisonCoin(coin);
+  };
+
+  els.top5Track?.addEventListener("click", act);
+  els.top5Track?.addEventListener("keydown", act);
+  els.tickerTrack?.addEventListener("click", act);
+  els.tickerTrack?.addEventListener("keydown", act);
+
+  const cycleTrigger = document.getElementById("targetTop5Cycle");
+  const cycle = event => {
+    if (event.type === "keydown" && !["Enter", " "].includes(event.key)) return;
+    if (event.type === "keydown") event.preventDefault();
+    event.stopPropagation();
+    atlasActivateTargetTopFiveCycle();
+  };
+
+  cycleTrigger?.addEventListener("click", cycle);
+  cycleTrigger?.addEventListener("keydown", cycle);
+}
+
 
 function atlasMarketCompactName(coin) {
   const full = String(coin?.name || coin?.symbol || "Actif").trim();
