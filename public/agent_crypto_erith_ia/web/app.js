@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.84 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.85 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.84";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.85";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -6311,6 +6311,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   state.chartEngineV2.loading = false;
   atlasRenderBrokerStrip();
   renderMultiHorizon();
+  renderAtlasMathCore();
 }
 
 function atlasNormalizeSparkline(values) {
@@ -6938,6 +6939,7 @@ function atlasRenderChartResult(c, period, result, chartKey, forceRedraw = false
   if (forceRedraw || !alreadyRendered) drawLineChart(els.mainChart, result.series, `${c.symbol} ${periodLabel}`, result, chartKey);
   atlasRenderAssetDetail(c, period, result, "valid");
   renderMultiHorizon();
+  renderAtlasMathCore();
   if (els.chartCaption) {
     const freshness = result?.integrity?.metrics?.freshness;
     const truth = atlasChartTruth(result, period);
@@ -10026,7 +10028,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.84 — Bridge Auto Health Quiet Status
+   Build 28.1.85 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -10521,7 +10523,12 @@ function atlasStrictGraphContract(period, chart, chartResult, comparisonIds, cha
 
 function atlasStrictMathContract() {
   const math = state.math || {};
+  const numberOrNull = value => {
+    if (value === null || value === undefined || value === "") return null;
+    return Number.isFinite(Number(value)) ? Number(value) : null;
+  };
   return {
+    schema: math.schema || "atlas_math_core_v3",
     asset: math.asset || null,
     heuristic_score: atlasStrictNumber(math.heuristicScore, 0),
     coverage: math.coverage || null,
@@ -10531,23 +10538,44 @@ function atlasStrictMathContract() {
     source: math.source || null,
     freshness: math.freshness || null,
     risk_global: math.riskGlobal || "Non évalué",
+    active_window: {
+      period_days: numberOrNull(math.periodDays),
+      period_label: math.periodLabel || null,
+      granularity: math.granularity || null,
+      observations: numberOrNull(math.observations),
+      returns_count: numberOrNull(math.returnsCount),
+      expected_points: numberOrNull(math.expectedPoints),
+      completeness_pct: numberOrNull(math.completenessPct),
+      large_gaps: numberOrNull(math.largeGaps),
+      first_at: atlasStrictTimestamp(math.seriesFirstAt),
+      last_at: atlasStrictTimestamp(math.seriesLastAt)
+    },
+    historical_risk: {
+      realized_volatility_window_pct: numberOrNull(math.realizedWindowPct),
+      realized_volatility_annualized_pct: numberOrNull(math.realizedAnnualizedPct),
+      ewma_lambda: numberOrNull(math.ewmaLambda),
+      ewma_volatility_annualized_pct: numberOrNull(math.ewmaAnnualizedPct),
+      downside_deviation_annualized_pct: numberOrNull(math.downsideAnnualizedPct),
+      max_drawdown_pct: numberOrNull(math.maxDrawdownPct),
+      max_drawdown_start_at: atlasStrictTimestamp(math.maxDrawdownStartAt),
+      max_drawdown_trough_at: atlasStrictTimestamp(math.maxDrawdownTroughAt),
+      max_drawdown_recovery_at: atlasStrictTimestamp(math.maxDrawdownRecoveryAt),
+      var_historical_95_step_pct: numberOrNull(math.var95StepPct),
+      expected_shortfall_historical_95_step_pct: numberOrNull(math.expectedShortfall95StepPct),
+      correlation_btc: numberOrNull(math.correlationBtc),
+      beta_btc: numberOrNull(math.betaBtc),
+      benchmark_observations: numberOrNull(math.benchmarkObservations),
+      benchmark_source: math.benchmarkSource || null,
+      dispersion_iqr_step_pct: numberOrNull(math.dispersionIqrStepPct),
+      concentration_top10_absolute_moves_pct: numberOrNull(math.concentrationTop10Pct),
+      bootstrap_volatility_window_ci95_pct: [numberOrNull(math.bootstrapLowPct), numberOrNull(math.bootstrapHighPct)],
+      bootstrap_samples: numberOrNull(math.bootstrapSamples),
+      unit_rule: "Les VaR, Expected Shortfall et dispersion sont exprimés par pas de la granularité active. Les volatilités annualisées utilisent cette granularité observée."
+    },
+    limitation: math.limitation || null,
     updated_at: atlasStrictTimestamp(math.updated_at),
-    calculated_measures: [
-      "score heuristique",
-      "couverture des données",
-      "cohérence 24 h / 7 j / 30 j",
-      "amplitude 24 h",
-      "ratio volume / capitalisation"
-    ],
-    explicitly_not_calculated: [
-      "ratio de Sharpe",
-      "Value at Risk",
-      "Expected Shortfall",
-      "volatilité réalisée",
-      "corrélation",
-      "bêta",
-      "drawdown maximal"
-    ]
+    calculated_measures: Array.isArray(math.calculatedMeasures) ? math.calculatedMeasures : [],
+    explicitly_not_calculated: Array.isArray(math.explicitlyNotCalculated) ? math.explicitlyNotCalculated : []
   };
 }
 
@@ -10597,11 +10625,11 @@ function atlasStrictContradictions(contract) {
     });
   }
 
-  if (contract.math.risk_global === "Non évalué") {
+  if (!String(contract.math.risk_global || "").startsWith("Partiel")) {
     issues.push({
       level: "confirmé",
       code: "risque_global_absent",
-      text: "Le risque global n’est pas évalué par Math Core."
+      text: "Le risque global historique n’est pas évalué par Math Core V3."
     });
   }
 
@@ -11258,7 +11286,7 @@ function atlasCompactReleaseLabel() {
 
 function atlasSyncReleaseLabels() {
   setText(document.getElementById("atlasV2ReleaseBadge"), atlasCompactReleaseLabel());
-  setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V2`);
+  setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
     `Agent-Crypto @erith.IA · ${ATLAS_RELEASE.replace("V2.0-alpha · ", "")}`
@@ -11893,42 +11921,40 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core intégré V2.0-alpha · Build 28.1 Source: modules .md Atlas Math. Exécution: traduction JS condensée. Lecture seule : validation humaine, aucune clé API, aucun capital engagé. */
-function atlasFmtPct(n) { return typeof n === "number" && Number.isFinite(n) ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "—";
-} function atlasFmtEUR(n) { return typeof n === "number" && Number.isFinite(n) ? fmtEUR.format(n) : "—";
-} function atlasSelectedCoin() { if (!Array.isArray(state.coins) || !state.coins.length) return null; return state.coins.find(c => c.id === state.selectedCoinId) || state.coins[0] || null;
-} function computeAtlasDataQuality(coin) { const missing = []; if (!coin) missing.push("actif"); if (coin && typeof coin.price !== "number") missing.push("prix EUR"); if (coin && typeof coin.volume24h !== "number") missing.push("volume 24h"); if (coin && !atlasCanonicalCoin(coin)) missing.push("source canonique"); if (!state.sourceLock?.valid) missing.push("Source Lock"); if (coin && !coin.timestamp) missing.push("timestamp"); const score = clamp(0, 100, 100 - missing.length * 24); return { score, status: score >= 80 ? "ok" : score >= 50 ? "faible" : "refus", missing };
-} function computeAtlasMarketMath(coin) { if (!coin) { return { score: 0, reason: "Livecheck requis", human: "aucune lecture marché sans source", change24h: null, change7d: null, fomoPenalty: 0 }; } const change24h = typeof coin.change24h === "number" ? coin.change24h : null; const change7d = typeof coin.change7d === "number" ? coin.change7d : null; const volumeScore = typeof coin.volume24h === "number" && coin.volume24h > 0 ? 20 : 0; const momentumScore = change24h === null ? 0 : clamp(0, 35, 18 + change24h * 2); const fomoPenalty = change24h !== null && Math.abs(change24h) > 12 ? 20 : 0; const score = clamp(0, 100, 35 + volumeScore + momentumScore - fomoPenalty); return { score, reason: fomoPenalty ? "Mouvement fort : prudence" : "Marché lisible en observation", human: fomoPenalty ? "marché actif, entrée possiblement tardive" : "marché lisible en observation", change24h, change7d, fomoPenalty };
-} function computeAtlasScenarioMath(coin) {
-  if (!coin || typeof coin.price !== "number" || !Number.isFinite(coin.price) || coin.price <= 0) {
-    return { reason: "Scénario indisponible sans prix réel", human: "Aucune projection locale" };
-  }
-  return {
-    reason: "Hypothèse locale ±3 %",
-    human: `+3 % : ${atlasFmtEUR(coin.price * 1.03)} · −3 % : ${atlasFmtEUR(coin.price * 0.97)}`
-  };
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.85
+   Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
+   Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
+*/
+const ATLAS_MATH_V3_EWMA_LAMBDA = 0.94;
+const ATLAS_MATH_V3_BOOTSTRAP_SAMPLES = 240;
+const ATLAS_MATH_V3_MIN_RETURNS = 20;
+
+function atlasMathCard(title, value, detail, human = "", className = "") {
+  return ` <div class="atlas-math-card ${escapeHtml(className || "")}"> <span>${escapeHtml(title)}</span> <b>${escapeHtml(value)}</b><small>${escapeHtml(detail || "")}</small> ${human ? `<em>${escapeHtml(human)}</em>` : ""} </div>`;
 }
 
-function atlasMathCard(title, value, detail, human = "") { return ` <div class="atlas-math-card"> <span>${escapeHtml(title)}</span> <b>${escapeHtml(value)}</b> <small>${escapeHtml(detail || "")}</small> ${human ? `<em>${escapeHtml(human)}</em>` : ""} </div>`;
-}
-function atlasMathSourceCard(source, freshness) {
+function atlasMathSourceCard(source, freshness, universe = "") {
   return `<div class="atlas-math-card" data-atlas-math-card="source">
-    <span>Source</span>
+    <span>Source historique</span>
     <b>${escapeHtml(source || "En attente")}</b>
-    <small>Fraîcheur <strong data-atlas-math-freshness>${escapeHtml(freshness || "Inconnue")}</strong></small>
+    <small>Fraîcheur <strong data-atlas-math-freshness>${escapeHtml(freshness || "Inconnue")}</strong>${universe ? ` · ${escapeHtml(universe)}` : ""}</small>
   </div>`;
 }
+
 function atlasRefreshMathFreshnessOnly() {
   const freshness = atlasMathFreshnessLabel(atlasSelectedCoin());
   document.querySelectorAll("[data-atlas-math-freshness]").forEach(node => {
     node.textContent = freshness;
   });
-} function atlasMathCoverageLabel(data) {
+}
+
+function atlasMathCoverageLabel(data) {
   if (!data || data.status !== "ok") return "Incomplète";
   if (Number(data.score) >= 90) return "Complète";
   if (Number(data.score) >= 65) return "Partielle";
   return "Limitée";
 }
+
 function atlasMathHorizonCoherence(coin) {
   const values = [coin?.change24h, coin?.change7d, coin?.change30d].map(Number).filter(Number.isFinite);
   if (values.length < 2) return "Données insuffisantes";
@@ -11938,6 +11964,7 @@ function atlasMathHorizonCoherence(coin) {
   if (negative === values.length) return "Cohérente baissière";
   return "Mixte";
 }
+
 function atlasMathAmplitudeLabel(change24h) {
   const value = Math.abs(Number(change24h));
   if (!Number.isFinite(value)) return "Non mesurée";
@@ -11947,8 +11974,10 @@ function atlasMathAmplitudeLabel(change24h) {
 }
 
 function atlasMathFreshnessLabel(coin) {
-  const raw = coin?.lastUpdated || coin?.timestamp || state.timestamp || null;
-  const timestamp = Date.parse(raw || "");
+  const active = atlasMathSeriesContext(coin);
+  const raw = active?.lastTimestamp || coin?.lastUpdated || coin?.timestamp || state.timestamp || null;
+  if (raw === null || raw === undefined || raw === "") return "Inconnue";
+  const timestamp = Number.isFinite(Number(raw)) ? Number(raw) : Date.parse(raw || "");
   if (!Number.isFinite(timestamp)) return "Inconnue";
   const seconds = Math.max(0, Math.round((Date.now() - timestamp) / 1000));
   if (seconds < 60) return `${seconds} s`;
@@ -11967,6 +11996,392 @@ function atlasMathMovementPhrase(symbol, value, horizon) {
 function atlasMathRatioLabel(coin) {
   const volume = Number(coin?.volume24h), cap = Number(coin?.marketCap);
   return Number.isFinite(volume) && volume >= 0 && Number.isFinite(cap) && cap > 0 ? `${(volume / cap * 100).toFixed(2)} %` : "—";
+}
+
+function atlasMathMedian(values) {
+  const clean = (values || []).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  if (!clean.length) return null;
+  const middle = Math.floor(clean.length / 2);
+  return clean.length % 2 ? clean[middle] : (clean[middle - 1] + clean[middle]) / 2;
+}
+
+function atlasMathQuantile(values, probability) {
+  const clean = (values || []).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  if (!clean.length) return null;
+  const p = clamp(0, 1, Number(probability));
+  const index = (clean.length - 1) * p;
+  const lower = Math.floor(index), upper = Math.ceil(index);
+  if (lower === upper) return clean[lower];
+  return clean[lower] + (clean[upper] - clean[lower]) * (index - lower);
+}
+
+function atlasMathMean(values) {
+  const clean = (values || []).map(Number).filter(Number.isFinite);
+  return clean.length ? clean.reduce((sum, value) => sum + value, 0) / clean.length : null;
+}
+
+function atlasMathSampleStd(values) {
+  const clean = (values || []).map(Number).filter(Number.isFinite);
+  if (clean.length < 2) return null;
+  const mean = atlasMathMean(clean);
+  const variance = clean.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (clean.length - 1);
+  return Math.sqrt(Math.max(0, variance));
+}
+
+function atlasMathNormalizeSeries(series) {
+  const points = (Array.isArray(series) ? series : [])
+    .map(point => [Number(point?.[0]), Number(point?.[1])])
+    .filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]) && point[1] > 0)
+    .sort((a, b) => a[0] - b[0]);
+  const unique = [];
+  for (const point of points) {
+    if (unique.length && unique[unique.length - 1][0] === point[0]) unique[unique.length - 1] = point;
+    else unique.push(point);
+  }
+  return unique;
+}
+
+function atlasMathLogReturns(points) {
+  const rows = [];
+  for (let index = 1; index < points.length; index += 1) {
+    const previous = Number(points[index - 1][1]);
+    const current = Number(points[index][1]);
+    if (!(previous > 0 && current > 0)) continue;
+    const value = Math.log(current / previous);
+    if (Number.isFinite(value)) rows.push({ timestamp: Number(points[index][0]), value });
+  }
+  return rows;
+}
+
+function atlasMathGranularityLabel(intervalMs) {
+  const ms = Number(intervalMs);
+  if (!Number.isFinite(ms) || ms <= 0) return "inconnue";
+  const minutes = ms / 60000;
+  if (minutes < 1) return `${Math.max(1, Math.round(ms / 1000))} s`;
+  if (minutes < 90) return `${Math.round(minutes)} min`;
+  const hours = minutes / 60;
+  if (hours < 48) return `${hours < 10 ? hours.toFixed(1) : Math.round(hours)} h`;
+  return `${(hours / 24).toFixed(1)} j`;
+}
+
+function atlasMathPeriodLabelSafe(period) {
+  try { return atlasChartPeriodLabel(Number(period || 1)); }
+  catch { return `${Number(period || 1)} j`; }
+}
+
+function atlasMathSeriesContext(coin) {
+  if (!coin?.id) return null;
+  const period = Number(state.chartPeriodDays || 1);
+  let result = null;
+  let universe = "Graphique actif";
+
+  const chart = state.dataBroker?.chart;
+  if (chart?.status === "ready" && chart?.period === period && atlasChartContextMatches(chart)) {
+    if (chart?.result?.comparison) {
+      result = state.dataBroker?.comparison?.results?.[coin.id] || null;
+      universe = "Comparaison active";
+    } else if (chart?.coinId === coin.id) {
+      result = chart.result;
+    }
+  }
+
+  if (!result && state.dataBroker?.comparison?.results?.[coin.id]) {
+    result = state.dataBroker.comparison.results[coin.id];
+    universe = "Comparaison chargée";
+  }
+
+  if (!result) {
+    try {
+      result = atlasGetStoredChartResult(coin, period);
+      if (result) universe = "Cache historique réel";
+    } catch {}
+  }
+
+  const points = atlasMathNormalizeSeries(result?.series);
+  if (points.length < 2) return { period, periodLabel: atlasMathPeriodLabelSafe(period), result, points, universe, source: result?.source || "Indisponible", lastTimestamp: null };
+  return {
+    period,
+    periodLabel: atlasMathPeriodLabelSafe(period),
+    result,
+    points,
+    universe,
+    source: result?.source || atlasChartProviderLabel(result) || "Historique réel",
+    lastTimestamp: Number(points[points.length - 1][0])
+  };
+}
+
+function atlasMathMaxDrawdown(points) {
+  if (!points?.length) return null;
+  let peakPrice = Number(points[0][1]);
+  let peakTime = Number(points[0][0]);
+  let maxDrawdown = 0;
+  let startTime = peakTime;
+  let troughTime = peakTime;
+  let recoveryTime = null;
+  let activePeak = peakPrice;
+  let activePeakTime = peakTime;
+
+  for (const [timestampRaw, priceRaw] of points) {
+    const timestamp = Number(timestampRaw), price = Number(priceRaw);
+    if (price > activePeak) {
+      activePeak = price;
+      activePeakTime = timestamp;
+    }
+    const drawdown = activePeak > 0 ? (price / activePeak) - 1 : 0;
+    if (drawdown < maxDrawdown) {
+      maxDrawdown = drawdown;
+      peakPrice = activePeak;
+      peakTime = activePeakTime;
+      startTime = activePeakTime;
+      troughTime = timestamp;
+      recoveryTime = null;
+    }
+  }
+
+  if (maxDrawdown < 0) {
+    for (const [timestampRaw, priceRaw] of points) {
+      const timestamp = Number(timestampRaw), price = Number(priceRaw);
+      if (timestamp <= troughTime) continue;
+      if (price >= peakPrice) { recoveryTime = timestamp; break; }
+    }
+  }
+
+  return {
+    pct: Math.abs(maxDrawdown) * 100,
+    startTime,
+    troughTime,
+    recoveryTime,
+    recovered: Number.isFinite(recoveryTime)
+  };
+}
+
+function atlasMathSeedFromPoints(points) {
+  let seed = 2166136261 >>> 0;
+  for (const point of points.slice(0, 64)) {
+    seed ^= (Number(point[0]) >>> 0);
+    seed = Math.imul(seed, 16777619) >>> 0;
+    seed ^= Math.round(Number(point[1]) * 10000) >>> 0;
+    seed = Math.imul(seed, 16777619) >>> 0;
+  }
+  return seed || 1;
+}
+
+function atlasMathSeededRandom(seed) {
+  let value = seed >>> 0;
+  return () => {
+    value += 0x6D2B79F5;
+    let t = value;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function atlasMathBootstrapVolatility(returns, seed) {
+  const clean = (returns || []).map(Number).filter(Number.isFinite);
+  if (clean.length < ATLAS_MATH_V3_MIN_RETURNS) return null;
+  const random = atlasMathSeededRandom(seed);
+  const estimates = [];
+  for (let sample = 0; sample < ATLAS_MATH_V3_BOOTSTRAP_SAMPLES; sample += 1) {
+    const resampled = [];
+    for (let index = 0; index < clean.length; index += 1) {
+      resampled.push(clean[Math.floor(random() * clean.length)]);
+    }
+    const std = atlasMathSampleStd(resampled);
+    if (Number.isFinite(std)) estimates.push(std * Math.sqrt(clean.length) * 100);
+  }
+  if (estimates.length < 20) return null;
+  return {
+    low: atlasMathQuantile(estimates, 0.025),
+    high: atlasMathQuantile(estimates, 0.975),
+    samples: estimates.length
+  };
+}
+
+function atlasMathCorrelationBeta(primaryRows, benchmarkRows, intervalMs) {
+  const bucket = Math.max(60000, Number(intervalMs) || 3600000);
+  const aggregate = rows => {
+    const map = new Map();
+    for (const row of rows || []) {
+      const key = Math.round(Number(row.timestamp) / bucket);
+      if (!Number.isFinite(key) || !Number.isFinite(Number(row.value))) continue;
+      const current = map.get(key) || { sum: 0, count: 0 };
+      current.sum += Number(row.value); current.count += 1;
+      map.set(key, current);
+    }
+    return new Map([...map.entries()].map(([key, item]) => [key, item.sum / item.count]));
+  };
+  const left = aggregate(primaryRows), right = aggregate(benchmarkRows);
+  const pairs = [...left.keys()].filter(key => right.has(key)).map(key => [left.get(key), right.get(key)]);
+  if (pairs.length < ATLAS_MATH_V3_MIN_RETURNS) return null;
+  const x = pairs.map(pair => pair[0]), y = pairs.map(pair => pair[1]);
+  const mx = atlasMathMean(x), my = atlasMathMean(y);
+  let covariance = 0, varianceX = 0, varianceY = 0;
+  for (let index = 0; index < pairs.length; index += 1) {
+    const dx = x[index] - mx, dy = y[index] - my;
+    covariance += dx * dy; varianceX += dx * dx; varianceY += dy * dy;
+  }
+  covariance /= (pairs.length - 1); varianceX /= (pairs.length - 1); varianceY /= (pairs.length - 1);
+  if (!(varianceX > 0 && varianceY > 0)) return null;
+  return {
+    correlation: covariance / Math.sqrt(varianceX * varianceY),
+    beta: covariance / varianceY,
+    observations: pairs.length
+  };
+}
+
+function atlasMathBenchmarkContext(coin, period) {
+  const symbol = String(coin?.symbol || "").toUpperCase();
+  if (symbol === "BTC" || coin?.id === "bitcoin") return { self: true, coin, result: atlasMathSeriesContext(coin) };
+  const bitcoin = (state.coins || []).find(item => item.id === "bitcoin" || String(item.symbol || "").toUpperCase() === "BTC");
+  if (!bitcoin) return null;
+  let context = null;
+  if (state.dataBroker?.comparison?.results?.[bitcoin.id]) {
+    const result = state.dataBroker.comparison.results[bitcoin.id];
+    const points = atlasMathNormalizeSeries(result?.series);
+    context = { period, result, points, source: result?.source || "Comparaison active" };
+  }
+  if (!context) {
+    try {
+      const result = atlasGetStoredChartResult(bitcoin, period);
+      if (result) context = { period, result, points: atlasMathNormalizeSeries(result.series), source: result.source || "Cache BTC réel" };
+    } catch {}
+  }
+  return context ? { self: false, coin: bitcoin, result: context } : null;
+}
+
+function atlasMathFormatPct(value, digits = 2) {
+  if (value === null || value === undefined || value === "") return "Indisponible";
+  return Number.isFinite(Number(value)) ? `${Number(value).toFixed(digits)} %` : "Indisponible";
+}
+
+function atlasMathFormatNumber(value, digits = 2) {
+  if (value === null || value === undefined || value === "") return "Indisponible";
+  return Number.isFinite(Number(value)) ? Number(value).toFixed(digits) : "Indisponible";
+}
+
+function atlasMathDate(value) {
+  if (value === null || value === undefined || value === "") return "—";
+  const timestamp = Number(value);
+  return Number.isFinite(timestamp) ? new Date(timestamp).toLocaleString("fr-FR") : "—";
+}
+
+function atlasMathComputeHistoricalMetrics(coin) {
+  const context = atlasMathSeriesContext(coin);
+  const points = context?.points || [];
+  const returnsRows = atlasMathLogReturns(points);
+  const returns = returnsRows.map(row => row.value);
+  const timestamps = points.map(point => Number(point[0]));
+  const gaps = timestamps.slice(1).map((timestamp, index) => timestamp - timestamps[index]).filter(value => value > 0);
+  const intervalMs = atlasMathMedian(gaps);
+  const coverageMs = points.length > 1 ? Number(points[points.length - 1][0]) - Number(points[0][0]) : null;
+  const expectedPoints = Number.isFinite(intervalMs) && intervalMs > 0 && Number.isFinite(coverageMs)
+    ? Math.max(2, Math.round(coverageMs / intervalMs) + 1)
+    : null;
+  const completenessPct = Number.isFinite(expectedPoints) ? Math.min(100, points.length / expectedPoints * 100) : null;
+  const largeGaps = Number.isFinite(intervalMs) ? gaps.filter(value => value > intervalMs * 1.8).length : null;
+  const sufficient = returns.length >= ATLAS_MATH_V3_MIN_RETURNS && Number.isFinite(intervalMs) && intervalMs > 0;
+  const periodsPerYear = sufficient ? (365.2425 * 24 * 60 * 60 * 1000) / intervalMs : null;
+  const std = sufficient ? atlasMathSampleStd(returns) : null;
+  const realizedWindowPct = Number.isFinite(std) ? std * Math.sqrt(returns.length) * 100 : null;
+  const realizedAnnualizedPct = Number.isFinite(std) && Number.isFinite(periodsPerYear) ? std * Math.sqrt(periodsPerYear) * 100 : null;
+
+  let ewmaVariance = null;
+  if (sufficient) {
+    ewmaVariance = returns[0] ** 2;
+    for (let index = 1; index < returns.length; index += 1) {
+      ewmaVariance = ATLAS_MATH_V3_EWMA_LAMBDA * ewmaVariance + (1 - ATLAS_MATH_V3_EWMA_LAMBDA) * returns[index] ** 2;
+    }
+  }
+  const ewmaAnnualizedPct = Number.isFinite(ewmaVariance) && Number.isFinite(periodsPerYear)
+    ? Math.sqrt(ewmaVariance * periodsPerYear) * 100
+    : null;
+
+  const downside = sufficient ? returns.map(value => Math.min(0, value)) : [];
+  const downsideStd = downside.length ? Math.sqrt(downside.reduce((sum, value) => sum + value ** 2, 0) / downside.length) : null;
+  const downsideAnnualizedPct = Number.isFinite(downsideStd) && Number.isFinite(periodsPerYear)
+    ? downsideStd * Math.sqrt(periodsPerYear) * 100
+    : null;
+
+  const q05 = sufficient ? atlasMathQuantile(returns, 0.05) : null;
+  const tail = Number.isFinite(q05) ? returns.filter(value => value <= q05) : [];
+  const var95StepPct = Number.isFinite(q05) ? Math.max(0, -q05 * 100) : null;
+  const expectedShortfall95StepPct = tail.length ? Math.max(0, -atlasMathMean(tail) * 100) : null;
+  const drawdown = sufficient ? atlasMathMaxDrawdown(points) : null;
+  const q25 = sufficient ? atlasMathQuantile(returns, 0.25) : null;
+  const q75 = sufficient ? atlasMathQuantile(returns, 0.75) : null;
+  const dispersionIqrStepPct = Number.isFinite(q25) && Number.isFinite(q75) ? (q75 - q25) * 100 : null;
+  const absolute = sufficient ? returns.map(Math.abs).sort((a, b) => b - a) : [];
+  const topCount = absolute.length ? Math.max(1, Math.ceil(absolute.length * 0.10)) : 0;
+  const absoluteSum = absolute.reduce((sum, value) => sum + value, 0);
+  const concentrationTop10Pct = sufficient && absoluteSum > 0 ? absolute.slice(0, topCount).reduce((sum, value) => sum + value, 0) / absoluteSum * 100 : null;
+  const bootstrap = sufficient ? atlasMathBootstrapVolatility(returns, atlasMathSeedFromPoints(points)) : null;
+
+  let benchmark = null;
+  if (sufficient) {
+    const benchmarkContext = atlasMathBenchmarkContext(coin, context?.period);
+    if (benchmarkContext?.self) benchmark = { correlation: 1, beta: 1, observations: returns.length, source: "BTC lui-même" };
+    else if (benchmarkContext?.result?.points?.length >= 2) {
+      const benchmarkPoints = benchmarkContext.result.points;
+      const benchmarkRows = atlasMathLogReturns(benchmarkPoints);
+      const benchmarkGaps = benchmarkPoints.slice(1).map((point, index) => Number(point[0]) - Number(benchmarkPoints[index][0])).filter(value => value > 0);
+      const alignInterval = Math.max(Number(intervalMs) || 0, Number(atlasMathMedian(benchmarkGaps)) || 0);
+      const aligned = atlasMathCorrelationBeta(returnsRows, benchmarkRows, alignInterval);
+      if (aligned) benchmark = { ...aligned, source: benchmarkContext.result.source || "Historique BTC réel" };
+    }
+  }
+
+  const calculated = [];
+  const unavailable = [];
+  const addMeasure = (condition, label) => (condition ? calculated : unavailable).push(label);
+  addMeasure(Number.isFinite(realizedWindowPct), "volatilité réalisée sur la fenêtre");
+  addMeasure(Number.isFinite(realizedAnnualizedPct), "volatilité réalisée annualisée");
+  addMeasure(Number.isFinite(ewmaAnnualizedPct), `volatilité EWMA λ=${ATLAS_MATH_V3_EWMA_LAMBDA}`);
+  addMeasure(Number.isFinite(downsideAnnualizedPct), "downside deviation annualisée");
+  addMeasure(Number.isFinite(drawdown?.pct), "drawdown maximal");
+  addMeasure(Number.isFinite(var95StepPct), "VaR historique 95 % par pas");
+  addMeasure(Number.isFinite(expectedShortfall95StepPct), "Expected Shortfall historique 95 % par pas");
+  addMeasure(Number.isFinite(benchmark?.correlation), "corrélation au BTC");
+  addMeasure(Number.isFinite(benchmark?.beta), "bêta par rapport au BTC");
+  addMeasure(Number.isFinite(dispersionIqrStepPct), "dispersion IQR des rendements");
+  addMeasure(Number.isFinite(concentrationTop10Pct), "concentration des mouvements absolus");
+  addMeasure(Number.isFinite(bootstrap?.low) && Number.isFinite(bootstrap?.high), "intervalle bootstrap 95 % de volatilité");
+
+  const riskGlobal = sufficient
+    ? "Partiel — risque de marché historique mesuré"
+    : "Non évalué — série historique insuffisante";
+
+  return {
+    status: sufficient ? "ready" : "insufficient",
+    context,
+    points,
+    returnsRows,
+    returnsCount: returns.length,
+    intervalMs,
+    granularity: atlasMathGranularityLabel(intervalMs),
+    coverageMs,
+    expectedPoints,
+    completenessPct,
+    largeGaps,
+    periodsPerYear,
+    realizedWindowPct,
+    realizedAnnualizedPct,
+    ewmaAnnualizedPct,
+    downsideAnnualizedPct,
+    var95StepPct,
+    expectedShortfall95StepPct,
+    drawdown,
+    dispersionIqrStepPct,
+    concentrationTop10Pct,
+    bootstrap,
+    benchmark,
+    calculated,
+    unavailable,
+    riskGlobal,
+    limitation: sufficient
+      ? "Mesures de marché historiques seulement : aucun risque de protocole, contrepartie, réglementation, liquidité d’exécution ou on-chain."
+      : `Minimum requis : ${ATLAS_MATH_V3_MIN_RETURNS} rendements réels sur une série cohérente.`
+  };
 }
 
 function renderAtlasMathCore() {
@@ -11991,11 +12406,16 @@ function renderAtlasMathCore() {
   const coherence = atlasMathHorizonCoherence(coin);
   const amplitude = atlasMathAmplitudeLabel(coin?.change24h);
   const ratio = atlasMathRatioLabel(coin);
+  const metrics = atlasMathComputeHistoricalMetrics(coin);
   const freshness = atlasMathFreshnessLabel(coin);
   const score = coin ? scoreCoin(coin).score : null;
-  const source = coin?.source || state.mainSource || "En attente";
+  const source = metrics?.context?.source || coin?.source || state.mainSource || "En attente";
+  const periodLabel = metrics?.context?.periodLabel || atlasMathPeriodLabelSafe(state.chartPeriodDays);
+  const pointCount = metrics?.points?.length || 0;
+  const stepLabel = metrics?.granularity || "inconnue";
 
   state.math = {
+    schema: "atlas_math_core_v3",
     asset: coin ? `${coin.name} (${coin.symbol})` : null,
     heuristicScore: score,
     coverage,
@@ -12004,54 +12424,105 @@ function renderAtlasMathCore() {
     ratioVolumeMarketCap: ratio,
     source,
     freshness,
-    riskGlobal: "Non évalué",
+    riskGlobal: metrics.riskGlobal,
+    periodDays: metrics?.context?.period || Number(state.chartPeriodDays || 1),
+    periodLabel,
+    granularity: stepLabel,
+    observations: pointCount,
+    returnsCount: metrics.returnsCount,
+    completenessPct: metrics.completenessPct,
+    expectedPoints: metrics.expectedPoints,
+    largeGaps: metrics.largeGaps,
+    seriesFirstAt: metrics.points?.[0]?.[0] || null,
+    seriesLastAt: metrics.points?.[metrics.points.length - 1]?.[0] || null,
+    realizedWindowPct: metrics.realizedWindowPct,
+    realizedAnnualizedPct: metrics.realizedAnnualizedPct,
+    ewmaLambda: ATLAS_MATH_V3_EWMA_LAMBDA,
+    ewmaAnnualizedPct: metrics.ewmaAnnualizedPct,
+    downsideAnnualizedPct: metrics.downsideAnnualizedPct,
+    maxDrawdownPct: metrics.drawdown?.pct ?? null,
+    maxDrawdownStartAt: metrics.drawdown?.startTime ?? null,
+    maxDrawdownTroughAt: metrics.drawdown?.troughTime ?? null,
+    maxDrawdownRecoveryAt: metrics.drawdown?.recoveryTime ?? null,
+    var95StepPct: metrics.var95StepPct,
+    expectedShortfall95StepPct: metrics.expectedShortfall95StepPct,
+    correlationBtc: metrics.benchmark?.correlation ?? null,
+    betaBtc: metrics.benchmark?.beta ?? null,
+    benchmarkObservations: metrics.benchmark?.observations ?? null,
+    benchmarkSource: metrics.benchmark?.source ?? null,
+    dispersionIqrStepPct: metrics.dispersionIqrStepPct,
+    concentrationTop10Pct: metrics.concentrationTop10Pct,
+    bootstrapLowPct: metrics.bootstrap?.low ?? null,
+    bootstrapHighPct: metrics.bootstrap?.high ?? null,
+    bootstrapSamples: metrics.bootstrap?.samples ?? null,
+    calculatedMeasures: metrics.calculated,
+    explicitlyNotCalculated: metrics.unavailable,
+    limitation: metrics.limitation,
     updated_at: new Date().toISOString()
   };
 
   const human = document.getElementById("atlasHumanVerdict");
   if (human) {
     human.classList.remove("ok", "warn", "refus");
-    human.classList.add(coin ? "warn" : "refus");
-    human.innerHTML = coin
-      ? `<b>Lecture factuelle :</b> ${escapeHtml(atlasMathMovementPhrase(coin.symbol, coin.change24h, "24 h"))} et ${escapeHtml(atlasMathMovementPhrase(coin.symbol, coin.change7d, "7 jours").replace(`${coin.symbol} `, ""))}.<br><b>Mesures :</b> vol./cap. ${escapeHtml(ratio)} · horizons ${escapeHtml(coherence.toLowerCase())} · amplitude ${escapeHtml(amplitude.toLowerCase())}.<br><b>Limites :</b> risque global, sécurité, données sociales et on-chain non évalués.`
-      : `<b>Lecture factuelle :</b> en attente du Livecheck.<br><b>Faits :</b> aucune donnée de marché chargée.<br><b>Limites :</b> aucune conclusion sans source.`;
+    human.classList.add(metrics.status === "ready" ? "warn" : "refus");
+    human.innerHTML = metrics.status === "ready"
+      ? `<b>Fenêtre réelle :</b> ${escapeHtml(periodLabel)} · ${pointCount} points · pas médian ${escapeHtml(stepLabel)} · complétude ${escapeHtml(atlasMathFormatPct(metrics.completenessPct, 1))}.<br><b>Risque historique :</b> volatilité ${escapeHtml(atlasMathFormatPct(metrics.realizedWindowPct))} sur la fenêtre · drawdown max ${escapeHtml(atlasMathFormatPct(metrics.drawdown?.pct))} · VaR 95 % ${escapeHtml(atlasMathFormatPct(metrics.var95StepPct))} par pas.<br><b>Limites :</b> ${escapeHtml(metrics.limitation)}`
+      : `<b>Math Core V3 :</b> série historique insuffisante pour calculer les mesures de risque.<br><b>Disponible :</b> ${pointCount} points · ${metrics.returnsCount} rendements · pas ${escapeHtml(stepLabel)}.<br><b>Stop :</b> aucune valeur manquante n’est remplacée par zéro.`;
   }
 
   const summaryGrid = document.getElementById("atlasSummaryGrid");
   if (summaryGrid) {
     summaryGrid.innerHTML = `
-      <div><span>Couverture</span><b>${escapeHtml(coverage)}</b></div>
-      <div><span>24 h</span><b>${escapeHtml(coin ? atlasFmtPct(coin.change24h) : "—")}</b></div>
-      <div><span>7 j</span><b>${escapeHtml(coin ? atlasFmtPct(coin.change7d) : "—")}</b></div>
-      <div><span>Amplitude 24 h</span><b>${escapeHtml(amplitude)}</b></div>
+      <div><span>Série réelle</span><b>${pointCount || "—"} pts</b></div>
+      <div><span>Volatilité fenêtre</span><b>${escapeHtml(atlasMathFormatPct(metrics.realizedWindowPct))}</b></div>
+      <div><span>Drawdown maximal</span><b>${escapeHtml(atlasMathFormatPct(metrics.drawdown?.pct))}</b></div>
+      <div><span>VaR 95 % / pas</span><b>${escapeHtml(atlasMathFormatPct(metrics.var95StepPct))}</b></div>
     `;
   }
 
   const panel = document.getElementById("atlasMathCorePanel");
   if (panel) {
+    const drawdownDetail = Number.isFinite(metrics.drawdown?.pct)
+      ? `${atlasMathDate(metrics.drawdown.startTime)} → ${atlasMathDate(metrics.drawdown.troughTime)}${metrics.drawdown.recovered ? ` · récupéré ${atlasMathDate(metrics.drawdown.recoveryTime)}` : " · non récupéré dans la fenêtre"}`
+      : "Série insuffisante";
+    const benchmarkDetail = metrics.benchmark
+      ? `${metrics.benchmark.observations} rendements alignés · ${metrics.benchmark.source}`
+      : "Historique BTC de même période indisponible";
+    const bootstrapValue = metrics.bootstrap
+      ? `${atlasMathFormatPct(metrics.bootstrap.low)} → ${atlasMathFormatPct(metrics.bootstrap.high)}`
+      : "Indisponible";
+
     panel.innerHTML = [
-      atlasMathCard("Actif", coin ? coin.symbol : "—", coin ? coin.name : "Livecheck requis", coin ? `${source} · ${atlasFmtEUR(coin.price)}` : ""),
-      atlasMathCard("Couverture des données", coverage, data.status === "ok" ? "Prix, volume, source et fraîcheur présents" : "Données insuffisantes"),
-      atlasMathCard("Variation 24 h", coin ? atlasFmtPct(coin.change24h) : "—", "Snapshot marché"),
-      atlasMathCard("Variation 7 j", coin ? atlasFmtPct(coin.change7d) : "—", "Snapshot marché"),
-      atlasMathCard("Variation 30 j", coin ? atlasFmtPct(coin.change30d) : "—", "Snapshot marché"),
-      atlasMathCard("Ratio volume / capitalisation", ratio, "Mesure descriptive"),
-      atlasMathCard("Cohérence des horizons", coherence, "24 h · 7 j · 30 j"),
-      atlasMathCard("Amplitude observée 24 h", amplitude, coin ? `Variation absolue ${Math.abs(Number(coin.change24h) || 0).toFixed(2)} %` : "Non mesurée"),
-      atlasMathSourceCard(source, freshness),
-      atlasMathCard("Risque global", "Non évalué", "Protocole, contrepartie, réglementation, profondeur et on-chain incomplets")
+      atlasMathCard("Actif et fenêtre", coin ? coin.symbol : "—", coin ? `${coin.name} · ${periodLabel}` : "Livecheck requis", coin ? `${source} · ${atlasFmtEUR(coin.price)}` : "", "wide"),
+      atlasMathCard("Qualité de série", Number.isFinite(metrics.completenessPct) ? `${metrics.completenessPct.toFixed(1)} %` : "Indisponible", `${pointCount} points observés / ${metrics.expectedPoints || "?"} attendus · ${metrics.largeGaps ?? "?"} grand(s) écart(s)`),
+      atlasMathCard("Granularité", stepLabel, `${metrics.returnsCount} rendements logarithmiques · source ${source}`),
+      atlasMathCard("Volatilité réalisée", atlasMathFormatPct(metrics.realizedWindowPct), `Fenêtre ${periodLabel} · unité % de la fenêtre`, `Annualisée : ${atlasMathFormatPct(metrics.realizedAnnualizedPct)}`),
+      atlasMathCard("Volatilité EWMA", atlasMathFormatPct(metrics.ewmaAnnualizedPct), `Annualisée · λ=${ATLAS_MATH_V3_EWMA_LAMBDA} · pas ${stepLabel}`),
+      atlasMathCard("Downside deviation", atlasMathFormatPct(metrics.downsideAnnualizedPct), `Annualisée · rendements négatifs · pas ${stepLabel}`),
+      atlasMathCard("Drawdown maximal", atlasMathFormatPct(metrics.drawdown?.pct), drawdownDetail, "", "wide"),
+      atlasMathCard("VaR historique 95 %", atlasMathFormatPct(metrics.var95StepPct), `Perte au quantile 5 % · unité par pas ${stepLabel}`),
+      atlasMathCard("Expected Shortfall 95 %", atlasMathFormatPct(metrics.expectedShortfall95StepPct), `Perte moyenne au-delà de la VaR · unité par pas ${stepLabel}`),
+      atlasMathCard("Corrélation au BTC", atlasMathFormatNumber(metrics.benchmark?.correlation, 3), benchmarkDetail),
+      atlasMathCard("Bêta vs BTC", atlasMathFormatNumber(metrics.benchmark?.beta, 3), benchmarkDetail),
+      atlasMathCard("Dispersion IQR", atlasMathFormatPct(metrics.dispersionIqrStepPct, 3), `Q75 − Q25 des rendements · par pas ${stepLabel}`),
+      atlasMathCard("Concentration des mouvements", atlasMathFormatPct(metrics.concentrationTop10Pct, 1), "Part des 10 % plus forts rendements absolus"),
+      atlasMathCard("Incertitude bootstrap 95 %", bootstrapValue, `${metrics.bootstrap?.samples || 0} rééchantillonnages déterministes · volatilité de fenêtre`, "", "wide"),
+      atlasMathSourceCard(source, freshness, `${periodLabel} · ${metrics.context?.universe || "série active"}`),
+      atlasMathCard("Risque global", metrics.riskGlobal, metrics.limitation, "", "wide")
     ].join("");
   }
 
   const verdict = document.getElementById("atlasMathVerdict");
   if (verdict) {
-    verdict.className = "atlas-verdict warn";
-    verdict.innerHTML = `<b>Mode observation</b> · aucune exécution réelle`;
+    verdict.className = `atlas-verdict ${metrics.status === "ready" ? "warn" : "refus"}`;
+    verdict.innerHTML = metrics.status === "ready"
+      ? `<b>Math Core V3 actif</b> · marché historique mesuré · validation humaine`
+      : `<b>Math Core V3 suspendu</b> · série réelle insuffisante`;
   }
 
   const riskPanel = document.getElementById("atlasRiskMathPanel");
   if (riskPanel) {
-    riskPanel.innerHTML = `<b>Amplitude observée</b><span>24 h : ${escapeHtml(amplitude)} · risque global non évalué.</span>`;
+    riskPanel.innerHTML = `<b>Risque historique V3</b><span>Volatilité ${escapeHtml(atlasMathFormatPct(metrics.realizedWindowPct))} · drawdown ${escapeHtml(atlasMathFormatPct(metrics.drawdown?.pct))} · ES 95 % ${escapeHtml(atlasMathFormatPct(metrics.expectedShortfall95StepPct))} par pas.</span>`;
   }
 
   const noFomoPanel = document.getElementById("atlasNoFomoMathPanel");
