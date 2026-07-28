@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.83 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.84 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.83";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.84";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10026,14 +10026,16 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.83 — Bridge Auto Health
+   Build 28.1.84 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
+   Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
 
 const ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS = 60000;
 let atlasLocalBridgeAutoTimer = 0;
 let atlasLocalBridgeProbePending = null;
 let atlasLocalBridgeLastAutoProbeAt = 0;
+let atlasLocalBridgeLastHealthSignature = "";
 
 function atlasLocalBridgeAdministratorActive() {
   return atlasAccessIsAuthorized() && atlasV2Mode() === "advanced";
@@ -10051,6 +10053,13 @@ function atlasLocalBridgeAutoStop() {
     window.clearInterval(atlasLocalBridgeAutoTimer);
     atlasLocalBridgeAutoTimer = 0;
   }
+}
+
+function atlasLocalBridgeHealthTransition(signature, silent) {
+  const next = String(signature || "unknown");
+  const changed = next !== atlasLocalBridgeLastHealthSignature;
+  atlasLocalBridgeLastHealthSignature = next;
+  return !silent || changed;
 }
 
 function atlasLocalBridgeAutoTick(reason = "interval") {
@@ -10146,7 +10155,6 @@ async function atlasLocalBridgeProbe(options = {}) {
     const badge = document.getElementById("localBridgeStatus");
     const detail = document.getElementById("localBridgeDetail");
     const button = document.getElementById("btnLocalBridgeProbe");
-    const wasConnected = atlasLocalDialogueState.connected === true;
 
     if (!silent) {
       if (button) button.disabled = true;
@@ -10180,6 +10188,10 @@ async function atlasLocalBridgeProbe(options = {}) {
       if (payload.ready === false || payload.model_ready === false) {
         atlasLocalDialogueState.connected = false;
         const required = payload.required_model || "llama3.2";
+        const announce = atlasLocalBridgeHealthTransition(
+          `model-missing:${required}`,
+          silent
+        );
 
         if (badge) {
           badge.textContent = `${required} requis`;
@@ -10193,28 +10205,34 @@ async function atlasLocalBridgeProbe(options = {}) {
 
         atlasLocalDialogueSetConnection(
           false,
-          `Bridge détecté, mais ${required} doit être installé dans Ollama.`
+          announce
+            ? `Bridge détecté, mais ${required} doit être installé dans Ollama.`
+            : ""
         );
         return payload;
       }
 
       atlasLocalDialogueState.connected = true;
+      const provider = payload.provider || "ollama";
+      const model = payload.model || "llama3.2";
+      const announce = atlasLocalBridgeHealthTransition(
+        `ready:${provider}:${model}`,
+        silent
+      );
 
       if (badge) {
         badge.textContent = "Bridge Ryzen connecté";
         badge.className = "pill ok";
       }
       if (detail) {
-        detail.textContent =
-          `Lecture seule · ${payload.provider || "ollama"} · `
-          + `${payload.model || "llama3.2"}`;
+        detail.textContent = `Lecture seule · ${provider} · ${model}`;
       }
 
       atlasLocalDialogueSetConnection(
         true,
-        silent && wasConnected
-          ? ""
-          : "Dialogue local prêt avec le moteur neutre llama3.2."
+        announce
+          ? "Dialogue local prêt avec le moteur neutre llama3.2."
+          : ""
       );
 
       return payload;
@@ -10222,6 +10240,8 @@ async function atlasLocalBridgeProbe(options = {}) {
       atlasLocalDialogueState.connected = false;
       atlasLocalDialogueState.provider = null;
       atlasLocalDialogueState.model = null;
+      const failure = error?.name === "AbortError" ? "timeout" : "offline";
+      const announce = atlasLocalBridgeHealthTransition(failure, silent);
 
       if (badge) {
         badge.textContent = "Bridge local non connecté";
@@ -10235,9 +10255,11 @@ async function atlasLocalBridgeProbe(options = {}) {
 
       atlasLocalDialogueSetConnection(
         false,
-        error?.name === "AbortError"
-          ? "Bridge local sans réponse."
-          : "Bridge local non connecté."
+        announce
+          ? (error?.name === "AbortError"
+              ? "Bridge local sans réponse."
+              : "Bridge local non connecté.")
+          : ""
       );
 
       return null;
