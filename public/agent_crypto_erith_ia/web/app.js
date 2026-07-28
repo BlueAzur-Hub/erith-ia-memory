@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.86R6 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.86R7 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86R6";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86R7";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4058,7 +4058,7 @@ async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
 }
 
 /* =========================================================
-   Build 28.1.86R6 — Scanner history transport fallback
+   Build 28.1.86R7 — Scanner history transport fallback
    CoinGecko reste la source du classement Market.
    Binance peut fournir uniquement la série historique,
    afin d'éviter qu'un blocage CORS/rate-limit CoinGecko
@@ -9470,17 +9470,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R6" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R7" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R6" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R7" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R6" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R7" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -10194,7 +10194,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.86R6 — Bridge Auto Health Quiet Status
+   Build 28.1.86R7 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -11333,7 +11333,6 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "sources", level: "adaptive", target: "closest-collapse", group: "system" },
   { id: "mesure-audience", level: "diagnostic", target: "self", group: "system" },
   { id: "local-ai-hub", level: "advanced", target: "closest-collapse", group: "system" },
-  { id: "chatgpt-workspace", level: "advanced", target: "self", group: "system" },
 
   { id: "missions-vie", level: "project", target: "self", group: "projects" },
   { id: "forge-aerith", level: "project", target: "self", group: "projects" },
@@ -12091,7 +12090,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86R6
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86R7
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
    Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
@@ -14371,7 +14370,7 @@ const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
 const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
 const ATLAS_ADMIN_CLUSTERS = Object.freeze(["decision", "analysis", "system", "projects"]);
 
-/* Build 28.1.86R6 — restauration de l’entrée Administration.
+/* Build 28.1.86R7 — restauration de l’entrée Administration.
    Un ancien workspace public ne doit jamais annuler l’ouverture demandée
    juste après la validation du mot de passe Christophe. */
 let atlasAdminForceWorkspacePending = false;
@@ -14422,7 +14421,7 @@ function atlasAdminClusterForModule(id) {
   const value = String(id || "").replace(/^#/, "");
   if (["watchlist", "decision-board", "news-sentinel", "nofomo"].includes(value)) return "decision";
   if (["math", "multi-horizon", "lecture-froide", "risques", "debutant"].includes(value)) return "analysis";
-  if (["auto-reader", "shared-memory", "github-memory", "safety", "simulation", "commandes", "newsSourceRegistry", "news-plan", "local-ai-hub", "chatgpt-workspace"].includes(value)) return "system";
+  if (["auto-reader", "shared-memory", "github-memory", "safety", "simulation", "commandes", "newsSourceRegistry", "news-plan", "local-ai-hub"].includes(value)) return "system";
   if (["missions-vie", "forge-aerith"].includes(value)) return "projects";
   return "";
 }
@@ -15064,93 +15063,7 @@ window.setTimeout(atlasChartOverlayUpdate, 800);
 
 
 
-/* =========================================================
-   Build 28.1.86R6 — ChatGPT embedded in Agent-Crypto section
-   Exact Agent-Crypto page only. No redirect. No OpenAI API key.
-   ========================================================= */
-const atlasChatGPTWorkspace = document.getElementById("chatgpt-workspace");
-const atlasChatGPTWorkspaceButton = document.getElementById("atlasAdminChatGPTWorkspace");
-const atlasChatGPTOpenButton = document.getElementById("btnOpenIntegratedChatGPT");
-const atlasChatGPTReloadButton = document.getElementById("btnReloadIntegratedChatGPT");
-const atlasChatGPTFullButton = document.getElementById("btnFullIntegratedChatGPT");
-const atlasChatGPTCloseButton = document.getElementById("btnCloseIntegratedChatGPT");
-const atlasChatGPTCheckButton = document.getElementById("btnCheckChatGPTDock");
-const atlasChatGPTDockStatus = document.getElementById("atlasChatGPTDockStatus");
-const atlasChatGPTDockDetail = document.getElementById("atlasChatGPTDockDetail");
-const atlasChatGPTEmbedStage = document.getElementById("atlasChatGPTEmbedStage");
-
-function atlasChatGPTExtensionReady() {
-  return document.documentElement.dataset.erithChatgptExtension === "ready";
-}
-
-function atlasChatGPTSetStatus(label, tone = "warn", detail = "") {
-  if (atlasChatGPTDockStatus) {
-    atlasChatGPTDockStatus.textContent = label;
-    atlasChatGPTDockStatus.classList.toggle("ok", tone === "ok");
-    atlasChatGPTDockStatus.classList.toggle("warn", tone !== "ok");
-  }
-  if (detail && atlasChatGPTDockDetail) atlasChatGPTDockDetail.textContent = detail;
-}
-
-function atlasChatGPTUpdateStatus() {
-  const ready = atlasChatGPTExtensionReady();
-  atlasChatGPTSetStatus(
-    ready ? "Extension Firefox prête" : "Extension Firefox à détecter",
-    ready ? "ok" : "warn",
-    ready
-      ? "Extension détectée sur cette page Agent-Crypto uniquement. ChatGPT peut être chargé directement dans la section ci-dessus."
-      : "Extension non détectée. Charge son manifest.json dans about:debugging#/runtime/this-firefox, puis recharge uniquement cette page Agent-Crypto."
-  );
-  return ready;
-}
-
-function atlasChatGPTOpenSection() {
-  if (!atlasChatGPTWorkspace) return;
-  atlasChatGPTWorkspace.open = true;
-  atlasChatGPTWorkspace.scrollIntoView({ behavior: "smooth", block: "start" });
-  atlasChatGPTWorkspaceButton?.setAttribute("aria-expanded", "true");
-  atlasChatGPTUpdateStatus();
-}
-
-function atlasChatGPTDispatch(action) {
-  atlasChatGPTOpenSection();
-  if (!atlasChatGPTExtensionReady()) return false;
-  window.dispatchEvent(new CustomEvent(`erith:chatgpt-embed-${action}`, {
-    detail: { source: "agent-crypto", exactPage: location.href }
-  }));
-  return true;
-}
-
-atlasChatGPTWorkspaceButton?.addEventListener("click", atlasChatGPTOpenSection);
-atlasChatGPTOpenButton?.addEventListener("click", () => atlasChatGPTDispatch("load"));
-atlasChatGPTReloadButton?.addEventListener("click", () => atlasChatGPTDispatch("reload"));
-atlasChatGPTFullButton?.addEventListener("click", () => atlasChatGPTDispatch("fullscreen"));
-atlasChatGPTCloseButton?.addEventListener("click", () => atlasChatGPTDispatch("close"));
-atlasChatGPTCheckButton?.addEventListener("click", atlasChatGPTUpdateStatus);
-atlasChatGPTWorkspace?.addEventListener("toggle", () => {
-  atlasChatGPTWorkspaceButton?.setAttribute("aria-expanded", atlasChatGPTWorkspace.open ? "true" : "false");
-});
-
-window.addEventListener("erith:chatgpt-extension-ready", atlasChatGPTUpdateStatus);
-window.addEventListener("erith:chatgpt-embed-state", event => {
-  const stateName = String(event?.detail?.state || "");
-  if (atlasChatGPTEmbedStage) atlasChatGPTEmbedStage.dataset.state = stateName || "idle";
-  if (stateName === "loading") {
-    atlasChatGPTSetStatus("Chargement de ChatGPT", "warn", "ChatGPT est en cours de chargement dans cette section.");
-  } else if (stateName === "loaded") {
-    atlasChatGPTSetStatus("ChatGPT intégré", "ok", "Le vrai site ChatGPT est chargé dans cette section Agent-Crypto.");
-  } else if (stateName === "closed") {
-    atlasChatGPTSetStatus("Cadre ChatGPT fermé", "warn", "Le cadre est fermé. Clique « Charger ChatGPT dans cette section » pour le rouvrir.");
-  } else if (stateName === "blocked") {
-    atlasChatGPTSetStatus("Intégration refusée", "warn", event?.detail?.message || "Firefox ou ChatGPT a refusé le chargement dans le cadre.");
-  }
-  const full = event?.detail?.fullscreen === true;
-  atlasChatGPTFullButton?.setAttribute("aria-pressed", full ? "true" : "false");
-  if (atlasChatGPTFullButton) atlasChatGPTFullButton.textContent = full ? "Quitter le plein écran" : "Plein écran";
-});
-
-window.setTimeout(atlasChatGPTUpdateStatus, 0);
-window.setTimeout(atlasChatGPTUpdateStatus, 800);
+/* Build 28.1.86R7 — failed ChatGPT iframe experiment removed. */
 
 
 /* =========================================================
@@ -15772,7 +15685,7 @@ window.setTimeout(atlasWorkspaceRenderStrip, 900);
 
 
 /* =========================================================
-   Build 28.1.86R6 — Hausses 5 Transaction Rebuild
+   Build 28.1.86R7 — Hausses 5 Transaction Rebuild
    Market-first scanners. History never decides the ranking.
    ========================================================= */
 const ATLAS_SCANNER_POOL_SIZE = 24;
@@ -15808,7 +15721,7 @@ function atlasScannerSetUiState(preset, status, message = "") {
 }
 
 /* =========================================================
-   Build 28.1.86R6 — Hausses 5 Rebuild
+   Build 28.1.86R7 — Hausses 5 Rebuild
    Aucun clic silencieux : toute attente, réussite ou erreur
    devient visible sans remplacer le graphique validé.
    ========================================================= */
@@ -16270,7 +16183,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.1.86R6 annulée :", error);
+    console.warn("Transaction scanner 28.1.86R7 annulée :", error);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     atlasScannerRestoreSnapshot(snapshot);
@@ -16398,7 +16311,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Hausses 5 / scanner 28.1.86R6 :", error);
+    console.error("Hausses 5 / scanner 28.1.86R7 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -16472,7 +16385,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.1.86R6 non capturé :", error);
+      console.error("Scanner 28.1.86R7 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -16482,7 +16395,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage Hausses 5 28.1.86R6 :", error);
+    console.error("Démarrage Hausses 5 28.1.86R7 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -16496,7 +16409,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.1.86R6"
+    source: "button-28.1.86R7"
   });
 }
 
@@ -16553,7 +16466,7 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 
 /* =========================================================
-   Build 28.1.86R6 — NON-REGRESSION GUARD
+   Build 28.1.86R7 — NON-REGRESSION GUARD
    Public: Math Core V3 visible in side dock.
    Administration: saved Math dock restored, Command Center untouched.
    ========================================================= */
@@ -16577,7 +16490,7 @@ window.setTimeout(atlasR3EnsureMathPresence, 900);
 
 
 /* =========================================================
-   Build 28.1.86R6 — ADMIN WORKSPACE RECOVERY GUARD
+   Build 28.1.86R7 — ADMIN WORKSPACE RECOVERY GUARD
    Ne touche ni au Math Core, ni aux scanners, ni au Market.
    ========================================================= */
 window.addEventListener("atlas:v2mode", event => {
