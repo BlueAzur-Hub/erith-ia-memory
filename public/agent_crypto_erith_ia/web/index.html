@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R9 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R10 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R9-clickable-flow-view-buttons" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R10-ribbon-controls-clip-fix" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R9</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R10</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -62,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R9</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R10</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -470,26 +470,28 @@
 
     <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">
       <section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
-        <div class="market-ribbon-label target-top5-cycle-control" id="targetTop5Cycle" data-cycle-preset="rank-5"
-             role="button" tabindex="0" aria-label="Afficher la vue graphique suivante" title="Vue suivante : Hausses 5">
+        <button type="button" class="market-ribbon-label target-top5-cycle-control" id="targetTop5Cycle" data-cycle-preset="rank-5"
+                aria-label="Afficher la vue graphique suivante" title="Vue suivante : Hausses 5">
           <span id="targetTop5CycleLabel">TARGET TOP 5 LIVE</span>
           <small id="targetTop5CycleSymbols">BTC · ETH · BNB · XRP · SOL</small>
           <span class="target-top5-cycle-button" id="targetTop5CycleButton" aria-hidden="true"><span>↻</span></span>
-        </div>
+        </button>
         <div class="top5-track" id="top5Track">
           <span class="market-ribbon-empty">Livecheck requis</span>
         </div>
       </section>
 
       <section class="ticker glass market-flow-ribbon" aria-label="Flux du reste du marché">
-        <div class="market-flow-label" id="marketFlowCycle" role="button" tabindex="0"
-             aria-label="Filtrer Market Flow : afficher uniquement les hausses" title="Filtrer : hausses uniquement">
+        <button type="button" class="market-flow-label" id="marketFlowCycle"
+                aria-label="Filtrer Market Flow : afficher uniquement les hausses" title="Filtrer : hausses uniquement">
           <span id="marketFlowCycleLabel">MARKET FLOW</span>
           <i class="market-flow-cycle-icon" aria-hidden="true">↻</i>
-        </div>
-        <div class="ticker-track" id="tickerTrack">
-          <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
-          <span>Agent-Crypto @erith.IA observe, vérifie, classe, refuse l’invention · </span>
+        </button>
+        <div class="market-flow-viewport">
+          <div class="ticker-track" id="tickerTrack">
+            <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
+            <span>Agent-Crypto @erith.IA observe, vérifie, classe, refuse l’invention · </span>
+          </div>
         </div>
       </section>
     </section>
@@ -1578,7 +1580,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R9 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R10 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2722,7 +2724,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R9</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R10</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2732,6 +2734,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.88R9-clickable-flow-view-buttons"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.88R10-ribbon-controls-clip-fix"></script>
 </body>
 </html>

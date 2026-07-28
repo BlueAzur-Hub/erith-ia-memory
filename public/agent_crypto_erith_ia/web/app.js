@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R9 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R10 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R9";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R10";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4884,7 +4884,7 @@ function atlasComparisonTooltipRows(chart, targetX) {
 }
 
 /* =========================================================
-   Build 28.1.88R9 — STABLE CURSOR TOOLTIP TRACKING
+   Build 28.1.88R10 — STABLE CURSOR TOOLTIP TRACKING
    Le panneau suit la souris réelle. Il ne suit plus le caretY
    du point de courbe voisin, qui pouvait changer de série et
    provoquer une oscillation haut/bas. Le changement de côté
@@ -5866,7 +5866,7 @@ function atlasPatchChartLastPoint(
 
 
 /* =========================================================
-   Build 28.1.88R9 — SYNCHRONIZED LIVE TERMINAL POINTS
+   Build 28.1.88R10 — SYNCHRONIZED LIVE TERMINAL POINTS
    Tous les points live visibles partagent le même X terminal.
    Une cotation qui arrive plus vite qu'une autre ne peut donc
    plus faire "sauter" le point de droite d'une courbe à l'autre.
@@ -8219,7 +8219,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R9 — TARGET TOP 5 LIVE cycle
+   Build 28.1.88R10 — TARGET TOP 5 LIVE cycle
    Le cartouche seul fait défiler les presets. Les cinq cartes
    et le Market Flow conservent exactement leur ajout/retrait.
    ========================================================= */
@@ -8291,7 +8291,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.1.88R9"
+      source: "target-top5-cycle-28.1.88R10"
     });
   }
 
@@ -8325,7 +8325,7 @@ function atlasInitMarketRibbonInteractions() {
   };
 
   cycleTrigger?.addEventListener("click", cycle);
-  cycleTrigger?.addEventListener("keydown", cycle);
+  if (cycleTrigger && cycleTrigger.tagName !== "BUTTON") cycleTrigger.addEventListener("keydown", cycle);
 
   const flowTrigger = document.getElementById("marketFlowCycle");
   const cycleFlow = event => {
@@ -8335,7 +8335,7 @@ function atlasInitMarketRibbonInteractions() {
     atlasCycleMarketFlowMode();
   };
   flowTrigger?.addEventListener("click", cycleFlow);
-  flowTrigger?.addEventListener("keydown", cycleFlow);
+  if (flowTrigger && flowTrigger.tagName !== "BUTTON") flowTrigger.addEventListener("keydown", cycleFlow);
 }
 
 
