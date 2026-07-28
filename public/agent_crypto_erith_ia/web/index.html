@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R5 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R6 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r5-chatgpt-dock-forge-readable" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r6-chatgpt-embedded-section" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R5</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R6</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -36,7 +36,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R5</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R6</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1393,7 +1393,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R5 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R6 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2436,47 +2436,40 @@
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">ChatGPT · Fil partagé Atlas / Aerith</span>
-        <span class="atlas-collapse-subtitle">Vrai ChatGPT dans la même fenêtre Firefox · sans API payante</span>
+        <span class="atlas-collapse-subtitle">Le vrai ChatGPT chargé directement dans cette section privée</span>
       </summary>
       <div class="atlas-collapse-body">
         <section class="panel glass atlas-chatgpt-workspace" aria-labelledby="chatgpt-workspace-title">
           <div class="section-head">
             <div>
-              <p class="eyebrow">CHATGPT RÉEL · SESSION AUTHENTIFIÉE</p>
-              <h2 id="chatgpt-workspace-title">Même fil, deux lectures : Atlas-10 puis Aerith-10 Crypto</h2>
+              <p class="eyebrow">CHATGPT RÉEL · SESSION FIREFOX AUTHENTIFIÉE</p>
+              <h2 id="chatgpt-workspace-title">ChatGPT intégré dans l’interface Agent-Crypto</h2>
               <p class="planning-intro">
-                L’extension Firefox ERITH.IA garde le vrai site ChatGPT et ses fils, puis ajoute Agent-Crypto dans la même page.
-                Aucun abonnement API supplémentaire et aucune clé OpenAI dans GitHub Pages.
+                Cette section charge directement <strong>chatgpt.com</strong> dans Agent-Crypto grâce à l’extension Firefox locale.
+                Tu gardes tes fils, ton compte ChatGPT et le même historique partagé entre Atlas-10 et Aerith-10 Crypto.
+                Aucune clé API et aucun abonnement supplémentaire.
               </p>
             </div>
             <span class="pill warn" id="atlasChatGPTDockStatus">Extension Firefox à détecter</span>
           </div>
 
-          <div class="atlas-chatgpt-workspace-grid">
-            <article>
-              <span>Conversation</span>
-              <b>Le fil ChatGPT que tu choisis</b>
-              <small>Atlas et Aerith lisent le même historique quand tu les charges successivement dans ce fil.</small>
-            </article>
-            <article>
-              <span>Affichage</span>
-              <b>ChatGPT + Agent-Crypto côte à côte</b>
-              <small>Le dock peut être masqué, redimensionné ou affiché en plein écran sans ouvrir une seconde fenêtre.</small>
-            </article>
-            <article>
-              <span>Coût</span>
-              <b>Aucune API ajoutée</b>
-              <small>La session ChatGPT déjà authentifiée reste la source de conversation.</small>
-            </article>
-          </div>
-
-          <div class="atlas-chatgpt-workspace-actions">
-            <button class="btn primary" id="btnOpenIntegratedChatGPT" type="button">Ouvrir ChatGPT intégré dans cet onglet</button>
+          <div class="atlas-chatgpt-embed-toolbar" aria-label="Contrôles ChatGPT intégré">
+            <button class="btn primary" id="btnOpenIntegratedChatGPT" type="button">Charger ChatGPT dans cette section</button>
+            <button class="btn" id="btnReloadIntegratedChatGPT" type="button">Recharger ChatGPT</button>
+            <button class="btn" id="btnFullIntegratedChatGPT" type="button" aria-pressed="false">Plein écran</button>
+            <button class="btn" id="btnCloseIntegratedChatGPT" type="button">Fermer le cadre</button>
             <button class="btn" id="btnCheckChatGPTDock" type="button">Vérifier l’extension</button>
           </div>
 
+          <div class="atlas-chatgpt-embed-stage" id="atlasChatGPTEmbedStage" data-state="idle" aria-live="polite">
+            <div class="atlas-chatgpt-embed-placeholder" id="atlasChatGPTEmbedPlaceholder">
+              <b>ChatGPT n’est pas encore chargé dans cette section.</b>
+              <span>Charge l’extension Firefox locale dans <code>about:debugging#/runtime/this-firefox</code>, recharge uniquement cette page Agent-Crypto, puis clique « Charger ChatGPT dans cette section ».</span>
+            </div>
+          </div>
+
           <p class="atlas-chatgpt-workspace-note" id="atlasChatGPTDockDetail">
-            Installe une seule fois l’extension fournie avec cette version. Ensuite, le bouton ouvre le vrai ChatGPT dans cet onglet et Agent-Crypto reste disponible dans son dock intégré.
+            Cette extension agit uniquement sur la page Agent-Crypto. Elle ne modifie aucune autre page GitHub et n’ajoute aucun dock dans les onglets ChatGPT.
           </p>
         </section>
       </div>
@@ -2714,7 +2707,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R5</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R6</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2724,6 +2717,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.86r5-chatgpt-dock-forge-readable"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.86r6-chatgpt-embedded-section"></script>
 </body>
 </html>
