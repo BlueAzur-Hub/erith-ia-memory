@@ -18308,7 +18308,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — Build 28.1.88R13R1
+   Agent-Crypto @erith.IA — Build 28.1.88R14
    ATLAS-10 AUTOMATIC LOCAL REPORTS · SEQUENTIAL · READ ONLY
    ========================================================= */
 .atlas-local-report-suite {
@@ -18346,6 +18346,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 #atlasLocalReportsStatus[data-tone="ready"] { color:#79efbf; }
 #atlasLocalReportsStatus[data-tone="partial"] { color:#ffe09a; }
 #atlasLocalReportsStatus[data-tone="wait"] { color:#9fb3c8; }
+#atlasLocalReportsStatus[data-tone="error"] { color:#ff8e9f; }
 
 .atlas-local-run-all {
   min-width:150px;

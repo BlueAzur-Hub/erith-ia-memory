@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R13R1 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R14 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R13R1";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R14";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11019,7 +11019,7 @@ async function atlasLocalBridgeProbe(options = {}) {
           ? "Dialogue local prêt avec le moteur neutre llama3.2."
           : ""
       );
-      atlasLocalReportsScheduleAutomatic("bridge-ready");
+      if (announce) atlasLocalReportsScheduleAutomatic("bridge-ready");
 
       return payload;
     } catch (error) {
@@ -11106,7 +11106,7 @@ const atlasLocalDialogueState = {
 };
 
 /* =========================================================
-   Build 28.1.88R13R1 — Atlas-10 automatic local reports
+   Build 28.1.88R14 — Atlas Reports Reliability
    Four sequential read-only summaries, one validated snapshot.
    ========================================================= */
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
@@ -11127,7 +11127,11 @@ const atlasLocalReportsState = {
   runToken: 0,
   reports: Object.create(null),
   lastAutoFingerprint: "",
+  lastAutoAttemptFingerprint: "",
+  lastAutoAttemptAt: 0,
   pendingReason: "",
+  pendingSince: 0,
+  autoRetryCount: 0,
   autoTimer: 0
 };
 
@@ -11741,8 +11745,14 @@ function atlasLocalReportHtml(markdown) {
 }
 
 function atlasLocalSetReport(node, markdown) {
-  if (!node) return;
-  node.innerHTML = atlasLocalReportHtml(markdown);
+  if (!node) return false;
+  const source = String(markdown || "").trim();
+  if (!source) return false;
+  node.innerHTML = atlasLocalReportHtml(source);
+  if (!String(node.textContent || "").trim()) {
+    node.textContent = source;
+  }
+  return !!String(node.textContent || "").trim();
 }
 
 
@@ -11791,6 +11801,56 @@ function atlasLocalReportResult(mode) {
   return atlasLocalReportsState.reports?.[mode] || null;
 }
 
+function atlasLocalReportAnswer(result) {
+  return String(result?.answer || "").replace(/\r\n?/g, "\n").trim();
+}
+
+function atlasLocalReportAnswerIsMeaningful(mode, result) {
+  const answer = atlasLocalReportAnswer(result);
+  if (answer.length < 120) return false;
+  if (/^(?:réponse locale vide|aucun rapport généré|undefined|null)$/i.test(answer)) return false;
+  const markers = {
+    market: ["État des sources", "Lecture globale déterministe", "Stop point"],
+    top5: ["Target Top 5 canonique", "Graphique lié au Top 5", "Stop point"],
+    math: ["Math Core", "mesures réellement calculées", "Stop point"],
+    contradictions: ["Verrous du contrat", "Contradictions détectées", "Stop point"]
+  }[mode] || ["Stop point"];
+  return markers.filter(marker => answer.toLocaleLowerCase("fr-FR").includes(marker.toLocaleLowerCase("fr-FR"))).length >= 2;
+}
+
+function atlasLocalReportsReadiness(snapshot) {
+  const contract = snapshot?.strict_contract || {};
+  const market = contract.market || {};
+  const binance = contract.sources?.binance || {};
+  const graph = contract.graph || {};
+  const marketCount = Number(market.assets_loaded || 0);
+  const directPairs = Number(binance.direct_pairs || 0);
+  const binanceTime = Date.parse(binance.last_message_at || "");
+  const binanceFresh = Number.isFinite(binanceTime) && (Date.now() - binanceTime) <= 120000;
+  const graphRows = Array.isArray(graph.series) ? graph.series.filter(Boolean) : [];
+  const graphReady = graph.status === "ready" && graphRows.length > 0;
+  const marketReady = state.liveOk === true && marketCount >= 200 && !!market.timestamp;
+  const bridgeReady = atlasLocalDialogueState.connected === true;
+  const binanceReady = binance.feed_status === "ready" && directPairs >= 5 && binanceFresh;
+  return {
+    ready: bridgeReady && marketReady && binanceReady && graphReady,
+    bridgeReady,
+    marketReady,
+    binanceReady,
+    graphReady,
+    marketCount,
+    directPairs
+  };
+}
+
+function atlasLocalReportsReadinessLabel(readiness) {
+  if (!readiness.bridgeReady) return "Bridge local en attente.";
+  if (!readiness.marketReady) return "Snapshot CoinGecko complet en attente.";
+  if (!readiness.binanceReady) return `Prix Binance en attente · ${readiness.directPairs}/5.`;
+  if (!readiness.graphReady) return "Graphique exploitable en attente.";
+  return "Sources prêtes.";
+}
+
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
   const ids = ATLAS_LOCAL_REPORT_IDS[mode];
   if (!ids) return;
@@ -11809,8 +11869,8 @@ function atlasLocalReportSetLoading(mode, index, total) {
 
 function atlasLocalReportStore(mode, result, snapshot, options = {}) {
   if (!ATLAS_LOCAL_REPORT_MODES.includes(mode)) return null;
-  const answer = String(result?.answer || "").trim();
-  if (!answer) return null;
+  if (!atlasLocalReportAnswerIsMeaningful(mode, result)) return null;
+  const answer = atlasLocalReportAnswer(result);
 
   const report = {
     mode,
@@ -11826,13 +11886,12 @@ function atlasLocalReportStore(mode, result, snapshot, options = {}) {
     modelCommentUsed: result?.model_comment_used === true
   };
 
-  atlasLocalReportsState.reports[mode] = report;
   const ids = ATLAS_LOCAL_REPORT_IDS[mode];
-  atlasLocalSetReport(document.getElementById(ids.content), report.answer);
-  setText(
-    document.getElementById(ids.meta),
-    `${report.snapshotLabel} · ${report.model}`
-  );
+  const contentNode = document.getElementById(ids.content);
+  if (!atlasLocalSetReport(contentNode, report.answer)) return null;
+
+  atlasLocalReportsState.reports[mode] = report;
+  setText(document.getElementById(ids.meta), `${report.snapshotLabel} · ${report.model}`);
   atlasLocalReportSetCardState(mode, "Prêt", "ready");
   document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.removeAttribute("disabled");
   document.querySelector(`[data-atlas-report-export="${mode}"]`)?.removeAttribute("disabled");
@@ -11872,10 +11931,33 @@ function atlasLocalReportsSetBusy(busy) {
 }
 
 function atlasLocalReportsValidSnapshot(snapshot) {
-  const count = Number(snapshot?.strict_contract?.market?.assets_loaded || 0);
-  const timestamp = snapshot?.strict_contract?.market?.timestamp
-    || snapshot?.raw_context?.source_status?.market_timestamp;
-  return !!state.liveOk && count > 0 && !!timestamp;
+  return atlasLocalReportsReadiness(snapshot).ready;
+}
+
+function atlasLocalReportsWait(ms) {
+  return new Promise(resolve => window.setTimeout(resolve, Math.max(0, Number(ms) || 0)));
+}
+
+async function atlasLocalReportRequestReliable(mode, snapshot, token) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    if (token !== atlasLocalReportsState.runToken) return null;
+    try {
+      const result = await atlasLocalBridgeRequest("/summary", {
+        profile: "atlas",
+        mode,
+        snapshot
+      });
+      if (token !== atlasLocalReportsState.runToken) return null;
+      if (atlasLocalReportAnswerIsMeaningful(mode, result)) return result;
+      lastError = new Error("Rapport local vide ou incomplet");
+    } catch (error) {
+      lastError = error;
+      if (error?.name === "AbortError") throw error;
+    }
+    if (attempt < 2) await atlasLocalReportsWait(650);
+  }
+  throw lastError || new Error("Rapport local non généré");
 }
 
 async function atlasLocalReportsRunAll(options = {}) {
@@ -11890,15 +11972,18 @@ async function atlasLocalReportsRunAll(options = {}) {
   }
 
   const snapshot = options.snapshot || atlasBuildCryptoPageSnapshot();
-  if (!atlasLocalReportsValidSnapshot(snapshot)) {
-    atlasLocalReportsSetSuiteStatus("Snapshot complet en attente.", "wait");
+  const readiness = atlasLocalReportsReadiness(snapshot);
+  if (!readiness.ready) {
+    atlasLocalReportsSetSuiteStatus(atlasLocalReportsReadinessLabel(readiness), "wait");
     return false;
   }
 
   const fingerprint = options.fingerprint || atlasLocalReportSnapshotFingerprint(snapshot);
   const token = ++atlasLocalReportsState.runToken;
+  atlasLocalReportsState.lastAutoAttemptFingerprint = options.automatic === true ? fingerprint : atlasLocalReportsState.lastAutoAttemptFingerprint;
+  atlasLocalReportsState.lastAutoAttemptAt = Date.now();
   atlasLocalReportsSetBusy(true);
-  atlasLocalReportsSetSuiteStatus("Analyse Atlas-10 · 1/4", "loading");
+  atlasLocalReportsSetSuiteStatus("Analyse Atlas-10 · 0/4", "loading");
   setText(
     document.getElementById("atlasLocalReportsMeta"),
     `Snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · quatre tâches séquentielles · lecture seule`
@@ -11911,42 +11996,47 @@ async function atlasLocalReportsRunAll(options = {}) {
       const mode = ATLAS_LOCAL_REPORT_MODES[index];
       const label = ATLAS_LOCAL_REPORT_LABELS[mode];
       atlasLocalReportSetLoading(mode, index + 1, ATLAS_LOCAL_REPORT_MODES.length);
-      atlasLocalReportsSetSuiteStatus(`Analyse Atlas-10 · ${index + 1}/4 · ${label}`, "loading");
+      atlasLocalReportsSetSuiteStatus(`Analyse Atlas-10 · ${completed}/4 prêts · ${label}`, "loading");
 
       try {
-        const result = await atlasLocalBridgeRequest("/summary", {
-          profile: "atlas",
-          mode,
-          snapshot
-        });
+        const result = await atlasLocalReportRequestReliable(mode, snapshot, token);
         if (token !== atlasLocalReportsState.runToken) return false;
         atlasLocalDialogueState.connected = true;
         atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
         atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
-        atlasLocalReportStore(mode, result, snapshot, { open: options.openFirst === true && index === 0 });
-        completed += 1;
+        const stored = atlasLocalReportStore(mode, result, snapshot, {
+          open: options.openFirst === true && index === 0
+        });
+        if (stored) completed += 1;
+        else throw new Error("Rapport local vide ou non affichable");
       } catch (error) {
         const previous = atlasLocalReportResult(mode);
-        atlasLocalReportSetCardState(mode, previous ? "Conservé" : "—", previous ? "ready" : "wait");
         const ids = ATLAS_LOCAL_REPORT_IDS[mode];
-        if (previous) {
+        if (previous?.answer) {
+          atlasLocalReportSetCardState(mode, "Conservé", "ready");
           setText(document.getElementById(ids.meta), `${previous.snapshotLabel} · dernier rapport conservé`);
+          atlasLocalSetReport(document.getElementById(ids.content), previous.answer);
         } else {
+          atlasLocalReportSetCardState(mode, "À relancer", "wait");
           setText(document.getElementById(ids.meta), "Rapport non généré");
+          document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.setAttribute("disabled", "");
+          document.querySelector(`[data-atlas-report-export="${mode}"]`)?.setAttribute("disabled", "");
         }
         if (error?.name === "AbortError") break;
       }
+
+      atlasLocalReportsSetSuiteStatus(`${completed}/4 rapports prêts.`, completed ? "partial" : "loading");
     }
 
     if (completed === ATLAS_LOCAL_REPORT_MODES.length) {
       if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
-      atlasLocalReportsSetSuiteStatus("Quatre rapports prêts.", "ready");
+      atlasLocalReportsSetSuiteStatus("4/4 rapports prêts.", "ready");
       atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. Validation humaine requise.");
       return true;
     }
 
     atlasLocalReportsSetSuiteStatus(
-      completed ? `${completed}/4 rapports prêts · résultats précédents conservés.` : "Aucun nouveau rapport généré.",
+      completed ? `${completed}/4 rapports prêts · relance individuelle disponible.` : "0/4 rapport prêt · relance disponible.",
       completed ? "partial" : "wait"
     );
     return completed > 0;
@@ -11966,20 +12056,42 @@ function atlasLocalReportsAutoReasonAllowed(reason) {
 }
 
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
-  atlasLocalReportsState.pendingReason = String(reason || "snapshot");
-  if (!atlasLocalReportsAutoReasonAllowed(atlasLocalReportsState.pendingReason)) return false;
+  const nextReason = String(reason || "snapshot");
+  if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
+
+  const now = Date.now();
+  if (!atlasLocalReportsState.pendingSince || atlasLocalReportsState.pendingReason !== nextReason) {
+    atlasLocalReportsState.pendingSince = now;
+    atlasLocalReportsState.autoRetryCount = 0;
+  }
+  atlasLocalReportsState.pendingReason = nextReason;
   if (atlasLocalReportsState.autoTimer) window.clearTimeout(atlasLocalReportsState.autoTimer);
 
+  const delay = atlasLocalReportsState.autoRetryCount ? 5000 : 3000;
   atlasLocalReportsState.autoTimer = window.setTimeout(async () => {
     atlasLocalReportsState.autoTimer = 0;
     if (!atlasLocalBridgeAdministratorActive()) return;
     if (!atlasLocalDialogueState.connected || atlasLocalDialogueState.busy || atlasLocalReportsState.running) return;
 
     const snapshot = atlasBuildCryptoPageSnapshot();
-    if (!atlasLocalReportsValidSnapshot(snapshot)) return;
+    const readiness = atlasLocalReportsReadiness(snapshot);
+    if (!readiness.ready) {
+      atlasLocalReportsSetSuiteStatus(atlasLocalReportsReadinessLabel(readiness), "wait");
+      atlasLocalReportsState.autoRetryCount += 1;
+      if (atlasLocalReportsState.autoRetryCount <= 12 && (Date.now() - atlasLocalReportsState.pendingSince) < 90000) {
+        atlasLocalReportsScheduleAutomatic(atlasLocalReportsState.pendingReason);
+      }
+      return;
+    }
+
     const fingerprint = atlasLocalReportSnapshotFingerprint(snapshot);
     if (!fingerprint || fingerprint === atlasLocalReportsState.lastAutoFingerprint) return;
+    if (
+      fingerprint === atlasLocalReportsState.lastAutoAttemptFingerprint
+      && (Date.now() - atlasLocalReportsState.lastAutoAttemptAt) < 90000
+    ) return;
 
+    atlasLocalReportsState.autoRetryCount = 0;
     await atlasLocalReportsRunAll({
       automatic: true,
       snapshot,
@@ -11987,7 +12099,7 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
       openFirst: false,
       reason: atlasLocalReportsState.pendingReason
     });
-  }, 1600);
+  }, delay);
   return true;
 }
 
@@ -12104,7 +12216,11 @@ async function atlasLocalDialogueRunSummary(mode = "market") {
     });
     atlasLocalDialogueRender(result, label);
     if (atlasLocalDialogueState.profile === "atlas") {
-      atlasLocalReportStore(mode, result, snapshot, { open: true });
+      const stored = atlasLocalReportStore(mode, result, snapshot, { open: true });
+      if (!stored) {
+        atlasLocalReportSetCardState(mode, "À relancer", "wait");
+        atlasLocalReportsSetSuiteStatus(`${ATLAS_LOCAL_REPORT_LABELS[mode]} non généré.`, "wait");
+      }
     }
   } catch (error) {
     atlasLocalDialogueState.connected = false;
@@ -17837,7 +17953,7 @@ window.addEventListener("atlas:v2mode", event => {
 });
 
 /* =========================================================
-   Build 28.1.88R13R1 — Scanner Live Collector
+   Build 28.1.88R14 — Scanner Live Collector
    Collecte silencieuse et horodatée de quatre paniers :
    Target Top 5, Hausses 5, Baisses 5 et Volumes 5.
    - Le classement reste exclusivement CoinGecko Market Snapshot.
