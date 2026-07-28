@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R11 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R12 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R11-tooltip-change-readability" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R12-atlas-automatic-local-reports" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R11</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R12</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -62,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R11</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R12</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1329,6 +1329,81 @@
                 <small id="atlasLocalResponseMeta">Lecture seule · validation humaine · aucune exécution réelle</small>
               </article>
             </div>
+
+            <section class="atlas-local-report-suite" id="atlasLocalReportSuite" aria-labelledby="atlasLocalReportsTitle">
+              <div class="atlas-local-report-suite-head">
+                <div>
+                  <p class="eyebrow">RAPPORT LOCAL ATLAS-10 · SNAPSHOT VALIDÉ</p>
+                  <h4 id="atlasLocalReportsTitle">Analyse automatique en quatre lectures</h4>
+                  <p id="atlasLocalReportsStatus">En attente d’un snapshot complet et du Bridge local.</p>
+                </div>
+                <button class="btn atlas-local-run-all" id="btnAtlasLocalRunAll" type="button">Analyse complète</button>
+              </div>
+
+              <div class="atlas-local-report-grid">
+                <details class="atlas-local-report-card" data-atlas-report-card="market">
+                  <summary>
+                    <span class="atlas-local-report-index">01</span>
+                    <span><b>Résumé du marché</b><small id="atlasLocalReportMetaMarket">En attente</small></span>
+                    <em id="atlasLocalReportStateMarket">—</em>
+                  </summary>
+                  <div class="atlas-local-report-card-body">
+                    <div class="atlas-local-report-content" id="atlasLocalReportMarket"><p class="atlas-local-response-empty">Aucun rapport généré.</p></div>
+                    <div class="atlas-local-report-actions">
+                      <button type="button" data-atlas-report-copy="market" disabled>Copier</button>
+                      <button type="button" data-atlas-report-export="market" disabled>Exporter .md</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="atlas-local-report-card" data-atlas-report-card="top5">
+                  <summary>
+                    <span class="atlas-local-report-index">02</span>
+                    <span><b>Analyse du Top 5</b><small id="atlasLocalReportMetaTop5">En attente</small></span>
+                    <em id="atlasLocalReportStateTop5">—</em>
+                  </summary>
+                  <div class="atlas-local-report-card-body">
+                    <div class="atlas-local-report-content" id="atlasLocalReportTop5"><p class="atlas-local-response-empty">Aucun rapport généré.</p></div>
+                    <div class="atlas-local-report-actions">
+                      <button type="button" data-atlas-report-copy="top5" disabled>Copier</button>
+                      <button type="button" data-atlas-report-export="top5" disabled>Exporter .md</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="atlas-local-report-card" data-atlas-report-card="math">
+                  <summary>
+                    <span class="atlas-local-report-index">03</span>
+                    <span><b>Math Core expliqué</b><small id="atlasLocalReportMetaMath">En attente</small></span>
+                    <em id="atlasLocalReportStateMath">—</em>
+                  </summary>
+                  <div class="atlas-local-report-card-body">
+                    <div class="atlas-local-report-content" id="atlasLocalReportMath"><p class="atlas-local-response-empty">Aucun rapport généré.</p></div>
+                    <div class="atlas-local-report-actions">
+                      <button type="button" data-atlas-report-copy="math" disabled>Copier</button>
+                      <button type="button" data-atlas-report-export="math" disabled>Exporter .md</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="atlas-local-report-card" data-atlas-report-card="contradictions">
+                  <summary>
+                    <span class="atlas-local-report-index">04</span>
+                    <span><b>Contradictions</b><small id="atlasLocalReportMetaContradictions">En attente</small></span>
+                    <em id="atlasLocalReportStateContradictions">—</em>
+                  </summary>
+                  <div class="atlas-local-report-card-body">
+                    <div class="atlas-local-report-content" id="atlasLocalReportContradictions"><p class="atlas-local-response-empty">Aucun rapport généré.</p></div>
+                    <div class="atlas-local-report-actions">
+                      <button type="button" data-atlas-report-copy="contradictions" disabled>Copier</button>
+                      <button type="button" data-atlas-report-export="contradictions" disabled>Exporter .md</button>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              <small class="atlas-local-report-suite-meta" id="atlasLocalReportsMeta">Lecture seule · quatre tâches séquentielles · aucune exécution financière</small>
+            </section>
           </section>
         </section>
       </div>
@@ -1580,7 +1655,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R11 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R12 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2724,7 +2799,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R11</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R12</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2734,6 +2809,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.88R11-tooltip-change-readability"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.88R12-atlas-automatic-local-reports"></script>
 </body>
 </html>
