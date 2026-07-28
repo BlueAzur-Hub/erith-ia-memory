@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R3 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R4 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R3";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R4";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4102,7 +4102,7 @@ async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
 }
 
 /* =========================================================
-   Build 28.1.88R3 — Scanner history transport fallback
+   Build 28.1.88R4 — Scanner history transport fallback
    CoinGecko reste la source du classement Market.
    Binance peut fournir uniquement la série historique,
    afin d'éviter qu'un blocage CORS/rate-limit CoinGecko
@@ -6398,6 +6398,7 @@ function atlasRenderComparisonDetail(entries, period) {
 }
 
 async function renderComparisonAnalystPanel(options = {}) {
+  if ((atlasScannerTransaction || atlasScannerQueuedRequest) && options.allowDuringScanner !== true) return;
   const coins = atlasComparisonCoins();
   if (coins.length < 2) {
     state.dataBroker.comparison.mode = "single";
@@ -9687,17 +9688,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R3" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R4" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R3" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R4" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R3" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.88R4" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -10423,7 +10424,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.88R3 — Bridge Auto Health Quiet Status
+   Build 28.1.88R4 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -12432,7 +12433,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.88R3
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.88R4
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
    Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
@@ -14712,7 +14713,7 @@ const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
 const ATLAS_ADMIN_GRAPH_MODES = Object.freeze(["normal", "focus", "closed"]);
 const ATLAS_ADMIN_CLUSTERS = Object.freeze(["decision", "analysis", "system", "projects"]);
 
-/* Build 28.1.88R3 — restauration de l’entrée Administration.
+/* Build 28.1.88R4 — restauration de l’entrée Administration.
    Un ancien workspace public ne doit jamais annuler l’ouverture demandée
    juste après la validation du mot de passe Christophe. */
 let atlasAdminForceWorkspacePending = false;
@@ -15406,7 +15407,7 @@ window.setTimeout(atlasChartOverlayUpdate, 800);
 
 
 
-/* Build 28.1.88R3 — failed ChatGPT iframe experiment removed. */
+/* Build 28.1.88R4 — failed ChatGPT iframe experiment removed. */
 
 
 /* =========================================================
@@ -16174,7 +16175,7 @@ window.setTimeout(atlasWorkspaceRenderStrip, 900);
 
 
 /* =========================================================
-   Build 28.1.88R3 — Hausses 5 Transaction Rebuild
+   Build 28.1.88R4 — Hausses 5 Transaction Rebuild
    Market-first scanners. History never decides the ranking.
    ========================================================= */
 const ATLAS_SCANNER_POOL_SIZE = 24;
@@ -16189,6 +16190,33 @@ let atlasScannerUiState = {
   message: "",
   updatedAt: 0
 };
+let atlasScannerCommitEpoch = 0;
+
+/*
+  Build 28.1.88R4 — Atomic Graph Snapshot Sync
+  Coupe silencieusement tout ancien rendu asynchrone avant un scanner.
+  Le canvas affiché reste intact ; seuls les travaux obsolètes perdent le droit
+  de publier leurs résultats après le démarrage d'une nouvelle transaction.
+*/
+function atlasScannerInvalidateChartWork(reason = "scanner") {
+  atlasScannerCommitEpoch += 1;
+  state.chartRenderToken += 1;
+  state.comparisonRenderToken += 1;
+  atlasClearChartRetryTimer();
+
+  if (state.chartEngineV2?.controller) {
+    try { state.chartEngineV2.controller.abort(); } catch {}
+  }
+  if (state.chartEngineV2) {
+    state.chartEngineV2.controller = null;
+    state.chartEngineV2.loading = false;
+    state.chartEngineV2.activeRequestKey = null;
+    state.chartEngineV2.retryKey = null;
+  }
+
+  return atlasScannerCommitEpoch;
+}
+
 state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit))
   ? Number(state.marketVisibleLimit)
   : 50;
@@ -16210,7 +16238,7 @@ function atlasScannerSetUiState(preset, status, message = "") {
 }
 
 /* =========================================================
-   Build 28.1.88R3 — Scanners atomiques silencieux
+   Build 28.1.88R4 — Scanners atomiques silencieux
    Le graphique validé reste intact pendant la recherche.
    Seul un résultat complet remplace l’état affiché.
    ========================================================= */
@@ -16286,6 +16314,8 @@ function atlasScannerCancel(reason = "annulé", options = {}) {
     tx.cancelReason = reason;
     try { tx.controller.abort(); } catch {}
   }
+
+  if (tx || atlasScannerQueuedRequest) atlasScannerInvalidateChartWork(`cancel:${reason}`);
 
   atlasScannerTransaction = null;
   atlasScannerQueuedRequest = null;
@@ -16412,7 +16442,7 @@ function atlasScannerProgress(tx, symbol = "") {
 
 
 /* =========================================================
-   Build 28.1.88R3 — Bridge Ryzen V1.6 history proxy + generic intermediate view
+   Build 28.1.88R4 — Bridge Ryzen V1.6 history proxy + generic intermediate view
    Priorité scanner : Bridge local lecture seule, puis transports navigateur.
    CoinGecko reste la source du classement Market ; le Bridge ne décide jamais
    quels actifs entrent dans Hausses 5, Baisses 5 ou Volumes 5.
@@ -16638,7 +16668,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
   const ids = prevalidated.map(entry => entry.coin.id);
   const canonicalKey = atlasExpectedChartContextKey(ids, tx.period);
-  const snapshot = atlasScannerStateSnapshot();
+  const snapshot = tx.displayedSnapshot || atlasScannerStateSnapshot();
+  const commitEpoch = atlasScannerInvalidateChartWork(`commit:${tx.preset}`);
   const historySummary = atlasScannerHistorySummary(prevalidated);
   const latestTimestamp = Math.max(...prevalidated.map(entry =>
     Number(entry.result?.integrity?.metrics?.lastTimestamp || 0)
@@ -16724,6 +16755,10 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       canonicalKey
     );
 
+    if (commitEpoch !== atlasScannerCommitEpoch) {
+      throw new Error("Commit graphique remplacé par une demande plus récente.");
+    }
+
     if (!Array.isArray(drawn) || drawn.length !== ATLAS_SCANNER_TARGET) {
       throw new Error(`Dessin incomplet : ${drawn?.length || 0}/5`);
     }
@@ -16731,6 +16766,10 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     const drawnIds = drawn.map(entry => entry.coin.id);
     if (drawnIds.some((id, index) => id !== ids[index])) {
       throw new Error("Ordre du canvas différent de la sélection.");
+    }
+
+    if (commitEpoch !== atlasScannerCommitEpoch) {
+      throw new Error("Commit graphique devenu obsolète avant publication.");
     }
 
     state.dataBroker.comparison.renderedIds = [...drawnIds];
@@ -16791,7 +16830,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.1.88R3 annulée :", error);
+    console.warn("Transaction scanner 28.1.88R4 annulée :", error);
+    atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     atlasScannerRestoreSnapshot(snapshot);
@@ -16911,7 +16951,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Hausses 5 / scanner 28.1.88R3 :", error);
+    console.error("Hausses 5 / scanner 28.1.88R4 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -16937,6 +16977,8 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     }
 
     atlasScannerCancel("nouvelle demande", { keepUi: true });
+    atlasScannerInvalidateChartWork(`start:${preset}`);
+    const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = Number(options.period || state.chartPeriodDays || 1);
     const pool = atlasScannerPool(preset, period);
@@ -16967,6 +17009,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       examined: 0,
       directAttempts: 0,
       validCount: 0,
+      displayedSnapshot,
       /* 16 candidats maximum : assez pour trouver 5 séries, sans boucle réseau interminable. */
       directLimit: Math.min(16, pool.length),
       cancelled: false,
@@ -16985,7 +17028,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.1.88R3 non capturé :", error);
+      console.error("Scanner 28.1.88R4 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -16995,7 +17038,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage Hausses 5 28.1.88R3 :", error);
+    console.error("Démarrage Hausses 5 28.1.88R4 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -17009,7 +17052,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.1.88R3"
+    source: "button-28.1.88R4"
   });
 }
 
@@ -17066,7 +17109,7 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 
 /* =========================================================
-   Build 28.1.88R3 — NON-REGRESSION GUARD
+   Build 28.1.88R4 — NON-REGRESSION GUARD
    Public: Math Core V3 visible in side dock.
    Administration: saved Math dock restored, Command Center untouched.
    ========================================================= */
@@ -17090,7 +17133,7 @@ window.setTimeout(atlasR3EnsureMathPresence, 900);
 
 
 /* =========================================================
-   Build 28.1.88R3 — ADMIN WORKSPACE RECOVERY GUARD
+   Build 28.1.88R4 — ADMIN WORKSPACE RECOVERY GUARD
    Ne touche ni au Math Core, ni aux scanners, ni au Market.
    ========================================================= */
 window.addEventListener("atlas:v2mode", event => {
