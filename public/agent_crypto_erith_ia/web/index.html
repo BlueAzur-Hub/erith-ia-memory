@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R4 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.86R5 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r4-admin-recovery-chatgpt" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.86r5-chatgpt-dock-forge-readable" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R4</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.86R5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -36,7 +36,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R4</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.86R5</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -67,7 +67,7 @@
               <div class="atlas-admin-command-shortcuts" role="group" aria-label="Groupes du Command Center">
                 <button type="button" data-admin-cluster-target="decision" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Décision</span><b>4</b></button>
                 <button type="button" data-admin-cluster-target="analysis" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Analyse</span><b>5</b></button>
-                <button type="button" data-admin-cluster-target="system" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Système</span><b>6</b></button>
+                <button type="button" data-admin-cluster-target="system" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Système</span><b>7</b></button>
                 <button type="button" data-admin-cluster-target="projects" aria-controls="atlasAdminCenterDrawer" aria-expanded="false"><span>Projets</span><b>2</b></button>
               </div>
               <button class="atlas-admin-graph-toggle is-normal" id="atlasAdminGraphToggle" type="button"
@@ -76,11 +76,11 @@
                       aria-label="Graphique en mode normal. Passer au mode Focus.">
                 <span>Vue</span><b id="atlasAdminGraphToggleState">Normal</b>
               </button>
-              <a class="atlas-admin-chatgpt-link" id="atlasAdminChatGPTLink"
-                 href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"
-                 aria-label="Ouvrir ChatGPT dans un nouvel onglet">
-                <span>ChatGPT</span><b aria-hidden="true">↗</b>
-              </a>
+              <button class="atlas-admin-chatgpt-link" id="atlasAdminChatGPTWorkspace"
+                      type="button" aria-controls="chatgpt-workspace" aria-expanded="false"
+                      aria-label="Ouvrir l’espace ChatGPT intégré">
+                <span>ChatGPT</span><b aria-hidden="true">▣</b>
+              </button>
               <button class="atlas-admin-center-toggle" id="atlasAdminCenterToggle" type="button" aria-expanded="false" aria-controls="atlasAdminCenterDrawer">
                 <span>Command Center</span><b id="atlasAdminCenterToggleState">Déployer +</b>
               </button>
@@ -124,6 +124,7 @@
                   <a href="#simulation" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">◫</span><span>Simulation</span></a>
                   <a href="#commandes" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon atlas-quick-icon-code" aria-hidden="true">&gt;_</span><span>Tests</span></a>
                   <a href="#local-ai-hub" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">✦</span><span>IA locale</span></a>
+                  <a href="#chatgpt-workspace" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">▣</span><span>ChatGPT</span></a>
                 </section>
 
                 <section class="atlas-admin-cluster atlas-admin-cluster-projects" data-admin-cluster="projects" aria-label="Projets ERITH.IA">
@@ -173,6 +174,7 @@
                   <option value="sources">Sources</option>
                   <option value="mesure-audience">Audience</option>
                   <option value="local-ai-hub">Atlas / Aerith local</option>
+                  <option value="chatgpt-workspace">ChatGPT intégré</option>
                 </optgroup>
                 <optgroup label="Projets @erith.IA">
                   <option value="missions-vie">Registre des projets</option>
@@ -1391,7 +1393,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R4 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.86R5 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2428,6 +2430,100 @@
       </div>
     </details>
 
+
+    <details class="atlas-collapse glass atlas-chatgpt-workspace-collapse"
+             data-collapse-key="chatgpt-workspace" id="chatgpt-workspace">
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-title">ChatGPT · Fil partagé Atlas / Aerith</span>
+        <span class="atlas-collapse-subtitle">Vrai ChatGPT dans la même fenêtre Firefox · sans API payante</span>
+      </summary>
+      <div class="atlas-collapse-body">
+        <section class="panel glass atlas-chatgpt-workspace" aria-labelledby="chatgpt-workspace-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">CHATGPT RÉEL · SESSION AUTHENTIFIÉE</p>
+              <h2 id="chatgpt-workspace-title">Même fil, deux lectures : Atlas-10 puis Aerith-10 Crypto</h2>
+              <p class="planning-intro">
+                L’extension Firefox ERITH.IA garde le vrai site ChatGPT et ses fils, puis ajoute Agent-Crypto dans la même page.
+                Aucun abonnement API supplémentaire et aucune clé OpenAI dans GitHub Pages.
+              </p>
+            </div>
+            <span class="pill warn" id="atlasChatGPTDockStatus">Extension Firefox à détecter</span>
+          </div>
+
+          <div class="atlas-chatgpt-workspace-grid">
+            <article>
+              <span>Conversation</span>
+              <b>Le fil ChatGPT que tu choisis</b>
+              <small>Atlas et Aerith lisent le même historique quand tu les charges successivement dans ce fil.</small>
+            </article>
+            <article>
+              <span>Affichage</span>
+              <b>ChatGPT + Agent-Crypto côte à côte</b>
+              <small>Le dock peut être masqué, redimensionné ou affiché en plein écran sans ouvrir une seconde fenêtre.</small>
+            </article>
+            <article>
+              <span>Coût</span>
+              <b>Aucune API ajoutée</b>
+              <small>La session ChatGPT déjà authentifiée reste la source de conversation.</small>
+            </article>
+          </div>
+
+          <div class="atlas-chatgpt-workspace-actions">
+            <button class="btn primary" id="btnOpenIntegratedChatGPT" type="button">Ouvrir ChatGPT intégré dans cet onglet</button>
+            <button class="btn" id="btnCheckChatGPTDock" type="button">Vérifier l’extension</button>
+          </div>
+
+          <p class="atlas-chatgpt-workspace-note" id="atlasChatGPTDockDetail">
+            Installe une seule fois l’extension fournie avec cette version. Ensuite, le bouton ouvre le vrai ChatGPT dans cet onglet et Agent-Crypto reste disponible dans son dock intégré.
+          </p>
+        </section>
+      </div>
+    </details>
+
+    <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse" data-collapse-key="forge-aerith" id="forge-aerith">
+  <summary class="atlas-collapse-summary">
+    <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+    <span class="atlas-collapse-title">✦ Forge d’Aerith Pro</span>
+    <span class="atlas-collapse-subtitle">Atelier Créatrice · huit étapes · imports · audit · exports</span>
+  </summary>
+
+  <div class="atlas-collapse-body">
+    <section class="panel glass forge-aerith-panel forge-aerith-embedded-panel forge-workshop-only-panel" aria-labelledby="forge-aerith-title">
+      <div class="forge-embedded-toolbar forge-workshop-toolbar">
+        <div class="forge-embedded-identity forge-workshop-identity">
+          <strong id="forge-aerith-title">Forge d’Aerith Pro · Atelier Créatrice</strong>
+          <span id="forgeEmbeddedStatus">Chargement de l’atelier en huit étapes…</span>
+        </div>
+
+        <a
+          class="btn secondary forge-embedded-fullscreen"
+          href="../atlas_10_full/index.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ouvrir la Forge complète ↗
+        </a>
+      </div>
+
+      <div class="forge-embedded-stage forge-workshop-stage" id="forgeEmbeddedStage">
+        <div class="forge-embedded-loading" id="forgeEmbeddedLoading" role="status">
+          Préparation de l’Atelier Créatrice…
+        </div>
+
+        <iframe
+          id="forgeAerithEmbedded"
+          class="forge-embedded forge-workshop-embedded"
+          src="../atlas_10_full/index.html#unifiedForge"
+          title="Forge d’Aerith Pro — Atelier Créatrice en huit étapes"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
+  </div>
+</details>
+
     <section class="life-missions-intro glass" id="missions-vie" aria-labelledby="missions-vie-title">
       <div>
         <p class="eyebrow">✦ ERITH.IA · MISSIONS DE VIE</p>
@@ -2553,48 +2649,6 @@
       </div>
     </details>
 
-    <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse" data-collapse-key="forge-aerith" id="forge-aerith">
-  <summary class="atlas-collapse-summary">
-    <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-    <span class="atlas-collapse-title">✦ Forge d’Aerith Pro</span>
-    <span class="atlas-collapse-subtitle">Atelier Créatrice · huit étapes · imports · audit · exports</span>
-  </summary>
-
-  <div class="atlas-collapse-body">
-    <section class="panel glass forge-aerith-panel forge-aerith-embedded-panel forge-workshop-only-panel" aria-labelledby="forge-aerith-title">
-      <div class="forge-embedded-toolbar forge-workshop-toolbar">
-        <div class="forge-embedded-identity forge-workshop-identity">
-          <strong id="forge-aerith-title">Forge d’Aerith Pro · Atelier Créatrice</strong>
-          <span id="forgeEmbeddedStatus">Chargement de l’atelier en huit étapes…</span>
-        </div>
-
-        <a
-          class="btn secondary forge-embedded-fullscreen"
-          href="../atlas_10_full/index.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Ouvrir la Forge complète ↗
-        </a>
-      </div>
-
-      <div class="forge-embedded-stage forge-workshop-stage" id="forgeEmbeddedStage">
-        <div class="forge-embedded-loading" id="forgeEmbeddedLoading" role="status">
-          Préparation de l’Atelier Créatrice…
-        </div>
-
-        <iframe
-          id="forgeAerithEmbedded"
-          class="forge-embedded forge-workshop-embedded"
-          src="../atlas_10_full/index.html#unifiedForge"
-          title="Forge d’Aerith Pro — Atelier Créatrice en huit étapes"
-          loading="lazy">
-        </iframe>
-      </div>
-    </section>
-  </div>
-</details>
-
     <details class="atlas-collapse glass life-project-collapse" data-collapse-key="mesure-audience" id="mesure-audience">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
@@ -2660,7 +2714,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R4</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.86R5</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2670,6 +2724,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.86r4-admin-recovery-chatgpt"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.86r5-chatgpt-dock-forge-readable"></script>
 </body>
 </html>
