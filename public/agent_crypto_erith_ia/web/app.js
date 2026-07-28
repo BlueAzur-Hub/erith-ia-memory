@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R6 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R7 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R6";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R7";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4883,6 +4883,32 @@ function atlasComparisonTooltipRows(chart, targetX) {
   });
 }
 
+/* =========================================================
+   Build 28.1.88R7 — STABLE CURSOR TOOLTIP TRACKING
+   Le panneau suit la souris réelle. Il ne suit plus le caretY
+   du point de courbe voisin, qui pouvait changer de série et
+   provoquer une oscillation haut/bas. Le changement de côté
+   reste actif avec une marge de tolérance anti-bascule.
+   ========================================================= */
+const atlasTooltipPointerPlugin = {
+  id: "atlasTooltipPointer",
+  beforeEvent(chart, args) {
+    const event = args?.event;
+    if (!chart || !event) return;
+
+    if (event.type === "mouseout" || event.type === "mouseleave") {
+      chart.$atlasTooltipPointer = null;
+      return;
+    }
+
+    const x = Number(event.x);
+    const y = Number(event.y);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+
+    chart.$atlasTooltipPointer = { x, y };
+  }
+};
+
 function atlasPositionChartTooltip(chart, tooltip, node) {
   const shell = chart?.canvas?.closest?.(".chart-shell");
   if (!shell || !node) return;
@@ -4890,22 +4916,51 @@ function atlasPositionChartTooltip(chart, tooltip, node) {
   const shellRect = shell.getBoundingClientRect();
   const canvasRect = chart.canvas.getBoundingClientRect();
   const measured = node.getBoundingClientRect();
+  const pointer = chart.$atlasTooltipPointer || null;
 
-  const anchorX = canvasRect.left - shellRect.left + Number(tooltip.caretX || 0);
-  const anchorY = canvasRect.top - shellRect.top + Number(tooltip.caretY || 0);
   const canvasLeft = canvasRect.left - shellRect.left;
+  const canvasTop = canvasRect.top - shellRect.top;
   const canvasWidth = canvasRect.width || shell.clientWidth;
-  const cursorOnRight = anchorX > canvasLeft + canvasWidth * 0.58;
+  const canvasHeight = canvasRect.height || shell.clientHeight;
 
-  let left = cursorOnRight
-    ? anchorX - measured.width - 18
-    : anchorX + 18;
-  let top = anchorY - measured.height * 0.50;
+  const pointerX = Number.isFinite(Number(pointer?.x))
+    ? Number(pointer.x)
+    : Number(tooltip.caretX || 0);
+  const pointerY = Number.isFinite(Number(pointer?.y))
+    ? Number(pointer.y)
+    : Number(tooltip.caretY || 0);
 
-  left = clamp(10, Math.max(10, shell.clientWidth - measured.width - 10), left);
-  top = clamp(10, Math.max(10, shell.clientHeight - measured.height - 10), top);
+  const anchorX = canvasLeft + clamp(0, canvasWidth, pointerX);
+  const anchorY = canvasTop + clamp(0, canvasHeight, pointerY);
+  const gap = 18;
+  const edge = 10;
+  const switchTolerance = 34;
+  const width = measured.width || 344;
+  const height = measured.height || 120;
+  const roomLeft = anchorX - gap - edge;
+  const roomRight = shell.clientWidth - anchorX - gap - edge;
 
-  node.dataset.dock = cursorOnRight ? "left" : "right";
+  let dock = node.dataset.dock === "left" || node.dataset.dock === "right"
+    ? node.dataset.dock
+    : "";
+
+  if (!dock) {
+    dock = roomRight >= width || roomRight >= roomLeft ? "right" : "left";
+  } else if (dock === "right") {
+    if (roomRight < width && roomLeft > roomRight + switchTolerance) dock = "left";
+  } else if (roomLeft < width && roomRight > roomLeft + switchTolerance) {
+    dock = "right";
+  }
+
+  let left = dock === "left"
+    ? anchorX - width - gap
+    : anchorX + gap;
+  let top = anchorY - height * 0.50;
+
+  left = clamp(edge, Math.max(edge, shell.clientWidth - width - edge), left);
+  top = clamp(edge, Math.max(edge, shell.clientHeight - height - edge), top);
+
+  node.dataset.dock = dock;
   node.style.left = `${Math.round(left)}px`;
   node.style.top = `${Math.round(top)}px`;
 }
@@ -5543,7 +5598,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
-      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
+      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin, atlasTooltipPointerPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -5811,7 +5866,7 @@ function atlasPatchChartLastPoint(
 
 
 /* =========================================================
-   Build 28.1.88R6 — LIVE BINANCE TERMINAL POINT
+   Build 28.1.88R7 — LIVE BINANCE TERMINAL POINT
    Le point terminal visible suit le WebSocket Binance sans
    réécrire l'historique source. Un unique point live est ajouté
    ou remplacé ; il ne s'accumule jamais.
@@ -6120,7 +6175,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     state.chartEngineV2.realChart = new Chart(ctx, {
       type: "line",
       data: { datasets },
-      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin],
+      plugins: [atlasChartMetadataPlugin, atlasVolumeOverlayPlugin, atlasOverlayAxesPlugin, atlasTooltipPointerPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -8066,7 +8121,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R6 — TARGET TOP 5 LIVE cycle
+   Build 28.1.88R7 — TARGET TOP 5 LIVE cycle
    Le cartouche seul fait défiler les presets. Les cinq cartes
    et le Market Flow conservent exactement leur ajout/retrait.
    ========================================================= */
@@ -8138,7 +8193,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.1.88R6"
+      source: "target-top5-cycle-28.1.88R7"
     });
   }
 
