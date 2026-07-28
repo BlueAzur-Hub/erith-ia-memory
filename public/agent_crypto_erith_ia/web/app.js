@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R12 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R13 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R12";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R13";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11095,7 +11095,7 @@ const atlasLocalDialogueState = {
 };
 
 /* =========================================================
-   Build 28.1.88R12 — Atlas-10 automatic local reports
+   Build 28.1.88R13 — Atlas-10 automatic local reports
    Four sequential read-only summaries, one validated snapshot.
    ========================================================= */
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
@@ -17824,3 +17824,305 @@ window.addEventListener("atlas:v2mode", event => {
     window.setTimeout(() => atlasAdminOpenWorkspace({ source: "mode-event" }), 0);
   }
 });
+
+/* =========================================================
+   Build 28.1.88R13 — Scanner Live Collector
+   Collecte silencieuse et horodatée de quatre paniers :
+   Target Top 5, Hausses 5, Baisses 5 et Volumes 5.
+   - Le classement reste exclusivement CoinGecko Market Snapshot.
+   - Le prix courant vient de Binance lorsqu'une cotation déjà sûre existe,
+     sinon de la dernière valeur CoinGecko réellement chargée.
+   - Le Bridge V1.7 peut compléter et persister localement les relevés.
+   - Aucune action financière, aucun nouveau panneau, aucune écriture GitHub.
+   ========================================================= */
+const ATLAS_SCANNER_COLLECTOR_SCHEMA = "atlas_scanner_live_snapshot_v1";
+const ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY = "agent_crypto_scanner_live_archive_v1";
+const ATLAS_SCANNER_COLLECTOR_PENDING_KEY = "agent_crypto_scanner_live_pending_v1";
+const ATLAS_SCANNER_COLLECTOR_INTERVAL_MS = 60_000;
+const ATLAS_SCANNER_COLLECTOR_LOCAL_LIMIT = 240;
+const ATLAS_SCANNER_COLLECTOR_PENDING_LIMIT = 60;
+const ATLAS_SCANNER_COLLECTOR_BRIDGE_URL = `${ATLAS_LOCAL_BRIDGE_BASE}/scanner-snapshot`;
+const atlasScannerCollectorRuntime = {
+  timer: 0,
+  flushTimer: 0,
+  busy: false,
+  lastFingerprint: "",
+  lastSavedAt: 0,
+  bridgeBackoffUntil: 0,
+  bridgeFailures: 0
+};
+
+function atlasScannerCollectorRead(key) {
+  try {
+    const rows = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(rows) ? rows : [];
+  } catch {
+    return [];
+  }
+}
+
+function atlasScannerCollectorWrite(key, rows, limit) {
+  const safe = (Array.isArray(rows) ? rows : []).slice(-Math.max(1, Number(limit) || 1));
+  try { localStorage.setItem(key, JSON.stringify(safe)); } catch {}
+  return safe;
+}
+
+function atlasScannerCollectorFinite(value, digits = null) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  if (digits === null) return number;
+  const factor = 10 ** Math.max(0, Number(digits) || 0);
+  return Math.round(number * factor) / factor;
+}
+
+function atlasScannerCollectorBasketCoins(kind) {
+  if (kind === "top5") {
+    return ["BTC", "ETH", "BNB", "XRP", "SOL"]
+      .map(symbol => atlasStrictCoinBySymbol(symbol))
+      .filter(Boolean)
+      .slice(0, 5);
+  }
+  if (kind === "gainers" || kind === "losers" || kind === "volume") {
+    return atlasScannerPool(kind, 1).slice(0, 5);
+  }
+  return [];
+}
+
+function atlasScannerCollectorAsset(coin, basket, scannerRank, now = Date.now()) {
+  const quote = atlasCurrentQuoteForCoin(coin, now);
+  const quotePrice = atlasScannerCollectorFinite(quote?.price, Number(quote?.price) < 1 ? 8 : 4);
+  const marketPrice = atlasScannerCollectorFinite(coin?.priceEur ?? coin?.price, Number(coin?.priceEur ?? coin?.price) < 1 ? 8 : 4);
+  const marketChange = atlasScannerCollectorFinite(coin?.change24h, 4);
+  const quoteChange = atlasScannerCollectorFinite(quote?.change24h, 4);
+  const safeSymbol = atlasScannerSafeExchangeSymbol(coin);
+  const metric = basket === "volume"
+    ? atlasScannerCollectorFinite(coin?.volume24h, 2)
+    : marketChange;
+
+  return {
+    coin_id: coin?.id || null,
+    symbol: String(coin?.symbol || "").toUpperCase() || null,
+    name: coin?.name || null,
+    market_rank: atlasScannerCollectorFinite(coin?.rank, 0),
+    scanner_rank: scannerRank,
+    classification_source: "CoinGecko Market Snapshot",
+    classification_metric: basket === "volume" ? "volume_24h_eur" : "change_24h_pct",
+    classification_value: metric,
+    market_price_eur: marketPrice,
+    market_change_24h_pct: marketChange,
+    market_volume_24h_eur: atlasScannerCollectorFinite(coin?.volume24h, 2),
+    observed_price_eur: quotePrice ?? marketPrice,
+    observed_change_24h_pct: quoteChange ?? marketChange,
+    observed_source: quote?.source || coin?.source || state.mainSource || "CoinGecko",
+    observed_status: quote?.status || (marketPrice !== null ? "conserved" : "unavailable"),
+    observed_at: quote?.timestamp ? new Date(quote.timestamp).toISOString() : atlasStrictTimestamp(state.timestamp),
+    binance_symbol_candidate: safeSymbol || null,
+    binance_candidate_allowed: !!safeSymbol
+  };
+}
+
+function atlasScannerCollectorBuildBasket(kind, now = Date.now()) {
+  const coins = atlasScannerCollectorBasketCoins(kind);
+  const labels = {
+    top5: "Target Top 5",
+    gainers: "Hausses 5",
+    losers: "Baisses 5",
+    volume: "Volumes 5"
+  };
+  return {
+    id: kind,
+    label: labels[kind] || kind,
+    ranking_source: kind === "top5" ? "Agent-Crypto canonical definition" : "CoinGecko Market Snapshot",
+    ranking_metric: kind === "volume" ? "volume_24h_eur" : kind === "top5" ? "canonical_order" : "change_24h_pct",
+    assets: coins.map((coin, index) => atlasScannerCollectorAsset(coin, kind, index + 1, now))
+  };
+}
+
+function atlasScannerCollectorBuildSnapshot(reason = "timer") {
+  if (!state.liveOk || !Array.isArray(state.coins) || state.coins.length < 5) return null;
+  const collectedAt = new Date().toISOString();
+  const minute = collectedAt.slice(0, 16);
+  const collectorId = typeof getCollectorId === "function" ? getCollectorId() : "local-browser";
+  const marketTimestamp = atlasStrictTimestamp(state.dataBroker?.market?.timestamp || state.timestamp);
+  const baskets = {
+    top5: atlasScannerCollectorBuildBasket("top5"),
+    gainers: atlasScannerCollectorBuildBasket("gainers"),
+    losers: atlasScannerCollectorBuildBasket("losers"),
+    volume: atlasScannerCollectorBuildBasket("volume")
+  };
+  const signature = Object.values(baskets)
+    .map(basket => basket.assets.map(asset => asset.coin_id).join(","))
+    .join("|");
+  const fingerprint = `${minute}|${marketTimestamp || "none"}|${signature}`;
+  const snapshotId = `${String(collectorId || "local-browser").replace(/[^a-zA-Z0-9_-]/g, "-")}_${collectedAt.slice(0, 19).replace(/[:T]/g, "-")}`;
+
+  return {
+    schema: ATLAS_SCANNER_COLLECTOR_SCHEMA,
+    snapshot_id: snapshotId,
+    collector_id: collectorId || "local-browser",
+    collector_type: "agent_crypto_browser",
+    release: ATLAS_RELEASE,
+    collected_at: collectedAt,
+    reason: String(reason || "timer"),
+    market: {
+      source: state.dataBroker?.market?.source || "CoinGecko",
+      mode: state.dataBroker?.market?.mode || state.sourceLock?.mode || null,
+      status: state.dataBroker?.market?.status || (state.liveOk ? "ready" : "unavailable"),
+      timestamp: marketTimestamp,
+      snapshot_id: state.dataBroker?.market?.snapshotId || state.sourceLock?.snapshotId || null,
+      assets_loaded: Number(state.coins.length || 0),
+      target_assets: 250,
+      quote_currency: "EUR"
+    },
+    exchange_feed: {
+      source: state.dataBroker?.exchangeFeed?.source || "Binance WebSocket",
+      status: state.dataBroker?.exchangeFeed?.status || null,
+      last_message_at: atlasStrictTimestamp(state.dataBroker?.exchangeFeed?.lastMessageAt),
+      direct_pairs: atlasScannerCollectorFinite(state.dataBroker?.exchangeFeed?.directCount, 0),
+      derived_pairs: atlasScannerCollectorFinite(state.dataBroker?.exchangeFeed?.derivedCount, 0)
+    },
+    baskets,
+    safety: {
+      observation_only: true,
+      no_exchange_action: true,
+      no_wallet_action: true,
+      no_github_write: true,
+      ranking_never_decided_by_binance: true
+    },
+    fingerprint
+  };
+}
+
+function atlasScannerCollectorStore(snapshot) {
+  if (!snapshot) return false;
+  const archive = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY);
+  const last = archive[archive.length - 1];
+  if (last?.fingerprint === snapshot.fingerprint) return false;
+  archive.push(snapshot);
+  atlasScannerCollectorWrite(ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY, archive, ATLAS_SCANNER_COLLECTOR_LOCAL_LIMIT);
+
+  const pending = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_PENDING_KEY);
+  if (!pending.some(row => row?.snapshot_id === snapshot.snapshot_id)) pending.push(snapshot);
+  atlasScannerCollectorWrite(ATLAS_SCANNER_COLLECTOR_PENDING_KEY, pending, ATLAS_SCANNER_COLLECTOR_PENDING_LIMIT);
+  atlasScannerCollectorRuntime.lastFingerprint = snapshot.fingerprint;
+  atlasScannerCollectorRuntime.lastSavedAt = Date.now();
+  return true;
+}
+
+function atlasScannerCollectorLatest() {
+  const archive = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY);
+  return archive[archive.length - 1] || null;
+}
+
+async function atlasScannerCollectorPost(snapshot) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 14_000);
+  try {
+    const response = await fetch(ATLAS_SCANNER_COLLECTOR_BRIDGE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(snapshot),
+      cache: "no-store",
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Bridge collector HTTP ${response.status}`);
+    const payload = await response.json();
+    if (!payload?.ok) throw new Error(payload?.error || "Bridge collector a refusé le snapshot");
+    return payload;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+async function atlasScannerCollectorFlush() {
+  if (atlasScannerCollectorRuntime.busy) return false;
+  if (Date.now() < Number(atlasScannerCollectorRuntime.bridgeBackoffUntil || 0)) return false;
+  const pending = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_PENDING_KEY);
+  if (!pending.length) return true;
+
+  atlasScannerCollectorRuntime.busy = true;
+  try {
+    const batch = pending.slice(0, 6);
+    const sent = new Set();
+    for (const snapshot of batch) {
+      await atlasScannerCollectorPost(snapshot);
+      sent.add(snapshot.snapshot_id);
+    }
+    const remaining = pending.filter(row => !sent.has(row?.snapshot_id));
+    atlasScannerCollectorWrite(ATLAS_SCANNER_COLLECTOR_PENDING_KEY, remaining, ATLAS_SCANNER_COLLECTOR_PENDING_LIMIT);
+    atlasScannerCollectorRuntime.bridgeFailures = 0;
+    atlasScannerCollectorRuntime.bridgeBackoffUntil = 0;
+    return true;
+  } catch (error) {
+    atlasScannerCollectorRuntime.bridgeFailures += 1;
+    const delay = Math.min(10 * 60_000, 60_000 * atlasScannerCollectorRuntime.bridgeFailures);
+    atlasScannerCollectorRuntime.bridgeBackoffUntil = Date.now() + delay;
+    console.debug("Scanner Live Collector : Bridge différé", String(error?.message || error || ""));
+    return false;
+  } finally {
+    atlasScannerCollectorRuntime.busy = false;
+  }
+}
+
+function atlasScannerCollectorCapture(reason = "timer", options = {}) {
+  const snapshot = atlasScannerCollectorBuildSnapshot(reason);
+  if (!snapshot) return false;
+  const stored = atlasScannerCollectorStore(snapshot);
+  if (stored || options.forceFlush) void atlasScannerCollectorFlush();
+  return stored;
+}
+
+function atlasScannerCollectorSchedule(reason = "market") {
+  window.clearTimeout(atlasScannerCollectorRuntime.flushTimer);
+  atlasScannerCollectorRuntime.flushTimer = window.setTimeout(() => {
+    atlasScannerCollectorRuntime.flushTimer = 0;
+    atlasScannerCollectorCapture(reason);
+  }, 1200);
+}
+
+function atlasScannerCollectorInit() {
+  if (!atlasScannerCollectorRuntime.timer) {
+    atlasScannerCollectorRuntime.timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") atlasScannerCollectorCapture("minute-pulse");
+      else void atlasScannerCollectorFlush();
+    }, ATLAS_SCANNER_COLLECTOR_INTERVAL_MS);
+  }
+  window.addEventListener("online", () => void atlasScannerCollectorFlush());
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      atlasScannerCollectorCapture("visibility-resume", { forceFlush: true });
+    }
+  });
+  window.setTimeout(() => atlasScannerCollectorCapture("startup", { forceFlush: true }), 5000);
+}
+
+/* Hook non destructif : tout snapshot Market validé programme une collecte. */
+const atlasBrokerCommitMarketR12 = atlasBrokerCommitMarket;
+atlasBrokerCommitMarket = function atlasBrokerCommitMarketR13(snapshot, mode) {
+  const result = atlasBrokerCommitMarketR12(snapshot, mode);
+  atlasScannerCollectorSchedule(`market-${String(mode || "unknown")}`);
+  return result;
+};
+
+/* Prépare déjà la donnée pour la future fiabilisation Atlas, sans changer ses rapports R12. */
+const atlasBuildStrictFactContractR12 = atlasBuildStrictFactContract;
+atlasBuildStrictFactContract = function atlasBuildStrictFactContractR13(period, chart, chartResult, comparisonIds, chartTruth) {
+  const contract = atlasBuildStrictFactContractR12(period, chart, chartResult, comparisonIds, chartTruth);
+  const latest = atlasScannerCollectorLatest();
+  contract.scanner_collector = latest ? {
+    status: "available",
+    schema: latest.schema,
+    collected_at: latest.collected_at,
+    market_timestamp: latest.market?.timestamp || null,
+    market_mode: latest.market?.mode || null,
+    baskets: latest.baskets || null,
+    note: "Classements CoinGecko ; cotations observées Binance lorsqu'elles sont sûres, sinon CoinGecko."
+  } : {
+    status: "empty",
+    note: "La collecte commence automatiquement dès qu'un Market Snapshot est disponible."
+  };
+  return contract;
+};
+
+atlasScannerCollectorInit();
+
