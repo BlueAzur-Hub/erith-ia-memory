@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R7 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R8 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R7";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R8";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4884,7 +4884,7 @@ function atlasComparisonTooltipRows(chart, targetX) {
 }
 
 /* =========================================================
-   Build 28.1.88R7 — STABLE CURSOR TOOLTIP TRACKING
+   Build 28.1.88R8 — STABLE CURSOR TOOLTIP TRACKING
    Le panneau suit la souris réelle. Il ne suit plus le caretY
    du point de courbe voisin, qui pouvait changer de série et
    provoquer une oscillation haut/bas. Le changement de côté
@@ -5568,9 +5568,9 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       yAxisID: "y",
       borderWidth: 2.55,
       pointRadius(context) {
-        return context.dataIndex === context.dataset.data.length - 1 ? 7.2 : 0;
+        return context.dataIndex === context.dataset.data.length - 1 ? 5.2 : 0;
       },
-      pointHoverRadius: 9.5,
+      pointHoverRadius: 6.4,
       pointHitRadius: 32,
       tension: 0.08,
       fill: { target: "start" },
@@ -5866,29 +5866,66 @@ function atlasPatchChartLastPoint(
 
 
 /* =========================================================
-   Build 28.1.88R7 — LIVE BINANCE TERMINAL POINT
-   Le point terminal visible suit le WebSocket Binance sans
-   réécrire l'historique source. Un unique point live est ajouté
-   ou remplacé ; il ne s'accumule jamais.
+   Build 28.1.88R8 — SYNCHRONIZED LIVE TERMINAL POINTS
+   Tous les points live visibles partagent le même X terminal.
+   Une cotation qui arrive plus vite qu'une autre ne peut donc
+   plus faire "sauter" le point de droite d'une courbe à l'autre.
+   Les prix restent propres à chaque actif et continuent d'être
+   alimentés par leur dernière cotation Binance disponible.
    ========================================================= */
+function atlasLiveEndpointAnchorX(chart, datasets = []) {
+  const existing = Number(chart?.$atlasLiveEndpointX);
+  if (Number.isFinite(existing)) return existing;
+
+  const historicalTimes = (datasets || [])
+    .flatMap(dataset => (dataset?.data || [])
+      .filter(point => point?.atlasLiveEndpoint !== true)
+      .map(point => Number(point?.x)))
+    .filter(Number.isFinite);
+
+  if (!historicalTimes.length) return NaN;
+
+  const intervals = (datasets || [])
+    .map(dataset => atlasMedianInterval(
+      (dataset?.data || []).filter(point => point?.atlasLiveEndpoint !== true)
+    ))
+    .filter(value => Number.isFinite(value) && value > 0)
+    .sort((a, b) => a - b);
+
+  const medianInterval = intervals.length
+    ? intervals[Math.floor(intervals.length / 2)]
+    : 60000;
+  const terminalGap = clamp(1000, 60000, medianInterval * 0.08);
+  const anchor = Math.max(...historicalTimes) + terminalGap;
+
+  chart.$atlasLiveEndpointX = anchor;
+  return anchor;
+}
+
 function atlasPatchVisibleChartLiveEndpoints(changedIds = []) {
   const chart = state.chartEngineV2?.realChart;
   if (!chart || !Array.isArray(chart.data?.datasets) || !chart.data.datasets.length) return false;
 
+  const datasets = atlasChartPriceDatasets(chart);
+  if (!datasets.length) return false;
+
+  const visibleIds = new Set(datasets
+    .map(dataset => (dataset?.atlasCoin || chart.$atlasCoin || null)?.id || '')
+    .filter(Boolean));
   const changed = new Set((changedIds || []).filter(Boolean));
+  if (changed.size && ![...changed].some(id => visibleIds.has(id))) return false;
+
   const comparison = chart.$atlasMode === "comparison";
   const base100 = comparison || chart.$atlasView === "base100";
+  const sharedX = atlasLiveEndpointAnchorX(chart, datasets);
+  if (!Number.isFinite(sharedX)) return false;
+
   let touched = false;
 
-  atlasChartPriceDatasets(chart).forEach(dataset => {
+  datasets.forEach(dataset => {
     const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
     const coinId = coin?.id || "";
-    if (!coinId || (changed.size && !changed.has(coinId))) return;
-
-    const quote = atlasExchangeQuoteForCoin(coinId);
-    const livePrice = Number(quote?.price);
-    const liveTimestamp = Number(quote?.timestamp);
-    if (quote?.status !== "live" || !Number.isFinite(livePrice) || livePrice <= 0 || !Number.isFinite(liveTimestamp)) return;
+    if (!coinId) return;
 
     const data = Array.isArray(dataset.data) ? dataset.data : [];
     if (!data.length) return;
@@ -5901,8 +5938,23 @@ function atlasPatchVisibleChartLiveEndpoints(changedIds = []) {
     const firstPrice = Number(firstHistorical?.rawPrice);
     if (base100 && !(Number.isFinite(firstPrice) && firstPrice > 0)) return;
 
+    const quote = atlasExchangeQuoteForCoin(coinId);
+    const livePrice = Number(quote?.price);
+    const quoteIsUsable = quote?.status === "live"
+      && Number.isFinite(livePrice)
+      && livePrice > 0;
+
+    const last = data[data.length - 1];
+    if (!quoteIsUsable) {
+      if (last?.atlasLiveEndpoint === true && Number(last.x) !== sharedX) {
+        last.x = sharedX;
+        touched = true;
+      }
+      return;
+    }
+
     const livePoint = {
-      x: liveTimestamp,
+      x: sharedX,
       y: base100 ? livePrice / firstPrice * 100 : livePrice,
       rawPrice: livePrice,
       baseValue: base100 ? livePrice / firstPrice * 100 : null,
@@ -5910,15 +5962,18 @@ function atlasPatchVisibleChartLiveEndpoints(changedIds = []) {
       atlasLiveSource: String(quote.source || "Binance WebSocket")
     };
 
-    const last = data[data.length - 1];
     if (last?.atlasLiveEndpoint === true) {
+      const changedPoint = Number(last.x) !== livePoint.x
+        || Number(last.y) !== livePoint.y
+        || Number(last.rawPrice) !== livePoint.rawPrice;
       Object.assign(last, livePoint);
+      touched = touched || changedPoint;
     } else {
       data.push(livePoint);
+      touched = true;
     }
 
     dataset.atlasLiveQuote = quote;
-    touched = true;
   });
 
   if (!touched) return false;
@@ -6157,8 +6212,8 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
         data: entry.data,
         parsing: false,
         borderWidth: index === 0 ? 3.15 : 2.55,
-        pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 7.2 : 0; },
-        pointHoverRadius: 9.5,
+        pointRadius(context) { return context.dataIndex === context.dataset.data.length - 1 ? 5.2 : 0; },
+        pointHoverRadius: 6.4,
         pointHitRadius: 32,
         tension: 0.08,
         spanGaps: false,
@@ -8121,7 +8176,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R7 — TARGET TOP 5 LIVE cycle
+   Build 28.1.88R8 — TARGET TOP 5 LIVE cycle
    Le cartouche seul fait défiler les presets. Les cinq cartes
    et le Market Flow conservent exactement leur ajout/retrait.
    ========================================================= */
@@ -8193,7 +8248,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.1.88R7"
+      source: "target-top5-cycle-28.1.88R8"
     });
   }
 
