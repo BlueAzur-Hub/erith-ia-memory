@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.86 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.86R1 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -16,7 +16,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.86R1";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4055,6 +4055,151 @@ async function atlasFetchChartDirectForFamily(c, days, family, options = {}) {
   return family === "binance"
     ? fetchBinanceChartDirect(c, days, options)
     : fetchCoinGeckoChartDirect(c, days, options);
+}
+
+/* =========================================================
+   Build 28.1.86R1 — Scanner history transport fallback
+   CoinGecko reste la source du classement Market.
+   Binance peut fournir uniquement la série historique,
+   afin d'éviter qu'un blocage CORS/rate-limit CoinGecko
+   rende Hausses 5, Baisses 5 ou Volumes 5 inutilisables.
+   ========================================================= */
+let atlasBinanceSpotCatalogPromise = null;
+const atlasBinanceEurUsdtKlineCache = new Map();
+
+function atlasScannerSafeExchangeSymbol(coin) {
+  const symbol = String(coin?.symbol || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!/^[A-Z0-9]{2,15}$/.test(symbol)) return "";
+  const duplicates = (state.coins || []).filter(row =>
+    String(row?.symbol || "").toUpperCase().replace(/[^A-Z0-9]/g, "") === symbol
+  );
+  /* Un ticker ambigu ne doit jamais servir à associer une autre crypto sur Binance. */
+  return duplicates.length === 1 ? symbol : "";
+}
+
+async function atlasLoadBinanceSpotCatalog(options = {}) {
+  if (atlasBinanceSpotCatalogPromise) return atlasBinanceSpotCatalogPromise;
+
+  atlasBinanceSpotCatalogPromise = (async () => {
+    let lastError = null;
+    for (const base of ATLAS_BINANCE_CHART_ENDPOINTS) {
+      try {
+        const payload = await atlasFetchJson(`${base}/api/v3/exchangeInfo`, {
+          signal: options.signal,
+          timeoutMs: Math.max(12000, Number(options.timeoutMs || 18000))
+        });
+        const symbols = new Set(
+          (Array.isArray(payload?.symbols) ? payload.symbols : [])
+            .filter(row => row?.status === "TRADING" && row?.isSpotTradingAllowed !== false)
+            .map(row => String(row?.symbol || "").toUpperCase())
+            .filter(Boolean)
+        );
+        if (!symbols.size) throw new Error("catalogue Binance vide");
+        return symbols;
+      } catch (error) {
+        if (error?.name === "AbortError") throw error;
+        lastError = error;
+      }
+    }
+    throw lastError || new Error("catalogue Binance indisponible");
+  })().catch(error => {
+    atlasBinanceSpotCatalogPromise = null;
+    throw error;
+  });
+
+  return atlasBinanceSpotCatalogPromise;
+}
+
+async function atlasFetchCachedEurUsdtRows(chartConfig, options = {}) {
+  const key = `${chartConfig.interval}:${chartConfig.limit}`;
+  const cached = atlasBinanceEurUsdtKlineCache.get(key);
+  if (cached && Date.now() - Number(cached.savedAt || 0) < 60_000 && Array.isArray(cached.rows)) {
+    return cached.rows;
+  }
+  const rows = await atlasFetchBinanceKlineRows("EURUSDT", chartConfig.interval, chartConfig.limit, options);
+  atlasBinanceEurUsdtKlineCache.set(key, { rows, savedAt: Date.now() });
+  return rows;
+}
+
+async function fetchBinanceChartDirectDynamic(c, days, options = {}) {
+  const baseSymbol = atlasScannerSafeExchangeSymbol(c);
+  if (!baseSymbol) throw new Error("symbole Binance non exploitable");
+
+  const period = Number(days || 1);
+  const chartConfig = atlasBinanceChartPeriodConfig(period);
+  const catalog = await atlasLoadBinanceSpotCatalog(options);
+  const directSymbol = `${baseSymbol}EUR`;
+  const usdtSymbol = `${baseSymbol}USDT`;
+  let directError = null;
+
+  if (catalog.has(directSymbol)) {
+    try {
+      const rows = await atlasFetchBinanceKlineRows(directSymbol, chartConfig.interval, chartConfig.limit, options);
+      const normalized = atlasNormalizeBinanceKlines(rows);
+      const integrity = atlasValidateChartSeries({
+        c,
+        days: period,
+        prices: normalized.series,
+        payload: null,
+        sourceMode: "binance-scanner-direct-klines"
+      });
+      if (!integrity.ok) throw new Error(`chandelles ${directSymbol} refusées · ${integrity.reason}`);
+      return {
+        series: normalized.series,
+        volumeSeries: normalized.volumeSeries,
+        source: `Binance Spot ${directSymbol.replace(/EUR$/, "/EUR")} · chandelles scanner`,
+        blocked: false,
+        kind: "binance-scanner-direct-klines",
+        sourceMode: "binance-scanner-direct-klines",
+        periodDays: period,
+        apiDays: period,
+        interval: chartConfig.interval,
+        pointCount: normalized.series.length,
+        generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
+        integrity
+      };
+    } catch (error) {
+      if (error?.name === "AbortError") throw error;
+      directError = error;
+    }
+  }
+
+  if (!catalog.has(usdtSymbol)) {
+    throw new Error(
+      `aucune paire Binance exploitable (${directSymbol}/${usdtSymbol})`
+      + `${directError ? ` · direct : ${String(directError.message || directError)}` : ""}`
+    );
+  }
+
+  const [cryptoRows, eurRows] = await Promise.all([
+    atlasFetchBinanceKlineRows(usdtSymbol, chartConfig.interval, chartConfig.limit, options),
+    atlasFetchCachedEurUsdtRows(chartConfig, options)
+  ]);
+  const normalized = atlasNormalizeDerivedBinanceKlines(cryptoRows, eurRows);
+  const integrity = atlasValidateChartSeries({
+    c,
+    days: period,
+    prices: normalized.series,
+    payload: null,
+    sourceMode: "binance-scanner-derived-klines"
+  });
+  if (!integrity.ok) {
+    throw new Error(`chandelles dérivées ${usdtSymbol} ÷ EURUSDT refusées · ${integrity.reason}`);
+  }
+  return {
+    series: normalized.series,
+    volumeSeries: normalized.volumeSeries,
+    source: `Binance Spot ${usdtSymbol.replace(/USDT$/, "/USDT")} ÷ EUR/USDT · chandelles scanner`,
+    blocked: false,
+    kind: "binance-scanner-derived-klines",
+    sourceMode: "binance-scanner-derived-klines",
+    periodDays: period,
+    apiDays: period,
+    interval: chartConfig.interval,
+    pointCount: normalized.series.length,
+    generatedAt: new Date(integrity.metrics.lastTimestamp).toISOString(),
+    integrity
+  };
 }
 
 async function fetchCoinGeckoChartDirect(c, days, options = {}) {
@@ -9322,9 +9467,21 @@ document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
 els.btnChartSolo?.addEventListener("click", () => atlasResetComparison(getSelectedCoin() || state.coins?.[0] || null));
 els.btnChartTop3?.addEventListener("click", () => atlasSelectTopComparison(3));
 els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
-els.btnChartGainers?.addEventListener("click", atlasHandleGainersClickV286);
-els.btnChartLosers?.addEventListener("click", () => atlasSelectMarketPreset("losers", 5));
-els.btnChartVolume5?.addEventListener("click", () => atlasSelectMarketPreset("volume", 5));
+els.btnChartGainers?.addEventListener("click", event => {
+  event?.preventDefault?.();
+  event?.stopPropagation?.();
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R1" });
+});
+els.btnChartLosers?.addEventListener("click", event => {
+  event?.preventDefault?.();
+  event?.stopPropagation?.();
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R1" });
+});
+els.btnChartVolume5?.addEventListener("click", event => {
+  event?.preventDefault?.();
+  event?.stopPropagation?.();
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.1.86R1" });
+});
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
  window.addEventListener("resize", () => { if (state.chartEngineV2?.realChart) { requestAnimationFrame(() => state.chartEngineV2.realChart.resize()); }
@@ -10028,7 +10185,7 @@ function atlasAccessLock() {
 }
 
 /* =========================================================
-   Build 28.1.86 — Bridge Auto Health Quiet Status
+   Build 28.1.86R1 — Bridge Auto Health Quiet Status
    Vérification locale uniquement en administration privée.
    Les sondes silencieuses ne réannoncent pas un état inchangé.
    ========================================================= */
@@ -11921,7 +12078,7 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 loadQuestionnaire(); async function copySessionBrief() { const text = buildSessionBrief(); const out = document.getElementById("questionnaireOutput"); try { await navigator.clipboard.writeText(text); if (out) out.textContent = text + "\n\n---\nCopie presse-papiers : OK."; } catch { if (out) out.textContent = text + "\n\n---\nCopie automatique impossible : sélectionne le texte et copie manuellement."; }
 } function downloadSessionBrief() { const text = buildSessionBrief(); const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const stamp = new Date().toISOString().slice(0, 10); a.href = url; a.download = `agent_crypto_note_reprise_${stamp}.md`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86
+} /* Atlas-10 Crypto — Math Core V3 · Build 28.1.86R1
    Mesures historiques calculées uniquement sur les séries réelles déjà chargées.
    Lecture seule : aucune clé API, aucun capital engagé, aucune mesure inventée.
    Hotfix R1 : restauration des helpers Math V2 encore requis par le rendu V3.
@@ -15411,7 +15568,7 @@ window.setTimeout(atlasWorkspaceRenderStrip, 900);
 
 
 /* =========================================================
-   Build 28.1.86 — Hausses 5 Transaction Rebuild
+   Build 28.1.86R1 — Hausses 5 Transaction Rebuild
    Market-first scanners. History never decides the ranking.
    ========================================================= */
 const ATLAS_SCANNER_POOL_SIZE = 24;
@@ -15447,7 +15604,7 @@ function atlasScannerSetUiState(preset, status, message = "") {
 }
 
 /* =========================================================
-   Build 28.1.86 — Hausses 5 Rebuild
+   Build 28.1.86R1 — Hausses 5 Rebuild
    Aucun clic silencieux : toute attente, réussite ou erreur
    devient visible sans remplacer le graphique validé.
    ========================================================= */
@@ -15574,7 +15731,9 @@ function atlasScannerPool(preset, period) {
   let rows = (state.coins || [])
     .filter(coin => Number.isFinite(Number(coin?.rank)))
     .filter(coin => Number(coin.rank) >= 1 && Number(coin.rank) <= 250)
-    .filter(coin => Number.isFinite(Number(coin?.priceEur ?? coin?.price)));
+    .filter(coin => Number.isFinite(Number(coin?.priceEur ?? coin?.price)))
+    /* Les stablecoins ne doivent pas dominer les scanners de mouvement/volume. */
+    .filter(coin => classifyAsset(coin) !== "Stablecoin");
 
   if (preset === "volume") {
     rows = rows
@@ -15583,7 +15742,6 @@ function atlasScannerPool(preset, period) {
       .sort((a, b) => Number(b.volume24h) - Number(a.volume24h));
   } else {
     rows = rows
-      .filter(coin => classifyAsset(coin) !== "Stablecoin")
       .filter(coin => Number.isFinite(basis.metric(coin)))
       .sort((a, b) => preset === "losers"
         ? basis.metric(a) - basis.metric(b)
@@ -15677,19 +15835,37 @@ function atlasScannerProgress(tx, symbol = "") {
 async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
 
+  let binanceError = null;
+  try {
+    const result = await fetchBinanceChartDirectDynamic(coin, tx.period, {
+      signal: tx.controller.signal,
+      timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+    });
+    atlasStoreChartResult(coin, tx.period, result, "binance");
+    return { result, source: "direct", provider: "binance" };
+  } catch (error) {
+    if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+    binanceError = error;
+  }
+
+  /* CoinGecko devient le repli, pas l'unique transport historique. */
   try {
     const result = await fetchCoinGeckoChartDirect(coin, tx.period, {
       signal: tx.controller.signal,
       timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
     });
     atlasStoreChartResult(coin, tx.period, result, "coingecko");
-    return { result, source: "direct" };
+    return { result, source: "direct", provider: "coingecko" };
   } catch (error) {
     if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
     if (/429|too many/i.test(String(error?.message || error || ""))) {
       await atlasWaitWithSignal(1800, tx.controller.signal).catch(() => {});
     }
-    return { result: null, source: "blocked", error };
+    const combined = new Error(
+      `Binance : ${String(binanceError?.message || binanceError || "indisponible")}`
+      + ` · CoinGecko : ${String(error?.message || error || "indisponible")}`
+    );
+    return { result: null, source: "blocked", error: combined };
   }
 }
 
@@ -15785,7 +15961,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
       entries: prevalidated,
       periodDays: tx.period,
       sourceMode: "comparison-base100",
-      source: "Classement Market + historiques CoinGecko EUR",
+      source: "Classement Market CoinGecko + historiques Binance/CoinGecko EUR",
       scanner: {
         preset: tx.preset,
         marketBasisLabel: tx.marketBasisLabel,
@@ -15890,7 +16066,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.1.86 annulée :", error);
+    console.warn("Transaction scanner 28.1.86R1 annulée :", error);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     atlasScannerRestoreSnapshot(snapshot);
@@ -15932,7 +16108,9 @@ async function atlasScannerRun(tx) {
       tx.examined += 1;
       atlasScannerProgress(tx, coin.symbol);
 
-      const stored = atlasGetStoredChartResult(coin, tx.period, "coingecko");
+      const stored =
+        atlasGetStoredChartResult(coin, tx.period, "binance")
+        || atlasGetStoredChartResult(coin, tx.period, "coingecko");
 
       /*
         Un historique existant, même daté, reste une série réelle traçable.
@@ -16016,7 +16194,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Hausses 5 / scanner 28.1.86 :", error);
+    console.error("Hausses 5 / scanner 28.1.86R1 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -16090,7 +16268,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.1.86 non capturé :", error);
+      console.error("Scanner 28.1.86R1 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -16100,7 +16278,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage Hausses 5 28.1.86 :", error);
+    console.error("Démarrage Hausses 5 28.1.86R1 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -16114,7 +16292,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.1.86"
+    source: "button-28.1.86R1"
   });
 }
 
