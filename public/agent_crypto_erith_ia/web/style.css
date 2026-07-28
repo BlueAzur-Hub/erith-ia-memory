@@ -17917,7 +17917,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Agent-Crypto @erith.IA — Build 28.1.88R8
+   Agent-Crypto @erith.IA — Build 28.1.88R9
    LIVE ENDPOINT + VISIBLE TARGET CYCLE CONTROL
    Aucun changement de dimensions du ruban.
    ========================================================= */
@@ -17971,4 +17971,160 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 }
 @keyframes atlasTargetCycleSpin {
   to { transform: rotate(360deg); }
+}
+
+
+/* =========================================================
+   Agent-Crypto @erith.IA — Build 28.1.88R9
+   VISIBLE VIEW BUTTONS + CLICKABLE TARGET / MARKET FLOW
+   Existing layout and card interactions preserved.
+   ========================================================= */
+.brand-account-row {
+  align-items: center !important;
+  gap: 8px 12px !important;
+}
+
+.atlas-view-switcher {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+
+.atlas-view-button {
+  --view-accent: #62ecff;
+  appearance: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  min-height: 29px !important;
+  padding: 5px 10px !important;
+  border: 1px solid color-mix(in srgb, var(--view-accent) 42%, rgba(255,255,255,.10)) !important;
+  border-radius: 9px !important;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--view-accent) 9%, rgba(15,26,43,.96)), rgba(5,14,26,.94)) !important;
+  color: color-mix(in srgb, var(--view-accent) 76%, #f7fbff) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.025) !important;
+  cursor: pointer !important;
+  font: 850 8px/1 system-ui, sans-serif !important;
+  letter-spacing: .015em !important;
+  white-space: nowrap !important;
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease !important;
+}
+
+.atlas-view-button-basic { --view-accent: #62ecff; }
+.atlas-view-button-intermediate { --view-accent: #b778ff; }
+.atlas-view-button-admin { --view-accent: #f4d386; }
+
+.atlas-view-button:hover,
+.atlas-view-button:focus-visible {
+  border-color: color-mix(in srgb, var(--view-accent) 82%, white) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--view-accent) 12%, transparent), 0 0 16px color-mix(in srgb, var(--view-accent) 14%, transparent) !important;
+}
+
+.atlas-view-button:active {
+  transform: translateY(1px) scale(.985) !important;
+}
+
+.atlas-view-button.is-active,
+.atlas-view-button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--view-accent) 92%, white) !important;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--view-accent) 24%, rgba(14,25,42,.98)), color-mix(in srgb, var(--view-accent) 10%, rgba(4,12,23,.98))) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--view-accent) 18%, transparent),
+    0 0 17px color-mix(in srgb, var(--view-accent) 19%, transparent) !important;
+}
+
+.atlas-view-button-icon {
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+#market-workspace .target-top5-cycle-control,
+#market-workspace .market-flow-label {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+#market-workspace .target-top5-cycle-control:hover,
+#market-workspace .target-top5-cycle-control:focus-visible {
+  background:
+    linear-gradient(90deg, rgba(244,211,134,.11), rgba(6,14,27,.04)) !important;
+  outline: none !important;
+  box-shadow: inset 0 0 0 1px rgba(244,211,134,.20) !important;
+}
+
+#market-workspace .target-top5-cycle-button {
+  pointer-events: none !important;
+}
+
+#market-workspace .market-flow-label {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 7px !important;
+}
+
+#market-workspace .market-flow-label:hover,
+#market-workspace .market-flow-label:focus-visible {
+  color: #ffffff !important;
+  outline: none !important;
+  background:
+    linear-gradient(90deg, rgba(98,236,255,.11), rgba(6,14,27,.93)) !important;
+  box-shadow: inset 0 0 0 1px rgba(98,236,255,.18), 12px 0 20px rgba(3,9,18,.70) !important;
+}
+
+#market-workspace .market-flow-cycle-icon {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 19px !important;
+  height: 19px !important;
+  border: 1px solid rgba(98,236,255,.34) !important;
+  border-radius: 7px !important;
+  color: #62ecff !important;
+  background: rgba(3,12,23,.72) !important;
+  font: 900 11px/1 system-ui,sans-serif !important;
+  font-style: normal !important;
+}
+
+#market-workspace .market-flow-label[data-flow-mode="positive"] {
+  background: linear-gradient(90deg, rgba(97,240,176,.13), rgba(6,14,27,.93)) !important;
+}
+#market-workspace .market-flow-label[data-flow-mode="positive"] span,
+#market-workspace .market-flow-label[data-flow-mode="positive"] .market-flow-cycle-icon {
+  color: #61f0b0 !important;
+}
+#market-workspace .market-flow-label[data-flow-mode="negative"] {
+  background: linear-gradient(90deg, rgba(255,113,141,.13), rgba(6,14,27,.93)) !important;
+}
+#market-workspace .market-flow-label[data-flow-mode="negative"] span,
+#market-workspace .market-flow-label[data-flow-mode="negative"] .market-flow-cycle-icon {
+  color: #ff718d !important;
+}
+
+@media (max-width: 900px) {
+  .brand-account-row {
+    align-items: flex-start !important;
+  }
+  .atlas-view-switcher {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .atlas-view-button {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding-inline: 7px !important;
+    font-size: 7.5px !important;
+  }
 }

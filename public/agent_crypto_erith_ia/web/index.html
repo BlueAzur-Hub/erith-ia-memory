@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R8 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.88R9 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R8-intermediate-view" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.88R9-clickable-flow-view-buttons" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -18,22 +18,42 @@
           <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
           <div class="brand-account-row">
             <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
-            <button class="atlas-account-switch" id="btnAdminAccountToggle"
-                    type="button" aria-pressed="false"
-                    aria-label="Ouvrir l’accès privé local">
-              <span class="atlas-account-switch-icon" aria-hidden="true">⌘</span>
-              <span id="adminAccountLinkText">Accès privé</span>
-            </button>
-            <button class="atlas-view-profile-switch" id="btnIntermediateViewToggle"
-                    type="button" aria-pressed="false"
-                    aria-label="Ouvrir la vue intermédiaire">
-              <span class="atlas-view-profile-icon" aria-hidden="true">◇</span>
-              <span id="intermediateViewToggleText">Vue intermédiaire</span>
-            </button>
+            <div class="atlas-view-switcher" role="group" aria-label="Choisir la vue de l’interface">
+              <button class="atlas-view-button atlas-view-button-basic" id="btnBasicViewToggle"
+                      type="button" data-atlas-view-mode="essential" aria-pressed="true"
+                      aria-label="Ouvrir la vue basique">
+                <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                </svg>
+                <span>Vue Basique</span>
+              </button>
+              <button class="atlas-view-button atlas-view-button-intermediate" id="btnIntermediateViewToggle"
+                      type="button" data-atlas-view-mode="intermediate" aria-pressed="false"
+                      aria-label="Ouvrir la vue intermédiaire">
+                <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 3.5 7.5 12 12l8.5-4.5L12 3Z"></path>
+                  <path d="m3.5 12 8.5 4.5 8.5-4.5"></path>
+                  <path d="m3.5 16.5 8.5 4.5 8.5-4.5"></path>
+                </svg>
+                <span>Vue intermédiaire</span>
+              </button>
+              <button class="atlas-view-button atlas-view-button-admin" id="btnAdminAccountToggle"
+                      type="button" data-atlas-view-mode="advanced" aria-pressed="false"
+                      aria-label="Ouvrir l’administration locale">
+                <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"></path>
+                  <path d="M9.5 12.2 11.2 14l3.7-4"></path>
+                </svg>
+                <span id="adminAccountLinkText">Administration</span>
+              </button>
+            </div>
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R8</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.88R9</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -42,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R8</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.88R9</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -450,10 +470,11 @@
 
     <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">
       <section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
-        <div class="market-ribbon-label" id="targetTop5Cycle" data-cycle-preset="rank-5">
+        <div class="market-ribbon-label target-top5-cycle-control" id="targetTop5Cycle" data-cycle-preset="rank-5"
+             role="button" tabindex="0" aria-label="Afficher la vue graphique suivante" title="Vue suivante : Hausses 5">
           <span id="targetTop5CycleLabel">TARGET TOP 5 LIVE</span>
           <small id="targetTop5CycleSymbols">BTC · ETH · BNB · XRP · SOL</small>
-          <button class="target-top5-cycle-button" id="targetTop5CycleButton" type="button" aria-label="Afficher la vue graphique suivante" title="Vue suivante : Hausses 5"><span aria-hidden="true">↻</span></button>
+          <span class="target-top5-cycle-button" id="targetTop5CycleButton" aria-hidden="true"><span>↻</span></span>
         </div>
         <div class="top5-track" id="top5Track">
           <span class="market-ribbon-empty">Livecheck requis</span>
@@ -461,8 +482,10 @@
       </section>
 
       <section class="ticker glass market-flow-ribbon" aria-label="Flux du reste du marché">
-        <div class="market-flow-label">
-          <span>MARKET FLOW</span>
+        <div class="market-flow-label" id="marketFlowCycle" role="button" tabindex="0"
+             aria-label="Filtrer Market Flow : afficher uniquement les hausses" title="Filtrer : hausses uniquement">
+          <span id="marketFlowCycleLabel">MARKET FLOW</span>
+          <i class="market-flow-cycle-icon" aria-hidden="true">↻</i>
         </div>
         <div class="ticker-track" id="tickerTrack">
           <span>Livecheck requis · aucune donnée chiffrée chargée · pas de tableau fictif · </span>
@@ -1555,7 +1578,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R8 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.88R9 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2699,7 +2722,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R8</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.88R9</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2709,6 +2732,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.88R8-intermediate-view"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.88R9-clickable-flow-view-buttons"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.88R8 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.88R9 — CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R8";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.88R9";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -4884,7 +4884,7 @@ function atlasComparisonTooltipRows(chart, targetX) {
 }
 
 /* =========================================================
-   Build 28.1.88R8 — STABLE CURSOR TOOLTIP TRACKING
+   Build 28.1.88R9 — STABLE CURSOR TOOLTIP TRACKING
    Le panneau suit la souris réelle. Il ne suit plus le caretY
    du point de courbe voisin, qui pouvait changer de série et
    provoquer une oscillation haut/bas. Le changement de côté
@@ -5866,7 +5866,7 @@ function atlasPatchChartLastPoint(
 
 
 /* =========================================================
-   Build 28.1.88R8 — SYNCHRONIZED LIVE TERMINAL POINTS
+   Build 28.1.88R9 — SYNCHRONIZED LIVE TERMINAL POINTS
    Tous les points live visibles partagent le même X terminal.
    Une cotation qui arrive plus vite qu'une autre ne peut donc
    plus faire "sauter" le point de droite d'une courbe à l'autre.
@@ -8027,10 +8027,52 @@ function atlasTopFiveCoins() {
   return atlasCuratedTopCoins(5);
 }
 
+const ATLAS_MARKET_FLOW_MODE_KEY = "atlas_crypto_market_flow_mode_v1";
+const ATLAS_MARKET_FLOW_MODES = ["all", "positive", "negative"];
+let atlasMarketFlowMode = (() => {
+  try {
+    const stored = localStorage.getItem(ATLAS_MARKET_FLOW_MODE_KEY);
+    return ATLAS_MARKET_FLOW_MODES.includes(stored) ? stored : "all";
+  } catch {
+    return "all";
+  }
+})();
+
+function atlasMarketFlowModeDisplay(mode = atlasMarketFlowMode) {
+  if (mode === "positive") return { label: "MARKET FLOW +", next: "baisses", aria: "Filtrer Market Flow : afficher uniquement les baisses" };
+  if (mode === "negative") return { label: "MARKET FLOW −", next: "normal", aria: "Filtrer Market Flow : revenir à la vue normale" };
+  return { label: "MARKET FLOW", next: "hausses", aria: "Filtrer Market Flow : afficher uniquement les hausses" };
+}
+
+function atlasSyncMarketFlowCycleLabel() {
+  const root = document.getElementById("marketFlowCycle");
+  const label = document.getElementById("marketFlowCycleLabel");
+  if (!root || !label) return;
+  const display = atlasMarketFlowModeDisplay();
+  label.textContent = display.label;
+  root.dataset.flowMode = atlasMarketFlowMode;
+  root.setAttribute("aria-label", display.aria);
+  root.title = `Filtrer : ${display.next}`;
+}
+
+function atlasCycleMarketFlowMode() {
+  const index = ATLAS_MARKET_FLOW_MODES.indexOf(atlasMarketFlowMode);
+  atlasMarketFlowMode = ATLAS_MARKET_FLOW_MODES[(index + 1) % ATLAS_MARKET_FLOW_MODES.length];
+  try { localStorage.setItem(ATLAS_MARKET_FLOW_MODE_KEY, atlasMarketFlowMode); } catch {}
+  atlasSyncMarketFlowCycleLabel();
+  atlasRenderMarketFlowRibbon();
+}
+
 function atlasMarketFlowCoins() {
   const topFiveIds = new Set(atlasTopFiveCoins().map(coin => coin.id));
   return [...(state.coins || [])]
     .filter(coin => !topFiveIds.has(coin.id))
+    .filter(coin => {
+      const change = Number(coin.change24h);
+      if (atlasMarketFlowMode === "positive") return Number.isFinite(change) && change > 0;
+      if (atlasMarketFlowMode === "negative") return Number.isFinite(change) && change < 0;
+      return true;
+    })
     .sort((a, b) => Number(a.rank || 9999) - Number(b.rank || 9999))
     .slice(0, 24);
 }
@@ -8063,6 +8105,7 @@ function atlasRenderTopFiveRibbon() {
 }
 
 function atlasRenderMarketFlowRibbon() {
+  atlasSyncMarketFlowCycleLabel();
   if (!els.tickerTrack) return;
   if (!atlasHasDisplayableMarket()) {
     setHTML(
@@ -8176,7 +8219,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R8 — TARGET TOP 5 LIVE cycle
+   Build 28.1.88R9 — TARGET TOP 5 LIVE cycle
    Le cartouche seul fait défiler les presets. Les cinq cartes
    et le Market Flow conservent exactement leur ajout/retrait.
    ========================================================= */
@@ -8216,12 +8259,12 @@ function atlasSyncTargetTopFiveCycleLabel() {
   root.dataset.cyclePreset = currentPreset;
   label.textContent = display.label;
   symbols.textContent = symbolLine || "BTC · ETH · BNB · XRP · SOL";
-  button.title = `Vue suivante : ${display.next}`;
-  button.setAttribute("aria-label", `Afficher ${display.next}`);
+  root.title = `Vue suivante : ${display.next}`;
+  root.setAttribute("aria-label", `Afficher ${display.next}`);
 
   const busy = !!atlasScannerTransaction || !!atlasScannerQueuedRequest;
   button.classList.toggle("is-loading", busy);
-  button.setAttribute("aria-busy", busy ? "true" : "false");
+  root.setAttribute("aria-busy", busy ? "true" : "false");
 }
 
 function atlasTargetTopFiveCyclePreset() {
@@ -8248,7 +8291,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.1.88R8"
+      source: "target-top5-cycle-28.1.88R9"
     });
   }
 
@@ -8273,7 +8316,7 @@ function atlasInitMarketRibbonInteractions() {
   els.tickerTrack?.addEventListener("click", act);
   els.tickerTrack?.addEventListener("keydown", act);
 
-  const cycleTrigger = document.getElementById("targetTop5CycleButton");
+  const cycleTrigger = document.getElementById("targetTop5Cycle");
   const cycle = event => {
     if (event.type === "keydown" && !["Enter", " "].includes(event.key)) return;
     if (event.type === "keydown") event.preventDefault();
@@ -8283,6 +8326,16 @@ function atlasInitMarketRibbonInteractions() {
 
   cycleTrigger?.addEventListener("click", cycle);
   cycleTrigger?.addEventListener("keydown", cycle);
+
+  const flowTrigger = document.getElementById("marketFlowCycle");
+  const cycleFlow = event => {
+    if (event.type === "keydown" && !["Enter", " "].includes(event.key)) return;
+    if (event.type === "keydown") event.preventDefault();
+    event.stopPropagation();
+    atlasCycleMarketFlowMode();
+  };
+  flowTrigger?.addEventListener("click", cycleFlow);
+  flowTrigger?.addEventListener("keydown", cycleFlow);
 }
 
 
@@ -12102,20 +12155,12 @@ function atlasV2ApplyMode(mode, options = {}) {
         ? "Revenir à l’administration Christophe"
         : "Ouvrir l’accès privé local");
   }
-  if (accountText) accountText.textContent = administrator
-    ? "Christophe · Verrouiller"
-    : atlasAccessIsAuthorized()
-      ? "Christophe · Administration"
-      : "Accès privé";
+  if (accountText) accountText.textContent = "Administration";
 
+  const basicToggle = document.getElementById("btnBasicViewToggle");
   const intermediateToggle = document.getElementById("btnIntermediateViewToggle");
-  const intermediateToggleText = document.getElementById("intermediateViewToggleText");
-  if (intermediateToggle) {
-    intermediateToggle.classList.toggle("is-intermediate", operator);
-    intermediateToggle.setAttribute("aria-pressed", operator ? "true" : "false");
-    intermediateToggle.setAttribute("aria-label", operator ? "Revenir à la vue basique" : "Ouvrir la vue intermédiaire");
-  }
-  if (intermediateToggleText) intermediateToggleText.textContent = operator ? "Vue Basique" : "Vue intermédiaire";
+  if (basicToggle) basicToggle.setAttribute("aria-label", "Ouvrir la vue basique");
+  if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir la vue intermédiaire");
 
   atlasV2ApplySectionVisibility(next);
   atlasV2SyncMixedSectionLabels(next);
@@ -12354,10 +12399,15 @@ function atlasInitV2Shell() {
     }
   });
 
+  document.getElementById("btnBasicViewToggle")?.addEventListener("click", () => {
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
+    atlasV2ApplyMode("essential", { persist: false, syncUrl: true });
+    window.requestAnimationFrame(() => document.getElementById("accueil")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  });
+
   document.getElementById("btnIntermediateViewToggle")?.addEventListener("click", () => {
-    const next = atlasV2Mode() === "intermediate" ? "essential" : "intermediate";
-    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
-    atlasV2ApplyMode(next, { persist: false, syncUrl: true });
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
+    atlasV2ApplyMode("intermediate", { persist: false, syncUrl: true });
     window.requestAnimationFrame(() => document.getElementById("accueil")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   });
 
