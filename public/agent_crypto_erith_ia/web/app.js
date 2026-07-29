@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.89R4 — SHARED ATLAS/AERITH SYNTHESIS · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.89R5 — SHARED ATLAS/AERITH SYNTHESIS · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R4";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R5";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11092,12 +11092,12 @@ function atlasInitLocalAccess() {
   document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
-  document.getElementById("atlasSharedSynthesisImport")?.addEventListener("change", atlasSharedSynthesisImportFile);
+
   const question = document.getElementById("atlasLocalQuestion");
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
   atlasLocalResponseSelectView("conclusion");
-  atlasSharedSynthesisRestore();
+
   atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
   atlasInitLocalBridgeAutoHealth();
   window.setInterval(() => {
@@ -11163,7 +11163,7 @@ const atlasLocalReportsState = {
 };
 
 /* =========================================================
-   Build 28.1.89R4 — Import Stable + F5 Restore
+   Build 28.1.89R5 — Import Stable + F5 Restore
    Couche additive : persistance, export/import et lecture Book.
    Aucun appel Ollama supplémentaire.
    ========================================================= */
@@ -11658,11 +11658,20 @@ function atlasSharedSynthesisExportMarkdown() {
 
 async function atlasSharedSynthesisImportFile(event) {
   const input = event?.currentTarget;
+  const status = document.getElementById("atlasSharedSynthesisStatus");
   const file = input?.files?.[0];
-  if (!file) return false;
+  if (!file) {
+    setText(status, "Import JSON prêt · aucun fichier sélectionné.");
+    return false;
+  }
+
+  setText(status, `Fichier sélectionné · ${file.name || "JSON Ryzen"} · lecture…`);
+
   try {
     if (file.size > 5 * 1024 * 1024) throw new Error("Fichier trop volumineux");
-    const pkg = JSON.parse(await file.text());
+    const raw = await file.text();
+    setText(status, "Fichier lu · validation et conservation Firefox…");
+    const pkg = JSON.parse(raw);
     atlasSharedSynthesisApplyPackage(pkg, {
       source: "import",
       persist: true,
@@ -11670,17 +11679,58 @@ async function atlasSharedSynthesisImportFile(event) {
     });
     const kb = Math.max(1, Math.round(Number(atlasSharedSynthesisState.persistence?.bytes || 0) / 1024));
     setText(
-      document.getElementById("atlasSharedSynthesisStatus"),
-      `Synthèse importée · conservation Firefox vérifiée · ${kb} Ko.`
+      status,
+      `Synthèse importée · 4/4 rapports Atlas · conclusion Aerith · conservation Firefox vérifiée · ${kb} Ko.`
     );
     return true;
   } catch (error) {
-    setText(document.getElementById("atlasSharedSynthesisStatus"), `Import refusé : ${error?.message || "fichier invalide"}.`);
+    setText(status, `Import refusé : ${error?.message || "fichier invalide"}.`);
     return false;
   } finally {
     if (input) input.value = "";
   }
 }
+
+const atlasSharedSynthesisStandaloneState = {
+  initialized: false,
+  restored: false
+};
+
+function atlasInitSharedSynthesisStandalone() {
+  const input = document.getElementById("atlasSharedSynthesisImport");
+  const status = document.getElementById("atlasSharedSynthesisStatus");
+  const badge = document.getElementById("atlasSharedSynthesisBadge");
+
+  if (!input) {
+    setText(status, "Import indisponible : champ fichier absent.");
+    return false;
+  }
+
+  if (input.dataset.atlasSharedImportBound !== "1") {
+    input.dataset.atlasSharedImportBound = "1";
+    input.addEventListener("change", atlasSharedSynthesisImportFile);
+  }
+
+  atlasSharedSynthesisStandaloneState.initialized = true;
+
+  if (!atlasSharedSynthesisStandaloneState.restored) {
+    atlasSharedSynthesisStandaloneState.restored = true;
+    atlasSharedSynthesisRestore();
+  }
+
+  if (!atlasSharedSynthesisState.package) {
+    setText(status, "Import JSON prêt · sélectionne le paquet créé sur le Ryzen.");
+    if (badge) {
+      badge.textContent = "Prêt";
+      badge.className = "pill warn";
+    }
+  }
+
+  return true;
+}
+
+/* Initialisation autonome : indépendante du shell, du Bridge et d’Atlas local. */
+atlasInitSharedSynthesisStandalone();
 
 function atlasSharedSynthesisReadReports() {
   if (!atlasSharedSynthesisState.package) return false;

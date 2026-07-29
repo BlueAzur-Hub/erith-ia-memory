@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.89R4 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.89R5 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.89R4-import-stable-f5-restore" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.89R5-standalone-import-boot-restore" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.89R4</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.89R5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -62,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.89R4</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.89R5</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1442,10 +1442,10 @@
                 <button type="button" id="btnAtlasSharedReadConclusion" disabled>Lire la conclusion</button>
                 <button type="button" id="btnAtlasSharedExportJson" disabled>Exporter JSON Book</button>
                 <button type="button" id="btnAtlasSharedExportMd" disabled>Exporter .md</button>
-                <label class="btn file-like" for="atlasSharedSynthesisImport">Importer JSON</label>
+                <label class="btn file-like" for="atlasSharedSynthesisImport">Importer JSON Ryzen</label>
                 <input id="atlasSharedSynthesisImport" type="file" accept=".json,application/json" hidden />
               </div>
-              <small class="atlas-shared-synthesis-note" id="atlasSharedSynthesisNote">Lecture seule · le Ryzen prépare le JSON ; le Book l’importe une fois puis le restaure après F5.</small>
+              <small class="atlas-shared-synthesis-note" id="atlasSharedSynthesisNote">Lecture seule · import autonome du JSON Ryzen · restauration locale après F5.</small>
             </section>
           </section>
         </section>
@@ -1567,7 +1567,7 @@
         </label>
         <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID une fois</button>
         <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
-        <label class="btn small file-like" for="autoMemoryImport">Importer JSON</label>
+        <label class="btn small file-like" for="autoMemoryImport">Importer JSON Ryzen</label>
         <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
         <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
       </div>
@@ -1698,7 +1698,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.89R4 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.89R5 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2842,7 +2842,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.89R4</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.89R5</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2852,6 +2852,25 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.89R4-import-stable-f5-restore"></script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.89R5-standalone-import-boot-restore"></script>
+  <script>
+  (() => {
+    const start = () => {
+      try {
+        if (typeof window.atlasInitSharedSynthesisStandalone === "function") {
+          window.atlasInitSharedSynthesisStandalone();
+          return;
+        }
+        const status = document.getElementById("atlasSharedSynthesisStatus");
+        if (status) status.textContent = "Import indisponible : module autonome non chargé.";
+      } catch (error) {
+        const status = document.getElementById("atlasSharedSynthesisStatus");
+        if (status) status.textContent = `Import indisponible : ${error?.message || "initialisation impossible"}.`;
+      }
+    };
+    start();
+    window.setTimeout(start, 0);
+  })();
+</script>
 </body>
 </html>
