@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-07-29T09:59:46.872060+00:00",
+  "generated_at": "2026-07-29T12:23:32.321017+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 12,
-    "critical_24h": 12,
+    "events_24h": 15,
+    "critical_24h": 15,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
@@ -25,8 +25,8 @@
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 1,
-      "latency_ms": 94,
+      "qualified_count": 2,
+      "latency_ms": 522,
       "error": null
     },
     {
@@ -35,9 +35,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 25,
-      "qualified_count": 0,
-      "latency_ms": 78,
+      "fetched_count": 29,
+      "qualified_count": 1,
+      "latency_ms": 307,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 68,
+      "latency_ms": 158,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 261,
+      "latency_ms": 449,
       "error": null
     },
     {
@@ -69,8 +69,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 24,
-      "latency_ms": 311,
+      "qualified_count": 25,
+      "latency_ms": 335,
       "error": null
     },
     {
@@ -91,8 +91,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 18,
-      "latency_ms": 123,
+      "qualified_count": 19,
+      "latency_ms": 204,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 12,
-      "latency_ms": 637,
+      "latency_ms": 967,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 97,
+      "latency_ms": 163,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 2,
-      "latency_ms": 237,
+      "latency_ms": 242,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 81,
+      "latency_ms": 169,
       "error": null
     }
   ],
@@ -365,11 +365,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T13:00:00+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.248097+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.248097+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.200440+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.200440+00:00",
       "freshness": {
         "iso": "2026-07-28T13:00:00+00:00",
-        "hours": 21.0,
+        "hours": 23.39,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -480,76 +480,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_5d18dd9a7fb22b97",
-      "event_id": "feed_5d18dd9a7fb22b97",
-      "fingerprint": "5d18dd9a7fb22b97",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "SecondFi to shut down after $2.4 million ADA wallet theft",
-      "body": "The breach stemmed from a vulnerability in transaction signing software that enabled the derivation of private keys from blockchain transaction data.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/web3/2026/07/22/secondfi-to-shut-down-after-usd2-4-million-ada-wallet-theft",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "CoinDesk",
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/web3/2026/07/22/secondfi-to-shut-down-after-usd2-4-million-ada-wallet-theft",
-        "https://cointelegraph.com/news/secondfi-shutdown-ada-theft-wallet-flaw"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-07-22T11:10:27+00:00",
-      "first_seen_at": "2026-07-23T09:40:20.450293+00:00",
-      "last_seen_at": "2026-07-23T09:40:20.450293+00:00",
-      "freshness": {
-        "iso": "2026-07-22T11:10:27+00:00",
-        "hours": 22.5,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 91,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 99,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [
-        "ADA"
-      ],
-      "sectors": [
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 2,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_952e0bbdc5d9f1fb",
       "event_id": "feed_952e0bbdc5d9f1fb",
       "fingerprint": "952e0bbdc5d9f1fb",
@@ -573,11 +503,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T11:59:17+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.284080+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.284080+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.259236+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.259236+00:00",
       "freshness": {
         "iso": "2026-07-28T11:59:17+00:00",
-        "hours": 22.01,
+        "hours": 24.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -677,6 +607,74 @@
         "action": "Alerte prioritaire · observation",
         "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
         "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_a14de6133eddfcf9",
+      "event_id": "feed_a14de6133eddfcf9",
+      "fingerprint": "a14de6133eddfcf9",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Apple Sued After Fake iPhone Wallet App Drained $1.8M in Bitcoin",
+      "body": "The suit claims Apple ranked a fake Sparrow Wallet app and put it in curated crypto collections alongside legitimate ones.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374628/apple-sued-after-fake-iphone-wallet-app-drained-1-8m-in-bitcoin",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374628/apple-sued-after-fake-iphone-wallet-app-drained-1-8m-in-bitcoin"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-07-29T10:22:57+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.103835+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.103835+00:00",
+      "freshness": {
+        "iso": "2026-07-29T10:22:57+00:00",
+        "hours": 2.01,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 99,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
       },
       "confirmations": 1,
       "relevance_score": 14,
@@ -1024,73 +1022,6 @@
       "matched_topics": [
         "crypto",
         "macro",
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_168a973ebd3a67dd",
-      "event_id": "feed_168a973ebd3a67dd",
-      "fingerprint": "168a973ebd3a67dd",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Midnight token rebounds 19% after Wanchain bridge hack, Hoskinson calls for ZK revamp",
-      "body": "Charles Hoskinson says the exploit, which briefly sent NIGHT to an all-time low, underscores why the industry needs to move beyond legacy bridge infrastructure.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/07/22/midnight-token-rebounds-after-wanchain-bridge-hack-hoskinson-calls-for-industry-overhaul",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/07/22/midnight-token-rebounds-after-wanchain-bridge-hack-hoskinson-calls-for-industry-overhaul"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-07-22T11:45:42+00:00",
-      "first_seen_at": "2026-07-23T12:04:46.208382+00:00",
-      "last_seen_at": "2026-07-23T12:04:46.208382+00:00",
-      "freshness": {
-        "iso": "2026-07-22T11:45:42+00:00",
-        "hours": 24.32,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 98,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "DeFi",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
         "security"
       ],
       "observation_only": true
@@ -1454,11 +1385,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T14:49:50+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.276581+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.276581+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.251704+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.251704+00:00",
       "freshness": {
         "iso": "2026-07-28T14:49:50+00:00",
-        "hours": 19.17,
+        "hours": 21.56,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1522,11 +1453,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-07-29T05:29:48+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.224825+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.224825+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.176552+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.176552+00:00",
       "freshness": {
         "iso": "2026-07-29T05:29:48+00:00",
-        "hours": 4.5,
+        "hours": 6.9,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2129,11 +2060,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-28T14:30:57+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.280585+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.280585+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.255640+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.255640+00:00",
       "freshness": {
         "iso": "2026-07-28T14:30:57+00:00",
-        "hours": 19.48,
+        "hours": 21.88,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2339,11 +2270,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T18:15:25+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.239111+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.239111+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.191391+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.191391+00:00",
       "freshness": {
         "iso": "2026-07-28T18:15:25+00:00",
-        "hours": 15.74,
+        "hours": 18.14,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2616,11 +2547,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:59:17+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.111599+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.111599+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.270483+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.270483+00:00",
       "freshness": {
         "iso": "2026-07-27T19:59:17+00:00",
-        "hours": 38.01,
+        "hours": 40.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2682,11 +2613,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T15:04:00+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.112855+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.112855+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.271666+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.271666+00:00",
       "freshness": {
         "iso": "2026-07-23T15:04:00+00:00",
-        "hours": 138.93,
+        "hours": 141.33,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2748,11 +2679,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T13:45:25+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.114090+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.114090+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.272843+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.272843+00:00",
       "freshness": {
         "iso": "2026-07-22T13:45:25+00:00",
-        "hours": 164.24,
+        "hours": 166.64,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2814,11 +2745,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T12:24:02+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.283039+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.283039+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.258094+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.258094+00:00",
       "freshness": {
         "iso": "2026-07-28T12:24:02+00:00",
-        "hours": 21.6,
+        "hours": 23.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3214,11 +3145,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:45:31+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.100161+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.100161+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.134332+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.134332+00:00",
       "freshness": {
         "iso": "2026-07-27T19:45:31+00:00",
-        "hours": 38.24,
+        "hours": 40.63,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3461,6 +3392,72 @@
       "observation_only": true
     },
     {
+      "id": "feed_6abd865d0eee9119",
+      "event_id": "feed_6abd865d0eee9119",
+      "fingerprint": "6abd865d0eee9119",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Binance disappears from Google Play in certain EU countries",
+      "body": "Binance’s Android app is unavailable on Google Play in some EU markets amid scrutiny over MiCA compliance.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/binance-disappears-android-google-play-certain-eu-countries",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/binance-disappears-android-google-play-certain-eu-countries"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-07-29T11:00:04+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.168832+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.168832+00:00",
+      "freshness": {
+        "iso": "2026-07-29T11:00:04+00:00",
+        "hours": 1.39,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "Exchanges"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_a61fb1d341f6b7c3",
       "event_id": "feed_a61fb1d341f6b7c3",
       "fingerprint": "a61fb1d341f6b7c3",
@@ -3484,12 +3481,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T09:15:36+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.218814+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.218814+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.171777+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.171777+00:00",
       "freshness": {
         "iso": "2026-07-29T09:15:36+00:00",
-        "hours": 0.74,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.13,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -3649,72 +3646,6 @@
       "matched_topics": [
         "regulation",
         "institutional"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_6abd865d0eee9119",
-      "event_id": "feed_6abd865d0eee9119",
-      "fingerprint": "6abd865d0eee9119",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Binance disappears from Google Play in certain EU countries",
-      "body": "Binance’s Android app is unavailable on Google Play in some EU markets amid scrutiny over MiCA compliance.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/binance-disappears-android-google-play-certain-eu-countries",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/binance-disappears-android-google-play-certain-eu-countries"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-27T13:24:17+00:00",
-      "first_seen_at": "2026-07-28T18:49:54.401405+00:00",
-      "last_seen_at": "2026-07-28T18:49:54.401405+00:00",
-      "freshness": {
-        "iso": "2026-07-27T13:24:17+00:00",
-        "hours": 29.43,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "Exchanges"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
       ],
       "observation_only": true
     },
@@ -4810,12 +4741,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T08:49:27+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.050599+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.050599+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.425568+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.425568+00:00",
       "freshness": {
         "iso": "2026-07-29T08:49:27+00:00",
-        "hours": 1.17,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.57,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -5005,11 +4936,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-28T16:08:19+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.274220+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.274220+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.249458+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.249458+00:00",
       "freshness": {
         "iso": "2026-07-28T16:08:19+00:00",
-        "hours": 17.86,
+        "hours": 20.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5304,48 +5235,54 @@
       "observation_only": true
     },
     {
-      "id": "feed_6b0234cae1845c08",
-      "event_id": "feed_6b0234cae1845c08",
-      "fingerprint": "6b0234cae1845c08",
+      "id": "feed_bf573e862f1b11e7",
+      "event_id": "feed_bf573e862f1b11e7",
+      "fingerprint": "bf573e862f1b11e7",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Talos brings institutional trading tools to Kalshi prediction markets",
-      "body": "The integration provides institutional clients with access to Kalshi’s event contracts and crypto perpetuals via Talos’ existing trading infrastructure.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/talos-brings-institutional-trading-tools-to-kalshi-prediction-markets",
-      "source_host": "cointelegraph.com",
+      "headline": "Bitcoin steadies above $64,000 as crypto looks to Fed interest-rate decision",
+      "body": "BTC added 0.75% before the Federal Reserve's rate decision. Inflation at 4.1% keeps an increase firmly on the table even as oil prices ease.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/07/29/bitcoin-steadies-above-usd64-000-as-crypto-looks-to-fed-interest-rate-decision",
+      "source_host": "coindesk.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
       "source_count": 1,
       "source_names": [
-        "Cointelegraph"
+        "CoinDesk"
       ],
       "source_urls": [
-        "https://cointelegraph.com/news/talos-brings-institutional-trading-tools-to-kalshi-prediction-markets"
+        "https://www.coindesk.com/markets/2026/07/29/bitcoin-steadies-above-usd64-000-as-crypto-looks-to-fed-interest-rate-decision",
+        "https://www.coindesk.com/tech/2026/07/29/live-updates-bitcoin-clears-usd64-000-in-asia-hours-ahead-of-fed-decision"
       ],
       "declared_status": "reported",
-      "event_type": "etf",
-      "event_label": "ETF / institutionnels",
-      "event_time": "2026-07-22T11:00:00+00:00",
-      "first_seen_at": "2026-07-23T12:04:45.925404+00:00",
-      "last_seen_at": "2026-07-23T12:04:45.925404+00:00",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-07-29T10:34:18+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.232779+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.239296+00:00",
       "freshness": {
-        "iso": "2026-07-22T11:00:00+00:00",
-        "hours": 25.08,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-07-29T10:34:18+00:00",
+        "hours": 1.82,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
-        "score": 54,
-        "level": "Moyen"
+        "score": 66,
+        "level": "Assez élevé"
       },
       "impact": {
-        "score": 88,
+        "score": 87,
         "level": "Critique"
       },
-      "direction": "catalyseur potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [],
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
       "manipulation": {
         "score": 30,
         "level": "Faible"
@@ -5355,15 +5292,16 @@
         "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
       },
       "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
       },
       "confirmations": 1,
-      "relevance_score": 12,
+      "relevance_score": 17,
       "matched_topics": [
         "crypto",
-        "institutional"
+        "macro",
+        "energy"
       ],
       "observation_only": true
     },
@@ -5460,11 +5398,80 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T05:37:38+00:00",
-      "first_seen_at": "2026-07-29T09:59:46.266634+00:00",
-      "last_seen_at": "2026-07-29T09:59:46.266634+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.241928+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.241928+00:00",
       "freshness": {
         "iso": "2026-07-29T05:37:38+00:00",
-        "hours": 4.37,
+        "hours": 6.76,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "macro"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_2a5f02e14a2bb6bb",
+      "event_id": "feed_2a5f02e14a2bb6bb",
+      "fingerprint": "2a5f02e14a2bb6bb",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin rises toward $64,000 as Korea's record chip crash leaves crypto untouched",
+      "body": "SK Hynix fell 17% after profit rose 557% and still missed estimates. Bitcoin is up 1%, and the Fed decides rates today.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/07/29/bitcoin-rises-toward-usd64-000-as-korea-s-record-chip-crash-leaves-crypto-untouched",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/07/29/bitcoin-rises-toward-usd64-000-as-korea-s-record-chip-crash-leaves-crypto-untouched"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-07-29T05:32:27+00:00",
+      "first_seen_at": "2026-07-29T12:23:31.242988+00:00",
+      "last_seen_at": "2026-07-29T12:23:31.242988+00:00",
+      "freshness": {
+        "iso": "2026-07-29T05:32:27+00:00",
+        "hours": 6.85,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
