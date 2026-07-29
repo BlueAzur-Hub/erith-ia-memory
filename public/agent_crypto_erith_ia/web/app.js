@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.91 — VERIFIED MONOLITHIC SYNTHESIS · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.92 — INDEXEDDB PERSISTENCE LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.91";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.92";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11155,19 +11155,23 @@ const atlasLocalReportsState = {
 
 
 /* =========================================================
-   Build 28.1.91 — Verified Monolithic Shared Synthesis
-   Un contrôleur, un import, une clé, une restauration au boot.
+   Build 28.1.92 — IndexedDB Shared Synthesis
+   Un contrôleur, un import, une base IndexedDB, une restauration au boot.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
-const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_storage_v2";
-const ATLAS_SHARED_SYNTHESIS_STORAGE_KEY = "agent_crypto_shared_synthesis_v2";
-const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 1500000;
+const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_indexeddb_v1";
+const ATLAS_SHARED_SYNTHESIS_DB_NAME = "agent_crypto_erith_ia_persistence";
+const ATLAS_SHARED_SYNTHESIS_DB_VERSION = 1;
+const ATLAS_SHARED_SYNTHESIS_STORE_NAME = "shared_synthesis";
+const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
+const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const atlasSharedSynthesisState = {
   initialized: false,
   package: null,
   source: "none",
-  persistence: { ok: false, bytes: 0, error: "Non enregistrée" }
+  operation: 0,
+  persistence: { ok: false, bytes: 0, backend: "IndexedDB", error: "Non enregistrée" }
 };
 
 function atlasSharedSynthesisClone(value) {
@@ -11359,7 +11363,9 @@ function atlasSharedSynthesisSetStatus(stateName, message, badgeText) {
 }
 
 function atlasSharedSynthesisPersistenceLabel() {
-  if (atlasSharedSynthesisState.persistence?.ok) return `${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés`;
+  if (atlasSharedSynthesisState.persistence?.ok) {
+    return `IndexedDB · ${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés`;
+  }
   return atlasSharedSynthesisState.persistence?.error || "Non enregistrée";
 }
 
@@ -11421,62 +11427,146 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
   }
 }
 
-function atlasSharedSynthesisPersist(pkg) {
-  let previousRaw = null;
+function atlasSharedSynthesisRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("requête IndexedDB refusée"));
+  });
+}
+
+function atlasSharedSynthesisTransaction(transaction) {
+  return new Promise((resolve, reject) => {
+    transaction.oncomplete = () => resolve(true);
+    transaction.onerror = () => reject(transaction.error || new Error("transaction IndexedDB refusée"));
+    transaction.onabort = () => reject(transaction.error || new Error("transaction IndexedDB annulée"));
+  });
+}
+
+function atlasSharedSynthesisOpenDatabase() {
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === "undefined") {
+      reject(new Error("IndexedDB indisponible dans ce navigateur"));
+      return;
+    }
+    const request = indexedDB.open(ATLAS_SHARED_SYNTHESIS_DB_NAME, ATLAS_SHARED_SYNTHESIS_DB_VERSION);
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains(ATLAS_SHARED_SYNTHESIS_STORE_NAME)) {
+        database.createObjectStore(ATLAS_SHARED_SYNTHESIS_STORE_NAME, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("ouverture IndexedDB refusée"));
+    request.onblocked = () => reject(new Error("IndexedDB bloquée par un autre onglet"));
+  });
+}
+
+async function atlasSharedSynthesisReadIndexedDb() {
+  const database = await atlasSharedSynthesisOpenDatabase();
+  try {
+    const transaction = database.transaction(ATLAS_SHARED_SYNTHESIS_STORE_NAME, "readonly");
+    const completed = atlasSharedSynthesisTransaction(transaction);
+    const record = await atlasSharedSynthesisRequest(
+      transaction.objectStore(ATLAS_SHARED_SYNTHESIS_STORE_NAME).get(ATLAS_SHARED_SYNTHESIS_RECORD_ID)
+    );
+    await completed;
+    return record || null;
+  } finally {
+    database.close();
+  }
+}
+
+async function atlasSharedSynthesisPersist(pkg) {
   try {
     const clean = atlasSharedSynthesisNormalizePackage(pkg);
     const raw = JSON.stringify(clean);
     const bytes = atlasSharedSynthesisUtf8Bytes(raw);
-    if (bytes > ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES) throw new Error(`synthèse trop volumineuse (${Math.ceil(bytes / 1024)} Ko)`);
-    previousRaw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
-    localStorage.setItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY, raw);
-    const verifiedRaw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
-    if (verifiedRaw !== raw) throw new Error("relecture locale différente de l’écriture");
-    const verified = atlasSharedSynthesisNormalizePackage(JSON.parse(verifiedRaw));
-    if (verified.fingerprint !== clean.fingerprint) throw new Error("empreinte différente après relecture");
-    return { ok: true, bytes, error: "", package: verified };
-  } catch (error) {
+    if (bytes > ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES) {
+      throw new Error(`synthèse trop volumineuse (${Math.ceil(bytes / 1024)} Ko)`);
+    }
+
+    const database = await atlasSharedSynthesisOpenDatabase();
     try {
-      if (previousRaw === null) localStorage.removeItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
-      else localStorage.setItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY, previousRaw);
-    } catch {}
-    return { ok: false, bytes: 0, error: error?.message || "stockage local refusé", package: null };
+      const writeTransaction = database.transaction(ATLAS_SHARED_SYNTHESIS_STORE_NAME, "readwrite");
+      const writeCompleted = atlasSharedSynthesisTransaction(writeTransaction);
+      writeTransaction.objectStore(ATLAS_SHARED_SYNTHESIS_STORE_NAME).put({
+        id: ATLAS_SHARED_SYNTHESIS_RECORD_ID,
+        schema: ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA,
+        saved_at: new Date().toISOString(),
+        fingerprint: clean.fingerprint,
+        bytes,
+        package: clean
+      });
+      await writeCompleted;
+
+      const readTransaction = database.transaction(ATLAS_SHARED_SYNTHESIS_STORE_NAME, "readonly");
+      const readCompleted = atlasSharedSynthesisTransaction(readTransaction);
+      const verifiedRecord = await atlasSharedSynthesisRequest(
+        readTransaction.objectStore(ATLAS_SHARED_SYNTHESIS_STORE_NAME).get(ATLAS_SHARED_SYNTHESIS_RECORD_ID)
+      );
+      await readCompleted;
+      if (!verifiedRecord?.package) throw new Error("relecture IndexedDB vide");
+      const verified = atlasSharedSynthesisNormalizePackage(verifiedRecord.package);
+      if (verified.fingerprint !== clean.fingerprint || verifiedRecord.fingerprint !== clean.fingerprint) {
+        throw new Error("empreinte différente après relecture IndexedDB");
+      }
+      return { ok: true, bytes, backend: "IndexedDB", error: "", package: verified };
+    } finally {
+      database.close();
+    }
+  } catch (error) {
+    return {
+      ok: false,
+      bytes: 0,
+      backend: "IndexedDB",
+      error: error?.message || "stockage IndexedDB refusé",
+      package: null
+    };
   }
 }
 
-function atlasSharedSynthesisActivate(pkg, source, persist = false) {
+function atlasSharedSynthesisActivate(pkg, source) {
   const clean = atlasSharedSynthesisNormalizePackage(pkg);
   atlasSharedSynthesisState.package = clean;
   atlasSharedSynthesisState.source = source;
   atlasSharedSynthesisHydrateReports(clean, source);
   atlasSharedSynthesisRender();
-  if (persist) {
-    atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(clean);
-    atlasSharedSynthesisRender();
-  }
   return clean;
 }
 
-function atlasSharedSynthesisRestore() {
+async function atlasSharedSynthesisRestore() {
+  const operation = ++atlasSharedSynthesisState.operation;
+  atlasSharedSynthesisSetStatus("working", "Restauration IndexedDB en cours…", "Restauration");
   try {
-    const raw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
-    if (!raw) {
+    const record = await atlasSharedSynthesisReadIndexedDb();
+    if (operation !== atlasSharedSynthesisState.operation) return false;
+    if (!record?.package) {
       atlasSharedSynthesisState.package = null;
-      atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, error: "Non enregistrée" };
+      atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, backend: "IndexedDB", error: "Non enregistrée" };
       atlasSharedSynthesisRender();
       atlasSharedSynthesisSetStatus("idle", "Import prêt · sélectionne une synthèse Atlas/Aerith créée sur le Ryzen.", "Prêt");
       return false;
     }
-    const pkg = atlasSharedSynthesisNormalizePackage(JSON.parse(raw));
-    atlasSharedSynthesisState.persistence = { ok: true, bytes: atlasSharedSynthesisUtf8Bytes(raw), error: "", package: pkg };
-    atlasSharedSynthesisActivate(pkg, "stored", false);
-    atlasSharedSynthesisSetStatus("ready", "Synthèse restaurée automatiquement · 4/4 rapports Atlas · conclusion Aerith disponible.", "Restaurée");
+    const pkg = atlasSharedSynthesisNormalizePackage(record.package);
+    if (record.fingerprint && record.fingerprint !== pkg.fingerprint) {
+      throw new Error("empreinte IndexedDB incohérente");
+    }
+    atlasSharedSynthesisState.persistence = {
+      ok: true,
+      bytes: Number(record.bytes) || atlasSharedSynthesisUtf8Bytes(JSON.stringify(pkg)),
+      backend: "IndexedDB",
+      error: "",
+      package: pkg
+    };
+    atlasSharedSynthesisActivate(pkg, "stored");
+    atlasSharedSynthesisSetStatus("ready", "Synthèse restaurée depuis IndexedDB · 4/4 rapports Atlas · conclusion Aerith disponible.", "Restaurée");
     return true;
   } catch (error) {
+    if (operation !== atlasSharedSynthesisState.operation) return false;
     atlasSharedSynthesisState.package = null;
-    atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, error: error?.message || "mémoire locale illisible" };
+    atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, backend: "IndexedDB", error: error?.message || "mémoire IndexedDB illisible" };
     atlasSharedSynthesisRender();
-    atlasSharedSynthesisSetStatus("warning", `Mémoire locale ignorée : ${atlasSharedSynthesisState.persistence.error}. L’import reste disponible.`, "Import prêt");
+    atlasSharedSynthesisSetStatus("warning", `IndexedDB indisponible : ${atlasSharedSynthesisState.persistence.error}. L’import reste disponible.`, "Import prêt");
     return false;
   }
 }
@@ -11488,22 +11578,29 @@ async function atlasSharedSynthesisImportFile(event) {
     atlasSharedSynthesisSetStatus("idle", "Import prêt · aucun fichier sélectionné.", "Prêt");
     return false;
   }
+  const operation = ++atlasSharedSynthesisState.operation;
   atlasSharedSynthesisSetStatus("working", `Fichier sélectionné · ${file.name || "synthèse Ryzen"} · lecture en cours…`, "Lecture");
   try {
     if (file.size > ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES) throw new Error("fichier supérieur à 5 Mo");
     const raw = await file.text();
     const parsed = JSON.parse(raw);
-    const clean = atlasSharedSynthesisActivate(parsed, "import", false);
-    atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(clean);
+    if (operation !== atlasSharedSynthesisState.operation) return false;
+    const clean = atlasSharedSynthesisActivate(parsed, "import");
+    atlasSharedSynthesisSetStatus("working", "Synthèse affichée · écriture et relecture IndexedDB…", "Enregistrement");
+    const saved = await atlasSharedSynthesisPersist(clean);
+    if (operation !== atlasSharedSynthesisState.operation) return false;
+    atlasSharedSynthesisState.persistence = saved;
     atlasSharedSynthesisRender();
-    if (atlasSharedSynthesisState.persistence.ok) {
-      atlasSharedSynthesisSetStatus("ready", `Import terminé · 4/4 rapports Atlas · conclusion Aerith · conservation locale vérifiée (${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko).`, "Importée");
+    if (saved.ok) {
+      atlasSharedSynthesisSetStatus("ready", `Import terminé · 4/4 rapports Atlas · conclusion Aerith · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko).`, "Importée");
     } else {
-      atlasSharedSynthesisSetStatus("warning", `Import affiché · conservation locale impossible : ${atlasSharedSynthesisState.persistence.error}.`, "Importée sans mémoire");
+      atlasSharedSynthesisSetStatus("warning", `Import affiché · IndexedDB impossible : ${saved.error}.`, "Importée sans mémoire");
     }
     return true;
   } catch (error) {
-    atlasSharedSynthesisSetStatus("error", `Import refusé : ${error?.message || "fichier JSON invalide"}.`, "Erreur");
+    if (operation === atlasSharedSynthesisState.operation) {
+      atlasSharedSynthesisSetStatus("error", `Import refusé : ${error?.message || "fichier JSON invalide"}.`, "Erreur");
+    }
     return false;
   } finally {
     if (input) input.value = "";
@@ -11535,14 +11632,20 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     reports,
     conclusion
   });
-  atlasSharedSynthesisActivate(pkg, "local", false);
-  atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(pkg);
-  atlasSharedSynthesisRender();
-  if (atlasSharedSynthesisState.persistence.ok) {
-    atlasSharedSynthesisSetStatus("ready", `Synthèse Ryzen créée · 4/4 rapports Atlas · conclusion Aerith · ${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés.`, "Produite");
-  } else {
-    atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée et affichée · conservation locale impossible : ${atlasSharedSynthesisState.persistence.error}.`, "Produite sans mémoire");
-  }
+  const operation = ++atlasSharedSynthesisState.operation;
+  atlasSharedSynthesisActivate(pkg, "local");
+  atlasSharedSynthesisSetStatus("working", "Synthèse Ryzen créée · écriture et relecture IndexedDB…", "Enregistrement");
+  void (async () => {
+    const saved = await atlasSharedSynthesisPersist(pkg);
+    if (operation !== atlasSharedSynthesisState.operation) return;
+    atlasSharedSynthesisState.persistence = saved;
+    atlasSharedSynthesisRender();
+    if (saved.ok) {
+      atlasSharedSynthesisSetStatus("ready", `Synthèse Ryzen créée · 4/4 rapports Atlas · conclusion Aerith · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko).`, "Produite");
+    } else {
+      atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée et affichée · IndexedDB impossible : ${saved.error}.`, "Produite sans mémoire");
+    }
+  })();
   return pkg;
 }
 
@@ -11614,7 +11717,7 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
-  atlasSharedSynthesisRestore();
+  void atlasSharedSynthesisRestore();
   return true;
 }
 
