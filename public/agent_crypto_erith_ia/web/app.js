@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.92 — INDEXEDDB PERSISTENCE LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.93 — GITHUB DATA PUBLICATION LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.92";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.93";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11155,8 +11155,8 @@ const atlasLocalReportsState = {
 
 
 /* =========================================================
-   Build 28.1.92 — IndexedDB Shared Synthesis
-   Un contrôleur, un import, une base IndexedDB, une restauration au boot.
+   Build 28.1.93 — GitHub Data Published Synthesis
+   Un contrôleur, IndexedDB stable, une publication GitHub Data et une restauration au boot.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_indexeddb_v1";
@@ -11166,11 +11166,15 @@ const ATLAS_SHARED_SYNTHESIS_STORE_NAME = "shared_synthesis";
 const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
+const ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE = "latest_atlas_aerith_synthesis.json";
+const ATLAS_SHARED_SYNTHESIS_PUBLICATION_URL = `../data/${ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE}`;
 const atlasSharedSynthesisState = {
   initialized: false,
   package: null,
   source: "none",
   operation: 0,
+  publicationOperation: 0,
+  publication: { state: "idle", label: "Non vérifiée", fingerprint: "", generatedAt: null },
   persistence: { ok: false, bytes: 0, backend: "IndexedDB", error: "Non enregistrée" }
 };
 
@@ -11362,6 +11366,31 @@ function atlasSharedSynthesisSetStatus(stateName, message, badgeText) {
   }
 }
 
+function atlasSharedSynthesisSetPublication(label, state = "idle", fingerprint = "", generatedAt = null) {
+  atlasSharedSynthesisState.publication = {
+    state,
+    label: String(label || "Non vérifiée"),
+    fingerprint: String(fingerprint || ""),
+    generatedAt: generatedAt || null
+  };
+  setText(document.getElementById("atlasSharedSynthesisPublished"), atlasSharedSynthesisState.publication.label);
+}
+
+function atlasSharedSynthesisTimestamp(pkg) {
+  const value = pkg?.generated_at || pkg?.snapshot_at || pkg?.snapshot?.generated_at || null;
+  const timestamp = value ? Date.parse(value) : NaN;
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function atlasSharedSynthesisPublishedIsNewer(candidate, current) {
+  if (!current) return true;
+  if (candidate?.fingerprint && candidate.fingerprint === current?.fingerprint) return false;
+  const candidateTime = atlasSharedSynthesisTimestamp(candidate);
+  const currentTime = atlasSharedSynthesisTimestamp(current);
+  if (candidateTime && currentTime) return candidateTime > currentTime;
+  return false;
+}
+
 function atlasSharedSynthesisPersistenceLabel() {
   if (atlasSharedSynthesisState.persistence?.ok) {
     return `IndexedDB · ${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés`;
@@ -11378,7 +11407,7 @@ function atlasSharedSynthesisRenderMarkdown(node, markdown) {
 function atlasSharedSynthesisRender() {
   const pkg = atlasSharedSynthesisState.package;
   const hasPackage = !!pkg;
-  document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd")
+  document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd, #btnAtlasSharedPreparePublication")
     .forEach(button => { button.disabled = !hasPackage; });
   if (!pkg) {
     setText(document.getElementById("atlasSharedSynthesisSnapshot"), "—");
@@ -11399,7 +11428,14 @@ function atlasSharedSynthesisRender() {
   setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedConclusionContent"), pkg.conclusion.answer);
-  setText(document.getElementById("atlasSharedSynthesisNote"), `${atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée"} · lecture seule · ${pkg.origin?.provider || "local"} · ${pkg.origin?.model || "modèle"}`);
+  const sourceLabel = atlasSharedSynthesisState.source === "local"
+    ? "Produite sur ce poste"
+    : atlasSharedSynthesisState.source === "import"
+      ? "Importée manuellement"
+      : atlasSharedSynthesisState.source === "published"
+        ? "Publiée depuis GitHub Data"
+        : "Restaurée";
+  setText(document.getElementById("atlasSharedSynthesisNote"), `${sourceLabel} · lecture seule · ${pkg.origin?.provider || "local"} · ${pkg.origin?.model || "modèle"}`);
   return true;
 }
 
@@ -11410,7 +11446,8 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
       atlasLocalReportsState.reports[mode] = report;
       const ids = ATLAS_LOCAL_REPORT_IDS[mode];
       atlasLocalSetReport(document.getElementById(ids.content), report.answer);
-      setText(document.getElementById(ids.meta), `${report.snapshotLabel || pkg.snapshot_label} · ${source === "import" ? "importé" : "conservé"} · ${report.model || pkg.origin?.model || "modèle"}`);
+      const reportSource = source === "local" ? "produit" : source === "import" ? "importé" : source === "published" ? "publié" : "conservé";
+      setText(document.getElementById(ids.meta), `${report.snapshotLabel || pkg.snapshot_label} · ${reportSource} · ${report.model || pkg.origin?.model || "modèle"}`);
       atlasLocalReportSetCardState(mode, source === "local" ? "Prêt" : "Archivé", "ready");
       document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.removeAttribute("disabled");
       document.querySelector(`[data-atlas-report-export="${mode}"]`)?.removeAttribute("disabled");
@@ -11634,6 +11671,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
   });
   const operation = ++atlasSharedSynthesisState.operation;
   atlasSharedSynthesisActivate(pkg, "local");
+  atlasSharedSynthesisSetPublication("À publier dans data/", "pending", pkg.fingerprint, pkg.generated_at);
   atlasSharedSynthesisSetStatus("working", "Synthèse Ryzen créée · écriture et relecture IndexedDB…", "Enregistrement");
   void (async () => {
     const saved = await atlasSharedSynthesisPersist(pkg);
@@ -11683,6 +11721,93 @@ function atlasSharedSynthesisExportJson() {
   }
 }
 
+function atlasSharedSynthesisPreparePublication() {
+  const pkg = atlasSharedSynthesisState.package;
+  if (!pkg) return false;
+  try {
+    const clean = atlasSharedSynthesisNormalizePackage(pkg);
+    const publication = {
+      ...clean,
+      publication: {
+        channel: "github_pages_data",
+        repository_path: "public/agent_crypto_erith_ia/data/latest_atlas_aerith_synthesis.json",
+        prepared_at: new Date().toISOString(),
+        read_only: true
+      }
+    };
+    const raw = JSON.stringify(publication);
+    downloadTextFile(ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE, "application/json;charset=utf-8", raw);
+    atlasSharedSynthesisSetPublication("Fichier prêt à téléverser", "prepared", clean.fingerprint, clean.generated_at);
+    atlasSharedSynthesisSetStatus("ready", `Publication Book préparée · téléverse ${ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE} dans public/agent_crypto_erith_ia/data/.`, "Publication prête");
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisSetStatus("error", `Publication refusée : ${error?.message || "erreur inconnue"}.`, "Erreur");
+    return false;
+  }
+}
+
+async function atlasSharedSynthesisCheckPublished(options = {}) {
+  const manual = options.manual === true;
+  const token = ++atlasSharedSynthesisState.publicationOperation;
+  atlasSharedSynthesisSetPublication("Vérification GitHub…", "working");
+  if (manual) atlasSharedSynthesisSetStatus("working", "Vérification de la publication GitHub Data…", "Vérification");
+  try {
+    if (typeof fetch !== "function") throw new Error("chargement réseau indisponible");
+    const separator = ATLAS_SHARED_SYNTHESIS_PUBLICATION_URL.includes("?") ? "&" : "?";
+    const response = await fetch(`${ATLAS_SHARED_SYNTHESIS_PUBLICATION_URL}${separator}v=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Accept: "application/json" }
+    });
+    if (token !== atlasSharedSynthesisState.publicationOperation) return false;
+    if (!response?.ok) {
+      if (response?.status === 404) throw new Error("aucune synthèse publiée dans data/");
+      throw new Error(`publication GitHub inaccessible (${response?.status || "réseau"})`);
+    }
+    const raw = await response.text();
+    const bytes = atlasSharedSynthesisUtf8Bytes(raw);
+    if (bytes > ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES) throw new Error("publication supérieure à 5 Mo");
+    const candidate = atlasSharedSynthesisNormalizePackage(JSON.parse(raw));
+    if (token !== atlasSharedSynthesisState.publicationOperation) return false;
+
+    const current = atlasSharedSynthesisState.package;
+    if (current?.fingerprint === candidate.fingerprint) {
+      atlasSharedSynthesisSetPublication(`À jour · ${candidate.snapshot_label}`, "ready", candidate.fingerprint, candidate.generated_at);
+      if (manual) atlasSharedSynthesisSetStatus("ready", "Publication GitHub vérifiée · l’Interface possède déjà cette synthèse.", "À jour");
+      return true;
+    }
+    if (current && !atlasSharedSynthesisPublishedIsNewer(candidate, current)) {
+      atlasSharedSynthesisSetPublication("Mémoire locale plus récente", "local-newer", candidate.fingerprint, candidate.generated_at);
+      if (manual) atlasSharedSynthesisSetStatus("ready", "Publication GitHub vérifiée · la mémoire locale plus récente est conservée.", "Locale conservée");
+      return false;
+    }
+
+    const clean = atlasSharedSynthesisActivate(candidate, "published");
+    atlasSharedSynthesisSetStatus("working", "Nouvelle publication GitHub trouvée · vérification IndexedDB…", "Mise à jour");
+    const saved = await atlasSharedSynthesisPersist(clean);
+    if (token !== atlasSharedSynthesisState.publicationOperation) return false;
+    atlasSharedSynthesisState.persistence = saved;
+    atlasSharedSynthesisRender();
+    atlasSharedSynthesisSetPublication(`Publiée · ${clean.snapshot_label}`, saved.ok ? "ready" : "warning", clean.fingerprint, clean.generated_at);
+    if (saved.ok) {
+      atlasSharedSynthesisSetStatus("ready", `Publication GitHub chargée · 4/4 rapports Atlas · conclusion Aerith · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko).`, "Publiée");
+    } else {
+      atlasSharedSynthesisSetStatus("warning", `Publication GitHub affichée · IndexedDB impossible : ${saved.error}.`, "Publiée sans mémoire");
+    }
+    return true;
+  } catch (error) {
+    if (token !== atlasSharedSynthesisState.publicationOperation) return false;
+    const hasLocal = !!atlasSharedSynthesisState.package;
+    atlasSharedSynthesisSetPublication(hasLocal ? "Indisponible · mémoire conservée" : "Aucune publication", "warning");
+    if (manual) {
+      atlasSharedSynthesisSetStatus(
+        hasLocal ? "Publication GitHub indisponible · les données IndexedDB restent affichées." : `Publication GitHub indisponible : ${error?.message || "erreur réseau"}.`,
+        hasLocal ? "Mémoire conservée" : "Indisponible"
+      );
+    }
+    return false;
+  }
+}
+
 function atlasSharedSynthesisExportMarkdown() {
   const pkg = atlasSharedSynthesisState.package;
   if (!pkg) return false;
@@ -11717,7 +11842,12 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
-  void atlasSharedSynthesisRestore();
+  document.getElementById("btnAtlasSharedPreparePublication")?.addEventListener("click", atlasSharedSynthesisPreparePublication);
+  document.getElementById("btnAtlasSharedCheckPublished")?.addEventListener("click", () => { void atlasSharedSynthesisCheckPublished({ manual: true }); });
+  void (async () => {
+    await atlasSharedSynthesisRestore();
+    await atlasSharedSynthesisCheckPublished({ manual: false });
+  })();
   return true;
 }
 
