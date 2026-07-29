@@ -18603,7 +18603,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Build 28.1.94 — GitHub Data Published Synthesis
+   Build 28.1.95 — Permanent Inline Atlas/Aerith Synthesis
    Carte autonome intégrée à app.js ; aucun quatrième fichier.
    ========================================================= */
 .atlas-shared-synthesis-card {
@@ -18620,7 +18620,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 .atlas-shared-synthesis-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
 .atlas-shared-synthesis-head h4 { margin:2px 0 6px; color:#ffe6a7; font-size:1.15rem; }
 .atlas-shared-synthesis-head p:not(.eyebrow) { margin:0; color:rgba(220,234,247,.78); }
-.atlas-shared-synthesis-meta { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin:16px 0; }
+.atlas-shared-synthesis-meta { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:16px 0; }
 .atlas-shared-synthesis-meta article { min-width:0; padding:11px 12px; border:1px solid rgba(255,255,255,.1); border-radius:12px; background:rgba(2,15,28,.55); }
 .atlas-shared-synthesis-meta span { display:block; margin-bottom:4px; color:rgba(184,207,229,.66); font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
 .atlas-shared-synthesis-meta b { display:block; overflow-wrap:anywhere; color:#f7fbff; font-size:.82rem; }
@@ -18652,35 +18652,4 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   .atlas-shared-synthesis-meta { grid-template-columns:1fr; }
   .atlas-shared-synthesis-card { padding:14px; }
   .atlas-shared-synthesis-actions > * { width:100%; justify-content:center; }
-}
-
-
-/* Build 28.1.94 — fenêtre de publication Book */
-.atlas-publication-dialog {
-  width: min(760px, calc(100vw - 28px));
-  padding: 0;
-  border: 1px solid rgba(106, 218, 255, .34);
-  border-radius: 22px;
-  background: rgba(4, 13, 25, .97);
-  color: var(--text, #eef8ff);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, .62), 0 0 42px rgba(43, 174, 255, .12);
-}
-.atlas-publication-dialog::backdrop { background: rgba(0, 5, 14, .78); backdrop-filter: blur(9px); }
-.atlas-publication-shell { padding: 24px; }
-.atlas-publication-head { display: flex; justify-content: space-between; gap: 22px; align-items: flex-start; }
-.atlas-publication-head h2 { margin: 5px 0 6px; font-size: clamp(1.35rem, 3vw, 2rem); }
-.atlas-publication-head p:not(.eyebrow) { margin: 0; color: var(--muted, #9eb4c7); }
-.atlas-publication-close { min-width: 42px; min-height: 42px; border-radius: 50%; font-size: 1.5rem; line-height: 1; }
-.atlas-publication-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 22px 0 16px; }
-.atlas-publication-grid article { padding: 13px; border: 1px solid rgba(120, 210, 255, .18); border-radius: 14px; background: rgba(255,255,255,.035); }
-.atlas-publication-grid span, .atlas-publication-grid b { display: block; }
-.atlas-publication-grid span { color: var(--muted, #9eb4c7); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
-.atlas-publication-grid b { margin-top: 6px; font-size: .94rem; overflow-wrap: anywhere; }
-.atlas-publication-message { margin: 0; padding: 14px 16px; border-radius: 14px; background: rgba(41, 173, 255, .09); border: 1px solid rgba(41, 173, 255, .2); }
-.atlas-publication-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 12px; }
-.atlas-publication-actions button:first-child { min-width: 220px; }
-.atlas-publication-shell > small { display: block; color: var(--muted, #9eb4c7); line-height: 1.5; }
-@media (max-width: 720px) {
-  .atlas-publication-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .atlas-publication-actions button { width: 100%; }
 }
