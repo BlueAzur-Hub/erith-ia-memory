@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-07-29T03:44:43.980110+00:00",
+  "generated_at": "2026-07-29T06:47:52.869378+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 12,
-    "critical_24h": 12,
+    "events_24h": 13,
+    "critical_24h": 13,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 360,
+      "latency_ms": 125,
       "error": null
     },
     {
@@ -35,9 +35,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 30,
+      "fetched_count": 22,
       "qualified_count": 0,
-      "latency_ms": 131,
+      "latency_ms": 209,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 114,
+      "latency_ms": 144,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 246,
+      "latency_ms": 291,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 24,
-      "latency_ms": 251,
+      "latency_ms": 357,
       "error": null
     },
     {
@@ -80,8 +80,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 26,
-      "latency_ms": 93,
+      "qualified_count": 27,
+      "latency_ms": 278,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 18,
-      "latency_ms": 156,
+      "latency_ms": 108,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 11,
-      "latency_ms": 665,
+      "latency_ms": 492,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 90,
+      "latency_ms": 152,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 0,
-      "latency_ms": 269,
+      "latency_ms": 175,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 87,
+      "latency_ms": 75,
       "error": null
     }
   ],
@@ -365,11 +365,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T13:00:00+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.118113+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.118113+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.342336+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.342336+00:00",
       "freshness": {
         "iso": "2026-07-28T13:00:00+00:00",
-        "hours": 14.75,
+        "hours": 17.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -573,11 +573,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T11:59:17+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.270674+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.270674+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.412320+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.412320+00:00",
       "freshness": {
         "iso": "2026-07-28T11:59:17+00:00",
-        "hours": 15.76,
+        "hours": 18.81,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -853,11 +853,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T07:40:40+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.126424+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.126424+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.350463+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.350463+00:00",
       "freshness": {
         "iso": "2026-07-28T07:40:40+00:00",
-        "hours": 20.07,
+        "hours": 23.12,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1145,73 +1145,6 @@
       "assets": [],
       "sectors": [
         "DeFi",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_a7459a5751b090c0",
-      "event_id": "feed_a7459a5751b090c0",
-      "fingerprint": "a7459a5751b090c0",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "AI models escaped OpenAI’s sandbox and hit Hugging Face. Crypto is where that gets dangerous",
-      "body": "OpenAI said the systems had their cyber guardrails lowered for an internal benchmark, but the incident shows how autonomous exploit chains could pose a deeper threat to smart contracts.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/07/22/ai-models-escaped-openai-s-sandbox-and-hit-hugging-face-crypto-is-where-that-gets-dangerous",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/07/22/ai-models-escaped-openai-s-sandbox-and-hit-hugging-face-crypto-is-where-that-gets-dangerous"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-07-22T06:01:56+00:00",
-      "first_seen_at": "2026-07-23T07:32:32.897780+00:00",
-      "last_seen_at": "2026-07-23T07:32:32.897780+00:00",
-      "freshness": {
-        "iso": "2026-07-22T06:01:56+00:00",
-        "hours": 25.51,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 98,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "IA",
         "Cybersécurité"
       ],
       "manipulation": {
@@ -1594,11 +1527,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T14:49:50+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.263051+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.263051+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.404744+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.404744+00:00",
       "freshness": {
         "iso": "2026-07-28T14:49:50+00:00",
-        "hours": 12.91,
+        "hours": 15.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1635,6 +1568,69 @@
         "regulation",
         "macro",
         "geopolitics"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_407259f9717c962e",
+      "event_id": "feed_407259f9717c962e",
+      "fingerprint": "407259f9717c962e",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Trade.xyz to cover SK Hynix perp liquidation losses tied to price anomaly",
+      "body": "Trade.xyz said its oracle worked as designed but will reimburse eligible traders after an external SK Hynix price print caused the contract’s mark price to fall nearly 19%.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/trade-xyz-sk-hynix-perp-liquidations-price-anomaly",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/trade-xyz-sk-hynix-perp-liquidations-price-anomaly"
+      ],
+      "declared_status": "reported",
+      "event_type": "bankruptcy",
+      "event_label": "Faillite / liquidité / retraits",
+      "event_time": "2026-07-29T05:29:48+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.318028+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.318028+00:00",
+      "freshness": {
+        "iso": "2026-07-29T05:29:48+00:00",
+        "hours": 1.3,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 96,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "security"
       ],
       "observation_only": true
     },
@@ -2206,11 +2202,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-28T14:30:57+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.267205+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.267205+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.408727+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.408727+00:00",
       "freshness": {
         "iso": "2026-07-28T14:30:57+00:00",
-        "hours": 13.23,
+        "hours": 16.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2416,12 +2412,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T18:15:25+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.109566+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.109566+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.333345+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.333345+00:00",
       "freshness": {
         "iso": "2026-07-28T18:15:25+00:00",
-        "hours": 9.49,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.54,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2693,11 +2689,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:59:17+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.195691+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.195691+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.247878+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.247878+00:00",
       "freshness": {
         "iso": "2026-07-27T19:59:17+00:00",
-        "hours": 31.76,
+        "hours": 34.81,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2759,11 +2755,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T15:04:00+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.197109+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.197109+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.249100+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.249100+00:00",
       "freshness": {
         "iso": "2026-07-23T15:04:00+00:00",
-        "hours": 132.68,
+        "hours": 135.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2825,11 +2821,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-22T13:45:25+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.198304+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.198304+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.250291+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.250291+00:00",
       "freshness": {
         "iso": "2026-07-22T13:45:25+00:00",
-        "hours": 157.99,
+        "hours": 161.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2891,11 +2887,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T12:24:02+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.269601+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.269601+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.411194+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.411194+00:00",
       "freshness": {
         "iso": "2026-07-28T12:24:02+00:00",
-        "hours": 15.34,
+        "hours": 18.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2957,11 +2953,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-28T08:00:00+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.279663+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.279663+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.419544+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.419544+00:00",
       "freshness": {
         "iso": "2026-07-28T08:00:00+00:00",
-        "hours": 19.75,
+        "hours": 22.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3291,11 +3287,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:45:31+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.187175+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.187175+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.185216+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.185216+00:00",
       "freshness": {
         "iso": "2026-07-27T19:45:31+00:00",
-        "hours": 31.99,
+        "hours": 35.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4823,11 +4819,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-28T23:00:10+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.368315+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.368315+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.198807+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.198807+00:00",
       "freshness": {
         "iso": "2026-07-28T23:00:10+00:00",
-        "hours": 4.74,
+        "hours": 7.8,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5017,12 +5013,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-28T16:08:19+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.260693+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.260693+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.402297+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.402297+00:00",
       "freshness": {
         "iso": "2026-07-28T16:08:19+00:00",
-        "hours": 11.61,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.66,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -5380,15 +5376,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_41a1ff999ba28742",
-      "event_id": "feed_41a1ff999ba28742",
-      "fingerprint": "41a1ff999ba28742",
+      "id": "feed_af59a4567a5cf084",
+      "event_id": "feed_af59a4567a5cf084",
+      "fingerprint": "af59a4567a5cf084",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "'Anything remotely dovish' from Fed could be good for bitcoin, says analyst",
-      "body": "Traders are divided on whether the Fed will hike rates, but analysts said crypto may be less exposed than AI-driven tech stocks.",
+      "headline": "Live updates: Bitcoin clears $64,000 in Asia hours ahead of Fed decision",
+      "body": "Markets price a hold at Wednesday's decision, but a real minority sees a surprise hike, with Citadel Securities and UBS among those flagging the risk.",
       "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/07/28/remotely-dovish-fed-could-be-good-for-bitcoin-says-analyst",
+      "source_url": "https://www.coindesk.com/tech/2026/07/29/live-updates-bitcoin-clears-usd64-000-in-asia-hours-ahead-of-fed-decision",
       "source_host": "coindesk.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -5397,18 +5393,18 @@
         "CoinDesk"
       ],
       "source_urls": [
-        "https://www.coindesk.com/markets/2026/07/28/remotely-dovish-fed-could-be-good-for-bitcoin-says-analyst"
+        "https://www.coindesk.com/tech/2026/07/29/live-updates-bitcoin-clears-usd64-000-in-asia-hours-ahead-of-fed-decision"
       ],
       "declared_status": "reported",
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-07-28T20:23:31+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.256735+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.256735+00:00",
+      "event_time": "2026-07-29T06:25:21+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.392004+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.392004+00:00",
       "freshness": {
-        "iso": "2026-07-28T20:23:31+00:00",
-        "hours": 7.35,
-        "label": "Fraîche · moins de 12 h",
+        "iso": "2026-07-29T06:25:21+00:00",
+        "hours": 0.38,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -5425,7 +5421,6 @@
       ],
       "sectors": [
         "Layer 1",
-        "IA",
         "Marché global"
       ],
       "manipulation": {
@@ -5450,15 +5445,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_ff6569f3572bef69",
-      "event_id": "feed_ff6569f3572bef69",
-      "fingerprint": "ff6569f3572bef69",
+      "id": "feed_8ddb8d9831e1462a",
+      "event_id": "feed_8ddb8d9831e1462a",
+      "fingerprint": "8ddb8d9831e1462a",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Bitcoin drops as South Korean stocks tumble, Senate shelves crypto Clarity Act",
-      "body": "BTC shed 2% as South Korea's Kospi plunged 11% and the U.S. Senate shelved the Clarity Act, leaving the market facing a pivotal Fed decision on Wednesday.",
+      "headline": "Citadel bets on a Fed rate hike Wednesday as bitcoin analysts call a hold. Someone will be wrong.",
+      "body": "Citadel's macro team says Wednesday's hike isn't about the data. It's about Warsh's best shot at making a surprise actually count before the market stops being surprised.",
       "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/07/28/bitcoin-drops-as-south-korean-stocks-tumble-senate-shelves-crypto-clarity-act",
+      "source_url": "https://www.coindesk.com/markets/2026/07/29/citadel-bets-on-a-fed-rate-hike-wednesday-as-bitcoin-analysts-call-a-hold-someone-will-be-wrong",
       "source_host": "coindesk.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -5467,18 +5462,18 @@
         "CoinDesk"
       ],
       "source_urls": [
-        "https://www.coindesk.com/markets/2026/07/28/bitcoin-drops-as-south-korean-stocks-tumble-senate-shelves-crypto-clarity-act"
+        "https://www.coindesk.com/markets/2026/07/29/citadel-bets-on-a-fed-rate-hike-wednesday-as-bitcoin-analysts-call-a-hold-someone-will-be-wrong"
       ],
       "declared_status": "reported",
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-07-28T11:09:16+00:00",
-      "first_seen_at": "2026-07-29T03:44:43.273190+00:00",
-      "last_seen_at": "2026-07-29T03:44:43.273190+00:00",
+      "event_time": "2026-07-29T05:37:38+00:00",
+      "first_seen_at": "2026-07-29T06:47:52.394575+00:00",
+      "last_seen_at": "2026-07-29T06:47:52.394575+00:00",
       "freshness": {
-        "iso": "2026-07-28T11:09:16+00:00",
-        "hours": 16.59,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-07-29T05:37:38+00:00",
+        "hours": 1.17,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
