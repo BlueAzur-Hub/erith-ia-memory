@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.89R1 — SHARED SYNTHESIS PERSISTENCE FIX · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.89R2 — LIGHTWEIGHT BOOK TRANSFER · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R1";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R2";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11163,16 +11163,19 @@ const atlasLocalReportsState = {
 };
 
 /* =========================================================
-   Build 28.1.89R1 — Shared Synthesis Persistence Fix Atlas-10 / Aerith-10
+   Build 28.1.89R2 — Lightweight Book Transfer Atlas-10 / Aerith-10
    Couche additive : persistance, export/import et lecture Book.
    Aucun appel Ollama supplémentaire.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_storage_v1";
+const ATLAS_SHARED_SYNTHESIS_TRANSFER_PROFILE = "book_lightweight_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_KEY = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 1500000;
+const ATLAS_SHARED_SYNTHESIS_BOOK_IMPORT_LIMIT_BYTES = 1500000;
 const atlasSharedSynthesisState = {
   package: null,
+  bookPackage: null,
   source: "none",
   persistence: null
 };
@@ -11363,6 +11366,7 @@ function atlasSharedSynthesisStoragePackage(pkg) {
   return {
     schema: ATLAS_SHARED_SYNTHESIS_SCHEMA,
     storage_schema: ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA,
+    transfer_profile: ATLAS_SHARED_SYNTHESIS_TRANSFER_PROFILE,
     compact_storage: true,
     generated_at: pkg?.generated_at || new Date().toISOString(),
     snapshot_at: pkg?.snapshot_at || pkg?.snapshot?.strict_contract?.market?.timestamp || pkg?.snapshot?.generated_at || null,
@@ -11382,6 +11386,27 @@ function atlasSharedSynthesisStoragePackage(pkg) {
     reports,
     conclusion: atlasSharedSynthesisCompactConclusion(pkg?.conclusion)
   };
+}
+
+function atlasSharedSynthesisBookPackage(pkg) {
+  const compact = atlasSharedSynthesisStoragePackage(pkg);
+  atlasSharedSynthesisValidate(compact);
+  return compact;
+}
+
+function atlasSharedSynthesisSetTransferStatus(message) {
+  setText(document.getElementById("atlasSharedSynthesisStatus"), message);
+}
+
+function atlasSharedSynthesisYieldToInterface() {
+  return new Promise(resolve => {
+    const done = () => window.setTimeout(resolve, 0);
+    if (typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(done);
+    } else {
+      done();
+    }
+  });
 }
 
 function atlasSharedSynthesisPersistenceMessage(result) {
@@ -11496,7 +11521,7 @@ function atlasSharedSynthesisRender() {
   if (!pkg) {
     if (card) card.dataset.state = "empty";
     if (badge) { badge.textContent = "En attente"; badge.className = "pill"; }
-    setText(status, "Aucune synthèse conservée. Lance une analyse complète sur le Ryzen ou importe un paquet JSON.");
+    setText(status, "Aucune synthèse conservée. Lance une analyse complète sur le Ryzen ou importe un JSON Book léger.");
     setText(document.getElementById("atlasSharedSynthesisSnapshot"), "—");
     setText(document.getElementById("atlasSharedSynthesisOrigin"), "—");
     setText(document.getElementById("atlasSharedSynthesisReports"), "0/4");
@@ -11544,6 +11569,9 @@ function atlasSharedSynthesisApplyPackage(pkg, options = {}) {
   }
 
   atlasSharedSynthesisState.package = clean;
+  atlasSharedSynthesisState.bookPackage = options.bookPackage
+    ? atlasSharedSynthesisClone(options.bookPackage)
+    : atlasSharedSynthesisBookPackage(clean);
   atlasSharedSynthesisState.source = options.source || "stored";
   atlasSharedSynthesisState.persistence = persistence;
   atlasSharedSynthesisHydrateReports(clean, atlasSharedSynthesisState.source);
@@ -11636,14 +11664,28 @@ async function atlasSharedSynthesisCopy() {
 function atlasSharedSynthesisExportJson() {
   const pkg = atlasSharedSynthesisState.package;
   if (!pkg) return false;
-  const stamp = new Date(pkg.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
-  downloadTextFile(
-    `agent_crypto_shared_synthesis_${stamp}.json`,
-    "application/json;charset=utf-8",
-    JSON.stringify(pkg, null, 2)
-  );
-  setText(document.getElementById("atlasSharedSynthesisStatus"), "Paquet JSON exporté pour le Book ou une autre machine.");
-  return true;
+  try {
+    const bookPackage = atlasSharedSynthesisState.bookPackage || atlasSharedSynthesisBookPackage(pkg);
+    const raw = JSON.stringify(bookPackage);
+    const bytes = atlasSharedSynthesisUtf8Bytes(raw);
+    if (bytes > ATLAS_SHARED_SYNTHESIS_BOOK_IMPORT_LIMIT_BYTES) {
+      throw new Error(`paquet Book trop volumineux (${Math.ceil(bytes / 1024)} Ko)`);
+    }
+    atlasSharedSynthesisState.bookPackage = bookPackage;
+    const stamp = new Date(pkg.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
+    downloadTextFile(
+      `agent_crypto_book_synthesis_${stamp}.json`,
+      "application/json;charset=utf-8",
+      raw
+    );
+    atlasSharedSynthesisSetTransferStatus(
+      `JSON Book léger exporté · ${Math.max(1, Math.round(bytes / 1024))} Ko · prêt pour import direct.`
+    );
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisSetTransferStatus(`Export JSON Book impossible : ${error?.message || "erreur inconnue"}.`);
+    return false;
+  }
 }
 
 function atlasSharedSynthesisExportMarkdown() {
@@ -11663,24 +11705,51 @@ async function atlasSharedSynthesisImportFile(event) {
   const input = event?.currentTarget;
   const file = input?.files?.[0];
   if (!file) return false;
+  input.disabled = true;
   try {
-    if (file.size > 5 * 1024 * 1024) throw new Error("Fichier trop volumineux");
-    const pkg = JSON.parse(await file.text());
-    atlasSharedSynthesisApplyPackage(pkg, {
+    if (file.size > ATLAS_SHARED_SYNTHESIS_BOOK_IMPORT_LIMIT_BYTES) {
+      throw new Error(
+        `ancien paquet lourd détecté (${Math.ceil(file.size / 1024)} Ko). Réexporte la synthèse depuis le Ryzen avec la Build 28.1.89R2`
+      );
+    }
+
+    atlasSharedSynthesisSetTransferStatus("Import Book · lecture du fichier léger…");
+    await atlasSharedSynthesisYieldToInterface();
+    const raw = await file.text();
+
+    atlasSharedSynthesisSetTransferStatus("Import Book · vérification du paquet…");
+    await atlasSharedSynthesisYieldToInterface();
+    const parsed = JSON.parse(raw);
+    const compact = atlasSharedSynthesisBookPackage(parsed);
+
+    if (
+      parsed?.transfer_profile
+      && parsed.transfer_profile !== ATLAS_SHARED_SYNTHESIS_TRANSFER_PROFILE
+    ) {
+      throw new Error("profil de transfert Book incompatible");
+    }
+
+    atlasSharedSynthesisSetTransferStatus("Import Book · conservation Firefox…");
+    await atlasSharedSynthesisYieldToInterface();
+    atlasSharedSynthesisApplyPackage(compact, {
       source: "import",
       persist: true,
-      requirePersistence: true
+      requirePersistence: true,
+      bookPackage: compact
     });
-    setText(
-      document.getElementById("atlasSharedSynthesisStatus"),
-      `Synthèse importée. ${atlasSharedSynthesisPersistenceMessage(atlasSharedSynthesisState.persistence)}`
+
+    atlasSharedSynthesisSetTransferStatus(
+      `Import Book terminé. ${atlasSharedSynthesisPersistenceMessage(atlasSharedSynthesisState.persistence)}`
     );
     return true;
   } catch (error) {
-    setText(document.getElementById("atlasSharedSynthesisStatus"), `Import refusé : ${error?.message || "fichier invalide"}.`);
+    atlasSharedSynthesisSetTransferStatus(`Import refusé : ${error?.message || "fichier invalide"}.`);
     return false;
   } finally {
-    if (input) input.value = "";
+    if (input) {
+      input.value = "";
+      input.disabled = false;
+    }
   }
 }
 
