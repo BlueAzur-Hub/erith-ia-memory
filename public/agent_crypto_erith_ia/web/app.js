@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.89R2 — LIGHTWEIGHT BOOK TRANSFER · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.89R3 — LIGHTWEIGHT BOOK TRANSFER · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R2";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.89R3";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11097,7 +11097,6 @@ function atlasInitLocalAccess() {
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
   atlasLocalResponseSelectView("conclusion");
-  atlasSharedSynthesisRestore();
   atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
   atlasInitLocalBridgeAutoHealth();
   window.setInterval(() => {
@@ -11163,14 +11162,15 @@ const atlasLocalReportsState = {
 };
 
 /* =========================================================
-   Build 28.1.89R2 — Lightweight Book Transfer Atlas-10 / Aerith-10
+   Build 28.1.89R3 — Persistent Boot Restore Lock Atlas-10 / Aerith-10
    Couche additive : persistance, export/import et lecture Book.
    Aucun appel Ollama supplémentaire.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_storage_v1";
 const ATLAS_SHARED_SYNTHESIS_TRANSFER_PROFILE = "book_lightweight_v1";
-const ATLAS_SHARED_SYNTHESIS_STORAGE_KEY = "agent_crypto_shared_synthesis_v1";
+const ATLAS_SHARED_SYNTHESIS_STORAGE_KEY = "agent_crypto_shared_synthesis_book_v2";
+const ATLAS_SHARED_SYNTHESIS_LEGACY_STORAGE_KEY = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 1500000;
 const ATLAS_SHARED_SYNTHESIS_BOOK_IMPORT_LIMIT_BYTES = 1500000;
 const atlasSharedSynthesisState = {
@@ -11178,6 +11178,13 @@ const atlasSharedSynthesisState = {
   bookPackage: null,
   source: "none",
   persistence: null
+};
+const atlasSharedSynthesisBootState = {
+  initialized: false,
+  restored: false,
+  attempts: 0,
+  lastReason: "",
+  lastError: ""
 };
 
 function atlasSharedSynthesisClone(value) {
@@ -11612,34 +11619,102 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
   return atlasSharedSynthesisApplyPackage(pkg, { source: "local", persist: true });
 }
 
-function atlasSharedSynthesisRestore() {
+function atlasSharedSynthesisStoredEntry() {
+  const primary = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
+  if (primary) return { raw: primary, key: ATLAS_SHARED_SYNTHESIS_STORAGE_KEY, legacy: false };
+  const legacy = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_LEGACY_STORAGE_KEY);
+  if (legacy) return { raw: legacy, key: ATLAS_SHARED_SYNTHESIS_LEGACY_STORAGE_KEY, legacy: true };
+  return null;
+}
+
+function atlasSharedSynthesisRestore(reason = "boot") {
+  atlasSharedSynthesisBootState.attempts += 1;
+  atlasSharedSynthesisBootState.lastReason = String(reason || "boot");
   try {
-    const raw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
-    if (!raw) {
+    const entry = atlasSharedSynthesisStoredEntry();
+    if (!entry) {
+      atlasSharedSynthesisBootState.restored = false;
+      atlasSharedSynthesisBootState.lastError = "";
       atlasSharedSynthesisState.persistence = null;
-      return atlasSharedSynthesisRender();
+      if (!atlasSharedSynthesisState.package) atlasSharedSynthesisRender();
+      return false;
     }
-    const pkg = JSON.parse(raw);
+
+    const pkg = JSON.parse(entry.raw);
     atlasSharedSynthesisValidate(pkg);
-    return atlasSharedSynthesisApplyPackage(pkg, {
+    let persistence = {
+      ok: true,
+      bytes: atlasSharedSynthesisUtf8Bytes(entry.raw),
+      package: pkg
+    };
+
+    if (entry.legacy) {
+      const migrated = atlasSharedSynthesisPersist(pkg);
+      if (migrated.ok) persistence = migrated;
+    }
+
+    atlasSharedSynthesisApplyPackage(pkg, {
       source: "stored",
       persist: false,
-      persistence: {
-        ok: true,
-        bytes: atlasSharedSynthesisUtf8Bytes(raw),
-        package: pkg
-      }
+      persistence,
+      bookPackage: pkg
     });
+
+    const restoredReports = ATLAS_LOCAL_REPORT_MODES.filter(
+      mode => String(atlasLocalReportsState.reports?.[mode]?.answer || "").trim()
+    ).length;
+    const restoredConclusion = !!String(
+      atlasLocalDialogueState.conclusionResponse?.answer || ""
+    ).trim();
+
+    if (restoredReports !== ATLAS_LOCAL_REPORT_MODES.length || !restoredConclusion) {
+      throw new Error(`hydratation incomplète (${restoredReports}/4 rapports)`);
+    }
+
+    atlasSharedSynthesisBootState.restored = true;
+    atlasSharedSynthesisBootState.lastError = "";
+    setText(
+      document.getElementById("atlasSharedSynthesisStatus"),
+      `Mémoire partagée restaurée · ${restoredReports}/4 rapports Atlas · conclusion Aerith disponible.`
+    );
+    return true;
   } catch (error) {
     console.warn("Synthèse partagée ignorée", error);
+    atlasSharedSynthesisBootState.restored = false;
+    atlasSharedSynthesisBootState.lastError = error?.message || "restauration impossible";
     atlasSharedSynthesisState.persistence = {
       ok: false,
       bytes: 0,
       package: null,
-      error: error?.message || "restauration impossible"
+      error: atlasSharedSynthesisBootState.lastError
     };
-    return atlasSharedSynthesisRender();
+    if (!atlasSharedSynthesisState.package) atlasSharedSynthesisRender();
+    return false;
   }
+}
+
+function atlasInitSharedSynthesisBootRestore() {
+  if (atlasSharedSynthesisBootState.initialized) return;
+  atlasSharedSynthesisBootState.initialized = true;
+
+  const restore = reason => atlasSharedSynthesisRestore(reason);
+  restore("boot-final");
+
+  window.setTimeout(() => {
+    if (!atlasSharedSynthesisBootState.restored) restore("boot-settle");
+  }, 0);
+
+  window.setTimeout(() => {
+    if (!atlasSharedSynthesisBootState.restored) restore("boot-retry");
+  }, 350);
+
+  window.addEventListener("pageshow", () => {
+    restore("pageshow");
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) restore("visibility-return");
+  });
 }
 
 async function atlasSharedSynthesisCopy() {
@@ -11709,7 +11784,7 @@ async function atlasSharedSynthesisImportFile(event) {
   try {
     if (file.size > ATLAS_SHARED_SYNTHESIS_BOOK_IMPORT_LIMIT_BYTES) {
       throw new Error(
-        `ancien paquet lourd détecté (${Math.ceil(file.size / 1024)} Ko). Réexporte la synthèse depuis le Ryzen avec la Build 28.1.89R2`
+        `ancien paquet lourd détecté (${Math.ceil(file.size / 1024)} Ko). Réexporte la synthèse depuis le Ryzen avec la Build 28.1.89R3`
       );
     }
 
@@ -14022,7 +14097,9 @@ window.addEventListener("pageshow", () => {
   requestAnimationFrame(() => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity));
 });
 requestAnimationFrame(() => atlasSafeBoot("analyst panel", renderAnalystPanel));
-atlasSafeBoot("auto reader start", startAutoReader); const QUESTIONNAIRE_STORAGE_KEY = "agent_crypto_erith_ia_questionnaire_v1"; function questionnaireFields() { return { objective: document.getElementById("qObjective"), assets: document.getElementById("qAssets"), virtualAmount: document.getElementById("qVirtualAmount"), risks: document.getElementById("qRisks"), news: document.getElementById("qNews"), machine: document.getElementById("qMachine"), access: document.getElementById("qAccess"), physical: document.getElementById("qPhysical") };
+atlasSafeBoot("auto reader start", startAutoReader);
+atlasSafeBoot("shared synthesis persistent boot restore", atlasInitSharedSynthesisBootRestore);
+const QUESTIONNAIRE_STORAGE_KEY = "agent_crypto_erith_ia_questionnaire_v1"; function questionnaireFields() { return { objective: document.getElementById("qObjective"), assets: document.getElementById("qAssets"), virtualAmount: document.getElementById("qVirtualAmount"), risks: document.getElementById("qRisks"), news: document.getElementById("qNews"), machine: document.getElementById("qMachine"), access: document.getElementById("qAccess"), physical: document.getElementById("qPhysical") };
 } function getQuestionnaireData() { const f = questionnaireFields(); return { objective: f.objective?.value?.trim() || "", assets: f.assets?.value?.trim() || "", virtualAmount: f.virtualAmount?.value?.trim() || "", risks: f.risks?.value?.trim() || "", news: f.news?.value?.trim() || "", machine: f.machine?.value?.trim() || "", access: f.access?.value?.trim() || "", physical: f.physical?.value?.trim() || "", updatedAt: new Date().toISOString() };
 } function setQuestionnaireData(data = {}) { const f = questionnaireFields(); if (f.objective) f.objective.value = data.objective || ""; if (f.assets) f.assets.value = data.assets || ""; if (f.virtualAmount) f.virtualAmount.value = data.virtualAmount || ""; if (f.risks) f.risks.value = data.risks || ""; if (f.news) f.news.value = data.news || ""; if (f.machine) f.machine.value = data.machine || ""; if (f.access) f.access.value = data.access || ""; if (f.physical) f.physical.value = data.physical || "";
 } function saveQuestionnaire() { const data = getQuestionnaireData(); try { localStorage.setItem(QUESTIONNAIRE_STORAGE_KEY, JSON.stringify(data)); } catch {} return data;
