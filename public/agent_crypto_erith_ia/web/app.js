@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.93 — GITHUB DATA PUBLICATION LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.94 — AUTOMATIC BOOK PUBLICATION LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.93";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.94";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11155,8 +11155,8 @@ const atlasLocalReportsState = {
 
 
 /* =========================================================
-   Build 28.1.93 — GitHub Data Published Synthesis
-   Un contrôleur, IndexedDB stable, une publication GitHub Data et une restauration au boot.
+   Build 28.1.94 — Automatic Bridge Publication to Book
+   Un contrôleur, IndexedDB stable, une publication Bridge bornée et une restauration au boot.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_indexeddb_v1";
@@ -11168,12 +11168,14 @@ const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE = "latest_atlas_aerith_synthesis.json";
 const ATLAS_SHARED_SYNTHESIS_PUBLICATION_URL = `../data/${ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE}`;
+const ATLAS_SHARED_SYNTHESIS_PUBLISH_ROUTE = `${ATLAS_LOCAL_BRIDGE_BASE}/publish-synthesis`;
 const atlasSharedSynthesisState = {
   initialized: false,
   package: null,
   source: "none",
   operation: 0,
   publicationOperation: 0,
+  publishing: false,
   publication: { state: "idle", label: "Non vérifiée", fingerprint: "", generatedAt: null },
   persistence: { ok: false, bytes: 0, backend: "IndexedDB", error: "Non enregistrée" }
 };
@@ -11407,8 +11409,10 @@ function atlasSharedSynthesisRenderMarkdown(node, markdown) {
 function atlasSharedSynthesisRender() {
   const pkg = atlasSharedSynthesisState.package;
   const hasPackage = !!pkg;
-  document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd, #btnAtlasSharedPreparePublication")
+  document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd")
     .forEach(button => { button.disabled = !hasPackage; });
+  const publishButton = document.getElementById("btnAtlasSharedPreparePublication");
+  if (publishButton) publishButton.disabled = !hasPackage || atlasSharedSynthesisState.source !== "local";
   if (!pkg) {
     setText(document.getElementById("atlasSharedSynthesisSnapshot"), "—");
     setText(document.getElementById("atlasSharedSynthesisOrigin"), "—");
@@ -11659,7 +11663,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     origin: {
       machine: atlasSharedSynthesisOriginMachine(),
       interface: ATLAS_RELEASE,
-      bridge: "V1.7.4",
+      bridge: "V1.7.5",
       provider: conclusion.provider || atlasLocalDialogueState.provider || "local",
       model: conclusion.model || atlasLocalDialogueState.model || "modèle local"
     },
@@ -11671,7 +11675,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
   });
   const operation = ++atlasSharedSynthesisState.operation;
   atlasSharedSynthesisActivate(pkg, "local");
-  atlasSharedSynthesisSetPublication("À publier dans data/", "pending", pkg.fingerprint, pkg.generated_at);
+  atlasSharedSynthesisSetPublication("Prête à publier", "pending", pkg.fingerprint, pkg.generated_at);
   atlasSharedSynthesisSetStatus("working", "Synthèse Ryzen créée · écriture et relecture IndexedDB…", "Enregistrement");
   void (async () => {
     const saved = await atlasSharedSynthesisPersist(pkg);
@@ -11683,6 +11687,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     } else {
       atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée et affichée · IndexedDB impossible : ${saved.error}.`, "Produite sans mémoire");
     }
+    atlasSharedSynthesisOpenPublicationDialog(pkg);
   })();
   return pkg;
 }
@@ -11721,28 +11726,101 @@ function atlasSharedSynthesisExportJson() {
   }
 }
 
-function atlasSharedSynthesisPreparePublication() {
-  const pkg = atlasSharedSynthesisState.package;
-  if (!pkg) return false;
+function atlasSharedSynthesisPublicationDialog() {
+  return document.getElementById("atlasPublicationDialog");
+}
+
+function atlasSharedSynthesisOpenPublicationDialog(pkg = atlasSharedSynthesisState.package) {
+  if (!pkg || atlasSharedSynthesisState.source !== "local") return false;
+  setText(document.getElementById("atlasPublicationSnapshot"), pkg.snapshot_label || "Snapshot conservé");
+  setText(document.getElementById("atlasPublicationReports"), "4/4");
+  setText(document.getElementById("atlasPublicationConclusion"), "Disponible");
+  setText(document.getElementById("atlasPublicationMemory"), atlasSharedSynthesisPersistenceLabel());
+  setText(document.getElementById("atlasPublicationMessage"), "La synthèse est prête. Un clic publie les quatre rapports et la conclusion pour le Book.");
+  const button = document.getElementById("btnAtlasPublicationNow");
+  if (button) {
+    button.disabled = false;
+    button.textContent = "Publier sur le Book";
+  }
+  const dialog = atlasSharedSynthesisPublicationDialog();
+  if (!dialog) return false;
   try {
-    const clean = atlasSharedSynthesisNormalizePackage(pkg);
-    const publication = {
-      ...clean,
-      publication: {
-        channel: "github_pages_data",
-        repository_path: "public/agent_crypto_erith_ia/data/latest_atlas_aerith_synthesis.json",
-        prepared_at: new Date().toISOString(),
-        read_only: true
-      }
-    };
-    const raw = JSON.stringify(publication);
-    downloadTextFile(ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE, "application/json;charset=utf-8", raw);
-    atlasSharedSynthesisSetPublication("Fichier prêt à téléverser", "prepared", clean.fingerprint, clean.generated_at);
-    atlasSharedSynthesisSetStatus("ready", `Publication Book préparée · téléverse ${ATLAS_SHARED_SYNTHESIS_PUBLICATION_FILE} dans public/agent_crypto_erith_ia/data/.`, "Publication prête");
+    if (!dialog.open && typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  } catch { dialog.setAttribute("open", ""); }
+  return true;
+}
+
+function atlasSharedSynthesisClosePublicationDialog() {
+  const dialog = atlasSharedSynthesisPublicationDialog();
+  if (!dialog) return false;
+  try { if (dialog.open && typeof dialog.close === "function") dialog.close(); }
+  catch { dialog.removeAttribute("open"); }
+  return true;
+}
+
+async function atlasSharedSynthesisPublishToBook() {
+  const pkg = atlasSharedSynthesisState.package;
+  if (!pkg || atlasSharedSynthesisState.publishing) return false;
+  const clean = atlasSharedSynthesisNormalizePackage(pkg);
+  atlasSharedSynthesisState.publishing = true;
+  const buttons = [
+    document.getElementById("btnAtlasSharedPreparePublication"),
+    document.getElementById("btnAtlasPublicationNow")
+  ].filter(Boolean);
+  buttons.forEach(button => { button.disabled = true; });
+  const dialogMessage = document.getElementById("atlasPublicationMessage");
+  setText(dialogMessage, "Transmission au Bridge Ryzen et publication GitHub en cours…");
+  atlasSharedSynthesisSetPublication("Publication en cours…", "working", clean.fingerprint, clean.generated_at);
+  atlasSharedSynthesisSetStatus("working", "Publication automatique vers le Book via le Bridge Ryzen…", "Publication");
+  try {
+    const response = await fetch(ATLAS_SHARED_SYNTHESIS_PUBLISH_ROUTE, {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        schema: "agent_crypto_bridge_publish_request_v1",
+        synthesis: clean,
+        requested_at: new Date().toISOString(),
+        interface: ATLAS_RELEASE
+      })
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || payload?.ok !== true) {
+      throw new Error(payload?.error || `Bridge publication indisponible (${response.status || "réseau"})`);
+    }
+    const shortCommit = String(payload?.commit_sha || "").slice(0, 8);
+    const publicationLabel = payload?.unchanged
+      ? `Déjà publiée · ${clean.snapshot_label}`
+      : `Publiée · ${clean.snapshot_label}`;
+    atlasSharedSynthesisSetPublication(publicationLabel, "ready", clean.fingerprint, clean.generated_at);
+    atlasSharedSynthesisSetStatus(
+      "ready",
+      payload?.unchanged
+        ? "Le Book possède déjà cette synthèse publiée."
+        : `Publication Book confirmée${shortCommit ? ` · commit ${shortCommit}` : ""}.`,
+      payload?.unchanged ? "Déjà publiée" : "Publiée"
+    );
+    setText(dialogMessage, payload?.unchanged
+      ? "Cette synthèse était déjà publiée. Le Book la chargera automatiquement."
+      : "Publication confirmée. Le Book chargera automatiquement cette synthèse depuis l’Interface.");
+    buttons.forEach(button => {
+      button.textContent = payload?.unchanged ? "Déjà publiée" : "Publication confirmée";
+      button.disabled = true;
+    });
     return true;
   } catch (error) {
-    atlasSharedSynthesisSetStatus("error", `Publication refusée : ${error?.message || "erreur inconnue"}.`, "Erreur");
+    const message = error?.message || "erreur de publication inconnue";
+    atlasSharedSynthesisSetPublication("Publication refusée", "error", clean.fingerprint, clean.generated_at);
+    atlasSharedSynthesisSetStatus("error", `Publication Book impossible : ${message}.`, "Erreur publication");
+    setText(dialogMessage, `Publication impossible : ${message}. La synthèse IndexedDB reste intacte.`);
+    buttons.forEach(button => {
+      button.disabled = false;
+      button.textContent = "Réessayer la publication";
+    });
     return false;
+  } finally {
+    atlasSharedSynthesisState.publishing = false;
   }
 }
 
@@ -11842,7 +11920,10 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
-  document.getElementById("btnAtlasSharedPreparePublication")?.addEventListener("click", atlasSharedSynthesisPreparePublication);
+  document.getElementById("btnAtlasSharedPreparePublication")?.addEventListener("click", () => { void atlasSharedSynthesisPublishToBook(); });
+  document.getElementById("btnAtlasPublicationNow")?.addEventListener("click", () => { void atlasSharedSynthesisPublishToBook(); });
+  document.getElementById("btnAtlasPublicationClose")?.addEventListener("click", atlasSharedSynthesisClosePublicationDialog);
+  document.getElementById("btnAtlasPublicationCloseSecondary")?.addEventListener("click", atlasSharedSynthesisClosePublicationDialog);
   document.getElementById("btnAtlasSharedCheckPublished")?.addEventListener("click", () => { void atlasSharedSynthesisCheckPublished({ manual: true }); });
   void (async () => {
     await atlasSharedSynthesisRestore();
