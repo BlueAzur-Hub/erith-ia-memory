@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.89R5 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
+  <title>Agent-Crypto @erith.IA — V2.0-alpha · Build 28.1.90 — PUBLIC MARKET · LOCAL OWNER ACCESS · ATLAS/AERITH LOCAL PROFILES</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.89R5-standalone-import-boot-restore" />
+  <link rel="stylesheet" href="./style.css?v=2.0-alpha-build-28.1.90-clean-shared-synthesis-core" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.89R5</span>
+          <span class="pill ok">GitHub Pack V2.0-alpha · Build 28.1.90</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -62,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.89R5</span>
+          <span id="atlasV2ReleaseBadge">V2.0-alpha · Build 28.1.90</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -805,7 +805,7 @@
                 <div class="news-actions">
                   <button class="btn primary" id="btnAnalyzeNews" type="button">Analyser et mémoriser</button>
                   <button class="btn" id="btnNewsClearForm" type="button">Effacer le formulaire</button>
-                  <button class="btn ghost" id="btnNewsExport" type="button">Exporter JSON Book</button>
+                  <button class="btn ghost" id="btnNewsExport" type="button">Exporter JSON</button>
                   <button class="btn ghost" id="btnNewsClearHistory" type="button">Vider l’historique</button>
                 </div>
 
@@ -1410,43 +1410,61 @@
               <small class="atlas-local-report-suite-meta" id="atlasLocalReportsMeta">Lecture seule · quatre tâches séquentielles · aucune exécution financière</small>
             </section>
 
-            <section class="atlas-shared-synthesis-card" id="atlasSharedSynthesisCard" data-state="empty" aria-labelledby="atlasSharedSynthesisTitle">
-              <div class="atlas-shared-synthesis-head">
+            <section class="atlas-clean-synthesis-card" id="atlasCleanSynthesisCard" data-state="empty" aria-labelledby="atlasCleanSynthesisTitle">
+              <div class="atlas-clean-synthesis-head">
                 <div>
                   <p class="eyebrow">SYNTHÈSE PARTAGÉE · ATLAS-10 / AERITH-10</p>
-                  <h4 id="atlasSharedSynthesisTitle">Conclusion transportable du snapshot</h4>
-                  <p id="atlasSharedSynthesisStatus">Aucune synthèse conservée. Lance une analyse complète sur le Ryzen ou importe un paquet JSON.</p>
+                  <h4 id="atlasCleanSynthesisTitle">Rapports produits sur le Ryzen, lisibles sur le Book</h4>
+                  <p id="atlasCleanSynthesisStatus" role="status" aria-live="polite">Module de synthèse en initialisation.</p>
                 </div>
-                <span class="pill" id="atlasSharedSynthesisBadge">En attente</span>
+                <span class="pill" id="atlasCleanSynthesisBadge">Initialisation</span>
               </div>
 
-              <div class="atlas-shared-synthesis-meta" aria-label="Métadonnées de la synthèse">
-                <article><span>Snapshot</span><b id="atlasSharedSynthesisSnapshot">—</b></article>
-                <article><span>Origine</span><b id="atlasSharedSynthesisOrigin">—</b></article>
-                <article><span>Rapports Atlas</span><b id="atlasSharedSynthesisReports">0/4</b></article>
-                <article><span>Fraîcheur</span><b id="atlasSharedSynthesisFreshness">—</b></article>
+              <div class="atlas-clean-synthesis-meta" aria-label="État de la synthèse partagée">
+                <article><b>Snapshot</b><span id="atlasCleanSynthesisSnapshot">—</span></article>
+                <article><b>Origine</b><span id="atlasCleanSynthesisOrigin">—</span></article>
+                <article><b>Rapports Atlas</b><span id="atlasCleanSynthesisReports">0/4</span></article>
+                <article><b>Conclusion Aerith</b><span id="atlasCleanSynthesisConclusion">Absente</span></article>
+                <article><b>Conservation locale</b><span id="atlasCleanSynthesisPersistence">Non enregistrée</span></article>
               </div>
 
-              <div class="atlas-shared-synthesis-content" id="atlasSharedSynthesisContent">
-                <p class="atlas-local-response-empty">La synthèse sera construite automatiquement après les quatre rapports Atlas-10 et la conclusion Aerith-10 Crypto.</p>
+              <div class="atlas-clean-synthesis-actions">
+                <button type="button" id="btnAtlasCleanSynthesisCopy" disabled>Copier la synthèse</button>
+                <button type="button" id="btnAtlasCleanSynthesisExport" disabled>Exporter JSON Book</button>
+                <label class="btn file-like atlas-clean-synthesis-import" for="atlasCleanSynthesisImport">Importer la synthèse Atlas/Aerith</label>
+                <input id="atlasCleanSynthesisImport" type="file" accept=".json,application/json" hidden />
               </div>
 
-              <details class="atlas-shared-conclusion" id="atlasSharedConclusionDetails">
-                <summary>Conclusion Aerith-10 Crypto complète</summary>
-                <div id="atlasSharedConclusionContent"><p class="atlas-local-response-empty">Aucune conclusion conservée.</p></div>
-              </details>
-
-              <div class="atlas-shared-synthesis-actions">
-                <button type="button" id="btnAtlasSharedCopy" disabled>Copier la synthèse</button>
-                <button type="button" id="btnAtlasSharedReadReports" disabled>Lire les quatre rapports</button>
-                <button type="button" id="btnAtlasSharedReadConclusion" disabled>Lire la conclusion</button>
-                <button type="button" id="btnAtlasSharedExportJson" disabled>Exporter JSON Book</button>
-                <button type="button" id="btnAtlasSharedExportMd" disabled>Exporter .md</button>
-                <label class="btn file-like" for="atlasSharedSynthesisImport">Importer JSON Ryzen</label>
-                <input id="atlasSharedSynthesisImport" type="file" accept=".json,application/json" hidden />
+              <div class="atlas-clean-synthesis-summary" id="atlasCleanSynthesisSummary">
+                <p class="atlas-local-response-empty">Aucune synthèse chargée. Sur le Ryzen, elle sera créée automatiquement après les quatre rapports Atlas et la conclusion Aerith.</p>
               </div>
-              <small class="atlas-shared-synthesis-note" id="atlasSharedSynthesisNote">Lecture seule · import autonome du JSON Ryzen · restauration locale après F5.</small>
+
+              <div class="atlas-clean-synthesis-report-list" id="atlasCleanSynthesisReportList" hidden>
+                <details open data-clean-report="market">
+                  <summary><b>01 · Résumé du marché</b><span data-clean-report-meta="market">—</span></summary>
+                  <div data-clean-report-content="market"></div>
+                </details>
+                <details data-clean-report="top5">
+                  <summary><b>02 · Analyse du Top 5</b><span data-clean-report-meta="top5">—</span></summary>
+                  <div data-clean-report-content="top5"></div>
+                </details>
+                <details data-clean-report="math">
+                  <summary><b>03 · Math Core expliqué</b><span data-clean-report-meta="math">—</span></summary>
+                  <div data-clean-report-content="math"></div>
+                </details>
+                <details data-clean-report="contradictions">
+                  <summary><b>04 · Contradictions</b><span data-clean-report-meta="contradictions">—</span></summary>
+                  <div data-clean-report-content="contradictions"></div>
+                </details>
+                <details open class="atlas-clean-synthesis-conclusion">
+                  <summary><b>Conclusion Aerith-10 Crypto</b><span id="atlasCleanSynthesisConclusionMeta">—</span></summary>
+                  <div id="atlasCleanSynthesisConclusionContent"></div>
+                </details>
+              </div>
+
+              <small class="atlas-clean-synthesis-rule">Lecture seule · aucune opération financière · une route d’import dédiée · aucune dépendance au Bridge sur le Book.</small>
             </section>
+
           </section>
         </section>
       </div>
@@ -1567,7 +1585,7 @@
         </label>
         <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID une fois</button>
         <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
-        <label class="btn small file-like" for="autoMemoryImport">Importer JSON Ryzen</label>
+        <label class="btn small file-like" for="autoMemoryImport">Importer mémoire de marché</label>
         <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
         <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
       </div>
@@ -1698,7 +1716,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.89R5 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">V2.0-alpha · Build 28.1.90 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2842,7 +2860,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.89R5</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Build 28.1.90</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2852,25 +2870,7 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=2.0-alpha-build-28.1.89R5-standalone-import-boot-restore"></script>
-  <script>
-  (() => {
-    const start = () => {
-      try {
-        if (typeof window.atlasInitSharedSynthesisStandalone === "function") {
-          window.atlasInitSharedSynthesisStandalone();
-          return;
-        }
-        const status = document.getElementById("atlasSharedSynthesisStatus");
-        if (status) status.textContent = "Import indisponible : module autonome non chargé.";
-      } catch (error) {
-        const status = document.getElementById("atlasSharedSynthesisStatus");
-        if (status) status.textContent = `Import indisponible : ${error?.message || "initialisation impossible"}.`;
-      }
-    };
-    start();
-    window.setTimeout(start, 0);
-  })();
-</script>
+  <script src="./app.js?v=2.0-alpha-build-28.1.90-clean-shared-synthesis-core"></script>
+  <script src="./shared-synthesis.js?v=2.0-alpha-build-28.1.90-clean-shared-synthesis-core"></script>
 </body>
 </html>

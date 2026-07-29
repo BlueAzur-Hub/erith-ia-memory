@@ -18603,142 +18603,76 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Build 28.1.89R5 — Import Stable + F5 Restore
-   Carte additive ; aucun composant R18 modifié.
+   Build 28.1.90 — Clean Shared Synthesis Core
+   Autonomous Atlas/Aerith transfer card. No shell override.
    ========================================================= */
-.atlas-shared-synthesis-card {
+.atlas-clean-synthesis-card {
   margin-top: 18px;
-  padding: 18px;
-  border: 1px solid rgba(134, 239, 214, .32);
+  padding: clamp(16px, 2vw, 24px);
+  border: 1px solid rgba(152, 205, 255, 0.24);
   border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(8, 31, 45, .92), rgba(12, 23, 41, .92)),
-    var(--panel);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  background: linear-gradient(145deg, rgba(13, 24, 43, 0.9), rgba(18, 33, 55, 0.82));
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.2);
 }
-.atlas-shared-synthesis-card[data-state="current"] { border-color: rgba(91, 235, 181, .52); }
-.atlas-shared-synthesis-card[data-state="archived"] { border-color: rgba(255, 184, 75, .46); }
-.atlas-shared-synthesis-head {
+.atlas-clean-synthesis-card[data-state="ready"] { border-color: rgba(95, 227, 179, 0.42); }
+.atlas-clean-synthesis-card[data-state="warning"],
+.atlas-clean-synthesis-card[data-state="error"] { border-color: rgba(255, 190, 95, 0.46); }
+.atlas-clean-synthesis-head,
+.atlas-clean-synthesis-actions,
+.atlas-clean-synthesis-meta {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
+  align-items: center;
+  gap: 12px;
 }
-.atlas-shared-synthesis-head h4 {
-  margin: 2px 0 6px;
-  color: #ffe6a7;
-  font-size: 1.15rem;
-}
-.atlas-shared-synthesis-head p:not(.eyebrow) {
-  margin: 0;
-  color: rgba(220, 234, 247, .78);
-}
-.atlas-shared-synthesis-meta {
+.atlas-clean-synthesis-head { justify-content: space-between; align-items: flex-start; }
+.atlas-clean-synthesis-head h4 { margin: 2px 0 6px; font-size: clamp(1rem, 1.8vw, 1.28rem); }
+.atlas-clean-synthesis-head p { margin: 0; }
+.atlas-clean-synthesis-meta {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 16px 0;
 }
-.atlas-shared-synthesis-meta article {
+.atlas-clean-synthesis-meta article {
   min-width: 0;
-  padding: 11px 12px;
-  border: 1px solid rgba(255,255,255,.1);
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  background: rgba(2, 15, 28, .55);
+  background: rgba(255, 255, 255, 0.035);
 }
-.atlas-shared-synthesis-meta span {
-  display: block;
-  margin-bottom: 4px;
-  color: rgba(184, 207, 229, .66);
-  font-size: .68rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.atlas-shared-synthesis-meta b {
-  display: block;
-  overflow-wrap: anywhere;
-  color: #f7fbff;
-  font-size: .82rem;
-}
-.atlas-shared-synthesis-content,
-.atlas-shared-conclusion > div {
-  padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,.1);
+.atlas-clean-synthesis-meta b,
+.atlas-clean-synthesis-meta span { display: block; }
+.atlas-clean-synthesis-meta b { margin-bottom: 4px; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.atlas-clean-synthesis-meta span { overflow-wrap: anywhere; }
+.atlas-clean-synthesis-actions { flex-wrap: wrap; margin-bottom: 16px; }
+.atlas-clean-synthesis-import { cursor: pointer; }
+.atlas-clean-synthesis-summary,
+.atlas-clean-synthesis-report-list details {
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 14px;
-  background: rgba(1, 12, 23, .72);
-  color: rgba(239, 247, 255, .9);
-  line-height: 1.55;
+  background: rgba(3, 12, 24, 0.34);
 }
-.atlas-shared-synthesis-content h4,
-.atlas-shared-conclusion h4 {
-  margin: 16px 0 7px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(134, 239, 214, .16);
-  color: #ffe6a7;
-}
-.atlas-shared-synthesis-content h4:first-child,
-.atlas-shared-conclusion h4:first-child { margin-top: 0; }
-.atlas-shared-synthesis-content p,
-.atlas-shared-conclusion p { margin: 6px 0; }
-.atlas-shared-synthesis-content ul,
-.atlas-shared-conclusion ul { margin: 6px 0 10px; padding-left: 22px; }
-.atlas-shared-synthesis-content li,
-.atlas-shared-conclusion li { margin: 4px 0; }
-.atlas-shared-conclusion {
-  margin-top: 12px;
-  border: 1px solid rgba(145, 115, 255, .24);
-  border-radius: 14px;
-  background: rgba(18, 12, 35, .45);
-}
-.atlas-shared-conclusion > summary {
-  cursor: pointer;
-  padding: 12px 14px;
-  color: #ebd5ff;
-  font-weight: 850;
-  list-style-position: inside;
-}
-.atlas-shared-conclusion > div {
-  margin: 0 12px 12px;
-}
-.atlas-shared-synthesis-actions {
+.atlas-clean-synthesis-summary { padding: 14px 16px; }
+.atlas-clean-synthesis-report-list { display: grid; gap: 10px; margin-top: 12px; }
+.atlas-clean-synthesis-report-list[hidden] { display: none; }
+.atlas-clean-synthesis-report-list summary {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
 }
-.atlas-shared-synthesis-actions button,
-.atlas-shared-synthesis-actions .btn {
-  min-height: 36px;
-  padding: 8px 12px;
-  border: 1px solid rgba(86, 219, 238, .28);
-  border-radius: 11px;
-  background: rgba(5, 34, 52, .78);
-  color: #eafaff;
-  font: inherit;
-  font-size: .76rem;
-  font-weight: 850;
-}
-.atlas-shared-synthesis-actions button:not(:disabled):hover,
-.atlas-shared-synthesis-actions .btn:hover {
-  border-color: rgba(86, 219, 238, .62);
-  background: rgba(8, 52, 73, .92);
-}
-.atlas-shared-synthesis-actions button:disabled {
-  opacity: .42;
-  cursor: not-allowed;
-}
-.atlas-shared-synthesis-note {
-  display: block;
-  margin-top: 10px;
-  color: rgba(134, 239, 214, .78);
-}
+.atlas-clean-synthesis-report-list summary::-webkit-details-marker { display: none; }
+.atlas-clean-synthesis-report-list summary span { color: var(--muted); font-size: 0.78rem; text-align: right; }
+.atlas-clean-synthesis-report-list details > div { padding: 0 14px 14px; }
+.atlas-clean-synthesis-conclusion { border-color: rgba(255, 179, 222, 0.24) !important; }
+.atlas-clean-synthesis-rule { display: block; margin-top: 12px; color: var(--muted); }
 @media (max-width: 980px) {
-  .atlas-shared-synthesis-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .atlas-shared-synthesis-head { flex-direction: column; }
+  .atlas-clean-synthesis-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
-  .atlas-shared-synthesis-meta { grid-template-columns: 1fr; }
-  .atlas-shared-synthesis-card { padding: 14px; }
-  .atlas-shared-synthesis-actions > * { width: 100%; justify-content: center; }
+  .atlas-clean-synthesis-head { display: grid; }
+  .atlas-clean-synthesis-meta { grid-template-columns: 1fr; }
+  .atlas-clean-synthesis-report-list summary { display: grid; }
+  .atlas-clean-synthesis-report-list summary span { text-align: left; }
 }
