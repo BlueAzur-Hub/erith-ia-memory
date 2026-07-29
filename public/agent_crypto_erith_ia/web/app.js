@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.90 — CLEAN SHARED SYNTHESIS CORE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.91 — VERIFIED MONOLITHIC SYNTHESIS · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.90";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.91";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -11087,6 +11087,7 @@ function atlasInitLocalAccess() {
   document.querySelectorAll("[data-atlas-report-export]").forEach(button => {
     button.addEventListener("click", () => atlasLocalReportsExport(button.dataset.atlasReportExport));
   });
+  atlasSharedSynthesisInit();
   const question = document.getElementById("atlasLocalQuestion");
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
@@ -11151,6 +11152,471 @@ const atlasLocalReportsState = {
   lastCompletedSnapshot: null,
   lastCompletedFingerprint: ""
 };
+
+
+/* =========================================================
+   Build 28.1.91 — Verified Monolithic Shared Synthesis
+   Un contrôleur, un import, une clé, une restauration au boot.
+   ========================================================= */
+const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
+const ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA = "agent_crypto_shared_synthesis_storage_v2";
+const ATLAS_SHARED_SYNTHESIS_STORAGE_KEY = "agent_crypto_shared_synthesis_v2";
+const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 1500000;
+const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
+const atlasSharedSynthesisState = {
+  initialized: false,
+  package: null,
+  source: "none",
+  persistence: { ok: false, bytes: 0, error: "Non enregistrée" }
+};
+
+function atlasSharedSynthesisClone(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function atlasSharedSynthesisUtf8Bytes(text) {
+  try { return new TextEncoder().encode(String(text || "")).byteLength; }
+  catch { return unescape(encodeURIComponent(String(text || ""))).length; }
+}
+
+function atlasSharedSynthesisPct(value, digits = 2) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${number >= 0 ? "+" : ""}${number.toFixed(digits)} %` : "—";
+}
+
+function atlasSharedSynthesisNumber(value, fallback = "—") {
+  const number = Number(value);
+  return Number.isFinite(number) ? String(number) : fallback;
+}
+
+function atlasSharedSynthesisOriginMachine() {
+  try {
+    if (typeof isCollectorConfigured === "function" && isCollectorConfigured()) return getCollectorId();
+  } catch {}
+  return "Ryzen 7 · poste producteur";
+}
+
+function atlasSharedSynthesisNormalizeReport(report, mode) {
+  return {
+    mode,
+    label: String(report?.label || ATLAS_LOCAL_REPORT_LABELS[mode]),
+    answer: String(report?.answer || "").replace(/\r\n?/g, "\n").trim(),
+    profile: String(report?.profile || "atlas"),
+    provider: String(report?.provider || "local"),
+    model: String(report?.model || "modèle local"),
+    time: report?.time || null,
+    snapshotLabel: report?.snapshotLabel || report?.snapshot_label || null,
+    fingerprint: report?.fingerprint || null,
+    quality: report?.quality || "strict_contract_v2",
+    modelCommentUsed: report?.modelCommentUsed === true || report?.model_comment_used === true
+  };
+}
+
+function atlasSharedSynthesisNormalizeConclusion(conclusion) {
+  return {
+    answer: String(conclusion?.answer || "").replace(/\r\n?/g, "\n").trim(),
+    profile: String(conclusion?.profile || "aerith"),
+    provider: String(conclusion?.provider || "local"),
+    model: String(conclusion?.model || "modèle local"),
+    time: conclusion?.time || null,
+    label: String(conclusion?.label || "Conclusion Aerith-10 Crypto"),
+    eyebrow: String(conclusion?.eyebrow || "CONCLUSION AERITH-10 CRYPTO"),
+    quality: conclusion?.quality || "strict_contract_v2",
+    modelCommentUsed: conclusion?.modelCommentUsed === true || conclusion?.model_comment_used === true,
+    fingerprint: conclusion?.fingerprint || null,
+    meta: conclusion?.meta || null
+  };
+}
+
+function atlasSharedSynthesisValidate(pkg) {
+  if (!pkg || pkg.schema !== ATLAS_SHARED_SYNTHESIS_SCHEMA) throw new Error("ce fichier n’est pas une synthèse Atlas/Aerith");
+  if (!String(pkg.fingerprint || "").trim()) throw new Error("empreinte de synthèse absente");
+  if (!String(pkg.summary_markdown || "").trim()) throw new Error("synthèse consolidée absente");
+  for (const mode of ATLAS_LOCAL_REPORT_MODES) {
+    if (!String(pkg?.reports?.[mode]?.answer || "").trim()) throw new Error(`rapport Atlas manquant : ${ATLAS_LOCAL_REPORT_LABELS[mode]}`);
+  }
+  if (!String(pkg?.conclusion?.answer || "").trim()) throw new Error("conclusion Aerith absente");
+  return true;
+}
+
+function atlasSharedSynthesisNormalizePackage(input) {
+  if (!input || input.schema !== ATLAS_SHARED_SYNTHESIS_SCHEMA) throw new Error("ce fichier n’est pas une synthèse Atlas/Aerith");
+  const snapshotAt = input?.snapshot_at
+    || input?.snapshot?.strict_contract?.market?.timestamp
+    || input?.snapshot?.generated_at
+    || input?.generated_at
+    || null;
+  const reports = {};
+  ATLAS_LOCAL_REPORT_MODES.forEach(mode => { reports[mode] = atlasSharedSynthesisNormalizeReport(input?.reports?.[mode], mode); });
+  const normalized = {
+    schema: ATLAS_SHARED_SYNTHESIS_SCHEMA,
+    storage_schema: ATLAS_SHARED_SYNTHESIS_STORAGE_SCHEMA,
+    compact_storage: true,
+    generated_at: input?.generated_at || new Date().toISOString(),
+    snapshot_at: snapshotAt,
+    snapshot_label: String(input?.snapshot_label || "Snapshot conservé"),
+    fingerprint: String(input?.fingerprint || ""),
+    origin: atlasSharedSynthesisClone(input?.origin || {}),
+    status: {
+      ...(atlasSharedSynthesisClone(input?.status || {})),
+      atlas_reports: "4/4",
+      aerith_conclusion: true,
+      observation_only: true,
+      human_validation_required: true
+    },
+    summary_markdown: String(input?.summary_markdown || "").replace(/\r\n?/g, "\n").trim(),
+    snapshot: {
+      generated_at: input?.snapshot?.generated_at || snapshotAt || input?.generated_at || null,
+      strict_contract: { market: { timestamp: snapshotAt } }
+    },
+    reports,
+    conclusion: atlasSharedSynthesisNormalizeConclusion(input?.conclusion)
+  };
+  atlasSharedSynthesisValidate(normalized);
+  return normalized;
+}
+
+function atlasSharedSynthesisBuildSummary(snapshot) {
+  const contract = snapshot?.strict_contract || {};
+  const binance = contract.sources?.binance || {};
+  const coingecko = contract.sources?.coingecko || {};
+  const market = contract.market || {};
+  const breadth = market.breadth_24h || {};
+  const top5 = contract.canonical_top5 || {};
+  const assets = Array.isArray(top5.assets) ? top5.assets : [];
+  const positives = assets.filter(row => Number(row?.change_24h_pct) > 0.05).length;
+  const negatives = assets.filter(row => Number(row?.change_24h_pct) < -0.05).length;
+  const stable = Math.max(0, assets.length - positives - negatives);
+  const graph = contract.graph || {};
+  const math = contract.math || {};
+  const windowData = math.active_window || {};
+  const risk = math.historical_risk || {};
+  const news = contract.news || {};
+  const lead = news.lead_event || null;
+  const contradictions = Array.isArray(contract.contradictions) ? contract.contradictions : [];
+  const contradictionLines = contradictions.length
+    ? contradictions.map(item => `- [${item.level || "à vérifier"}] ${item.text || item.code || "Contradiction non détaillée"}`)
+    : ["- Aucune contradiction enregistrée dans le contrat factuel."];
+  return [
+    "**1. État des sources**",
+    `- Binance : ${binance.feed_status || "état inconnu"} · ${binance.source || "Binance"} · ${atlasSharedSynthesisNumber(binance.direct_pairs, "0")} paires directes · ${atlasSharedSynthesisNumber(binance.derived_pairs, "0")} dérivées.`,
+    `- CoinGecko : ${coingecko.status || market.status || "état inconnu"} · mode ${coingecko.mode || market.mode || "inconnu"} · univers ${atlasSharedSynthesisNumber(market.assets_loaded, "0")}/${atlasSharedSynthesisNumber(market.target_assets, "250")}.`,
+    "", "**2. Lecture globale**",
+    `- Largeur 24 h : ${atlasSharedSynthesisNumber(breadth.positive, "0")} hausses · ${atlasSharedSynthesisNumber(breadth.negative, "0")} baisses · ${atlasSharedSynthesisNumber(breadth.stable, "0")} stables · ${breadth.classification || "classification indisponible"}.`,
+    "", "**3. Target Top 5 canonique**",
+    `- Couverture ${assets.filter(row => row?.available).length}/${assets.length || 5} · ${positives} positifs · ${negatives} négatifs · ${stable} stables.`,
+    `- ${assets.map(row => `${row.symbol || "?"} ${atlasSharedSynthesisPct(row.change_24h_pct)}`).join(" · ") || "Aucune cotation conservée."}`,
+    "", "**4. Graphique**",
+    `- ${graph.period_label || "Période inconnue"} · vue ${graph.view || "inconnue"} · échelle ${graph.scale || "inconnue"} · ${graph.truth_label || graph.provider || "source inconnue"} · fraîcheur ${graph.freshness || "inconnue"}.`,
+    `- ${Array.isArray(graph.series) ? graph.series.length : 0} séries conservées ; aucune tendance n’est déduite de la position verticale à l’écran.`,
+    "", "**5. Math Core**",
+    `- Actif : ${math.asset || "non défini"} · score heuristique ${atlasSharedSynthesisNumber(math.heuristic_score)} · fenêtre ${windowData.period_label || "inconnue"} · ${atlasSharedSynthesisNumber(windowData.observations, "0")} points · complétude ${atlasSharedSynthesisPct(windowData.completeness_pct)}.`,
+    `- Volatilité fenêtre ${atlasSharedSynthesisPct(risk.realized_volatility_window_pct)} · drawdown maximal ${atlasSharedSynthesisPct(risk.max_drawdown_pct)} · VaR 95 % par pas ${atlasSharedSynthesisPct(risk.var_historical_95_step_pct)} · Expected Shortfall ${atlasSharedSynthesisPct(risk.expected_shortfall_historical_95_step_pct)}.`,
+    `- Risque global : ${math.risk_global || "Non évalué"}.`,
+    "", "**6. News Sentinel / Watchlist**",
+    `- News Sentinel : ${news.status || "état inconnu"}${lead?.headline ? ` · événement directeur : ${lead.headline}` : " · aucun événement directeur conservé"}.`,
+    `- Watchlist : ${atlasSharedSynthesisNumber(contract.watchlist?.configured_count, "0")} actifs observés · ce n’est pas un portefeuille.`,
+    "", "**7. Contradictions importantes**", ...contradictionLines,
+    "", "**8. Conclusion Aerith-10 Crypto**", "- La conclusion complète produite sur le Ryzen est conservée ci-dessous et dans le paquet exporté.",
+    "", "**9. Limites et stop point**",
+    `- ${math.limitation || "Les limites du Math Core restent applicables."}`,
+    `- ${contract.stop_point?.meaning || "Arrêter l’analyse lorsque les données ne soutiennent plus une conclusion."}`,
+    "- Validation humaine obligatoire."
+  ].join("\n");
+}
+
+function atlasSharedSynthesisPackageMarkdown(pkg) {
+  const lines = [
+    "# Agent-Crypto — Synthèse partagée Atlas-10 / Aerith-10", "",
+    `- Version Interface : ${pkg?.origin?.interface || ATLAS_RELEASE}`,
+    `- Snapshot : ${pkg?.snapshot_label || "—"}`,
+    `- Générée : ${pkg?.generated_at || "—"}`,
+    `- Origine : ${pkg?.origin?.machine || "poste producteur"}`,
+    `- Bridge : ${pkg?.origin?.bridge || "non déclaré"}`,
+    `- Moteur : ${pkg?.origin?.provider || "local"} · ${pkg?.origin?.model || "modèle local"}`,
+    `- Rapports Atlas : ${pkg?.status?.atlas_reports || "0/4"}`,
+    "- Mode : lecture seule · validation humaine", "", "## Synthèse consolidée", "",
+    pkg?.summary_markdown || "Aucune synthèse.", "", "## Conclusion Aerith-10 Crypto complète", "",
+    pkg?.conclusion?.answer || "Aucune conclusion conservée."
+  ];
+  ATLAS_LOCAL_REPORT_MODES.forEach(mode => {
+    const report = pkg?.reports?.[mode];
+    lines.push("", `## Atlas-10 — ${ATLAS_LOCAL_REPORT_LABELS[mode]}`, "", report?.answer || "Rapport absent.");
+  });
+  lines.push("", "## Limite", "", "Analyse descriptive en lecture seule. Aucun ordre financier, wallet, clé privée ou écriture GitHub.");
+  return lines.join("\n");
+}
+
+function atlasSharedSynthesisSetStatus(stateName, message, badgeText) {
+  const card = document.getElementById("atlasSharedSynthesisCard");
+  if (card) card.dataset.state = stateName;
+  setText(document.getElementById("atlasSharedSynthesisStatus"), message);
+  const badge = document.getElementById("atlasSharedSynthesisBadge");
+  if (badge) {
+    badge.textContent = badgeText;
+    badge.className = `pill ${stateName === "ready" ? "ok" : stateName === "warning" || stateName === "error" ? "warn" : ""}`.trim();
+  }
+}
+
+function atlasSharedSynthesisPersistenceLabel() {
+  if (atlasSharedSynthesisState.persistence?.ok) return `${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés`;
+  return atlasSharedSynthesisState.persistence?.error || "Non enregistrée";
+}
+
+function atlasSharedSynthesisRenderMarkdown(node, markdown) {
+  if (!node) return;
+  try { atlasLocalSetReport(node, markdown); }
+  catch { node.textContent = String(markdown || ""); }
+}
+
+function atlasSharedSynthesisRender() {
+  const pkg = atlasSharedSynthesisState.package;
+  const hasPackage = !!pkg;
+  document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd")
+    .forEach(button => { button.disabled = !hasPackage; });
+  if (!pkg) {
+    setText(document.getElementById("atlasSharedSynthesisSnapshot"), "—");
+    setText(document.getElementById("atlasSharedSynthesisOrigin"), "—");
+    setText(document.getElementById("atlasSharedSynthesisReports"), "0/4");
+    setText(document.getElementById("atlasSharedSynthesisConclusion"), "Absente");
+    setText(document.getElementById("atlasSharedSynthesisPersistence"), "Non enregistrée");
+    const content = document.getElementById("atlasSharedSynthesisContent");
+    if (content) content.innerHTML = '<p class="atlas-local-response-empty">Aucune synthèse chargée. Sur le Ryzen, elle sera créée automatiquement après les quatre rapports Atlas et la conclusion Aerith.</p>';
+    const conclusion = document.getElementById("atlasSharedConclusionContent");
+    if (conclusion) conclusion.innerHTML = '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
+    return false;
+  }
+  setText(document.getElementById("atlasSharedSynthesisSnapshot"), pkg.snapshot_label || "—");
+  setText(document.getElementById("atlasSharedSynthesisOrigin"), pkg.origin?.machine || "poste producteur");
+  setText(document.getElementById("atlasSharedSynthesisReports"), "4/4");
+  setText(document.getElementById("atlasSharedSynthesisConclusion"), "Disponible");
+  setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
+  atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
+  atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedConclusionContent"), pkg.conclusion.answer);
+  setText(document.getElementById("atlasSharedSynthesisNote"), `${atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée"} · lecture seule · ${pkg.origin?.provider || "local"} · ${pkg.origin?.model || "modèle"}`);
+  return true;
+}
+
+function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
+  try {
+    ATLAS_LOCAL_REPORT_MODES.forEach(mode => {
+      const report = atlasSharedSynthesisClone(pkg.reports[mode]);
+      atlasLocalReportsState.reports[mode] = report;
+      const ids = ATLAS_LOCAL_REPORT_IDS[mode];
+      atlasLocalSetReport(document.getElementById(ids.content), report.answer);
+      setText(document.getElementById(ids.meta), `${report.snapshotLabel || pkg.snapshot_label} · ${source === "import" ? "importé" : "conservé"} · ${report.model || pkg.origin?.model || "modèle"}`);
+      atlasLocalReportSetCardState(mode, source === "local" ? "Prêt" : "Archivé", "ready");
+      document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.removeAttribute("disabled");
+      document.querySelector(`[data-atlas-report-export="${mode}"]`)?.removeAttribute("disabled");
+    });
+    atlasLocalReportsState.lastCompletedSnapshot = atlasSharedSynthesisClone(pkg.snapshot);
+    atlasLocalReportsState.lastCompletedFingerprint = pkg.fingerprint;
+    atlasLocalReportsSetSuiteStatus(source === "local" ? "4/4 rapports prêts." : "4/4 rapports restaurés en lecture seule.", "ready");
+    setText(document.getElementById("atlasLocalReportsMeta"), `Snapshot ${pkg.snapshot_label} · quatre rapports ${source === "local" ? "produits" : "conservés"} · lecture seule`);
+    atlasLocalDialogueState.conclusionResponse = atlasSharedSynthesisClone(pkg.conclusion);
+    atlasLocalConclusionState.lastFingerprint = pkg.fingerprint;
+    atlasLocalResponseRenderStored(atlasLocalDialogueState.activeResponseView || "conclusion");
+  } catch (error) {
+    console.warn("Hydratation Atlas/Aerith partielle", error);
+  }
+}
+
+function atlasSharedSynthesisPersist(pkg) {
+  let previousRaw = null;
+  try {
+    const clean = atlasSharedSynthesisNormalizePackage(pkg);
+    const raw = JSON.stringify(clean);
+    const bytes = atlasSharedSynthesisUtf8Bytes(raw);
+    if (bytes > ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES) throw new Error(`synthèse trop volumineuse (${Math.ceil(bytes / 1024)} Ko)`);
+    previousRaw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
+    localStorage.setItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY, raw);
+    const verifiedRaw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
+    if (verifiedRaw !== raw) throw new Error("relecture locale différente de l’écriture");
+    const verified = atlasSharedSynthesisNormalizePackage(JSON.parse(verifiedRaw));
+    if (verified.fingerprint !== clean.fingerprint) throw new Error("empreinte différente après relecture");
+    return { ok: true, bytes, error: "", package: verified };
+  } catch (error) {
+    try {
+      if (previousRaw === null) localStorage.removeItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
+      else localStorage.setItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY, previousRaw);
+    } catch {}
+    return { ok: false, bytes: 0, error: error?.message || "stockage local refusé", package: null };
+  }
+}
+
+function atlasSharedSynthesisActivate(pkg, source, persist = false) {
+  const clean = atlasSharedSynthesisNormalizePackage(pkg);
+  atlasSharedSynthesisState.package = clean;
+  atlasSharedSynthesisState.source = source;
+  atlasSharedSynthesisHydrateReports(clean, source);
+  atlasSharedSynthesisRender();
+  if (persist) {
+    atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(clean);
+    atlasSharedSynthesisRender();
+  }
+  return clean;
+}
+
+function atlasSharedSynthesisRestore() {
+  try {
+    const raw = localStorage.getItem(ATLAS_SHARED_SYNTHESIS_STORAGE_KEY);
+    if (!raw) {
+      atlasSharedSynthesisState.package = null;
+      atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, error: "Non enregistrée" };
+      atlasSharedSynthesisRender();
+      atlasSharedSynthesisSetStatus("idle", "Import prêt · sélectionne une synthèse Atlas/Aerith créée sur le Ryzen.", "Prêt");
+      return false;
+    }
+    const pkg = atlasSharedSynthesisNormalizePackage(JSON.parse(raw));
+    atlasSharedSynthesisState.persistence = { ok: true, bytes: atlasSharedSynthesisUtf8Bytes(raw), error: "", package: pkg };
+    atlasSharedSynthesisActivate(pkg, "stored", false);
+    atlasSharedSynthesisSetStatus("ready", "Synthèse restaurée automatiquement · 4/4 rapports Atlas · conclusion Aerith disponible.", "Restaurée");
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisState.package = null;
+    atlasSharedSynthesisState.persistence = { ok: false, bytes: 0, error: error?.message || "mémoire locale illisible" };
+    atlasSharedSynthesisRender();
+    atlasSharedSynthesisSetStatus("warning", `Mémoire locale ignorée : ${atlasSharedSynthesisState.persistence.error}. L’import reste disponible.`, "Import prêt");
+    return false;
+  }
+}
+
+async function atlasSharedSynthesisImportFile(event) {
+  const input = event?.currentTarget;
+  const file = input?.files?.[0];
+  if (!file) {
+    atlasSharedSynthesisSetStatus("idle", "Import prêt · aucun fichier sélectionné.", "Prêt");
+    return false;
+  }
+  atlasSharedSynthesisSetStatus("working", `Fichier sélectionné · ${file.name || "synthèse Ryzen"} · lecture en cours…`, "Lecture");
+  try {
+    if (file.size > ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES) throw new Error("fichier supérieur à 5 Mo");
+    const raw = await file.text();
+    const parsed = JSON.parse(raw);
+    const clean = atlasSharedSynthesisActivate(parsed, "import", false);
+    atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(clean);
+    atlasSharedSynthesisRender();
+    if (atlasSharedSynthesisState.persistence.ok) {
+      atlasSharedSynthesisSetStatus("ready", `Import terminé · 4/4 rapports Atlas · conclusion Aerith · conservation locale vérifiée (${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko).`, "Importée");
+    } else {
+      atlasSharedSynthesisSetStatus("warning", `Import affiché · conservation locale impossible : ${atlasSharedSynthesisState.persistence.error}.`, "Importée sans mémoire");
+    }
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisSetStatus("error", `Import refusé : ${error?.message || "fichier JSON invalide"}.`, "Erreur");
+    return false;
+  } finally {
+    if (input) input.value = "";
+  }
+}
+
+function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
+  if (!snapshot || !fingerprint || !atlasLocalReportsReadyForFingerprint(fingerprint)) return null;
+  const conclusion = atlasLocalDialogueState.conclusionResponse;
+  if (!conclusion?.answer || conclusion.fingerprint !== fingerprint) return null;
+  const reports = {};
+  ATLAS_LOCAL_REPORT_MODES.forEach(mode => { reports[mode] = atlasSharedSynthesisClone(atlasLocalReportResult(mode)); });
+  const pkg = atlasSharedSynthesisNormalizePackage({
+    schema: ATLAS_SHARED_SYNTHESIS_SCHEMA,
+    generated_at: new Date().toISOString(),
+    snapshot_at: snapshot?.strict_contract?.market?.timestamp || snapshot?.generated_at || null,
+    snapshot_label: atlasLocalReportSnapshotLabel(snapshot),
+    fingerprint,
+    origin: {
+      machine: atlasSharedSynthesisOriginMachine(),
+      interface: ATLAS_RELEASE,
+      bridge: "V1.7.4",
+      provider: conclusion.provider || atlasLocalDialogueState.provider || "local",
+      model: conclusion.model || atlasLocalDialogueState.model || "modèle local"
+    },
+    status: { atlas_reports: "4/4", aerith_conclusion: true, observation_only: true, human_validation_required: true },
+    summary_markdown: atlasSharedSynthesisBuildSummary(snapshot),
+    snapshot,
+    reports,
+    conclusion
+  });
+  atlasSharedSynthesisActivate(pkg, "local", false);
+  atlasSharedSynthesisState.persistence = atlasSharedSynthesisPersist(pkg);
+  atlasSharedSynthesisRender();
+  if (atlasSharedSynthesisState.persistence.ok) {
+    atlasSharedSynthesisSetStatus("ready", `Synthèse Ryzen créée · 4/4 rapports Atlas · conclusion Aerith · ${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés.`, "Produite");
+  } else {
+    atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée et affichée · conservation locale impossible : ${atlasSharedSynthesisState.persistence.error}.`, "Produite sans mémoire");
+  }
+  return pkg;
+}
+
+async function atlasSharedSynthesisCopy() {
+  const text = atlasSharedSynthesisState.package?.summary_markdown;
+  if (!text) return false;
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+  atlasSharedSynthesisSetStatus("ready", "Synthèse copiée dans le presse-papiers.", "Disponible");
+  return true;
+}
+
+function atlasSharedSynthesisExportJson() {
+  const pkg = atlasSharedSynthesisState.package;
+  if (!pkg) return false;
+  try {
+    const clean = atlasSharedSynthesisNormalizePackage(pkg);
+    const raw = JSON.stringify(clean);
+    const stamp = new Date(clean.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
+    downloadTextFile(`agent_crypto_book_synthesis_${stamp}.json`, "application/json;charset=utf-8", raw);
+    atlasSharedSynthesisSetStatus("ready", `JSON Book exporté · ${Math.max(1, Math.round(atlasSharedSynthesisUtf8Bytes(raw) / 1024))} Ko.`, "Disponible");
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisSetStatus("error", `Export JSON refusé : ${error?.message || "erreur inconnue"}.`, "Erreur");
+    return false;
+  }
+}
+
+function atlasSharedSynthesisExportMarkdown() {
+  const pkg = atlasSharedSynthesisState.package;
+  if (!pkg) return false;
+  const stamp = new Date(pkg.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
+  downloadTextFile(`agent_crypto_shared_synthesis_${stamp}.md`, "text/markdown;charset=utf-8", atlasSharedSynthesisPackageMarkdown(pkg));
+  atlasSharedSynthesisSetStatus("ready", "Synthèse Markdown exportée.", "Disponible");
+  return true;
+}
+
+function atlasSharedSynthesisReadReports() {
+  if (!atlasSharedSynthesisState.package) return false;
+  atlasLocalReportsOpenAll();
+  document.getElementById("atlasLocalReportSuite")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  return true;
+}
+
+function atlasSharedSynthesisReadConclusion() {
+  if (!atlasSharedSynthesisState.package) return false;
+  atlasLocalResponseSelectView("conclusion");
+  document.querySelector(".atlas-local-response-panel")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  return true;
+}
+
+function atlasSharedSynthesisInit() {
+  if (atlasSharedSynthesisState.initialized) return true;
+  const input = document.getElementById("atlasSharedSynthesisImport");
+  if (!input) return false;
+  atlasSharedSynthesisState.initialized = true;
+  input.addEventListener("change", atlasSharedSynthesisImportFile);
+  document.getElementById("btnAtlasSharedCopy")?.addEventListener("click", atlasSharedSynthesisCopy);
+  document.getElementById("btnAtlasSharedReadReports")?.addEventListener("click", atlasSharedSynthesisReadReports);
+  document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
+  document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
+  document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
+  atlasSharedSynthesisRestore();
+  return true;
+}
 
 function atlasLocalFinite(value) {
   const number = Number(value);
@@ -12306,6 +12772,7 @@ async function atlasLocalConclusionRun(options = {}) {
     atlasLocalDialogueState.conclusionResponse = response;
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
+    atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
     atlasLocalDialogueSetConnection(true, "Conclusion Aerith-10 Crypto terminée. Validation humaine requise.");
     return true;
   } catch (error) {
@@ -13081,13 +13548,17 @@ function atlasInitV2Shell() {
   window.addEventListener("scroll", scheduleSelectorSync, { passive: true });
   window.addEventListener("resize", scheduleSelectorSync, { passive: true });
 
-  if (atlasAccessIsAuthorized()) atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
   const initialV2Mode = atlasV2Mode();
   if (initialV2Mode === "intermediate") atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
-  atlasV2ApplyMode(initialV2Mode, { persist: false, silentAuth: true });
-  atlasV2DecisionLockRefresh();
 
-  if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
+  /* Math Core V3 est déclaré plus bas dans le fichier stable R18.
+     L'application initiale du mode attend donc la fin de l'évaluation du script. */
+  queueMicrotask(() => {
+    atlasV2ApplyMode(initialV2Mode, { persist: false, silentAuth: true });
+    atlasV2DecisionLockRefresh();
+    if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
+  });
+
   window.setInterval(() => { atlasV2SyncMathRail(); atlasV2DecisionLockRefresh(); }, 2000);
 }
 
