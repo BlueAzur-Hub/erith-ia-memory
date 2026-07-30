@@ -18603,7 +18603,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Build 28.1.96 — Stable Stack Consolidation + Permanent Inline Atlas/Aerith Synthesis
+   Build 28.1.98 — Stable Stack Consolidation + Permanent Inline Atlas/Aerith Synthesis
    Carte autonome intégrée à app.js ; aucun quatrième fichier.
    ========================================================= */
 .atlas-shared-synthesis-card {
@@ -18656,7 +18656,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Build 28.1.96 — Stable Stack Consolidation Lock
+   Build 28.1.98 — Stable Stack Consolidation Lock
    Compact runtime truth panel; no chart, market, scanner or synthesis logic changed.
    ========================================================= */
 .atlas-stable-stack {
@@ -18735,4 +18735,163 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   .atlas-stable-stack-head { align-items: stretch; flex-direction: column; }
   .atlas-stable-stack-head .pill { align-self: flex-start; }
   .atlas-stable-stack-grid { grid-template-columns: 1fr; }
+}
+
+
+/* =========================================================
+   Build 28.1.98 — Analytical Truth & Evidence · Safe Rebase Non-Destruction Lock
+   Compact proof panel, visual identity preserved.
+   ========================================================= */
+.atlas-analytical-truth {
+  margin: 14px 0 16px;
+  padding: 14px;
+  border: 1px solid rgba(118, 228, 239, .28);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(102, 220, 235, .09), transparent 34%),
+    linear-gradient(145deg, rgba(3, 19, 34, .88), rgba(5, 28, 45, .72));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+.atlas-analytical-truth[data-state="ready"] { border-color: rgba(115,255,177,.34); }
+.atlas-analytical-truth[data-state="reading"] { border-color: rgba(111,224,239,.32); }
+.atlas-analytical-truth[data-state="conserved"] { border-color: rgba(255,203,92,.36); }
+.atlas-analytical-truth-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.atlas-analytical-truth-head h5 {
+  margin: 2px 0 0;
+  color: #eafcff;
+  font-size: .94rem;
+  line-height: 1.32;
+}
+.atlas-analytical-truth-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.atlas-analytical-truth-grid article {
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid rgba(255,255,255,.085);
+  border-radius: 11px;
+  background: rgba(1, 14, 26, .52);
+}
+.atlas-analytical-truth-grid span,
+.atlas-analytical-truth-grid b,
+.atlas-analytical-truth-grid small { display: block; }
+.atlas-analytical-truth-grid span {
+  margin-bottom: 4px;
+  color: rgba(178, 207, 228, .68);
+  font-size: .64rem;
+  font-weight: 850;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+.atlas-analytical-truth-grid b {
+  overflow-wrap: anywhere;
+  color: #f2fbff;
+  font-size: .79rem;
+  line-height: 1.25;
+}
+.atlas-analytical-truth-grid small {
+  margin-top: 4px;
+  color: rgba(190, 213, 230, .64);
+  font-size: .67rem;
+  line-height: 1.35;
+}
+.atlas-analytical-truth-details {
+  margin-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.075);
+}
+.atlas-analytical-truth-details > summary {
+  padding: 10px 2px 5px;
+  color: #a8edf2;
+  font-size: .72rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+.atlas-analytical-truth-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 6px;
+}
+.atlas-analytical-truth-detail-grid article {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 10px;
+  background: rgba(0, 10, 20, .42);
+}
+.atlas-analytical-truth-detail-grid h6 {
+  margin: 0 0 6px;
+  color: #ffe4a8;
+  font-size: .72rem;
+  letter-spacing: .045em;
+}
+.atlas-analytical-truth-detail-grid ul {
+  margin: 0;
+  padding-left: 17px;
+  color: rgba(215, 232, 244, .78);
+  font-size: .68rem;
+  line-height: 1.48;
+}
+.atlas-analytical-truth-status {
+  margin: 10px 0 0;
+  color: rgba(137, 237, 215, .8);
+  font-size: .7rem;
+}
+.atlas-analytical-truth[data-state="conserved"] .atlas-analytical-truth-status { color: #efd58f; }
+#targetTop5Cycle:focus-visible,
+#marketFlowCycle:focus-visible,
+.atlas-analytical-truth summary:focus-visible,
+.atlas-analytical-truth button:focus-visible {
+  outline: 2px solid rgba(128, 235, 248, .92);
+  outline-offset: 3px;
+}
+@media (max-width: 1180px) {
+  .atlas-analytical-truth-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .atlas-analytical-truth { padding: 12px; }
+  .atlas-analytical-truth-head { flex-direction: column; }
+  .atlas-analytical-truth-grid,
+  .atlas-analytical-truth-detail-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-analytical-truth *,
+  #targetTop5Cycle *,
+  #marketFlowCycle * {
+    scroll-behavior: auto !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+
+/* =========================================================
+   Build 28.1.98 — Scanner Recovery Full Stack Lock
+   Visible status for Hausses 5, Baisses 5 and Volumes 5.
+   ========================================================= */
+#analyste[data-scanner-transaction="running"] #btnChartGainers,
+#analyste[data-scanner-transaction="running"] #btnChartLosers,
+#analyste[data-scanner-transaction="running"] #btnChartVolume5 {
+  cursor: progress !important;
+}
+
+#btnChartGainers[data-scanner-state="failed"],
+#btnChartLosers[data-scanner-state="failed"],
+#btnChartVolume5[data-scanner-state="failed"] {
+  animation: atlasScannerFailurePulse .42s ease-out 1;
+}
+
+@keyframes atlasScannerFailurePulse {
+  0% { transform: translateY(0); }
+  45% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
 }
