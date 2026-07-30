@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.96R1 — TARGET CYCLE SURGICAL REPAIR · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.96R2 — TARGET STATE MACHINE LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.96R1";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.96R2";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -8267,31 +8267,7 @@ function atlasTargetTopFiveDisplay(preset) {
   return map[preset] || { label: "SÉLECTION LIBRE", next: "Hausses 5" };
 }
 
-function atlasTargetTopFiveCurrentPreset(root = null) {
-  const pendingPreset = String(
-    atlasScannerTransaction?.preset
-    || atlasScannerQueuedRequest?.preset
-    || ""
-  );
-  if (pendingPreset) return pendingPreset;
-
-  const activeButtons = [
-    [els.btnChartGainers, "gainers"],
-    [els.btnChartLosers, "losers"],
-    [els.btnChartVolume5, "volume"],
-    [els.btnChartTop3, "rank-3"],
-    [els.btnChartTop5, "rank-5"]
-  ];
-  const activePreset = activeButtons.find(([button]) => button?.classList.contains("active"))?.[1];
-  if (activePreset) return activePreset;
-
-  const committedPreset = String(state.dataBroker?.comparison?.preset || "");
-  if (["gainers", "losers", "volume", "rank-3", "rank-5"].includes(committedPreset)) {
-    return committedPreset;
-  }
-
-  return String(root?.dataset?.cyclePreset || "rank-5");
-}
+let atlasTargetTopFiveCycleState = "rank-5";
 
 function atlasSyncTargetTopFiveCycleLabel() {
   const root = document.getElementById("targetTop5Cycle");
@@ -8300,16 +8276,40 @@ function atlasSyncTargetTopFiveCycleLabel() {
   const button = document.getElementById("targetTop5CycleButton");
   if (!root || !label || !symbols || !button) return;
 
-  const currentPreset = atlasTargetTopFiveCurrentPreset(root);
-  const display = atlasTargetTopFiveDisplay(currentPreset);
-  const ids = atlasComparisonIds();
+  const pendingPreset = String(
+    atlasScannerTransaction?.preset
+    || atlasScannerQueuedRequest?.preset
+    || ""
+  );
+  const chartReady = state.dataBroker?.chart?.status === "ready"
+    && atlasChartContextMatches(state.dataBroker.chart)
+    && !!state.chartEngineV2?.realChart;
+  const committedPreset = chartReady
+    ? String(state.dataBroker?.comparison?.preset || "")
+    : "";
+  const rememberedPreset = String(
+    root.dataset.cyclePreset
+    || atlasTargetTopFiveCycleState
+    || "rank-5"
+  );
+  const currentPreset = pendingPreset
+    || (["gainers", "losers", "volume", "rank-3", "rank-5"].includes(committedPreset)
+      ? committedPreset
+      : rememberedPreset);
+
+  if (["gainers", "losers", "volume", "rank-3", "rank-5"].includes(currentPreset)) {
+    atlasTargetTopFiveCycleState = currentPreset;
+    root.dataset.cyclePreset = currentPreset;
+  }
+
+  const display = atlasTargetTopFiveDisplay(atlasTargetTopFiveCycleState);
+  const ids = chartReady ? atlasComparisonIds() : [];
   const symbolLine = ids
     .map(id => state.coins.find(coin => coin.id === id)?.symbol)
     .filter(Boolean)
     .map(symbol => String(symbol).toUpperCase())
     .join(" · ");
 
-  root.dataset.cyclePreset = currentPreset;
   label.textContent = display.label;
   symbols.textContent = symbolLine || "BTC · ETH · BNB · XRP · SOL";
   root.title = `Vue suivante : ${display.next}`;
@@ -8321,8 +8321,14 @@ function atlasSyncTargetTopFiveCycleLabel() {
 }
 
 function atlasTargetTopFiveCyclePreset() {
-  const root = document.getElementById("targetTop5Cycle");
-  const current = atlasTargetTopFiveCurrentPreset(root);
+  const current = String(
+    atlasScannerTransaction?.preset
+    || atlasScannerQueuedRequest?.preset
+    || atlasTargetTopFiveCycleState
+    || document.getElementById("targetTop5Cycle")?.dataset?.cyclePreset
+    || state.dataBroker?.comparison?.preset
+    || "rank-5"
+  );
 
   if (current === "gainers") return "losers";
   if (current === "losers") return "volume";
@@ -8333,20 +8339,37 @@ function atlasTargetTopFiveCyclePreset() {
 
 function atlasActivateTargetTopFiveCycle() {
   if (!state.liveOk || !Array.isArray(state.coins) || !state.coins.length) return false;
+
+  /*
+    Le cartouche n'annule jamais une transaction Scanner déjà en cours.
+    Les boutons Hausses/Baisses/Volumes du menu conservent intégralement
+    leur comportement historique de la Build 28.1.96.
+  */
   if (atlasScannerTransaction || atlasScannerQueuedRequest) return false;
 
   const next = atlasTargetTopFiveCyclePreset();
-  const actionButton = {
-    "gainers": els.btnChartGainers,
-    "losers": els.btnChartLosers,
-    "volume": els.btnChartVolume5,
-    "rank-3": els.btnChartTop3,
-    "rank-5": els.btnChartTop5
-  }[next];
+  const period = Number(state.chartPeriodDays || 1);
+  let started = false;
 
-  if (!actionButton) return false;
-  actionButton.click();
-  return true;
+  if (next === "gainers" || next === "losers" || next === "volume") {
+    started = atlasScannerStart(next, 5, {
+      period,
+      source: "target-top5-cycle-28.1.96R2"
+    });
+  } else {
+    atlasScannerCancel("target top 5 cycle", { keepUi: false, keepOverlay: false });
+    atlasSelectTopComparison(next === "rank-3" ? 3 : 5);
+    started = true;
+  }
+
+  if (started !== false) {
+    atlasTargetTopFiveCycleState = next;
+    const root = document.getElementById("targetTop5Cycle");
+    if (root) root.dataset.cyclePreset = next;
+    atlasSyncTargetTopFiveCycleLabel();
+  }
+
+  return started !== false;
 }
 
 function atlasInitMarketRibbonInteractions() {
