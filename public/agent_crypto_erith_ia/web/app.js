@@ -7576,7 +7576,7 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
   const key = atlasChartKey(coin, normalizedPeriod);
   atlasResetChartRetry(key);
   state.dataBroker.chart = {
-    status: "loading", coinId: coin.id, period: normalizedPeriod, source: atlasChartPreferredProviderLabel(c),
+    status: "loading", coinId: coin.id, period: normalizedPeriod, source: atlasChartPreferredProviderLabel(coin),
     mode: "none", timestamp: null, pointCount: 0,
     contextKey: atlasExpectedChartContextKey([coin.id], normalizedPeriod), result: null, error: null
   };
