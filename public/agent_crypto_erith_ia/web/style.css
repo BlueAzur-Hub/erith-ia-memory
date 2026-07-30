@@ -16386,15 +16386,11 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   V2.0-alpha · Build 28.1.88R4
-   VERSION 60 TOOLTIP DESIGN RESTORE
+   Market Core V2.0-Alpha · Build 28.2.2
+   SOURCE BADGE VISIBILITY
+   The obsolete delayed/archive suppression was removed.
+   Every valid chart keeps its canonical source/freshness badge visible.
    ========================================================= */
-
-.atlas-market-zone #analyste .chart-shell[data-chart-state="valid"][data-chart-freshness="delayed"]::before,
-.atlas-market-zone #analyste .chart-shell[data-chart-state="valid"][data-chart-freshness="archive"]::before {
-  display: none !important;
-  content: none !important;
-}
 
 .atlas-source-header-link {
   color: #7cecff;
@@ -18901,7 +18897,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.1
+   Market Core V2.0-Alpha · Build 28.2.2
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
