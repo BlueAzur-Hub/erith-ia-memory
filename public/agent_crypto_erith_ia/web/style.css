@@ -18603,7 +18603,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Build 28.1.95 — Permanent Inline Atlas/Aerith Synthesis
+   Build 28.1.96 — Stable Stack Consolidation + Permanent Inline Atlas/Aerith Synthesis
    Carte autonome intégrée à app.js ; aucun quatrième fichier.
    ========================================================= */
 .atlas-shared-synthesis-card {
@@ -18652,4 +18652,87 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   .atlas-shared-synthesis-meta { grid-template-columns:1fr; }
   .atlas-shared-synthesis-card { padding:14px; }
   .atlas-shared-synthesis-actions > * { width:100%; justify-content:center; }
+}
+
+
+/* =========================================================
+   Build 28.1.96 — Stable Stack Consolidation Lock
+   Compact runtime truth panel; no chart, market, scanner or synthesis logic changed.
+   ========================================================= */
+.atlas-stable-stack {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid rgba(111, 224, 239, .20);
+  border-radius: 15px;
+  background:
+    linear-gradient(135deg, rgba(19, 42, 63, .82), rgba(8, 20, 35, .92));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+.atlas-stable-stack[data-runtime="production"] { border-color: rgba(115,255,177,.34); }
+.atlas-stable-stack[data-runtime="reading"] { border-color: rgba(111,224,239,.32); }
+.atlas-stable-stack[data-runtime="warning"] { border-color: rgba(255,203,92,.34); }
+.atlas-stable-stack-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+.atlas-stable-stack-head h5 {
+  margin: 2px 0 0;
+  color: #f1f6fb;
+  font-size: clamp(.82rem, 1.1vw, .98rem);
+  line-height: 1.35;
+}
+.atlas-stable-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.atlas-stable-stack-grid article {
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid rgba(111,224,239,.12);
+  border-radius: 11px;
+  background: rgba(4, 15, 27, .58);
+}
+.atlas-stable-stack-grid span,
+.atlas-stable-stack-grid b,
+.atlas-stable-stack-grid small { display: block; }
+.atlas-stable-stack-grid span {
+  color: #8299ae;
+  font-size: .61rem;
+  font-weight: 700;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+.atlas-stable-stack-grid b {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  color: #eef7ff;
+  font-size: .76rem;
+  line-height: 1.3;
+}
+.atlas-stable-stack-grid small {
+  margin-top: 4px;
+  color: #93a7b9;
+  font-size: .65rem;
+  line-height: 1.35;
+}
+.atlas-stable-stack-status {
+  margin: 10px 1px 0;
+  color: #aabccc;
+  font-size: .69rem;
+  line-height: 1.4;
+}
+.atlas-stable-stack[data-runtime="production"] .atlas-stable-stack-status { color: #9ee7bf; }
+.atlas-stable-stack[data-runtime="warning"] .atlas-stable-stack-status { color: #efd58f; }
+@media (max-width: 1180px) {
+  .atlas-stable-stack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 650px) {
+  .atlas-stable-stack { padding: 12px; }
+  .atlas-stable-stack-head { align-items: stretch; flex-direction: column; }
+  .atlas-stable-stack-head .pill { align-self: flex-start; }
+  .atlas-stable-stack-grid { grid-template-columns: 1fr; }
 }

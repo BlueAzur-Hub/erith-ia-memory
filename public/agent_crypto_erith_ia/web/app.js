@@ -1,4 +1,4 @@
-/* V2.0-alpha · Build 28.1.95 — INLINE SYNTHESIS SECTION LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* V2.0-alpha · Build 28.1.96 — STABLE STACK CONSOLIDATION LOCK · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.95";
+const ATLAS_RELEASE = "V2.0-alpha · Build 28.1.96";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -10966,6 +10966,7 @@ async function atlasLocalBridgeProbe(options = {}) {
         throw new Error(payload?.error || `HTTP ${response.status}`);
       }
 
+      atlasStableStackUpdateBridge(payload);
       atlasLocalDialogueState.provider = payload.provider || null;
       atlasLocalDialogueState.model =
         payload.model || payload.required_model || null;
@@ -11023,6 +11024,7 @@ async function atlasLocalBridgeProbe(options = {}) {
 
       return payload;
     } catch (error) {
+      atlasStableStackUpdateBridge(null, error);
       atlasLocalDialogueState.connected = false;
       atlasLocalDialogueState.provider = null;
       atlasLocalDialogueState.model = null;
@@ -11155,7 +11157,7 @@ const atlasLocalReportsState = {
 
 
 /* =========================================================
-   Build 28.1.95 — Permanent Inline Atlas/Aerith Synthesis
+   Build 28.1.96 — Stable Stack Consolidation + Permanent Inline Atlas/Aerith Synthesis
    Une sous-section permanente, une base IndexedDB, aucune popup, aucune publication GitHub.
    ========================================================= */
 const ATLAS_SHARED_SYNTHESIS_SCHEMA = "agent_crypto_shared_synthesis_v1";
@@ -11166,6 +11168,139 @@ const ATLAS_SHARED_SYNTHESIS_STORE_NAME = "shared_synthesis";
 const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
+const ATLAS_STABLE_STACK = Object.freeze({
+  interface: "Build 28.1.96",
+  controlCenter: "V2.1.0",
+  bridge: "V1.7.6",
+  bridgeNumeric: "1.7.6",
+  model: "llama3.2:latest"
+});
+const atlasStableStackState = {
+  bridgeReachable: false,
+  bridgeReady: false,
+  bridgeVersion: "",
+  provider: "",
+  model: "",
+  requiredModel: "llama3.2",
+  lastError: "",
+  checkedAt: 0
+};
+
+function atlasStableStackSetText(id, value) {
+  setText(document.getElementById(id), value);
+}
+
+function atlasStableStackNormalizeModel(value) {
+  const model = String(value || "").trim();
+  if (!model) return "";
+  return model.includes(":") ? model : `${model}:latest`;
+}
+
+function atlasStableStackUpdateBridge(payload, error = null) {
+  if (payload && payload.ok !== false) {
+    atlasStableStackState.bridgeReachable = true;
+    atlasStableStackState.bridgeReady = payload.ready !== false && payload.model_ready !== false;
+    atlasStableStackState.bridgeVersion = String(payload.version || payload.bridge_version || "").trim();
+    atlasStableStackState.provider = String(payload.provider || "").trim();
+    atlasStableStackState.model = atlasStableStackNormalizeModel(payload.model || "");
+    atlasStableStackState.requiredModel = atlasStableStackNormalizeModel(payload.required_model || "llama3.2");
+    atlasStableStackState.lastError = String(payload.readiness_error || "").trim();
+  } else {
+    atlasStableStackState.bridgeReachable = false;
+    atlasStableStackState.bridgeReady = false;
+    atlasStableStackState.bridgeVersion = "";
+    atlasStableStackState.provider = "";
+    atlasStableStackState.model = "";
+    atlasStableStackState.lastError = String(error?.message || error || "Bridge local non détecté");
+  }
+  atlasStableStackState.checkedAt = Date.now();
+  atlasStableStackRender();
+}
+
+function atlasStableStackRender() {
+  const panel = document.getElementById("atlasStableStack");
+  if (!panel) return false;
+
+  const pkg = atlasSharedSynthesisState.package;
+  const hasSynthesis = !!pkg;
+  const persistenceReady = atlasSharedSynthesisState.persistence?.ok === true;
+  const bridgeReachable = atlasStableStackState.bridgeReachable;
+  const bridgeReady = atlasStableStackState.bridgeReady;
+  const reportedVersion = atlasStableStackState.bridgeVersion;
+  const canonicalVersion = ATLAS_STABLE_STACK.bridgeNumeric;
+  const versionMatches = !reportedVersion || reportedVersion === canonicalVersion;
+
+  let runtime = "waiting";
+  let badgeText = "En attente";
+  let station = "Poste de lecture";
+  let stationDetail = "La synthèse reste consultable sans Bridge.";
+  let status = "Pile canonique reconnue · aucune publication GitHub · aucune action financière.";
+
+  if (bridgeReady) {
+    runtime = versionMatches ? "production" : "warning";
+    badgeText = versionMatches ? "Production locale" : "Bridge à vérifier";
+    station = "Ryzen · production locale";
+    stationDetail = "Les quatre rapports et la conclusion peuvent être produits sur ce poste.";
+    status = versionMatches
+      ? "Bridge V1.7.6 et Ollama prêts · production locale en lecture seule."
+      : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : V1.7.6.`;
+  } else if (bridgeReachable) {
+    runtime = "warning";
+    badgeText = "Modèle requis";
+    station = "Poste producteur incomplet";
+    stationDetail = "Le Bridge répond, mais le modèle local n’est pas prêt.";
+    status = `Bridge détecté · ${atlasStableStackState.requiredModel || ATLAS_STABLE_STACK.model} requis dans Ollama.`;
+  } else if (hasSynthesis) {
+    runtime = "reading";
+    badgeText = "Lecture";
+    station = "Poste de lecture";
+    stationDetail = "Rapports et conclusion disponibles sans Bridge ni Ollama.";
+    status = "Synthèse conservée · moteur local non requis pour la consultation.";
+  }
+
+  panel.dataset.runtime = runtime;
+  const badge = document.getElementById("atlasStableStackBadge");
+  if (badge) {
+    badge.textContent = badgeText;
+    badge.className = `pill ${runtime === "production" || runtime === "reading" ? "ok" : runtime === "warning" ? "warn" : ""}`.trim();
+  }
+
+  const bridgeLabel = bridgeReachable
+    ? `V${reportedVersion || canonicalVersion} · ${bridgeReady ? "actif" : "modèle absent"}`
+    : `${ATLAS_STABLE_STACK.bridge} · non détecté`;
+  const bridgeDetail = bridgeReachable
+    ? (versionMatches ? "Moteur local canonique reconnu." : `Version attendue : ${ATLAS_STABLE_STACK.bridge}.`)
+    : (hasSynthesis ? "Non requis pour lire la synthèse conservée." : "Démarre le Control Center seulement pour produire de nouveaux rapports.");
+
+  const modelLabel = bridgeReady
+    ? `${atlasStableStackState.model || ATLAS_STABLE_STACK.model} · connecté`
+    : bridgeReachable
+      ? `${atlasStableStackState.requiredModel || ATLAS_STABLE_STACK.model} · requis`
+      : hasSynthesis ? "Non requis pour lire" : `${ATLAS_STABLE_STACK.model} · non détecté`;
+  const modelDetail = bridgeReady
+    ? `${atlasStableStackState.provider || "ollama"} · moteur local prêt.`
+    : bridgeReachable
+      ? "Installe ou sélectionne le modèle requis dans Ollama."
+      : "Requis uniquement pour produire de nouveaux rapports.";
+
+  atlasStableStackSetText("atlasStableStackBridge", bridgeLabel);
+  atlasStableStackSetText("atlasStableStackBridgeDetail", bridgeDetail);
+  atlasStableStackSetText("atlasStableStackOllama", modelLabel);
+  atlasStableStackSetText("atlasStableStackOllamaDetail", modelDetail);
+  atlasStableStackSetText("atlasStableStackStation", station);
+  atlasStableStackSetText("atlasStableStackStationDetail", stationDetail);
+  atlasStableStackSetText("atlasStableStackReports", hasSynthesis ? "4/4" : "0/4");
+  atlasStableStackSetText("atlasStableStackConclusion", hasSynthesis ? "Disponible" : "Absente");
+  atlasStableStackSetText(
+    "atlasStableStackMemory",
+    persistenceReady
+      ? `IndexedDB · ${Math.max(1, Math.round(atlasSharedSynthesisState.persistence.bytes / 1024))} Ko vérifiés`
+      : hasSynthesis ? "IndexedDB · non vérifiée" : "IndexedDB · en attente"
+  );
+  atlasStableStackSetText("atlasStableStackStatus", status);
+  return true;
+}
+
 const atlasSharedSynthesisState = {
   initialized: false,
   package: null,
@@ -11377,6 +11512,7 @@ function atlasSharedSynthesisRenderMarkdown(node, markdown) {
 
 function atlasSharedSynthesisRender() {
   const pkg = atlasSharedSynthesisState.package;
+  atlasStableStackRender();
   const hasPackage = !!pkg;
   document.querySelectorAll("#btnAtlasSharedCopy, #btnAtlasSharedReadReports, #btnAtlasSharedReadConclusion, #btnAtlasSharedExportJson, #btnAtlasSharedExportMd")
     .forEach(button => { button.disabled = !hasPackage; });
@@ -11622,7 +11758,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     origin: {
       machine: atlasSharedSynthesisOriginMachine(),
       interface: ATLAS_RELEASE,
-      bridge: "V1.7.5",
+      bridge: "V1.7.6",
       provider: conclusion.provider || atlasLocalDialogueState.provider || "local",
       model: conclusion.model || atlasLocalDialogueState.model || "modèle local"
     },
@@ -11708,6 +11844,7 @@ function atlasSharedSynthesisReadConclusion() {
 
 function atlasSharedSynthesisInit() {
   if (atlasSharedSynthesisState.initialized) return true;
+  atlasStableStackRender();
   const input = document.getElementById("atlasSharedSynthesisImport");
   if (!input) return false;
   atlasSharedSynthesisState.initialized = true;
