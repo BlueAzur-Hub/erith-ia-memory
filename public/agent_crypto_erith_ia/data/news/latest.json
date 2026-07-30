@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-07-30T03:33:54.994273+00:00",
+  "generated_at": "2026-07-30T06:44:47.185621+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 17,
-    "critical_24h": 17,
+    "events_24h": 15,
+    "critical_24h": 15,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 3,
-      "latency_ms": 410,
+      "latency_ms": 395,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "ok",
       "fetched_count": 29,
       "qualified_count": 0,
-      "latency_ms": 434,
+      "latency_ms": 193,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 125,
+      "latency_ms": 113,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 306,
+      "latency_ms": 275,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 367,
+      "latency_ms": 330,
       "error": null
     },
     {
@@ -80,8 +80,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 27,
-      "latency_ms": 201,
+      "qualified_count": 28,
+      "latency_ms": 155,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 23,
-      "latency_ms": 127,
+      "latency_ms": 117,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 12,
-      "latency_ms": 617,
+      "latency_ms": 941,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 125,
+      "latency_ms": 115,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 1,
-      "latency_ms": 197,
+      "latency_ms": 292,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 100,
+      "latency_ms": 131,
       "error": null
     }
   ],
@@ -548,75 +548,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_2ba5af9e28d93441",
-      "event_id": "feed_2ba5af9e28d93441",
-      "fingerprint": "2ba5af9e28d93441",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Arbitrum-based AFX Trade drained of $24 million after bridge keys compromised",
-      "body": "Security firms said the attacker used enough hot-validator signatures to approve a 24.15 million USDC withdrawal, while Arbitrum said its native bridge was not affected.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/07/23/arbitrum-based-afx-trade-drained-of-usd24-million-after-bridge-keys-compromised",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/07/23/arbitrum-based-afx-trade-drained-of-usd24-million-after-bridge-keys-compromised"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-07-23T05:01:06+00:00",
-      "first_seen_at": "2026-07-24T09:38:03.488943+00:00",
-      "last_seen_at": "2026-07-24T09:38:03.488943+00:00",
-      "freshness": {
-        "iso": "2026-07-23T05:01:06+00:00",
-        "hours": 28.62,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 99,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [
-        "USDC"
-      ],
-      "sectors": [
-        "DeFi",
-        "Stablecoins"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_a14de6133eddfcf9",
       "event_id": "feed_a14de6133eddfcf9",
       "fingerprint": "a14de6133eddfcf9",
@@ -640,11 +571,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T10:22:57+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.131898+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.131898+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.049158+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.049158+00:00",
       "freshness": {
         "iso": "2026-07-29T10:22:57+00:00",
-        "hours": 17.18,
+        "hours": 20.36,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1454,11 +1385,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-07-29T05:29:48+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.237934+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.237934+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.103722+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.103722+00:00",
       "freshness": {
         "iso": "2026-07-29T05:29:48+00:00",
-        "hours": 22.07,
+        "hours": 25.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1651,11 +1582,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T15:13:07+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.356963+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.356963+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.267263+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.267263+00:00",
       "freshness": {
         "iso": "2026-07-29T15:13:07+00:00",
-        "hours": 12.35,
+        "hours": 15.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1714,12 +1645,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T16:16:43+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.126313+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.126313+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.045458+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.045458+00:00",
       "freshness": {
         "iso": "2026-07-29T16:16:43+00:00",
-        "hours": 11.29,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.47,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1983,12 +1914,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T17:06:55+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.204173+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.204173+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.089231+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.089231+00:00",
       "freshness": {
         "iso": "2026-07-29T17:06:55+00:00",
-        "hours": 10.45,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.63,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2312,76 +2243,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_2b5ad15c9ae344d2",
-      "event_id": "feed_2b5ad15c9ae344d2",
-      "fingerprint": "2b5ad15c9ae344d2",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin wilts as oil and rates rise. Clarity Act odds tumble to 38%",
-      "body": "Geopolitical risks, rising rates, and fresh regulatory setbacks send crypto lower as key Democrats demand stronger safeguards in the market structure bill.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/07/23/bitcoin-wilts-as-oil-and-rates-rise-clarity-act-odds-tumble-to-38",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/07/23/bitcoin-wilts-as-oil-and-rates-rise-clarity-act-odds-tumble-to-38"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-23T03:50:20+00:00",
-      "first_seen_at": "2026-07-24T06:41:59.502404+00:00",
-      "last_seen_at": "2026-07-24T06:41:59.502404+00:00",
-      "freshness": {
-        "iso": "2026-07-23T03:50:20+00:00",
-        "hours": 26.86,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 17,
-      "matched_topics": [
-        "crypto",
-        "regulation",
-        "energy"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_77b5f27098698dd2",
       "event_id": "feed_77b5f27098698dd2",
       "fingerprint": "77b5f27098698dd2",
@@ -2405,11 +2266,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T13:47:35+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.213017+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.213017+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.092653+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.092653+00:00",
       "freshness": {
         "iso": "2026-07-29T13:47:35+00:00",
-        "hours": 13.77,
+        "hours": 16.95,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2614,11 +2475,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:59:17+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.271705+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.271705+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.168926+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.168926+00:00",
       "freshness": {
         "iso": "2026-07-27T19:59:17+00:00",
-        "hours": 55.58,
+        "hours": 58.76,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2680,11 +2541,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-23T15:04:00+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.273170+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.273170+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.169820+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.169820+00:00",
       "freshness": {
         "iso": "2026-07-23T15:04:00+00:00",
-        "hours": 156.5,
+        "hours": 159.68,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3146,12 +3007,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T16:09:34+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.127660+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.127660+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.046226+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.046226+00:00",
       "freshness": {
         "iso": "2026-07-29T16:09:34+00:00",
-        "hours": 11.41,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.59,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3396,7 +3257,7 @@
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
       "headline": "Binance.US to attempt prediction markets entry as CFTC-licensed entity, says CEO",
-      "body": "The CEO of the US crypto exchange said that the company would apply for a license with the CFTC in August allowing it to offer prediction markets.",
+      "body": "The CEO of the US crypto exchange said that the company would apply for a license with the CFTC in August, allowing it to offer prediction markets.",
       "source_name": "Cointelegraph",
       "source_url": "https://cointelegraph.com/news/binance-us-prediction-markets-cftc-designated-contract-market",
       "source_host": "cointelegraph.com",
@@ -3413,11 +3274,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T21:52:27+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.192427+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.192427+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.084232+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.084232+00:00",
       "freshness": {
         "iso": "2026-07-29T21:52:27+00:00",
-        "hours": 5.69,
+        "hours": 8.87,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3479,11 +3340,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T20:11:27+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.196442+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.196442+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.086177+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.086177+00:00",
       "freshness": {
         "iso": "2026-07-29T20:11:27+00:00",
-        "hours": 7.37,
+        "hours": 10.56,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3609,11 +3470,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-29T09:15:36+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.229987+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.229987+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.099023+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.099023+00:00",
       "freshness": {
         "iso": "2026-07-29T09:15:36+00:00",
-        "hours": 18.31,
+        "hours": 21.49,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4739,11 +4600,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T08:49:27+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.406649+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.406649+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.327583+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.327583+00:00",
       "freshness": {
         "iso": "2026-07-29T08:49:27+00:00",
-        "hours": 18.74,
+        "hours": 21.92,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5126,12 +4987,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T18:43:45+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.120454+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.120454+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.042271+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.042271+00:00",
       "freshness": {
         "iso": "2026-07-29T18:43:45+00:00",
-        "hours": 8.84,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.02,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -5237,6 +5098,75 @@
       "observation_only": true
     },
     {
+      "id": "feed_e2787a81ceef8355",
+      "event_id": "feed_e2787a81ceef8355",
+      "fingerprint": "e2787a81ceef8355",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin analysts agree the Fed's hold was hawkish. They don't agree on what happens next.",
+      "body": "Four analysts agree the Fed's hawkish hold changes the calculus for risk assets, but they split on whether bitcoin's real test is already here or still six weeks away.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/07/30/bitcoin-analysts-agree-the-fed-s-hold-was-hawkish-they-don-t-agree-on-what-happens-next",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/07/30/bitcoin-analysts-agree-the-fed-s-hold-was-hawkish-they-don-t-agree-on-what-happens-next"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-07-30T06:28:58+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.250527+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.250527+00:00",
+      "freshness": {
+        "iso": "2026-07-30T06:28:58+00:00",
+        "hours": 0.26,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "macro"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_bf573e862f1b11e7",
       "event_id": "feed_bf573e862f1b11e7",
       "fingerprint": "bf573e862f1b11e7",
@@ -5261,11 +5191,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T10:34:18+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.368553+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.368553+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.273723+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.273723+00:00",
       "freshness": {
         "iso": "2026-07-29T10:34:18+00:00",
-        "hours": 16.99,
+        "hours": 20.17,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5331,11 +5261,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T06:25:21+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.375938+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.375938+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.278692+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.278692+00:00",
       "freshness": {
         "iso": "2026-07-29T06:25:21+00:00",
-        "hours": 21.14,
+        "hours": 24.32,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5401,11 +5331,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T05:37:38+00:00",
-      "first_seen_at": "2026-07-30T03:33:54.378980+00:00",
-      "last_seen_at": "2026-07-30T03:33:54.378980+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.280545+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.280545+00:00",
       "freshness": {
         "iso": "2026-07-29T05:37:38+00:00",
-        "hours": 21.94,
+        "hours": 25.12,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5506,6 +5436,75 @@
         "action": "Alerte prioritaire · observation",
         "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
         "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "macro"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_0f335c2b5b9baa42",
+      "event_id": "feed_0f335c2b5b9baa42",
+      "fingerprint": "0f335c2b5b9baa42",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Ethereum Price Stalls as Fed Rate Decision Looms",
+      "body": "Despite being down today, ETH has clawed back from the worst levels of the year. Now it's waiting on the Fed.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374653/ethereum-price-stalls-fed-rate-decision",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374653/ethereum-price-stalls-fed-rate-decision"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-07-29T17:18:49+00:00",
+      "first_seen_at": "2026-07-30T06:44:46.043198+00:00",
+      "last_seen_at": "2026-07-30T06:44:46.043198+00:00",
+      "freshness": {
+        "iso": "2026-07-29T17:18:49+00:00",
+        "hours": 13.43,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "ETH"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
       },
       "confirmations": 1,
       "relevance_score": 13,
