@@ -16517,7 +16517,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.9
+   Market Core V2.0-Alpha · Build 28.2.10
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -19028,13 +19028,13 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.9
+   Market Core V2.0-Alpha · Build 28.2.10
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
 
 /* ==========================================================================
-   BUILD 28.2.9 — DETAIL PANEL TYPOGRAPHY POLISH
+   BUILD 28.2.10 — DETAIL PANEL TYPOGRAPHY POLISH
    Visual hierarchy only. Geometry, Aerith crop and functional data unchanged.
    ========================================================================== */
 
@@ -19272,5 +19272,108 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 #analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, rgba(98,236,255,.78), rgba(255,216,135,.66));
+}
+
+/* ==========================================================================
+   BUILD 28.2.10 — MATH CORE DOCK USABILITY
+   Horizontal rail score + usable lateral scrolling.
+   ========================================================================== */
+
+/* Reduced mode: only the score remains, always horizontal. */
+.atlas-math-dock.is-rail .atlas-math-rail-content,
+.atlas-math-dock.is-rail .atlas-math-rail-medallion {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  transform: none !important;
+}
+
+.atlas-math-dock.is-rail .atlas-math-rail-medallion {
+  display: grid !important;
+  place-items: center !important;
+  white-space: nowrap !important;
+  direction: ltr !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Side mode: the dock itself scrolls, while its heading stays reachable. */
+#math.atlas-math-dock.is-side {
+  position: sticky !important;
+  top: 8px !important;
+  align-self: start !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: calc(100vh - 16px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-x: none !important;
+  overscroll-behavior-y: auto !important;
+  scrollbar-gutter: stable !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(98,236,255,.46) rgba(2,9,18,.32);
+  touch-action: pan-y;
+}
+
+#math.atlas-math-dock.is-side .atlas-math-dock-head {
+  position: sticky !important;
+  z-index: 12 !important;
+  top: -1px !important;
+  margin: -1px -1px 7px !important;
+  padding: 9px 9px 8px !important;
+  border-bottom: 1px solid rgba(255,216,135,.18) !important;
+  background:
+    linear-gradient(180deg, rgba(5,17,31,.99), rgba(4,15,28,.95)) !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.20) !important;
+  backdrop-filter: blur(12px);
+}
+
+#math.atlas-math-dock.is-side::-webkit-scrollbar {
+  width: 7px;
+}
+
+#math.atlas-math-dock.is-side::-webkit-scrollbar-track {
+  background: rgba(2,9,18,.30);
+  border-radius: 999px;
+}
+
+#math.atlas-math-dock.is-side::-webkit-scrollbar-thumb {
+  border: 1px solid rgba(2,9,18,.52);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(98,236,255,.62),
+    rgba(255,216,135,.54)
+  );
+}
+
+#math.atlas-math-dock.is-side::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(98,236,255,.80),
+    rgba(255,216,135,.68)
+  );
+}
+
+/* Open technical content must never be clipped in lateral mode. */
+#math.atlas-math-dock.is-side .atlas-tech-details[open] {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Narrow layouts keep their existing stacked behavior. */
+@media (max-width: 850px) {
+  #math.atlas-math-dock.is-side {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    scrollbar-gutter: auto !important;
+  }
+
+  #math.atlas-math-dock.is-side .atlas-math-dock-head {
+    position: static !important;
+    margin: 0 0 7px !important;
+  }
 }
 
