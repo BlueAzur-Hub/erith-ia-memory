@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.50 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.51 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.50";
-const ATLAS_BUILD = "28.2.50";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.50";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.51";
+const ATLAS_BUILD = "28.2.51";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.51";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7036,7 +7036,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.50
+   Market Core V2.0-Alpha · Build 28.2.51
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11168,7 +11168,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.50 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.51 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -11389,7 +11389,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.50"
+      source: "target-top5-cycle-28.2.51"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -13326,17 +13326,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -14420,7 +14420,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.50",
+  interface: "Build 28.2.51",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16671,7 +16671,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.50`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.51`
   );
 }
 
@@ -20847,7 +20847,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.50 — Parallel Markets Foundation
+   Build 28.2.51 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -21461,6 +21461,85 @@ function atlasMetalsStructuralRenderActive(assetId = null) {
     "USGS 2026"
   );
 
+  setText(
+    document.getElementById("atlasMetalsStructureTitle"),
+    `${record.name} · ${record.symbol}`
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureSummary"),
+    `${record.family} · ${record.supply_chain.display}`
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureProduction"),
+    record.production.display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureProductionDetail"),
+    record.analysis.offer_detail
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureReserves"),
+    record.reserves.display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureReservesDetail"),
+    `Unité source : ${String(record.reserves.unit || "non précisée").replaceAll("_", " ")}.`
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureProducers"),
+    record.production.top_display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureProducersDetail"),
+    record.analysis.physical_detail
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureUses"),
+    record.uses.display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureUsesDetail"),
+    atlasMetalsStructuralArray(record.uses.items).join(" · ")
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureEu"),
+    record.eu_status.display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureEuDetail"),
+    record.eu_status.group
+      ? `Groupe : ${record.eu_status.group}`
+      : "Classification RMIS 2023."
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureSupply"),
+    record.supply_chain.display
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureSupplyDetail"),
+    record.supply_chain.detail
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureMacro"),
+    record.macro.title
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureMacroDetail"),
+    record.macro.detail
+  );
+
+  const structureSources = atlasMetalsStructuralArray(record.source_ids)
+    .map(atlasMetalsStructuralSource)
+    .filter(Boolean);
+  setText(
+    document.getElementById("atlasMetalsStructureSources"),
+    structureSources.map(source => source.short_name || source.name).join(" · ")
+  );
+  setText(
+    document.getElementById("atlasMetalsStructureSourceTruth"),
+    `${structureSources.length} source${structureSources.length > 1 ? "s" : ""} publique${structureSources.length > 1 ? "s" : ""} · données ${record.data_year}e · aucune cotation.`
+  );
+
   document
     .querySelectorAll(
       ".atlas-metals-analysis-horizons small"
@@ -21888,7 +21967,7 @@ function atlasParallelMarketRenderMetalsDetail() {
   const period = atlasChartPeriodLabel(metals.period);
   setText(
     document.getElementById("atlasMetalsChartMode"),
-    `${mode.toUpperCase()} · ${period.toUpperCase()}`
+    `COTATIONS VERROUILLÉES · ${period.toUpperCase()}`
   );
 
   const status = document.getElementById("atlasMetalsDomainStatusText");
@@ -21896,8 +21975,8 @@ function atlasParallelMarketRenderMetalsDetail() {
     const count = metals.selectionIds.length;
     status.textContent =
       `${count} actif${count > 1 ? "s" : ""} sélectionné`
-      + `${count > 1 ? "s" : ""} · ${mode} · ${period} · `
-      + "prix non connectés · structure publique disponible";
+      + `${count > 1 ? "s" : ""} · structure publique active · `
+      + "cotations non connectées";
   }
 }
 
@@ -21972,9 +22051,7 @@ function atlasParallelMarketRenderMetals() {
   if (truth) {
     truth.textContent = metals.section === "critical"
       ? "USGS préparé · import structurel non connecté"
-      : `${metals.view === "base100" ? "Base 100" : "Prix"} · `
-        + `${atlasChartPeriodLabel(metals.period)} · `
-        + "source de cotation absente · aucun prix inventé";
+      : `Structure publique active · cotations séparées · aucun prix inventé`;
   }
 
   atlasParallelMarketRenderMetalsDetail();
@@ -22580,7 +22657,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.50 — Comparison Memory Slots A / B / C
+   Build 28.2.51 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -22930,7 +23007,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.50`
+        source: `workspace-slot-${slot}-28.2.51`
       });
     } else {
       requestAnimationFrame(() => {
@@ -24415,7 +24492,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.50 annulée :", error);
+    console.warn("Transaction scanner 28.2.51 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -24598,7 +24675,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.50 :", error);
+    console.error("Scanner 28.2.51 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -24687,7 +24764,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.50 non capturé :", error);
+      console.error("Scanner 28.2.51 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -24697,7 +24774,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.50 :", error);
+    console.error("Démarrage scanner 28.2.51 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -24711,7 +24788,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.50"
+    source: "button-28.2.51"
   });
 }
 

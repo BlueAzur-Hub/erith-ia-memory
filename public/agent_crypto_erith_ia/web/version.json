@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.50",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.50",
-  "published_at": "2026-07-31T22:58:46Z",
+  "build": "28.2.51",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.51",
+  "published_at": "2026-07-31T23:32:24Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -60,5 +60,14 @@
     "primary_source": "USGS Mineral Commodity Summaries 2026 v1.3",
     "quotes_connected": false,
     "historical_prices_imported": false
+  },
+  "metals_structure_first": {
+    "base": "28.2.50",
+    "scope": "metals_ui_only",
+    "default_reading": "public_structure",
+    "empty_chart_demoted": true,
+    "quotation_controls_locked": true,
+    "crypto_workspace_unchanged": true,
+    "structural_registry_unchanged": true
   }
 }
