@@ -19479,3 +19479,17 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.12 — SELECTION TOGGLE RESTORE
+   is-selected and ACTIF again represent the graph primary series.
+   Row click again adds/removes the asset from the graph selection.
+   ========================================================================== */
+
+#marketSnapshotPanel .asset-row[aria-pressed="true"] {
+  cursor: pointer;
+}
+
+#marketSnapshotPanel .asset-row[aria-pressed="false"] {
+  cursor: pointer;
+}
+
