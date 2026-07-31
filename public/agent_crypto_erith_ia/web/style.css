@@ -19892,3 +19892,31 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.19 — MATH CORE DISCLOSURE VISIBILITY FIX
+   The closed top dock must use its natural height and never clip the summary.
+   ========================================================================== */
+
+#math.atlas-math-dock.is-top,
+#math.atlas-math-dock.is-top:has(.atlas-tech-details:not([open])) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+#math.atlas-math-dock.is-top .atlas-tech-details:not([open]) {
+  min-height: 34px !important;
+  height: 34px !important;
+  max-height: 34px !important;
+  overflow: visible !important;
+}
+
+#math.atlas-math-dock.is-top .atlas-tech-details > summary {
+  flex: 0 0 auto;
+}
+
+#math.atlas-math-dock.is-top .atlas-verdict {
+  min-height: 34px;
+}
+
