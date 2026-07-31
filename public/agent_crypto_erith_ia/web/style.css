@@ -21707,3 +21707,550 @@ html[data-atlas-market-domain="metals"]
   }
 }
 
+
+
+/* ==========================================================================
+   BUILD 28.2.36 — METALS DOMAIN VISUAL ISOLATION
+   ========================================================================== */
+
+#analyste[data-market-domain="metals"] .chart-v2-recovery-line {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  min-height: 43px !important;
+  padding-block: 6px !important;
+  overflow: visible !important;
+}
+
+#analyste[data-market-domain="metals"] .atlas-market-domain-title-block {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  transform: none !important;
+}
+
+#analyste[data-market-domain="metals"] .atlas-market-domain-longpress,
+#analyste[data-market-domain="metals"] .atlas-market-domain-switch {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  flex: 0 0 auto !important;
+}
+
+#analyste[data-market-domain="metals"] .chart-v2-toolbar {
+  display: none !important;
+}
+
+#analyste[data-market-domain="metals"] {
+  grid-template-columns:
+    minmax(0, 1fr)
+    clamp(300px, 22vw, 360px) !important;
+}
+
+#analyste[data-market-domain="metals"] .chart-panel {
+  grid-column: auto !important;
+}
+
+html[data-atlas-market-domain="metals"] #chartV2Legend,
+html[data-atlas-market-domain="metals"] #comparisonSelection,
+html[data-atlas-market-domain="metals"] #atlasChartInsightOverlay,
+html[data-atlas-market-domain="metals"] #atlasChartTooltip,
+html[data-atlas-market-domain="metals"] #atlasChartRefresh,
+html[data-atlas-market-domain="metals"] #chartCaption,
+html[data-atlas-market-domain="metals"] #detailPanel,
+html[data-atlas-market-domain="metals"] #detailPanelRail {
+  display: none !important;
+}
+
+html[data-atlas-market-domain="metals"] #market-workspace {
+  display: none !important;
+}
+
+html[data-atlas-market-domain="metals"] #market-workspace::before {
+  content: none !important;
+  display: none !important;
+}
+
+#analyste .atlas-metals-domain-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(244,211,134,.22);
+  border-radius: 9px;
+  background: rgba(244,211,134,.055);
+  color: #9dafbd;
+  font: 800 9px/1.25 system-ui, sans-serif;
+}
+
+#analyste .atlas-metals-domain-status[hidden] {
+  display: none !important;
+}
+
+#analyste .atlas-metals-domain-status b {
+  flex: 0 0 auto;
+  color: #ffda83;
+  letter-spacing: .06em;
+}
+
+#analyste .atlas-metals-domain-status span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#analyste[data-market-domain="metals"] .chart-shell {
+  min-height: 570px !important;
+}
+
+#analyste .atlas-parallel-market-foundation {
+  inset: 10px 10px 48px !important;
+  grid-template-rows: auto auto minmax(0, 1fr) auto !important;
+}
+
+#analyste .atlas-metals-empty-chart {
+  display: grid;
+  grid-template-rows: auto minmax(120px, 1fr);
+  min-height: 150px;
+  margin-bottom: 9px;
+  overflow: hidden;
+  border: 1px solid rgba(244,211,134,.18);
+  border-radius: 11px;
+  background: rgba(2,9,17,.68);
+}
+
+#analyste .atlas-metals-empty-chart > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.018);
+}
+
+#analyste .atlas-metals-empty-chart > header div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#analyste .atlas-metals-empty-chart > header span {
+  color: #7f94a4;
+  font: 900 8px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+
+#analyste .atlas-metals-empty-chart > header b {
+  color: #ffe0a0;
+  font: 900 9px/1 system-ui, sans-serif;
+}
+
+#analyste .atlas-metals-empty-chart > header small {
+  color: #ffb66c;
+  font: 800 8px/1 system-ui, sans-serif;
+}
+
+#analyste .atlas-metals-empty-chart-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(rgba(244,211,134,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244,211,134,.035) 1px, transparent 1px);
+  background-size: 100% 32px, 52px 100%, 100% 96px, 156px 100%;
+}
+
+#analyste .atlas-metals-axis-y,
+#analyste .atlas-metals-axis-x {
+  position: absolute;
+  color: rgba(174,190,202,.42);
+  font: 800 7px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+
+#analyste .atlas-metals-axis-y { top: 10px; left: 9px; }
+#analyste .atlas-metals-axis-x { right: 9px; bottom: 8px; }
+
+#analyste .atlas-metals-empty-chart-message {
+  display: grid;
+  gap: 5px;
+  max-width: 440px;
+  padding: 12px 16px;
+  text-align: center;
+  border: 1px solid rgba(244,211,134,.18);
+  border-radius: 10px;
+  background: rgba(4,12,22,.86);
+}
+
+#analyste .atlas-metals-empty-chart-message b {
+  color: #ffe1a0;
+  font-size: 11px;
+  letter-spacing: .05em;
+}
+
+#analyste .atlas-metals-empty-chart-message span {
+  color: #91a5b4;
+  font-size: 9px;
+}
+
+#analyste .atlas-metals-empty-chart-legend {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  display: flex;
+  gap: 5px;
+}
+
+#analyste .atlas-metals-empty-chart-legend span {
+  padding: 4px 7px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 999px;
+  background: rgba(4,12,22,.82);
+  color: #8499a9;
+  font: 900 8px/1 system-ui, sans-serif;
+}
+
+#analyste .atlas-metals-empty-chart-legend span.is-focus {
+  border-color: rgba(244,211,134,.46);
+  color: #ffdc86;
+}
+
+#analyste .atlas-metals-basket button.is-focus {
+  outline: 1px solid rgba(98,236,255,.56);
+  outline-offset: 1px;
+}
+
+#analyste .atlas-metals-foundation-table tr {
+  cursor: pointer;
+}
+
+#analyste .atlas-metals-foundation-table tr.is-focus td {
+  background: rgba(244,211,134,.065);
+}
+
+#analyste .atlas-metals-detail-panel {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  max-height: 100%;
+  padding: 11px;
+  overflow: auto;
+  border-color: rgba(244,211,134,.22);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(244,211,134,.07), transparent 20rem),
+    linear-gradient(180deg, rgba(5,15,27,.96), rgba(4,10,19,.98));
+}
+
+#analyste .atlas-metals-detail-panel[hidden] {
+  display: none !important;
+}
+
+#analyste .atlas-metals-detail-head {
+  display: grid;
+  gap: 3px;
+  padding: 2px 2px 8px;
+  border-bottom: 1px solid rgba(244,211,134,.18);
+}
+
+#analyste .atlas-metals-detail-head strong {
+  color: #fff0c3;
+  font-size: 19px;
+}
+
+#analyste .atlas-metals-detail-head small {
+  color: #8599a8;
+  font-size: 9px;
+}
+
+#analyste .atlas-metals-detail-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#analyste .atlas-metals-detail-strip > span,
+#analyste .atlas-metals-detail-grid > span,
+#analyste .atlas-metals-sentinel-gates > span {
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 8px;
+  background: rgba(255,255,255,.025);
+}
+
+#analyste .atlas-metals-detail-strip small,
+#analyste .atlas-metals-detail-grid b,
+#analyste .atlas-metals-sentinel-gates b {
+  display: block;
+  color: #718899;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+#analyste .atlas-metals-detail-strip b {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: #ffe1a0;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#analyste .atlas-metals-detail-card {
+  display: grid;
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 10px;
+  background: rgba(255,255,255,.018);
+}
+
+#analyste .atlas-metals-detail-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+}
+
+#analyste .atlas-metals-detail-card > header b {
+  color: #efe5c6;
+  font-size: 10px;
+}
+
+#analyste .atlas-metals-detail-card > header small {
+  color: #748999;
+  font-size: 8px;
+}
+
+#analyste .atlas-metals-detail-grid,
+#analyste .atlas-metals-sentinel-gates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+#analyste .atlas-metals-detail-grid small,
+#analyste .atlas-metals-sentinel-gates small {
+  display: block;
+  margin-top: 3px;
+  color: #b8c5ce;
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+#analyste .atlas-metals-source-dock > header div {
+  display: grid;
+  gap: 2px;
+}
+
+#analyste .atlas-metals-source-dock > header em {
+  padding: 4px 6px;
+  border: 1px solid rgba(255,182,108,.24);
+  border-radius: 999px;
+  color: #ffb66c;
+  font: 800 8px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+#analyste .atlas-metals-source-list {
+  display: grid;
+  gap: 5px;
+}
+
+#analyste .atlas-metals-source-list > span {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 7px;
+  background: rgba(255,255,255,.018);
+}
+
+#analyste .atlas-metals-source-list b {
+  color: #ffe0a0;
+  font-size: 9px;
+}
+
+#analyste .atlas-metals-source-list small {
+  min-width: 0;
+  overflow: hidden;
+  color: #8ca0ae;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#analyste .atlas-metals-source-list em {
+  color: #84d9c9;
+  font: 800 7px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+#analyste .atlas-metals-integrity p {
+  margin: 0;
+  color: #9fb1be;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1100px) {
+  #analyste[data-market-domain="metals"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  #analyste .atlas-metals-detail-panel {
+    max-height: none;
+  }
+
+  #analyste[data-market-domain="metals"] .chart-shell {
+    min-height: 610px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  #analyste[data-market-domain="metals"] .atlas-market-domain-title-block {
+    flex-wrap: nowrap !important;
+  }
+
+  #analyste .atlas-market-domain-longpress .eyebrow {
+    font-size: 8px !important;
+  }
+
+  #analyste .atlas-metals-detail-grid,
+  #analyste .atlas-metals-sentinel-gates {
+    grid-template-columns: 1fr;
+  }
+
+  #analyste .atlas-metals-source-list > span {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  #analyste .atlas-metals-source-list em {
+    grid-column: 2;
+  }
+}
+
+/* Build 28.2.36 — Metals table internal scroll lock */
+#analyste .atlas-parallel-market-view[data-metals-view-panel="prices"] {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 3px;
+}
+
+/* Build 28.2.36 — hidden Crypto toolbar pointer isolation */
+#analyste[data-market-domain="metals"] .chart-v2-toolbar,
+#analyste[data-market-domain="metals"] .chart-v2-toolbar * {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+#analyste[data-market-domain="metals"] .atlas-market-domain-title-block {
+  position: relative !important;
+  z-index: 60 !important;
+  pointer-events: auto !important;
+}
+
+#analyste[data-market-domain="metals"] .atlas-market-domain-longpress,
+#analyste[data-market-domain="metals"] .atlas-market-domain-switch {
+  pointer-events: auto !important;
+}
+
+/* Build 28.2.36 — definitive Metals domain specificity lock */
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-v2-toolbar,
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-v2-toolbar-row,
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-v2-toolbar * {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+}
+
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens {
+  grid-template-columns:
+    minmax(0, 1fr)
+    clamp(300px, 22vw, 360px) !important;
+  grid-template-rows: auto !important;
+  column-gap: 8px !important;
+}
+
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .atlas-metals-detail-panel {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+
+@media (max-width: 1100px) {
+  html[data-atlas-market-domain="metals"]
+    #analyste.champagne-clean-lens {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+  }
+
+  html[data-atlas-market-domain="metals"]
+    #analyste.champagne-clean-lens
+    .atlas-metals-detail-panel {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+}
+
+/* Build 28.2.36 — definitive Crypto caption isolation */
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  #chartCaption,
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-caption {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
