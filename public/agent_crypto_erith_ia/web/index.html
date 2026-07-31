@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.43 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.44 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.43" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.44" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -60,10 +60,10 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.43"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.44"
             disabled
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.43</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.44</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -78,7 +78,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.43</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.44</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -724,13 +724,12 @@
               <span class="eyebrow">SOURCES DE L’ACTIF</span>
               <b id="atlasMetalsSourceDockTitle">Références préparées</b>
             </div>
-            <em>0 source live</em>
+            <em id="atlasMetalsSourceDockState">0 source connectée</em>
           </header>
-          <div class="atlas-metals-source-list">
-            <span><b>USGS</b><small>Production · réserves · dépendances</small><em>PRÉPARÉ</em></span>
-            <span><b>LBMA</b><small>Or · argent · références de marché</small><em>À CONNECTER</em></span>
-            <span><b>LME</b><small>Métaux industriels · stocks · contrats</small><em>À CONNECTER</em></span>
-            <span><b>IEA</b><small>Matériaux critiques · chaîne industrielle</small><em>PRÉPARÉ</em></span>
+          <div class="atlas-metals-source-list"
+               id="atlasMetalsSourceList"
+               aria-live="polite">
+            <span><b>Registre local</b><small>Chargement de la fondation des sources</small><em>EN ATTENTE</em></span>
           </div>
         </section>
 
@@ -877,19 +876,20 @@
           </footer>
         </article>
 
-        <aside class="panel glass atlas-metals-market-registry">
+        <aside class="panel glass atlas-metals-market-registry"
+               id="atlasMetalsMarketRegistry">
           <header>
             <span class="eyebrow">CATALOGUE DES ADAPTATEURS</span>
             <h3>Cotations, macro et structure</h3>
           </header>
-          <div class="atlas-metals-registry-list">
-            <span><b>Alpha Vantage</b><small>Or, argent, actions, ETF</small><em>ADAPTER CANDIDAT</em></span>
-            <span><b>Twelve Data</b><small>Actions, ETF, indices, matières</small><em>ADAPTER CANDIDAT</em></span>
-            <span><b>FRED</b><small>Taux, inflation, dollar, macro</small><em>MACRO</em></span>
-            <span><b>USGS</b><small>Production, réserves, dépendances</small><em>STRUCTUREL</em></span>
-            <span><b>World Bank</b><small>Prix mensuels des matières</small><em>HISTORIQUE</em></span>
+          <div class="atlas-metals-registry-list"
+               id="atlasMetalsRegistryList"
+               aria-live="polite">
+            <span><b>Registre local</b><small>Chargement des sources qualifiées</small><em>EN ATTENTE</em></span>
           </div>
-          <p>La future Bourse réutilisera le même contrat : source, horodatage, devise, délai, OHLCV et cache séparé.</p>
+          <p id="atlasMetalsRegistrySummary">
+            Fondation locale · aucune clé · aucun appel de cotation.
+          </p>
         </aside>
       </section>
     </section>
@@ -1903,7 +1903,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.43</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.44</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0</b><small>Daily Pilotage Lock · stack validée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2224,7 +2224,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.43 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.44 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3379,7 +3379,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.43</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.44</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3389,6 +3389,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.43"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.44"></script>
 </body>
 </html>
