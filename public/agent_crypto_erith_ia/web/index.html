@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.46 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
+  <meta name="atlas-build" content="28.2.47" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.47" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.47 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.46" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.47" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -60,10 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.46"
-            disabled
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.47"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.46</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.47</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -78,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.46</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.47</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -250,7 +251,7 @@
                hidden>
         <div class="source-card atlas-metals-adapter-lock">
           <span>Connexion</span>
-          <strong>PRIX NON CONNECTÉS</strong>
+          <strong>ADAPTATEUR DE COTATION REQUIS</strong>
         </div>
         <div class="source-card live-decision">
           <span>État du domaine</span>
@@ -261,7 +262,7 @@
         <div class="source-card">
           <span>Sources préparées</span>
           <strong id="atlasMetalsHeaderSources">
-            USGS · IEA · RMIS · BANQUE MONDIALE
+            USGS · IEA · LBMA/LME à connecter
           </strong>
         </div>
         <div class="source-card">
@@ -495,11 +496,11 @@
                     <tr><th>Métal</th><th>Symbole</th><th>Unité</th><th>Prix</th><th>État</th></tr>
                   </thead>
                   <tbody id="atlasMetalsFoundationRows">
-                    <tr data-metal-row="gold"><td>Or</td><td>XAU</td><td>USD / once troy</td><td>—</td><td>Prix non connectés</td></tr>
-                    <tr data-metal-row="silver"><td>Argent</td><td>XAG</td><td>USD / once troy</td><td>—</td><td>Prix non connectés</td></tr>
-                    <tr data-metal-row="platinum"><td>Platine</td><td>XPT</td><td>USD / once troy</td><td>—</td><td>Prix non connectés</td></tr>
-                    <tr data-metal-row="palladium"><td>Palladium</td><td>XPD</td><td>USD / once troy</td><td>—</td><td>Prix non connectés</td></tr>
-                    <tr data-metal-row="copper"><td>Cuivre</td><td>HG</td><td>USD / livre ou tonne</td><td>—</td><td>Prix non connectés</td></tr>
+                    <tr data-metal-row="gold"><td>Or</td><td>XAU</td><td>USD / once troy</td><td>—</td><td>Adaptateur requis</td></tr>
+                    <tr data-metal-row="silver"><td>Argent</td><td>XAG</td><td>USD / once troy</td><td>—</td><td>Adaptateur requis</td></tr>
+                    <tr data-metal-row="platinum"><td>Platine</td><td>XPT</td><td>USD / once troy</td><td>—</td><td>Adaptateur requis</td></tr>
+                    <tr data-metal-row="palladium"><td>Palladium</td><td>XPD</td><td>USD / once troy</td><td>—</td><td>Adaptateur requis</td></tr>
+                    <tr data-metal-row="copper"><td>Cuivre</td><td>HG</td><td>USD / livre ou tonne</td><td>—</td><td>Adaptateur requis</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -698,7 +699,7 @@
           <div class="atlas-metals-detail-grid">
             <span><b>Famille</b><small id="atlasMetalsDetailFamily">Précieux monétaire</small></span>
             <span><b>Unité</b><small id="atlasMetalsDetailUnit">USD / once troy</small></span>
-            <span><b>État des données</b><small>Prix non connectés</small></span>
+            <span><b>État des données</b><small>Adaptateur requis</small></span>
             <span><b>Sélection graphique</b><small id="atlasMetalsDetailSelection">Incluse</small></span>
           </div>
         </section>
@@ -724,12 +725,13 @@
               <span class="eyebrow">SOURCES DE L’ACTIF</span>
               <b id="atlasMetalsSourceDockTitle">Références préparées</b>
             </div>
-            <em id="atlasMetalsSourceDockState">0 source connectée</em>
+            <em>0 source live</em>
           </header>
-          <div class="atlas-metals-source-list"
-               id="atlasMetalsSourceList"
-               aria-live="polite">
-            <span><b>Registre local</b><small>Chargement de la fondation des sources</small><em>EN ATTENTE</em></span>
+          <div class="atlas-metals-source-list">
+            <span><b>USGS</b><small>Production · réserves · dépendances</small><em>PRÉPARÉ</em></span>
+            <span><b>LBMA</b><small>Or · argent · références de marché</small><em>À CONNECTER</em></span>
+            <span><b>LME</b><small>Métaux industriels · stocks · contrats</small><em>À CONNECTER</em></span>
+            <span><b>IEA</b><small>Matériaux critiques · chaîne industrielle</small><em>PRÉPARÉ</em></span>
           </div>
         </section>
 
@@ -805,9 +807,9 @@
             <small>Lecture par familles</small>
           </div>
           <div class="atlas-metals-flow-track">
-            <span><b>Précieux monétaires</b><small>XAU · XAG</small><em>Prix non connectés</em></span>
-            <span><b>Précieux industriels</b><small>XPT · XPD</small><em>Prix non connectés</em></span>
-            <span><b>Industriel</b><small>HG</small><em>Prix non connectés</em></span>
+            <span><b>Précieux monétaires</b><small>XAU · XAG</small><em>Source requise</em></span>
+            <span><b>Précieux industriels</b><small>XPT · XPD</small><em>Source requise</em></span>
+            <span><b>Industriel</b><small>HG</small><em>Source requise</em></span>
             <span><b>Matériaux critiques</b><small>USGS · IEA</small><em>Structurel</em></span>
           </div>
         </article>
@@ -819,12 +821,12 @@
           <header class="atlas-metals-market-head">
             <div>
               <span class="eyebrow">MARKET SNAPSHOT · MÉTAUX</span>
-              <h2>Panier Métaux · données disponibles</h2>
-              <p>Aucun prix actuel connecté. Les données publiques restent disponibles sans dépense.</p>
+              <h2>Panier Métaux et état des sources</h2>
+              <p>Le tableau reste vide de prix tant qu’aucun adaptateur réel n’est connecté.</p>
             </div>
             <div class="atlas-metals-market-source-state">
-              <span>PRIX <b>NON CONNECTÉS</b></span>
-              <span>SOURCES <b>PUBLIQUES</b></span>
+              <span>COURS <b>NON CONNECTÉS</b></span>
+              <span>STRUCTURE <b>USGS PRÉPARÉ</b></span>
             </div>
           </header>
 
@@ -852,19 +854,19 @@
               </thead>
               <tbody id="atlasMetalsMarketRows">
                 <tr data-metals-market-row="gold" data-metals-market-family="monetary">
-                  <td>Or</td><td>XAU</td><td>Précieux monétaire</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Prix non connectés</td>
+                  <td>Or</td><td>XAU</td><td>Précieux monétaire</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Adaptateur requis</td>
                 </tr>
                 <tr data-metals-market-row="silver" data-metals-market-family="monetary">
-                  <td>Argent</td><td>XAG</td><td>Précieux monétaire et industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Prix non connectés</td>
+                  <td>Argent</td><td>XAG</td><td>Précieux monétaire et industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Adaptateur requis</td>
                 </tr>
                 <tr data-metals-market-row="platinum" data-metals-market-family="precious-industrial">
-                  <td>Platine</td><td>XPT</td><td>Précieux industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Prix non connectés</td>
+                  <td>Platine</td><td>XPT</td><td>Précieux industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Adaptateur requis</td>
                 </tr>
                 <tr data-metals-market-row="palladium" data-metals-market-family="precious-industrial">
-                  <td>Palladium</td><td>XPD</td><td>Précieux industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Prix non connectés</td>
+                  <td>Palladium</td><td>XPD</td><td>Précieux industriel</td><td>USD / once troy</td><td>—</td><td>—</td><td>Aucune</td><td>Adaptateur requis</td>
                 </tr>
                 <tr data-metals-market-row="copper" data-metals-market-family="industrial">
-                  <td>Cuivre</td><td>HG</td><td>Industriel</td><td>USD / livre ou tonne</td><td>—</td><td>—</td><td>Aucune</td><td>Prix non connectés</td>
+                  <td>Cuivre</td><td>HG</td><td>Industriel</td><td>USD / livre ou tonne</td><td>—</td><td>—</td><td>Aucune</td><td>Adaptateur requis</td>
                 </tr>
               </tbody>
             </table>
@@ -872,47 +874,24 @@
 
           <footer class="atlas-metals-market-footer">
             <b id="atlasMetalsMarketStatus">5 actifs · aucun cours inventé</b>
-            <span>Données publiques versionnées · aucun cours inventé.</span>
+            <span>Bridge requis pour protéger les clés API et gérer les quotas.</span>
           </footer>
         </article>
 
-        <section class="panel glass atlas-metals-market-registry atlas-metals-source-band"
-                 id="atlasMetalsMarketRegistry"
-                 aria-labelledby="atlasMetalsSourceBandTitle">
-          <header class="atlas-metals-source-band-head">
-            <div>
-              <span class="eyebrow">SOURCES DISPONIBLES</span>
-              <h3 id="atlasMetalsSourceBandTitle">Lecture publique du panier Métaux</h3>
-            </div>
-            <span class="atlas-metals-zero-cost-badge">SOURCES PUBLIQUES · ZÉRO COÛT</span>
+        <aside class="panel glass atlas-metals-market-registry">
+          <header>
+            <span class="eyebrow">CATALOGUE DES ADAPTATEURS</span>
+            <h3>Cotations, macro et structure</h3>
           </header>
-
-          <div class="atlas-metals-clarity-list"
-               id="atlasMetalsClarityList"
-               aria-live="polite">
-            <span><b>Prix actuels</b><small>Aucune cotation gratuite fiable connectée</small><em>NON CONNECTÉS</em></span>
-            <span><b>Données publiques</b><small>USGS · IEA · RMIS · Banque mondiale</small><em>PRÉPARÉES</em></span>
-            <span><b>Macro</b><small>FRED · couche non activée</small><em>NON ACTIVÉE</em></span>
-            <span><b>Options limitées</b><small>Aucun compte ni clé créés</small><em>NON ACTIVÉES</em></span>
+          <div class="atlas-metals-registry-list">
+            <span><b>Alpha Vantage</b><small>Or, argent, actions, ETF</small><em>ADAPTER CANDIDAT</em></span>
+            <span><b>Twelve Data</b><small>Actions, ETF, indices, matières</small><em>ADAPTER CANDIDAT</em></span>
+            <span><b>FRED</b><small>Taux, inflation, dollar, macro</small><em>MACRO</em></span>
+            <span><b>USGS</b><small>Production, réserves, dépendances</small><em>STRUCTUREL</em></span>
+            <span><b>World Bank</b><small>Prix mensuels des matières</small><em>HISTORIQUE</em></span>
           </div>
-
-          <p id="atlasMetalsRegistrySummary">
-            Données publiques préparées · détails techniques réservés à l’Administration.
-          </p>
-
-          <details class="atlas-metals-technical-registry"
-                   id="atlasMetalsTechnicalRegistry"
-                   hidden>
-            <summary id="atlasMetalsTechnicalRegistrySummary">
-              Détails techniques des sources
-            </summary>
-            <div class="atlas-metals-registry-list"
-                 id="atlasMetalsRegistryList"
-                 aria-live="polite">
-              <span><b>Registre local</b><small>Chargement des sources qualifiées</small><em>EN ATTENTE</em></span>
-            </div>
-          </details>
-        </section>
+          <p>La future Bourse réutilisera le même contrat : source, horodatage, devise, délai, OHLCV et cache séparé.</p>
+        </aside>
       </section>
     </section>
 
@@ -1072,7 +1051,7 @@
             <p class="eyebrow">ANALYSE MÉTAUX MULTI-HORIZON</p>
             <h2>XAU / XAG / XPT / XPD / HG</h2>
           </div>
-          <span class="pill warn">Observation sans cotation</span>
+          <span class="pill warn">Adaptateur requis</span>
         </div>
 
         <p class="atlas-metals-analysis-intro">
@@ -1082,8 +1061,8 @@
         <div class="atlas-metals-analysis-grid">
           <article>
             <span>COTATION</span>
-            <b>Prix non connectés</b>
-            <small>Aucune source gratuite fiable n’est activée.</small>
+            <b>Non connectée</b>
+            <small>Prix, OHLC, délai et devise à qualifier.</small>
           </article>
           <article>
             <span>MACRO</span>
@@ -1111,7 +1090,7 @@
 
         <footer>
           <b>Décision humaine uniquement</b>
-          <span>Prochaine étape : données publiques USGS / IEA / RMIS / Banque mondiale.</span>
+          <span>Prochaine dépendance : adaptateur réel XAU / XAG, puis extension XPT / XPD / HG.</span>
         </footer>
       </section>
     </section>
@@ -1925,7 +1904,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.46</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.47</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0</b><small>Daily Pilotage Lock · stack validée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2246,7 +2225,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.46 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.47 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3401,7 +3380,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.46</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.47</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3411,6 +3390,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.46"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.47"></script>
 </body>
 </html>

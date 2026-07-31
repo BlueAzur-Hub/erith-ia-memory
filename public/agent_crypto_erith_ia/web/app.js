@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.46 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.47 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,15 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.46";
-const ATLAS_BUILD = "28.2.46";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.47";
+const ATLAS_BUILD = "28.2.47";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.47";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
+const ATLAS_VERSION_ASSET_URLS = Object.freeze({
+  index: "./index.html",
+  app: "./app.js",
+  style: "./style.css"
+});
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
 const atlasVersionAwarenessState = {
@@ -30,6 +36,7 @@ const atlasVersionAwarenessState = {
   confirmationTimer: 0,
   remoteBuild: null,
   remoteToken: null,
+  remotePublication: null,
   lastCheckedAt: 0,
   lastError: null
 };
@@ -180,798 +187,13 @@ const ATLAS_PARALLEL_MARKET_METALS_STATE_KEY =
   "agent_crypto_parallel_market_metals_state_v1";
 const ATLAS_PARALLEL_MARKET_DOMAINS =
   Object.freeze(["crypto", "metals"]);
-
-const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
-  assets: "./market_asset_registry.json",
-  sources: "./market_source_registry.json",
-  contract: "./market_data_contract.json",
-  bridge: "./bridge_market_adapter_contract.json"
-});
-
-const ATLAS_METALS_ASSETS = Object.freeze(
-  [
-  {
-    "id": "gold",
-    "name": "Or",
-    "symbol": "XAU",
-    "unit": "USD / once troy",
-    "family": "précieux monétaire",
-    "familyId": "monetary",
-    "assetClass": "precious_metal",
-    "currency": "USD",
-    "unitCode": "troy_ounce",
-    "unitState": "qualified"
-  },
-  {
-    "id": "silver",
-    "name": "Argent",
-    "symbol": "XAG",
-    "unit": "USD / once troy",
-    "family": "précieux monétaire et industriel",
-    "familyId": "monetary-industrial",
-    "assetClass": "precious_metal",
-    "currency": "USD",
-    "unitCode": "troy_ounce",
-    "unitState": "qualified"
-  },
-  {
-    "id": "platinum",
-    "name": "Platine",
-    "symbol": "XPT",
-    "unit": "USD / once troy",
-    "family": "précieux industriel",
-    "familyId": "precious-industrial",
-    "assetClass": "precious_metal",
-    "currency": "USD",
-    "unitCode": "troy_ounce",
-    "unitState": "qualified"
-  },
-  {
-    "id": "palladium",
-    "name": "Palladium",
-    "symbol": "XPD",
-    "unit": "USD / once troy",
-    "family": "précieux industriel",
-    "familyId": "precious-industrial",
-    "assetClass": "precious_metal",
-    "currency": "USD",
-    "unitCode": "troy_ounce",
-    "unitState": "qualified"
-  },
-  {
-    "id": "copper",
-    "name": "Cuivre",
-    "symbol": "HG",
-    "unit": "Source requise · livre ou tonne",
-    "family": "industriel",
-    "familyId": "industrial",
-    "assetClass": "industrial_metal",
-    "currency": "USD",
-    "unitCode": null,
-    "unitState": "source_dependent"
-  }
-].map(asset => Object.freeze(asset))
-);
-
-const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
-  [
-  {
-    "id": "metals_dev",
-    "name": "Metals.Dev",
-    "short_name": "Metals.Dev",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals",
-      "commodities"
-    ],
-    "roles": [
-      "snapshot",
-      "history",
-      "multi_metal"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "Snapshot gratuit limité · non activé",
-      "silver": "Snapshot gratuit limité · non activé",
-      "platinum": "Snapshot gratuit limité · non activé",
-      "palladium": "Snapshot gratuit limité · non activé",
-      "copper": "Référence cuivre annoncée · unité à qualifier"
-    },
-    "coverage_summary": "Option gratuite très limitée · environ trois snapshots par jour.",
-    "status": "free_optional",
-    "status_label": "OPTION GRATUITE LIMITÉE",
-    "status_tone": "free",
-    "policy_group": "free_optional",
-    "priority": 1,
-    "catalogue_order": 91,
-    "api_key_required": true,
-    "bridge_required": true,
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "terms_to_monitor",
-    "cache_policy": "allowed_under_terms_to_monitor",
-    "activation": "inactive",
-    "licence_state": "free_plan_terms_to_monitor",
-    "source_timestamp": true,
-    "official_docs": "https://metals.dev/docs"
-  },
-  {
-    "id": "goldapi",
-    "name": "GoldAPI.io",
-    "short_name": "GoldAPI",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals"
-    ],
-    "roles": [
-      "snapshot",
-      "history",
-      "precious_metals"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium"
-    ],
-    "asset_notes": {
-      "gold": "XAU · option gratuite non activée",
-      "silver": "XAG · option gratuite non activée",
-      "platinum": "XPT · option gratuite non activée",
-      "palladium": "XPD · option gratuite non activée"
-    },
-    "coverage_summary": "Quatre métaux précieux · droit public à confirmer.",
-    "status": "free_optional",
-    "status_label": "OPTION GRATUITE LIMITÉE",
-    "status_tone": "free",
-    "policy_group": "free_optional",
-    "priority": 2,
-    "catalogue_order": 92,
-    "api_key_required": true,
-    "bridge_required": true,
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "to_confirm_before_publication",
-    "cache_policy": "to_confirm",
-    "activation": "inactive",
-    "licence_state": "sandbox_public_display_to_confirm",
-    "source_timestamp": true,
-    "official_docs": "https://www.goldapi.io/"
-  },
-  {
-    "id": "alpha_vantage",
-    "name": "Alpha Vantage",
-    "short_name": "Alpha Vantage",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals",
-      "stocks",
-      "crypto",
-      "forex",
-      "macro"
-    ],
-    "roles": [
-      "quote",
-      "history",
-      "gold_silver_spot",
-      "stocks"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver"
-    ],
-    "asset_notes": {
-      "gold": "XAU · spot agrégé et historique candidat",
-      "silver": "XAG · spot agrégé et historique candidat"
-    },
-    "coverage_summary": "Pilote XAU/XAG, actions, ETF et macro.",
-    "status": "free_optional",
-    "status_label": "OPTION GRATUITE XAU/XAG",
-    "status_tone": "free",
-    "priority": 1,
-    "catalogue_order": 100,
-    "api_key_required": true,
-    "bridge_required": true,
-    "licence_state": "plan_and_public_display_to_verify",
-    "source_timestamp": true,
-    "official_docs": "https://www.alphavantage.co/documentation/",
-    "policy_group": "free_optional",
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "to_confirm_before_publication",
-    "cache_policy": "to_confirm",
-    "activation": "inactive"
-  },
-  {
-    "id": "twelve_data",
-    "name": "Twelve Data",
-    "short_name": "Twelve Data",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals",
-      "stocks",
-      "crypto",
-      "forex"
-    ],
-    "roles": [
-      "quote",
-      "ohlc",
-      "history",
-      "websocket",
-      "multi_market"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "XAU/USD · couverture à tester",
-      "silver": "XAG/USD · couverture à tester",
-      "platinum": "XPT/USD · couverture à tester",
-      "palladium": "XPD/USD · couverture à tester",
-      "copper": "Symbole et unité cuivre à qualifier"
-    },
-    "coverage_summary": "Candidat unifié Métaux + Bourse, couverture 5/5 à tester.",
-    "status": "test_only_not_public",
-    "status_label": "TEST INTERNE UNIQUEMENT",
-    "status_tone": "blocked",
-    "priority": 2,
-    "catalogue_order": 110,
-    "api_key_required": true,
-    "bridge_required": true,
-    "licence_state": "plan_and_public_display_to_verify",
-    "source_timestamp": true,
-    "official_docs": "https://twelvedata.com/docs",
-    "policy_group": "test_only_not_public",
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "forbidden_on_basic_plan",
-    "cache_policy": "internal_only",
-    "activation": "inactive"
-  },
-  {
-    "id": "api_ninjas",
-    "name": "API Ninjas — Commodity Price",
-    "short_name": "API Ninjas",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals",
-      "commodities"
-    ],
-    "roles": [
-      "future_quote",
-      "history",
-      "commodity_snapshot"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "Future roulant · ne pas appeler spot",
-      "silver": "Future roulant · ne pas appeler spot",
-      "platinum": "Future roulant · couverture candidate",
-      "palladium": "Future roulant · couverture candidate",
-      "copper": "Future roulant · unité contrat à qualifier"
-    },
-    "coverage_summary": "Futures candidats pour les cinq métaux.",
-    "status": "test_only_not_public",
-    "status_label": "TEST UNIQUEMENT",
-    "status_tone": "blocked",
-    "priority": 3,
-    "catalogue_order": 120,
-    "api_key_required": true,
-    "bridge_required": true,
-    "licence_state": "premium_for_public_or_commercial_use",
-    "source_timestamp": true,
-    "official_docs": "https://api-ninjas.com/api/commodityprice",
-    "policy_group": "test_only_not_public",
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "evaluation_only",
-    "cache_policy": "forbidden_on_free_plan",
-    "activation": "inactive"
-  },
-  {
-    "id": "metals_api",
-    "name": "Metals-API",
-    "short_name": "Metals-API",
-    "authority_type": "vendor_api",
-    "domains": [
-      "metals",
-      "commodities"
-    ],
-    "roles": [
-      "quote",
-      "history"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "coverage_summary": "Plan gratuit non utilisable publiquement.",
-    "status": "test_only_not_public",
-    "status_label": "AFFICHAGE PUBLIC INTERDIT",
-    "status_tone": "blocked",
-    "policy_group": "test_only_not_public",
-    "priority": 9,
-    "catalogue_order": 123,
-    "api_key_required": true,
-    "bridge_required": true,
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "forbidden_on_free_plan",
-    "cache_policy": "not_public",
-    "activation": "inactive",
-    "licence_state": "free_plan_personal_or_test_only",
-    "source_timestamp": true,
-    "official_docs": "https://documentation.metals-api.com/"
-  },
-  {
-    "id": "lbma",
-    "name": "London Bullion Market Association",
-    "short_name": "LBMA",
-    "authority_type": "official_benchmark",
-    "domains": [
-      "metals"
-    ],
-    "roles": [
-      "benchmark",
-      "clearing",
-      "methodology"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium"
-    ],
-    "asset_notes": {
-      "gold": "Benchmark officiel · licence requise",
-      "silver": "Benchmark officiel · licence requise",
-      "platinum": "Référence de marché · licence à qualifier",
-      "palladium": "Référence de marché · licence à qualifier"
-    },
-    "coverage_summary": "Benchmarks officiels des métaux précieux.",
-    "status": "official_reference",
-    "status_label": "RÉFÉRENCE OFFICIELLE",
-    "status_tone": "reference",
-    "priority": 4,
-    "catalogue_order": 130,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "licence_required",
-    "source_timestamp": true,
-    "official_docs": "https://www.lbma.org.uk/prices-and-data",
-    "policy_group": "official_reference",
-    "cost_eur": null,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "licence_required_for_live_or_redistribution",
-    "cache_policy": "licence_dependent",
-    "activation": "inactive"
-  },
-  {
-    "id": "lme",
-    "name": "London Metal Exchange",
-    "short_name": "LME",
-    "authority_type": "official_exchange",
-    "domains": [
-      "metals"
-    ],
-    "roles": [
-      "official_price",
-      "stocks",
-      "contracts",
-      "warehouse"
-    ],
-    "asset_ids": [
-      "copper"
-    ],
-    "asset_notes": {
-      "copper": "Cuivre officiel · USD/tonne selon flux · licence requise"
-    },
-    "coverage_summary": "Cuivre industriel, stocks et contrats officiels.",
-    "status": "official_reference",
-    "status_label": "RÉFÉRENCE OFFICIELLE",
-    "status_tone": "reference",
-    "priority": 4,
-    "catalogue_order": 140,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "licence_required",
-    "source_timestamp": true,
-    "official_docs": "https://www.lme.com/en/Market-data",
-    "policy_group": "official_reference",
-    "cost_eur": null,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "licence_required_for_live_or_redistribution",
-    "cache_policy": "licence_dependent",
-    "activation": "inactive"
-  },
-  {
-    "id": "cme",
-    "name": "CME Group / COMEX / NYMEX",
-    "short_name": "CME",
-    "authority_type": "official_exchange",
-    "domains": [
-      "metals",
-      "commodities"
-    ],
-    "roles": [
-      "futures",
-      "options",
-      "volume",
-      "term_structure"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "GC · futur officiel",
-      "silver": "SI · futur officiel",
-      "platinum": "PL · futur officiel",
-      "palladium": "PA · futur officiel",
-      "copper": "HG · futur officiel en USD/livre"
-    },
-    "coverage_summary": "Contrats futures et courbes à terme officielles.",
-    "status": "official_reference",
-    "status_label": "RÉFÉRENCE OFFICIELLE",
-    "status_tone": "reference",
-    "priority": 5,
-    "catalogue_order": 150,
-    "api_key_required": true,
-    "bridge_required": true,
-    "licence_state": "subscription_and_licence_required",
-    "source_timestamp": true,
-    "official_docs": "https://www.cmegroup.com/market-data/market-data-api.html",
-    "policy_group": "official_reference",
-    "cost_eur": null,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "licence_required_for_live_or_redistribution",
-    "cache_policy": "licence_dependent",
-    "activation": "inactive"
-  },
-  {
-    "id": "usgs",
-    "name": "USGS — Mineral Commodity Summaries",
-    "short_name": "USGS",
-    "authority_type": "public_authority",
-    "domains": [
-      "metals",
-      "critical_materials",
-      "commodities"
-    ],
-    "roles": [
-      "production",
-      "reserves",
-      "resources",
-      "import_dependence"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "Production, réserves et dépendances",
-      "silver": "Production, réserves et dépendances",
-      "platinum": "PGM, production et réserves",
-      "palladium": "PGM, production et réserves",
-      "copper": "Production, réserves et dépendances"
-    },
-    "coverage_summary": "Données structurelles annuelles, aucun cours.",
-    "status": "public_zero_cost",
-    "status_label": "PUBLIC · ZÉRO COÛT",
-    "status_tone": "zero",
-    "priority": 2,
-    "catalogue_order": 160,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "public_with_attribution",
-    "source_timestamp": true,
-    "official_docs": "https://pubs.usgs.gov/publication/mcs2026",
-    "policy_group": "public_zero_cost",
-    "cost_eur": 0,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "source_specific_with_attribution",
-    "cache_policy": "version_or_publication_bound",
-    "activation": "inactive"
-  },
-  {
-    "id": "iea",
-    "name": "International Energy Agency",
-    "short_name": "IEA",
-    "authority_type": "international_institution",
-    "domains": [
-      "metals",
-      "critical_materials",
-      "macro"
-    ],
-    "roles": [
-      "demand_scenarios",
-      "supply_chain",
-      "policy"
-    ],
-    "asset_ids": [
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "platinum": "PGM et usages de transition à documenter",
-      "palladium": "PGM et chaîne industrielle à documenter",
-      "copper": "Demande, concentration et transition énergétique"
-    },
-    "coverage_summary": "Scénarios et chaînes des matériaux critiques.",
-    "status": "public_zero_cost",
-    "status_label": "PUBLIC · ZÉRO COÛT",
-    "status_tone": "zero",
-    "priority": 3,
-    "catalogue_order": 170,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "dataset_specific",
-    "source_timestamp": true,
-    "official_docs": "https://www.iea.org/data-and-statistics/data-tools/critical-minerals-data-explorer",
-    "policy_group": "public_zero_cost",
-    "cost_eur": 0,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "source_specific_with_attribution",
-    "cache_policy": "version_or_publication_bound",
-    "activation": "inactive"
-  },
-  {
-    "id": "rmis",
-    "name": "RMIS / JRC — Commission européenne",
-    "short_name": "RMIS",
-    "authority_type": "public_authority",
-    "domains": [
-      "metals",
-      "critical_materials",
-      "regulation"
-    ],
-    "roles": [
-      "eu_critical_status",
-      "profiles",
-      "trade",
-      "recycling"
-    ],
-    "asset_ids": [
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "platinum": "Profil UE et statut critique/stratégique",
-      "palladium": "Profil UE et dépendances",
-      "copper": "Profil UE, commerce et recyclage"
-    },
-    "coverage_summary": "Profils et criticité européenne.",
-    "status": "public_zero_cost",
-    "status_label": "PUBLIC UE · ZÉRO COÛT",
-    "status_tone": "zero",
-    "priority": 4,
-    "catalogue_order": 180,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "download_specific",
-    "source_timestamp": true,
-    "official_docs": "https://rmis.jrc.ec.europa.eu/",
-    "policy_group": "public_zero_cost",
-    "cost_eur": 0,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "source_specific_with_attribution",
-    "cache_policy": "version_or_publication_bound",
-    "activation": "inactive"
-  },
-  {
-    "id": "world_bank",
-    "name": "World Bank — Pink Sheet",
-    "short_name": "World Bank",
-    "authority_type": "international_institution",
-    "domains": [
-      "metals",
-      "commodities",
-      "macro"
-    ],
-    "roles": [
-      "monthly_history",
-      "annual_history",
-      "commodity_context"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "Historique mensuel et annuel",
-      "silver": "Historique mensuel et annuel",
-      "platinum": "Historique mensuel selon série disponible",
-      "copper": "Historique mensuel et annuel"
-    },
-    "coverage_summary": "Historique mensuel, jamais source spot.",
-    "status": "public_zero_cost",
-    "status_label": "HISTORIQUE · ZÉRO COÛT",
-    "status_tone": "zero",
-    "priority": 5,
-    "catalogue_order": 190,
-    "api_key_required": false,
-    "bridge_required": true,
-    "licence_state": "public_dataset",
-    "source_timestamp": true,
-    "official_docs": "https://www.worldbank.org/en/research/commodity-markets",
-    "policy_group": "public_zero_cost",
-    "cost_eur": 0,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "source_specific_with_attribution",
-    "cache_policy": "version_or_publication_bound",
-    "activation": "inactive"
-  },
-  {
-    "id": "fred",
-    "name": "FRED / ALFRED",
-    "short_name": "FRED",
-    "authority_type": "public_data_platform",
-    "domains": [
-      "metals",
-      "stocks",
-      "macro"
-    ],
-    "roles": [
-      "rates",
-      "inflation",
-      "dollar",
-      "industrial_cycle"
-    ],
-    "asset_ids": [
-      "gold",
-      "silver",
-      "platinum",
-      "palladium",
-      "copper"
-    ],
-    "asset_notes": {
-      "gold": "Dollar, taux réels et inflation",
-      "silver": "Dollar, taux et cycle industriel",
-      "platinum": "Cycle industriel et automobile",
-      "palladium": "Cycle industriel et automobile",
-      "copper": "Production industrielle, dollar et taux"
-    },
-    "coverage_summary": "Macro documentée, aucun cours intraday.",
-    "status": "free_account_optional",
-    "status_label": "MACRO GRATUITE · NON ACTIVÉE",
-    "status_tone": "free",
-    "priority": 5,
-    "catalogue_order": 200,
-    "api_key_required": true,
-    "bridge_required": true,
-    "licence_state": "series_source_dependent",
-    "source_timestamp": true,
-    "official_docs": "https://fred.stlouisfed.org/docs/api/fred/overview.html",
-    "policy_group": "free_account_optional",
-    "cost_eur": 0,
-    "account_required": true,
-    "card_required": false,
-    "public_display": "series_specific",
-    "cache_policy": "series_specific",
-    "activation": "inactive"
-  },
-  {
-    "id": "cibjo",
-    "name": "CIBJO Blue Books",
-    "short_name": "CIBJO",
-    "authority_type": "standards_body",
-    "domains": [
-      "gemstones",
-      "metals"
-    ],
-    "roles": [
-      "nomenclature",
-      "standards",
-      "responsible_sourcing"
-    ],
-    "asset_ids": [],
-    "coverage_summary": "Nomenclature et standards volontaires.",
-    "status": "human_reference",
-    "status_label": "NORME DE RÉFÉRENCE",
-    "status_tone": "reference",
-    "priority": 6,
-    "catalogue_order": 240,
-    "api_key_required": false,
-    "bridge_required": false,
-    "licence_state": "edition_and_rights_to_verify",
-    "source_timestamp": false,
-    "official_docs": "https://cibjo.org/the-blue-books/",
-    "policy_group": "human_reference",
-    "cost_eur": 0,
-    "account_required": false,
-    "card_required": false,
-    "public_display": "reference_only",
-    "cache_policy": "source_specific",
-    "activation": "inactive"
-  }
-].map(source => Object.freeze(source))
-);
-
-const ATLAS_MARKET_CONTRACT_FALLBACK = Object.freeze(
-  {
-  "schema": "agent_crypto_market_data_contract_v1",
-  "states": [
-    "direct",
-    "data_current",
-    "data_delayed",
-    "data_historical",
-    "date_unqualified",
-    "source_disconnected",
-    "adapter_required",
-    "licence_to_verify"
-  ],
-  "cache_namespaces": [
-    "cache_metals_quotes",
-    "cache_metals_history",
-    "cache_metals_structural",
-    "cache_metals_macro",
-    "cache_metals_sources"
-  ],
-  "bridge_schema": "agent_crypto_bridge_market_adapter_contract_v1",
-  "routes": [
-    "/market/metals/quote",
-    "/market/metals/series",
-    "/market/metals/snapshot",
-    "/market/metals/source-status"
-  ]
-}
-);
-
-const atlasMarketRegistryState = {
-  status: "fallback",
-  origin: "fallback_intégré",
-  assets: ATLAS_METALS_ASSETS,
-  sources: ATLAS_METALS_SOURCE_FALLBACK,
-  contract: ATLAS_MARKET_CONTRACT_FALLBACK,
-  bridge: {
-    schema: "agent_crypto_bridge_market_adapter_contract_v1",
-    routes: []
-  },
-  loadedAt: null,
-  error: null
-};
+const ATLAS_METALS_ASSETS = Object.freeze([
+  Object.freeze({ id: "gold", name: "Or", symbol: "XAU", unit: "USD / once troy", family: "précieux monétaire" }),
+  Object.freeze({ id: "silver", name: "Argent", symbol: "XAG", unit: "USD / once troy", family: "précieux monétaire et industriel" }),
+  Object.freeze({ id: "platinum", name: "Platine", symbol: "XPT", unit: "USD / once troy", family: "précieux industriel" }),
+  Object.freeze({ id: "palladium", name: "Palladium", symbol: "XPD", unit: "USD / once troy", family: "précieux industriel" }),
+  Object.freeze({ id: "copper", name: "Cuivre", symbol: "HG", unit: "USD / livre ou tonne", family: "industriel" })
+]);
 
 state.marketDomain = "crypto";
 state.parallelMarkets = {
@@ -987,13 +209,8 @@ state.parallelMarkets = {
     activeId: "gold",
     marketFilter: "all",
     selectionIds: ATLAS_METALS_ASSETS.map(asset => asset.id),
-    registryStatus: "fallback",
-    registryOrigin: "fallback_intégré",
-    quoteCache: Object.create(null),
     chartCache: Object.create(null),
-    structuralCache: Object.create(null),
-    macroCache: Object.create(null),
-    sourceCache: Object.create(null)
+    structuralCache: Object.create(null)
   }
 };
 
@@ -1154,6 +371,7 @@ const clamp = (min, max, value) => Math.max(min, Math.min(max, value)); function
 } function num(value, formatter = fmtEUR.format.bind(fmtEUR)) { return typeof value === "number" && Number.isFinite(value) ? formatter(value) : "Donnée manquante";
 } 
 
+
 function atlasVersionParts(value) {
   const parts = String(value || "").match(/\d+/g);
   return Array.isArray(parts) ? parts.map(Number) : [];
@@ -1165,17 +383,28 @@ function atlasCompareBuildNumbers(left, right) {
   const length = Math.max(a.length, b.length);
 
   for (let index = 0; index < length; index += 1) {
-    const difference = Number(a[index] || 0) - Number(b[index] || 0);
+    const difference =
+      Number(a[index] || 0) - Number(b[index] || 0);
     if (difference !== 0) return difference > 0 ? 1 : -1;
   }
 
   return 0;
 }
 
-function atlasVersionManifestRequestUrl(stamp = Date.now()) {
-  const url = new URL(ATLAS_VERSION_MANIFEST_URL, window.location.href);
+function atlasVersionRequestUrl(path, stamp = Date.now()) {
+  const url = new URL(
+    path,
+    document.baseURI || window.location.href
+  );
   url.searchParams.set("_version_check", String(stamp));
   return url.toString();
+}
+
+function atlasVersionManifestRequestUrl(stamp = Date.now()) {
+  return atlasVersionRequestUrl(
+    ATLAS_VERSION_MANIFEST_URL,
+    stamp
+  );
 }
 
 function atlasVersionControlElements() {
@@ -1203,26 +432,63 @@ function atlasVersionCheckedAtLabel(timestamp = 0) {
   }
 }
 
-function atlasVersionControlTooltip(mode, build, checkedAt = 0) {
+function atlasVersionControlTooltip(
+  mode,
+  build,
+  checkedAt = 0
+) {
   const freshness = atlasVersionCheckedAtLabel(checkedAt);
 
+  if (mode === "checking") {
+    return `Vérification forcée de la publication · ${freshness}`;
+  }
+
   if (mode === "available") {
-    return `Nouvelle version disponible · Build ${build} · ${freshness}`;
+    return (
+      `Nouvelle version cohérente disponible · Build ${build}`
+      + ` · ${freshness}`
+    );
+  }
+
+  if (mode === "publishing") {
+    return (
+      `Publication du Build ${build} encore incomplète`
+      + ` · Cliquer pour revérifier · ${freshness}`
+    );
+  }
+
+  if (mode === "repair") {
+    return (
+      `Fichiers chargés incohérents · Build ${build}`
+      + ` · Cliquer pour recharger la publication cohérente`
+    );
   }
 
   if (mode === "applying") {
-    return `Mise à jour vers le Build ${build} en cours · ${freshness}`;
+    return (
+      `Mise à jour vers le Build ${build} en cours`
+      + ` · ${freshness}`
+    );
   }
 
   if (mode === "failed") {
-    return `Actualisation vers le Build ${build} impossible · ${freshness}`;
+    return (
+      `Vérification ou actualisation impossible`
+      + ` · Cliquer pour réessayer · ${freshness}`
+    );
   }
 
   if (mode === "installed") {
-    return `Mise à jour installée · Build ${build} · Nouvelle vérification distante en attente`;
+    return (
+      `Mise à jour installée · Build ${build}`
+      + ` · Cliquer pour vérifier de nouveau`
+    );
   }
 
-  return `Version installée · Build ${ATLAS_BUILD} · ${freshness}`;
+  return (
+    `Version installée · Build ${ATLAS_BUILD}`
+    + ` · Cliquer pour vérifier · ${freshness}`
+  );
 }
 
 function atlasVersionControlState(mode, options = {}) {
@@ -1231,7 +497,10 @@ function atlasVersionControlState(mode, options = {}) {
 
   const stateMode = [
     "current",
+    "checking",
     "available",
+    "publishing",
+    "repair",
     "applying",
     "failed",
     "installed"
@@ -1239,7 +508,9 @@ function atlasVersionControlState(mode, options = {}) {
     ? mode
     : "current";
 
-  const build = String(options.build || ATLAS_BUILD).trim() || ATLAS_BUILD;
+  const build =
+    String(options.build || ATLAS_BUILD).trim()
+    || ATLAS_BUILD;
   const token = String(options.token || "").trim();
   const checkedAt = Number(
     options.checkedAt
@@ -1253,94 +524,109 @@ function atlasVersionControlState(mode, options = {}) {
   control.removeAttribute("data-remote-token");
   control.removeAttribute("aria-busy");
 
-  if (stateMode === "available") {
-    control.classList.add("warn");
-    control.disabled = false;
+  if ([
+    "available",
+    "publishing",
+    "repair",
+    "failed",
+    "applying"
+  ].includes(stateMode)) {
     control.dataset.remoteBuild = build;
     if (token) control.dataset.remoteToken = token;
-    text.textContent = `Nouvelle version disponible · Build ${build}`;
-    control.setAttribute(
-      "aria-label",
-      `Nouvelle version disponible, Build ${build}. Cliquer pour actualiser.`
-    );
-    control.title = atlasVersionControlTooltip(
-      stateMode,
-      build,
-      checkedAt
-    );
-    return true;
   }
 
-  if (stateMode === "applying") {
+  control.disabled = stateMode === "applying";
+
+  if (stateMode === "checking") {
+    control.classList.add("ok");
+    text.textContent = "Vérification de version…";
+    control.setAttribute(
+      "aria-label",
+      "Vérification forcée de la publication en cours"
+    );
+  } else if (stateMode === "available") {
     control.classList.add("warn");
-    control.disabled = true;
+    text.textContent =
+      `Nouvelle version disponible · Build ${build}`;
+    control.setAttribute(
+      "aria-label",
+      (
+        `Nouvelle version cohérente disponible, Build ${build}.`
+        + " Cliquer pour installer."
+      )
+    );
+  } else if (stateMode === "publishing") {
+    control.classList.add("warn");
+    text.textContent =
+      `Publication Build ${build} incomplète · Revérifier`;
+    control.setAttribute(
+      "aria-label",
+      (
+        `Publication du Build ${build} encore incomplète.`
+        + " Cliquer pour revérifier."
+      )
+    );
+  } else if (stateMode === "repair") {
+    control.classList.add("warn");
+    text.textContent =
+      `Fichiers incohérents · Recharger le Build ${build}`;
+    control.setAttribute(
+      "aria-label",
+      (
+        `Les fichiers chargés ne portent pas tous le Build ${build}.`
+        + " Cliquer pour recharger."
+      )
+    );
+  } else if (stateMode === "applying") {
+    control.classList.add("warn");
     control.setAttribute("aria-busy", "true");
-    control.dataset.remoteBuild = build;
-    if (token) control.dataset.remoteToken = token;
     text.textContent = "Mise à jour en cours…";
     control.setAttribute(
       "aria-label",
       `Mise à jour vers le Build ${build} en cours`
     );
-    control.title = atlasVersionControlTooltip(
-      stateMode,
-      build,
-      checkedAt
-    );
-    return true;
-  }
-
-  if (stateMode === "failed") {
+  } else if (stateMode === "failed") {
     control.classList.add("fail");
-    control.disabled = false;
-    control.dataset.remoteBuild = build;
-    if (token) control.dataset.remoteToken = token;
-    text.textContent = "Actualisation impossible · Réessayer";
+    text.textContent = "Vérification impossible · Réessayer";
     control.setAttribute(
       "aria-label",
-      `Actualisation vers le Build ${build} impossible. Cliquer pour réessayer.`
+      "Vérification ou actualisation impossible. Cliquer pour réessayer."
     );
-    control.title = atlasVersionControlTooltip(
-      stateMode,
-      build,
-      checkedAt
-    );
-    return true;
-  }
-
-  if (stateMode === "installed") {
+  } else if (stateMode === "installed") {
     control.classList.add("ok");
-    control.disabled = true;
-    text.textContent = `Mise à jour installée · Build ${build}`;
+    text.textContent =
+      `Mise à jour installée · Build ${build}`;
     control.setAttribute(
       "aria-label",
-      `Mise à jour installée, Build ${build}`
+      (
+        `Mise à jour installée, Build ${build}.`
+        + " Cliquer pour vérifier de nouveau."
+      )
     );
-    control.title = atlasVersionControlTooltip(
-      stateMode,
-      build,
-      checkedAt
+  } else {
+    control.classList.add("ok");
+    text.textContent = ATLAS_RELEASE;
+    control.setAttribute(
+      "aria-label",
+      (
+        `Version installée : Market Core V2.0-Alpha,`
+        + ` Build ${ATLAS_BUILD}. Cliquer pour vérifier.`
+      )
     );
-    return true;
   }
 
-  control.classList.add("ok");
-  control.disabled = true;
-  text.textContent = ATLAS_RELEASE;
-  control.setAttribute(
-    "aria-label",
-    `Version installée : Market Core V2.0-Alpha, Build ${ATLAS_BUILD}`
-  );
   control.title = atlasVersionControlTooltip(
     stateMode,
-    ATLAS_BUILD,
+    build,
     checkedAt
   );
   return true;
 }
 
 function atlasVersionConfirmationClear() {
-  window.clearTimeout(atlasVersionAwarenessState.confirmationTimer);
+  window.clearTimeout(
+    atlasVersionAwarenessState.confirmationTimer
+  );
   atlasVersionAwarenessState.confirmationTimer = 0;
 }
 
@@ -1350,15 +636,19 @@ function atlasVersionShowInstalled(
 ) {
   atlasVersionConfirmationClear();
 
-  const installedBuild = String(build || ATLAS_BUILD).trim() || ATLAS_BUILD;
+  const installedBuild =
+    String(build || ATLAS_BUILD).trim()
+    || ATLAS_BUILD;
+
   atlasVersionControlState("installed", {
     build: installedBuild
   });
 
-  atlasVersionAwarenessState.confirmationTimer = window.setTimeout(() => {
-    atlasVersionAwarenessState.confirmationTimer = 0;
-    atlasVersionControlState("current");
-  }, Math.max(0, Number(duration) || 0));
+  atlasVersionAwarenessState.confirmationTimer =
+    window.setTimeout(() => {
+      atlasVersionAwarenessState.confirmationTimer = 0;
+      atlasVersionControlState("current");
+    }, Math.max(0, Number(duration) || 0));
 
   return true;
 }
@@ -1368,10 +658,15 @@ function atlasVersionHideUpdate() {
   atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = null;
   atlasVersionAwarenessState.remoteToken = null;
+  atlasVersionAwarenessState.remotePublication = null;
   return atlasVersionControlState("current");
 }
 
-function atlasVersionShowUpdate(remoteBuild, remoteToken = "") {
+function atlasVersionShowUpdate(
+  remoteBuild,
+  remoteToken = "",
+  publication = null
+) {
   const build = String(remoteBuild || "").trim();
   const token = String(remoteToken || "").trim();
   if (!build) return false;
@@ -1380,6 +675,7 @@ function atlasVersionShowUpdate(remoteBuild, remoteToken = "") {
   atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = build;
   atlasVersionAwarenessState.remoteToken = token || null;
+  atlasVersionAwarenessState.remotePublication = publication;
 
   return atlasVersionControlState("available", {
     build,
@@ -1387,8 +683,56 @@ function atlasVersionShowUpdate(remoteBuild, remoteToken = "") {
   });
 }
 
-function atlasVersionShowFailure(remoteBuild, remoteToken = "") {
-  const build = String(remoteBuild || ATLAS_BUILD).trim() || ATLAS_BUILD;
+function atlasVersionShowPublishing(
+  remoteBuild,
+  remoteToken = "",
+  publication = null
+) {
+  const build =
+    String(remoteBuild || ATLAS_BUILD).trim()
+    || ATLAS_BUILD;
+  const token = String(remoteToken || "").trim();
+
+  atlasVersionConfirmationClear();
+  atlasVersionAwarenessState.applying = false;
+  atlasVersionAwarenessState.remoteBuild = build;
+  atlasVersionAwarenessState.remoteToken = token || null;
+  atlasVersionAwarenessState.remotePublication = publication;
+
+  return atlasVersionControlState("publishing", {
+    build,
+    token
+  });
+}
+
+function atlasVersionShowRepair(
+  build = ATLAS_BUILD,
+  token = ATLAS_ASSET_TOKEN
+) {
+  const targetBuild =
+    String(build || ATLAS_BUILD).trim()
+    || ATLAS_BUILD;
+  const targetToken = String(token || "").trim();
+
+  atlasVersionConfirmationClear();
+  atlasVersionAwarenessState.applying = false;
+  atlasVersionAwarenessState.remoteBuild = targetBuild;
+  atlasVersionAwarenessState.remoteToken =
+    targetToken || null;
+
+  return atlasVersionControlState("repair", {
+    build: targetBuild,
+    token: targetToken
+  });
+}
+
+function atlasVersionShowFailure(
+  remoteBuild = ATLAS_BUILD,
+  remoteToken = ""
+) {
+  const build =
+    String(remoteBuild || ATLAS_BUILD).trim()
+    || ATLAS_BUILD;
   const token = String(remoteToken || "").trim();
 
   atlasVersionConfirmationClear();
@@ -1420,17 +764,43 @@ function atlasVersionManifestToken(manifest) {
   ).trim();
 }
 
-async function atlasFetchVersionManifest() {
-  const response = await fetch(atlasVersionManifestRequestUrl(), {
-    cache: "no-store",
-    credentials: "same-origin",
-    headers: {
-      accept: "application/json"
+async function atlasFetchVersionText(path, stamp = Date.now()) {
+  const response = await fetch(
+    atlasVersionRequestUrl(path, stamp),
+    {
+      cache: "no-store",
+      credentials: "same-origin",
+      headers: {
+        accept: "text/plain, text/html, text/css, application/javascript"
+      }
     }
-  });
+  );
 
   if (!response.ok) {
-    throw new Error(`Version manifest HTTP ${response.status}`);
+    throw new Error(
+      `Publication ${path} HTTP ${response.status}`
+    );
+  }
+
+  return response.text();
+}
+
+async function atlasFetchVersionManifest(stamp = Date.now()) {
+  const response = await fetch(
+    atlasVersionManifestRequestUrl(stamp),
+    {
+      cache: "no-store",
+      credentials: "same-origin",
+      headers: {
+        accept: "application/json"
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Version manifest HTTP ${response.status}`
+    );
   }
 
   const manifest = await response.json();
@@ -1441,6 +811,10 @@ async function atlasFetchVersionManifest() {
     throw new Error("Version manifest invalide");
   }
 
+  if (!token) {
+    throw new Error("Token de publication absent");
+  }
+
   return {
     manifest,
     build,
@@ -1448,14 +822,194 @@ async function atlasFetchVersionManifest() {
   };
 }
 
+function atlasVersionMetaValue(name) {
+  return String(
+    document
+      .querySelector(`meta[name="${name}"]`)
+      ?.getAttribute("content")
+    || ""
+  ).trim();
+}
+
+function atlasVersionCssIdentityValue(name) {
+  try {
+    return String(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+      || ""
+    )
+      .trim()
+      .replace(/^["']|["']$/g, "");
+  } catch {
+    return "";
+  }
+}
+
+function atlasVersionRuntimeIdentity() {
+  const identity = {
+    indexBuild: atlasVersionMetaValue("atlas-build"),
+    indexToken: atlasVersionMetaValue(
+      "atlas-asset-token"
+    ),
+    appBuild: ATLAS_BUILD,
+    appToken: ATLAS_ASSET_TOKEN,
+    styleBuild: atlasVersionCssIdentityValue(
+      "--atlas-asset-build"
+    ),
+    styleToken: atlasVersionCssIdentityValue(
+      "--atlas-asset-token"
+    )
+  };
+
+  const builds = [
+    identity.indexBuild,
+    identity.appBuild,
+    identity.styleBuild
+  ];
+  const tokens = [
+    identity.indexToken,
+    identity.appToken,
+    identity.styleToken
+  ];
+
+  identity.ok =
+    builds.every(value => value === ATLAS_BUILD)
+    && tokens.every(value => value === ATLAS_ASSET_TOKEN);
+
+  return identity;
+}
+
+function atlasVersionExtractIdentity(kind, text) {
+  const source = String(text || "");
+
+  if (kind === "index") {
+    return {
+      build: String(
+        source.match(
+          /<meta\s+name=["']atlas-build["']\s+content=["']([^"']+)["']/i
+        )?.[1]
+        || ""
+      ).trim(),
+      token: String(
+        source.match(
+          /<meta\s+name=["']atlas-asset-token["']\s+content=["']([^"']+)["']/i
+        )?.[1]
+        || ""
+      ).trim(),
+      referencesApp:
+        /<script[^>]+src=["']\.\/app\.js(?:\?[^"']*)?["']/i
+          .test(source),
+      referencesStyle:
+        /<link[^>]+href=["']\.\/style\.css(?:\?[^"']*)?["']/i
+          .test(source)
+    };
+  }
+
+  if (kind === "app") {
+    return {
+      build: String(
+        source.match(
+          /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
+        )?.[1]
+        || ""
+      ).trim(),
+      token: String(
+        source.match(
+          /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
+        )?.[1]
+        || ""
+      ).trim()
+    };
+  }
+
+  return {
+    build: String(
+      source.match(
+        /ATLAS_ASSET_BUILD:\s*([0-9.]+)/
+      )?.[1]
+      || ""
+    ).trim(),
+    token: String(
+      source.match(
+        /ATLAS_ASSET_TOKEN:\s*([a-z0-9._-]+)/
+      )?.[1]
+      || ""
+    ).trim()
+  };
+}
+
+async function atlasVerifyRemotePublication(remote) {
+  const stamp = Date.now();
+  const [indexText, appText, styleText] =
+    await Promise.all([
+      atlasFetchVersionText(
+        ATLAS_VERSION_ASSET_URLS.index,
+        stamp
+      ),
+      atlasFetchVersionText(
+        ATLAS_VERSION_ASSET_URLS.app,
+        stamp
+      ),
+      atlasFetchVersionText(
+        ATLAS_VERSION_ASSET_URLS.style,
+        stamp
+      )
+    ]);
+
+  const identities = {
+    index: atlasVersionExtractIdentity(
+      "index",
+      indexText
+    ),
+    app: atlasVersionExtractIdentity(
+      "app",
+      appText
+    ),
+    style: atlasVersionExtractIdentity(
+      "style",
+      styleText
+    )
+  };
+
+  const expectedBuild = String(remote?.build || "");
+  const expectedToken = String(remote?.token || "");
+
+  const buildOk = Object.values(identities).every(
+    identity => identity.build === expectedBuild
+  );
+  const tokenOk = Object.values(identities).every(
+    identity => identity.token === expectedToken
+  );
+  const referencesOk =
+    identities.index.referencesApp === true
+    && identities.index.referencesStyle === true;
+
+  return {
+    ok: buildOk && tokenOk && referencesOk,
+    build: expectedBuild,
+    token: expectedToken,
+    identities,
+    buildOk,
+    tokenOk,
+    referencesOk,
+    checkedAt: Date.now()
+  };
+}
+
 function atlasVersionExpectedUpdateRead() {
   try {
     return {
       build: String(
-        sessionStorage.getItem("agent_crypto_expected_build") || ""
+        sessionStorage.getItem(
+          "agent_crypto_expected_build"
+        )
+        || ""
       ).trim(),
       token: String(
-        sessionStorage.getItem("agent_crypto_expected_token") || ""
+        sessionStorage.getItem(
+          "agent_crypto_expected_token"
+        )
+        || ""
       ).trim()
     };
   } catch {
@@ -1488,32 +1042,118 @@ function atlasVersionExpectedUpdateWrite(build, token = "") {
 
 function atlasVersionExpectedUpdateClear() {
   try {
-    sessionStorage.removeItem("agent_crypto_expected_build");
-    sessionStorage.removeItem("agent_crypto_expected_token");
-    sessionStorage.removeItem("agent_crypto_update_started_at");
+    sessionStorage.removeItem(
+      "agent_crypto_expected_build"
+    );
+    sessionStorage.removeItem(
+      "agent_crypto_expected_token"
+    );
+    sessionStorage.removeItem(
+      "agent_crypto_update_started_at"
+    );
   } catch {}
 }
 
 async function atlasVersionCheck(options = {}) {
   const force = options?.force === true;
-  if (atlasVersionAwarenessState.checking) return false;
-  if (!force && atlasVersionAwarenessState.confirmationTimer) return false;
-  if (!force && document.visibilityState === "hidden") return false;
-  if (!force && navigator.onLine === false) return false;
+  const userInitiated =
+    options?.userInitiated === true;
+
+  if (atlasVersionAwarenessState.checking) {
+    return false;
+  }
+  if (
+    !force
+    && atlasVersionAwarenessState.confirmationTimer
+  ) {
+    return false;
+  }
+  if (
+    !force
+    && document.visibilityState === "hidden"
+  ) {
+    return false;
+  }
+  if (!force && navigator.onLine === false) {
+    return false;
+  }
 
   atlasVersionAwarenessState.checking = true;
   atlasVersionAwarenessState.lastError = null;
 
+  if (force || userInitiated) {
+    atlasVersionControlState("checking");
+  }
+
   try {
-    const remote = await atlasFetchVersionManifest();
+    const stamp = Date.now();
+    const remote = await atlasFetchVersionManifest(stamp);
+    const comparison = atlasCompareBuildNumbers(
+      remote.build,
+      ATLAS_BUILD
+    );
 
     atlasVersionAwarenessState.remoteBuild = remote.build;
-    atlasVersionAwarenessState.remoteToken = remote.token || null;
-    atlasVersionAwarenessState.lastCheckedAt = Date.now();
+    atlasVersionAwarenessState.remoteToken =
+      remote.token || null;
+    atlasVersionAwarenessState.lastCheckedAt =
+      Date.now();
 
-    if (atlasCompareBuildNumbers(remote.build, ATLAS_BUILD) > 0) {
-      atlasVersionShowUpdate(remote.build, remote.token);
+    if (comparison > 0) {
+      const publication =
+        await atlasVerifyRemotePublication(remote);
+
+      if (!publication.ok) {
+        atlasVersionShowPublishing(
+          remote.build,
+          remote.token,
+          publication
+        );
+        return false;
+      }
+
+      atlasVersionShowUpdate(
+        remote.build,
+        remote.token,
+        publication
+      );
       return true;
+    }
+
+    if (comparison < 0) {
+      atlasVersionShowPublishing(
+        ATLAS_BUILD,
+        ATLAS_ASSET_TOKEN,
+        {
+          ok: false,
+          reason: "manifest_behind_loaded_app",
+          remote
+        }
+      );
+      return false;
+    }
+
+    if (force || userInitiated) {
+      const publication =
+        await atlasVerifyRemotePublication(remote);
+
+      if (!publication.ok) {
+        atlasVersionShowPublishing(
+          remote.build,
+          remote.token,
+          publication
+        );
+        return false;
+      }
+    }
+
+    const runtime = atlasVersionRuntimeIdentity();
+    if (!runtime.ok) {
+      atlasVersionShowRepair(
+        remote.build,
+        remote.token
+      );
+      return false;
     }
 
     atlasVersionHideUpdate();
@@ -1524,16 +1164,19 @@ async function atlasVersionCheck(options = {}) {
     );
 
     const expected = atlasVersionExpectedUpdateRead();
-    if (
+    atlasVersionShowFailure(
       expected.build
-      && atlasCompareBuildNumbers(expected.build, ATLAS_BUILD) > 0
-    ) {
-      atlasVersionShowFailure(expected.build, expected.token);
-    } else {
-      atlasVersionControlState("current");
-    }
+      || atlasVersionAwarenessState.remoteBuild
+      || ATLAS_BUILD,
+      expected.token
+      || atlasVersionAwarenessState.remoteToken
+      || ATLAS_ASSET_TOKEN
+    );
 
-    console.warn("Vérification de version différée :", error);
+    console.warn(
+      "Vérification de version différée :",
+      error
+    );
     return false;
   } finally {
     atlasVersionAwarenessState.checking = false;
@@ -1541,18 +1184,25 @@ async function atlasVersionCheck(options = {}) {
 }
 
 function atlasBuildVersionRefreshUrl(
-  remoteBuild = atlasVersionAwarenessState.remoteBuild || ATLAS_BUILD,
-  remoteToken = atlasVersionAwarenessState.remoteToken || "",
-  currentHref = window.location.href,
+  remoteBuild =
+    atlasVersionAwarenessState.remoteBuild
+    || ATLAS_BUILD,
+  remoteToken =
+    atlasVersionAwarenessState.remoteToken
+    || ATLAS_ASSET_TOKEN,
+  currentHref =
+    document.baseURI || window.location.href,
   stamp = Date.now()
 ) {
   const url = new URL(currentHref);
-  url.searchParams.set("build", String(remoteBuild || ATLAS_BUILD));
-  if (remoteToken) {
-    url.searchParams.set("asset_token", String(remoteToken));
-  } else {
-    url.searchParams.delete("asset_token");
-  }
+  url.searchParams.set(
+    "build",
+    String(remoteBuild || ATLAS_BUILD)
+  );
+  url.searchParams.set(
+    "asset_token",
+    String(remoteToken || ATLAS_ASSET_TOKEN)
+  );
   url.searchParams.set("_refresh", String(stamp));
   url.hash = "";
   return url.toString();
@@ -1577,43 +1227,102 @@ async function atlasClearSameOriginCacheStorage() {
   }
 }
 
-async function atlasApplyVersionUpdate() {
-  if (atlasVersionAwarenessState.applying) return false;
+function atlasVersionNavigateToUpdate(target) {
+  window.location.replace(target);
+  return true;
+}
+
+async function atlasApplyVersionUpdate(options = {}) {
+  if (atlasVersionAwarenessState.applying) {
+    return false;
+  }
 
   atlasVersionConfirmationClear();
 
   const { control } = atlasVersionControlElements();
   const requestedBuild = String(
-    control?.dataset?.remoteBuild
+    options.build
+    || control?.dataset?.remoteBuild
     || atlasVersionAwarenessState.remoteBuild
-    || ""
+    || ATLAS_BUILD
   ).trim();
   const requestedToken = String(
-    control?.dataset?.remoteToken
+    options.token
+    || control?.dataset?.remoteToken
     || atlasVersionAwarenessState.remoteToken
-    || ""
+    || ATLAS_ASSET_TOKEN
   ).trim();
 
   atlasVersionAwarenessState.applying = true;
   atlasVersionControlState("applying", {
-    build: requestedBuild || ATLAS_BUILD,
+    build: requestedBuild,
     token: requestedToken
   });
 
   try {
     const remote = await atlasFetchVersionManifest();
+    const publication =
+      await atlasVerifyRemotePublication(remote);
 
-    if (atlasCompareBuildNumbers(remote.build, ATLAS_BUILD) <= 0) {
-      atlasVersionExpectedUpdateClear();
-      atlasVersionHideUpdate();
-      atlasVersionRefreshUrlCleanup();
+    if (!publication.ok) {
+      atlasVersionShowPublishing(
+        remote.build,
+        remote.token,
+        publication
+      );
       return false;
     }
 
-    atlasVersionAwarenessState.remoteBuild = remote.build;
-    atlasVersionAwarenessState.remoteToken = remote.token || null;
+    const comparison = atlasCompareBuildNumbers(
+      remote.build,
+      ATLAS_BUILD
+    );
+    const repairCurrent =
+      comparison === 0
+      && (
+        options.allowSameBuild === true
+        || control?.dataset?.state === "repair"
+      );
 
-    atlasVersionExpectedUpdateWrite(remote.build, remote.token);
+    if (comparison < 0) {
+      atlasVersionShowPublishing(
+        ATLAS_BUILD,
+        ATLAS_ASSET_TOKEN,
+        {
+          ok: false,
+          reason: "manifest_behind_loaded_app",
+          remote
+        }
+      );
+      return false;
+    }
+
+    if (comparison === 0 && !repairCurrent) {
+      const runtime = atlasVersionRuntimeIdentity();
+      if (!runtime.ok) {
+        atlasVersionShowRepair(
+          remote.build,
+          remote.token
+        );
+      } else {
+        atlasVersionExpectedUpdateClear();
+        atlasVersionHideUpdate();
+        atlasVersionRefreshUrlCleanup();
+      }
+      return false;
+    }
+
+    atlasVersionAwarenessState.remoteBuild =
+      remote.build;
+    atlasVersionAwarenessState.remoteToken =
+      remote.token || null;
+    atlasVersionAwarenessState.remotePublication =
+      publication;
+
+    atlasVersionExpectedUpdateWrite(
+      remote.build,
+      remote.token
+    );
     await atlasClearSameOriginCacheStorage();
 
     const target = atlasBuildVersionRefreshUrl(
@@ -1621,37 +1330,67 @@ async function atlasApplyVersionUpdate() {
       remote.token
     );
 
-    window.location.replace(target);
-    return true;
+    return atlasVersionNavigateToUpdate(target);
   } catch (error) {
     atlasVersionAwarenessState.lastError = String(
       error?.message || error
     );
 
     atlasVersionShowFailure(
-      requestedBuild
-      || atlasVersionAwarenessState.remoteBuild
-      || ATLAS_BUILD,
+      requestedBuild,
       requestedToken
-      || atlasVersionAwarenessState.remoteToken
-      || ""
     );
 
-    console.warn("Actualisation de version impossible :", error);
+    console.warn(
+      "Actualisation de version impossible :",
+      error
+    );
     return false;
+  } finally {
+    atlasVersionAwarenessState.applying = false;
   }
+}
+
+async function atlasVersionControlAction() {
+  const { control } = atlasVersionControlElements();
+  const mode = String(
+    control?.dataset?.state || "current"
+  );
+
+  if (mode === "applying") return false;
+
+  if (mode === "available") {
+    return atlasApplyVersionUpdate();
+  }
+
+  if (mode === "repair") {
+    return atlasApplyVersionUpdate({
+      allowSameBuild: true
+    });
+  }
+
+  return atlasVersionCheck({
+    force: true,
+    userInitiated: true
+  });
 }
 
 function atlasVersionRefreshUrlCleanup() {
   const url = new URL(window.location.href);
-  const managed = ["_refresh", "build", "asset_token"];
+  const managed = [
+    "_refresh",
+    "build",
+    "asset_token"
+  ];
   const hadManagedParameter = managed.some(
     name => url.searchParams.has(name)
   );
 
   if (!hadManagedParameter) return false;
 
-  managed.forEach(name => url.searchParams.delete(name));
+  managed.forEach(
+    name => url.searchParams.delete(name)
+  );
   window.history.replaceState(
     {},
     "",
@@ -1662,14 +1401,33 @@ function atlasVersionRefreshUrlCleanup() {
 
 function atlasVersionResolveExpectedUpdate() {
   const expected = atlasVersionExpectedUpdateRead();
+  const runtime = atlasVersionRuntimeIdentity();
 
   if (!expected.build) {
     atlasVersionRefreshUrlCleanup();
+
+    if (!runtime.ok) {
+      atlasVersionShowRepair(
+        ATLAS_BUILD,
+        ATLAS_ASSET_TOKEN
+      );
+      return "repair";
+    }
+
     atlasVersionControlState("current");
     return "none";
   }
 
-  if (atlasCompareBuildNumbers(ATLAS_BUILD, expected.build) >= 0) {
+  const buildReached =
+    atlasCompareBuildNumbers(
+      ATLAS_BUILD,
+      expected.build
+    ) >= 0;
+  const tokenReached =
+    !expected.token
+    || ATLAS_ASSET_TOKEN === expected.token;
+
+  if (buildReached && tokenReached && runtime.ok) {
     atlasVersionExpectedUpdateClear();
     atlasVersionRefreshUrlCleanup();
     atlasVersionShowInstalled(ATLAS_BUILD);
@@ -1677,41 +1435,66 @@ function atlasVersionResolveExpectedUpdate() {
   }
 
   atlasVersionRefreshUrlCleanup();
-  atlasVersionShowFailure(expected.build, expected.token);
+
+  if (buildReached) {
+    atlasVersionShowRepair(
+      expected.build || ATLAS_BUILD,
+      expected.token || ATLAS_ASSET_TOKEN
+    );
+    return "repair";
+  }
+
+  atlasVersionShowFailure(
+    expected.build,
+    expected.token
+  );
   return "incomplete";
 }
 
 function atlasVersionAwarenessSchedule(delay = 2500) {
-  window.clearTimeout(atlasVersionAwarenessState.timer);
-  atlasVersionAwarenessState.timer = window.setTimeout(
-    () => void atlasVersionCheck(),
-    Math.max(0, Number(delay) || 0)
+  window.clearTimeout(
+    atlasVersionAwarenessState.timer
   );
+  atlasVersionAwarenessState.timer =
+    window.setTimeout(
+      () => void atlasVersionCheck(),
+      Math.max(0, Number(delay) || 0)
+    );
 }
 
 function atlasVersionAwarenessInit() {
-  if (atlasVersionAwarenessState.initialized) return true;
+  if (atlasVersionAwarenessState.initialized) {
+    return true;
+  }
   atlasVersionAwarenessState.initialized = true;
 
-  document
-    .getElementById("atlasVersionControl")
-    ?.addEventListener(
-      "click",
-      () => void atlasApplyVersionUpdate()
-    );
+  const control =
+    document.getElementById("atlasVersionControl");
 
-  const expectedStatus = atlasVersionResolveExpectedUpdate();
+  if (control) {
+    control.disabled = false;
+    control.addEventListener(
+      "click",
+      () => void atlasVersionControlAction()
+    );
+  }
+
+  const expectedStatus =
+    atlasVersionResolveExpectedUpdate();
 
   window.addEventListener(
     "online",
     () => atlasVersionAwarenessSchedule(800)
   );
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      atlasVersionAwarenessSchedule(700);
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (document.visibilityState === "visible") {
+        atlasVersionAwarenessSchedule(700);
+      }
     }
-  });
+  );
 
   window.setInterval(
     () => void atlasVersionCheck(),
@@ -1722,6 +1505,7 @@ function atlasVersionAwarenessInit() {
     expectedStatus === "confirmed"
       ? ATLAS_VERSION_CONFIRMATION_MS + 800
       : expectedStatus === "incomplete"
+        || expectedStatus === "repair"
         ? 900
         : 2800
   );
@@ -6204,7 +5988,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.46
+   Market Core V2.0-Alpha · Build 28.2.47
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -10336,7 +10120,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.46 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.47 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -10557,7 +10341,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.46"
+      source: "target-top5-cycle-28.2.47"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -12494,17 +12278,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.46" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.46" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.46" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -13588,7 +13372,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.46",
+  interface: "Build 28.2.47",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -15839,7 +15623,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.46`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.47`
   );
 }
 
@@ -15914,8 +15698,6 @@ function atlasV2ApplyMode(mode, options = {}) {
   const role = administrator ? "administrator" : operator ? "operator" : "public";
   document.documentElement.dataset.atlasRole = role;
   document.body.dataset.atlasRole = role;
-
-  if (typeof atlasMarketRegistryRender === "function") atlasMarketRegistryRender();
 
   if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
   if (description) description.textContent = administrator
@@ -16057,14 +15839,6 @@ function atlasV2ApplyMathDock(position, options = {}) {
 
   atlasV2SyncMathRail();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
-
-  if (atlasParallelMarketDomain?.() === "metals") {
-    math.hidden = true;
-    math.setAttribute("aria-hidden", "true");
-    topDock.hidden = true;
-    topDock.setAttribute("aria-hidden", "true");
-  }
-
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, next);
 
   atlasScheduleStableChartResize();
@@ -20025,7 +19799,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.46 — Parallel Markets Foundation
+   Build 28.2.47 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -20246,403 +20020,6 @@ function atlasParallelMarketSetMetalsMarketFilter(filter) {
   return value;
 }
 
-
-function atlasMarketRegistryArray(value) {
-  return Array.isArray(value) ? value : [];
-}
-
-function atlasMarketRegistrySourceToneClass(tone) {
-  const normalized = String(tone || "").toLowerCase();
-  return [
-    "ready",
-    "candidate",
-    "license",
-    "structural",
-    "historical",
-    "macro",
-    "future",
-    "reference",
-    "zero",
-    "free",
-    "blocked"
-  ].includes(normalized)
-    ? `is-${normalized}`
-    : "is-reference";
-}
-
-function atlasMarketRegistryAssetMeta(assetId) {
-  const id = String(assetId || "");
-  const loaded = atlasMarketRegistryArray(
-    atlasMarketRegistryState.assets
-  ).find(asset => String(asset?.id || "") === id);
-
-  if (loaded) return loaded;
-
-  return ATLAS_METALS_ASSETS.find(
-    asset => asset.id === id
-  ) || ATLAS_METALS_ASSETS[0];
-}
-
-function atlasMarketRegistryMetalSources() {
-  return atlasMarketRegistryArray(
-    atlasMarketRegistryState.sources
-  )
-    .filter(source => {
-      const domains = atlasMarketRegistryArray(source?.domains);
-      return (
-        domains.includes("metals")
-        || domains.includes("commodities")
-        || domains.includes("macro")
-      );
-    })
-    .sort((left, right) => {
-      const orderDifference =
-        Number(left?.catalogue_order || 9999)
-        - Number(right?.catalogue_order || 9999);
-      if (orderDifference) return orderDifference;
-
-      return String(left?.name || "").localeCompare(
-        String(right?.name || ""),
-        "fr"
-      );
-    });
-}
-
-function atlasMarketRegistrySourcesForAsset(assetId) {
-  const id = String(assetId || "");
-
-  return atlasMarketRegistryMetalSources()
-    .filter(source => {
-      const ids = atlasMarketRegistryArray(source?.asset_ids);
-      return ids.includes(id);
-    })
-    .sort((left, right) => {
-      const priorityDifference =
-        Number(left?.priority || 999)
-        - Number(right?.priority || 999);
-      if (priorityDifference) return priorityDifference;
-
-      return Number(left?.catalogue_order || 9999)
-        - Number(right?.catalogue_order || 9999);
-    });
-}
-
-function atlasMarketRegistryCreateSourceRow(source, assetId = null) {
-  const row = document.createElement("span");
-  const name = document.createElement("b");
-  const description = document.createElement("small");
-  const status = document.createElement("em");
-
-  name.textContent = String(
-    source?.short_name || source?.name || "Source"
-  );
-
-  const note = assetId
-    ? source?.asset_notes?.[assetId]
-    : null;
-
-  description.textContent = String(
-    note
-    || source?.coverage_summary
-    || "Rôle non qualifié"
-  );
-
-  status.textContent = String(
-    source?.status_label || "À QUALIFIER"
-  );
-  status.classList.add(
-    atlasMarketRegistrySourceToneClass(
-      source?.status_tone
-    )
-  );
-
-  row.dataset.marketSourceId = String(source?.id || "");
-  row.dataset.marketSourceStatus = String(
-    source?.status || "unknown"
-  );
-  row.append(name, description, status);
-  return row;
-}
-
-
-function atlasMarketRegistryNames(sources, fallback = "Aucune") {
-  const names = atlasMarketRegistryArray(sources)
-    .map(source => String(source?.short_name || source?.name || "").trim())
-    .filter(Boolean);
-  return names.length ? [...new Set(names)].join(" · ") : fallback;
-}
-
-function atlasMarketRegistrySourcesByPolicy(assetId, policyGroups, options = {}) {
-  const allowed = new Set(atlasMarketRegistryArray(policyGroups));
-  const candidates = options.allMetals
-    ? atlasMarketRegistryMetalSources()
-    : atlasMarketRegistrySourcesForAsset(assetId);
-  return candidates.filter(source => allowed.has(String(source?.policy_group || "")));
-}
-
-function atlasMarketRegistryClarityRow(title, description, status, tone = "reference") {
-  const row = document.createElement("span");
-  const name = document.createElement("b");
-  const detail = document.createElement("small");
-  const state = document.createElement("em");
-  name.textContent = String(title || "");
-  detail.textContent = String(description || "");
-  state.textContent = String(status || "");
-  state.classList.add(atlasMarketRegistrySourceToneClass(tone));
-  row.append(name, detail, state);
-  return row;
-}
-
-function atlasMarketRegistryIsAdministrator() {
-  return document.body?.dataset?.atlasRole === "administrator";
-}
-
-function atlasMarketRegistryRenderSourceDock(assetId = null) {
-  const asset = atlasMarketRegistryAssetMeta(assetId || atlasParallelMarketActiveMetal().id);
-  const list = document.getElementById("atlasMetalsSourceList");
-  const stateLabel = document.getElementById("atlasMetalsSourceDockState");
-  if (!list || !asset) return;
-
-  const publicSources = atlasMarketRegistrySourcesByPolicy(asset.id, ["public_zero_cost"]);
-  const macroSources = atlasMarketRegistrySourcesByPolicy(asset.id, ["free_account_optional"])
-    .filter(source => atlasMarketRegistryArray(source?.roles)
-      .some(role => ["rates", "inflation", "dollar", "industrial_cycle"].includes(role)));
-  const references = atlasMarketRegistrySourcesByPolicy(asset.id, ["official_reference"]);
-  const freeOptions = atlasMarketRegistrySourcesByPolicy(asset.id, ["free_optional"]);
-
-  list.replaceChildren(
-    atlasMarketRegistryClarityRow("Prix actuels", "Aucune source gratuite fiable connectée", "NON CONNECTÉS", "blocked"),
-    atlasMarketRegistryClarityRow("Données publiques", atlasMarketRegistryNames(publicSources, "Aucune source publique spécifique"), "PRÉPARÉES", "zero"),
-    atlasMarketRegistryClarityRow("Macro", atlasMarketRegistryNames(macroSources, "Aucune couche macro") + " · non activée", "NON ACTIVÉE", "free"),
-    atlasMarketRegistryClarityRow("Références", atlasMarketRegistryNames(references, "Aucune licence nécessaire"), references.length ? "CONSULTATION" : "AUCUNE", "reference")
-  );
-  if (stateLabel) stateLabel.textContent = "0 prix";
-  setText(document.getElementById("atlasMetalsSourceDockTitle"), `${asset.name} · ${asset.symbol}`);
-  list.dataset.freeOptionCount = String(freeOptions.length);
-}
-
-function atlasMarketRegistryRenderCatalog() {
-  const clarity = document.getElementById("atlasMetalsClarityList");
-  const technicalList = document.getElementById("atlasMetalsRegistryList");
-  const technicalDetails = document.getElementById("atlasMetalsTechnicalRegistry");
-  const technicalSummary = document.getElementById("atlasMetalsTechnicalRegistrySummary");
-  const summary = document.getElementById("atlasMetalsRegistrySummary");
-  if (!clarity || !technicalList) return;
-
-  const sourceList = atlasMarketRegistryMetalSources();
-  const publicSources = sourceList.filter(source => source?.policy_group === "public_zero_cost");
-  const freeOptions = sourceList.filter(source => source?.policy_group === "free_optional");
-  const macroSources = sourceList.filter(source => source?.policy_group === "free_account_optional"
-    && atlasMarketRegistryArray(source?.roles)
-      .some(role => ["rates", "inflation", "dollar", "industrial_cycle"].includes(role)));
-
-  clarity.replaceChildren(
-    atlasMarketRegistryClarityRow("Prix actuels", "Aucune source gratuite fiable connectée", "NON CONNECTÉS", "blocked"),
-    atlasMarketRegistryClarityRow("Données publiques", atlasMarketRegistryNames(publicSources, "USGS · IEA · RMIS · Banque mondiale"), "PRÉPARÉES", "zero"),
-    atlasMarketRegistryClarityRow("Macro", atlasMarketRegistryNames(macroSources, "FRED") + " · non activée", "NON ACTIVÉE", "free"),
-    atlasMarketRegistryClarityRow("Options gratuites limitées", atlasMarketRegistryNames(freeOptions, "Aucune") + " · aucun compte créé", "NON ACTIVÉES", "free")
-  );
-
-  technicalList.replaceChildren();
-  sourceList.forEach(source => technicalList.append(atlasMarketRegistryCreateSourceRow(source)));
-  const administrator = atlasMarketRegistryIsAdministrator();
-  if (technicalDetails) {
-    technicalDetails.hidden = !administrator;
-    technicalDetails.setAttribute("aria-hidden", administrator ? "false" : "true");
-    if (!administrator) technicalDetails.open = false;
-  }
-  if (technicalSummary) technicalSummary.textContent = `Détails techniques · ${sourceList.length} sources`;
-  if (summary) {
-    const origin = atlasMarketRegistryState.status === "loaded" ? "registres JSON locaux" : "fallback intégré";
-    summary.textContent = `Données publiques préparées · détails techniques en Administration · ${origin}`;
-  }
-  clarity.dataset.registryStatus = atlasMarketRegistryState.status;
-  technicalList.dataset.registryStatus = atlasMarketRegistryState.status;
-}
-
-function atlasMarketRegistryRender() {
-  atlasMarketRegistryRenderCatalog();
-  atlasMarketRegistryRenderSourceDock(
-    atlasParallelMarketActiveMetal().id
-  );
-
-  const metals = atlasParallelMarketMetalsState();
-  metals.registryStatus = atlasMarketRegistryState.status;
-  metals.registryOrigin = atlasMarketRegistryState.origin;
-}
-
-function atlasMarketRegistryNormalizeAssets(payload) {
-  const assets = atlasMarketRegistryArray(payload?.assets)
-    .filter(asset => {
-      return (
-        typeof asset?.id === "string"
-        && typeof asset?.name === "string"
-        && typeof asset?.symbol === "string"
-      );
-    })
-    .map(asset => {
-      const fallback = ATLAS_METALS_ASSETS.find(
-        item => item.id === asset.id
-      ) || {};
-
-      return Object.freeze({
-        ...fallback,
-        ...asset,
-        unit:
-          asset.display_unit
-          || fallback.unit
-          || "Unité à qualifier",
-        family:
-          String(
-            asset.family_label
-            || fallback.family
-            || "Non qualifiée"
-          ).toLowerCase()
-      });
-    });
-
-  const knownIds = new Set(
-    ATLAS_METALS_ASSETS.map(asset => asset.id)
-  );
-
-  if (
-    assets.length !== ATLAS_METALS_ASSETS.length
-    || assets.some(asset => !knownIds.has(asset.id))
-  ) {
-    throw new Error("Registre actifs incomplet");
-  }
-
-  return assets;
-}
-
-function atlasMarketRegistryNormalizeSources(payload) {
-  const sources = atlasMarketRegistryArray(payload?.sources)
-    .filter(source => {
-      return (
-        typeof source?.id === "string"
-        && typeof source?.name === "string"
-        && Array.isArray(source?.domains)
-        && typeof source?.status === "string"
-      );
-    })
-    .map(source => Object.freeze({ ...source }));
-
-  if (sources.length < 10) {
-    throw new Error("Registre sources incomplet");
-  }
-
-  return sources;
-}
-
-async function atlasMarketRegistryFetchJson(path) {
-  const separator = String(path).includes("?") ? "&" : "?";
-  const response = await fetch(
-    `${path}${separator}build=${encodeURIComponent(ATLAS_BUILD)}`,
-    {
-      cache: "no-store",
-      headers: {
-        "Accept": "application/json"
-      }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Registre ${path} indisponible (${response.status})`
-    );
-  }
-
-  return response.json();
-}
-
-async function atlasMarketRegistryLoad() {
-  atlasMarketRegistryState.status = "loading";
-  atlasMarketRegistryState.error = null;
-  atlasMarketRegistryRender();
-
-  try {
-    const [
-      assetsPayload,
-      sourcesPayload,
-      contractPayload,
-      bridgePayload
-    ] = await Promise.all([
-      atlasMarketRegistryFetchJson(
-        ATLAS_MARKET_REGISTRY_PATHS.assets
-      ),
-      atlasMarketRegistryFetchJson(
-        ATLAS_MARKET_REGISTRY_PATHS.sources
-      ),
-      atlasMarketRegistryFetchJson(
-        ATLAS_MARKET_REGISTRY_PATHS.contract
-      ),
-      atlasMarketRegistryFetchJson(
-        ATLAS_MARKET_REGISTRY_PATHS.bridge
-      )
-    ]);
-
-    const assets = atlasMarketRegistryNormalizeAssets(
-      assetsPayload
-    );
-    const sources = atlasMarketRegistryNormalizeSources(
-      sourcesPayload
-    );
-
-    if (
-      contractPayload?.schema
-      !== "agent_crypto_market_data_contract_v1"
-    ) {
-      throw new Error("Contrat de données incompatible");
-    }
-
-    if (
-      bridgePayload?.schema
-      !== "agent_crypto_bridge_market_adapter_contract_v1"
-    ) {
-      throw new Error("Contrat Bridge incompatible");
-    }
-
-    atlasMarketRegistryState.status = "loaded";
-    atlasMarketRegistryState.origin = "json_local";
-    atlasMarketRegistryState.assets = assets;
-    atlasMarketRegistryState.sources = sources;
-    atlasMarketRegistryState.contract = {
-      schema: contractPayload.schema,
-      states: atlasMarketRegistryArray(
-        contractPayload.states
-      ),
-      cache_namespaces: atlasMarketRegistryArray(
-        contractPayload.cache_namespaces
-      ).filter(name => String(name).startsWith(
-        "cache_metals_"
-      ))
-    };
-    atlasMarketRegistryState.bridge = bridgePayload;
-    atlasMarketRegistryState.loadedAt =
-      new Date().toISOString();
-    atlasMarketRegistryState.error = null;
-  } catch (error) {
-    atlasMarketRegistryState.status = "fallback";
-    atlasMarketRegistryState.origin = "fallback_intégré";
-    atlasMarketRegistryState.assets = ATLAS_METALS_ASSETS;
-    atlasMarketRegistryState.sources =
-      ATLAS_METALS_SOURCE_FALLBACK;
-    atlasMarketRegistryState.contract =
-      ATLAS_MARKET_CONTRACT_FALLBACK;
-    atlasMarketRegistryState.bridge = {
-      schema:
-        "agent_crypto_bridge_market_adapter_contract_v1",
-      routes: []
-    };
-    atlasMarketRegistryState.error =
-      String(error?.message || error || "Erreur registre");
-  }
-
-  atlasMarketRegistryRender();
-  atlasParallelMarketRenderMetals();
-  return atlasMarketRegistryState.status;
-}
-
 function atlasParallelMarketRenderMetalsMarket() {
   const metals = atlasParallelMarketMetalsState();
   const selected = new Set(metals.selectionIds);
@@ -20716,7 +20093,7 @@ function atlasParallelMarketRenderMetalsMarket() {
 
   setText(
     document.getElementById("atlasMetalsHeaderDecision"),
-    `PANIER MÉTAUX ${selected.size}/5 · PRIX 0/5`
+    `PANIER MÉTAUX ${selected.size}/5 · COTATIONS 0/5`
   );
   setText(
     document.getElementById("atlasMetalsLiveStatus"),
@@ -20726,8 +20103,7 @@ function atlasParallelMarketRenderMetalsMarket() {
 
 function atlasParallelMarketRenderMetalsDetail() {
   const metals = atlasParallelMarketMetalsState();
-  const baseAsset = atlasParallelMarketActiveMetal();
-  const asset = atlasMarketRegistryAssetMeta(baseAsset.id);
+  const asset = atlasParallelMarketActiveMetal();
   const selected = new Set(metals.selectionIds);
 
   setText(document.getElementById("atlasMetalsDetailName"), asset.name);
@@ -20741,7 +20117,10 @@ function atlasParallelMarketRenderMetalsDetail() {
     document.getElementById("atlasMetalsDetailSelection"),
     selected.has(asset.id) ? "Incluse" : "Hors sélection"
   );
-  atlasMarketRegistryRenderSourceDock(asset.id);
+  setText(
+    document.getElementById("atlasMetalsSourceDockTitle"),
+    `${asset.name} · ${asset.symbol}`
+  );
 
   const mode = metals.view === "base100" ? "Base 100" : "Prix";
   const period = atlasChartPeriodLabel(metals.period);
@@ -20756,7 +20135,7 @@ function atlasParallelMarketRenderMetalsDetail() {
     status.textContent =
       `${count} actif${count > 1 ? "s" : ""} sélectionné`
       + `${count > 1 ? "s" : ""} · ${mode} · ${period} · `
-      + "prix actuels non connectés · données publiques préparées";
+      + "source de cotation non connectée";
   }
 }
 
@@ -20838,7 +20217,6 @@ function atlasParallelMarketRenderMetals() {
 
   atlasParallelMarketRenderMetalsDetail();
   atlasParallelMarketRenderMetalsMarket();
-  atlasMarketRegistryRenderCatalog();
 }
 
 function atlasParallelMarketRender() {
@@ -20873,14 +20251,6 @@ function atlasParallelMarketRender() {
   const metalsLiveStatus = document.getElementById("atlasMetalsLiveStatus");
   const metalsAnalysisFoundation = document.getElementById(
     "atlasMetalsAnalysisFoundation"
-  );
-  const mathPanel = document.getElementById("math");
-  const mathTopDock = document.getElementById("mathTopDock");
-  const cryptoAnalysisFamily = document.querySelector(
-    ".atlas-layout-family-analysis"
-  );
-  const cryptoMultiHorizon = document.getElementById(
-    "multi-horizon"
   );
 
   document.documentElement.dataset.atlasMarketDomain = domain;
@@ -20971,26 +20341,6 @@ function atlasParallelMarketRender() {
     metalsActive,
     "market-grid"
   );
-  atlasParallelMarketHiddenState(
-    mathPanel,
-    metalsActive,
-    "math-core"
-  );
-  atlasParallelMarketHiddenState(
-    mathTopDock,
-    metalsActive,
-    "math-top-dock"
-  );
-  atlasParallelMarketHiddenState(
-    cryptoAnalysisFamily,
-    metalsActive,
-    "crypto-analysis-family"
-  );
-  atlasParallelMarketHiddenState(
-    cryptoMultiHorizon,
-    metalsActive,
-    "crypto-multi-horizon"
-  );
   if (metalsMarketArea) metalsMarketArea.hidden = !metalsActive;
 
   if (cryptoDetail) {
@@ -21055,23 +20405,6 @@ function atlasParallelMarketRender() {
       } catch {}
       atlasRedrawCurrentChartV2?.();
     });
-  }
-
-  if (mathPanel) {
-    mathPanel.setAttribute(
-      "aria-hidden",
-      metalsActive
-        ? "true"
-        : (mathPanel.hidden ? "true" : "false")
-    );
-  }
-  if (mathTopDock) {
-    mathTopDock.setAttribute(
-      "aria-hidden",
-      metalsActive
-        ? "true"
-        : (mathTopDock.hidden ? "true" : "false")
-    );
   }
 
   atlasWorkspaceRenderStrip?.();
@@ -21211,8 +20544,6 @@ function atlasParallelMarketInit() {
   );
 
   atlasParallelMarketMetalsRead();
-  atlasMarketRegistryRender();
-  void atlasMarketRegistryLoad();
 
   switchButton?.addEventListener("click", event => {
     event.preventDefault();
@@ -21482,7 +20813,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.46 — Comparison Memory Slots A / B / C
+   Build 28.2.47 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -21832,7 +21163,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.46`
+        source: `workspace-slot-${slot}-28.2.47`
       });
     } else {
       requestAnimationFrame(() => {
@@ -23317,7 +22648,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.46 annulée :", error);
+    console.warn("Transaction scanner 28.2.47 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -23500,7 +22831,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.46 :", error);
+    console.error("Scanner 28.2.47 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -23589,7 +22920,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.46 non capturé :", error);
+      console.error("Scanner 28.2.47 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -23599,7 +22930,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.46 :", error);
+    console.error("Démarrage scanner 28.2.47 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -23613,7 +22944,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.46"
+    source: "button-28.2.47"
   });
 }
 

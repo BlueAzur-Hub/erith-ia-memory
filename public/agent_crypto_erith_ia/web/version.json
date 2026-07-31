@@ -1,13 +1,30 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.46",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.46",
-  "published_at": "2026-07-31T21:20:28Z",
+  "build": "28.2.47",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.47",
+  "published_at": "2026-07-31T21:52:11Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
     "atlas_aerith_dialogue_chamber_background": "assets/images/atlas_aerith_dialogue_chamber_bg.png"
+  },
+  "coherence_contract": {
+    "index": {
+      "path": "index.html",
+      "build_marker": "meta[name=atlas-build]",
+      "token_marker": "meta[name=atlas-asset-token]"
+    },
+    "app": {
+      "path": "app.js",
+      "build_marker": "ATLAS_BUILD",
+      "token_marker": "ATLAS_ASSET_TOKEN"
+    },
+    "style": {
+      "path": "style.css",
+      "build_marker": "ATLAS_ASSET_BUILD",
+      "token_marker": "ATLAS_ASSET_TOKEN"
+    }
   },
   "registries": {
     "market_assets": "market_asset_registry.json",
@@ -15,15 +32,12 @@
     "market_data_contract": "market_data_contract.json",
     "bridge_market_adapter_contract": "bridge_market_adapter_contract.json"
   },
-  "policy": {
-    "default_cost_eur": 0,
-    "paid_source_activation": "explicit_operator_decision_required",
-    "free_trial_with_card": "forbidden"
-  },
-  "workspace_recovery": {
-    "metals_full_width": true,
-    "source_band": true,
-    "crypto_math_isolated": true,
-    "crypto_analysis_isolated": true
+  "recovery_base": {
+    "visual": "28.2.43",
+    "registries": "28.2.45",
+    "rejected_visual_layers": [
+      "28.2.45",
+      "28.2.46"
+    ]
   }
 }
