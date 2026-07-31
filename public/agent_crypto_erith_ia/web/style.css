@@ -19606,3 +19606,74 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   transition: color .14s ease, text-shadow .14s ease;
 }
 
+/* ==========================================================================
+   BUILD 28.2.16 — COMPARISON SERIES READINESS
+   Selected assets expose the real state of their historical series.
+   ========================================================================== */
+
+.market-comparison-meta {
+  display: grid;
+  min-width: 78px;
+  gap: 2px;
+  align-content: center;
+  justify-items: center;
+}
+
+.market-series-status {
+  display: block;
+  max-width: 106px;
+  overflow: hidden;
+  color: rgba(178,207,224,.72);
+  font: 800 6.2px/1.05 system-ui, sans-serif;
+  letter-spacing: .018em;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+
+.market-series-status[hidden] {
+  display: none !important;
+}
+
+.market-series-status.is-loading,
+.market-series-status.is-waiting {
+  color: rgba(132,214,255,.84);
+}
+
+.market-series-status.is-direct,
+.market-series-status.is-ready,
+.market-series-status.is-validated {
+  color: rgba(108,241,201,.90);
+}
+
+.market-series-status.is-cache {
+  color: rgba(145,207,255,.88);
+}
+
+.market-series-status.is-delayed,
+.market-series-status.is-archive {
+  color: rgba(255,205,112,.90);
+}
+
+.market-series-status.is-incomplete {
+  color: rgba(255,172,94,.92);
+}
+
+.market-series-status.is-spot-only,
+.market-series-status.is-unavailable {
+  color: rgba(255,117,149,.90);
+}
+
+@media (min-width: 851px) and (max-width: 1440px) {
+  .market-workspace-grid.math-dock-side
+  .market-snapshot-panel .market-comparison-meta {
+    min-width: 72px;
+  }
+
+  .market-workspace-grid.math-dock-side
+  .market-snapshot-panel .market-series-status {
+    max-width: 92px;
+    font-size: 5.9px;
+  }
+}
+

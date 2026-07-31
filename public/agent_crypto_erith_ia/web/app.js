@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.15 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.16 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.15";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.16";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -1786,6 +1786,16 @@ function atlasPatchMarketRowSnapshot(row, coin, selection) {
     toggle.textContent = compared ? "Retirer" : "Ajouter";
     const basketStatus = cells[7]?.querySelector?.(".market-basket-status");
     if (basketStatus) basketStatus.textContent = atlasMarketBasketStatus(coin, selection);
+
+    const readinessNode = cells[7]?.querySelector?.(".market-series-status");
+    const readiness = atlasComparisonSeriesReadiness(coin, selection);
+    if (readinessNode) {
+      readinessNode.hidden = !readiness.selected;
+      readinessNode.textContent = readiness.label;
+      readinessNode.title = readiness.title;
+      readinessNode.dataset.seriesState = readiness.state;
+      readinessNode.className = `market-series-status is-${readiness.state}`;
+    }
   }
 
   if (cells[8]) cells[8].textContent = score.score ?? "—";
@@ -4659,7 +4669,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.15
+   Market Core V2.0-Alpha · Build 28.2.16
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -7002,7 +7012,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   const previousRenderedIds = [...(state.dataBroker.comparison.renderedIds || [])];
 
   state.dataBroker.comparison.status = "loading";
-  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.pendingIds = [...ids];
   state.dataBroker.comparison.unavailableIds = [];
   state.dataBroker.comparison.results = {};
   state.dataBroker.comparison.renderedIds = previousRenderedIds;
@@ -7040,6 +7050,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     );
   }
   atlasRenderComparisonControls();
+  renderMarketTable();
 
   const fetched = [];
   for (let index = 0; index < coins.length; index += 1) {
@@ -7054,16 +7065,51 @@ async function renderComparisonAnalystPanel(options = {}) {
       );
     }
 
+    let fetchedItem;
     try {
-      fetched.push(await atlasFetchComparisonSeriesResilient(coin, period, { signal: controller.signal }));
+      fetchedItem = await atlasFetchComparisonSeriesResilient(
+        coin,
+        period,
+        { signal: controller.signal }
+      );
     } catch (error) {
       if (atlasComparisonAbortError(error)) return;
-      fetched.push({
+      fetchedItem = {
         coin,
-        result: { series: [], blocked: true, reason: String(error?.message || error) },
+        result: {
+          series: [],
+          blocked: true,
+          reason: String(error?.message || error)
+        },
         error
-      });
+      };
     }
+
+    fetched.push(fetchedItem);
+    state.dataBroker.comparison.pendingIds =
+      (state.dataBroker.comparison.pendingIds || [])
+        .filter(id => id !== coin.id);
+
+    if (
+      fetchedItem?.result
+      && !fetchedItem.result.blocked
+      && Array.isArray(fetchedItem.result.series)
+      && fetchedItem.result.series.length
+    ) {
+      state.dataBroker.comparison.results = {
+        ...(state.dataBroker.comparison.results || {}),
+        [coin.id]: fetchedItem.result
+      };
+    } else {
+      state.dataBroker.comparison.unavailableIds = [
+        ...new Set([
+          ...(state.dataBroker.comparison.unavailableIds || []),
+          coin.id
+        ])
+      ];
+    }
+
+    renderMarketTable();
   }
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
@@ -7204,6 +7250,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   }
 
   atlasRenderComparisonControls();
+  renderMarketTable();
   atlasChartSetPeriodButtons(period, false);
   state.chartEngineV2.loading = false;
   atlasRenderBrokerStrip();
@@ -8751,7 +8798,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.15"
+      source: "target-top5-cycle-28.2.16"
     });
   }
 
@@ -8804,6 +8851,166 @@ function atlasMarketBasketStatus(coin, selection = atlasComparisonIds()) {
   if (index >= 0) return `Panier ${index + 1}/${ATLAS_COMPARISON_MAX_SERIES}`;
   const free = Math.max(0, ATLAS_COMPARISON_MAX_SERIES - selection.length);
   return free > 0 ? `${free} place${free > 1 ? "s" : ""} libre${free > 1 ? "s" : ""}` : "Panier complet";
+}
+
+function atlasComparisonResultForCoin(coin, selection = atlasComparisonIds()) {
+  if (!coin?.id || !selection.includes(coin.id)) return null;
+
+  const comparisonResult = state.dataBroker?.comparison?.results?.[coin.id];
+  if (comparisonResult) return comparisonResult;
+
+  const chart = state.dataBroker?.chart;
+  if (
+    selection.length === 1
+    && chart?.status === "ready"
+    && chart?.coinId === coin.id
+    && atlasChartContextMatches(chart)
+  ) {
+    return chart.result || null;
+  }
+
+  return null;
+}
+
+function atlasComparisonSeriesReadiness(coin, selection = atlasComparisonIds()) {
+  const selected = !!coin?.id && selection.includes(coin.id);
+  if (!selected) {
+    return {
+      selected: false,
+      state: "available",
+      label: "",
+      title: "Actif non sélectionné"
+    };
+  }
+
+  const comparison = state.dataBroker?.comparison || {};
+  const result = atlasComparisonResultForCoin(coin, selection);
+  const pending = new Set(comparison.pendingIds || []).has(coin.id);
+  const unavailable = new Set(comparison.unavailableIds || []).has(coin.id);
+  const rendered = new Set(comparison.renderedIds || []).has(coin.id)
+    || (
+      selection.length === 1
+      && state.dataBroker?.chart?.status === "ready"
+      && state.dataBroker?.chart?.coinId === coin.id
+      && atlasChartContextMatches(state.dataBroker.chart)
+    );
+
+  if (pending || (comparison.status === "loading" && !result && !unavailable)) {
+    return {
+      selected: true,
+      state: "loading",
+      label: "Chargement…",
+      title: `Chargement de la série ${atlasChartPeriodLabel(state.chartPeriodDays)}`
+    };
+  }
+
+  if (result) {
+    const points = Math.max(
+      0,
+      Number(
+        result?.integrity?.metrics?.pointCount
+        ?? result?.series?.length
+        ?? 0
+      )
+    );
+    const rules = atlasChartRules(state.chartPeriodDays);
+    const integrityOk = result?.integrity?.ok !== false;
+    const coverageHours = Number(result?.integrity?.metrics?.coverageHours || 0);
+    const complete = integrityOk
+      && points >= Number(rules?.minPoints || 1)
+      && coverageHours >= Number(rules?.minCoverageHours || 0);
+
+    if (!complete) {
+      return {
+        selected: true,
+        state: "incomplete",
+        label: `Incomplète · ${points} pts`,
+        title: result?.integrity?.reason || "Série historique incomplète"
+      };
+    }
+
+    const freshness = atlasChartWorstFreshness(result, state.chartPeriodDays);
+    const normalizedMode = atlasChartSourceMode(result);
+    const rawMode = String(
+      result?.originalSourceMode
+      || result?.sourceMode
+      || ""
+    ).toLowerCase();
+    const sourceMode = normalizedMode === "direct" || rawMode.includes("direct")
+      ? "direct"
+      : normalizedMode === "cache" || rawMode.includes("cache")
+        ? "cache"
+        : normalizedMode;
+    const provider = atlasChartProviderLabel(result);
+
+    if (freshness === "archive") {
+      return {
+        selected: true,
+        state: "archive",
+        label: `Archive · ${points} pts`,
+        title: `${provider} · série réelle archivée · ${points} points`
+      };
+    }
+
+    if (freshness === "delayed") {
+      return {
+        selected: true,
+        state: sourceMode === "cache" ? "cache" : "delayed",
+        label: `${sourceMode === "cache" ? "Cache retardé" : "Direct retardé"} · ${points} pts`,
+        title: `${provider} · historique retardé · ${points} points`
+      };
+    }
+
+    if (sourceMode === "cache") {
+      return {
+        selected: true,
+        state: "cache",
+        label: `Cache récent · ${points} pts`,
+        title: `${provider} · cache historique récent · ${points} points`
+      };
+    }
+
+    if (sourceMode === "direct") {
+      return {
+        selected: true,
+        state: rendered ? "direct" : "validated",
+        label: `${rendered ? "Direct" : "Validée"} · ${points} pts`,
+        title: `${provider} · série historique ${rendered ? "affichée" : "validée"} · ${points} points`
+      };
+    }
+
+    return {
+      selected: true,
+      state: rendered ? "ready" : "validated",
+      label: `${rendered ? "Prête" : "Validée"} · ${points} pts`,
+      title: `${provider} · ${points} points historiques`
+    };
+  }
+
+  if (unavailable || ["partial", "blocked"].includes(comparison.status)) {
+    const quote = atlasCurrentQuoteForCoin(coin);
+    const spotOnly = atlasQuoteIsUsable(quote);
+    return {
+      selected: true,
+      state: spotOnly ? "spot-only" : "unavailable",
+      label: spotOnly ? "Prix direct seul" : "Indisponible",
+      title: spotOnly
+        ? "Prix courant disponible, historique non affichable"
+        : "Prix et historique indisponibles"
+    };
+  }
+
+  return {
+    selected: true,
+    state: "waiting",
+    label: "Historique en attente",
+    title: "Série sélectionnée, chargement historique non démarré"
+  };
+}
+
+function atlasComparisonSeriesReadinessMarkup(coin, selection = atlasComparisonIds()) {
+  const readiness = atlasComparisonSeriesReadiness(coin, selection);
+  return `<small class="market-series-status is-${escapeHtml(readiness.state)}" data-series-state="${escapeHtml(readiness.state)}" title="${escapeHtml(readiness.title)}" ${readiness.selected ? "" : "hidden"}>${escapeHtml(readiness.label)}</small>`;
 }
 
 function atlasMarketCompactName(coin) {
@@ -8859,7 +9066,7 @@ function renderMarketTable() {
       ? `${clsPct(snapshot.change24h)} ${atlasMoveStrengthClass(snapshot.change24h)}`
       : "";
     const compactName = atlasMarketCompactName(c);
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</span></td><td class="${clsPct(snapshot.change7d)}">${fmtPct(snapshot.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
+    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</span></td><td class="${clsPct(snapshot.change7d)}">${fmtPct(snapshot.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><span class="market-comparison-meta"><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${atlasComparisonSeriesReadinessMarkup(c, selection)}</span>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
   }).join("");
 
   const updated = state.timestamp ? new Date(state.timestamp).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
@@ -10515,17 +10722,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.16" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.16" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.16" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -11609,7 +11816,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.15",
+  interface: "Build 28.2.16",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -13860,7 +14067,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.15`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.16`
   );
 }
 
@@ -19247,7 +19454,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.15 annulée :", error);
+    console.warn("Transaction scanner 28.2.16 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -19431,7 +19638,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.15 :", error);
+    console.error("Scanner 28.2.16 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -19520,7 +19727,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.15 non capturé :", error);
+      console.error("Scanner 28.2.16 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -19530,7 +19737,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.15 :", error);
+    console.error("Démarrage scanner 28.2.16 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -19544,7 +19751,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.15"
+    source: "button-28.2.16"
   });
 }
 
