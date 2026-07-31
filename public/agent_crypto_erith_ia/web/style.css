@@ -20078,3 +20078,222 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   text-shadow: none;
 }
 
+/* ==========================================================================
+   BUILD 28.2.24 — OVERLAY & RIGHT PANEL SPACE RECOVERY
+   1. Chart synthesis fits its text while reserving the source-truth badge.
+   2. The right detail panel gives more width to real content.
+   ========================================================================== */
+
+/* ---------- Chart overlay geometry ---------- */
+
+#analyste .chart-shell {
+  --atlas-chart-truth-reserve: clamp(260px, 31%, 330px);
+}
+
+#analyste .atlas-chart-insight-overlay,
+#analyste:not(.detail-collapsed) .atlas-chart-insight-overlay,
+#analyste.detail-collapsed .atlas-chart-insight-overlay {
+  width: fit-content !important;
+  inline-size: fit-content !important;
+  min-width: 0 !important;
+  max-width:
+    min(
+      640px,
+      calc(100% - var(--atlas-chart-truth-reserve) - 34px)
+    ) !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 10px 12px 9px !important;
+  gap: 5px !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-layout="solo"] {
+  max-width:
+    min(
+      590px,
+      calc(100% - var(--atlas-chart-truth-reserve) - 34px)
+    ) !important;
+}
+
+#analyste .atlas-chart-insight-overlay[data-layout="empty"] {
+  max-width:
+    min(
+      530px,
+      calc(100% - var(--atlas-chart-truth-reserve) - 34px)
+    ) !important;
+}
+
+#analyste .atlas-chart-insight-overlay > strong,
+#analyste .atlas-chart-insight-overlay > span,
+#analyste .atlas-chart-insight-overlay > small {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+#analyste .atlas-chart-insight-overlay > strong {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  column-gap: 3px !important;
+  row-gap: 4px !important;
+}
+
+#analyste .atlas-chart-insight-overlay .atlas-hud-truth {
+  max-width: 100% !important;
+  margin-left: 3px !important;
+  white-space: normal !important;
+  text-align: left !important;
+}
+
+#analyste .atlas-chart-insight-overlay > small {
+  overflow-wrap: anywhere !important;
+}
+
+/* The right source badge remains readable but no longer occupies an
+   uncontrolled horizontal strip. */
+#analyste .chart-shell[data-real-chart]::before {
+  top: 14px !important;
+  right: 13px !important;
+  max-width: min(310px, 34%) !important;
+  box-sizing: border-box !important;
+  padding: 6px 9px !important;
+  border-radius: 10px !important;
+  font-size: 9px !important;
+  line-height: 1.16 !important;
+  text-align: right !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Keep the legend below the real overlay height on the compact notebook
+   viewport. */
+@media (min-width: 901px) and (max-width: 1380px) {
+  #analyste .chart-shell {
+    --atlas-chart-truth-reserve: clamp(250px, 32%, 315px);
+  }
+
+  #analyste .atlas-chart-insight-overlay,
+  #analyste:not(.detail-collapsed) .atlas-chart-insight-overlay,
+  #analyste.detail-collapsed .atlas-chart-insight-overlay {
+    max-width:
+      min(
+        600px,
+        calc(100% - var(--atlas-chart-truth-reserve) - 30px)
+      ) !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > strong {
+    font-size: 11px !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > span {
+    font-size: 11px !important;
+  }
+
+  #analyste .atlas-chart-insight-overlay > small {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #analyste .chart-shell {
+    --atlas-chart-truth-reserve: 0px;
+  }
+
+  #analyste .atlas-chart-insight-overlay,
+  #analyste:not(.detail-collapsed) .atlas-chart-insight-overlay,
+  #analyste.detail-collapsed .atlas-chart-insight-overlay {
+    width: calc(100% - 20px) !important;
+    inline-size: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+  }
+
+  #analyste .chart-shell[data-real-chart]::before {
+    top: auto !important;
+    right: 10px !important;
+    bottom: 52px !important;
+    max-width: calc(100% - 20px) !important;
+  }
+}
+
+/* ---------- Right detail panel space recovery ---------- */
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  padding: 7px 5px 7px 6px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle {
+  margin-inline: 1px !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-body {
+  padding-right: 0 !important;
+  scrollbar-gutter: auto !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip {
+  grid-template-columns: .78fr 1.02fr 1.20fr 1fr !important;
+  gap: 3px !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip > span {
+  min-height: 40px !important;
+  padding: 6px 5px !important;
+  gap: 3px !important;
+  border-radius: 8px !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip small {
+  font-size: 6.8px !important;
+  letter-spacing: .065em !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip
+  > [data-detail-semantic="identity"] b,
+#analyste.champagne-clean-lens .detail-compact-strip
+  > [data-detail-semantic="price"] b,
+#analyste.champagne-clean-lens .detail-compact-strip
+  > [data-detail-semantic="change"] b {
+  display: block !important;
+  overflow: hidden !important;
+  font-size: 8.7px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.018em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  -webkit-line-clamp: unset !important;
+}
+
+/* Decision alone may still use two lines. */
+#analyste.champagne-clean-lens .detail-compact-strip
+  > [data-detail-semantic="decision"] b {
+  display: -webkit-box !important;
+  overflow: hidden !important;
+  white-space: normal !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+}
+
+#analyste .atlas-detail-subwindow-body {
+  padding: 6px 4px !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid {
+  gap: 3px !important;
+}
+
+#analyste .atlas-primary-detail-window .clean-lens-detail-grid > div {
+  padding: 6px !important;
+}
+
+@media (min-width: 901px) and (max-width: 1380px) {
+  #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    --atlas-open-detail-width: clamp(300px, 22.5vw, 330px);
+    padding-right: calc(var(--atlas-open-detail-width) + 5px) !important;
+  }
+
+  #analyste.champagne-clean-lens .clean-lens-detail-panel {
+    padding-inline: 5px !important;
+  }
+}
+
