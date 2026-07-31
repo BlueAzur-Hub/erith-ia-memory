@@ -21035,3 +21035,33 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.30 — UPDATE CONFIRMATION & FRESHNESS STAMP
+   Brief post-update confirmation; check time stays in the native tooltip.
+   ========================================================================== */
+
+.atlas-version-control[data-state="installed"] {
+  border-color: rgba(117,246,209,.72);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(71,223,145,.22),
+      rgba(98,236,255,.17)
+    );
+  color: #d9fff2;
+  box-shadow:
+    0 0 0 1px rgba(176,255,231,.08) inset,
+    0 0 18px rgba(71,223,145,.13);
+  cursor: default;
+}
+
+.atlas-version-control[data-state="installed"]:disabled {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-version-control {
+    transition: none !important;
+  }
+}
+

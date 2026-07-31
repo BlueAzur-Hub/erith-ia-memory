@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.29 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.30 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,15 +17,17 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.29";
-const ATLAS_BUILD = "28.2.29";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.30";
+const ATLAS_BUILD = "28.2.30";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
+const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
 const atlasVersionAwarenessState = {
   initialized: false,
   checking: false,
   applying: false,
   timer: 0,
+  confirmationTimer: 0,
   remoteBuild: null,
   remoteToken: null,
   lastCheckedAt: 0,
@@ -360,6 +362,46 @@ function atlasVersionControlElements() {
   };
 }
 
+function atlasVersionCheckedAtLabel(timestamp = 0) {
+  const value = Number(timestamp || 0);
+  if (!Number.isFinite(value) || value <= 0) {
+    return "Dernière vérification de version : en attente";
+  }
+
+  try {
+    const formatted = new Intl.DateTimeFormat("fr-FR", {
+      dateStyle: "short",
+      timeStyle: "medium"
+    }).format(new Date(value));
+
+    return `Dernière vérification de version : ${formatted}`;
+  } catch {
+    return "Dernière vérification de version : effectuée";
+  }
+}
+
+function atlasVersionControlTooltip(mode, build, checkedAt = 0) {
+  const freshness = atlasVersionCheckedAtLabel(checkedAt);
+
+  if (mode === "available") {
+    return `Nouvelle version disponible · Build ${build} · ${freshness}`;
+  }
+
+  if (mode === "applying") {
+    return `Mise à jour vers le Build ${build} en cours · ${freshness}`;
+  }
+
+  if (mode === "failed") {
+    return `Actualisation vers le Build ${build} impossible · ${freshness}`;
+  }
+
+  if (mode === "installed") {
+    return `Mise à jour installée · Build ${build} · Nouvelle vérification distante en attente`;
+  }
+
+  return `Version installée · Build ${ATLAS_BUILD} · ${freshness}`;
+}
+
 function atlasVersionControlState(mode, options = {}) {
   const { control, text } = atlasVersionControlElements();
   if (!control || !text) return false;
@@ -368,13 +410,19 @@ function atlasVersionControlState(mode, options = {}) {
     "current",
     "available",
     "applying",
-    "failed"
+    "failed",
+    "installed"
   ].includes(mode)
     ? mode
     : "current";
 
   const build = String(options.build || ATLAS_BUILD).trim() || ATLAS_BUILD;
   const token = String(options.token || "").trim();
+  const checkedAt = Number(
+    options.checkedAt
+    ?? atlasVersionAwarenessState.lastCheckedAt
+    ?? 0
+  );
 
   control.classList.remove("ok", "warn", "fail");
   control.dataset.state = stateMode;
@@ -392,6 +440,11 @@ function atlasVersionControlState(mode, options = {}) {
       "aria-label",
       `Nouvelle version disponible, Build ${build}. Cliquer pour actualiser.`
     );
+    control.title = atlasVersionControlTooltip(
+      stateMode,
+      build,
+      checkedAt
+    );
     return true;
   }
 
@@ -406,6 +459,11 @@ function atlasVersionControlState(mode, options = {}) {
       "aria-label",
       `Mise à jour vers le Build ${build} en cours`
     );
+    control.title = atlasVersionControlTooltip(
+      stateMode,
+      build,
+      checkedAt
+    );
     return true;
   }
 
@@ -419,6 +477,27 @@ function atlasVersionControlState(mode, options = {}) {
       "aria-label",
       `Actualisation vers le Build ${build} impossible. Cliquer pour réessayer.`
     );
+    control.title = atlasVersionControlTooltip(
+      stateMode,
+      build,
+      checkedAt
+    );
+    return true;
+  }
+
+  if (stateMode === "installed") {
+    control.classList.add("ok");
+    control.disabled = true;
+    text.textContent = `Mise à jour installée · Build ${build}`;
+    control.setAttribute(
+      "aria-label",
+      `Mise à jour installée, Build ${build}`
+    );
+    control.title = atlasVersionControlTooltip(
+      stateMode,
+      build,
+      checkedAt
+    );
     return true;
   }
 
@@ -429,10 +508,40 @@ function atlasVersionControlState(mode, options = {}) {
     "aria-label",
     `Version installée : Market Core V2.0-Alpha, Build ${ATLAS_BUILD}`
   );
+  control.title = atlasVersionControlTooltip(
+    stateMode,
+    ATLAS_BUILD,
+    checkedAt
+  );
+  return true;
+}
+
+function atlasVersionConfirmationClear() {
+  window.clearTimeout(atlasVersionAwarenessState.confirmationTimer);
+  atlasVersionAwarenessState.confirmationTimer = 0;
+}
+
+function atlasVersionShowInstalled(
+  build = ATLAS_BUILD,
+  duration = ATLAS_VERSION_CONFIRMATION_MS
+) {
+  atlasVersionConfirmationClear();
+
+  const installedBuild = String(build || ATLAS_BUILD).trim() || ATLAS_BUILD;
+  atlasVersionControlState("installed", {
+    build: installedBuild
+  });
+
+  atlasVersionAwarenessState.confirmationTimer = window.setTimeout(() => {
+    atlasVersionAwarenessState.confirmationTimer = 0;
+    atlasVersionControlState("current");
+  }, Math.max(0, Number(duration) || 0));
+
   return true;
 }
 
 function atlasVersionHideUpdate() {
+  atlasVersionConfirmationClear();
   atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = null;
   atlasVersionAwarenessState.remoteToken = null;
@@ -444,6 +553,7 @@ function atlasVersionShowUpdate(remoteBuild, remoteToken = "") {
   const token = String(remoteToken || "").trim();
   if (!build) return false;
 
+  atlasVersionConfirmationClear();
   atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = build;
   atlasVersionAwarenessState.remoteToken = token || null;
@@ -458,6 +568,7 @@ function atlasVersionShowFailure(remoteBuild, remoteToken = "") {
   const build = String(remoteBuild || ATLAS_BUILD).trim() || ATLAS_BUILD;
   const token = String(remoteToken || "").trim();
 
+  atlasVersionConfirmationClear();
   atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = build;
   atlasVersionAwarenessState.remoteToken = token || null;
@@ -563,6 +674,7 @@ function atlasVersionExpectedUpdateClear() {
 async function atlasVersionCheck(options = {}) {
   const force = options?.force === true;
   if (atlasVersionAwarenessState.checking) return false;
+  if (!force && atlasVersionAwarenessState.confirmationTimer) return false;
   if (!force && document.visibilityState === "hidden") return false;
   if (!force && navigator.onLine === false) return false;
 
@@ -594,6 +706,8 @@ async function atlasVersionCheck(options = {}) {
       && atlasCompareBuildNumbers(expected.build, ATLAS_BUILD) > 0
     ) {
       atlasVersionShowFailure(expected.build, expected.token);
+    } else {
+      atlasVersionControlState("current");
     }
 
     console.warn("Vérification de version différée :", error);
@@ -642,6 +756,8 @@ async function atlasClearSameOriginCacheStorage() {
 
 async function atlasApplyVersionUpdate() {
   if (atlasVersionAwarenessState.applying) return false;
+
+  atlasVersionConfirmationClear();
 
   const { control } = atlasVersionControlElements();
   const requestedBuild = String(
@@ -733,7 +849,7 @@ function atlasVersionResolveExpectedUpdate() {
   if (atlasCompareBuildNumbers(ATLAS_BUILD, expected.build) >= 0) {
     atlasVersionExpectedUpdateClear();
     atlasVersionRefreshUrlCleanup();
-    atlasVersionControlState("current");
+    atlasVersionShowInstalled(ATLAS_BUILD);
     return "confirmed";
   }
 
@@ -780,7 +896,11 @@ function atlasVersionAwarenessInit() {
   );
 
   atlasVersionAwarenessSchedule(
-    expectedStatus === "incomplete" ? 900 : 2800
+    expectedStatus === "confirmed"
+      ? ATLAS_VERSION_CONFIRMATION_MS + 800
+      : expectedStatus === "incomplete"
+        ? 900
+        : 2800
   );
 
   return true;
@@ -5261,7 +5381,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.29
+   Market Core V2.0-Alpha · Build 28.2.30
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -9465,7 +9585,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.29"
+      source: "target-top5-cycle-28.2.30"
     });
   }
 
@@ -11389,17 +11509,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.29" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.29" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.29" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -12483,7 +12603,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.29",
+  interface: "Build 28.2.30",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -14734,7 +14854,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.29`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.30`
   );
 }
 
@@ -20263,7 +20383,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.29 annulée :", error);
+    console.warn("Transaction scanner 28.2.30 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -20446,7 +20566,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.29 :", error);
+    console.error("Scanner 28.2.30 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -20535,7 +20655,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.29 non capturé :", error);
+      console.error("Scanner 28.2.30 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -20545,7 +20665,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.29 :", error);
+    console.error("Démarrage scanner 28.2.30 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -20559,7 +20679,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.29"
+    source: "button-28.2.30"
   });
 }
 
