@@ -21221,3 +21221,54 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
     letter-spacing: .015em !important;
   }
 }
+
+/* ==========================================================================
+   BUILD 28.2.34 — MEMORY SLOTS BOOK LAYOUT FIX
+   Keep transient chart progress above the memory strip on Transformer Book.
+   ========================================================================== */
+
+/* The memory HUD remains the authoritative bottom layer. */
+#analyste .atlas-workspace-reprise {
+  z-index: 13 !important;
+}
+
+/* The transient “Série x/x” status must never cover A / B / C. */
+html[data-atlas-viewport="transformer"]
+  #analyste.champagne-clean-lens .atlas-chart-refresh,
+html[data-atlas-viewport="transformer"]
+  #analyste.champagne-clean-lens.detail-collapsed .atlas-chart-refresh {
+  right: 14px !important;
+  bottom: 52px !important;
+  z-index: 12 !important;
+  max-width: min(250px, calc(100% - 28px)) !important;
+}
+
+/* Keep the descriptive text inside its own grid cell. */
+html[data-atlas-viewport="transformer"]
+  #analyste .atlas-workspace-reprise > b,
+html[data-atlas-viewport="transformer"]
+  #analyste .atlas-workspace-reprise > small {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html[data-atlas-viewport="transformer"]
+  #analyste .atlas-workspace-slots {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+/* Same collision protection for narrow browser windows. */
+@media (max-width: 1100px) {
+  #analyste.champagne-clean-lens .atlas-chart-refresh,
+  #analyste.champagne-clean-lens.detail-collapsed .atlas-chart-refresh {
+    right: 12px !important;
+    bottom: 52px !important;
+    z-index: 12 !important;
+    max-width: min(230px, calc(100% - 24px)) !important;
+  }
+}
+
