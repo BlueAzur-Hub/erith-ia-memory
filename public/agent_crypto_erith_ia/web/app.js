@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.34 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.35 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,8 +17,8 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.34";
-const ATLAS_BUILD = "28.2.34";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.35";
+const ATLAS_BUILD = "28.2.35";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
@@ -171,6 +171,37 @@ const state = {
     lastRunMs: 0,
     livecheckBusy: false,
     bootStarted: false
+  }
+};
+
+const ATLAS_PARALLEL_MARKET_DOMAIN_KEY =
+  "agent_crypto_parallel_market_domain_v1";
+const ATLAS_PARALLEL_MARKET_METALS_STATE_KEY =
+  "agent_crypto_parallel_market_metals_state_v1";
+const ATLAS_PARALLEL_MARKET_DOMAINS =
+  Object.freeze(["crypto", "metals"]);
+const ATLAS_METALS_ASSETS = Object.freeze([
+  Object.freeze({ id: "gold", name: "Or", symbol: "XAU", unit: "USD / once troy", family: "précieux monétaire" }),
+  Object.freeze({ id: "silver", name: "Argent", symbol: "XAG", unit: "USD / once troy", family: "précieux monétaire et industriel" }),
+  Object.freeze({ id: "platinum", name: "Platine", symbol: "XPT", unit: "USD / once troy", family: "précieux industriel" }),
+  Object.freeze({ id: "palladium", name: "Palladium", symbol: "XPD", unit: "USD / once troy", family: "précieux industriel" }),
+  Object.freeze({ id: "copper", name: "Cuivre", symbol: "HG", unit: "USD / livre ou tonne", family: "industriel" })
+]);
+
+state.marketDomain = "crypto";
+state.parallelMarkets = {
+  metals: {
+    status: "foundation",
+    source: null,
+    sourceMode: "none",
+    timestamp: null,
+    period: 1,
+    view: "price",
+    scale: "linear",
+    section: "prices",
+    selectionIds: ATLAS_METALS_ASSETS.map(asset => asset.id),
+    chartCache: Object.create(null),
+    structuralCache: Object.create(null)
   }
 };
 
@@ -5381,7 +5412,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.34
+   Market Core V2.0-Alpha · Build 28.2.35
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -9513,7 +9544,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.34 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.35 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -9734,7 +9765,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.34"
+      source: "target-top5-cycle-28.2.35"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -11671,17 +11702,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.34" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.35" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.34" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.35" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.34" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.35" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -12765,7 +12796,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.34",
+  interface: "Build 28.2.35",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -15016,7 +15047,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.34`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.35`
   );
 }
 
@@ -19192,6 +19223,521 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
+   Build 28.2.35 — Parallel Markets Foundation
+
+   One chart area, two isolated domains:
+   - Crypto remains the complete validated production market.
+   - Metals is a no-fake-data foundation awaiting real adapters.
+
+   Long press on the title or normal click on the visible domain badge:
+   Crypto ↔ Metals.
+   ========================================================= */
+
+const ATLAS_PARALLEL_MARKET_HOLD_MS = 720;
+let atlasParallelMarketHoldTimer = 0;
+let atlasParallelMarketHoldConsumed = false;
+
+function atlasParallelMarketSafeRead(key) {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key) || "null");
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function atlasParallelMarketReadDomain() {
+  try {
+    const value = String(
+      localStorage.getItem(ATLAS_PARALLEL_MARKET_DOMAIN_KEY) || ""
+    ).trim();
+    return ATLAS_PARALLEL_MARKET_DOMAINS.includes(value)
+      ? value
+      : "crypto";
+  } catch {
+    return "crypto";
+  }
+}
+
+function atlasParallelMarketDomain() {
+  return ATLAS_PARALLEL_MARKET_DOMAINS.includes(state.marketDomain)
+    ? state.marketDomain
+    : "crypto";
+}
+
+function atlasParallelMarketMetalsState() {
+  return state.parallelMarkets.metals;
+}
+
+function atlasParallelMarketValidMetalIds(ids) {
+  const available = new Set(ATLAS_METALS_ASSETS.map(asset => asset.id));
+  const normalized = Array.isArray(ids)
+    ? ids
+        .map(id => String(id || ""))
+        .filter(id => available.has(id))
+        .filter((id, index, list) => list.indexOf(id) === index)
+        .slice(0, ATLAS_METALS_ASSETS.length)
+    : [];
+
+  return normalized.length
+    ? normalized
+    : ATLAS_METALS_ASSETS.map(asset => asset.id);
+}
+
+function atlasParallelMarketMetalsRead() {
+  const saved = atlasParallelMarketSafeRead(
+    ATLAS_PARALLEL_MARKET_METALS_STATE_KEY
+  );
+  if (!saved) return atlasParallelMarketMetalsState();
+
+  const metals = atlasParallelMarketMetalsState();
+  metals.period = [1, 7, 30, 90, 365].includes(Number(saved.period))
+    ? Number(saved.period)
+    : 1;
+  metals.view = saved.view === "base100" ? "base100" : "price";
+  metals.scale = saved.scale === "logarithmic"
+    ? "logarithmic"
+    : "linear";
+  metals.section = saved.section === "critical"
+    ? "critical"
+    : "prices";
+  metals.selectionIds = atlasParallelMarketValidMetalIds(
+    saved.selectionIds
+  );
+  return metals;
+}
+
+function atlasParallelMarketMetalsWrite() {
+  const metals = atlasParallelMarketMetalsState();
+  const payload = {
+    schema: "agent_crypto_parallel_market_metals_state_v1",
+    savedAt: new Date().toISOString(),
+    period: Number(metals.period || 1),
+    view: metals.view === "base100" ? "base100" : "price",
+    scale: metals.scale === "logarithmic"
+      ? "logarithmic"
+      : "linear",
+    section: metals.section === "critical"
+      ? "critical"
+      : "prices",
+    selectionIds: [...metals.selectionIds]
+  };
+
+  try {
+    localStorage.setItem(
+      ATLAS_PARALLEL_MARKET_METALS_STATE_KEY,
+      JSON.stringify(payload)
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function atlasParallelMarketSelectedMetals() {
+  const selected = new Set(
+    atlasParallelMarketMetalsState().selectionIds
+  );
+  return ATLAS_METALS_ASSETS.filter(asset => selected.has(asset.id));
+}
+
+function atlasParallelMarketSetControlsDisabled(disabled) {
+  document
+    .querySelectorAll(
+      "#analyste .chart-v2-toolbar button, "
+      + "#analyste .compare-actions button"
+    )
+    .forEach(button => {
+      if (disabled) {
+        if (!button.hasAttribute("data-parallel-market-disabled")) {
+          button.dataset.parallelMarketDisabled =
+            button.disabled ? "1" : "0";
+        }
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+      } else if (button.hasAttribute("data-parallel-market-disabled")) {
+        button.disabled =
+          button.dataset.parallelMarketDisabled === "1";
+        button.removeAttribute("data-parallel-market-disabled");
+        if (!button.disabled) button.removeAttribute("aria-disabled");
+      }
+    });
+}
+
+function atlasParallelMarketRenderMetals() {
+  const metals = atlasParallelMarketMetalsState();
+  const selected = new Set(metals.selectionIds);
+
+  document.querySelectorAll("[data-metal-id]").forEach(button => {
+    const active = selected.has(button.dataset.metalId);
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-metal-row]").forEach(row => {
+    row.hidden = !selected.has(row.dataset.metalRow);
+  });
+
+  document.querySelectorAll("[data-metals-period]").forEach(button => {
+    const active =
+      Number(button.dataset.metalsPeriod) === Number(metals.period);
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-metals-view]").forEach(button => {
+    const active = button.dataset.metalsView === metals.view;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-metals-section]").forEach(button => {
+    const active = button.dataset.metalsSection === metals.section;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-metals-view-panel]").forEach(panel => {
+    panel.hidden = panel.dataset.metalsViewPanel !== metals.section;
+  });
+
+  const assets = atlasParallelMarketSelectedMetals();
+  const symbols = assets.map(asset => asset.symbol).join(" / ");
+  const summary = document.getElementById(
+    "atlasMetalsSelectionSummary"
+  );
+  if (summary) {
+    summary.textContent = assets.length
+      ? `${assets.length} métal${assets.length > 1 ? "x" : ""} `
+        + `sélectionné${assets.length > 1 ? "s" : ""} · ${symbols}`
+      : "Aucun métal sélectionné";
+  }
+
+  const truth = document.getElementById(
+    "atlasMetalsFoundationTruth"
+  );
+  if (truth) {
+    truth.textContent = metals.section === "critical"
+      ? "USGS préparé · import structurel non connecté"
+      : `${metals.view === "base100" ? "Base 100" : "Prix"} · `
+        + `${atlasChartPeriodLabel(metals.period)} · `
+        + "source de cotation absente · aucun prix inventé";
+  }
+}
+
+function atlasParallelMarketRender() {
+  const domain = atlasParallelMarketDomain();
+  const metalsActive = domain === "metals";
+  const analyst = document.getElementById("analyste");
+  const switchButton = document.getElementById(
+    "atlasMarketDomainSwitch"
+  );
+  const switchValue = document.getElementById(
+    "atlasMarketDomainSwitchValue"
+  );
+  const foundation = document.getElementById(
+    "atlasParallelMarketFoundation"
+  );
+  const canvas = document.getElementById("mainChart");
+  const overlay = document.getElementById(
+    "atlasChartInsightOverlay"
+  );
+  const legend = document.getElementById("chartV2Legend");
+  const tooltip = document.getElementById("atlasChartTooltip");
+  const refresh = document.getElementById("atlasChartRefresh");
+  const detail = document.getElementById("detailPanel");
+  const cryptoCaption = document.getElementById(
+    "atlasChartCaptionCrypto"
+  );
+  const metalsCaption = document.getElementById(
+    "atlasChartCaptionMetals"
+  );
+
+  document.documentElement.dataset.atlasMarketDomain = domain;
+  if (analyst) analyst.dataset.marketDomain = domain;
+
+  if (switchButton) {
+    switchButton.dataset.domain = domain;
+    switchButton.setAttribute(
+      "aria-pressed",
+      metalsActive ? "true" : "false"
+    );
+    switchButton.setAttribute(
+      "aria-label",
+      metalsActive
+        ? "Marché Métaux actif. Cliquer pour revenir au marché Crypto."
+        : "Marché Crypto actif. Cliquer pour afficher le marché Métaux."
+    );
+    switchButton.title = metalsActive
+      ? "Marché Métaux · cliquer pour revenir à Crypto"
+      : "Marché Crypto · cliquer pour afficher Métaux";
+  }
+
+  if (switchValue) {
+    switchValue.textContent = metalsActive ? "MÉTAUX" : "CRYPTO";
+  }
+
+  if (foundation) foundation.hidden = !metalsActive;
+  if (canvas) canvas.hidden = metalsActive;
+  if (overlay) overlay.hidden = metalsActive;
+  if (legend && metalsActive) legend.hidden = true;
+  if (tooltip && metalsActive) tooltip.hidden = true;
+  if (refresh && metalsActive) refresh.hidden = true;
+  if (detail) {
+    if (metalsActive) {
+      if (!detail.hasAttribute("data-parallel-market-hidden-state")) {
+        detail.dataset.parallelMarketHiddenState =
+          detail.hidden ? "1" : "0";
+      }
+      detail.hidden = true;
+    } else if (
+      detail.hasAttribute("data-parallel-market-hidden-state")
+    ) {
+      detail.hidden =
+        detail.dataset.parallelMarketHiddenState === "1";
+      detail.removeAttribute(
+        "data-parallel-market-hidden-state"
+      );
+    }
+  }
+  if (cryptoCaption) cryptoCaption.hidden = metalsActive;
+  if (metalsCaption) metalsCaption.hidden = !metalsActive;
+
+  atlasParallelMarketSetControlsDisabled(metalsActive);
+
+  if (metalsActive) {
+    atlasParallelMarketRenderMetals();
+    setText(
+      document.getElementById("selectedAssetTitle"),
+      "Marché Métaux — fondation sans cotation"
+    );
+  } else {
+    const coin = getSelectedCoin();
+    if (coin) {
+      setText(
+        document.getElementById("selectedAssetTitle"),
+        `${coin.name} — ${coin.symbol}`
+      );
+    }
+    requestAnimationFrame(() => {
+      try {
+        state.chartEngineV2.realChart?.resize?.();
+      } catch {}
+      atlasRedrawCurrentChartV2?.();
+    });
+  }
+
+  atlasWorkspaceRenderStrip?.();
+  atlasWorkspaceSlotsRender?.();
+  return domain;
+}
+
+function atlasParallelMarketSetDomain(domain, options = {}) {
+  const next = ATLAS_PARALLEL_MARKET_DOMAINS.includes(domain)
+    ? domain
+    : "crypto";
+
+  if (next === atlasParallelMarketDomain() && options.force !== true) {
+    atlasParallelMarketRender();
+    return next;
+  }
+
+  if (atlasScannerTransaction || atlasScannerQueuedRequest) {
+    atlasScannerCancel(
+      "changement de marché parallèle",
+      {
+        keepUi: false,
+        keepOverlay: false
+      }
+    );
+  }
+
+  state.marketDomain = next;
+
+  if (options.persist !== false) {
+    try {
+      localStorage.setItem(
+        ATLAS_PARALLEL_MARKET_DOMAIN_KEY,
+        next
+      );
+    } catch {}
+  }
+
+  atlasParallelMarketMetalsWrite();
+  atlasParallelMarketRender();
+
+  if (options.save !== false) {
+    atlasWorkspaceScheduleSave?.(120);
+  }
+
+  window.dispatchEvent(
+    new CustomEvent("atlas:market-domain", {
+      detail: {
+        domain: next,
+        source: options.source || "interface"
+      }
+    })
+  );
+
+  return next;
+}
+
+function atlasParallelMarketToggle(source = "interface") {
+  return atlasParallelMarketSetDomain(
+    atlasParallelMarketDomain() === "crypto"
+      ? "metals"
+      : "crypto",
+    {
+      source
+    }
+  );
+}
+
+function atlasParallelMarketToggleMetal(metalId) {
+  const id = String(metalId || "");
+  const available = new Set(ATLAS_METALS_ASSETS.map(asset => asset.id));
+  if (!available.has(id)) return false;
+
+  const metals = atlasParallelMarketMetalsState();
+  const selected = new Set(metals.selectionIds);
+
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+
+  metals.selectionIds = ATLAS_METALS_ASSETS
+    .map(asset => asset.id)
+    .filter(assetId => selected.has(assetId));
+
+  atlasParallelMarketMetalsWrite();
+  atlasParallelMarketRenderMetals();
+  atlasWorkspaceScheduleSave?.(120);
+  return true;
+}
+
+function atlasParallelMarketSetMetalsPeriod(period) {
+  const value = Number(period);
+  if (![1, 7, 30, 90, 365].includes(value)) return false;
+  atlasParallelMarketMetalsState().period = value;
+  atlasParallelMarketMetalsWrite();
+  atlasParallelMarketRenderMetals();
+  atlasWorkspaceRenderStrip?.();
+  atlasWorkspaceScheduleSave?.(120);
+  return true;
+}
+
+function atlasParallelMarketSetMetalsView(view) {
+  atlasParallelMarketMetalsState().view =
+    view === "base100" ? "base100" : "price";
+  atlasParallelMarketMetalsWrite();
+  atlasParallelMarketRenderMetals();
+  atlasWorkspaceRenderStrip?.();
+  atlasWorkspaceScheduleSave?.(120);
+  return true;
+}
+
+function atlasParallelMarketSetMetalsSection(section) {
+  atlasParallelMarketMetalsState().section =
+    section === "critical" ? "critical" : "prices";
+  atlasParallelMarketMetalsWrite();
+  atlasParallelMarketRenderMetals();
+  atlasWorkspaceRenderStrip?.();
+  atlasWorkspaceScheduleSave?.(120);
+  return true;
+}
+
+function atlasParallelMarketInit() {
+  const switchButton = document.getElementById(
+    "atlasMarketDomainSwitch"
+  );
+  const longPress = document.getElementById(
+    "atlasMarketDomainLongPress"
+  );
+  const foundation = document.getElementById(
+    "atlasParallelMarketFoundation"
+  );
+
+  atlasParallelMarketMetalsRead();
+
+  switchButton?.addEventListener("click", event => {
+    event.preventDefault();
+    atlasParallelMarketToggle("domain-badge");
+  });
+
+  longPress?.addEventListener("click", event => {
+    event.preventDefault();
+    if (atlasParallelMarketHoldConsumed) {
+      atlasParallelMarketHoldConsumed = false;
+    }
+  });
+
+  longPress?.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    atlasParallelMarketHoldConsumed = false;
+    window.clearTimeout(atlasParallelMarketHoldTimer);
+    atlasParallelMarketHoldTimer = window.setTimeout(() => {
+      atlasParallelMarketHoldTimer = 0;
+      atlasParallelMarketHoldConsumed = true;
+      atlasParallelMarketToggle("title-long-press");
+    }, ATLAS_PARALLEL_MARKET_HOLD_MS);
+  });
+
+  const cancelHold = () => {
+    window.clearTimeout(atlasParallelMarketHoldTimer);
+    atlasParallelMarketHoldTimer = 0;
+  };
+
+  longPress?.addEventListener("pointerup", cancelHold);
+  longPress?.addEventListener("pointercancel", cancelHold);
+  longPress?.addEventListener("pointerleave", cancelHold);
+
+  longPress?.addEventListener("keydown", event => {
+    if (event.shiftKey && ["Enter", " "].includes(event.key)) {
+      event.preventDefault();
+      atlasParallelMarketToggle("title-keyboard");
+    }
+  });
+
+  foundation?.addEventListener("click", event => {
+    const metal = event.target.closest("[data-metal-id]");
+    if (metal) {
+      event.preventDefault();
+      atlasParallelMarketToggleMetal(metal.dataset.metalId);
+      return;
+    }
+
+    const period = event.target.closest("[data-metals-period]");
+    if (period) {
+      event.preventDefault();
+      atlasParallelMarketSetMetalsPeriod(
+        period.dataset.metalsPeriod
+      );
+      return;
+    }
+
+    const view = event.target.closest("[data-metals-view]");
+    if (view) {
+      event.preventDefault();
+      atlasParallelMarketSetMetalsView(
+        view.dataset.metalsView
+      );
+      return;
+    }
+
+    const section = event.target.closest("[data-metals-section]");
+    if (section) {
+      event.preventDefault();
+      atlasParallelMarketSetMetalsSection(
+        section.dataset.metalsSection
+      );
+    }
+  });
+
+  state.marketDomain = atlasParallelMarketReadDomain();
+  atlasParallelMarketRender();
+  return true;
+}
+
+/* =========================================================
    Build 28.1.54 — Complete workspace memory
    Stores interface choices only. Never stores or fabricates prices.
    ========================================================= */
@@ -19282,12 +19828,29 @@ function atlasWorkspaceCapture() {
       analysis: state.chartViewV2.analysis !== false,
       marketColumns: state.chartViewV2.marketColumns === "complete" ? "complete" : "essential",
     },
+    marketDomain: atlasParallelMarketDomain(),
+    parallelMarket: {
+      domain: "metals",
+      period: Number(atlasParallelMarketMetalsState().period || 1),
+      view: atlasParallelMarketMetalsState().view === "base100"
+        ? "base100"
+        : "price",
+      scale: atlasParallelMarketMetalsState().scale === "logarithmic"
+        ? "logarithmic"
+        : "linear",
+      section: atlasParallelMarketMetalsState().section === "critical"
+        ? "critical"
+        : "prices",
+      selectionIds: [
+        ...atlasParallelMarketMetalsState().selectionIds
+      ]
+    }
   };
 }
 
 
 /* =========================================================
-   Build 28.2.34 — Comparison Memory Slots A / B / C
+   Build 28.2.35 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -19349,6 +19912,27 @@ function atlasWorkspaceSlotRead(slotId) {
 
 function atlasWorkspaceSlotSummary(snapshot) {
   const saved = snapshot?.workspace || snapshot || {};
+
+  if (saved.marketDomain === "metals") {
+    const parallel = saved.parallelMarket || {};
+    const ids = atlasParallelMarketValidMetalIds(
+      parallel.selectionIds
+    );
+    const symbols = ids
+      .map(id => ATLAS_METALS_ASSETS.find(asset => asset.id === id)?.symbol)
+      .filter(Boolean)
+      .join("/");
+    const period = atlasChartPeriodLabel(
+      [1, 7, 30, 90, 365].includes(Number(parallel.period))
+        ? Number(parallel.period)
+        : 1
+    );
+    const view = parallel.view === "base100"
+      ? "Base 100"
+      : "Prix";
+    return `Métaux · ${symbols} · ${period} · ${view}`;
+  }
+
   const ids = Array.isArray(saved.comparisonIds)
     ? saved.comparisonIds.filter(Boolean)
     : [];
@@ -19475,6 +20059,49 @@ function atlasWorkspaceSlotRecall(slotId) {
   const record = atlasWorkspaceSlotRead(slot);
   if (!record) return atlasWorkspaceSlotWrite(slot);
 
+  const saved = record.workspace;
+
+  if (saved.marketDomain === "metals") {
+    const parallel = saved.parallelMarket || {};
+    const metals = atlasParallelMarketMetalsState();
+
+    metals.period = [1, 7, 30, 90, 365].includes(
+      Number(parallel.period)
+    )
+      ? Number(parallel.period)
+      : 1;
+    metals.view = parallel.view === "base100"
+      ? "base100"
+      : "price";
+    metals.scale = parallel.scale === "logarithmic"
+      ? "logarithmic"
+      : "linear";
+    metals.section = parallel.section === "critical"
+      ? "critical"
+      : "prices";
+    metals.selectionIds = atlasParallelMarketValidMetalIds(
+      parallel.selectionIds
+    );
+
+    atlasParallelMarketMetalsWrite();
+    atlasParallelMarketSetDomain("metals", {
+      source: `workspace-slot-${slot}`,
+      save: false
+    });
+    atlasWorkspaceWrite();
+    atlasWorkspaceRenderStrip();
+    atlasWorkspaceSlotFlash(
+      `MÉMOIRE ${slot} RESTAURÉE · MÉTAUX`,
+      "restored"
+    );
+    return true;
+  }
+
+  atlasParallelMarketSetDomain("crypto", {
+    source: `workspace-slot-${slot}`,
+    save: false
+  });
+
   if (!Array.isArray(state.coins) || !state.coins.length) {
     atlasWorkspaceSlotFlash(
       `MÉMOIRE ${slot} · MARCHÉ NON CHARGÉ`,
@@ -19491,7 +20118,6 @@ function atlasWorkspaceSlotRecall(slotId) {
     }
   );
 
-  const saved = record.workspace;
   const selection = atlasWorkspaceSlotValidIds(saved);
   const ids = selection.ids;
   const primary = selection.primary;
@@ -19561,7 +20187,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.34`
+        source: `workspace-slot-${slot}-28.2.35`
       });
     } else {
       requestAnimationFrame(() => {
@@ -19841,6 +20467,18 @@ function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {
 function atlasWorkspaceWrite() {
   if (atlasScannerTransaction) return null;
 
+  if (atlasParallelMarketDomain() === "metals") {
+    const snapshot = atlasWorkspaceCapture();
+    try {
+      localStorage.setItem(
+        ATLAS_WORKSPACE_STATE_KEY,
+        JSON.stringify(snapshot)
+      );
+    } catch {}
+    atlasWorkspaceRenderStrip();
+    return snapshot;
+  }
+
   const chart = state.dataBroker?.chart;
   const ids = atlasComparisonIds();
   const chartReady = chart?.status === "ready";
@@ -19918,6 +20556,30 @@ function atlasWorkspaceRenderStrip(options = {}) {
   const primary = document.getElementById("atlasWorkspaceReprisePrimary");
   const secondary = document.getElementById("atlasWorkspaceRepriseSecondary");
   if (!root || !kicker || !primary || !secondary) return;
+
+  if (atlasParallelMarketDomain() === "metals") {
+    const metals = atlasParallelMarketMetalsState();
+    const assets = atlasParallelMarketSelectedMetals();
+    const symbols = assets.map(asset => asset.symbol).join("/");
+    const period = atlasChartPeriodLabel(metals.period);
+    const view = metals.view === "base100" ? "Base 100" : "Prix";
+    const section = metals.section === "critical"
+      ? "Matériaux critiques"
+      : "Cours des métaux";
+
+    root.dataset.state = options.restored === true
+      ? "restored"
+      : "current";
+    kicker.textContent = options.restored === true
+      ? "SESSION RESTAURÉE"
+      : "ESPACE MÉMORISÉ";
+    primary.textContent =
+      `Métaux · ${period} · ${view} · ${symbols || "aucune sélection"}`;
+    secondary.textContent =
+      `${section} · caches Métaux séparés · aucune cotation inventée`;
+    atlasWorkspaceSlotsRender();
+    return;
+  }
 
   const comparison = atlasComparisonActive();
   const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
@@ -20114,6 +20776,14 @@ function atlasWorkspaceRestoreAfterMarket() {
     atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
   }
 
+  atlasParallelMarketSetDomain(
+    saved.marketDomain === "metals" ? "metals" : "crypto",
+    {
+      persist: false,
+      save: false,
+      source: "workspace-restore"
+    }
+  );
   atlasWorkspaceRenderStrip({ restored: true });
   atlasWorkspaceScheduleSave(180);
   return true;
@@ -21002,7 +21672,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.34 annulée :", error);
+    console.warn("Transaction scanner 28.2.35 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -21185,7 +21855,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.34 :", error);
+    console.error("Scanner 28.2.35 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -21274,7 +21944,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.34 non capturé :", error);
+      console.error("Scanner 28.2.35 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -21284,7 +21954,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.34 :", error);
+    console.error("Démarrage scanner 28.2.35 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -21298,7 +21968,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.34"
+    source: "button-28.2.35"
   });
 }
 
@@ -22805,6 +23475,7 @@ function atlasAnalyticalTruthInit() {
   return true;
 }
 
+atlasParallelMarketInit();
 atlasAnalyticalTruthInit();
 
 atlasVersionAwarenessInit();
