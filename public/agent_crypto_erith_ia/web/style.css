@@ -19930,3 +19930,28 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   color: rgba(255,205,112,.92);
 }
 
+/* ==========================================================================
+   BUILD 28.2.22 — SCANNER HISTORY & ENDPOINT TRUTH
+   Historical provenance and the current terminal observation are separate.
+   ========================================================================== */
+
+[data-comparison-endpoint-truth] {
+  font-variant-numeric: tabular-nums;
+}
+
+[data-comparison-endpoint-truth][data-endpoint-state="live"] {
+  color: rgba(107,242,201,.95);
+}
+
+[data-comparison-endpoint-truth][data-endpoint-state="collected"] {
+  color: rgba(132,220,255,.94);
+}
+
+[data-comparison-endpoint-truth][data-endpoint-state="stored"] {
+  color: rgba(255,211,126,.92);
+}
+
+[data-comparison-endpoint-truth][data-endpoint-state="unavailable"] {
+  color: rgba(255,124,152,.90);
+}
+
