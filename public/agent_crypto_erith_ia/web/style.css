@@ -22254,3 +22254,390 @@ html[data-atlas-market-domain="metals"]
   overflow: hidden !important;
 }
 
+
+
+/* ==========================================================================
+   BUILD 28.2.37 — METALS MARKET WORKSPACE FOUNDATION
+   ========================================================================== */
+
+.atlas-metals-market-area {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.atlas-metals-market-area[hidden] {
+  display: none !important;
+}
+
+.atlas-metals-market-ribbons {
+  display: grid;
+  gap: 8px;
+}
+
+.atlas-metals-target-ribbon,
+.atlas-metals-flow-ribbon {
+  display: grid;
+  grid-template-columns: 178px minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(244,211,134,.24);
+  border-radius: 12px;
+}
+
+.atlas-metals-ribbon-label {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 10px 12px;
+  border-right: 1px solid rgba(244,211,134,.18);
+  background: rgba(244,211,134,.055);
+}
+
+.atlas-metals-ribbon-label span {
+  color: #ffdc84;
+  font: 900 11px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+
+.atlas-metals-ribbon-label small {
+  overflow: hidden;
+  color: #93a8b6;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-metals-target-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+  padding: 7px;
+}
+
+.atlas-metals-target-track button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  cursor: pointer;
+}
+
+.atlas-metals-target-track button b {
+  color: #ffda82;
+  font-size: 11px;
+}
+
+.atlas-metals-target-track button span {
+  overflow: hidden;
+  color: #b8c7d0;
+  font-size: 9px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-metals-target-track button em {
+  color: #ffb66c;
+  font: 900 11px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.atlas-metals-target-track button.is-focus {
+  border-color: rgba(98,236,255,.54);
+  box-shadow: inset 3px 0 0 rgba(98,236,255,.74);
+}
+
+.atlas-metals-flow-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  padding: 7px;
+}
+
+.atlas-metals-flow-track > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 9px;
+  background: rgba(255,255,255,.02);
+}
+
+.atlas-metals-flow-track b {
+  overflow: hidden;
+  color: #e8dcc0;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-metals-flow-track small {
+  color: #8196a5;
+  font-size: 8px;
+}
+
+.atlas-metals-flow-track em {
+  color: #ffb66c;
+  font: 800 8px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.atlas-metals-market-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(280px, 21vw, 340px);
+  gap: 10px;
+  min-width: 0;
+}
+
+.atlas-metals-market-snapshot,
+.atlas-metals-market-registry {
+  min-width: 0;
+}
+
+.atlas-metals-market-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.atlas-metals-market-head h2 {
+  margin: 3px 0 4px;
+  color: #fff0c0;
+  font-size: 19px;
+}
+
+.atlas-metals-market-head p {
+  margin: 0;
+  color: #8fa3b2;
+  font-size: 9px;
+}
+
+.atlas-metals-market-source-state {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.atlas-metals-market-source-state span {
+  padding: 5px 7px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 999px;
+  color: #8498a7;
+  font: 800 8px/1 system-ui, sans-serif;
+}
+
+.atlas-metals-market-source-state b {
+  color: #ffce77;
+}
+
+.atlas-metals-market-tools {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+
+.atlas-metals-market-tools > span {
+  padding-right: 4px;
+  color: #748a99;
+  font: 800 8px/1 system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.atlas-metals-market-tools button {
+  padding: 6px 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  background: rgba(255,255,255,.02);
+  color: #9caeb9;
+  font: 800 8px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.atlas-metals-market-tools button.is-active {
+  border-color: rgba(244,211,134,.42);
+  background: rgba(244,211,134,.10);
+  color: #ffdf94;
+}
+
+.atlas-metals-market-table-wrap {
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+}
+
+.atlas-metals-market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9px;
+}
+
+.atlas-metals-market-table th,
+.atlas-metals-market-table td {
+  padding: 8px 9px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.atlas-metals-market-table th {
+  color: #758b9b;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.atlas-metals-market-table td {
+  color: #b9c7d0;
+}
+
+.atlas-metals-market-table td:nth-child(5),
+.atlas-metals-market-table td:nth-child(6) {
+  color: #ffcb72;
+  font-weight: 900;
+}
+
+.atlas-metals-market-table td:last-child {
+  color: #ffb66c;
+}
+
+.atlas-metals-market-table tr {
+  cursor: pointer;
+}
+
+.atlas-metals-market-table tr.is-focus td {
+  background: rgba(98,236,255,.055);
+}
+
+.atlas-metals-market-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.atlas-metals-market-footer b {
+  color: #e9ddbc;
+  font-size: 9px;
+}
+
+.atlas-metals-market-footer span {
+  color: #8297a6;
+  font-size: 8px;
+  text-align: right;
+}
+
+.atlas-metals-market-registry {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+}
+
+.atlas-metals-market-registry h3 {
+  margin: 3px 0 0;
+  color: #fff0c0;
+  font-size: 16px;
+}
+
+.atlas-metals-registry-list {
+  display: grid;
+  gap: 6px;
+}
+
+.atlas-metals-registry-list > span {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  padding: 7px;
+  border: 1px solid rgba(255,255,255,.065);
+  border-radius: 8px;
+  background: rgba(255,255,255,.018);
+}
+
+.atlas-metals-registry-list b {
+  color: #ffe09b;
+  font-size: 9px;
+}
+
+.atlas-metals-registry-list small {
+  min-width: 0;
+  overflow: hidden;
+  color: #8fa3b1;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-metals-registry-list em {
+  color: #83d9c8;
+  font: 800 7px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.atlas-metals-market-registry p {
+  margin: 0;
+  color: #8fa3b1;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+  .atlas-metals-target-ribbon,
+  .atlas-metals-flow-ribbon {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
+  .atlas-metals-target-track {
+    grid-template-columns: repeat(5, minmax(110px, 1fr));
+    overflow-x: auto;
+  }
+
+  .atlas-metals-flow-track {
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    overflow-x: auto;
+  }
+
+  .atlas-metals-market-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .atlas-metals-target-ribbon,
+  .atlas-metals-flow-ribbon {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-metals-ribbon-label {
+    border-right: 0;
+    border-bottom: 1px solid rgba(244,211,134,.18);
+  }
+
+  .atlas-metals-market-head,
+  .atlas-metals-market-footer {
+    flex-direction: column;
+  }
+
+  .atlas-metals-market-source-state {
+    justify-content: flex-start;
+  }
+
+  .atlas-metals-market-footer span {
+    text-align: left;
+  }
+}
