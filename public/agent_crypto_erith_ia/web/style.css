@@ -19493,3 +19493,52 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   cursor: pointer;
 }
 
+/* ==========================================================================
+   BUILD 28.2.13 — COMPACT MARKET TABLE RESPONSIVE FIX
+   Protect 24H / 7J values from line wrapping on compact 1366×768 screens.
+   ========================================================================== */
+
+.market-snapshot-panel th:nth-child(4),
+.market-snapshot-panel td:nth-child(4),
+.market-snapshot-panel th:nth-child(5),
+.market-snapshot-panel td:nth-child(5) {
+  box-sizing: border-box !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.market-snapshot-panel th:nth-child(4),
+.market-snapshot-panel td:nth-child(4) {
+  width: 92px !important;
+  min-width: 92px !important;
+  max-width: 92px !important;
+}
+
+.market-snapshot-panel th:nth-child(5),
+.market-snapshot-panel td:nth-child(5) {
+  width: 78px !important;
+  min-width: 78px !important;
+  max-width: 78px !important;
+}
+
+/* Compact desktop / Transformer Book class viewport. */
+@media (min-width: 851px) and (max-width: 1440px) {
+  .market-workspace-grid.math-dock-side
+  .market-snapshot-panel[data-market-columns="essential"] table {
+    min-width: 930px !important;
+  }
+
+  .market-workspace-grid.math-dock-side
+  .market-snapshot-panel .spark-control {
+    min-width: 134px !important;
+    gap: 4px !important;
+  }
+
+  .market-workspace-grid.math-dock-side
+  .market-snapshot-panel .market-basket-status {
+    min-width: 68px !important;
+  }
+}
+
