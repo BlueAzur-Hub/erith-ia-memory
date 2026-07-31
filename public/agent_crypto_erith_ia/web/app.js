@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.47 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.48 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.47";
-const ATLAS_BUILD = "28.2.47";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.47";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.48";
+const ATLAS_BUILD = "28.2.48";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.48";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -187,13 +187,584 @@ const ATLAS_PARALLEL_MARKET_METALS_STATE_KEY =
   "agent_crypto_parallel_market_metals_state_v1";
 const ATLAS_PARALLEL_MARKET_DOMAINS =
   Object.freeze(["crypto", "metals"]);
-const ATLAS_METALS_ASSETS = Object.freeze([
-  Object.freeze({ id: "gold", name: "Or", symbol: "XAU", unit: "USD / once troy", family: "précieux monétaire" }),
-  Object.freeze({ id: "silver", name: "Argent", symbol: "XAG", unit: "USD / once troy", family: "précieux monétaire et industriel" }),
-  Object.freeze({ id: "platinum", name: "Platine", symbol: "XPT", unit: "USD / once troy", family: "précieux industriel" }),
-  Object.freeze({ id: "palladium", name: "Palladium", symbol: "XPD", unit: "USD / once troy", family: "précieux industriel" }),
-  Object.freeze({ id: "copper", name: "Cuivre", symbol: "HG", unit: "USD / livre ou tonne", family: "industriel" })
-]);
+
+const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
+  assets: "./market_asset_registry.json",
+  sources: "./market_source_registry.json",
+  contract: "./market_data_contract.json",
+  bridge: "./bridge_market_adapter_contract.json"
+});
+
+const ATLAS_METALS_ASSETS = Object.freeze(
+  [
+  {
+    "id": "gold",
+    "name": "Or",
+    "symbol": "XAU",
+    "unit": "USD / once troy",
+    "family": "précieux monétaire",
+    "familyId": "monetary",
+    "assetClass": "precious_metal",
+    "currency": "USD",
+    "unitCode": "troy_ounce",
+    "unitState": "qualified"
+  },
+  {
+    "id": "silver",
+    "name": "Argent",
+    "symbol": "XAG",
+    "unit": "USD / once troy",
+    "family": "précieux monétaire et industriel",
+    "familyId": "monetary-industrial",
+    "assetClass": "precious_metal",
+    "currency": "USD",
+    "unitCode": "troy_ounce",
+    "unitState": "qualified"
+  },
+  {
+    "id": "platinum",
+    "name": "Platine",
+    "symbol": "XPT",
+    "unit": "USD / once troy",
+    "family": "précieux industriel",
+    "familyId": "precious-industrial",
+    "assetClass": "precious_metal",
+    "currency": "USD",
+    "unitCode": "troy_ounce",
+    "unitState": "qualified"
+  },
+  {
+    "id": "palladium",
+    "name": "Palladium",
+    "symbol": "XPD",
+    "unit": "USD / once troy",
+    "family": "précieux industriel",
+    "familyId": "precious-industrial",
+    "assetClass": "precious_metal",
+    "currency": "USD",
+    "unitCode": "troy_ounce",
+    "unitState": "qualified"
+  },
+  {
+    "id": "copper",
+    "name": "Cuivre",
+    "symbol": "HG",
+    "unit": "Source requise · livre ou tonne",
+    "family": "industriel",
+    "familyId": "industrial",
+    "assetClass": "industrial_metal",
+    "currency": "USD",
+    "unitCode": null,
+    "unitState": "source_dependent"
+  }
+].map(asset => Object.freeze(asset))
+);
+
+const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
+  [
+  {
+    "id": "alpha_vantage",
+    "name": "Alpha Vantage",
+    "short_name": "Alpha Vantage",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals",
+      "stocks",
+      "crypto",
+      "forex",
+      "macro"
+    ],
+    "roles": [
+      "quote",
+      "history",
+      "gold_silver_spot",
+      "stocks"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver"
+    ],
+    "asset_notes": {
+      "gold": "XAU · spot agrégé et historique candidat",
+      "silver": "XAG · spot agrégé et historique candidat"
+    },
+    "coverage_summary": "Pilote XAU/XAG, actions, ETF et macro.",
+    "status": "pilot_candidate",
+    "status_label": "PILOTE XAU/XAG",
+    "status_tone": "candidate",
+    "priority": 1,
+    "catalogue_order": 100,
+    "api_key_required": true,
+    "bridge_required": true,
+    "licence_state": "plan_and_public_display_to_verify",
+    "source_timestamp": true,
+    "official_docs": "https://www.alphavantage.co/documentation/"
+  },
+  {
+    "id": "twelve_data",
+    "name": "Twelve Data",
+    "short_name": "Twelve Data",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals",
+      "stocks",
+      "crypto",
+      "forex"
+    ],
+    "roles": [
+      "quote",
+      "ohlc",
+      "history",
+      "websocket",
+      "multi_market"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "XAU/USD · couverture à tester",
+      "silver": "XAG/USD · couverture à tester",
+      "platinum": "XPT/USD · couverture à tester",
+      "palladium": "XPD/USD · couverture à tester",
+      "copper": "Symbole et unité cuivre à qualifier"
+    },
+    "coverage_summary": "Candidat unifié Métaux + Bourse, couverture 5/5 à tester.",
+    "status": "coverage_test_required",
+    "status_label": "COUVERTURE À TESTER",
+    "status_tone": "candidate",
+    "priority": 2,
+    "catalogue_order": 110,
+    "api_key_required": true,
+    "bridge_required": true,
+    "licence_state": "plan_and_public_display_to_verify",
+    "source_timestamp": true,
+    "official_docs": "https://twelvedata.com/docs"
+  },
+  {
+    "id": "api_ninjas",
+    "name": "API Ninjas — Commodity Price",
+    "short_name": "API Ninjas",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals",
+      "commodities"
+    ],
+    "roles": [
+      "future_quote",
+      "history",
+      "commodity_snapshot"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "Future roulant · ne pas appeler spot",
+      "silver": "Future roulant · ne pas appeler spot",
+      "platinum": "Future roulant · couverture candidate",
+      "palladium": "Future roulant · couverture candidate",
+      "copper": "Future roulant · unité contrat à qualifier"
+    },
+    "coverage_summary": "Futures candidats pour les cinq métaux.",
+    "status": "coverage_test_required",
+    "status_label": "FUTURES À TESTER",
+    "status_tone": "candidate",
+    "priority": 3,
+    "catalogue_order": 120,
+    "api_key_required": true,
+    "bridge_required": true,
+    "licence_state": "premium_for_public_or_commercial_use",
+    "source_timestamp": true,
+    "official_docs": "https://api-ninjas.com/api/commodityprice"
+  },
+  {
+    "id": "lbma",
+    "name": "London Bullion Market Association",
+    "short_name": "LBMA",
+    "authority_type": "official_benchmark",
+    "domains": [
+      "metals"
+    ],
+    "roles": [
+      "benchmark",
+      "clearing",
+      "methodology"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium"
+    ],
+    "asset_notes": {
+      "gold": "Benchmark officiel · licence requise",
+      "silver": "Benchmark officiel · licence requise",
+      "platinum": "Référence de marché · licence à qualifier",
+      "palladium": "Référence de marché · licence à qualifier"
+    },
+    "coverage_summary": "Benchmarks officiels des métaux précieux.",
+    "status": "reference_license_required",
+    "status_label": "LICENCE REQUISE",
+    "status_tone": "license",
+    "priority": 4,
+    "catalogue_order": 130,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "licence_required",
+    "source_timestamp": true,
+    "official_docs": "https://www.lbma.org.uk/prices-and-data"
+  },
+  {
+    "id": "lme",
+    "name": "London Metal Exchange",
+    "short_name": "LME",
+    "authority_type": "official_exchange",
+    "domains": [
+      "metals"
+    ],
+    "roles": [
+      "official_price",
+      "stocks",
+      "contracts",
+      "warehouse"
+    ],
+    "asset_ids": [
+      "copper"
+    ],
+    "asset_notes": {
+      "copper": "Cuivre officiel · USD/tonne selon flux · licence requise"
+    },
+    "coverage_summary": "Cuivre industriel, stocks et contrats officiels.",
+    "status": "reference_license_required",
+    "status_label": "LICENCE REQUISE",
+    "status_tone": "license",
+    "priority": 4,
+    "catalogue_order": 140,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "licence_required",
+    "source_timestamp": true,
+    "official_docs": "https://www.lme.com/en/Market-data"
+  },
+  {
+    "id": "cme",
+    "name": "CME Group / COMEX / NYMEX",
+    "short_name": "CME",
+    "authority_type": "official_exchange",
+    "domains": [
+      "metals",
+      "commodities"
+    ],
+    "roles": [
+      "futures",
+      "options",
+      "volume",
+      "term_structure"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "GC · futur officiel",
+      "silver": "SI · futur officiel",
+      "platinum": "PL · futur officiel",
+      "palladium": "PA · futur officiel",
+      "copper": "HG · futur officiel en USD/livre"
+    },
+    "coverage_summary": "Contrats futures et courbes à terme officielles.",
+    "status": "professional_future",
+    "status_label": "PHASE ULTÉRIEURE",
+    "status_tone": "future",
+    "priority": 5,
+    "catalogue_order": 150,
+    "api_key_required": true,
+    "bridge_required": true,
+    "licence_state": "subscription_and_licence_required",
+    "source_timestamp": true,
+    "official_docs": "https://www.cmegroup.com/market-data/market-data-api.html"
+  },
+  {
+    "id": "usgs",
+    "name": "USGS — Mineral Commodity Summaries",
+    "short_name": "USGS",
+    "authority_type": "public_authority",
+    "domains": [
+      "metals",
+      "critical_materials",
+      "commodities"
+    ],
+    "roles": [
+      "production",
+      "reserves",
+      "resources",
+      "import_dependence"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "Production, réserves et dépendances",
+      "silver": "Production, réserves et dépendances",
+      "platinum": "PGM, production et réserves",
+      "palladium": "PGM, production et réserves",
+      "copper": "Production, réserves et dépendances"
+    },
+    "coverage_summary": "Données structurelles annuelles, aucun cours.",
+    "status": "structural_ready",
+    "status_label": "STRUCTUREL PRÊT",
+    "status_tone": "structural",
+    "priority": 2,
+    "catalogue_order": 160,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "public_with_attribution",
+    "source_timestamp": true,
+    "official_docs": "https://pubs.usgs.gov/publication/mcs2026"
+  },
+  {
+    "id": "iea",
+    "name": "International Energy Agency",
+    "short_name": "IEA",
+    "authority_type": "international_institution",
+    "domains": [
+      "metals",
+      "critical_materials",
+      "macro"
+    ],
+    "roles": [
+      "demand_scenarios",
+      "supply_chain",
+      "policy"
+    ],
+    "asset_ids": [
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "platinum": "PGM et usages de transition à documenter",
+      "palladium": "PGM et chaîne industrielle à documenter",
+      "copper": "Demande, concentration et transition énergétique"
+    },
+    "coverage_summary": "Scénarios et chaînes des matériaux critiques.",
+    "status": "structural_ready",
+    "status_label": "STRUCTUREL PRÊT",
+    "status_tone": "structural",
+    "priority": 3,
+    "catalogue_order": 170,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "dataset_specific",
+    "source_timestamp": true,
+    "official_docs": "https://www.iea.org/data-and-statistics/data-tools/critical-minerals-data-explorer"
+  },
+  {
+    "id": "rmis",
+    "name": "RMIS / JRC — Commission européenne",
+    "short_name": "RMIS",
+    "authority_type": "public_authority",
+    "domains": [
+      "metals",
+      "critical_materials",
+      "regulation"
+    ],
+    "roles": [
+      "eu_critical_status",
+      "profiles",
+      "trade",
+      "recycling"
+    ],
+    "asset_ids": [
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "platinum": "Profil UE et statut critique/stratégique",
+      "palladium": "Profil UE et dépendances",
+      "copper": "Profil UE, commerce et recyclage"
+    },
+    "coverage_summary": "Profils et criticité européenne.",
+    "status": "structural_ready",
+    "status_label": "RÉFÉRENCE UE",
+    "status_tone": "structural",
+    "priority": 4,
+    "catalogue_order": 180,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "download_specific",
+    "source_timestamp": true,
+    "official_docs": "https://rmis.jrc.ec.europa.eu/"
+  },
+  {
+    "id": "world_bank",
+    "name": "World Bank — Pink Sheet",
+    "short_name": "World Bank",
+    "authority_type": "international_institution",
+    "domains": [
+      "metals",
+      "commodities",
+      "macro"
+    ],
+    "roles": [
+      "monthly_history",
+      "annual_history",
+      "commodity_context"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "Historique mensuel et annuel",
+      "silver": "Historique mensuel et annuel",
+      "platinum": "Historique mensuel selon série disponible",
+      "copper": "Historique mensuel et annuel"
+    },
+    "coverage_summary": "Historique mensuel, jamais source spot.",
+    "status": "historical_ready",
+    "status_label": "HISTORIQUE PRÊT",
+    "status_tone": "historical",
+    "priority": 5,
+    "catalogue_order": 190,
+    "api_key_required": false,
+    "bridge_required": true,
+    "licence_state": "public_dataset",
+    "source_timestamp": true,
+    "official_docs": "https://www.worldbank.org/en/research/commodity-markets"
+  },
+  {
+    "id": "fred",
+    "name": "FRED / ALFRED",
+    "short_name": "FRED",
+    "authority_type": "public_data_platform",
+    "domains": [
+      "metals",
+      "stocks",
+      "macro"
+    ],
+    "roles": [
+      "rates",
+      "inflation",
+      "dollar",
+      "industrial_cycle"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "Dollar, taux réels et inflation",
+      "silver": "Dollar, taux et cycle industriel",
+      "platinum": "Cycle industriel et automobile",
+      "palladium": "Cycle industriel et automobile",
+      "copper": "Production industrielle, dollar et taux"
+    },
+    "coverage_summary": "Macro documentée, aucun cours intraday.",
+    "status": "macro_ready",
+    "status_label": "MACRO PRÊT",
+    "status_tone": "macro",
+    "priority": 5,
+    "catalogue_order": 200,
+    "api_key_required": true,
+    "bridge_required": true,
+    "licence_state": "series_source_dependent",
+    "source_timestamp": true,
+    "official_docs": "https://fred.stlouisfed.org/docs/api/fred/overview.html"
+  },
+  {
+    "id": "cibjo",
+    "name": "CIBJO Blue Books",
+    "short_name": "CIBJO",
+    "authority_type": "standards_body",
+    "domains": [
+      "gemstones",
+      "metals"
+    ],
+    "roles": [
+      "nomenclature",
+      "standards",
+      "responsible_sourcing"
+    ],
+    "asset_ids": [],
+    "coverage_summary": "Nomenclature et standards volontaires.",
+    "status": "human_reference",
+    "status_label": "NORME DE RÉFÉRENCE",
+    "status_tone": "reference",
+    "priority": 6,
+    "catalogue_order": 240,
+    "api_key_required": false,
+    "bridge_required": false,
+    "licence_state": "edition_and_rights_to_verify",
+    "source_timestamp": false,
+    "official_docs": "https://cibjo.org/the-blue-books/"
+  }
+].map(source => Object.freeze(source))
+);
+
+const ATLAS_MARKET_CONTRACT_FALLBACK = Object.freeze(
+  {
+  "schema": "agent_crypto_market_data_contract_v1",
+  "states": [
+    "direct",
+    "data_current",
+    "data_delayed",
+    "data_historical",
+    "date_unqualified",
+    "source_disconnected",
+    "adapter_required",
+    "licence_to_verify"
+  ],
+  "cache_namespaces": [
+    "cache_metals_quotes",
+    "cache_metals_history",
+    "cache_metals_structural",
+    "cache_metals_macro",
+    "cache_metals_sources"
+  ],
+  "bridge_schema": "agent_crypto_bridge_market_adapter_contract_v1",
+  "routes": [
+    "/market/metals/quote",
+    "/market/metals/series",
+    "/market/metals/snapshot",
+    "/market/metals/source-status"
+  ]
+}
+);
+
+const atlasMarketRegistryState = {
+  status: "fallback",
+  origin: "fallback_intégré",
+  assets: ATLAS_METALS_ASSETS,
+  sources: ATLAS_METALS_SOURCE_FALLBACK,
+  contract: ATLAS_MARKET_CONTRACT_FALLBACK,
+  bridge: {
+    schema: "agent_crypto_bridge_market_adapter_contract_v1",
+    routes: []
+  },
+  loadedAt: null,
+  error: null
+};
 
 state.marketDomain = "crypto";
 state.parallelMarkets = {
@@ -209,8 +780,13 @@ state.parallelMarkets = {
     activeId: "gold",
     marketFilter: "all",
     selectionIds: ATLAS_METALS_ASSETS.map(asset => asset.id),
+    registryStatus: "fallback",
+    registryOrigin: "fallback_intégré",
+    quoteCache: Object.create(null),
     chartCache: Object.create(null),
-    structuralCache: Object.create(null)
+    structuralCache: Object.create(null),
+    macroCache: Object.create(null),
+    sourceCache: Object.create(null)
   }
 };
 
@@ -370,7 +946,6 @@ const clamp = (min, max, value) => Math.max(min, Math.min(max, value)); function
 } function escapeHtml(str) { return String(str ?? "").replace(/[&<>'"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;" }[c]));
 } function num(value, formatter = fmtEUR.format.bind(fmtEUR)) { return typeof value === "number" && Number.isFinite(value) ? formatter(value) : "Donnée manquante";
 } 
-
 
 function atlasVersionParts(value) {
   const parts = String(value || "").match(/\d+/g);
@@ -5988,7 +6563,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.47
+   Market Core V2.0-Alpha · Build 28.2.48
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -10120,7 +10695,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.47 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.48 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -10341,7 +10916,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.47"
+      source: "target-top5-cycle-28.2.48"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -12278,17 +12853,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.48" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.48" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.47" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.48" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -13372,7 +13947,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.47",
+  interface: "Build 28.2.48",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -15623,7 +16198,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.47`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.48`
   );
 }
 
@@ -19799,7 +20374,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.47 — Parallel Markets Foundation
+   Build 28.2.48 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -20020,6 +20595,402 @@ function atlasParallelMarketSetMetalsMarketFilter(filter) {
   return value;
 }
 
+
+function atlasMarketRegistryArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function atlasMarketRegistrySourceToneClass(tone) {
+  const normalized = String(tone || "").toLowerCase();
+  return [
+    "ready",
+    "candidate",
+    "license",
+    "structural",
+    "historical",
+    "macro",
+    "future",
+    "reference"
+  ].includes(normalized)
+    ? `is-${normalized}`
+    : "is-reference";
+}
+
+function atlasMarketRegistryAssetMeta(assetId) {
+  const id = String(assetId || "");
+  const loaded = atlasMarketRegistryArray(
+    atlasMarketRegistryState.assets
+  ).find(asset => String(asset?.id || "") === id);
+
+  if (loaded) return loaded;
+
+  return ATLAS_METALS_ASSETS.find(
+    asset => asset.id === id
+  ) || ATLAS_METALS_ASSETS[0];
+}
+
+function atlasMarketRegistryMetalSources() {
+  return atlasMarketRegistryArray(
+    atlasMarketRegistryState.sources
+  )
+    .filter(source => {
+      const domains = atlasMarketRegistryArray(source?.domains);
+      return (
+        domains.includes("metals")
+        || domains.includes("commodities")
+        || domains.includes("macro")
+      );
+    })
+    .sort((left, right) => {
+      const orderDifference =
+        Number(left?.catalogue_order || 9999)
+        - Number(right?.catalogue_order || 9999);
+      if (orderDifference) return orderDifference;
+
+      return String(left?.name || "").localeCompare(
+        String(right?.name || ""),
+        "fr"
+      );
+    });
+}
+
+function atlasMarketRegistrySourcesForAsset(assetId) {
+  const id = String(assetId || "");
+
+  return atlasMarketRegistryMetalSources()
+    .filter(source => {
+      const ids = atlasMarketRegistryArray(source?.asset_ids);
+      return ids.includes(id);
+    })
+    .sort((left, right) => {
+      const priorityDifference =
+        Number(left?.priority || 999)
+        - Number(right?.priority || 999);
+      if (priorityDifference) return priorityDifference;
+
+      return Number(left?.catalogue_order || 9999)
+        - Number(right?.catalogue_order || 9999);
+    });
+}
+
+function atlasMarketRegistryCreateSourceRow(source, assetId = null) {
+  const row = document.createElement("span");
+  const name = document.createElement("b");
+  const description = document.createElement("small");
+  const status = document.createElement("em");
+
+  name.textContent = String(
+    source?.short_name || source?.name || "Source"
+  );
+
+  const note = assetId
+    ? source?.asset_notes?.[assetId]
+    : null;
+
+  description.textContent = String(
+    note
+    || source?.coverage_summary
+    || "Rôle non qualifié"
+  );
+
+  status.textContent = String(
+    source?.status_label || "À QUALIFIER"
+  );
+  status.classList.add(
+    atlasMarketRegistrySourceToneClass(
+      source?.status_tone
+    )
+  );
+
+  row.dataset.marketSourceId = String(source?.id || "");
+  row.dataset.marketSourceStatus = String(
+    source?.status || "unknown"
+  );
+  row.append(name, description, status);
+  return row;
+}
+
+function atlasMarketRegistryRenderSourceDock(assetId = null) {
+  const asset = atlasMarketRegistryAssetMeta(
+    assetId || atlasParallelMarketActiveMetal().id
+  );
+  const list = document.getElementById(
+    "atlasMetalsSourceList"
+  );
+  const stateLabel = document.getElementById(
+    "atlasMetalsSourceDockState"
+  );
+
+  if (!list || !asset) return;
+
+  const sources = atlasMarketRegistrySourcesForAsset(
+    asset.id
+  ).slice(0, 7);
+
+  list.replaceChildren();
+
+  if (!sources.length) {
+    const empty = document.createElement("span");
+    const name = document.createElement("b");
+    const description = document.createElement("small");
+    const status = document.createElement("em");
+
+    name.textContent = "Aucune source qualifiée";
+    description.textContent =
+      "Le registre ne contient encore aucune couverture pour cet actif.";
+    status.textContent = "À DOCUMENTER";
+    status.classList.add("is-reference");
+    empty.append(name, description, status);
+    list.append(empty);
+  } else {
+    sources.forEach(source => {
+      list.append(
+        atlasMarketRegistryCreateSourceRow(
+          source,
+          asset.id
+        )
+      );
+    });
+  }
+
+  if (stateLabel) {
+    stateLabel.textContent =
+      `${sources.length} référence`
+      + `${sources.length > 1 ? "s" : ""}`
+      + " · 0 connectée";
+  }
+
+  setText(
+    document.getElementById("atlasMetalsSourceDockTitle"),
+    `${asset.name} · ${asset.symbol}`
+  );
+}
+
+function atlasMarketRegistryRenderCatalog() {
+  const list = document.getElementById(
+    "atlasMetalsRegistryList"
+  );
+  const summary = document.getElementById(
+    "atlasMetalsRegistrySummary"
+  );
+  if (!list) return;
+
+  const sources = atlasMarketRegistryMetalSources();
+  list.replaceChildren();
+
+  sources.forEach(source => {
+    list.append(
+      atlasMarketRegistryCreateSourceRow(source)
+    );
+  });
+
+  if (summary) {
+    const contract = atlasMarketRegistryState.contract || {};
+    const stateCount = atlasMarketRegistryArray(
+      contract.states
+    ).length;
+    const cacheCount = atlasMarketRegistryArray(
+      contract.cache_namespaces
+    ).length;
+    const origin = atlasMarketRegistryState.status === "loaded"
+      ? "registres JSON locaux"
+      : "fallback intégré";
+
+    summary.textContent =
+      `${sources.length} sources · `
+      + `${ATLAS_METALS_ASSETS.length} actifs · `
+      + `${stateCount} états · `
+      + `${cacheCount} caches Métaux · `
+      + `${origin} · aucune clé`;
+  }
+
+  list.dataset.registryStatus =
+    atlasMarketRegistryState.status;
+}
+
+function atlasMarketRegistryRender() {
+  atlasMarketRegistryRenderCatalog();
+  atlasMarketRegistryRenderSourceDock(
+    atlasParallelMarketActiveMetal().id
+  );
+
+  const metals = atlasParallelMarketMetalsState();
+  metals.registryStatus = atlasMarketRegistryState.status;
+  metals.registryOrigin = atlasMarketRegistryState.origin;
+}
+
+function atlasMarketRegistryNormalizeAssets(payload) {
+  const assets = atlasMarketRegistryArray(payload?.assets)
+    .filter(asset => {
+      return (
+        typeof asset?.id === "string"
+        && typeof asset?.name === "string"
+        && typeof asset?.symbol === "string"
+      );
+    })
+    .map(asset => {
+      const fallback = ATLAS_METALS_ASSETS.find(
+        item => item.id === asset.id
+      ) || {};
+
+      return Object.freeze({
+        ...fallback,
+        ...asset,
+        unit:
+          asset.display_unit
+          || fallback.unit
+          || "Unité à qualifier",
+        family:
+          String(
+            asset.family_label
+            || fallback.family
+            || "Non qualifiée"
+          ).toLowerCase()
+      });
+    });
+
+  const knownIds = new Set(
+    ATLAS_METALS_ASSETS.map(asset => asset.id)
+  );
+
+  if (
+    assets.length !== ATLAS_METALS_ASSETS.length
+    || assets.some(asset => !knownIds.has(asset.id))
+  ) {
+    throw new Error("Registre actifs incomplet");
+  }
+
+  return assets;
+}
+
+function atlasMarketRegistryNormalizeSources(payload) {
+  const sources = atlasMarketRegistryArray(payload?.sources)
+    .filter(source => {
+      return (
+        typeof source?.id === "string"
+        && typeof source?.name === "string"
+        && Array.isArray(source?.domains)
+        && typeof source?.status === "string"
+      );
+    })
+    .map(source => Object.freeze({ ...source }));
+
+  if (sources.length < 10) {
+    throw new Error("Registre sources incomplet");
+  }
+
+  return sources;
+}
+
+async function atlasMarketRegistryFetchJson(path) {
+  const separator = String(path).includes("?") ? "&" : "?";
+  const response = await fetch(
+    `${path}${separator}build=${encodeURIComponent(ATLAS_BUILD)}`,
+    {
+      cache: "no-store",
+      headers: {
+        "Accept": "application/json"
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Registre ${path} indisponible (${response.status})`
+    );
+  }
+
+  return response.json();
+}
+
+async function atlasMarketRegistryLoad() {
+  atlasMarketRegistryState.status = "loading";
+  atlasMarketRegistryState.error = null;
+  atlasMarketRegistryRender();
+
+  try {
+    const [
+      assetsPayload,
+      sourcesPayload,
+      contractPayload,
+      bridgePayload
+    ] = await Promise.all([
+      atlasMarketRegistryFetchJson(
+        ATLAS_MARKET_REGISTRY_PATHS.assets
+      ),
+      atlasMarketRegistryFetchJson(
+        ATLAS_MARKET_REGISTRY_PATHS.sources
+      ),
+      atlasMarketRegistryFetchJson(
+        ATLAS_MARKET_REGISTRY_PATHS.contract
+      ),
+      atlasMarketRegistryFetchJson(
+        ATLAS_MARKET_REGISTRY_PATHS.bridge
+      )
+    ]);
+
+    const assets = atlasMarketRegistryNormalizeAssets(
+      assetsPayload
+    );
+    const sources = atlasMarketRegistryNormalizeSources(
+      sourcesPayload
+    );
+
+    if (
+      contractPayload?.schema
+      !== "agent_crypto_market_data_contract_v1"
+    ) {
+      throw new Error("Contrat de données incompatible");
+    }
+
+    if (
+      bridgePayload?.schema
+      !== "agent_crypto_bridge_market_adapter_contract_v1"
+    ) {
+      throw new Error("Contrat Bridge incompatible");
+    }
+
+    atlasMarketRegistryState.status = "loaded";
+    atlasMarketRegistryState.origin = "json_local";
+    atlasMarketRegistryState.assets = assets;
+    atlasMarketRegistryState.sources = sources;
+    atlasMarketRegistryState.contract = {
+      schema: contractPayload.schema,
+      states: atlasMarketRegistryArray(
+        contractPayload.states
+      ),
+      cache_namespaces: atlasMarketRegistryArray(
+        contractPayload.cache_namespaces
+      ).filter(name => String(name).startsWith(
+        "cache_metals_"
+      ))
+    };
+    atlasMarketRegistryState.bridge = bridgePayload;
+    atlasMarketRegistryState.loadedAt =
+      new Date().toISOString();
+    atlasMarketRegistryState.error = null;
+  } catch (error) {
+    atlasMarketRegistryState.status = "fallback";
+    atlasMarketRegistryState.origin = "fallback_intégré";
+    atlasMarketRegistryState.assets = ATLAS_METALS_ASSETS;
+    atlasMarketRegistryState.sources =
+      ATLAS_METALS_SOURCE_FALLBACK;
+    atlasMarketRegistryState.contract =
+      ATLAS_MARKET_CONTRACT_FALLBACK;
+    atlasMarketRegistryState.bridge = {
+      schema:
+        "agent_crypto_bridge_market_adapter_contract_v1",
+      routes: []
+    };
+    atlasMarketRegistryState.error =
+      String(error?.message || error || "Erreur registre");
+  }
+
+  atlasMarketRegistryRender();
+  atlasParallelMarketRenderMetals();
+  return atlasMarketRegistryState.status;
+}
+
 function atlasParallelMarketRenderMetalsMarket() {
   const metals = atlasParallelMarketMetalsState();
   const selected = new Set(metals.selectionIds);
@@ -20103,7 +21074,8 @@ function atlasParallelMarketRenderMetalsMarket() {
 
 function atlasParallelMarketRenderMetalsDetail() {
   const metals = atlasParallelMarketMetalsState();
-  const asset = atlasParallelMarketActiveMetal();
+  const baseAsset = atlasParallelMarketActiveMetal();
+  const asset = atlasMarketRegistryAssetMeta(baseAsset.id);
   const selected = new Set(metals.selectionIds);
 
   setText(document.getElementById("atlasMetalsDetailName"), asset.name);
@@ -20117,10 +21089,7 @@ function atlasParallelMarketRenderMetalsDetail() {
     document.getElementById("atlasMetalsDetailSelection"),
     selected.has(asset.id) ? "Incluse" : "Hors sélection"
   );
-  setText(
-    document.getElementById("atlasMetalsSourceDockTitle"),
-    `${asset.name} · ${asset.symbol}`
-  );
+  atlasMarketRegistryRenderSourceDock(asset.id);
 
   const mode = metals.view === "base100" ? "Base 100" : "Prix";
   const period = atlasChartPeriodLabel(metals.period);
@@ -20217,6 +21186,7 @@ function atlasParallelMarketRenderMetals() {
 
   atlasParallelMarketRenderMetalsDetail();
   atlasParallelMarketRenderMetalsMarket();
+  atlasMarketRegistryRenderCatalog();
 }
 
 function atlasParallelMarketRender() {
@@ -20544,6 +21514,8 @@ function atlasParallelMarketInit() {
   );
 
   atlasParallelMarketMetalsRead();
+  atlasMarketRegistryRender();
+  void atlasMarketRegistryLoad();
 
   switchButton?.addEventListener("click", event => {
     event.preventDefault();
@@ -20813,7 +21785,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.47 — Comparison Memory Slots A / B / C
+   Build 28.2.48 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -21163,7 +22135,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.47`
+        source: `workspace-slot-${slot}-28.2.48`
       });
     } else {
       requestAnimationFrame(() => {
@@ -22648,7 +23620,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.47 annulée :", error);
+    console.warn("Transaction scanner 28.2.48 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -22831,7 +23803,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.47 :", error);
+    console.error("Scanner 28.2.48 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -22920,7 +23892,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.47 non capturé :", error);
+      console.error("Scanner 28.2.48 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -22930,7 +23902,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.47 :", error);
+    console.error("Démarrage scanner 28.2.48 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -22944,7 +23916,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.47"
+    source: "button-28.2.48"
   });
 }
 

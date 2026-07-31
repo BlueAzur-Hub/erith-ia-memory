@@ -23482,7 +23482,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.47 — METALS WORKSPACE CONSOLIDATION
+   BUILD 28.2.43 — METALS WORKSPACE CONSOLIDATION
    Toolbar 28.2.42 is intentionally untouched.
    ========================================================================== */
 
@@ -23776,17 +23776,172 @@ html[data-atlas-market-domain="metals"]
     text-align: left;
   }
 }
+
+
 /* ==========================================================================
-   BUILD 28.2.47 — STABLE RECOVERY & UPDATE CONTROL REPAIR
+   BUILD 28.2.48 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
+   Toolbar and geometry from 28.2.43 remain unchanged.
+   ========================================================================== */
+
+#atlasMetalsRegistryList {
+  max-height: 392px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(98,236,255,.28)
+    transparent;
+}
+
+#atlasMetalsRegistryList::-webkit-scrollbar {
+  width: 5px;
+}
+
+#atlasMetalsRegistryList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(98,236,255,.28);
+}
+
+#atlasMetalsRegistryList > span,
+#atlasMetalsSourceList > span {
+  min-width: 0;
+}
+
+#atlasMetalsRegistryList > span small,
+#atlasMetalsSourceList > span small {
+  overflow-wrap: anywhere;
+}
+
+#atlasMetalsRegistryList em,
+#atlasMetalsSourceList em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  max-width: 138px;
+  padding: 4px 6px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 999px;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+}
+
+#atlasMetalsRegistryList em.is-ready,
+#atlasMetalsSourceList em.is-ready {
+  border-color: rgba(112,232,190,.30);
+  background: rgba(112,232,190,.08);
+  color: #83e9c6;
+}
+
+#atlasMetalsRegistryList em.is-candidate,
+#atlasMetalsSourceList em.is-candidate {
+  border-color: rgba(98,236,255,.28);
+  background: rgba(98,236,255,.07);
+  color: #7ce8f4;
+}
+
+#atlasMetalsRegistryList em.is-license,
+#atlasMetalsSourceList em.is-license {
+  border-color: rgba(255,182,108,.32);
+  background: rgba(255,182,108,.08);
+  color: #ffbd76;
+}
+
+#atlasMetalsRegistryList em.is-structural,
+#atlasMetalsSourceList em.is-structural {
+  border-color: rgba(189,170,255,.28);
+  background: rgba(189,170,255,.07);
+  color: #c5b8ff;
+}
+
+#atlasMetalsRegistryList em.is-historical,
+#atlasMetalsSourceList em.is-historical {
+  border-color: rgba(244,211,134,.28);
+  background: rgba(244,211,134,.07);
+  color: #f2d78e;
+}
+
+#atlasMetalsRegistryList em.is-macro,
+#atlasMetalsSourceList em.is-macro {
+  border-color: rgba(105,186,255,.28);
+  background: rgba(105,186,255,.07);
+  color: #89caff;
+}
+
+#atlasMetalsRegistryList em.is-future,
+#atlasMetalsSourceList em.is-future {
+  border-color: rgba(161,177,190,.24);
+  background: rgba(161,177,190,.055);
+  color: #aab9c4;
+}
+
+#atlasMetalsRegistryList em.is-reference,
+#atlasMetalsSourceList em.is-reference {
+  border-color: rgba(255,255,255,.13);
+  background: rgba(255,255,255,.035);
+  color: #98aab6;
+}
+
+#atlasMetalsRegistrySummary {
+  margin-top: 9px !important;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  color: #879ba8 !important;
+  font-size: 8.5px !important;
+  line-height: 1.45 !important;
+}
+
+#atlasMetalsRegistryList[data-registry-status="loading"] {
+  opacity: .72;
+}
+
+#atlasMetalsRegistryList[data-registry-status="loaded"] {
+  opacity: 1;
+}
+
+#atlasMetalsSourceDockState {
+  max-width: 145px;
+  text-align: right;
+  white-space: normal;
+}
+
+@media (max-width: 1100px) {
+  #atlasMetalsRegistryList {
+    max-height: 320px;
+  }
+
+  #atlasMetalsRegistryList em,
+  #atlasMetalsSourceList em {
+    max-width: 118px;
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 700px) {
+  #atlasMetalsRegistryList {
+    max-height: 280px;
+  }
+
+  #atlasMetalsRegistryList em,
+  #atlasMetalsSourceList em {
+    grid-column: 2;
+    justify-self: start;
+    max-width: none;
+  }
+}
+
+/* ==========================================================================
+   BUILD 28.2.48 — STABLE RECOVERY & UPDATE CONTROL REPAIR
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 28.2.47
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.47
+   ATLAS_ASSET_BUILD: 28.2.48
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.48
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.47";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.47";
+  --atlas-asset-build: "28.2.48";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.48";
 }
 
 .atlas-version-control[data-state="current"],

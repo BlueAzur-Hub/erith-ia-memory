@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_bridge_market_adapter_contract_v1",
-  "version": "1.1.0",
-  "published_at": "2026-07-31T21:00:00Z",
+  "version": "1.0.0",
+  "published_at": "2026-07-31T20:19:32Z",
   "security": {
     "api_keys_in_browser_forbidden": true,
     "api_keys_in_public_repository_forbidden": true,
@@ -115,17 +115,5 @@
     "timeout",
     "invalid_payload",
     "date_unqualified"
-  ],
-  "budget_policy": {
-    "default_cost_eur": 0,
-    "keyed_source_activation": "disabled_by_default",
-    "account_creation": "explicit_operator_decision_required",
-    "paid_subscription": "forbidden_without_explicit_operator_decision",
-    "free_trial_with_card": "forbidden"
-  },
-  "activation_defaults": {
-    "metals_quotes": "disabled",
-    "public_structural_imports": "prepared_not_running",
-    "paid_adapters": "disabled"
-  }
+  ]
 }
