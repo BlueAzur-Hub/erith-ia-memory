@@ -16517,7 +16517,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.8
+   Market Core V2.0-Alpha · Build 28.2.9
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -19028,7 +19028,249 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.8
+   Market Core V2.0-Alpha · Build 28.2.9
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
+
+/* ==========================================================================
+   BUILD 28.2.9 — DETAIL PANEL TYPOGRAPHY POLISH
+   Visual hierarchy only. Geometry, Aerith crop and functional data unchanged.
+   ========================================================================== */
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  --detail-text-primary: rgba(255,246,219,.96);
+  --detail-text-secondary: rgba(210,226,239,.78);
+  --detail-text-muted: rgba(173,198,217,.68);
+  --detail-line-active: rgba(98,236,255,.30);
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle {
+  padding-bottom: 8px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle-title .eyebrow {
+  color: rgba(176,222,247,.88) !important;
+  font-size: 7.8px !important;
+  font-weight: 880 !important;
+  letter-spacing: .14em !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle-title strong {
+  color: #fff0c8 !important;
+  font-size: 16px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.018em !important;
+  text-shadow: 0 1px 12px rgba(255,216,135,.10);
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle > em,
+#analyste.champagne-clean-lens .detail-panel-toggle [data-detail-toggle-label] {
+  color: rgba(221,242,252,.92) !important;
+  font-size: 8px !important;
+  font-weight: 850 !important;
+  letter-spacing: .02em !important;
+}
+
+#analyste.champagne-clean-lens .detail-project-visual > span {
+  font-size: 7.6px !important;
+  font-weight: 880 !important;
+  letter-spacing: .045em !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip {
+  gap: 5px !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip > span {
+  min-height: 42px !important;
+  padding: 7px 8px !important;
+  align-content: start !important;
+  gap: 4px !important;
+  background: rgba(2,9,18,.64) !important;
+  border-color: rgba(255,255,255,.15) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(98,236,255,.025),
+    0 5px 13px rgba(0,0,0,.15);
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip small {
+  color: rgba(178,207,228,.78) !important;
+  font-size: 7.1px !important;
+  font-weight: 850 !important;
+  letter-spacing: .08em !important;
+}
+
+#analyste.champagne-clean-lens .detail-compact-strip b {
+  display: -webkit-box !important;
+  overflow: hidden !important;
+  color: var(--detail-text-primary) !important;
+  font-size: 9px !important;
+  font-weight: 920 !important;
+  line-height: 1.18 !important;
+  letter-spacing: -.01em !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure {
+  border-color: rgba(255,255,255,.14) !important;
+  background: rgba(2,9,18,.60) !important;
+  transition:
+    border-color .16s ease,
+    background-color .16s ease,
+    box-shadow .16s ease !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure:hover {
+  border-color: var(--detail-line-active) !important;
+  background: rgba(2,9,18,.72) !important;
+  box-shadow: inset 0 0 18px rgba(98,236,255,.028) !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure[open] {
+  border-color: rgba(255,216,135,.23) !important;
+  background: rgba(2,9,18,.74) !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure > summary {
+  min-height: 38px !important;
+  padding: 8px 9px !important;
+  gap: 7px !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure > summary > span {
+  color: var(--detail-text-primary) !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.005em !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure > summary > small {
+  color: var(--detail-text-muted) !important;
+  font-size: 7.2px !important;
+  font-weight: 720 !important;
+  line-height: 1.18 !important;
+  letter-spacing: .005em !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure > summary > em,
+#analyste.champagne-clean-lens .clean-lens-disclosure > summary [data-window-state] {
+  color: #8feeff !important;
+  font-size: 7.4px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: .015em !important;
+  text-shadow: 0 0 10px rgba(98,236,255,.13);
+}
+
+#analyste.champagne-clean-lens .clean-lens-disclosure[open] > summary > em,
+#analyste.champagne-clean-lens .clean-lens-disclosure[open] > summary [data-window-state] {
+  color: #ffe0a0 !important;
+}
+
+#analyste.champagne-clean-lens .atlas-primary-detail-window .clean-lens-detail-grid {
+  gap: 5px !important;
+  padding: 7px !important;
+}
+
+#analyste.champagne-clean-lens .atlas-primary-detail-window .clean-lens-detail-grid > div {
+  min-height: 50px !important;
+  padding: 8px 9px !important;
+  background: rgba(2,9,18,.74) !important;
+  border-color: rgba(255,255,255,.14) !important;
+}
+
+#analyste.champagne-clean-lens .atlas-primary-detail-window .clean-lens-detail-grid b {
+  margin-bottom: 4px !important;
+  color: rgba(255,229,168,.94) !important;
+  font-size: 7.9px !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  letter-spacing: .01em !important;
+}
+
+#analyste.champagne-clean-lens .atlas-primary-detail-window .clean-lens-detail-grid span {
+  display: block !important;
+  overflow-wrap: anywhere !important;
+  color: rgba(226,237,246,.92) !important;
+  font-size: 8.4px !important;
+  font-weight: 670 !important;
+  line-height: 1.28 !important;
+  letter-spacing: -.003em !important;
+}
+
+#analyste.champagne-clean-lens .broker-strip > div,
+#analyste.champagne-clean-lens .diagnostic-strip > div {
+  min-width: 0 !important;
+  padding: 8px !important;
+  background: rgba(2,9,18,.76) !important;
+}
+
+#analyste.champagne-clean-lens .broker-strip span,
+#analyste.champagne-clean-lens .diagnostic-strip span {
+  color: rgba(182,207,226,.74) !important;
+  font-size: 7.1px !important;
+  font-weight: 820 !important;
+  line-height: 1.12 !important;
+  letter-spacing: .035em !important;
+}
+
+#analyste.champagne-clean-lens .broker-strip b,
+#analyste.champagne-clean-lens .diagnostic-strip b {
+  display: block !important;
+  margin: 3px 0 !important;
+  overflow-wrap: anywhere !important;
+  color: var(--detail-text-primary) !important;
+  font-size: 8.8px !important;
+  font-weight: 900 !important;
+  line-height: 1.18 !important;
+  letter-spacing: -.008em !important;
+}
+
+#analyste.champagne-clean-lens .broker-strip small,
+#analyste.champagne-clean-lens .diagnostic-strip small {
+  display: block !important;
+  overflow-wrap: anywhere !important;
+  color: rgba(202,221,235,.78) !important;
+  font-size: 7.2px !important;
+  font-weight: 650 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.002em !important;
+}
+
+#analyste.champagne-clean-lens .asset-detail-why,
+#analyste.champagne-clean-lens #assetDetailWhy {
+  color: rgba(255,237,195,.92) !important;
+  font-size: 8.2px !important;
+  font-weight: 720 !important;
+  line-height: 1.32 !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(98,236,255,.42) rgba(2,9,18,.34);
+}
+
+#analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar-track {
+  background: rgba(2,9,18,.30);
+  border-radius: 999px;
+}
+
+#analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar-thumb {
+  border: 1px solid rgba(2,9,18,.52);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(98,236,255,.60), rgba(255,216,135,.52));
+}
+
+#analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(98,236,255,.78), rgba(255,216,135,.66));
+}
+
