@@ -12823,8 +12823,8 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 }
 
 #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-project-visual {
-  flex: 0 0 112px !important;
-  min-height: 112px !important;
+  flex: 0 0 146px !important;
+  min-height: 146px !important;
 }
 
 #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-body {
@@ -12854,8 +12854,8 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
     linear-gradient(180deg, rgba(2,8,18,.02) 0%, rgba(2,8,18,.10) 48%, rgba(2,8,18,.74) 100%),
     linear-gradient(90deg, rgba(2,8,18,.08), rgba(2,8,18,0) 50%, rgba(2,8,18,.12)),
     url("./assets/images/agent_crypto_project_visual.png");
-  background-size: cover;
-  background-position: center 27%;
+  background-size: 100% auto;
+  background-position: center 7%;
   background-repeat: no-repeat;
   box-shadow:
     inset 0 0 0 1px rgba(98,236,255,.06),
@@ -12871,9 +12871,9 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
   border-radius: 999px;
   background: rgba(2,8,18,.66);
   color: rgba(255,238,194,.90);
-  font: 850 7px/1 system-ui, sans-serif;
-  letter-spacing: .11em;
-  text-transform: uppercase;
+  font: 850 7.4px/1 system-ui, sans-serif;
+  letter-spacing: .055em;
+  text-transform: none;
   backdrop-filter: blur(7px);
 }
 
@@ -16456,7 +16456,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.5
+   Market Core V2.0-Alpha · Build 28.2.6
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -18967,7 +18967,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.5
+   Market Core V2.0-Alpha · Build 28.2.6
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
