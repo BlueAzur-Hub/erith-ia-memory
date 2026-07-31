@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.40 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.41 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.40" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.41" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -60,10 +60,10 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.40"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.41"
             disabled
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.40</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.41</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -78,7 +78,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.40</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.41</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -248,10 +248,12 @@
                id="atlasMetalsCommandBar"
                aria-label="État du marché Métaux"
                hidden>
-        <div class="source-card atlas-metals-adapter-lock">
-          <span>Connexion</span>
-          <strong>ADAPTATEUR DE COTATION REQUIS</strong>
-        </div>
+        <button class="btn" type="button" disabled title="Adaptateur Métaux requis">
+          Vérifier sources Métaux
+        </button>
+        <button class="btn" type="button" disabled title="Aucune cotation connectée">
+          Actualiser Métaux
+        </button>
         <div class="source-card live-decision">
           <span>État du domaine</span>
           <strong id="atlasMetalsHeaderDecision">
@@ -339,21 +341,18 @@
       <article class="panel glass chart-panel">
         <div class="section-head compact chart-v2-recovery-line">
           <div class="chart-v2-title-block atlas-market-domain-title-block">
-            <button class="atlas-market-domain-longpress"
-                    id="atlasMarketDomainLongPress"
-                    type="button"
-                    aria-label="Graphique Analyste. Appui long pour changer de marché.">
-              <span class="eyebrow" id="atlasMarketDomainTitleLabel">GRAPHIQUE ANALYSTE</span>
-            </button>
-            <button class="atlas-market-domain-switch"
-                    id="atlasMarketDomainSwitch"
-                    type="button"
-                    data-domain="crypto"
-                    aria-pressed="false"
-                    aria-label="Marché Crypto actif. Cliquer pour afficher le marché Métaux.">
-              <span>MARCHÉ</span>
-              <b id="atlasMarketDomainSwitchValue">CRYPTO</b>
-            </button>
+            <div class="atlas-domain-switch-slot atlas-domain-switch-slot-crypto"
+                 id="atlasDomainSwitchCryptoSlot">
+              <button class="atlas-market-domain-switch"
+                      id="atlasMarketDomainSwitch"
+                      type="button"
+                      data-domain="crypto"
+                      aria-pressed="false"
+                      aria-label="Marché Crypto actif. Cliquer pour afficher le marché Métaux.">
+                <span>MARCHÉ</span>
+                <b id="atlasMarketDomainSwitchValue">CRYPTO</b>
+              </button>
+            </div>
             <h2 id="selectedAssetTitle" class="atlas-visually-hidden" aria-live="polite">Bitcoin — BTC</h2>
           </div>
           <div class="chart-head-actions chart-v2-toolbar">
@@ -433,6 +432,9 @@
             </header>
 
             <div class="atlas-parallel-market-controls" aria-label="Réglages préparés du marché Métaux">
+              <div class="atlas-domain-switch-slot atlas-domain-switch-slot-metals"
+                   id="atlasDomainSwitchMetalsSlot"
+                   aria-label="Sélection du marché"></div>
               <div role="group" aria-label="Vue Métaux">
                 <span>Vue</span>
                 <button type="button" data-metals-view="price" class="is-active">Prix</button>
@@ -728,7 +730,7 @@
                  id="atlasMetalsSourceDock">
           <header>
             <div>
-              <span class="eyebrow">SOURCES DE L’ACTIF</span>
+              <span class="eyebrow">SOURCE DOCK MÉTAUX</span>
               <b id="atlasMetalsSourceDockTitle">Références préparées</b>
             </div>
             <em>0 source live</em>
@@ -886,8 +888,8 @@
 
         <aside class="panel glass atlas-metals-market-registry">
           <header>
-            <span class="eyebrow">CATALOGUE DES ADAPTATEURS</span>
-            <h3>Cotations, macro et structure</h3>
+            <span class="eyebrow">SOURCE REGISTRY</span>
+            <h3>Métaux puis Bourse</h3>
           </header>
           <div class="atlas-metals-registry-list">
             <span><b>Alpha Vantage</b><small>Or, argent, actions, ETF</small><em>ADAPTER CANDIDAT</em></span>
@@ -1037,70 +1039,6 @@
 
 
     </section>
-    <section class="atlas-metals-analysis-foundation"
-             id="atlasMetalsAnalysisFoundation"
-             aria-labelledby="atlasMetalsAnalysisTitle"
-             hidden>
-      <header class="atlas-metals-analysis-family">
-        <span class="atlas-layout-family-index" aria-hidden="true">01</span>
-        <div>
-          <p>PARCOURS MÉTAUX</p>
-          <h2 id="atlasMetalsAnalysisTitle">Analyse Métaux & décision</h2>
-          <span>Comparer les horizons, qualifier les sources et séparer marché, physique, macro et provenance.</span>
-        </div>
-        <span class="atlas-layout-family-signal" aria-hidden="true"></span>
-      </header>
-
-      <section class="panel glass atlas-metals-analysis-panel">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">ANALYSE MÉTAUX MULTI-HORIZON</p>
-            <h2>XAU / XAG / XPT / XPD / HG</h2>
-          </div>
-          <span class="pill warn">Adaptateur requis</span>
-        </div>
-
-        <p class="atlas-metals-analysis-intro">
-          Aucun mouvement, score ou corrélation n’est calculé avant réception de séries réelles, horodatées et exprimées dans une unité explicite.
-        </p>
-
-        <div class="atlas-metals-analysis-grid">
-          <article>
-            <span>MARCHÉ</span>
-            <b>Non connecté</b>
-            <small>Cours, OHLC et délai à qualifier.</small>
-          </article>
-          <article>
-            <span>MACRO</span>
-            <b>Préparé</b>
-            <small>Dollar, taux, inflation et cycle industriel.</small>
-          </article>
-          <article>
-            <span>OFFRE-DEMANDE</span>
-            <b>Préparé</b>
-            <small>Production, stocks, usages et dépendances.</small>
-          </article>
-          <article>
-            <span>PHYSIQUE & PROVENANCE</span>
-            <b>À documenter</b>
-            <small>Prime, certification, origine et chaîne logistique.</small>
-          </article>
-        </div>
-
-        <div class="atlas-metals-analysis-horizons">
-          <span><b>24 h</b><small>En attente</small></span>
-          <span><b>7 jours</b><small>En attente</small></span>
-          <span><b>30 jours</b><small>En attente</small></span>
-          <span><b>1 an</b><small>En attente</small></span>
-        </div>
-
-        <footer>
-          <b>Décision humaine uniquement</b>
-          <span>Prochaine dépendance : adaptateur réel XAU / XAG, puis extension XPT / XPD / HG.</span>
-        </footer>
-      </section>
-    </section>
-
     <section class="atlas-layout-family atlas-layout-family-analysis" aria-labelledby="atlasLayoutFamily01">
       <span class="atlas-layout-family-index" aria-hidden="true">01</span>
       <div class="atlas-layout-family-copy">
@@ -1910,7 +1848,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.40</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.41</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0</b><small>Daily Pilotage Lock · stack validée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2231,7 +2169,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.40 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.41 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3386,7 +3324,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.40</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.41</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3396,6 +3334,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.40"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.41"></script>
 </body>
 </html>
