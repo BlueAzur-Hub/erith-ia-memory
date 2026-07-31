@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.49 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.50 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.49";
-const ATLAS_BUILD = "28.2.49";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.49";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.50";
+const ATLAS_BUILD = "28.2.50";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.50";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -194,6 +194,8 @@ const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
   contract: "./market_data_contract.json",
   bridge: "./bridge_market_adapter_contract.json"
 });
+const ATLAS_METALS_STRUCTURAL_REGISTRY_PATH =
+  "./metals_structural_registry.json";
 
 const ATLAS_METALS_ASSETS = Object.freeze(
   [
@@ -751,6 +753,477 @@ const ATLAS_MARKET_CONTRACT_FALLBACK = Object.freeze(
   ]
 }
 );
+
+
+const ATLAS_METALS_STRUCTURAL_FALLBACK = Object.freeze(
+  {
+  "schema": "agent_crypto_metals_structural_registry_v1",
+  "version": "1.0.0",
+  "published_at": "2026-07-31T22:58:46Z",
+  "reference_year": 2025,
+  "language": "fr",
+  "price_policy": {
+    "quotes_connected": false,
+    "historical_prices_imported": false,
+    "scores_computed": false,
+    "no_invented_values": true
+  },
+  "publication": {
+    "primary_report": "USGS Mineral Commodity Summaries 2026",
+    "primary_report_version": "1.3",
+    "primary_report_revised": "2026-05-27",
+    "primary_data_year": 2025,
+    "estimate_marker": "2025e"
+  },
+  "sources": [
+    {
+      "id": "usgs_mcs_2026",
+      "name": "U.S. Geological Survey",
+      "short_name": "USGS",
+      "title": "Mineral Commodity Summaries 2026",
+      "role": "production_reserves_uses",
+      "status_label": "DONNÉES 2025",
+      "status_tone": "structural",
+      "publication_date": "2026-02-06",
+      "revised_date": "2026-05-27",
+      "version": "1.3",
+      "licence": "U.S. public domain · citation demandée",
+      "url": "https://pubs.usgs.gov/publication/mcs2026"
+    },
+    {
+      "id": "iea_critical_minerals_2026",
+      "name": "International Energy Agency",
+      "short_name": "IEA",
+      "title": "Critical Minerals Data Explorer",
+      "role": "demand_scenarios",
+      "status_label": "SCÉNARIOS 2026",
+      "status_tone": "macro",
+      "updated_date": "2026-07-27",
+      "licence": "CC BY 4.0",
+      "url": "https://www.iea.org/data-and-statistics/data-tools/critical-minerals-data-explorer"
+    },
+    {
+      "id": "rmis_eu_2023",
+      "name": "EU Raw Materials Information System",
+      "short_name": "RMIS",
+      "title": "EU Critical and Strategic Raw Materials 2023",
+      "role": "eu_criticality",
+      "status_label": "STATUT UE",
+      "status_tone": "reference",
+      "reference_year": 2023,
+      "licence": "Portail public UE · conditions de réutilisation à respecter",
+      "url": "https://rmis.jrc.ec.europa.eu/eu-critical-raw-materials"
+    },
+    {
+      "id": "world_bank_pink_sheet_2026",
+      "name": "World Bank",
+      "short_name": "Banque mondiale",
+      "title": "Commodity Markets · Pink Sheet",
+      "role": "monthly_history_catalogue",
+      "status_label": "HISTORIQUE PUBLIC",
+      "status_tone": "historical",
+      "updated_month": "2026-07",
+      "import_state": "not_imported",
+      "licence": "Conditions de réutilisation de la source à respecter",
+      "url": "https://www.worldbank.org/en/research/commodity-markets"
+    }
+  ],
+  "assets": [
+    {
+      "id": "gold",
+      "symbol": "XAU",
+      "name": "Or",
+      "family": "Précieux monétaire",
+      "data_year": 2025,
+      "estimate": true,
+      "production": {
+        "world_value": 3300,
+        "unit": "metric_tonnes",
+        "display": "3 300 t · 2025e",
+        "top_producers": [
+          {
+            "country": "Chine",
+            "value": 380
+          },
+          {
+            "country": "Russie",
+            "value": 310
+          },
+          {
+            "country": "Australie",
+            "value": 280
+          },
+          {
+            "country": "Canada",
+            "value": 200
+          },
+          {
+            "country": "États-Unis",
+            "value": 160
+          }
+        ],
+        "top_display": "Chine · Russie · Australie"
+      },
+      "reserves": {
+        "world_value": 66000,
+        "unit": "metric_tonnes",
+        "display": "66 000 t",
+        "scope": "gold"
+      },
+      "uses": {
+        "items": [
+          "Bijouterie",
+          "Réserve de valeur",
+          "Électronique",
+          "Aérospatial"
+        ],
+        "display": "Bijouterie · réserve · électronique"
+      },
+      "supply_chain": {
+        "classification": "production_diversified",
+        "display": "Production répartie · rôle monétaire mondial",
+        "detail": "Production répartie entre plusieurs grands pays ; demande monétaire, joaillière et technologique."
+      },
+      "eu_status": {
+        "critical_2023": false,
+        "strategic_2023": false,
+        "display": "Non classé UE 2023"
+      },
+      "macro": {
+        "title": "Historique public disponible",
+        "detail": "Banque mondiale · série mensuelle non importée dans cette Build."
+      },
+      "analysis": {
+        "offer_title": "3 300 t produites · 66 000 t de réserves",
+        "offer_detail": "Estimations mondiales USGS pour 2025.",
+        "physical_title": "Chine · Russie · Australie",
+        "physical_detail": "Principaux producteurs ; rôle monétaire et industriel."
+      },
+      "source_ids": [
+        "usgs_mcs_2026",
+        "world_bank_pink_sheet_2026"
+      ]
+    },
+    {
+      "id": "silver",
+      "symbol": "XAG",
+      "name": "Argent",
+      "family": "Précieux monétaire et industriel",
+      "data_year": 2025,
+      "estimate": true,
+      "production": {
+        "world_value": 26000,
+        "unit": "metric_tonnes",
+        "display": "26 000 t · 2025e",
+        "top_producers": [
+          {
+            "country": "Mexique",
+            "value": 6300
+          },
+          {
+            "country": "Pérou",
+            "value": 3600
+          },
+          {
+            "country": "Chine",
+            "value": 3400
+          },
+          {
+            "country": "Bolivie",
+            "value": 1500
+          },
+          {
+            "country": "Chili",
+            "value": 1400
+          }
+        ],
+        "top_display": "Mexique · Pérou · Chine"
+      },
+      "reserves": {
+        "world_value": 610000,
+        "unit": "metric_tonnes",
+        "display": "610 000 t",
+        "scope": "silver"
+      },
+      "uses": {
+        "items": [
+          "Électrique et électronique",
+          "Photovoltaïque",
+          "Investissement physique",
+          "Joaillerie"
+        ],
+        "display": "Électronique · solaire · investissement"
+      },
+      "supply_chain": {
+        "classification": "byproduct_sensitive",
+        "display": "Sous-produit polymétallique · offre dépendante",
+        "detail": "Une grande part de l’argent provient de mines de plomb-zinc, cuivre et or."
+      },
+      "eu_status": {
+        "critical_2023": false,
+        "strategic_2023": false,
+        "display": "Non classé UE 2023"
+      },
+      "macro": {
+        "title": "Historique public disponible",
+        "detail": "Banque mondiale · série mensuelle non importée dans cette Build."
+      },
+      "analysis": {
+        "offer_title": "26 000 t produites · 610 000 t de réserves",
+        "offer_detail": "Offre sensible aux chaînes polymétalliques.",
+        "physical_title": "Mexique · Pérou · Chine",
+        "physical_detail": "Production concentrée et souvent issue de sous-produits."
+      },
+      "source_ids": [
+        "usgs_mcs_2026",
+        "world_bank_pink_sheet_2026"
+      ]
+    },
+    {
+      "id": "platinum",
+      "symbol": "XPT",
+      "name": "Platine",
+      "family": "Précieux industriel",
+      "data_year": 2025,
+      "estimate": true,
+      "production": {
+        "world_value": 170000,
+        "unit": "kilograms",
+        "display": "170 000 kg · 2025e",
+        "top_producers": [
+          {
+            "country": "Afrique du Sud",
+            "value": 120000
+          },
+          {
+            "country": "Russie",
+            "value": 20000
+          },
+          {
+            "country": "Zimbabwe",
+            "value": 18000
+          },
+          {
+            "country": "Canada",
+            "value": 5000
+          },
+          {
+            "country": "États-Unis",
+            "value": 1800
+          }
+        ],
+        "top_display": "Afrique du Sud · Russie · Zimbabwe"
+      },
+      "reserves": {
+        "world_value": 76000000,
+        "operator": ">",
+        "unit": "kilograms_pgm_content",
+        "display": "> 76 000 t PGM",
+        "scope": "combined_platinum_group_metals"
+      },
+      "uses": {
+        "items": [
+          "Catalyse automobile",
+          "Industrie chimique",
+          "Bijouterie",
+          "Hydrogène"
+        ],
+        "display": "Catalyse · chimie · bijouterie · hydrogène"
+      },
+      "supply_chain": {
+        "classification": "high_geographic_concentration",
+        "display": "Forte concentration en Afrique du Sud",
+        "detail": "La production mondiale de platine dépend fortement de l’Afrique du Sud."
+      },
+      "eu_status": {
+        "critical_2023": true,
+        "strategic_2023": true,
+        "group": "Platinum Group Metals",
+        "display": "Critique + stratégique UE"
+      },
+      "macro": {
+        "title": "Cycle automobile et industriel",
+        "detail": "Demande liée aux catalyseurs, à la chimie et aux technologies hydrogène."
+      },
+      "analysis": {
+        "offer_title": "170 000 kg produits · réserves PGM > 76 000 t",
+        "offer_detail": "Réserves publiées pour le groupe des platinoïdes.",
+        "physical_title": "Afrique du Sud dominante",
+        "physical_detail": "Risque géographique élevé ; Russie et Zimbabwe en relais."
+      },
+      "source_ids": [
+        "usgs_mcs_2026",
+        "rmis_eu_2023"
+      ]
+    },
+    {
+      "id": "palladium",
+      "symbol": "XPD",
+      "name": "Palladium",
+      "family": "Précieux industriel",
+      "data_year": 2025,
+      "estimate": true,
+      "production": {
+        "world_value": 190000,
+        "unit": "kilograms",
+        "display": "190 000 kg · 2025e",
+        "top_producers": [
+          {
+            "country": "Russie",
+            "value": 84000
+          },
+          {
+            "country": "Afrique du Sud",
+            "value": 70000
+          },
+          {
+            "country": "Canada",
+            "value": 16000
+          },
+          {
+            "country": "Zimbabwe",
+            "value": 15000
+          },
+          {
+            "country": "États-Unis",
+            "value": 6200
+          }
+        ],
+        "top_display": "Russie · Afrique du Sud · Canada"
+      },
+      "reserves": {
+        "world_value": 76000000,
+        "operator": ">",
+        "unit": "kilograms_pgm_content",
+        "display": "> 76 000 t PGM",
+        "scope": "combined_platinum_group_metals"
+      },
+      "uses": {
+        "items": [
+          "Catalyse automobile",
+          "Électronique",
+          "Industrie chimique",
+          "Recyclage"
+        ],
+        "display": "Catalyse auto · électronique · chimie"
+      },
+      "supply_chain": {
+        "classification": "high_geographic_concentration",
+        "display": "Russie + Afrique du Sud dominantes",
+        "detail": "La production est fortement concentrée en Russie et en Afrique du Sud."
+      },
+      "eu_status": {
+        "critical_2023": true,
+        "strategic_2023": true,
+        "group": "Platinum Group Metals",
+        "display": "Critique + stratégique UE"
+      },
+      "macro": {
+        "title": "Cycle automobile et recyclage",
+        "detail": "Demande liée aux catalyseurs ; recyclage secondaire important."
+      },
+      "analysis": {
+        "offer_title": "190 000 kg produits · réserves PGM > 76 000 t",
+        "offer_detail": "Réserves publiées pour le groupe des platinoïdes.",
+        "physical_title": "Russie + Afrique du Sud",
+        "physical_detail": "Concentration élevée et dépendance aux chaînes automobiles."
+      },
+      "source_ids": [
+        "usgs_mcs_2026",
+        "rmis_eu_2023"
+      ]
+    },
+    {
+      "id": "copper",
+      "symbol": "HG",
+      "name": "Cuivre",
+      "family": "Industriel",
+      "data_year": 2025,
+      "estimate": true,
+      "production": {
+        "world_value": 23000000,
+        "unit": "metric_tonnes",
+        "display": "23 Mt · 2025e",
+        "refinery_world_value": 29000000,
+        "refinery_display": "29 Mt raffinées",
+        "top_producers": [
+          {
+            "country": "Chili",
+            "value": 5300000
+          },
+          {
+            "country": "RDC",
+            "value": 3200000
+          },
+          {
+            "country": "Pérou",
+            "value": 2700000
+          },
+          {
+            "country": "Chine",
+            "value": 1800000
+          },
+          {
+            "country": "Russie",
+            "value": 1300000
+          }
+        ],
+        "top_display": "Chili · RDC · Pérou"
+      },
+      "reserves": {
+        "world_value": 980000000,
+        "unit": "metric_tonnes",
+        "display": "980 Mt",
+        "scope": "copper"
+      },
+      "uses": {
+        "items": [
+          "Construction",
+          "Réseaux électriques",
+          "Électronique",
+          "Transport"
+        ],
+        "display": "Construction · réseaux · électronique"
+      },
+      "supply_chain": {
+        "classification": "mine_refinery_mismatch",
+        "display": "Mines Amérique/Afrique · raffinage chinois",
+        "detail": "Le Chili domine l’extraction tandis que la Chine concentre fortement le raffinage."
+      },
+      "eu_status": {
+        "critical_2023": false,
+        "strategic_2023": true,
+        "display": "Stratégique UE 2023",
+        "note": "Inclus comme matière stratégique sans atteindre les deux seuils CRM."
+      },
+      "macro": {
+        "title": "Scénarios IEA 2026",
+        "detail": "Demande et offre projetées dans le Critical Minerals Data Explorer."
+      },
+      "analysis": {
+        "offer_title": "23 Mt extraites · 980 Mt de réserves",
+        "offer_detail": "29 Mt raffinées ; forte dissociation mines-raffinage.",
+        "physical_title": "Chili · RDC · Pérou",
+        "physical_detail": "Raffinage fortement concentré en Chine ; statut stratégique UE."
+      },
+      "source_ids": [
+        "usgs_mcs_2026",
+        "iea_critical_minerals_2026",
+        "rmis_eu_2023",
+        "world_bank_pink_sheet_2026"
+      ]
+    }
+  ]
+}
+);
+
+const atlasMetalsStructuralState = {
+  status: "fallback",
+  origin: "fallback_intégré",
+  registry: ATLAS_METALS_STRUCTURAL_FALLBACK,
+  loadedAt: null,
+  error: null
+};
 
 const atlasMarketRegistryState = {
   status: "fallback",
@@ -6563,7 +7036,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.49
+   Market Core V2.0-Alpha · Build 28.2.50
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -10695,7 +11168,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.49 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.50 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -10916,7 +11389,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.49"
+      source: "target-top5-cycle-28.2.50"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -12853,17 +13326,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.49" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.49" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.49" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.50" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -13947,7 +14420,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.49",
+  interface: "Build 28.2.50",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16198,7 +16671,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.49`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.50`
   );
 }
 
@@ -20374,7 +20847,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.49 — Parallel Markets Foundation
+   Build 28.2.50 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -20596,6 +21069,411 @@ function atlasParallelMarketSetMetalsMarketFilter(filter) {
 }
 
 
+
+function atlasMetalsStructuralArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function atlasMetalsStructuralRegistry() {
+  return (
+    atlasMetalsStructuralState.registry
+    || ATLAS_METALS_STRUCTURAL_FALLBACK
+  );
+}
+
+function atlasMetalsStructuralAsset(assetId = null) {
+  const id = String(
+    assetId
+    || atlasParallelMarketActiveMetal()?.id
+    || "gold"
+  );
+
+  return atlasMetalsStructuralArray(
+    atlasMetalsStructuralRegistry()?.assets
+  ).find(asset => asset?.id === id)
+    || atlasMetalsStructuralArray(
+      ATLAS_METALS_STRUCTURAL_FALLBACK?.assets
+    ).find(asset => asset?.id === id)
+    || ATLAS_METALS_STRUCTURAL_FALLBACK.assets[0];
+}
+
+function atlasMetalsStructuralSource(sourceId) {
+  const id = String(sourceId || "");
+
+  return atlasMetalsStructuralArray(
+    atlasMetalsStructuralRegistry()?.sources
+  ).find(source => source?.id === id)
+    || atlasMetalsStructuralArray(
+      ATLAS_METALS_STRUCTURAL_FALLBACK?.sources
+    ).find(source => source?.id === id)
+    || null;
+}
+
+function atlasMetalsStructuralSourceRow(source, note = "") {
+  const row = document.createElement("span");
+  const name = document.createElement("b");
+  const description = document.createElement("small");
+  const status = document.createElement("em");
+
+  name.textContent = String(
+    source?.short_name || source?.name || "Source"
+  );
+  description.textContent = String(
+    note
+    || source?.title
+    || source?.role
+    || "Source publique"
+  );
+  status.textContent = String(
+    source?.status_label || "RÉFÉRENCE"
+  );
+  status.classList.add(
+    atlasMarketRegistrySourceToneClass(
+      source?.status_tone || "reference"
+    )
+  );
+
+  row.dataset.marketSourceId = String(source?.id || "");
+  row.dataset.structuralSource = "true";
+  row.append(name, description, status);
+  return row;
+}
+
+function atlasMetalsStructuralValidate(payload) {
+  if (
+    payload?.schema
+    !== "agent_crypto_metals_structural_registry_v1"
+  ) {
+    throw new Error("Registre structurel incompatible");
+  }
+
+  const assets = atlasMetalsStructuralArray(payload?.assets);
+  const sources = atlasMetalsStructuralArray(payload?.sources);
+  const required = new Set([
+    "gold",
+    "silver",
+    "platinum",
+    "palladium",
+    "copper"
+  ]);
+
+  if (
+    assets.length !== required.size
+    || assets.some(asset => !required.has(asset?.id))
+  ) {
+    throw new Error("Registre structurel incomplet");
+  }
+
+  if (sources.length < 4) {
+    throw new Error("Sources structurelles incomplètes");
+  }
+
+  assets.forEach(asset => {
+    if (
+      !asset?.production?.display
+      || !asset?.reserves?.display
+      || !asset?.production?.top_display
+      || !asset?.uses?.display
+      || !asset?.eu_status?.display
+      || !Array.isArray(asset?.source_ids)
+    ) {
+      throw new Error(
+        `Données structurelles invalides : ${asset?.id || "?"}`
+      );
+    }
+  });
+
+  return payload;
+}
+
+async function atlasMetalsStructuralLoad() {
+  atlasMetalsStructuralState.status = "loading";
+  atlasMetalsStructuralState.error = null;
+
+  try {
+    const payload = await atlasMarketRegistryFetchJson(
+      ATLAS_METALS_STRUCTURAL_REGISTRY_PATH
+    );
+
+    atlasMetalsStructuralState.registry =
+      atlasMetalsStructuralValidate(payload);
+    atlasMetalsStructuralState.status = "loaded";
+    atlasMetalsStructuralState.origin = "json_local";
+    atlasMetalsStructuralState.loadedAt =
+      new Date().toISOString();
+  } catch (error) {
+    atlasMetalsStructuralState.registry =
+      ATLAS_METALS_STRUCTURAL_FALLBACK;
+    atlasMetalsStructuralState.status = "fallback";
+    atlasMetalsStructuralState.origin =
+      "fallback_intégré";
+    atlasMetalsStructuralState.loadedAt = null;
+    atlasMetalsStructuralState.error = String(
+      error?.message || error || "Erreur structure"
+    );
+  }
+
+  atlasParallelMarketRenderMetals();
+  return atlasMetalsStructuralState.status;
+}
+
+function atlasMetalsStructuralRenderSourceDock(assetId = null) {
+  const asset = atlasMetalsStructuralAsset(assetId);
+  const list = document.getElementById(
+    "atlasMetalsSourceList"
+  );
+  const stateLabel = document.getElementById(
+    "atlasMetalsSourceDockState"
+  );
+
+  if (!list || !asset) return;
+
+  const sources = atlasMetalsStructuralArray(
+    asset.source_ids
+  )
+    .map(atlasMetalsStructuralSource)
+    .filter(Boolean);
+
+  list.replaceChildren();
+
+  sources.forEach(source => {
+    let note = source.title;
+
+    if (source.id === "usgs_mcs_2026") {
+      note = "Production · réserves · usages";
+    } else if (source.id === "rmis_eu_2023") {
+      note = "Criticité et statut stratégique UE";
+    } else if (source.id === "iea_critical_minerals_2026") {
+      note = "Scénarios offre-demande du cuivre";
+    } else if (source.id === "world_bank_pink_sheet_2026") {
+      note = "Historique mensuel public · non importé";
+    }
+
+    list.append(
+      atlasMetalsStructuralSourceRow(source, note)
+    );
+  });
+
+  if (stateLabel) {
+    stateLabel.textContent =
+      `${sources.length} source`
+      + `${sources.length > 1 ? "s" : ""}`
+      + " publique"
+      + `${sources.length > 1 ? "s" : ""}`;
+  }
+
+  const meta = atlasMarketRegistryAssetMeta(asset.id);
+  setText(
+    document.getElementById("atlasMetalsSourceDockTitle"),
+    `${meta.name} · ${meta.symbol}`
+  );
+}
+
+function atlasMetalsStructuralRenderCatalog() {
+  const list = document.getElementById(
+    "atlasMetalsRegistryList"
+  );
+  const summary = document.getElementById(
+    "atlasMetalsRegistrySummary"
+  );
+  if (!list) return;
+
+  const sources = atlasMetalsStructuralArray(
+    atlasMetalsStructuralRegistry()?.sources
+  );
+
+  list.replaceChildren();
+
+  sources.forEach(source => {
+    list.append(
+      atlasMetalsStructuralSourceRow(
+        source,
+        source.title
+      )
+    );
+  });
+
+  if (summary) {
+    const origin =
+      atlasMetalsStructuralState.status === "loaded"
+        ? "registre JSON local"
+        : "fallback public intégré";
+
+    summary.textContent =
+      `${sources.length} sources publiques · `
+      + "5 métaux · données 2025 · "
+      + `${origin} · aucun prix`;
+  }
+
+  list.dataset.registryStatus =
+    atlasMetalsStructuralState.status;
+}
+
+function atlasMetalsStructuralRenderMarketRows() {
+  atlasMetalsStructuralArray(
+    atlasMetalsStructuralRegistry()?.assets
+  ).forEach(record => {
+    const row = document.querySelector(
+      `[data-metals-market-row="${record.id}"]`
+    );
+    if (!row) return;
+
+    const cells = row.querySelectorAll("td");
+    if (cells.length < 8) return;
+
+    cells[4].textContent = "—";
+    cells[5].textContent = "—";
+    cells[6].textContent = "USGS 2026";
+    cells[7].textContent = "Structure disponible";
+    row.dataset.structuralState = "available";
+    row.dataset.structuralYear =
+      String(record.data_year || 2025);
+  });
+}
+
+function atlasMetalsStructuralRenderActive(assetId = null) {
+  const record = atlasMetalsStructuralAsset(assetId);
+  if (!record) return false;
+
+  setText(
+    document.getElementById(
+      "atlasMetalsDetailDataState"
+    ),
+    "Structure publique disponible"
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructuralProduction"
+    ),
+    record.production.display
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructuralReserves"
+    ),
+    record.reserves.display
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructuralProducers"
+    ),
+    record.production.top_display
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructuralUses"
+    ),
+    record.uses.display
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructuralEu"
+    ),
+    record.eu_status.display
+  );
+
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisAssetTitle"
+    ),
+    `${record.name} · ${record.symbol}`
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisState"
+    ),
+    `Structure ${record.data_year}`
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisIntro"
+    ),
+    "Données structurelles publiques séparées des cotations : "
+    + "aucun mouvement, score ou prix n’est inventé."
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisQuoteState"
+    ),
+    "Non connectée"
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisQuoteDetail"
+    ),
+    "Aucun prix, OHLC ou historique importé."
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisMacroState"
+    ),
+    record.macro.title
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisMacroDetail"
+    ),
+    record.macro.detail
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisOfferState"
+    ),
+    record.analysis.offer_title
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisOfferDetail"
+    ),
+    record.analysis.offer_detail
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisPhysicalState"
+    ),
+    record.analysis.physical_title
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisPhysicalDetail"
+    ),
+    record.analysis.physical_detail
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsAnalysisProvenance"
+    ),
+    `USGS MCS 2026 v1.3 · données ${record.data_year}e`
+    + " · statut UE RMIS 2023 · prix non connectés."
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsIntegrityText"
+    ),
+    `Structure publique ${record.data_year}e · `
+    + "USGS MCS 2026 v1.3 · unités conservées · "
+    + "aucune cotation ni courbe inventée."
+  );
+  setText(
+    document.getElementById(
+      "atlasMetalsStructureState"
+    ),
+    "USGS 2026"
+  );
+
+  document
+    .querySelectorAll(
+      ".atlas-metals-analysis-horizons small"
+    )
+    .forEach(item => {
+      item.textContent = "Prix non connecté";
+    });
+
+  atlasMetalsStructuralRenderSourceDock(record.id);
+  atlasMetalsStructuralRenderMarketRows();
+  return true;
+}
+
 function atlasMarketRegistryArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -20711,101 +21589,11 @@ function atlasMarketRegistryCreateSourceRow(source, assetId = null) {
 }
 
 function atlasMarketRegistryRenderSourceDock(assetId = null) {
-  const asset = atlasMarketRegistryAssetMeta(
-    assetId || atlasParallelMarketActiveMetal().id
-  );
-  const list = document.getElementById(
-    "atlasMetalsSourceList"
-  );
-  const stateLabel = document.getElementById(
-    "atlasMetalsSourceDockState"
-  );
-
-  if (!list || !asset) return;
-
-  const sources = atlasMarketRegistrySourcesForAsset(
-    asset.id
-  ).slice(0, 7);
-
-  list.replaceChildren();
-
-  if (!sources.length) {
-    const empty = document.createElement("span");
-    const name = document.createElement("b");
-    const description = document.createElement("small");
-    const status = document.createElement("em");
-
-    name.textContent = "Aucune source qualifiée";
-    description.textContent =
-      "Le registre ne contient encore aucune couverture pour cet actif.";
-    status.textContent = "À DOCUMENTER";
-    status.classList.add("is-reference");
-    empty.append(name, description, status);
-    list.append(empty);
-  } else {
-    sources.forEach(source => {
-      list.append(
-        atlasMarketRegistryCreateSourceRow(
-          source,
-          asset.id
-        )
-      );
-    });
-  }
-
-  if (stateLabel) {
-    stateLabel.textContent =
-      `${sources.length} référence`
-      + `${sources.length > 1 ? "s" : ""}`
-      + " · 0 connectée";
-  }
-
-  setText(
-    document.getElementById("atlasMetalsSourceDockTitle"),
-    `${asset.name} · ${asset.symbol}`
-  );
+  atlasMetalsStructuralRenderSourceDock(assetId);
 }
 
 function atlasMarketRegistryRenderCatalog() {
-  const list = document.getElementById(
-    "atlasMetalsRegistryList"
-  );
-  const summary = document.getElementById(
-    "atlasMetalsRegistrySummary"
-  );
-  if (!list) return;
-
-  const sources = atlasMarketRegistryMetalSources();
-  list.replaceChildren();
-
-  sources.forEach(source => {
-    list.append(
-      atlasMarketRegistryCreateSourceRow(source)
-    );
-  });
-
-  if (summary) {
-    const contract = atlasMarketRegistryState.contract || {};
-    const stateCount = atlasMarketRegistryArray(
-      contract.states
-    ).length;
-    const cacheCount = atlasMarketRegistryArray(
-      contract.cache_namespaces
-    ).length;
-    const origin = atlasMarketRegistryState.status === "loaded"
-      ? "registres JSON locaux"
-      : "fallback intégré";
-
-    summary.textContent =
-      `${sources.length} sources · `
-      + `${ATLAS_METALS_ASSETS.length} actifs · `
-      + `${stateCount} états · `
-      + `${cacheCount} caches Métaux · `
-      + `${origin} · aucune clé`;
-  }
-
-  list.dataset.registryStatus =
-    atlasMarketRegistryState.status;
+  atlasMetalsStructuralRenderCatalog();
 }
 
 function atlasMarketRegistryRender() {
@@ -21056,19 +21844,23 @@ function atlasParallelMarketRenderMetalsMarket() {
     )
   ].length;
 
+  atlasMetalsStructuralRenderMarketRows();
+
   setText(
     document.getElementById("atlasMetalsMarketStatus"),
     `${visibleRows} actif${visibleRows > 1 ? "s" : ""} visible`
-    + `${visibleRows > 1 ? "s" : ""} · aucun cours inventé`
+    + `${visibleRows > 1 ? "s" : ""}`
+    + " · structure publique disponible · aucun cours inventé"
   );
 
   setText(
     document.getElementById("atlasMetalsHeaderDecision"),
-    `PANIER MÉTAUX ${selected.size}/5 · COTATIONS 0/5`
+    `PANIER MÉTAUX ${selected.size}/5 · STRUCTURE ${selected.size}/5`
+    + " · PRIX 0/5"
   );
   setText(
     document.getElementById("atlasMetalsLiveStatus"),
-    `Marché Métaux · 0/${selected.size || 5}`
+    `Marché Métaux · structure ${selected.size || 5}/5`
   );
 }
 
@@ -21090,6 +21882,7 @@ function atlasParallelMarketRenderMetalsDetail() {
     selected.has(asset.id) ? "Incluse" : "Hors sélection"
   );
   atlasMarketRegistryRenderSourceDock(asset.id);
+  atlasMetalsStructuralRenderActive(asset.id);
 
   const mode = metals.view === "base100" ? "Base 100" : "Prix";
   const period = atlasChartPeriodLabel(metals.period);
@@ -21104,7 +21897,7 @@ function atlasParallelMarketRenderMetalsDetail() {
     status.textContent =
       `${count} actif${count > 1 ? "s" : ""} sélectionné`
       + `${count > 1 ? "s" : ""} · ${mode} · ${period} · `
-      + "source de cotation non connectée";
+      + "prix non connectés · structure publique disponible";
   }
 }
 
@@ -21515,7 +22308,9 @@ function atlasParallelMarketInit() {
 
   atlasParallelMarketMetalsRead();
   atlasMarketRegistryRender();
+  atlasMetalsStructuralRenderActive();
   void atlasMarketRegistryLoad();
+  void atlasMetalsStructuralLoad();
 
   switchButton?.addEventListener("click", event => {
     event.preventDefault();
@@ -21785,7 +22580,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.49 — Comparison Memory Slots A / B / C
+   Build 28.2.50 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -22135,7 +22930,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.49`
+        source: `workspace-slot-${slot}-28.2.50`
       });
     } else {
       requestAnimationFrame(() => {
@@ -23620,7 +24415,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.49 annulée :", error);
+    console.warn("Transaction scanner 28.2.50 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -23803,7 +24598,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.49 :", error);
+    console.error("Scanner 28.2.50 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -23892,7 +24687,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.49 non capturé :", error);
+      console.error("Scanner 28.2.50 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -23902,7 +24697,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.49 :", error);
+    console.error("Démarrage scanner 28.2.50 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -23916,7 +24711,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.49"
+    source: "button-28.2.50"
   });
 }
 
