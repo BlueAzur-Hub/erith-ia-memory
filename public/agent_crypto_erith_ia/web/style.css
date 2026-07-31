@@ -5632,10 +5632,10 @@ main .decision-board{
 #analyste.champagne-clean-lens .clean-lens-detail-grid > div,
 #analyste.champagne-clean-lens .clean-lens-disclosure .broker-strip > div,
 #analyste.champagne-clean-lens .clean-lens-disclosure .diagnostic-strip > div {
-  background: rgba(2, 9, 18, .72) !important;
+  background: rgba(2, 9, 18, .86) !important;
   border-color: rgba(255,255,255,.17) !important;
-  -webkit-backdrop-filter: blur(9px);
-  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(11px);
+  backdrop-filter: blur(11px);
 }
 
 #analyste.champagne-clean-lens #assetDetailWhy {
@@ -8079,40 +8079,188 @@ a.source-portal:focus-visible {
 }
 
 #analyste.champagne-clean-lens .detail-panel-body {
-  gap: 6px !important;
+  position: relative;
+  z-index: 2;
+  gap: 8px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 8px !important;
+  padding: 2px 2px 9px !important;
+  border-bottom: 1px solid rgba(255,216,135,.16);
+  background: linear-gradient(90deg, rgba(2,9,18,.84), rgba(2,9,18,.38));
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle-title {
+  gap: 3px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-subtitle {
+  color: rgba(185,211,230,.70);
+  font: 760 7.2px/1.15 system-ui, sans-serif;
+  letter-spacing: .035em;
+}
+
+.detail-truth-ledger {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(255,216,135,.20);
+  border-radius: 11px;
+  background: rgba(2,9,18,.80);
+  box-shadow: inset 0 0 22px rgba(255,216,135,.025), 0 8px 20px rgba(0,0,0,.16);
+  -webkit-backdrop-filter: blur(11px);
+  backdrop-filter: blur(11px);
+}
+
+.detail-truth-ledger-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.detail-truth-ledger-head span {
+  color: #ffe0a0;
+  font: 920 7.6px/1 system-ui, sans-serif;
+  letter-spacing: .12em;
+}
+
+.detail-truth-ledger-head small {
+  color: rgba(183,207,226,.62);
+  font: 720 6.8px/1.15 system-ui, sans-serif;
+  text-align: right;
+}
+
+.detail-truth-ledger .broker-strip {
+  grid-template-columns: 1fr !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.detail-truth-ledger .broker-strip > div {
+  min-height: 50px !important;
+  padding: 8px 9px !important;
+  border-radius: 9px !important;
+  background: rgba(1,7,16,.82) !important;
+  border-color: rgba(255,255,255,.13) !important;
+}
+
+.detail-truth-ledger .broker-strip > div:nth-child(1) {
+  border-left: 3px solid rgba(98,236,255,.72) !important;
+}
+
+.detail-truth-ledger .broker-strip > div:nth-child(2) {
+  border-left: 3px solid rgba(71,223,145,.78) !important;
+}
+
+.detail-truth-ledger .broker-strip > div:nth-child(3) {
+  border-left: 3px solid rgba(255,196,91,.82) !important;
+}
+
+.detail-truth-ledger .broker-strip span {
+  color: rgba(179,207,228,.70) !important;
+  font-size: 7.2px !important;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.detail-truth-ledger .broker-strip b {
+  margin: 3px 0 !important;
+  color: #fff0c8 !important;
+  font-size: 9.2px !important;
+  line-height: 1.18 !important;
+}
+
+.detail-truth-ledger .broker-strip small {
+  color: rgba(196,216,232,.72) !important;
+  font-size: 7.2px !important;
+  line-height: 1.2 !important;
+}
+
+.detail-layer-guide {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+}
+
+.detail-layer-guide article {
+  display: grid;
+  gap: 4px;
+  padding: 8px 9px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 9px;
+  background: rgba(2,9,18,.84);
+}
+
+.detail-layer-guide article:nth-child(1) {
+  border-left: 3px solid rgba(71,223,145,.74);
+}
+
+.detail-layer-guide article:nth-child(2) {
+  border-left: 3px solid rgba(98,236,255,.68);
+}
+
+.detail-layer-guide article:nth-child(3) {
+  border-left: 3px solid rgba(255,196,91,.76);
+}
+
+.detail-layer-guide b {
+  color: #fff0c8;
+  font: 900 8.4px/1.1 system-ui, sans-serif;
+}
+
+.detail-layer-guide span {
+  color: rgba(213,228,240,.78);
+  font: 690 7.6px/1.35 system-ui, sans-serif;
 }
 
 /* Always-visible summary, reduced to one operational strip. */
 .detail-compact-strip {
   display: grid;
-  grid-template-columns: .72fr 1fr 1.25fr .8fr;
-  gap: 5px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .detail-compact-strip > span {
   min-width: 0;
-  min-height: 39px;
-  padding: 6px 7px;
+  min-height: 49px;
+  padding: 8px 9px;
   display: grid;
   align-content: center;
-  gap: 3px;
+  gap: 4px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.11);
-  border-radius: 9px;
-  background: rgba(2, 9, 18, .58);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 10px;
+  background: rgba(2, 9, 18, .82);
+  box-shadow: inset 0 0 18px rgba(98,236,255,.025);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.detail-compact-strip > span:nth-child(2) {
+  border-color: rgba(71,223,145,.26);
+}
+
+.detail-compact-strip > span:nth-child(3) {
+  border-color: rgba(255,216,135,.24);
 }
 
 .detail-compact-strip small {
-  color: rgba(177,199,219,.62);
-  font: 760 6.8px/1 system-ui, sans-serif;
-  letter-spacing: .08em;
+  color: rgba(177,208,229,.72);
+  font: 800 7.2px/1 system-ui, sans-serif;
+  letter-spacing: .09em;
   text-transform: uppercase;
 }
 
 .detail-compact-strip b {
   overflow: hidden;
   color: #fff0c8;
-  font: 900 8.5px/1.12 system-ui, sans-serif;
+  font: 900 9.6px/1.18 system-ui, sans-serif;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -8213,13 +8361,13 @@ a.source-portal:focus-visible {
 }
 
 #analyste .atlas-primary-detail-window .clean-lens-detail-grid b {
-  font-size: 7.5px !important;
-  margin-bottom: 2px !important;
+  font-size: 7.8px !important;
+  margin-bottom: 3px !important;
 }
 
 #analyste .atlas-primary-detail-window .clean-lens-detail-grid span {
-  font-size: 8px !important;
-  line-height: 1.15 !important;
+  font-size: 8.5px !important;
+  line-height: 1.22 !important;
 }
 
 #analyste .atlas-primary-detail-window .clean-lens-why-box {
@@ -12525,8 +12673,15 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
   overflow: auto !important;
   overscroll-behavior: contain !important;
   scrollbar-gutter: stable !important;
+  border-color: rgba(255,216,135,.25) !important;
   background:
-    linear-gradient(180deg, rgba(4,13,26,.94), rgba(3,10,21,.90)) !important;
+    linear-gradient(180deg, rgba(2,8,18,.72) 0%, rgba(2,8,18,.88) 30%, rgba(2,8,18,.96) 74%, rgba(2,8,18,.98) 100%),
+    radial-gradient(circle at 52% 14%, rgba(255,126,190,.12), transparent 36%),
+    url("./assets/images/agent_crypto_project_visual.png") center 13% / cover no-repeat !important;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(98,236,255,.05),
+    inset 0 0 42px rgba(255,126,190,.025) !important;
 }
 
 #analyste.champagne-clean-lens.detail-collapsed .clean-lens-detail-panel {
@@ -12769,7 +12924,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 #analyste.champagne-clean-lens:not(.detail-collapsed) {
   grid-template-columns:
     minmax(0, 1fr)
-    clamp(300px, 22vw, 360px) !important;
+    clamp(330px, 23vw, 390px) !important;
   grid-template-rows: minmax(0, 1fr) !important;
   column-gap: 7px !important;
   align-items: stretch !important;
@@ -16386,7 +16541,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.3
+   Market Core V2.0-Alpha · Build 28.2.4
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -18897,7 +19052,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.3
+   Market Core V2.0-Alpha · Build 28.2.4
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
