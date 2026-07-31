@@ -23248,161 +23248,234 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.41 — CONTEXTUAL DOMAIN SWITCH RECOVERY
-   Base restored from 28.2.39. No global toolbar geometry override.
+   BUILD 28.2.42 — UNIFIED MARKET TOOLBAR ALIGNMENT
+   Clean rebuild from 28.2.39. The domain switch never changes parent.
    ========================================================================== */
 
-/* The obsolete text title is removed. The switch itself becomes the label. */
+/* Authoritative visibility state. */
+#analyste .chart-v2-toolbar[hidden],
+#analyste #atlasMetalsUnifiedToolbar[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* The old moving title no longer exists. */
 #analyste .atlas-market-domain-longpress,
 #analyste #atlasMarketDomainLongPress {
   display: none !important;
 }
 
-/* Crypto: preserve the original toolbar flow completely. */
+/* Same header grid in Crypto and Metals. */
 html[data-atlas-market-domain="crypto"]
   #analyste.champagne-clean-lens
-  .chart-v2-recovery-line {
+  > .chart-panel
+  > .section-head.compact.chart-v2-recovery-line,
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  > .chart-panel
+  > .section-head.compact.chart-v2-recovery-line {
   display: grid !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  grid-template-columns: 122px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-height: 50px !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 6px 8px !important;
+  overflow: visible !important;
 }
 
+/* The switch is permanently anchored in column 1. */
 html[data-atlas-market-domain="crypto"]
   #analyste
+  .atlas-market-domain-title-block,
+html[data-atlas-market-domain="metals"]
+  #analyste
   .atlas-market-domain-title-block {
+  position: static !important;
   display: flex !important;
   align-items: center !important;
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  justify-content: flex-start !important;
+  grid-column: 1 !important;
+  width: 122px !important;
+  min-width: 122px !important;
+  max-width: 122px !important;
   height: auto !important;
   margin: 0 !important;
   padding: 0 !important;
-  position: static !important;
   transform: none !important;
+  z-index: 70 !important;
 }
 
-html[data-atlas-market-domain="crypto"]
-  #analyste
-  .atlas-domain-switch-slot-crypto {
-  display: flex !important;
+#analyste #atlasMarketDomainSwitch {
+  position: static !important;
+  inset: auto !important;
+  display: inline-flex !important;
   align-items: center !important;
-  min-width: 0 !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 116px !important;
+  min-width: 116px !important;
+  max-width: 116px !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  max-height: 30px !important;
+  margin: 0 !important;
+  padding: 5px 8px !important;
+  transform: none !important;
+  white-space: nowrap !important;
+  pointer-events: auto !important;
 }
 
+/* Crypto controls occupy column 2 without any reconstruction. */
 html[data-atlas-market-domain="crypto"]
   #analyste
   .chart-v2-toolbar {
-  display: flex !important;
+  grid-column: 2 !important;
+  display: grid !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  width: auto !important;
+  width: 100% !important;
   min-width: 0 !important;
   max-width: none !important;
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  overflow-x: auto !important;
   margin: 0 !important;
 }
 
-/* Metals: the outer Crypto header row is unnecessary.
-   The switch lives with Vue / Période / Section. */
+/* Metals controls occupy the very same column and baseline. */
+#analyste #atlasMetalsUnifiedToolbar {
+  grid-column: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244,211,134,.30) transparent;
+}
+
+#analyste #atlasMetalsUnifiedToolbar::-webkit-scrollbar {
+  height: 4px;
+}
+
+#analyste #atlasMetalsUnifiedToolbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(244,211,134,.30);
+}
+
+#analyste #atlasMetalsUnifiedToolbar > div {
+  flex: 0 0 auto !important;
+  min-height: 34px !important;
+  padding: 3px 5px !important;
+  border-radius: 9px !important;
+}
+
+#analyste #atlasMetalsUnifiedToolbar span {
+  font-size: 6.9px !important;
+}
+
+#analyste #atlasMetalsUnifiedToolbar button {
+  min-height: 27px !important;
+  padding: 4px 7px !important;
+  font-size: 7.6px !important;
+  white-space: nowrap !important;
+}
+
+/* The Metals panel starts directly with its identity and graph. */
+#analyste
+  #atlasParallelMarketFoundation
+  > .atlas-parallel-market-controls {
+  display: none !important;
+}
+
+/* Neutralize older Metals rules that collapsed the Crypto header. */
 html[data-atlas-market-domain="metals"]
   #analyste.champagne-clean-lens
-  .chart-v2-recovery-line {
-  display: none !important;
+  .chart-v2-toolbar,
+html[data-atlas-market-domain="metals"]
+  #analyste.champagne-clean-lens
+  .chart-v2-toolbar * {
+  pointer-events: none !important;
 }
 
-#analyste .atlas-domain-switch-slot-metals {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-  padding: 4px;
-  border: 1px solid rgba(244,211,134,.18);
-  border-radius: 9px;
-  background: rgba(244,211,134,.045);
-}
-
-#analyste .atlas-domain-switch-slot-metals:empty {
-  display: none !important;
-}
-
-#analyste .atlas-domain-switch-slot-metals
-  .atlas-market-domain-switch {
-  min-height: 25px !important;
-  padding: 5px 10px !important;
-  border-radius: 7px !important;
-  border-color: rgba(244,211,134,.46) !important;
-  background: rgba(244,211,134,.10) !important;
-  color: #ffe1a0 !important;
-  transform: none !important;
-  position: static !important;
-  inset: auto !important;
-  margin: 0 !important;
-}
-
-#analyste .atlas-domain-switch-slot-metals
-  .atlas-market-domain-switch b {
-  color: #ffd978 !important;
-}
-
-/* Shared button remains compact and never masks neighbouring controls. */
-#analyste #atlasMarketDomainSwitch {
-  flex: 0 0 auto !important;
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  height: auto !important;
-  max-height: none !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Transformer Book: keep the Crypto menu scrollable and Metals controls wrapped. */
+/* Transformer Book: same anchor, horizontally scrollable controls. */
 @media (max-width: 1100px) {
   html[data-atlas-market-domain="crypto"]
     #analyste.champagne-clean-lens
-    .chart-v2-recovery-line {
-    display: grid !important;
+    > .chart-panel
+    > .section-head.compact.chart-v2-recovery-line,
+  html[data-atlas-market-domain="metals"]
+    #analyste.champagne-clean-lens
+    > .chart-panel
+    > .section-head.compact.chart-v2-recovery-line {
+    grid-template-columns: 112px minmax(0, 1fr) !important;
+    gap: 6px !important;
+    padding-inline: 6px !important;
   }
 
   html[data-atlas-market-domain="crypto"]
     #analyste
-    .chart-v2-toolbar {
-    display: flex !important;
+    .atlas-market-domain-title-block,
+  html[data-atlas-market-domain="metals"]
+    #analyste
+    .atlas-market-domain-title-block {
+    width: 112px !important;
+    min-width: 112px !important;
+    max-width: 112px !important;
+  }
+
+  #analyste #atlasMarketDomainSwitch {
+    width: 106px !important;
+    min-width: 106px !important;
+    max-width: 106px !important;
+  }
+
+  #analyste #atlasMetalsUnifiedToolbar {
+    flex-wrap: nowrap !important;
     overflow-x: auto !important;
   }
-
-  #analyste .atlas-parallel-market-controls {
-    align-items: center;
-  }
-
-  #analyste .atlas-domain-switch-slot-metals {
-    flex: 0 0 auto;
-  }
 }
 
-/* Build 28.2.41 — exact outer header isolation */
-html[data-atlas-market-domain="metals"]
-  #analyste.champagne-clean-lens
-  > .chart-panel
-  > .section-head.compact.chart-v2-recovery-line {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  height: 0 !important;
-  min-height: 0 !important;
-  max-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
+@media (max-width: 700px) {
+  html[data-atlas-market-domain="crypto"]
+    #analyste.champagne-clean-lens
+    > .chart-panel
+    > .section-head.compact.chart-v2-recovery-line,
+  html[data-atlas-market-domain="metals"]
+    #analyste.champagne-clean-lens
+    > .chart-panel
+    > .section-head.compact.chart-v2-recovery-line {
+    grid-template-columns: 104px minmax(0, 1fr) !important;
+  }
 
-html[data-atlas-market-domain="crypto"]
-  #analyste.champagne-clean-lens
-  > .chart-panel
-  > .section-head.compact.chart-v2-recovery-line {
-  display: grid !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
+  html[data-atlas-market-domain="crypto"]
+    #analyste
+    .atlas-market-domain-title-block,
+  html[data-atlas-market-domain="metals"]
+    #analyste
+    .atlas-market-domain-title-block {
+    width: 104px !important;
+    min-width: 104px !important;
+    max-width: 104px !important;
+  }
+
+  #analyste #atlasMarketDomainSwitch {
+    width: 98px !important;
+    min-width: 98px !important;
+    max-width: 98px !important;
+    font-size: 8px !important;
+  }
 }
