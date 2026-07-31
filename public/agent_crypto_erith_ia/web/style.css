@@ -19591,3 +19591,18 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.15 — LIVE CARD TICK SYNC
+   Live card fields are patched in place; the card is never reconstructed.
+   ========================================================================== */
+
+.atlas-help-market-grid [data-help-live],
+.atlas-help-market-sources [data-help-live] {
+  font-variant-numeric: tabular-nums;
+}
+
+.atlas-help-market-grid [data-help-live="price-eur"],
+.atlas-help-market-grid [data-help-live="change24h"] {
+  transition: color .14s ease, text-shadow .14s ease;
+}
+

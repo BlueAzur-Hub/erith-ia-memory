@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.14 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.15 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.14";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.15";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -1703,6 +1703,7 @@ function atlasPatchMarketRowSpot(coin) {
     cells[3].className = `market-move-cell ${Number.isFinite(variation) ? `${clsPct(variation)} ${atlasMoveStrengthClass(variation)}` : ""}`;
     cells[3].textContent = atlasCurrentQuoteChangeText(quote);
   }
+  atlasPatchOpenMarketHelp(coin);
 }
 
 function atlasPatchTickerSpot(changedIds = []) {
@@ -1789,6 +1790,7 @@ function atlasPatchMarketRowSnapshot(row, coin, selection) {
 
   if (cells[8]) cells[8].textContent = score.score ?? "—";
   if (cells[9]) cells[9].textContent = beginnerDecision(coin);
+  atlasPatchOpenMarketHelp(coin);
 }
 
 function atlasPatchMarketTableSnapshot() {
@@ -4657,7 +4659,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.14
+   Market Core V2.0-Alpha · Build 28.2.15
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -8749,7 +8751,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.14"
+      source: "target-top5-cycle-28.2.15"
     });
   }
 
@@ -10513,17 +10515,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.15" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -11607,7 +11609,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.14",
+  interface: "Build 28.2.15",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -13858,7 +13860,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.14`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.15`
   );
 }
 
@@ -16717,15 +16719,16 @@ function atlasMarketHelpDefinition(row) {
     : `<span class="atlas-help-market-fallback" aria-hidden="true">${escapeHtml(coin.symbol.slice(0, 1))}</span>`;
   return {
     rich: true,
+    marketCoinId: coin.id,
     liveText: `${coin.name} ${coin.symbol}. ${compared ? "Présent dans la comparaison. Clique la ligne pour le retirer." : "Clique la ligne pour l’ajouter à la comparaison."}`,
     html: `<div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
       <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
-        <span><small>Prix direct EUR</small><strong>${escapeHtml(snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur))}</strong></span>
+        <span><small>Prix direct EUR</small><strong data-help-live="price-eur">${escapeHtml(snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur))}</strong></span>
         <span><small>Prix USD marché</small><strong>${escapeHtml(priceUsd)}</strong></span>
-        <span><small>24 h direct</small><strong class="${clsPct(snapshot.change24h)}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</strong></span>
-        <span><small>7 j marché</small><strong class="${clsPct(snapshot.change7d)}">${escapeHtml(fmtPct(snapshot.change7d))}</strong></span>
-        <span><small>30 j marché</small><strong class="${clsPct(snapshot.change30d)}">${escapeHtml(fmtPct(snapshot.change30d))}</strong></span>
+        <span><small>24 h direct</small><strong data-help-live="change24h" class="${clsPct(snapshot.change24h)}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</strong></span>
+        <span><small>7 j marché</small><strong data-help-live="change7d" class="${clsPct(snapshot.change7d)}">${escapeHtml(fmtPct(snapshot.change7d))}</strong></span>
+        <span><small>30 j marché</small><strong data-help-live="change30d" class="${clsPct(snapshot.change30d)}">${escapeHtml(fmtPct(snapshot.change30d))}</strong></span>
         <span><small>Vol./cap.</small><strong>${Number.isFinite(ratio) ? `${ratio.toFixed(2)} %` : "—"}</strong></span>
         <span><small>Capitalisation</small><strong>${escapeHtml(num(coin.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
         <span><small>Volume 24 h</small><strong>${escapeHtml(num(coin.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
@@ -16733,11 +16736,73 @@ function atlasMarketHelpDefinition(row) {
         <span><small>Décision</small><strong>${escapeHtml(beginnerDecision(coin))}</strong></span>
       </div>
       <div class="atlas-help-market-sources">
-        <span><b>Cotation et 24 h observés</b><em>${escapeHtml(snapshot.truthLabel)} · ${escapeHtml(snapshot.freshnessLabel)}</em></span>
-        <span><b>Référence marché 24 h</b><em>${escapeHtml(Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—")} · ${escapeHtml(snapshot.marketSourceLabel)} · ${escapeHtml(snapshot.marketFrameLabel)}</em></span>
+        <span><b>Cotation et 24 h observés</b><em data-help-live="observed-source">${escapeHtml(snapshot.truthLabel)} · ${escapeHtml(snapshot.freshnessLabel)}</em></span>
+        <span><b>Référence marché 24 h</b><em data-help-live="market-reference">${escapeHtml(Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—")} · ${escapeHtml(snapshot.marketSourceLabel)} · ${escapeHtml(snapshot.marketFrameLabel)}</em></span>
       </div>
       <div class="atlas-help-market-action ${compared ? "is-remove" : "is-add"}">${compared ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique ou appuie sur Entrée pour retirer` : `Non sélectionné · clique ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`}</div>`
   };
+}
+
+function atlasPatchOpenMarketHelp(coinOrId) {
+  const coin = typeof coinOrId === "string"
+    ? state.coins.find(item => item.id === coinOrId)
+    : coinOrId;
+  if (!coin?.id) return false;
+
+  const layer = document.getElementById("atlasHelpLayer");
+  if (!layer || layer.hidden || layer.getAttribute("aria-hidden") === "true") return false;
+
+  const activeCoinId = atlasHelpActiveTarget?.dataset?.marketHelpId || "";
+  const layerCoinId = layer.dataset.marketHelpCoinId || "";
+  if (coin.id !== activeCoinId && coin.id !== layerCoinId) return false;
+
+  const snapshot = atlasMarketSnapshotSurface(coin);
+  const priceNode = layer.querySelector('[data-help-live="price-eur"]');
+  const change24Node = layer.querySelector('[data-help-live="change24h"]');
+  const change7Node = layer.querySelector('[data-help-live="change7d"]');
+  const change30Node = layer.querySelector('[data-help-live="change30d"]');
+  const observedSourceNode = layer.querySelector('[data-help-live="observed-source"]');
+  const marketReferenceNode = layer.querySelector('[data-help-live="market-reference"]');
+
+  if (priceNode) {
+    priceNode.textContent = snapshot.quoteUsable
+      ? atlasCurrentQuotePriceText(snapshot.quote)
+      : atlasFormatEUR(snapshot.priceEur);
+  }
+
+  if (change24Node) {
+    change24Node.textContent = atlasMarketSnapshotChange24Text(snapshot);
+    change24Node.classList.remove("pos", "neg", "neutral");
+    change24Node.classList.add(clsPct(snapshot.change24h));
+  }
+
+  if (change7Node) {
+    change7Node.textContent = fmtPct(snapshot.change7d);
+    change7Node.classList.remove("pos", "neg", "neutral");
+    change7Node.classList.add(clsPct(snapshot.change7d));
+  }
+
+  if (change30Node) {
+    change30Node.textContent = fmtPct(snapshot.change30d);
+    change30Node.classList.remove("pos", "neg", "neutral");
+    change30Node.classList.add(clsPct(snapshot.change30d));
+  }
+
+  if (observedSourceNode) {
+    observedSourceNode.textContent = `${snapshot.truthLabel} · ${snapshot.freshnessLabel}`;
+    observedSourceNode.title = atlasCurrentQuoteTitle(snapshot.quote);
+  }
+
+  if (marketReferenceNode) {
+    const marketChange = Number.isFinite(snapshot.marketChange24h)
+      ? fmtPct(snapshot.marketChange24h)
+      : "—";
+    marketReferenceNode.textContent =
+      `${marketChange} · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`;
+  }
+
+  layer.dataset.marketHelpCoinId = coin.id;
+  return true;
 }
 
 function atlasHelpMarkup(definition) {
@@ -16778,6 +16843,8 @@ function atlasShowHelpLayer(target, pointer = null) {
   if (atlasHelpActiveTarget && atlasHelpActiveTarget !== target) atlasRestoreHelpDescription(atlasHelpActiveTarget);
   atlasHelpActiveTarget = target;
   layer.innerHTML = atlasHelpMarkup(definition);
+  if (definition.marketCoinId) layer.dataset.marketHelpCoinId = definition.marketCoinId;
+  else delete layer.dataset.marketHelpCoinId;
   layer.setAttribute("aria-hidden", "false");
   if (!("atlasHelpOriginalDescribedby" in target.dataset)) {
     target.dataset.atlasHelpOriginalDescribedby = target.getAttribute("aria-describedby") || "";
@@ -16803,6 +16870,7 @@ function atlasHideHelpLayer(immediate = false) {
     if (layer) {
       layer.hidden = true;
       layer.setAttribute("aria-hidden", "true");
+      delete layer.dataset.marketHelpCoinId;
     }
     atlasRestoreHelpDescription(atlasHelpActiveTarget);
     atlasHelpActiveTarget = null;
@@ -19179,7 +19247,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.14 annulée :", error);
+    console.warn("Transaction scanner 28.2.15 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -19363,7 +19431,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.14 :", error);
+    console.error("Scanner 28.2.15 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -19452,7 +19520,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.14 non capturé :", error);
+      console.error("Scanner 28.2.15 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -19462,7 +19530,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.14 :", error);
+    console.error("Démarrage scanner 28.2.15 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -19476,7 +19544,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.14"
+    source: "button-28.2.15"
   });
 }
 
