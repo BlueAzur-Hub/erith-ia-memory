@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.13 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.14 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,7 +17,7 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.13";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.14";
 const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
@@ -1257,6 +1257,61 @@ function atlasMarketQuoteTruthLabel(quote) {
 function atlasMarketQuoteFreshnessLabel(quote) {
   if (!atlasQuoteIsUsable(quote) || !quote?.timestamp) return "aucun horodatage";
   return atlasBrokerAgeLabel(quote.timestamp);
+}
+
+function atlasMarketSnapshotSurface(coin, now = Date.now()) {
+  const quote = atlasCurrentQuoteForCoin(coin, now);
+  const quoteUsable = atlasQuoteIsUsable(quote);
+  const directChange24h = quoteUsable && Number.isFinite(Number(quote.change24h))
+    ? Number(quote.change24h)
+    : null;
+  const marketChange24h = Number.isFinite(Number(coin?.marketChange24h))
+    ? Number(coin.marketChange24h)
+    : Number.isFinite(Number(coin?.change24h))
+      ? Number(coin.change24h)
+      : null;
+  const observedChange24h = directChange24h ?? marketChange24h;
+  const observedBasis = directChange24h !== null ? "direct" : "market";
+  const frame = typeof atlasMarketFrameShortId === "function"
+    ? atlasMarketFrameShortId()
+    : "Frame indisponible";
+
+  return {
+    coin,
+    quote,
+    quoteUsable,
+    priceEur: quoteUsable
+      ? Number(quote.price)
+      : Number.isFinite(Number(coin?.marketPriceEur ?? coin?.priceEur ?? coin?.price))
+        ? Number(coin.marketPriceEur ?? coin.priceEur ?? coin.price)
+        : null,
+    priceUsd: Number.isFinite(Number(coin?.priceUsd)) ? Number(coin.priceUsd) : null,
+    change24h: observedChange24h,
+    directChange24h,
+    marketChange24h,
+    change7d: Number.isFinite(Number(coin?.change7d)) ? Number(coin.change7d) : null,
+    change30d: Number.isFinite(Number(coin?.change30d)) ? Number(coin.change30d) : null,
+    observedBasis,
+    truthLabel: quoteUsable
+      ? atlasMarketQuoteTruthLabel(quote)
+      : "SNAPSHOT · CoinGecko",
+    freshnessLabel: quoteUsable
+      ? atlasMarketQuoteFreshnessLabel(quote)
+      : atlasBrokerAgeLabel(
+          Date.parse(state.dataBroker?.market?.timestamp || state.timestamp || "") || Date.now()
+        ),
+    marketFrameLabel: frame,
+    marketSourceLabel: "CoinGecko"
+  };
+}
+
+function atlasMarketSnapshotChange24Text(snapshot) {
+  const value = Number(snapshot?.change24h);
+  if (!Number.isFinite(value)) return "—";
+  const formatted = fmtPct(value);
+  return snapshot?.quote?.status === "conserved" && snapshot?.observedBasis === "direct"
+    ? `≈ ${formatted}`
+    : formatted;
 }
 
 function atlasCurrentQuotePriceText(quote) {
@@ -4602,7 +4657,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.13
+   Market Core V2.0-Alpha · Build 28.2.14
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -8694,7 +8749,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.13"
+      source: "target-top5-cycle-28.2.14"
     });
   }
 
@@ -8796,12 +8851,13 @@ function renderMarketTable() {
     const primary = c.id === state.selectedCoinId && compared;
     const watched = state.watchIds.includes(c.id);
     const compareLabel = compared ? "Retirer" : "Ajouter";
-    const quote = atlasCurrentQuoteForCoin(c);
-    const moveClass = Number.isFinite(Number(quote.change24h))
-      ? `${clsPct(quote.change24h)} ${atlasMoveStrengthClass(quote.change24h)}`
+    const snapshot = atlasMarketSnapshotSurface(c);
+    const quote = snapshot.quote;
+    const moveClass = Number.isFinite(Number(snapshot.change24h))
+      ? `${clsPct(snapshot.change24h)} ${atlasMoveStrengthClass(snapshot.change24h)}`
       : "";
     const compactName = atlasMarketCompactName(c);
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasCurrentQuoteChangeText(quote))}</span></td><td class="${clsPct(c.change7d)}">${fmtPct(c.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
+    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</span></td><td class="${clsPct(snapshot.change7d)}">${fmtPct(snapshot.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
   }).join("");
 
   const updated = state.timestamp ? new Date(state.timestamp).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
@@ -10457,17 +10513,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.13" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.13" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.13" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.14" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -11551,7 +11607,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.13",
+  interface: "Build 28.2.14",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -13802,7 +13858,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.13`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.14`
   );
 }
 
@@ -14590,12 +14646,14 @@ function computeAtlasMarketMath(coin) {
 }
 
 function computeAtlasScenarioMath(coin) {
-  if (!coin || typeof coin.price !== "number" || !Number.isFinite(coin.price) || coin.price <= 0) {
+  const snapshot = coin ? atlasMarketSnapshotSurface(coin) : null;
+  const price = Number(snapshot?.priceEur);
+  if (!Number.isFinite(price) || price <= 0) {
     return { reason: "Scénario indisponible sans prix réel", human: "Aucune projection locale" };
   }
   return {
     reason: "Hypothèse locale ±3 %",
-    human: `+3 % : ${atlasFmtEUR(coin.price * 1.03)} · −3 % : ${atlasFmtEUR(coin.price * 0.97)}`
+    human: `+3 % : ${atlasFmtEUR(price * 1.03)} · −3 % : ${atlasFmtEUR(price * 0.97)}`
   };
 }
 
@@ -15189,7 +15247,7 @@ function renderAtlasMathCore() {
       : "Indisponible";
 
     panel.innerHTML = [
-      atlasMathCard("Actif et fenêtre", coin ? coin.symbol : "—", coin ? `${coin.name} · ${periodLabel}` : "Livecheck requis", coin ? `${source} · ${atlasFmtEUR(coin.price)}` : "", "wide"),
+      atlasMathCard("Actif et fenêtre", coin ? coin.symbol : "—", coin ? `${coin.name} · ${periodLabel}` : "Livecheck requis", coin && currentQuote && atlasQuoteIsUsable(currentQuote) ? `${atlasMarketQuoteTruthLabel(currentQuote)} · ${atlasCurrentQuotePriceText(currentQuote)} · ${atlasMarketQuoteFreshnessLabel(currentQuote)}` : coin ? `${source} · prix observé indisponible` : "", "wide"),
       atlasMathCard("Market Frame", marketFrameContext.currentFrameId ? atlasMarketFrameShortId() : "Indisponible", `${marketFrameContext.validatedAssets}/${marketFrameContext.requestedAssets} actifs validés · ${atlasBrokerModeLabel(marketFrameContext.currentFrameMode)}`, marketFrameContext.chartUsesCurrentFrame ? "Contexte graphique rattaché au frame courant" : "Graphique rattaché à un frame antérieur traçable", "wide"),
       atlasMathCard("Prix observé", currentQuote && atlasQuoteIsUsable(currentQuote) ? atlasCurrentQuotePriceText(currentQuote) : "Indisponible", currentQuote && atlasQuoteIsUsable(currentQuote) ? `${atlasQuoteStatusLabel(currentQuote)} · ${currentQuote.source} · ${atlasExactTimestampLabel(currentQuote.timestamp)}` : "Aucune cotation exploitable"),
       atlasMathCard("Qualité de série", Number.isFinite(metrics.completenessPct) ? `${metrics.completenessPct.toFixed(1)} %` : "Indisponible", `${pointCount} points observés / ${metrics.expectedPoints || "?"} attendus · ${metrics.largeGaps ?? "?"} grand(s) écart(s)`),
@@ -16651,8 +16709,9 @@ function atlasMarketHelpDefinition(row) {
   const selection = atlasComparisonIds();
   const compared = selection.includes(coin.id);
   const score = scoreCoin(coin);
+  const snapshot = atlasMarketSnapshotSurface(coin);
   const ratio = coin.volume24h && coin.marketCap ? coin.volume24h / coin.marketCap * 100 : null;
-  const priceUsd = atlasHasPositiveQuote(coin.priceUsd) ? atlasFormatUSD(coin.priceUsd) : "USD —";
+  const priceUsd = atlasHasPositiveQuote(snapshot.priceUsd) ? atlasFormatUSD(snapshot.priceUsd) : "USD —";
   const image = coin.image
     ? `<img class="atlas-help-market-icon" src="${escapeHtml(coin.image)}" alt="" loading="eager">`
     : `<span class="atlas-help-market-fallback" aria-hidden="true">${escapeHtml(coin.symbol.slice(0, 1))}</span>`;
@@ -16662,16 +16721,20 @@ function atlasMarketHelpDefinition(row) {
     html: `<div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
       <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
-        <span><small>Prix direct EUR</small><strong>${escapeHtml(atlasCurrentQuotePriceText(atlasCurrentQuoteForCoin(coin)))}</strong></span>
-        <span><small>Prix USD</small><strong>${escapeHtml(priceUsd)}</strong></span>
-        <span><small>24 h</small><strong class="${clsPct(coin.change24h)}">${escapeHtml(atlasFmtMarketPct(coin.change24h))}</strong></span>
-        <span><small>7 j</small><strong class="${clsPct(coin.change7d)}">${escapeHtml(fmtPct(coin.change7d))}</strong></span>
-        <span><small>30 j</small><strong class="${clsPct(coin.change30d)}">${escapeHtml(fmtPct(coin.change30d))}</strong></span>
+        <span><small>Prix direct EUR</small><strong>${escapeHtml(snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur))}</strong></span>
+        <span><small>Prix USD marché</small><strong>${escapeHtml(priceUsd)}</strong></span>
+        <span><small>24 h direct</small><strong class="${clsPct(snapshot.change24h)}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</strong></span>
+        <span><small>7 j marché</small><strong class="${clsPct(snapshot.change7d)}">${escapeHtml(fmtPct(snapshot.change7d))}</strong></span>
+        <span><small>30 j marché</small><strong class="${clsPct(snapshot.change30d)}">${escapeHtml(fmtPct(snapshot.change30d))}</strong></span>
         <span><small>Vol./cap.</small><strong>${Number.isFinite(ratio) ? `${ratio.toFixed(2)} %` : "—"}</strong></span>
         <span><small>Capitalisation</small><strong>${escapeHtml(num(coin.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
         <span><small>Volume 24 h</small><strong>${escapeHtml(num(coin.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
         <span><small>Score Atlas</small><strong>${escapeHtml(score.score ?? "—")}</strong></span>
         <span><small>Décision</small><strong>${escapeHtml(beginnerDecision(coin))}</strong></span>
+      </div>
+      <div class="atlas-help-market-sources">
+        <span><b>Cotation et 24 h observés</b><em>${escapeHtml(snapshot.truthLabel)} · ${escapeHtml(snapshot.freshnessLabel)}</em></span>
+        <span><b>Référence marché 24 h</b><em>${escapeHtml(Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—")} · ${escapeHtml(snapshot.marketSourceLabel)} · ${escapeHtml(snapshot.marketFrameLabel)}</em></span>
       </div>
       <div class="atlas-help-market-action ${compared ? "is-remove" : "is-add"}">${compared ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique ou appuie sur Entrée pour retirer` : `Non sélectionné · clique ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`}</div>`
   };
@@ -19116,7 +19179,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.13 annulée :", error);
+    console.warn("Transaction scanner 28.2.14 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -19300,7 +19363,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.13 :", error);
+    console.error("Scanner 28.2.14 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -19389,7 +19452,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.13 non capturé :", error);
+      console.error("Scanner 28.2.14 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -19399,7 +19462,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.13 :", error);
+    console.error("Démarrage scanner 28.2.14 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -19413,7 +19476,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.13"
+    source: "button-28.2.14"
   });
 }
 

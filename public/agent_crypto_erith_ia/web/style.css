@@ -19542,3 +19542,52 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.14 — MARKET SNAPSHOT CONSISTENCY
+   The row and the rich crypto card share the same observed quote surface.
+   ========================================================================== */
+
+.atlas-help-market-sources {
+  display: grid;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding: 7px 9px;
+  border: 1px solid rgba(98,236,255,.16);
+  border-radius: 10px;
+  background: rgba(4,15,28,.62);
+}
+
+.atlas-help-market-sources > span {
+  display: grid;
+  grid-template-columns: minmax(128px, .88fr) minmax(0, 1.6fr);
+  gap: 8px;
+  align-items: baseline;
+}
+
+.atlas-help-market-sources b {
+  color: rgba(255,226,164,.86);
+  font: 850 7px/1.2 system-ui, sans-serif;
+  letter-spacing: .035em;
+}
+
+.atlas-help-market-sources em {
+  overflow: hidden;
+  color: rgba(185,215,233,.76);
+  font: 700 7px/1.25 system-ui, sans-serif;
+  font-style: normal;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .atlas-help-market-sources > span {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .atlas-help-market-sources em {
+    text-align: left;
+  }
+}
+
