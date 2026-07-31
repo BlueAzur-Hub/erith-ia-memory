@@ -20297,3 +20297,119 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.25 — SUMMARY LINE WRAP & DETAIL GUTTER TRIM
+   1. Quantitative summary uses deterministic semantic rows.
+   2. Right-panel gutters are reduced without touching card geometry.
+   ========================================================================== */
+
+/* ---------- Deterministic summary rows ---------- */
+
+#analyste .atlas-chart-insight-overlay > small {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 2px !important;
+  overflow: visible !important;
+  line-height: 1.18 !important;
+}
+
+#analyste .atlas-hud-summary-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: baseline !important;
+  min-width: 0 !important;
+  column-gap: 0 !important;
+  row-gap: 1px !important;
+}
+
+#analyste .atlas-hud-summary-row > span {
+  min-width: 0 !important;
+  overflow-wrap: normal !important;
+}
+
+#analyste .atlas-hud-summary-row > span + span::before {
+  content: "·";
+  display: inline-block;
+  margin: 0 5px;
+  color: rgba(196,218,233,.58);
+}
+
+#analyste .atlas-hud-summary-secondary {
+  color: rgba(205,224,237,.82) !important;
+  font-size: .95em !important;
+}
+
+#analyste .atlas-hud-datetime {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+@media (min-width: 901px) and (max-width: 1380px) {
+  #analyste .atlas-hud-summary-row {
+    line-height: 1.16 !important;
+  }
+
+  #analyste .atlas-hud-summary-row > span + span::before {
+    margin-inline: 4px;
+  }
+}
+
+/* ---------- Right detail panel gutter trim ---------- */
+
+#analyste.champagne-clean-lens .clean-lens-detail-panel {
+  padding: 6px 2px 6px 3px !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-toggle {
+  margin-inline: 0 !important;
+}
+
+#analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-body {
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 5px !important;
+  scrollbar-gutter: auto !important;
+}
+
+#analyste.champagne-clean-lens .detail-panel-body::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+#analyste.champagne-clean-lens .atlas-detail-subwindow {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#analyste.champagne-clean-lens .atlas-detail-subwindow > summary {
+  padding-inline: 7px !important;
+}
+
+#analyste.champagne-clean-lens .atlas-detail-subwindow-body {
+  padding: 5px 2px !important;
+}
+
+#analyste.champagne-clean-lens
+  .atlas-primary-detail-window
+  .clean-lens-detail-grid {
+  padding-inline: 3px !important;
+}
+
+#analyste.champagne-clean-lens
+  .atlas-primary-detail-window
+  .clean-lens-detail-grid > div {
+  padding-inline: 5px !important;
+}
+
+#analyste.champagne-clean-lens .clean-lens-why-box,
+#analyste.champagne-clean-lens .why-box {
+  margin-inline: 2px !important;
+}
+
+@media (min-width: 901px) and (max-width: 1380px) {
+  #analyste.champagne-clean-lens .clean-lens-detail-panel {
+    padding-inline: 2px !important;
+  }
+}
+

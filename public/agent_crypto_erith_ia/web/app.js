@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.24 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.25 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,8 +17,8 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.24";
-const ATLAS_BUILD = "28.2.24";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.25";
+const ATLAS_BUILD = "28.2.25";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const atlasVersionAwarenessState = {
@@ -5009,7 +5009,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.24
+   Market Core V2.0-Alpha · Build 28.2.25
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -9213,7 +9213,7 @@ function atlasActivateTargetTopFiveCycle() {
   if (next === "gainers" || next === "losers" || next === "volume") {
     return atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.24"
+      source: "target-top5-cycle-28.2.25"
     });
   }
 
@@ -11137,17 +11137,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.24" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.25" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.24" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.25" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.24" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.25" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -12231,7 +12231,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.24",
+  interface: "Build 28.2.25",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -14482,7 +14482,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.24`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.25`
   );
 }
 
@@ -18067,24 +18067,91 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     : "horodatage inconnu";
   const coverage = atlasChartOverlayPointCoverage(rows);
 
-  const scannerHistorySummary = String(result?.scanner?.historySummary || "").trim();
-  const scannerMarketBasis = String(result?.scanner?.marketBasisLabel || "").trim();
-  const providerLabel = atlasChartProviderLabel({ comparison: true, entries });
-  let summary = `${coverage} · série la plus ancienne ${oldestText} · ${providerLabel} EUR`;
-  if (scannerHistorySummary) summary += ` · historiques ${scannerHistorySummary}`;
-  if (scannerMarketBasis) summary += ` · classement ${scannerMarketBasis}`;
+  const scannerHistorySummary = String(
+    result?.scanner?.historySummary || ""
+  ).trim();
+  const scannerMarketBasis = String(
+    result?.scanner?.marketBasisLabel || ""
+  ).trim();
+  const providerLabel = atlasChartProviderLabel({
+    comparison: true,
+    entries
+  });
+
+  let primarySummaryItems = [
+    {
+      className: "atlas-hud-detail",
+      text: `${coverage} · ${providerLabel} EUR`
+    }
+  ];
+  let secondarySummaryItems = [
+    {
+      className: "atlas-hud-oldest",
+      label: "plus ancienne",
+      value: oldestText,
+      dateTime: true
+    }
+  ];
+
+  if (scannerHistorySummary) {
+    secondarySummaryItems.push({
+      className: "atlas-hud-detail",
+      text: `historiques ${scannerHistorySummary}`
+    });
+  }
+  if (scannerMarketBasis) {
+    secondarySummaryItems.push({
+      className: "atlas-hud-detail",
+      text: `classement ${scannerMarketBasis}`
+    });
+  }
 
   if (preset === "volume") {
-    const valid = rows.filter(row => Number.isFinite(row.volume)).sort((a, b) => b.volume - a.volume);
+    const valid = rows
+      .filter(row => Number.isFinite(row.volume))
+      .sort((a, b) => b.volume - a.volume);
+
     if (valid.length) {
-      summary = `Volume supérieur ${valid[0].symbol} ${fmtCompactEUR.format(valid[0].volume)}`
-        + (valid.length > 1
-          ? ` · inférieur ${valid[valid.length - 1].symbol} ${fmtCompactEUR.format(valid[valid.length - 1].volume)}`
-          : "")
-        + ` · ${coverage} · ${providerLabel} EUR`;
+      primarySummaryItems = [
+        {
+          className: "atlas-hud-leader",
+          text:
+            `Volume supérieur ${valid[0].symbol} `
+            + fmtCompactEUR.format(valid[0].volume)
+        }
+      ];
+
+      if (valid.length > 1) {
+        primarySummaryItems.push({
+          className: "atlas-hud-laggard",
+          text:
+            `inférieur ${valid[valid.length - 1].symbol} `
+            + fmtCompactEUR.format(valid[valid.length - 1].volume)
+        });
+      }
+
+      secondarySummaryItems = [
+        {
+          className: "atlas-hud-detail",
+          text: coverage
+        },
+        {
+          className: "atlas-hud-detail",
+          text: `${providerLabel} EUR`
+        },
+        {
+          className: "atlas-hud-oldest",
+          label: "plus ancienne",
+          value: oldestText,
+          dateTime: true
+        }
+      ];
     }
   } else {
-    const valid = rows.filter(row => Number.isFinite(row.change)).sort((a, b) => b.change - a.change);
+    const valid = rows
+      .filter(row => Number.isFinite(row.change))
+      .sort((a, b) => b.change - a.change);
+
     if (valid.length) {
       const max = valid[0].change;
       const min = valid[valid.length - 1].change;
@@ -18097,29 +18164,91 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
         .map(row => row.symbol)
         .join("/");
       const gap = max - min;
-      summary = `Leader ${leaders} ${fmtPct(max)} · retard ${laggards} ${fmtPct(min)}`
-        + ` · écart ${gap.toFixed(2)} pt · ${coverage} · plus ancienne ${oldestText}`;
+
+      primarySummaryItems = [
+        {
+          className: "atlas-hud-leader",
+          text: `Leader ${leaders} ${fmtPct(max)}`
+        },
+        {
+          className: "atlas-hud-laggard",
+          text: `retard ${laggards} ${fmtPct(min)}`
+        },
+        {
+          className: "atlas-hud-detail",
+          text: `écart ${gap.toFixed(2)} pt`
+        }
+      ];
+
+      secondarySummaryItems = [
+        {
+          className: "atlas-hud-detail",
+          text: coverage
+        },
+        {
+          className: "atlas-hud-oldest",
+          label: "plus ancienne",
+          value: oldestText,
+          dateTime: true
+        }
+      ];
     }
   }
 
+  if (options.preserved) {
+    secondarySummaryItems.push({
+      className: "atlas-hud-detail",
+      text:
+        `mise à jour ${
+          atlasChartPeriodLabel(
+            Number(
+              options.requestedPeriod
+              || state.chartPeriodDays
+              || period
+            )
+          )
+        } en cours`
+    });
+  }
+
+  const summaryItemHtml = item => {
+    const className = escapeHtml(
+      String(item?.className || "atlas-hud-detail")
+    );
+
+    if (item?.dateTime) {
+      return `<span class="${className}">`
+        + `${escapeHtml(String(item.label || ""))} `
+        + `<time class="atlas-hud-datetime">`
+        + `${escapeHtml(String(item.value || "horodatage inconnu"))}`
+        + `</time></span>`;
+    }
+
+    return `<span class="${className}">`
+      + `${escapeHtml(String(item?.text || ""))}`
+      + `</span>`;
+  };
+
+  const summaryHtml =
+    `<span class="atlas-hud-summary-row atlas-hud-summary-primary">`
+      + primarySummaryItems.map(summaryItemHtml).join("")
+    + `</span>`
+    + `<span class="atlas-hud-summary-row atlas-hud-summary-secondary">`
+      + secondarySummaryItems.map(summaryItemHtml).join("")
+    + `</span>`;
+
   const truthLabel = String(truth.label || "source non mesurée");
-  const displayedTruthLabel = options.preserved ? "historique conservé" : truthLabel;
-  const displayedModeLabel = String(options.modeLabel || atlasChartOverlayModeLabel());
+  const displayedTruthLabel = options.preserved
+    ? "historique conservé"
+    : truthLabel;
+  const displayedModeLabel = String(
+    options.modeLabel || atlasChartOverlayModeLabel()
+  );
   const titleHtml = atlasChartOverlayTitleHtml(
     `${displayedModeLabel} · ${periodLabel} · BASE 100`,
     `${scaleLabel} · ${entries.length}/${selectedCount} SÉRIES`,
     displayedTruthLabel
   );
-
-  if (options.preserved) {
-    summary += ` · mise à jour ${atlasChartPeriodLabel(Number(options.requestedPeriod || state.chartPeriodDays || period))} en cours`;
-  }
-
-  let summaryHtml = escapeHtml(summary);
-  summaryHtml = summaryHtml
-    .replace(/^Leader ([^·]+)/, '<span class="atlas-hud-leader">Leader $1</span>')
-    .replace(/ · retard ([^·]+)/, ' · <span class="atlas-hud-laggard">retard $1</span>')
-    .replace(/( · écart .*)$/, '<span class="atlas-hud-detail">$1</span>');
 
   atlasChartOverlaySet(
     titleHtml,
@@ -19882,7 +20011,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.24 annulée :", error);
+    console.warn("Transaction scanner 28.2.25 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -20065,7 +20194,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.24 :", error);
+    console.error("Scanner 28.2.25 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -20154,7 +20283,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.24 non capturé :", error);
+      console.error("Scanner 28.2.25 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -20164,7 +20293,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.24 :", error);
+    console.error("Démarrage scanner 28.2.25 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -20178,7 +20307,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.24"
+    source: "button-28.2.25"
   });
 }
 
