@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-07-31T13:08:53.500202+00:00",
+  "generated_at": "2026-07-31T15:31:41.274246+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 16,
-    "critical_24h": 15,
+    "events_24h": 14,
+    "critical_24h": 13,
     "strong_24h": 1,
     "sources_ok": 11,
     "sources_total": 11,
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 6,
-      "latency_ms": 742,
+      "latency_ms": 415,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 77,
+      "latency_ms": 313,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 90,
+      "latency_ms": 159,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 237,
+      "latency_ms": 377,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 21,
-      "latency_ms": 269,
+      "latency_ms": 390,
       "error": null
     },
     {
@@ -80,8 +80,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 28,
-      "latency_ms": 214,
+      "qualified_count": 27,
+      "latency_ms": 143,
       "error": null
     },
     {
@@ -91,8 +91,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 21,
-      "latency_ms": 101,
+      "qualified_count": 18,
+      "latency_ms": 238,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 12,
-      "latency_ms": 712,
+      "latency_ms": 719,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 88,
+      "latency_ms": 124,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "world",
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
-      "fetched_count": 24,
+      "fetched_count": 23,
       "qualified_count": 0,
-      "latency_ms": 443,
+      "latency_ms": 314,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 70,
+      "latency_ms": 158,
       "error": null
     }
   ],
@@ -435,11 +435,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-31T09:02:01+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.570698+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.570698+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.355389+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.355389+00:00",
       "freshness": {
         "iso": "2026-07-31T09:02:01+00:00",
-        "hours": 4.11,
+        "hours": 6.49,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -504,11 +504,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-30T09:50:02+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.582609+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.582609+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.365571+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.365571+00:00",
       "freshness": {
         "iso": "2026-07-30T09:50:02+00:00",
-        "hours": 27.31,
+        "hours": 29.69,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1374,11 +1374,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-29T16:16:43+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.594514+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.594514+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.376368+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.376368+00:00",
       "freshness": {
         "iso": "2026-07-29T16:16:43+00:00",
-        "hours": 44.87,
+        "hours": 47.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1479,6 +1479,71 @@
       "relevance_score": 8,
       "matched_topics": [
         "security"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_d20c0a32e4c58a68",
+      "event_id": "feed_d20c0a32e4c58a68",
+      "fingerprint": "d20c0a32e4c58a68",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "AMLBot launches AI Tracer for self-service blockchain investigations",
+      "body": "Crypto forensics company AMLBot launched an AI-enabled tool allowing users with no specialist knowledge to trace their digital assets, even after they are stolen.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/crypto-forensics-firm-launches-ai-tracing-service-track-your-stolen-coins",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/crypto-forensics-firm-launches-ai-tracing-service-track-your-stolen-coins"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-07-31T13:59:56+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.256368+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.256368+00:00",
+      "freshness": {
+        "iso": "2026-07-31T13:59:56+00:00",
+        "hours": 1.53,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 94,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "IA"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
       ],
       "observation_only": true
     },
@@ -1832,6 +1897,144 @@
       "observation_only": true
     },
     {
+      "id": "feed_fb0fc5e104a97a49",
+      "event_id": "feed_fb0fc5e104a97a49",
+      "fingerprint": "fb0fc5e104a97a49",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Crypto faces 3 barriers to next bull run, STS Digital CEO says",
+      "body": "Institutional options selling, AI and delayed U.S. crypto regulation are weighing on bitcoin, according to STS Digital CEO Maxime Seiler.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/07/31/crypto-faces-3-barriers-to-next-bull-run-sts-digital-ceo-says",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/07/31/crypto-faces-3-barriers-to-next-bull-run-sts-digital-ceo-says"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-07-31T15:00:00+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.499588+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.499588+00:00",
+      "freshness": {
+        "iso": "2026-07-31T15:00:00+00:00",
+        "hours": 0.53,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "IA"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "crypto",
+        "regulation",
+        "institutional"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_44f064aae9af9685",
+      "event_id": "feed_44f064aae9af9685",
+      "fingerprint": "44f064aae9af9685",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Circle secures New York trust charter as crypto regulatory push accelerates",
+      "body": "The approval lets the USDC issuer offer fiduciary and custody services under New York banking law.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/policy/2026/07/31/circle-secures-new-york-trust-charter-as-crypto-regulatory-push-accelerates",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/policy/2026/07/31/circle-secures-new-york-trust-charter-as-crypto-regulatory-push-accelerates"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-07-31T13:35:17+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.500461+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.500461+00:00",
+      "freshness": {
+        "iso": "2026-07-31T13:35:17+00:00",
+        "hours": 1.94,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [
+        "USDC"
+      ],
+      "sectors": [
+        "Stablecoins"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_06a07ac7957215ca",
       "event_id": "feed_06a07ac7957215ca",
       "fingerprint": "06a07ac7957215ca",
@@ -1925,13 +2128,13 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-07-30T20:10:16+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.697503+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.697503+00:00",
+      "event_time": "2026-07-31T13:43:57+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.257339+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.257339+00:00",
       "freshness": {
-        "iso": "2026-07-30T20:10:16+00:00",
-        "hours": 16.98,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-07-31T13:43:57+00:00",
+        "hours": 1.8,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -1972,85 +2175,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_31e62f54f61365c8",
-      "event_id": "feed_31e62f54f61365c8",
-      "fingerprint": "31e62f54f61365c8",
+      "id": "feed_147b272930d78d43",
+      "event_id": "feed_147b272930d78d43",
+      "fingerprint": "147b272930d78d43",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Crypto Biz: Is the AI-to-crypto rotation underway?",
-      "body": "Bitcoin ETF inflows, cooling AI momentum and potential regulatory progress under the CLARITY Act are fueling speculation that capital is rotating back into crypto.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/crypto-biz-ai-to-crypto-rotation-bitcoin-etf-inflows-clarity-act",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/crypto-biz-ai-to-crypto-rotation-bitcoin-etf-inflows-clarity-act"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-24T15:15:57+00:00",
-      "first_seen_at": "2026-07-27T11:43:59.573840+00:00",
-      "last_seen_at": "2026-07-27T11:43:59.573840+00:00",
-      "freshness": {
-        "iso": "2026-07-24T15:15:57+00:00",
-        "hours": 68.47,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "IA"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 17,
-      "matched_topics": [
-        "crypto",
-        "regulation",
-        "institutional"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_7488a7fa3f5b0222",
-      "event_id": "feed_7488a7fa3f5b0222",
-      "fingerprint": "7488a7fa3f5b0222",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of First Interstate Bank",
-      "body": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of First Interstate Bank",
+      "headline": "Federal Reserve Board issues enforcement action with Iuka Bancshares, Inc. and The Iuka State Bank",
+      "body": "Federal Reserve Board issues enforcement action with Iuka Bancshares, Inc. and The Iuka State Bank",
       "source_name": "Federal Reserve",
-      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730a.htm",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730b.htm",
       "source_host": "federalreserve.gov",
       "source_group": "primary",
       "source_class": "Source primaire / institutionnelle",
@@ -2059,17 +2192,17 @@
         "Federal Reserve"
       ],
       "source_urls": [
-        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730a.htm"
+        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730b.htm"
       ],
       "declared_status": "confirmed",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T15:00:00+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.655507+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.655507+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.478495+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.478495+00:00",
       "freshness": {
         "iso": "2026-07-30T15:00:00+00:00",
-        "hours": 22.15,
+        "hours": 24.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2106,15 +2239,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_147b272930d78d43",
-      "event_id": "feed_147b272930d78d43",
-      "fingerprint": "147b272930d78d43",
+      "id": "feed_7488a7fa3f5b0222",
+      "event_id": "feed_7488a7fa3f5b0222",
+      "fingerprint": "7488a7fa3f5b0222",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Federal Reserve Board issues enforcement action with Iuka Bancshares, Inc. and The Iuka State Bank",
-      "body": "Federal Reserve Board issues enforcement action with Iuka Bancshares, Inc. and The Iuka State Bank",
+      "headline": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of First Interstate Bank",
+      "body": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of First Interstate Bank",
       "source_name": "Federal Reserve",
-      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730b.htm",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730a.htm",
       "source_host": "federalreserve.gov",
       "source_group": "primary",
       "source_class": "Source primaire / institutionnelle",
@@ -2123,17 +2256,17 @@
         "Federal Reserve"
       ],
       "source_urls": [
-        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730b.htm"
+        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260730a.htm"
       ],
       "declared_status": "confirmed",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T15:00:00+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.656559+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.656559+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.480080+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.480080+00:00",
       "freshness": {
         "iso": "2026-07-30T15:00:00+00:00",
-        "hours": 22.15,
+        "hours": 24.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2193,11 +2326,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T13:53:38+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.615437+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.615437+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.413555+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.413555+00:00",
       "freshness": {
         "iso": "2026-07-30T13:53:38+00:00",
-        "hours": 23.25,
+        "hours": 25.63,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2259,11 +2392,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-27T19:59:17+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.616647+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.616647+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.414504+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.414504+00:00",
       "freshness": {
         "iso": "2026-07-27T19:59:17+00:00",
-        "hours": 89.16,
+        "hours": 91.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3306,11 +3439,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-30T13:52:37+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.758837+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.758837+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.523485+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.523485+00:00",
       "freshness": {
         "iso": "2026-07-30T13:52:37+00:00",
-        "hours": 23.27,
+        "hours": 25.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3442,12 +3575,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-31T12:11:17+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.567122+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.567122+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.352139+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.352139+00:00",
       "freshness": {
         "iso": "2026-07-31T12:11:17+00:00",
-        "hours": 0.96,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.34,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -3580,11 +3713,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-31T06:46:23+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.686126+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.686126+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.264545+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.264545+00:00",
       "freshness": {
         "iso": "2026-07-31T06:46:23+00:00",
-        "hours": 6.37,
+        "hours": 8.75,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3784,16 +3917,16 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-07-31T10:18:54+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.553598+00:00",
-      "last_seen_at": "2026-07-31T13:08:53.219656+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.449517+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.538648+00:00",
       "freshness": {
         "iso": "2026-07-31T10:18:54+00:00",
-        "hours": 2.83,
+        "hours": 5.21,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
-        "score": 91,
+        "score": 96,
         "level": "Élevé"
       },
       "impact": {
@@ -4046,11 +4179,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-30T14:06:14+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.756583+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.756583+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.521227+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.521227+00:00",
       "freshness": {
         "iso": "2026-07-30T14:06:14+00:00",
-        "hours": 23.04,
+        "hours": 25.42,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4112,11 +4245,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-30T13:55:18+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.757725+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.757725+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.522173+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.522173+00:00",
       "freshness": {
         "iso": "2026-07-30T13:55:18+00:00",
-        "hours": 23.23,
+        "hours": 25.61,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4217,70 +4350,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_7ec550a714e234cf",
-      "event_id": "feed_7ec550a714e234cf",
-      "fingerprint": "7ec550a714e234cf",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Institutional crypto trading platform LMAX is exploring sale, IPO",
-      "body": "LMAX is working with Morgan Stanley and investment bank KBW to assess its options, which could lead to a sale or a public offering.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/05/22/institutional-crypto-trading-platform-lmax-is-exploring-sale-ipo",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/05/22/institutional-crypto-trading-platform-lmax-is-exploring-sale-ipo"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf",
-      "event_label": "ETF / institutionnels",
-      "event_time": "2026-07-24T14:36:16+00:00",
-      "first_seen_at": "2026-07-27T11:43:59.842049+00:00",
-      "last_seen_at": "2026-07-27T11:43:59.842049+00:00",
-      "freshness": {
-        "iso": "2026-07-24T14:36:16+00:00",
-        "hours": 69.13,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 88,
-        "level": "Critique"
-      },
-      "direction": "catalyseur potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "institutional"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_20d2f58abd9f283b",
       "event_id": "feed_20d2f58abd9f283b",
       "fingerprint": "20d2f58abd9f283b",
@@ -4304,11 +4373,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-30T11:42:03+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.581497+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.581497+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.364651+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.364651+00:00",
       "freshness": {
         "iso": "2026-07-30T11:42:03+00:00",
-        "hours": 25.45,
+        "hours": 27.83,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4370,11 +4439,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T18:43:45+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.589560+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.589560+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.371738+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.371738+00:00",
       "freshness": {
         "iso": "2026-07-29T18:43:45+00:00",
-        "hours": 42.42,
+        "hours": 44.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4440,11 +4509,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-07-31T04:46:14+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.687345+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.687345+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.265525+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.265525+00:00",
       "freshness": {
         "iso": "2026-07-31T04:46:14+00:00",
-        "hours": 8.38,
+        "hours": 10.76,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4915,11 +4984,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-29T17:18:49+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.590646+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.590646+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.373230+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.373230+00:00",
       "freshness": {
         "iso": "2026-07-29T17:18:49+00:00",
-        "hours": 43.83,
+        "hours": 46.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4984,11 +5053,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-30T16:17:29+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.703693+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.703693+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.277261+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.277261+00:00",
       "freshness": {
         "iso": "2026-07-30T16:17:29+00:00",
-        "hours": 20.86,
+        "hours": 23.24,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5053,11 +5122,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-07-30T17:38:13+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.701266+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.701266+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.275177+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.275177+00:00",
       "freshness": {
         "iso": "2026-07-30T17:38:13+00:00",
-        "hours": 19.51,
+        "hours": 21.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5119,12 +5188,12 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-07-31T11:58:33+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.736297+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.736297+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.505087+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.505087+00:00",
       "freshness": {
         "iso": "2026-07-31T11:58:33+00:00",
-        "hours": 1.17,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.55,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -5155,6 +5224,75 @@
         "action": "Alerte prioritaire · observation",
         "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
         "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "geopolitics"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_0e080abf3051a647",
+      "event_id": "feed_0e080abf3051a647",
+      "fingerprint": "0e080abf3051a647",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "US Treasury Sanctions Iranian Firms Taking Bitcoin for Hormuz Passage",
+      "body": "OFAC sanctioned two Iranian firms including Hormuz Safe, which “accepts payment in Bitcoin and other digital assets.”",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374789/us-treasury-sanctions-iranian-firms-taking-bitcoin-for-hormuz-passage",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374789/us-treasury-sanctions-iranian-firms-taking-bitcoin-for-hormuz-passage"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-07-31T15:05:43+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.349555+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.349555+00:00",
+      "freshness": {
+        "iso": "2026-07-31T15:05:43+00:00",
+        "hours": 0.43,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 85,
+        "level": "Critique"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
       },
       "confirmations": 1,
       "relevance_score": 12,
@@ -5326,138 +5464,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T16:29:23+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.763954+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.763954+00:00",
+      "first_seen_at": "2026-07-31T15:31:40.584834+00:00",
+      "last_seen_at": "2026-07-31T15:31:40.584834+00:00",
       "freshness": {
         "iso": "2026-07-30T16:29:23+00:00",
-        "hours": 20.66,
+        "hours": 23.04,
         "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 94,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 84,
-        "level": "Fort"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "regulation"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_22cd6a55a133a790",
-      "event_id": "feed_22cd6a55a133a790",
-      "fingerprint": "22cd6a55a133a790",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "CFTC Releases Advisory on Self-Certification of an Event Contract Series",
-      "body": "",
-      "source_name": "U.S. CFTC",
-      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9273-26",
-      "source_host": "cftc.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "U.S. CFTC"
-      ],
-      "source_urls": [
-        "https://www.cftc.gov/PressRoom/PressReleases/9273-26"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-24T19:30:31+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.764999+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.764999+00:00",
-      "freshness": {
-        "iso": "2026-07-24T19:30:31+00:00",
-        "hours": 161.64,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 94,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 84,
-        "level": "Fort"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "regulation"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_df5cb05c59766885",
-      "event_id": "feed_df5cb05c59766885",
-      "fingerprint": "df5cb05c59766885",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "CFTC Staff Issues No-Action Position on Designated Contract Market Procedures",
-      "body": "",
-      "source_name": "U.S. CFTC",
-      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9272-26",
-      "source_host": "cftc.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "U.S. CFTC"
-      ],
-      "source_urls": [
-        "https://www.cftc.gov/PressRoom/PressReleases/9272-26"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-24T19:05:39+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.765987+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.765987+00:00",
-      "freshness": {
-        "iso": "2026-07-24T19:05:39+00:00",
-        "hours": 162.05,
-        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
