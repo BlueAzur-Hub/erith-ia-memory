@@ -13410,7 +13410,7 @@ html[data-atlas-role="administrator"] .atlas-v2-nav-advanced {
    DATA TRUTH · DIRECT / CACHE / TIMESTAMP LOCK
    ========================================================= */
 
-/* Origine directe et fraîcheur sont deux dimensions séparées. */
+/* Origine directe et ancienneté sont deux dimensions séparées. */
 .atlas-market-zone #analyste
 .chart-shell[data-chart-state="valid"][data-chart-origin="direct"][data-chart-freshness="fresh"]::before {
   content: attr(data-chart-provider-label) !important;
@@ -21202,3 +21202,22 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+
+
+/* ==========================================================================
+   BUILD 28.2.33 — MARKET DATA LEXICON CLEANUP
+   Concise labels; no added height on Transformer Book.
+   ========================================================================== */
+
+#analyste .atlas-chart-history-truth,
+#analyste .atlas-chart-truth-badge {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1100px) {
+  #analyste .atlas-chart-history-truth,
+  #analyste .atlas-chart-truth-badge {
+    font-size: 10px !important;
+    letter-spacing: .015em !important;
+  }
+}
