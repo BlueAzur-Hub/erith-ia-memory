@@ -19678,86 +19678,125 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 }
 
 /* ==========================================================================
-   BUILD 28.2.17 — VERSION AWARENESS & SAFE REFRESH
-   Hidden by default. Visible only when version.json reports a newer build.
+   BUILD 28.2.29 — UNIFIED UPDATE CONTROL
+   Installed version and available update share the same compact component.
    ========================================================================== */
 
-.atlas-version-update {
-  flex: 1 0 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 7px;
+.atlas-version-control {
+  flex: 0 1 auto;
   min-width: 0;
-}
-
-.atlas-version-update[hidden] {
-  display: none !important;
-}
-
-.atlas-version-update > span {
-  min-width: 0;
-  padding: 6px 10px;
+  min-height: 30px;
+  max-width: min(360px, 44vw);
+  padding: 6px 11px;
   overflow: hidden;
-  border: 1px solid rgba(255,215,130,.54);
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(255,171,76,.16), rgba(98,236,255,.10));
-  color: #ffe0a0;
-  box-shadow:
-    0 0 0 1px rgba(255,215,130,.07) inset,
-    0 5px 18px rgba(0,0,0,.22);
+  appearance: none;
   font: 900 10px/1.1 system-ui, sans-serif;
   letter-spacing: .015em;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition:
+    border-color .16s ease,
+    background-color .16s ease,
+    color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
 }
 
-.atlas-version-update > button {
-  flex: 0 0 auto;
-  min-height: 29px;
-  padding: 6px 11px;
-  border: 1px solid rgba(98,236,255,.62);
-  border-radius: 999px;
+.atlas-version-control > span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-version-control[data-state="current"] {
+  border-color: rgba(71,223,145,.44);
+  background: rgba(71,223,145,.15);
+  color: #c4fbdc;
+  cursor: default;
+}
+
+.atlas-version-control[data-state="available"] {
+  border-color: rgba(255,215,130,.62);
   background:
-    linear-gradient(135deg, rgba(98,236,255,.22), rgba(71,223,145,.13));
-  color: #d7fbff;
+    linear-gradient(
+      90deg,
+      rgba(255,171,76,.18),
+      rgba(98,236,255,.10)
+    );
+  color: #ffe0a0;
   box-shadow:
-    0 0 16px rgba(98,236,255,.12),
-    0 0 0 1px rgba(255,255,255,.04) inset;
-  font: 950 9px/1 system-ui, sans-serif;
-  letter-spacing: .025em;
+    0 0 0 1px rgba(255,215,130,.07) inset,
+    0 5px 18px rgba(0,0,0,.22);
   cursor: pointer;
 }
 
-.atlas-version-update > button:hover,
-.atlas-version-update > button:focus-visible {
-  border-color: rgba(255,226,164,.82);
+.atlas-version-control[data-state="available"]:hover,
+.atlas-version-control[data-state="available"]:focus-visible {
+  border-color: rgba(255,231,174,.90);
   color: #fff1c8;
+  box-shadow:
+    0 0 18px rgba(255,199,96,.14),
+    0 0 0 1px rgba(255,255,255,.05) inset;
   transform: translateY(-1px);
 }
 
-.atlas-version-update > button:disabled {
-  opacity: .66;
+.atlas-version-control[data-state="applying"] {
+  border-color: rgba(98,236,255,.58);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(98,236,255,.17),
+      rgba(71,223,145,.11)
+    );
+  color: #d7fbff;
   cursor: wait;
-  transform: none;
+}
+
+.atlas-version-control[data-state="failed"] {
+  border-color: rgba(255,92,117,.58);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,92,117,.15),
+      rgba(255,171,76,.08)
+    );
+  color: #ffc6ce;
+  cursor: pointer;
+}
+
+.atlas-version-control[data-state="failed"]:hover,
+.atlas-version-control[data-state="failed"]:focus-visible {
+  border-color: rgba(255,143,159,.82);
+  color: #ffe0e5;
+  transform: translateY(-1px);
+}
+
+.atlas-version-control:disabled {
+  opacity: 1;
+}
+
+.atlas-version-control[data-state="applying"]:disabled {
+  opacity: .78;
 }
 
 @media (max-width: 1100px) {
-  .atlas-version-update {
-    justify-content: flex-start;
+  .atlas-version-control {
+    max-width: min(420px, 58vw);
   }
 }
 
 @media (max-width: 680px) {
-  .atlas-version-update {
-    display: grid;
-    grid-template-columns: minmax(0,1fr) auto;
+  .atlas-version-control {
     width: 100%;
+    max-width: 100%;
+    min-height: 34px;
+    border-radius: 10px;
+    white-space: normal;
   }
 
-  .atlas-version-update > span {
-    border-radius: 10px;
+  .atlas-version-control > span {
     white-space: normal;
   }
 }
