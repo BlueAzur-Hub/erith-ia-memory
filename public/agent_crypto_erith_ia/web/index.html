@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.4 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.5 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.4" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.5" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="status-stack" aria-label="Statuts">
-          <span class="pill ok">Market Core V2.0-Alpha · Build 28.2.4</span>
+          <span class="pill ok">Market Core V2.0-Alpha · Build 28.2.5</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="sigil">⌁</span>
         </div>
@@ -62,7 +62,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.4</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.5</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -376,17 +376,20 @@
           <span class="detail-panel-toggle-title">
             <span class="eyebrow">DÉTAIL ACTIF</span>
             <strong>Lecture technique</strong>
-            <small class="detail-panel-subtitle">prix observé · Market Frame · historique</small>
           </span>
           <span class="detail-panel-toggle-state" id="detailPanelToggleState">Réduire ◀</span>
         </button>
 
+        <div class="detail-project-visual" aria-hidden="true">
+          <span>PROJECT VISUAL · AGENT-CRYPTO</span>
+        </div>
+
         <div class="detail-panel-body" id="detailPanelBody">
           <div class="detail-compact-strip" id="detailCompactStrip" aria-label="Résumé compact de l’actif">
-            <span><small>Actif suivi</small><b id="detailCompactAsset">En attente</b></span>
-            <span><small>Prix observé</small><b id="detailCompactPrice">—</b></span>
-            <span><small>Décision humaine</small><b id="detailCompactDecision">—</b></span>
-            <span><small>Marché 24 h</small><b id="detailCompactChange">—</b></span>
+            <span><small>Actif</small><b id="detailCompactAsset">En attente</b></span>
+            <span><small>Prix EUR</small><b id="detailCompactPrice">—</b></span>
+            <span><small>Décision</small><b id="detailCompactDecision">—</b></span>
+            <span><small>24 h</small><b id="detailCompactChange">—</b></span>
           </div>
 
           <details class="atlas-detail-subwindow atlas-primary-detail-window" id="detailAssetWindow" data-detail-window="asset">
@@ -436,33 +439,12 @@
             </div>
           </details>
 
-          <section class="detail-truth-ledger" aria-labelledby="detailTruthLedgerTitle">
-            <header class="detail-truth-ledger-head">
-              <span id="detailTruthLedgerTitle">VÉRITÉ DES DONNÉES</span>
-              <small>trois couches indépendantes et datées</small>
-            </header>
+          <details class="clean-lens-disclosure atlas-detail-subwindow" id="detailSourcesWindow" data-detail-window="sources">
+            <summary><span>Sources et fraîcheur</span><small>marché · spot · historique</small><em data-window-state>Ouvrir</em></summary>
             <div class="broker-strip" id="brokerStrip" aria-label="État atomique des données">
               <div><span>Market Frame</span><b id="brokerMarket">En attente</b><small id="brokerMarketTime">—</small></div>
-              <div><span>Prix observé</span><b id="brokerSpot">En attente</b><small id="brokerSpotTime">—</small></div>
-              <div><span>Historique affiché</span><b id="brokerChart">En attente</b><small id="brokerChartTime">—</small></div>
-            </div>
-          </section>
-
-          <details class="clean-lens-disclosure atlas-detail-subwindow" id="detailSourcesWindow" data-detail-window="sources">
-            <summary><span>Comprendre les couches</span><small>prix live · frame · courbe</small><em data-window-state>Ouvrir</em></summary>
-            <div class="detail-layer-guide">
-              <article>
-                <b>Prix observé</b>
-                <span>Dernière cotation utilisable : Binance, CoinGecko direct, snapshot ou valeur conservée.</span>
-              </article>
-              <article>
-                <b>Market Frame</b>
-                <span>Photo CoinGecko commune aux rangs, volumes, variations et paniers de marché.</span>
-              </article>
-              <article>
-                <b>Historique affiché</b>
-                <span>Série de la période active, chargée en direct ou conservée en cache avec sa fraîcheur réelle.</span>
-              </article>
+              <div><span>Prix actuel</span><b id="brokerSpot">En attente</b><small id="brokerSpotTime">—</small></div>
+              <div><span>Historique</span><b id="brokerChart">En attente</b><small id="brokerChartTime">—</small></div>
             </div>
           </details>
 
@@ -478,7 +460,7 @@
 
           <details class="clean-lens-disclosure clean-lens-integrity atlas-detail-subwindow" id="detailIntegrityWindow" data-detail-window="integrity">
             <summary><span>Intégrité graphique</span><small>devise · couverture · cohérence</small><em data-window-state>Ouvrir</em></summary>
-            <p>Le moteur conserve la série canonique de la période active : fournisseur réel, devise EUR, couverture, dernier point et écart spot/courbe. Binance, CoinGecko et le cache restent explicitement distingués. Aucune série n’est inventée.</p>
+            <p>Le moteur conserve la courbe canonique de Multi Horizon : données CoinGecko EUR, période active, couverture réelle, dernier point et écart spot/courbe. Aucune série n’est inventée.</p>
           </details>
 </div>
       </article>
@@ -1451,7 +1433,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.4</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.5</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0</b><small>Daily Pilotage Lock · stack validée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -1772,7 +1754,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.4 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.5 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2916,7 +2898,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.4</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.5</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -2926,6 +2908,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.4"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.5"></script>
 </body>
 </html>
