@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_market_data_contract_v1",
-  "version": "1.0.0",
-  "published_at": "2026-07-31T20:19:32Z",
+  "version": "1.1.0",
+  "published_at": "2026-07-31T21:00:00Z",
   "null_policy": {
     "missing_numeric_value": null,
     "display_value": "—",
@@ -16,7 +16,11 @@
     "date_unqualified",
     "source_disconnected",
     "adapter_required",
-    "licence_to_verify"
+    "licence_to_verify",
+    "price_not_connected",
+    "zero_cost_public",
+    "free_option_inactive",
+    "public_display_forbidden"
   ],
   "instrument_types": [
     "spot",
@@ -129,5 +133,21 @@
     "cache_stocks_history",
     "cache_stocks_fundamentals",
     "cache_stocks_regulatory"
+  ],
+  "budget_policy": {
+    "default_cost_eur": 0,
+    "paid_source_activation_requires_explicit_operator_decision": true,
+    "free_trial_requiring_card_forbidden": true,
+    "account_creation_requires_explicit_operator_decision": true,
+    "api_key_creation_requires_explicit_operator_decision": true,
+    "public_display_rights_must_be_verified": true
+  },
+  "source_policy_states": [
+    "public_zero_cost",
+    "free_optional",
+    "free_account_optional",
+    "test_only_not_public",
+    "official_reference",
+    "professional_future"
   ]
 }

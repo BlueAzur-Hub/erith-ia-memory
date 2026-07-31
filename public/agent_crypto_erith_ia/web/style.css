@@ -23930,3 +23930,51 @@ html[data-atlas-market-domain="metals"]
     max-width: none;
   }
 }
+
+
+/* ==========================================================================\n   BUILD 28.2.45 — METALS CLARITY & ZERO-COST POLICY\n   ========================================================================== */
+.atlas-metals-market-snapshot,
+.atlas-metals-market-registry { align-self: start; }
+.atlas-metals-clarity-list { display: grid; gap: 7px; }
+.atlas-metals-clarity-list > span {
+  display: grid; grid-template-columns: 126px minmax(0,1fr) auto;
+  gap: 8px; align-items: center; min-width: 0; padding: 9px;
+  border: 1px solid rgba(255,255,255,.07); border-radius: 9px;
+  background: rgba(255,255,255,.02);
+}
+.atlas-metals-clarity-list b { color:#ffe09b; font-size:9px; }
+.atlas-metals-clarity-list small { min-width:0; color:#9aadb8; font-size:8.5px; line-height:1.35; overflow-wrap:anywhere; }
+.atlas-metals-clarity-list em {
+  display:inline-flex; align-items:center; justify-content:center; max-width:140px;
+  padding:5px 7px; border:1px solid rgba(255,255,255,.12); border-radius:999px;
+  color:#9fb0bb; font:850 7px/1.15 system-ui,sans-serif; font-style:normal;
+  text-align:center; white-space:normal;
+}
+.atlas-metals-clarity-list em.is-zero,
+#atlasMetalsRegistryList em.is-zero,
+#atlasMetalsSourceList em.is-zero { border-color:rgba(112,232,190,.34); background:rgba(112,232,190,.09); color:#87eac9; }
+.atlas-metals-clarity-list em.is-free,
+#atlasMetalsRegistryList em.is-free,
+#atlasMetalsSourceList em.is-free { border-color:rgba(98,236,255,.28); background:rgba(98,236,255,.07); color:#7ce8f4; }
+.atlas-metals-clarity-list em.is-blocked,
+#atlasMetalsRegistryList em.is-blocked,
+#atlasMetalsSourceList em.is-blocked { border-color:rgba(255,182,108,.30); background:rgba(255,182,108,.075); color:#ffbd76; }
+.atlas-metals-technical-registry { margin-top:2px; padding-top:8px; border-top:1px solid rgba(255,255,255,.07); }
+.atlas-metals-technical-registry[hidden] { display:none !important; }
+.atlas-metals-technical-registry > summary {
+  padding:8px 9px; border:1px solid rgba(189,170,255,.18); border-radius:8px;
+  background:rgba(189,170,255,.045); color:#bdaaff; font:850 8px/1 system-ui,sans-serif;
+  cursor:pointer; list-style-position:inside;
+}
+.atlas-metals-technical-registry[open] > summary { margin-bottom:8px; }
+#atlasMetalsRegistryList { max-height:330px; }
+#atlasMetalsRegistrySummary { color:#8fa6b2 !important; }
+#atlasMetalsSourceDockState { color:#83e9c6 !important; }
+.atlas-metals-flow-track em { color:#ffcc7c; }
+.atlas-metals-market-footer span { color:#83d8c8; }
+.atlas-metals-market-table td:last-child { color:#ffcb72; }
+@media (max-width:1100px) { .atlas-metals-clarity-list > span { grid-template-columns:116px minmax(0,1fr) auto; } }
+@media (max-width:700px) {
+  .atlas-metals-clarity-list > span { grid-template-columns:1fr; }
+  .atlas-metals-clarity-list em { justify-self:start; max-width:none; }
+}

@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.44 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.45 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,8 +17,8 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.44";
-const ATLAS_BUILD = "28.2.44";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.45";
+const ATLAS_BUILD = "28.2.45";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
@@ -256,6 +256,97 @@ const ATLAS_METALS_ASSETS = Object.freeze(
 const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
   [
   {
+    "id": "metals_dev",
+    "name": "Metals.Dev",
+    "short_name": "Metals.Dev",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals",
+      "commodities"
+    ],
+    "roles": [
+      "snapshot",
+      "history",
+      "multi_metal"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "asset_notes": {
+      "gold": "Snapshot gratuit limité · non activé",
+      "silver": "Snapshot gratuit limité · non activé",
+      "platinum": "Snapshot gratuit limité · non activé",
+      "palladium": "Snapshot gratuit limité · non activé",
+      "copper": "Référence cuivre annoncée · unité à qualifier"
+    },
+    "coverage_summary": "Option gratuite très limitée · environ trois snapshots par jour.",
+    "status": "free_optional",
+    "status_label": "OPTION GRATUITE LIMITÉE",
+    "status_tone": "free",
+    "policy_group": "free_optional",
+    "priority": 1,
+    "catalogue_order": 91,
+    "api_key_required": true,
+    "bridge_required": true,
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "terms_to_monitor",
+    "cache_policy": "allowed_under_terms_to_monitor",
+    "activation": "inactive",
+    "licence_state": "free_plan_terms_to_monitor",
+    "source_timestamp": true,
+    "official_docs": "https://metals.dev/docs"
+  },
+  {
+    "id": "goldapi",
+    "name": "GoldAPI.io",
+    "short_name": "GoldAPI",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals"
+    ],
+    "roles": [
+      "snapshot",
+      "history",
+      "precious_metals"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium"
+    ],
+    "asset_notes": {
+      "gold": "XAU · option gratuite non activée",
+      "silver": "XAG · option gratuite non activée",
+      "platinum": "XPT · option gratuite non activée",
+      "palladium": "XPD · option gratuite non activée"
+    },
+    "coverage_summary": "Quatre métaux précieux · droit public à confirmer.",
+    "status": "free_optional",
+    "status_label": "OPTION GRATUITE LIMITÉE",
+    "status_tone": "free",
+    "policy_group": "free_optional",
+    "priority": 2,
+    "catalogue_order": 92,
+    "api_key_required": true,
+    "bridge_required": true,
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "to_confirm_before_publication",
+    "cache_policy": "to_confirm",
+    "activation": "inactive",
+    "licence_state": "sandbox_public_display_to_confirm",
+    "source_timestamp": true,
+    "official_docs": "https://www.goldapi.io/"
+  },
+  {
     "id": "alpha_vantage",
     "name": "Alpha Vantage",
     "short_name": "Alpha Vantage",
@@ -282,16 +373,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "silver": "XAG · spot agrégé et historique candidat"
     },
     "coverage_summary": "Pilote XAU/XAG, actions, ETF et macro.",
-    "status": "pilot_candidate",
-    "status_label": "PILOTE XAU/XAG",
-    "status_tone": "candidate",
+    "status": "free_optional",
+    "status_label": "OPTION GRATUITE XAU/XAG",
+    "status_tone": "free",
     "priority": 1,
     "catalogue_order": 100,
     "api_key_required": true,
     "bridge_required": true,
     "licence_state": "plan_and_public_display_to_verify",
     "source_timestamp": true,
-    "official_docs": "https://www.alphavantage.co/documentation/"
+    "official_docs": "https://www.alphavantage.co/documentation/",
+    "policy_group": "free_optional",
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "to_confirm_before_publication",
+    "cache_policy": "to_confirm",
+    "activation": "inactive"
   },
   {
     "id": "twelve_data",
@@ -326,16 +424,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Symbole et unité cuivre à qualifier"
     },
     "coverage_summary": "Candidat unifié Métaux + Bourse, couverture 5/5 à tester.",
-    "status": "coverage_test_required",
-    "status_label": "COUVERTURE À TESTER",
-    "status_tone": "candidate",
+    "status": "test_only_not_public",
+    "status_label": "TEST INTERNE UNIQUEMENT",
+    "status_tone": "blocked",
     "priority": 2,
     "catalogue_order": 110,
     "api_key_required": true,
     "bridge_required": true,
     "licence_state": "plan_and_public_display_to_verify",
     "source_timestamp": true,
-    "official_docs": "https://twelvedata.com/docs"
+    "official_docs": "https://twelvedata.com/docs",
+    "policy_group": "test_only_not_public",
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "forbidden_on_basic_plan",
+    "cache_policy": "internal_only",
+    "activation": "inactive"
   },
   {
     "id": "api_ninjas",
@@ -366,16 +471,62 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Future roulant · unité contrat à qualifier"
     },
     "coverage_summary": "Futures candidats pour les cinq métaux.",
-    "status": "coverage_test_required",
-    "status_label": "FUTURES À TESTER",
-    "status_tone": "candidate",
+    "status": "test_only_not_public",
+    "status_label": "TEST UNIQUEMENT",
+    "status_tone": "blocked",
     "priority": 3,
     "catalogue_order": 120,
     "api_key_required": true,
     "bridge_required": true,
     "licence_state": "premium_for_public_or_commercial_use",
     "source_timestamp": true,
-    "official_docs": "https://api-ninjas.com/api/commodityprice"
+    "official_docs": "https://api-ninjas.com/api/commodityprice",
+    "policy_group": "test_only_not_public",
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "evaluation_only",
+    "cache_policy": "forbidden_on_free_plan",
+    "activation": "inactive"
+  },
+  {
+    "id": "metals_api",
+    "name": "Metals-API",
+    "short_name": "Metals-API",
+    "authority_type": "vendor_api",
+    "domains": [
+      "metals",
+      "commodities"
+    ],
+    "roles": [
+      "quote",
+      "history"
+    ],
+    "asset_ids": [
+      "gold",
+      "silver",
+      "platinum",
+      "palladium",
+      "copper"
+    ],
+    "coverage_summary": "Plan gratuit non utilisable publiquement.",
+    "status": "test_only_not_public",
+    "status_label": "AFFICHAGE PUBLIC INTERDIT",
+    "status_tone": "blocked",
+    "policy_group": "test_only_not_public",
+    "priority": 9,
+    "catalogue_order": 123,
+    "api_key_required": true,
+    "bridge_required": true,
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "forbidden_on_free_plan",
+    "cache_policy": "not_public",
+    "activation": "inactive",
+    "licence_state": "free_plan_personal_or_test_only",
+    "source_timestamp": true,
+    "official_docs": "https://documentation.metals-api.com/"
   },
   {
     "id": "lbma",
@@ -403,16 +554,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "palladium": "Référence de marché · licence à qualifier"
     },
     "coverage_summary": "Benchmarks officiels des métaux précieux.",
-    "status": "reference_license_required",
-    "status_label": "LICENCE REQUISE",
-    "status_tone": "license",
+    "status": "official_reference",
+    "status_label": "RÉFÉRENCE OFFICIELLE",
+    "status_tone": "reference",
     "priority": 4,
     "catalogue_order": 130,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "licence_required",
     "source_timestamp": true,
-    "official_docs": "https://www.lbma.org.uk/prices-and-data"
+    "official_docs": "https://www.lbma.org.uk/prices-and-data",
+    "policy_group": "official_reference",
+    "cost_eur": null,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "licence_required_for_live_or_redistribution",
+    "cache_policy": "licence_dependent",
+    "activation": "inactive"
   },
   {
     "id": "lme",
@@ -435,16 +593,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Cuivre officiel · USD/tonne selon flux · licence requise"
     },
     "coverage_summary": "Cuivre industriel, stocks et contrats officiels.",
-    "status": "reference_license_required",
-    "status_label": "LICENCE REQUISE",
-    "status_tone": "license",
+    "status": "official_reference",
+    "status_label": "RÉFÉRENCE OFFICIELLE",
+    "status_tone": "reference",
     "priority": 4,
     "catalogue_order": 140,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "licence_required",
     "source_timestamp": true,
-    "official_docs": "https://www.lme.com/en/Market-data"
+    "official_docs": "https://www.lme.com/en/Market-data",
+    "policy_group": "official_reference",
+    "cost_eur": null,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "licence_required_for_live_or_redistribution",
+    "cache_policy": "licence_dependent",
+    "activation": "inactive"
   },
   {
     "id": "cme",
@@ -476,16 +641,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "HG · futur officiel en USD/livre"
     },
     "coverage_summary": "Contrats futures et courbes à terme officielles.",
-    "status": "professional_future",
-    "status_label": "PHASE ULTÉRIEURE",
-    "status_tone": "future",
+    "status": "official_reference",
+    "status_label": "RÉFÉRENCE OFFICIELLE",
+    "status_tone": "reference",
     "priority": 5,
     "catalogue_order": 150,
     "api_key_required": true,
     "bridge_required": true,
     "licence_state": "subscription_and_licence_required",
     "source_timestamp": true,
-    "official_docs": "https://www.cmegroup.com/market-data/market-data-api.html"
+    "official_docs": "https://www.cmegroup.com/market-data/market-data-api.html",
+    "policy_group": "official_reference",
+    "cost_eur": null,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "licence_required_for_live_or_redistribution",
+    "cache_policy": "licence_dependent",
+    "activation": "inactive"
   },
   {
     "id": "usgs",
@@ -518,16 +690,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Production, réserves et dépendances"
     },
     "coverage_summary": "Données structurelles annuelles, aucun cours.",
-    "status": "structural_ready",
-    "status_label": "STRUCTUREL PRÊT",
-    "status_tone": "structural",
+    "status": "public_zero_cost",
+    "status_label": "PUBLIC · ZÉRO COÛT",
+    "status_tone": "zero",
     "priority": 2,
     "catalogue_order": 160,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "public_with_attribution",
     "source_timestamp": true,
-    "official_docs": "https://pubs.usgs.gov/publication/mcs2026"
+    "official_docs": "https://pubs.usgs.gov/publication/mcs2026",
+    "policy_group": "public_zero_cost",
+    "cost_eur": 0,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "source_specific_with_attribution",
+    "cache_policy": "version_or_publication_bound",
+    "activation": "inactive"
   },
   {
     "id": "iea",
@@ -555,16 +734,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Demande, concentration et transition énergétique"
     },
     "coverage_summary": "Scénarios et chaînes des matériaux critiques.",
-    "status": "structural_ready",
-    "status_label": "STRUCTUREL PRÊT",
-    "status_tone": "structural",
+    "status": "public_zero_cost",
+    "status_label": "PUBLIC · ZÉRO COÛT",
+    "status_tone": "zero",
     "priority": 3,
     "catalogue_order": 170,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "dataset_specific",
     "source_timestamp": true,
-    "official_docs": "https://www.iea.org/data-and-statistics/data-tools/critical-minerals-data-explorer"
+    "official_docs": "https://www.iea.org/data-and-statistics/data-tools/critical-minerals-data-explorer",
+    "policy_group": "public_zero_cost",
+    "cost_eur": 0,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "source_specific_with_attribution",
+    "cache_policy": "version_or_publication_bound",
+    "activation": "inactive"
   },
   {
     "id": "rmis",
@@ -593,16 +779,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Profil UE, commerce et recyclage"
     },
     "coverage_summary": "Profils et criticité européenne.",
-    "status": "structural_ready",
-    "status_label": "RÉFÉRENCE UE",
-    "status_tone": "structural",
+    "status": "public_zero_cost",
+    "status_label": "PUBLIC UE · ZÉRO COÛT",
+    "status_tone": "zero",
     "priority": 4,
     "catalogue_order": 180,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "download_specific",
     "source_timestamp": true,
-    "official_docs": "https://rmis.jrc.ec.europa.eu/"
+    "official_docs": "https://rmis.jrc.ec.europa.eu/",
+    "policy_group": "public_zero_cost",
+    "cost_eur": 0,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "source_specific_with_attribution",
+    "cache_policy": "version_or_publication_bound",
+    "activation": "inactive"
   },
   {
     "id": "world_bank",
@@ -632,16 +825,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Historique mensuel et annuel"
     },
     "coverage_summary": "Historique mensuel, jamais source spot.",
-    "status": "historical_ready",
-    "status_label": "HISTORIQUE PRÊT",
-    "status_tone": "historical",
+    "status": "public_zero_cost",
+    "status_label": "HISTORIQUE · ZÉRO COÛT",
+    "status_tone": "zero",
     "priority": 5,
     "catalogue_order": 190,
     "api_key_required": false,
     "bridge_required": true,
     "licence_state": "public_dataset",
     "source_timestamp": true,
-    "official_docs": "https://www.worldbank.org/en/research/commodity-markets"
+    "official_docs": "https://www.worldbank.org/en/research/commodity-markets",
+    "policy_group": "public_zero_cost",
+    "cost_eur": 0,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "source_specific_with_attribution",
+    "cache_policy": "version_or_publication_bound",
+    "activation": "inactive"
   },
   {
     "id": "fred",
@@ -674,16 +874,23 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
       "copper": "Production industrielle, dollar et taux"
     },
     "coverage_summary": "Macro documentée, aucun cours intraday.",
-    "status": "macro_ready",
-    "status_label": "MACRO PRÊT",
-    "status_tone": "macro",
+    "status": "free_account_optional",
+    "status_label": "MACRO GRATUITE · NON ACTIVÉE",
+    "status_tone": "free",
     "priority": 5,
     "catalogue_order": 200,
     "api_key_required": true,
     "bridge_required": true,
     "licence_state": "series_source_dependent",
     "source_timestamp": true,
-    "official_docs": "https://fred.stlouisfed.org/docs/api/fred/overview.html"
+    "official_docs": "https://fred.stlouisfed.org/docs/api/fred/overview.html",
+    "policy_group": "free_account_optional",
+    "cost_eur": 0,
+    "account_required": true,
+    "card_required": false,
+    "public_display": "series_specific",
+    "cache_policy": "series_specific",
+    "activation": "inactive"
   },
   {
     "id": "cibjo",
@@ -710,7 +917,14 @@ const ATLAS_METALS_SOURCE_FALLBACK = Object.freeze(
     "bridge_required": false,
     "licence_state": "edition_and_rights_to_verify",
     "source_timestamp": false,
-    "official_docs": "https://cibjo.org/the-blue-books/"
+    "official_docs": "https://cibjo.org/the-blue-books/",
+    "policy_group": "human_reference",
+    "cost_eur": 0,
+    "account_required": false,
+    "card_required": false,
+    "public_display": "reference_only",
+    "cache_policy": "source_specific",
+    "activation": "inactive"
   }
 ].map(source => Object.freeze(source))
 );
@@ -5990,7 +6204,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.44
+   Market Core V2.0-Alpha · Build 28.2.45
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -10122,7 +10336,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.44 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.45 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -10343,7 +10557,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.44"
+      source: "target-top5-cycle-28.2.45"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -12280,17 +12494,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.44" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.45" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.44" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.45" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.44" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.45" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -13374,7 +13588,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.44",
+  interface: "Build 28.2.45",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -15625,7 +15839,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.44`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.45`
   );
 }
 
@@ -15700,6 +15914,8 @@ function atlasV2ApplyMode(mode, options = {}) {
   const role = administrator ? "administrator" : operator ? "operator" : "public";
   document.documentElement.dataset.atlasRole = role;
   document.body.dataset.atlasRole = role;
+
+  if (typeof atlasMarketRegistryRender === "function") atlasMarketRegistryRender();
 
   if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
   if (description) description.textContent = administrator
@@ -19801,7 +20017,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.44 — Parallel Markets Foundation
+   Build 28.2.45 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -20037,7 +20253,10 @@ function atlasMarketRegistrySourceToneClass(tone) {
     "historical",
     "macro",
     "future",
-    "reference"
+    "reference",
+    "zero",
+    "free",
+    "blocked"
   ].includes(normalized)
     ? `is-${normalized}`
     : "is-reference";
@@ -20137,102 +20356,100 @@ function atlasMarketRegistryCreateSourceRow(source, assetId = null) {
   return row;
 }
 
-function atlasMarketRegistryRenderSourceDock(assetId = null) {
-  const asset = atlasMarketRegistryAssetMeta(
-    assetId || atlasParallelMarketActiveMetal().id
-  );
-  const list = document.getElementById(
-    "atlasMetalsSourceList"
-  );
-  const stateLabel = document.getElementById(
-    "atlasMetalsSourceDockState"
-  );
 
+function atlasMarketRegistryNames(sources, fallback = "Aucune") {
+  const names = atlasMarketRegistryArray(sources)
+    .map(source => String(source?.short_name || source?.name || "").trim())
+    .filter(Boolean);
+  return names.length ? [...new Set(names)].join(" · ") : fallback;
+}
+
+function atlasMarketRegistrySourcesByPolicy(assetId, policyGroups, options = {}) {
+  const allowed = new Set(atlasMarketRegistryArray(policyGroups));
+  const candidates = options.allMetals
+    ? atlasMarketRegistryMetalSources()
+    : atlasMarketRegistrySourcesForAsset(assetId);
+  return candidates.filter(source => allowed.has(String(source?.policy_group || "")));
+}
+
+function atlasMarketRegistryClarityRow(title, description, status, tone = "reference") {
+  const row = document.createElement("span");
+  const name = document.createElement("b");
+  const detail = document.createElement("small");
+  const state = document.createElement("em");
+  name.textContent = String(title || "");
+  detail.textContent = String(description || "");
+  state.textContent = String(status || "");
+  state.classList.add(atlasMarketRegistrySourceToneClass(tone));
+  row.append(name, detail, state);
+  return row;
+}
+
+function atlasMarketRegistryIsAdministrator() {
+  return document.body?.dataset?.atlasRole === "administrator";
+}
+
+function atlasMarketRegistryRenderSourceDock(assetId = null) {
+  const asset = atlasMarketRegistryAssetMeta(assetId || atlasParallelMarketActiveMetal().id);
+  const list = document.getElementById("atlasMetalsSourceList");
+  const stateLabel = document.getElementById("atlasMetalsSourceDockState");
   if (!list || !asset) return;
 
-  const sources = atlasMarketRegistrySourcesForAsset(
-    asset.id
-  ).slice(0, 7);
+  const publicSources = atlasMarketRegistrySourcesByPolicy(asset.id, ["public_zero_cost"]);
+  const macroSources = atlasMarketRegistrySourcesByPolicy(asset.id, ["free_account_optional"])
+    .filter(source => atlasMarketRegistryArray(source?.roles)
+      .some(role => ["rates", "inflation", "dollar", "industrial_cycle"].includes(role)));
+  const references = atlasMarketRegistrySourcesByPolicy(asset.id, ["official_reference"]);
+  const freeOptions = atlasMarketRegistrySourcesByPolicy(asset.id, ["free_optional"]);
 
-  list.replaceChildren();
-
-  if (!sources.length) {
-    const empty = document.createElement("span");
-    const name = document.createElement("b");
-    const description = document.createElement("small");
-    const status = document.createElement("em");
-
-    name.textContent = "Aucune source qualifiée";
-    description.textContent =
-      "Le registre ne contient encore aucune couverture pour cet actif.";
-    status.textContent = "À DOCUMENTER";
-    status.classList.add("is-reference");
-    empty.append(name, description, status);
-    list.append(empty);
-  } else {
-    sources.forEach(source => {
-      list.append(
-        atlasMarketRegistryCreateSourceRow(
-          source,
-          asset.id
-        )
-      );
-    });
-  }
-
-  if (stateLabel) {
-    stateLabel.textContent =
-      `${sources.length} référence`
-      + `${sources.length > 1 ? "s" : ""}`
-      + " · 0 connectée";
-  }
-
-  setText(
-    document.getElementById("atlasMetalsSourceDockTitle"),
-    `${asset.name} · ${asset.symbol}`
+  list.replaceChildren(
+    atlasMarketRegistryClarityRow("Prix actuels", "Aucune source gratuite fiable connectée", "NON CONNECTÉS", "blocked"),
+    atlasMarketRegistryClarityRow("Données publiques", atlasMarketRegistryNames(publicSources, "Aucune source publique spécifique"), "ZÉRO COÛT", "zero"),
+    atlasMarketRegistryClarityRow("Macro", atlasMarketRegistryNames(macroSources, "Aucune couche macro") + " · non activée", "0 €", "free"),
+    atlasMarketRegistryClarityRow("Références", atlasMarketRegistryNames(references, "Aucune licence nécessaire"), references.length ? "CONSULTATION" : "AUCUNE", "reference")
   );
+  if (stateLabel) stateLabel.textContent = "0 prix · 0 €";
+  setText(document.getElementById("atlasMetalsSourceDockTitle"), `${asset.name} · ${asset.symbol}`);
+  list.dataset.freeOptionCount = String(freeOptions.length);
 }
 
 function atlasMarketRegistryRenderCatalog() {
-  const list = document.getElementById(
-    "atlasMetalsRegistryList"
+  const clarity = document.getElementById("atlasMetalsClarityList");
+  const technicalList = document.getElementById("atlasMetalsRegistryList");
+  const technicalDetails = document.getElementById("atlasMetalsTechnicalRegistry");
+  const technicalSummary = document.getElementById("atlasMetalsTechnicalRegistrySummary");
+  const summary = document.getElementById("atlasMetalsRegistrySummary");
+  if (!clarity || !technicalList) return;
+
+  const sourceList = atlasMarketRegistryMetalSources();
+  const publicSources = sourceList.filter(source => source?.policy_group === "public_zero_cost");
+  const freeOptions = sourceList.filter(source => source?.policy_group === "free_optional");
+  const macroSources = sourceList.filter(source => source?.policy_group === "free_account_optional"
+    && atlasMarketRegistryArray(source?.roles)
+      .some(role => ["rates", "inflation", "dollar", "industrial_cycle"].includes(role)));
+
+  clarity.replaceChildren(
+    atlasMarketRegistryClarityRow("Prix actuels", "Aucune source gratuite fiable connectée", "NON CONNECTÉS", "blocked"),
+    atlasMarketRegistryClarityRow("Données publiques", atlasMarketRegistryNames(publicSources, "USGS · IEA · RMIS · Banque mondiale"), "ZÉRO COÛT", "zero"),
+    atlasMarketRegistryClarityRow("Macro", atlasMarketRegistryNames(macroSources, "FRED") + " · non activée", "0 €", "free"),
+    atlasMarketRegistryClarityRow("Options gratuites limitées", atlasMarketRegistryNames(freeOptions, "Aucune") + " · aucun compte créé", "NON ACTIVÉES", "free")
   );
-  const summary = document.getElementById(
-    "atlasMetalsRegistrySummary"
-  );
-  if (!list) return;
 
-  const sources = atlasMarketRegistryMetalSources();
-  list.replaceChildren();
-
-  sources.forEach(source => {
-    list.append(
-      atlasMarketRegistryCreateSourceRow(source)
-    );
-  });
-
-  if (summary) {
-    const contract = atlasMarketRegistryState.contract || {};
-    const stateCount = atlasMarketRegistryArray(
-      contract.states
-    ).length;
-    const cacheCount = atlasMarketRegistryArray(
-      contract.cache_namespaces
-    ).length;
-    const origin = atlasMarketRegistryState.status === "loaded"
-      ? "registres JSON locaux"
-      : "fallback intégré";
-
-    summary.textContent =
-      `${sources.length} sources · `
-      + `${ATLAS_METALS_ASSETS.length} actifs · `
-      + `${stateCount} états · `
-      + `${cacheCount} caches Métaux · `
-      + `${origin} · aucune clé`;
+  technicalList.replaceChildren();
+  sourceList.forEach(source => technicalList.append(atlasMarketRegistryCreateSourceRow(source)));
+  const administrator = atlasMarketRegistryIsAdministrator();
+  if (technicalDetails) {
+    technicalDetails.hidden = !administrator;
+    technicalDetails.setAttribute("aria-hidden", administrator ? "false" : "true");
+    if (!administrator) technicalDetails.open = false;
   }
-
-  list.dataset.registryStatus =
-    atlasMarketRegistryState.status;
+  if (technicalSummary) technicalSummary.textContent = `Détails techniques · ${sourceList.length} sources`;
+  if (summary) {
+    const origin = atlasMarketRegistryState.status === "loaded" ? "registres JSON locaux" : "fallback intégré";
+    summary.textContent = `4 catégories · 0 € · aucune source payante activée · ${origin}`;
+  }
+  clarity.dataset.registryStatus = atlasMarketRegistryState.status;
+  technicalList.dataset.registryStatus = atlasMarketRegistryState.status;
 }
 
 function atlasMarketRegistryRender() {
@@ -20491,7 +20708,7 @@ function atlasParallelMarketRenderMetalsMarket() {
 
   setText(
     document.getElementById("atlasMetalsHeaderDecision"),
-    `PANIER MÉTAUX ${selected.size}/5 · COTATIONS 0/5`
+    `PANIER MÉTAUX ${selected.size}/5 · PRIX 0/5`
   );
   setText(
     document.getElementById("atlasMetalsLiveStatus"),
@@ -20531,7 +20748,7 @@ function atlasParallelMarketRenderMetalsDetail() {
     status.textContent =
       `${count} actif${count > 1 ? "s" : ""} sélectionné`
       + `${count > 1 ? "s" : ""} · ${mode} · ${period} · `
-      + "source de cotation non connectée";
+      + "prix actuels non connectés · politique zéro coût";
   }
 }
 
@@ -21212,7 +21429,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.44 — Comparison Memory Slots A / B / C
+   Build 28.2.45 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -21562,7 +21779,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.44`
+        source: `workspace-slot-${slot}-28.2.45`
       });
     } else {
       requestAnimationFrame(() => {
@@ -23047,7 +23264,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.44 annulée :", error);
+    console.warn("Transaction scanner 28.2.45 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -23230,7 +23447,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.44 :", error);
+    console.error("Scanner 28.2.45 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -23319,7 +23536,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.44 non capturé :", error);
+      console.error("Scanner 28.2.45 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -23329,7 +23546,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.44 :", error);
+    console.error("Démarrage scanner 28.2.45 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -23343,7 +23560,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.44"
+    source: "button-28.2.45"
   });
 }
 
