@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.31 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.32 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,8 +17,8 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.31";
-const ATLAS_BUILD = "28.2.31";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.32";
+const ATLAS_BUILD = "28.2.32";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
@@ -5381,7 +5381,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.31
+   Market Core V2.0-Alpha · Build 28.2.32
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -9513,7 +9513,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.31 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.32 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -9734,7 +9734,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.31"
+      source: "target-top5-cycle-28.2.32"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -11671,17 +11671,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.32" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.32" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.32" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -12765,7 +12765,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.31",
+  interface: "Build 28.2.32",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -15016,7 +15016,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.31`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.32`
   );
 }
 
@@ -19285,6 +19285,456 @@ function atlasWorkspaceCapture() {
   };
 }
 
+
+/* =========================================================
+   Build 28.2.32 — Comparison Memory Slots A / B / C
+
+   Empty slot:
+   - click = save current graph workspace.
+
+   Filled slot:
+   - click = recall.
+   - Shift+click or long press = overwrite.
+
+   Stored values:
+   - selected cryptos and preset;
+   - period;
+   - Base 100 / Price;
+   - normal / logarithmic scale;
+   - volume, legend and analysis visibility.
+
+   No market price or fabricated value is stored.
+   ========================================================= */
+
+const ATLAS_WORKSPACE_SLOT_IDS = Object.freeze(["A", "B", "C"]);
+const ATLAS_WORKSPACE_SLOT_PREFIX =
+  "agent_crypto_erith_ia_comparison_memory_slot_v1_";
+const ATLAS_WORKSPACE_SLOT_HOLD_MS = 720;
+
+let atlasWorkspaceSlotHoldTimer = 0;
+let atlasWorkspaceSlotHoldConsumed = false;
+
+function atlasWorkspaceSlotNormalizeId(value) {
+  const slot = String(value || "").trim().toUpperCase();
+  return ATLAS_WORKSPACE_SLOT_IDS.includes(slot) ? slot : "";
+}
+
+function atlasWorkspaceSlotStorageKey(slotId) {
+  const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  return slot ? `${ATLAS_WORKSPACE_SLOT_PREFIX}${slot}` : "";
+}
+
+function atlasWorkspaceSlotRead(slotId) {
+  const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  if (!slot) return null;
+
+  const stored = atlasWorkspaceReadJson(
+    atlasWorkspaceSlotStorageKey(slot)
+  );
+
+  if (
+    !stored
+    || stored.schema !== "agent_crypto_comparison_memory_slot_v1"
+    || !stored.workspace
+    || typeof stored.workspace !== "object"
+  ) {
+    return null;
+  }
+
+  return {
+    ...stored,
+    slot
+  };
+}
+
+function atlasWorkspaceSlotSummary(snapshot) {
+  const saved = snapshot?.workspace || snapshot || {};
+  const ids = Array.isArray(saved.comparisonIds)
+    ? saved.comparisonIds.filter(Boolean)
+    : [];
+  const period = atlasChartPeriodLabel(
+    ATLAS_WORKSPACE_PERIODS.includes(Number(saved.period))
+      ? Number(saved.period)
+      : 1
+  );
+  const preset = String(saved.comparisonPreset || "manual");
+  const presetLabels = {
+    solo: "Solo",
+    "rank-3": "Top 3",
+    "rank-5": "Top 5",
+    gainers: "Hausses 5",
+    losers: "Baisses 5",
+    volume: "Volumes 5",
+    manual: `${ids.length || 0} séries`,
+    empty: "Vide"
+  };
+  const view = saved.chartView?.view === "base100"
+    ? "Base 100"
+    : "Prix EUR";
+  const scale = saved.chartView?.scale === "logarithmic"
+    ? "Log"
+    : "Normale";
+
+  return `${presetLabels[preset] || `${ids.length} séries`} · `
+    + `${period} · ${view} · ${scale}`;
+}
+
+function atlasWorkspaceSlotFlash(message, stateName = "stored") {
+  const root = document.getElementById("atlasWorkspaceReprise");
+  const kicker = document.getElementById(
+    "atlasWorkspaceRepriseKicker"
+  );
+  if (!root || !kicker) return;
+
+  window.clearTimeout(atlasWorkspaceRestoredFlashTimer);
+  root.dataset.state = stateName;
+  kicker.textContent = String(message || "MÉMOIRE ACTUALISÉE");
+
+  atlasWorkspaceRestoredFlashTimer = window.setTimeout(() => {
+    root.dataset.state = "current";
+    kicker.textContent = "ESPACE MÉMORISÉ";
+  }, 3200);
+}
+
+function atlasWorkspaceSlotWrite(slotId, options = {}) {
+  const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  if (!slot) return false;
+
+  if (atlasScannerTransaction || atlasScannerQueuedRequest) {
+    atlasWorkspaceSlotFlash(
+      "SCANNER EN COURS · MÉMOIRE NON MODIFIÉE",
+      "warning"
+    );
+    return false;
+  }
+
+  const snapshot = atlasWorkspaceCapture();
+  const payload = {
+    schema: "agent_crypto_comparison_memory_slot_v1",
+    slot,
+    savedAt: new Date().toISOString(),
+    release: ATLAS_RELEASE,
+    workspace: snapshot
+  };
+
+  try {
+    localStorage.setItem(
+      atlasWorkspaceSlotStorageKey(slot),
+      JSON.stringify(payload)
+    );
+  } catch {
+    atlasWorkspaceSlotFlash(
+      `MÉMOIRE ${slot} NON ENREGISTRÉE`,
+      "warning"
+    );
+    return false;
+  }
+
+  atlasWorkspaceSlotsRender();
+  atlasWorkspaceSlotFlash(
+    options.overwrite === true
+      ? `MÉMOIRE ${slot} REMPLACÉE`
+      : `MÉMOIRE ${slot} ENREGISTRÉE`,
+    "stored"
+  );
+  return true;
+}
+
+function atlasWorkspaceSlotValidIds(saved) {
+  const available = new Set(
+    (state.coins || []).map(coin => coin.id)
+  );
+  const raw = Array.isArray(saved?.comparisonIds)
+    ? saved.comparisonIds
+    : [];
+
+  let ids = raw
+    .filter(id => available.has(id))
+    .filter((id, index, list) => list.indexOf(id) === index)
+    .slice(0, ATLAS_COMPARISON_MAX_SERIES);
+
+  const primary = available.has(saved?.selectedCoinId)
+    ? saved.selectedCoinId
+    : ids[0] || null;
+
+  if (primary && !ids.includes(primary)) ids.unshift(primary);
+  if (primary && ids[0] !== primary) {
+    ids = [primary, ...ids.filter(id => id !== primary)];
+  }
+
+  return {
+    ids: ids.slice(0, ATLAS_COMPARISON_MAX_SERIES),
+    primary: primary && ids.includes(primary)
+      ? primary
+      : ids[0] || null
+  };
+}
+
+function atlasWorkspaceSlotRecall(slotId) {
+  const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  const record = atlasWorkspaceSlotRead(slot);
+  if (!record) return atlasWorkspaceSlotWrite(slot);
+
+  if (!Array.isArray(state.coins) || !state.coins.length) {
+    atlasWorkspaceSlotFlash(
+      `MÉMOIRE ${slot} · MARCHÉ NON CHARGÉ`,
+      "warning"
+    );
+    return false;
+  }
+
+  atlasScannerCancel(
+    `rappel mémoire ${slot}`,
+    {
+      keepUi: false,
+      keepOverlay: false
+    }
+  );
+
+  const saved = record.workspace;
+  const selection = atlasWorkspaceSlotValidIds(saved);
+  const ids = selection.ids;
+  const primary = selection.primary;
+
+  const period = ATLAS_WORKSPACE_PERIODS.includes(Number(saved.period))
+    ? Number(saved.period)
+    : 1;
+
+  const preset = ATLAS_WORKSPACE_PRESETS.includes(
+    String(saved.comparisonPreset || "")
+  )
+    ? String(saved.comparisonPreset)
+    : ids.length > 1
+      ? "manual"
+      : ids.length === 1
+        ? "solo"
+        : "empty";
+
+  state.chartPeriodDays = period;
+  state.graphSelectionCleared =
+    saved.selectionCleared === true && !ids.length;
+
+  atlasSetComparisonIds(ids, primary, {
+    preset
+  });
+
+  const savedView = saved.chartView
+    && typeof saved.chartView === "object"
+      ? saved.chartView
+      : {};
+
+  state.chartViewV2 = {
+    ...state.chartViewV2,
+    view: savedView.view === "base100"
+      ? "base100"
+      : "price",
+    scale: savedView.scale === "logarithmic"
+      ? "logarithmic"
+      : "linear",
+    volume: savedView.volume !== false,
+    legend: savedView.legend === true,
+    comparisonLegend:
+      savedView.comparisonLegend === true,
+    analysis: savedView.analysis !== false,
+    marketColumns:
+      savedView.marketColumns === "complete"
+        ? "complete"
+        : "essential"
+  };
+
+  atlasWriteChartV2Settings();
+  atlasChartSetPeriodButtons(period, true);
+  atlasRenderComparisonControls();
+  atlasChartV2SyncControls();
+
+  if (atlasTargetCycleIsPreset?.(preset)) {
+    atlasTargetCycleRememberPreset(preset);
+  }
+
+  const restoredFromCache = atlasWorkspaceRestoreCachedGraph(
+    ids,
+    period,
+    preset
+  );
+
+  if (!restoredFromCache) {
+    if (ATLAS_SCANNER_PRESETS.has(preset)) {
+      atlasScannerStart(preset, 5, {
+        period,
+        source: `workspace-slot-${slot}-28.2.32`
+      });
+    } else {
+      requestAnimationFrame(() => {
+        void renderAnalystPanel({
+          renderAll: true,
+          forceSingle: ids.length === 1,
+          workspaceSlot: slot
+        });
+      });
+    }
+  }
+
+  atlasWorkspaceWrite();
+  atlasWorkspaceRenderStrip();
+  atlasWorkspaceSlotsRender();
+  atlasWorkspaceSlotFlash(
+    `MÉMOIRE ${slot} RESTAURÉE`,
+    "restored"
+  );
+
+  return true;
+}
+
+function atlasWorkspaceSlotsRender() {
+  document
+    .querySelectorAll("[data-workspace-slot]")
+    .forEach(button => {
+      const slot = atlasWorkspaceSlotNormalizeId(
+        button.dataset.workspaceSlot
+      );
+      const record = atlasWorkspaceSlotRead(slot);
+      const filled = !!record;
+
+      button.dataset.state = filled ? "filled" : "empty";
+      button.classList.toggle("is-filled", filled);
+
+      if (!filled) {
+        button.title =
+          `Mémoire ${slot} vide · cliquer pour enregistrer`;
+        button.setAttribute(
+          "aria-label",
+          `Mémoire ${slot} vide. Cliquer pour enregistrer `
+          + `la configuration actuelle.`
+        );
+        return;
+      }
+
+      const summary = atlasWorkspaceSlotSummary(record);
+      const savedAt = record.savedAt
+        ? new Date(record.savedAt).toLocaleString("fr-FR")
+        : "date inconnue";
+
+      button.title =
+        `Mémoire ${slot} · ${summary} · enregistrée ${savedAt}`
+        + ` · cliquer pour rappeler`
+        + ` · Maj+clic ou appui long pour remplacer`;
+
+      button.setAttribute(
+        "aria-label",
+        `Mémoire ${slot} enregistrée : ${summary}. `
+        + `Cliquer pour rappeler. `
+        + `Maj plus clic ou appui long pour remplacer.`
+      );
+    });
+}
+
+function atlasWorkspaceSlotActivate(event, slotId) {
+  const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  if (!slot) return false;
+
+  if (atlasWorkspaceSlotHoldConsumed) {
+    atlasWorkspaceSlotHoldConsumed = false;
+    return false;
+  }
+
+  const existing = atlasWorkspaceSlotRead(slot);
+
+  if (!existing) {
+    return atlasWorkspaceSlotWrite(slot);
+  }
+
+  if (event?.shiftKey === true) {
+    return atlasWorkspaceSlotWrite(slot, {
+      overwrite: true
+    });
+  }
+
+  return atlasWorkspaceSlotRecall(slot);
+}
+
+function atlasWorkspaceSlotsInit() {
+  const root = document.getElementById("atlasWorkspaceSlots");
+  if (!root || root.dataset.initialized === "true") {
+    atlasWorkspaceSlotsRender();
+    return false;
+  }
+
+  root.dataset.initialized = "true";
+
+  root.addEventListener("click", event => {
+    const button = event.target.closest("[data-workspace-slot]");
+    if (!button) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    atlasWorkspaceSlotActivate(
+      event,
+      button.dataset.workspaceSlot
+    );
+  });
+
+  root.addEventListener("pointerdown", event => {
+    const button = event.target.closest("[data-workspace-slot]");
+    if (!button || !atlasWorkspaceSlotRead(
+      button.dataset.workspaceSlot
+    )) {
+      return;
+    }
+
+    atlasWorkspaceSlotHoldConsumed = false;
+    window.clearTimeout(atlasWorkspaceSlotHoldTimer);
+
+    atlasWorkspaceSlotHoldTimer = window.setTimeout(() => {
+      atlasWorkspaceSlotHoldTimer = 0;
+      atlasWorkspaceSlotHoldConsumed = true;
+      atlasWorkspaceSlotWrite(
+        button.dataset.workspaceSlot,
+        {
+          overwrite: true
+        }
+      );
+    }, ATLAS_WORKSPACE_SLOT_HOLD_MS);
+  });
+
+  const cancelHold = () => {
+    window.clearTimeout(atlasWorkspaceSlotHoldTimer);
+    atlasWorkspaceSlotHoldTimer = 0;
+  };
+
+  root.addEventListener("pointerup", cancelHold);
+  root.addEventListener("pointercancel", cancelHold);
+  root.addEventListener("pointerleave", cancelHold);
+
+  root.addEventListener("keydown", event => {
+    const button = event.target.closest("[data-workspace-slot]");
+    if (!button || !["Enter", " "].includes(event.key)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (
+      event.shiftKey
+      && atlasWorkspaceSlotRead(button.dataset.workspaceSlot)
+    ) {
+      atlasWorkspaceSlotWrite(
+        button.dataset.workspaceSlot,
+        {
+          overwrite: true
+        }
+      );
+      return;
+    }
+
+    atlasWorkspaceSlotActivate(
+      event,
+      button.dataset.workspaceSlot
+    );
+  });
+
+  atlasWorkspaceSlotsRender();
+  return true;
+}
+
 function atlasWorkspaceStoredChartResult(coin, period) {
   if (!coin?.id) return null;
   const preferred = atlasChartPreferredSourceFamily(coin);
@@ -19490,6 +19940,7 @@ function atlasWorkspaceRenderStrip(options = {}) {
   kicker.textContent = restored ? "SESSION RESTAURÉE" : "ESPACE MÉMORISÉ";
   primary.textContent = `${atlasWorkspacePresetLabel()} · ${period} · ${view} · ${scale} · ${atlasWorkspaceSelectionLabel()}`;
   secondary.textContent = `${displays.join(" · ")} · Vue ${graphMode} · choix locaux uniquement`;
+  atlasWorkspaceSlotsRender();
 
   if (restored) {
     window.clearTimeout(atlasWorkspaceRestoredFlashTimer);
@@ -19704,8 +20155,14 @@ document.getElementById("atlasV2AdvancedModuleSelect")?.addEventListener("change
 window.addEventListener("beforeunload", atlasWorkspaceWrite);
 window.addEventListener("pagehide", atlasWorkspaceWrite);
 
-window.setTimeout(atlasWorkspaceRenderStrip, 0);
-window.setTimeout(atlasWorkspaceRenderStrip, 900);
+window.setTimeout(() => {
+  atlasWorkspaceSlotsInit();
+  atlasWorkspaceRenderStrip();
+}, 0);
+window.setTimeout(() => {
+  atlasWorkspaceSlotsRender();
+  atlasWorkspaceRenderStrip();
+}, 900);
 
 
 /* =========================================================
@@ -20545,7 +21002,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.31 annulée :", error);
+    console.warn("Transaction scanner 28.2.32 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -20728,7 +21185,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.31 :", error);
+    console.error("Scanner 28.2.32 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -20817,7 +21274,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.31 non capturé :", error);
+      console.error("Scanner 28.2.32 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -20827,7 +21284,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.31 :", error);
+    console.error("Démarrage scanner 28.2.32 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -20841,7 +21298,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.31"
+    source: "button-28.2.32"
   });
 }
 

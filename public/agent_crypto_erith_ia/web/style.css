@@ -21095,3 +21095,110 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   color: #62ecff !important;
 }
 
+/* ==========================================================================
+   BUILD 28.2.32 — COMPARISON MEMORY SLOTS A / B / C
+   Compact graph configurations inside the existing workspace memory strip.
+   ========================================================================== */
+
+#analyste .atlas-workspace-reprise {
+  grid-template-columns:
+    auto minmax(0, 1fr) minmax(140px, auto) auto !important;
+}
+
+#analyste .atlas-workspace-slots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  pointer-events: auto;
+}
+
+#analyste .atlas-workspace-slot {
+  width: 25px;
+  height: 24px;
+  min-width: 25px;
+  padding: 0;
+  border: 1px solid rgba(118,163,191,.38);
+  border-radius: 7px;
+  background: rgba(5,17,31,.82);
+  color: rgba(193,218,234,.72);
+  font: 900 10px/1 system-ui, sans-serif;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+#analyste .atlas-workspace-slot:hover,
+#analyste .atlas-workspace-slot:focus-visible {
+  border-color: rgba(98,236,255,.76);
+  color: #d8fbff;
+  outline: none;
+}
+
+#analyste .atlas-workspace-slot[data-state="filled"] {
+  border-color: rgba(244,211,134,.58);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(244,211,134,.16),
+      rgba(6,18,31,.90)
+    );
+  color: #ffe4a3;
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,207,.08),
+    0 0 12px rgba(244,211,134,.06);
+}
+
+#analyste .atlas-workspace-reprise[data-state="stored"] {
+  border-color: rgba(98,236,255,.48) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(98,236,255,.82),
+    0 10px 28px rgba(0,0,0,.20) !important;
+}
+
+#analyste .atlas-workspace-reprise[data-state="warning"] {
+  border-color: rgba(255,171,76,.52) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(255,171,76,.84),
+    0 10px 28px rgba(0,0,0,.20) !important;
+}
+
+#analyste .atlas-workspace-reprise[data-state="stored"]
+  .atlas-workspace-reprise-kicker {
+  color: #72ecff !important;
+}
+
+#analyste .atlas-workspace-reprise[data-state="warning"]
+  .atlas-workspace-reprise-kicker {
+  color: #ffbd78 !important;
+}
+
+@media (max-width: 1100px) {
+  #analyste .atlas-workspace-reprise {
+    grid-template-columns:
+      auto minmax(0, 1fr) auto !important;
+  }
+
+  #analyste .atlas-workspace-reprise > small {
+    display: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  #analyste .atlas-workspace-reprise {
+    left: 5px !important;
+    right: 5px !important;
+    gap: 5px !important;
+    padding-inline: 7px !important;
+  }
+
+  #analyste .atlas-workspace-reprise-kicker {
+    display: none !important;
+  }
+
+  #analyste .atlas-workspace-slot {
+    width: 24px;
+    min-width: 24px;
+  }
+}
+
