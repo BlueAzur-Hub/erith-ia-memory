@@ -16517,7 +16517,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.10
+   Market Core V2.0-Alpha · Build 28.2.11
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -19028,13 +19028,13 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.10
+   Market Core V2.0-Alpha · Build 28.2.11
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
 
 /* ==========================================================================
-   BUILD 28.2.10 — DETAIL PANEL TYPOGRAPHY POLISH
+   BUILD 28.2.9 — DETAIL PANEL TYPOGRAPHY POLISH
    Visual hierarchy only. Geometry, Aerith crop and functional data unchanged.
    ========================================================================== */
 
@@ -19374,6 +19374,108 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   #math.atlas-math-dock.is-side .atlas-math-dock-head {
     position: static !important;
     margin: 0 0 7px !important;
+  }
+}
+
+/* ==========================================================================
+   BUILD 28.2.11 — MARKET CONTEXT SYNC
+   Row click = active Market/Math context. Basket remains an explicit action.
+   ========================================================================== */
+
+#marketSnapshotPanel .asset-row.is-selected td {
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--crypto-color) 13%, transparent),
+      rgba(255,216,135,.035) 58%,
+      transparent
+    ) !important;
+}
+
+#marketSnapshotPanel .asset-row.is-selected {
+  outline: 1px solid color-mix(in srgb, var(--crypto-color) 70%, rgba(255,216,135,.22)) !important;
+  outline-offset: -1px;
+}
+
+.market-active-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 7px;
+  padding: 2px 5px;
+  border: 1px solid rgba(255,216,135,.34);
+  border-radius: 999px;
+  background: rgba(255,216,135,.10);
+  color: #ffe3a6;
+  font: 900 6.8px/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+}
+
+.market-active-badge[hidden] {
+  display: none !important;
+}
+
+.price-dual > small {
+  display: grid !important;
+  gap: 2px !important;
+  margin-top: 3px !important;
+  line-height: 1.05 !important;
+}
+
+.price-dual > small > span {
+  color: rgba(206,229,242,.84);
+  font: 850 7.2px/1.05 system-ui, sans-serif;
+  letter-spacing: .025em;
+  white-space: nowrap;
+}
+
+.price-dual > small > em {
+  color: rgba(155,184,205,.68);
+  font: 700 6.8px/1.05 system-ui, sans-serif;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.spark-control {
+  align-items: center;
+}
+
+.market-basket-status {
+  display: block;
+  min-width: 74px;
+  color: rgba(170,199,219,.70);
+  font: 760 6.8px/1.1 system-ui, sans-serif;
+  letter-spacing: .025em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.asset-row.is-compared .market-basket-status {
+  color: rgba(255,226,164,.86);
+}
+
+.atlas-math-context-line {
+  margin: 4px 0 0;
+  max-width: 360px;
+  overflow: hidden;
+  color: rgba(180,213,233,.74);
+  font: 760 7.4px/1.25 system-ui, sans-serif;
+  letter-spacing: .012em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#math.is-side .atlas-math-context-line {
+  max-width: 250px;
+}
+
+#math.is-rail .atlas-math-context-line {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .market-basket-status {
+    display: none;
   }
 }
 
