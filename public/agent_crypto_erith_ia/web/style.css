@@ -19920,3 +19920,25 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   min-height: 34px;
 }
 
+/* ==========================================================================
+   BUILD 28.2.20 — AUTO BASKET RELIABILITY
+   Auto baskets remain exact; historical limits are declared, never replaced.
+   ========================================================================== */
+
+.market-series-status.is-direct,
+.market-series-status.is-ready,
+.market-series-status.is-validated,
+.market-series-status.is-cache,
+.market-series-status.is-delayed,
+.market-series-status.is-archive,
+.market-series-status.is-incomplete,
+.market-series-status.is-spot-only,
+.market-series-status.is-unavailable {
+  text-shadow: 0 0 10px currentColor;
+}
+
+#comparisonSelection .compare-hint[data-auto-basket],
+#comparisonSelection .compare-hint {
+  font-variant-numeric: tabular-nums;
+}
+
