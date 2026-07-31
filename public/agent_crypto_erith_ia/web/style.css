@@ -21065,3 +21065,33 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.31 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   No size change. Manual selection remains visually distinct from presets.
+   ========================================================================== */
+
+#market-workspace #targetTop5Cycle[data-cycle-mode="manual"] {
+  border-color: rgba(98,236,255,.34) !important;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(98,236,255,.095),
+      rgba(6,14,27,.94) 72%
+    ) !important;
+}
+
+#market-workspace #targetTop5Cycle[data-cycle-mode="manual"]
+  #targetTop5CycleLabel {
+  color: #98efff !important;
+}
+
+#market-workspace #targetTop5Cycle[aria-busy="true"] {
+  cursor: progress !important;
+}
+
+#market-workspace #targetTop5Cycle[aria-busy="true"]
+  .target-top5-cycle-button {
+  border-color: rgba(98,236,255,.58) !important;
+  color: #62ecff !important;
+}
+

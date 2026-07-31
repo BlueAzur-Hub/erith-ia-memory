@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.30 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.31 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,8 +17,8 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.30";
-const ATLAS_BUILD = "28.2.30";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.31";
+const ATLAS_BUILD = "28.2.31";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
@@ -5381,7 +5381,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.30
+   Market Core V2.0-Alpha · Build 28.2.31
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -9513,20 +9513,143 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.1.88R11 — TARGET TOP 5 LIVE cycle
-   Le cartouche seul fait défiler les presets. Les cinq cartes
-   et le Market Flow conservent exactement leur ajout/retrait.
+   Build 28.2.31 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+
+   Le cycle automatique et la sélection manuelle sont deux contrats séparés.
+
+   Cycle du cartouche :
+   Top 5 → Hausses 5 → Baisses 5 → Volumes 5 → Top 3 → Top 5
+
+   Contrats protégés :
+   - les cinq cartes crypto et Market Flow conservent ajout / retrait ;
+   - une modification de carte reste une SÉLECTION LIBRE ;
+   - Solo reste indépendant ;
+   - la position automatique du cycle n'est pas effacée par la sélection libre ;
+   - un scanner en échec conserve le dernier graphique valide.
    ========================================================= */
+
+const ATLAS_TARGET_CYCLE_ORDER = Object.freeze([
+  "rank-5",
+  "gainers",
+  "losers",
+  "volume",
+  "rank-3"
+]);
+const ATLAS_TARGET_CYCLE_STORAGE_KEY =
+  "agent_crypto_target_cycle_preset_v1";
+
+function atlasTargetCycleIsPreset(value) {
+  return ATLAS_TARGET_CYCLE_ORDER.includes(String(value || ""));
+}
+
+function atlasTargetCycleStoredPreset() {
+  try {
+    const stored = String(
+      localStorage.getItem(ATLAS_TARGET_CYCLE_STORAGE_KEY) || ""
+    ).trim();
+    return atlasTargetCycleIsPreset(stored) ? stored : "rank-5";
+  } catch {
+    return "rank-5";
+  }
+}
+
+function atlasTargetCycleRememberPreset(value) {
+  const preset = atlasTargetCycleIsPreset(value)
+    ? String(value)
+    : atlasTargetCycleStoredPreset();
+
+  const root = document.getElementById("targetTop5Cycle");
+  if (root) root.dataset.cyclePreset = preset;
+
+  try {
+    localStorage.setItem(ATLAS_TARGET_CYCLE_STORAGE_KEY, preset);
+  } catch {}
+
+  return preset;
+}
+
+function atlasTargetCycleCurrentPreset() {
+  const requested = String(
+    atlasScannerTransaction?.preset
+    || atlasScannerQueuedRequest?.preset
+    || ""
+  );
+
+  if (atlasTargetCycleIsPreset(requested)) {
+    return atlasTargetCycleRememberPreset(requested);
+  }
+
+  const displayed = String(
+    state.dataBroker?.comparison?.preset || ""
+  );
+
+  if (atlasTargetCycleIsPreset(displayed)) {
+    return atlasTargetCycleRememberPreset(displayed);
+  }
+
+  const rootPreset = String(
+    document.getElementById("targetTop5Cycle")
+      ?.dataset?.cyclePreset
+    || ""
+  );
+
+  if (atlasTargetCycleIsPreset(rootPreset)) {
+    return rootPreset;
+  }
+
+  return atlasTargetCycleRememberPreset(
+    atlasTargetCycleStoredPreset()
+  );
+}
+
+function atlasTargetCycleNextPreset(value) {
+  const current = atlasTargetCycleIsPreset(value)
+    ? String(value)
+    : atlasTargetCycleCurrentPreset();
+  const index = ATLAS_TARGET_CYCLE_ORDER.indexOf(current);
+
+  return ATLAS_TARGET_CYCLE_ORDER[
+    (index + 1) % ATLAS_TARGET_CYCLE_ORDER.length
+  ];
+}
 
 function atlasTargetTopFiveDisplay(preset) {
   const map = {
-    "rank-5": { label: "TARGET TOP 5 LIVE", next: "Hausses 5" },
-    "gainers": { label: "HAUSSES 5", next: "Baisses 5" },
-    "losers": { label: "BAISSES 5", next: "Volumes 5" },
-    "volume": { label: "VOLUMES 5", next: "Top 3" },
-    "rank-3": { label: "TOP 3 LIVE", next: "Top 5" }
+    "rank-5": {
+      label: "TARGET TOP 5 LIVE",
+      shortLabel: "Top 5"
+    },
+    "gainers": {
+      label: "HAUSSES 5",
+      shortLabel: "Hausses 5"
+    },
+    "losers": {
+      label: "BAISSES 5",
+      shortLabel: "Baisses 5"
+    },
+    "volume": {
+      label: "VOLUMES 5",
+      shortLabel: "Volumes 5"
+    },
+    "rank-3": {
+      label: "TOP 3 LIVE",
+      shortLabel: "Top 3"
+    },
+    "manual": {
+      label: "SÉLECTION LIBRE",
+      shortLabel: "Sélection libre"
+    },
+    "solo": {
+      label: "SOLO",
+      shortLabel: "Solo"
+    },
+    "empty": {
+      label: "SÉLECTION VIDE",
+      shortLabel: "Sélection vide"
+    }
   };
-  return map[preset] || { label: "SÉLECTION LIBRE", next: "Hausses 5" };
+
+  return map[preset] || map.manual;
 }
 
 function atlasSyncTargetTopFiveCycleLabel() {
@@ -9539,10 +9662,16 @@ function atlasSyncTargetTopFiveCycleLabel() {
   const chartReady = state.dataBroker?.chart?.status === "ready"
     && atlasChartContextMatches(state.dataBroker.chart)
     && !!state.chartEngineV2?.realChart;
-  const currentPreset = chartReady
+
+  const displayedPreset = chartReady
     ? String(state.dataBroker?.comparison?.preset || "manual")
-    : String(root.dataset.cyclePreset || "rank-5");
-  const display = atlasTargetTopFiveDisplay(currentPreset);
+    : String(state.dataBroker?.comparison?.preset || "rank-5");
+
+  const cyclePreset = atlasTargetCycleCurrentPreset();
+  const nextPreset = atlasTargetCycleNextPreset(cyclePreset);
+  const display = atlasTargetTopFiveDisplay(displayedPreset);
+  const nextDisplay = atlasTargetTopFiveDisplay(nextPreset);
+
   const ids = chartReady ? atlasComparisonIds() : [];
   const symbolLine = ids
     .map(id => state.coins.find(coin => coin.id === id)?.symbol)
@@ -9550,47 +9679,80 @@ function atlasSyncTargetTopFiveCycleLabel() {
     .map(symbol => String(symbol).toUpperCase())
     .join(" · ");
 
-  root.dataset.cyclePreset = currentPreset;
-  label.textContent = display.label;
-  symbols.textContent = symbolLine || "BTC · ETH · BNB · XRP · SOL";
-  root.title = `Vue suivante : ${display.next}`;
-  root.setAttribute("aria-label", `Afficher ${display.next}`);
+  root.dataset.cyclePreset = cyclePreset;
+  root.dataset.cycleNext = nextPreset;
+  root.dataset.cycleMode = atlasTargetCycleIsPreset(displayedPreset)
+    ? "automatic"
+    : "manual";
 
-  const busy = !!atlasScannerTransaction || !!atlasScannerQueuedRequest;
+  label.textContent = display.label;
+  symbols.textContent =
+    symbolLine || "BTC · ETH · BNB · XRP · SOL";
+
+  root.title =
+    `Mode affiché : ${display.shortLabel}`
+    + ` · Cycle automatique : ${
+      atlasTargetTopFiveDisplay(cyclePreset).shortLabel
+    }`
+    + ` · Cliquer pour : ${nextDisplay.shortLabel}`;
+
+  root.setAttribute(
+    "aria-label",
+    `Mode affiché : ${display.shortLabel}. `
+    + `Cliquer pour afficher ${nextDisplay.shortLabel}.`
+  );
+
+  const busy = !!atlasScannerTransaction
+    || !!atlasScannerQueuedRequest;
+
   button.classList.toggle("is-loading", busy);
   root.setAttribute("aria-busy", busy ? "true" : "false");
 }
 
 function atlasTargetTopFiveCyclePreset() {
-  const current = String(
-    atlasScannerTransaction?.preset
-    || atlasScannerQueuedRequest?.preset
-    || state.dataBroker?.comparison?.preset
-    || ""
+  return atlasTargetCycleNextPreset(
+    atlasTargetCycleCurrentPreset()
   );
-
-  if (current === "gainers") return "losers";
-  if (current === "losers") return "volume";
-  if (current === "volume") return "rank-3";
-  if (current === "rank-3") return "rank-5";
-  return "gainers";
 }
 
 function atlasActivateTargetTopFiveCycle() {
-  if (!state.liveOk || !Array.isArray(state.coins) || !state.coins.length) return false;
+  if (
+    !state.liveOk
+    || !Array.isArray(state.coins)
+    || !state.coins.length
+  ) {
+    return false;
+  }
 
   const next = atlasTargetTopFiveCyclePreset();
   const period = Number(state.chartPeriodDays || 1);
 
-  if (next === "gainers" || next === "losers" || next === "volume") {
-    return atlasScannerStart(next, 5, {
+  if (
+    next === "gainers"
+    || next === "losers"
+    || next === "volume"
+  ) {
+    const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.30"
+      source: "target-top5-cycle-28.2.31"
     });
+
+    if (started) atlasTargetCycleRememberPreset(next);
+    atlasSyncTargetTopFiveCycleLabel();
+    return started;
   }
 
-  atlasScannerCancel("target top 5 cycle", { keepUi: false, keepOverlay: false });
+  atlasScannerCancel(
+    "target top 5 cycle",
+    {
+      keepUi: false,
+      keepOverlay: false
+    }
+  );
+
+  atlasTargetCycleRememberPreset(next);
   atlasSelectTopComparison(next === "rank-3" ? 3 : 5);
+  atlasSyncTargetTopFiveCycleLabel();
   return true;
 }
 
@@ -11509,17 +11671,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.30" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.31" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -12603,7 +12765,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.30",
+  interface: "Build 28.2.31",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -14854,7 +15016,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.30`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.31`
   );
 }
 
@@ -20383,7 +20545,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.30 annulée :", error);
+    console.warn("Transaction scanner 28.2.31 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -20566,7 +20728,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.30 :", error);
+    console.error("Scanner 28.2.31 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -20655,7 +20817,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.30 non capturé :", error);
+      console.error("Scanner 28.2.31 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -20665,7 +20827,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.30 :", error);
+    console.error("Démarrage scanner 28.2.31 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -20679,7 +20841,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.30"
+    source: "button-28.2.31"
   });
 }
 
