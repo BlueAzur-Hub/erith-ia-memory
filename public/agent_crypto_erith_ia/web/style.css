@@ -23479,3 +23479,300 @@ html[data-atlas-market-domain="metals"]
     font-size: 8px !important;
   }
 }
+
+
+/* ==========================================================================
+   BUILD 28.2.43 — METALS WORKSPACE CONSOLIDATION
+   Toolbar 28.2.42 is intentionally untouched.
+   ========================================================================== */
+
+/* Header: one truthful state instead of two inactive pseudo-actions. */
+.atlas-metals-command-bar {
+  grid-template-columns:
+    minmax(255px, 1.02fr)
+    minmax(255px, 1.02fr)
+    minmax(360px, 1.35fr)
+    minmax(235px, .90fr) !important;
+}
+
+.atlas-metals-adapter-lock {
+  border-color: rgba(255,182,108,.28) !important;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,182,108,.075),
+      rgba(255,182,108,.025)
+    ) !important;
+}
+
+.atlas-metals-adapter-lock strong {
+  color: #ffbd76 !important;
+}
+
+/* Root cause of the black dead zone:
+   controls moved to the shared toolbar in 28.2.42, so the Foundation
+   now has exactly three visible rows: identity, view, summary. */
+html[data-atlas-market-domain="metals"]
+  #analyste
+  .atlas-parallel-market-foundation {
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto !important;
+  align-content: stretch !important;
+}
+
+/* Keep the summary directly under the graph. */
+html[data-atlas-market-domain="metals"]
+  #analyste
+  .atlas-parallel-market-foot {
+  align-self: end !important;
+  min-height: 30px !important;
+  padding-top: 6px !important;
+  margin-top: 0 !important;
+}
+
+/* The graph view fills the available middle row without creating a
+   secondary empty panel. */
+html[data-atlas-market-domain="metals"]
+  #analyste
+  .atlas-parallel-market-view[data-metals-view-panel="prices"] {
+  align-self: stretch !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+html[data-atlas-market-domain="metals"]
+  #analyste
+  .atlas-metals-empty-chart {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+/* Clarify the two source levels visually. */
+#atlasMetalsSourceDock .eyebrow {
+  color: #83e7ef !important;
+}
+
+.atlas-metals-market-registry > header .eyebrow {
+  color: #bdaaff !important;
+}
+
+/* No Crypto analysis module may leak below the Metals workspace. */
+html[data-atlas-market-domain="metals"]
+  .atlas-layout-family-analysis,
+html[data-atlas-market-domain="metals"]
+  [data-layout-family="analysis"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Dedicated Metals analysis is authoritative only in Metals. */
+.atlas-metals-analysis-foundation {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.atlas-metals-analysis-foundation[hidden] {
+  display: none !important;
+}
+
+.atlas-metals-analysis-family {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 20px;
+  min-height: 118px;
+  padding: 18px 24px;
+  border: 1px solid rgba(244,211,134,.22);
+  border-left: 5px solid rgba(244,211,134,.78);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(244,211,134,.07),
+      transparent 48%
+    ),
+    rgba(8,22,38,.90);
+}
+
+.atlas-metals-analysis-family .atlas-layout-family-index {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(98,236,255,.38);
+  border-radius: 16px;
+  color: #67e9f6;
+  font: 900 15px/1 system-ui, sans-serif;
+}
+
+.atlas-metals-analysis-family p {
+  margin: 0 0 6px;
+  color: #58dff0;
+  font: 900 10px/1 system-ui, sans-serif;
+  letter-spacing: .13em;
+}
+
+.atlas-metals-analysis-family h2 {
+  margin: 0 0 5px;
+  color: #ffe7a8;
+  font-size: 24px;
+}
+
+.atlas-metals-analysis-family div > span {
+  color: #a8bac6;
+  font-size: 12px;
+}
+
+.atlas-metals-analysis-family .atlas-layout-family-signal {
+  height: 4px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #62ecff
+    );
+  box-shadow: 0 0 18px rgba(98,236,255,.28);
+}
+
+.atlas-metals-analysis-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.atlas-metals-analysis-intro {
+  margin: 0;
+  color: #9eb1bd;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.atlas-metals-analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.atlas-metals-analysis-grid article {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 10px;
+  background: rgba(255,255,255,.022);
+}
+
+.atlas-metals-analysis-grid span {
+  color: #718999;
+  font: 900 8px/1 system-ui, sans-serif;
+  letter-spacing: .06em;
+}
+
+.atlas-metals-analysis-grid b {
+  color: #ffe0a0;
+  font-size: 12px;
+}
+
+.atlas-metals-analysis-grid small {
+  color: #9fb0bb;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.atlas-metals-analysis-horizons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.atlas-metals-analysis-horizons > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid rgba(244,211,134,.14);
+  border-radius: 9px;
+  background: rgba(244,211,134,.035);
+}
+
+.atlas-metals-analysis-horizons b {
+  color: #f0d893;
+  font-size: 10px;
+}
+
+.atlas-metals-analysis-horizons small {
+  color: #8195a4;
+  font-size: 9px;
+}
+
+.atlas-metals-analysis-panel footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.atlas-metals-analysis-panel footer b {
+  color: #7ee0d0;
+  font-size: 9px;
+}
+
+.atlas-metals-analysis-panel footer span {
+  color: #899dab;
+  font-size: 9px;
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  .atlas-metals-command-bar {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .atlas-metals-analysis-grid,
+  .atlas-metals-analysis-horizons {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .atlas-metals-command-bar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .atlas-metals-analysis-family {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .atlas-metals-analysis-family
+    .atlas-layout-family-signal {
+    display: none;
+  }
+
+  .atlas-metals-analysis-family h2 {
+    font-size: 20px;
+  }
+
+  .atlas-metals-analysis-grid,
+  .atlas-metals-analysis-horizons {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-metals-analysis-panel footer {
+    flex-direction: column;
+  }
+
+  .atlas-metals-analysis-panel footer span {
+    text-align: left;
+  }
+}
