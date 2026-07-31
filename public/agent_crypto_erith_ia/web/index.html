@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.38 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.39 — DETERMINISTIC MARKET FRAME · PRICE TRUTH · SCANNER COHERENCE</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.38" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.39" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -15,7 +15,7 @@
     <header class="hero glass" id="accueil">
       <div class="hero-top">
         <div class="title-block">
-          <p class="eyebrow">ERITH.IA · CRYPTO OBSERVATORY</p>
+          <p class="eyebrow">ERITH.IA · MARKETS OBSERVATORY</p>
           <div class="brand-account-row">
             <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
             <div class="atlas-view-switcher" role="group" aria-label="Choisir la vue de l’interface">
@@ -60,12 +60,17 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.38"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.39"
             disabled
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.38</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.39</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
+          <span class="pill warn atlas-metals-live-status"
+                id="atlasMetalsLiveStatus"
+                hidden>
+            Marché Métaux · 0/5
+          </span>
           <span class="sigil">⌁</span>
         </div>
       </div>
@@ -73,7 +78,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.38</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.39</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -236,6 +241,36 @@
         <div class="source-card" id="sourceTimeCard">
           <span>Heure données</span>
           <strong id="sourceTime">—</strong>
+        </div>
+      </section>
+
+      <section class="command-bar atlas-metals-command-bar"
+               id="atlasMetalsCommandBar"
+               aria-label="État du marché Métaux"
+               hidden>
+        <button class="btn" type="button" disabled title="Adaptateur Métaux requis">
+          Vérifier sources Métaux
+        </button>
+        <button class="btn" type="button" disabled title="Aucune cotation connectée">
+          Actualiser Métaux
+        </button>
+        <div class="source-card live-decision">
+          <span>État du domaine</span>
+          <strong id="atlasMetalsHeaderDecision">
+            PANIER MÉTAUX 5/5 · COTATIONS 0/5
+          </strong>
+        </div>
+        <div class="source-card">
+          <span>Sources préparées</span>
+          <strong id="atlasMetalsHeaderSources">
+            USGS · IEA · LBMA/LME à connecter
+          </strong>
+        </div>
+        <div class="source-card">
+          <span>Données Métaux</span>
+          <strong id="atlasMetalsHeaderTime">
+            Aucune cotation horodatée
+          </strong>
         </div>
       </section>
     </header>
@@ -1813,7 +1848,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.38</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.39</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0</b><small>Daily Pilotage Lock · stack validée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2134,7 +2169,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.38 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.39 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3289,7 +3324,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.38</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.39</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3299,6 +3334,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.38"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.39"></script>
 </body>
 </html>
