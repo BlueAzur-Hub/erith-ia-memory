@@ -21461,85 +21461,6 @@ function atlasMetalsStructuralRenderActive(assetId = null) {
     "USGS 2026"
   );
 
-  setText(
-    document.getElementById("atlasMetalsStructureTitle"),
-    `${record.name} · ${record.symbol}`
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureSummary"),
-    `${record.family} · ${record.supply_chain.display}`
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureProduction"),
-    record.production.display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureProductionDetail"),
-    record.analysis.offer_detail
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureReserves"),
-    record.reserves.display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureReservesDetail"),
-    `Unité source : ${String(record.reserves.unit || "non précisée").replaceAll("_", " ")}.`
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureProducers"),
-    record.production.top_display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureProducersDetail"),
-    record.analysis.physical_detail
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureUses"),
-    record.uses.display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureUsesDetail"),
-    atlasMetalsStructuralArray(record.uses.items).join(" · ")
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureEu"),
-    record.eu_status.display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureEuDetail"),
-    record.eu_status.group
-      ? `Groupe : ${record.eu_status.group}`
-      : "Classification RMIS 2023."
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureSupply"),
-    record.supply_chain.display
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureSupplyDetail"),
-    record.supply_chain.detail
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureMacro"),
-    record.macro.title
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureMacroDetail"),
-    record.macro.detail
-  );
-
-  const structureSources = atlasMetalsStructuralArray(record.source_ids)
-    .map(atlasMetalsStructuralSource)
-    .filter(Boolean);
-  setText(
-    document.getElementById("atlasMetalsStructureSources"),
-    structureSources.map(source => source.short_name || source.name).join(" · ")
-  );
-  setText(
-    document.getElementById("atlasMetalsStructureSourceTruth"),
-    `${structureSources.length} source${structureSources.length > 1 ? "s" : ""} publique${structureSources.length > 1 ? "s" : ""} · données ${record.data_year}e · aucune cotation.`
-  );
-
   document
     .querySelectorAll(
       ".atlas-metals-analysis-horizons small"
@@ -21967,7 +21888,7 @@ function atlasParallelMarketRenderMetalsDetail() {
   const period = atlasChartPeriodLabel(metals.period);
   setText(
     document.getElementById("atlasMetalsChartMode"),
-    `COTATIONS VERROUILLÉES · ${period.toUpperCase()}`
+    `${mode.toUpperCase()} · ${period.toUpperCase()}`
   );
 
   const status = document.getElementById("atlasMetalsDomainStatusText");
@@ -21975,8 +21896,8 @@ function atlasParallelMarketRenderMetalsDetail() {
     const count = metals.selectionIds.length;
     status.textContent =
       `${count} actif${count > 1 ? "s" : ""} sélectionné`
-      + `${count > 1 ? "s" : ""} · structure publique active · `
-      + "cotations non connectées";
+      + `${count > 1 ? "s" : ""} · ${mode} · ${period} · `
+      + "prix non connectés · structure publique disponible";
   }
 }
 
@@ -22051,7 +21972,9 @@ function atlasParallelMarketRenderMetals() {
   if (truth) {
     truth.textContent = metals.section === "critical"
       ? "USGS préparé · import structurel non connecté"
-      : `Structure publique active · cotations séparées · aucun prix inventé`;
+      : `${metals.view === "base100" ? "Base 100" : "Prix"} · `
+        + `${atlasChartPeriodLabel(metals.period)} · `
+        + "source de cotation absente · aucun prix inventé";
   }
 
   atlasParallelMarketRenderMetalsDetail();
@@ -26299,3 +26222,47 @@ atlasParallelMarketInit();
 atlasAnalyticalTruthInit();
 
 atlasVersionAwarenessInit();
+
+
+/* =========================================================
+   Build 28.2.51 — Dual Metals workspace navigation
+   Graphique Métaux and Market Métaux are separate destinations.
+   No Crypto state, snapshot, scanner, cache or chart logic is changed.
+   ========================================================= */
+(() => {
+  const targets = Object.freeze({
+    graph: "atlasParallelMarketFoundation",
+    market: "atlasMetalsMarketArea",
+    analysis: "atlasMetalsAnalysisFoundation",
+    sources: "atlasMetalsMarketRegistry"
+  });
+
+  function setWorkspaceActive(name) {
+    document.querySelectorAll("[data-metals-workspace]").forEach(button => {
+      const active = button.dataset.metalsWorkspace === name;
+      button.classList.toggle("is-active", active);
+      if (button.closest(".atlas-metals-workspace-switch")) {
+        button.setAttribute("aria-pressed", active ? "true" : "false");
+      }
+    });
+  }
+
+  function openWorkspace(name) {
+    const targetId = targets[name] || targets.graph;
+    const target = document.getElementById(targetId);
+    if (!target) return false;
+    setWorkspaceActive(name);
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
+  }
+
+  document.querySelectorAll("[data-metals-workspace]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      openWorkspace(button.dataset.metalsWorkspace || "graph");
+    });
+  });
+
+  window.atlasOpenMetalsWorkspace = openWorkspace;
+})();
