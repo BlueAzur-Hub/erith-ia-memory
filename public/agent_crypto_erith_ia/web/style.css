@@ -19762,3 +19762,133 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.18 — MATH CORE DISCLOSURE POLISH
+   Remove the dead strip and make the disclosure line visibly actionable.
+   ========================================================================== */
+
+#math .atlas-tech-details {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+#math .atlas-tech-details > summary {
+  position: relative;
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 7px 38px 7px 11px !important;
+  overflow: hidden;
+  border: 1px solid rgba(255,216,135,.24);
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, rgba(255,216,135,.075), rgba(98,236,255,.035));
+  color: #fff0bd;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.015) inset,
+    0 5px 15px rgba(0,0,0,.12);
+  font: 900 10.4px/1.2 system-ui, sans-serif;
+  letter-spacing: .012em;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+#math .atlas-tech-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+#math .atlas-tech-details > summary::marker {
+  content: "";
+}
+
+#math .atlas-tech-details > summary > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#math .atlas-tech-details > summary::after {
+  content: "›";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(98,236,255,.28);
+  border-radius: 999px;
+  background: rgba(5,18,31,.68);
+  color: #87efff;
+  font: 950 17px/1 system-ui, sans-serif;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center;
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    color .16s ease,
+    background .16s ease;
+}
+
+#math .atlas-tech-details > summary:hover,
+#math .atlas-tech-details > summary:focus-visible {
+  border-color: rgba(98,236,255,.54);
+  background:
+    linear-gradient(90deg, rgba(255,216,135,.11), rgba(98,236,255,.075));
+  color: #fff5d2;
+  outline: none;
+}
+
+#math .atlas-tech-details > summary:hover::after,
+#math .atlas-tech-details > summary:focus-visible::after {
+  border-color: rgba(255,216,135,.56);
+  background: rgba(98,236,255,.11);
+  color: #fff0bd;
+}
+
+#math .atlas-tech-details[open] > summary::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+#math .atlas-tech-details[open] > summary {
+  margin-bottom: 7px !important;
+}
+
+#math.atlas-math-dock.is-top {
+  row-gap: 6px !important;
+}
+
+#math.atlas-math-dock.is-top .atlas-verdict {
+  margin-bottom: 0 !important;
+}
+
+#math.atlas-math-dock.is-top .atlas-tech-details:not([open]),
+#math.atlas-math-dock.is-side .atlas-tech-details:not([open]) {
+  min-height: 34px !important;
+  max-height: 34px !important;
+  overflow: visible !important;
+}
+
+#math.atlas-math-dock.is-top:has(.atlas-tech-details:not([open])) {
+  max-height: 236px !important;
+}
+
+#math.atlas-math-dock.is-side .atlas-tech-details > summary {
+  font-size: 9.4px;
+}
+
+@media (max-width: 680px) {
+  #math .atlas-tech-details > summary {
+    min-height: 36px;
+    padding-right: 36px !important;
+    font-size: 9.5px;
+  }
+}
+
