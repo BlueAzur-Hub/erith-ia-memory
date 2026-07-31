@@ -19677,3 +19677,88 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
   }
 }
 
+/* ==========================================================================
+   BUILD 28.2.17 — VERSION AWARENESS & SAFE REFRESH
+   Hidden by default. Visible only when version.json reports a newer build.
+   ========================================================================== */
+
+.atlas-version-update {
+  flex: 1 0 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.atlas-version-update[hidden] {
+  display: none !important;
+}
+
+.atlas-version-update > span {
+  min-width: 0;
+  padding: 6px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,215,130,.54);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(255,171,76,.16), rgba(98,236,255,.10));
+  color: #ffe0a0;
+  box-shadow:
+    0 0 0 1px rgba(255,215,130,.07) inset,
+    0 5px 18px rgba(0,0,0,.22);
+  font: 900 10px/1.1 system-ui, sans-serif;
+  letter-spacing: .015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atlas-version-update > button {
+  flex: 0 0 auto;
+  min-height: 29px;
+  padding: 6px 11px;
+  border: 1px solid rgba(98,236,255,.62);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(98,236,255,.22), rgba(71,223,145,.13));
+  color: #d7fbff;
+  box-shadow:
+    0 0 16px rgba(98,236,255,.12),
+    0 0 0 1px rgba(255,255,255,.04) inset;
+  font: 950 9px/1 system-ui, sans-serif;
+  letter-spacing: .025em;
+  cursor: pointer;
+}
+
+.atlas-version-update > button:hover,
+.atlas-version-update > button:focus-visible {
+  border-color: rgba(255,226,164,.82);
+  color: #fff1c8;
+  transform: translateY(-1px);
+}
+
+.atlas-version-update > button:disabled {
+  opacity: .66;
+  cursor: wait;
+  transform: none;
+}
+
+@media (max-width: 1100px) {
+  .atlas-version-update {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .atlas-version-update {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto;
+    width: 100%;
+  }
+
+  .atlas-version-update > span {
+    border-radius: 10px;
+    white-space: normal;
+  }
+}
+
