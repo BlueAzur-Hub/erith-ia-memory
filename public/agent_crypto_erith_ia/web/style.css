@@ -12823,8 +12823,8 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
 }
 
 #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-project-visual {
-  flex: 0 0 190px !important;
-  min-height: 190px !important;
+  flex: 0 0 136px !important;
+  min-height: 136px !important;
 }
 
 #analyste.champagne-clean-lens:not(.detail-collapsed) .detail-panel-body {
@@ -12856,10 +12856,10 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
   left: 0 !important;
   pointer-events: none !important;
   background-image: url("./assets/images/agent_crypto_project_visual.png") !important;
-  background-size: 100% auto !important;
-  background-position: center top !important;
+  background-size: 136% auto !important;
+  background-position: center -56px !important;
   background-repeat: no-repeat !important;
-  opacity: .98 !important;
+  opacity: .96 !important;
 }
 
 #analyste.champagne-clean-lens:not(.detail-collapsed) .clean-lens-detail-panel::after {
@@ -12874,11 +12874,12 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
   background:
     linear-gradient(180deg,
       rgba(3,10,21,.00) 0%,
-      rgba(3,10,21,.03) 18%,
-      rgba(3,10,21,.22) 31%,
-      rgba(3,10,21,.56) 43%,
-      rgba(3,10,21,.79) 57%,
-      rgba(3,10,21,.92) 76%,
+      rgba(3,10,21,.02) 17%,
+      rgba(3,10,21,.12) 27%,
+      rgba(3,10,21,.32) 38%,
+      rgba(3,10,21,.60) 51%,
+      rgba(3,10,21,.82) 69%,
+      rgba(3,10,21,.94) 85%,
       rgba(3,10,21,.98) 100%) !important;
 }
 
@@ -12930,11 +12931,11 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
   position: relative !important;
   background:
     linear-gradient(180deg,
-      rgba(3,10,21,.18) 0%,
-      rgba(3,10,21,.46) 12%,
-      rgba(3,10,21,.72) 34%,
-      rgba(3,10,21,.90) 68%,
-      rgba(3,10,21,.96) 100%) !important;
+      rgba(3,10,21,.14) 0%,
+      rgba(3,10,21,.28) 16%,
+      rgba(3,10,21,.56) 42%,
+      rgba(3,10,21,.82) 72%,
+      rgba(3,10,21,.95) 100%) !important;
 }
 
 #analyste.champagne-clean-lens.detail-collapsed .detail-project-visual {
@@ -16516,7 +16517,7 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.7
+   Market Core V2.0-Alpha · Build 28.2.8
    SOURCE BADGE VISIBILITY
    The obsolete delayed/archive suppression was removed.
    Every valid chart keeps its canonical source/freshness badge visible.
@@ -19027,7 +19028,7 @@ html[data-atlas-role="operator"] #atlasPrivateMissionsOptionGroup[hidden] {
 
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.7
+   Market Core V2.0-Alpha · Build 28.2.8
    Source-label truth only: dynamic provider/origin/freshness
    and honest current-price tooltip titles.
    ========================================================= */
