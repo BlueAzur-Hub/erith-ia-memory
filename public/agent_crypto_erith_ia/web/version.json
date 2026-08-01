@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.55",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.55",
-  "published_at": "2026-08-01T01:05:29Z",
+  "build": "28.2.56",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.56",
+  "published_at": "2026-08-01T05:06:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -63,7 +63,7 @@
     "assets": 5,
     "reference_year": 2025,
     "primary_source": "USGS Mineral Commodity Summaries 2026 v1.3",
-    "quotes_connected": false,
+    "quotes_connected": true,
     "historical_prices_imported": false
   },
   "metals_market_frame_cleanup": {
@@ -89,11 +89,11 @@
     "history_index_path": "../data/metals/history/index.json",
     "archive_reader_ready": true,
     "archive_assets": 0,
-    "provider_configured": false,
+    "provider_configured": true,
     "bridge_required": true,
     "crypto_data_reuse_forbidden": true,
-    "quotes_connected": false,
-    "chart_series_connected": false,
+    "quotes_connected": true,
+    "chart_series_connected": true,
     "layout_unchanged": true,
     "crypto_workspace_unchanged": true
   },
@@ -103,13 +103,27 @@
     "input_schema": "agent_crypto_metals_import_v1",
     "tool": "../tools/metals_snapshot_ingest.py",
     "template": "../data/metals/import_template.json",
-    "provider_configured": false,
-    "provider_fetch_performed": false,
+    "provider_configured": true,
+    "provider_fetch_performed": true,
     "public_key_exposure": false,
     "full_basket_required_by_default": true,
     "history_writer_ready": true,
     "market_reader_ready": true,
     "chart_requires_two_or_more_real_snapshots": true,
+    "layout_unchanged": true,
+    "crypto_workspace_unchanged": true
+  },
+  "metals_live_bridge": {
+    "base": "28.2.55",
+    "bridge_origin": "http://127.0.0.1:8787",
+    "bridge_version_required": "1.8.0",
+    "snapshot_route": "/market/metals/snapshot",
+    "status_route": "/market/metals/status",
+    "history_route": "/market/metals/history",
+    "manual_refresh_only": true,
+    "provider_requests_per_manual_refresh": 1,
+    "github_pages_remains_primary_interface": true,
+    "local_interface_copy_is_fallback_only": true,
     "layout_unchanged": true,
     "crypto_workspace_unchanged": true
   }
