@@ -23779,7 +23779,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.52 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
+   BUILD 28.2.53 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
    Toolbar and geometry from 28.2.43 remain unchanged.
    ========================================================================== */
 
@@ -23932,16 +23932,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 28.2.52 — STABLE RECOVERY & UPDATE CONTROL REPAIR
+   BUILD 28.2.53 — STABLE RECOVERY & UPDATE CONTROL REPAIR
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 28.2.52
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.52
+   ATLAS_ASSET_BUILD: 28.2.53
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.53
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.52";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.52";
+  --atlas-asset-build: "28.2.53";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.53";
 }
 
 .atlas-version-control[data-state="current"],
@@ -24010,7 +24010,7 @@ html[data-atlas-market-domain="metals"]
   pointer-events: auto;
 }
 /* ==========================================================================
-   BUILD 28.2.52 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
+   BUILD 28.2.53 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
 
    Root correction:
    - bypass the legacy multi-grid cascade in the wide Metals workspace;
@@ -24020,8 +24020,8 @@ html[data-atlas-market-domain="metals"]
    - preserve the existing stacked layout at 1100 px and below.
 
    No data, toolbar, registry, updater or module behavior is changed.
-   ATLAS_ASSET_BUILD: 28.2.52
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.52
+   ATLAS_ASSET_BUILD: 28.2.53
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.53
    ========================================================================== */
 
 @media (min-width: 1101px) {
@@ -24157,7 +24157,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.52 — METALS MARKET FRAME RECOVERY
+   BUILD 28.2.53 — METALS MARKET FRAME RECOVERY
    Base métier et géométrique : 28.2.50 / 28.2.49.
    Objectif unique : cadrer le Market Métaux sur Target + Flow + Espace 02.
    ========================================================================== */
@@ -24165,27 +24165,3 @@ html[data-atlas-market-domain="metals"] #atlasMetalsMarketArea {
   scroll-margin-top: 6px;
 }
 
-.atlas-metals-market-return {
-  min-height: 26px;
-  padding: 5px 9px;
-  border: 1px solid rgba(98,236,255,.34);
-  border-radius: 8px;
-  background: rgba(98,236,255,.06);
-  color: #8ff4ff;
-  font: 850 8px/1 system-ui, sans-serif;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.atlas-metals-market-return:hover,
-.atlas-metals-market-return:focus-visible {
-  border-color: rgba(98,236,255,.65);
-  background: rgba(98,236,255,.11);
-  outline: none;
-}
-
-@media (max-width: 700px) {
-  .atlas-metals-market-return {
-    justify-self: start;
-  }
-}

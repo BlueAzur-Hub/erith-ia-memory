@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.52",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.52",
-  "published_at": "2026-08-01T00:06:42Z",
+  "build": "28.2.53",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.53",
+  "published_at": "2026-08-01T00:30:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -61,18 +61,16 @@
     "quotes_connected": false,
     "historical_prices_imported": false
   },
-  "metals_market_frame_recovery": {
-    "base": "28.2.50",
-    "stable_geometry_base": "28.2.49",
-    "scope": "navigation_and_scroll_framing_only",
-    "market_frame": [
+  "metals_market_frame_cleanup": {
+    "base": "28.2.52",
+    "scope": "remove_unrequested_market_header_button_only",
+    "global_market_shortcut_preserved": true,
+    "market_frame_preserved": [
       "TARGET MÉTAUX",
       "METALS FLOW",
       "ESPACE 02 · MARKET MÉTAUX"
     ],
-    "global_market_shortcut_domain_aware": true,
-    "global_graph_shortcut_domain_aware": true,
-    "extra_workspace_tabs_added": false,
+    "removed_element_id": "atlasMetalsReturnToGraph",
     "crypto_workspace_unchanged": true,
     "metals_data_unchanged": true,
     "quotes_connected": false
