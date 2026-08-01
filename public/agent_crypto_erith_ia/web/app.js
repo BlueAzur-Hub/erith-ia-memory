@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.57R2 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.57R3 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57R2";
-const ATLAS_BUILD = "28.2.57R2";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57r2";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57R3";
+const ATLAS_BUILD = "28.2.57R3";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57r3";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7063,7 +7063,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.57R2
+   Market Core V2.0-Alpha · Build 28.2.57R3
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11195,7 +11195,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.57R2 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.57R3 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14447,7 +14447,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.57R2",
+  interface: "Build 28.2.57R3",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16698,7 +16698,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57R2`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57R3`
   );
 }
 
@@ -20874,7 +20874,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.57R2 — Parallel Markets Foundation
+   Build 28.2.57R3 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -23317,7 +23317,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.57R2 — Comparison Memory Slots A / B / C
+   Build 28.2.57R3 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -26956,11 +26956,11 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.57R2 — Rapport Métaux Ryzen inscrit dans l’Interface
+   Build 28.2.57R3 — Rapport Métaux Ryzen inscrit dans l’Interface
    - le Bridge fournit uniquement les cotations déjà récoltées ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le rapport, le snapshot et l’historique ;
-   - Export JSON Book / Import restaurent aussi les cotations Métaux ;
+   - la comparaison visible utilise uniquement les snapshots réels conservés ;
    - aucune requête Metals.Dev n’est déclenchée par cette mémoire.
    ========================================================= */
 const ATLAS_METALS_REPORT_SCHEMA = "agent_crypto_metals_ryzen_report_v1";
@@ -27219,7 +27219,7 @@ function atlasMetalsReportBuildMarkdown(pkg) {
     `- Origine : ${pkg.origin.label}.`,
     `- Snapshot : ${atlasMetalsReportDate(pkg.snapshot_at)} · couverture ${pkg.status.quotes}/5.`,
     `- Source de cotation : ${pkg.source.provider_name || "Metals.Dev"} · état ${pkg.source.status}.`,
-    "- L’inscription du rapport, IndexedDB, l’export et l’import ne déclenchent aucune requête Metals.Dev.",
+    "- L’inscription du rapport, sa comparaison et sa lecture depuis l’Interface ne déclenchent aucune requête Metals.Dev.",
     "",
     "**2. Panier Métaux précieux et industriels**",
     ...quoteLines,
@@ -27442,6 +27442,183 @@ function atlasMetalsReportHydrateQuoteState(pkg, origin = "book_memory") {
   return true;
 }
 
+function atlasMetalsReportEscapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function atlasMetalsReportComparisonForAsset(asset) {
+  const points = (Array.isArray(asset?.history_points) ? asset.history_points : [])
+    .filter(point => point?.time && Number.isFinite(Number(point?.price)))
+    .map(point => ({
+      time: atlasMetalsReportIso(point.time),
+      price: Number(point.price),
+      currency: String(point.currency || asset?.quote?.currency || "").toUpperCase(),
+      unit: String(point.unit || asset?.quote?.unit || "")
+    }))
+    .filter(point => point.time)
+    .sort((left, right) => Date.parse(left.time) - Date.parse(right.time));
+
+  if (points.length < 2) {
+    return {
+      comparable: false,
+      previous: points.at(-1) || null,
+      latest: points.at(-1) || null,
+      delta_value: null,
+      delta_percent: null,
+      direction: "insufficient"
+    };
+  }
+
+  const previous = points.at(-2);
+  const latest = points.at(-1);
+  const coherent = previous.currency === latest.currency && previous.unit === latest.unit;
+  if (!coherent) {
+    return {
+      comparable: false,
+      previous,
+      latest,
+      delta_value: null,
+      delta_percent: null,
+      direction: "incoherent"
+    };
+  }
+
+  const deltaValue = latest.price - previous.price;
+  const deltaPercent = previous.price !== 0
+    ? (deltaValue / previous.price) * 100
+    : null;
+  const epsilon = Math.max(Math.abs(previous.price), Math.abs(latest.price), 1) * 1e-12;
+  const direction = Math.abs(deltaValue) <= epsilon
+    ? "stable"
+    : deltaValue > 0 ? "up" : "down";
+
+  return {
+    comparable: true,
+    previous,
+    latest,
+    delta_value: deltaValue,
+    delta_percent: Number.isFinite(deltaPercent) ? deltaPercent : null,
+    direction
+  };
+}
+
+function atlasMetalsReportSignedValue(value, point) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "—";
+  const absolute = Math.abs(number);
+  const maximumFractionDigits = absolute >= 1000 ? 2 : absolute >= 100 ? 3 : absolute >= 1 ? 4 : 6;
+  const formatted = new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits
+  }).format(absolute);
+  const sign = number > 0 ? "+" : number < 0 ? "−" : "";
+  const currency = String(point?.currency || "").toUpperCase();
+  return `${sign}${formatted}${currency ? ` ${currency}` : ""}`;
+}
+
+function atlasMetalsReportComparisonDirection(direction) {
+  if (direction === "up") return { label: "Hausse", className: "is-up", symbol: "↗" };
+  if (direction === "down") return { label: "Baisse", className: "is-down", symbol: "↘" };
+  if (direction === "stable") return { label: "Stable", className: "is-stable", symbol: "→" };
+  if (direction === "incoherent") return { label: "Incohérent", className: "is-warning", symbol: "!" };
+  return { label: "Insuffisant", className: "is-warning", symbol: "·" };
+}
+
+function atlasMetalsReportSnapshotCoverage(snapshot) {
+  const expected = new Set(["gold", "silver", "platinum", "palladium", "copper"]);
+  const received = new Set(
+    (Array.isArray(snapshot?.quotes) ? snapshot.quotes : [])
+      .filter(quote => expected.has(quote?.asset_id) && Number.isFinite(Number(quote?.price)))
+      .map(quote => quote.asset_id)
+  );
+  return `${received.size}/5`;
+}
+
+function atlasMetalsReportRenderComparison(pkg) {
+  const rows = document.getElementById("atlasMetalsComparisonRows");
+  const windowText = document.getElementById("atlasMetalsComparisonWindow");
+  const summary = document.getElementById("atlasMetalsComparisonSummary");
+  const strip = document.getElementById("atlasMetalsSnapshotStrip");
+  const note = document.getElementById("atlasMetalsComparisonNote");
+  if (!rows || !windowText || !summary || !strip) return false;
+
+  const assets = Array.isArray(pkg?.assets) ? pkg.assets : [];
+  const comparisons = assets.map(asset => ({
+    asset,
+    comparison: atlasMetalsReportComparisonForAsset(asset)
+  }));
+  const comparable = comparisons.filter(item => item.comparison.comparable);
+  const counts = comparable.reduce((accumulator, item) => {
+    accumulator[item.comparison.direction] = (accumulator[item.comparison.direction] || 0) + 1;
+    return accumulator;
+  }, { up: 0, down: 0, stable: 0 });
+
+  if (!assets.length) {
+    rows.innerHTML = '<tr><td colspan="6">Aucune comparaison disponible.</td></tr>';
+  } else {
+    rows.innerHTML = comparisons.map(({ asset, comparison }) => {
+      const direction = atlasMetalsReportComparisonDirection(comparison.direction);
+      const previous = comparison.previous ? atlasMetalsReportPrice(comparison.previous) : "—";
+      const latest = comparison.latest ? atlasMetalsReportPrice(comparison.latest) : "—";
+      const delta = atlasMetalsReportSignedValue(comparison.delta_value, comparison.latest);
+      const percent = atlasMetalsReportPercent(comparison.delta_percent);
+      return `
+        <tr data-direction="${atlasMetalsReportEscapeHtml(comparison.direction)}">
+          <td><b>${atlasMetalsReportEscapeHtml(asset?.symbol || "—")}</b><span>${atlasMetalsReportEscapeHtml(asset?.name || asset?.id || "Métal")}</span></td>
+          <td>${atlasMetalsReportEscapeHtml(previous)}</td>
+          <td>${atlasMetalsReportEscapeHtml(latest)}</td>
+          <td>${atlasMetalsReportEscapeHtml(delta)}</td>
+          <td>${atlasMetalsReportEscapeHtml(percent)}</td>
+          <td><span class="atlas-metals-trend ${direction.className}"><i aria-hidden="true">${direction.symbol}</i>${direction.label}</span></td>
+        </tr>`;
+    }).join("");
+  }
+
+  const comparableTimes = comparable
+    .flatMap(item => [item.comparison.previous?.time, item.comparison.latest?.time])
+    .filter(Boolean)
+    .sort((left, right) => Date.parse(left) - Date.parse(right));
+  const previousAt = comparableTimes[0] || null;
+  const latestAt = comparableTimes.at(-1) || null;
+  windowText.textContent = comparable.length
+    ? `Comparaison du ${atlasMetalsReportDate(previousAt)} au ${atlasMetalsReportDate(latestAt)} · ${comparable.length}/5 métaux cohérents.`
+    : "Historique insuffisant ou unités incohérentes : aucune variation calculée.";
+
+  summary.textContent = comparable.length
+    ? `↑ ${counts.up} · ↓ ${counts.down} · → ${counts.stable}`
+    : "0 comparé";
+  summary.className = `pill ${comparable.length === 5 ? "ok" : "warn"}`;
+
+  const snapshots = (Array.isArray(pkg?.history) ? pkg.history : [])
+    .filter(Boolean)
+    .map(snapshot => ({
+      snapshot,
+      time: atlasMetalsReportSnapshotTime(snapshot)
+    }))
+    .filter(item => item.time)
+    .sort((left, right) => Date.parse(left.time) - Date.parse(right.time))
+    .slice(-8);
+  strip.innerHTML = snapshots.length
+    ? snapshots.map((item, index) => `
+        <span class="${index === snapshots.length - 1 ? "is-latest" : ""}">
+          <b>${atlasMetalsReportEscapeHtml(atlasMetalsReportDate(item.time))}</b>
+          <small>${atlasMetalsReportEscapeHtml(atlasMetalsReportSnapshotCoverage(item.snapshot))} réel</small>
+        </span>`).join("")
+    : "<span>Aucun snapshot conservé.</span>";
+
+  if (note) {
+    note.textContent = comparable.length === 5
+      ? "Écarts calculés entre les deux derniers relevés réels de chaque métal · aucune prévision · aucune requête Metals.Dev."
+      : "Comparaison suspendue pour toute série incomplète ou incohérente · aucune valeur remplacée ou inventée.";
+  }
+  return true;
+}
+
 function atlasMetalsReportRender() {
   const pkg = atlasMetalsReportState.package;
   const content = document.getElementById("atlasMetalsReportContent");
@@ -27452,11 +27629,13 @@ function atlasMetalsReportRender() {
     setText(document.getElementById("atlasMetalsReportQuotes"), "0/5");
     setText(document.getElementById("atlasMetalsReportHistory"), "0 snapshot");
     setText(document.getElementById("atlasMetalsReportPersistence"), "Non enregistrée");
-    ["btnAtlasMetalsReportCopy", "btnAtlasMetalsReportExportJson", "btnAtlasMetalsReportExportMd"]
+    atlasMetalsReportRenderComparison(null);
+    ["btnAtlasMetalsReportCopy", "btnAtlasMetalsReportExportMd"]
       .forEach(id => document.getElementById(id)?.setAttribute("disabled", ""));
     return false;
   }
   if (content) content.innerHTML = atlasLocalReportHtml(pkg.report_markdown);
+  atlasMetalsReportRenderComparison(pkg);
   setText(document.getElementById("atlasMetalsReportSnapshot"), atlasMetalsReportDate(pkg.snapshot_at));
   setText(document.getElementById("atlasMetalsReportOrigin"), pkg.origin?.label || "Ryzen 7");
   setText(document.getElementById("atlasMetalsReportQuotes"), `${pkg.status?.quotes || 0}/5`);
@@ -27468,7 +27647,7 @@ function atlasMetalsReportRender() {
       ? `IndexedDB · ${Math.max(1, Math.round(atlasMetalsReportState.persistence.bytes / 1024))} Ko vérifiés`
       : "IndexedDB · non vérifiée"
   );
-  ["btnAtlasMetalsReportCopy", "btnAtlasMetalsReportExportJson", "btnAtlasMetalsReportExportMd"]
+  ["btnAtlasMetalsReportCopy", "btnAtlasMetalsReportExportMd"]
     .forEach(id => document.getElementById(id)?.removeAttribute("disabled"));
   return true;
 }
@@ -27549,7 +27728,7 @@ async function atlasMetalsReportRestore() {
   } catch (error) {
     atlasMetalsReportState.persistence = { ok: false, bytes: 0, error: String(error?.message || error) };
     atlasMetalsReportRender();
-    atlasMetalsReportSetStatus("warning", `IndexedDB indisponible : ${atlasMetalsReportState.persistence.error}. L’import reste disponible.`, "Import prêt");
+    atlasMetalsReportSetStatus("warning", `IndexedDB indisponible : ${atlasMetalsReportState.persistence.error}. Le rapport inscrit dans l’Interface reste la source de référence.`, "À vérifier");
     return null;
   }
 }
@@ -27639,17 +27818,7 @@ function atlasMetalsReportInit() {
   if (atlasMetalsReportState.initialized) return atlasMetalsReportState.restorePromise;
   atlasMetalsReportState.initialized = true;
   document.getElementById("btnAtlasMetalsReportCopy")?.addEventListener("click", atlasMetalsReportCopy);
-  document.getElementById("btnAtlasMetalsReportExportJson")?.addEventListener("click", atlasMetalsReportExportJson);
   document.getElementById("btnAtlasMetalsReportExportMd")?.addEventListener("click", atlasMetalsReportExportMd);
-  document.getElementById("atlasMetalsReportImport")?.addEventListener("change", async event => {
-    const input = event.currentTarget;
-    const file = input.files?.[0] || null;
-    input.value = "";
-    if (!file) return;
-    atlasMetalsReportSetStatus("working", "Import du rapport Métaux…", "Import");
-    try { await atlasMetalsReportImportFile(file); }
-    catch (error) { atlasMetalsReportSetStatus("error", `Import refusé : ${error?.message || error}.`, "Refusé"); }
-  });
   atlasMetalsReportRender();
   atlasMetalsReportState.restorePromise = (async () => {
     await atlasMetalsReportRestore();
@@ -27702,7 +27871,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.57R2 — Metals Market Frame Recovery
+   Build 28.2.57R3 — Metals Market Frame Recovery
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */

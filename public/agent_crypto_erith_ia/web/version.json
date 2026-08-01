@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.57R2",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.57r2",
-  "published_at": "2026-08-01T06:45:00Z",
+  "build": "28.2.57R3",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.57r3",
+  "published_at": "2026-08-01T08:04:18Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -129,7 +129,7 @@
     "crypto_workspace_unchanged": true
   },
   "metals_ryzen_report_memory": {
-    "base": "28.2.57",
+    "base": "28.2.57R2",
     "schema": "agent_crypto_metals_ryzen_report_v1",
     "interface_subsection_path": "../data/metals/ryzen_report.json",
     "automatic_read_on_ryzen_and_book": true,
@@ -137,6 +137,31 @@
     "indexeddb_local_backup": true,
     "provider_requests_for_report_read": 0,
     "bridge_version_required_for_new_collection": "1.8.0",
+    "crypto_workspace_unchanged": true
+  },
+  "metals_comparative_history": {
+    "base": "28.2.57R2",
+    "mode": "latest_two_real_snapshots",
+    "assets": [
+      "XAU",
+      "XAG",
+      "XPT",
+      "XPD",
+      "HG"
+    ],
+    "value_delta": true,
+    "percent_delta": true,
+    "trend_state": [
+      "up",
+      "down",
+      "stable",
+      "insufficient",
+      "incoherent"
+    ],
+    "snapshot_strip": true,
+    "provider_requests_for_comparison": 0,
+    "predictions_generated": false,
+    "book_transfer_controls_visible": false,
     "crypto_workspace_unchanged": true
   }
 }

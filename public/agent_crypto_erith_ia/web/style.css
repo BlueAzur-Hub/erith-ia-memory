@@ -23779,7 +23779,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.57R2 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
+   BUILD 28.2.57R3 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
    Toolbar and geometry from 28.2.43 remain unchanged.
    ========================================================================== */
 
@@ -23932,16 +23932,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 28.2.57R2 — STABLE RECOVERY & UPDATE CONTROL REPAIR
+   BUILD 28.2.57R3 — STABLE RECOVERY & UPDATE CONTROL REPAIR
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 28.2.57R2
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.57r2
+   ATLAS_ASSET_BUILD: 28.2.57R3
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.57r3
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.57R2";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.57r2";
+  --atlas-asset-build: "28.2.57R3";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.57r3";
 }
 
 .atlas-version-control[data-state="current"],
@@ -24010,7 +24010,7 @@ html[data-atlas-market-domain="metals"]
   pointer-events: auto;
 }
 /* ==========================================================================
-   BUILD 28.2.57R2 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
+   BUILD 28.2.57R3 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
 
    Root correction:
    - bypass the legacy multi-grid cascade in the wide Metals workspace;
@@ -24020,8 +24020,8 @@ html[data-atlas-market-domain="metals"]
    - preserve the existing stacked layout at 1100 px and below.
 
    No data, toolbar, registry, updater or module behavior is changed.
-   ATLAS_ASSET_BUILD: 28.2.57R2
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.57r2
+   ATLAS_ASSET_BUILD: 28.2.57R3
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.57r3
    ========================================================================== */
 
 @media (min-width: 1101px) {
@@ -24157,7 +24157,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.57R2 — METALS MARKET FRAME RECOVERY
+   BUILD 28.2.57R3 — METALS MARKET FRAME RECOVERY
    Base métier et géométrique : 28.2.50 / 28.2.49.
    Objectif unique : cadrer le Market Métaux sur Target + Flow + Espace 02.
    ========================================================================== */
@@ -24167,7 +24167,7 @@ html[data-atlas-market-domain="metals"] #atlasMetalsMarketArea {
 
 
 
-/* BUILD 28.2.57R2 — BRIDGE LOCAL METALS LIVE DATA LOCK */
+/* BUILD 28.2.57R3 — BRIDGE LOCAL METALS LIVE DATA LOCK */
 #analyste #atlasMetalsChartCanvas {
   position: absolute;
   inset: 0;
@@ -24190,11 +24190,125 @@ html[data-atlas-market-domain="metals"] #atlasMetalsMarketArea {
 }
 
 
-/* BUILD 28.2.57R2 — RAPPORT MÉTAUX RYZEN · MÉMOIRE BOOK */
+/* BUILD 28.2.57R3 — RAPPORT MÉTAUX RYZEN · MÉMOIRE BOOK */
 .atlas-metals-report-memory { margin-top:18px; }
+.atlas-metals-comparison {
+  margin: 14px 0 16px;
+  padding: 15px;
+  border: 1px solid rgba(235, 192, 96, .24);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 211, 120, .075), rgba(70, 205, 230, .045)),
+    rgba(4, 13, 25, .52);
+}
+.atlas-metals-comparison-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.atlas-metals-comparison-head h5 {
+  margin: 3px 0 4px;
+  color: #fff0bd;
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+}
+.atlas-metals-comparison-head p:last-child {
+  margin: 0;
+  color: rgba(230, 240, 248, .72);
+  font-size: .82rem;
+}
+.atlas-metals-comparison-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+}
+.atlas-metals-comparison-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+.atlas-metals-comparison-table th,
+.atlas-metals-comparison-table td {
+  padding: 10px 11px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  white-space: nowrap;
+}
+.atlas-metals-comparison-table th {
+  color: rgba(223, 235, 244, .66);
+  font-size: .68rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,.025);
+}
+.atlas-metals-comparison-table th:first-child,
+.atlas-metals-comparison-table td:first-child { text-align: left; }
+.atlas-metals-comparison-table tbody tr:last-child td { border-bottom: 0; }
+.atlas-metals-comparison-table td:first-child b {
+  display: block;
+  color: #ffe8a6;
+  font-size: .9rem;
+}
+.atlas-metals-comparison-table td:first-child span {
+  display: block;
+  margin-top: 2px;
+  color: rgba(225, 236, 244, .62);
+  font-size: .72rem;
+}
+.atlas-metals-trend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 76px;
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+}
+.atlas-metals-trend i { font-style: normal; font-size: .88rem; }
+.atlas-metals-trend.is-up { color: #a7ffd8; border-color: rgba(76,221,153,.35); background: rgba(76,221,153,.08); }
+.atlas-metals-trend.is-down { color: #ffc0ca; border-color: rgba(255,108,130,.35); background: rgba(255,108,130,.08); }
+.atlas-metals-trend.is-stable { color: #cceeff; border-color: rgba(98,205,255,.30); background: rgba(98,205,255,.07); }
+.atlas-metals-trend.is-warning { color: #ffe1a2; border-color: rgba(255,190,96,.34); background: rgba(255,190,96,.07); }
+.atlas-metals-snapshot-strip {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+.atlas-metals-snapshot-strip > span {
+  flex: 0 0 auto;
+  min-width: 178px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  background: rgba(255,255,255,.025);
+}
+.atlas-metals-snapshot-strip > span.is-latest {
+  border-color: rgba(235,192,96,.34);
+  background: rgba(235,192,96,.07);
+}
+.atlas-metals-snapshot-strip b,
+.atlas-metals-snapshot-strip small { display: block; }
+.atlas-metals-snapshot-strip b { color: rgba(244,248,251,.86); font-size: .75rem; }
+.atlas-metals-snapshot-strip small { margin-top: 2px; color: rgba(214,228,239,.58); font-size: .68rem; }
+#atlasMetalsComparisonNote {
+  display: block;
+  margin-top: 9px;
+  color: rgba(215,230,240,.60);
+  line-height: 1.45;
+}
 .atlas-metals-report-memory .atlas-shared-synthesis-content { max-height:none; }
 .atlas-metals-report-memory .atlas-shared-synthesis-content h4 { color:#ffe8a6; }
 .atlas-metals-report-memory[data-state="working"] { border-color:rgba(86,219,238,.48); }
 @media (max-width:700px) {
   .atlas-metals-report-memory { margin-top:12px; }
+  .atlas-metals-comparison { padding: 12px; }
+  .atlas-metals-comparison-head { display: grid; gap: 9px; }
+  .atlas-metals-comparison-head .pill { justify-self: start; }
 }
