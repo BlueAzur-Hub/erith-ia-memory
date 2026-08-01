@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.57R1 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.57R2 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57R1";
-const ATLAS_BUILD = "28.2.57R1";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57r1";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57R2";
+const ATLAS_BUILD = "28.2.57R2";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57r2";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -2000,7 +2000,7 @@ function atlasVersionExtractIdentity(kind, text) {
   return {
     build: String(
       source.match(
-        /ATLAS_ASSET_BUILD:\s*([0-9.]+)/
+        /ATLAS_ASSET_BUILD:\s*([0-9A-Za-z._-]+)/
       )?.[1]
       || ""
     ).trim(),
@@ -7063,7 +7063,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.57R1
+   Market Core V2.0-Alpha · Build 28.2.57R2
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11195,7 +11195,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.57R1 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.57R2 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14447,7 +14447,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.57R1",
+  interface: "Build 28.2.57R2",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16698,7 +16698,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57R1`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57R2`
   );
 }
 
@@ -20874,7 +20874,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.57R1 — Parallel Markets Foundation
+   Build 28.2.57R2 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -23317,7 +23317,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.57R1 — Comparison Memory Slots A / B / C
+   Build 28.2.57R2 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -26956,7 +26956,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.57R1 — Rapport Métaux Ryzen inscrit dans l’Interface
+   Build 28.2.57R2 — Rapport Métaux Ryzen inscrit dans l’Interface
    - le Bridge fournit uniquement les cotations déjà récoltées ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le rapport, le snapshot et l’historique ;
@@ -27702,7 +27702,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.57R1 — Metals Market Frame Recovery
+   Build 28.2.57R2 — Metals Market Frame Recovery
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
