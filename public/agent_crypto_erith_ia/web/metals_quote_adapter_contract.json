@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_metals_quote_adapter_contract_v1",
-  "version": "1.0.0",
-  "published_at": "2026-08-01T00:43:47Z",
+  "version": "1.1.0",
+  "published_at": "2026-08-01T01:05:29Z",
   "domain": "metals",
   "purpose": "Read a separated Metals snapshot/archive without exposing a provider key or reusing Crypto data.",
   "paths": {
@@ -9,7 +9,9 @@
     "status": "../data/metals/status.json",
     "history_index": "../data/metals/history/index.json",
     "bridge_snapshot_route": "/market/metals/snapshot",
-    "bridge_status_route": "/market/metals/source-status"
+    "bridge_status_route": "/market/metals/source-status",
+    "import_template": "../data/metals/import_template.json",
+    "local_ingest_tool": "../tools/metals_snapshot_ingest.py"
   },
   "required_assets": [
     {
@@ -96,5 +98,19 @@
       "alpha_vantage"
     ],
     "selection_requires_explicit_decision": true
+  },
+  "import_gate": {
+    "state": "ready",
+    "input_schema": "agent_crypto_metals_import_v1",
+    "provider_neutral": true,
+    "provider_fetch_performed": false,
+    "full_basket_required_by_default": true,
+    "partial_import_requires_explicit_flag": true,
+    "secret_fields_rejected": true,
+    "writes_latest": true,
+    "appends_daily_jsonl_history": true,
+    "rebuilds_history_index": true,
+    "updates_collector_status": true,
+    "single_snapshot_must_not_draw_chart": true
   }
 }

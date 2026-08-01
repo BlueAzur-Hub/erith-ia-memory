@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_metals_snapshot_v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "snapshot_id": null,
   "saved_at": null,
   "source_mode": "none",
@@ -16,7 +16,7 @@
   "assets_count": 0,
   "quote_currencies": [],
   "quotes": [],
-  "state": "adapter_required",
+  "state": "import_gate_ready",
   "integrity": {
     "quotes_connected": false,
     "no_invented_values": true,
@@ -25,6 +25,8 @@
     "received_timestamp_required": true,
     "currency_required_for_numeric_price": true,
     "unit_required_for_numeric_price": true,
-    "single_snapshot_must_not_draw_chart": true
+    "single_snapshot_must_not_draw_chart": true,
+    "local_import_requires_real_source": true,
+    "secret_fields_forbidden": true
   }
 }

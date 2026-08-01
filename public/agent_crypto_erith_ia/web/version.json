@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.54",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.54",
-  "published_at": "2026-08-01T00:43:47Z",
+  "build": "28.2.55",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.55",
+  "published_at": "2026-08-01T01:05:29Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -18,7 +18,8 @@
     "metals_quote_adapter_contract": "metals_quote_adapter_contract.json",
     "metals_snapshot": "../data/metals/latest.json",
     "metals_collector_status": "../data/metals/status.json",
-    "metals_history_index": "../data/metals/history/index.json"
+    "metals_history_index": "../data/metals/history/index.json",
+    "metals_import_template": "../data/metals/import_template.json"
   },
   "coherence_contract": {
     "index": {
@@ -93,6 +94,22 @@
     "crypto_data_reuse_forbidden": true,
     "quotes_connected": false,
     "chart_series_connected": false,
+    "layout_unchanged": true,
+    "crypto_workspace_unchanged": true
+  },
+  "metals_snapshot_import_gate": {
+    "base": "28.2.54",
+    "state": "ready",
+    "input_schema": "agent_crypto_metals_import_v1",
+    "tool": "../tools/metals_snapshot_ingest.py",
+    "template": "../data/metals/import_template.json",
+    "provider_configured": false,
+    "provider_fetch_performed": false,
+    "public_key_exposure": false,
+    "full_basket_required_by_default": true,
+    "history_writer_ready": true,
+    "market_reader_ready": true,
+    "chart_requires_two_or_more_real_snapshots": true,
     "layout_unchanged": true,
     "crypto_workspace_unchanged": true
   }
