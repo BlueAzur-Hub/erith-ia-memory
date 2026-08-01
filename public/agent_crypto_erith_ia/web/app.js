@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.51 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.52 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.51";
-const ATLAS_BUILD = "28.2.51";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.51";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.52";
+const ATLAS_BUILD = "28.2.52";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.52";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7036,7 +7036,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.51
+   Market Core V2.0-Alpha · Build 28.2.52
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11168,7 +11168,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.51 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.52 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -11389,7 +11389,7 @@ function atlasActivateTargetTopFiveCycle() {
   ) {
     const started = atlasScannerStart(next, 5, {
       period,
-      source: "target-top5-cycle-28.2.51"
+      source: "target-top5-cycle-28.2.52"
     });
 
     if (started) atlasTargetCycleRememberPreset(next);
@@ -13326,17 +13326,17 @@ els.btnChartTop5?.addEventListener("click", () => atlasSelectTopComparison(5));
 els.btnChartGainers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
+  atlasScannerStart("gainers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.52" });
 });
 els.btnChartLosers?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
+  atlasScannerStart("losers", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.52" });
 });
 els.btnChartVolume5?.addEventListener("click", event => {
   event?.preventDefault?.();
   event?.stopPropagation?.();
-  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.51" });
+  atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.52" });
 });
 els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
@@ -14420,7 +14420,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.51",
+  interface: "Build 28.2.52",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16671,7 +16671,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.51`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.52`
   );
 }
 
@@ -20847,7 +20847,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.51 — Parallel Markets Foundation
+   Build 28.2.52 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -22580,7 +22580,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.51 — Comparison Memory Slots A / B / C
+   Build 28.2.52 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -22930,7 +22930,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     if (ATLAS_SCANNER_PRESETS.has(preset)) {
       atlasScannerStart(preset, 5, {
         period,
-        source: `workspace-slot-${slot}-28.2.51`
+        source: `workspace-slot-${slot}-28.2.52`
       });
     } else {
       requestAnimationFrame(() => {
@@ -24415,7 +24415,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     return true;
   } catch (error) {
-    console.warn("Transaction scanner 28.2.51 annulée :", error);
+    console.warn("Transaction scanner 28.2.52 annulée :", error);
     atlasScannerInvalidateChartWork(`rollback:${tx.preset}`);
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
@@ -24598,7 +24598,7 @@ async function atlasScannerRun(tx) {
     );
   } catch (error) {
     if (error?.name === "AbortError" || tx?.controller?.signal?.aborted) return false;
-    console.error("Scanner 28.2.51 :", error);
+    console.error("Scanner 28.2.52 :", error);
     if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
@@ -24687,7 +24687,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
-      console.error("Scanner 28.2.51 non capturé :", error);
+      console.error("Scanner 28.2.52 non capturé :", error);
       if (atlasScannerTransaction === tx) atlasScannerTransaction = null;
       atlasScannerVisibleFailure(
         preset,
@@ -24697,7 +24697,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     });
     return true;
   } catch (error) {
-    console.error("Démarrage scanner 28.2.51 :", error);
+    console.error("Démarrage scanner 28.2.52 :", error);
     return atlasScannerVisibleFailure(
       preset,
       `${label} refusé par le contrôle de démarrage`,
@@ -24711,7 +24711,7 @@ function atlasHandleGainersClickV286(event) {
   event?.stopPropagation?.();
   return atlasScannerStart("gainers", 5, {
     period: Number(state.chartPeriodDays || 1),
-    source: "button-28.2.51"
+    source: "button-28.2.52"
   });
 }
 
@@ -26225,8 +26225,9 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.51 — Dual Metals workspace navigation
-   Graphique Métaux and Market Métaux are separate destinations.
+   Build 28.2.52 — Metals Market framing lock
+   Market Métaux opens on one deliberate frame:
+   TARGET MÉTAUX + METALS FLOW + ESPACE 02 · MARKET MÉTAUX.
    No Crypto state, snapshot, scanner, cache or chart logic is changed.
    ========================================================= */
 (() => {
@@ -26237,7 +26238,18 @@ atlasVersionAwarenessInit();
     sources: "atlasMetalsMarketRegistry"
   });
 
+  const frameTop = Object.freeze({
+    graph: 86,
+    market: 6,
+    analysis: 92,
+    sources: 92
+  });
+
+  let activeWorkspace = "graph";
+
   function setWorkspaceActive(name) {
+    activeWorkspace = name;
+    document.documentElement.dataset.atlasMetalsWorkspace = name;
     document.querySelectorAll("[data-metals-workspace]").forEach(button => {
       const active = button.dataset.metalsWorkspace === name;
       button.classList.toggle("is-active", active);
@@ -26247,12 +26259,40 @@ atlasVersionAwarenessInit();
     });
   }
 
+  function workspaceTop(target, name) {
+    const offset = Number(frameTop[name] ?? frameTop.graph);
+    return Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset);
+  }
+
+  function lockMarketFrame(target) {
+    const expectedTop = frameTop.market;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const delta = target.getBoundingClientRect().top - expectedTop;
+        if (Math.abs(delta) > 1) {
+          window.scrollBy({ top: delta, behavior: "auto" });
+        }
+      });
+    });
+  }
+
   function openWorkspace(name) {
-    const targetId = targets[name] || targets.graph;
-    const target = document.getElementById(targetId);
+    const workspace = Object.prototype.hasOwnProperty.call(targets, name)
+      ? name
+      : "graph";
+    const target = document.getElementById(targets[workspace]);
     if (!target) return false;
-    setWorkspaceActive(name);
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    setWorkspaceActive(workspace);
+
+    // Market framing is immediate and exact so the three requested bands
+    // remain visible together. Other destinations keep the softer motion.
+    window.scrollTo({
+      top: workspaceTop(target, workspace),
+      behavior: workspace === "market" ? "auto" : "smooth"
+    });
+
+    if (workspace === "market") lockMarketFrame(target);
     return true;
   }
 
@@ -26265,4 +26305,5 @@ atlasVersionAwarenessInit();
   });
 
   window.atlasOpenMetalsWorkspace = openWorkspace;
+  window.atlasGetMetalsWorkspace = () => activeWorkspace;
 })();

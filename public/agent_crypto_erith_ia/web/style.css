@@ -23779,7 +23779,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 28.2.51 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
+   BUILD 28.2.52 — METALS SOURCE REGISTRY & DATA CONTRACT FOUNDATION
    Toolbar and geometry from 28.2.43 remain unchanged.
    ========================================================================== */
 
@@ -23932,16 +23932,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 28.2.51 — STABLE RECOVERY & UPDATE CONTROL REPAIR
+   BUILD 28.2.52 — STABLE RECOVERY & UPDATE CONTROL REPAIR
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 28.2.51
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.51
+   ATLAS_ASSET_BUILD: 28.2.52
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.52
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.51";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.51";
+  --atlas-asset-build: "28.2.52";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.52";
 }
 
 .atlas-version-control[data-state="current"],
@@ -24010,7 +24010,7 @@ html[data-atlas-market-domain="metals"]
   pointer-events: auto;
 }
 /* ==========================================================================
-   BUILD 28.2.51 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
+   BUILD 28.2.52 — FIREFOX METALS WIDE DECK GEOMETRY LOCK
 
    Root correction:
    - bypass the legacy multi-grid cascade in the wide Metals workspace;
@@ -24020,8 +24020,8 @@ html[data-atlas-market-domain="metals"]
    - preserve the existing stacked layout at 1100 px and below.
 
    No data, toolbar, registry, updater or module behavior is changed.
-   ATLAS_ASSET_BUILD: 28.2.51
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.51
+   ATLAS_ASSET_BUILD: 28.2.52
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.52
    ========================================================================== */
 
 @media (min-width: 1101px) {
@@ -24157,7 +24157,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ========================================================================== 
-   BUILD 28.2.51 — DUAL METALS GRAPH / MARKET WORKSPACE LOCK
+   BUILD 28.2.52 — DUAL METALS GRAPH / MARKET WORKSPACE LOCK
    Crypto remains unchanged. Metals owns two explicit, separate workspaces:
    01 Graphique Métaux, 02 Market Métaux.
    ========================================================================== */
@@ -24228,5 +24228,35 @@ html[data-atlas-market-domain="metals"]
 
   #analyste .atlas-metals-dual-workspace-note button {
     align-self: flex-start;
+  }
+}
+
+
+/* ========================================================================== 
+   BUILD 28.2.52 — METALS MARKET FRAMING LOCK
+   Exact opening frame requested by Christophe:
+   TARGET MÉTAUX + METALS FLOW + ESPACE 02 · MARKET MÉTAUX.
+   ========================================================================== */
+
+html[data-atlas-market-domain="metals"]
+  #atlasMetalsMarketArea {
+  scroll-margin-top: 6px !important;
+  scroll-snap-align: start;
+}
+
+html[data-atlas-market-domain="metals"]
+  #atlasMetalsMarketArea > .atlas-metals-market-ribbons {
+  margin-top: 0 !important;
+}
+
+html[data-atlas-market-domain="metals"][data-atlas-metals-workspace="market"]
+  #atlasMetalsMarketArea {
+  --atlas-metals-market-frame-top: 6px;
+}
+
+@media (max-width: 1100px) {
+  html[data-atlas-market-domain="metals"]
+    #atlasMetalsMarketArea {
+    scroll-margin-top: 8px !important;
   }
 }
