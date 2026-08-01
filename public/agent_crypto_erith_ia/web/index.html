@@ -394,13 +394,6 @@
             </div>
           </div>
             <div class="chart-head-actions atlas-metals-unified-toolbar atlas-parallel-market-controls" id="atlasMetalsUnifiedToolbar" aria-label="Réglages du marché Métaux" hidden>
-              <div class="atlas-metals-workspace-switch" role="group" aria-label="Espaces Métaux">
-                <span>Espace</span>
-                <button type="button" data-metals-workspace="graph" class="is-active">Graphique Métaux</button>
-                <button type="button" data-metals-workspace="market">Market Métaux</button>
-                <button type="button" data-metals-workspace="analysis">Analyse</button>
-                <button type="button" data-metals-workspace="sources">Sources</button>
-              </div>
               <div role="group" aria-label="Vue Métaux">
                 <span>Vue</span>
                 <button type="button" data-metals-view="price" class="is-active">Prix</button>
@@ -444,8 +437,8 @@
                    hidden>
             <header class="atlas-parallel-market-head">
               <div>
-                <span class="eyebrow">ESPACE 01 · GRAPHIQUE MÉTAUX</span>
-                <h3>Graphique Métaux précieux et industriels</h3>
+                <span class="eyebrow">MARCHÉS PARALLÈLES · FOUNDATION</span>
+                <h3>Or, argent, métaux précieux et industriels</h3>
                 <p>Aucun cours n’est affiché tant qu’un adaptateur de données réel n’est pas connecté.</p>
               </div>
               <div class="atlas-parallel-market-status">
@@ -460,7 +453,7 @@
                        aria-label="Cadre graphique Métaux sans données">
                 <header>
                   <div>
-                    <span>GRAPHIQUE MÉTAUX · INDÉPENDANT DU CRYPTO</span>
+                    <span>GRAPHIQUE MÉTAUX</span>
                     <b id="atlasMetalsChartMode">PRIX · 24H</b>
                   </div>
                   <small>Source réelle requise</small>
@@ -492,10 +485,9 @@
                 <button type="button" data-metal-id="copper" aria-pressed="true"><b>HG</b><span>Cuivre</span><small>USD / livre ou tonne</small></button>
               </div>
 
-              <div class="atlas-metals-graph-market-note atlas-metals-dual-workspace-note">
-                <b>ESPACE 02 · MARKET MÉTAUX SÉPARÉ</b>
-                <span>Le graphique reste ici. Le tableau, les filtres, la structure et les sources sont dans le Market Métaux.</span>
-                <button type="button" data-metals-workspace="market">Ouvrir le Market Métaux ↓</button>
+              <div class="atlas-metals-graph-market-note">
+                <b>TABLEAU COMPLET DANS MARKET SNAPSHOT</b>
+                <span>Le graphique reste dédié aux trajectoires ; le Market conserve les colonnes, filtres et états de source.</span>
               </div>
 
               <div class="atlas-metals-table-wrap atlas-metals-graph-legacy-table" id="atlasMetalsGraphLegacyTable" hidden aria-hidden="true">
@@ -584,7 +576,7 @@
         </div>
         <div class="chart-caption" id="chartCaption">
           <span id="atlasChartCaptionCrypto">CoinGecko construit un Market Frame commun pouvant contenir jusqu’à 250 actifs validés en EUR. Les vues 50, 100 et Tous lisent cette même photo ; Binance actualise les prix compatibles en direct et CoinGecko complète les autres actifs. Sélectionne un actif pour charger son historique réel Binance ou CoinGecko à la demande.</span>
-          <span id="atlasChartCaptionMetals" hidden>Deux espaces Métaux séparés : un Graphique Métaux et un Market Métaux. Les cotations restent non connectées et aucune valeur n’est inventée.</span>
+          <span id="atlasChartCaptionMetals" hidden>Fondation Métaux active : panier, unités, séparation des caches et emplacement USGS sont préparés. Aucun cours ne sera affiché avant connexion d’une source réelle.</span>
         </div>
       </article>
 
@@ -832,7 +824,10 @@
               <p>Tableau, filtres, structure physique et sources Métaux. Les prix restent vides tant qu’aucune cotation réelle n’est connectée.</p>
             </div>
             <div class="atlas-metals-market-source-state">
-              <button class="atlas-metals-return-graph" type="button" data-metals-workspace="graph">↑ Graphique Métaux</button>
+              <button class="atlas-metals-market-return"
+                      id="atlasMetalsReturnToGraph"
+                      type="button"
+                      aria-label="Revenir au Graphique Métaux">↑ Graphique Métaux</button>
               <span>COURS <b>NON CONNECTÉS</b></span>
               <span>STRUCTURE <b id="atlasMetalsStructureState">USGS 2026</b></span>
             </div>

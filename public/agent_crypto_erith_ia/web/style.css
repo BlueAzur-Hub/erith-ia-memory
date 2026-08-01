@@ -24156,107 +24156,36 @@ html[data-atlas-market-domain="metals"]
 }
 
 
-/* ========================================================================== 
-   BUILD 28.2.52 — DUAL METALS GRAPH / MARKET WORKSPACE LOCK
-   Crypto remains unchanged. Metals owns two explicit, separate workspaces:
-   01 Graphique Métaux, 02 Market Métaux.
+/* ==========================================================================
+   BUILD 28.2.52 — METALS MARKET FRAME RECOVERY
+   Base métier et géométrique : 28.2.50 / 28.2.49.
+   Objectif unique : cadrer le Market Métaux sur Target + Flow + Espace 02.
    ========================================================================== */
-
-#analyste .atlas-metals-workspace-switch {
-  border-color: rgba(98,236,255,.24) !important;
-  background: rgba(98,236,255,.045) !important;
+html[data-atlas-market-domain="metals"] #atlasMetalsMarketArea {
+  scroll-margin-top: 6px;
 }
 
-#analyste .atlas-metals-workspace-switch > span {
-  color: #82e8f2 !important;
-}
-
-#analyste .atlas-metals-workspace-switch button {
+.atlas-metals-market-return {
+  min-height: 26px;
+  padding: 5px 9px;
+  border: 1px solid rgba(98,236,255,.34);
+  border-radius: 8px;
+  background: rgba(98,236,255,.06);
+  color: #8ff4ff;
+  font: 850 8px/1 system-ui, sans-serif;
   white-space: nowrap;
-}
-
-#analyste .atlas-metals-workspace-switch button.is-active {
-  border-color: rgba(98,236,255,.52) !important;
-  background: rgba(98,236,255,.12) !important;
-  color: #aaf6ff !important;
-  box-shadow: inset 0 0 0 1px rgba(98,236,255,.10);
-}
-
-#analyste .atlas-metals-dual-workspace-note button,
-.atlas-metals-return-graph {
-  flex: 0 0 auto;
-  padding: 6px 8px;
-  border: 1px solid rgba(98,236,255,.32);
-  border-radius: 7px;
-  background: rgba(98,236,255,.08);
-  color: #9af1fa;
-  font: 900 8px/1 system-ui, sans-serif;
-  letter-spacing: .03em;
   cursor: pointer;
 }
 
-#analyste .atlas-metals-dual-workspace-note button:hover,
-.atlas-metals-return-graph:hover {
-  border-color: rgba(98,236,255,.62);
-  background: rgba(98,236,255,.14);
+.atlas-metals-market-return:hover,
+.atlas-metals-market-return:focus-visible {
+  border-color: rgba(98,236,255,.65);
+  background: rgba(98,236,255,.11);
+  outline: none;
 }
 
-.atlas-metals-return-graph {
-  margin-right: 2px;
-}
-
-html[data-atlas-market-domain="metals"]
-  #atlasParallelMarketFoundation,
-html[data-atlas-market-domain="metals"]
-  #atlasMetalsMarketArea {
-  scroll-margin-top: 86px;
-}
-
-html[data-atlas-market-domain="metals"]
-  #atlasMetalsAnalysisFoundation,
-html[data-atlas-market-domain="metals"]
-  #atlasMetalsMarketRegistry {
-  scroll-margin-top: 92px;
-}
-
-@media (max-width: 1100px) {
-  #analyste .atlas-metals-workspace-switch {
-    width: 100%;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-  }
-
-  #analyste .atlas-metals-dual-workspace-note button {
-    align-self: flex-start;
-  }
-}
-
-
-/* ========================================================================== 
-   BUILD 28.2.52 — METALS MARKET FRAMING LOCK
-   Exact opening frame requested by Christophe:
-   TARGET MÉTAUX + METALS FLOW + ESPACE 02 · MARKET MÉTAUX.
-   ========================================================================== */
-
-html[data-atlas-market-domain="metals"]
-  #atlasMetalsMarketArea {
-  scroll-margin-top: 6px !important;
-  scroll-snap-align: start;
-}
-
-html[data-atlas-market-domain="metals"]
-  #atlasMetalsMarketArea > .atlas-metals-market-ribbons {
-  margin-top: 0 !important;
-}
-
-html[data-atlas-market-domain="metals"][data-atlas-metals-workspace="market"]
-  #atlasMetalsMarketArea {
-  --atlas-metals-market-frame-top: 6px;
-}
-
-@media (max-width: 1100px) {
-  html[data-atlas-market-domain="metals"]
-    #atlasMetalsMarketArea {
-    scroll-margin-top: 8px !important;
+@media (max-width: 700px) {
+  .atlas-metals-market-return {
+    justify-self: start;
   }
 }

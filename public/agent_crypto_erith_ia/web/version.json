@@ -3,7 +3,7 @@
   "release": "Market Core V2.0-Alpha",
   "build": "28.2.52",
   "asset_token": "market-core-v2.0-alpha-build-28.2.52",
-  "published_at": "2026-07-31T23:55:57Z",
+  "published_at": "2026-08-01T00:06:42Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -61,43 +61,20 @@
     "quotes_connected": false,
     "historical_prices_imported": false
   },
-  "dual_metals_workspace_lock": {
+  "metals_market_frame_recovery": {
     "base": "28.2.50",
+    "stable_geometry_base": "28.2.49",
+    "scope": "navigation_and_scroll_framing_only",
+    "market_frame": [
+      "TARGET MÉTAUX",
+      "METALS FLOW",
+      "ESPACE 02 · MARKET MÉTAUX"
+    ],
+    "global_market_shortcut_domain_aware": true,
+    "global_graph_shortcut_domain_aware": true,
+    "extra_workspace_tabs_added": false,
     "crypto_workspace_unchanged": true,
-    "metals_graph_workspace": {
-      "label": "Graphique Métaux",
-      "independent_from_crypto": true,
-      "quotes_connected": false,
-      "no_invented_curve": true
-    },
-    "metals_market_workspace": {
-      "label": "Market Métaux",
-      "assets": [
-        "XAU",
-        "XAG",
-        "XPT",
-        "XPD",
-        "HG"
-      ],
-      "structural_registry": "metals_structural_registry.json",
-      "quotes_connected": false
-    },
-    "data_directory_contract": {
-      "crypto_archive_preserved": "../data/latest.json",
-      "crypto_news_preserved": "../data/news/latest.json",
-      "crypto_data_not_reused_as_metal_quotes": true,
-      "metals_archive_created": false
-    }
-  },
-  "metals_market_framing_lock": {
-    "base": "28.2.51",
-    "objective": "Open Market Métaux with TARGET MÉTAUX, METALS FLOW and ESPACE 02 visible in one frame",
-    "target_id": "atlasMetalsMarketArea",
-    "desktop_frame_top_px": 6,
-    "stacked_frame_top_px": 8,
-    "crypto_workspace_unchanged": true,
-    "data_and_registries_unchanged": true,
-    "quotes_connected": false,
-    "no_invented_curve": true
+    "metals_data_unchanged": true,
+    "quotes_connected": false
   }
 }

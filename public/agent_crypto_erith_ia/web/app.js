@@ -26225,85 +26225,61 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.52 — Metals Market framing lock
-   Market Métaux opens on one deliberate frame:
-   TARGET MÉTAUX + METALS FLOW + ESPACE 02 · MARKET MÉTAUX.
-   No Crypto state, snapshot, scanner, cache or chart logic is changed.
+   Build 28.2.52 — Metals Market Frame Recovery
+   The existing global Graphique / Marché shortcuts become domain-aware.
+   No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
 (() => {
-  const targets = Object.freeze({
-    graph: "atlasParallelMarketFoundation",
-    market: "atlasMetalsMarketArea",
-    analysis: "atlasMetalsAnalysisFoundation",
-    sources: "atlasMetalsMarketRegistry"
-  });
+  const FRAME_TOP_GAP = 6;
 
-  const frameTop = Object.freeze({
-    graph: 86,
-    market: 6,
-    analysis: 92,
-    sources: 92
-  });
-
-  let activeWorkspace = "graph";
-
-  function setWorkspaceActive(name) {
-    activeWorkspace = name;
-    document.documentElement.dataset.atlasMetalsWorkspace = name;
-    document.querySelectorAll("[data-metals-workspace]").forEach(button => {
-      const active = button.dataset.metalsWorkspace === name;
-      button.classList.toggle("is-active", active);
-      if (button.closest(".atlas-metals-workspace-switch")) {
-        button.setAttribute("aria-pressed", active ? "true" : "false");
-      }
-    });
+  function metalsFrameTarget(name) {
+    if (name === "market") {
+      return document.getElementById("atlasMetalsMarketArea");
+    }
+    return document.getElementById("analyste");
   }
 
-  function workspaceTop(target, name) {
-    const offset = Number(frameTop[name] ?? frameTop.graph);
-    return Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset);
-  }
+  function scrollToMetalsFrame(name, options = {}) {
+    if (atlasParallelMarketDomain() !== "metals") return false;
+    const target = metalsFrameTarget(name);
+    if (!target || target.hidden) return false;
 
-  function lockMarketFrame(target) {
-    const expectedTop = frameTop.market;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const delta = target.getBoundingClientRect().top - expectedTop;
-        if (Math.abs(delta) > 1) {
-          window.scrollBy({ top: delta, behavior: "auto" });
-        }
-      });
-    });
-  }
+    const behavior = options.instant === true ? "auto" : "smooth";
+    const place = () => {
+      const top = Math.max(
+        0,
+        window.scrollY + target.getBoundingClientRect().top - FRAME_TOP_GAP
+      );
+      window.scrollTo({ top, behavior });
+    };
 
-  function openWorkspace(name) {
-    const workspace = Object.prototype.hasOwnProperty.call(targets, name)
-      ? name
-      : "graph";
-    const target = document.getElementById(targets[workspace]);
-    if (!target) return false;
-
-    setWorkspaceActive(workspace);
-
-    // Market framing is immediate and exact so the three requested bands
-    // remain visible together. Other destinations keep the softer motion.
-    window.scrollTo({
-      top: workspaceTop(target, workspace),
-      behavior: workspace === "market" ? "auto" : "smooth"
-    });
-
-    if (workspace === "market") lockMarketFrame(target);
+    requestAnimationFrame(() => requestAnimationFrame(place));
     return true;
   }
 
-  document.querySelectorAll("[data-metals-workspace]").forEach(button => {
-    button.addEventListener("click", event => {
+  document.querySelectorAll('a[href="#market-workspace"]').forEach(link => {
+    link.addEventListener("click", event => {
+      if (atlasParallelMarketDomain() !== "metals") return;
       event.preventDefault();
-      event.stopPropagation();
-      openWorkspace(button.dataset.metalsWorkspace || "graph");
-    });
+      scrollToMetalsFrame("market");
+    }, true);
   });
 
-  window.atlasOpenMetalsWorkspace = openWorkspace;
-  window.atlasGetMetalsWorkspace = () => activeWorkspace;
+  document.querySelectorAll('a[href="#analyste"]').forEach(link => {
+    link.addEventListener("click", event => {
+      if (atlasParallelMarketDomain() !== "metals") return;
+      event.preventDefault();
+      scrollToMetalsFrame("graph");
+    }, true);
+  });
+
+  document.getElementById("atlasMetalsReturnToGraph")?.addEventListener(
+    "click",
+    event => {
+      event.preventDefault();
+      scrollToMetalsFrame("graph");
+    }
+  );
+
+  window.atlasOpenMetalsFrame = scrollToMetalsFrame;
 })();
