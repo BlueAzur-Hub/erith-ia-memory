@@ -1,0 +1,100 @@
+{
+  "schema": "agent_crypto_metals_quote_adapter_contract_v1",
+  "version": "1.0.0",
+  "published_at": "2026-08-01T00:43:47Z",
+  "domain": "metals",
+  "purpose": "Read a separated Metals snapshot/archive without exposing a provider key or reusing Crypto data.",
+  "paths": {
+    "latest": "../data/metals/latest.json",
+    "status": "../data/metals/status.json",
+    "history_index": "../data/metals/history/index.json",
+    "bridge_snapshot_route": "/market/metals/snapshot",
+    "bridge_status_route": "/market/metals/source-status"
+  },
+  "required_assets": [
+    {
+      "asset_id": "gold",
+      "symbol": "XAU"
+    },
+    {
+      "asset_id": "silver",
+      "symbol": "XAG"
+    },
+    {
+      "asset_id": "platinum",
+      "symbol": "XPT"
+    },
+    {
+      "asset_id": "palladium",
+      "symbol": "XPD"
+    },
+    {
+      "asset_id": "copper",
+      "symbol": "HG"
+    }
+  ],
+  "snapshot_schema": "agent_crypto_metals_snapshot_v1",
+  "quote_record_contract": "agent_crypto_market_data_contract_v1.quote_record",
+  "accepted_data_states": [
+    "data_current",
+    "data_delayed",
+    "data_historical",
+    "date_unqualified",
+    "source_disconnected",
+    "adapter_required",
+    "licence_to_verify"
+  ],
+  "required_quote_fields": [
+    "domain",
+    "asset_id",
+    "symbol",
+    "source_id",
+    "instrument_type",
+    "currency",
+    "unit",
+    "source_time",
+    "received_at",
+    "data_state"
+  ],
+  "numeric_nullable": [
+    "price",
+    "bid",
+    "ask",
+    "change",
+    "change_percent"
+  ],
+  "security": {
+    "provider_key_in_browser_forbidden": true,
+    "provider_key_in_public_repository_forbidden": true,
+    "keyed_provider_must_use_bridge": true,
+    "public_page_reads_archive_only": true,
+    "logs_must_redact_secrets": true
+  },
+  "separation": {
+    "crypto_latest_path": "../data/latest.json",
+    "metals_latest_path": "../data/metals/latest.json",
+    "crypto_cache_must_not_supply_metals": true,
+    "metals_cache_namespace": "cache_metals_quotes",
+    "metals_history_namespace": "cache_metals_history"
+  },
+  "render_policy": {
+    "empty_snapshot_display": "—",
+    "zero_is_not_missing": true,
+    "market_may_render_valid_snapshot": true,
+    "detail_may_render_valid_snapshot": true,
+    "chart_requires_series_or_at_least_two_real_snapshots": true,
+    "single_snapshot_must_not_create_line": true,
+    "missing_change_percent_must_remain_null": true,
+    "browser_time_must_not_replace_source_time": true
+  },
+  "provider_selection": {
+    "selected_provider_id": null,
+    "state": "not_configured",
+    "candidate_order_from_audit": [
+      "metals_dev",
+      "goldapi",
+      "alpha_vantage"
+    ],
+    "selection_requires_explicit_decision": true
+  }
+}
