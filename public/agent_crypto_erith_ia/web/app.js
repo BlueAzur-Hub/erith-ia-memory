@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.57 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.57R1 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57";
-const ATLAS_BUILD = "28.2.57";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.57R1";
+const ATLAS_BUILD = "28.2.57R1";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.57r1";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7063,7 +7063,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.57
+   Market Core V2.0-Alpha · Build 28.2.57R1
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11195,7 +11195,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.57 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.57R1 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14447,7 +14447,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.57",
+  interface: "Build 28.2.57R1",
   controlCenter: "V2.1.0",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16698,7 +16698,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.57R1`
   );
 }
 
@@ -20874,7 +20874,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.57 — Parallel Markets Foundation
+   Build 28.2.57R1 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -22265,7 +22265,7 @@ function atlasMetalsQuoteFoundationRenderChart() {
   const originLabel = atlasMetalsQuoteFoundationState.origin === "local_bridge"
     ? "Bridge local · Metals.Dev"
     : atlasMetalsQuoteFoundationState.origin === "book_memory"
-      ? "Mémoire Ryzen · JSON Book / IndexedDB"
+      ? "Mémoire Ryzen · inscrite dans l’Interface"
       : atlasMetalsQuoteFoundationState.origin === "github_archive"
         ? "Archive GitHub"
         : "Source réelle requise";
@@ -23317,7 +23317,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.57 — Comparison Memory Slots A / B / C
+   Build 28.2.57R1 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -26956,7 +26956,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.57 — Rapport Métaux Ryzen inscrit dans l’Interface
+   Build 28.2.57R1 — Rapport Métaux Ryzen inscrit dans l’Interface
    - le Bridge fournit uniquement les cotations déjà récoltées ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le rapport, le snapshot et l’historique ;
@@ -26970,6 +26970,7 @@ const ATLAS_METALS_REPORT_DB_VERSION = 1;
 const ATLAS_METALS_REPORT_STORE = "reports";
 const ATLAS_METALS_REPORT_RECORD_ID = "current";
 const ATLAS_METALS_REPORT_LIMIT_BYTES = 5 * 1024 * 1024;
+const ATLAS_METALS_REPORT_INTERFACE_PATH = "../data/metals/ryzen_report.json";
 
 const atlasMetalsReportState = {
   initialized: false,
@@ -27483,15 +27484,46 @@ async function atlasMetalsReportActivate(pkg, source, persist = true) {
     atlasMetalsReportState.package = saved.package;
     atlasMetalsReportState.persistence = { ok: true, bytes: saved.bytes, error: "" };
   }
-  atlasMetalsReportHydrateQuoteState(atlasMetalsReportState.package, source === "ryzen" ? "local_bridge" : "book_memory");
+  atlasMetalsReportHydrateQuoteState(
+    atlasMetalsReportState.package,
+    source === "ryzen" ? "local_bridge" : source === "interface" ? "interface_memory" : "book_memory"
+  );
   atlasMetalsReportRender();
-  const label = source === "ryzen" ? "Produite" : source === "indexeddb" ? "Restaurée" : "Importée";
+  const label = source === "ryzen" ? "Produite" : source === "indexeddb" ? "Restaurée" : source === "interface" ? "Inscrite" : "Importée";
   atlasMetalsReportSetStatus(
     "ready",
     `${label} · rapport Métaux ${clean.status.quotes}/5 · ${clean.status.history_snapshots} snapshot${clean.status.history_snapshots > 1 ? "s" : ""} · IndexedDB vérifiée.`,
     label
   );
   return clean;
+}
+
+async function atlasMetalsReportLoadFromInterface() {
+  try {
+    const separator = ATLAS_METALS_REPORT_INTERFACE_PATH.includes("?") ? "&" : "?";
+    const response = await fetch(
+      `${ATLAS_METALS_REPORT_INTERFACE_PATH}${separator}build=${encodeURIComponent(ATLAS_BUILD)}`,
+      { cache: "no-store", headers: { "Accept": "application/json" } }
+    );
+    if (!response.ok) throw new Error(`mémoire Interface indisponible (${response.status})`);
+    const candidate = await atlasMetalsReportValidatePackage(await response.json());
+    const current = atlasMetalsReportState.package;
+    const candidateTime = Date.parse(candidate.snapshot_at || candidate.generated_at || 0) || 0;
+    const currentTime = Date.parse(current?.snapshot_at || current?.generated_at || 0) || 0;
+    if (current && currentTime > candidateTime) return current;
+    await atlasMetalsReportActivate(candidate, "interface", true);
+    atlasMetalsReportSetStatus(
+      "ready",
+      `Inscrite dans l’Interface · rapport Métaux ${candidate.status.quotes}/5 · lecture automatique sur ce poste.`,
+      "Inscrite"
+    );
+    return candidate;
+  } catch (error) {
+    if (!atlasMetalsReportState.package) {
+      atlasMetalsReportSetStatus("warning", `Rapport Interface indisponible : ${error?.message || error}.`, "À vérifier");
+    }
+    return null;
+  }
 }
 
 async function atlasMetalsReportRestore() {
@@ -27619,14 +27651,18 @@ function atlasMetalsReportInit() {
     catch (error) { atlasMetalsReportSetStatus("error", `Import refusé : ${error?.message || error}.`, "Refusé"); }
   });
   atlasMetalsReportRender();
-  atlasMetalsReportState.restorePromise = atlasMetalsReportRestore();
+  atlasMetalsReportState.restorePromise = (async () => {
+    await atlasMetalsReportRestore();
+    await atlasMetalsReportLoadFromInterface();
+    return atlasMetalsReportState.package;
+  })();
   return atlasMetalsReportState.restorePromise;
 }
 
 const atlasMetalsQuoteFoundationSummaryV56 = atlasMetalsQuoteFoundationSummary;
 atlasMetalsQuoteFoundationSummary = function atlasMetalsQuoteFoundationSummaryV57() {
   const summary = atlasMetalsQuoteFoundationSummaryV56();
-  if (atlasMetalsQuoteFoundationState.origin !== "book_memory" || summary.quoteCount < 1) return summary;
+  if (!["book_memory", "interface_memory"].includes(atlasMetalsQuoteFoundationState.origin) || summary.quoteCount < 1) return summary;
   return {
     quoteCount: summary.quoteCount,
     short: `Mémoire Ryzen ${summary.quoteCount}/5`,
@@ -27666,7 +27702,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.57 — Metals Market Frame Recovery
+   Build 28.2.57R1 — Metals Market Frame Recovery
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */

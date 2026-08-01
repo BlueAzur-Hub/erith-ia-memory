@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_metals_collector_status_v1",
   "version": "1.1.0",
-  "status": "import_gate_ready",
-  "provider_id": null,
-  "provider_name": null,
-  "bridge_required": true,
+  "status": "ready",
+  "provider_id": "metals_dev",
+  "provider_name": "Metals.Dev",
+  "bridge_required": false,
   "bridge_route": "/market/metals/snapshot",
-  "public_page_mode": "archive_reader_only",
-  "last_attempt_at": null,
-  "last_success_at": null,
+  "public_page_mode": "interface_report_reader",
+  "last_attempt_at": "2026-08-01T05:22:16Z",
+  "last_success_at": "2026-08-01T05:22:16Z",
   "last_error": null,
   "assets_expected": 5,
-  "assets_received": 0,
+  "assets_received": 5,
   "quota": {
     "plan": null,
     "limit": null,
@@ -22,10 +22,10 @@
   "history": {
     "directory": "history/",
     "index": "history/index.json",
-    "files": 0,
-    "snapshots": 0,
-    "oldest_at": null,
-    "newest_at": null
+    "files": 2,
+    "snapshots": 2,
+    "oldest_at": "2026-08-01T04:49:01Z",
+    "newest_at": "2026-08-01T05:22:16Z"
   },
   "security": {
     "api_key_present_in_public_files": false,
@@ -34,7 +34,7 @@
     "secret_fields_forbidden_in_import": true,
     "provider_fetch_not_performed_by_public_page": true
   },
-  "updated_at": "2026-08-01T01:05:29Z",
+  "updated_at": "2026-08-01T06:45:00Z",
   "local_import_tool": "../../tools/metals_snapshot_ingest.py",
   "import_template": "import_template.json"
 }

@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.57",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.57",
-  "published_at": "2026-08-01T08:30:00Z",
+  "build": "28.2.57R1",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.57r1",
+  "published_at": "2026-08-01T06:45:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -19,7 +19,8 @@
     "metals_snapshot": "../data/metals/latest.json",
     "metals_collector_status": "../data/metals/status.json",
     "metals_history_index": "../data/metals/history/index.json",
-    "metals_import_template": "../data/metals/import_template.json"
+    "metals_import_template": "../data/metals/import_template.json",
+    "metals_ryzen_report": "../data/metals/ryzen_report.json"
   },
   "coherence_contract": {
     "index": {
@@ -128,15 +129,14 @@
     "crypto_workspace_unchanged": true
   },
   "metals_ryzen_report_memory": {
-    "base": "28.2.56",
+    "base": "28.2.57",
     "schema": "agent_crypto_metals_ryzen_report_v1",
-    "automatic_from_local_bridge_5_of_5": true,
-    "indexeddb_persistence": true,
-    "book_json_export_import": true,
-    "book_import_restores_quotes_and_history": true,
-    "provider_requests_for_report": 0,
-    "bridge_version_required": "1.8.0",
-    "bridge_change_required": false,
+    "interface_subsection_path": "../data/metals/ryzen_report.json",
+    "automatic_read_on_ryzen_and_book": true,
+    "book_import_required": false,
+    "indexeddb_local_backup": true,
+    "provider_requests_for_report_read": 0,
+    "bridge_version_required_for_new_collection": "1.8.0",
     "crypto_workspace_unchanged": true
   }
 }
