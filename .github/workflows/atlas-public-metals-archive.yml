@@ -130,7 +130,7 @@ jobs:
           from pathlib import Path
           status = json.loads(Path("public/agent_crypto_erith_ia/data/metals/status.json").read_text(encoding="utf-8"))
           history = status.get("history") or {}
-          print("## Atlas Public Metals Archive · Build 28.2.59")
+          print("## Atlas Public Metals Archive · Build 28.2.60")
           print(f"- Current quotes: **{status.get('assets_received', 0)}/5**")
           print(f"- Current state: **{status.get('status')}**")
           print(f"- History available: **{bool(history.get('available'))}**")
