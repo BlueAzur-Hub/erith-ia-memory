@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.61 — METALS RESULTS VISIBILITY LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.62 — METALS TERMINOLOGY & RESPONSIVE RESULTS LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.61";
-const ATLAS_BUILD = "28.2.61";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.61";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.62";
+const ATLAS_BUILD = "28.2.62";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.62";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7173,7 +7173,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.61
+   Market Core V2.0-Alpha · Build 28.2.62
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11305,7 +11305,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.61 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.62 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14557,7 +14557,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.61",
+  interface: "Build 28.2.62",
   controlCenter: "V2.2.0R1",
   bridge: "V1.8.0",
   bridgeNumeric: "1.8.0",
@@ -16808,7 +16808,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.61`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.62`
   );
 }
 
@@ -20984,7 +20984,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.61 — Parallel Markets Foundation
+   Build 28.2.62 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -21052,7 +21052,7 @@ function atlasParallelMarketMetalsRead() {
   const metals = atlasParallelMarketMetalsState();
   if (!saved) {
     metals.period = 7;
-    metals.resultVisibilityVersion = "28.2.61";
+    metals.resultVisibilityVersion = "28.2.62";
     return metals;
   }
 
@@ -21061,7 +21061,7 @@ function atlasParallelMarketMetalsRead() {
     : 7;
   const visibilityMigrated = String(saved.resultVisibilityVersion || "") === "28.2.61";
   if (!visibilityMigrated && metals.period === 1) metals.period = 7;
-  metals.resultVisibilityVersion = "28.2.61";
+  metals.resultVisibilityVersion = "28.2.62";
   metals.view = saved.view === "base100" ? "base100" : "price";
   metals.scale = saved.scale === "logarithmic"
     ? "logarithmic"
@@ -23696,14 +23696,14 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.61 — Metals Multi-Horizon History Connection Lock
+   Build 28.2.62 — Metals Multi-Horizon History Connection Lock
    - 7 j / 30 j / 90 j / 1 an use real daily Futures snapshots.
    - 24 h remains explicitly unavailable without intraday history.
    - Gold API current quotes stay separate from Yahoo Futures history.
    ========================================================= */
 
 /* =========================================================
-   Build 28.2.61 — Comparison Memory Slots A / B / C
+   Build 28.2.62 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -27342,7 +27342,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.61 — Rapport Métaux public automatique
+   Build 28.2.62 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -27527,9 +27527,13 @@ function atlasMetalsReportAssetRows(snapshot, historySnapshots) {
         fx_source_date: quote.fx_source_date || null,
         currency: String(quote.currency || "").toUpperCase(),
         unit: String(quote.unit || ""),
-        change_percent: Number.isFinite(Number(quote.change_percent))
-          ? Number(quote.change_percent)
-          : null,
+        change_percent:
+          quote.change_percent !== null
+          && quote.change_percent !== undefined
+          && quote.change_percent !== ""
+          && Number.isFinite(Number(quote.change_percent))
+            ? Number(quote.change_percent)
+            : null,
         data_state: String(quote.data_state || "unknown"),
         source_id: quote.source_id || quote.provider_id || null,
         source_name: quote.source_name || quote.provider_name || null,
@@ -27563,7 +27567,7 @@ function atlasMetalsReportWarnings(assets, snapshot, historySnapshots) {
     warnings.push(`Cotations absentes : ${missing.map(asset => asset.symbol).join(" / ")}.`);
   }
   if (historySnapshots.length < 2) {
-    warnings.push("Historique insuffisant : un seul snapshot ne permet pas d’établir une trajectoire.");
+    warnings.push("Historique insuffisant : une seule séance Futures ne permet pas d’établir une trajectoire.");
   }
   const currencies = new Set(assets.map(asset => asset.quote?.currency).filter(Boolean));
   if (currencies.size > 1) warnings.push("Unités monétaires multiples : comparaison directe des niveaux de prix interdite.");
@@ -27579,9 +27583,14 @@ function atlasMetalsReportBuildMarkdown(pkg) {
   const historyCount = pkg.history.length;
   const quoteLines = assets.map(asset => {
     const providerChange = asset.quote?.change_percent;
-    const providerPart = Number.isFinite(Number(providerChange))
+    const providerChangeAvailable =
+      providerChange !== null
+      && providerChange !== undefined
+      && providerChange !== ""
+      && Number.isFinite(Number(providerChange));
+    const providerPart = providerChangeAvailable
       ? ` · variation fournisseur ${atlasMetalsReportPercent(providerChange)}`
-      : "";
+      : " · variation fournisseur non fournie";
     const eurPart = Number.isFinite(Number(asset.quote?.price_eur))
       ? ` · ${atlasMetalsQuoteFoundationEurText(asset.quote)} indicatif BCE`
       : "";
@@ -27620,7 +27629,7 @@ function atlasMetalsReportBuildMarkdown(pkg) {
     "**3. Lecture des cotations**",
     `- ${complete ? "Les cinq cotations attendues sont présentes." : "Le panier contient des valeurs manquantes."}`,
     "- Les niveaux de prix sont conservés dans leur devise et leur unité source ; la conversion EUR BCE reste informative.",
-    "- Une variation fournisseur reste séparée de la variation calculée sur l’historique Futures public.",
+    "- La variation fournisseur, lorsqu’elle est fournie, reste séparée de la variation calculée sur l’historique Futures public.",
     "",
     "**4. Historique réel et comparaison**",
     `- ${historyCount} séance${historyCount > 1 ? "s" : ""} Futures quotidienne${historyCount > 1 ? "s" : ""} conservée${historyCount > 1 ? "s" : ""}.`,
@@ -28007,11 +28016,11 @@ function atlasMetalsReportRenderComparison(pkg) {
           <b>${atlasMetalsReportEscapeHtml(atlasMetalsReportDate(item.time))}</b>
           <small>${atlasMetalsReportEscapeHtml(atlasMetalsReportSnapshotCoverage(item.snapshot))} réel</small>
         </span>`).join("")
-    : "<span>Aucun snapshot conservé.</span>";
+    : "<span>Aucune séance Futures conservée.</span>";
 
   if (note) {
     note.textContent = comparable.length === 5
-      ? "Écarts calculés entre les deux derniers relevés réels de chaque métal · aucune prévision · aucune requête fournisseur."
+      ? "Écarts calculés entre les deux dernières séances Futures réelles de chaque métal · aucune prévision · aucune requête fournisseur."
       : "Comparaison suspendue pour toute série incomplète ou incohérente · aucune valeur remplacée ou inventée.";
   }
   return true;
@@ -28025,7 +28034,7 @@ function atlasMetalsReportRender() {
     setText(document.getElementById("atlasMetalsReportSnapshot"), "—");
     setText(document.getElementById("atlasMetalsReportOrigin"), "—");
     setText(document.getElementById("atlasMetalsReportQuotes"), "0/5");
-    setText(document.getElementById("atlasMetalsReportHistory"), "0 snapshot");
+    setText(document.getElementById("atlasMetalsReportHistory"), "0 séance Futures");
     setText(document.getElementById("atlasMetalsReportPersistence"), "Non enregistrée");
     atlasMetalsReportRenderComparison(null);
     ["btnAtlasMetalsReportCopy", "btnAtlasMetalsReportExportMd"]
@@ -28072,7 +28081,7 @@ async function atlasMetalsReportActivate(pkg, source, persist = true) {
   const label = source === "public" ? "Publique" : source === "local" ? "Locale" : source === "indexeddb" ? "Restaurée" : "Importée";
   atlasMetalsReportSetStatus(
     "ready",
-    `${label} · rapport Métaux ${clean.status.quotes}/5 · ${clean.status.history_snapshots} snapshot${clean.status.history_snapshots > 1 ? "s" : ""} · IndexedDB vérifiée.`,
+    `${label} · rapport Métaux ${clean.status.quotes}/5 · ${clean.status.history_snapshots} séance${clean.status.history_snapshots > 1 ? "s" : ""} Futures · IndexedDB vérifiée.`,
     label
   );
   return clean;
@@ -28272,7 +28281,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.61 — Current Quotes / History Decoupled Lock
+   Build 28.2.62 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
@@ -28335,7 +28344,7 @@ window.addEventListener("resize", () => {
 });
 
 /* =========================================================
-   Build 28.2.61 — METALS RESULTS VISIBILITY LOCK
+   Build 28.2.62 — METALS RESULTS VISIBILITY LOCK
    - Useful default: 7-day real Futures chart instead of an empty 24-hour panel.
    - One-time migration of the previously saved 24-hour Metals state.
    - Prominent active-metal result headline with percentage, sessions and dates.
