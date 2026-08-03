@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.57R3",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.57r3",
-  "published_at": "2026-08-01T08:04:18Z",
+  "build": "28.2.58",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.58",
+  "published_at": "2026-08-03T21:00:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -20,7 +20,8 @@
     "metals_collector_status": "../data/metals/status.json",
     "metals_history_index": "../data/metals/history/index.json",
     "metals_import_template": "../data/metals/import_template.json",
-    "metals_ryzen_report": "../data/metals/ryzen_report.json"
+    "metals_public_history": "../data/metals/history/public_1y.json",
+    "metals_fx_usd_eur": "../data/metals/fx/usd_eur.json"
   },
   "coherence_contract": {
     "index": {
@@ -64,7 +65,7 @@
     "assets": 5,
     "reference_year": 2025,
     "primary_source": "USGS Mineral Commodity Summaries 2026 v1.3",
-    "quotes_connected": true,
+    "quotes_connected": false,
     "historical_prices_imported": false
   },
   "metals_market_frame_cleanup": {
@@ -82,7 +83,7 @@
     "quotes_connected": false
   },
   "metals_data_foundation": {
-    "base": "28.2.53",
+    "base": "28.2.57R3",
     "schema": "agent_crypto_metals_snapshot_v1",
     "contract": "metals_quote_adapter_contract.json",
     "snapshot_path": "../data/metals/latest.json",
@@ -91,12 +92,13 @@
     "archive_reader_ready": true,
     "archive_assets": 0,
     "provider_configured": true,
-    "bridge_required": true,
+    "bridge_required": false,
     "crypto_data_reuse_forbidden": true,
-    "quotes_connected": true,
-    "chart_series_connected": true,
+    "quotes_connected": false,
+    "chart_series_connected": false,
     "layout_unchanged": true,
-    "crypto_workspace_unchanged": true
+    "crypto_workspace_unchanged": true,
+    "public_archive_primary": true
   },
   "metals_snapshot_import_gate": {
     "base": "28.2.54",
@@ -105,14 +107,15 @@
     "tool": "../tools/metals_snapshot_ingest.py",
     "template": "../data/metals/import_template.json",
     "provider_configured": true,
-    "provider_fetch_performed": true,
+    "provider_fetch_performed": false,
     "public_key_exposure": false,
     "full_basket_required_by_default": true,
     "history_writer_ready": true,
     "market_reader_ready": true,
     "chart_requires_two_or_more_real_snapshots": true,
     "layout_unchanged": true,
-    "crypto_workspace_unchanged": true
+    "crypto_workspace_unchanged": true,
+    "normal_flow": false
   },
   "metals_live_bridge": {
     "base": "28.2.55",
@@ -122,26 +125,17 @@
     "status_route": "/market/metals/status",
     "history_route": "/market/metals/history",
     "manual_refresh_only": true,
-    "provider_requests_per_manual_refresh": 1,
+    "provider_requests_per_manual_refresh": 0,
     "github_pages_remains_primary_interface": true,
     "local_interface_copy_is_fallback_only": true,
     "layout_unchanged": true,
-    "crypto_workspace_unchanged": true
-  },
-  "metals_ryzen_report_memory": {
-    "base": "28.2.57R2",
-    "schema": "agent_crypto_metals_ryzen_report_v1",
-    "interface_subsection_path": "../data/metals/ryzen_report.json",
-    "automatic_read_on_ryzen_and_book": true,
-    "book_import_required": false,
-    "indexeddb_local_backup": true,
-    "provider_requests_for_report_read": 0,
-    "bridge_version_required_for_new_collection": "1.8.0",
-    "crypto_workspace_unchanged": true
+    "crypto_workspace_unchanged": true,
+    "state": "legacy_optional_fallback",
+    "public_archive_primary": true
   },
   "metals_comparative_history": {
-    "base": "28.2.57R2",
-    "mode": "latest_two_real_snapshots",
+    "base": "28.2.57R3",
+    "mode": "public_futures_daily_one_year",
     "assets": [
       "XAU",
       "XAG",
@@ -162,6 +156,35 @@
     "provider_requests_for_comparison": 0,
     "predictions_generated": false,
     "book_transfer_controls_visible": false,
-    "crypto_workspace_unchanged": true
+    "crypto_workspace_unchanged": true,
+    "spot_current_series_separated": true
+  },
+  "public_metals_archive": {
+    "base": "28.2.57R3",
+    "collector": "../tools/collect_public_metals.py",
+    "workflow": ".github/workflows/atlas-public-metals-archive.yml",
+    "current_source": "Gold API (indicative)",
+    "history_source": "Yahoo Finance futures (daily 1y)",
+    "fx_source": "BCE reference rate",
+    "assets": [
+      "XAU",
+      "XAG",
+      "XPT",
+      "XPD",
+      "HG"
+    ],
+    "history_range": "1y daily",
+    "api_key_required": false,
+    "manual_ryzen_publication_required": false,
+    "bridge_required_for_book": false,
+    "crypto_workspace_unchanged": true,
+    "legacy_metals_dev_active": false,
+    "bridge_role": "optional local cache after public archive validation",
+    "state": "awaiting_first_real_github_run",
+    "schedule": "every_4_hours",
+    "failure_policy": "preserve_last_valid_and_mark_degraded",
+    "report_generation": "browser_from_public_archive",
+    "report_persistence": "indexeddb_v2",
+    "same_public_files_ryzen_and_transformer_book": true
   }
 }

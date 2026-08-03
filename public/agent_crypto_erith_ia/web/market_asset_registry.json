@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_market_asset_registry_v1",
-  "version": "1.0.0",
-  "published_at": "2026-07-31T20:19:32Z",
+  "version": "1.1.0",
+  "published_at": "2026-08-03T20:55:00Z",
   "domain": "metals",
   "purpose": "Canonical identity, family, instrument and unit metadata. No quote or fabricated numeric value is stored here.",
   "defaults": {
@@ -211,9 +211,9 @@
       "family_label": "Industriel",
       "asset_class": "industrial_metal",
       "default_currency": "USD",
-      "default_unit": null,
-      "display_unit": "Source requise · livre ou tonne",
-      "unit_state": "source_dependent",
+      "default_unit": "pound",
+      "display_unit": "USD / livre",
+      "unit_state": "qualified_for_selected_source",
       "instrument_candidates": [
         {
           "symbol": "HG",
@@ -229,10 +229,10 @@
         }
       ],
       "quote_source_candidates": [
-        "twelve_data",
-        "api_ninjas",
-        "lme",
-        "cme"
+        "gold_api",
+        "yahoo_finance",
+        "cme",
+        "lme"
       ],
       "structural_source_candidates": [
         "usgs",
@@ -247,7 +247,14 @@
         "30d",
         "90d",
         "1y"
-      ]
+      ],
+      "selected_instrument": {
+        "symbol": "HG",
+        "provider_symbol": "HG=F",
+        "instrument_type": "future_continuous",
+        "unit": "pound",
+        "market": "COMEX"
+      }
     }
   ]
 }

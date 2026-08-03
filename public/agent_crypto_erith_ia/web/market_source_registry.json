@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_market_source_registry_v1",
-  "version": "1.0.0",
-  "published_at": "2026-07-31T20:19:32Z",
+  "version": "1.1.0",
+  "published_at": "2026-08-03T20:55:00Z",
   "purpose": "Source roles, access constraints, licences and candidate coverage. No API key and no market value is stored.",
   "status_states": [
     "production",
@@ -70,6 +70,113 @@
       "licence_state": "exchange_terms",
       "source_timestamp": true,
       "official_docs": "https://developers.binance.com/en/docs/introduction"
+    },
+    {
+      "id": "gold_api",
+      "name": "Gold API",
+      "short_name": "Gold API",
+      "authority_type": "public_market_api",
+      "domains": [
+        "metals"
+      ],
+      "roles": [
+        "current_indicative_quote"
+      ],
+      "asset_ids": [
+        "gold",
+        "silver",
+        "platinum",
+        "palladium",
+        "copper"
+      ],
+      "asset_notes": {
+        "gold": "XAU · cotation indicative courante · USD / once troy",
+        "silver": "XAG · cotation indicative courante · USD / once troy",
+        "platinum": "XPT · cotation indicative courante · USD / once troy",
+        "palladium": "XPD · cotation indicative courante · USD / once troy",
+        "copper": "HG · cotation indicative courante · USD / livre"
+      },
+      "coverage_summary": "Cotation indicative publique des cinq métaux, collectée automatiquement sans clé.",
+      "status": "production",
+      "status_label": "PRODUCTION PUBLIQUE",
+      "status_tone": "ready",
+      "priority": 1,
+      "catalogue_order": 70,
+      "api_key_required": false,
+      "bridge_required": false,
+      "licence_state": "public_terms",
+      "source_timestamp": true,
+      "official_docs": "https://gold-api.com/docs"
+    },
+    {
+      "id": "yahoo_finance",
+      "name": "Yahoo Finance Futures",
+      "short_name": "Yahoo Futures",
+      "authority_type": "public_market_archive",
+      "domains": [
+        "metals",
+        "commodities"
+      ],
+      "roles": [
+        "daily_history",
+        "future_continuous"
+      ],
+      "asset_ids": [
+        "gold",
+        "silver",
+        "platinum",
+        "palladium",
+        "copper"
+      ],
+      "asset_notes": {
+        "gold": "GC=F · COMEX · historique quotidien 1 an",
+        "silver": "SI=F · COMEX · historique quotidien 1 an",
+        "platinum": "PL=F · NYMEX · historique quotidien 1 an",
+        "palladium": "PA=F · NYMEX · historique quotidien 1 an",
+        "copper": "HG=F · COMEX · historique quotidien 1 an · USD / livre"
+      },
+      "coverage_summary": "Historique quotidien public des Futures métaux, séparé des cotations indicatives courantes.",
+      "status": "production",
+      "status_label": "ARCHIVE PUBLIQUE",
+      "status_tone": "historical",
+      "priority": 1,
+      "catalogue_order": 71,
+      "api_key_required": false,
+      "bridge_required": false,
+      "licence_state": "public_web_terms",
+      "source_timestamp": true,
+      "official_docs": "https://finance.yahoo.com/"
+    },
+    {
+      "id": "ecb",
+      "name": "Banque centrale européenne",
+      "short_name": "BCE",
+      "authority_type": "central_bank",
+      "domains": [
+        "macro",
+        "metals"
+      ],
+      "roles": [
+        "usd_eur_reference_rate"
+      ],
+      "asset_ids": [
+        "gold",
+        "silver",
+        "platinum",
+        "palladium",
+        "copper"
+      ],
+      "coverage_summary": "Taux de référence quotidien USD/EUR utilisé uniquement pour la conversion informative.",
+      "status": "production",
+      "status_label": "RÉFÉRENCE OFFICIELLE",
+      "status_tone": "macro",
+      "priority": 1,
+      "catalogue_order": 72,
+      "api_key_required": false,
+      "bridge_required": false,
+      "licence_state": "official_public_data",
+      "source_timestamp": true,
+      "official_docs": "https://data.ecb.europa.eu/"
     },
     {
       "id": "coin_metrics",

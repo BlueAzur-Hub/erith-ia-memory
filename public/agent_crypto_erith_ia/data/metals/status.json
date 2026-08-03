@@ -1,40 +1,59 @@
 {
   "schema": "agent_crypto_metals_collector_status_v1",
-  "version": "1.1.0",
-  "status": "ready",
-  "provider_id": "metals_dev",
-  "provider_name": "Metals.Dev",
+  "version": "2.0.0",
+  "status": "awaiting_first_public_run",
+  "provider_id": "public_metals_multi_source",
+  "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
-  "bridge_route": "/market/metals/snapshot",
-  "public_page_mode": "interface_report_reader",
-  "last_attempt_at": "2026-08-01T05:22:16Z",
-  "last_success_at": "2026-08-01T05:22:16Z",
+  "public_page_mode": "github_actions_archive_reader",
+  "last_attempt_at": null,
+  "last_success_at": null,
   "last_error": null,
   "assets_expected": 5,
-  "assets_received": 5,
+  "assets_received": 0,
   "quota": {
-    "plan": null,
+    "plan": "public_no_key",
     "limit": null,
     "remaining": null,
     "period": null,
     "reset_at": null
   },
-  "history": {
-    "directory": "history/",
-    "index": "history/index.json",
-    "files": 2,
-    "snapshots": 2,
-    "oldest_at": "2026-08-01T04:49:01Z",
-    "newest_at": "2026-08-01T05:22:16Z"
+  "sources": [
+    {
+      "id": "gold_api",
+      "role": "current_indicative_prices",
+      "authentication": "none",
+      "state": "awaiting_first_run"
+    },
+    {
+      "id": "yahoo_finance",
+      "role": "one_year_daily_futures",
+      "authentication": "none",
+      "state": "awaiting_first_run"
+    },
+    {
+      "id": "ecb",
+      "role": "usd_eur_reference_rate",
+      "authentication": "none",
+      "state": "awaiting_first_run"
+    }
+  ],
+  "history": null,
+  "fx": null,
+  "legacy_archive": {
+    "provider_id": "metals_dev",
+    "state": "archive_only",
+    "directory": "archive/metals_dev_2026-08-01"
   },
   "security": {
     "api_key_present_in_public_files": false,
     "browser_direct_keyed_request_forbidden": true,
     "crypto_cache_separation_required": true,
     "secret_fields_forbidden_in_import": true,
-    "provider_fetch_not_performed_by_public_page": true
+    "provider_fetch_not_performed_by_public_page": true,
+    "manual_ryzen_publication_required": false
   },
-  "updated_at": "2026-08-01T06:45:00Z",
-  "local_import_tool": "../../tools/metals_snapshot_ingest.py",
-  "import_template": "import_template.json"
+  "updated_at": null,
+  "collector": "tools/collect_public_metals.py",
+  "next_action": "Le workflow GitHub Actions lance automatiquement la première collecte après l’upload."
 }

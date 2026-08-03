@@ -1,0 +1,33 @@
+{
+  "schema": "agent_crypto_metals_daily_series_v1",
+  "version": "2.0.0",
+  "asset_id": "gold",
+  "symbol": "XAU",
+  "provider_symbol": "GC=F",
+  "name": "Or",
+  "instrument_type": "future_continuous",
+  "market": "COMEX",
+  "currency": "USD",
+  "unit": "troy_ounce",
+  "unit_label_fr": "USD / once troy",
+  "unit_basis": "exchange_contract_convention",
+  "interval": "1d",
+  "range": "1y",
+  "source_id": "yahoo_finance",
+  "source_name": "Yahoo Finance",
+  "exchange_name": "COMEX",
+  "timezone": "UTC",
+  "received_at": null,
+  "points_count": 0,
+  "oldest_at": null,
+  "newest_at": null,
+  "points": [],
+  "state": "awaiting_first_public_run",
+  "integrity": {
+    "fabricated_points_forbidden": true,
+    "source_timestamp_preserved": true,
+    "daily_date_deduplicated": true,
+    "minimum_one_year_span_required": true,
+    "crypto_history_reuse_forbidden": true
+  }
+}

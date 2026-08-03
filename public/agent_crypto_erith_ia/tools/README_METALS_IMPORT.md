@@ -1,46 +1,19 @@
-# ERITH.IA — Import local d’un snapshot Métaux
+# ERITH.IA — Outil de secours pour snapshot Métaux
 
-Cet outil publie un JSON déjà obtenu depuis une source réelle dans
-l’archive Métaux séparée.
+Cet outil historique reste présent uniquement pour la compatibilité et les diagnostics locaux.
+Il n’appartient pas au flux normal de la Build 28.2.58.
 
-Il ne contacte aucun fournisseur, ne demande aucune clé et refuse les
-champs ressemblant à une clé, un token, un secret ou un mot de passe.
+## Flux normal 28.2.58
 
-## Fichiers écrits
+GitHub Actions exécute automatiquement `collect_public_metals.py`, puis met à jour les fichiers publics lus par le Ryzen et le Transformer Book.
+Aucun rapport ni fichier ne doit être publié manuellement depuis le Ryzen.
 
-- `data/metals/latest.json`
-- `data/metals/status.json`
-- `data/metals/history/YYYY-MM-DD.jsonl`
-- `data/metals/history/index.json`
+## Usage exceptionnel
 
-## Préparation
-
-Copier `data/metals/import_template.json` vers un fichier local, par
-exemple `metals_snapshot_real.json`, puis remplir uniquement avec des
-valeurs réellement reçues.
-
-Ne jamais ajouter de clé API dans ce fichier.
-
-## Validation
+`metals_snapshot_ingest.py` peut valider et enregistrer localement un JSON déjà obtenu depuis une source réelle. Il ne contacte aucun fournisseur, ne demande aucune clé et refuse les champs ressemblant à un secret.
 
 ```text
 python tools/metals_snapshot_ingest.py --input metals_snapshot_real.json --root public/agent_crypto_erith_ia --dry-run
 ```
 
-## Publication
-
-```text
-python tools/metals_snapshot_ingest.py --input metals_snapshot_real.json --root public/agent_crypto_erith_ia
-```
-
-Le panier XAU, XAG, XPT, XPD et HG est exigé par défaut.
-L’option `--allow-partial` doit être explicitement ajoutée pour un panier
-incomplet.
-
-## Verrous
-
-- aucune absence n’est transformée en zéro ;
-- aucune donnée Crypto n’alimente les Métaux ;
-- un snapshot identique n’est pas ajouté deux fois ;
-- un snapshot unique alimente le Market mais ne crée pas de courbe ;
-- aucune collecte fournisseur n’est exécutée par la page publique.
+Cet usage de secours ne remplace pas le collecteur GitHub Actions et ne publie rien vers GitHub.
