@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.58 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.59 — SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.58";
-const ATLAS_BUILD = "28.2.58";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.58";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.59";
+const ATLAS_BUILD = "28.2.59";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.59";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7172,7 +7172,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.58
+   Market Core V2.0-Alpha · Build 28.2.59
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11304,7 +11304,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.58 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.59 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14556,7 +14556,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.58",
+  interface: "Build 28.2.59",
   controlCenter: "V2.2.0R1",
   bridge: "V1.8.0",
   bridgeNumeric: "1.8.0",
@@ -16807,7 +16807,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.58`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.59`
   );
 }
 
@@ -20983,7 +20983,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.58 — Parallel Markets Foundation
+   Build 28.2.59 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -22139,7 +22139,7 @@ async function atlasMetalsQuoteFoundationLoadFromArchive() {
     ]);
   let historyResponse = Object.freeze({
     schema: "agent_crypto_metals_history_response_v1",
-    version: "2.0.0",
+    version: "2.1.0",
     count: 0,
     snapshots: Object.freeze([]),
     integrity: Object.freeze({ fabricated_points_forbidden: true })
@@ -22228,34 +22228,38 @@ function atlasMetalsQuoteFoundationSummary() {
   ).filter(record => record.price !== null).length;
   const collector = atlasMetalsQuoteFoundationState.collector;
   const collectorState = String(collector?.status || "");
+  const historyAvailable = collector?.history?.available === true
+    || atlasMetalsQuoteFoundationArray(atlasMetalsQuoteFoundationState.history).length > 1;
+  const historyPreserved = collector?.history?.preserved === true;
 
   if (quoteCount > 0) {
     const local = atlasMetalsQuoteFoundationState.origin === "local_bridge";
     const degraded = collectorState === "degraded";
+    const partial = collectorState === "partial" || !historyAvailable;
+    const historyText = historyAvailable
+      ? (historyPreserved ? "historique annuel conservé" : "historique annuel disponible")
+      : "historique annuel en attente";
     return {
       quoteCount,
-      short: degraded ? `Dernier valide ${quoteCount}/5` : local ? `Cache local ${quoteCount}/5` : `Public ${quoteCount}/5`,
+      historyAvailable,
+      short: degraded
+        ? `Dernier valide ${quoteCount}/5`
+        : partial
+          ? `Public ${quoteCount}/5 · historique en attente`
+          : local ? `Cache local ${quoteCount}/5` : `Public ${quoteCount}/5`,
       domain: degraded
         ? `${quoteCount}/5 dernières cotations valides conservées · collecte publique dégradée`
-        : local
-          ? `${quoteCount}/5 cotations publiques disponibles`
-          : `${quoteCount}/5 cotations Métaux publiques et horodatées`,
-      market: degraded
-        ? `${quoteCount}/5 dernières cotations valides · historique annuel conservé`
-        : local
-          ? `${quoteCount}/5 cotations publiques · historique annuel séparé`
-          : `${quoteCount}/5 cotations disponibles · historique annuel séparé`,
+        : `${quoteCount}/5 cotations Métaux publiques et horodatées · ${historyText}`,
+      market: `${quoteCount}/5 cotations disponibles · ${historyText}`,
       truth: degraded
         ? `${quoteCount}/5 dernières cotations valides · aucune valeur de remplacement inventée`
-        : local
-          ? `${quoteCount}/5 cotations publiques lues depuis le cache local`
-          : `${quoteCount}/5 cotations réelles lues depuis les fichiers publics Métaux`
+        : `${quoteCount}/5 cotations réelles lues depuis les fichiers publics Métaux · ${historyText}`
     };
   }
 
   if (atlasMetalsQuoteFoundationState.status === "unavailable") {
     return {
-      quoteCount: 0,
+      quoteCount: 0, historyAvailable: false,
       short: "archive indisponible",
       domain: "archive Métaux indisponible · cotations non connectées",
       market: "structure publique disponible · archive Métaux indisponible",
@@ -22263,32 +22267,12 @@ function atlasMetalsQuoteFoundationSummary() {
     };
   }
 
-  if (collectorState === "adapter_required") {
-    return {
-      quoteCount: 0,
-      short: "fondation prête",
-      domain: "archive Métaux prête · adaptateur Bridge non configuré",
-      market: "structure publique disponible · archive Métaux vide · Bridge préparé",
-      truth: "archive Métaux séparée prête · adaptateur requis · aucun prix inventé"
-    };
-  }
-
-  if (collectorState === "import_gate_ready") {
-    return {
-      quoteCount: 0,
-      short: "import local prêt",
-      domain: "archive Métaux prête · import local sécurisé · fournisseur non configuré",
-      market: "structure publique disponible · archive Métaux vide · import local prêt",
-      truth: "archive Métaux séparée prête · premier snapshot réel attendu"
-    };
-  }
-
   return {
-    quoteCount: 0,
-    short: "archive vide",
-    domain: "archive Métaux présente · aucune cotation horodatée",
-    market: "structure publique disponible · archive Métaux vide",
-    truth: "archive Métaux vide · aucune valeur de remplacement"
+    quoteCount: 0, historyAvailable: false,
+    short: "collecte en attente",
+    domain: "collecte publique Métaux en attente · aucune cotation horodatée",
+    market: "structure publique disponible · cotations en attente",
+    truth: "aucune valeur de remplacement inventée"
   };
 }
 
@@ -22308,26 +22292,34 @@ function atlasMetalsQuoteFoundationRenderConnectionTruth() {
       })
     : "Aucune cotation horodatée";
 
-  const degraded = String(atlasMetalsQuoteFoundationState.collector?.status || "") === "degraded";
+  const collectorState = String(atlasMetalsQuoteFoundationState.collector?.status || "");
+  const degraded = collectorState === "degraded";
+  const partial = collectorState === "partial" || (connected && !summary.historyAvailable);
   setText(
     document.getElementById("atlasMetalsConnectionState"),
     connected
-      ? (degraded ? "ARCHIVE CONSERVÉE · COLLECTE DÉGRADÉE" : local ? "SOURCES PUBLIQUES · CACHE LOCAL" : "MÉTAUX PUBLICS · ARCHIVE CONNECTÉE")
+      ? (degraded
+        ? "ARCHIVE COURANTE CONSERVÉE · COLLECTE DÉGRADÉE"
+        : partial
+          ? `COTATIONS PUBLIQUES ${summary.quoteCount}/5 · HISTORIQUE EN ATTENTE`
+          : local ? "SOURCES PUBLIQUES · CACHE LOCAL" : "MÉTAUX PUBLICS · ARCHIVE CONNECTÉE")
       : "PRIX NON CONNECTÉS · STRUCTURE DISPONIBLE"
   );
   setText(
     document.getElementById("atlasMetalsHeaderSources"),
     connected
-      ? "GOLD API · YAHOO FUTURES · BCE · USGS · IEA · RMIS · BANQUE MONDIALE"
+      ? (summary.historyAvailable
+        ? "GOLD API · YAHOO FUTURES · BCE · USGS · IEA · RMIS · BANQUE MONDIALE"
+        : "GOLD API · BCE · YAHOO FUTURES EN ATTENTE · USGS · IEA · RMIS · BANQUE MONDIALE")
       : "USGS · IEA · RMIS · BANQUE MONDIALE"
   );
   setText(document.getElementById("atlasMetalsHeaderTime"), timeText);
   setText(
     document.getElementById("atlasMetalsFoundationIntro"),
     connected
-      ? (degraded
-        ? "Dernier snapshot public valide conservé ; la tentative de collecte la plus récente a échoué."
-        : "Cotations publiques et historique annuel lus depuis GitHub Actions ; structure physique conservée séparément.")
+      ? (summary.historyAvailable
+        ? "Cotations publiques et historique annuel lus depuis l’archive GitHub Actions ; structure physique conservée séparément."
+        : "Cotations publiques connectées. La collecte historique Futures reste en attente et ne bloque plus les prix actuels.")
       : "Première collecte publique automatique en attente ; aucune valeur historique n’est affichée comme cotation actuelle."
   );
   setText(
@@ -22337,7 +22329,9 @@ function atlasMetalsQuoteFoundationRenderConnectionTruth() {
   setText(
     document.getElementById("atlasMetalsMarketIntro"),
     connected
-      ? "Tableau réel, filtres, structure physique et sources Métaux ; données communes servies par GitHub Pages."
+      ? (summary.historyAvailable
+        ? "Tableau réel, filtres, structure physique et sources Métaux ; données communes servies par GitHub Pages."
+        : "Cotations actuelles réelles disponibles ; graphique historique en attente, sans valeur inventée.")
       : "Tableau, filtres, structure physique et sources Métaux. Les prix restent vides tant qu’aucune cotation réelle n’est connectée."
   );
   setText(
@@ -22345,6 +22339,7 @@ function atlasMetalsQuoteFoundationRenderConnectionTruth() {
     connected ? `${summary.quoteCount}/5 RÉELLES` : "NON CONNECTÉS"
   );
 }
+
 
 const ATLAS_METALS_CHART_COLORS = Object.freeze({
   gold: "#ffd46a",
@@ -22444,9 +22439,13 @@ function atlasMetalsQuoteFoundationRenderChart() {
   if (!series.length) {
     canvas.hidden = true;
     if (message) message.hidden = false;
-    if (messageTitle) messageTitle.textContent = "AUCUNE COTATION CONNECTÉE";
-    if (messageText) messageText.textContent =
-      "Le cadre est prêt. Aucune courbe ni valeur n’est inventée.";
+    const quoteSummary = atlasMetalsQuoteFoundationSummary();
+    if (messageTitle) messageTitle.textContent = quoteSummary.quoteCount > 0
+      ? `COTATIONS ${quoteSummary.quoteCount}/5 CONNECTÉES`
+      : "AUCUNE COTATION CONNECTÉE";
+    if (messageText) messageText.textContent = quoteSummary.quoteCount > 0
+      ? "Les prix actuels sont disponibles. L’historique annuel reste en attente ; aucune courbe n’est inventée."
+      : "Le cadre est prêt. Aucune courbe ni valeur n’est inventée.";
     return false;
   }
 
@@ -23049,7 +23048,7 @@ function atlasParallelMarketRender() {
     setText(
       document.getElementById("selectedAssetTitle"),
       atlasMetalsQuoteFoundationSummary().quoteCount > 0
-        ? "Marché Métaux — cotations Bridge local"
+        ? "Marché Métaux — cotations publiques"
         : "Marché Métaux — observation sans cotation"
     );
   } else {
@@ -23482,7 +23481,7 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.58 — Comparison Memory Slots A / B / C
+   Build 28.2.59 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -27121,7 +27120,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.58 — Rapport Métaux public automatique
+   Build 28.2.59 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -28052,7 +28051,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.58 — Metals Market Frame Recovery
+   Build 28.2.59 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */

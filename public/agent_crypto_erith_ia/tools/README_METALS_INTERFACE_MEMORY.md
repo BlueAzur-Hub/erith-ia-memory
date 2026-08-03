@@ -1,6 +1,6 @@
 # Mémoire Métaux publique dans l’Interface
 
-Build 28.2.58 — Public Metals Archive.
+Build 28.2.59 — Public Metals Archive.
 
 - GitHub Actions produit automatiquement `data/metals/latest.json`, `status.json`, l’historique annuel et le taux USD/EUR.
 - La même Interface lit ces fichiers sur le Ryzen et sur le Transformer Book.

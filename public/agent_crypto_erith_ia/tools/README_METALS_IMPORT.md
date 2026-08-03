@@ -1,9 +1,9 @@
 # ERITH.IA — Outil de secours pour snapshot Métaux
 
 Cet outil historique reste présent uniquement pour la compatibilité et les diagnostics locaux.
-Il n’appartient pas au flux normal de la Build 28.2.58.
+Il n’appartient pas au flux normal de la Build 28.2.59.
 
-## Flux normal 28.2.58
+## Flux normal 28.2.59
 
 GitHub Actions exécute automatiquement `collect_public_metals.py`, puis met à jour les fichiers publics lus par le Ryzen et le Transformer Book.
 Aucun rapport ni fichier ne doit être publié manuellement depuis le Ryzen.

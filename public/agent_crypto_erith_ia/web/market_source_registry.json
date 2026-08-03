@@ -96,7 +96,7 @@
         "palladium": "XPD · cotation indicative courante · USD / once troy",
         "copper": "HG · cotation indicative courante · USD / livre"
       },
-      "coverage_summary": "Cotation indicative publique des cinq métaux, collectée automatiquement sans clé.",
+      "coverage_summary": "Cotations indicatives actuelles XAU, XAG, XPT, XPD et HG ; publication indépendante de l’historique.",
       "status": "production",
       "status_label": "PRODUCTION PUBLIQUE",
       "status_tone": "ready",
@@ -106,7 +106,8 @@
       "bridge_required": false,
       "licence_state": "public_terms",
       "source_timestamp": true,
-      "official_docs": "https://gold-api.com/docs"
+      "official_docs": "https://gold-api.com/docs",
+      "blocking_for_current_quotes": true
     },
     {
       "id": "yahoo_finance",
@@ -135,7 +136,7 @@
         "palladium": "PA=F · NYMEX · historique quotidien 1 an",
         "copper": "HG=F · COMEX · historique quotidien 1 an · USD / livre"
       },
-      "coverage_summary": "Historique quotidien public des Futures métaux, séparé des cotations indicatives courantes.",
+      "coverage_summary": "Historique Futures quotidien 1 an, séparé des cotations actuelles ; échec non bloquant.",
       "status": "production",
       "status_label": "ARCHIVE PUBLIQUE",
       "status_tone": "historical",
@@ -145,7 +146,9 @@
       "bridge_required": false,
       "licence_state": "public_web_terms",
       "source_timestamp": true,
-      "official_docs": "https://finance.yahoo.com/"
+      "official_docs": "https://finance.yahoo.com/",
+      "transport": "browser_session_query2_query1",
+      "blocking_for_current_quotes": false
     },
     {
       "id": "ecb",

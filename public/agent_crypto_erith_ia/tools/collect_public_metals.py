@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.58.
+"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.59.
 
 Public sources, no provider key:
 - Gold API: current indicative XAU/XAG/XPT/XPD/HG prices.
@@ -21,6 +21,7 @@ import math
 import os
 import shutil
 import sys
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,13 +32,18 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+try:
+    from curl_cffi import requests as curl_requests
+except Exception:  # optional outside the GitHub Actions runtime
+    curl_requests = None
+
 UTC = timezone.utc
-SCHEMA_VERSION = "2.0.0"
-BUILD_TARGET = "28.2.58"
+SCHEMA_VERSION = "2.1.0"
+BUILD_TARGET = "28.2.59"
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
-    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.58"
+    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.59"
 )
 
 
@@ -63,7 +69,11 @@ ASSET_ORDER = {metal.asset_id: index for index, metal in enumerate(METALS)}
 EXPECTED_ASSETS = [metal.asset_id for metal in METALS]
 
 GOLD_API_BASE = "https://api.gold-api.com/price"
-YAHOO_CHART_BASE = "https://query1.finance.yahoo.com/v8/finance/chart"
+YAHOO_CHART_BASES = (
+    "https://query2.finance.yahoo.com/v8/finance/chart",
+    "https://query1.finance.yahoo.com/v8/finance/chart",
+)
+YAHOO_CRUMB_URL = "https://query2.finance.yahoo.com/v1/test/getcrumb"
 ECB_USD_EUR_URL = (
     "https://data-api.ecb.europa.eu/service/data/EXR/"
     "D.USD.EUR.SP00.A?lastNObservations=10&format=csvdata"
@@ -153,13 +163,14 @@ def read_json(path: Path) -> dict[str, Any] | None:
 
 
 def build_session() -> requests.Session:
+    # 429 is deliberately not retried: repeated automated retries worsen throttling.
     retry = Retry(
-        total=4,
-        connect=4,
-        read=4,
-        status=4,
+        total=2,
+        connect=2,
+        read=2,
+        status=2,
         backoff_factor=0.8,
-        status_forcelist=(429, 500, 502, 503, 504),
+        status_forcelist=(500, 502, 503, 504),
         allowed_methods=frozenset({"GET"}),
         respect_retry_after_header=True,
     )
@@ -168,6 +179,64 @@ def build_session() -> requests.Session:
     session.mount("https://", HTTPAdapter(max_retries=retry))
     return session
 
+
+def build_yahoo_session():
+    if curl_requests is None:
+        return build_session()
+    session = curl_requests.Session(impersonate="chrome")
+    session.headers.update({
+        "User-Agent": USER_AGENT,
+        "Accept": "application/json,text/plain,*/*",
+        "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://finance.yahoo.com/",
+    })
+    return session
+
+
+def yahoo_get_payload(session, metal: Metal, timeout: float) -> dict[str, Any]:
+    # Yahoo frequently rate-limits datacenter requests. Use one browser-like session,
+    # a crumb when obtainable, query2 first, query1 once as a host fallback, and no 429 loop.
+    crumb = None
+    try:
+        session.get("https://fc.yahoo.com", timeout=timeout, allow_redirects=True)
+    except Exception:
+        pass
+    try:
+        response = session.get(YAHOO_CRUMB_URL, timeout=timeout)
+        if response.status_code == 200 and response.text.strip():
+            crumb = response.text.strip()
+    except Exception:
+        crumb = None
+
+    now = int(utc_now().timestamp())
+    period1 = now - 380 * 86400
+    params = {
+        "period1": period1,
+        "period2": now,
+        "interval": "1d",
+        "events": "history",
+        "includeAdjustedClose": "true",
+    }
+    if crumb:
+        params["crumb"] = crumb
+
+    encoded = quote(metal.future_symbol, safe="")
+    failures = []
+    for base in YAHOO_CHART_BASES:
+        url = f"{base}/{encoded}"
+        try:
+            response = session.get(url, params=params, timeout=timeout)
+            if response.status_code == 429:
+                failures.append(f"{base.split('//',1)[1].split('/',1)[0]} HTTP 429")
+                continue
+            response.raise_for_status()
+            payload = response.json()
+            if not isinstance(payload, dict):
+                raise RuntimeError("objet JSON attendu")
+            return payload
+        except Exception as exc:
+            failures.append(f"{base.split('//',1)[1].split('/',1)[0]} {exc}")
+    raise RuntimeError(" ; ".join(failures))
 
 def get_json(session: requests.Session, url: str, timeout: float) -> dict[str, Any]:
     response = session.get(url, timeout=timeout)
@@ -275,12 +344,7 @@ def yahoo_future_series(
     fixture_name = f"yahoo_{metal.future_symbol.replace('=', '_')}.json"
     payload = load_fixture(fixtures, fixture_name)
     if payload is None:
-        encoded = quote(metal.future_symbol, safe="")
-        payload = get_json(
-            session,
-            f"{YAHOO_CHART_BASE}/{encoded}?range=1y&interval=1d&events=history",
-            timeout,
-        )
+        payload = yahoo_get_payload(session, metal, timeout)
     if not isinstance(payload, dict):
         raise RuntimeError(f"Yahoo {metal.future_symbol}: objet JSON attendu")
 
@@ -555,11 +619,12 @@ def current_snapshot(quotes: list[dict[str, Any]], received_at: str) -> dict[str
         "provider_name": "Gold API",
         "assets_expected": EXPECTED_ASSETS,
         "assets_count": len(quotes),
-        "quote_currencies": ["USD"],
+        "quote_currencies": ["USD"] + (["EUR"] if quotes and all(item.get("price_eur") is not None for item in quotes) else []),
         "quotes": sorted(quotes, key=lambda row: ASSET_ORDER[row["asset_id"]]),
         "state": "ready" if len(quotes) == len(METALS) else "partial",
         "integrity": {
-            "quotes_connected": len(quotes) == len(METALS),
+            "quotes_connected": len(quotes) > 0,
+            "complete_five_asset_basket": len(quotes) == len(METALS),
             "no_invented_values": True,
             "crypto_data_reuse_forbidden": True,
             "source_timestamp_required": False,
@@ -576,81 +641,85 @@ def current_snapshot(quotes: list[dict[str, Any]], received_at: str) -> dict[str
     return payload
 
 
-def build_status(
-    received_at: str,
-    history: dict[str, Any],
-    series_by_asset: dict[str, dict[str, Any]],
-    fx: dict[str, Any],
-) -> dict[str, Any]:
-    oldest = min(series["oldest_at"] for series in series_by_asset.values())
-    newest = max(series["newest_at"] for series in series_by_asset.values())
+def history_state_from_disk(data_dir: Path) -> dict[str, Any]:
+    history = read_json(data_dir / "history" / "public_1y.json") or {}
+    index = read_json(data_dir / "history" / "index.json") or {}
+    valid = (
+        history.get("schema") == "agent_crypto_metals_history_response_v1"
+        and int(history.get("count") or 0) >= 200
+        and index.get("schema") == "agent_crypto_metals_history_index_v1"
+    )
     return {
-        "schema": "agent_crypto_metals_collector_status_v1",
-        "version": SCHEMA_VERSION,
-        "status": "ready",
-        "provider_id": "public_metals_multi_source",
-        "provider_name": "Gold API + Yahoo Finance Futures + BCE",
-        "bridge_required": False,
-        "public_page_mode": "github_actions_archive_reader",
-        "last_attempt_at": received_at,
-        "last_success_at": received_at,
-        "last_error": None,
-        "assets_expected": len(METALS),
-        "assets_received": len(METALS),
-        "quota": {"plan": "public_no_key", "limit": None, "remaining": None, "period": None, "reset_at": None},
-        "sources": [
-            {"id": "gold_api", "role": "current_indicative_prices", "authentication": "none", "state": "ready"},
-            {"id": "yahoo_finance", "role": "one_year_daily_futures", "authentication": "none", "state": "ready"},
-            {"id": "ecb", "role": "usd_eur_reference_rate", "authentication": "none", "state": "ready"},
-        ],
-        "history": {
-            "file": "history/public_1y.json",
-            "snapshots": history["count"],
-            "oldest_at": oldest,
-            "newest_at": newest,
-            "series_points": {asset_id: series["points_count"] for asset_id, series in series_by_asset.items()},
-        },
-        "fx": {"pair": fx["pair"], "source_date": fx["source_date"], "eur_per_usd": fx["eur_per_usd"]},
-        "security": {
-            "api_key_present_in_public_files": False,
-            "browser_direct_keyed_request_forbidden": True,
-            "crypto_cache_separation_required": True,
-            "secret_fields_forbidden_in_import": True,
-            "provider_fetch_not_performed_by_public_page": True,
-            "manual_ryzen_publication_required": False,
-        },
-        "updated_at": received_at,
-        "collector": "tools/collect_public_metals.py",
+        "available": bool(valid),
+        "preserved": bool(valid),
+        "file": "history/public_1y.json",
+        "snapshots": int(history.get("count") or 0) if valid else 0,
+        "oldest_at": index.get("oldest_at") if valid else None,
+        "newest_at": index.get("newest_at") if valid else None,
+        "series_points": {
+            str(entry.get("asset_id")): int(entry.get("points") or 0)
+            for entry in (index.get("entries") or []) if isinstance(entry, dict)
+        } if valid else {},
+        "source_id": "yahoo_finance",
     }
 
 
-def build_degraded_status(data_dir: Path, received_at: str, errors: list[str], source_states: dict[str, str]) -> dict[str, Any]:
+def build_status(
+    data_dir: Path,
+    received_at: str,
+    current_count: int,
+    current_preserved: bool,
+    history_info: dict[str, Any],
+    fx: dict[str, Any] | None,
+    source_states: dict[str, str],
+    errors: list[str],
+) -> dict[str, Any]:
     previous = read_json(data_dir / "status.json") or {}
-    previous_latest = read_json(data_dir / "latest.json") or {}
-    previous_ready = previous.get("status") in {"ready", "degraded"} and previous_latest.get("assets_count") == len(METALS)
+    effective_count = current_count
+    if current_preserved:
+        effective_count = int((read_json(data_dir / "latest.json") or {}).get("assets_count") or 0)
+
+    history_available = bool(history_info.get("available"))
+    if current_count == len(METALS) and history_available and not errors:
+        state = "ready"
+    elif current_count > 0:
+        state = "partial"
+    elif current_preserved and effective_count > 0:
+        state = "degraded"
+    else:
+        state = "unavailable"
+
+    last_success = received_at if current_count > 0 else previous.get("last_success_at")
     return {
         "schema": "agent_crypto_metals_collector_status_v1",
         "version": SCHEMA_VERSION,
-        "status": "degraded" if previous_ready else "unavailable",
+        "status": state,
         "provider_id": "public_metals_multi_source",
         "provider_name": "Gold API + Yahoo Finance Futures + BCE",
         "bridge_required": False,
         "public_page_mode": "github_actions_archive_reader",
         "last_attempt_at": received_at,
-        "last_success_at": previous.get("last_success_at") if previous_ready else None,
-        "last_error": " | ".join(errors)[:4000],
+        "last_success_at": last_success,
+        "last_error": " | ".join(errors)[:4000] if errors else None,
         "assets_expected": len(METALS),
-        "assets_received": int(previous_latest.get("assets_count") or 0) if previous_ready else 0,
+        "assets_received": effective_count,
+        "current": {
+            "available": effective_count > 0,
+            "preserved": bool(current_preserved),
+            "assets": effective_count,
+            "source_id": "gold_api",
+        },
         "quota": {"plan": "public_no_key", "limit": None, "remaining": None, "period": None, "reset_at": None},
         "sources": [
-            {"id": source_id, "authentication": "none", "state": source_states.get(source_id, "unavailable")}
-            for source_id in ("gold_api", "yahoo_finance", "ecb")
+            {"id": "gold_api", "role": "current_indicative_prices", "authentication": "none", "state": source_states.get("gold_api", "unavailable")},
+            {"id": "yahoo_finance", "role": "one_year_daily_futures", "transport": "browser_session_query2_query1", "authentication": "none", "state": source_states.get("yahoo_finance", "unavailable")},
+            {"id": "ecb", "role": "usd_eur_reference_rate", "authentication": "none", "state": source_states.get("ecb", "unavailable")},
         ],
-        "history": previous.get("history") if previous_ready else None,
-        "fx": previous.get("fx") if previous_ready else None,
+        "history": history_info,
+        "fx": ({"pair": fx.get("pair"), "source_date": fx.get("source_date"), "eur_per_usd": fx.get("eur_per_usd")} if fx else previous.get("fx")),
         "fallback": {
-            "last_valid_snapshot_preserved": bool(previous_ready),
-            "last_valid_history_preserved": bool(previous_ready),
+            "last_valid_snapshot_preserved": bool(current_preserved),
+            "last_valid_history_preserved": bool(history_info.get("preserved")),
             "invented_replacement_values": False,
         },
         "security": {
@@ -661,10 +730,14 @@ def build_degraded_status(data_dir: Path, received_at: str, errors: list[str], s
             "provider_fetch_not_performed_by_public_page": True,
             "manual_ryzen_publication_required": False,
         },
+        "integrity": {
+            "current_and_history_decoupled": True,
+            "current_quotes_not_erased_by_history_failure": True,
+            "history_never_fabricated": True,
+        },
         "updated_at": received_at,
         "collector": "tools/collect_public_metals.py",
     }
-
 
 def build_index(received_at: str, history: dict[str, Any], series_by_asset: dict[str, dict[str, Any]]) -> dict[str, Any]:
     entries = [
@@ -701,13 +774,13 @@ def build_index(received_at: str, history: dict[str, Any], series_by_asset: dict
     }
 
 
-def build_manifest(received_at: str, state: str, status: dict[str, Any], errors: list[str] | None = None) -> dict[str, Any]:
+def build_manifest(received_at: str, status: dict[str, Any], errors: list[str] | None = None) -> dict[str, Any]:
     payload = {
         "schema": "agent_crypto_public_metals_collection_manifest_v1",
         "version": SCHEMA_VERSION,
         "generated_at": received_at,
         "build_target": BUILD_TARGET,
-        "state": state,
+        "state": status.get("status"),
         "assets": [metal.symbol for metal in METALS],
         "current_provider": "gold_api",
         "history_provider": "yahoo_finance",
@@ -726,8 +799,10 @@ def build_manifest(received_at: str, state: str, status: dict[str, Any], errors:
             "no_api_key": True,
             "no_manual_ryzen_publication": True,
             "crypto_data_untouched": True,
-            "five_of_five_required": True,
-            "minimum_one_year_history_required": True,
+            "current_and_history_decoupled": True,
+            "current_quotes_survive_history_failure": True,
+            "five_of_five_current_required_for_green_run": True,
+            "minimum_one_year_history_required_when_published": True,
             "spot_and_futures_series_separated": True,
             "last_valid_data_preserved_on_failure": True,
         },
@@ -736,26 +811,26 @@ def build_manifest(received_at: str, state: str, status: dict[str, Any], errors:
     return payload
 
 
-def validate_output(
-    snapshot: dict[str, Any],
-    history: dict[str, Any],
-    status: dict[str, Any],
-    series_by_asset: dict[str, dict[str, Any]],
-) -> None:
-    if snapshot.get("assets_count") != len(METALS):
-        raise RuntimeError(f"Snapshot courant incomplet: {snapshot.get('assets_count')}/{len(METALS)}")
-    if {row.get("asset_id") for row in snapshot.get("quotes", [])} != set(EXPECTED_ASSETS):
+def validate_current(snapshot: dict[str, Any]) -> None:
+    count = int(snapshot.get("assets_count") or 0)
+    quotes = snapshot.get("quotes") or []
+    if count != len(quotes) or count < 1:
+        raise RuntimeError("Snapshot courant vide ou incohérent")
+    if len({row.get("asset_id") for row in quotes}) != count:
         raise RuntimeError("Panier courant incohérent")
+    if any(positive_number(row.get("price")) is None for row in quotes):
+        raise RuntimeError("Prix courant invalide")
+    if snapshot.get("integrity", {}).get("no_invented_values") is not True:
+        raise RuntimeError("Verrou anti-invention absent")
+
+
+def validate_history(history: dict[str, Any], series_by_asset: dict[str, dict[str, Any]]) -> None:
     if history.get("count", 0) < 200:
         raise RuntimeError(f"Historique public insuffisant: {history.get('count', 0)} snapshots")
-    if any(snapshot_row.get("assets_count") != len(METALS) for snapshot_row in history.get("snapshots", [])):
-        raise RuntimeError("Historique contient un snapshot incomplet")
     if set(series_by_asset) != set(EXPECTED_ASSETS):
         raise RuntimeError("Séries Métaux incomplètes")
     if any(series.get("points_count", 0) < 200 for series in series_by_asset.values()):
         raise RuntimeError("Une série Métaux contient moins de 200 points")
-    if status.get("security", {}).get("api_key_present_in_public_files") is not False:
-        raise RuntimeError("Verrou sécurité public absent")
 
 
 def main() -> int:
@@ -763,6 +838,7 @@ def main() -> int:
     parser.add_argument("--root", default="public/agent_crypto_erith_ia", help="Racine de l'interface dans le dépôt")
     parser.add_argument("--timeout", type=float, default=25.0)
     parser.add_argument("--fixtures", type=Path, default=None, help="Fixtures hors ligne pour tests")
+    parser.add_argument("--pacing", type=float, default=1.4, help="Pause entre symboles Yahoo hors fixtures")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -772,62 +848,103 @@ def main() -> int:
 
     received_at = iso()
     session = build_session()
+    yahoo_session = build_yahoo_session()
     errors: list[str] = []
     source_states = {"gold_api": "ready", "yahoo_finance": "ready", "ecb": "ready"}
 
+    previous_latest = read_json(data_dir / "latest.json") or {}
+    previous_current_valid = (
+        previous_latest.get("schema") == "agent_crypto_metals_snapshot_v1"
+        and int(previous_latest.get("assets_count") or 0) > 0
+        and previous_latest.get("integrity", {}).get("no_invented_values") is True
+    )
+
+    # Current quotes and FX are independent from the historical series.
     quotes: list[dict[str, Any]] = []
     for metal in METALS:
         try:
             quotes.append(gold_api_quote(session, metal, args.timeout, received_at, args.fixtures))
         except Exception as exc:
-            source_states["gold_api"] = "unavailable"
+            source_states["gold_api"] = "partial" if quotes else "unavailable"
             errors.append(f"Gold API {metal.symbol}: {exc}")
 
-    series_by_asset: dict[str, dict[str, Any]] = {}
-    for metal in METALS:
-        try:
-            series_by_asset[metal.asset_id] = yahoo_future_series(session, metal, args.timeout, received_at, args.fixtures)
-        except Exception as exc:
-            source_states["yahoo_finance"] = "unavailable"
-            errors.append(f"Yahoo {metal.future_symbol}: {exc}")
-
-    fx: dict[str, Any] = {}
+    fx: dict[str, Any] | None = None
     try:
         fx = ecb_fx(session, args.timeout, received_at, args.fixtures)
+        enrich_quotes_with_fx(quotes, fx)
+        atomic_write_json(data_dir / "fx" / "usd_eur.json", fx)
     except Exception as exc:
         source_states["ecb"] = "unavailable"
         errors.append(f"BCE USD/EUR: {exc}")
+        # USD quotes remain publishable without an EUR conversion.
+        for item in quotes:
+            item["price_eur"] = None
+            item["fx_source_id"] = None
+            item["fx_source_date"] = None
 
-    if errors:
-        status = build_degraded_status(data_dir, received_at, errors, source_states)
-        atomic_write_json(data_dir / "status.json", status)
-        atomic_write_json(data_dir / "collector_manifest.json", build_manifest(received_at, "degraded", status, errors))
-        print(json.dumps({"status": status["status"], "errors": errors}, ensure_ascii=False))
-        return 0
+    current_count = len(quotes)
+    current_preserved = False
+    if current_count > 0:
+        snapshot = current_snapshot(quotes, received_at)
+        validate_current(snapshot)
+        atomic_write_json(data_dir / "latest.json", snapshot)
+    elif previous_current_valid:
+        current_preserved = True
 
-    enrich_quotes_with_fx(quotes, fx)
-    snapshot = current_snapshot(quotes, received_at)
-    history = build_history_response(series_by_asset, received_at)
-    status = build_status(received_at, history, series_by_asset, fx)
-    index = build_index(received_at, history, series_by_asset)
-    validate_output(snapshot, history, status, series_by_asset)
+    # Historical futures are collected separately. Their failure never removes current prices.
+    series_by_asset: dict[str, dict[str, Any]] = {}
+    history_errors: list[str] = []
+    for index, metal in enumerate(METALS):
+        if args.fixtures is None and index:
+            time.sleep(max(0.0, args.pacing))
+        try:
+            series_by_asset[metal.asset_id] = yahoo_future_series(
+                yahoo_session, metal, args.timeout, received_at, args.fixtures
+            )
+        except Exception as exc:
+            history_errors.append(f"Yahoo {metal.future_symbol}: {exc}")
 
-    atomic_write_json(data_dir / "latest.json", snapshot)
+    history_info: dict[str, Any]
+    if len(series_by_asset) == len(METALS):
+        try:
+            history = build_history_response(series_by_asset, received_at)
+            index = build_index(received_at, history, series_by_asset)
+            validate_history(history, series_by_asset)
+            atomic_write_json(data_dir / "history" / "public_1y.json", history)
+            atomic_write_json(data_dir / "history" / "index.json", index)
+            for asset_id, series in series_by_asset.items():
+                atomic_write_json(data_dir / "series" / f"{asset_id}.json", series)
+            history_info = {
+                "available": True, "preserved": False, "file": "history/public_1y.json",
+                "snapshots": history["count"], "oldest_at": index["oldest_at"], "newest_at": index["newest_at"],
+                "series_points": {key: value["points_count"] for key, value in series_by_asset.items()},
+                "source_id": "yahoo_finance",
+            }
+        except Exception as exc:
+            history_errors.append(f"Historique commun: {exc}")
+            history_info = history_state_from_disk(data_dir)
+    else:
+        history_info = history_state_from_disk(data_dir)
+
+    if history_errors:
+        source_states["yahoo_finance"] = "preserved" if history_info.get("available") else "unavailable"
+        errors.extend(history_errors)
+
+    status = build_status(
+        data_dir, received_at, current_count, current_preserved, history_info, fx, source_states, errors
+    )
     atomic_write_json(data_dir / "status.json", status)
-    atomic_write_json(data_dir / "history" / "public_1y.json", history)
-    atomic_write_json(data_dir / "history" / "index.json", index)
-    atomic_write_json(data_dir / "fx" / "usd_eur.json", fx)
-    for asset_id, series in series_by_asset.items():
-        atomic_write_json(data_dir / "series" / f"{asset_id}.json", series)
-    atomic_write_json(data_dir / "collector_manifest.json", build_manifest(received_at, "ready", status))
+    atomic_write_json(data_dir / "collector_manifest.json", build_manifest(received_at, status, errors))
 
     print(json.dumps({
-        "status": "ok",
+        "status": status["status"],
         "received_at": received_at,
-        "quotes": len(quotes),
-        "history_snapshots": history["count"],
-        "series_points": {key: value["points_count"] for key, value in series_by_asset.items()},
-        "fx_date": fx["source_date"],
+        "current_quotes": status["assets_received"],
+        "current_preserved": current_preserved,
+        "history_available": bool(history_info.get("available")),
+        "history_preserved": bool(history_info.get("preserved")),
+        "history_snapshots": int(history_info.get("snapshots") or 0),
+        "errors": errors,
     }, ensure_ascii=False))
     return 0
 

@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.58",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.58",
+  "build": "28.2.59",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.59",
   "published_at": "2026-08-03T21:00:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
@@ -186,5 +186,9 @@
     "report_generation": "browser_from_public_archive",
     "report_persistence": "indexeddb_v2",
     "same_public_files_ryzen_and_transformer_book": true
+  },
+  "metals_public_archive": {
+    "current_history_decoupled": true,
+    "history_failure_blocks_current_quotes": false
   }
 }
