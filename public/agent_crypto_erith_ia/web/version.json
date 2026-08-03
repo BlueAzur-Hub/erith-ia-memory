@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.60",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.60",
-  "published_at": "2026-08-03T22:15:12Z",
+  "build": "28.2.61",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.61",
+  "published_at": "2026-08-03T22:51:22Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -214,6 +214,7 @@
     "analysis_horizons_connected_days": [
       7,
       30,
+      90,
       365
     ],
     "twenty_four_hour_policy": "intraday_required_no_daily_two_point_curve",
@@ -224,5 +225,33 @@
     "crypto_workspace_unchanged": true,
     "layout_geometry_unchanged": true,
     "bridge_role_unchanged": "legacy_optional_fallback"
+  },
+  "metals_results_visibility": {
+    "base": "28.2.60",
+    "state": "ready",
+    "default_period_days": 7,
+    "saved_24h_state_migrated_once": true,
+    "primary_analysis_horizons_days": [
+      7,
+      30,
+      90,
+      365
+    ],
+    "result_headline_visible": true,
+    "result_headline_fields": [
+      "asset",
+      "symbol",
+      "period",
+      "percent",
+      "sessions",
+      "date_range",
+      "current_quote_separation"
+    ],
+    "twenty_four_hour_state": "explicit_intraday_unavailable",
+    "report_history_label": "sessions_futures",
+    "indexeddb_report_refreshed_from_newer_public_snapshot": true,
+    "crypto_workspace_unchanged": true,
+    "collector_unchanged": true,
+    "bridge_unchanged": true
   }
 }
