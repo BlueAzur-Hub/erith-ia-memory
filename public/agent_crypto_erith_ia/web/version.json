@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.62",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.62",
-  "published_at": "2026-08-03T23:05:20Z",
+  "build": "28.2.63",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.63",
+  "published_at": "2026-08-03T23:29:03Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -263,6 +263,39 @@
     "history_counter_label": "futures_sessions",
     "provider_change_null_policy": "display_not_provided_never_zero",
     "provider_change_spot_futures_separation_preserved": true,
+    "crypto_workspace_unchanged": true,
+    "collector_unchanged": true,
+    "github_actions_unchanged": true,
+    "bridge_unchanged": true
+  },
+  "metals_parallel_math_core_graph_recovery": {
+    "base": "28.2.62",
+    "state": "ready",
+    "result_headline_mode": "compact_explicit_grid_row",
+    "graph_height_recovered": true,
+    "math_core_metals_version": "1.0.0",
+    "math_core_follows_active_metal": true,
+    "math_core_follows_active_period": true,
+    "math_core_metrics": [
+      "real_sessions",
+      "period_variation_pct",
+      "session_volatility_pct",
+      "max_drawdown_pct",
+      "high_low_amplitude_pct",
+      "series_completeness_pct"
+    ],
+    "current_quote_source": "Gold API indicative",
+    "historical_source": "Yahoo Finance Futures daily",
+    "spot_futures_separated": true,
+    "math_core_crypto_restored_on_crypto_domain": true,
+    "market_metals_reused_not_duplicated": true,
+    "display_order": [
+      "metals_graph",
+      "metals_math_core",
+      "existing_metals_market",
+      "metals_analysis"
+    ],
+    "prediction_generated": false,
     "crypto_workspace_unchanged": true,
     "collector_unchanged": true,
     "github_actions_unchanged": true,
