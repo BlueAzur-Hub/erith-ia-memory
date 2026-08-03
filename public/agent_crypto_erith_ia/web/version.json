@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.59",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.59",
-  "published_at": "2026-08-03T21:00:00Z",
+  "build": "28.2.60",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.60",
+  "published_at": "2026-08-03T22:15:12Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -90,15 +90,17 @@
     "status_path": "../data/metals/status.json",
     "history_index_path": "../data/metals/history/index.json",
     "archive_reader_ready": true,
-    "archive_assets": 0,
+    "archive_assets": 5,
     "provider_configured": true,
     "bridge_required": false,
     "crypto_data_reuse_forbidden": true,
-    "quotes_connected": false,
-    "chart_series_connected": false,
+    "quotes_connected": true,
+    "chart_series_connected": true,
     "layout_unchanged": true,
     "crypto_workspace_unchanged": true,
-    "public_archive_primary": true
+    "public_archive_primary": true,
+    "history_sessions_per_asset": 261,
+    "state": "ready"
   },
   "metals_snapshot_import_gate": {
     "base": "28.2.54",
@@ -180,15 +182,47 @@
     "crypto_workspace_unchanged": true,
     "legacy_metals_dev_active": false,
     "bridge_role": "optional local cache after public archive validation",
-    "state": "awaiting_first_real_github_run",
+    "state": "ready",
     "schedule": "every_4_hours",
     "failure_policy": "preserve_last_valid_and_mark_degraded",
     "report_generation": "browser_from_public_archive",
     "report_persistence": "indexeddb_v2",
-    "same_public_files_ryzen_and_transformer_book": true
+    "same_public_files_ryzen_and_transformer_book": true,
+    "first_real_github_run_completed": true,
+    "current_quotes_ready": true,
+    "history_ready": true,
+    "archive_assets": 5
   },
   "metals_public_archive": {
     "current_history_decoupled": true,
-    "history_failure_blocks_current_quotes": false
+    "history_failure_blocks_current_quotes": false,
+    "multi_horizon_history_connected": true,
+    "twenty_four_hour_intraday_fabrication_forbidden": true
+  },
+  "metals_multi_horizon_history": {
+    "base": "28.2.59",
+    "state": "connected",
+    "current_quote_source": "Gold API indicative spot reference",
+    "history_source": "Yahoo Finance continuous Futures daily public archive",
+    "fx_source": "ECB daily reference rate",
+    "chart_periods_connected_days": [
+      7,
+      30,
+      90,
+      365
+    ],
+    "analysis_horizons_connected_days": [
+      7,
+      30,
+      365
+    ],
+    "twenty_four_hour_policy": "intraday_required_no_daily_two_point_curve",
+    "spot_futures_mixing_forbidden": true,
+    "anchor_before_period_cutoff_used": true,
+    "base100_multi_asset_only": true,
+    "raw_price_single_active_asset_only": true,
+    "crypto_workspace_unchanged": true,
+    "layout_geometry_unchanged": true,
+    "bridge_role_unchanged": "legacy_optional_fallback"
   }
 }

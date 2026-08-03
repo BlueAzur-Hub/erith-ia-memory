@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.59.
+"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.60.
 
 Public sources, no provider key:
 - Gold API: current indicative XAU/XAG/XPT/XPD/HG prices.
@@ -39,11 +39,11 @@ except Exception:  # optional outside the GitHub Actions runtime
 
 UTC = timezone.utc
 SCHEMA_VERSION = "2.1.0"
-BUILD_TARGET = "28.2.59"
+BUILD_TARGET = "28.2.60"
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
-    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.59"
+    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.60"
 )
 
 
