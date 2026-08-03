@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
   "version": "2.1.0",
-  "generated_at": null,
+  "generated_at": "2026-08-03T21:37:51.256Z",
   "build_target": "28.2.59",
-  "state": "awaiting_first_public_run",
+  "state": "ready",
   "assets": [
     "XAU",
     "XAG",
@@ -14,7 +14,7 @@
   "current_provider": "gold_api",
   "history_provider": "yahoo_finance",
   "fx_provider": "ecb",
-  "status": "awaiting_first_public_run",
+  "status": "ready",
   "errors": [],
   "files": {
     "latest": "data/metals/latest.json",
@@ -34,13 +34,12 @@
     "no_api_key": true,
     "no_manual_ryzen_publication": true,
     "crypto_data_untouched": true,
-    "five_of_five_required": true,
-    "minimum_one_year_history_required": true,
-    "spot_and_futures_series_separated": true,
-    "last_valid_data_preserved_on_failure": true,
     "current_and_history_decoupled": true,
     "current_quotes_survive_history_failure": true,
     "five_of_five_current_required_for_green_run": true,
-    "minimum_one_year_history_required_when_published": true
-  }
+    "minimum_one_year_history_required_when_published": true,
+    "spot_and_futures_series_separated": true,
+    "last_valid_data_preserved_on_failure": true
+  },
+  "fingerprint": "sha256:ee0efe54d6342ac49daaf5e7c7a7f6485eb1364d1fb5117a884f098466004a73"
 }
