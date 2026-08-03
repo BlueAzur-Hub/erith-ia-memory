@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
   "version": "2.0.0",
-  "generated_at": null,
+  "generated_at": "2026-08-03T21:07:05.202Z",
   "build_target": "28.2.58",
-  "state": "awaiting_first_public_run",
+  "state": "degraded",
   "assets": [
     "XAU",
     "XAG",
@@ -14,8 +14,14 @@
   "current_provider": "gold_api",
   "history_provider": "yahoo_finance",
   "fx_provider": "ecb",
-  "status": "awaiting_first_public_run",
-  "errors": [],
+  "status": "unavailable",
+  "errors": [
+    "Yahoo GC=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/GC%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))",
+    "Yahoo SI=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/SI%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))",
+    "Yahoo PL=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PL%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))",
+    "Yahoo PA=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PA%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))",
+    "Yahoo HG=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/HG%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))"
+  ],
   "files": {
     "latest": "data/metals/latest.json",
     "status": "data/metals/status.json",
@@ -38,5 +44,6 @@
     "minimum_one_year_history_required": true,
     "spot_and_futures_series_separated": true,
     "last_valid_data_preserved_on_failure": true
-  }
+  },
+  "fingerprint": "sha256:f938ad643ca3a76cafb7efa0edd1c4b375d4237b957a885a319d3326866e0ab0"
 }

@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_metals_collector_status_v1",
   "version": "2.0.0",
-  "status": "awaiting_first_public_run",
+  "status": "unavailable",
   "provider_id": "public_metals_multi_source",
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": null,
+  "last_attempt_at": "2026-08-03T21:07:05.202Z",
   "last_success_at": null,
-  "last_error": null,
+  "last_error": "Yahoo GC=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/GC%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses')) | Yahoo SI=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/SI%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses')) | Yahoo PL=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PL%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses')) | Yahoo PA=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/PA%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses')) | Yahoo HG=F: HTTPSConnectionPool(host='query1.finance.yahoo.com', port=443): Max retries exceeded with url: /v8/finance/chart/HG%3DF?range=1y&interval=1d&events=history (Caused by ResponseError('too many 429 error responses'))",
   "assets_expected": 5,
   "assets_received": 0,
   "quota": {
@@ -21,29 +21,26 @@
   "sources": [
     {
       "id": "gold_api",
-      "role": "current_indicative_prices",
       "authentication": "none",
-      "state": "awaiting_first_run"
+      "state": "ready"
     },
     {
       "id": "yahoo_finance",
-      "role": "one_year_daily_futures",
       "authentication": "none",
-      "state": "awaiting_first_run"
+      "state": "unavailable"
     },
     {
       "id": "ecb",
-      "role": "usd_eur_reference_rate",
       "authentication": "none",
-      "state": "awaiting_first_run"
+      "state": "ready"
     }
   ],
   "history": null,
   "fx": null,
-  "legacy_archive": {
-    "provider_id": "metals_dev",
-    "state": "archive_only",
-    "directory": "archive/metals_dev_2026-08-01"
+  "fallback": {
+    "last_valid_snapshot_preserved": false,
+    "last_valid_history_preserved": false,
+    "invented_replacement_values": false
   },
   "security": {
     "api_key_present_in_public_files": false,
@@ -53,7 +50,6 @@
     "provider_fetch_not_performed_by_public_page": true,
     "manual_ryzen_publication_required": false
   },
-  "updated_at": null,
-  "collector": "tools/collect_public_metals.py",
-  "next_action": "Le workflow GitHub Actions lance automatiquement la première collecte après l’upload."
+  "updated_at": "2026-08-03T21:07:05.202Z",
+  "collector": "tools/collect_public_metals.py"
 }
