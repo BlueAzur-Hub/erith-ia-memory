@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.71 — METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.72 — BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.71";
-const ATLAS_BUILD = "28.2.71";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.71";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.72";
+const ATLAS_BUILD = "28.2.72";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.72";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7177,7 +7177,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.71
+   Market Core V2.0-Alpha · Build 28.2.72
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11309,7 +11309,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.71 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.72 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14561,10 +14561,10 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.71",
-  controlCenter: "V2.2.0R1",
-  bridge: "V1.8.0",
-  bridgeNumeric: "1.8.0",
+  interface: "Build 28.2.72",
+  controlCenter: "V2.1.0R1",
+  bridge: "V1.7.6",
+  bridgeNumeric: "1.7.6",
   model: "llama3.2:latest"
 });
 const atlasStableStackState = {
@@ -16812,7 +16812,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.71`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.72`
   );
 }
 
@@ -21300,7 +21300,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.71 — Parallel Markets Foundation
+   Build 28.2.72 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -22541,28 +22541,10 @@ async function atlasMetalsBridgeFetchJson(path, timeoutMs = 2200) {
 }
 
 async function atlasMetalsQuoteFoundationLoadFromBridge(periodDays = null) {
-  const period = Number(periodDays || atlasParallelMarketMetalsState().period || 1);
-  const [healthPayload, snapshotRoute, statusRoute, historyRoute, contractPayload] =
-    await Promise.all([
-      atlasMetalsBridgeFetchJson(ATLAS_METALS_BRIDGE_PATHS.health),
-      atlasMetalsBridgeFetchJson(ATLAS_METALS_BRIDGE_PATHS.snapshot),
-      atlasMetalsBridgeFetchJson(ATLAS_METALS_BRIDGE_PATHS.status),
-      atlasMetalsBridgeFetchJson(`${ATLAS_METALS_BRIDGE_PATHS.history}?days=${period}`),
-      atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.contract)
-    ]);
-
-  if (String(healthPayload?.version || "") !== "1.8.0") {
-    throw new Error(`Bridge incompatible : ${healthPayload?.version || "version absente"}`);
-  }
-  if (snapshotRoute?.available !== true || !snapshotRoute?.snapshot) {
-    throw new Error("Aucun snapshot Métaux local disponible");
-  }
-
-  const snapshot = atlasMetalsQuoteFoundationValidateSnapshot(snapshotRoute.snapshot);
-  const collector = atlasMetalsQuoteFoundationValidateStatus(statusRoute?.status);
-  const history = atlasMetalsQuoteFoundationValidateHistoryResponse(historyRoute?.history);
-  const contract = atlasMetalsQuoteFoundationValidateContract(contractPayload);
-  return { snapshot, collector, history, contract };
+  void periodDays;
+  throw new Error(
+    "Fallback Bridge Métaux retiré : les données Métaux proviennent uniquement de l’archive publique GitHub Actions."
+  );
 }
 
 async function atlasMetalsQuoteFoundationLoadFromArchive() {
@@ -23909,35 +23891,18 @@ async function atlasMetalsQuoteFoundationLoad() {
     atlasMetalsQuoteFoundationState.error = null;
   } catch (error) {
     archiveError = String(error?.message || error || "Archive publique Métaux indisponible");
-    try {
-      const local = await atlasMetalsQuoteFoundationLoadFromBridge();
-      atlasMetalsQuoteFoundationState.snapshot = local.snapshot;
-      atlasMetalsQuoteFoundationState.collector = local.collector;
-      atlasMetalsQuoteFoundationState.historyIndex = null;
-      atlasMetalsQuoteFoundationState.history = local.history.snapshots;
-      atlasMetalsQuoteFoundationState.intradayHistory = null;
-      atlasMetalsQuoteFoundationState.spotHistory = Object.freeze([]);
-      atlasMetalsQuoteFoundationState.contract = local.contract;
-      atlasMetalsQuoteFoundationState.quotes = local.snapshot.quotes;
-      atlasMetalsQuoteFoundationState.status = "loaded";
-      atlasMetalsQuoteFoundationState.origin = "local_bridge";
-      atlasMetalsQuoteFoundationState.loadedAt = new Date().toISOString();
-      atlasMetalsQuoteFoundationState.error = archiveError;
-    } catch (bridgeError) {
-      atlasMetalsQuoteFoundationState.status = "unavailable";
-      atlasMetalsQuoteFoundationState.origin = "none";
-      atlasMetalsQuoteFoundationState.snapshot = null;
-      atlasMetalsQuoteFoundationState.collector = null;
-      atlasMetalsQuoteFoundationState.historyIndex = null;
-      atlasMetalsQuoteFoundationState.history = Object.freeze([]);
-      atlasMetalsQuoteFoundationState.intradayHistory = null;
-      atlasMetalsQuoteFoundationState.spotHistory = Object.freeze([]);
-      atlasMetalsQuoteFoundationState.contract = null;
-      atlasMetalsQuoteFoundationState.quotes = Object.freeze([]);
-      atlasMetalsQuoteFoundationState.loadedAt = null;
-      atlasMetalsQuoteFoundationState.error =
-        `${archiveError} · ${String(bridgeError?.message || bridgeError || "Bridge local indisponible")}`;
-    }
+    atlasMetalsQuoteFoundationState.status = "unavailable";
+    atlasMetalsQuoteFoundationState.origin = "none";
+    atlasMetalsQuoteFoundationState.snapshot = null;
+    atlasMetalsQuoteFoundationState.collector = null;
+    atlasMetalsQuoteFoundationState.historyIndex = null;
+    atlasMetalsQuoteFoundationState.history = Object.freeze([]);
+    atlasMetalsQuoteFoundationState.intradayHistory = null;
+    atlasMetalsQuoteFoundationState.spotHistory = Object.freeze([]);
+    atlasMetalsQuoteFoundationState.contract = null;
+    atlasMetalsQuoteFoundationState.quotes = Object.freeze([]);
+    atlasMetalsQuoteFoundationState.loadedAt = null;
+    atlasMetalsQuoteFoundationState.error = archiveError;
   }
 
   atlasParallelMarketRenderMetals();
@@ -24853,14 +24818,14 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.71 — Metals Multi-Horizon History Connection Lock
+   Build 28.2.72 — Metals Multi-Horizon History Connection Lock
    - 7 j / 30 j / 90 j / 1 an use real daily Futures snapshots.
    - 24 h remains explicitly unavailable without intraday history.
    - Gold API current quotes stay separate from Yahoo Futures history.
    ========================================================= */
 
 /* =========================================================
-   Build 28.2.71 — Comparison Memory Slots A / B / C
+   Build 28.2.72 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -28499,7 +28464,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.71 — Rapport Métaux public automatique
+   Build 28.2.72 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -29438,7 +29403,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.71 — Current Quotes / History Decoupled Lock
+   Build 28.2.72 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
@@ -29501,10 +29466,19 @@ window.addEventListener("resize", () => {
 });
 
 /* =========================================================
-   Build 28.2.71 — METALS RESULTS VISIBILITY LOCK
+   Build 28.2.72 — METALS RESULTS VISIBILITY LOCK
    - Useful default: 7-day real Futures chart instead of an empty 24-hour panel.
    - One-time migration of the previously saved 24-hour Metals state.
    - Prominent active-metal result headline with percentage, sessions and dates.
    - Primary analysis horizons: 7 d / 30 d / 90 d / 1 y.
    - 24 h remains accessible as an explicit non-measured intraday state.
+   ========================================================= */
+
+
+/* =========================================================
+   Build 28.2.72 — BRIDGE CANONICAL STACK RECOVERY LOCK
+   - Control Center canonique : V2.1.0R1
+   - Bridge Crypto canonique : V1.7.6
+   - Métaux : archive publique GitHub Actions uniquement
+   - Metals.Dev et fallback Bridge Métaux retirés
    ========================================================= */

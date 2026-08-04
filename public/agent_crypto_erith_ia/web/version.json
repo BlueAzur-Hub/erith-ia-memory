@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.71",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.71",
-  "published_at": "2026-08-04T03:24:47Z",
+  "build": "28.2.72",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.72",
+  "published_at": "2026-08-04T04:00:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -124,18 +124,19 @@
   "metals_live_bridge": {
     "base": "28.2.55",
     "bridge_origin": "http://127.0.0.1:8787",
-    "bridge_version_required": "1.8.0",
+    "bridge_version_required": null,
     "snapshot_route": "/market/metals/snapshot",
     "status_route": "/market/metals/status",
     "history_route": "/market/metals/history",
-    "manual_refresh_only": true,
+    "manual_refresh_only": false,
     "provider_requests_per_manual_refresh": 0,
     "github_pages_remains_primary_interface": true,
-    "local_interface_copy_is_fallback_only": true,
+    "local_interface_copy_is_fallback_only": false,
     "layout_unchanged": true,
     "crypto_workspace_unchanged": true,
-    "state": "legacy_optional_fallback",
-    "public_archive_primary": true
+    "state": "retired_public_archive_only",
+    "public_archive_primary": true,
+    "metals_dev_reactivation_forbidden": true
   },
   "metals_comparative_history": {
     "base": "28.2.57R3",
@@ -474,5 +475,23 @@
     "crypto_cursor_engine_unchanged": true,
     "collectors_unchanged": true,
     "bridge_unchanged": true
+  },
+  "bridge_canonical_stack_recovery": {
+    "base": "28.2.71",
+    "state": "ready_for_user_test",
+    "control_center": "V2.1.0R1",
+    "bridge": "V1.7.6",
+    "model": "llama3.2:latest",
+    "interface": "Build 28.2.72",
+    "bridge_scope": "crypto_history_scanner_reports_conclusion_chat",
+    "metals_scope": "public_github_actions_archive_only",
+    "metals_dev_dependency": false,
+    "local_metals_bridge_fallback": false,
+    "github_writes": false,
+    "exchange_actions": false,
+    "wallet_actions": false,
+    "crypto_graph_changed": false,
+    "metals_graph_changed": false,
+    "collectors_changed": false
   }
 }
