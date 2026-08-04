@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.80
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.81
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.80
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.80
+   ATLAS_ASSET_BUILD: 28.2.81
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.81
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.80";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.80";
+  --atlas-asset-build: "28.2.81";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.81";
 }
 
 :root{
@@ -25459,3 +25459,61 @@ html[data-atlas-market-domain="metals"]
 }
 @media (max-width:1100px){.sim-profile-switcher{grid-template-columns:1fr 1fr}.sim-profile-switcher p{grid-column:1/-1}}
 @media (max-width:700px){.sim-profile-switcher{grid-template-columns:1fr}.sim-profile-switcher p{grid-column:auto}}
+
+
+/* =========================================================
+   LAYER 28.2.81 — LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK
+   Additive, local, fictitious and non-executing.
+   ========================================================= */
+.learning-journey-cockpit{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(92,211,255,.22);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 92% 8%,rgba(72,218,170,.10),transparent 30%),
+    linear-gradient(145deg,rgba(6,19,34,.94),rgba(4,12,24,.92));
+  box-shadow:0 18px 44px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.03);
+}
+.learning-cockpit-head,.learning-cockpit-focus,.learning-session-plan-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+}
+.learning-cockpit-head h3{margin:3px 0 5px;color:#fff0c8;font-size:17px}
+.learning-cockpit-head p:not(.eyebrow){max-width:820px;margin:0;color:#9eb4c8;font-size:11px;line-height:1.55}
+.learning-cockpit-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+.learning-cockpit-summary article{display:grid;gap:4px;min-height:84px;padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035)}
+.learning-cockpit-summary b{color:#8fa7bc;font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+.learning-cockpit-summary span{color:#f2fbff;font-size:15px;font-weight:850;line-height:1.25}
+.learning-cockpit-summary em{color:#7f96ab;font-size:9px;font-style:normal;line-height:1.4}
+.learning-cockpit-focus{margin-top:11px;padding:12px;border:1px solid rgba(89,226,174,.16);border-radius:12px;background:rgba(31,105,92,.08)}
+.learning-cockpit-focus-copy{min-width:0;flex:1}
+.learning-cockpit-focus h4{margin:3px 0 6px;color:#dfffee;font-size:15px}
+.learning-cockpit-focus-copy>p:not(.eyebrow){margin:0;color:#adc5d5;font-size:10px;line-height:1.5}
+.learning-cockpit-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.learning-cockpit-tags span{padding:5px 8px;border:1px solid rgba(112,226,190,.18);border-radius:999px;background:rgba(4,16,27,.52);color:#bfeedd;font-size:8px;font-weight:800}
+.learning-help-setting{display:grid;gap:5px;min-width:220px;padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(2,9,18,.5)}
+.learning-help-setting label{color:#8fa7bc;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.07em}
+.learning-help-setting select{min-height:34px;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:rgba(2,9,18,.88);color:#eef8ff;padding:7px 9px;font-size:10px;font-weight:800}
+.learning-help-setting span{color:#7890a6;font-size:8px;line-height:1.4}
+.learning-session-plan{display:grid;gap:7px;margin-top:11px;padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.025)}
+.learning-session-plan-head{align-items:center;margin-bottom:2px}
+.learning-session-plan-head>div{display:flex;align-items:center;gap:9px}.learning-session-plan-head b{color:#fff0c8;font-size:12px}.learning-session-plan-head span{color:#76e0b7;font-size:9px;font-weight:850}
+.learning-session-plan>label{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(2,9,18,.43);cursor:pointer}
+.learning-session-plan>label:has(input:checked){border-color:rgba(69,223,160,.25);background:rgba(69,223,160,.055)}
+.learning-session-plan input{margin-top:2px;accent-color:#45dfa0}
+.learning-session-plan label span{display:grid;gap:3px}.learning-session-plan label b{color:#e7f4ff;font-size:10px}.learning-session-plan label em{color:#839bb0;font-size:9px;font-style:normal;line-height:1.4}
+.learning-session-note{display:grid;gap:6px;margin-top:11px;color:#8fa7bc;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.07em}
+.learning-session-note textarea{width:100%;min-height:72px;resize:vertical;border:1px solid rgba(255,255,255,.10);border-radius:11px;background:rgba(2,9,18,.68);color:#eaf6ff;padding:10px;font:500 10px/1.5 system-ui,sans-serif;text-transform:none;letter-spacing:0}
+.learning-cockpit-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.learning-cockpit-reading{margin-top:10px;padding:10px 11px;border-left:3px solid rgba(75,219,170,.65);border-radius:8px;background:rgba(40,153,118,.08);color:#bfe0d3;font-size:9px;line-height:1.5}
+.learning-target-flash{animation:learningTargetFlash 1.8s ease}
+@keyframes learningTargetFlash{0%,100%{box-shadow:inherit}22%{box-shadow:0 0 0 2px rgba(69,223,160,.55),0 0 34px rgba(69,223,160,.22)}}
+html[data-learning-help-mode="off"] .atlas-info-button{opacity:.48}
+html[data-learning-help-mode="short"] .atlas-pedagogy-foot{display:none}
+@media(max-width:1180px){.learning-cockpit-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+  .learning-cockpit-head,.learning-cockpit-focus{display:grid}
+  .learning-cockpit-summary{grid-template-columns:1fr}
+  .learning-help-setting{min-width:0}
+  .learning-cockpit-actions .btn{flex:1 1 180px}
+}
