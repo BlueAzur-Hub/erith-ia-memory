@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.81
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.82
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.81
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.81
+   ATLAS_ASSET_BUILD: 28.2.82
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.82
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.81";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.81";
+  --atlas-asset-build: "28.2.82";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.82";
 }
 
 :root{
@@ -25516,4 +25516,88 @@ html[data-learning-help-mode="short"] .atlas-pedagogy-foot{display:none}
   .learning-cockpit-summary{grid-template-columns:1fr}
   .learning-help-setting{min-width:0}
   .learning-cockpit-actions .btn{flex:1 1 180px}
+}
+
+
+/* =========================================================
+   LAYER 28.2.82 — CHECKBOX LAYOUT & GUIDED SESSION UI FIX
+   Firefox/Ryzen visual repair reported on Build 28.2.81.
+   Root cause: the historical generic input rule width:100% also
+   applied to native checkboxes and pushed their text to the far edge.
+   Geometry only: no learning, simulation or safety logic changed.
+   ========================================================= */
+input[type="checkbox"]{
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  height:16px!important;
+  min-height:16px!important;
+  max-height:16px!important;
+  flex:0 0 16px!important;
+  margin:0!important;
+  padding:0!important;
+  align-self:center!important;
+  box-shadow:none!important;
+  accent-color:#47df91;
+}
+
+/* Guided session: compact left-aligned checkbox + readable text. */
+.learning-session-plan>label{
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr)!important;
+  align-items:start!important;
+  justify-content:stretch!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+  min-height:0!important;
+  padding:10px 12px!important;
+  text-align:left!important;
+}
+.learning-session-plan>label>input{
+  grid-column:1!important;
+  grid-row:1!important;
+  align-self:start!important;
+  justify-self:start!important;
+  margin-top:2px!important;
+}
+.learning-session-plan>label>span{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:0!important;
+  width:auto!important;
+  text-align:left!important;
+}
+
+/* Other pedagogical checkbox groups use the same stable geometry. */
+.sim-cost-confirm,
+.withdrawal-safety-checks label,
+.scam-sentinel-grid label{
+  display:grid!important;
+  grid-template-columns:16px minmax(0,1fr)!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  column-gap:9px!important;
+  text-align:left!important;
+}
+.sim-cost-confirm>input,
+.withdrawal-safety-checks label>input,
+.scam-sentinel-grid label>input{
+  grid-column:1!important;
+  justify-self:start!important;
+}
+.sim-cost-confirm>span,
+.withdrawal-safety-checks label>span{
+  grid-column:2!important;
+  min-width:0!important;
+  width:auto!important;
+  text-align:left!important;
+}
+
+@media(max-width:640px){
+  .learning-session-plan>label{padding:9px 10px!important;column-gap:9px!important}
+  input[type="checkbox"]{width:17px!important;min-width:17px!important;max-width:17px!important;height:17px!important;min-height:17px!important;max-height:17px!important;flex-basis:17px!important}
+  .learning-session-plan>label,
+  .sim-cost-confirm,
+  .withdrawal-safety-checks label,
+  .scam-sentinel-grid label{grid-template-columns:17px minmax(0,1fr)!important}
 }
