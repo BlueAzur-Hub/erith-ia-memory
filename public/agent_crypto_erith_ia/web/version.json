@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.67",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.67",
-  "published_at": "2026-08-04T01:14:10Z",
+  "build": "28.2.68",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.68",
+  "published_at": "2026-08-04T02:22:53Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -400,6 +400,37 @@
     ],
     "fabricated_points_forbidden": true,
     "crypto_workspace_unchanged": true,
+    "bridge_unchanged": true
+  },
+  "metals_all_series_comparison": {
+    "base": "28.2.67",
+    "state": "ready",
+    "control": "TOUS",
+    "location": "compact_metals_chart_legend_after_HG",
+    "assets": [
+      "XAU",
+      "XAG",
+      "XPT",
+      "XPD",
+      "HG"
+    ],
+    "periods_days": [
+      1,
+      7,
+      30,
+      90,
+      365
+    ],
+    "automatic_view": "base100",
+    "single_asset_return_view": "real_price",
+    "legend_variations_visible": true,
+    "leader_and_laggard_visible": true,
+    "spread_points_visible": true,
+    "artificial_average_generated": false,
+    "gold_api_current_quotes_mixed_with_futures": false,
+    "math_core_changed": false,
+    "crypto_workspace_unchanged": true,
+    "collectors_unchanged": true,
     "bridge_unchanged": true
   }
 }
