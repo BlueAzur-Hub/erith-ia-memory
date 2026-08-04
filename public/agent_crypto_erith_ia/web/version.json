@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.70",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.70",
-  "published_at": "2026-08-04T03:10:39Z",
+  "build": "28.2.71",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.71",
+  "published_at": "2026-08-04T03:24:47Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -435,7 +435,7 @@
   },
   "metals_cursor_historical_inspector": {
     "base": "28.2.69",
-    "state": "ready_for_user_test",
+    "state": "ready",
     "title": "PRIX HISTORIQUE",
     "pointer_following_panel": true,
     "nearest_real_point_only": true,
@@ -455,6 +455,22 @@
     "point_markers": true,
     "fixed_current_quote_panel_removed": true,
     "fabricated_points": false,
+    "crypto_cursor_engine_unchanged": true,
+    "collectors_unchanged": true,
+    "bridge_unchanged": true
+  },
+  "metals_inspector_full_5x5_layout": {
+    "base": "28.2.70",
+    "state": "ready_for_user_test",
+    "visible_rows_comparison_mode": 5,
+    "visible_rows_single_mode": 1,
+    "row_overflow": false,
+    "scroll_required": false,
+    "crypto_table_density_reference_used": true,
+    "header_compacted": true,
+    "footer_compacted": true,
+    "data_engine_changed": false,
+    "nearest_point_engine_changed": false,
     "crypto_cursor_engine_unchanged": true,
     "collectors_unchanged": true,
     "bridge_unchanged": true
