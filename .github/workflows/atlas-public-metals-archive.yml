@@ -89,6 +89,28 @@ jobs:
               if latest.get("integrity", {}).get("no_invented_values") is not True:
                   raise SystemExit("current anti-invention lock missing")
 
+          spot_path = root / "history" / "spot_48h.json"
+          if not spot_path.is_file():
+              raise SystemExit("spot_48h.json missing")
+          spot = json.loads(spot_path.read_text(encoding="utf-8"))
+          if spot.get("schema") != "agent_crypto_metals_spot_history_v1":
+              raise SystemExit("invalid spot history schema")
+          if spot.get("integrity", {}).get("fabricated_points_forbidden") is not True:
+              raise SystemExit("spot anti-invention lock missing")
+          if spot.get("integrity", {}).get("futures_mixing_forbidden") is not True:
+              raise SystemExit("spot/futures separation lock missing")
+          snapshots = spot.get("snapshots") or []
+          if int(spot.get("count") or 0) != len(snapshots):
+              raise SystemExit("spot history count mismatch")
+          for item in snapshots:
+              if int(item.get("assets_count") or 0) != 5:
+                  raise SystemExit("incomplete basket in spot history")
+              if item.get("provider_id") != "gold_api":
+                  raise SystemExit("non-Gold API snapshot in spot history")
+              quotes = item.get("quotes") or []
+              if len(quotes) != 5 or any(row.get("instrument_type") != "spot_reference" for row in quotes):
+                  raise SystemExit("invalid spot quote basket")
+
           history = status.get("history") or {}
           if history.get("available") is True:
               required = [
@@ -117,6 +139,8 @@ jobs:
               "current_quotes": current_count,
               "history_available": history.get("available"),
               "history_preserved": history.get("preserved"),
+              "spot_snapshots": len(snapshots),
+              "spot_span_hours": spot.get("span_hours", 0),
               "last_error": status.get("last_error"),
           })
           PY
@@ -130,12 +154,16 @@ jobs:
           from pathlib import Path
           status = json.loads(Path("public/agent_crypto_erith_ia/data/metals/status.json").read_text(encoding="utf-8"))
           history = status.get("history") or {}
-          print("## Atlas Public Metals Archive · Build 28.2.60")
+          spot = status.get("spot_history") or {}
+          print("## Atlas Public Metals Archive · Build 28.2.66")
           print(f"- Current quotes: **{status.get('assets_received', 0)}/5**")
           print(f"- Current state: **{status.get('status')}**")
           print(f"- History available: **{bool(history.get('available'))}**")
           print(f"- History preserved: **{bool(history.get('preserved'))}**")
           print(f"- History snapshots: **{history.get('snapshots', 0)}**")
+          print(f"- Spot snapshots (48 h): **{spot.get('snapshots', 0)}**")
+          print(f"- Spot coverage: **{float(spot.get('span_hours') or 0):.1f} h**")
+          print(f"- 24 h complete: **{bool(spot.get('complete_24h'))}**")
           if status.get("last_error"):
               print(f"- Collector warning: `{status['last_error'][:1000]}`")
           PY
