@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.79" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.79" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.79 — INLINE EXPERT LEARNING & TRANSACTION PROOF LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
+  <meta name="atlas-build" content="28.2.80" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.80" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.80 — DUAL CAPITAL SIMULATION PROFILE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.79" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.80" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.79"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.80"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.79</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.80</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.79</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.80</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.79 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.80 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2700,10 +2700,10 @@
           <p class="eyebrow">△ PAPER TRADING SANDBOX</p>
           <h2>Simulation micro-transactions</h2>
           <p class="sim-intro">
-            Portefeuille virtuel local avec profil débutant 100 €. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à apprendre avant toute future connexion Kraken.
+            Portefeuille virtuel local avec deux profils séparés : Progression 1 000 € par défaut et École 100 € conservé. Aucun ordre réel, aucune clé API, aucun wallet connecté.
           </p>
         </div>
-        <span class="pill warn">Profil 100 €</span>
+        <span class="pill warn" id="simProfileBadge">Profil 1 000 €</span>
       </div>
 
       <div class="visual-identity-strip" aria-label="Identité visuelle Atlas et NØX">
@@ -2717,18 +2717,28 @@
         <span>Chaque action importante affichera maintenant une confirmation claire ici.</span>
       </div>
 
+      <div class="sim-profile-switcher" id="simProfileSwitcher" role="group" aria-label="Choisir le capital virtuel de simulation">
+        <button type="button" class="active" data-sim-profile="solo_progression_1000_v1" aria-pressed="true">
+          <b>Progression 1 000 €</b><span>Ticket 50 € · maximum 100 € · exposition 300 €</span>
+        </button>
+        <button type="button" data-sim-profile="solo_beginner_100_v1_1_alpha_13" aria-pressed="false">
+          <b>École 100 €</b><span>Ticket 5 € · maximum 10 € · exposition 30 €</span>
+        </button>
+        <p>Chaque profil conserve son portefeuille, ses positions et son journal dans un espace local séparé. Changer de profil ne détruit pas l’autre simulation.</p>
+      </div>
+
       <div class="sim-profile-panel" id="simProfilePanel">
         <div class="sim-profile-head">
-          <b>Profil actif : Solo Débutant 100 €</b>
-          <span id="simProfileStatus">BTC / ETH / SOL · ticket 5 € · maximum 10 € · exposition 30 €</span>
+          <b id="simProfileTitle">Profil actif : Solo Progression 1 000 €</b>
+          <span id="simProfileStatus">BTC / ETH / SOL · ticket 50 € · maximum 100 € · exposition 300 €</span>
         </div>
         <div class="sim-profile-grid">
-          <div><b>Capital <button class="atlas-info-button" type="button" data-info-key="capital" aria-label="Expliquer le capital">ⓘ</button></b><span>100 € virtuels</span></div>
-          <div><b>Ticket conseillé <button class="atlas-info-button" type="button" data-info-key="ticket" aria-label="Expliquer le ticket conseillé">ⓘ</button></b><span>5 €</span></div>
-          <div><b>Maximum opération <button class="atlas-info-button" type="button" data-info-key="max_operation" aria-label="Expliquer le maximum par opération">ⓘ</button></b><span>10 €</span></div>
-          <div><b>Exposition maximale <button class="atlas-info-button" type="button" data-info-key="exposure" aria-label="Expliquer l’exposition maximale">ⓘ</button></b><span>30 €</span></div>
-          <div><b>Réserve minimale <button class="atlas-info-button" type="button" data-info-key="reserve" aria-label="Expliquer la réserve minimale">ⓘ</button></b><span>70 €</span></div>
-          <div><b>Cryptos autorisées <button class="atlas-info-button" type="button" data-info-key="allowed_assets" aria-label="Expliquer les actifs autorisés">ⓘ</button></b><span>BTC · ETH · SOL</span></div>
+          <div><b>Capital <button class="atlas-info-button" type="button" data-info-key="capital" aria-label="Expliquer le capital">ⓘ</button></b><span id="simProfileCapital">1 000 € virtuels</span></div>
+          <div><b>Ticket conseillé <button class="atlas-info-button" type="button" data-info-key="ticket" aria-label="Expliquer le ticket conseillé">ⓘ</button></b><span id="simProfileTicket">50 €</span></div>
+          <div><b>Maximum opération <button class="atlas-info-button" type="button" data-info-key="max_operation" aria-label="Expliquer le maximum par opération">ⓘ</button></b><span id="simProfileMaxOperation">100 €</span></div>
+          <div><b>Exposition maximale <button class="atlas-info-button" type="button" data-info-key="exposure" aria-label="Expliquer l’exposition maximale">ⓘ</button></b><span id="simProfileMaxExposure">300 €</span></div>
+          <div><b>Réserve minimale <button class="atlas-info-button" type="button" data-info-key="reserve" aria-label="Expliquer la réserve minimale">ⓘ</button></b><span id="simProfileMinReserve">700 €</span></div>
+          <div><b>Cryptos autorisées <button class="atlas-info-button" type="button" data-info-key="allowed_assets" aria-label="Expliquer les actifs autorisés">ⓘ</button></b><span id="simProfileAllowedAssets">BTC · ETH · SOL</span></div>
         </div>
       </div>
 
@@ -2840,27 +2850,27 @@
         <div class="school-tests" aria-label="Tests guidés du simulateur">
           <button class="school-test primary" data-school-test="safe_btc_5">
             <b>1 · Tester une opération prudente</b>
-            <span>BTC 5 € · doit être accepté</span>
+            <span id="schoolSafeLabel">BTC 50 € · doit être accepté</span>
           </button>
           <button class="school-test" data-school-test="too_big_btc_50">
             <b>2 · Tester une opération trop grosse</b>
-            <span>BTC 50 € · doit être refusé</span>
+            <span id="schoolTooBigLabel">BTC 500 € · doit être refusé</span>
           </button>
           <button class="school-test" data-school-test="forbidden_doge_5">
             <b>3 · Tester une crypto interdite</b>
-            <span>DOGE 5 € · doit être refusé</span>
+            <span id="schoolForbiddenLabel">DOGE 50 € · doit être refusé</span>
           </button>
           <button class="school-test" data-school-test="fill_ceiling">
             <b>4 · Remplir le plafond de sécurité</b>
-            <span>BTC 10 € + ETH 10 € + SOL 10 €</span>
+            <span id="schoolFillLabel">BTC 100 € + ETH 100 € + SOL 100 €</span>
           </button>
           <button class="school-test" data-school-test="exceed_ceiling">
             <b>5 · Dépasser le plafond</b>
-            <span>Après 30 € exposés, BTC 5 € doit être refusé</span>
+            <span id="schoolExceedLabel">Après 300 € exposés, BTC 50 € doit être refusé</span>
           </button>
           <button class="school-test reset" data-school-test="reset_100">
-            <b>Remettre le simulateur à 100 €</b>
-            <span>Repartir proprement</span>
+            <b id="schoolResetTitle">Remettre le profil actif à 1 000 €</b>
+            <span id="schoolResetLabel">Réinitialiser uniquement ce profil</span>
           </button>
         </div>
 
@@ -3145,7 +3155,7 @@
       <div class="sim-manual-title">Mode manuel avancé — utile plus tard, pas obligatoire pour apprendre</div>
       <div class="sim-controls">
         <label><span>Actif</span><input id="simSymbol" type="text" value="BTC" placeholder="BTC, ETH, SOL..." /></label>
-        <label><span>Montant €</span><input id="simAmount" type="number" min="1" step="1" value="5" /></label>
+        <label><span>Montant €</span><input id="simAmount" type="number" min="1" step="1" value="50" /></label>
         <button class="btn small primary" id="btnSimBuy">Simuler achat</button>
         <button class="btn small" id="btnSimSell">Simuler vente</button>
         <button class="btn small danger" id="btnSimReset">Reset simulation</button>
@@ -3246,7 +3256,7 @@
         <button class="cmd-preset" data-command="compare BTC ETH">Comparer BTC/ETH</button>
         <button class="cmd-preset" data-command="sources">Sources</button>
         <button class="cmd-preset" data-command="risk SOL">Risque SOL</button>
-        <button class="cmd-preset" data-command="simulation_profile">Profil 100€</button>
+        <button class="cmd-preset" data-command="simulation_profile">Profil simulation</button>
         <button class="cmd-preset" data-command="sim_buy BTC 5">Simuler achat BTC 5€</button>
         <button class="cmd-preset" data-command="sim_buy BTC 50">Test refus 50€</button>
         <button class="cmd-preset" data-command="sim_buy DOGE 5">Test refus DOGE</button>
@@ -3697,7 +3707,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.79</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.80</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3723,6 +3733,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.79"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.80"></script>
 </body>
 </html>

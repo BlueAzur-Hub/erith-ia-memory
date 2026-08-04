@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.79",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.79",
-  "published_at": "2026-08-04T11:39:00Z",
+  "build": "28.2.80",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.80",
+  "published_at": "2026-08-04T20:07:00Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -712,6 +712,47 @@
     "legacy_simulation_logs_migrated_non_destructively": true,
     "existing_pedagogy_security_layer_preserved": true,
     "all_existing_sections_preserved": true,
+    "github_write_performed": false,
+    "real_order_performed": false,
+    "real_wallet_connected": false,
+    "real_exchange_key_used": false,
+    "firefox_publication_validation_required_after_upload": true
+  },
+  "dual_capital_simulation_profile_lock": {
+    "base": "28.2.79",
+    "state": "ready_for_public_firefox_validation",
+    "scope": "simulation_profiles_only_additive",
+    "default_profile": "Solo Progression 1 000 €",
+    "preserved_profile": "Solo Débutant 100 €",
+    "profile_1000": {
+      "start_cash_eur": 1000,
+      "default_ticket_eur": 50,
+      "max_per_operation_eur": 100,
+      "max_exposure_eur": 300,
+      "min_reserve_eur": 700,
+      "allowed_assets": [
+        "BTC",
+        "ETH",
+        "SOL"
+      ]
+    },
+    "profile_100": {
+      "start_cash_eur": 100,
+      "default_ticket_eur": 5,
+      "max_per_operation_eur": 10,
+      "max_exposure_eur": 30,
+      "min_reserve_eur": 70,
+      "allowed_assets": [
+        "BTC",
+        "ETH",
+        "SOL"
+      ]
+    },
+    "profile_state_isolated": true,
+    "switching_profiles_deletes_other_state": false,
+    "legacy_100_eur_state_migrated_non_destructively": true,
+    "school_tests_scale_to_active_profile": true,
+    "existing_sections_removed": false,
     "github_write_performed": false,
     "real_order_performed": false,
     "real_wallet_connected": false,

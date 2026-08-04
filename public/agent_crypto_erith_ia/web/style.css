@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.79
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.80
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.79
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.79
+   ATLAS_ASSET_BUILD: 28.2.80
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.80
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.79";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.79";
+  --atlas-asset-build: "28.2.80";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.80";
 }
 
 :root{
@@ -25411,3 +25411,51 @@ html[data-atlas-market-domain="metals"]
   .transaction-proof-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:480px){.transaction-proof-summary{grid-template-columns:1fr}}
+
+
+/* ========================================================================== 
+   LAYER 28.2.80 — DUAL CAPITAL SIMULATION PROFILE LOCK
+   ========================================================================== */
+.sim-profile-switcher{
+  display:grid;
+  grid-template-columns:minmax(230px,1fr) minmax(230px,1fr) minmax(280px,1.25fr);
+  gap:12px;
+  align-items:stretch;
+  margin:14px 0;
+}
+.sim-profile-switcher button{
+  min-height:72px;
+  padding:13px 15px;
+  border:1px solid rgba(98,236,255,.22);
+  border-radius:16px;
+  background:rgba(11,27,44,.82);
+  color:var(--text);
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  transition:border-color .16s ease, background .16s ease, transform .16s ease;
+}
+.sim-profile-switcher button:hover{border-color:rgba(98,236,255,.55);transform:translateY(-1px)}
+.sim-profile-switcher button.active{
+  border-color:rgba(71,223,145,.75);
+  background:linear-gradient(135deg,rgba(20,83,70,.72),rgba(12,38,55,.9));
+  box-shadow:0 0 0 1px rgba(71,223,145,.12) inset;
+}
+.sim-profile-switcher button b{font-size:1rem;color:var(--text)}
+.sim-profile-switcher button span{font-size:.82rem;color:var(--text2);line-height:1.35}
+.sim-profile-switcher p{
+  margin:0;
+  padding:13px 15px;
+  border:1px solid rgba(255,215,130,.2);
+  border-radius:16px;
+  background:rgba(255,215,130,.055);
+  color:var(--text2);
+  display:flex;
+  align-items:center;
+  line-height:1.45;
+}
+@media (max-width:1100px){.sim-profile-switcher{grid-template-columns:1fr 1fr}.sim-profile-switcher p{grid-column:1/-1}}
+@media (max-width:700px){.sim-profile-switcher{grid-template-columns:1fr}.sim-profile-switcher p{grid-column:auto}}
