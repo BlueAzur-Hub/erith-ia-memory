@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.76",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.76",
-  "published_at": "2026-08-04T06:26:46Z",
+  "build": "28.2.77",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.77",
+  "published_at": "2026-08-04T07:20:46Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -504,7 +504,7 @@
   },
   "decision_board_truth_contract": {
     "base": "28.2.72",
-    "state": "ready_for_user_test",
+    "state": "validated_on_firefox_ryzen",
     "scope": "crypto_decision_board_visible_truth_contract_only",
     "archive_index_policy": "historical_watch_index_remains_visible_for_consultation",
     "archive_direct_analysis": "suspended",
@@ -532,7 +532,7 @@
   },
   "coingecko_usd_eur_market_fallback": {
     "base": "28.2.73",
-    "state": "ready_for_firefox_live_test",
+    "state": "retired_replaced_by_public_crypto_market_archive",
     "preferred_path": "CoinGecko Top 250 EUR direct",
     "fallback_path": "CoinGecko Top 250 USD direct + ECB USD/EUR public reference",
     "archive_policy": "only_after_eur_and_usd_eur_paths_fail",
@@ -565,7 +565,7 @@
   },
   "public_crypto_market_archive": {
     "base": "28.2.74",
-    "state": "ready_after_first_github_actions_run",
+    "state": "validated_on_firefox_ryzen",
     "collector": "../tools/collect_public_crypto.py",
     "workflow": ".github/workflows/atlas-public-crypto-market.yml",
     "snapshot_path": "../data/crypto/latest.json",
@@ -595,6 +595,35 @@
     "runtime_css_identity_matches_manifest": true,
     "old_28_2_75_parser_can_detect_28_2_76": true,
     "market_logic_unchanged": true,
-    "geometry_unchanged": true
+    "geometry_unchanged": true,
+    "state": "validated_on_firefox_ryzen"
+  },
+  "canonical_snapshot_memory_deduplication_lock": {
+    "base": "28.2.76",
+    "state": "ready_for_user_test",
+    "scope": "local_memory_and_decision_board_comparison_truth_only",
+    "canonical_identity_source": "state.sourceLock.snapshotId",
+    "canonical_timestamp_source": "state.sourceLock.timestamp",
+    "one_record_per_collector_and_market_snapshot": true,
+    "repeat_livechecks_increment_observation_count": true,
+    "duplicate_market_observations_neutralized": true,
+    "legacy_source_time_used_as_safe_fallback_identity": true,
+    "legacy_records_deleted": false,
+    "decision_board_requires_distinct_market_snapshots": true,
+    "public_crypto_collector_changed": false,
+    "github_actions_changed": false,
+    "decision_board_formula_changed": false,
+    "movement_thresholds_changed": false,
+    "anomaly_thresholds_changed": false,
+    "crypto_graphs_changed": false,
+    "metals_workspace_changed": false,
+    "bridge_changed": false,
+    "interface_geometry_changed": false,
+    "validation_state_truth_updates": [
+      "decision_board_truth_contract_validated",
+      "public_crypto_market_archive_validated",
+      "publication_identity_single_source_lock_validated",
+      "browser_direct_top250_fallback_retired"
+    ]
   }
 }

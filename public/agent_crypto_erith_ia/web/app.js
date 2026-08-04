@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.76 — PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.77 — CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.76";
-const ATLAS_BUILD = "28.2.76";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.76";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.77";
+const ATLAS_BUILD = "28.2.77";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.77";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11057,18 +11057,57 @@ function atlasDecisionLine(c) {
   return `${String(c.symbol || c.name || "ACTIF").toUpperCase()} · ${atlasDecisionPct(c.change24h)} · ${action} · score ${score.score ?? "—"}`;
 }
 
-function atlasDecisionMemoryStats() {
-  const rawRecords = typeof readAutoMemory === "function" ? readAutoMemory() : [];
-  const records = [...rawRecords]
+function atlasMemoryCanonicalSnapshotId(record) {
+  const direct = String(record?.market_snapshot_id || record?.source_snapshot_id || "").trim();
+  if (direct) return direct;
+  const sourceTime = String(record?.market_generated_at || record?.source_time || "").trim();
+  return sourceTime ? `legacy-source-time:${sourceTime}` : "";
+}
+
+function atlasMemoryRecordTime(record) {
+  return record?.market_generated_at || record?.source_time || record?.saved_at || null;
+}
+
+function atlasDistinctMarketMemory(records = []) {
+  const ordered = [...records]
     .filter(record => record && record.saved_at)
     .sort((a, b) => Date.parse(a.saved_at || 0) - Date.parse(b.saved_at || 0));
+  const map = new Map();
+  for (const record of ordered) {
+    const collector = record.collector_id || "local-legacy";
+    const canonicalId = atlasMemoryCanonicalSnapshotId(record);
+    const fallbackId = record.snapshot_id || record.id || record.saved_at;
+    const key = `${collector}::${canonicalId || fallbackId}`;
+    map.set(key, record);
+  }
+  return [...map.values()].sort((a, b) => Date.parse(atlasMemoryRecordTime(a) || 0) - Date.parse(atlasMemoryRecordTime(b) || 0));
+}
+
+function atlasDecisionMemoryStats() {
+  const rawRecords = typeof readAutoMemory === "function" ? readAutoMemory() : [];
+  const records = atlasDistinctMarketMemory(rawRecords);
   const collectors = [...new Set(records.map(r => r.collector_id || "local-legacy").filter(Boolean))];
   const last = records.length ? records[records.length - 1] : null;
   const lastCollector = last?.collector_id || "local-legacy";
+  const lastCanonicalId = atlasMemoryCanonicalSnapshotId(last);
   const previous = last
-    ? [...records].reverse().find(r => r !== last && (r.collector_id || "local-legacy") === lastCollector && Array.isArray(r.assets)) || null
+    ? [...records].reverse().find(r => {
+        if (r === last || (r.collector_id || "local-legacy") !== lastCollector || !Array.isArray(r.assets)) return false;
+        const candidateId = atlasMemoryCanonicalSnapshotId(r);
+        return !lastCanonicalId || !candidateId || candidateId !== lastCanonicalId;
+      }) || null
     : null;
-  return { records, collectors, last, previous, lastCollector, comparable: !!(last && previous) };
+  return {
+    rawRecords,
+    records,
+    collectors,
+    last,
+    previous,
+    lastCollector,
+    distinctCount: records.length,
+    duplicateObservations: Math.max(0, rawRecords.length - records.length),
+    comparable: !!(last && previous)
+  };
 }
 
 function atlasDecisionSectorRows(coins) {
@@ -11167,7 +11206,7 @@ function renderDecisionBoard() {
       <article class="decision-card"><b>Repères à comparer</b><span>BTC / ETH / SOL après source réelle.</span></article>
       <article class="decision-card"><b>Anomalies / prudence</b><span>La lecture démarre après réception d’un prix réel.</span></article>
       <article class="decision-card"><b>Lecture catégories d’actifs</b><span>En attente du tableau marché.</span></article>
-      <article class="decision-card"><b>Mémoire comparable</b><span>${memory.records.length} snapshots · ${memory.collectors.length || 0} collecteur(s).</span></article>
+      <article class="decision-card"><b>Mémoire comparable</b><span>${memory.records.length} snapshots canoniques distincts · ${memory.collectors.length || 0} collecteur(s).</span></article>
       <article class="decision-card decision-card-wide"><b>Décision froide</b><span>Attendre le Livecheck · validation humaine avant toute décision.</span></article>
     `;
     if (verdict) {
@@ -11175,7 +11214,7 @@ function renderDecisionBoard() {
         <div class="decision-verdict-title">Décision Atlas : attendre le Livecheck</div>
         <div class="decision-verdict-body">
           <div><b>Situation marché</b><span>Aucune lecture sans source réelle active.</span></div>
-          <div><b>Qualité des données</b><span>${memory.records.length} snapshots mémoire · ${memory.collectors.length || 0} collecteur(s).</span></div>
+          <div><b>Qualité des données</b><span>${memory.records.length} snapshots canoniques distincts · ${memory.collectors.length || 0} collecteur(s).</span></div>
           <div><b>Action de travail</b><span>Lancer Livecheck, puis comparer BTC / ETH / SOL.</span></div>
         </div>
       `;
@@ -11205,7 +11244,7 @@ function renderDecisionBoard() {
   const selectedScore = scoreCoin(selected);
 
   if (status) {
-    status.textContent = `Mémoire ${memory.records.length} · ${quality.confidence}`;
+    status.textContent = `Mémoire ${memory.records.length} distincts · ${quality.confidence}`;
     status.className = `pill ${quality.confidence === "confiance correcte" ? "ok" : "warn"}`;
   }
 
@@ -11226,11 +11265,13 @@ function renderDecisionBoard() {
     ? `${allCategoryNegative ? "Aucune catégorie positive sur 24 h.<br>" : ""}${sectors.map(s => `${escapeHtml(s.key)} · ${atlasDecisionPct(s.avg24)} · repère ${escapeHtml(s.best?.symbol || "—")}`).join("<br>")}`
     : "Catégories d’actifs en attente.";
 
+  const lastMemoryTime = atlasMemoryRecordTime(memory.last);
   const memoryHtml = [
-    `${memory.records.length} snapshots locaux`,
+    `${memory.records.length} snapshots canoniques distincts`,
+    `${memory.rawRecords.length} relevés conservés · ${memory.duplicateObservations} doublon(s) neutralisé(s)`,
     `${memory.collectors.length || 0} collecteur(s)`,
-    memory.last?.saved_at ? `dernier comparable : ${new Date(memory.last.saved_at).toLocaleTimeString("fr-FR")} · ${escapeHtml(memory.lastCollector)}` : "dernier : en attente",
-    memory.comparable ? (deltas.length ? deltas.join("<br>") : "écart insuffisant entre deux relevés du même collecteur") : "comparaison suspendue : aucun relevé antérieur du même collecteur"
+    lastMemoryTime ? `dernier snapshot marché : ${new Date(lastMemoryTime).toLocaleTimeString("fr-FR")} · ${escapeHtml(memory.lastCollector)}` : "dernier : en attente",
+    memory.comparable ? (deltas.length ? deltas.join("<br>") : "deux snapshots distincts disponibles · écart inférieur au seuil de lecture") : "comparaison en attente : un second snapshot marché distinct est requis"
   ].join("<br>");
 
   const selectedIndexContext = quality.directReady ? "" : " · historique archivé";
@@ -11262,8 +11303,8 @@ function renderDecisionBoard() {
       ? anomalies.slice(0, 3).map(c => escapeHtml(String(c.symbol || c.name).toUpperCase())).join(" · ")
       : "aucune anomalie majeure";
     const memoryQuality = memory.comparable
-      ? `comparaison interne au collecteur ${escapeHtml(memory.lastCollector)}`
-      : "pas encore de paire comparable du même collecteur";
+      ? `comparaison de snapshots canoniques distincts · collecteur ${escapeHtml(memory.lastCollector)}`
+      : "pas encore de paire de snapshots canoniques distincts";
 
     const verdictTitle = quality.directReady ? "Décision Atlas" : "Consultation Atlas archivée";
     verdict.innerHTML = `
@@ -11283,7 +11324,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Qualité des données</b>
-          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} contrôles publics · ${memory.records.length} snapshots · ${memoryQuality}.</span>
+          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} contrôles publics · ${memory.records.length} snapshots canoniques distincts · ${memoryQuality}.</span>
         </div>
         <div>
           <b>Prudence</b>
@@ -12756,16 +12797,106 @@ const COLLECTOR_MAX_RECORDS = 500; function readCollectorMemory() { try { const 
 } /* ========================================================= V2.0-alpha · Build 28.1 — Atlas Auto Reader Ouverture page -> Livecheck auto -> snapshots -> lecture marché. ========================================================= */ const AUTO_MEMORY_KEY = "agent_crypto_erith_ia_auto_reader_v1_1_alpha_13";
 const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = localStorage.getItem(AUTO_MEMORY_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
 } function writeAutoMemory(records) { let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : []; try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch { safe = safe.slice(Math.floor(safe.length / 2)); try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {} } return safe;
-} function compactCoinForAuto(c) { const s = scoreCoin(c); return { id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, rank: c.rank ?? null, price_eur: c.price ?? null, change_24h_pct: c.change24h ?? null, change_7d_pct: c.change7d ?? null, change_30d_pct: c.change30d ?? null, market_cap_eur: c.marketCap ?? null, volume_24h_eur: c.volume24h ?? null, category: classifyAsset(c), action: atlasActionForCoin(c), score: s.score, source: c.source || state.mainSource || null };
-} function makeAutoSnapshot() { const collectorId = getCollectorId(); const wanted = new Set(state.watchIds || []); const watch = state.coins.filter(c => wanted.has(c.id)); const leaders = state.coins.slice(0, 20); const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i); const created = new Date().toISOString(); return { id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, snapshot_id: `${collectorId}_${created.replace(/[:.]/g, "-")}`, collector_id: collectorId, collector_type: "local_browser", saved_at: created, version: ATLAS_RELEASE, source: state.mainSource || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS, global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null }, assets: merged.map(compactCoinForAuto) };
+} function compactCoinForAuto(c) {
+  const s = scoreCoin(c);
+  const canonicalPriceEur = Number.isFinite(Number(c.marketPriceEur))
+    ? Number(c.marketPriceEur)
+    : Number.isFinite(Number(c.priceEur))
+      ? Number(c.priceEur)
+      : Number.isFinite(Number(c.price)) ? Number(c.price) : null;
+  const canonicalChange24h = Number.isFinite(Number(c.marketChange24h))
+    ? Number(c.marketChange24h)
+    : Number.isFinite(Number(c.change24h)) ? Number(c.change24h) : null;
+  return {
+    id: c.id,
+    symbol: String(c.symbol || "").toUpperCase(),
+    name: c.name,
+    rank: c.rank ?? null,
+    price_eur: canonicalPriceEur,
+    change_24h_pct: canonicalChange24h,
+    change_7d_pct: c.change7d ?? null,
+    change_30d_pct: c.change30d ?? null,
+    market_cap_eur: c.marketCap ?? null,
+    volume_24h_eur: c.volume24h ?? null,
+    category: classifyAsset(c),
+    action: atlasActionForCoin(c),
+    score: s.score,
+    source: c.source || state.mainSource || null,
+    price_basis: c.marketPriceEur != null ? "canonical_market_snapshot" : "best_available_market_value"
+  };
+
+} function makeAutoSnapshot() {
+  const collectorId = getCollectorId();
+  const wanted = new Set(state.watchIds || []);
+  const watch = state.coins.filter(c => wanted.has(c.id));
+  const leaders = state.coins.slice(0, 20);
+  const merged = [...leaders, ...watch].filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i);
+  const created = new Date().toISOString();
+  const marketSnapshotId = String(state.sourceLock?.snapshotId || "").trim() || null;
+  const marketGeneratedAt = state.sourceLock?.timestamp || state.timestamp || null;
+  const marketSourceMode = state.sourceLock?.mode || "none";
+  const fx = typeof atlasMarketFxContext === "function" ? atlasMarketFxContext() : null;
+  const identityPart = marketSnapshotId
+    ? marketSnapshotId.replace(/[^a-zA-Z0-9_-]+/g, "-").slice(0, 180)
+    : created.replace(/[:.]/g, "-");
+  const recordId = `${collectorId}_${identityPart}`;
+  return {
+    id: recordId,
+    snapshot_id: recordId,
+    collector_id: collectorId,
+    collector_type: "local_browser",
+    saved_at: created,
+    last_seen_at: created,
+    observation_count: 1,
+    version: ATLAS_RELEASE,
+    source: state.mainSource || null,
+    source_time: marketGeneratedAt,
+    market_snapshot_id: marketSnapshotId,
+    market_generated_at: marketGeneratedAt,
+    market_source_mode: marketSourceMode,
+    market_provenance: {
+      canonical_source: state.sourceLock?.canonical || ATLAS_CANONICAL_MARKET_SOURCE,
+      public_archive: marketSourceMode === "github-public",
+      fx_pair: fx?.pair || null,
+      fx_source_date: fx?.sourceDate || null,
+      fx_source_name: fx?.sourceName || null
+    },
+    live_ok: !!state.liveOk,
+    cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS,
+    global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null },
+    assets: merged.map(compactCoinForAuto)
+  };
 } function lastAutoSnapshot() { const records = readAutoMemory(); return records.length ? records[records.length - 1] : null;
 } function saveAutoSnapshot() {
   if (!state.liveOk || !state.coins.length) return null;
   const records = readAutoMemory();
   const snapshot = makeAutoSnapshot();
+  const canonicalId = atlasMemoryCanonicalSnapshotId(snapshot);
+  if (canonicalId) {
+    const existingIndex = records.findIndex(record =>
+      (record?.collector_id || "local-legacy") === snapshot.collector_id
+      && atlasMemoryCanonicalSnapshotId(record) === canonicalId
+    );
+    if (existingIndex >= 0) {
+      const existing = records[existingIndex];
+      const updated = {
+        ...existing,
+        last_seen_at: snapshot.saved_at,
+        observation_count: Math.max(1, Number(existing?.observation_count || 1)) + 1,
+        market_snapshot_id: snapshot.market_snapshot_id || existing.market_snapshot_id || null,
+        market_generated_at: snapshot.market_generated_at || existing.market_generated_at || existing.source_time || null,
+        market_source_mode: snapshot.market_source_mode || existing.market_source_mode || null,
+        market_provenance: snapshot.market_provenance || existing.market_provenance || null
+      };
+      records[existingIndex] = updated;
+      writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
+      queueMicrotask(renderMemoryTruth);
+      return updated;
+    }
+  }
   records.push(snapshot);
-  const saved = writeAutoMemory(records);
-  const finalSnapshot = saved[saved.length - 1] || snapshot;
+  const saved = writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
+  const finalSnapshot = saved.find(record => record.snapshot_id === snapshot.snapshot_id) || snapshot;
   queueMicrotask(renderMemoryTruth);
   return finalSnapshot;
 } function findAutoAsset(snapshot, idOrSymbol) { if (!snapshot || !Array.isArray(snapshot.assets)) return null; const q = String(idOrSymbol || "").toUpperCase(); return snapshot.assets.find(a => String(a.id || "").toUpperCase() === q || String(a.symbol || "").toUpperCase() === q) || null;
@@ -12774,10 +12905,12 @@ const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = loc
 } function chooseAutoIntervalMs(snapshot, previous) { return ATLAS_MARKET_REFRESH_MS;
 } function formatAutoDelay(ms) { const sec = Math.max(0, Math.round(ms / 1000)); if (sec >= 60) { const min = Math.floor(sec / 60); const rest = sec % 60; return rest ? `${min} min ${rest} s` : `${min} min`; } return `${sec} s`;
 } function renderAutoReader(snapshot = null, previous = null) {
-  const records = readAutoMemory();
-  const last = snapshot || records[records.length - 1] || null;
+  const rawRecords = readAutoMemory();
+  const memory = atlasDecisionMemoryStats();
+  const records = memory.records;
+  const last = snapshot || memory.last || null;
   const pulse = last
-    ? autoMarketPulse(last, previous || records[records.length - 2] || null)
+    ? autoMarketPulse(last, previous || memory.previous || null)
     : { label: "En attente", mode: "wait", lines: ["Atlas attend la première lecture."] };
 
   const runtime = atlasAutoRuntimeLabel();
@@ -12795,7 +12928,7 @@ const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = loc
       ? new Date(last.saved_at).toLocaleString("fr-FR")
       : "En attente";
   }
-  if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length}/${AUTO_MAX_RECORDS}`;
+  if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length} distincts · ${rawRecords.length} relevés`;
   if (els.autoActiveCadence) {
     els.autoActiveCadence.textContent = `${formatAutoDelay(state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS)} · marché`;
   }
@@ -12829,7 +12962,8 @@ const AUTO_MAX_RECORDS = 3000; function readAutoMemory() { try { const raw = loc
         : "Onglet masqué : les timers locaux sont suspendus.",
       "Écriture GitHub depuis cette page : NON. GitHub Pages reste en lecture seule.",
       `Collecteur de ce Firefox : ${getCollectorId()} (${isCollectorConfigured() ? "configuré" : "temporaire"}).`,
-      `Snapshots locaux disponibles : ${records.length}.`,
+      `Snapshots canoniques distincts : ${records.length}.`,
+      `Relevés locaux conservés : ${rawRecords.length}.`,
       last?.saved_at
         ? `Dernier snapshot local : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`
         : "Dernier snapshot local : aucun.",
@@ -12916,10 +13050,10 @@ function atlasAfterLivecheck(options = {}) {
     return;
   }
 
-  const previous = lastAutoSnapshot();
   const snapshot = saveAutoSnapshot();
+  const memory = atlasDecisionMemoryStats();
   state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
-  renderAutoReader(snapshot, previous);
+  renderAutoReader(memory.last || snapshot, memory.previous || null);
 
   if (state.auto?.enabled && atlasPulseVisible()) {
     scheduleAutoRead(options.marketDelayMs ?? ATLAS_MARKET_REFRESH_MS);
@@ -12989,7 +13123,28 @@ const ATLAS_MEMORY_TRUTH_KEY = "agent_crypto_erith_ia_memory_truth_v27_2_5"; fun
 } function getCollectorId() { let id = cleanCollectorId(localStorage.getItem(COLLECTOR_ID_KEY)); if (!id) { id = defaultCollectorId(); localStorage.setItem(COLLECTOR_ID_KEY, id); localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "0"); } return id;
 } function migrateLocalCollectorRecords(targetId, silent = false) { const id = cleanCollectorId(targetId || getCollectorId()); if (!id || isGeneratedCollectorId(id)) return { changed: 0, total: 0, collectors_before: [] }; const records = readAutoMemory(); const beforeCollectors = collectorStats(records).collectors; let changed = 0; const migrated = records.map(record => { if (!record || typeof record !== "object") return record; const current = record.collector_id || "local-legacy"; if (!isLegacyCollectorId(current)) return record; changed += 1; const saved = record.saved_at || new Date().toISOString(); const key = `${id}_${String(saved).replace(/[:.]/g, "-")}`; return { ...record, id: key, snapshot_id: key, collector_id: id, collector_type: record.collector_type || "local_browser", migrated_from_collector_id: current, migrated_at: new Date().toISOString() }; }); if (changed) { writeAutoMemory(normalizeSharedRecords(migrated, id)); } const note = changed ? `${new Date().toLocaleString("fr-FR")} · ${changed} anciens snapshots rattachés à ${id}` : `${new Date().toLocaleString("fr-FR")} · aucun ancien snapshot à migrer`; localStorage.setItem(COLLECTOR_MIGRATION_NOTE_KEY, note); if (!silent && els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = [ "ID COLLECTEUR SAUVÉ", "", `Machine configurée : ${id}`, `Anciens snapshots rattachés : ${changed}`, "", "Cette configuration est conservée dans Firefox.", "Tu n’as pas à refaire cette étape à chaque ouverture." ].join("\n"); } return { changed, total: records.length, collectors_before: beforeCollectors };
 } function setCollectorId(value) { const id = cleanCollectorId(value); if (!id) return getCollectorId(); localStorage.setItem(COLLECTOR_ID_KEY, id); localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "1"); migrateLocalCollectorRecords(id, false); return id;
-} function normalizeSharedRecords(records, fallbackCollectorId = null) { const map = new Map(); const fallback = cleanCollectorId(fallbackCollectorId || getCollectorId()); for (const record of records || []) { if (!record || typeof record !== "object") continue; const existingCollector = record.collector_id || ""; const collector = existingCollector || fallback || "local-legacy"; const saved = record.saved_at || record.id || new Date().toISOString(); const key = record.snapshot_id || record.id || `${collector}_${String(saved).replace(/[:.]/g, "-")}`; map.set(key, { ...record, id: key, snapshot_id: key, collector_id: collector }); } return [...map.values()] .sort((a, b) => String(a.saved_at || "").localeCompare(String(b.saved_at || ""))) .slice(-AUTO_MAX_RECORDS);
+} function normalizeSharedRecords(records, fallbackCollectorId = null) {
+  const map = new Map();
+  const fallback = cleanCollectorId(fallbackCollectorId || getCollectorId());
+  for (const record of records || []) {
+    if (!record || typeof record !== "object") continue;
+    const existingCollector = record.collector_id || "";
+    const collector = existingCollector || fallback || "local-legacy";
+    const saved = record.saved_at || record.id || new Date().toISOString();
+    const canonicalId = atlasMemoryCanonicalSnapshotId(record);
+    const recordKey = record.snapshot_id || record.id || `${collector}_${String(saved).replace(/[:.]/g, "-")}`;
+    map.set(recordKey, {
+      ...record,
+      id: recordKey,
+      snapshot_id: recordKey,
+      collector_id: collector,
+      market_snapshot_id: record.market_snapshot_id || (canonicalId && !canonicalId.startsWith("legacy-source-time:") ? canonicalId : null),
+      market_generated_at: record.market_generated_at || record.source_time || null
+    });
+  }
+  return [...map.values()]
+    .sort((a, b) => String(a.saved_at || "").localeCompare(String(b.saved_at || "")))
+    .slice(-AUTO_MAX_RECORDS);
 } function collectorStats(records = readAutoMemory()) { const counts = {}; for (const r of records || []) { const id = r.collector_id || "local-legacy"; counts[id] = (counts[id] || 0) + 1; } const collectors = Object.keys(counts).sort(); return { count: records.length, collectors, counts };
 } function formatCollectorCounts(stats) { if (!stats || !stats.collectors?.length) return "aucun"; return stats.collectors.map(id => `${id} (${stats.counts[id] || 0})`).join(" / ");
 }
@@ -14776,7 +14931,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.76",
+  interface: "Build 28.2.77",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -17027,7 +17182,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.76`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.77`
   );
 }
 
