@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.60.
+"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.66.
 
 Public sources, no provider key:
 - Gold API: current indicative XAU/XAG/XPT/XPD/HG prices.
@@ -23,7 +23,7 @@ import shutil
 import sys
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import quote
@@ -38,12 +38,12 @@ except Exception:  # optional outside the GitHub Actions runtime
     curl_requests = None
 
 UTC = timezone.utc
-SCHEMA_VERSION = "2.1.0"
-BUILD_TARGET = "28.2.60"
+SCHEMA_VERSION = "2.2.0"
+BUILD_TARGET = "28.2.66"
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
-    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.60"
+    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.66"
 )
 
 
@@ -67,6 +67,11 @@ METALS: tuple[Metal, ...] = (
 )
 ASSET_ORDER = {metal.asset_id: index for index, metal in enumerate(METALS)}
 EXPECTED_ASSETS = [metal.asset_id for metal in METALS]
+
+SPOT_HISTORY_SCHEMA = "agent_crypto_metals_spot_history_v1"
+SPOT_RETENTION_HOURS = 48
+SPOT_MIN_COMPLETE_HOURS = 20
+SPOT_HISTORY_RELATIVE_PATH = Path("history") / "spot_48h.json"
 
 GOLD_API_BASE = "https://api.gold-api.com/price"
 YAHOO_CHART_BASES = (
@@ -641,6 +646,118 @@ def current_snapshot(quotes: list[dict[str, Any]], received_at: str) -> dict[str
     return payload
 
 
+def spot_snapshot_valid(snapshot: Any) -> bool:
+    if not isinstance(snapshot, dict):
+        return False
+    if snapshot.get("schema") != "agent_crypto_metals_snapshot_v1":
+        return False
+    if snapshot.get("provider_id") != "gold_api":
+        return False
+    quotes = snapshot.get("quotes")
+    if not isinstance(quotes, list) or len(quotes) != len(METALS):
+        return False
+    if int(snapshot.get("assets_count") or 0) != len(METALS):
+        return False
+    if snapshot.get("integrity", {}).get("no_invented_values") is not True:
+        return False
+    ids = {str(row.get("asset_id") or "") for row in quotes if isinstance(row, dict)}
+    if ids != set(EXPECTED_ASSETS):
+        return False
+    for row in quotes:
+        if not isinstance(row, dict):
+            return False
+        if row.get("source_id") != "gold_api":
+            return False
+        if row.get("instrument_type") != "spot_reference":
+            return False
+        if positive_number(row.get("price")) is None:
+            return False
+    return parse_time(snapshot.get("saved_at")) is not None
+
+
+def build_spot_history(
+    data_dir: Path,
+    snapshot: dict[str, Any] | None,
+    received_at: str,
+) -> dict[str, Any]:
+    path = data_dir / SPOT_HISTORY_RELATIVE_PATH
+    previous = read_json(path) or {}
+    candidates: list[dict[str, Any]] = []
+    if previous.get("schema") == SPOT_HISTORY_SCHEMA:
+        candidates.extend(
+            item for item in (previous.get("snapshots") or [])
+            if spot_snapshot_valid(item)
+        )
+    if spot_snapshot_valid(snapshot):
+        candidates.append(snapshot)
+
+    deduplicated: dict[str, dict[str, Any]] = {}
+    for item in candidates:
+        stamp = parse_time(item.get("saved_at"))
+        if not stamp:
+            continue
+        deduplicated[stamp] = item
+
+    now = datetime.fromisoformat(received_at.replace("Z", "+00:00")).astimezone(UTC)
+    cutoff = now - timedelta(hours=SPOT_RETENTION_HOURS)
+    rows = []
+    for stamp, item in sorted(deduplicated.items()):
+        moment = datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(UTC)
+        if moment >= cutoff:
+            rows.append(item)
+
+    oldest_at = parse_time(rows[0].get("saved_at")) if rows else None
+    newest_at = parse_time(rows[-1].get("saved_at")) if rows else None
+    span_hours = 0.0
+    if oldest_at and newest_at:
+        span_hours = max(0.0, (
+            datetime.fromisoformat(newest_at.replace("Z", "+00:00"))
+            - datetime.fromisoformat(oldest_at.replace("Z", "+00:00"))
+        ).total_seconds() / 3600.0)
+
+    payload = {
+        "schema": SPOT_HISTORY_SCHEMA,
+        "version": SCHEMA_VERSION,
+        "source_mode": "github_actions_public_archive",
+        "source_id": "gold_api",
+        "source_name": "Gold API",
+        "generated_at": received_at,
+        "retention_hours": SPOT_RETENTION_HOURS,
+        "minimum_complete_hours": SPOT_MIN_COMPLETE_HOURS,
+        "assets": [metal.symbol for metal in METALS],
+        "count": len(rows),
+        "oldest_at": oldest_at,
+        "newest_at": newest_at,
+        "span_hours": round(span_hours, 6),
+        "snapshots": rows,
+        "integrity": {
+            "fabricated_points_forbidden": True,
+            "complete_five_asset_snapshots_only": True,
+            "source_timestamp_preserved": True,
+            "spot_reference_only": True,
+            "futures_mixing_forbidden": True,
+            "crypto_history_reuse_forbidden": True,
+        },
+    }
+    payload["fingerprint"] = sha256_json({
+        "generated_at": received_at,
+        "snapshots": rows,
+    })
+    atomic_write_json(path, payload)
+    return {
+        "available": len(rows) > 0,
+        "complete_24h": len(rows) >= 2 and span_hours >= SPOT_MIN_COMPLETE_HOURS,
+        "file": str(SPOT_HISTORY_RELATIVE_PATH).replace("\\", "/"),
+        "snapshots": len(rows),
+        "oldest_at": oldest_at,
+        "newest_at": newest_at,
+        "span_hours": round(span_hours, 6),
+        "retention_hours": SPOT_RETENTION_HOURS,
+        "minimum_complete_hours": SPOT_MIN_COMPLETE_HOURS,
+        "source_id": "gold_api",
+    }
+
+
 def history_state_from_disk(data_dir: Path) -> dict[str, Any]:
     history = read_json(data_dir / "history" / "public_1y.json") or {}
     index = read_json(data_dir / "history" / "index.json") or {}
@@ -670,6 +787,7 @@ def build_status(
     current_count: int,
     current_preserved: bool,
     history_info: dict[str, Any],
+    spot_info: dict[str, Any],
     fx: dict[str, Any] | None,
     source_states: dict[str, str],
     errors: list[str],
@@ -716,6 +834,7 @@ def build_status(
             {"id": "ecb", "role": "usd_eur_reference_rate", "authentication": "none", "state": source_states.get("ecb", "unavailable")},
         ],
         "history": history_info,
+        "spot_history": spot_info,
         "fx": ({"pair": fx.get("pair"), "source_date": fx.get("source_date"), "eur_per_usd": fx.get("eur_per_usd")} if fx else previous.get("fx")),
         "fallback": {
             "last_valid_snapshot_preserved": bool(current_preserved),
@@ -791,6 +910,7 @@ def build_manifest(received_at: str, status: dict[str, Any], errors: list[str] |
             "latest": "data/metals/latest.json",
             "status": "data/metals/status.json",
             "history": "data/metals/history/public_1y.json",
+            "spot_history": "data/metals/history/spot_48h.json",
             "history_index": "data/metals/history/index.json",
             "fx": "data/metals/fx/usd_eur.json",
             "series": [f"data/metals/series/{metal.asset_id}.json" for metal in METALS],
@@ -804,6 +924,8 @@ def build_manifest(received_at: str, status: dict[str, Any], errors: list[str] |
             "five_of_five_current_required_for_green_run": True,
             "minimum_one_year_history_required_when_published": True,
             "spot_and_futures_series_separated": True,
+            "rolling_spot_archive_enabled": True,
+            "spot_history_retention_hours": SPOT_RETENTION_HOURS,
             "last_valid_data_preserved_on_failure": True,
         },
     }
@@ -884,12 +1006,21 @@ def main() -> int:
 
     current_count = len(quotes)
     current_preserved = False
+    snapshot: dict[str, Any] | None = None
     if current_count > 0:
         snapshot = current_snapshot(quotes, received_at)
         validate_current(snapshot)
         atomic_write_json(data_dir / "latest.json", snapshot)
     elif previous_current_valid:
         current_preserved = True
+
+    # A complete Gold API basket is appended to a dedicated rolling spot archive.
+    # Partial or missing baskets never enter the 24-hour series.
+    spot_info = build_spot_history(
+        data_dir,
+        snapshot if current_count == len(METALS) else None,
+        received_at,
+    )
 
     # Historical futures are collected separately. Their failure never removes current prices.
     series_by_asset: dict[str, dict[str, Any]] = {}
@@ -931,7 +1062,7 @@ def main() -> int:
         errors.extend(history_errors)
 
     status = build_status(
-        data_dir, received_at, current_count, current_preserved, history_info, fx, source_states, errors
+        data_dir, received_at, current_count, current_preserved, history_info, spot_info, fx, source_states, errors
     )
     atomic_write_json(data_dir / "status.json", status)
     atomic_write_json(data_dir / "collector_manifest.json", build_manifest(received_at, status, errors))
@@ -944,6 +1075,9 @@ def main() -> int:
         "history_available": bool(history_info.get("available")),
         "history_preserved": bool(history_info.get("preserved")),
         "history_snapshots": int(history_info.get("snapshots") or 0),
+        "spot_snapshots": int(spot_info.get("snapshots") or 0),
+        "spot_span_hours": float(spot_info.get("span_hours") or 0),
+        "spot_24h_complete": bool(spot_info.get("complete_24h")),
         "errors": errors,
     }, ensure_ascii=False))
     return 0

@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.65",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.65",
-  "published_at": "2026-08-04T00:07:22Z",
+  "build": "28.2.66",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.66",
+  "published_at": "2026-08-04T00:41:35Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -21,7 +21,8 @@
     "metals_history_index": "../data/metals/history/index.json",
     "metals_import_template": "../data/metals/import_template.json",
     "metals_public_history": "../data/metals/history/public_1y.json",
-    "metals_fx_usd_eur": "../data/metals/fx/usd_eur.json"
+    "metals_fx_usd_eur": "../data/metals/fx/usd_eur.json",
+    "metals_spot_history": "../data/metals/history/spot_48h.json"
   },
   "coherence_contract": {
     "index": {
@@ -344,6 +345,30 @@
     "crypto_workspace_unchanged": true,
     "collector_unchanged": true,
     "github_actions_unchanged": true,
+    "bridge_unchanged": true
+  },
+  "metals_real_24h_spot_archive": {
+    "base": "28.2.65",
+    "state": "ready_to_accumulate",
+    "collector": "../tools/collect_public_metals.py",
+    "workflow": ".github/workflows/atlas-public-metals-archive.yml",
+    "file": "../data/metals/history/spot_48h.json",
+    "source": "Gold API",
+    "schedule": "every_4_hours",
+    "retention_hours": 48,
+    "minimum_complete_hours": 20,
+    "complete_five_asset_baskets_only": true,
+    "first_real_point_after_first_workflow_run": true,
+    "full_window_requires_elapsed_time": true,
+    "futures_horizons_preserved": [
+      7,
+      30,
+      90,
+      365
+    ],
+    "spot_and_futures_separated": true,
+    "fabricated_points_forbidden": true,
+    "crypto_workspace_unchanged": true,
     "bridge_unchanged": true
   }
 }

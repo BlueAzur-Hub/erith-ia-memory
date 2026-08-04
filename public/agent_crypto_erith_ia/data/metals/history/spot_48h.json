@@ -1,0 +1,31 @@
+{
+  "schema": "agent_crypto_metals_spot_history_v1",
+  "version": "2.2.0",
+  "source_mode": "github_actions_public_archive",
+  "source_id": "gold_api",
+  "source_name": "Gold API",
+  "generated_at": null,
+  "retention_hours": 48,
+  "minimum_complete_hours": 20,
+  "assets": [
+    "XAU",
+    "XAG",
+    "XPT",
+    "XPD",
+    "HG"
+  ],
+  "count": 0,
+  "oldest_at": null,
+  "newest_at": null,
+  "span_hours": 0,
+  "snapshots": [],
+  "integrity": {
+    "fabricated_points_forbidden": true,
+    "complete_five_asset_snapshots_only": true,
+    "source_timestamp_preserved": true,
+    "spot_reference_only": true,
+    "futures_mixing_forbidden": true,
+    "crypto_history_reuse_forbidden": true
+  },
+  "fingerprint": null
+}
