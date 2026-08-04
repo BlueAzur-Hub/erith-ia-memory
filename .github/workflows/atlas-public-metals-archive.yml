@@ -111,6 +111,37 @@ jobs:
               if len(quotes) != 5 or any(row.get("instrument_type") != "spot_reference" for row in quotes):
                   raise SystemExit("invalid spot quote basket")
 
+          intraday_path = root / "history" / "intraday_24h.json"
+          if not intraday_path.is_file():
+              raise SystemExit("intraday_24h.json missing")
+          intraday = json.loads(intraday_path.read_text(encoding="utf-8"))
+          if intraday.get("schema") != "agent_crypto_metals_intraday_history_v1":
+              raise SystemExit("invalid intraday history schema")
+          integrity = intraday.get("integrity") or {}
+          if integrity.get("fabricated_points_forbidden") is not True:
+              raise SystemExit("intraday anti-invention lock missing")
+          if integrity.get("gold_api_current_quote_mixing_forbidden") is not True:
+              raise SystemExit("intraday/current spot separation lock missing")
+          series = intraday.get("series") or []
+          if len(series) != 5 or int(intraday.get("series_count") or 0) != 5:
+              raise SystemExit("intraday five-asset series missing")
+          ids = set()
+          for item in series:
+              ids.add(item.get("asset_id"))
+              if item.get("source_id") != "yahoo_finance":
+                  raise SystemExit("non-Yahoo source in intraday history")
+              if item.get("instrument_type") != "future_continuous":
+                  raise SystemExit("non-Futures instrument in intraday history")
+              if item.get("interval") != "5m":
+                  raise SystemExit("unexpected intraday interval")
+              points = item.get("points") or []
+              if int(item.get("points_count") or 0) != len(points) or len(points) < 2:
+                  raise SystemExit("insufficient intraday points")
+              if any(not row.get("time") or not isinstance(row.get("close"), (int, float)) for row in points):
+                  raise SystemExit("invalid intraday point")
+          if ids != {"gold", "silver", "platinum", "palladium", "copper"}:
+              raise SystemExit("intraday asset set mismatch")
+
           history = status.get("history") or {}
           if history.get("available") is True:
               required = [
@@ -154,14 +185,18 @@ jobs:
           from pathlib import Path
           status = json.loads(Path("public/agent_crypto_erith_ia/data/metals/status.json").read_text(encoding="utf-8"))
           history = status.get("history") or {}
+          intraday = status.get("intraday_24h") or {}
           spot = status.get("spot_history") or {}
-          print("## Atlas Public Metals Archive · Build 28.2.66")
+          print("## Atlas Public Metals Archive · Build 28.2.67")
           print(f"- Current quotes: **{status.get('assets_received', 0)}/5**")
           print(f"- Current state: **{status.get('status')}**")
           print(f"- History available: **{bool(history.get('available'))}**")
           print(f"- History preserved: **{bool(history.get('preserved'))}**")
           print(f"- History snapshots: **{history.get('snapshots', 0)}**")
-          print(f"- Spot snapshots (48 h): **{spot.get('snapshots', 0)}**")
+          print(f"- Intraday Futures ready: **{bool(intraday.get('available'))}**")
+          print(f"- Intraday Futures assets: **{intraday.get('assets', 0)}/5**")
+          print(f"- Intraday interval: **{intraday.get('interval', '—')}**")
+          print(f"- Spot snapshots journal (48 h): **{spot.get('snapshots', 0)}**")
           print(f"- Spot coverage: **{float(spot.get('span_hours') or 0):.1f} h**")
           print(f"- 24 h complete: **{bool(spot.get('complete_24h'))}**")
           if status.get("last_error"):
