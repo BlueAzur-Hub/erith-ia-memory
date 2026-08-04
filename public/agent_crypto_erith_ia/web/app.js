@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.83 — GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.84 — LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.83";
-const ATLAS_BUILD = "28.2.83";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.83";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.84";
+const ATLAS_BUILD = "28.2.84";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.84";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11618,6 +11618,8 @@ const ATLAS_GUIDED_LESSONS = Object.freeze({"market":{"intro":"Un prix isolé ne
 const ATLAS_LEARNING_HISTORY_KEY = "agent_crypto_learning_journey_history_28_2_83";
 const ATLAS_LEARNING_PREVIOUS_COCKPIT_KEY = "agent_crypto_learning_journey_cockpit_28_2_81";
 const ATLAS_LEARNING_PREVIOUS_ROADMAP_KEY = "agent_crypto_expert_roadmap_28_2_79";
+const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_2_84";
+const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_TARGET_LABELS = Object.freeze({
   "market-workspace":"Espace Marché",
   schoolPanel:"Mode École guidé",
@@ -11628,6 +11630,358 @@ const ATLAS_LEARNING_TARGET_LABELS = Object.freeze({
   scamSentinelPanel:"Scam Sentinel pédagogique",
   transactionProofLedger:"Journal des preuves de simulation"
 });
+
+function atlasLearningStorageJson(key, fallback = null) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return JSON.parse(raw);
+  } catch { return fallback; }
+}
+function atlasLegacyLearningHash(value) {
+  const text = String(value || "");
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+function legacyLearningSnapshot() {
+  let cockpitRaw = "", roadmapRaw = "";
+  try {
+    cockpitRaw = localStorage.getItem(ATLAS_LEARNING_PREVIOUS_COCKPIT_KEY) || "";
+    roadmapRaw = localStorage.getItem(ATLAS_LEARNING_PREVIOUS_ROADMAP_KEY) || "";
+  } catch {}
+  let cockpit = null, roadmap = null;
+  try { cockpit = cockpitRaw ? JSON.parse(cockpitRaw) : null; } catch {}
+  try { roadmap = roadmapRaw ? JSON.parse(roadmapRaw) : null; } catch {}
+  const steps = Object.fromEntries(ATLAS_LEARNING_SESSION_STEPS.map(key => [key, cockpit?.steps?.[key] === true]));
+  const note = String(cockpit?.note || "");
+  const modules = ATLAS_EXPERT_ROADMAP_MODULES.map(module => {
+    const item = roadmap?.modules?.[module.key] || {};
+    const status = ATLAS_EXPERT_STATUS_META[item.status] ? item.status : "new";
+    return { key:module.key, title:module.title, status, note:String(item.note || ""), updated_at:item.updated_at || null };
+  });
+  const progressed = modules.filter(item => item.status !== "new");
+  const completedSessions = Math.max(0, Math.trunc(atlasFiniteNumber(cockpit?.completed_sessions, 0)));
+  const hasCockpit = Boolean(cockpit && typeof cockpit === "object" && (
+    note || cockpit.module_key || cockpit.completed_at || completedSessions || Object.values(steps).some(Boolean)
+  ));
+  const hasRoadmap = progressed.length > 0 || modules.some(item => item.note);
+  const signature = atlasLegacyLearningHash(`${cockpitRaw}\n---ROADMAP---\n${roadmapRaw}`);
+  return {
+    has_data:hasCockpit || hasRoadmap,
+    signature,
+    cockpit_raw:cockpitRaw,
+    roadmap_raw:roadmapRaw,
+    cockpit,
+    roadmap,
+    steps,
+    note,
+    note_length:learningTextCount(note),
+    completed_sessions:completedSessions,
+    module_key:ATLAS_EXPERT_ROADMAP_MODULES.some(module => module.key === cockpit?.module_key) ? cockpit.module_key : null,
+    progressed_modules:progressed,
+    all_modules:modules
+  };
+}
+function legacyLearningMigrationMarker() {
+  const value = atlasLearningStorageJson(ATLAS_LEARNING_MIGRATION_KEY, {});
+  return value && typeof value === "object" ? value : {};
+}
+function legacyLearningMigrationPreview(snapshot = legacyLearningSnapshot()) {
+  if (!snapshot.has_data) return "Aucune donnée pédagogique ancienne détectée.";
+  const checked = ATLAS_LEARNING_SESSION_STEPS.filter(key => snapshot.steps[key]).length;
+  const module = learningModuleByKey(snapshot.module_key || "market");
+  const lines = [
+    "MÉMOIRE PÉDAGOGIQUE ANCIENNE DÉTECTÉE",
+    "",
+    `Empreinte : ${snapshot.signature}`,
+    `Session courante ancienne : ${module.title}`,
+    `Sessions déclarées : ${snapshot.completed_sessions}`,
+    `Étapes cochées dans le brouillon : ${checked}/5`,
+    `Texte conservé dans l’ancien champ : ${snapshot.note_length} caractère${snapshot.note_length > 1 ? "s" : ""}`,
+    `Modules avec progression : ${snapshot.progressed_modules.length}`,
+    "",
+    "PROGRESSION RETROUVÉE",
+    ...(snapshot.progressed_modules.length
+      ? snapshot.progressed_modules.map(item => `- ${item.title} : ${ATLAS_EXPERT_STATUS_META[item.status]?.label || item.status}`)
+      : ["- Aucune progression de module retrouvée."]),
+    "",
+    "TEXTE RETROUVÉ DANS LE BROUILLON",
+    snapshot.note || "Aucun texte dans l’ancien brouillon.",
+    "",
+    "RÈGLE DE VÉRITÉ",
+    snapshot.note_length >= 800
+      ? "L’ancien format limitait ce champ à 800 caractères. Les caractères déjà coupés avant ce Build ne peuvent pas être reconstruits depuis le navigateur. Les 800 caractères encore stockés seront importés intégralement."
+      : "Tout le texte encore présent dans l’ancien stockage sera importé intégralement.",
+    "Les anciennes clés resteront intactes après l’import."
+  ];
+  return lines.join("\n");
+}
+function learningMigrationCurrentIsPristine(current, history) {
+  return !current.completed_at
+    && !String(current.notes_free || "").trim()
+    && !String(current.takeaway || "").trim()
+    && !ATLAS_LEARNING_SESSION_STEPS.some(key => current.steps?.[key])
+    && history.length === 0;
+}
+function legacyLearningProgressRecord(module, item, signature, index) {
+  const stamp = item.updated_at || new Date().toISOString();
+  return {
+    schema:"agent_crypto_learning_journey_cockpit_v2",
+    session_id:`LEGACY-PROGRESS-${module.key}-${signature}-${index + 1}`,
+    started_at:stamp,
+    completed_at:stamp,
+    archived_at:new Date().toISOString(),
+    completed_sessions:0,
+    module_key:module.key,
+    module_title:module.title,
+    steps:{ read:false, open:false, practice:false, verify:false, note:false },
+    lesson:ATLAS_GUIDED_LESSONS[module.key] || ATLAS_GUIDED_LESSONS.market,
+    profile_label:"Profil fictif historique — détail non enregistré",
+    simulation:null,
+    interface_facts:[
+      `Progression ${ATLAS_EXPERT_STATUS_META[item.status]?.label || item.status} retrouvée dans le parcours 28.2.79.`,
+      "Le détail des cases, de la simulation et du texte de cette ancienne séance n’était pas archivé par l’ancien format."
+    ],
+    notes_free:item.note || "Progression récupérée. Le texte détaillé de cette séance n’était pas conservé dans l’ancien format.",
+    takeaway:item.note || "",
+    legacy_progress_only:true,
+    legacy_status:item.status,
+    legacy_signature:signature,
+    migration_build:"28.2.84"
+  };
+}
+function importLegacyLearningData() {
+  const snapshot = legacyLearningSnapshot();
+  if (!snapshot.has_data) {
+    setActionFeedback("warn", "Aucune mémoire ancienne", "Aucune donnée 28.2.81/82 n’a été trouvée dans ce Firefox.");
+    renderLegacyLearningMigration();
+    return;
+  }
+  const marker = legacyLearningMigrationMarker();
+  if (marker.status === "imported" && marker.signature === snapshot.signature) {
+    setActionFeedback("info", "Import déjà effectué", "La même mémoire ancienne a déjà été importée. Aucun doublon n’a été créé.");
+    renderLegacyLearningMigration(true);
+    return;
+  }
+  const currentBefore = loadLearningCockpitState();
+  const historyBefore = loadLearningHistory();
+  const roadmapBefore = loadExpertRoadmap();
+  try {
+    if (!localStorage.getItem(ATLAS_LEARNING_MIGRATION_BACKUP_KEY)) {
+      localStorage.setItem(ATLAS_LEARNING_MIGRATION_BACKUP_KEY, JSON.stringify({
+        schema:"agent_crypto_learning_legacy_backup_v1",
+        created_at:new Date().toISOString(),
+        source:{
+          cockpit_key:ATLAS_LEARNING_PREVIOUS_COCKPIT_KEY,
+          cockpit_raw:snapshot.cockpit_raw,
+          roadmap_key:ATLAS_LEARNING_PREVIOUS_ROADMAP_KEY,
+          roadmap_raw:snapshot.roadmap_raw,
+          signature:snapshot.signature
+        },
+        target_before:{
+          cockpit:currentBefore,
+          history:historyBefore,
+          roadmap:roadmapBefore
+        }
+      }));
+    }
+  } catch {}
+
+  const history = historyBefore.slice();
+  const roadmap = roadmapBefore;
+  let progressRecordsAdded = 0;
+  snapshot.progressed_modules.forEach((legacyItem, index) => {
+    const module = learningModuleByKey(legacyItem.key);
+    const currentItem = roadmap.modules[module.key] || { status:"new", note:"", updated_at:null };
+    const currentScore = ATLAS_EXPERT_STATUS_META[currentItem.status]?.score ?? 0;
+    const legacyScore = ATLAS_EXPERT_STATUS_META[legacyItem.status]?.score ?? 0;
+    const status = legacyScore > currentScore ? legacyItem.status : currentItem.status;
+    const note = [String(currentItem.note || "").trim(), String(legacyItem.note || "").trim()].filter(Boolean).filter((value, pos, array) => array.indexOf(value) === pos).join("\n\n");
+    roadmap.modules[module.key] = {
+      ...currentItem,
+      status,
+      note,
+      updated_at:currentItem.updated_at || legacyItem.updated_at || new Date().toISOString()
+    };
+    const recordId = `LEGACY-PROGRESS-${module.key}-${snapshot.signature}-${index + 1}`;
+    if (!history.some(entry => entry?.session_id === recordId || (entry?.legacy_signature === snapshot.signature && entry?.module_key === module.key && entry?.legacy_progress_only))) {
+      history.push(legacyLearningProgressRecord(module, legacyItem, snapshot.signature, index));
+      progressRecordsAdded += 1;
+    }
+  });
+
+  while (history.filter(entry => entry?.legacy_signature === snapshot.signature).length < snapshot.completed_sessions) {
+    const index = history.filter(entry => entry?.legacy_signature === snapshot.signature).length;
+    const module = ATLAS_EXPERT_ROADMAP_MODULES[index] || ATLAS_EXPERT_ROADMAP_MODULES[0];
+    history.push(legacyLearningProgressRecord(module, { status:"discovered", note:"", updated_at:snapshot.cockpit?.started_at || null }, snapshot.signature, index));
+    progressRecordsAdded += 1;
+  }
+  saveLearningHistory(history);
+  saveExpertRoadmap(roadmap);
+
+  const current = loadLearningCockpitState();
+  const legacyModule = learningModuleByKey(snapshot.module_key || recommendedLearningModule().key);
+  const oldSteps = {
+    read:snapshot.steps.read,
+    open:snapshot.steps.open,
+    practice:snapshot.steps.practice,
+    verify:snapshot.steps.verify,
+    note:false
+  };
+  const pristine = learningMigrationCurrentIsPristine(currentBefore, historyBefore);
+  if (snapshot.cockpit?.completed_at) {
+    const completedId = `LEGACY-COMPLETE-${snapshot.signature}`;
+    const completedRecord = {
+      ...defaultLearningCockpitState(),
+      session_id:completedId,
+      started_at:snapshot.cockpit.started_at || snapshot.cockpit.completed_at,
+      completed_at:snapshot.cockpit.completed_at,
+      archived_at:new Date().toISOString(),
+      module_key:legacyModule.key,
+      module_title:legacyModule.title,
+      steps:{...snapshot.steps},
+      lesson:ATLAS_GUIDED_LESSONS[legacyModule.key] || ATLAS_GUIDED_LESSONS.market,
+      notes_free:"",
+      takeaway:snapshot.note,
+      legacy_signature:snapshot.signature,
+      legacy_source:"cockpit_28_2_81",
+      migration_build:"28.2.84"
+    };
+    const nextHistory = loadLearningHistory();
+    if (!nextHistory.some(entry => entry?.session_id === completedId)) {
+      nextHistory.push(completedRecord);
+      saveLearningHistory(nextHistory);
+    }
+  } else if (pristine) {
+    const imported = {
+      ...current,
+      session_id:snapshot.cockpit?.session_id || `LEGACY-DRAFT-${snapshot.signature}`,
+      started_at:snapshot.cockpit?.started_at || new Date().toISOString(),
+      completed_at:null,
+      completed_sessions:Math.max(snapshot.completed_sessions, loadLearningHistory().length),
+      module_key:legacyModule.key,
+      steps:oldSteps,
+      lesson_read_at:snapshot.steps.read ? (snapshot.cockpit?.started_at || new Date().toISOString()) : null,
+      notes_free:snapshot.note,
+      takeaway:"",
+      practice_proof_id:null,
+      legacy_signature:snapshot.signature,
+      legacy_source:"cockpit_28_2_81",
+      migration_build:"28.2.84"
+    };
+    saveLearningCockpitState(imported);
+  } else {
+    const merged = loadLearningCockpitState();
+    const recovered = snapshot.note.trim();
+    if (recovered && !String(merged.notes_free || "").includes(recovered)) {
+      merged.notes_free = [String(merged.notes_free || "").trim(), `---\nBrouillon récupéré du Cockpit 28.2.81\n\n${recovered}`].filter(Boolean).join("\n\n");
+    }
+    merged.steps = Object.fromEntries(ATLAS_LEARNING_SESSION_STEPS.map(key => [key, key === "note" ? Boolean(merged.takeaway?.trim()) : Boolean(merged.steps?.[key] || oldSteps[key])]));
+    merged.completed_sessions = Math.max(snapshot.completed_sessions, loadLearningHistory().length);
+    merged.legacy_signature = snapshot.signature;
+    merged.migration_build = "28.2.84";
+    saveLearningCockpitState(merged);
+  }
+
+  const importedHistory = loadLearningHistory();
+  const result = {
+    schema:"agent_crypto_learning_legacy_migration_v1",
+    status:"imported",
+    signature:snapshot.signature,
+    imported_at:new Date().toISOString(),
+    old_keys_preserved:true,
+    note_characters_imported:snapshot.note_length,
+    note_may_have_been_previously_truncated:snapshot.note_length >= 800,
+    completed_sessions_declared:snapshot.completed_sessions,
+    progress_records_added:progressRecordsAdded,
+    history_records_after:importedHistory.length,
+    module_imported:legacyModule.key
+  };
+  try { localStorage.setItem(ATLAS_LEARNING_MIGRATION_KEY, JSON.stringify(result)); } catch {}
+  renderExpertRoadmap();
+  renderLearningJourneyCockpit();
+  renderLegacyLearningMigration();
+  setActionFeedback("ok", "Mémoire pédagogique récupérée", `${snapshot.note_length} caractères encore stockés importés · ${snapshot.progressed_modules.length} module${snapshot.progressed_modules.length > 1 ? "s" : ""} de progression préservé${snapshot.progressed_modules.length > 1 ? "s" : ""} · aucune ancienne clé supprimée.`);
+}
+function ignoreLegacyLearningData() {
+  const snapshot = legacyLearningSnapshot();
+  if (!snapshot.has_data) return;
+  try { localStorage.setItem(ATLAS_LEARNING_MIGRATION_KEY, JSON.stringify({ schema:"agent_crypto_learning_legacy_migration_v1", status:"ignored", signature:snapshot.signature, ignored_at:new Date().toISOString(), old_keys_preserved:true })); } catch {}
+  renderLegacyLearningMigration();
+  setActionFeedback("info", "Mémoire ancienne laissée intacte", "Aucun import effectué. Tu peux réafficher la récupération à tout moment.");
+}
+function restoreLegacyLearningRecovery() {
+  const snapshot = legacyLearningSnapshot();
+  if (!snapshot.has_data) {
+    setActionFeedback("info", "Aucune mémoire ancienne", "Aucune donnée 28.2.81/82 n’est présente dans ce Firefox.");
+    return;
+  }
+  const marker = legacyLearningMigrationMarker();
+  try { localStorage.setItem(ATLAS_LEARNING_MIGRATION_KEY, JSON.stringify({ ...marker, status:marker.status === "imported" ? "imported" : "pending", signature:snapshot.signature, panel_open:true })); } catch {}
+  renderLegacyLearningMigration(true);
+  document.getElementById("learningLegacyRecoveryPanel")?.scrollIntoView({ behavior:"smooth", block:"center" });
+}
+function renderLegacyLearningMigration(forceOpen = false) {
+  const panel = document.getElementById("learningLegacyRecoveryPanel");
+  const status = document.getElementById("learningLegacyRecoveryStatus");
+  const summary = document.getElementById("learningLegacyRecoverySummary");
+  const preview = document.getElementById("learningLegacyRecoveryPreview");
+  const importButton = document.getElementById("btnImportLegacyLearning");
+  const ignoreButton = document.getElementById("btnIgnoreLegacyLearning");
+  const restoreButton = document.getElementById("btnRestoreLegacyLearningRecovery");
+  const noticeTitle = document.getElementById("learningMigrationNoticeTitle");
+  const noticeText = document.getElementById("learningMigrationNoticeText");
+  if (!panel) return;
+  const snapshot = legacyLearningSnapshot();
+  const marker = legacyLearningMigrationMarker();
+  const sameSignature = marker.signature === snapshot.signature;
+  const imported = snapshot.has_data && sameSignature && marker.status === "imported";
+  const ignored = snapshot.has_data && sameSignature && marker.status === "ignored";
+  const pending = snapshot.has_data && !imported && !ignored;
+  if (restoreButton) restoreButton.hidden = !snapshot.has_data;
+  if (!snapshot.has_data) {
+    panel.hidden = true;
+    if (noticeTitle) noticeTitle.textContent = "Carnet pédagogique continu 28.2.84";
+    if (noticeText) noticeText.textContent = "Aucune mémoire 28.2.81/82 n’a été détectée dans ce Firefox. Le carnet actuel reste inchangé.";
+    return;
+  }
+  if (noticeTitle) noticeTitle.textContent = imported ? "Mémoire pédagogique ancienne récupérée" : ignored ? "Mémoire pédagogique ancienne conservée sans import" : "Mémoire pédagogique ancienne détectée";
+  if (noticeText) noticeText.textContent = imported
+    ? "L’ancien parcours et le texte encore présent ont été importés sans supprimer les clés 28.2.81/82. La même empreinte ne peut pas créer de doublon."
+    : ignored
+      ? "Aucune ancienne donnée n’a été supprimée. Le bouton Voir la récupération permet de revenir sur ce choix."
+      : "Vérifie ce qui a été retrouvé, puis importe-le dans le nouveau carnet. Les anciennes clés resteront intactes.";
+  if (status) {
+    status.textContent = imported ? "IMPORTÉ · ANTI-DOUBLON" : ignored ? "IGNORÉ · DONNÉES CONSERVÉES" : "À RÉCUPÉRER";
+    status.className = imported ? "pill ok" : ignored ? "pill warn" : "pill warn";
+  }
+  const checked = ATLAS_LEARNING_SESSION_STEPS.filter(key => snapshot.steps[key]).length;
+  if (summary) summary.innerHTML = [
+    `<b>${snapshot.completed_sessions} session${snapshot.completed_sessions > 1 ? "s" : ""} déclarée${snapshot.completed_sessions > 1 ? "s" : ""}</b>`,
+    `<span>${snapshot.progressed_modules.length} module${snapshot.progressed_modules.length > 1 ? "s" : ""} avec progression</span>`,
+    `<span>${snapshot.note_length} caractère${snapshot.note_length > 1 ? "s" : ""} encore stocké${snapshot.note_length > 1 ? "s" : ""}</span>`,
+    `<span>${checked}/5 étapes dans le brouillon ancien</span>`
+  ].join("");
+  if (preview) preview.textContent = legacyLearningMigrationPreview(snapshot);
+  if (importButton) {
+    importButton.disabled = imported;
+    importButton.textContent = imported ? "Déjà importé — aucun doublon" : "Importer dans mon carnet";
+  }
+  if (ignoreButton) ignoreButton.disabled = imported;
+  panel.hidden = !(pending || forceOpen || marker.panel_open === true);
+}
+function toggleLegacyLearningPreview() {
+  const preview = document.getElementById("learningLegacyRecoveryPreview");
+  if (!preview) return;
+  preview.hidden = !preview.hidden;
+  const button = document.getElementById("btnPreviewLegacyLearning");
+  if (button) button.textContent = preview.hidden ? "Voir avant import" : "Masquer l’aperçu";
+}
+
 function learningHelpMode() {
   try {
     const saved = localStorage.getItem(ATLAS_LEARNING_HELP_MODE_KEY);
@@ -11665,7 +12019,7 @@ function defaultLearningCockpitState() {
     notes_free:"",
     takeaway:"",
     practice_proof_id:null,
-    restart_build:"28.2.83"
+    restart_build:"28.2.84"
   };
 }
 function loadLearningHistory() {
@@ -11932,7 +12286,7 @@ function completeLearningSession() {
     saveExpertRoadmap(roadmap);
     renderExpertRoadmap();
   }
-  setActionFeedback("ok", "Session pédagogique archivée intégralement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans le carnet 28.2.83.`);
+  setActionFeedback("ok", "Session pédagogique archivée intégralement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans le carnet 28.2.84.`);
   renderLearningJourneyCockpit();
 }
 function newLearningSession() {
@@ -11951,6 +12305,17 @@ function buildLearningSessionMarkdown(cockpitInput = null) {
   const stats = learningRoadmapStats();
   const totals = getSimulationTotals();
   const lesson = ATLAS_GUIDED_LESSONS[module.key] || ATLAS_GUIDED_LESSONS.market;
+  const legacyProgressOnly = cockpit.legacy_progress_only === true;
+  const stepLines = legacyProgressOnly
+    ? ["- Détail des cinq cases non enregistré dans l’ancien format."]
+    : ATLAS_LEARNING_SESSION_STEPS.map((key, index) => `- [${cockpit.steps[key] ? "x" : " "}] ${index + 1}. ${key}`);
+  const simulationLines = legacyProgressOnly
+    ? ["- État de la simulation historique non enregistré dans l’ancien format."]
+    : [
+        `- Argent disponible : ${fmtEUR.format(cockpit.simulation?.cash ?? state.sim.cash)}`,
+        `- Montant placé : ${fmtEUR.format(cockpit.simulation?.positions_value ?? totals.positionsValue)}`,
+        `- P/L brut : ${atlasSignedEUR(cockpit.simulation?.pnl_gross ?? totals.pnl)}`
+      ];
   const lines = [
     "# SESSION D’APPRENTISSAGE AGENT-CRYPTO",
     "",
@@ -11982,13 +12347,11 @@ function buildLearningSessionMarkdown(cockpitInput = null) {
     "",
     "## Étapes",
     "",
-    ...ATLAS_LEARNING_SESSION_STEPS.map((key, index) => `- [${cockpit.steps[key] ? "x" : " "}] ${index + 1}. ${key}`),
+    ...stepLines,
     "",
     "## État de la simulation",
     "",
-    `- Argent disponible : ${fmtEUR.format(cockpit.simulation?.cash ?? state.sim.cash)}`,
-    `- Montant placé : ${fmtEUR.format(cockpit.simulation?.positions_value ?? totals.positionsValue)}`,
-    `- P/L brut : ${atlasSignedEUR(cockpit.simulation?.pnl_gross ?? totals.pnl)}`,
+    ...simulationLines,
     "",
     "## Mes notes libres",
     "",
@@ -12055,7 +12418,7 @@ function loadExpertRoadmap() {
     const previous = data.modules?.[module.key] || {};
     modules[module.key] = {
       status: ATLAS_EXPERT_STATUS_META[previous.status] ? previous.status : "new",
-      note: String(previous.note || "").slice(0, 600),
+      note: String(previous.note || ""),
       updated_at: previous.updated_at || null
     };
   });
@@ -12078,7 +12441,7 @@ function renderExpertRoadmap() {
     if (item.status === "practiced") practiced += 1;
     score += meta.score;
     const options = Object.entries(ATLAS_EXPERT_STATUS_META).map(([value, option]) => `<option value="${value}"${value === item.status ? " selected" : ""}>${escapeHtml(option.label)}</option>`).join("");
-    return `<article class="expert-roadmap-card" data-roadmap-key="${module.key}" data-status="${item.status}"><div class="expert-roadmap-card-head"><div><span>${escapeHtml(module.phase)}</span><b>${escapeHtml(module.title)}</b></div><select data-roadmap-status aria-label="État ${escapeHtml(module.title)}">${options}</select></div><p>${escapeHtml(module.goal)}</p><label>Note personnelle locale<textarea data-roadmap-note maxlength="600" placeholder="Ce que j’ai compris, ce que je dois revoir…">${escapeHtml(item.note)}</textarea></label></article>`;
+    return `<article class="expert-roadmap-card" data-roadmap-key="${module.key}" data-status="${item.status}"><div class="expert-roadmap-card-head"><div><span>${escapeHtml(module.phase)}</span><b>${escapeHtml(module.title)}</b></div><select data-roadmap-status aria-label="État ${escapeHtml(module.title)}">${options}</select></div><p>${escapeHtml(module.goal)}</p><label>Note personnelle locale<textarea data-roadmap-note placeholder="Ce que j’ai compris, ce que je dois revoir…">${escapeHtml(item.note)}</textarea></label></article>`;
   }).join("");
   const percent = maxScore ? Math.round(score / maxScore * 100) : 0;
   if (els.expertRoadmapProgressText) els.expertRoadmapProgressText.textContent = `${discovered}/${ATLAS_EXPERT_ROADMAP_MODULES.length} modules découverts`;
@@ -12093,7 +12456,7 @@ function updateExpertRoadmapFromCard(card) {
   const data = loadExpertRoadmap();
   const status = card.querySelector("[data-roadmap-status]")?.value || "new";
   const note = card.querySelector("[data-roadmap-note]")?.value || "";
-  data.modules[key] = { status: ATLAS_EXPERT_STATUS_META[status] ? status : "new", note: String(note).slice(0,600), updated_at:new Date().toISOString() };
+  data.modules[key] = { status: ATLAS_EXPERT_STATUS_META[status] ? status : "new", note: String(note), updated_at:new Date().toISOString() };
   saveExpertRoadmap(data);
   renderExpertRoadmap();
 }
@@ -12103,7 +12466,7 @@ function saveExpertRoadmapNote(card) {
   const data = loadExpertRoadmap();
   const previous = data.modules[key] || { status:"new", note:"" };
   const note = card.querySelector("[data-roadmap-note]")?.value || "";
-  data.modules[key] = { ...previous, note:String(note).slice(0,600), updated_at:new Date().toISOString() };
+  data.modules[key] = { ...previous, note:String(note), updated_at:new Date().toISOString() };
   saveExpertRoadmap(data);
 }
 function buildExpertRoadmapMarkdown() {
@@ -15037,6 +15400,10 @@ els.btnCompleteLearningSession?.addEventListener("click", completeLearningSessio
 els.btnNewLearningSession?.addEventListener("click", newLearningSession);
 els.btnExportLearningSession?.addEventListener("click", exportLearningSession);
 els.btnExportLearningNotebook?.addEventListener("click", exportLearningNotebook);
+document.getElementById("btnPreviewLegacyLearning")?.addEventListener("click", toggleLegacyLearningPreview);
+document.getElementById("btnImportLegacyLearning")?.addEventListener("click", importLegacyLearningData);
+document.getElementById("btnIgnoreLegacyLearning")?.addEventListener("click", ignoreLegacyLearningData);
+document.getElementById("btnRestoreLegacyLearningRecovery")?.addEventListener("click", restoreLegacyLearningRecovery);
 els.transactionProofFilter?.addEventListener("change", renderTransactionProofLedger);
 els.btnExportProofMarkdown?.addEventListener("click", exportTransactionProofMarkdown);
 els.btnExportProofJSON?.addEventListener("click", exportTransactionProofJSON);
@@ -16237,7 +16604,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.83",
+  interface: "Build 28.2.84",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -18488,7 +18855,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.83`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.84`
   );
 }
 
@@ -31177,4 +31544,4 @@ window.addEventListener("resize", () => {
    Deterministic scoring, thresholds, memory and sources unchanged.
    ============================================================ */
 
-setTimeout(() => { hydrateSimCostInputs(); applyAtlasPedagogyView(); renderExpertRoadmap(); renderTransactionProofLedger(); renderSchoolProfileLabels(); renderSimulationEducation(); renderLearningJourneyCockpit(); }, 0);
+setTimeout(() => { hydrateSimCostInputs(); applyAtlasPedagogyView(); renderExpertRoadmap(); renderTransactionProofLedger(); renderSchoolProfileLabels(); renderSimulationEducation(); renderLearningJourneyCockpit(); renderLegacyLearningMigration(); }, 0);
