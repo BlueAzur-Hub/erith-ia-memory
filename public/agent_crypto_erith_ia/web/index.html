@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.73" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.73" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.73 — DECISION BOARD TRUTH CONTRACT LOCK</title>
+  <meta name="atlas-build" content="28.2.74" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.74" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.74 — COINGECKO USD TO EUR MARKET FALLBACK LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.73" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.74" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.73"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.74"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.73</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.74</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.73</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.74</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -634,7 +634,7 @@
           <span id="atlasMetalsDomainStatusText">5 actifs sélectionnés · source de cotation non connectée</span>
         </div>
         <div class="chart-caption" id="chartCaption">
-          <span id="atlasChartCaptionCrypto">CoinGecko construit un Market Frame commun pouvant contenir jusqu’à 250 actifs validés en EUR. Les vues 50, 100 et Tous lisent cette même photo ; Binance actualise les prix compatibles en direct et CoinGecko complète les autres actifs. Sélectionne un actif pour charger son historique réel Binance ou CoinGecko à la demande.</span>
+          <span id="atlasChartCaptionCrypto">CoinGecko construit un Market Frame commun pouvant contenir jusqu’à 250 actifs. Le chemin EUR direct reste prioritaire ; en cas d’échec, le Top 250 USD est converti en EUR avec le taux public BCE avant tout retour à l’archive. Les vues 50, 100 et Tous lisent cette même photo ; Binance actualise les prix compatibles en direct et CoinGecko complète les autres actifs. Sélectionne un actif pour charger son historique réel Binance ou CoinGecko à la demande.</span>
           <span id="atlasChartCaptionMetals" hidden>Fondation Métaux active : panier, unités, séparation des caches et emplacement USGS sont préparés. Aucun cours ne sera affiché avant connexion d’une source réelle.</span>
         </div>
       </article>
@@ -2042,7 +2042,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.73</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.74</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.1.0R1</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.7.6 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.73 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.74 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3507,18 +3507,18 @@
         <div>
           <p class="eyebrow">LIVE SOURCES</p>
           <h2>Sources testées et statut</h2>
-        <p class="source-bottom-note">Diagnostic source principal en bas de page : CoinGecko est critique pour autoriser tableau, prix et graphiques.</p>
+        <p class="source-bottom-note">Diagnostic source principal : CoinGecko EUR est prioritaire ; CoinGecko USD converti au taux BCE est le secours direct avant l’archive.</p>
         </div>
         <span class="pill" id="sourceDecision">Refusé avant Livecheck</span>
       </div>
       <div class="source-grid" id="sourceGrid"></div>
-      <p class="source-help">Les sources avec clé API privée ne doivent jamais être exposées dans GitHub Pages. Cette version publique privilégie les endpoints publics et un refus propre en cas d’échec.</p>
+      <p class="source-help">Aucune clé privée n’est exposée. Ordre public : CoinGecko EUR direct → CoinGecko USD Top 250 + conversion BCE EUR → dernier snapshot local daté.</p>
     </section>
       </div>
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.73</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.74</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3528,6 +3528,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.73"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.74"></script>
 </body>
 </html>

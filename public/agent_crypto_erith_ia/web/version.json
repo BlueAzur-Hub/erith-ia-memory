@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.73",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.73",
-  "published_at": "2026-08-04T04:48:13Z",
+  "build": "28.2.74",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.74",
+  "published_at": "2026-08-04T05:36:07Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -482,7 +482,7 @@
     "control_center": "V2.1.0R1",
     "bridge": "V1.7.6",
     "model": "llama3.2:latest",
-    "interface": "Build 28.2.73",
+    "interface": "Build 28.2.74",
     "bridge_scope": "crypto_history_scanner_reports_conclusion_chat",
     "metals_scope": "public_github_actions_archive_only",
     "metals_dev_dependency": false,
@@ -520,6 +520,39 @@
     "crypto_graph_changed": false,
     "metals_workspace_changed": false,
     "collectors_changed": false,
+    "interface_geometry_changed": false
+  },
+  "coingecko_usd_eur_market_fallback": {
+    "base": "28.2.73",
+    "state": "ready_for_firefox_live_test",
+    "preferred_path": "CoinGecko Top 250 EUR direct",
+    "fallback_path": "CoinGecko Top 250 USD direct + ECB USD/EUR public reference",
+    "archive_policy": "only_after_eur_and_usd_eur_paths_fail",
+    "fx_registry": "../data/metals/fx/usd_eur.json",
+    "fx_source": "Banque centrale européenne",
+    "fx_max_age_days": 10,
+    "monetary_fields_converted_to_eur": [
+      "current_price",
+      "market_cap",
+      "total_volume",
+      "high_24h",
+      "low_24h",
+      "global_top250_market_cap",
+      "global_top250_volume"
+    ],
+    "percentage_variations_basis": "CoinGecko USD",
+    "fallback_source_lock_mode": "direct",
+    "decision_board_enabled_on_valid_fallback": true,
+    "fallback_provenance_visible": true,
+    "archive_state_label_corrected": true,
+    "scoring_formula_changed": false,
+    "movement_thresholds_changed": false,
+    "anomaly_thresholds_changed": false,
+    "crypto_chart_changed": false,
+    "metals_workspace_changed": false,
+    "bridge_changed": false,
+    "collectors_changed": false,
+    "github_actions_changed": false,
     "interface_geometry_changed": false
   }
 }
