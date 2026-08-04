@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.82" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.82" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.82 — CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
+  <meta name="atlas-build" content="28.2.83" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.83" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.83 — GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.82" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.83" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.82"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.83"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.82</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.83</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.82</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.83</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.82 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.83 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2839,32 +2839,72 @@
           </div>
         </div>
 
+        <div class="learning-restart-notice" id="learningRestartNotice">
+          <b>Nouveau carnet pédagogique 28.2.83</b>
+          <span>Le Cockpit redémarre proprement depuis le module 01. Les anciennes données 28.2.81/82 restent conservées dans le stockage local précédent et ne sont pas effacées.</span>
+        </div>
+
+        <details class="learning-lesson-panel" id="learningLessonPanel" open>
+          <summary><span>LEÇON INTÉGRÉE AU COCKPIT</span><b id="learningLessonTitle">01 · Marché et données</b></summary>
+          <div class="learning-lesson-body">
+            <p class="learning-lesson-intro" id="learningLessonIntro"></p>
+            <div class="learning-lesson-grid">
+              <section>
+                <h5>Notions à comprendre</h5>
+                <ul id="learningLessonConcepts"></ul>
+              </section>
+              <section>
+                <h5>Exemple pédagogique</h5>
+                <p id="learningLessonExample"></p>
+              </section>
+              <section>
+                <h5>Données visibles dans ton interface</h5>
+                <ul id="learningLessonInterface"></ul>
+              </section>
+              <section>
+                <h5>Règle de sécurité</h5>
+                <p id="learningLessonSafety"></p>
+              </section>
+            </div>
+            <button class="btn small primary" id="btnMarkLessonRead" type="button">J’ai lu cette leçon intégrée</button>
+          </div>
+        </details>
+
         <div class="learning-session-plan" id="learningSessionPlan">
           <div class="learning-session-plan-head">
             <div><b id="learningSessionTitle">Session du jour</b><span id="learningSessionProgress">0/5 étapes</span></div>
-            <button class="btn small" id="btnNewLearningSession" type="button">Nouvelle session</button>
+            <button class="btn small" id="btnNewLearningSession" type="button">Recommencer ce module</button>
           </div>
-          <label><input type="checkbox" data-learning-step="read" /> <span><b>1. Relire la notion</b><em id="learningStepRead">Lire l’objectif du module recommandé.</em></span></label>
-          <label><input type="checkbox" data-learning-step="open" /> <span><b>2. Ouvrir la bonne zone</b><em id="learningStepOpen">Le cockpit t’y conduit directement.</em></span></label>
+          <label><input type="checkbox" data-learning-step="read" /> <span><b>1. Lire la leçon intégrée</b><em id="learningStepRead">Le contenu complet se trouve juste au-dessus, dans l’interface.</em></span></label>
+          <label><input type="checkbox" data-learning-step="open" /> <span><b>2. Ouvrir la bonne zone</b><em id="learningStepOpen">Le Cockpit t’y conduit et valide cette étape.</em></span></label>
           <label><input type="checkbox" data-learning-step="practice" /> <span><b>3. Faire un exercice fictif</b><em id="learningStepPractice">Aucun argent réel et aucun ordre externe.</em></span></label>
-          <label><input type="checkbox" data-learning-step="verify" /> <span><b>4. Vérifier le résultat</b><em id="learningStepVerify">Lire les frais, le seuil et le résultat net.</em></span></label>
-          <label><input type="checkbox" data-learning-step="note" /> <span><b>5. Écrire ce que tu retiens</b><em>Une phrase suffit. Tu pourras la relire plus tard.</em></span></label>
+          <label><input type="checkbox" data-learning-step="verify" /> <span><b>4. Vérifier le résultat</b><em id="learningStepVerify">Comparer ce qui était attendu avec les données réellement affichées.</em></span></label>
+          <label><input type="checkbox" data-learning-step="note" /> <span><b>5. Écrire ta conclusion personnelle</b><em>La conclusion est séparée de tes notes longues et elle n’est pas tronquée.</em></span></label>
         </div>
 
-        <label class="learning-session-note">
-          <span>Note de la session</span>
-          <textarea id="learningSessionNote" maxlength="800" placeholder="Exemple : j’ai compris pourquoi une hausse ne suffit pas si les frais ne sont pas couverts."></textarea>
-        </label>
+        <div class="learning-notebook-grid">
+          <label class="learning-session-note learning-session-note-free">
+            <span>Mes notes libres — sauvegarde automatique complète</span>
+            <textarea id="learningSessionNotesFree" placeholder="Copie les définitions, ajoute tes observations, tes questions et tout ce que tu veux conserver. Aucun texte n’est volontairement tronqué."></textarea>
+            <em id="learningNotesCounter">0 caractère · sauvegarde locale complète</em>
+          </label>
+          <label class="learning-session-note learning-session-takeaway">
+            <span>Ce que je retiens — conclusion personnelle</span>
+            <textarea id="learningSessionNote" placeholder="Écris avec tes propres mots ce que cette séance t’a appris. Cette conclusion valide l’étape 5."></textarea>
+            <em id="learningTakeawayCounter">0 caractère · sauvegarde locale complète</em>
+          </label>
+        </div>
 
         <div class="learning-cockpit-actions">
           <button class="btn small primary" id="btnContinueLearning" type="button">Continuer mon parcours</button>
           <button class="btn small" id="btnOpenLearningPractice" type="button">Ouvrir l’exercice</button>
-          <button class="btn small" id="btnOpenLearningProofs" type="button">Voir mon journal</button>
-          <button class="btn small" id="btnCompleteLearningSession" type="button">Marquer la session terminée</button>
-          <button class="btn small" id="btnExportLearningSession" type="button">Exporter la session .md</button>
+          <button class="btn small" id="btnOpenLearningProofs" type="button">Voir les preuves de simulation</button>
+          <button class="btn small" id="btnCompleteLearningSession" type="button">Enregistrer et terminer la session</button>
+          <button class="btn small" id="btnExportLearningSession" type="button">Exporter cette session .md</button>
+          <button class="btn small" id="btnExportLearningNotebook" type="button">Exporter mon carnet complet .md</button>
         </div>
 
-        <div class="learning-cockpit-reading" id="learningCockpitReading">Commence par la prochaine étape recommandée. Le cockpit s’adapte à ta progression locale et à tes simulations fictives.</div>
+        <div class="learning-cockpit-reading" id="learningCockpitReading">Commence par lire la leçon intégrée. Tes notes sont sauvegardées automatiquement et intégralement dans ce navigateur.</div>
       </section>
 
       <section class="expert-roadmap-panel" id="expertLearningRoadmap" aria-labelledby="expertRoadmapTitle">
@@ -3775,7 +3815,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.82</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.83</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3801,6 +3841,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.82"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.83"></script>
 </body>
 </html>

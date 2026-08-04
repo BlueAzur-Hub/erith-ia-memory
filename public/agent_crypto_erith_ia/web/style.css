@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.82
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.83
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.82
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.82
+   ATLAS_ASSET_BUILD: 28.2.83
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.83
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.82";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.82";
+  --atlas-asset-build: "28.2.83";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.83";
 }
 
 :root{
@@ -25601,3 +25601,41 @@ input[type="checkbox"]{
   .withdrawal-safety-checks label,
   .scam-sentinel-grid label{grid-template-columns:17px minmax(0,1fr)!important}
 }
+
+
+/* =========================================================
+   LAYER 28.2.83 — GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK
+   Integrated lessons, complete autosaved notes, no deliberate truncation.
+   ========================================================= */
+.learning-restart-notice{
+  display:grid;gap:4px;margin-top:11px;padding:10px 12px;
+  border:1px solid rgba(255,194,93,.25);border-radius:11px;
+  background:rgba(123,82,20,.10);color:#b8cadd;font-size:9px;line-height:1.5;
+}
+.learning-restart-notice b{color:#ffe6a5;font-size:10px}
+.learning-lesson-panel{
+  margin-top:11px;border:1px solid rgba(88,210,255,.20);border-radius:13px;
+  background:rgba(3,14,26,.68);overflow:hidden;
+}
+.learning-lesson-panel summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;cursor:pointer;list-style:none;background:rgba(67,178,219,.07);
+}
+.learning-lesson-panel summary::-webkit-details-marker{display:none}
+.learning-lesson-panel summary span{color:#8fbddd;font-size:8px;font-weight:900;letter-spacing:.16em}
+.learning-lesson-panel summary b{color:#fff0c8;font-size:12px;text-align:right}
+.learning-lesson-body{display:grid;gap:12px;padding:14px}
+.learning-lesson-intro{margin:0;padding:11px 12px;border-left:3px solid #45dfa0;border-radius:8px;background:rgba(69,223,160,.06);color:#d6e7f2;font-size:10px;line-height:1.65}
+.learning-lesson-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.learning-lesson-grid section{min-width:0;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(255,255,255,.025)}
+.learning-lesson-grid h5{margin:0 0 8px;color:#ffe7ac;font-size:10px}
+.learning-lesson-grid p,.learning-lesson-grid li{color:#aec3d4;font-size:9px;line-height:1.55}
+.learning-lesson-grid p{margin:0}
+.learning-lesson-grid ul{display:grid;gap:6px;margin:0;padding-left:18px}
+.learning-notebook-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:11px;margin-top:11px}
+.learning-session-note{margin-top:0!important;padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(2,9,18,.42)}
+.learning-session-note textarea{min-height:240px!important;max-height:none!important;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px!important;line-height:1.58!important}
+.learning-session-takeaway textarea{min-height:240px!important}
+.learning-session-note>em{color:#78a0b7;font-size:8px;font-style:normal;font-weight:700;text-transform:none;letter-spacing:0}
+.learning-session-plan>label:nth-of-type(1) em{color:#8fd8bd}
+@media(max-width:980px){.learning-lesson-grid,.learning-notebook-grid{grid-template-columns:1fr}.learning-session-note textarea{min-height:210px!important}}

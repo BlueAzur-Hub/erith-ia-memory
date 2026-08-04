@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.82 — CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.83 — GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.82";
-const ATLAS_BUILD = "28.2.82";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.82";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.83";
+const ATLAS_BUILD = "28.2.83";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.83";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -1499,7 +1499,7 @@ state.memoryTruth = {
   }
 };
 
-const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), simProfileTitle: $("simProfileTitle"), simProfileBadge: $("simProfileBadge"), simProfileCapital: $("simProfileCapital"), simProfileTicket: $("simProfileTicket"), simProfileMaxOperation: $("simProfileMaxOperation"), simProfileMaxExposure: $("simProfileMaxExposure"), simProfileMinReserve: $("simProfileMinReserve"), simProfileAllowedAssets: $("simProfileAllowedAssets"), schoolSafeLabel: $("schoolSafeLabel"), schoolTooBigLabel: $("schoolTooBigLabel"), schoolForbiddenLabel: $("schoolForbiddenLabel"), schoolFillLabel: $("schoolFillLabel"), schoolExceedLabel: $("schoolExceedLabel"), schoolResetTitle: $("schoolResetTitle"), schoolResetLabel: $("schoolResetLabel"), schoolResult: $("schoolResult"), simBuyFeePct: $("simBuyFeePct"), simSellFeePct: $("simSellFeePct"), simEntryImpactPct: $("simEntryImpactPct"), simExitImpactPct: $("simExitImpactPct"), simCostsConfirmed: $("simCostsConfirmed"), simCostStatus: $("simCostStatus"), simRoundTripCost: $("simRoundTripCost"), simBreakEvenPrice: $("simBreakEvenPrice"), simNetPnL: $("simNetPnL"), simCostTruth: $("simCostTruth"), simScenarioOutput: $("simScenarioOutput"), simSecurityGateStatus: $("simSecurityGateStatus"), simSecurityGateList: $("simSecurityGateList"), simSecurityGateReading: $("simSecurityGateReading"), atlasPedagogyDrawer: $("atlasPedagogyDrawer"), atlasPedagogyTitle: $("atlasPedagogyTitle"), atlasPedagogyBody: $("atlasPedagogyBody"), btnClosePedagogy: $("btnClosePedagogy"), btnMinimizePedagogy: $("btnMinimizePedagogy"), learningCockpitStatus: $("learningCockpitStatus"), learningCockpitProfile: $("learningCockpitProfile"), learningCockpitCapital: $("learningCockpitCapital"), learningCockpitProgress: $("learningCockpitProgress"), learningCockpitModules: $("learningCockpitModules"), learningCockpitPortfolio: $("learningCockpitPortfolio"), learningCockpitExposure: $("learningCockpitExposure"), learningCockpitLastProof: $("learningCockpitLastProof"), learningCockpitLastProofTime: $("learningCockpitLastProofTime"), learningCockpitModule: $("learningCockpitModule"), learningCockpitGoal: $("learningCockpitGoal"), learningCockpitModuleState: $("learningCockpitModuleState"), learningCockpitDuration: $("learningCockpitDuration"), learningCockpitRisk: $("learningCockpitRisk"), learningHelpMode: $("learningHelpMode"), learningHelpModeHint: $("learningHelpModeHint"), learningSessionTitle: $("learningSessionTitle"), learningSessionProgress: $("learningSessionProgress"), learningSessionNote: $("learningSessionNote"), learningStepRead: $("learningStepRead"), learningStepOpen: $("learningStepOpen"), learningStepPractice: $("learningStepPractice"), learningStepVerify: $("learningStepVerify"), btnNewLearningSession: $("btnNewLearningSession"), btnContinueLearning: $("btnContinueLearning"), btnOpenLearningPractice: $("btnOpenLearningPractice"), btnOpenLearningProofs: $("btnOpenLearningProofs"), btnCompleteLearningSession: $("btnCompleteLearningSession"), btnExportLearningSession: $("btnExportLearningSession"), learningCockpitReading: $("learningCockpitReading"), expertRoadmapGrid: $("expertRoadmapGrid"), expertRoadmapBadge: $("expertRoadmapBadge"), expertRoadmapProgressText: $("expertRoadmapProgressText"), expertRoadmapMasteryText: $("expertRoadmapMasteryText"), expertRoadmapProgressBar: $("expertRoadmapProgressBar"), btnExportExpertRoadmap: $("btnExportExpertRoadmap"), btnResetExpertRoadmap: $("btnResetExpertRoadmap"), transactionProofStatus: $("transactionProofStatus"), proofBuyCount: $("proofBuyCount"), proofSellCount: $("proofSellCount"), proofRefusalCount: $("proofRefusalCount"), proofRealizedPnl: $("proofRealizedPnl"), transactionProofFilter: $("transactionProofFilter"), transactionProofRows: $("transactionProofRows"), btnExportProofMarkdown: $("btnExportProofMarkdown"), btnExportProofJSON: $("btnExportProofJSON"), btnSimCostSchoolPreset: $("btnSimCostSchoolPreset"), btnSimCostReset: $("btnSimCostReset"), withdrawAsset: $("withdrawAsset"), withdrawNetwork: $("withdrawNetwork"), withdrawAmount: $("withdrawAmount"), withdrawFee: $("withdrawFee"), withdrawDestinationVerified: $("withdrawDestinationVerified"), withdrawSmallTest: $("withdrawSmallTest"), withdrawNoThirdParty: $("withdrawNoThirdParty"), btnCheckWithdrawalSafety: $("btnCheckWithdrawalSafety"), withdrawalSafetyStatus: $("withdrawalSafetyStatus"), withdrawalSafetyOutput: $("withdrawalSafetyOutput"), scamSentinelChecks: $("scamSentinelChecks"), scamSentinelStatus: $("scamSentinelStatus"), scamSentinelOutput: $("scamSentinelOutput"), btnAnalyzeScamSignals: $("btnAnalyzeScamSignals"), btnResetScamSignals: $("btnResetScamSignals"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
+const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), simProfileTitle: $("simProfileTitle"), simProfileBadge: $("simProfileBadge"), simProfileCapital: $("simProfileCapital"), simProfileTicket: $("simProfileTicket"), simProfileMaxOperation: $("simProfileMaxOperation"), simProfileMaxExposure: $("simProfileMaxExposure"), simProfileMinReserve: $("simProfileMinReserve"), simProfileAllowedAssets: $("simProfileAllowedAssets"), schoolSafeLabel: $("schoolSafeLabel"), schoolTooBigLabel: $("schoolTooBigLabel"), schoolForbiddenLabel: $("schoolForbiddenLabel"), schoolFillLabel: $("schoolFillLabel"), schoolExceedLabel: $("schoolExceedLabel"), schoolResetTitle: $("schoolResetTitle"), schoolResetLabel: $("schoolResetLabel"), schoolResult: $("schoolResult"), simBuyFeePct: $("simBuyFeePct"), simSellFeePct: $("simSellFeePct"), simEntryImpactPct: $("simEntryImpactPct"), simExitImpactPct: $("simExitImpactPct"), simCostsConfirmed: $("simCostsConfirmed"), simCostStatus: $("simCostStatus"), simRoundTripCost: $("simRoundTripCost"), simBreakEvenPrice: $("simBreakEvenPrice"), simNetPnL: $("simNetPnL"), simCostTruth: $("simCostTruth"), simScenarioOutput: $("simScenarioOutput"), simSecurityGateStatus: $("simSecurityGateStatus"), simSecurityGateList: $("simSecurityGateList"), simSecurityGateReading: $("simSecurityGateReading"), atlasPedagogyDrawer: $("atlasPedagogyDrawer"), atlasPedagogyTitle: $("atlasPedagogyTitle"), atlasPedagogyBody: $("atlasPedagogyBody"), btnClosePedagogy: $("btnClosePedagogy"), btnMinimizePedagogy: $("btnMinimizePedagogy"), learningCockpitStatus: $("learningCockpitStatus"), learningCockpitProfile: $("learningCockpitProfile"), learningCockpitCapital: $("learningCockpitCapital"), learningCockpitProgress: $("learningCockpitProgress"), learningCockpitModules: $("learningCockpitModules"), learningCockpitPortfolio: $("learningCockpitPortfolio"), learningCockpitExposure: $("learningCockpitExposure"), learningCockpitLastProof: $("learningCockpitLastProof"), learningCockpitLastProofTime: $("learningCockpitLastProofTime"), learningCockpitModule: $("learningCockpitModule"), learningCockpitGoal: $("learningCockpitGoal"), learningCockpitModuleState: $("learningCockpitModuleState"), learningCockpitDuration: $("learningCockpitDuration"), learningCockpitRisk: $("learningCockpitRisk"), learningHelpMode: $("learningHelpMode"), learningHelpModeHint: $("learningHelpModeHint"), learningSessionTitle: $("learningSessionTitle"), learningSessionProgress: $("learningSessionProgress"), learningSessionNote: $("learningSessionNote"), learningSessionNotesFree: $("learningSessionNotesFree"), learningNotesCounter: $("learningNotesCounter"), learningTakeawayCounter: $("learningTakeawayCounter"), learningLessonPanel: $("learningLessonPanel"), learningLessonTitle: $("learningLessonTitle"), learningLessonIntro: $("learningLessonIntro"), learningLessonConcepts: $("learningLessonConcepts"), learningLessonExample: $("learningLessonExample"), learningLessonInterface: $("learningLessonInterface"), learningLessonSafety: $("learningLessonSafety"), btnMarkLessonRead: $("btnMarkLessonRead"), btnExportLearningNotebook: $("btnExportLearningNotebook"), learningRestartNotice: $("learningRestartNotice"), learningStepRead: $("learningStepRead"), learningStepOpen: $("learningStepOpen"), learningStepPractice: $("learningStepPractice"), learningStepVerify: $("learningStepVerify"), btnNewLearningSession: $("btnNewLearningSession"), btnContinueLearning: $("btnContinueLearning"), btnOpenLearningPractice: $("btnOpenLearningPractice"), btnOpenLearningProofs: $("btnOpenLearningProofs"), btnCompleteLearningSession: $("btnCompleteLearningSession"), btnExportLearningSession: $("btnExportLearningSession"), learningCockpitReading: $("learningCockpitReading"), expertRoadmapGrid: $("expertRoadmapGrid"), expertRoadmapBadge: $("expertRoadmapBadge"), expertRoadmapProgressText: $("expertRoadmapProgressText"), expertRoadmapMasteryText: $("expertRoadmapMasteryText"), expertRoadmapProgressBar: $("expertRoadmapProgressBar"), btnExportExpertRoadmap: $("btnExportExpertRoadmap"), btnResetExpertRoadmap: $("btnResetExpertRoadmap"), transactionProofStatus: $("transactionProofStatus"), proofBuyCount: $("proofBuyCount"), proofSellCount: $("proofSellCount"), proofRefusalCount: $("proofRefusalCount"), proofRealizedPnl: $("proofRealizedPnl"), transactionProofFilter: $("transactionProofFilter"), transactionProofRows: $("transactionProofRows"), btnExportProofMarkdown: $("btnExportProofMarkdown"), btnExportProofJSON: $("btnExportProofJSON"), btnSimCostSchoolPreset: $("btnSimCostSchoolPreset"), btnSimCostReset: $("btnSimCostReset"), withdrawAsset: $("withdrawAsset"), withdrawNetwork: $("withdrawNetwork"), withdrawAmount: $("withdrawAmount"), withdrawFee: $("withdrawFee"), withdrawDestinationVerified: $("withdrawDestinationVerified"), withdrawSmallTest: $("withdrawSmallTest"), withdrawNoThirdParty: $("withdrawNoThirdParty"), btnCheckWithdrawalSafety: $("btnCheckWithdrawalSafety"), withdrawalSafetyStatus: $("withdrawalSafetyStatus"), withdrawalSafetyOutput: $("withdrawalSafetyOutput"), scamSentinelChecks: $("scamSentinelChecks"), scamSentinelStatus: $("scamSentinelStatus"), scamSentinelOutput: $("scamSentinelOutput"), btnAnalyzeScamSignals: $("btnAnalyzeScamSignals"), btnResetScamSignals: $("btnResetScamSignals"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
   autoReaderTruth: $("autoReaderTruth"), autoVisibilityTruth: $("autoVisibilityTruth"),
   autoLastSnapshotTruth: $("autoLastSnapshotTruth"), autoCollectorTruth: $("autoCollectorTruth"),
   autoGithubWriteTruth: $("autoGithubWriteTruth"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"),
@@ -11012,7 +11012,7 @@ const SIM_COST_STORAGE_KEY = "agent_crypto_erith_ia_sim_costs_28_2_80";
 const SIM_COST_STORAGE_KEY_PREVIOUS = "agent_crypto_erith_ia_sim_costs_28_2_79";
 const ATLAS_PROOF_SCHEMA = "agent_crypto_transaction_proof_v1";
 const ATLAS_PEDAGOGY_VIEW_KEY = "agent_crypto_pedagogy_view_28_2_79";
-const ATLAS_EXPERT_ROADMAP_KEY = "agent_crypto_expert_roadmap_28_2_79";
+const ATLAS_EXPERT_ROADMAP_KEY = "agent_crypto_expert_roadmap_28_2_83";
 const SIM_COST_DEFAULTS = { buyFeePct: 0, sellFeePct: 0, entryImpactPct: 0, exitImpactPct: 0, confirmed: false, source: "manual" };
 let atlasSimulationScenarioPct = 0;
 
@@ -11598,7 +11598,7 @@ function closeAtlasPedagogy() {
 }
 
 
-const ATLAS_LEARNING_COCKPIT_KEY = "agent_crypto_learning_journey_cockpit_28_2_81";
+const ATLAS_LEARNING_COCKPIT_KEY = "agent_crypto_learning_journey_cockpit_28_2_83";
 const ATLAS_LEARNING_HELP_MODE_KEY = "agent_crypto_learning_help_mode_28_2_81";
 const ATLAS_LEARNING_SESSION_STEPS = Object.freeze(["read", "open", "practice", "verify", "note"]);
 const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
@@ -11613,6 +11613,20 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   derivatives:{ target:"simSecurityGate", practice:"Vérifier que marge et levier restent désactivés.", verify:"Expliquer l’exposition réelle et le risque de liquidation." },
   scams:{ target:"scamSentinelPanel", practice:"Cocher un scénario fictif puis analyser les signaux.", verify:"Identifier l’arrêt, le canal officiel et les secrets à ne jamais transmettre." },
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
+});
+const ATLAS_GUIDED_LESSONS = Object.freeze({"market":{"intro":"Un prix isolé ne décrit pas le marché. Il faut toujours le replacer dans une période, identifier sa source, vérifier l’âge des données et regarder l’activité autour de l’actif.","concepts":["Prix actuel : dernière valeur observée sur une source donnée, pas une vérité universelle.","Variation 24 h et 7 j : mouvement relatif sur deux horizons différents.","Volume : activité d’échange sur une période ; il aide à juger la force d’un mouvement.","Capitalisation : prix multiplié par l’offre en circulation ; ce n’est pas une caisse disponible.","Liquidité : facilité d’acheter ou vendre sans déplacer fortement le prix.","Source et fraîcheur : nom du fournisseur, heure de collecte et âge de la donnée."],"example":"BTC peut progresser de +0,7 % sur 24 h tout en restant faible sur 7 jours. La conclusion correcte est seulement : petite hausse récente sur la source observée. Ce n’est pas une preuve de tendance durable.","safety":"Ne jamais acheter parce qu’un seul chiffre est vert. Une décision réelle exigerait plusieurs données cohérentes, des frais connus et une validation humaine."},"spot":{"intro":"Le marché Spot correspond à l’achat ou à la vente directe d’un actif, sans emprunt ni levier. Une simulation Spot doit montrer le montant engagé, le prix d’entrée, la quantité reçue et les coûts.","concepts":["Ordre au marché : exécution immédiate aux meilleurs prix disponibles, avec risque de slippage.","Ordre limite : prix choisi à l’avance, mais exécution non garantie.","Bid : meilleur prix proposé par un acheteur.","Ask : meilleur prix demandé par un vendeur.","Spread : écart entre le meilleur bid et le meilleur ask.","Slippage : différence entre le prix attendu et le prix exécuté.","Exécution partielle : seule une partie de l’ordre trouve une contrepartie."],"example":"Avec 50 € fictifs, le simulateur convertit le montant en une quantité de BTC au prix d’entrée affiché. Si le prix bouge immédiatement ou si des frais sont appliqués, le portefeuille peut afficher légèrement moins de 1 000 €.","safety":"Le profil débutant reste Spot uniquement. Levier, marge, futures, short et emprunt demeurent bloqués."},"risk":{"intro":"Le résultat utile est le résultat net après frais, spread et slippage. La taille de position doit rester compatible avec la réserve et l’exposition maximale du profil.","concepts":["Frais d’achat et de vente : commissions payées à l’entrée et à la sortie.","Seuil de rentabilité : prix nécessaire pour récupérer tous les coûts.","P/L brut : gain ou perte avant certains coûts de sortie.","P/L net : estimation après tous les coûts renseignés.","Exposition : montant soumis aux variations du marché.","Drawdown : baisse depuis un sommet antérieur.","Espérance : combinaison des gains, pertes et probabilités sur une série."],"example":"Une hausse de +1 % ne produit pas forcément un gain net si l’aller-retour coûte 1,2 %. Le seuil de rentabilité se situe alors au-dessus du prix d’entrée.","safety":"Les taux affichés restent des hypothèses pédagogiques tant qu’ils ne sont pas vérifiés sur un aperçu officiel de la plateforme."},"account":{"intro":"La sécurité du compte précède tout dépôt. Une plateforme correctement utilisée reste vulnérable si l’email, le mot de passe ou la récupération du compte sont compromis.","concepts":["Mot de passe unique et long.","2FA ou passkey indépendante du mot de passe.","Email sécurisé et sessions inconnues révoquées.","Verrou des paramètres et des retraits lorsque disponible.","Domaine officiel ouvert depuis un favori.","Aucun code transmis à un prétendu support."],"example":"Un appel urgent affirmant que le compte est piraté ne justifie jamais de donner un code 2FA ni d’installer un accès distant.","safety":"Raccrocher, ouvrir soi-même le site officiel et vérifier l’état du compte depuis un canal indépendant."},"wallet":{"intro":"Un retrait combine un actif, un réseau, une adresse, des frais et des confirmations. Une seule incohérence peut envoyer les fonds au mauvais endroit.","concepts":["Adresse : destination technique, à contrôler après collage.","Réseau : doit être accepté à la fois au départ et à l’arrivée.","Memo ou tag : identifiant supplémentaire parfois obligatoire.","Frais et minimum : déterminent le montant net reçu.","TXID : identifiant public de la transaction.","Petit test : transfert réduit avant un montant plus important.","Phrase de récupération : secret absolu du wallet."],"example":"Envoyer un token sur un réseau non pris en charge peut rendre les fonds invisibles ou difficiles à récupérer, même si l’adresse ressemble à la bonne.","safety":"Aucune phrase de récupération, aucune adresse réelle et aucun transfert réel ne sont demandés dans ce laboratoire."},"tokenomics":{"intro":"Le prix unitaire ne suffit pas à juger un jeton. Il faut étudier l’offre, la valorisation, l’inflation, les déblocages et la concentration des détenteurs.","concepts":["Offre en circulation et offre maximale.","Capitalisation et valorisation totalement diluée — FDV.","Inflation, émissions et burn.","Vesting et unlocks des équipes ou investisseurs.","Concentration des détenteurs.","Stablecoin : objectif de stabilité, mais risques d’émetteur, réserve et depeg."],"example":"Un jeton à 0,01 € peut être plus valorisé qu’un jeton à 100 € si des milliards d’unités existent. Le prix d’une unité ne mesure pas la taille du projet.","safety":"Un prix faible n’est jamais une preuve que l’actif est bon marché."},"defi":{"intro":"La DeFi repose sur des smart contracts. Une signature peut autoriser un contrat à déplacer des actifs, même sans révéler la phrase de récupération.","concepts":["Smart contract : programme déployé sur une blockchain.","Gas : coût d’exécution sur le réseau.","Approval : autorisation donnée à un contrat.","Approval illimité : permission potentiellement beaucoup plus large que l’opération.","DEX : échange décentralisé via contrats.","Bridge : transfert ou représentation entre réseaux.","Oracle et dépendances : sources externes utilisées par le protocole."],"example":"Un faux airdrop peut demander une signature présentée comme une simple vérification alors qu’elle accorde une autorisation de dépense.","safety":"Ne rien signer si la fonction, le contrat, le réseau, le montant autorisé ou le gas ne sont pas compris."},"yield":{"intro":"Un rendement ne se juge pas seulement par son pourcentage. Il faut identifier sa source, l’inflation du jeton, la durée de blocage et le risque de contrepartie.","concepts":["Staking natif et staking par prestataire.","Récompense nominale contre rendement réel.","Inflation du jeton récompensé.","Blocage et délai de retrait.","Slashing sur certains réseaux.","Risque de protocole ou de contrepartie.","Rendement net après coûts et variation du prix."],"example":"Recevoir +8 % de jetons ne crée pas un gain en euros si le prix du jeton baisse de 30 % pendant la même période.","safety":"Un rendement très élevé doit être traité comme un signal de risque supplémentaire, jamais comme une garantie."},"derivatives":{"intro":"Les dérivés donnent une exposition au prix sans nécessairement posséder l’actif. Le levier multiplie les gains et les pertes et rapproche la liquidation.","concepts":["Marge : garantie immobilisée pour une position.","Levier : exposition supérieure au capital engagé.","Long et short.","Futures et contrats perpétuels.","Funding périodique.","Mark price et prix de liquidation.","Marge isolée et marge croisée."],"example":"100 € avec un levier ×5 créent 500 € d’exposition. Un mouvement défavorable de 5 % représente environ 25 € de perte brute, avant frais.","safety":"Ces produits sont étudiés uniquement pour les reconnaître. Ils restent désactivés dans le profil débutant."},"scams":{"intro":"La blockchain exécute une transaction valide techniquement ; elle ne vérifie pas que le destinataire est honnête. La sécurité doit donc détecter la pression et les demandes anormales.","concepts":["Faux support et phishing.","Rendement garanti ou urgence artificielle.","Paiement demandé pour débloquer un retrait.","Accès distant et malware de presse-papiers.","Address poisoning.","Wallet drainer et approval illimité.","Pump-and-dump, rug pull et honeypot.","Fausse récupération de fonds."],"example":"Un support demandant de déplacer les cryptos vers une adresse de sécurité est lui-même un signal critique : un support légitime ne dicte pas une adresse de retrait.","safety":"En cas de doute : ne rien envoyer, ne rien signer, ne donner aucun code et revenir au canal officiel ouvert manuellement."},"records":{"intro":"Une expertise durable exige des preuves et un journal. Chaque opération doit pouvoir être reconstruite sans dépendre de la mémoire.","concepts":["Date, heure, actif, paire et type d’ordre.","Montant, quantité, prix moyen et frais.","TXID et justificatifs pour les transferts.","P/L brut et net.","Exports CSV, JSON ou Markdown.","Sources officielles et date de consultation.","Traçabilité fiscale à vérifier selon les règles en vigueur."],"example":"Deux opérations au même montant peuvent produire des résultats différents si les prix d’entrée, frais et quantités ne sont pas identiques. Le journal permet de l’expliquer.","safety":"Ne jamais inventer une valeur manquante. Une preuve incomplète doit rester explicitement incomplète."}});
+const ATLAS_LEARNING_HISTORY_KEY = "agent_crypto_learning_journey_history_28_2_83";
+const ATLAS_LEARNING_PREVIOUS_COCKPIT_KEY = "agent_crypto_learning_journey_cockpit_28_2_81";
+const ATLAS_LEARNING_PREVIOUS_ROADMAP_KEY = "agent_crypto_expert_roadmap_28_2_79";
+const ATLAS_LEARNING_TARGET_LABELS = Object.freeze({
+  "market-workspace":"Espace Marché",
+  schoolPanel:"Mode École guidé",
+  simCostPanel:"Coûts pédagogiques et seuil de rentabilité",
+  simSecurityGate:"Security Gate pédagogique",
+  withdrawalSafetyLab:"Laboratoire de retrait fictif",
+  expertLearningRoadmap:"Parcours expert sur 24 mois",
+  scamSentinelPanel:"Scam Sentinel pédagogique",
+  transactionProofLedger:"Journal des preuves de simulation"
 });
 function learningHelpMode() {
   try {
@@ -11640,15 +11654,28 @@ function renderLearningHelpMode() {
 }
 function defaultLearningCockpitState() {
   return {
-    schema:"agent_crypto_learning_journey_cockpit_v1",
+    schema:"agent_crypto_learning_journey_cockpit_v2",
     session_id:`LEARN-${Date.now().toString(36).toUpperCase()}`,
     started_at:new Date().toISOString(),
     completed_at:null,
-    completed_sessions:0,
+    completed_sessions:loadLearningHistory().length,
     module_key:null,
     steps:{ read:false, open:false, practice:false, verify:false, note:false },
-    note:""
+    lesson_read_at:null,
+    notes_free:"",
+    takeaway:"",
+    practice_proof_id:null,
+    restart_build:"28.2.83"
   };
+}
+function loadLearningHistory() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(ATLAS_LEARNING_HISTORY_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+function saveLearningHistory(history) {
+  try { localStorage.setItem(ATLAS_LEARNING_HISTORY_KEY, JSON.stringify(Array.isArray(history) ? history.slice(0,200) : [])); } catch {}
 }
 function loadLearningCockpitState() {
   let data = null;
@@ -11658,13 +11685,64 @@ function loadLearningCockpitState() {
   return {
     ...base,
     ...data,
-    completed_sessions:Math.max(0, atlasFiniteNumber(data.completed_sessions, 0)),
+    completed_sessions:loadLearningHistory().length,
     steps:Object.fromEntries(ATLAS_LEARNING_SESSION_STEPS.map(key => [key, data.steps?.[key] === true])),
-    note:String(data.note || "").slice(0,800)
+    lesson_read_at:data.lesson_read_at || null,
+    notes_free:String(data.notes_free ?? data.note ?? ""),
+    takeaway:String(data.takeaway ?? ""),
+    practice_proof_id:data.practice_proof_id || null
   };
 }
 function saveLearningCockpitState(data) {
   try { localStorage.setItem(ATLAS_LEARNING_COCKPIT_KEY, JSON.stringify(data)); } catch {}
+}
+function learningTextCount(value) { return Array.from(String(value || "")).length; }
+function renderLearningTextCounters(cockpit) {
+  if (els.learningNotesCounter) els.learningNotesCounter.textContent = `${learningTextCount(cockpit.notes_free)} caractère${learningTextCount(cockpit.notes_free) > 1 ? "s" : ""} · sauvegarde locale complète`;
+  if (els.learningTakeawayCounter) els.learningTakeawayCounter.textContent = `${learningTextCount(cockpit.takeaway)} caractère${learningTextCount(cockpit.takeaway) > 1 ? "s" : ""} · sauvegarde locale complète`;
+}
+function currentLearningInterfaceFacts(moduleKey) {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  const costs = readSimCostInputs();
+  const btc = state.coins?.find?.(coin => coin.id === "bitcoin");
+  const latest = latestLearningProof();
+  const map = {
+    market:[
+      btc && Number.isFinite(Number(btc.price)) ? `BTC : ${fmtEUR.format(Number(btc.price))} · 24 h ${atlasSignedPct(btc.change24h)} · 7 j ${atlasSignedPct(btc.change7d)}` : "BTC : donnée momentanément indisponible.",
+      `Source principale affichée : ${state.mainSource || "non disponible"}.`,
+      `Actifs actuellement chargés : ${state.coins?.length || 0}.`
+    ],
+    spot:[
+      `Profil actif : ${SIM_PROFILE.label} · ticket conseillé ${fmtEUR.format(SIM_PROFILE.defaultAmount)}.`,
+      `Argent disponible : ${fmtEUR.format(state.sim.cash)} · montant placé : ${fmtEUR.format(totals.positionsValue)}.`,
+      latest ? `Dernière preuve : ${proofTypeLabel(latest.type)} ${latest.symbol || "—"} ${Number.isFinite(Number(latest.amount_eur)) ? fmtEUR.format(Number(latest.amount_eur)) : ""}.` : "Aucune preuve de simulation pour cette nouvelle session."
+    ],
+    risk:[
+      `Exposition : ${fmtEUR.format(totals.positionsValue)} sur ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`,
+      `Hypothèse de coût aller-retour : ${getSimRoundTripCostPct(costs).toFixed(2)} %.`,
+      `P/L brut actuel : ${atlasSignedEUR(totals.pnl)}.`
+    ],
+    account:["Simulation locale : aucun compte exchange connecté.","Levier et ordres réels : bloqués.","Le Security Gate distingue les données conformes, manquantes et bloquantes."],
+    wallet:[`Actif de démonstration : ${String(els.withdrawAsset?.value || "BTC").toUpperCase()}.`,`Réseau de démonstration : ${String(els.withdrawNetwork?.value || "Bitcoin")}.`,"Aucune adresse réelle n’est demandée dans le laboratoire."],
+    tokenomics:["Le parcours expert conserve les notes localement.","Aucune valorisation de jeton n’est transformée en recommandation.","Le prix unitaire doit être comparé à l’offre et à la FDV."],
+    defi:["Aucun wallet et aucun smart contract ne sont connectés.","Le laboratoire reste entièrement fictif.","Les autorisations illimitées incomprises doivent être refusées."],
+    yield:["Aucun rendement réel n’est activé.","Le Cockpit compare rendement nominal, inflation et risque.","Les récompenses en jetons ne garantissent pas un gain en euros."],
+    derivatives:["Profil Spot uniquement.","Levier, marge, futures et short : bloqués.","Exposition maximale du profil : " + fmtEUR.format(SIM_PROFILE.maxExposure) + "."],
+    scams:["Le Scam Sentinel analyse uniquement les cases cochées.","Il ne certifie aucun site ni aucune personne.","Une alerte rouge impose l’arrêt de la simulation."],
+    records:[`Preuves locales conservées : ${transactionProofEntries("all").length}.`,`Sessions pédagogiques archivées : ${loadLearningHistory().length}.`,"Les exports restent locaux et ne publient rien automatiquement."]
+  };
+  return map[moduleKey] || map.market;
+}
+function renderIntegratedLearningLesson(moduleKey) {
+  const lesson = ATLAS_GUIDED_LESSONS[moduleKey] || ATLAS_GUIDED_LESSONS.market;
+  const module = learningModuleByKey(moduleKey);
+  if (els.learningLessonTitle) els.learningLessonTitle.textContent = module.title;
+  if (els.learningLessonIntro) els.learningLessonIntro.textContent = lesson.intro;
+  if (els.learningLessonConcepts) els.learningLessonConcepts.innerHTML = lesson.concepts.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+  if (els.learningLessonExample) els.learningLessonExample.textContent = lesson.example;
+  if (els.learningLessonInterface) els.learningLessonInterface.innerHTML = currentLearningInterfaceFacts(moduleKey).map(item => `<li>${escapeHtml(item)}</li>`).join("");
+  if (els.learningLessonSafety) els.learningLessonSafety.textContent = lesson.safety;
 }
 function learningRoadmapStats() {
   const data = loadExpertRoadmap();
@@ -11690,7 +11768,7 @@ function recommendedLearningModule() {
 }
 function latestLearningProof() {
   if (!state.sim) loadSimulation();
-  return transactionProofEntries("all").slice(-1)[0] || null;
+  return transactionProofEntries("all")[0] || null;
 }
 function learningModuleByKey(key) {
   return ATLAS_EXPERT_ROADMAP_MODULES.find(module => module.key === key) || recommendedLearningModule();
@@ -11701,17 +11779,21 @@ function renderLearningJourneyCockpit() {
   const cockpit = loadLearningCockpitState();
   const stats = learningRoadmapStats();
   const recommended = learningModuleByKey(cockpit.module_key);
+  cockpit.module_key = recommended.key;
   const item = stats.data.modules[recommended.key];
   const practice = ATLAS_LEARNING_PRACTICE_MAP[recommended.key] || ATLAS_LEARNING_PRACTICE_MAP.market;
   const totals = getSimulationTotals();
   const symbols = Object.keys(state.sim.positions || {});
   const latest = latestLearningProof();
+  if (["spot","risk","records"].includes(recommended.key) && latest?.time && new Date(latest.time).getTime() >= new Date(cockpit.started_at).getTime()) {
+    cockpit.steps.practice = true;
+    cockpit.practice_proof_id = latest.proof_id || null;
+  }
   const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
   const finished = Boolean(cockpit.completed_at);
-  if (els.learningCockpitStatus) {
-    els.learningCockpitStatus.textContent = finished ? `Session terminée · ${cockpit.completed_sessions}` : `${completedSteps}/5 étapes`;
-    els.learningCockpitStatus.className = finished ? "pill ok" : completedSteps ? "pill warn" : "pill ok";
-  }
+  saveLearningCockpitState(cockpit);
+  els.learningCockpitStatus.textContent = finished ? `Session terminée · ${cockpit.completed_sessions}` : `${completedSteps}/5 étapes`;
+  els.learningCockpitStatus.className = finished ? "pill ok" : completedSteps ? "pill warn" : "pill ok";
   if (els.learningCockpitProfile) els.learningCockpitProfile.textContent = SIM_PROFILE.label;
   if (els.learningCockpitCapital) els.learningCockpitCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels · ticket ${fmtEUR.format(SIM_PROFILE.defaultAmount)}`;
   if (els.learningCockpitProgress) els.learningCockpitProgress.textContent = `${stats.percent} %`;
@@ -11723,22 +11805,28 @@ function renderLearningJourneyCockpit() {
   if (els.learningCockpitModule) els.learningCockpitModule.textContent = recommended.title;
   if (els.learningCockpitGoal) els.learningCockpitGoal.textContent = recommended.goal;
   if (els.learningCockpitModuleState) els.learningCockpitModuleState.textContent = ATLAS_EXPERT_STATUS_META[item.status]?.label || "À découvrir";
-  if (els.learningCockpitDuration) els.learningCockpitDuration.textContent = `Session 15 min · ${cockpit.completed_sessions} terminée${cockpit.completed_sessions > 1 ? "s" : ""}`;
+  if (els.learningCockpitDuration) els.learningCockpitDuration.textContent = `Session 15 min · ${cockpit.completed_sessions} archivée${cockpit.completed_sessions > 1 ? "s" : ""}`;
   if (els.learningCockpitRisk) els.learningCockpitRisk.textContent = "100 % fictif · aucun risque financier";
   if (els.learningSessionTitle) els.learningSessionTitle.textContent = `${recommended.title} · session guidée`;
   if (els.learningSessionProgress) els.learningSessionProgress.textContent = `${completedSteps}/5 étapes`;
-  if (els.learningStepRead) els.learningStepRead.textContent = recommended.goal;
-  if (els.learningStepOpen) els.learningStepOpen.textContent = `Ouvrir : ${practice.target.replace(/([A-Z])/g," $1").toLowerCase()}.`;
+  if (els.learningStepRead) els.learningStepRead.textContent = "Lire la leçon intégrée complète et cliquer sur « J’ai lu cette leçon intégrée ».";
+  if (els.learningStepOpen) els.learningStepOpen.textContent = `Ouvrir : ${ATLAS_LEARNING_TARGET_LABELS[practice.target] || "zone pédagogique"}.`;
   if (els.learningStepPractice) els.learningStepPractice.textContent = practice.practice;
   if (els.learningStepVerify) els.learningStepVerify.textContent = practice.verify;
   document.querySelectorAll("[data-learning-step]").forEach(input => { input.checked = cockpit.steps[input.dataset.learningStep] === true; });
-  if (els.learningSessionNote && document.activeElement !== els.learningSessionNote) els.learningSessionNote.value = cockpit.note || "";
+  if (els.learningSessionNotesFree && document.activeElement !== els.learningSessionNotesFree) els.learningSessionNotesFree.value = cockpit.notes_free || "";
+  if (els.learningSessionNote && document.activeElement !== els.learningSessionNote) els.learningSessionNote.value = cockpit.takeaway || "";
+  renderLearningTextCounters(cockpit);
+  renderIntegratedLearningLesson(recommended.key);
   if (els.learningCockpitReading) {
+    const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]);
     els.learningCockpitReading.textContent = finished
-      ? `Session enregistrée. Tu peux relire ta note, exporter le résumé ou démarrer une nouvelle session sur ${recommended.title}.`
+      ? `Session archivée intégralement. Les notes longues et la conclusion restent disponibles dans le carnet complet.`
       : completedSteps === 0
-        ? `Commence par “Continuer mon parcours”. L’exercice recommandé est : ${practice.practice}`
-        : `Tu as terminé ${completedSteps} étape${completedSteps > 1 ? "s" : ""} sur 5. Prochaine priorité : ${ATLAS_LEARNING_SESSION_STEPS.find(key => !cockpit.steps[key]) || "terminer la session"}.`;
+        ? `Commence par la leçon intégrée. Aucune information de base ne dépend désormais de la conversation.`
+        : missing.length
+          ? `Progression ${completedSteps}/5. Étapes restantes : ${missing.join(", ")}. Tes deux zones de texte sont sauvegardées automatiquement sans coupe volontaire.`
+          : `Les 5 étapes sont prêtes. Tu peux enregistrer et terminer la session.`;
   }
   renderLearningHelpMode();
 }
@@ -11746,21 +11834,39 @@ function saveLearningStep(step, checked) {
   if (!ATLAS_LEARNING_SESSION_STEPS.includes(step)) return;
   const cockpit = loadLearningCockpitState();
   cockpit.steps[step] = checked === true;
-  if (step === "note" && checked && !String(cockpit.note || "").trim()) cockpit.steps.note = false;
+  if (step === "read" && checked) cockpit.lesson_read_at = cockpit.lesson_read_at || new Date().toISOString();
+  if (step === "note" && checked && !String(cockpit.takeaway || "").trim()) cockpit.steps.note = false;
   cockpit.completed_at = null;
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
   saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
 }
-function saveLearningSessionNote(value) {
+function markIntegratedLessonRead() {
   const cockpit = loadLearningCockpitState();
-  cockpit.note = String(value || "").slice(0,800);
-  cockpit.steps.note = Boolean(cockpit.note.trim());
+  cockpit.steps.read = true;
+  cockpit.lesson_read_at = new Date().toISOString();
+  cockpit.completed_at = null;
+  saveLearningCockpitState(cockpit);
+  renderLearningJourneyCockpit();
+  setActionFeedback("ok", "Leçon intégrée lue", `${learningModuleByKey(cockpit.module_key).title} · étape 1 validée dans le Cockpit.`);
+}
+function saveLearningSessionNotes(value, field = "notes_free") {
+  const cockpit = loadLearningCockpitState();
+  if (field === "takeaway") {
+    cockpit.takeaway = String(value || "");
+    cockpit.steps.note = Boolean(cockpit.takeaway.trim());
+  } else {
+    cockpit.notes_free = String(value || "");
+  }
   cockpit.completed_at = null;
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
   saveLearningCockpitState(cockpit);
-  renderLearningJourneyCockpit();
+  renderLearningTextCounters(cockpit);
+  const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
+  if (els.learningSessionProgress) els.learningSessionProgress.textContent = `${completedSteps}/5 étapes`;
+  document.querySelectorAll('[data-learning-step="note"]').forEach(input => { input.checked = cockpit.steps.note; });
 }
+function saveLearningSessionNote(value) { saveLearningSessionNotes(value, "takeaway"); }
 function learningTargetForModule(moduleKey, practiceOnly = false) {
   const map = ATLAS_LEARNING_PRACTICE_MAP[moduleKey] || ATLAS_LEARNING_PRACTICE_MAP.market;
   if (practiceOnly && ["market", "tokenomics", "yield"].includes(moduleKey)) return "schoolPanel";
@@ -11783,44 +11889,68 @@ function continueLearningJourney(practiceOnly = false) {
   saveLearningCockpitState(cockpit);
   const targetId = learningTargetForModule(module.key, practiceOnly);
   scrollToLearningTarget(targetId);
-  setActionFeedback("info", practiceOnly ? "Exercice fictif ouvert" : "Parcours repris", `${module.title} · aucune opération réelle.`);
+  setActionFeedback("info", practiceOnly ? "Exercice fictif ouvert" : "Parcours repris", `${module.title} · ${ATLAS_LEARNING_TARGET_LABELS[targetId] || "zone pédagogique"} · aucune opération réelle.`);
   renderLearningJourneyCockpit();
+}
+function learningSessionSnapshot(cockpit) {
+  const module = learningModuleByKey(cockpit.module_key);
+  const totals = getSimulationTotals();
+  const lesson = ATLAS_GUIDED_LESSONS[module.key] || ATLAS_GUIDED_LESSONS.market;
+  return {
+    ...cockpit,
+    archived_at:new Date().toISOString(),
+    module_title:module.title,
+    lesson,
+    profile_label:SIM_PROFILE.label,
+    simulation:{ cash:state.sim.cash, positions_value:totals.positionsValue, pnl_gross:totals.pnl },
+    interface_facts:currentLearningInterfaceFacts(module.key)
+  };
 }
 function completeLearningSession() {
   const cockpit = loadLearningCockpitState();
-  const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
-  if (completedSteps < 3) {
-    if (!confirm(`Seulement ${completedSteps}/5 étapes sont cochées. Marquer quand même cette session comme terminée ?`)) return;
+  const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]);
+  if (missing.length) {
+    setActionFeedback("warn", "Session incomplète", `Étapes restantes : ${missing.join(", ")}. La session n’est pas archivée tant que les 5 étapes ne sont pas validées.`);
+    renderLearningJourneyCockpit();
+    return;
+  }
+  if (!String(cockpit.takeaway || "").trim()) {
+    setActionFeedback("warn", "Conclusion personnelle manquante", "Écris ce que tu retiens avec tes propres mots. Tes notes longues peuvent rester dans le premier champ.");
+    return;
   }
   cockpit.completed_at = new Date().toISOString();
-  cockpit.completed_sessions = Math.max(0, cockpit.completed_sessions) + 1;
-  cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
+  const history = loadLearningHistory();
+  history.unshift(learningSessionSnapshot(cockpit));
+  saveLearningHistory(history);
+  cockpit.completed_sessions = history.length;
   saveLearningCockpitState(cockpit);
   const roadmap = loadExpertRoadmap();
   const current = roadmap.modules[cockpit.module_key];
-  if (current && ["new", "discovered"].includes(current.status)) {
-    roadmap.modules[cockpit.module_key] = { ...current, status:"understood", updated_at:new Date().toISOString() };
+  if (current) {
+    const nextStatus = current.status === "new" ? "discovered" : current.status === "discovered" ? "understood" : ["understood","review"].includes(current.status) ? "practiced" : current.status;
+    roadmap.modules[cockpit.module_key] = { ...current, status:nextStatus, note:cockpit.takeaway, updated_at:new Date().toISOString() };
     saveExpertRoadmap(roadmap);
     renderExpertRoadmap();
   }
-  setActionFeedback("ok", "Session pédagogique enregistrée", `${cockpit.completed_sessions} session${cockpit.completed_sessions > 1 ? "s" : ""} terminée${cockpit.completed_sessions > 1 ? "s" : ""}.`);
+  setActionFeedback("ok", "Session pédagogique archivée intégralement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans le carnet 28.2.83.`);
   renderLearningJourneyCockpit();
 }
 function newLearningSession() {
   const previous = loadLearningCockpitState();
   const recommended = recommendedLearningModule();
   const next = defaultLearningCockpitState();
-  next.completed_sessions = previous.completed_sessions;
-  next.module_key = recommended.key;
+  next.completed_sessions = loadLearningHistory().length;
+  next.module_key = previous.completed_at ? recommended.key : learningModuleByKey(previous.module_key).key;
   saveLearningCockpitState(next);
   renderLearningJourneyCockpit();
-  setActionFeedback("info", "Nouvelle session prête", `${recommended.title} · 15 minutes · argent fictif uniquement.`);
+  setActionFeedback("info", "Session neuve prête", `${learningModuleByKey(next.module_key).title} · notes vides · anciennes sessions conservées dans le carnet.`);
 }
-function buildLearningSessionMarkdown() {
-  const cockpit = loadLearningCockpitState();
+function buildLearningSessionMarkdown(cockpitInput = null) {
+  const cockpit = cockpitInput || loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
   const stats = learningRoadmapStats();
   const totals = getSimulationTotals();
+  const lesson = ATLAS_GUIDED_LESSONS[module.key] || ATLAS_GUIDED_LESSONS.market;
   const lines = [
     "# SESSION D’APPRENTISSAGE AGENT-CRYPTO",
     "",
@@ -11828,9 +11958,27 @@ function buildLearningSessionMarkdown() {
     `Session : ${cockpit.session_id}`,
     `Début : ${cockpit.started_at}`,
     `Fin : ${cockpit.completed_at || "En cours"}`,
-    `Profil fictif : ${SIM_PROFILE.label}`,
-    `Module : ${module.title}`,
+    `Profil fictif : ${cockpit.profile_label || SIM_PROFILE.label}`,
+    `Module : ${cockpit.module_title || module.title}`,
     `Progression globale : ${stats.percent} %`,
+    "",
+    "## Leçon intégrée",
+    "",
+    lesson.intro,
+    "",
+    ...lesson.concepts.map(item => `- ${item}`),
+    "",
+    "### Exemple pédagogique",
+    "",
+    lesson.example,
+    "",
+    "### Règle de sécurité",
+    "",
+    lesson.safety,
+    "",
+    "## Données visibles dans l’interface",
+    "",
+    ...(cockpit.interface_facts || currentLearningInterfaceFacts(module.key)).map(item => `- ${item}`),
     "",
     "## Étapes",
     "",
@@ -11838,13 +11986,17 @@ function buildLearningSessionMarkdown() {
     "",
     "## État de la simulation",
     "",
-    `- Argent disponible : ${fmtEUR.format(state.sim.cash)}`,
-    `- Montant placé : ${fmtEUR.format(totals.positionsValue)}`,
-    `- P/L brut : ${atlasSignedEUR(totals.pnl)}`,
+    `- Argent disponible : ${fmtEUR.format(cockpit.simulation?.cash ?? state.sim.cash)}`,
+    `- Montant placé : ${fmtEUR.format(cockpit.simulation?.positions_value ?? totals.positionsValue)}`,
+    `- P/L brut : ${atlasSignedEUR(cockpit.simulation?.pnl_gross ?? totals.pnl)}`,
     "",
-    "## Note personnelle",
+    "## Mes notes libres",
     "",
-    cockpit.note || "Aucune note.",
+    cockpit.notes_free || "Aucune note libre.",
+    "",
+    "## Ce que je retiens",
+    "",
+    cockpit.takeaway || "Aucune conclusion.",
     "",
     "Aucune étape ne constitue une autorisation financière."
   ];
@@ -11853,6 +12005,31 @@ function buildLearningSessionMarkdown() {
 function exportLearningSession() {
   downloadTextFile(`agent_crypto_session_apprentissage_${new Date().toISOString().slice(0,10)}.md`, "text/markdown", buildLearningSessionMarkdown());
 }
+function buildLearningNotebookMarkdown() {
+  const history = loadLearningHistory();
+  const current = loadLearningCockpitState();
+  const parts = [
+    "# CARNET COMPLET D’APPRENTISSAGE AGENT-CRYPTO",
+    "",
+    `Build : ${ATLAS_BUILD}`,
+    `Export : ${new Date().toISOString()}`,
+    `Sessions archivées : ${history.length}`,
+    "",
+    "Les textes sont exportés sans coupe volontaire.",
+    ""
+  ];
+  history.slice().reverse().forEach((session, index) => {
+    parts.push("---", "", `# Session archivée ${index + 1}`, "", buildLearningSessionMarkdown(session), "");
+  });
+  if (!current.completed_at && (current.notes_free || current.takeaway || ATLAS_LEARNING_SESSION_STEPS.some(key => current.steps[key]))) {
+    parts.push("---", "", "# Session actuelle en cours", "", buildLearningSessionMarkdown(current), "");
+  }
+  return parts.join("\n");
+}
+function exportLearningNotebook() {
+  downloadTextFile(`agent_crypto_carnet_complet_${new Date().toISOString().slice(0,10)}.md`, "text/markdown", buildLearningNotebookMarkdown());
+}
+
 
 const ATLAS_EXPERT_ROADMAP_MODULES = Object.freeze([
   { key:"market", title:"01 · Marché et données", phase:"Fondations", goal:"Prix, variations, volume, capitalisation, liquidité, sources et fraîcheur." },
@@ -14850,13 +15027,16 @@ els.btnResetExpertRoadmap?.addEventListener("click", resetExpertRoadmap);
 
 els.learningHelpMode?.addEventListener("change", () => saveLearningHelpMode(els.learningHelpMode.value));
 document.querySelectorAll("[data-learning-step]").forEach(input => input.addEventListener("change", () => saveLearningStep(input.dataset.learningStep, input.checked)));
-els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.learningSessionNote._saveTimer); els.learningSessionNote._saveTimer = setTimeout(() => saveLearningSessionNote(els.learningSessionNote.value), 300); });
+els.learningSessionNotesFree?.addEventListener("input", () => { clearTimeout(els.learningSessionNotesFree._saveTimer); els.learningSessionNotesFree._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNotesFree.value, "notes_free"), 220); });
+els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.learningSessionNote._saveTimer); els.learningSessionNote._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNote.value, "takeaway"), 220); });
+els.btnMarkLessonRead?.addEventListener("click", markIntegratedLessonRead);
 els.btnContinueLearning?.addEventListener("click", () => continueLearningJourney(false));
 els.btnOpenLearningPractice?.addEventListener("click", () => continueLearningJourney(true));
 els.btnOpenLearningProofs?.addEventListener("click", () => scrollToLearningTarget("transactionProofLedger"));
 els.btnCompleteLearningSession?.addEventListener("click", completeLearningSession);
 els.btnNewLearningSession?.addEventListener("click", newLearningSession);
 els.btnExportLearningSession?.addEventListener("click", exportLearningSession);
+els.btnExportLearningNotebook?.addEventListener("click", exportLearningNotebook);
 els.transactionProofFilter?.addEventListener("change", renderTransactionProofLedger);
 els.btnExportProofMarkdown?.addEventListener("click", exportTransactionProofMarkdown);
 els.btnExportProofJSON?.addEventListener("click", exportTransactionProofJSON);
@@ -16057,7 +16237,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.82",
+  interface: "Build 28.2.83",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -18308,7 +18488,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.82`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.83`
   );
 }
 
