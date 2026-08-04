@@ -1,0 +1,15 @@
+release agent-crypto build 28.2.77 canonical snapshot memory deduplication lock
+
+Tie local Decision Board memory to the canonical public market snapshot identity instead of every successful browser refresh.
+
+Store the public snapshot id, generation time, source mode and CoinGecko plus ECB provenance in local observations. Reuse the existing record when the same collector sees the same canonical market snapshot again and increment its observation counter without creating a false comparison point.
+
+Deduplicate repeated and legacy observations only for analysis while preserving existing unique local records. Compare two distinct canonical market snapshots from the same collector and expose distinct snapshot, retained observation and neutralized duplicate counts in the Decision Board.
+
+Use the canonical public market price and market variation fields inside comparison memory instead of Binance-overlaid spot values.
+
+Mark the failed browser-direct Top 250 fallback as retired and record the validated public Crypto archive, Decision Board truth contract and publication identity states in the version manifest.
+
+Preserve the public Crypto collector and GitHub Actions schedule, CoinGecko USD to EUR conversion through the ECB reference, Binance live prices, CoinGecko histories, News Sentinel, Watchlist, simulation, Math Core, Metals workspace, Control Center V2.1.0R1, Bridge V1.7.6 and the validated interface geometry.
+
+Perform no GitHub write, exchange action, wallet action, provider-key change, collector change or workflow change.

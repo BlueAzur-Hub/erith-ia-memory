@@ -1,0 +1,99 @@
+{
+  "schema": "agent_crypto_build_manifest_v1",
+  "build": "28.2.77",
+  "title": "Canonical Snapshot Memory Deduplication Lock",
+  "base_build": "28.2.76",
+  "base_zip_sha256": "61f27e3031c76885bb784840e109e4b33b89cc7d54d75dfb6913409d6c912409",
+  "replacement_paths": [
+    "public/agent_crypto_erith_ia/web/app.js",
+    "public/agent_crypto_erith_ia/web/index.html",
+    "public/agent_crypto_erith_ia/web/style.css",
+    "public/agent_crypto_erith_ia/web/version.json"
+  ],
+  "files": [
+    {
+      "path": "AGENT_CRYPTO_BUILD_28_2_77_VERIFICATION_REPORT_FINAL.md",
+      "bytes": 4400,
+      "sha256": "c6b15a188258d3abb5edbf68f512b572281baf3a99590fc70fe671b5cbc82959"
+    },
+    {
+      "path": "AUDIT_GLOBAL_AGENT_CRYPTO_BUILD_28_2_76_NEXT_MISSION.md",
+      "bytes": 3726,
+      "sha256": "3d239c17b1b82a9cdc55d5c30fb6be984d89ab6af8df700b14038e9351cd37f4"
+    },
+    {
+      "path": "GITHUB_COMMIT_BUILD_28_2_77.txt",
+      "bytes": 1548,
+      "sha256": "ee588a70ff47c2b068bc99661a3057ffc345cd4fe59d3893f416875d0ba9e9ce"
+    },
+    {
+      "path": "README_UPLOAD_BUILD_28_2_77.md",
+      "bytes": 2043,
+      "sha256": "fe025e51d058a53ecbb3c6a40a6cbd3277d991d2007ebb0901525cbe31eb4ad1"
+    },
+    {
+      "path": "VERIFICATION_RESULTS_28_2_77.json",
+      "bytes": 1287,
+      "sha256": "df90eab57630392e67e2d5b4b8f9777e649da741412182d96678e63bea6b47e5"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/web/app.js",
+      "bytes": 1288635,
+      "sha256": "46f71858723d7a00545a0b134b81bcbdf85264e15980a6c441636057a832db19"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/web/index.html",
+      "bytes": 209709,
+      "sha256": "a4d90819ec9efa80da5c9497405b690b42e37f41bbbe4b6b1739e83cfad241f6"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/web/style.css",
+      "bytes": 859514,
+      "sha256": "28c0c857a104b980b32cfb9ef7b763bb511c141cfba4c7d159ec58f71ebcdd4e"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/web/version.json",
+      "bytes": 21427,
+      "sha256": "80148337324e0b47b2096a5d71c228f213871cd4a9e34310bcb6176823294bee"
+    }
+  ],
+  "verification": {
+    "total": 36,
+    "passed": 36,
+    "failed": []
+  },
+  "memory_contract": {
+    "canonical_identity": "state.sourceLock.snapshotId",
+    "one_record_per_collector_and_market_snapshot": true,
+    "repeat_observation_increments_counter": true,
+    "legacy_unique_records_preserved": true,
+    "duplicate_observations_neutralized_for_analysis": true,
+    "decision_board_requires_distinct_market_snapshots": true,
+    "canonical_market_price_used": true
+  },
+  "runtime_identity": {
+    "indexBuild": "28.2.77",
+    "indexToken": "market-core-v2.0-alpha-build-28.2.77",
+    "appBuild": "28.2.77",
+    "appToken": "market-core-v2.0-alpha-build-28.2.77",
+    "styleBuild": "28.2.77",
+    "styleToken": "market-core-v2.0-alpha-build-28.2.77",
+    "ok": true
+  },
+  "unchanged": {
+    "public_crypto_collector": true,
+    "github_actions_workflow": true,
+    "decision_formula": true,
+    "movement_thresholds": true,
+    "anomaly_thresholds": true,
+    "crypto_graphs": true,
+    "metals_workspace": true,
+    "bridge": true,
+    "interface_geometry": true
+  },
+  "limitations": [
+    "real GitHub Pages propagation requires publication by Christophe",
+    "real Firefox validation requires the public deployment",
+    "headless Chromium verification used an injected offline fixture"
+  ]
+}
