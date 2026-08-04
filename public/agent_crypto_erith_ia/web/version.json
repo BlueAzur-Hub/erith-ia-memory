@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.74",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.74",
-  "published_at": "2026-08-04T05:36:07Z",
+  "build": "28.2.75",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.75",
+  "published_at": "2026-08-04T05:53:10Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -23,7 +23,9 @@
     "metals_public_history": "../data/metals/history/public_1y.json",
     "metals_fx_usd_eur": "../data/metals/fx/usd_eur.json",
     "metals_spot_history": "../data/metals/history/spot_48h.json",
-    "metals_intraday_24h": "../data/metals/history/intraday_24h.json"
+    "metals_intraday_24h": "../data/metals/history/intraday_24h.json",
+    "crypto_public_market": "../data/crypto/latest.json",
+    "crypto_public_market_status": "../data/crypto/status.json"
   },
   "coherence_contract": {
     "index": {
@@ -554,5 +556,29 @@
     "collectors_changed": false,
     "github_actions_changed": false,
     "interface_geometry_changed": false
+  },
+  "public_crypto_market_archive": {
+    "base": "28.2.74",
+    "state": "ready_after_first_github_actions_run",
+    "collector": "../tools/collect_public_crypto.py",
+    "workflow": ".github/workflows/atlas-public-crypto-market.yml",
+    "snapshot_path": "../data/crypto/latest.json",
+    "status_path": "../data/crypto/status.json",
+    "market_source": "CoinGecko Top 250 USD",
+    "fx_source": "ECB USD/EUR public reference",
+    "publication_mode": "GitHub Actions static JSON",
+    "schedule": "every_2_hours",
+    "browser_direct_top250_required": false,
+    "original_usd_preserved": true,
+    "eur_values_converted_with_single_ecb_rate": true,
+    "percentage_variations_base": "CoinGecko USD",
+    "last_valid_preserved_on_failure": true,
+    "decision_board_current_max_age_hours": 3,
+    "display_max_age_hours": 24,
+    "local_browser_cache_last_resort": true,
+    "crypto_graphs_unchanged": true,
+    "metals_workspace_unchanged": true,
+    "bridge_unchanged": true,
+    "github_write_scope": "public/agent_crypto_erith_ia/data/crypto only"
   }
 }

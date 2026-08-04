@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.74 — COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.75 — PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.74";
-const ATLAS_BUILD = "28.2.74";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.74";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.75";
+const ATLAS_BUILD = "28.2.75";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.75";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -44,9 +44,10 @@ const ATLAS_MARKET_DEGRADE_AFTER_FAILURES = 2;
 var ATLAS_MARKET_VIEW_LIMITS = Object.freeze([50, 100, 250]);
 var ATLAS_SCANNER_PRESETS = new Set(["gainers", "losers", "volume"]);
 var atlasScannerTransaction = null;
-/* DIRECT-FIRST STARTUP · STATUS HARMONIZATION LOCK
-   Le cache local est seulement préparé au démarrage. Il n'est rendu visible
-   qu'après l'échec confirmé de la tentative CoinGecko directe.
+/* PUBLIC-ARCHIVE-FIRST STARTUP · BROWSER INDEPENDENCE LOCK
+   Le marché principal est lu depuis un JSON public produit par GitHub Actions.
+   Firefox ne contacte plus CoinGecko pour charger le Top 250.
+   Le cache navigateur reste seulement le dernier secours local.
 */
 const atlasStartup = {
   started: false,
@@ -56,10 +57,11 @@ const atlasStartup = {
   cacheTimestamp: null,
   promise: null
 };
-/* MARKET PULSE & LIVE SPOT CANON LOCK
-   Top 250: 60 s · spot sélection: 30 s · historique: 5 min.
+/* MARKET PULSE & PUBLIC SNAPSHOT CANON LOCK
+   Archive publique Top 250: relecture 5 min · collecte GitHub Actions: 2 h.
+   Spot sélection: 30 s · historique: 5 min.
    Onglet caché: pause réseau · retour: reprise immédiate.
-   Backoff: 60 / 120 / 300 s · ancien état valide conservé.
+   Le dernier snapshot public valide est conservé si une collecte échoue.
 */
 const state = {
   liveOk: false,
@@ -193,6 +195,10 @@ const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
   sources: "./market_source_registry.json",
   contract: "./market_data_contract.json",
   bridge: "./bridge_market_adapter_contract.json"
+});
+const ATLAS_PUBLIC_CRYPTO_MARKET_PATHS = Object.freeze({
+  latest: "../data/crypto/latest.json",
+  status: "../data/crypto/status.json"
 });
 const ATLAS_METALS_STRUCTURAL_REGISTRY_PATH =
   "./metals_structural_registry.json";
@@ -2821,19 +2827,19 @@ function atlasSetLivecheckButtonBusy(busy, label = "") {
     : "Relancer maintenant";
 }
 
-function atlasAnnounceDirectRetry(delayMs, context = "CoinGecko direct indisponible") {
+function atlasAnnounceDirectRetry(delayMs, context = "Snapshot public Crypto indisponible") {
   const delay = Math.max(1000, Number(delayMs) || 15_000);
   const label = formatAutoDelay(delay);
   const exact = state.timestamp ? atlasExactTimestampLabel(state.timestamp) : "aucun snapshot";
-  setLiveStatus("warn", `Nouvelle tentative · ${label}`);
+  setLiveStatus("warn", `Nouvelle lecture · ${label}`);
   setText(
     els.sourceName,
-    state.sourceLock?.mode === "direct"
-      ? "CoinGecko direct · dernière lecture conservée"
-      : "CoinGecko · archive affichée temporairement"
+    state.sourceLock?.mode === "github-public"
+      ? "Snapshot public CoinGecko · dernière lecture conservée"
+      : "Cache navigateur · dernier secours"
   );
   setTableDecision(
-    `${context} · archive ${exact} affichée · nouvelle tentative automatique dans ${label}`,
+    `${context} · dernière lecture ${exact} affichée · nouvelle lecture automatique dans ${label}`,
     "warn"
   );
   atlasSyncTruthDatasets();
@@ -2905,8 +2911,10 @@ const ATLAS_COMPARISON_REQUEST_SPACING_MS = 1100;
 const ATLAS_COMPARISON_LONG_HORIZON_SPACING_MS = 2200;
 const ATLAS_COMPARISON_RETRY_DELAYS_MS = Object.freeze([0]);
 const ATLAS_COMPARISON_DIRECT_TIMEOUT_MS = 24000;
-const ATLAS_MARKET_REFRESH_MS = 60 * 1000;
+const ATLAS_MARKET_REFRESH_MS = 5 * 60 * 1000;
 const ATLAS_ANALYSIS_MAX_AGE_MS = 15 * 60 * 1000;
+const ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS = 3 * 60 * 60 * 1000;
+const ATLAS_PUBLIC_MARKET_DISPLAY_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const ATLAS_DIRECT_GRACE_MS = 15 * 60 * 1000;
 const ATLAS_MARKET_MIN_ASSETS = 40;
 const ATLAS_FX_REFERENCE_MAX_AGE_MS = 10 * 24 * 60 * 60 * 1000;
@@ -2988,6 +2996,19 @@ function atlasMarketTruth() {
       age: atlasBrokerAgeLabel(timestamp),
       label: "Direct CoinGecko",
       delayed24h: false
+    };
+  }
+
+  if (mode === "github-public") {
+    return {
+      level: ageMs <= ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS ? "public-current" : "public-delayed",
+      mode,
+      timestamp,
+      ageMs,
+      exact: atlasExactTimestampLabel(timestamp),
+      age: atlasBrokerAgeLabel(timestamp),
+      label: "Snapshot public CoinGecko",
+      delayed24h: ageMs > ATLAS_ANALYSIS_MAX_AGE_MS
     };
   }
 
@@ -3314,6 +3335,7 @@ function atlasSyncTruthDatasets() {
 
 function atlasBrokerModeLabel(mode) {
   if (mode === "direct") return "Direct CoinGecko";
+  if (mode === "github-public") return "Snapshot public CoinGecko";
   if (mode === "direct-conserved") return "Dernière lecture directe conservée";
   if (mode === "recent-cache") return "Cache récent CoinGecko";
   if (mode === "github-cache") return "Archive GitHub CoinGecko";
@@ -4517,8 +4539,8 @@ function atlasRenderBrokerStrip() {
 function atlasRenderDiagnostics() {
   const market = state.dataBroker.market || {};
   const chart = state.dataBroker.chart || {};
-  const eur = (state.sourceStatus || []).find(item => item?.key === "coingecko-eur") || null;
-  const usd = (state.sourceStatus || []).find(item => item?.key === "coingecko-usd") || null;
+  const publicMarket = (state.sourceStatus || []).find(item => item?.key === "coingecko-public") || null;
+  const fx = (state.sourceStatus || []).find(item => item?.key === "ecb-usd-eur") || null;
   const coin = getSelectedCoin();
   const chartKey = coin ? atlasChartKey(coin, Number(state.chartPeriodDays || 1)) : "";
   const retryCount = Number.isFinite(Number(chart.retryCount))
@@ -4532,17 +4554,16 @@ function atlasRenderDiagnostics() {
       : chart.status === "loading" ? "Chargement direct" : chart.status === "blocked" ? "Indisponible" : "En attente";
   const sourceDetail = market.status === "ready"
     ? `${market.assetsCount || 0} actifs · ${(market.quoteCurrencies || []).join(" + ") || "EUR"}`
-    : market.error || eur?.detail || "Aucun snapshot";
-  const fxFallback = atlasMarketUsesUsdEurFallback();
-  const marketError = eur && eur.status !== "OK" && !fxFallback ? eur.detail : null;
-  const usdError = usd && !["OK", "NON LANCÉ"].includes(usd.status) ? usd.detail : null;
-  const lastError = chart.error || marketError || usdError || "Aucune erreur";
+    : market.error || publicMarket?.detail || "Aucun snapshot public";
+  const marketError = publicMarket && publicMarket.status !== "OK" ? publicMarket.detail : null;
+  const fxError = fx && fx.status !== "OK" ? fx.detail : null;
+  const lastError = chart.error || marketError || fxError || "Aucune erreur";
 
   setText(els.diagSourceMode, market.status === "ready" ? atlasBrokerModeLabel(market.mode) : "Indisponible");
   setText(els.diagSourceDetail, sourceDetail);
-  const marketLatency = fxFallback ? usd?.ms : eur?.ms;
+  const marketLatency = publicMarket?.ms;
   setText(els.diagMarketLatency, Number.isFinite(Number(marketLatency)) ? `${Math.round(Number(marketLatency))} ms` : "—");
-  setText(els.diagUsdLatency, `USD : ${Number.isFinite(Number(usd?.ms)) ? `${Math.round(Number(usd.ms))} ms` : usd?.status || "—"}`);
+  setText(els.diagUsdLatency, `BCE : ${Number.isFinite(Number(fx?.ms)) ? `${Math.round(Number(fx.ms))} ms` : fx?.status || "—"}`);
   setText(els.diagChartMode, chartMode);
   setText(els.diagChartLatency, `Latence : ${Number.isFinite(Number(chart.latencyMs)) ? `${Math.round(Number(chart.latencyMs))} ms` : chart.mode === "browser-cache" ? "cache local" : "—"}`);
   setText(els.diagRetryCount, `${retryCount} retry${retryCount > 1 ? "s" : ""}`);
@@ -4567,6 +4588,25 @@ async function atlasRefreshSelectedSpot(coin) {
 }
 
 const SourceAdapter = {
+  async publicCryptoMarket(options = {}) {
+    const cacheBust = `atlas=${Date.now()}`;
+    const [payload, status] = await Promise.all([
+      fetchJsonWithRetry(
+        `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.latest}?${cacheBust}`,
+        { signal: options.signal, networkKind: "market" },
+        12000,
+        1
+      ),
+      fetchJsonWithRetry(
+        `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.status}?${cacheBust}`,
+        { signal: options.signal, networkKind: "source" },
+        8000,
+        1
+      ).catch(() => null)
+    ]);
+    return atlasNormalizePublicCryptoSnapshot(payload, status);
+  },
+
   async coingeckoTop50Eur(options = {}) {
     const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=250&page=1&locale=fr&precision=full&sparkline=false&price_change_percentage=1h,24h,7d,30d";
     const rows = await fetchJsonWithRetry(url, { signal: options.signal, networkKind: "market" }, 18000, 1);
@@ -4750,6 +4790,62 @@ const SourceAdapter = {
   }
 };
 
+/* ATLAS PUBLIC CRYPTO MARKET PURE HELPERS BEGIN */
+function atlasNormalizePublicCryptoSnapshot(payload, status = null) {
+  if (!payload || payload.schema !== "agent_crypto_public_market_snapshot_v1") {
+    throw new Error("Archive publique Crypto absente ou schéma invalide");
+  }
+  const coins = Array.isArray(payload.coins) ? payload.coins : [];
+  if (coins.length < ATLAS_MARKET_MIN_ASSETS || !atlasCanonicalSnapshot(coins)) {
+    throw new Error(`Archive publique Crypto incomplète : ${coins.length}/250`);
+  }
+  const timestamp = payload.generated_at || coins[0]?.timestamp || null;
+  const ageMs = atlasTimestampAgeMs(timestamp);
+  if (!Number.isFinite(ageMs) || ageMs > ATLAS_PUBLIC_MARKET_DISPLAY_MAX_AGE_MS) {
+    throw new Error(`Archive publique Crypto trop ancienne : ${atlasBrokerAgeLabel(timestamp)}`);
+  }
+  const fx = payload.fx || {};
+  const eurPerUsd = Number(fx.eur_per_usd);
+  if (String(fx.pair || "").toUpperCase() !== "USD/EUR" || !Number.isFinite(eurPerUsd) || eurPerUsd <= 0) {
+    throw new Error("Conversion BCE USD/EUR publique invalide");
+  }
+  const assetsCount = Number(payload.assets_count || coins.length);
+  const statusState = String(status?.status || "ready");
+  return {
+    coins,
+    global: payload.global || null,
+    timestamp,
+    generatedAt: timestamp,
+    snapshotId: payload.snapshot_id || `coingecko-public_${timestamp}`,
+    assetsCount,
+    statusState,
+    sourceLabel: "CoinGecko USD · snapshot public GitHub Actions · conversion BCE EUR",
+    sourceReason: "CoinGecko est collecté par GitHub Actions. Le navigateur lit un JSON public ; les valeurs monétaires USD sont converties en EUR avec le taux BCE publié. Les variations restent en base USD CoinGecko.",
+    sourceStatus: [
+      {
+        key: "coingecko-public",
+        name: "CoinGecko USD public",
+        kind: "Top 250 collecté par GitHub Actions",
+        status: "OK",
+        detail: `${assetsCount}/250 actifs · snapshot ${atlasExactTimestampLabel(timestamp)}`
+      },
+      {
+        key: "ecb-usd-eur",
+        name: "BCE USD/EUR",
+        kind: "Conversion monétaire publique",
+        status: "OK",
+        detail: `1 USD = ${eurPerUsd.toFixed(6)} EUR · taux du ${fx.source_date || "—"}`
+      }
+    ]
+  };
+}
+
+function atlasPublicMarketAnalysisReady() {
+  return state.sourceLock?.mode === "github-public"
+    && atlasMarketAgeMs() <= ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS;
+}
+/* ATLAS PUBLIC CRYPTO MARKET PURE HELPERS END */
+
 /* ATLAS USD TO EUR FALLBACK PURE HELPERS BEGIN */
 function atlasFxReferenceAgeMs(sourceDate) {
   const text = String(sourceDate || "").trim();
@@ -4846,7 +4942,7 @@ function atlasMarketFxContext(coins = state.coins) {
 }
 
 function atlasMarketUsesUsdEurFallback() {
-  return state.sourceLock?.mode === "direct" && !!atlasMarketFxContext();
+  return ["direct", "github-public"].includes(state.sourceLock?.mode) && !!atlasMarketFxContext();
 }
 /* ATLAS USD TO EUR FALLBACK PURE HELPERS END */
 
@@ -4947,23 +5043,32 @@ function atlasApplyUsdEnrichment(result) {
 }
 
 const liveSources = [
-  { key: "coingecko-eur", name: "CoinGecko EUR", kind: "Top 250 marché · chemin préféré" },
-  { key: "coingecko-usd", name: "CoinGecko USD", kind: "Top 250 de secours USD→EUR · enrichissement si EUR direct" }
+  { key: "coingecko-public", name: "CoinGecko USD public", kind: "Top 250 collecté par GitHub Actions" },
+  { key: "ecb-usd-eur", name: "BCE USD/EUR", kind: "Conversion monétaire publique" }
 ]; function setLiveStatus(mode, text) { if (!els.liveStatus) return; els.liveStatus.className = `pill ${mode}`; els.liveStatus.textContent = text;
 }
 function atlasSetStableDirectMarketStatus() {
   const assetCount = Number(state.coins?.length || 0);
   const fx = atlasMarketFxContext();
-  if (fx) {
+  if (state.sourceLock?.mode === "github-public") {
+    const current = atlasPublicMarketAnalysisReady();
+    setLiveStatus(current ? "ok" : "warn", current ? `Marché public ${assetCount}/250` : `Marché public daté ${assetCount}/250`);
+    setText(els.sourceName, "CoinGecko USD · GitHub Actions · conversion BCE EUR");
+    setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
+    setTableDecision(
+      `${assetCount} actifs · snapshot public ${atlasBrokerAgeLabel(state.timestamp)} · valeurs EUR BCE · variations CoinGecko USD · relecture 5 min`,
+      current ? "ok" : "warn"
+    );
+  } else if (fx) {
     setLiveStatus("ok", `Marché ${assetCount}/250 · USD→EUR`);
     setText(els.sourceName, `CoinGecko USD direct · conversion BCE EUR (${fx.sourceDate || "date à confirmer"})`);
     setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-    setTableDecision(`${assetCount} actifs · valeurs EUR converties BCE · variations CoinGecko USD · pulse 60 s`, "ok");
+    setTableDecision(`${assetCount} actifs · valeurs EUR converties BCE · variations CoinGecko USD`, "ok");
   } else {
     setLiveStatus("ok", `Marché ${assetCount}/250 validés actualisé`);
     setText(els.sourceName, `CoinGecko direct · ${assetCount}/250 validés EUR`);
     setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-    setTableDecision(`${assetCount} actifs EUR directs · pulse 60 s`, "ok");
+    setTableDecision(`${assetCount} actifs EUR directs`, "ok");
   }
   atlasSetLivecheckButtonBusy(false);
 }
@@ -4974,18 +5079,21 @@ function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = 
 
   const previousTime = Date.parse(previous.timestamp || "");
   const age = Number.isFinite(previousTime) ? Math.max(0, Date.now() - previousTime) : Infinity;
-  if (age > ATLAS_DIRECT_GRACE_MS) return false;
+  const previousMode = previous.sourceLock?.mode || previous.sourceMode || "none";
+  const grace = previousMode === "github-public" ? ATLAS_PUBLIC_MARKET_DISPLAY_MAX_AGE_MS : ATLAS_DIRECT_GRACE_MS;
+  if (age > grace) return false;
 
   state.coins = previous.coins;
   state.global = previous.global;
   state.timestamp = previous.timestamp;
-  state.mainSource = previous.mainSource || "CoinGecko · dernière lecture directe conservée";
+  state.mainSource = previous.mainSource || "CoinGecko · dernière lecture publique conservée";
   state.liveOk = true;
 
+  const conservedMode = previousMode === "github-public" ? "github-public" : "direct-conserved";
   atlasSetSourceLock(
-    "direct-conserved",
+    conservedMode,
     state.timestamp,
-    `${context} différée · dernière réponse directe conservée · nouvelle tentative programmée · ${cleanError(error)}`,
+    `${context} différée · dernière lecture valide conservée · nouvelle tentative programmée · ${cleanError(error)}`,
     true,
     previous.snapshotId || previous.sourceLock?.snapshotId || null
   );
@@ -4997,13 +5105,13 @@ function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = 
       timestamp: state.timestamp,
       snapshotId: state.sourceLock.snapshotId
     },
-    "direct-conserved"
+    conservedMode
   );
 
-  setLiveStatus("ok", "Dernière lecture conservée · nouvel essai");
+  setLiveStatus(atlasAnalysisLiveReady() ? "ok" : "warn", previousMode === "github-public" ? "Snapshot public conservé" : "Dernière lecture conservée · nouvel essai");
   setText(els.sourceName, state.mainSource);
   setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-  setTableDecision(`${state.coins.length} actifs EUR · dernière lecture conservée`, "ok");
+  setTableDecision(`${state.coins.length} actifs · dernière lecture valide conservée`, atlasAnalysisLiveReady() ? "ok" : "warn");
 
   atlasSyncTruthDatasets();
   atlasPatchMarketSnapshotDom();
@@ -5015,18 +5123,14 @@ function atlasKeepDirectStatusDuringTransientFailure(previous, error, context = 
 } function pushSourceStatus(record) { if (!record || !record.key) return; state.sourceStatus = normalizeSourceStatusList(state.sourceStatus).filter(item => item.key !== record.key); state.sourceStatus.push(record);
 } function updateSourceMetric(doneOverride = null) {
   state.sourceStatus = normalizeSourceStatusList(state.sourceStatus);
-  const eur = state.sourceStatus.find(item => item.key === "coingecko-eur");
-  const usd = state.sourceStatus.find(item => item.key === "coingecko-usd");
-  const eurOk = eur?.status === "OK";
-  const usdOk = usd?.status === "OK";
-  const fx = atlasMarketUsesUsdEurFallback() ? atlasMarketFxContext() : null;
-  setText(els.metricSources, eurOk ? (usdOk ? "EUR + USD" : "EUR OK") : fx && usdOk ? "USD → EUR" : "—");
-  if (!eur) setText(els.metricSourcesHint, "Marché CoinGecko en attente");
-  else if (fx && usdOk) setText(els.metricSourcesHint, `Top 250 USD direct · conversion BCE ${fx.sourceDate} · variations en base USD`);
-  else if (!eurOk && usdOk) setText(els.metricSourcesHint, `Top 250 USD reçu · conversion EUR non validée · ${escapeHtml(usd.detail || "taux BCE indisponible")}`);
-  else if (!eurOk) setText(els.metricSourcesHint, `CoinGecko EUR et secours USD indisponibles · ${escapeHtml(usd?.detail || eur.detail || "échec")}`);
-  else if (usdOk) setText(els.metricSourcesHint, "Top 250 EUR actif · prix USD directs disponibles");
-  else setText(els.metricSourcesHint, "Top 250 EUR actif · enrichissement USD indisponible");
+  const market = state.sourceStatus.find(item => item.key === "coingecko-public");
+  const fx = state.sourceStatus.find(item => item.key === "ecb-usd-eur");
+  const marketOk = market?.status === "OK";
+  const fxOk = fx?.status === "OK";
+  setText(els.metricSources, marketOk && fxOk ? "PUBLIC + BCE" : marketOk ? "PUBLIC" : "—");
+  if (marketOk && fxOk) setText(els.metricSourcesHint, `${market.detail || "Top 250 public"} · ${fx.detail || "conversion BCE"}`);
+  else if (marketOk) setText(els.metricSourcesHint, "Snapshot public reçu · conversion à confirmer");
+  else setText(els.metricSourcesHint, "Archive publique Crypto en attente ou indisponible");
 } 
 function atlasHasDisplayableMarket(coins = state.coins) {
   return atlasCanonicalSnapshot(coins) && coins.length > 0;
@@ -5057,10 +5161,14 @@ function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponi
   state.mainSource = remembered.mainSource || "CoinGecko · dernier snapshot valide";
   state.liveOk = true;
 
+  const ageMs = atlasMarketAgeMs();
+  const rememberedPublic = remembered.sourceMode === "github-public";
   const rememberedWasDirect = ["direct", "direct-conserved"].includes(remembered.sourceMode);
-  const restoredMode = rememberedWasDirect && atlasMarketAgeMs() <= ATLAS_DIRECT_GRACE_MS
-    ? "direct-conserved"
-    : "local-cache";
+  const restoredMode = rememberedPublic && ageMs <= ATLAS_PUBLIC_MARKET_DISPLAY_MAX_AGE_MS
+    ? "github-public"
+    : rememberedWasDirect && ageMs <= ATLAS_DIRECT_GRACE_MS
+      ? "direct-conserved"
+      : "local-cache";
 
   atlasSetSourceLock(
     restoredMode,
@@ -5081,16 +5189,21 @@ function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponi
   state.marketContinuity.lastReason = String(reason || "réseau différé");
 
   const conservedDirect = state.sourceLock.mode === "direct-conserved";
-  setLiveStatus("warn", conservedDirect ? "Dernière lecture conservée" : "Mode archive");
-  setText(els.sourceName, conservedDirect
-    ? "CoinGecko · dernière lecture directe conservée"
-    : "CoinGecko · archive locale");
+  const conservedPublic = state.sourceLock.mode === "github-public";
+  setLiveStatus(atlasAnalysisLiveReady() ? "ok" : "warn", conservedPublic ? "Snapshot public conservé" : conservedDirect ? "Dernière lecture conservée" : "Mode archive");
+  setText(els.sourceName, conservedPublic
+    ? "CoinGecko · snapshot public conservé"
+    : conservedDirect
+      ? "CoinGecko · dernière lecture directe conservée"
+      : "CoinGecko · archive locale");
   setText(els.sourceTime, state.timestamp ? atlasExactTimestampLabel(state.timestamp) : "—");
   setTableDecision(
-    conservedDirect
-      ? "Top 250 conservé · nouvelle tentative programmée"
-      : "Archive CoinGecko conservée · analyses live suspendues",
-    "warn"
+    conservedPublic
+      ? `Snapshot public conservé · ${atlasBrokerAgeLabel(state.timestamp)} · nouvelle lecture programmée`
+      : conservedDirect
+        ? "Top 250 conservé · nouvelle tentative programmée"
+        : "Archive CoinGecko conservée · analyses live suspendues",
+    atlasAnalysisLiveReady() ? "ok" : "warn"
   );
 
   return true;
@@ -5198,10 +5311,17 @@ function atlasMarketAgeMs() {
   return Number.isFinite(timestamp) ? Math.max(0, Date.now() - timestamp) : Infinity;
 }
 function atlasAnalysisLiveReady() {
-  return !!state.liveOk && state.sourceLock?.valid === true && state.sourceLock?.mode === "direct" && atlasCanonicalSnapshot(state.coins) && state.coins.length >= ATLAS_MARKET_MIN_ASSETS && atlasMarketAgeMs() <= ATLAS_ANALYSIS_MAX_AGE_MS;
+  const mode = state.sourceLock?.mode || "none";
+  const maxAge = mode === "github-public" ? ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS : ATLAS_ANALYSIS_MAX_AGE_MS;
+  return !!state.liveOk
+    && state.sourceLock?.valid === true
+    && ["direct", "github-public"].includes(mode)
+    && atlasCanonicalSnapshot(state.coins)
+    && state.coins.length >= ATLAS_MARKET_MIN_ASSETS
+    && atlasMarketAgeMs() <= maxAge;
 }
 function saveMarketCache() {
-  if (!state.coins?.length || state.sourceLock?.mode !== "direct" || !atlasCanonicalSnapshot(state.coins)) return;
+  if (!state.coins?.length || !["direct", "github-public"].includes(state.sourceLock?.mode) || !atlasCanonicalSnapshot(state.coins)) return;
   try {
     localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
       schema: "atlas_market_cache_top250_v1",
@@ -5260,14 +5380,14 @@ function atlasPrimeMarketCacheSilently() {
 }
 
 function atlasRenderDirectFirstStartup() {
-  atlasSetSourceLock("none", null, "Vérification CoinGecko directe en cours", false);
-  setLiveStatus("warn", "Vérification CoinGecko");
-  setText(els.sourceName, "CoinGecko direct · vérification en cours");
+  atlasSetSourceLock("none", null, "Lecture du snapshot public Crypto en cours", false);
+  setLiveStatus("warn", "Lecture marché public");
+  setText(els.sourceName, "GitHub Actions · snapshot CoinGecko public");
   setText(els.sourceTime, "—");
   setTableDecision(
     atlasStartup.cacheAvailable
-      ? "Vérification directe en cours · archive locale gardée en secours silencieux"
-      : "Vérification directe en cours · aucun cache affiché avant échec confirmé",
+      ? "Lecture du JSON public en cours · cache navigateur gardé en dernier secours"
+      : "Lecture du JSON public en cours · attente de la première collecte GitHub Actions",
     "warn"
   );
 }
@@ -5305,7 +5425,7 @@ function applyMarketCache(reason = "CoinGecko direct indisponible : dernière le
 }
 function explainForBeginnerLiveFailure(okCount = 0) {
   const total = Math.max(1, Number(state.sourceStatusExpectedTotal || liveSources.length));
-  return `Les chemins CoinGecko EUR direct et CoinGecko USD→EUR ne sont pas exploitables. ${Math.min(okCount, total)}/${total} flux CoinGecko ont répondu. ` + "Atlas conserve uniquement la dernière lecture CoinGecko locale ; sinon les prix et indices sont bloqués.";
+  return `Le snapshot public Crypto produit par GitHub Actions n’est pas exploitable. ${Math.min(okCount, total)}/${total} éléments publics ont répondu. ` + "Atlas conserve la dernière lecture locale seulement en dernier secours ; aucun appel CoinGecko Top 250 n’est demandé à Firefox.";
 }
 function atlasRestorePreviousSnapshot(previous, error, context = "Actualisation") {
   if (!previous || !atlasCanonicalSnapshot(previous.coins)) return false;
@@ -5578,7 +5698,7 @@ async function runLivecheck(options = {}) {
   if (state.auto?.livecheckBusy || !atlasPulseVisible()) return false;
 
   state.auto.livecheckBusy = true;
-  atlasSetLivecheckButtonBusy(true, "Connexion automatique…");
+  atlasSetLivecheckButtonBusy(true, "Lecture du marché public…");
   state.auto.lastStartedAt = new Date().toISOString();
   state.auto.lastRunMs = Date.now();
   state.sourceStatusExpectedTotal = 2;
@@ -5590,41 +5710,39 @@ async function runLivecheck(options = {}) {
         mainSource: state.mainSource,
         timestamp: state.timestamp,
         snapshotId: state.sourceLock?.snapshotId || null,
-        sourceLock: state.sourceLock
+        sourceLock: state.sourceLock,
+        sourceMode: state.sourceLock?.mode || "none"
       }
     : state.marketContinuity?.lastGood;
 
   atlasAbortPulseController(state.marketPulse.marketController);
   const controller = new AbortController();
   state.marketPulse.marketController = controller;
-
-  let eurStartedAt = 0;
   let succeeded = false;
 
   try {
-    setLiveStatus("warn", "Chargement Top 250 EUR");
-    setTableDecision("CoinGecko EUR en cours · secours USD→EUR prêt", "warn");
-    setText(els.sourceName, "CoinGecko · Top 250 EUR préféré");
+    setLiveStatus("warn", "Lecture snapshot public");
+    setTableDecision("GitHub Pages · lecture du Top 250 CoinGecko publié", "warn");
+    setText(els.sourceName, "GitHub Actions · CoinGecko USD → EUR BCE");
     state.sourceStatus = [];
     renderSourceGrid();
     updateSourceMetric(0);
 
-    eurStartedAt = performance.now();
-    const result = await SourceAdapter.coingeckoTop50Eur({ signal: controller.signal });
+    const startedAt = performance.now();
+    const result = await SourceAdapter.publicCryptoMarket({ signal: controller.signal });
     if (controller.signal.aborted || !atlasPulseVisible()) return false;
+    const latencyMs = Math.round(performance.now() - startedAt);
 
-    const eurLatencyMs = Math.round(performance.now() - eurStartedAt);
-    state.sourceStatus = [{ ...result.leg, ms: eurLatencyMs }];
-
+    state.sourceStatus = result.sourceStatus.map(item => item.key === "coingecko-public" ? { ...item, ms: latencyMs } : { ...item });
     const loaded = atlasApplyCanonicalSnapshot({
-      coins: result.markets,
+      coins: result.coins,
       global: result.global,
-      timestamp: result.generatedAt,
+      timestamp: result.timestamp,
       snapshotId: result.snapshotId,
-      sourceLabel: "CoinGecko direct · Top 250 EUR",
-      sourceReason: "Marché CoinGecko EUR direct ; flux USD utilisé seulement comme enrichissement optionnel."
-    }, "direct");
-    if (!loaded) throw new Error("Snapshot Top 250 EUR refusé");
+      sourceLabel: result.sourceLabel,
+      sourceReason: result.sourceReason
+    }, "github-public");
+    if (!loaded) throw new Error("Snapshot public CoinGecko refusé");
 
     atlasMergeSpotBookIntoCoins();
     state.marketPulse.marketFailures = 0;
@@ -5632,125 +5750,56 @@ async function runLivecheck(options = {}) {
     succeeded = true;
 
     atlasSetStableDirectMarketStatus();
-    atlasTrackAudience("market_loaded", { assets: state.coins.length, mode: "direct-eur" });
-    setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-
+    atlasTrackAudience("market_loaded", { assets: state.coins.length, mode: "github-public" });
     renderSourceGrid();
-    updateSourceMetric(1);
+    updateSourceMetric(2);
     atlasPatchMarketSnapshotDom();
-    renderTrustLock(true);
+    renderTrustLock(atlasAnalysisLiveReady());
 
     atlasStartSelectedChart(160, true);
     await atlasDelay(260);
     await atlasWaitForChartIdle(30_000);
+    return true;
+  } catch (error) {
+    if (error?.name === "AbortError") return false;
+    state.marketPulse.marketFailures += 1;
+    state.sourceStatus = [
+      {
+        key: "coingecko-public",
+        name: "CoinGecko USD public",
+        kind: "Top 250 collecté par GitHub Actions",
+        status: "INDISPONIBLE",
+        detail: cleanError(error)
+      },
+      {
+        key: "ecb-usd-eur",
+        name: "BCE USD/EUR",
+        kind: "Conversion monétaire publique",
+        status: "NON VÉRIFIÉ",
+        detail: "Le snapshot public n’a pas été chargé"
+      }
+    ];
 
-    try {
-      const usdStartedAt = performance.now();
-      const usdResult = await SourceAdapter.coingeckoUsdForIds(
-        state.coins.map(coin => coin.id),
-        { signal: controller.signal }
-      );
-      if (controller.signal.aborted || !atlasPulseVisible()) return false;
-
-      const usdLatencyMs = Math.round(performance.now() - usdStartedAt);
-      const enriched = atlasApplyUsdEnrichment(usdResult);
+    if (atlasKeepDirectStatusDuringTransientFailure(previousMarket, error, "Lecture publique")) {
       atlasMergeSpotBookIntoCoins();
-
-      state.sourceStatus = [
-        state.sourceStatus.find(item => item.key === "coingecko-eur") || { ...result.leg },
-        {
-          key: "coingecko-usd",
-          name: "CoinGecko USD",
-          kind: "Enrichissement des lignes visibles",
-          status: "OK",
-          ms: usdLatencyMs,
-          detail: `${enriched}/${state.coins.length} prix USD`
-        }
-      ];
-
-      atlasSetStableDirectMarketStatus();
+    } else if (previousMarket && atlasRestorePreviousSnapshot(
+      { ...previousMarket, snapshotId: previousMarket.snapshotId || previousMarket.sourceLock?.snapshotId || null },
+      error,
+      "Lecture publique"
+    )) {
       atlasPatchMarketSnapshotDom();
-    } catch (usdError) {
-      if (usdError?.name === "AbortError") return false;
-
-      state.sourceStatus = [
-        state.sourceStatus.find(item => item.key === "coingecko-eur") || { ...result.leg },
-        {
-          key: "coingecko-usd",
-          name: "CoinGecko USD",
-          kind: "Enrichissement des lignes visibles",
-          status: "INDISPONIBLE",
-          detail: cleanError(usdError)
-        }
-      ];
-
-      atlasSetStableDirectMarketStatus();
-      atlasPatchMarketSnapshotDom();
+    } else if (!applyMarketCache("Snapshot public Crypto indisponible : dernière lecture conservée en cache navigateur.")) {
+      atlasSetSourceLock("none", null, "Aucun snapshot public Crypto exploitable", false);
+      setLiveStatus("fail", "Marché public indisponible");
+      clearMarketDisplay("Aucun snapshot public Crypto exploitable");
+      setTableDecision("Marché public indisponible", "fail");
     }
 
     renderSourceGrid();
-    updateSourceMetric(2);
-    return true;
-  } catch (eurError) {
-    if (eurError?.name === "AbortError") return false;
-    const eurLatencyMs = eurStartedAt ? Math.round(performance.now() - eurStartedAt) : null;
-
-    try {
-      setLiveStatus("warn", "Secours CoinGecko USD → EUR");
-      setTableDecision("Top 250 USD en cours · conversion BCE EUR", "warn");
-      setText(els.sourceName, "CoinGecko USD · secours avec taux BCE");
-      const fallback = await atlasFetchUsdEurMarketFallback(eurError, { controller, eurLatencyMs });
-      if (controller.signal.aborted || !atlasPulseVisible()) return false;
-
-      state.sourceStatus = fallback.sourceStatus;
-      const loaded = atlasApplyCanonicalSnapshot(fallback.snapshot, "direct");
-      if (!loaded) throw new Error("Snapshot CoinGecko USD→EUR refusé");
-
-      atlasMergeSpotBookIntoCoins();
-      state.marketPulse.marketFailures = 0;
-      state.marketPulse.lastMarketSuccessAt = Date.now();
-      succeeded = true;
-
-      atlasSetStableDirectMarketStatus();
-      atlasTrackAudience("market_loaded", { assets: state.coins.length, mode: "direct-usd-ecb-eur" });
-      setText(els.sourceTime, atlasExactTimestampLabel(state.timestamp));
-      renderSourceGrid();
-      updateSourceMetric(2);
-      atlasPatchMarketSnapshotDom();
-      renderTrustLock(true);
-
-      atlasStartSelectedChart(160, true);
-      await atlasDelay(260);
-      await atlasWaitForChartIdle(30_000);
-      return true;
-    } catch (fallbackError) {
-      if (fallbackError?.name === "AbortError") return false;
-
-      state.marketPulse.marketFailures += 1;
-      state.sourceStatus = atlasFallbackFailureStatuses(eurError, fallbackError, eurLatencyMs);
-      const combinedError = new Error(`CoinGecko EUR : ${cleanError(eurError)} · secours USD→EUR : ${cleanError(fallbackError)}`);
-
-      if (atlasKeepDirectStatusDuringTransientFailure(previousMarket, combinedError, "Livecheck")) {
-        atlasMergeSpotBookIntoCoins();
-      } else if (previousMarket && atlasRestorePreviousSnapshot(
-        { ...previousMarket, snapshotId: previousMarket.snapshotId || previousMarket.sourceLock?.snapshotId || null },
-        combinedError,
-        "Livecheck"
-      )) {
-        atlasPatchMarketSnapshotDom();
-      } else if (!applyMarketCache("CoinGecko EUR et secours USD→EUR indisponibles : dernière lecture conservée en archive locale.")) {
-        atlasSetSourceLock("none", null, "Aucun snapshot CoinGecko exploitable", false);
-        setLiveStatus("fail", "CoinGecko EUR et USD indisponibles");
-        clearMarketDisplay("Aucun snapshot CoinGecko direct exploitable");
-        setTableDecision("Marché indisponible", "fail");
-      }
-
-      renderSourceGrid();
-      updateSourceMetric(2);
-      atlasRenderMarketAccessNotice();
-      renderTrustLock(false);
-      return false;
-    }
+    updateSourceMetric(0);
+    atlasRenderMarketAccessNotice();
+    renderTrustLock(false);
+    return false;
   } finally {
     if (state.marketPulse.marketController === controller) state.marketPulse.marketController = null;
     state.auto.livecheckBusy = false;
@@ -5760,7 +5809,7 @@ async function runLivecheck(options = {}) {
       atlasAfterLivecheck({ marketDelayMs: ATLAS_MARKET_REFRESH_MS, spotDelayMs: 900, reason: options.reason || "livecheck" });
     } else if (state.auto?.enabled && atlasPulseVisible()) {
       const retryDelay = atlasMarketRetryDelay(state.marketPulse.marketFailures || 1);
-      atlasAnnounceDirectRetry(retryDelay, "CoinGecko EUR et secours USD→EUR indisponibles");
+      atlasAnnounceDirectRetry(retryDelay, "Snapshot public Crypto indisponible");
       scheduleAutoRead(retryDelay);
     }
   }
@@ -5768,169 +5817,7 @@ async function runLivecheck(options = {}) {
 
 async function refreshMarketOnly(options = {}) {
   if (state.auto?.livecheckBusy || !state.auto?.enabled || !atlasPulseVisible()) return false;
-
-  state.auto.livecheckBusy = true;
-  atlasSetLivecheckButtonBusy(true, "Nouvelle tentative automatique…");
-  state.auto.lastStartedAt = new Date().toISOString();
-  state.auto.lastRunMs = Date.now();
-
-  const previous = state.coins.length
-    ? {
-        coins: state.coins,
-        global: state.global,
-        timestamp: state.timestamp,
-        snapshotId: state.sourceLock?.snapshotId,
-        mainSource: state.mainSource
-      }
-    : null;
-
-  atlasAbortPulseController(state.marketPulse.marketController);
-  const controller = new AbortController();
-  state.marketPulse.marketController = controller;
-
-  let refreshed = false;
-  let eurStartedAt = 0;
-
-  try {
-    eurStartedAt = performance.now();
-    const result = await SourceAdapter.coingeckoTop50Eur({ signal: controller.signal });
-    if (controller.signal.aborted || !atlasPulseVisible()) return false;
-
-    const eurLatencyMs = Math.round(performance.now() - eurStartedAt);
-    state.sourceStatus = [{ ...result.leg, ms: eurLatencyMs }];
-
-    refreshed = atlasApplyCanonicalSnapshot({
-      coins: result.markets,
-      global: result.global,
-      timestamp: result.generatedAt,
-      snapshotId: result.snapshotId,
-      sourceLabel: "CoinGecko direct · Top 250 EUR",
-      sourceReason: "Marché CoinGecko EUR direct ; flux USD utilisé seulement comme enrichissement optionnel."
-    }, "direct");
-    if (!refreshed) throw new Error("Snapshot Top 250 EUR refusé");
-
-    atlasMergeSpotBookIntoCoins();
-    state.marketPulse.marketFailures = 0;
-    state.marketPulse.lastMarketSuccessAt = Date.now();
-
-    atlasSetStableDirectMarketStatus();
-    atlasPatchMarketSnapshotDom();
-
-    if (!state.chartEngineV2?.realChart && state.dataBroker.chart?.status !== "loading") {
-      atlasStartSelectedChart(160, true);
-    }
-
-    await atlasWaitForChartIdle(30_000);
-
-    try {
-      const usdStartedAt = performance.now();
-      const usdResult = await SourceAdapter.coingeckoUsdForIds(
-        state.coins.map(coin => coin.id),
-        { signal: controller.signal }
-      );
-      if (controller.signal.aborted || !atlasPulseVisible()) return false;
-
-      const usdLatencyMs = Math.round(performance.now() - usdStartedAt);
-      const enriched = atlasApplyUsdEnrichment(usdResult);
-      atlasMergeSpotBookIntoCoins();
-
-      state.sourceStatus = [
-        state.sourceStatus.find(item => item.key === "coingecko-eur") || { ...result.leg },
-        {
-          key: "coingecko-usd",
-          name: "CoinGecko USD",
-          kind: "Enrichissement des lignes visibles",
-          status: "OK",
-          ms: usdLatencyMs,
-          detail: `${enriched}/${state.coins.length} prix USD`
-        }
-      ];
-
-      atlasSetStableDirectMarketStatus();
-      atlasPatchMarketSnapshotDom();
-    } catch (usdError) {
-      if (usdError?.name === "AbortError") return false;
-
-      state.sourceStatus = [
-        state.sourceStatus.find(item => item.key === "coingecko-eur") || { ...result.leg },
-        {
-          key: "coingecko-usd",
-          name: "CoinGecko USD",
-          kind: "Enrichissement des lignes visibles",
-          status: "INDISPONIBLE",
-          detail: cleanError(usdError)
-        }
-      ];
-
-      atlasSetStableDirectMarketStatus();
-      atlasPatchMarketSnapshotDom();
-    }
-
-    return true;
-  } catch (eurError) {
-    if (eurError?.name === "AbortError") return false;
-    const eurLatencyMs = eurStartedAt ? Math.round(performance.now() - eurStartedAt) : null;
-
-    try {
-      const fallback = await atlasFetchUsdEurMarketFallback(eurError, { controller, eurLatencyMs });
-      if (controller.signal.aborted || !atlasPulseVisible()) return false;
-      state.sourceStatus = fallback.sourceStatus;
-      refreshed = atlasApplyCanonicalSnapshot(fallback.snapshot, "direct");
-      if (!refreshed) throw new Error("Snapshot CoinGecko USD→EUR refusé");
-
-      atlasMergeSpotBookIntoCoins();
-      state.marketPulse.marketFailures = 0;
-      state.marketPulse.lastMarketSuccessAt = Date.now();
-      atlasSetStableDirectMarketStatus();
-      atlasPatchMarketSnapshotDom();
-
-      if (!state.chartEngineV2?.realChart && state.dataBroker.chart?.status !== "loading") {
-        atlasStartSelectedChart(160, true);
-      }
-      await atlasWaitForChartIdle(30_000);
-      return true;
-    } catch (fallbackError) {
-      if (fallbackError?.name === "AbortError") return false;
-
-      state.marketPulse.marketFailures += 1;
-      state.sourceStatus = atlasFallbackFailureStatuses(eurError, fallbackError, eurLatencyMs);
-      const combinedError = new Error(`CoinGecko EUR : ${cleanError(eurError)} · secours USD→EUR : ${cleanError(fallbackError)}`);
-
-      if (atlasKeepDirectStatusDuringTransientFailure(previous, combinedError, "Rafraîchissement")) {
-        atlasMergeSpotBookIntoCoins();
-      } else if (previous && atlasRestorePreviousSnapshot(
-        { ...previous, mainSource: previous.mainSource || "CoinGecko · dernière lecture directe" },
-        combinedError,
-        "Rafraîchissement"
-      )) {
-        atlasMergeSpotBookIntoCoins();
-        atlasPatchMarketSnapshotDom();
-      } else if (!applyMarketCache("CoinGecko EUR et secours USD→EUR indisponibles : dernière lecture conservée en archive locale.")) {
-        clearMarketDisplay("Aucun snapshot CoinGecko direct exploitable");
-      }
-
-      return false;
-    }
-  } finally {
-    if (state.marketPulse.marketController === controller) state.marketPulse.marketController = null;
-    state.auto.livecheckBusy = false;
-    atlasSetLivecheckButtonBusy(false);
-
-    renderSourceGrid();
-    updateSourceMetric(state.sourceStatus.length || 0);
-    atlasRenderMarketAccessNotice();
-
-    if (refreshed) {
-      atlasAfterLivecheck({ marketDelayMs: ATLAS_MARKET_REFRESH_MS, reason: options.reason || "market-pulse" });
-    } else {
-      renderAutoReader();
-      const retryDelay = atlasMarketRetryDelay(state.marketPulse.marketFailures || 1);
-      atlasAnnounceDirectRetry(retryDelay, "Actualisation CoinGecko EUR et USD→EUR indisponible");
-      scheduleAutoRead(retryDelay);
-    }
-
-    atlasScheduleSpotPulse(refreshed ? 900 : atlasPulseBackoffDelay(state.marketPulse.spotFailures || 1));
-  }
+  return runLivecheck({ ...options, reason: options.reason || "public-market-pulse" });
 }
 
 function classifyAsset(c) {
@@ -11076,7 +10963,7 @@ function getSourceRecord(key) { return state.sourceStatus.find(s => s.key === ke
 } function normalizeSymbol(value) { return String(value || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase();
 } function findCoinByQuery(query) { const q = normalizeSymbol(query); if (!q) return null; return state.coins.find(c => String(c.symbol || "").toUpperCase() === q || String(c.id || "").toUpperCase() === q || String(c.name || "").toUpperCase() === q ) || null;
 } function coinPayload(c) { if (!c) return null; const s = scoreCoin(c); const ratio = c.volume24h && c.marketCap ? c.volume24h / c.marketCap : null; return { id: c.id, rank: c.rank ?? null, name: c.name, symbol: c.symbol, type: classifyAsset(c), price_eur: c.price ?? null, change_24h_pct: c.change24h ?? null, change_7d_pct: c.change7d ?? null, change_30d_pct: c.change30d ?? null, market_cap_eur: c.marketCap ?? null, volume_24h_eur: c.volume24h ?? null, volume_marketcap_ratio: ratio, score: s.score, score_label: s.label, decision: beginnerDecision(c), limits: ["no_contract_security", "no_social_validation", "no_onchain_validation", "not_financial_advice"] };
-} function sourceHealthPayload() { const total = liveSources.length; const status = liveSources.map(src => { const rec = state.sourceStatus.find(s => s.key === src.key); return { key: src.key, name: src.name, role: "atomic_market_leg", kind: src.kind, status: rec ? rec.status : "WAIT", ms: rec?.ms ?? null, detail: rec?.detail ?? "not_tested" }; }); const ok = status.filter(s => s.status === "OK").length; const fail = status.filter(s => s.status === "ÉCHEC").length; return { live_ok: atlasAnalysisLiveReady(), market_visible: state.liveOk, main_source: state.mainSource, total_flows: total, successful_flows: ok, failed_flows: fail, tested_flows: state.sourceStatus.length, critical_rule: "CoinGecko EUR est le chemin préféré. En cas d’échec, CoinGecko USD Top 250 est converti en EUR avec le taux BCE public. L’archive n’est utilisée que si les deux chemins directs sont inutilisables.", sources: status };
+} function sourceHealthPayload() { const total = liveSources.length; const status = liveSources.map(src => { const rec = state.sourceStatus.find(s => s.key === src.key); return { key: src.key, name: src.name, role: "atomic_market_leg", kind: src.kind, status: rec ? rec.status : "WAIT", ms: rec?.ms ?? null, detail: rec?.detail ?? "not_tested" }; }); const ok = status.filter(s => s.status === "OK").length; const fail = status.filter(s => s.status === "ÉCHEC").length; return { live_ok: atlasAnalysisLiveReady(), market_visible: state.liveOk, main_source: state.mainSource, total_flows: total, successful_flows: ok, failed_flows: fail, tested_flows: state.sourceStatus.length, critical_rule: "Le marché principal provient du snapshot public produit par GitHub Actions à partir de CoinGecko USD et converti en EUR avec le taux BCE. Le cache navigateur n’est utilisé qu’en dernier recours si ce snapshot public est absent, incomplet ou trop ancien.", sources: status };
 } const SIM_PROFILE = { key: "solo_beginner_100_v1_1_alpha_13", label: "Solo Débutant 100 €", startCash: 100, allowedSymbols: ["BTC", "ETH", "SOL"], defaultAmount: 5, maxPerOperation: 10, maxExposure: 30, minReserve: 70
 };
 const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_13";
@@ -11090,7 +10977,7 @@ const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { 
 } function profileRefusal(message, extra = {}) { return commandError(message, { profile: getSimulationProfileStatus(), ...extra });
 } function simulationRefusal(message, extra = {}) { if (!state.sim) loadSimulation(); simLog({ type: "REFUS", message }); saveSimulation(); renderSimulation(); return profileRefusal(message, extra);
 } function simulationPayload() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const positions = Object.keys(state.sim.positions).map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; return { symbol: sym, name: pos.name, qty: pos.qty, avg_price_eur: pos.avgPrice, current_price_eur: price, invested_eur: pos.invested, value_eur: value, pnl_eur: value - pos.invested }; }); return { mode: "paper_trading_only", profile: getSimulationProfileStatus(), cash_eur: state.sim.cash, initial_cash_eur: state.sim.initialCash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl, positions, logs: state.sim.logs.slice(0, 10) };
-} function simulateOrder(side, symbolInput = null, amountInput = null) { if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot CoinGecko direct récent requis.", sourceHealthPayload()); const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || ""); const amount = Number(amountInput ?? els.simAmount?.value ?? 0); if (!symbol) return simulationRefusal("Actif manquant."); if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide."); if (!SIM_PROFILE.allowedSymbols.includes(symbol)) { return simulationRefusal(`Profil débutant : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol }); } const coin = findCoinByQuery(symbol); if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol }); if (!state.sim) loadSimulation(); const price = coin.price; if (!Number.isFinite(price) || price <= 0) return simulationRefusal("Prix indisponible pour simulation."); const sym = coin.symbol.toUpperCase(); if (amount > SIM_PROFILE.maxPerOperation) { return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount }); } const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price }; if (side === "buy") { const totals = getSimulationTotals(); if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount }); if (state.sim.cash - amount < SIM_PROFILE.minReserve) { return simulationRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount }); } if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) { return simulationRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount }); } const qty = amount / price; const newQty = pos.qty + qty; const newInvested = pos.invested + amount; pos.qty = newQty; pos.invested = newInvested; pos.avgPrice = newInvested / newQty; pos.lastPrice = price; state.sim.positions[sym] = pos; state.sim.cash -= amount; simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · profil 100 €.` }); } else if (side === "sell") { if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`); const maxValue = pos.qty * price; const sellValue = Math.min(amount, maxValue); const qty = sellValue / price; const soldRatio = qty / pos.qty; pos.qty -= qty; pos.invested = Math.max(0, pos.invested * (1 - soldRatio)); pos.lastPrice = price; state.sim.cash += sellValue; if (pos.qty <= 0.00000001) delete state.sim.positions[sym]; else state.sim.positions[sym] = pos; simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)} · profil 100 €.` }); } saveSimulation(); renderSimulation(); return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, price_eur: price, portfolio: simulationPayload() });
+} function simulateOrder(side, symbolInput = null, amountInput = null) { if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload()); const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || ""); const amount = Number(amountInput ?? els.simAmount?.value ?? 0); if (!symbol) return simulationRefusal("Actif manquant."); if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide."); if (!SIM_PROFILE.allowedSymbols.includes(symbol)) { return simulationRefusal(`Profil débutant : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol }); } const coin = findCoinByQuery(symbol); if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol }); if (!state.sim) loadSimulation(); const price = coin.price; if (!Number.isFinite(price) || price <= 0) return simulationRefusal("Prix indisponible pour simulation."); const sym = coin.symbol.toUpperCase(); if (amount > SIM_PROFILE.maxPerOperation) { return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount }); } const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price }; if (side === "buy") { const totals = getSimulationTotals(); if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount }); if (state.sim.cash - amount < SIM_PROFILE.minReserve) { return simulationRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount }); } if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) { return simulationRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount }); } const qty = amount / price; const newQty = pos.qty + qty; const newInvested = pos.invested + amount; pos.qty = newQty; pos.invested = newInvested; pos.avgPrice = newInvested / newQty; pos.lastPrice = price; state.sim.positions[sym] = pos; state.sim.cash -= amount; simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · profil 100 €.` }); } else if (side === "sell") { if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`); const maxValue = pos.qty * price; const sellValue = Math.min(amount, maxValue); const qty = sellValue / price; const soldRatio = qty / pos.qty; pos.qty -= qty; pos.invested = Math.max(0, pos.invested * (1 - soldRatio)); pos.lastPrice = price; state.sim.cash += sellValue; if (pos.qty <= 0.00000001) delete state.sim.positions[sym]; else state.sim.positions[sym] = pos; simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)} · profil 100 €.` }); } saveSimulation(); renderSimulation(); return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, price_eur: price, portfolio: simulationPayload() });
 } function simLogTypeLabel(type) { if (type === "SIM_BUY") return "ACHAT SIMULÉ"; if (type === "SIM_SELL") return "VENTE SIMULÉE"; if (type === "REFUS") return "REFUS"; if (type === "RESET") return "RESET"; return String(type || "INFO");
 } function simLogLine(entry) { const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : ""; const label = simLogTypeLabel(entry?.type); const msg = entry?.message || ""; return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
 } function renderSimulation() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); if (els.simProfileStatus) { const profile = getSimulationProfileStatus(); els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`; } setText(els.simCash, fmtEUR.format(state.sim.cash)); setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue)); setText(els.simTotalValue, fmtEUR.format(totals.total)); if (els.simPnL) { els.simPnL.textContent = `${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`; els.simPnL.classList.toggle("pnl-pos", totals.pnl >= 0); els.simPnL.classList.toggle("pnl-neg", totals.pnl < 0); } const positions = Object.keys(state.sim.positions); if (els.simPositions) { els.simPositions.innerHTML = positions.length ? positions.map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; const pnl = value - pos.invested; return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span>${pos.qty.toFixed(8)}</span><span>${fmtEUR.format(value)}</span><span class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${fmtEUR.format(pnl)}</span></div>`; }).join("") : "Aucune position simulée."; } if (els.simLog) { els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée."; }
@@ -11226,10 +11113,10 @@ function atlasDecisionSourceQuality(memory, okSources, totalSources) {
   if (directReady && sourceRatio >= 1 && memory.comparable && memory.records.length >= 20) confidence = "confiance correcte";
   else if (directReady && sourceRatio >= 0.5 && memory.records.length >= 5) confidence = "confiance moyenne";
   const label = directReady
-    ? "données directes"
+    ? mode === "github-public" ? "snapshot public récent" : "données directes"
     : mode === "local-cache"
       ? "archive locale"
-      : "snapshot récent conservé";
+      : mode === "github-public" ? "snapshot public daté" : "snapshot récent conservé";
   return { sourceRatio, directReady, mode, confidence, label };
 }
 
@@ -11326,8 +11213,8 @@ function renderDecisionBoard() {
   const coldHtml = [
     `Actif courant : ${selectedLine}`,
     `Action : ${escapeHtml(selected ? atlasActionForCoin(selected) : "Attendre")}`,
-    `Données : ${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} flux CoinGecko`,
-    "Règle : action descriptive déterminée par la catégorie de l’actif et l’état direct / archivé, indépendamment de l’indice · validation humaine."
+    `Données : ${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} contrôles publics`,
+    "Règle : action descriptive déterminée par la catégorie de l’actif et l’état public récent / conservé, indépendamment de l’indice · validation humaine."
   ].join("<br>");
 
   grid.innerHTML = `
@@ -11369,7 +11256,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Qualité des données</b>
-          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} flux CoinGecko · ${memory.records.length} snapshots · ${memoryQuality}.</span>
+          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} contrôles publics · ${memory.records.length} snapshots · ${memoryQuality}.</span>
         </div>
         <div>
           <b>Prudence</b>
@@ -11377,7 +11264,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Action de travail</b>
-          <span>L’action descriptive dépend de la catégorie de l’actif et de l’état direct / archivé, pas de l’indice. Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise.</span>
+          <span>L’action descriptive dépend de la catégorie de l’actif et de l’état public récent / conservé, pas de l’indice. Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise.</span>
         </div>
       </div>
     `;
@@ -11570,6 +11457,7 @@ function scoreCoin(c) {
   if (typeof c.change24h === "number" && Math.abs(c.change24h) > 18) penalty += 12;
   if (c.volume24h && c.marketCap && c.volume24h / c.marketCap < 0.01) penalty += 10;
   if (state.sourceLock?.mode === "direct-conserved") penalty += 3;
+  else if (state.sourceLock?.mode === "github-public") penalty += 2;
   else if (state.sourceLock?.mode !== "direct") penalty += 5;
 
   const score = Math.round(clamp(0, 100, base - penalty));
@@ -11582,6 +11470,7 @@ function scoreCoin(c) {
   else label = "Volatilité élevée";
 
   if (state.sourceLock?.mode === "direct-conserved") label = `${label} · conservé`;
+  else if (state.sourceLock?.mode === "github-public") label = `${label} · public`;
   else if (state.sourceLock?.mode !== "direct") label = `${label} · archive`;
 
   return { score, label, parts };
@@ -12684,7 +12573,7 @@ function renderWatchlist() {
 } function atlasMarketTone() { if (!state.liveOk || !state.coins.length) return { label: "En attente", mode: "wait" }; const btc = state.coins.find(c => c.id === "bitcoin" || c.symbol === "BTC"); const eth = state.coins.find(c => c.id === "ethereum" || c.symbol === "ETH"); const avgTop = state.coins.slice(0, 10).reduce((s, c) => s + (Number(c.change24h) || 0), 0) / Math.max(1, Math.min(10, state.coins.length)); const btcMove = Number(btc?.change24h) || 0; const ethMove = Number(eth?.change24h) || 0; const momentum = (avgTop + btcMove + ethMove) / 3; if (momentum >= 4) return { label: "Marché très positif, risque FOMO élevé", mode: "hot" }; if (momentum >= 1) return { label: "Marché positif, observation active", mode: "ok" }; if (momentum <= -3) return { label: "Marché sous pression, prudence renforcée", mode: "cold" }; return { label: "Marché neutre à surveiller", mode: "calm" };
 } function atlasTopSymbols(list, limit = 4) { return list.slice(0, limit).map(c => `${c.symbol} ${atlasFmtMarketPct(c.change24h)}`).join(" · ");
 } function atlasDecisionBriefText() {
-  if (!atlasAnalysisLiveReady()) return "ATLAS DECISION BRIEF\nMode archive ou snapshot incomplet : analyse directe, conclusion active et simulation suspendues. L’indice de veille Atlas historique et les prix archivés restent consultables.";
+  if (!atlasAnalysisLiveReady()) return "ATLAS DECISION BRIEF\nSnapshot public trop ancien ou incomplet : conclusion active et simulation suspendues. L’indice de veille Atlas historique et les prix conservés restent consultables.";
   const tone = atlasMarketTone();
   const nonStable = state.coins.filter(c => classifyAsset(c) !== "Stablecoin" && typeof c.change24h === "number");
   const hot = nonStable.slice().sort((a, b) => b.change24h - a.change24h).filter(c => c.change24h > 3);
@@ -12692,18 +12581,21 @@ function renderWatchlist() {
   const hotText = hot.length ? atlasTopSymbols(hot, 5) : "aucun mouvement haussier majeur";
   const coldText = cold.length ? atlasTopSymbols(cold, 4) : "aucun décrochage majeur dans le top chargé";
   const fx = atlasMarketFxContext();
-  const snapshotSourceLine = fx
-    ? `Snapshot marché : CoinGecko Top 250 USD direct, valeurs monétaires converties en EUR au taux BCE du ${fx.sourceDate} · ${atlasExactTimestampLabel(state.timestamp)}.`
-    : `Snapshot marché : CoinGecko Top 250 EUR direct ; USD en enrichissement optionnel · ${atlasExactTimestampLabel(state.timestamp)}.`;
+  const publicMode = state.sourceLock?.mode === "github-public";
+  const snapshotSourceLine = publicMode
+    ? `Snapshot marché : CoinGecko Top 250 USD collecté par GitHub Actions, publié en JSON et converti en EUR avec le taux BCE du ${fx?.sourceDate || "—"} · ${atlasExactTimestampLabel(state.timestamp)}.`
+    : fx
+      ? `Snapshot marché : CoinGecko Top 250 USD direct, valeurs monétaires converties en EUR au taux BCE du ${fx.sourceDate} · ${atlasExactTimestampLabel(state.timestamp)}.`
+      : `Snapshot marché : CoinGecko Top 250 EUR direct · ${atlasExactTimestampLabel(state.timestamp)}.`;
   const priceSourceLine = fx
     ? `Prix, capitalisations, volumes et bornes 24 h : USD CoinGecko convertis avec 1 USD = ${Number(fx.eurPerUsd).toFixed(6)} EUR. Variations en pourcentage : base USD CoinGecko.`
-    : "Prix EUR : marché CoinGecko direct. Prix USD : enrichissement CoinGecko optionnel, jamais estimé.";
+    : "Prix EUR : marché CoinGecko.";
   return [
     "ATLAS DECISION BRIEF",
     `État : ${tone.label}.`,
     snapshotSourceLine,
     priceSourceLine,
-    "Graphique Top 5 : chandelles Binance EUR ; autres actifs : historique CoinGecko EUR. Dernier historique de même source conservé en secours.",
+    "Graphique Top 5 : chandelles Binance EUR ; autres actifs : historique CoinGecko à la demande. Le snapshot public ne déclenche aucun ordre.",
     `À observer : ${hotText}.`,
     `À protéger : ${coldText}.`,
     "Décision de travail : observer / comparer. Pas d’achat automatique, pas de FOMO, pas d’ordre réel."
@@ -12713,18 +12605,18 @@ function renderTrustLock(live = false) {
   if (!els.trustLockText) return;
   const locked = !!live && atlasAnalysisLiveReady();
   const fx = atlasMarketFxContext();
+  const publicMode = state.sourceLock?.mode === "github-public";
   els.trustLockText.classList.toggle("ok-lock", locked);
   els.trustLockText.classList.toggle("warn-lock", !locked);
-  if (locked && fx) {
-    els.trustLockText.textContent = `SOURCE CANONIQUE · CoinGecko USD direct. Valeurs monétaires converties en EUR avec le taux BCE du ${fx.sourceDate} : 1 USD = ${Number(fx.eurPerUsd).toFixed(6)} EUR. ` +
-      "Les variations en pourcentage restent celles de CoinGecko en base USD. Binance alimente les prix et graphiques du Top 5 ; le dernier snapshot CoinGecko daté reste le dernier secours.";
+  if (locked && publicMode && fx) {
+    els.trustLockText.textContent = `SOURCE CANONIQUE PUBLIQUE · CoinGecko USD collecté par GitHub Actions. Le navigateur lit le JSON publié ; valeurs monétaires converties en EUR avec le taux BCE du ${fx.sourceDate} : 1 USD = ${Number(fx.eurPerUsd).toFixed(6)} EUR. ` +
+      "Les variations restent celles de CoinGecko en base USD. Binance alimente les prix et graphiques compatibles ; aucune requête Top 250 CoinGecko n’est demandée à Firefox.";
+  } else if (locked && fx) {
+    els.trustLockText.textContent = `SOURCE CANONIQUE · CoinGecko USD. Valeurs monétaires converties en EUR avec le taux BCE du ${fx.sourceDate}. Les variations restent en base USD CoinGecko.`;
   } else if (locked) {
-    els.trustLockText.textContent = `SOURCE CANONIQUE · CoinGecko uniquement. Marché EUR : ${state.dataBroker.market?.mode || state.sourceLock.mode}. ` +
-      "Prix EUR fournis par le marché CoinGecko ; USD ajouté seulement s’il est disponible, sans estimation. " +
-      "Binance alimente les prix et graphiques du Top 5 ; CoinGecko alimente le marché global, les scanners et les autres historiques. " +
-      "En cas de panne, le chemin USD→EUR BCE est essayé avant le dernier snapshot CoinGecko daté.";
+    els.trustLockText.textContent = "SOURCE CANONIQUE · CoinGecko. Snapshot validé et décision sous validation humaine.";
   } else {
-    els.trustLockText.textContent = "Aucun chemin direct CoinGecko exploitable : EUR direct et secours USD→EUR indisponibles. Les prix archivés et l’indice de veille Atlas historique restent consultables ; analyse directe, conclusion active et simulation suspendues.";
+    els.trustLockText.textContent = "Snapshot public Crypto absent, trop ancien ou incomplet. Les prix conservés et l’indice historique restent consultables ; conclusion active et simulation suspendues. Firefox ne tente plus de charger le Top 250 directement depuis CoinGecko.";
   }
 }
 function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead) return; const box = els.coldRead.closest(".cold-read"); if (box) { box.classList.toggle("live", live); box.classList.toggle("offline", !live); } if (live) { els.coldRead.textContent = atlasDecisionBriefText(); } else { els.coldRead.textContent = "ATLAS DECISION BRIEFLivecheck absent. L’observatoire refuse d’afficher un tableau chiffré et ne donne aucune lecture de marché."; }
@@ -13008,7 +12900,7 @@ function atlasAfterLivecheck(options = {}) {
     atlasScheduleChartPulse(ATLAS_CHART_BACKGROUND_REFRESH_MS);
   }
 
-  if (state.sourceLock?.mode === "direct") {
+  if (["direct", "github-public"].includes(state.sourceLock?.mode)) {
     atlasScannerResumeQueuedAfterDirect();
   }
 
@@ -14857,7 +14749,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.74",
+  interface: "Build 28.2.75",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -17108,7 +17000,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.74`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.75`
   );
 }
 
@@ -17336,14 +17228,16 @@ function atlasV2DecisionLockRefresh() {
   const marketReady = !!state.liveOk && !!state.coins?.length;
 
   const marketMode = state.sourceLock?.mode || "none";
-  const fxFallback = marketMode === "direct" && !!atlasMarketFxContext();
+  const fxFallback = ["direct", "github-public"].includes(marketMode) && !!atlasMarketFxContext();
   const dataLabel = !marketReady
     ? "Marché en attente"
-    : marketMode === "direct"
-      ? (fxFallback ? "CoinGecko USD → EUR BCE" : "CoinGecko EUR direct")
-      : marketMode === "direct-conserved"
-        ? "Dernière lecture conservée"
-        : "Snapshot archivé chargé";
+    : marketMode === "github-public"
+      ? (atlasAnalysisLiveReady() ? "Snapshot public CoinGecko récent" : "Snapshot public CoinGecko daté")
+      : marketMode === "direct"
+        ? (fxFallback ? "CoinGecko USD → EUR BCE" : "CoinGecko EUR direct")
+        : marketMode === "direct-conserved"
+          ? "Dernière lecture conservée"
+          : "Snapshot archivé chargé";
   setText(document.getElementById("decisionLockData"), dataLabel);
   setText(document.getElementById("decisionLockChart"), chartReady ? "Série vérifiée" : "Graphe à confirmer");
   setText(
@@ -26247,7 +26141,7 @@ function atlasScannerResumeQueuedAfterDirect() {
   const queued = atlasScannerQueuedRequest;
   if (!queued || atlasScannerTransaction) return false;
   if (!state.liveOk || !state.coins.length) return false;
-  if (String(state.sourceLock?.mode || state.dataBroker?.market?.mode || "") !== "direct") return false;
+  if (!["direct", "github-public"].includes(String(state.sourceLock?.mode || state.dataBroker?.market?.mode || ""))) return false;
   atlasScannerQueuedRequest = null;
   return atlasScannerStart(queued.preset, 5, {
     period: queued.period,
