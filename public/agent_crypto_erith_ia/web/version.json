@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.72",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.72",
-  "published_at": "2026-08-04T04:00:00Z",
+  "build": "28.2.73",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.73",
+  "published_at": "2026-08-04T04:48:13Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -482,7 +482,7 @@
     "control_center": "V2.1.0R1",
     "bridge": "V1.7.6",
     "model": "llama3.2:latest",
-    "interface": "Build 28.2.72",
+    "interface": "Build 28.2.73",
     "bridge_scope": "crypto_history_scanner_reports_conclusion_chat",
     "metals_scope": "public_github_actions_archive_only",
     "metals_dev_dependency": false,
@@ -493,5 +493,33 @@
     "crypto_graph_changed": false,
     "metals_graph_changed": false,
     "collectors_changed": false
+  },
+  "decision_board_truth_contract": {
+    "base": "28.2.72",
+    "state": "ready_for_user_test",
+    "scope": "crypto_decision_board_visible_truth_contract_only",
+    "archive_index_policy": "historical_watch_index_remains_visible_for_consultation",
+    "archive_direct_analysis": "suspended",
+    "archive_active_conclusion": "suspended",
+    "archive_simulation": "suspended",
+    "displayed_index_name": "Indice de veille Atlas",
+    "source_counter_name": "flux CoinGecko",
+    "source_counter_independent_providers_claimed": false,
+    "category_reading_name": "Lecture catégories d’actifs",
+    "action_basis": [
+      "asset_category",
+      "direct_or_archived_state"
+    ],
+    "action_depends_on_watch_index": false,
+    "scoring_formula_changed": false,
+    "anomaly_thresholds_changed": false,
+    "movement_thresholds_changed": false,
+    "memory_engine_changed": false,
+    "news_sentinel_changed": false,
+    "bridge_changed": false,
+    "crypto_graph_changed": false,
+    "metals_workspace_changed": false,
+    "collectors_changed": false,
+    "interface_geometry_changed": false
   }
 }

@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.72 — BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.73 — DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.72";
-const ATLAS_BUILD = "28.2.72";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.72";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.73";
+const ATLAS_BUILD = "28.2.73";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.73";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -5683,7 +5683,7 @@ function whyDecision(c) {
   if (typeof c.change7d === "number") bits.push(`Variation marché 7 j : ${fmtPct(c.change7d)}.`);
   if (c.volume24h && c.marketCap) bits.push(`Ratio volume/market cap : ${((c.volume24h / c.marketCap) * 100).toFixed(2)} %.`);
   bits.push("Sécurité, actualités, social et on-chain non validés automatiquement.");
-  if (!atlasAnalysisLiveReady()) bits.push("Snapshot en archive : scores et simulation suspendus.");
+  if (!atlasAnalysisLiveReady()) bits.push("Snapshot en archive : indice de veille historique consultable ; analyse directe, conclusion active et simulation suspendues.");
   return bits.join(" ");
 }
 function renderBeginnerSummary() { if (!els.beginnerSummary) return; if (!state.liveOk || !state.coins.length) { els.beginnerSummary.textContent = "Le marché n’est pas lisible pour l’instant. Aucune source marché principale n’a fourni un tableau fiable. Donc : pas de prix, pas de conclusion, pas de tableau fictif."; if (els.advancedGrid) { els.advancedGrid.innerHTML = ` <div><b>État</b><span>Livecheck absent ou échec</span></div> <div><b>Tableau</b><span>Bloqué</span></div> <div><b>Données</b><span>Non récupérées</span></div> <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>`; } return; } const btc = state.coins.find(c => c.id === "bitcoin"); const eth = state.coins.find(c => c.id === "ethereum"); const first = state.coins[0]; els.beginnerSummary.textContent = `Marché lisible depuis ${state.mainSource}. ` + `Le tableau montre des données de marché réelles : prix, variation, volume et capitalisation. ` + `Bitcoin et Ethereum servent de repères. ` + `Les stablecoins ne sont pas des opportunités de hausse : ils servent surtout à lire stabilité et liquidité. ` + `Ce cockpit aide à observer, pas à acheter.`; if (els.advancedGrid) { const ratio = first?.volume24h && first?.marketCap ? ((first.volume24h / first.marketCap) * 100).toFixed(2) + " %" : "Donnée manquante"; els.advancedGrid.innerHTML = ` <div><b>Source</b><span>${escapeHtml(state.mainSource || "—")}</span></div> <div><b>Actifs chargés</b><span>${state.coins.length}</span></div> <div><b>BTC 24h</b><span>${btc ? atlasFmtMarketPct(btc.change24h) : "Donnée manquante"}</span></div> <div><b>ETH 24h</b><span>${eth ? atlasFmtMarketPct(eth.change24h) : "Donnée manquante"}</span></div> <div><b>Premier actif</b><span>${first ? escapeHtml(first.name) : "—"}</span></div> <div><b>Type</b><span>${escapeHtml(classifyAsset(first))}</span></div> <div><b>Vol/Market cap</b><span>${ratio}</span></div> <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>`; }
@@ -7177,7 +7177,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.72
+   Market Core V2.0-Alpha · Build 28.2.73
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -10918,7 +10918,7 @@ function atlasDecisionAnomalyReason(c) {
   const score = scoreCoin(c).score;
   if (change >= 7) reasons.push(`mouvement 24 h ${atlasDecisionPct(c.change24h)}`);
   if (ratio >= 0.08) reasons.push(`vol/cap ${(ratio * 100).toFixed(2)} %`);
-  if (Number(score || 0) < 40) reasons.push(`score ${score ?? "—"}`);
+  if (Number(score || 0) < 40) reasons.push(`indice Atlas ${score ?? "—"}`);
   return reasons.join(" · ") || "vérification requise";
 }
 
@@ -10969,7 +10969,7 @@ function renderDecisionBoard() {
       <article class="decision-card"><b>Mouvements à vérifier</b><span>Livecheck requis · classement en attente.</span></article>
       <article class="decision-card"><b>Repères à comparer</b><span>BTC / ETH / SOL après source réelle.</span></article>
       <article class="decision-card"><b>Anomalies / prudence</b><span>La lecture démarre après réception d’un prix réel.</span></article>
-      <article class="decision-card"><b>Lecture secteurs</b><span>En attente du tableau marché.</span></article>
+      <article class="decision-card"><b>Lecture catégories d’actifs</b><span>En attente du tableau marché.</span></article>
       <article class="decision-card"><b>Mémoire comparable</b><span>${memory.records.length} snapshots · ${memory.collectors.length || 0} collecteur(s).</span></article>
       <article class="decision-card decision-card-wide"><b>Décision froide</b><span>Attendre le Livecheck · validation humaine avant toute décision.</span></article>
     `;
@@ -11024,10 +11024,10 @@ function renderDecisionBoard() {
     ? anomalies.map(c => `${String(c.symbol || c.name).toUpperCase()} · ${atlasDecisionAnomalyReason(c)}`).join("<br>")
     : "Pas d’anomalie majeure détectée dans le tableau actuel.";
 
-  const allSectorNegative = sectors.length > 0 && sectors.every(s => Number(s.avg24 || 0) < 0);
+  const allCategoryNegative = sectors.length > 0 && sectors.every(s => Number(s.avg24 || 0) < 0);
   const sectorsHtml = sectors.length
-    ? `${allSectorNegative ? "Aucun secteur positif sur 24 h.<br>" : ""}${sectors.map(s => `${escapeHtml(s.key)} · ${atlasDecisionPct(s.avg24)} · repère ${escapeHtml(s.best?.symbol || "—")}`).join("<br>")}`
-    : "Secteurs en attente.";
+    ? `${allCategoryNegative ? "Aucune catégorie positive sur 24 h.<br>" : ""}${sectors.map(s => `${escapeHtml(s.key)} · ${atlasDecisionPct(s.avg24)} · repère ${escapeHtml(s.best?.symbol || "—")}`).join("<br>")}`
+    : "Catégories d’actifs en attente.";
 
   const memoryHtml = [
     `${memory.records.length} snapshots locaux`,
@@ -11036,21 +11036,22 @@ function renderDecisionBoard() {
     memory.comparable ? (deltas.length ? deltas.join("<br>") : "écart insuffisant entre deux relevés du même collecteur") : "comparaison suspendue : aucun relevé antérieur du même collecteur"
   ].join("<br>");
 
+  const selectedIndexContext = quality.directReady ? "" : " · historique archivé";
   const selectedLine = selected
-    ? `${escapeHtml(selected.symbol || selected.name)} · 24 h ${atlasDecisionPct(selected.change24h)} · 7 j ${atlasDecisionPct(selected.change7d)} · score ${selectedScore.score ?? "—"}`
+    ? `${escapeHtml(selected.symbol || selected.name)} · 24 h ${atlasDecisionPct(selected.change24h)} · 7 j ${atlasDecisionPct(selected.change7d)} · indice de veille Atlas ${selectedScore.score ?? "—"}${selectedIndexContext}`
     : "Actif courant indisponible";
   const coldHtml = [
     `Actif courant : ${selectedLine}`,
     `Action : ${escapeHtml(selected ? atlasActionForCoin(selected) : "Attendre")}`,
-    `Données : ${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} source(s)`,
-    "Règle : observer / comparer, validation humaine."
+    `Données : ${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} flux CoinGecko`,
+    "Règle : action descriptive déterminée par la catégorie de l’actif et l’état direct / archivé, indépendamment de l’indice · validation humaine."
   ].join("<br>");
 
   grid.innerHTML = `
     <article class="decision-card"><b>Mouvements à vérifier</b><span>${observeHtml}</span></article>
     <article class="decision-card"><b>Repères à comparer</b><span>${compareHtml}</span></article>
     <article class="decision-card"><b>Anomalies / prudence</b><span>${anomaliesHtml}</span></article>
-    <article class="decision-card"><b>Lecture secteurs</b><span>${sectorsHtml}</span></article>
+    <article class="decision-card"><b>Lecture catégories d’actifs</b><span>${sectorsHtml}</span></article>
     <article class="decision-card"><b>Mémoire comparable</b><span>${memoryHtml}</span></article>
     <article class="decision-card decision-card-wide"><b>Décision froide</b><span>${coldHtml}</span></article>
   `;
@@ -11067,8 +11068,9 @@ function renderDecisionBoard() {
       ? `comparaison interne au collecteur ${escapeHtml(memory.lastCollector)}`
       : "pas encore de paire comparable du même collecteur";
 
+    const verdictTitle = quality.directReady ? "Décision Atlas" : "Consultation Atlas archivée";
     verdict.innerHTML = `
-      <div class="decision-verdict-title">Décision Atlas : ${escapeHtml(action)} · ${escapeHtml(quality.confidence)}</div>
+      <div class="decision-verdict-title">${verdictTitle} : ${escapeHtml(action)} · ${escapeHtml(quality.confidence)}</div>
       <div class="decision-verdict-body">
         <div>
           <b>Situation marché</b>
@@ -11084,7 +11086,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Qualité des données</b>
-          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} source(s) · ${memory.records.length} snapshots · ${memoryQuality}.</span>
+          <span>${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} flux CoinGecko · ${memory.records.length} snapshots · ${memoryQuality}.</span>
         </div>
         <div>
           <b>Prudence</b>
@@ -11092,7 +11094,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Action de travail</b>
-          <span>Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise.</span>
+          <span>L’action descriptive dépend de la catégorie de l’actif et de l’état direct / archivé, pas de l’indice. Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise.</span>
         </div>
       </div>
     `;
@@ -11309,7 +11311,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.72 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.73 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -12399,7 +12401,7 @@ function renderWatchlist() {
 } function atlasMarketTone() { if (!state.liveOk || !state.coins.length) return { label: "En attente", mode: "wait" }; const btc = state.coins.find(c => c.id === "bitcoin" || c.symbol === "BTC"); const eth = state.coins.find(c => c.id === "ethereum" || c.symbol === "ETH"); const avgTop = state.coins.slice(0, 10).reduce((s, c) => s + (Number(c.change24h) || 0), 0) / Math.max(1, Math.min(10, state.coins.length)); const btcMove = Number(btc?.change24h) || 0; const ethMove = Number(eth?.change24h) || 0; const momentum = (avgTop + btcMove + ethMove) / 3; if (momentum >= 4) return { label: "Marché très positif, risque FOMO élevé", mode: "hot" }; if (momentum >= 1) return { label: "Marché positif, observation active", mode: "ok" }; if (momentum <= -3) return { label: "Marché sous pression, prudence renforcée", mode: "cold" }; return { label: "Marché neutre à surveiller", mode: "calm" };
 } function atlasTopSymbols(list, limit = 4) { return list.slice(0, limit).map(c => `${c.symbol} ${atlasFmtMarketPct(c.change24h)}`).join(" · ");
 } function atlasDecisionBriefText() {
-  if (!atlasAnalysisLiveReady()) return "ATLAS DECISION BRIEF\nMode archive ou snapshot incomplet : scores et conclusion suspendus. Les prix restent consultables.";
+  if (!atlasAnalysisLiveReady()) return "ATLAS DECISION BRIEF\nMode archive ou snapshot incomplet : analyse directe, conclusion active et simulation suspendues. L’indice de veille Atlas historique et les prix archivés restent consultables.";
   const tone = atlasMarketTone();
   const nonStable = state.coins.filter(c => classifyAsset(c) !== "Stablecoin" && typeof c.change24h === "number");
   const hot = nonStable.slice().sort((a, b) => b.change24h - a.change24h).filter(c => c.change24h > 3);
@@ -12428,7 +12430,7 @@ function renderTrustLock(live = false) {
       "Binance alimente les prix et graphiques du Top 5 ; CoinGecko alimente le marché global, les scanners et les autres historiques. " +
       "En cas de panne, le dernier snapshot CoinGecko daté est conservé.";
   } else {
-    els.trustLockText.textContent = "Marché EUR direct absent : prix archivés consultables, scores Atlas et simulation suspendus. Le flux USD reste optionnel.";
+    els.trustLockText.textContent = "Marché EUR direct absent : prix archivés et indice de veille Atlas historique consultables ; analyse directe, conclusion active et simulation suspendues. Le flux USD reste optionnel.";
   }
 }
 function renderColdRead(live = false) { renderTrustLock(live); if (!els.coldRead) return; const box = els.coldRead.closest(".cold-read"); if (box) { box.classList.toggle("live", live); box.classList.toggle("offline", !live); } if (live) { els.coldRead.textContent = atlasDecisionBriefText(); } else { els.coldRead.textContent = "ATLAS DECISION BRIEFLivecheck absent. L’observatoire refuse d’afficher un tableau chiffré et ne donne aucune lecture de marché."; }
@@ -14561,7 +14563,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.72",
+  interface: "Build 28.2.73",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -16812,7 +16814,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.72`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.73`
   );
 }
 
@@ -21300,7 +21302,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.72 — Parallel Markets Foundation
+   Build 28.2.73 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -24818,14 +24820,14 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.72 — Metals Multi-Horizon History Connection Lock
+   Build 28.2.73 — Metals Multi-Horizon History Connection Lock
    - 7 j / 30 j / 90 j / 1 an use real daily Futures snapshots.
    - 24 h remains explicitly unavailable without intraday history.
    - Gold API current quotes stay separate from Yahoo Futures history.
    ========================================================= */
 
 /* =========================================================
-   Build 28.2.72 — Comparison Memory Slots A / B / C
+   Build 28.2.73 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -28464,7 +28466,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.72 — Rapport Métaux public automatique
+   Build 28.2.73 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -29403,7 +29405,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.72 — Current Quotes / History Decoupled Lock
+   Build 28.2.73 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
@@ -29466,7 +29468,7 @@ window.addEventListener("resize", () => {
 });
 
 /* =========================================================
-   Build 28.2.72 — METALS RESULTS VISIBILITY LOCK
+   Build 28.2.73 — METALS RESULTS VISIBILITY LOCK
    - Useful default: 7-day real Futures chart instead of an empty 24-hour panel.
    - One-time migration of the previously saved 24-hour Metals state.
    - Prominent active-metal result headline with percentage, sessions and dates.
@@ -29476,9 +29478,16 @@ window.addEventListener("resize", () => {
 
 
 /* =========================================================
-   Build 28.2.72 — BRIDGE CANONICAL STACK RECOVERY LOCK
+   Build 28.2.73 — BRIDGE CANONICAL STACK RECOVERY LOCK
    - Control Center canonique : V2.1.0R1
    - Bridge Crypto canonique : V1.7.6
    - Métaux : archive publique GitHub Actions uniquement
    - Metals.Dev et fallback Bridge Métaux retirés
    ========================================================= */
+
+
+/* ============================================================
+   Build 28.2.73 — DECISION BOARD TRUTH CONTRACT LOCK
+   Visible terminology and archive-state contract only.
+   Deterministic scoring, thresholds, memory and sources unchanged.
+   ============================================================ */
