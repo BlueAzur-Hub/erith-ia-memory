@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.69 — METALS EMBEDDED MARKET TABLE LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.70 — METALS CURSOR HISTORICAL INSPECTOR LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.69";
-const ATLAS_BUILD = "28.2.69";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.69";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.70";
+const ATLAS_BUILD = "28.2.70";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.70";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -7177,7 +7177,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.69
+   Market Core V2.0-Alpha · Build 28.2.70
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11309,7 +11309,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.69 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.70 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14561,7 +14561,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.69",
+  interface: "Build 28.2.70",
   controlCenter: "V2.2.0R1",
   bridge: "V1.8.0",
   bridgeNumeric: "1.8.0",
@@ -16812,7 +16812,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.69`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.70`
   );
 }
 
@@ -21300,7 +21300,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.69 — Parallel Markets Foundation
+   Build 28.2.70 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -23311,157 +23311,329 @@ function atlasMetalsChartMarketPeriodLabel(periodDays) {
   return `${days} J`;
 }
 
-function atlasMetalsChartMarketSnapshotTime() {
-  const candidates = [
-    atlasMetalsQuoteFoundationState.snapshot?.saved_at,
-    atlasMetalsQuoteFoundationState.snapshot?.generated_at,
-    ...atlasMetalsQuoteFoundationArray(atlasMetalsQuoteFoundationState.quotes)
-      .flatMap(quote => [quote?.received_at, quote?.source_time])
-  ];
-  for (const candidate of candidates) {
-    const stamp = Date.parse(String(candidate || ""));
-    if (Number.isFinite(stamp)) return stamp;
-  }
-  return null;
+const atlasMetalsCursorInspectorState = {
+  canvas: null,
+  geometry: null,
+  baseImage: null,
+  pointer: null,
+  frame: 0,
+  installed: false
+};
+
+function atlasMetalsCursorInspectorPanel() {
+  return document.getElementById("atlasMetalsChartMarketPanel");
 }
 
-function atlasMetalsChartMarketDrawSparkline(canvas, points, color) {
-  if (!canvas) return false;
-  const clean = atlasMetalsQuoteFoundationArray(points)
-    .map(point => Number(point?.y))
-    .filter(Number.isFinite);
-  const rect = canvas.getBoundingClientRect();
-  const width = Math.max(54, Math.round(rect.width || 72));
-  const height = Math.max(18, Math.round(rect.height || 24));
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
+function atlasMetalsCursorInspectorRestoreBase() {
+  const canvas = atlasMetalsCursorInspectorState.canvas;
+  const image = atlasMetalsCursorInspectorState.baseImage;
+  const geometry = atlasMetalsCursorInspectorState.geometry;
+  if (!canvas || !image || !geometry) return false;
   const ctx = canvas.getContext("2d");
   if (!ctx) return false;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, width, height);
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.putImageData(image, 0, 0);
+  ctx.restore();
+  ctx.setTransform(geometry.dpr, 0, 0, geometry.dpr, 0, 0);
+  return true;
+}
 
-  if (clean.length < 2) {
-    ctx.strokeStyle = "rgba(174,190,202,.26)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(3, height / 2);
-    ctx.lineTo(width - 3, height / 2);
-    ctx.stroke();
+function atlasMetalsCursorInspectorHide(options = {}) {
+  const panel = atlasMetalsCursorInspectorPanel();
+  atlasMetalsCursorInspectorState.pointer = null;
+  if (options.restore !== false) atlasMetalsCursorInspectorRestoreBase();
+  if (!panel) return;
+  panel.hidden = true;
+  panel.setAttribute("aria-hidden", "true");
+  panel.removeAttribute("data-dock");
+  panel.style.removeProperty("left");
+  panel.style.removeProperty("top");
+}
+
+function atlasMetalsCursorInspectorReset(canvas = null) {
+  if (atlasMetalsCursorInspectorState.frame) {
+    cancelAnimationFrame(atlasMetalsCursorInspectorState.frame);
+    atlasMetalsCursorInspectorState.frame = 0;
+  }
+  atlasMetalsCursorInspectorState.canvas = canvas || atlasMetalsCursorInspectorState.canvas;
+  atlasMetalsCursorInspectorState.geometry = null;
+  atlasMetalsCursorInspectorState.baseImage = null;
+  atlasMetalsCursorInspectorHide({ restore: false });
+}
+
+function atlasMetalsCursorNearestPoint(points, targetX) {
+  const rows = atlasMetalsQuoteFoundationArray(points);
+  if (!rows.length || !Number.isFinite(Number(targetX))) return null;
+  let low = 0;
+  let high = rows.length - 1;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (Number(rows[middle]?.x) < targetX) low = middle + 1;
+    else high = middle;
+  }
+  const right = rows[low] || null;
+  const left = rows[Math.max(0, low - 1)] || null;
+  if (!left) return right;
+  if (!right) return left;
+  return Math.abs(Number(left.x) - targetX) <= Math.abs(Number(right.x) - targetX)
+    ? left
+    : right;
+}
+
+function atlasMetalsCursorMedianInterval(points) {
+  const rows = atlasMetalsQuoteFoundationArray(points)
+    .map(point => Number(point?.x))
+    .filter(Number.isFinite)
+    .sort((left, right) => left - right);
+  if (rows.length < 2) return Infinity;
+  const intervals = [];
+  for (let index = 1; index < rows.length; index += 1) {
+    const delta = rows[index] - rows[index - 1];
+    if (delta > 0) intervals.push(delta);
+  }
+  if (!intervals.length) return Infinity;
+  intervals.sort((left, right) => left - right);
+  return intervals[Math.floor(intervals.length / 2)];
+}
+
+function atlasMetalsCursorHistoricalPriceText(value, assetId) {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return "—";
+  const digits = assetId === "copper"
+    ? 4
+    : Math.abs(amount) >= 1000 ? 1 : Math.abs(amount) >= 100 ? 2 : 3;
+  return `${new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  }).format(amount)} USD`;
+}
+
+function atlasMetalsCursorChangeText(value) {
+  const change = Number(value);
+  if (!Number.isFinite(change)) return "—";
+  const normalized = Math.abs(change) < 0.005 ? 0 : change;
+  return `${normalized > 0 ? "+" : ""}${new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(normalized)} %`;
+}
+
+function atlasMetalsCursorInspectorRows(targetX) {
+  const geometry = atlasMetalsCursorInspectorState.geometry;
+  if (!geometry) return [];
+  const periodDays = Number(geometry.periodDays || 7);
+  return geometry.series.map(displaySeries => {
+    const rawPoints = atlasMetalsQuoteFoundationAssetPoints(displaySeries.id, periodDays);
+    const rawPoint = atlasMetalsCursorNearestPoint(rawPoints, targetX);
+    const displayPoint = atlasMetalsCursorNearestPoint(displaySeries.points, targetX);
+    const nativeInterval = atlasMetalsCursorMedianInterval(rawPoints);
+    const distance = rawPoint ? Math.abs(Number(rawPoint.x) - Number(targetX)) : Infinity;
+    if (!rawPoint || !displayPoint || (Number.isFinite(nativeInterval) && distance > nativeInterval * 4)) return null;
+    const first = rawPoints[0] || null;
+    const price = Number(rawPoint?.y);
+    const change = first && Number(first.y) !== 0 && Number.isFinite(price)
+      ? ((price / Number(first.y)) - 1) * 100
+      : null;
+    const asset = ATLAS_METALS_ASSETS.find(item => item.id === displaySeries.id) || {
+      id: displaySeries.id,
+      symbol: displaySeries.symbol || displaySeries.id.toUpperCase(),
+      name: displaySeries.symbol || displaySeries.id
+    };
+    return {
+      asset,
+      color: displaySeries.color || ATLAS_METALS_CHART_COLORS[displaySeries.id] || "#9fb3c2",
+      rawPoint,
+      displayPoint,
+      price,
+      change,
+      time: Number(rawPoint?.x ?? displayPoint?.x)
+    };
+  }).filter(row => row && row.rawPoint && row.displayPoint && Number.isFinite(row.time));
+}
+
+function atlasMetalsCursorInspectorTimestamp(rows, targetX) {
+  const activeId = atlasParallelMarketActiveMetal()?.id;
+  const preferred = rows.find(row => row.asset.id === activeId) || rows[0] || null;
+  return Number(preferred?.time || targetX);
+}
+
+function atlasMetalsCursorInspectorPosition(canvas, pointerX, pointerY) {
+  const panel = atlasMetalsCursorInspectorPanel();
+  const stage = canvas?.parentElement;
+  if (!panel || !stage) return;
+  const width = panel.offsetWidth || 350;
+  const height = panel.offsetHeight || 260;
+  const stageWidth = stage.clientWidth || canvas.clientWidth || 760;
+  const stageHeight = stage.clientHeight || canvas.clientHeight || 230;
+  const gap = 18;
+  const edge = 10;
+  const roomRight = stageWidth - pointerX - gap - edge;
+  const roomLeft = pointerX - gap - edge;
+  const previous = panel.dataset.dock === "left" || panel.dataset.dock === "right"
+    ? panel.dataset.dock
+    : "";
+  const tolerance = 34;
+  let dock = previous || (roomRight >= width || roomRight >= roomLeft ? "right" : "left");
+  if (dock === "right" && roomRight < width && roomLeft > roomRight + tolerance) dock = "left";
+  if (dock === "left" && roomLeft < width && roomRight > roomLeft + tolerance) dock = "right";
+  let left = dock === "left" ? pointerX - width - gap : pointerX + gap;
+  let top = pointerY - height * .5;
+  left = clamp(edge, Math.max(edge, stageWidth - width - edge), left);
+  top = clamp(edge, Math.max(edge, stageHeight - height - edge), top);
+  panel.dataset.dock = dock;
+  panel.style.left = `${Math.round(left)}px`;
+  panel.style.top = `${Math.round(top)}px`;
+}
+
+function atlasMetalsCursorInspectorRenderPanel(rows, targetX, pointerX, pointerY) {
+  const panel = atlasMetalsCursorInspectorPanel();
+  const geometry = atlasMetalsCursorInspectorState.geometry;
+  if (!panel || !geometry || !rows.length) {
+    atlasMetalsCursorInspectorHide();
     return false;
   }
-
-  const sampled = clean.length > 42
-    ? clean.filter((_, index) => index % Math.ceil(clean.length / 42) === 0 || index === clean.length - 1)
-    : clean;
-  let min = Math.min(...sampled);
-  let max = Math.max(...sampled);
-  if (min === max) { min -= 1; max += 1; }
-  const px = index => 3 + (index / Math.max(1, sampled.length - 1)) * (width - 6);
-  const py = value => 3 + (1 - (value - min) / (max - min)) * (height - 6);
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, `${color}3b`);
-  gradient.addColorStop(1, `${color}00`);
-  ctx.beginPath();
-  sampled.forEach((value, index) => {
-    const x = px(index); const y = py(value);
-    if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.lineTo(px(sampled.length - 1), height - 2);
-  ctx.lineTo(px(0), height - 2);
-  ctx.closePath();
-  ctx.fillStyle = gradient;
-  ctx.fill();
-
-  ctx.beginPath();
-  sampled.forEach((value, index) => {
-    const x = px(index); const y = py(value);
-    if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.6;
-  ctx.lineJoin = "round";
-  ctx.lineCap = "round";
-  ctx.stroke();
-  return true;
-}
-
-function atlasMetalsQuoteFoundationRenderChartMarketPanel() {
-  const panel = document.getElementById("atlasMetalsChartMarketPanel");
-  if (!panel) return false;
-  const metals = atlasParallelMarketMetalsState();
-  const periodDays = Number(metals.period || 7);
-  const active = atlasParallelMarketActiveMetal();
-  const stamp = atlasMetalsChartMarketSnapshotTime();
+  const stamp = atlasMetalsCursorInspectorTimestamp(rows, targetX);
+  const intraday = Number(geometry.periodDays) === 1;
   const time = document.getElementById("atlasMetalsChartMarketTime");
+  const origin = document.getElementById("atlasMetalsChartMarketOrigin");
   const period = document.getElementById("atlasMetalsChartMarketPeriod");
   const source = document.getElementById("atlasMetalsChartMarketSource");
-  const origin = document.getElementById("atlasMetalsChartMarketOrigin");
-
   if (time) {
-    time.textContent = stamp
-      ? new Date(stamp).toLocaleString("fr-FR", {
-          day: "2-digit", month: "2-digit", year: "numeric",
-          hour: "2-digit", minute: "2-digit", second: "2-digit"
-        })
-      : "Cotation en attente";
-    time.dateTime = stamp ? new Date(stamp).toISOString() : "";
+    const date = new Date(stamp);
+    time.textContent = date.toLocaleString("fr-FR", intraday
+      ? { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }
+      : { day: "2-digit", month: "2-digit", year: "numeric" });
+    time.dateTime = date.toISOString();
   }
-  if (period) period.textContent = `PÉRIODE ACTIVE · ${atlasMetalsChartMarketPeriodLabel(periodDays)}`;
-  if (source) {
-    source.textContent = periodDays === 1
-      ? "Gold API actuel · Yahoo Finance Futures intraday"
-      : "Gold API actuel · Yahoo Finance Futures quotidien";
-  }
-  if (origin) {
-    origin.textContent = atlasMetalsQuoteFoundationState.origin === "github_archive"
-      ? "Gold API · cotations indicatives"
-      : atlasMetalsQuoteFoundationState.origin === "local_bridge"
-        ? "Bridge local · cache complémentaire"
-        : "Cotations publiques · source vérifiée";
-  }
+  if (origin) origin.textContent = intraday
+    ? "Yahoo Finance Futures · point intraday 5 min"
+    : "Yahoo Finance Futures · séance quotidienne";
+  if (period) period.textContent = `PÉRIODE ACTIVE · ${atlasMetalsChartMarketPeriodLabel(geometry.periodDays)}`;
+  if (source) source.textContent = `${rows.length}/${geometry.series.length} série${geometry.series.length > 1 ? "s" : ""} · variation depuis le début de la fenêtre`;
 
-  document.querySelectorAll("[data-metals-chart-market-row]").forEach(row => {
-    const assetId = String(row.dataset.metalsChartMarketRow || "");
-    const asset = ATLAS_METALS_ASSETS.find(item => item.id === assetId);
-    const quote = atlasMetalsQuoteFoundationQuote(assetId);
-    const reading = atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays);
-    const price = row.querySelector("[data-metals-chart-market-price]");
-    const change = row.querySelector("[data-metals-chart-market-change]");
-    const sparkline = row.querySelector("[data-metals-chart-market-sparkline]");
-    const stateName = reading?.available === true
-      ? reading.percent > 0 ? "up" : reading.percent < 0 ? "down" : "flat"
-      : "unknown";
-    const color = ATLAS_METALS_CHART_COLORS[assetId] || "#9fb3c2";
-
-    row.classList.toggle("is-active", assetId === active.id);
-    row.dataset.state = stateName;
-    row.setAttribute("aria-current", assetId === active.id ? "true" : "false");
-    if (price) price.textContent = atlasMetalsQuoteFoundationPriceText(quote);
-    if (change) change.textContent = reading?.available
-      ? atlasMetalsHumanReadingPercent(reading.percent)
-      : "—";
-    row.setAttribute(
+  const byId = new Map(rows.map(row => [row.asset.id, row]));
+  document.querySelectorAll("[data-metals-chart-market-row]").forEach(node => {
+    const row = byId.get(String(node.dataset.metalsChartMarketRow || ""));
+    node.hidden = !row;
+    if (!row) return;
+    const price = node.querySelector("[data-metals-chart-market-price]");
+    const change = node.querySelector("[data-metals-chart-market-change]");
+    const stateName = row.change > 0 ? "up" : row.change < 0 ? "down" : "flat";
+    node.dataset.state = stateName;
+    if (price) price.textContent = atlasMetalsCursorHistoricalPriceText(row.price, row.asset.id);
+    if (change) change.textContent = atlasMetalsCursorChangeText(row.change);
+    node.setAttribute(
       "aria-label",
-      `${asset?.name || assetId}, cours actuel ${atlasMetalsQuoteFoundationPriceText(quote)}, variation ${atlasMetalsChartMarketPeriodLabel(periodDays)} ${reading?.available ? atlasMetalsHumanReadingPercent(reading.percent) : "non mesurée"}`
-    );
-    atlasMetalsChartMarketDrawSparkline(
-      sparkline,
-      atlasMetalsQuoteFoundationAssetPoints(assetId, periodDays),
-      color
+      `${row.asset.name}, prix historique ${atlasMetalsCursorHistoricalPriceText(row.price, row.asset.id)}, variation ${atlasMetalsCursorChangeText(row.change)}`
     );
   });
 
-  panel.dataset.mode = atlasParallelMarketMetalsAllActive() ? "comparison" : "single";
+  panel.hidden = false;
+  panel.setAttribute("aria-hidden", "false");
+  atlasMetalsCursorInspectorPosition(geometry.canvas, pointerX, pointerY);
   return true;
 }
 
-function atlasMetalsChartMarketReservedWidth(stageWidth) {
-  const panel = document.getElementById("atlasMetalsChartMarketPanel");
-  if (!panel || window.matchMedia("(max-width: 900px)").matches) return 18;
-  const width = Math.round(panel.getBoundingClientRect().width || 0);
-  return width > 0 ? Math.min(Math.round(stageWidth * .43), width + 30) : 18;
+function atlasMetalsCursorInspectorDraw(rows, targetX, pointerX, pointerY) {
+  const geometry = atlasMetalsCursorInspectorState.geometry;
+  if (!geometry || !atlasMetalsCursorInspectorRestoreBase()) return false;
+  const ctx = geometry.canvas.getContext("2d");
+  if (!ctx) return false;
+  const guideX = geometry.sx(targetX);
+  ctx.save();
+  ctx.setLineDash([4, 5]);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(219,239,249,.42)";
+  ctx.beginPath();
+  ctx.moveTo(guideX, geometry.pad.top);
+  ctx.lineTo(guideX, geometry.height - geometry.pad.bottom);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  rows.forEach(row => {
+    const point = row.displayPoint;
+    if (!point) return;
+    const x = geometry.sx(Number(point.x));
+    const y = geometry.sy(Number(point.y));
+    ctx.beginPath();
+    ctx.arc(x, y, 5.2, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(3,10,20,.96)";
+    ctx.fill();
+    ctx.lineWidth = 2.4;
+    ctx.strokeStyle = row.color;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, y, 2.15, 0, Math.PI * 2);
+    ctx.fillStyle = row.color;
+    ctx.fill();
+  });
+  ctx.restore();
+  atlasMetalsCursorInspectorRenderPanel(rows, targetX, pointerX, pointerY);
+  return true;
+}
+
+function atlasMetalsCursorInspectorUpdate() {
+  atlasMetalsCursorInspectorState.frame = 0;
+  const geometry = atlasMetalsCursorInspectorState.geometry;
+  const pointer = atlasMetalsCursorInspectorState.pointer;
+  if (!geometry || !pointer) return;
+  const { x, y } = pointer;
+  const inside = x >= geometry.pad.left
+    && x <= geometry.width - geometry.pad.right
+    && y >= geometry.pad.top
+    && y <= geometry.height - geometry.pad.bottom;
+  if (!inside) {
+    atlasMetalsCursorInspectorHide();
+    return;
+  }
+  const ratio = clamp(0, 1, (x - geometry.pad.left) / geometry.plotW);
+  const targetX = geometry.minX + ratio * (geometry.maxX - geometry.minX);
+  const rows = atlasMetalsCursorInspectorRows(targetX);
+  if (!rows.length) {
+    atlasMetalsCursorInspectorHide();
+    return;
+  }
+  atlasMetalsCursorInspectorDraw(rows, targetX, x, y);
+}
+
+function atlasMetalsCursorInspectorPointerMove(event) {
+  const canvas = atlasMetalsCursorInspectorState.canvas;
+  if (!canvas || canvas.hidden || atlasParallelMarketDomain() !== "metals") return;
+  const rect = canvas.getBoundingClientRect();
+  atlasMetalsCursorInspectorState.pointer = {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+  if (!atlasMetalsCursorInspectorState.frame) {
+    atlasMetalsCursorInspectorState.frame = requestAnimationFrame(atlasMetalsCursorInspectorUpdate);
+  }
+}
+
+function atlasMetalsCursorInspectorCommitBase(canvas, geometry) {
+  const ctx = canvas?.getContext("2d");
+  if (!canvas || !ctx || !geometry) return false;
+  atlasMetalsCursorInspectorState.canvas = canvas;
+  atlasMetalsCursorInspectorState.geometry = { ...geometry, canvas };
+  try {
+    atlasMetalsCursorInspectorState.baseImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  } catch {
+    atlasMetalsCursorInspectorState.baseImage = null;
+  }
+  atlasMetalsCursorInspectorHide({ restore: false });
+  return !!atlasMetalsCursorInspectorState.baseImage;
+}
+
+function atlasMetalsCursorInspectorInit() {
+  if (atlasMetalsCursorInspectorState.installed) return true;
+  const canvas = document.getElementById("atlasMetalsChartCanvas");
+  if (!canvas) return false;
+  atlasMetalsCursorInspectorState.installed = true;
+  atlasMetalsCursorInspectorState.canvas = canvas;
+  canvas.addEventListener("pointermove", atlasMetalsCursorInspectorPointerMove, { passive: true });
+  canvas.addEventListener("pointerleave", () => atlasMetalsCursorInspectorHide());
+  canvas.addEventListener("pointercancel", () => atlasMetalsCursorInspectorHide());
+  window.addEventListener("blur", () => atlasMetalsCursorInspectorHide());
+  return true;
 }
 
 function atlasMetalsQuoteFoundationRenderChart() {
@@ -23477,7 +23649,6 @@ function atlasMetalsQuoteFoundationRenderChart() {
     .forEach(axis => { axis.hidden = series.length > 0; });
   const pointCount = Math.max(0, ...series.map(item => item.points.length));
   const periodDays = Number(atlasParallelMarketMetalsState().period || 7);
-  atlasMetalsQuoteFoundationRenderChartMarketPanel();
   atlasMetalsQuoteFoundationRenderResultHeadline(periodDays);
   atlasMetalsQuoteFoundationRenderHumanReading(atlasParallelMarketActiveMetal().id, periodDays);
   const periodLabel = atlasChartPeriodLabel(periodDays);
@@ -23509,6 +23680,7 @@ function atlasMetalsQuoteFoundationRenderChart() {
   ctx.clearRect(0, 0, width, height);
 
   if (!series.length) {
+    atlasMetalsCursorInspectorReset(canvas);
     canvas.hidden = true;
     if (message) message.hidden = false;
     const quoteSummary = atlasMetalsQuoteFoundationSummary();
@@ -23537,7 +23709,7 @@ function atlasMetalsQuoteFoundationRenderChart() {
       ? `${pointCount} points Yahoo Finance Futures intraday dans la fenêtre 24 heures.`
       : `${pointCount} séances publiques réelles sur la période sélectionnée.`;
 
-  const pad = { left: 48, right: atlasMetalsChartMarketReservedWidth(width), top: 18, bottom: 34 };
+  const pad = { left: 48, right: 18, top: 18, bottom: 34 };
   const plotW = Math.max(1, width - pad.left - pad.right);
   const plotH = Math.max(1, height - pad.top - pad.bottom);
   const all = series.flatMap(item => item.points);
@@ -23594,6 +23766,22 @@ function atlasMetalsQuoteFoundationRenderChart() {
   ctx.textAlign = "right";
   ctx.fillText(new Date(maxX).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" }), width - pad.right, height - 10);
   ctx.textAlign = "left";
+  atlasMetalsCursorInspectorCommitBase(canvas, {
+    periodDays,
+    series,
+    pad,
+    plotW,
+    plotH,
+    minX,
+    maxX,
+    minY,
+    maxY,
+    sx,
+    sy,
+    width,
+    height,
+    dpr
+  });
   return true;
 }
 
@@ -24383,6 +24571,7 @@ function atlasParallelMarketInit() {
   );
 
   atlasParallelMarketMetalsRead();
+  atlasMetalsCursorInspectorInit();
   atlasMarketRegistryRender();
   atlasMetalsStructuralRenderActive();
   void atlasMarketRegistryLoad();
@@ -24487,15 +24676,6 @@ function atlasParallelMarketInit() {
   });
 
   foundation?.addEventListener("click", event => {
-    const chartMarketRow = event.target.closest("[data-metals-chart-market-row]");
-    if (chartMarketRow) {
-      event.preventDefault();
-      atlasParallelMarketSetActiveMetal(
-        chartMarketRow.dataset.metalsChartMarketRow
-      );
-      return;
-    }
-
     const allSeries = event.target.closest("[data-metals-all-series]");
     if (allSeries) {
       event.preventDefault();
@@ -24673,14 +24853,14 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.69 — Metals Multi-Horizon History Connection Lock
+   Build 28.2.70 — Metals Multi-Horizon History Connection Lock
    - 7 j / 30 j / 90 j / 1 an use real daily Futures snapshots.
    - 24 h remains explicitly unavailable without intraday history.
    - Gold API current quotes stay separate from Yahoo Futures history.
    ========================================================= */
 
 /* =========================================================
-   Build 28.2.69 — Comparison Memory Slots A / B / C
+   Build 28.2.70 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -28319,7 +28499,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.69 — Rapport Métaux public automatique
+   Build 28.2.70 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -29258,7 +29438,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.69 — Current Quotes / History Decoupled Lock
+   Build 28.2.70 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
@@ -29321,7 +29501,7 @@ window.addEventListener("resize", () => {
 });
 
 /* =========================================================
-   Build 28.2.69 — METALS RESULTS VISIBILITY LOCK
+   Build 28.2.70 — METALS RESULTS VISIBILITY LOCK
    - Useful default: 7-day real Futures chart instead of an empty 24-hour panel.
    - One-time migration of the previously saved 24-hour Metals state.
    - Prominent active-metal result headline with percentage, sessions and dates.
