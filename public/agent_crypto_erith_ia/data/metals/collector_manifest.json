@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
-  "version": "2.1.0",
-  "generated_at": "2026-08-03T22:22:38.792Z",
-  "build_target": "28.2.60",
+  "version": "2.2.0",
+  "generated_at": "2026-08-04T00:44:47.696Z",
+  "build_target": "28.2.66",
   "state": "ready",
   "assets": [
     "XAU",
@@ -20,6 +20,7 @@
     "latest": "data/metals/latest.json",
     "status": "data/metals/status.json",
     "history": "data/metals/history/public_1y.json",
+    "spot_history": "data/metals/history/spot_48h.json",
     "history_index": "data/metals/history/index.json",
     "fx": "data/metals/fx/usd_eur.json",
     "series": [
@@ -39,7 +40,9 @@
     "five_of_five_current_required_for_green_run": true,
     "minimum_one_year_history_required_when_published": true,
     "spot_and_futures_series_separated": true,
+    "rolling_spot_archive_enabled": true,
+    "spot_history_retention_hours": 48,
     "last_valid_data_preserved_on_failure": true
   },
-  "fingerprint": "sha256:bc960c0914f57f8bc70fe10811546753f1623b0b265a3fc0239d4999e3eeba33"
+  "fingerprint": "sha256:caaf74f9e9cd47788e74fbd56f2c8b677dcc7abacfb7294887dd6c8e402c7077"
 }
