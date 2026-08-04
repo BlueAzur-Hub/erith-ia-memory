@@ -18,8 +18,8 @@
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
 const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.77";
-const ATLAS_BUILD = "28.2.77";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.77";
+const ATLAS_BUILD = "28.2.78";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.78";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -1499,7 +1499,7 @@ state.memoryTruth = {
   }
 };
 
-const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
+const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), schoolResult: $("schoolResult"), simBuyFeePct: $("simBuyFeePct"), simSellFeePct: $("simSellFeePct"), simEntryImpactPct: $("simEntryImpactPct"), simExitImpactPct: $("simExitImpactPct"), simCostsConfirmed: $("simCostsConfirmed"), simCostStatus: $("simCostStatus"), simRoundTripCost: $("simRoundTripCost"), simBreakEvenPrice: $("simBreakEvenPrice"), simNetPnL: $("simNetPnL"), simCostTruth: $("simCostTruth"), simScenarioOutput: $("simScenarioOutput"), simSecurityGateStatus: $("simSecurityGateStatus"), simSecurityGateList: $("simSecurityGateList"), simSecurityGateReading: $("simSecurityGateReading"), atlasPedagogyDrawer: $("atlasPedagogyDrawer"), atlasPedagogyTitle: $("atlasPedagogyTitle"), atlasPedagogyBody: $("atlasPedagogyBody"), btnClosePedagogy: $("btnClosePedagogy"), btnSimCostSchoolPreset: $("btnSimCostSchoolPreset"), btnSimCostReset: $("btnSimCostReset"), withdrawAsset: $("withdrawAsset"), withdrawNetwork: $("withdrawNetwork"), withdrawAmount: $("withdrawAmount"), withdrawFee: $("withdrawFee"), withdrawDestinationVerified: $("withdrawDestinationVerified"), withdrawSmallTest: $("withdrawSmallTest"), withdrawNoThirdParty: $("withdrawNoThirdParty"), btnCheckWithdrawalSafety: $("btnCheckWithdrawalSafety"), withdrawalSafetyStatus: $("withdrawalSafetyStatus"), withdrawalSafetyOutput: $("withdrawalSafetyOutput"), scamSentinelChecks: $("scamSentinelChecks"), scamSentinelStatus: $("scamSentinelStatus"), scamSentinelOutput: $("scamSentinelOutput"), btnAnalyzeScamSignals: $("btnAnalyzeScamSignals"), btnResetScamSignals: $("btnResetScamSignals"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
   autoReaderTruth: $("autoReaderTruth"), autoVisibilityTruth: $("autoVisibilityTruth"),
   autoLastSnapshotTruth: $("autoLastSnapshotTruth"), autoCollectorTruth: $("autoCollectorTruth"),
   autoGithubWriteTruth: $("autoGithubWriteTruth"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"),
@@ -3265,7 +3265,7 @@ function atlasComparisonHistoryComposition(
 function atlasComparisonFreshnessText(level = "fresh") {
   if (level === "archive") return "données historiques anciennes";
   if (level === "delayed") return "données différées";
-  return "données à jour";
+  return "à jour";
 }
 
 function atlasComparisonHistoryLabel(composition, options = {}) {
@@ -10994,21 +10994,499 @@ function getSourceRecord(key) { return state.sourceStatus.find(s => s.key === ke
 } const SIM_PROFILE = { key: "solo_beginner_100_v1_1_alpha_13", label: "Solo Débutant 100 €", startCash: 100, allowedSymbols: ["BTC", "ETH", "SOL"], defaultAmount: 5, maxPerOperation: 10, maxExposure: 30, minReserve: 70
 };
 const SIM_STORAGE_KEY = "agent_crypto_erith_ia_sim_v1_1_alpha_13";
-const SIM_START_CASH = SIM_PROFILE.startCash; function loadSimulation() { try { const raw = localStorage.getItem(SIM_STORAGE_KEY); if (raw) { const parsed = JSON.parse(raw); if (parsed && typeof parsed.cash === "number" && parsed.positions && parsed.profileKey === SIM_PROFILE.key) { state.sim = parsed; return; } } } catch {} state.sim = { cash: SIM_START_CASH, initialCash: SIM_START_CASH, profileKey: SIM_PROFILE.key, positions: {}, logs: [{ time: new Date().toISOString(), type: "PROFILE", message: "Profil Solo Débutant 100 € chargé." }] };
-} function saveSimulation() { try { localStorage.setItem(SIM_STORAGE_KEY, JSON.stringify(state.sim)); } catch {}
-} function resetSimulation() { state.sim = { cash: SIM_START_CASH, initialCash: SIM_START_CASH, profileKey: SIM_PROFILE.key, positions: {}, logs: [{ time: new Date().toISOString(), type: "RESET", message: "Simulation réinitialisée sur profil Solo Débutant 100 €." }] }; saveSimulation(); renderSimulation();
-} function simLog(entry) { if (!state.sim) loadSimulation(); state.sim.logs.unshift({ time: new Date().toISOString(), ...entry }); state.sim.logs = state.sim.logs.slice(0, 50);
-} function getPositionValue(symbol) { if (!state.sim) loadSimulation(); const pos = state.sim.positions[symbol]; if (!pos) return 0; const coin = findCoinByQuery(symbol); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice ?? 0; return pos.qty * price;
-} function getSimulationTotals() { if (!state.sim) loadSimulation(); const positionsValue = Object.keys(state.sim.positions).reduce((sum, sym) => sum + getPositionValue(sym), 0); const total = state.sim.cash + positionsValue; return { positionsValue, total, pnl: total - state.sim.initialCash };
-} function getSimulationProfileStatus() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const remainingExposure = Math.max(0, SIM_PROFILE.maxExposure - totals.positionsValue); return { profile: SIM_PROFILE.label, start_cash_eur: SIM_PROFILE.startCash, allowed_symbols: SIM_PROFILE.allowedSymbols, default_amount_eur: SIM_PROFILE.defaultAmount, max_per_operation_eur: SIM_PROFILE.maxPerOperation, max_exposure_eur: SIM_PROFILE.maxExposure, current_exposure_eur: totals.positionsValue, remaining_exposure_eur: remainingExposure, min_reserve_eur: SIM_PROFILE.minReserve, cash_eur: state.sim.cash };
-} function profileRefusal(message, extra = {}) { return commandError(message, { profile: getSimulationProfileStatus(), ...extra });
-} function simulationRefusal(message, extra = {}) { if (!state.sim) loadSimulation(); simLog({ type: "REFUS", message }); saveSimulation(); renderSimulation(); return profileRefusal(message, extra);
-} function simulationPayload() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const positions = Object.keys(state.sim.positions).map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; return { symbol: sym, name: pos.name, qty: pos.qty, avg_price_eur: pos.avgPrice, current_price_eur: price, invested_eur: pos.invested, value_eur: value, pnl_eur: value - pos.invested }; }); return { mode: "paper_trading_only", profile: getSimulationProfileStatus(), cash_eur: state.sim.cash, initial_cash_eur: state.sim.initialCash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl, positions, logs: state.sim.logs.slice(0, 10) };
-} function simulateOrder(side, symbolInput = null, amountInput = null) { if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload()); const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || ""); const amount = Number(amountInput ?? els.simAmount?.value ?? 0); if (!symbol) return simulationRefusal("Actif manquant."); if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide."); if (!SIM_PROFILE.allowedSymbols.includes(symbol)) { return simulationRefusal(`Profil débutant : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol }); } const coin = findCoinByQuery(symbol); if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol }); if (!state.sim) loadSimulation(); const price = coin.price; if (!Number.isFinite(price) || price <= 0) return simulationRefusal("Prix indisponible pour simulation."); const sym = coin.symbol.toUpperCase(); if (amount > SIM_PROFILE.maxPerOperation) { return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount }); } const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: price }; if (side === "buy") { const totals = getSimulationTotals(); if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount }); if (state.sim.cash - amount < SIM_PROFILE.minReserve) { return simulationRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount }); } if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) { return simulationRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount }); } const qty = amount / price; const newQty = pos.qty + qty; const newInvested = pos.invested + amount; pos.qty = newQty; pos.invested = newInvested; pos.avgPrice = newInvested / newQty; pos.lastPrice = price; state.sim.positions[sym] = pos; state.sim.cash -= amount; simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, price_eur: price, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · profil 100 €.` }); } else if (side === "sell") { if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`); const maxValue = pos.qty * price; const sellValue = Math.min(amount, maxValue); const qty = sellValue / price; const soldRatio = qty / pos.qty; pos.qty -= qty; pos.invested = Math.max(0, pos.invested * (1 - soldRatio)); pos.lastPrice = price; state.sim.cash += sellValue; if (pos.qty <= 0.00000001) delete state.sim.positions[sym]; else state.sim.positions[sym] = pos; simLog({ type: "SIM_SELL", symbol: sym, amount_eur: sellValue, price_eur: price, qty, message: `Vente simulée ${sym} pour ${fmtEUR.format(sellValue)} · profil 100 €.` }); } saveSimulation(); renderSimulation(); return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, price_eur: price, portfolio: simulationPayload() });
-} function simLogTypeLabel(type) { if (type === "SIM_BUY") return "ACHAT SIMULÉ"; if (type === "SIM_SELL") return "VENTE SIMULÉE"; if (type === "REFUS") return "REFUS"; if (type === "RESET") return "RESET"; return String(type || "INFO");
-} function simLogLine(entry) { const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : ""; const label = simLogTypeLabel(entry?.type); const msg = entry?.message || ""; return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
-} function renderSimulation() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); if (els.simProfileStatus) { const profile = getSimulationProfileStatus(); els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`; } setText(els.simCash, fmtEUR.format(state.sim.cash)); setText(els.simPositionsValue, fmtEUR.format(totals.positionsValue)); setText(els.simTotalValue, fmtEUR.format(totals.total)); if (els.simPnL) { els.simPnL.textContent = `${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`; els.simPnL.classList.toggle("pnl-pos", totals.pnl >= 0); els.simPnL.classList.toggle("pnl-neg", totals.pnl < 0); } const positions = Object.keys(state.sim.positions); if (els.simPositions) { els.simPositions.innerHTML = positions.length ? positions.map(sym => { const pos = state.sim.positions[sym]; const coin = findCoinByQuery(sym); const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice; const value = pos.qty * price; const pnl = value - pos.invested; return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span>${pos.qty.toFixed(8)}</span><span>${fmtEUR.format(value)}</span><span class="${pnl >= 0 ? "pnl-pos" : "pnl-neg"}">${pnl >= 0 ? "+" : ""}${fmtEUR.format(pnl)}</span></div>`; }).join("") : "Aucune position simulée."; } if (els.simLog) { els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée."; }
-} function situationPayload() { return { version: ATLAS_RELEASE, active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
+const SIM_COST_STORAGE_KEY = "agent_crypto_erith_ia_sim_costs_28_2_78";
+const SIM_START_CASH = SIM_PROFILE.startCash;
+const SIM_COST_DEFAULTS = { buyFeePct: 0, sellFeePct: 0, entryImpactPct: 0, exitImpactPct: 0, confirmed: false, source: "manual" };
+let atlasSimulationScenarioPct = 0;
+
+function atlasFiniteNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+function atlasClampPercent(value) {
+  return Math.min(25, Math.max(0, atlasFiniteNumber(value, 0)));
+}
+function atlasZeroCurrency(value) {
+  const number = atlasFiniteNumber(value, 0);
+  return Math.abs(number) < 0.005 ? 0 : number;
+}
+function atlasSignedEUR(value) {
+  const number = atlasZeroCurrency(value);
+  return `${number > 0 ? "+" : ""}${fmtEUR.format(number)}`;
+}
+function atlasSignedPct(value, digits = 2) {
+  const number = Math.abs(atlasFiniteNumber(value, 0)) < 0.0005 ? 0 : atlasFiniteNumber(value, 0);
+  return `${number > 0 ? "+" : ""}${number.toFixed(digits)} %`;
+}
+function loadSimCostAssumptions() {
+  let costs = { ...SIM_COST_DEFAULTS };
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SIM_COST_STORAGE_KEY) || "null");
+    if (parsed && typeof parsed === "object") costs = { ...costs, ...parsed };
+  } catch {}
+  costs.buyFeePct = atlasClampPercent(costs.buyFeePct);
+  costs.sellFeePct = atlasClampPercent(costs.sellFeePct);
+  costs.entryImpactPct = atlasClampPercent(costs.entryImpactPct);
+  costs.exitImpactPct = atlasClampPercent(costs.exitImpactPct);
+  costs.confirmed = costs.confirmed === true;
+  return costs;
+}
+function readSimCostInputs() {
+  const costs = loadSimCostAssumptions();
+  return {
+    buyFeePct: atlasClampPercent(els.simBuyFeePct?.value ?? costs.buyFeePct),
+    sellFeePct: atlasClampPercent(els.simSellFeePct?.value ?? costs.sellFeePct),
+    entryImpactPct: atlasClampPercent(els.simEntryImpactPct?.value ?? costs.entryImpactPct),
+    exitImpactPct: atlasClampPercent(els.simExitImpactPct?.value ?? costs.exitImpactPct),
+    confirmed: els.simCostsConfirmed ? els.simCostsConfirmed.checked : costs.confirmed,
+    source: costs.source || "manual"
+  };
+}
+function saveSimCostAssumptions(source = "manual") {
+  const costs = { ...readSimCostInputs(), source };
+  try { localStorage.setItem(SIM_COST_STORAGE_KEY, JSON.stringify(costs)); } catch {}
+  renderSimulationEducation();
+  return costs;
+}
+function hydrateSimCostInputs() {
+  const costs = loadSimCostAssumptions();
+  if (els.simBuyFeePct) els.simBuyFeePct.value = String(costs.buyFeePct);
+  if (els.simSellFeePct) els.simSellFeePct.value = String(costs.sellFeePct);
+  if (els.simEntryImpactPct) els.simEntryImpactPct.value = String(costs.entryImpactPct);
+  if (els.simExitImpactPct) els.simExitImpactPct.value = String(costs.exitImpactPct);
+  if (els.simCostsConfirmed) els.simCostsConfirmed.checked = costs.confirmed;
+}
+function getSimRoundTripCostPct(costs = readSimCostInputs()) {
+  return costs.buyFeePct + costs.sellFeePct + costs.entryImpactPct + costs.exitImpactPct;
+}
+function migrateSimulationState(sim) {
+  const next = sim && typeof sim === "object" ? sim : {};
+  next.cash = atlasFiniteNumber(next.cash, SIM_START_CASH);
+  next.initialCash = atlasFiniteNumber(next.initialCash, SIM_START_CASH);
+  next.profileKey = SIM_PROFILE.key;
+  next.positions = next.positions && typeof next.positions === "object" ? next.positions : {};
+  next.logs = Array.isArray(next.logs) ? next.logs : [];
+  next.realizedPnl = atlasFiniteNumber(next.realizedPnl, 0);
+  Object.keys(next.positions).forEach(symbol => {
+    const pos = next.positions[symbol] || {};
+    pos.qty = Math.max(0, atlasFiniteNumber(pos.qty, 0));
+    pos.invested = Math.max(0, atlasFiniteNumber(pos.invested, 0));
+    pos.avgPrice = Math.max(0, atlasFiniteNumber(pos.avgPrice, 0));
+    pos.lastPrice = Math.max(0, atlasFiniteNumber(pos.lastPrice, pos.avgPrice));
+    pos.buyFeesEur = Math.max(0, atlasFiniteNumber(pos.buyFeesEur, 0));
+    pos.entryImpactEur = Math.max(0, atlasFiniteNumber(pos.entryImpactEur, 0));
+    next.positions[symbol] = pos;
+  });
+  return next;
+}
+function loadSimulation() {
+  try {
+    const raw = localStorage.getItem(SIM_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.cash === "number" && parsed.positions && parsed.profileKey === SIM_PROFILE.key) {
+        state.sim = migrateSimulationState(parsed);
+        return;
+      }
+    }
+  } catch {}
+  state.sim = migrateSimulationState({ cash: SIM_START_CASH, initialCash: SIM_START_CASH, profileKey: SIM_PROFILE.key, positions: {}, logs: [{ time: new Date().toISOString(), type: "PROFILE", message: "Profil Solo Débutant 100 € chargé." }] });
+}
+function saveSimulation() { try { localStorage.setItem(SIM_STORAGE_KEY, JSON.stringify(state.sim)); } catch {} }
+function resetSimulation() {
+  state.sim = migrateSimulationState({ cash: SIM_START_CASH, initialCash: SIM_START_CASH, profileKey: SIM_PROFILE.key, positions: {}, realizedPnl: 0, logs: [{ time: new Date().toISOString(), type: "RESET", message: "Simulation réinitialisée sur profil Solo Débutant 100 €." }] });
+  saveSimulation();
+  renderSimulation();
+}
+function simLog(entry) {
+  if (!state.sim) loadSimulation();
+  state.sim.logs.unshift({ time: new Date().toISOString(), ...entry });
+  state.sim.logs = state.sim.logs.slice(0, 50);
+}
+function getPositionMarketPrice(symbol, scenarioPct = 0) {
+  if (!state.sim) loadSimulation();
+  const pos = state.sim.positions[symbol];
+  if (!pos) return 0;
+  const coin = findCoinByQuery(symbol);
+  const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice ?? 0;
+  return Math.max(0, price * (1 + atlasFiniteNumber(scenarioPct, 0) / 100));
+}
+function getPositionValue(symbol, scenarioPct = 0) {
+  if (!state.sim) loadSimulation();
+  const pos = state.sim.positions[symbol];
+  if (!pos) return 0;
+  return pos.qty * getPositionMarketPrice(symbol, scenarioPct);
+}
+function estimatePositionExit(symbol, scenarioPct = 0, costs = readSimCostInputs()) {
+  if (!state.sim) loadSimulation();
+  const pos = state.sim.positions[symbol];
+  if (!pos) return null;
+  const marketPrice = getPositionMarketPrice(symbol, scenarioPct);
+  const exitExecutionPrice = marketPrice * (1 - costs.exitImpactPct / 100);
+  const grossExecutionValue = Math.max(0, pos.qty * exitExecutionPrice);
+  const sellFeeEur = grossExecutionValue * costs.sellFeePct / 100;
+  const netProceedsEur = Math.max(0, grossExecutionValue - sellFeeEur);
+  const grossMarketValue = pos.qty * marketPrice;
+  const grossPnlEur = grossMarketValue - pos.invested;
+  const netPnlEur = netProceedsEur - pos.invested;
+  const exitFactor = Math.max(0.000001, (1 - costs.exitImpactPct / 100) * (1 - costs.sellFeePct / 100));
+  const breakEvenMarketPrice = pos.qty > 0 ? pos.invested / (pos.qty * exitFactor) : 0;
+  return { marketPrice, exitExecutionPrice, grossMarketValue, grossExecutionValue, sellFeeEur, netProceedsEur, grossPnlEur, netPnlEur, breakEvenMarketPrice };
+}
+function getSimulationTotals(scenarioPct = 0) {
+  if (!state.sim) loadSimulation();
+  const positionsValue = Object.keys(state.sim.positions).reduce((sum, sym) => sum + getPositionValue(sym, scenarioPct), 0);
+  const total = state.sim.cash + positionsValue;
+  return { positionsValue, total, pnl: total - state.sim.initialCash };
+}
+function getSimulationNetTotals(scenarioPct = 0, costs = readSimCostInputs()) {
+  if (!state.sim) loadSimulation();
+  const exits = Object.keys(state.sim.positions).map(sym => estimatePositionExit(sym, scenarioPct, costs)).filter(Boolean);
+  const netPositionsValue = exits.reduce((sum, item) => sum + item.netProceedsEur, 0);
+  const total = state.sim.cash + netPositionsValue;
+  return { netPositionsValue, total, pnl: total - state.sim.initialCash, exits };
+}
+function getSimulationProfileStatus() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  const remainingExposure = Math.max(0, SIM_PROFILE.maxExposure - totals.positionsValue);
+  return { profile: SIM_PROFILE.label, start_cash_eur: SIM_PROFILE.startCash, allowed_symbols: SIM_PROFILE.allowedSymbols, default_amount_eur: SIM_PROFILE.defaultAmount, max_per_operation_eur: SIM_PROFILE.maxPerOperation, max_exposure_eur: SIM_PROFILE.maxExposure, current_exposure_eur: totals.positionsValue, remaining_exposure_eur: remainingExposure, min_reserve_eur: SIM_PROFILE.minReserve, cash_eur: state.sim.cash };
+}
+function profileRefusal(message, extra = {}) { return commandError(message, { profile: getSimulationProfileStatus(), ...extra }); }
+function simulationRefusal(message, extra = {}) {
+  if (!state.sim) loadSimulation();
+  simLog({ type: "REFUS", message });
+  saveSimulation();
+  renderSimulation();
+  return profileRefusal(message, extra);
+}
+function simulationPayload() {
+  if (!state.sim) loadSimulation();
+  const costs = readSimCostInputs();
+  const totals = getSimulationTotals();
+  const netTotals = getSimulationNetTotals(0, costs);
+  const positions = Object.keys(state.sim.positions).map(sym => {
+    const pos = state.sim.positions[sym];
+    const exit = estimatePositionExit(sym, 0, costs);
+    return { symbol: sym, name: pos.name, qty: pos.qty, avg_price_eur: pos.avgPrice, current_price_eur: exit?.marketPrice ?? pos.lastPrice, invested_eur: pos.invested, value_eur: exit?.grossMarketValue ?? 0, pnl_eur: exit?.grossPnlEur ?? 0, estimated_net_exit_eur: exit?.netProceedsEur ?? 0, estimated_net_pnl_eur: exit?.netPnlEur ?? 0, estimated_break_even_price_eur: exit?.breakEvenMarketPrice ?? 0 };
+  });
+  return { mode: "paper_trading_only", profile: getSimulationProfileStatus(), cost_assumptions: costs, cash_eur: state.sim.cash, initial_cash_eur: state.sim.initialCash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl, estimated_net_total_eur: netTotals.total, estimated_net_pnl_eur: netTotals.pnl, realized_pnl_eur: state.sim.realizedPnl || 0, positions, logs: state.sim.logs.slice(0, 10) };
+}
+function simulateOrder(side, symbolInput = null, amountInput = null) {
+  if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload());
+  const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
+  const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
+  if (!symbol) return simulationRefusal("Actif manquant.");
+  if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.");
+  if (!SIM_PROFILE.allowedSymbols.includes(symbol)) return simulationRefusal(`Profil débutant : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol });
+  const coin = findCoinByQuery(symbol);
+  if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol });
+  if (!state.sim) loadSimulation();
+  const marketPrice = coin.price;
+  if (!Number.isFinite(marketPrice) || marketPrice <= 0) return simulationRefusal("Prix indisponible pour simulation.");
+  const sym = coin.symbol.toUpperCase();
+  if (amount > SIM_PROFILE.maxPerOperation) return simulationRefusal(`Profil débutant : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
+  const costs = readSimCostInputs();
+  const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: marketPrice, buyFeesEur: 0, entryImpactEur: 0 };
+
+  if (side === "buy") {
+    const totals = getSimulationTotals();
+    if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
+    if (state.sim.cash - amount < SIM_PROFILE.minReserve) return simulationRefusal(`Profil débutant : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount });
+    if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) return simulationRefusal(`Profil débutant : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount });
+
+    const buyFeeEur = amount * costs.buyFeePct / 100;
+    const netAssetBudget = Math.max(0, amount - buyFeeEur);
+    const executionPrice = marketPrice * (1 + costs.entryImpactPct / 100);
+    const qty = executionPrice > 0 ? netAssetBudget / executionPrice : 0;
+    if (!(qty > 0)) return simulationRefusal("Les hypothèses de coûts ne laissent aucun montant convertible.");
+    const entryImpactEur = Math.max(0, qty * executionPrice - qty * marketPrice);
+    const oldQty = pos.qty;
+    const newQty = oldQty + qty;
+    pos.avgPrice = newQty > 0 ? ((oldQty * (pos.avgPrice || marketPrice)) + qty * executionPrice) / newQty : executionPrice;
+    pos.qty = newQty;
+    pos.invested += amount;
+    pos.lastPrice = marketPrice;
+    pos.buyFeesEur += buyFeeEur;
+    pos.entryImpactEur += entryImpactEur;
+    state.sim.positions[sym] = pos;
+    state.sim.cash -= amount;
+    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, market_price_eur: marketPrice, execution_price_eur: executionPrice, buy_fee_eur: buyFeeEur, entry_impact_eur: entryImpactEur, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · frais ${fmtEUR.format(buyFeeEur)} · quantité ${qty.toFixed(8)}.` });
+  } else if (side === "sell") {
+    if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`);
+    const maxMarketValue = pos.qty * marketPrice;
+    const requestedMarketValue = Math.min(amount, maxMarketValue);
+    const qty = Math.min(pos.qty, requestedMarketValue / marketPrice);
+    const soldRatio = qty / pos.qty;
+    const executionPrice = marketPrice * (1 - costs.exitImpactPct / 100);
+    const grossExecutionValue = Math.max(0, qty * executionPrice);
+    const sellFeeEur = grossExecutionValue * costs.sellFeePct / 100;
+    const netProceedsEur = Math.max(0, grossExecutionValue - sellFeeEur);
+    const allocatedCostBasis = pos.invested * soldRatio;
+    const realizedPnlEur = netProceedsEur - allocatedCostBasis;
+    pos.qty -= qty;
+    pos.invested = Math.max(0, pos.invested - allocatedCostBasis);
+    pos.lastPrice = marketPrice;
+    state.sim.cash += netProceedsEur;
+    state.sim.realizedPnl = atlasFiniteNumber(state.sim.realizedPnl, 0) + realizedPnlEur;
+    if (pos.qty <= 0.00000001) delete state.sim.positions[sym]; else state.sim.positions[sym] = pos;
+    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: grossExecutionValue, market_price_eur: marketPrice, execution_price_eur: executionPrice, sell_fee_eur: sellFeeEur, net_proceeds_eur: netProceedsEur, realized_pnl_eur: realizedPnlEur, qty, message: `Vente simulée ${sym} · brut ${fmtEUR.format(grossExecutionValue)} · net ${fmtEUR.format(netProceedsEur)} · résultat ${atlasSignedEUR(realizedPnlEur)}.` });
+  }
+  saveSimulation();
+  renderSimulation();
+  return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, market_price_eur: marketPrice, costs, portfolio: simulationPayload() });
+}
+function simLogTypeLabel(type) {
+  if (type === "SIM_BUY") return "ACHAT SIMULÉ";
+  if (type === "SIM_SELL") return "VENTE SIMULÉE";
+  if (type === "REFUS") return "REFUS";
+  if (type === "RESET") return "RESET";
+  return String(type || "INFO");
+}
+function simLogLine(entry) {
+  const time = entry?.time ? new Date(entry.time).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit", second:"2-digit" }) : "";
+  const label = simLogTypeLabel(entry?.type);
+  const msg = entry?.message || "";
+  return time ? `${label} · ${msg} · ${time}` : `${label} · ${msg}`;
+}
+function renderSimulation() {
+  if (!state.sim) loadSimulation();
+  const totals = getSimulationTotals();
+  if (els.simProfileStatus) {
+    const profile = getSimulationProfileStatus();
+    els.simProfileStatus.textContent = `${profile.allowed_symbols.join(" / ")} · ticket ${fmtEUR.format(profile.default_amount_eur)} · max ${fmtEUR.format(profile.max_per_operation_eur)} · exposé ${fmtEUR.format(profile.current_exposure_eur)} / ${fmtEUR.format(profile.max_exposure_eur)} · réserve min ${fmtEUR.format(profile.min_reserve_eur)}`;
+  }
+  setText(els.simCash, fmtEUR.format(atlasZeroCurrency(state.sim.cash)));
+  setText(els.simPositionsValue, fmtEUR.format(atlasZeroCurrency(totals.positionsValue)));
+  setText(els.simTotalValue, fmtEUR.format(atlasZeroCurrency(totals.total)));
+  if (els.simPnL) {
+    const pnl = atlasZeroCurrency(totals.pnl);
+    els.simPnL.textContent = atlasSignedEUR(pnl);
+    els.simPnL.classList.toggle("pnl-pos", pnl >= 0);
+    els.simPnL.classList.toggle("pnl-neg", pnl < 0);
+  }
+  const costs = readSimCostInputs();
+  const positions = Object.keys(state.sim.positions);
+  if (els.simPositions) {
+    els.simPositions.innerHTML = positions.length ? positions.map(sym => {
+      const pos = state.sim.positions[sym];
+      const exit = estimatePositionExit(sym, 0, costs);
+      const grossPnl = atlasZeroCurrency(exit?.grossPnlEur || 0);
+      const netPnl = atlasZeroCurrency(exit?.netPnlEur || 0);
+      return `<div class="sim-position-row"><b>${escapeHtml(sym)}</b><span title="Quantité fictive">${pos.qty.toFixed(8)}</span><span title="Prix moyen d’entrée">${fmtEUR.format(pos.avgPrice || 0)}</span><span title="Prix actuel">${fmtEUR.format(exit?.marketPrice || 0)}</span><span title="Valeur brute">${fmtEUR.format(exit?.grossMarketValue || 0)}</span><span class="${grossPnl >= 0 ? "pnl-pos" : "pnl-neg"}" title="P/L brut">${atlasSignedEUR(grossPnl)}</span><span class="${netPnl >= 0 ? "pnl-pos" : "pnl-neg"}" title="P/L net estimé">${atlasSignedEUR(netPnl)}</span></div>`;
+    }).join("") : "Aucune position simulée.";
+  }
+  if (els.simLog) els.simLog.textContent = state.sim.logs.length ? state.sim.logs.map(simLogLine).join("\n") : "Aucune simulation lancée.";
+  renderSimulationEducation();
+}
+
+function renderSimulationScenario() {
+  if (!els.simScenarioOutput) return;
+  if (!state.sim) loadSimulation();
+  const symbols = Object.keys(state.sim.positions);
+  if (!symbols.length) {
+    els.simScenarioOutput.textContent = "Ouvre une position fictive pour calculer les scénarios.";
+    return;
+  }
+  const costs = readSimCostInputs();
+  const pct = atlasFiniteNumber(atlasSimulationScenarioPct, 0);
+  const totals = getSimulationTotals(pct);
+  const netTotals = getSimulationNetTotals(pct, costs);
+  const rows = symbols.map(sym => {
+    const exit = estimatePositionExit(sym, pct, costs);
+    return `${sym} · prix scénario ${fmtEUR.format(exit.marketPrice)} · valeur brute ${fmtEUR.format(exit.grossMarketValue)} · P/L brut ${atlasSignedEUR(exit.grossPnlEur)} · P/L net estimé ${atlasSignedEUR(exit.netPnlEur)}`;
+  });
+  els.simScenarioOutput.textContent = [`SCÉNARIO ${atlasSignedPct(pct)}`, ...rows, `Portefeuille brut : ${fmtEUR.format(totals.total)}`, `Portefeuille net estimé : ${fmtEUR.format(netTotals.total)}`, `Résultat net estimé : ${atlasSignedEUR(netTotals.pnl)}`, "Aucune position n’a été modifiée."].join("\n");
+}
+function setSecurityGateItem(key, stateName, text) {
+  const item = els.simSecurityGateList?.querySelector(`[data-gate="${key}"]`);
+  if (!item) return;
+  item.dataset.state = stateName;
+  const span = item.querySelector("span");
+  if (span) span.textContent = text;
+}
+function renderSimulationSecurityGate() {
+  if (!els.simSecurityGateStatus || !els.simSecurityGateList) return;
+  if (!state.sim) loadSimulation();
+  const symbol = normalizeSymbol(els.simSymbol?.value || "BTC");
+  const amount = atlasFiniteNumber(els.simAmount?.value, 0);
+  const totals = getSimulationTotals();
+  const costs = readSimCostInputs();
+  const checks = {
+    mode: { ok: true, text: "Local · aucun ordre réel" },
+    source: { ok: atlasAnalysisLiveReady(), text: atlasAnalysisLiveReady() ? "Snapshot public exploitable" : "Livecheck requis" },
+    asset: { ok: SIM_PROFILE.allowedSymbols.includes(symbol), text: SIM_PROFILE.allowedSymbols.includes(symbol) ? `${symbol} autorisé` : `${symbol || "Actif"} refusé` },
+    amount: { ok: amount > 0 && amount <= SIM_PROFILE.maxPerOperation, text: amount > 0 && amount <= SIM_PROFILE.maxPerOperation ? `${fmtEUR.format(amount)} dans la limite` : `Maximum ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}` },
+    exposure: { ok: totals.positionsValue <= SIM_PROFILE.maxExposure + 0.005, text: `${fmtEUR.format(totals.positionsValue)} / ${fmtEUR.format(SIM_PROFILE.maxExposure)}` },
+    reserve: { ok: state.sim.cash >= SIM_PROFILE.minReserve - 0.005, text: `${fmtEUR.format(state.sim.cash)} disponibles` },
+    costs: { ok: costs.confirmed, warn: !costs.confirmed, text: costs.confirmed ? `${getSimRoundTripCostPct(costs).toFixed(2)} % confirmé` : "Hypothèses non confirmées" },
+    leverage: { ok: true, text: "Spot uniquement · levier bloqué" }
+  };
+  Object.entries(checks).forEach(([key, check]) => setSecurityGateItem(key, check.ok ? "ok" : (check.warn ? "warn" : "blocked"), check.text));
+  const blocked = Object.values(checks).filter(item => !item.ok && !item.warn).length;
+  const warnings = Object.values(checks).filter(item => item.warn).length;
+  if (blocked) {
+    els.simSecurityGateStatus.textContent = `ROUGE · ${blocked} blocage${blocked > 1 ? "s" : ""}`;
+    els.simSecurityGateStatus.className = "pill danger";
+    els.simSecurityGateReading.textContent = "La simulation doit être corrigée avant de lancer le test : actif, montant, source, exposition ou réserve non conforme.";
+  } else if (warnings) {
+    els.simSecurityGateStatus.textContent = "ORANGE · coûts à vérifier";
+    els.simSecurityGateStatus.className = "pill warn";
+    els.simSecurityGateReading.textContent = "Les verrous du profil sont conformes, mais les hypothèses de frais et d’écarts ne sont pas encore confirmées.";
+  } else {
+    els.simSecurityGateStatus.textContent = "VERT · exercice cohérent";
+    els.simSecurityGateStatus.className = "pill ok";
+    els.simSecurityGateReading.textContent = "Exercice fictif cohérent dans le profil débutant. Ce verdict ne constitue pas une autorisation d’opération réelle.";
+  }
+}
+function renderSimulationEducation() {
+  const costs = readSimCostInputs();
+  const roundTripPct = getSimRoundTripCostPct(costs);
+  const netTotals = getSimulationNetTotals(0, costs);
+  const firstSymbol = Object.keys(state.sim?.positions || {})[0] || null;
+  const firstExit = firstSymbol ? estimatePositionExit(firstSymbol, 0, costs) : null;
+  if (els.simRoundTripCost) els.simRoundTripCost.textContent = `${roundTripPct.toFixed(2)} %`;
+  if (els.simBreakEvenPrice) els.simBreakEvenPrice.textContent = firstExit ? `${firstSymbol} · ${fmtEUR.format(firstExit.breakEvenMarketPrice)}` : "Aucune position";
+  if (els.simNetPnL) {
+    const pnl = atlasZeroCurrency(netTotals.pnl);
+    els.simNetPnL.textContent = atlasSignedEUR(pnl);
+    els.simNetPnL.classList.toggle("pnl-pos", pnl >= 0);
+    els.simNetPnL.classList.toggle("pnl-neg", pnl < 0);
+  }
+  if (els.simCostStatus) {
+    els.simCostStatus.textContent = costs.confirmed ? "Hypothèses confirmées" : "À renseigner";
+    els.simCostStatus.className = costs.confirmed ? "pill ok" : "pill warn";
+  }
+  if (els.simCostTruth) els.simCostTruth.textContent = costs.confirmed ? "Confirmé pour cet exercice" : "Hypothèses non confirmées";
+  renderSimulationScenario();
+  renderSimulationSecurityGate();
+}
+
+
+function atlasWithdrawalAllowedNetworks(asset) {
+  const map = { BTC: ["bitcoin"], ETH: ["ethereum"], SOL: ["solana"], USDC: ["ethereum", "solana", "polygon"] };
+  return map[String(asset || "").toUpperCase()] || [];
+}
+function renderWithdrawalSafety() {
+  if (!els.withdrawalSafetyStatus || !els.withdrawalSafetyOutput) return;
+  const asset = String(els.withdrawAsset?.value || "BTC").toUpperCase();
+  const network = String(els.withdrawNetwork?.value || "").toLowerCase();
+  const amount = Math.max(0, atlasFiniteNumber(els.withdrawAmount?.value, 0));
+  const fee = Math.max(0, atlasFiniteNumber(els.withdrawFee?.value, 0));
+  const destination = els.withdrawDestinationVerified?.checked === true;
+  const smallTest = els.withdrawSmallTest?.checked === true;
+  const noThirdParty = els.withdrawNoThirdParty?.checked === true;
+  const networkOk = atlasWithdrawalAllowedNetworks(asset).includes(network);
+  const amountOk = amount > 0 && fee >= 0 && fee < amount;
+  const blocked = [networkOk, amountOk, destination, noThirdParty].filter(value => !value).length;
+  const net = Math.max(0, amount - fee);
+  const lines = [
+    `Actif : ${asset}`,
+    `Réseau pédagogique : ${network || "—"}`,
+    `Montant fictif : ${amount}`,
+    `Frais fictifs : ${fee}`,
+    `Montant net estimé : ${net}`,
+    `Destination vérifiée : ${destination ? "oui" : "non"}`,
+    `Petit test prévu : ${smallTest ? "oui" : "non"}`,
+    "Aucune adresse, clé ou transaction réelle n’est utilisée."
+  ];
+  if (blocked) {
+    els.withdrawalSafetyStatus.textContent = `ROUGE · ${blocked} blocage${blocked > 1 ? "s" : ""}`;
+    els.withdrawalSafetyStatus.className = "pill danger";
+    lines.unshift("RETRAIT FICTIF REFUSÉ");
+    if (!networkOk) lines.push("Motif : réseau incohérent avec l’actif dans cette démonstration.");
+    if (!amountOk) lines.push("Motif : montant nul ou frais supérieurs au montant.");
+    if (!destination) lines.push("Motif : destination non vérifiée indépendamment.");
+    if (!noThirdParty) lines.push("Motif : un tiers dicte l’adresse ou le trajet.");
+  } else if (!smallTest) {
+    els.withdrawalSafetyStatus.textContent = "ORANGE · petit test requis";
+    els.withdrawalSafetyStatus.className = "pill warn";
+    lines.unshift("TRAJET COHÉRENT MAIS INCOMPLET");
+    lines.push("Prévoir un petit transfert test avant tout montant plus important.");
+  } else {
+    els.withdrawalSafetyStatus.textContent = "VERT · test fictif cohérent";
+    els.withdrawalSafetyStatus.className = "pill ok";
+    lines.unshift("RETRAIT TEST FICTIF COHÉRENT");
+    lines.push("Ce verdict n’autorise aucun retrait réel et ne certifie pas le support d’un réseau par Kraken.");
+  }
+  els.withdrawalSafetyOutput.textContent = lines.join("\n");
+}
+function analyzeScamSignals() {
+  if (!els.scamSentinelChecks || !els.scamSentinelStatus || !els.scamSentinelOutput) return;
+  const labels = {
+    guaranteed_return: "rendement garanti",
+    urgency: "urgence artificielle",
+    fake_support: "support demandant un secret",
+    unlock_payment: "paiement exigé pour retirer",
+    remote_access: "accès distant demandé",
+    forced_address: "adresse imposée par un tiers",
+    unlimited_approval: "autorisation illimitée incomprise",
+    send_to_receive: "envoi préalable pour recevoir davantage"
+  };
+  const checked = [...els.scamSentinelChecks.querySelectorAll('input:checked')].map(input => input.value);
+  if (!checked.length) {
+    els.scamSentinelStatus.textContent = "VERT · aucun signal déclaré";
+    els.scamSentinelStatus.className = "pill ok";
+    els.scamSentinelOutput.textContent = "Aucun signal coché. Cela ne certifie pas la légitimité d’une sollicitation : vérifie toujours le domaine, le prestataire et le canal officiel.";
+    return;
+  }
+  els.scamSentinelStatus.textContent = `ROUGE · ${checked.length} signal${checked.length > 1 ? "aux" : ""}`;
+  els.scamSentinelStatus.className = "pill danger";
+  els.scamSentinelOutput.textContent = [
+    "RISQUE CRITIQUE — ARRÊT",
+    ...checked.map(key => `• ${labels[key] || key}`),
+    "",
+    "Ne rien envoyer, ne rien signer, ne transmettre aucun code et ne pas installer d’accès distant.",
+    "Revenir au site ou au support officiel par un canal ouvert manuellement."
+  ].join("\n");
+}
+
+function atlasPedagogyContent(key) {
+  if (!state.sim) loadSimulation();
+  const costs = readSimCostInputs();
+  const totals = getSimulationTotals();
+  const netTotals = getSimulationNetTotals(0, costs);
+  const symbol = Object.keys(state.sim.positions)[0] || normalizeSymbol(els.simSymbol?.value || "BTC");
+  const exit = state.sim.positions[symbol] ? estimatePositionExit(symbol, 0, costs) : null;
+  const entries = {
+    capital: ["Capital virtuel", "Somme totale consacrée à la simulation. Elle reste fictive et locale.", `Capital de départ : ${fmtEUR.format(state.sim.initialCash)}.`],
+    ticket: ["Ticket conseillé", "Montant pédagogique proposé pour un premier exercice. Il limite l’impact d’une erreur.", `Ticket du profil : ${fmtEUR.format(SIM_PROFILE.defaultAmount)}.`],
+    max_operation: ["Maximum par opération", "Plafond appliqué à chaque achat ou vente fictive dans le profil débutant.", `Maximum : ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`],
+    exposure: ["Exposition", "Part du capital actuellement soumise aux variations du marché.", `Exposition : ${fmtEUR.format(totals.positionsValue)} sur ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`],
+    reserve: ["Réserve minimale", "Somme que le profil interdit d’exposer afin de conserver une marge de sécurité.", `Disponible : ${fmtEUR.format(state.sim.cash)} · minimum : ${fmtEUR.format(SIM_PROFILE.minReserve)}.`],
+    allowed_assets: ["Actifs autorisés", "Périmètre volontairement limité pour éviter la dispersion pendant l’apprentissage.", SIM_PROFILE.allowedSymbols.join(" · ")],
+    cash: ["Argent disponible", "Capital virtuel qui n’est pas actuellement placé sur une crypto.", `Disponible maintenant : ${fmtEUR.format(state.sim.cash)}.`],
+    positions_value: ["Montant placé", "Valeur brute actuelle des positions ouvertes, avant estimation du coût de sortie.", `Valeur brute : ${fmtEUR.format(totals.positionsValue)}.`],
+    total_value: ["Portefeuille total", "Argent disponible additionné à la valeur brute des positions.", `Total brut : ${fmtEUR.format(totals.total)}.`],
+    pnl: ["Gain ou perte — P/L", "Différence entre la valeur du portefeuille et le capital de départ. Le brut ne déduit pas forcément le coût futur de sortie.", `P/L brut : ${atlasSignedEUR(totals.pnl)} · net estimé : ${atlasSignedEUR(netTotals.pnl)}.`],
+    buy_fee: ["Frais d’achat", "Commission appliquée lors de l’achat. Le taux réel dépend de la plateforme, de la paire et du type d’ordre.", `Hypothèse actuelle : ${costs.buyFeePct.toFixed(2)} %.`],
+    sell_fee: ["Frais de vente", "Commission appliquée lors de la sortie. Elle s’ajoute aux coûts déjà supportés à l’entrée.", `Hypothèse actuelle : ${costs.sellFeePct.toFixed(2)} %.`],
+    entry_impact: ["Écart à l’achat", "Estimation pédagogique du spread et du slippage supportés à l’entrée.", `Hypothèse actuelle : ${costs.entryImpactPct.toFixed(2)} %.`],
+    exit_impact: ["Écart à la sortie", "Estimation pédagogique de la dégradation du prix lors de la vente.", `Hypothèse actuelle : ${costs.exitImpactPct.toFixed(2)} %.`],
+    virtual_portfolio: ["Portefeuille virtuel", "Liste des positions fictives avec quantité, prix d’entrée, valeur, P/L brut et estimation nette.", exit ? `${symbol} · entrée ${fmtEUR.format(state.sim.positions[symbol].avgPrice)} · équilibre estimé ${fmtEUR.format(exit.breakEvenMarketPrice)}.` : "Aucune position ouverte."],
+    simulation_log: ["Journal simulation", "Historique local des achats, ventes, refus, frais et résultats réalisés. Il ne contient aucune transaction réelle.", `${state.sim.logs.length} événement${state.sim.logs.length > 1 ? "s" : ""} conservé${state.sim.logs.length > 1 ? "s" : ""}.`],
+    withdraw_asset: ["Actif retiré", "Crypto-actif que la plateforme doit envoyer. Il doit être accepté par la destination.", `Actif choisi : ${String(els.withdrawAsset?.value || "BTC").toUpperCase()}.`],
+    withdraw_network: ["Réseau de retrait", "Voie technique utilisée pour transporter l’actif. Le réseau de départ et celui accepté par la destination doivent correspondre.", `Réseau choisi : ${String(els.withdrawNetwork?.value || "—")}.`],
+    withdraw_amount: ["Montant du retrait", "Quantité brute envoyée avant déduction éventuelle des frais.", `Montant fictif : ${els.withdrawAmount?.value || "0"}.`],
+    withdraw_fee: ["Frais de retrait", "Quantité prélevée pour le retrait ou le réseau. Elle est distincte des frais d’achat et de vente.", `Frais fictifs : ${els.withdrawFee?.value || "0"}.`]
+  };
+  return entries[key] || ["Explication", "Cette notion n’a pas encore de fiche dédiée.", "Aucune donnée supplémentaire."];
+}
+function openAtlasPedagogy(key) {
+  const [title, definition, current] = atlasPedagogyContent(key);
+  if (!els.atlasPedagogyDrawer || !els.atlasPedagogyTitle || !els.atlasPedagogyBody) return;
+  els.atlasPedagogyTitle.textContent = title;
+  els.atlasPedagogyBody.innerHTML = `<p><b>Définition</b><br>${escapeHtml(definition)}</p><div class="pedagogy-current"><b>État actuel</b><br>${escapeHtml(current)}</div><p><b>Règle de prudence</b><br>Une valeur isolée n’autorise jamais une opération réelle. Vérifie toujours la source, la fraîcheur, les frais et le contexte.</p>`;
+  els.atlasPedagogyDrawer.hidden = false;
+  els.atlasPedagogyDrawer.setAttribute("aria-hidden", "false");
+  els.btnClosePedagogy?.focus();
+}
+function closeAtlasPedagogy() {
+  if (!els.atlasPedagogyDrawer) return;
+  els.atlasPedagogyDrawer.hidden = true;
+  els.atlasPedagogyDrawer.setAttribute("aria-hidden", "true");
+}
+function situationPayload() { return { version: ATLAS_RELEASE, active_now: [ "public_market_observation", "charts", "source_diagnostic", "human_readable_tests", "local_paper_trading", "solo_beginner_profile_100_eur", "briefing_questions" ], prepared_only: [ "private_backend", "remote_access", "kraken_read_only", "physical_security_layer" ], locked: [ "real_wallet_connection", "private_key", "withdraw_key", "real_order", "automatic_trading" ], current_step: "collect_information_before_private_backend" };
 } function nextStepsPayload() { return { next_steps: [ "confirm_priority_assets", "define_virtual_simulation_amount", "define_forbidden_risks", "select_news_sources", "describe_private_machine", "choose_access_security_model" ], next_version_candidate: "V1.1-beta_local_private_preparation" };
 } function boundariesPayload() { return { hard_boundaries: [ "no_real_exchange_key_now", "no_real_wallet_connection", "no_seed_phrase_in_ui_or_files", "no_withdraw_permission", "no_real_order_from_public_frontend", "no_public_remote_access", "no_nominative_labels_in_public_interface" ] };
 } function briefingPayload() { return { mode: "preparation_session", purpose: "collect_information_before_private_backend", collect: [ "target_mode_observation_simulation_or_future_semi_auto", "priority_assets", "risk_limits", "news_sources", "private_machine_context", "remote_access_preference", "physical_security_preference" ], forbidden_during_session: [ "create_real_exchange_key", "connect_real_wallet", "enter_seed_phrase", "enable_withdraw_permission", "start_real_trading", "open_public_remote_access" ] };
@@ -13743,6 +14221,46 @@ els.btnSummarizeRefusals?.addEventListener("click", summarizeRefusals);
 els.btnDownloadMemoryReport?.addEventListener("click", downloadMemoryReport); els.btnBuildSimSummary?.addEventListener("click", renderLearningSummary);
 els.btnDownloadLearningJournal?.addEventListener("click", downloadLearningJournal);
 els.btnDownloadSimJSON?.addEventListener("click", downloadSimulationJSON); els.btnSimBuy?.addEventListener("click", () => renderCommandOutput(simulateOrder("buy")));
+[els.simBuyFeePct, els.simSellFeePct, els.simEntryImpactPct, els.simExitImpactPct].forEach(input => input?.addEventListener("input", () => saveSimCostAssumptions("manual")));
+els.simCostsConfirmed?.addEventListener("change", () => saveSimCostAssumptions("manual"));
+els.btnSimCostSchoolPreset?.addEventListener("click", () => {
+  if (els.simBuyFeePct) els.simBuyFeePct.value = "0.25";
+  if (els.simSellFeePct) els.simSellFeePct.value = "0.25";
+  if (els.simEntryImpactPct) els.simEntryImpactPct.value = "0.05";
+  if (els.simExitImpactPct) els.simExitImpactPct.value = "0.05";
+  if (els.simCostsConfirmed) els.simCostsConfirmed.checked = false;
+  saveSimCostAssumptions("school_example");
+  setActionFeedback("info", "Exemple école chargé", "0,25 % achat · 0,25 % vente · 0,05 % entrée · 0,05 % sortie. À ne pas confondre avec un tarif réel.");
+});
+els.btnSimCostReset?.addEventListener("click", () => {
+  if (els.simBuyFeePct) els.simBuyFeePct.value = "0";
+  if (els.simSellFeePct) els.simSellFeePct.value = "0";
+  if (els.simEntryImpactPct) els.simEntryImpactPct.value = "0";
+  if (els.simExitImpactPct) els.simExitImpactPct.value = "0";
+  if (els.simCostsConfirmed) els.simCostsConfirmed.checked = false;
+  saveSimCostAssumptions("reset");
+});
+document.querySelectorAll("[data-sim-scenario]").forEach(button => button.addEventListener("click", () => {
+  atlasSimulationScenarioPct = atlasFiniteNumber(button.dataset.simScenario, 0);
+  document.querySelectorAll("[data-sim-scenario]").forEach(other => other.classList.toggle("active", other === button));
+  renderSimulationScenario();
+}));
+document.addEventListener("click", event => {
+  const infoButton = event.target.closest?.("[data-info-key]");
+  if (infoButton) openAtlasPedagogy(infoButton.dataset.infoKey);
+});
+els.btnClosePedagogy?.addEventListener("click", closeAtlasPedagogy);
+els.atlasPedagogyDrawer?.addEventListener("click", event => { if (event.target === els.atlasPedagogyDrawer) closeAtlasPedagogy(); });
+document.addEventListener("keydown", event => { if (event.key === "Escape" && !els.atlasPedagogyDrawer?.hidden) closeAtlasPedagogy(); });
+[els.simSymbol, els.simAmount].forEach(input => input?.addEventListener("input", renderSimulationSecurityGate));
+[els.withdrawAsset, els.withdrawNetwork, els.withdrawAmount, els.withdrawFee, els.withdrawDestinationVerified, els.withdrawSmallTest, els.withdrawNoThirdParty].forEach(input => input?.addEventListener("change", renderWithdrawalSafety));
+els.btnCheckWithdrawalSafety?.addEventListener("click", renderWithdrawalSafety);
+els.btnAnalyzeScamSignals?.addEventListener("click", analyzeScamSignals);
+els.btnResetScamSignals?.addEventListener("click", () => {
+  els.scamSentinelChecks?.querySelectorAll('input').forEach(input => { input.checked = false; });
+  if (els.scamSentinelStatus) { els.scamSentinelStatus.textContent = "ORANGE · aucune analyse"; els.scamSentinelStatus.className = "pill warn"; }
+  if (els.scamSentinelOutput) els.scamSentinelOutput.textContent = "Aucune sollicitation analysée. En cas de doute : ne rien envoyer, ne rien signer et revenir par le canal officiel.";
+});
 els.btnSimSell?.addEventListener("click", () => renderCommandOutput(simulateOrder("sell")));
 els.btnSimReset?.addEventListener("click", () => { resetSimulation(); renderCommandOutput(commandOk("reset_sim", simulationPayload()));
 }); document.querySelectorAll("[data-school-test]").forEach(btn => { btn.addEventListener("click", () => runSchoolTest(btn.dataset.schoolTest));
@@ -29870,3 +30388,5 @@ window.addEventListener("resize", () => {
    Visible terminology and archive-state contract only.
    Deterministic scoring, thresholds, memory and sources unchanged.
    ============================================================ */
+
+setTimeout(() => { hydrateSimCostInputs(); renderSimulationEducation(); }, 0);

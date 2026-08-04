@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.77" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.77" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.77 — CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK</title>
+  <meta name="atlas-build" content="28.2.78" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.78" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.78 — PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.77" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.78" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.77"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.78"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.77</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.78</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.77</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.78</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.77 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.78 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2723,21 +2723,71 @@
           <span id="simProfileStatus">BTC / ETH / SOL · ticket 5 € · maximum 10 € · exposition 30 €</span>
         </div>
         <div class="sim-profile-grid">
-          <div><b>Capital</b><span>100 € virtuels</span></div>
-          <div><b>Ticket conseillé</b><span>5 €</span></div>
-          <div><b>Maximum opération</b><span>10 €</span></div>
-          <div><b>Exposition maximale</b><span>30 €</span></div>
-          <div><b>Réserve minimale</b><span>70 €</span></div>
-          <div><b>Cryptos autorisées</b><span>BTC · ETH · SOL</span></div>
+          <div><b>Capital <button class="atlas-info-button" type="button" data-info-key="capital" aria-label="Expliquer le capital">ⓘ</button></b><span>100 € virtuels</span></div>
+          <div><b>Ticket conseillé <button class="atlas-info-button" type="button" data-info-key="ticket" aria-label="Expliquer le ticket conseillé">ⓘ</button></b><span>5 €</span></div>
+          <div><b>Maximum opération <button class="atlas-info-button" type="button" data-info-key="max_operation" aria-label="Expliquer le maximum par opération">ⓘ</button></b><span>10 €</span></div>
+          <div><b>Exposition maximale <button class="atlas-info-button" type="button" data-info-key="exposure" aria-label="Expliquer l’exposition maximale">ⓘ</button></b><span>30 €</span></div>
+          <div><b>Réserve minimale <button class="atlas-info-button" type="button" data-info-key="reserve" aria-label="Expliquer la réserve minimale">ⓘ</button></b><span>70 €</span></div>
+          <div><b>Cryptos autorisées <button class="atlas-info-button" type="button" data-info-key="allowed_assets" aria-label="Expliquer les actifs autorisés">ⓘ</button></b><span>BTC · ETH · SOL</span></div>
         </div>
       </div>
 
       <div class="sim-grid">
-        <div class="sim-card"><b>Capital virtuel</b><span id="simCash">—</span></div>
-        <div class="sim-card"><b>Valeur positions</b><span id="simPositionsValue">—</span></div>
-        <div class="sim-card"><b>Total simulé</b><span id="simTotalValue">—</span></div>
-        <div class="sim-card"><b>P/L virtuel</b><span id="simPnL">—</span></div>
+        <div class="sim-card"><b>Argent disponible <button class="atlas-info-button" type="button" data-info-key="cash" aria-label="Expliquer l’argent disponible">ⓘ</button></b><span id="simCash">—</span><em>Non exposé au marché</em></div>
+        <div class="sim-card"><b>Montant placé <button class="atlas-info-button" type="button" data-info-key="positions_value" aria-label="Expliquer la valeur des positions">ⓘ</button></b><span id="simPositionsValue">—</span><em>Valeur brute actuelle</em></div>
+        <div class="sim-card"><b>Portefeuille total <button class="atlas-info-button" type="button" data-info-key="total_value" aria-label="Expliquer le total simulé">ⓘ</button></b><span id="simTotalValue">—</span><em>Disponible + positions</em></div>
+        <div class="sim-card"><b>Gain / perte brut <button class="atlas-info-button" type="button" data-info-key="pnl" aria-label="Expliquer le gain ou la perte">ⓘ</button></b><span id="simPnL">—</span><em>Avant coût de sortie estimé</em></div>
       </div>
+
+      <section class="sim-cost-panel" id="simCostPanel" aria-labelledby="simCostTitle">
+        <div class="sim-cost-head">
+          <div>
+            <p class="eyebrow">ⓘ COÛTS PÉDAGOGIQUES</p>
+            <h3 id="simCostTitle">Frais, écarts d’exécution et seuil de rentabilité</h3>
+            <p>Renseigne uniquement des valeurs lues dans un aperçu officiel. Les valeurs restent locales et ne déclenchent aucune transaction.</p>
+          </div>
+          <span class="pill warn" id="simCostStatus">À renseigner</span>
+        </div>
+        <div class="sim-cost-grid">
+          <label><span>Frais d’achat % <button class="atlas-info-button" type="button" data-info-key="buy_fee" aria-label="Expliquer les frais d’achat">ⓘ</button></span><input id="simBuyFeePct" type="number" min="0" max="25" step="0.01" value="0" inputmode="decimal" /></label>
+          <label><span>Frais de vente % <button class="atlas-info-button" type="button" data-info-key="sell_fee" aria-label="Expliquer les frais de vente">ⓘ</button></span><input id="simSellFeePct" type="number" min="0" max="25" step="0.01" value="0" inputmode="decimal" /></label>
+          <label><span>Écart à l’achat % <button class="atlas-info-button" type="button" data-info-key="entry_impact" aria-label="Expliquer l’écart à l’achat">ⓘ</button></span><input id="simEntryImpactPct" type="number" min="0" max="25" step="0.01" value="0" inputmode="decimal" /></label>
+          <label><span>Écart à la sortie % <button class="atlas-info-button" type="button" data-info-key="exit_impact" aria-label="Expliquer l’écart à la sortie">ⓘ</button></span><input id="simExitImpactPct" type="number" min="0" max="25" step="0.01" value="0" inputmode="decimal" /></label>
+        </div>
+        <div class="sim-cost-actions">
+          <button class="btn small" id="btnSimCostSchoolPreset" type="button">Charger un exemple école</button>
+          <button class="btn small" id="btnSimCostReset" type="button">Remettre à 0 %</button>
+          <label class="sim-cost-confirm"><input id="simCostsConfirmed" type="checkbox" /> <span>J’ai vérifié ces hypothèses pour l’exercice</span></label>
+        </div>
+        <div class="sim-cost-summary">
+          <article><b>Coût aller-retour estimé</b><span id="simRoundTripCost">0,00 %</span></article>
+          <article><b>Prix d’équilibre estimé</b><span id="simBreakEvenPrice">Aucune position</span></article>
+          <article><b>P/L net estimé</b><span id="simNetPnL">0,00 €</span></article>
+          <article><b>Statut</b><span id="simCostTruth">Hypothèses non confirmées</span></article>
+        </div>
+        <p class="rule-line sim-cost-warning">Exemple école ≠ tarif Kraken. Le taux réel dépend de la paire, du type d’ordre, du niveau du compte, du spread et des conditions du marché.</p>
+      </section>
+
+      <section class="sim-scenario-panel" id="simScenarioPanel" aria-labelledby="simScenarioTitle">
+        <div class="sim-scenario-head">
+          <div>
+            <p class="eyebrow">△ SCÉNARIOS INSTANTANÉS</p>
+            <h3 id="simScenarioTitle">Observer sans attendre le marché</h3>
+            <p>Ces boutons ne modifient pas la position. Ils calculent immédiatement un scénario fictif à partir de la position ouverte.</p>
+          </div>
+          <span class="pill ok">Dry-run</span>
+        </div>
+        <div class="sim-scenario-buttons" role="group" aria-label="Choisir une variation fictive">
+          <button type="button" data-sim-scenario="-5">−5 %</button>
+          <button type="button" data-sim-scenario="-3">−3 %</button>
+          <button type="button" data-sim-scenario="-1">−1 %</button>
+          <button type="button" data-sim-scenario="0" class="active">Prix actuel</button>
+          <button type="button" data-sim-scenario="1">+1 %</button>
+          <button type="button" data-sim-scenario="3">+3 %</button>
+          <button type="button" data-sim-scenario="5">+5 %</button>
+        </div>
+        <div class="sim-scenario-output" id="simScenarioOutput">Ouvre une position fictive pour calculer les scénarios.</div>
+      </section>
 
       <div class="atlas-simulation-math" id="atlasSimulationMathPanel">
         <b>Atlas Simulation Math</b>
@@ -2803,6 +2853,78 @@
           </ul>
         </div>
       </div>
+
+      <section class="sim-security-gate" id="simSecurityGate" aria-labelledby="simSecurityGateTitle">
+        <div class="sim-security-head">
+          <div>
+            <p class="eyebrow">⊘ SECURITY GATE PÉDAGOGIQUE</p>
+            <h3 id="simSecurityGateTitle">Comprendre avant de confirmer</h3>
+            <p>Le gate analyse uniquement la simulation locale. Il ne certifie ni une plateforme, ni une adresse, ni une opération réelle.</p>
+          </div>
+          <span class="pill warn" id="simSecurityGateStatus">ORANGE · vérification requise</span>
+        </div>
+        <div class="sim-security-grid" id="simSecurityGateList">
+          <article data-gate="mode"><b>Simulation locale</b><span>En attente</span></article>
+          <article data-gate="source"><b>Source de prix</b><span>En attente</span></article>
+          <article data-gate="asset"><b>Actif autorisé</b><span>En attente</span></article>
+          <article data-gate="amount"><b>Montant borné</b><span>En attente</span></article>
+          <article data-gate="exposure"><b>Exposition protégée</b><span>En attente</span></article>
+          <article data-gate="reserve"><b>Réserve protégée</b><span>En attente</span></article>
+          <article data-gate="costs"><b>Coûts vérifiés</b><span>En attente</span></article>
+          <article data-gate="leverage"><b>Levier interdit</b><span>En attente</span></article>
+        </div>
+        <div class="sim-security-reading" id="simSecurityGateReading">Le gate se met à jour avec le formulaire manuel, la position, les coûts et le Livecheck.</div>
+      </section>
+
+      <section class="withdrawal-safety-lab" id="withdrawalSafetyLab" aria-labelledby="withdrawalSafetyTitle">
+        <div class="withdrawal-safety-head">
+          <div>
+            <p class="eyebrow">◇ RETRAIT TEST — SIMULATION SÉCURISÉE</p>
+            <h3 id="withdrawalSafetyTitle">Vérifier le trajet avant tout transfert</h3>
+            <p>Aucune adresse réelle n’est demandée. Ce laboratoire vérifie seulement la cohérence pédagogique actif, réseau, montant, frais et petit test.</p>
+          </div>
+          <span class="pill warn" id="withdrawalSafetyStatus">ORANGE · à vérifier</span>
+        </div>
+        <div class="withdrawal-safety-grid">
+          <label><span>Actif <button class="atlas-info-button" type="button" data-info-key="withdraw_asset" aria-label="Expliquer l’actif retiré">ⓘ</button></span><select id="withdrawAsset"><option>BTC</option><option>ETH</option><option>SOL</option><option>USDC</option></select></label>
+          <label><span>Réseau <button class="atlas-info-button" type="button" data-info-key="withdraw_network" aria-label="Expliquer le réseau de retrait">ⓘ</button></span><select id="withdrawNetwork"><option value="bitcoin">Bitcoin</option><option value="ethereum">Ethereum</option><option value="solana">Solana</option><option value="polygon">Polygon</option></select></label>
+          <label><span>Montant fictif <button class="atlas-info-button" type="button" data-info-key="withdraw_amount" aria-label="Expliquer le montant retiré">ⓘ</button></span><input id="withdrawAmount" type="number" min="0" step="0.000001" value="0.0001" inputmode="decimal" /></label>
+          <label><span>Frais fictifs <button class="atlas-info-button" type="button" data-info-key="withdraw_fee" aria-label="Expliquer les frais de retrait">ⓘ</button></span><input id="withdrawFee" type="number" min="0" step="0.000001" value="0.00001" inputmode="decimal" /></label>
+        </div>
+        <div class="withdrawal-safety-checks">
+          <label><input id="withdrawDestinationVerified" type="checkbox" /> <span>Destination vérifiée indépendamment</span></label>
+          <label><input id="withdrawSmallTest" type="checkbox" /> <span>Petit transfert test prévu</span></label>
+          <label><input id="withdrawNoThirdParty" type="checkbox" checked /> <span>Aucun tiers ne dicte l’adresse</span></label>
+          <button class="btn small primary" id="btnCheckWithdrawalSafety" type="button">Vérifier le retrait fictif</button>
+        </div>
+        <div class="withdrawal-safety-output" id="withdrawalSafetyOutput">Choisis l’actif et le réseau, puis vérifie la destination et le petit test. Aucun transfert ne peut partir d’ici.</div>
+      </section>
+
+      <section class="scam-sentinel-panel" id="scamSentinelPanel" aria-labelledby="scamSentinelTitle">
+        <div class="scam-sentinel-head">
+          <div>
+            <p class="eyebrow">⊘ SCAM SENTINEL PÉDAGOGIQUE</p>
+            <h3 id="scamSentinelTitle">Repérer les signaux d’arnaque</h3>
+            <p>Coche ce qui apparaît dans une sollicitation. Le verdict est déterministe et ne remplace pas une vérification officielle du prestataire.</p>
+          </div>
+          <span class="pill warn" id="scamSentinelStatus">ORANGE · aucune analyse</span>
+        </div>
+        <div class="scam-sentinel-grid" id="scamSentinelChecks">
+          <label><input type="checkbox" value="guaranteed_return" /> Rendement garanti</label>
+          <label><input type="checkbox" value="urgency" /> Urgence ou dernière chance</label>
+          <label><input type="checkbox" value="fake_support" /> Support demandant un code ou secret</label>
+          <label><input type="checkbox" value="unlock_payment" /> Nouveau paiement exigé pour retirer</label>
+          <label><input type="checkbox" value="remote_access" /> Installation d’un accès distant</label>
+          <label><input type="checkbox" value="forced_address" /> Adresse imposée par un tiers</label>
+          <label><input type="checkbox" value="unlimited_approval" /> Autorisation illimitée incomprise</label>
+          <label><input type="checkbox" value="send_to_receive" /> Envoyer pour recevoir davantage</label>
+        </div>
+        <div class="scam-sentinel-actions">
+          <button class="btn small primary" id="btnAnalyzeScamSignals" type="button">Analyser les signaux</button>
+          <button class="btn small" id="btnResetScamSignals" type="button">Réinitialiser</button>
+        </div>
+        <div class="scam-sentinel-output" id="scamSentinelOutput">Aucune sollicitation analysée. En cas de doute : ne rien envoyer, ne rien signer et revenir par le canal officiel.</div>
+      </section>
 
       <div class="learning-panel" id="learningPanel">
         <div class="learning-head">
@@ -3014,11 +3136,12 @@
 
       <div class="sim-columns">
         <div>
-          <h3>Portefeuille virtuel</h3>
+          <h3>Portefeuille virtuel <button class="atlas-info-button" type="button" data-info-key="virtual_portfolio" aria-label="Expliquer le portefeuille virtuel">ⓘ</button></h3>
+          <div class="sim-position-legend"><span>Actif</span><span>Quantité</span><span>Entrée</span><span>Prix actuel</span><span>Valeur</span><span>P/L brut</span><span>P/L net estimé</span></div>
           <div class="sim-positions" id="simPositions">Aucune position simulée.</div>
         </div>
         <div>
-          <h3>Journal simulation</h3>
+          <h3>Journal simulation <button class="atlas-info-button" type="button" data-info-key="simulation_log" aria-label="Expliquer le journal de simulation">ⓘ</button></h3>
           <pre class="sim-log" id="simLog">Aucune simulation lancée.</pre>
         </div>
       </div>
@@ -3518,16 +3641,27 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.77</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.78</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
   </main>
 
+  <aside class="atlas-pedagogy-drawer" id="atlasPedagogyDrawer" aria-hidden="true" hidden>
+    <div class="atlas-pedagogy-dialog" role="dialog" aria-modal="true" aria-labelledby="atlasPedagogyTitle">
+      <div class="atlas-pedagogy-head">
+        <div><p class="eyebrow">INFO PÉDAGOGIQUE DYNAMIQUE</p><h2 id="atlasPedagogyTitle">Explication</h2></div>
+        <button type="button" id="btnClosePedagogy" aria-label="Fermer l’explication">×</button>
+      </div>
+      <div class="atlas-pedagogy-body" id="atlasPedagogyBody"></div>
+      <p class="atlas-pedagogy-foot">Définition + état actuel + source ou hypothèse. Aucune recommandation financière.</p>
+    </div>
+  </aside>
+
   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.77"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.78"></script>
 </body>
 </html>
