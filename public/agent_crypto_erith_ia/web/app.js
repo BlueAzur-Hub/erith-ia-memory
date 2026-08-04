@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.75 — PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.76 — PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.75";
-const ATLAS_BUILD = "28.2.75";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.75";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.76";
+const ATLAS_BUILD = "28.2.76";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.76";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -2074,23 +2074,42 @@ function atlasVersionRuntimeIdentity() {
   return identity;
 }
 
+function atlasVersionIdentityMarker(source, expression) {
+  const input = String(source || "");
+  const flags = expression.flags.includes("g")
+    ? expression.flags
+    : `${expression.flags}g`;
+  const matcher = new RegExp(expression.source, flags);
+  const values = Array.from(
+    input.matchAll(matcher),
+    match => String(match?.[1] || "").trim()
+  ).filter(Boolean);
+
+  return {
+    value: values.length === 1 ? values[0] : "",
+    count: values.length,
+    values
+  };
+}
+
 function atlasVersionExtractIdentity(kind, text) {
   const source = String(text || "");
 
   if (kind === "index") {
+    const buildMarker = atlasVersionIdentityMarker(
+      source,
+      /<meta\s+name=["']atlas-build["']\s+content=["']([^"']+)["']/i
+    );
+    const tokenMarker = atlasVersionIdentityMarker(
+      source,
+      /<meta\s+name=["']atlas-asset-token["']\s+content=["']([^"']+)["']/i
+    );
+
     return {
-      build: String(
-        source.match(
-          /<meta\s+name=["']atlas-build["']\s+content=["']([^"']+)["']/i
-        )?.[1]
-        || ""
-      ).trim(),
-      token: String(
-        source.match(
-          /<meta\s+name=["']atlas-asset-token["']\s+content=["']([^"']+)["']/i
-        )?.[1]
-        || ""
-      ).trim(),
+      build: buildMarker.value,
+      token: tokenMarker.value,
+      buildMarkerCount: buildMarker.count,
+      tokenMarkerCount: tokenMarker.count,
       referencesApp:
         /<script[^>]+src=["']\.\/app\.js(?:\?[^"']*)?["']/i
           .test(source),
@@ -2101,35 +2120,37 @@ function atlasVersionExtractIdentity(kind, text) {
   }
 
   if (kind === "app") {
+    const buildMarker = atlasVersionIdentityMarker(
+      source,
+      /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
+    );
+    const tokenMarker = atlasVersionIdentityMarker(
+      source,
+      /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
+    );
+
     return {
-      build: String(
-        source.match(
-          /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
-        )?.[1]
-        || ""
-      ).trim(),
-      token: String(
-        source.match(
-          /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
-        )?.[1]
-        || ""
-      ).trim()
+      build: buildMarker.value,
+      token: tokenMarker.value,
+      buildMarkerCount: buildMarker.count,
+      tokenMarkerCount: tokenMarker.count
     };
   }
 
+  const buildMarker = atlasVersionIdentityMarker(
+    source,
+    /ATLAS_ASSET_BUILD:\s*([0-9A-Za-z._-]+)/
+  );
+  const tokenMarker = atlasVersionIdentityMarker(
+    source,
+    /ATLAS_ASSET_TOKEN:\s*([a-z0-9._-]+)/
+  );
+
   return {
-    build: String(
-      source.match(
-        /ATLAS_ASSET_BUILD:\s*([0-9A-Za-z._-]+)/
-      )?.[1]
-      || ""
-    ).trim(),
-    token: String(
-      source.match(
-        /ATLAS_ASSET_TOKEN:\s*([a-z0-9._-]+)/
-      )?.[1]
-      || ""
-    ).trim()
+    build: buildMarker.value,
+    token: tokenMarker.value,
+    buildMarkerCount: buildMarker.count,
+    tokenMarkerCount: tokenMarker.count
   };
 }
 
@@ -2175,17 +2196,23 @@ async function atlasVerifyRemotePublication(remote) {
   const tokenOk = Object.values(identities).every(
     identity => identity.token === expectedToken
   );
+  const markerCountsOk = Object.values(identities).every(
+    identity =>
+      identity.buildMarkerCount === 1
+      && identity.tokenMarkerCount === 1
+  );
   const referencesOk =
     identities.index.referencesApp === true
     && identities.index.referencesStyle === true;
 
   return {
-    ok: buildOk && tokenOk && referencesOk,
+    ok: buildOk && tokenOk && markerCountsOk && referencesOk,
     build: expectedBuild,
     token: expectedToken,
     identities,
     buildOk,
     tokenOk,
+    markerCountsOk,
     referencesOk,
     checkedAt: Date.now()
   };
@@ -14749,7 +14776,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.75",
+  interface: "Build 28.2.76",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -17000,7 +17027,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.75`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.76`
   );
 }
 
