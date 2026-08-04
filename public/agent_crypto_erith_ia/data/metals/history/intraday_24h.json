@@ -1,0 +1,28 @@
+{
+  "schema": "agent_crypto_metals_intraday_history_v1",
+  "version": "2.3.0",
+  "source_mode": "github_actions_public_archive",
+  "source_id": "yahoo_finance",
+  "source_name": "Yahoo Finance Futures",
+  "generated_at": null,
+  "interval": "5m",
+  "requested_range": "2d",
+  "window_hours": 24,
+  "assets": [
+    "XAU",
+    "XAG",
+    "XPT",
+    "XPD",
+    "HG"
+  ],
+  "series_count": 0,
+  "series": [],
+  "integrity": {
+    "fabricated_points_forbidden": true,
+    "source_timestamp_preserved": true,
+    "five_asset_series_required": true,
+    "gold_api_current_quote_mixing_forbidden": true,
+    "daily_series_reuse_forbidden": true,
+    "crypto_history_reuse_forbidden": true
+  }
+}

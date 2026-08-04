@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.66.
+"""Collect public metals data for Agent-Crypto @erith.IA Build 28.2.67.
 
 Public sources, no provider key:
 - Gold API: current indicative XAU/XAG/XPT/XPD/HG prices.
-- Yahoo Finance chart endpoint: one-year daily futures series.
+- Yahoo Finance chart endpoint: one-year daily and immediate 24-hour intraday futures series.
 - ECB SDMX: daily USD/EUR reference rate.
 
 The public page never contacts these providers. GitHub Actions runs this collector,
@@ -38,12 +38,12 @@ except Exception:  # optional outside the GitHub Actions runtime
     curl_requests = None
 
 UTC = timezone.utc
-SCHEMA_VERSION = "2.2.0"
-BUILD_TARGET = "28.2.66"
+SCHEMA_VERSION = "2.3.0"
+BUILD_TARGET = "28.2.67"
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 "
-    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.66"
+    "Agent-Crypto-ERITH-IA-Public-Metals/28.2.67"
 )
 
 
@@ -72,6 +72,13 @@ SPOT_HISTORY_SCHEMA = "agent_crypto_metals_spot_history_v1"
 SPOT_RETENTION_HOURS = 48
 SPOT_MIN_COMPLETE_HOURS = 20
 SPOT_HISTORY_RELATIVE_PATH = Path("history") / "spot_48h.json"
+
+INTRADAY_HISTORY_SCHEMA = "agent_crypto_metals_intraday_history_v1"
+INTRADAY_INTERVAL = "5m"
+INTRADAY_REQUEST_RANGE = "2d"
+INTRADAY_WINDOW_HOURS = 24
+INTRADAY_HISTORY_RELATIVE_PATH = Path("history") / "intraday_24h.json"
+_YAHOO_CRUMB_CACHE: dict[int, str | None] = {}
 
 GOLD_API_BASE = "https://api.gold-api.com/price"
 YAHOO_CHART_BASES = (
@@ -198,9 +205,10 @@ def build_yahoo_session():
     return session
 
 
-def yahoo_get_payload(session, metal: Metal, timeout: float) -> dict[str, Any]:
-    # Yahoo frequently rate-limits datacenter requests. Use one browser-like session,
-    # a crumb when obtainable, query2 first, query1 once as a host fallback, and no 429 loop.
+def yahoo_get_crumb(session, timeout: float) -> str | None:
+    key = id(session)
+    if key in _YAHOO_CRUMB_CACHE:
+        return _YAHOO_CRUMB_CACHE[key]
     crumb = None
     try:
         session.get("https://fc.yahoo.com", timeout=timeout, allow_redirects=True)
@@ -212,16 +220,37 @@ def yahoo_get_payload(session, metal: Metal, timeout: float) -> dict[str, Any]:
             crumb = response.text.strip()
     except Exception:
         crumb = None
+    _YAHOO_CRUMB_CACHE[key] = crumb
+    return crumb
 
+
+def yahoo_get_payload(
+    session,
+    metal: Metal,
+    timeout: float,
+    *,
+    interval: str = "1d",
+    period_days: int | None = 380,
+    range_value: str | None = None,
+    include_prepost: bool = False,
+) -> dict[str, Any]:
+    # One browser-like session and one cached crumb are shared by daily and intraday calls.
+    # HTTP 429 is never retried in a loop.
+    crumb = yahoo_get_crumb(session, timeout)
     now = int(utc_now().timestamp())
-    period1 = now - 380 * 86400
-    params = {
-        "period1": period1,
-        "period2": now,
-        "interval": "1d",
+    params: dict[str, Any] = {
+        "interval": interval,
         "events": "history",
         "includeAdjustedClose": "true",
     }
+    if range_value:
+        params["range"] = range_value
+    else:
+        days = max(2, int(period_days or 380))
+        params["period1"] = now - days * 86400
+        params["period2"] = now
+    if include_prepost:
+        params["includePrePost"] = "true"
     if crumb:
         params["crumb"] = crumb
 
@@ -349,7 +378,7 @@ def yahoo_future_series(
     fixture_name = f"yahoo_{metal.future_symbol.replace('=', '_')}.json"
     payload = load_fixture(fixtures, fixture_name)
     if payload is None:
-        payload = yahoo_get_payload(session, metal, timeout)
+        payload = yahoo_get_payload(session, metal, timeout, interval="1d", period_days=380)
     if not isinstance(payload, dict):
         raise RuntimeError(f"Yahoo {metal.future_symbol}: objet JSON attendu")
 
@@ -449,6 +478,184 @@ def yahoo_future_series(
         },
     }
 
+
+
+def yahoo_intraday_series(
+    session,
+    metal: Metal,
+    timeout: float,
+    received_at: str,
+    fixtures: Path | None,
+) -> dict[str, Any]:
+    fixture_name = f"yahoo_intraday_{metal.future_symbol.replace('=', '_')}.json"
+    payload = load_fixture(fixtures, fixture_name)
+    if payload is None:
+        payload = yahoo_get_payload(
+            session,
+            metal,
+            timeout,
+            interval=INTRADAY_INTERVAL,
+            period_days=None,
+            range_value=INTRADAY_REQUEST_RANGE,
+            include_prepost=True,
+        )
+    if not isinstance(payload, dict):
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: objet JSON attendu")
+
+    chart = payload.get("chart")
+    result_list = chart.get("result") if isinstance(chart, dict) else None
+    error = chart.get("error") if isinstance(chart, dict) else None
+    if error:
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: {error}")
+    if not isinstance(result_list, list) or not result_list or not isinstance(result_list[0], dict):
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: résultat absent")
+    result = result_list[0]
+    timestamps = result.get("timestamp")
+    indicators = result.get("indicators")
+    quote_rows = indicators.get("quote") if isinstance(indicators, dict) else None
+    quote_data = quote_rows[0] if isinstance(quote_rows, list) and quote_rows else None
+    if not isinstance(timestamps, list) or not isinstance(quote_data, dict):
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: série absente")
+
+    meta = result.get("meta") if isinstance(result.get("meta"), dict) else {}
+    currency = str(meta.get("currency") or "USD").upper()
+    if currency != "USD":
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: devise {currency}, USD requise")
+
+    opens = quote_data.get("open") or []
+    highs = quote_data.get("high") or []
+    lows = quote_data.get("low") or []
+    closes = quote_data.get("close") or []
+    volumes = quote_data.get("volume") or []
+    deduplicated: dict[str, dict[str, Any]] = {}
+    for index, raw_stamp in enumerate(timestamps):
+        point_time = parse_time(raw_stamp)
+        close_value = positive_number(closes[index] if index < len(closes) else None)
+        if not point_time or close_value is None:
+            continue
+        deduplicated[point_time] = {
+            "time": point_time,
+            "open": positive_number(opens[index] if index < len(opens) else None),
+            "high": positive_number(highs[index] if index < len(highs) else None),
+            "low": positive_number(lows[index] if index < len(lows) else None),
+            "close": close_value,
+            "volume": finite_number(volumes[index] if index < len(volumes) else None),
+        }
+
+    points = [deduplicated[key] for key in sorted(deduplicated)]
+    if len(points) < 2:
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: moins de deux points réels")
+
+    # Keep a small margin beyond 24 hours so the browser can cut an exact rolling window.
+    newest = datetime.fromisoformat(points[-1]["time"].replace("Z", "+00:00")).astimezone(UTC)
+    cutoff = newest - timedelta(hours=30)
+    points = [
+        point for point in points
+        if datetime.fromisoformat(point["time"].replace("Z", "+00:00")).astimezone(UTC) >= cutoff
+    ]
+    if len(points) < 2:
+        raise RuntimeError(f"Yahoo intraday {metal.future_symbol}: fenêtre 30 h insuffisante")
+
+    return {
+        "schema": "agent_crypto_metals_intraday_series_v1",
+        "version": SCHEMA_VERSION,
+        "asset_id": metal.asset_id,
+        "symbol": metal.symbol,
+        "provider_symbol": metal.future_symbol,
+        "name": metal.name,
+        "instrument_type": "future_continuous",
+        "market": metal.market,
+        "currency": "USD",
+        "unit": metal.unit,
+        "unit_label_fr": metal.unit_label_fr,
+        "interval": INTRADAY_INTERVAL,
+        "requested_range": INTRADAY_REQUEST_RANGE,
+        "source_id": "yahoo_finance",
+        "source_name": "Yahoo Finance",
+        "exchange_name": meta.get("exchangeName") or meta.get("fullExchangeName") or metal.market,
+        "timezone": meta.get("exchangeTimezoneName") or "UTC",
+        "received_at": received_at,
+        "points_count": len(points),
+        "oldest_at": points[0]["time"],
+        "newest_at": points[-1]["time"],
+        "points": points,
+        "integrity": {
+            "fabricated_points_forbidden": True,
+            "source_timestamp_preserved": True,
+            "current_spot_quote_mixing_forbidden": True,
+            "daily_series_reuse_forbidden": True,
+        },
+    }
+
+
+def intraday_state_from_disk(data_dir: Path) -> dict[str, Any]:
+    payload = read_json(data_dir / INTRADAY_HISTORY_RELATIVE_PATH) or {}
+    series = payload.get("series") if isinstance(payload.get("series"), list) else []
+    valid_series = [
+        item for item in series
+        if isinstance(item, dict)
+        and item.get("schema") == "agent_crypto_metals_intraday_series_v1"
+        and item.get("source_id") == "yahoo_finance"
+        and item.get("interval") == INTRADAY_INTERVAL
+        and int(item.get("points_count") or 0) >= 2
+        and isinstance(item.get("points"), list)
+        and len(item.get("points")) >= 2
+    ]
+    valid = (
+        payload.get("schema") == INTRADAY_HISTORY_SCHEMA
+        and payload.get("integrity", {}).get("fabricated_points_forbidden") is True
+        and payload.get("integrity", {}).get("gold_api_current_quote_mixing_forbidden") is True
+        and len(valid_series) == len(METALS)
+        and {item.get("asset_id") for item in valid_series} == set(EXPECTED_ASSETS)
+    )
+    return {
+        "available": bool(valid),
+        "preserved": bool(valid),
+        "file": str(INTRADAY_HISTORY_RELATIVE_PATH).replace("\\", "/"),
+        "assets": len(valid_series) if valid else 0,
+        "series_points": {str(item.get("asset_id")): int(item.get("points_count") or 0) for item in valid_series} if valid else {},
+        "oldest_at": min((item.get("oldest_at") for item in valid_series), default=None) if valid else None,
+        "newest_at": max((item.get("newest_at") for item in valid_series), default=None) if valid else None,
+        "interval": INTRADAY_INTERVAL,
+        "window_hours": INTRADAY_WINDOW_HOURS,
+        "source_id": "yahoo_finance",
+    }
+
+
+def build_intraday_history(
+    data_dir: Path,
+    series_by_asset: dict[str, dict[str, Any]],
+    received_at: str,
+) -> dict[str, Any]:
+    if set(series_by_asset) != set(EXPECTED_ASSETS):
+        return intraday_state_from_disk(data_dir)
+    ordered = [series_by_asset[metal.asset_id] for metal in METALS]
+    payload = {
+        "schema": INTRADAY_HISTORY_SCHEMA,
+        "version": SCHEMA_VERSION,
+        "source_mode": "github_actions_public_archive",
+        "source_id": "yahoo_finance",
+        "source_name": "Yahoo Finance Futures",
+        "generated_at": received_at,
+        "interval": INTRADAY_INTERVAL,
+        "requested_range": INTRADAY_REQUEST_RANGE,
+        "window_hours": INTRADAY_WINDOW_HOURS,
+        "assets": [metal.symbol for metal in METALS],
+        "series_count": len(ordered),
+        "series": ordered,
+        "integrity": {
+            "fabricated_points_forbidden": True,
+            "source_timestamp_preserved": True,
+            "five_asset_series_required": True,
+            "gold_api_current_quote_mixing_forbidden": True,
+            "daily_series_reuse_forbidden": True,
+            "crypto_history_reuse_forbidden": True,
+        },
+    }
+    payload["fingerprint"] = sha256_json({"generated_at": received_at, "series": ordered})
+    atomic_write_json(data_dir / INTRADAY_HISTORY_RELATIVE_PATH, payload)
+    state = intraday_state_from_disk(data_dir)
+    return {**state, "preserved": False}
 
 def ecb_fx(
     session: requests.Session,
@@ -787,6 +994,7 @@ def build_status(
     current_count: int,
     current_preserved: bool,
     history_info: dict[str, Any],
+    intraday_info: dict[str, Any],
     spot_info: dict[str, Any],
     fx: dict[str, Any] | None,
     source_states: dict[str, str],
@@ -798,7 +1006,8 @@ def build_status(
         effective_count = int((read_json(data_dir / "latest.json") or {}).get("assets_count") or 0)
 
     history_available = bool(history_info.get("available"))
-    if current_count == len(METALS) and history_available and not errors:
+    intraday_available = bool(intraday_info.get("available"))
+    if current_count == len(METALS) and history_available and intraday_available and not errors:
         state = "ready"
     elif current_count > 0:
         state = "partial"
@@ -830,15 +1039,17 @@ def build_status(
         "quota": {"plan": "public_no_key", "limit": None, "remaining": None, "period": None, "reset_at": None},
         "sources": [
             {"id": "gold_api", "role": "current_indicative_prices", "authentication": "none", "state": source_states.get("gold_api", "unavailable")},
-            {"id": "yahoo_finance", "role": "one_year_daily_futures", "transport": "browser_session_query2_query1", "authentication": "none", "state": source_states.get("yahoo_finance", "unavailable")},
+            {"id": "yahoo_finance", "role": "daily_and_intraday_futures", "transport": "browser_session_query2_query1", "authentication": "none", "state": source_states.get("yahoo_finance", "unavailable")},
             {"id": "ecb", "role": "usd_eur_reference_rate", "authentication": "none", "state": source_states.get("ecb", "unavailable")},
         ],
         "history": history_info,
+        "intraday_24h": intraday_info,
         "spot_history": spot_info,
         "fx": ({"pair": fx.get("pair"), "source_date": fx.get("source_date"), "eur_per_usd": fx.get("eur_per_usd")} if fx else previous.get("fx")),
         "fallback": {
             "last_valid_snapshot_preserved": bool(current_preserved),
             "last_valid_history_preserved": bool(history_info.get("preserved")),
+            "last_valid_intraday_preserved": bool(intraday_info.get("preserved")),
             "invented_replacement_values": False,
         },
         "security": {
@@ -853,6 +1064,7 @@ def build_status(
             "current_and_history_decoupled": True,
             "current_quotes_not_erased_by_history_failure": True,
             "history_never_fabricated": True,
+            "intraday_futures_and_current_spot_separated": True,
         },
         "updated_at": received_at,
         "collector": "tools/collect_public_metals.py",
@@ -910,6 +1122,7 @@ def build_manifest(received_at: str, status: dict[str, Any], errors: list[str] |
             "latest": "data/metals/latest.json",
             "status": "data/metals/status.json",
             "history": "data/metals/history/public_1y.json",
+            "intraday_24h": "data/metals/history/intraday_24h.json",
             "spot_history": "data/metals/history/spot_48h.json",
             "history_index": "data/metals/history/index.json",
             "fx": "data/metals/fx/usd_eur.json",
@@ -924,6 +1137,9 @@ def build_manifest(received_at: str, status: dict[str, Any], errors: list[str] |
             "five_of_five_current_required_for_green_run": True,
             "minimum_one_year_history_required_when_published": True,
             "spot_and_futures_series_separated": True,
+            "immediate_intraday_futures_enabled": True,
+            "intraday_interval": INTRADAY_INTERVAL,
+            "intraday_window_hours": INTRADAY_WINDOW_HOURS,
             "rolling_spot_archive_enabled": True,
             "spot_history_retention_hours": SPOT_RETENTION_HOURS,
             "last_valid_data_preserved_on_failure": True,
@@ -1022,9 +1238,11 @@ def main() -> int:
         received_at,
     )
 
-    # Historical futures are collected separately. Their failure never removes current prices.
+    # Daily and intraday Futures are collected independently from the current Gold API quote.
     series_by_asset: dict[str, dict[str, Any]] = {}
+    intraday_by_asset: dict[str, dict[str, Any]] = {}
     history_errors: list[str] = []
+    intraday_errors: list[str] = []
     for index, metal in enumerate(METALS):
         if args.fixtures is None and index:
             time.sleep(max(0.0, args.pacing))
@@ -1033,7 +1251,15 @@ def main() -> int:
                 yahoo_session, metal, args.timeout, received_at, args.fixtures
             )
         except Exception as exc:
-            history_errors.append(f"Yahoo {metal.future_symbol}: {exc}")
+            history_errors.append(f"Yahoo daily {metal.future_symbol}: {exc}")
+        if args.fixtures is None:
+            time.sleep(max(0.25, args.pacing / 2.0))
+        try:
+            intraday_by_asset[metal.asset_id] = yahoo_intraday_series(
+                yahoo_session, metal, args.timeout, received_at, args.fixtures
+            )
+        except Exception as exc:
+            intraday_errors.append(f"Yahoo intraday {metal.future_symbol}: {exc}")
 
     history_info: dict[str, Any]
     if len(series_by_asset) == len(METALS):
@@ -1052,17 +1278,28 @@ def main() -> int:
                 "source_id": "yahoo_finance",
             }
         except Exception as exc:
-            history_errors.append(f"Historique commun: {exc}")
+            history_errors.append(f"Historique quotidien commun: {exc}")
             history_info = history_state_from_disk(data_dir)
     else:
         history_info = history_state_from_disk(data_dir)
 
-    if history_errors:
-        source_states["yahoo_finance"] = "preserved" if history_info.get("available") else "unavailable"
+    if len(intraday_by_asset) == len(METALS):
+        try:
+            intraday_info = build_intraday_history(data_dir, intraday_by_asset, received_at)
+        except Exception as exc:
+            intraday_errors.append(f"Historique intraday commun: {exc}")
+            intraday_info = intraday_state_from_disk(data_dir)
+    else:
+        intraday_info = intraday_state_from_disk(data_dir)
+
+    if history_errors or intraday_errors:
+        yahoo_preserved = bool(history_info.get("available")) or bool(intraday_info.get("available"))
+        source_states["yahoo_finance"] = "preserved" if yahoo_preserved else "unavailable"
         errors.extend(history_errors)
+        errors.extend(intraday_errors)
 
     status = build_status(
-        data_dir, received_at, current_count, current_preserved, history_info, spot_info, fx, source_states, errors
+        data_dir, received_at, current_count, current_preserved, history_info, intraday_info, spot_info, fx, source_states, errors
     )
     atomic_write_json(data_dir / "status.json", status)
     atomic_write_json(data_dir / "collector_manifest.json", build_manifest(received_at, status, errors))
@@ -1075,6 +1312,9 @@ def main() -> int:
         "history_available": bool(history_info.get("available")),
         "history_preserved": bool(history_info.get("preserved")),
         "history_snapshots": int(history_info.get("snapshots") or 0),
+        "intraday_available": bool(intraday_info.get("available")),
+        "intraday_assets": int(intraday_info.get("assets") or 0),
+        "intraday_points": intraday_info.get("series_points") or {},
         "spot_snapshots": int(spot_info.get("snapshots") or 0),
         "spot_span_hours": float(spot_info.get("span_hours") or 0),
         "spot_24h_complete": bool(spot_info.get("complete_24h")),

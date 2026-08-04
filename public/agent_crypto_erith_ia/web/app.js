@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.66 — METALS UNIFIED READING LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.67 — METALS UNIFIED READING LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.66";
-const ATLAS_BUILD = "28.2.66";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.66";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.67";
+const ATLAS_BUILD = "28.2.67";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.67";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -201,6 +201,7 @@ const ATLAS_METALS_QUOTE_FOUNDATION_PATHS = Object.freeze({
   status: "../data/metals/status.json",
   historyIndex: "../data/metals/history/index.json",
   historyResponse: "../data/metals/history/public_1y.json",
+  intradayHistory: "../data/metals/history/intraday_24h.json",
   spotHistory: "../data/metals/history/spot_48h.json",
   fxUsdEur: "../data/metals/fx/usd_eur.json",
   contract: "./metals_quote_adapter_contract.json"
@@ -1356,6 +1357,7 @@ const atlasMetalsQuoteFoundationState = {
   collector: null,
   historyIndex: null,
   history: Object.freeze([]),
+  intradayHistory: null,
   spotHistory: Object.freeze([]),
   contract: null,
   quotes: Object.freeze([]),
@@ -7175,7 +7177,7 @@ function atlasDestroyRealChart() {
 }
 
 /* =========================================================
-   Market Core V2.0-Alpha · Build 28.2.66
+   Market Core V2.0-Alpha · Build 28.2.67
    SOURCE LABEL TRUTH — provider, origin and freshness are
    rendered from the same chart result, without CSS guessing.
    ========================================================= */
@@ -11307,7 +11309,7 @@ function atlasMarketPrepareAlert(coin){if(!coin?.id)return;atlasMarketEnsureWatc
 function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(coin);if($("analyste")?.classList.contains("detail-collapsed"))$("detailPanelRail")?.click();const d=$("source-dock");if(d){d.open=true;atlasEnsureSourceDock(coin,{force:false});d.scrollIntoView({behavior:"smooth",block:"center"});}}
 function atlasMarketHandleAction(action,coin,event){if(action==="open")atlasMarketOpenCoin(coin);else if(action==="compare")atlasToggleComparisonCoin(coin);else if(action==="watch")atlasMarketEnsureWatchCoin(coin);else if(action==="alert")atlasMarketPrepareAlert(coin);else if(action==="sources")atlasMarketOpenSources(coin);event?.preventDefault?.();}
 /* =========================================================
-   Build 28.2.66 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
+   Build 28.2.67 — TARGET SCANNER DISCRETE CYCLE CONTRACT LOCK
 
    Le cycle automatique et la sélection manuelle sont deux contrats séparés.
 
@@ -14559,7 +14561,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.66",
+  interface: "Build 28.2.67",
   controlCenter: "V2.2.0R1",
   bridge: "V1.8.0",
   bridgeNumeric: "1.8.0",
@@ -16810,7 +16812,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.66`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.2.67`
   );
 }
 
@@ -18203,8 +18205,8 @@ function atlasRenderMetalsMathCore() {
   const metrics = atlasMetalsMathCoreMetrics();
   const asset = metrics.asset;
   const intraday = metrics.periodDays === 1;
-  const observationUnit = intraday ? "relevés spot" : "séances Futures";
-  const historicalSource = intraday ? "Gold API · archive spot automatique" : "Yahoo Finance Futures";
+  const observationUnit = intraday ? "points Futures intraday" : "séances Futures";
+  const historicalSource = intraday ? "Yahoo Finance Futures · intraday 5 min" : "Yahoo Finance Futures";
   shell.dataset.mathDomain = "metals";
   shell.classList.add("atlas-math-metals");
   const color = ATLAS_METALS_CHART_COLORS[asset.id] || "#ffd46a";
@@ -18221,7 +18223,7 @@ function atlasRenderMetalsMathCore() {
   if (title) title.textContent = `${asset.name} · qualité et risque historique`;
   if (contextLine) contextLine.textContent = `${asset.symbol} · ${metrics.periodLabel} · ${metrics.points.length} ${observationUnit} · ${historicalSource}`;
   if (muted) muted.textContent = intraday
-    ? "Archive spot Gold API glissante · Futures séparés · aucune prévision."
+    ? "Historique Futures intraday · cotation actuelle Gold API séparée · aucune prévision."
     : "Historique Futures quotidien · cotation actuelle Gold API séparée · aucune prévision.";
   if (detailsTitle) detailsTitle.textContent = "Contrôles de la série Métaux";
 
@@ -18238,7 +18240,7 @@ function atlasRenderMetalsMathCore() {
   const breakdown = document.getElementById("scoreBreakdown");
   if (breakdown) {
     breakdown.innerHTML = `
-      <div><span>${intraday ? "Relevés attendus" : "Séances attendues"}</span><b>${metrics.rows.length || "—"}</b></div>
+      <div><span>${intraday ? "Points attendus" : "Séances attendues"}</span><b>${metrics.rows.length || "—"}</b></div>
       <div><span>Points valides</span><b>${metrics.points.length || "—"}</b></div>
       <div><span>Rendements</span><b>${metrics.returns.length || "—"}</b></div>
       <div><span>Unité</span><b>${escapeHtml(metrics.points[0]?.currency || metrics.quote?.currency || "USD")}</b></div>
@@ -18261,14 +18263,14 @@ function atlasRenderMetalsMathCore() {
     human.classList.remove("ok", "warn", "refus");
     human.classList.add(metrics.ready ? "warn" : "refus");
     human.innerHTML = metrics.ready
-      ? `<b>Fenêtre réelle :</b> ${escapeHtml(metrics.periodLabel)} · ${metrics.points.length} ${escapeHtml(observationUnit)} · ${escapeHtml(atlasMetalsMathDate(metrics.first?.x))} → ${escapeHtml(atlasMetalsMathDate(metrics.last?.x))}.<br><b>Lecture :</b> ${escapeHtml(direction)} · variation ${escapeHtml(variationText)} · volatilité par relevé ${escapeHtml(atlasMetalsMathFormatPct(metrics.volatilitySessionPct))} · drawdown max ${escapeHtml(atlasMetalsMathFormatPct(metrics.drawdown?.pct))}.<br><b>Limites :</b> ${intraday ? "archive spot Gold API glissante" : "historique quotidien Futures"} uniquement ; aucune prévision.`
+      ? `<b>Fenêtre réelle :</b> ${escapeHtml(metrics.periodLabel)} · ${metrics.points.length} ${escapeHtml(observationUnit)} · ${escapeHtml(atlasMetalsMathDate(metrics.first?.x))} → ${escapeHtml(atlasMetalsMathDate(metrics.last?.x))}.<br><b>Lecture :</b> ${escapeHtml(direction)} · variation ${escapeHtml(variationText)} · volatilité par relevé ${escapeHtml(atlasMetalsMathFormatPct(metrics.volatilitySessionPct))} · drawdown max ${escapeHtml(atlasMetalsMathFormatPct(metrics.drawdown?.pct))}.<br><b>Limites :</b> ${intraday ? "historique Futures intraday" : "historique quotidien Futures"} uniquement ; aucune prévision.`
       : `<b>Math Core Métaux :</b> série en constitution pour cette fenêtre.<br><b>Disponible :</b> ${metrics.points.length} ${escapeHtml(observationUnit)} réel${metrics.points.length > 1 ? "s" : ""}.<br><b>Stop :</b> aucune valeur absente n’est remplacée.`;
   }
 
   const summaryGrid = document.getElementById("atlasSummaryGrid");
   if (summaryGrid) {
     summaryGrid.innerHTML = `
-      <div><span>Série réelle</span><b>${metrics.points.length || "—"} ${intraday ? "relevés" : "séances"}</b></div>
+      <div><span>Série réelle</span><b>${metrics.points.length || "—"} ${intraday ? "points" : "séances"}</b></div>
       <div><span>Variation fenêtre</span><b>${escapeHtml(variationText)}</b></div>
       <div><span>Volatilité / séance</span><b>${escapeHtml(atlasMetalsMathFormatPct(metrics.volatilitySessionPct))}</b></div>
       <div><span>Drawdown maximal</span><b>${escapeHtml(atlasMetalsMathFormatPct(metrics.drawdown?.pct))}</b></div>
@@ -18288,9 +18290,9 @@ function atlasRenderMetalsMathCore() {
       atlasMathCard("Volatilité / séance", atlasMetalsMathFormatPct(metrics.volatilitySessionPct), `${metrics.returns.length} rendements logarithmiques`),
       atlasMathCard("Drawdown maximal", atlasMetalsMathFormatPct(metrics.drawdown?.pct), metrics.drawdown ? `${atlasMetalsMathDate(metrics.drawdown.start?.x)} → ${atlasMetalsMathDate(metrics.drawdown.trough?.x)}` : "Indisponible"),
       atlasMathCard("Amplitude haut / bas", atlasMetalsMathFormatPct(metrics.amplitudePct), Number.isFinite(metrics.low) && Number.isFinite(metrics.high) ? `${metrics.low.toLocaleString("fr-FR")} → ${metrics.high.toLocaleString("fr-FR")} ${metrics.points[0]?.currency || "USD"}` : "Indisponible"),
-      atlasMathCard("Qualité de série", metrics.rows.length ? `${quality} %` : "Indisponible", `${metrics.points.length}/${metrics.rows.length || 0} ${intraday ? "relevés" : "séances"} valides`),
-      atlasMathCard("Provenance", historicalSource, intraday ? "Paniers spot publics · collecte GitHub Actions" : "Série quotidienne publique · contrats Futures", intraday ? "Yahoo Futures séparé pour 7 j et plus" : "Gold API distinct pour le prix actuel", "wide"),
-      atlasMathCard("Limites", "Observation seulement", intraday ? "Fenêtre spot glissante · aucune prévision ni mélange Futures" : "Aucune prévision, recommandation ou mélange spot/Futures", "Décision humaine uniquement", "wide")
+      atlasMathCard("Qualité de série", metrics.rows.length ? `${quality} %` : "Indisponible", `${metrics.points.length}/${metrics.rows.length || 0} ${intraday ? "points" : "séances"} valides`),
+      atlasMathCard("Provenance", historicalSource, intraday ? "Série publique intraday · contrats Futures" : "Série quotidienne publique · contrats Futures", intraday ? "Gold API distinct pour le prix actuel" : "Gold API distinct pour le prix actuel", "wide"),
+      atlasMathCard("Limites", "Observation seulement", intraday ? "Fenêtre Futures intraday · aucune prévision ni mélange avec la cotation Gold API" : "Aucune prévision, recommandation ou mélange spot/Futures", "Décision humaine uniquement", "wide")
     ].join("");
   }
 
@@ -18298,7 +18300,7 @@ function atlasRenderMetalsMathCore() {
   if (verdict) {
     verdict.className = `atlas-verdict ${metrics.ready ? "warn" : "refus"}`;
     verdict.innerHTML = metrics.ready
-      ? `<b>Math Core Métaux actif</b> · ${intraday ? "série spot" : "série Futures"} mesurée · décision humaine`
+      ? `<b>Math Core Métaux actif</b> · ${intraday ? "série Futures intraday" : "série Futures"} mesurée · décision humaine`
       : `<b>Math Core Métaux suspendu</b> · série réelle insuffisante`;
   }
 
@@ -21298,7 +21300,7 @@ window.addEventListener("orientationchange", () => atlasScheduleForgeResize(180)
 
 
 /* =========================================================
-   Build 28.2.66 — Parallel Markets Foundation
+   Build 28.2.67 — Parallel Markets Foundation
 
    One chart area, two isolated domains:
    - Crypto remains the complete validated production market.
@@ -22434,6 +22436,59 @@ function atlasMetalsQuoteFoundationValidateSpotHistory(payload) {
   });
 }
 
+
+function atlasMetalsQuoteFoundationValidateIntradayHistory(payload) {
+  if (payload?.schema !== "agent_crypto_metals_intraday_history_v1") {
+    throw new Error("Historique intraday Métaux incompatible");
+  }
+  if (payload?.integrity?.fabricated_points_forbidden !== true) {
+    throw new Error("Verrou anti-invention intraday absent");
+  }
+  if (payload?.integrity?.gold_api_current_quote_mixing_forbidden !== true) {
+    throw new Error("Séparation intraday Futures / cotation Gold API absente");
+  }
+  const allowed = atlasMetalsQuoteFoundationAllowedAssets();
+  const series = atlasMetalsQuoteFoundationArray(payload?.series).map(record => {
+    const assetId = String(record?.asset_id || "");
+    const asset = allowed.get(assetId);
+    if (!asset) throw new Error(`Actif intraday inconnu : ${assetId || "?"}`);
+    if (String(record?.symbol || "").toUpperCase() !== asset.symbol) {
+      throw new Error(`Symbole intraday incohérent : ${assetId}`);
+    }
+    if (String(record?.source_id || "") !== "yahoo_finance") {
+      throw new Error(`Source intraday invalide : ${assetId}`);
+    }
+    if (String(record?.instrument_type || "") !== "future_continuous") {
+      throw new Error(`Instrument intraday invalide : ${assetId}`);
+    }
+    const points = atlasMetalsQuoteFoundationArray(record?.points)
+      .map(point => {
+        const time = atlasMetalsQuoteFoundationIsoOrNull(point?.time);
+        const close = Number(point?.close);
+        if (!time || !Number.isFinite(close) || close <= 0) return null;
+        return Object.freeze({
+          ...point,
+          time,
+          close,
+          open: Number.isFinite(Number(point?.open)) ? Number(point.open) : null,
+          high: Number.isFinite(Number(point?.high)) ? Number(point.high) : null,
+          low: Number.isFinite(Number(point?.low)) ? Number(point.low) : null,
+          volume: Number.isFinite(Number(point?.volume)) ? Number(point.volume) : null
+        });
+      })
+      .filter(Boolean)
+      .sort((left, right) => Date.parse(left.time) - Date.parse(right.time));
+    if (Number(record?.points_count ?? points.length) !== points.length) {
+      throw new Error(`Compteur intraday incohérent : ${assetId}`);
+    }
+    return Object.freeze({ ...record, asset_id: assetId, symbol: asset.symbol, points: Object.freeze(points) });
+  });
+  if (series.length && series.length !== ATLAS_METALS_ASSETS.length) {
+    throw new Error("Panier intraday Métaux incomplet");
+  }
+  return Object.freeze({ ...payload, series: Object.freeze(series) });
+}
+
 async function atlasMetalsBridgeFetchJson(path, timeoutMs = 2200) {
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
@@ -22495,14 +22550,26 @@ async function atlasMetalsQuoteFoundationLoadFromArchive() {
     ]);
   let historyResponse = Object.freeze({
     schema: "agent_crypto_metals_history_response_v1",
-    version: "2.2.0",
+    version: "2.3.0",
     count: 0,
     snapshots: Object.freeze([]),
     integrity: Object.freeze({ fabricated_points_forbidden: true })
   });
+  let intradayHistory = Object.freeze({
+    schema: "agent_crypto_metals_intraday_history_v1",
+    version: "2.3.0",
+    series_count: 0,
+    series: Object.freeze([]),
+    interval: "5m",
+    window_hours: 24,
+    integrity: Object.freeze({
+      fabricated_points_forbidden: true,
+      gold_api_current_quote_mixing_forbidden: true
+    })
+  });
   let spotHistory = Object.freeze({
     schema: "agent_crypto_metals_spot_history_v1",
-    version: "2.2.0",
+    version: "2.3.0",
     count: 0,
     snapshots: Object.freeze([]),
     retention_hours: 48,
@@ -22517,20 +22584,28 @@ async function atlasMetalsQuoteFoundationLoadFromArchive() {
       await atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.historyResponse)
     );
   } catch (error) {
-    console.warn("Historique public Métaux non encore produit :", error);
+    console.warn("Historique quotidien public Métaux non disponible :", error);
+  }
+  try {
+    intradayHistory = atlasMetalsQuoteFoundationValidateIntradayHistory(
+      await atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.intradayHistory)
+    );
+  } catch (error) {
+    console.warn("Historique intraday Futures Métaux non disponible :", error);
   }
   try {
     spotHistory = atlasMetalsQuoteFoundationValidateSpotHistory(
       await atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.spotHistory)
     );
   } catch (error) {
-    console.warn("Historique spot Métaux en constitution :", error);
+    console.warn("Journal spot Métaux non disponible :", error);
   }
   return {
     snapshot: atlasMetalsQuoteFoundationValidateSnapshot(snapshotPayload),
     collector: atlasMetalsQuoteFoundationValidateStatus(statusPayload),
     historyIndex: atlasMetalsQuoteFoundationValidateHistory(historyPayload),
     history: historyResponse,
+    intradayHistory,
     spotHistory,
     contract: atlasMetalsQuoteFoundationValidateContract(contractPayload)
   };
@@ -22747,42 +22822,51 @@ function atlasMetalsQuoteFoundationSpotRows() {
     ...atlasMetalsQuoteFoundationArray(atlasMetalsQuoteFoundationState.spotHistory)
   ];
   const current = atlasMetalsQuoteFoundationState.snapshot;
-  if (current && String(current?.provider_id || "") === "gold_api") {
-    snapshots.push(current);
-  }
+  if (current && String(current?.provider_id || "") === "gold_api") snapshots.push(current);
   const unique = new Map();
   snapshots.forEach(snapshot => {
-    const time = Date.parse(String(
-      snapshot?.saved_at
-      || snapshot?.quotes?.[0]?.received_at
-      || snapshot?.quotes?.[0]?.source_time
-      || ""
-    ));
-    if (!Number.isFinite(time)) return;
-    if (Number(snapshot?.assets_count || 0) !== 5) return;
-    const quotes = atlasMetalsQuoteFoundationArray(snapshot?.quotes);
-    if (quotes.length !== 5 || !quotes.every(quote => (
-      String(quote?.source_id || "") === "gold_api"
-      && String(quote?.instrument_type || "") === "spot_reference"
-    ))) return;
+    const time = Date.parse(String(snapshot?.saved_at || snapshot?.quotes?.[0]?.received_at || ""));
+    if (!Number.isFinite(time) || Number(snapshot?.assets_count || 0) !== 5) return;
     unique.set(String(time), { snapshot, time });
   });
   return [...unique.values()].sort((left, right) => left.time - right.time);
 }
 
+function atlasMetalsQuoteFoundationIntradaySeries(assetId) {
+  return atlasMetalsQuoteFoundationArray(atlasMetalsQuoteFoundationState.intradayHistory?.series)
+    .find(record => String(record?.asset_id || "") === String(assetId || "")) || null;
+}
+
+function atlasMetalsQuoteFoundationIntradayPoints(assetId) {
+  const series = atlasMetalsQuoteFoundationIntradaySeries(assetId);
+  const points = atlasMetalsQuoteFoundationArray(series?.points)
+    .map(point => ({
+      x: Date.parse(String(point?.time || "")),
+      y: Number(point?.close),
+      currency: String(series?.currency || "USD").toUpperCase(),
+      unit: String(series?.unit || ""),
+      source: "yahoo_finance_intraday"
+    }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y > 0)
+    .sort((left, right) => left.x - right.x);
+  if (!points.length) return [];
+  const newest = points[points.length - 1].x;
+  const cutoff = newest - 24 * 3600000;
+  const unique = new Map();
+  points.filter(point => point.x >= cutoff).forEach(point => unique.set(String(point.x), point));
+  return [...unique.values()].sort((left, right) => left.x - right.x);
+}
+
 function atlasMetalsQuoteFoundationPeriodRows(periodDays) {
   const days = Number(periodDays || 365);
-  const rows = days === 1
-    ? atlasMetalsQuoteFoundationSpotRows()
-    : atlasMetalsQuoteFoundationHistoryRows();
+  if (days === 1) {
+    return atlasMetalsQuoteFoundationIntradayPoints(atlasParallelMarketActiveMetal().id)
+      .map(point => ({ time: point.x, point }));
+  }
+  const rows = atlasMetalsQuoteFoundationHistoryRows();
   if (!rows.length) return [];
-
   const newestTime = rows[rows.length - 1].time;
   const cutoff = newestTime - Math.max(1, days) * 86400000;
-  if (days === 1) {
-    return rows.filter(row => row.time >= cutoff);
-  }
-
   const inside = rows.filter(row => row.time >= cutoff);
   const anchor = [...rows].reverse().find(row => row.time < cutoff) || null;
   const selected = anchor ? [anchor, ...inside] : inside;
@@ -22792,15 +22876,16 @@ function atlasMetalsQuoteFoundationPeriodRows(periodDays) {
 }
 
 function atlasMetalsQuoteFoundationAssetPoints(assetId, periodDays = null) {
+  if (Number(periodDays) === 1) {
+    return atlasMetalsQuoteFoundationIntradayPoints(assetId);
+  }
   const rows = periodDays === null
     ? atlasMetalsQuoteFoundationHistoryRows()
     : atlasMetalsQuoteFoundationPeriodRows(periodDays);
-  const spot = Number(periodDays) === 1;
-  const instrument = spot ? "spot_reference" : "future_continuous";
   return rows.map(row => {
     const quote = atlasMetalsQuoteFoundationArray(row.snapshot?.quotes)
       .find(item => item?.asset_id === assetId
-        && String(item?.instrument_type || "") === instrument);
+        && String(item?.instrument_type || "") === "future_continuous");
     const price = Number(quote?.price);
     if (!Number.isFinite(price) || price <= 0) return null;
     return {
@@ -22808,7 +22893,7 @@ function atlasMetalsQuoteFoundationAssetPoints(assetId, periodDays = null) {
       y: price,
       currency: String(quote?.currency || "USD").toUpperCase(),
       unit: String(quote?.unit || ""),
-      source: spot ? "gold_api" : "yahoo_finance"
+      source: "yahoo_finance"
     };
   }).filter(Boolean);
 }
@@ -22844,22 +22929,22 @@ function atlasMetalsQuoteFoundationChartSeries() {
 
 function atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays) {
   const days = Number(periodDays);
-  const spot = days === 1;
+  const intraday = days === 1;
   const points = atlasMetalsQuoteFoundationAssetPoints(assetId, days);
-  const unitLabel = spot ? "relevés Gold API" : "séances Futures";
+  const unitLabel = intraday ? "points Futures intraday" : "séances Futures";
   const spanHours = points.length >= 2
     ? Math.max(0, (points[points.length - 1].x - points[0].x) / 3600000)
     : 0;
 
-  if (points.length < 2 || (spot && spanHours < 20)) {
+  if (points.length < 2) {
     const count = points.length;
     return Object.freeze({
       available: false,
-      partial: spot && count > 0,
-      state: spot ? "building" : "insufficient",
-      text: spot ? "Historique 24 h en constitution" : "Historique insuffisant",
-      detail: spot
-        ? `${count} relevé${count > 1 ? "s" : ""} spot réel${count > 1 ? "s" : ""} · ${spanHours.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} h couvertes · minimum 20 h`
+      partial: intraday && count > 0,
+      state: "insufficient",
+      text: intraday ? "Intraday Futures en attente" : "Historique insuffisant",
+      detail: intraday
+        ? `${count} point${count > 1 ? "s" : ""} Futures intraday réel${count > 1 ? "s" : ""} · première collecte GitHub Actions requise`
         : `${count} séance${count > 1 ? "s" : ""} Futures réelle${count > 1 ? "s" : ""}`,
       points: count,
       spanHours
@@ -22886,7 +22971,7 @@ function atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(percent);
-  const dateOptions = spot
+  const dateOptions = intraday
     ? { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }
     : undefined;
   return Object.freeze({
@@ -22900,7 +22985,7 @@ function atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays) {
     first,
     last,
     spanHours,
-    source: spot ? "gold_api_spot_archive" : "yahoo_finance_futures"
+    source: intraday ? "yahoo_finance_futures_intraday" : "yahoo_finance_futures_daily"
   });
 }
 
@@ -23014,7 +23099,7 @@ function atlasMetalsQuoteFoundationRenderHumanReading(assetId = null, periodDays
   title.textContent = `${asset.name} · lecture sur ${periodLabel}`;
   period.textContent = `${asset.symbol} · ${periodLabel}`;
   source.textContent = spot
-    ? "Archive spot Gold API automatique · Futures non mélangés · observation uniquement, aucune prévision."
+    ? "Historique Yahoo Finance Futures intraday · cotation Gold API distincte · observation uniquement, aucune prévision."
     : "Historique Yahoo Finance Futures · cotation Gold API distincte · observation uniquement, aucune prévision.";
 
   if (!activeReading) {
@@ -23029,14 +23114,14 @@ function atlasMetalsQuoteFoundationRenderHumanReading(assetId = null, periodDays
     card.dataset.state = activeReading.state || "insufficient";
     state.textContent = spot ? "En constitution" : "Insuffisant";
     summary.textContent = spot
-      ? `La fenêtre 24 heures se constitue avec des relevés Gold API réels : ${activeReading.detail}.`
+      ? `La série Futures intraday 24 heures n’est pas encore disponible : ${activeReading.detail}.`
       : "Le nombre de séances disponibles ne permet pas une lecture historique fiable sur cette période.";
   } else {
     const movement = atlasMetalsHumanReadingMovement(activeReading.percent);
     card.dataset.state = movement.state;
     state.textContent = "Observation";
     summary.textContent = spot
-      ? `${movement.sentence} sur la fenêtre spot disponible : ${atlasMetalsHumanReadingPercent(activeReading.percent)} sur ${activeReading.points} relevés Gold API.`
+      ? `${movement.sentence} sur 24 heures : ${atlasMetalsHumanReadingPercent(activeReading.percent)} sur ${activeReading.points} points Futures intraday.`
       : `${movement.sentence} sur ${periodLabel} : ${atlasMetalsHumanReadingPercent(activeReading.percent)} sur ${activeReading.points} séances Futures.`;
   }
 
@@ -23091,7 +23176,7 @@ function atlasMetalsQuoteFoundationRenderResultHeadline(periodDays = null) {
   const currentText = current?.price !== null && current?.price !== undefined
     ? ` · cotation actuelle ${atlasMetalsQuoteFoundationPriceText(current)} séparée`
     : "";
-  const unit = days === 1 ? "relevés Gold API" : "séances Futures";
+  const unit = days === 1 ? "points Futures intraday" : "séances Futures";
   detail.textContent = `${reading.points} ${unit} · ${reading.detail}${currentText}`;
   return true;
 }
@@ -23118,7 +23203,7 @@ function atlasMetalsQuoteFoundationRenderChart() {
       ? `Mémoire publique · IndexedDB · ${periodLabel}`
       : atlasMetalsQuoteFoundationState.origin === "github_archive"
         ? periodDays === 1
-          ? "Gold API · archive spot automatique · fenêtre 24 h"
+          ? "Yahoo Finance Futures · intraday 5 min · fenêtre 24 h"
           : `Yahoo Finance Futures · quotidien · ${periodLabel}`
         : "Source réelle requise";
   if (source) source.textContent = originLabel;
@@ -23140,14 +23225,14 @@ function atlasMetalsQuoteFoundationRenderChart() {
     canvas.hidden = true;
     if (message) message.hidden = false;
     const quoteSummary = atlasMetalsQuoteFoundationSummary();
-    const spotBuilding = periodDays === 1;
-    if (messageTitle) messageTitle.textContent = spotBuilding
-      ? "HISTORIQUE 24 H EN CONSTITUTION"
+    const intradayPending = periodDays === 1;
+    if (messageTitle) messageTitle.textContent = intradayPending
+      ? "INTRADAY FUTURES EN ATTENTE"
       : quoteSummary.quoteCount > 0
         ? `COTATIONS ${quoteSummary.quoteCount}/5 CONNECTÉES`
         : "AUCUNE COTATION CONNECTÉE";
-    if (messageText) messageText.textContent = spotBuilding
-      ? "Le premier panier Gold API réel sera ajouté par GitHub Actions ; aucune valeur n’est inventée."
+    if (messageText) messageText.textContent = intradayPending
+      ? "La prochaine exécution GitHub Actions doit publier la série Yahoo Futures intraday complète ; aucune attente d’accumulation sur 24 heures."
       : quoteSummary.quoteCount > 0
         ? "Les prix actuels sont disponibles. L’historique annuel reste en attente ; aucune courbe n’est inventée."
         : "Le cadre est prêt. Aucune courbe ni valeur n’est inventée.";
@@ -23157,12 +23242,12 @@ function atlasMetalsQuoteFoundationRenderChart() {
   canvas.hidden = false;
   if (message) message.hidden = pointCount > 1;
   if (messageTitle) messageTitle.textContent = pointCount === 1
-    ? (periodDays === 1 ? "PREMIER RELEVÉ SPOT RÉEL ENREGISTRÉ" : "PREMIER SNAPSHOT RÉEL ENREGISTRÉ")
+    ? (periodDays === 1 ? "PREMIER POINT FUTURES INTRADAY" : "PREMIER SNAPSHOT RÉEL ENREGISTRÉ")
     : "HISTORIQUE RÉEL";
   if (messageText) messageText.textContent = pointCount === 1
-    ? "Un second relevé réel est nécessaire pour former une trajectoire."
+    ? "Un second point Futures intraday est nécessaire pour former une trajectoire."
     : periodDays === 1
-      ? `${pointCount} relevés spot Gold API réels dans la fenêtre glissante.`
+      ? `${pointCount} points Yahoo Finance Futures intraday dans la fenêtre 24 heures.`
       : `${pointCount} séances publiques réelles sur la période sélectionnée.`;
 
   const pad = { left: 48, right: 18, top: 18, bottom: 34 };
@@ -23331,6 +23416,7 @@ async function atlasMetalsQuoteFoundationLoad() {
     atlasMetalsQuoteFoundationState.collector = archive.collector;
     atlasMetalsQuoteFoundationState.historyIndex = archive.historyIndex;
     atlasMetalsQuoteFoundationState.history = archive.history.snapshots;
+    atlasMetalsQuoteFoundationState.intradayHistory = archive.intradayHistory;
     atlasMetalsQuoteFoundationState.spotHistory = archive.spotHistory.snapshots;
     atlasMetalsQuoteFoundationState.contract = archive.contract;
     atlasMetalsQuoteFoundationState.quotes = archive.snapshot.quotes;
@@ -23348,6 +23434,7 @@ async function atlasMetalsQuoteFoundationLoad() {
       atlasMetalsQuoteFoundationState.collector = local.collector;
       atlasMetalsQuoteFoundationState.historyIndex = null;
       atlasMetalsQuoteFoundationState.history = local.history.snapshots;
+      atlasMetalsQuoteFoundationState.intradayHistory = null;
       atlasMetalsQuoteFoundationState.spotHistory = Object.freeze([]);
       atlasMetalsQuoteFoundationState.contract = local.contract;
       atlasMetalsQuoteFoundationState.quotes = local.snapshot.quotes;
@@ -23362,6 +23449,7 @@ async function atlasMetalsQuoteFoundationLoad() {
       atlasMetalsQuoteFoundationState.collector = null;
       atlasMetalsQuoteFoundationState.historyIndex = null;
       atlasMetalsQuoteFoundationState.history = Object.freeze([]);
+      atlasMetalsQuoteFoundationState.intradayHistory = null;
       atlasMetalsQuoteFoundationState.spotHistory = Object.freeze([]);
       atlasMetalsQuoteFoundationState.contract = null;
       atlasMetalsQuoteFoundationState.quotes = Object.freeze([]);
@@ -23378,11 +23466,15 @@ async function atlasMetalsQuoteFoundationLoad() {
 async function atlasMetalsQuoteFoundationReloadHistory() {
   try {
     let history = null;
+    let intradayHistory = null;
     let spotHistory = null;
     if (atlasMetalsQuoteFoundationState.origin === "github_archive") {
-      [history, spotHistory] = await Promise.all([
+      [history, intradayHistory, spotHistory] = await Promise.all([
         atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.historyResponse)
           .then(atlasMetalsQuoteFoundationValidateHistoryResponse),
+        atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.intradayHistory)
+          .then(atlasMetalsQuoteFoundationValidateIntradayHistory)
+          .catch(() => null),
         atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.spotHistory)
           .then(atlasMetalsQuoteFoundationValidateSpotHistory)
           .catch(() => null)
@@ -23394,11 +23486,12 @@ async function atlasMetalsQuoteFoundationReloadHistory() {
       );
       history = atlasMetalsQuoteFoundationValidateHistoryResponse(route?.history);
     }
-    if (!history && !spotHistory) {
+    if (!history && !intradayHistory && !spotHistory) {
       atlasMetalsQuoteFoundationRenderChart();
       return false;
     }
     if (history) atlasMetalsQuoteFoundationState.history = history.snapshots;
+    if (intradayHistory) atlasMetalsQuoteFoundationState.intradayHistory = intradayHistory;
     if (spotHistory) atlasMetalsQuoteFoundationState.spotHistory = spotHistory.snapshots;
     atlasMetalsQuoteFoundationState.error = null;
     atlasMetalsQuoteFoundationRenderAnalysisHorizons();
@@ -23581,13 +23674,13 @@ function atlasParallelMarketRenderMetals() {
     button.setAttribute("aria-pressed", active ? "true" : "false");
     if (value === 1) {
       button.title = spotReading?.available
-        ? "Historique 24 h réel · archive Gold API automatique"
-        : `Historique 24 h en constitution · ${spotReading?.detail || "premier relevé attendu"}`;
+        ? "Historique 24 h réel · Yahoo Finance Futures intraday"
+        : `Intraday Futures en attente · ${spotReading?.detail || "première collecte GitHub Actions requise"}`;
       button.setAttribute(
         "aria-label",
         spotReading?.available
-          ? "24 heures mesurées par l’archive spot Gold API"
-          : "Historique 24 heures en constitution"
+          ? "24 heures mesurées par Yahoo Finance Futures intraday"
+          : "Historique Futures intraday 24 heures en attente"
       );
     }
   });
@@ -24244,14 +24337,14 @@ function atlasWorkspaceCapture() {
 
 
 /* =========================================================
-   Build 28.2.66 — Metals Multi-Horizon History Connection Lock
+   Build 28.2.67 — Metals Multi-Horizon History Connection Lock
    - 7 j / 30 j / 90 j / 1 an use real daily Futures snapshots.
    - 24 h remains explicitly unavailable without intraday history.
    - Gold API current quotes stay separate from Yahoo Futures history.
    ========================================================= */
 
 /* =========================================================
-   Build 28.2.66 — Comparison Memory Slots A / B / C
+   Build 28.2.67 — Comparison Memory Slots A / B / C
 
    Empty slot:
    - click = save current graph workspace.
@@ -27890,7 +27983,7 @@ function atlasAnalyticalTruthInit() {
 }
 
 /* =========================================================
-   Build 28.2.66 — Rapport Métaux public automatique
+   Build 28.2.67 — Rapport Métaux public automatique
    - GitHub Actions publie les cotations et l’historique public ;
    - l’Interface produit un rapport local déterministe ;
    - IndexedDB conserve le dernier rapport public valide sur chaque poste ;
@@ -28829,7 +28922,7 @@ atlasVersionAwarenessInit();
 
 
 /* =========================================================
-   Build 28.2.66 — Current Quotes / History Decoupled Lock
+   Build 28.2.67 — Current Quotes / History Decoupled Lock
    The existing global Graphique / Marché shortcuts become domain-aware.
    No Crypto graph, scanner, updater, cache or Metals data logic is changed.
    ========================================================= */
@@ -28892,7 +28985,7 @@ window.addEventListener("resize", () => {
 });
 
 /* =========================================================
-   Build 28.2.66 — METALS RESULTS VISIBILITY LOCK
+   Build 28.2.67 — METALS RESULTS VISIBILITY LOCK
    - Useful default: 7-day real Futures chart instead of an empty 24-hour panel.
    - One-time migration of the previously saved 24-hour Metals state.
    - Prominent active-metal result headline with percentage, sessions and dates.
