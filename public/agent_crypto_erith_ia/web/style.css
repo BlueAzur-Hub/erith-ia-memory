@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.84
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.85
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.84
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.84
+   ATLAS_ASSET_BUILD: 28.2.85
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.85
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.84";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.84";
+  --atlas-asset-build: "28.2.85";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.85";
 }
 
 :root{
@@ -25672,3 +25672,40 @@ input[type="checkbox"]{
   .learning-legacy-recovery-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:560px){.learning-legacy-recovery-summary{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   LAYER 28.2.85 — LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX
+   Automatic, post-write-verified recovery with explicit success/failure state.
+   ========================================================= */
+.learning-legacy-recovery-result{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  padding:11px;
+  border:1px solid rgba(74,205,255,.22);
+  border-radius:11px;
+  background:rgba(3,15,25,.72);
+}
+.learning-legacy-recovery-result>*{
+  min-width:0;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;
+  background:rgba(2,10,18,.62);
+  color:#c9dbe7;
+  font-size:9px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.learning-legacy-recovery-result>b{color:#fff0c8}
+.learning-legacy-recovery-result[data-state="ok"]{
+  border-color:rgba(67,224,159,.38);
+  background:rgba(23,116,86,.12);
+}
+.learning-legacy-recovery-result[data-state="error"]{
+  border-color:rgba(255,107,107,.42);
+  background:rgba(145,43,43,.12);
+}
+@media(max-width:900px){.learning-legacy-recovery-result{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.learning-legacy-recovery-result{grid-template-columns:1fr}}
