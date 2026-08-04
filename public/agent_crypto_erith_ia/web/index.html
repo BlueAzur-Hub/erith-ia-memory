@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.68" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.68" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.68 — METALS ALL-SERIES COMPARISON LOCK</title>
+  <meta name="atlas-build" content="28.2.69" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.69" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.69 — METALS EMBEDDED MARKET TABLE LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.68" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.69" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.68"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.69"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.68</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.69</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.68</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.69</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -462,6 +462,60 @@
                   <span class="atlas-metals-axis-y">VALEUR</span>
                   <span class="atlas-metals-axis-x">TEMPS</span>
                   <canvas id="atlasMetalsChartCanvas" aria-label="Courbes réelles des métaux sélectionnés" hidden></canvas>
+
+<aside class="atlas-metals-chart-market-panel"
+       id="atlasMetalsChartMarketPanel"
+       aria-label="Cours actuels et variations historiques des cinq métaux">
+  <header>
+    <div>
+      <strong>COURS MÉTAUX</strong>
+      <small id="atlasMetalsChartMarketOrigin">Gold API · cotations indicatives</small>
+    </div>
+    <time id="atlasMetalsChartMarketTime" datetime="">—</time>
+  </header>
+
+  <div class="atlas-metals-chart-market-columns" aria-hidden="true">
+    <span>Métal</span><span>Cours actuel</span><span>Variation</span><span>Tendance</span>
+  </div>
+
+  <div class="atlas-metals-chart-market-rows" role="list">
+    <button type="button" role="listitem" data-metals-chart-market-row="gold" style="--atlas-metal-series-color:#ffd05a">
+      <span class="atlas-metals-chart-market-identity"><i aria-hidden="true"></i><b>XAU</b><small>Or</small></span>
+      <strong data-metals-chart-market-price>—</strong>
+      <em data-metals-chart-market-change>—</em>
+      <canvas data-metals-chart-market-sparkline aria-hidden="true"></canvas>
+    </button>
+    <button type="button" role="listitem" data-metals-chart-market-row="silver" style="--atlas-metal-series-color:#b9c8d6">
+      <span class="atlas-metals-chart-market-identity"><i aria-hidden="true"></i><b>XAG</b><small>Argent</small></span>
+      <strong data-metals-chart-market-price>—</strong>
+      <em data-metals-chart-market-change>—</em>
+      <canvas data-metals-chart-market-sparkline aria-hidden="true"></canvas>
+    </button>
+    <button type="button" role="listitem" data-metals-chart-market-row="platinum" style="--atlas-metal-series-color:#57d7e8">
+      <span class="atlas-metals-chart-market-identity"><i aria-hidden="true"></i><b>XPT</b><small>Platine</small></span>
+      <strong data-metals-chart-market-price>—</strong>
+      <em data-metals-chart-market-change>—</em>
+      <canvas data-metals-chart-market-sparkline aria-hidden="true"></canvas>
+    </button>
+    <button type="button" role="listitem" data-metals-chart-market-row="palladium" style="--atlas-metal-series-color:#c78be6">
+      <span class="atlas-metals-chart-market-identity"><i aria-hidden="true"></i><b>XPD</b><small>Palladium</small></span>
+      <strong data-metals-chart-market-price>—</strong>
+      <em data-metals-chart-market-change>—</em>
+      <canvas data-metals-chart-market-sparkline aria-hidden="true"></canvas>
+    </button>
+    <button type="button" role="listitem" data-metals-chart-market-row="copper" style="--atlas-metal-series-color:#ff8150">
+      <span class="atlas-metals-chart-market-identity"><i aria-hidden="true"></i><b>HG</b><small>Cuivre</small></span>
+      <strong data-metals-chart-market-price>—</strong>
+      <em data-metals-chart-market-change>—</em>
+      <canvas data-metals-chart-market-sparkline aria-hidden="true"></canvas>
+    </button>
+  </div>
+
+  <footer>
+    <b id="atlasMetalsChartMarketPeriod">PÉRIODE ACTIVE · 7 J</b>
+    <span id="atlasMetalsChartMarketSource">Gold API actuel · Yahoo Finance Futures</span>
+  </footer>
+</aside>
                   <div class="atlas-metals-empty-chart-message" id="atlasMetalsChartMessage">
                     <b id="atlasMetalsChartMessageTitle">AUCUNE COTATION CONNECTÉE</b>
                     <span id="atlasMetalsChartMessageText">Le cadre est prêt. Aucune courbe ni valeur n’est inventée.</span>
@@ -1994,7 +2048,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 28.2.68</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Interface</span><b>Build 28.2.69</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
                   <article><span>Control Center</span><b>V2.2.0R1</b><small>GitHub Interface Lock · stack stable</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.8.0 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">llama3.2:latest · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2315,7 +2369,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.68 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.69 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3470,7 +3524,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.68</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.69</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3480,6 +3534,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.68"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.69"></script>
 </body>
 </html>

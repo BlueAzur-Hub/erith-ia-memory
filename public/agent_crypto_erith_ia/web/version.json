@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.68",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.68",
-  "published_at": "2026-08-04T02:22:53Z",
+  "build": "28.2.69",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.69",
+  "published_at": "2026-08-04T02:46:33Z",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -429,6 +429,33 @@
     "artificial_average_generated": false,
     "gold_api_current_quotes_mixed_with_futures": false,
     "math_core_changed": false,
+    "crypto_workspace_unchanged": true,
+    "collectors_unchanged": true,
+    "bridge_unchanged": true
+  },
+  "metals_embedded_market_table": {
+    "base": "28.2.68",
+    "state": "ready",
+    "title": "COURS MÉTAUX",
+    "assets": [
+      "XAU",
+      "XAG",
+      "XPT",
+      "XPD",
+      "HG"
+    ],
+    "current_quote_source": "Gold API indicative current quote",
+    "variation_source_24h": "Yahoo Finance continuous Futures intraday 5m",
+    "variation_source_7d_plus": "Yahoo Finance continuous Futures daily",
+    "periods": [
+      1,
+      7,
+      30,
+      90,
+      365
+    ],
+    "active_row_click_restores_real_price_view": true,
+    "sparkline_points_fabricated": false,
     "crypto_workspace_unchanged": true,
     "collectors_unchanged": true,
     "bridge_unchanged": true
