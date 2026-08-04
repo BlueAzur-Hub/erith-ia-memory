@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.78" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.78" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.78 — PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
+  <meta name="atlas-build" content="28.2.79" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.79" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.79 — INLINE EXPERT LEARNING & TRANSACTION PROOF LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.78" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.79" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.78"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.79"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.78</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.79</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.78</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.79</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.78 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.2.79 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2789,6 +2789,27 @@
         <div class="sim-scenario-output" id="simScenarioOutput">Ouvre une position fictive pour calculer les scénarios.</div>
       </section>
 
+      <section class="expert-roadmap-panel" id="expertLearningRoadmap" aria-labelledby="expertRoadmapTitle">
+        <div class="expert-roadmap-head">
+          <div>
+            <p class="eyebrow">◇ PARCOURS EXPERT · HORIZON 24 MOIS</p>
+            <h3 id="expertRoadmapTitle">Construire l’expertise sans brûler les étapes</h3>
+            <p>Progression locale et personnelle. Aucun score financier, aucune compétition et aucune fonction existante retirée.</p>
+          </div>
+          <span class="pill ok" id="expertRoadmapBadge">0 module pratiqué</span>
+        </div>
+        <div class="expert-roadmap-progress" aria-label="Progression du parcours expert">
+          <div><b id="expertRoadmapProgressText">0/11 modules découverts</b><span id="expertRoadmapMasteryText">0 pratiqué</span></div>
+          <div class="expert-roadmap-bar"><i id="expertRoadmapProgressBar"></i></div>
+        </div>
+        <div class="expert-roadmap-grid" id="expertRoadmapGrid"></div>
+        <div class="expert-roadmap-actions">
+          <button class="btn small primary" id="btnExportExpertRoadmap" type="button">Télécharger feuille de route .md</button>
+          <button class="btn small" id="btnResetExpertRoadmap" type="button">Réinitialiser le suivi</button>
+        </div>
+        <p class="rule-line">Les états servent uniquement à organiser les révisions : À découvrir → Découvert → Compris → Pratiqué → À revoir.</p>
+      </section>
+
       <div class="atlas-simulation-math" id="atlasSimulationMathPanel">
         <b>Atlas Simulation Math</b>
         <span>Simulation locale uniquement. Une simulation réussie n’autorise jamais une exécution réelle.</span>
@@ -3145,6 +3166,41 @@
           <pre class="sim-log" id="simLog">Aucune simulation lancée.</pre>
         </div>
       </div>
+
+      <section class="transaction-proof-panel" id="transactionProofLedger" aria-labelledby="transactionProofTitle">
+        <div class="transaction-proof-head">
+          <div>
+            <p class="eyebrow">⌁ TRANSACTION PROOF LEDGER · LOCAL</p>
+            <h3 id="transactionProofTitle">Prouver ce que la simulation a réellement fait</h3>
+            <p>Chaque achat, vente et refus reçoit un identifiant local. Aucun ordre réel, aucune adresse réelle et aucune donnée secrète.</p>
+          </div>
+          <span class="pill ok" id="transactionProofStatus">0 preuve</span>
+        </div>
+        <div class="transaction-proof-summary">
+          <article><b>Achats fictifs</b><span id="proofBuyCount">0</span></article>
+          <article><b>Ventes fictives</b><span id="proofSellCount">0</span></article>
+          <article><b>Refus de sécurité</b><span id="proofRefusalCount">0</span></article>
+          <article><b>Résultat réalisé</b><span id="proofRealizedPnl">0,00 €</span></article>
+        </div>
+        <div class="transaction-proof-actions">
+          <label>Filtre
+            <select id="transactionProofFilter">
+              <option value="all">Tout</option>
+              <option value="SIM_BUY">Achats</option>
+              <option value="SIM_SELL">Ventes</option>
+              <option value="REFUS">Refus</option>
+            </select>
+          </label>
+          <button class="btn small" id="btnExportProofMarkdown" type="button">Exporter preuves .md</button>
+          <button class="btn small" id="btnExportProofJSON" type="button">Exporter preuves JSON</button>
+        </div>
+        <div class="transaction-proof-table-wrap">
+          <table class="transaction-proof-table">
+            <thead><tr><th>Identifiant</th><th>Heure</th><th>Type</th><th>Actif</th><th>Montant</th><th>Prix / coûts</th><th>Résultat</th></tr></thead>
+            <tbody id="transactionProofRows"><tr><td colspan="7">Aucune preuve de simulation.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
 
       <p class="rule-line warn-lock">
         Verrou : la simulation ne remplace pas une stratégie. Tout passage réel devra exiger backend sécurisé, logs, limites, dry-run prolongé et validation humaine.
@@ -3641,20 +3697,25 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.78</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.79</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
   </main>
 
   <aside class="atlas-pedagogy-drawer" id="atlasPedagogyDrawer" aria-hidden="true" hidden>
-    <div class="atlas-pedagogy-dialog" role="dialog" aria-modal="true" aria-labelledby="atlasPedagogyTitle">
+    <div class="atlas-pedagogy-dialog" role="complementary" aria-labelledby="atlasPedagogyTitle">
       <div class="atlas-pedagogy-head">
-        <div><p class="eyebrow">INFO PÉDAGOGIQUE DYNAMIQUE</p><h2 id="atlasPedagogyTitle">Explication</h2></div>
-        <button type="button" id="btnClosePedagogy" aria-label="Fermer l’explication">×</button>
+        <div><p class="eyebrow">AIDE CONTEXTUELLE · NON BLOQUANTE</p><h2 id="atlasPedagogyTitle">Explication</h2></div>
+        <div class="atlas-pedagogy-actions">
+          <button type="button" id="btnMinimizePedagogy" aria-label="Réduire ou développer l’aide" title="Réduire ou développer">−</button>
+          <button type="button" id="btnClosePedagogy" aria-label="Fermer l’explication" title="Fermer">×</button>
+        </div>
       </div>
-      <div class="atlas-pedagogy-body" id="atlasPedagogyBody"></div>
-      <p class="atlas-pedagogy-foot">Définition + état actuel + source ou hypothèse. Aucune recommandation financière.</p>
+      <div class="atlas-pedagogy-collapsible">
+        <div class="atlas-pedagogy-body" id="atlasPedagogyBody"></div>
+        <p class="atlas-pedagogy-foot">Définition + état actuel + source ou hypothèse. Aucune recommandation financière.</p>
+      </div>
     </div>
   </aside>
 
@@ -3662,6 +3723,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.78"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.79"></script>
 </body>
 </html>
