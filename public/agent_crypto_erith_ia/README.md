@@ -1,7 +1,7 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.2.91  
-**Mission du Build :** Foundations Learning Path 01–03 & Beginner Guidance Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.2.92  
+**Mission du Build :** Full Learning Journey Reset & Module 01 Restart Lock
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
 
@@ -25,7 +25,7 @@ Elle ne permet pas de :
 - activer le levier, la marge, les futures ou le short ;
 - transformer une observation en recommandation financière.
 
-## Build 28.2.91 — Parcours débutants 01 à 03
+## Build 28.2.92 — Parcours débutants 01 à 03
 
 Le Build remplace les consignes génériques des trois premiers modules par des parcours détaillés.
 
@@ -84,7 +84,7 @@ Le Build conserve :
 
 Une session déjà archivée n’est pas réécrite. Le nouveau parcours peut être relu sans falsifier l’ancienne preuve.
 
-Pour un brouillon actif créé avant le Build 28.2.91, le bouton **Recommencer les étapes 2 à 4** remet uniquement ces étapes et leurs preuves à zéro. Les notes, la conclusion et les archives restent conservées.
+Pour un brouillon actif créé avant le Build 28.2.92, le bouton **Recommencer les étapes 2 à 4** remet uniquement ces étapes et leurs preuves à zéro. Les notes, la conclusion et les archives restent conservées.
 
 ## Publication
 
@@ -104,7 +104,7 @@ Après publication :
 
 1. attendre GitHub Pages ;
 2. effectuer `Ctrl + F5` dans Firefox ;
-3. vérifier `Build 28.2.91` ;
+3. vérifier `Build 28.2.92` ;
 4. ouvrir `Simulation` puis le Cockpit d’apprentissage ;
 5. utiliser **Recommencer les étapes 2 à 4** si l’ancien brouillon du Module 03 est encore à 2/5 ou 3/5 ;
 6. vérifier le parcours détaillé avant de reprendre l’exercice.
@@ -118,3 +118,23 @@ Une hypothèse de frais n’est pas un tarif réel.
 Une simulation fictive n’est jamais une autorisation financière.
 Aucun argent réel, aucune clé API, aucun wallet.
 ```
+
+
+## Build 28.2.92 — Recommencer tout depuis le Module 01
+
+Le Cockpit ajoute une commande distincte de « Recommencer ce module » :
+
+**Recommencer tout depuis le Module 01**
+
+Cette commande applique deux confirmations successives, dont la saisie exacte `RECOMMENCER MODULE 01`. Avant la première écriture d’effacement, elle crée une sauvegarde JSON téléchargeable et en conserve une copie exacte dans le carnet IndexedDB.
+
+Elle remet uniquement à zéro :
+
+- le brouillon pédagogique courant ;
+- les sessions pédagogiques archivées ;
+- les notes et conclusions ;
+- les états de progression des 11 modules.
+
+Elle ouvre ensuite `01 · Marché et données` à `0/5 étapes` avec une progression de `0 %`.
+
+Elle ne touche pas au Market, aux Métaux, au Bridge, au portefeuille fictif, aux preuves de simulation, aux collecteurs ni aux réglages généraux. Le marqueur de reset empêche également l’ancienne récupération automatique de recréer les sessions volontairement effacées.
