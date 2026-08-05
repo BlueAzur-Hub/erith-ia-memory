@@ -1,206 +1,120 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.2.87  
-**Statut :** observatoire de marchés, simulateur fictif et cockpit d’apprentissage  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.2.91  
+**Mission du Build :** Foundations Learning Path 01–03 & Beginner Guidance Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
 
 ## Mission
 
-Agent-Crypto est une interface pédagogique et prudente destinée à apprendre progressivement le fonctionnement des cryptomonnaies sans utiliser d’argent réel.
+Agent-Crypto est une interface pédagogique destinée à apprendre progressivement les cryptomonnaies avec des données publiques et un portefeuille entièrement fictif.
 
-Elle permet de :
+L’interface permet notamment de :
 
-- observer des données de marché publiques ;
-- distinguer source, fraîcheur, archive, calcul et hypothèse ;
-- étudier les prix, variations, volumes, liquidité et capitalisation ;
-- simuler des opérations Spot fictives ;
-- comprendre les frais, le spread, le slippage et le seuil de rentabilité ;
-- suivre un parcours expert sur vingt-quatre mois ;
-- conserver des notes, conclusions et preuves dans le navigateur ;
-- étudier la sécurité, les retraits, les arnaques et la traçabilité.
+- lire les prix, variations, volumes, sources et heures de collecte ;
+- comprendre le Spot, les ordres, l’exécution et les positions ;
+- simuler des opérations fictives ;
+- étudier les frais, les écarts d’exécution, l’exposition et le seuil de rentabilité ;
+- conserver localement les notes, conclusions, sessions et preuves pédagogiques.
 
 Elle ne permet pas de :
 
 - déclencher un ordre réel ;
-- connecter un wallet réel ;
-- utiliser une clé privée ou une phrase de récupération ;
-- utiliser une clé API d’exchange ;
+- connecter un wallet ou une clé privée ;
+- connecter une clé API d’exchange ;
 - activer le levier, la marge, les futures ou le short ;
-- fournir une promesse de gain ou une recommandation financière personnelle.
+- transformer une observation en recommandation financière.
 
-## Build 28.2.87 — Cockpit guidé
+## Build 28.2.91 — Parcours débutants 01 à 03
 
-Le Build 28.2.87 corrige le parcours utilisateur du cockpit.
+Le Build remplace les consignes génériques des trois premiers modules par des parcours détaillés.
 
-Une seule action principale est désormais affichée à chaque étape :
+Chaque étape indique désormais :
 
-1. Lire la leçon.
-2. Ouvrir la bonne zone.
-3. Faire l’exercice fictif.
-4. Vérifier le résultat.
-5. Écrire la conclusion.
-6. Terminer et archiver.
-7. Passer au module suivant.
+1. la notion étudiée ;
+2. sa définition en français débutant ;
+3. le nom exact du panneau ;
+4. le nom exact du bouton ou du contrôle ;
+5. l’action à effectuer ;
+6. la raison de l’action ;
+7. le résultat attendu ;
+8. l’endroit où lire ce résultat ;
+9. la manière de l’interpréter ;
+10. ce qu’il faut retenir avant de continuer.
 
-Les cases du parcours sont des preuves automatiques. Elles ne sont plus des commandes à cocher manuellement.
+### Module 01 — Marché et données
 
-Après archivage, une carte de fin affiche immédiatement :
+- Livecheck nommé précisément ;
+- lecture guidée de la ligne Bitcoin dans `MARKET SNAPSHOT` ;
+- distinction Prix / 24 h / 7 j ;
+- contrôle de la source et de l’heure ;
+- distinction entre observation et prédiction.
 
-- le module terminé ;
-- les cinq étapes validées ;
-- le nombre de caractères des notes ;
-- le nombre de caractères de la conclusion ;
-- la progression globale ;
-- le prochain module ;
-- le bouton de continuation.
+### Module 02 — Spot et carnet d’ordres
 
-Le Build répare également l’ancien cas où le bouton `Continuer mon parcours` pouvait rouvrir une séance déjà archivée. La séance est reconnue par son identifiant, restaurée comme terminée et n’est jamais dupliquée.
+- distinction ordre / exécution / position ;
+- carnet d’ordres pédagogique Bid / Ask / Spread ;
+- exercice ordre au marché / ordre limite ;
+- achat fictif BTC 50 € avec le bouton réel du Mode École ;
+- lecture de la quantité et du prix d’entrée.
 
-## Parcours expert
+### Module 03 — Frais et gestion du risque
 
-Le cursus comprend onze modules :
+- distinction capital / montant engagé / exposition ;
+- chargement explicite de l’exemple dans `Coûts pédagogiques` ;
+- création explicite de la position fictive BTC 50 € ;
+- scénarios −3 % puis +5 % ;
+- traduction de `P/L` en gain ou perte ;
+- distinction résultat avant frais / résultat après frais.
 
-1. Marché et données.
-2. Spot et carnet d’ordres.
-3. Frais et gestion du risque.
-4. Sécurité du compte.
-5. Portefeuilles et retraits.
-6. Stablecoins et tokenomics.
-7. Smart contracts et DeFi.
-8. Staking et rendements.
-9. Dérivés et liquidation.
-10. Arnaques et investigation.
-11. Traçabilité et fiscalité.
+## Compatibilité et conservation
 
-La progression est personnelle, locale et non compétitive.
+Le Build conserve :
 
-## Simulation fictive
+- les clés et le schéma IndexedDB ;
+- les clés `localStorage` ;
+- les sessions déjà archivées ;
+- les notes et conclusions existantes ;
+- les profils fictifs 100 € et 1 000 € ;
+- les marchés Crypto ;
+- les Métaux ;
+- le Decision Board ;
+- le Bridge ;
+- les collecteurs et workflows.
 
-Deux profils séparés sont conservés.
+Une session déjà archivée n’est pas réécrite. Le nouveau parcours peut être relu sans falsifier l’ancienne preuve.
 
-### Solo Progression 1 000 €
-
-- capital fictif : 1 000 € ;
-- ticket conseillé : 50 € ;
-- maximum par opération : 100 € ;
-- exposition maximale : 300 € ;
-- réserve minimale : 700 € ;
-- actifs autorisés : BTC, ETH et SOL.
-
-### École 100 €
-
-- capital fictif : 100 € ;
-- ticket conseillé : 5 € ;
-- maximum par opération : 10 € ;
-- exposition maximale : 30 € ;
-- réserve minimale : 70 € ;
-- actifs autorisés : BTC, ETH et SOL.
-
-Chaque profil possède son portefeuille, ses positions et son journal local. Changer de profil ne détruit pas l’autre simulation.
-
-## Stockage pédagogique
-
-Le carnet d’apprentissage utilise IndexedDB :
-
-- base : `agent_crypto_learning_notebook` ;
-- magasin : `notebook` ;
-- enregistrement principal : `learning_notebook_primary`.
-
-IndexedDB conserve :
-
-- la séance active ;
-- les sessions archivées ;
-- les notes libres ;
-- les conclusions personnelles ;
-- la progression des onze modules ;
-- la preuve de récupération des anciennes données.
-
-Les anciennes sources de récupération restent conservées en lecture seule :
-
-- `agent_crypto_learning_journey_cockpit_28_2_81` ;
-- `agent_crypto_expert_roadmap_28_2_79`.
-
-Le stockage des profils de simulation reste séparé et n’est pas migré par le cockpit.
-
-## Architecture publique
-
-```text
-public/agent_crypto_erith_ia/
-├── README.md
-├── data/
-│   ├── crypto/
-│   ├── metals/
-│   ├── news/
-│   ├── charts/
-│   └── history/
-└── web/
-    ├── index.html
-    ├── style.css
-    ├── app.js
-    ├── version.json
-    ├── market_asset_registry.json
-    ├── market_source_registry.json
-    ├── market_data_contract.json
-    ├── bridge_market_adapter_contract.json
-    ├── metals_structural_registry.json
-    └── metals_quote_adapter_contract.json
-```
-
-Le Build 28.2.87 remplace uniquement :
-
-```text
-public/agent_crypto_erith_ia/README.md
-public/agent_crypto_erith_ia/web/index.html
-public/agent_crypto_erith_ia/web/style.css
-public/agent_crypto_erith_ia/web/app.js
-public/agent_crypto_erith_ia/web/version.json
-```
-
-## Données et vérité
-
-Règles permanentes :
-
-```text
-Pas de source réelle ou d’archive publique valide = pas de prix affirmé.
-Pas de données récupérées = pas de tableau chiffré inventé.
-Une simulation fictive n’est jamais une autorisation financière.
-Une hypothèse de frais n’est jamais présentée comme un tarif contractuel.
-Spot et Futures restent distingués.
-Les données Crypto ne remplacent jamais les données Métaux.
-```
-
-Les collecteurs publics, les workflows GitHub Actions, les registres de sources, le Decision Board, l’espace Métaux et le Bridge ne sont pas modifiés par le Build 28.2.87.
-
-## Interface publique
-
-Après publication par Christophe :
-
-```text
-https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/web/index.html
-```
+Pour un brouillon actif créé avant le Build 28.2.91, le bouton **Recommencer les étapes 2 à 4** remet uniquement ces étapes et leurs preuves à zéro. Les notes, la conclusion et les archives restent conservées.
 
 ## Publication
 
-L’assistante prépare les fichiers localement. Christophe reste la seule personne qui publie dans GitHub.
+Christophe reste la seule personne qui publie les fichiers dans GitHub.
 
-Après remplacement des cinq fichiers :
+Fichiers à remplacer :
 
-1. attendre la publication GitHub Pages ;
-2. ouvrir l’interface dans le même profil Firefox ;
-3. effectuer un rechargement forcé ;
-4. vérifier `Build 28.2.87` ;
-5. ouvrir le cockpit ;
-6. vérifier que la séance Spot archivée affiche une carte de fin ;
-7. cliquer `Passer au module 03 — Frais et gestion du risque` ;
-8. confirmer que les anciennes notes et la progression restent intactes.
+```text
+public/agent_crypto_erith_ia/README.md
+public/agent_crypto_erith_ia/web/app.js
+public/agent_crypto_erith_ia/web/index.html
+public/agent_crypto_erith_ia/web/style.css
+public/agent_crypto_erith_ia/web/version.json
+```
 
-## Limites de validation
+Après publication :
 
-La livraison fournit des contrôles statiques et un test comportemental ciblé dans Chromium par injection de l’interface et d’un contrat IndexedDB en mémoire.
+1. attendre GitHub Pages ;
+2. effectuer `Ctrl + F5` dans Firefox ;
+3. vérifier `Build 28.2.91` ;
+4. ouvrir `Simulation` puis le Cockpit d’apprentissage ;
+5. utiliser **Recommencer les étapes 2 à 4** si l’ancien brouillon du Module 03 est encore à 2/5 ou 3/5 ;
+6. vérifier le parcours détaillé avant de reprendre l’exercice.
 
-La validation publique définitive reste le test effectué par Christophe dans son profil Firefox/Ryzen après publication.
+## Vérité et sécurité
 
-## Principe directeur
-
-> Comprendre avant d’exécuter, simuler avant de risquer, vérifier avant de confirmer.
+```text
+Pas de source réelle valide = pas de prix affirmé.
+Pas de position fictive = pas de scénario calculé.
+Une hypothèse de frais n’est pas un tarif réel.
+Une simulation fictive n’est jamais une autorisation financière.
+Aucun argent réel, aucune clé API, aucun wallet.
+```
