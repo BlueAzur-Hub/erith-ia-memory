@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.00 — LIVECHECK STEP 3 MARKET TARGET LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.01 — CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.00";
-const ATLAS_BUILD = "28.3.00";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.00";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.01";
+const ATLAS_BUILD = "28.3.01";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.01";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.00";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.00";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.00";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.01";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.01";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.01";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12751,7 +12751,11 @@ function handleFoundationAction(action) {
     if (action === "market_answer_prudent") {
       if (!state.liveOk || !String(els.sourceName?.textContent || "").trim() || String(els.sourceTime?.textContent || "—").trim() === "—") return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
       cockpit.practice_evidence.market_prudent = true; cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); return foundationFeedback(true, "Conclusion prudente validée", "Les valeurs décrivent les périodes observées sans prédire le prochain mouvement.");
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      focusLearningConclusion();
+      setActionFeedback("ok", "Étape 4 validée · conclusion personnelle", "Le champ exact « Ce que je retiens » est maintenant ciblé. Utilise le repère autonome affiché au-dessus du champ ; aucune IA n’est nécessaire.", els.learningSessionNote);
+      return;
     }
   }
   if (module.key === "spot") {
@@ -12970,7 +12974,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.00 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.01 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
@@ -13096,9 +13100,11 @@ function renderLearningJourneyCockpit() {
     cockpit.practice_proof_id = latest.proof_id || null;
     cockpit.practice_completed_at = cockpit.practice_completed_at || latest.time || new Date().toISOString();
   }
-  if (!cockpit.completed_at && String(cockpit.takeaway || "").trim() && !cockpit.steps.note) {
-    cockpit.steps.note = true;
-    stateChanged = true;
+  if (!cockpit.completed_at) {
+    const noteBeforeRepair = cockpit.steps.note === true;
+    if (foundationIsActive(cockpit.module_key)) foundationApplyConclusionValidation(cockpit);
+    else if (String(cockpit.takeaway || "").trim()) cockpit.steps.note = true;
+    if (cockpit.steps.note !== noteBeforeRepair) stateChanged = true;
   }
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   if (stateChanged) saveLearningCockpitState(cockpit);
@@ -13248,15 +13254,24 @@ function markIntegratedLessonRead() {
 function saveLearningSessionNotes(value, field = "notes_free") {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at) return;
+  const noteWasReady = cockpit.steps.note === true;
   if (field === "takeaway") {
     cockpit.takeaway = String(value || "");
-    if (!foundationIsActive(cockpit.module_key)) cockpit.steps.note = Boolean(cockpit.takeaway.trim());
+    if (foundationIsActive(cockpit.module_key)) foundationApplyConclusionValidation(cockpit);
+    else cockpit.steps.note = Boolean(cockpit.takeaway.trim());
   } else {
     cockpit.notes_free = String(value || "");
   }
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(cockpit);
+  if (field === "takeaway" && foundationIsActive(cockpit.module_key)) {
+    renderLearningJourneyCockpit();
+    if (!noteWasReady && cockpit.steps.note === true) {
+      setActionFeedback("ok", "Conclusion enregistrée · 5/5", "La dernière étape est validée automatiquement. Le bouton principal permet maintenant de terminer et archiver la session.", els.learningSessionNote);
+    }
+    return;
+  }
   renderLearningTextCounters(cockpit);
   const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
   if (els.learningSessionProgress) els.learningSessionProgress.textContent = `${completedSteps}/5 étapes`;
