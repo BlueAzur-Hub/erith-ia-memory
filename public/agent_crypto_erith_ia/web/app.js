@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.97 — FULL RESTART LEARNING AND ACTIVE SIMULATION LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.98 — INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.97";
-const ATLAS_BUILD = "28.2.97";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.97";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.98";
+const ATLAS_BUILD = "28.2.98";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.98";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.97";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.98";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11664,11 +11664,11 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.97";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.97";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.97";
+const ATLAS_LEARNING_FLOW_BUILD = "28.2.98";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.98";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.98";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
-const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.97";
+const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
 const ATLAS_LEARNING_DB_NAME = "agent_crypto_learning_notebook";
@@ -11775,8 +11775,10 @@ async function atlasLearningDbReadRecord() {
   const db = await atlasLearningDbOpen();
   try {
     const tx = db.transaction(ATLAS_LEARNING_DB_STORE, "readonly");
-    const record = await atlasLearningDbRequest(tx.objectStore(ATLAS_LEARNING_DB_STORE).get(ATLAS_LEARNING_DB_RECORD_ID));
-    await atlasLearningDbTransactionDone(tx);
+    const done = atlasLearningDbTransactionDone(tx);
+    const request = tx.objectStore(ATLAS_LEARNING_DB_STORE).get(ATLAS_LEARNING_DB_RECORD_ID);
+    const record = await atlasLearningDbRequest(request);
+    await done;
     return record || null;
   } finally { db.close(); }
 }
@@ -11808,8 +11810,10 @@ async function atlasLearningDbWriteVerified(record = atlasLearningNotebookCache)
   try {
     db = await atlasLearningDbOpen();
     const tx = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
-    tx.objectStore(ATLAS_LEARNING_DB_STORE).put(payload);
-    await atlasLearningDbTransactionDone(tx);
+    const done = atlasLearningDbTransactionDone(tx);
+    const request = tx.objectStore(ATLAS_LEARNING_DB_STORE).put(payload);
+    await atlasLearningDbRequest(request);
+    await done;
     db.close(); db = null;
     const readBack = await atlasLearningDbReadRecord();
     const actual = readBack ? atlasLearningNotebookDigest(readBack) : "";
@@ -12660,8 +12664,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.97 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Pour reprendre proprement, « Recommencer ce module depuis l’étape 1 » efface la leçon lue, les cinq étapes, les notes, la conclusion et les preuves du brouillon actif. Les sessions archivées et les autres modules restent intacts.</span>`
-    : `<b>Parcours 28.2.97 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.2.98 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.2.98 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12892,7 +12896,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.97 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.98 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
@@ -13513,331 +13517,318 @@ function newLearningSession() {
   return restartLearningModuleFromStepOne({ source:"session_options" });
 }
 
-function learningFullResetStamp() {
-  return new Date().toISOString().replace(/[:.]/g, "-");
-}
-function learningFullResetBackupPayload() {
-  if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
-  if (!state.sim) loadSimulation();
-  const current = loadLearningCockpitState();
-  if (!current.completed_at) {
-    if (els.learningSessionNotesFree) current.notes_free = String(els.learningSessionNotesFree.value || "");
-    if (els.learningSessionNote) {
-      current.takeaway = String(els.learningSessionNote.value || "");
-      current.steps.note = Boolean(current.takeaway.trim());
+const AGENT_CRYPTO_RESET_SUCCESS_KEY = "agent_crypto_internal_reset_success_28_2_98";
+const AGENT_CRYPTO_RESET_ERROR_PREFIX = "RESET-AGENT-CRYPTO";
+
+function agentCryptoResetLocalStorageTargets() {
+  const exact = new Set([
+    ATLAS_LEARNING_COCKPIT_KEY,
+    ATLAS_LEARNING_HISTORY_KEY,
+    ATLAS_EXPERT_ROADMAP_KEY,
+    ATLAS_LEARNING_PREVIOUS_COCKPIT_KEY,
+    ATLAS_LEARNING_PREVIOUS_ROADMAP_KEY,
+    ATLAS_LEARNING_MIGRATION_KEY,
+    ATLAS_LEARNING_MIGRATION_BACKUP_KEY,
+    ATLAS_LEARNING_RECOVERY_AUDIT_KEY,
+    ATLAS_LEARNING_HELP_MODE_KEY,
+    ATLAS_PEDAGOGY_VIEW_KEY,
+    SIM_ACTIVE_PROFILE_STORAGE_KEY,
+    SIM_LEGACY_STORAGE_KEY,
+    SIM_COST_STORAGE_KEY,
+    SIM_COST_STORAGE_KEY_PREVIOUS
+  ]);
+  Object.values(SIM_PROFILES).forEach(profile => exact.add(simulationStorageKey(profile)));
+  const prefixes = [
+    "agent_crypto_learning_",
+    "agent_crypto_expert_roadmap_",
+    SIM_STORAGE_PREFIX
+  ];
+  const targets = [];
+  try {
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key && (exact.has(key) || prefixes.some(prefix => key.startsWith(prefix)))) targets.push(key);
     }
-    atlasLearningNotebookCache.cockpit = atlasLearningNormalizeCockpit(current, loadLearningHistory().length);
+  } catch (error) {
+    const failure = new Error(String(error?.message || error || "lecture localStorage impossible"));
+    failure.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-LOCALSTORAGE-LIST`;
+    throw failure;
   }
-  const notebook = atlasLearningNotebookPayload(atlasLearningNotebookCache);
-  delete notebook.reset;
-  delete notebook.last_reset_backup;
-  return {
-    schema:"agent_crypto_full_restart_backup_v2",
-    backup_id:`FULL-RESTART-BACKUP-${Date.now().toString(36).toUpperCase()}`,
-    created_at:new Date().toISOString(),
-    source_build:ATLAS_BUILD,
-    purpose:"Sauvegarde automatique créée avant de repartir entièrement depuis le Module 01 avec une simulation fictive propre.",
-    restored_automatically:false,
-    scope:{
-      included:["brouillon pédagogique", "sessions archivées", "notes", "conclusions", "progression des modules", "diagnostic de récupération", "profil fictif actif", "positions fictives", "gain ou perte réalisé", "journal de simulation", "hypothèses de coûts", "scénario temporaire"],
-      excluded:["Market", "Métaux", "Bridge", "autre profil de simulation", "collecteurs", "réglages généraux"]
-    },
-    active_simulation:{
-      profile_key:SIM_PROFILE.key,
-      profile_label:SIM_PROFILE.label,
-      storage_key:simulationStorageKey(),
-      state:atlasLearningClone(state.sim),
-      cost_assumptions:loadSimCostAssumptions(),
-      scenario_pct:atlasSimulationScenarioPct
-    },
-    notebook
-  };
-}
-function learningFullResetVerification() {
-  const cockpit = loadLearningCockpitState();
-  const history = loadLearningHistory();
-  const roadmap = loadExpertRoadmap();
-  const allStepsEmpty = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] !== true);
-  const allModulesNew = ATLAS_EXPERT_ROADMAP_MODULES.every(module => {
-    const item = roadmap.modules?.[module.key];
-    return item?.status === "new" && !String(item?.note || "").trim();
-  });
-  const backup = atlasLearningNotebookCache?.last_reset_backup || null;
-  const marker = atlasLearningNotebookCache?.reset || {};
-  return {
-    ok:Boolean(
-      cockpit.module_key === "market"
-      && cockpit.completed_at === null
-      && cockpit.completed_sessions === 0
-      && history.length === 0
-      && allStepsEmpty
-      && !String(cockpit.notes_free || "").trim()
-      && !String(cockpit.takeaway || "").trim()
-      && allModulesNew
-      && marker.status === "active"
-      && marker.block_legacy_reimport === true
-      && backup?.backup_id === marker.backup_id
-    ),
-    module_key:cockpit.module_key,
-    completed_sessions:cockpit.completed_sessions,
-    history_length:history.length,
-    all_steps_empty:allStepsEmpty,
-    notes_empty:!String(cockpit.notes_free || "").trim(),
-    takeaway_empty:!String(cockpit.takeaway || "").trim(),
-    all_modules_new:allModulesNew,
-    backup_id:backup?.backup_id || null,
-    marker_status:marker.status || null,
-    block_legacy_reimport:marker.block_legacy_reimport === true
-  };
-}
-function resetSimulationEducationState(source = "full_restart") {
-  const costs = { ...SIM_COST_DEFAULTS, source };
-  try { localStorage.setItem(SIM_COST_STORAGE_KEY, JSON.stringify(costs)); } catch {}
-  hydrateSimCostInputs();
-  atlasSimulationScenarioPct = 0;
-  document.querySelectorAll("[data-sim-scenario]").forEach(button => button.classList.remove("active"));
-  renderSimulationEducation();
-  renderSimulationScenario();
-  return costs;
-}
-function activeSimulationResetVerification() {
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem(simulationStorageKey()) || "null"); } catch {}
-  const costs = loadSimCostAssumptions();
-  const live = state.sim || {};
-  const positionsEmpty = Object.keys(live.positions || {}).length === 0;
-  const storedPositionsEmpty = stored && Object.keys(stored.positions || {}).length === 0;
-  const costsEmpty = [costs.buyFeePct, costs.sellFeePct, costs.entryImpactPct, costs.exitImpactPct].every(value => atlasFiniteNumber(value, 0) === 0) && costs.confirmed !== true;
-  return {
-    ok:Boolean(
-      atlasFiniteNumber(live.cash, -1) === SIM_PROFILE.startCash
-      && atlasFiniteNumber(live.realizedPnl, 1) === 0
-      && positionsEmpty
-      && stored
-      && atlasFiniteNumber(stored.cash, -1) === SIM_PROFILE.startCash
-      && atlasFiniteNumber(stored.realizedPnl, 1) === 0
-      && storedPositionsEmpty
-      && costsEmpty
-      && atlasSimulationScenarioPct === 0
-    ),
-    profile_key:SIM_PROFILE.key,
-    cash:atlasFiniteNumber(live.cash, -1),
-    stored_cash:atlasFiniteNumber(stored?.cash, -1),
-    positions_empty:positionsEmpty,
-    stored_positions_empty:Boolean(storedPositionsEmpty),
-    realized_pnl:atlasFiniteNumber(live.realizedPnl, 0),
-    costs_empty:costsEmpty,
-    scenario_pct:atlasSimulationScenarioPct
-  };
+  return [...new Set(targets)];
 }
 
-function resetLearningSimulationFromCockpit() {
-  if (!state.sim) loadSimulation();
-  const profile = SIM_PROFILE;
-  const positionsBefore = Object.keys(state.sim?.positions || {}).length;
-  const cashBefore = Number(state.sim?.cash || 0);
-  const message = [
-    `Réinitialiser uniquement la simulation fictive « ${profile.label} » ?`,
-    "",
-    "SERA REMIS À ZÉRO :",
-    `• capital virtuel à ${fmtEUR.format(profile.startCash)}`,
-    "• positions fictives",
-    "• gain ou perte réalisé",
-    "• journal de simulation du profil actif",
-    "",
-    "SERA CONSERVÉ :",
-    "• parcours pédagogique et ses archives",
-    "• Market, Métaux et Bridge",
-    "• collecteurs et réglages généraux",
-    "• l’autre profil de simulation"
-  ].join("\n");
-  if (typeof window !== "undefined" && !window.confirm(message)) {
-    setActionFeedback("info", "Reset simulation annulé", "Aucune donnée de simulation n’a été modifiée.", document.getElementById("learningSessionPlan"));
-    return { ok:false, cancelled:true };
+function agentCryptoSnapshotLocalStorage(keys) {
+  const snapshot = {};
+  for (const key of keys) {
+    try { snapshot[key] = localStorage.getItem(key); }
+    catch (error) {
+      const failure = new Error(String(error?.message || error || "lecture localStorage impossible"));
+      failure.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-LOCALSTORAGE-SNAPSHOT`;
+      throw failure;
+    }
   }
-  resetSimulation();
-  renderSchoolProfileLabels();
-  renderLearningJourneyCockpit();
-  const options = document.getElementById("learningSessionOptions");
-  if (options) options.open = false;
-  const result = {
-    ok:true,
+  return snapshot;
+}
+
+function agentCryptoRestoreLocalStorage(snapshot = {}) {
+  const failures = [];
+  for (const [key, value] of Object.entries(snapshot)) {
+    try {
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    } catch (error) {
+      failures.push({ key, error:String(error?.message || error) });
+    }
+  }
+  return { ok:failures.length === 0, failures };
+}
+
+function agentCryptoClearLocalStorage(keys) {
+  const failures = [];
+  for (const key of keys) {
+    try {
+      localStorage.removeItem(key);
+      if (localStorage.getItem(key) !== null) failures.push({ key, error:"clé encore présente après suppression" });
+    } catch (error) {
+      failures.push({ key, error:String(error?.message || error) });
+    }
+  }
+  if (failures.length) {
+    const failure = new Error("certaines données Agent-Crypto n’ont pas pu être supprimées");
+    failure.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-LOCALSTORAGE-CLEAR`;
+    failure.details = failures;
+    throw failure;
+  }
+  return { ok:true, removed:keys };
+}
+
+function agentCryptoResetDbRequest(request, code) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => {
+      const failure = new Error(String(request.error?.message || request.error || "requête IndexedDB impossible"));
+      failure.code = code;
+      reject(failure);
+    };
+  });
+}
+
+function agentCryptoResetDbTransaction(transaction, code) {
+  return new Promise((resolve, reject) => {
+    transaction.oncomplete = () => resolve(true);
+    transaction.onerror = () => {
+      const failure = new Error(String(transaction.error?.message || transaction.error || "transaction IndexedDB impossible"));
+      failure.code = code;
+      reject(failure);
+    };
+    transaction.onabort = () => {
+      const failure = new Error(String(transaction.error?.message || transaction.error || "transaction IndexedDB annulée"));
+      failure.code = code;
+      reject(failure);
+    };
+  });
+}
+
+async function agentCryptoResetReadNotebook() {
+  let db = null;
+  try {
+    db = await atlasLearningDbOpen();
+    const transaction = db.transaction(ATLAS_LEARNING_DB_STORE, "readonly");
+    const done = agentCryptoResetDbTransaction(transaction, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-READ-TRANSACTION`);
+    const request = transaction.objectStore(ATLAS_LEARNING_DB_STORE).get(ATLAS_LEARNING_DB_RECORD_ID);
+    const record = await agentCryptoResetDbRequest(request, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-READ`);
+    await done;
+    return record || null;
+  } catch (error) {
+    if (!error.code) error.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-OPEN`;
+    throw error;
+  } finally {
+    if (db) db.close();
+  }
+}
+
+async function agentCryptoResetWriteNotebook(record) {
+  let db = null;
+  try {
+    db = await atlasLearningDbOpen();
+    const transaction = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
+    const done = agentCryptoResetDbTransaction(transaction, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-WRITE-TRANSACTION`);
+    const request = transaction.objectStore(ATLAS_LEARNING_DB_STORE).put(record);
+    await agentCryptoResetDbRequest(request, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-WRITE`);
+    await done;
+    return true;
+  } catch (error) {
+    if (!error.code) error.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-OPEN`;
+    throw error;
+  } finally {
+    if (db) db.close();
+  }
+}
+
+async function agentCryptoResetDeleteNotebookRecord() {
+  let db = null;
+  try {
+    db = await atlasLearningDbOpen();
+    const transaction = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
+    const done = agentCryptoResetDbTransaction(transaction, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-ROLLBACK-TRANSACTION`);
+    const request = transaction.objectStore(ATLAS_LEARNING_DB_STORE).delete(ATLAS_LEARNING_DB_RECORD_ID);
+    await agentCryptoResetDbRequest(request, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-ROLLBACK-DELETE`);
+    await done;
+    return true;
+  } finally {
+    if (db) db.close();
+  }
+}
+
+function agentCryptoBlankNotebook(resetAt) {
+  const cockpit = defaultLearningCockpitState();
+  cockpit.completed_sessions = 0;
+  cockpit.module_key = "market";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  cockpit.restart_build = ATLAS_BUILD;
+  cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  cockpit.last_action = null;
+  return atlasLearningNormalizeNotebook({
+    id:ATLAS_LEARNING_DB_RECORD_ID,
+    schema:"agent_crypto_learning_notebook_indexeddb_v1",
     build:ATLAS_BUILD,
-    profile_key:profile.key,
-    profile_label:profile.label,
-    cash_before:cashBefore,
-    cash_after:Number(state.sim.cash || 0),
-    positions_before:positionsBefore,
-    positions_after:Object.keys(state.sim.positions || {}).length,
-    learning_preserved:true
-  };
-  window.__atlasLearningSimulationResetLastResult = result;
-  setActionFeedback("ok", "Simulation fictive réinitialisée", `${profile.label} · ${fmtEUR.format(profile.startCash)} disponibles · aucune position. Le parcours pédagogique est intact.`, document.getElementById("learningSessionPlan"));
-  return result;
+    cockpit,
+    history:[],
+    roadmap:atlasLearningNormalizeRoadmap(null),
+    recovery:{ status:"fresh_start", verified:true, backend:"IndexedDB", reset_at:resetAt },
+    migration:{ status:"fresh_start", block_automatic_reimport:true, backend:"IndexedDB", reset_at:resetAt },
+    reset:{
+      schema:"agent_crypto_internal_clean_reset_v1",
+      status:"complete",
+      build:ATLAS_BUILD,
+      reset_at:resetAt,
+      scope:"Agent-Crypto learning and simulations only"
+    },
+    last_reset_backup:null,
+    updated_at:resetAt
+  });
+}
+
+function agentCryptoVerifyBlankNotebook(record) {
+  const notebook = atlasLearningNormalizeNotebook(record || {});
+  const cockpit = notebook.cockpit;
+  const stepsEmpty = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] !== true);
+  const roadmapEmpty = ATLAS_EXPERT_ROADMAP_MODULES.every(module => {
+    const item = notebook.roadmap?.modules?.[module.key];
+    return item?.status === "new" && !String(item?.note || "").trim();
+  });
+  return Boolean(
+    cockpit.module_key === "market"
+    && cockpit.completed_at === null
+    && cockpit.completed_sessions === 0
+    && notebook.history.length === 0
+    && stepsEmpty
+    && !String(cockpit.notes_free || "").trim()
+    && !String(cockpit.takeaway || "").trim()
+    && roadmapEmpty
+    && notebook.reset?.status === "complete"
+    && notebook.reset?.build === ATLAS_BUILD
+  );
+}
+
+function agentCryptoShowResetSuccessOnBoot() {
+  let marker = null;
+  try {
+    marker = JSON.parse(sessionStorage.getItem(AGENT_CRYPTO_RESET_SUCCESS_KEY) || "null");
+    sessionStorage.removeItem(AGENT_CRYPTO_RESET_SUCCESS_KEY);
+  } catch {}
+  if (!marker || marker.build !== ATLAS_BUILD) return false;
+  setActionFeedback(
+    "ok",
+    "Réinitialisation terminée",
+    `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
+  );
+  scrollToLearningTarget("learningPrimaryActionPanel");
+  return true;
 }
 
 async function resetEntireLearningJourney() {
-  const firstMessage = [
-    "Repartir ENTIÈREMENT depuis le Module 01 ?",
+  const message = [
+    "Repartir de zéro dans Agent-Crypto ?",
     "",
-    "SERA REMIS À ZÉRO :",
-    "• brouillon actuel et ses 5 étapes",
-    "• sessions pédagogiques archivées",
-    "• notes et conclusions",
-    "• progression des 11 modules",
-    `• simulation fictive active « ${SIM_PROFILE.label} »`,
-    "• positions, gain ou perte réalisé et journal du profil actif",
-    "• hypothèses de coûts et scénario temporaire",
+    "SERA EFFACÉ UNIQUEMENT DANS AGENT-CRYPTO :",
+    "• progression, notes, conclusions et archives pédagogiques",
+    "• états de récupération du carnet",
+    "• simulations fictives, positions et journaux",
+    "• frais pédagogiques et scénario temporaire",
     "",
     "SERA CONSERVÉ :",
-    "• Market, Métaux et Bridge",
-    "• l’autre profil de simulation",
-    "• collecteurs et réglages généraux",
+    "• Market, Métaux, Bridge, collecteurs et réglages généraux",
+    "• GitHub, YouTube, mots de passe, cookies et autres interfaces BlueAzur",
     "",
-    "Une sauvegarde JSON exacte de l’apprentissage ET de la simulation active sera téléchargée et conservée dans IndexedDB avant l’effacement."
+    "L’application reviendra directement au Module 01 · 0/5."
   ].join("\n");
-  if (typeof window !== "undefined" && !window.confirm(firstMessage)) {
-    setActionFeedback("info", "Reprise complète annulée", "Aucune donnée pédagogique ou de simulation n’a été modifiée.");
-    return { ok:false, cancelled:true, stage:"first_confirmation" };
+  if (typeof window !== "undefined" && !window.confirm(message)) {
+    setActionFeedback("info", "Réinitialisation annulée", "Aucune donnée n’a été modifiée.");
+    return { ok:false, cancelled:true };
   }
-  const phrase = typeof window !== "undefined"
-    ? window.prompt('Dernière confirmation : tape exactement « REPARTIR MODULE 01 » pour remettre à zéro l’apprentissage et la simulation fictive active.')
-    : "";
-  if (String(phrase || "").trim() !== "REPARTIR MODULE 01") {
-    setActionFeedback("info", "Reprise complète annulée", "La phrase de confirmation ne correspond pas. Aucune donnée n’a été modifiée.");
-    return { ok:false, cancelled:true, stage:"typed_confirmation" };
-  }
-
-  if (!state.sim) loadSimulation();
-  if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
-  const previousNotebook = atlasLearningClone(atlasLearningNotebookCache);
-  const previousSimulation = atlasLearningClone(state.sim);
-  const previousScenario = atlasSimulationScenarioPct;
-  let previousCostsRaw = null;
-  try { previousCostsRaw = localStorage.getItem(SIM_COST_STORAGE_KEY); } catch {}
-  const backup = learningFullResetBackupPayload();
-  const backupFilename = `agent_crypto_sauvegarde_complete_avant_reprise_${learningFullResetStamp()}.json`;
-  let downloadCreated = false;
-  try {
-    downloadTextFile(backupFilename, "application/json", JSON.stringify(backup, null, 2));
-    downloadCreated = true;
-  } catch (error) {
-    backup.download_error = String(error?.message || error || "téléchargement impossible");
-  }
-
-  const resetAt = new Date().toISOString();
-  const legacySnapshot = legacyLearningSnapshot();
-  const next = defaultLearningCockpitState();
-  next.completed_sessions = 0;
-  next.module_key = "market";
-  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
-  next.restart_build = ATLAS_LEARNING_FULL_RESET_BUILD;
-  next.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
-  next.last_action = "read";
-
-  const resetMarker = {
-    schema:"agent_crypto_full_restart_v2",
-    status:"active",
-    build:ATLAS_LEARNING_FULL_RESET_BUILD,
-    reset_at:resetAt,
-    backup_id:backup.backup_id,
-    backup_filename:backupFilename,
-    backup_download_created:downloadCreated,
-    legacy_signature:legacySnapshot.signature,
-    block_legacy_reimport:true,
-    cleared:["cockpit", "history", "notes", "takeaway", "roadmap", "active_simulation", "active_simulation_log", "active_simulation_costs", "active_simulation_scenario"],
-    preserved:["market", "metals", "bridge", "other_simulation_profile", "collectors", "general_settings"]
-  };
-
-  atlasLearningNotebookCache = atlasLearningNormalizeNotebook({
-    ...atlasLearningNotebookCache,
-    cockpit:next,
-    history:[],
-    roadmap:atlasLearningNormalizeRoadmap(null),
-    recovery:{ ...(atlasLearningNotebookCache.recovery || {}), status:"user_full_restart", verified:false, reset_at:resetAt, backend:"IndexedDB", source_keys_preserved:true },
-    migration:{ ...(atlasLearningNotebookCache.migration || {}), status:"user_full_restart", signature:legacySnapshot.signature, reset_at:resetAt, block_automatic_reimport:true, backend:"IndexedDB" },
-    reset:resetMarker,
-    last_reset_backup:backup,
-    updated_at:resetAt
-  });
 
   const button = els.btnResetLearningJourney;
-  if (button) { button.disabled = true; button.textContent = "Reprise complète vérifiée…"; }
-  const write = await atlasLearningPersistNow("full_restart_learning_and_active_simulation_28_2_97");
-  if (!write.ok) {
-    atlasLearningNotebookCache = previousNotebook;
-    renderExpertRoadmap();
-    renderLearningJourneyCockpit();
-    if (button) { button.disabled = false; button.textContent = "Repartir entièrement depuis le Module 01"; }
-    const result = { ok:false, stage:"indexeddb_write", write, backup_id:backup.backup_id, backup_filename:backupFilename, backup_download_created:downloadCreated };
-    window.__atlasLearningFullResetLastResult = result;
-    setActionFeedback("warn", "Reprise complète non appliquée", `IndexedDB n’a pas confirmé l’écriture. L’ancien parcours et la simulation restent chargés. Sauvegarde : ${backupFilename}.`);
-    return result;
-  }
+  if (button) { button.disabled = true; button.textContent = "Réinitialisation…"; }
+  let previousNotebook = null;
+  let storageSnapshot = null;
+  let storageKeys = [];
+  let notebookChanged = false;
 
-  const learningVerification = learningFullResetVerification();
-  if (!learningVerification.ok) {
-    atlasLearningNotebookCache = previousNotebook;
-    const rollback = await atlasLearningPersistNow("full_restart_learning_rollback_28_2_97");
-    renderExpertRoadmap();
-    renderLearningJourneyCockpit();
-    if (button) { button.disabled = false; button.textContent = "Repartir entièrement depuis le Module 01"; }
-    const result = { ok:false, stage:"learning_verification", learning_verification:learningVerification, rollback, backup_id:backup.backup_id, backup_filename:backupFilename, backup_download_created:downloadCreated };
-    window.__atlasLearningFullResetLastResult = result;
-    setActionFeedback("warn", "Reprise complète annulée après contrôle", "La relecture du carnet ne correspondait pas à un Module 01 vide. L’ancien carnet a été restauré et la simulation n’a pas été touchée.");
-    return result;
-  }
+  try {
+    previousNotebook = await agentCryptoResetReadNotebook();
+    storageKeys = agentCryptoResetLocalStorageTargets();
+    storageSnapshot = agentCryptoSnapshotLocalStorage(storageKeys);
 
-  resetSimulation();
-  resetSimulationEducationState("full_restart_28_2_97");
-  const simulationVerification = activeSimulationResetVerification();
-  if (!simulationVerification.ok) {
-    state.sim = migrateSimulationState(previousSimulation);
-    saveSimulation();
+    const resetAt = new Date().toISOString();
+    const blankNotebook = agentCryptoBlankNotebook(resetAt);
+    await agentCryptoResetWriteNotebook(blankNotebook);
+    notebookChanged = true;
+
+    const readBack = await agentCryptoResetReadNotebook();
+    if (!agentCryptoVerifyBlankNotebook(readBack)) {
+      const failure = new Error("le carnet relu ne correspond pas à un Module 01 vide");
+      failure.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-VERIFY`;
+      throw failure;
+    }
+
+    agentCryptoClearLocalStorage(storageKeys);
+    atlasLearningNotebookCache = atlasLearningNormalizeNotebook(readBack);
+    state.sim = null;
+    SIM_PROFILE = SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY];
+    atlasSimulationScenarioPct = 0;
+
     try {
-      if (previousCostsRaw === null) localStorage.removeItem(SIM_COST_STORAGE_KEY);
-      else localStorage.setItem(SIM_COST_STORAGE_KEY, previousCostsRaw);
+      sessionStorage.setItem(AGENT_CRYPTO_RESET_SUCCESS_KEY, JSON.stringify({ build:ATLAS_BUILD, reset_at:resetAt }));
     } catch {}
-    hydrateSimCostInputs();
-    atlasSimulationScenarioPct = previousScenario;
-    renderSimulation();
-    renderSimulationEducation();
-    renderSimulationScenario();
-    atlasLearningNotebookCache = previousNotebook;
-    const rollback = await atlasLearningPersistNow("full_restart_complete_rollback_28_2_97");
+    window.location.reload();
+    return { ok:true, build:ATLAS_BUILD, reset_at:resetAt };
+  } catch (error) {
+    const localRestore = storageSnapshot ? agentCryptoRestoreLocalStorage(storageSnapshot) : { ok:true, failures:[] };
+    let notebookRestore = { ok:true };
+    if (notebookChanged) {
+      try {
+        if (previousNotebook) await agentCryptoResetWriteNotebook(previousNotebook);
+        else await agentCryptoResetDeleteNotebookRecord();
+      } catch (restoreError) {
+        notebookRestore = { ok:false, error:String(restoreError?.message || restoreError) };
+      }
+    }
+    if (previousNotebook) atlasLearningNotebookCache = atlasLearningNormalizeNotebook(previousNotebook);
     renderExpertRoadmap();
     renderLearningJourneyCockpit();
-    if (button) { button.disabled = false; button.textContent = "Repartir entièrement depuis le Module 01"; }
-    const result = { ok:false, stage:"simulation_verification", simulation_verification:simulationVerification, rollback, backup_id:backup.backup_id, backup_filename:backupFilename, backup_download_created:downloadCreated };
+    if (button) { button.disabled = false; button.textContent = "Repartir de zéro"; }
+    const code = error?.code || `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-UNKNOWN`;
+    const restored = localRestore.ok && notebookRestore.ok;
+    setActionFeedback(
+      "warn",
+      "Réinitialisation non appliquée",
+      `${restored ? "L’ancien état a été restauré. Aucune donnée n’a été perdue." : "La restauration n’a pas été entièrement confirmée."} Code : ${code}.`
+    );
+    const result = { ok:false, code, error:String(error?.message || error), local_restore:localRestore, notebook_restore:notebookRestore };
     window.__atlasLearningFullResetLastResult = result;
-    setActionFeedback("warn", "Reprise complète annulée après contrôle", "La simulation n’a pas confirmé sa remise à zéro. Le carnet et la simulation antérieurs ont été restaurés.");
     return result;
   }
-
-  atlasLearningReviewOpen = false;
-  if (els.learningSecondaryActions) els.learningSecondaryActions.open = false;
-  if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
-  renderSchoolProfileLabels();
-  renderExpertRoadmap();
-  renderLearningJourneyCockpit();
-  renderLegacyLearningMigration(true);
-  scrollToLearningTarget("learningPrimaryActionPanel");
-  if (button) { button.disabled = false; button.textContent = "Repartir entièrement depuis le Module 01"; }
-  const result = {
-    ok:true,
-    build:ATLAS_LEARNING_FULL_RESET_BUILD,
-    reset_at:resetAt,
-    learning_verification:learningVerification,
-    simulation_verification:simulationVerification,
-    backup_id:backup.backup_id,
-    backup_filename:backupFilename,
-    backup_download_created:downloadCreated,
-    preserved:resetMarker.preserved,
-    cleared:resetMarker.cleared
-  };
-  window.__atlasLearningFullResetLastResult = result;
-  setActionFeedback("ok", "Reprise complète terminée", `Module 01 · 0/5 étapes · progression 0 % · ${SIM_PROFILE.label} remis à ${fmtEUR.format(SIM_PROFILE.startCash)} · aucune position. Sauvegarde : ${backupFilename}.`);
-  return result;
 }
 
 function showCompletedLearningReview() {
@@ -33144,7 +33135,9 @@ setTimeout(() => {
   renderTransactionProofLedger();
   renderSchoolProfileLabels();
   renderSimulationEducation();
-  runLegacyLearningRecoveryAtStartup().catch(error => {
+  runLegacyLearningRecoveryAtStartup().then(() => {
+    agentCryptoShowResetSuccessOnBoot();
+  }).catch(error => {
     atlasLearningStorageLastResult = { ok:false, backend:"IndexedDB", error_name:String(error?.name || "IndexedDBError"), error_message:String(error?.message || error) };
     if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
     atlasLearningNotebookCache.recovery = { status:"error", verified:false, failed_write:atlasLearningStorageLastResult, source_keys_preserved:true, backend:"IndexedDB" };

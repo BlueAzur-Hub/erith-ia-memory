@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.2.97",
-  "build": "28.2.97",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.97",
-  "published_at": "2026-08-05T20:25:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.2.98",
+  "build": "28.2.98",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.98",
+  "published_at": "2026-08-05T22:00:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1202,5 +1202,48 @@
     "simulation_backend": "localStorage",
     "dual_verification": true,
     "rollback_on_failure": true
+  },
+  "internal_agent_crypto_clean_reset_lock": {
+    "base": "28.2.97",
+    "build": "28.2.98",
+    "scope": "Agent-Crypto local learning and simulations only",
+    "visible_reset_controls": 1,
+    "button_label": "Repartir de zéro",
+    "confirmation_count": 1,
+    "typed_confirmation": false,
+    "automatic_json_download": false,
+    "clears": [
+      "learning_cockpit",
+      "learning_history",
+      "learning_notes",
+      "learning_conclusions",
+      "learning_roadmap",
+      "learning_recovery_state",
+      "all_fictional_simulation_profiles",
+      "simulation_positions",
+      "simulation_logs",
+      "simulation_costs",
+      "temporary_scenario"
+    ],
+    "preserves": [
+      "market",
+      "metals",
+      "bridge",
+      "collectors",
+      "general_settings",
+      "GitHub",
+      "YouTube",
+      "browser_passwords",
+      "browser_cookies",
+      "other_BlueAzur_interfaces"
+    ],
+    "learning_backend": "IndexedDB",
+    "simulation_backend": "localStorage",
+    "indexeddb_transaction_handlers_installed_before_requests": true,
+    "readback_verification": true,
+    "rollback_with_explicit_error_code": true,
+    "success_state": "Module 01 · 0/5 · no learning archive · default fictional capital · no position",
+    "manual_browser_storage_cleanup_required": false,
+    "ctrl_f5_required": false
   }
 }
