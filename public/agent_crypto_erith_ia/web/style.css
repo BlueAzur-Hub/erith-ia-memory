@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.3.01
+   ATLAS PUBLICATION IDENTITY — BUILD 28.3.02
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.3.01
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.01
+   ATLAS_ASSET_BUILD: 28.3.02
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.02
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.3.01";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.01";
+  --atlas-asset-build: "28.3.02";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.02";
 }
 
 :root{
@@ -25833,3 +25833,7 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-2px); }
 }
+
+
+/* BUILD 28.3.02 — SINGLE ACTION LESSON & AUTONOMOUS GUIDED FLOW LOCK */
+#btnMarkLessonRead[hidden] { display: none !important; }
