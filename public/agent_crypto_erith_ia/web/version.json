@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.88",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.88",
-  "published_at": "2026-08-05T04:06:05+02:00",
+  "build": "28.2.89",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.89",
+  "published_at": "2026-08-05T04:37:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1002,5 +1002,40 @@
     "real_order_performed": false,
     "wallet_connected": false,
     "github_write_performed": false
+  },
+  "learning_cockpit_core_consolidation": {
+    "base": "28.2.88",
+    "state": "ready_for_public_validation",
+    "core_build": "28.2.89",
+    "notebook_schema_version": 2,
+    "verified_indexeddb_commits": true,
+    "atomic_actions": [
+      "archive_session",
+      "start_next_module",
+      "restart_draft",
+      "mark_lesson_read",
+      "open_target",
+      "complete_practice",
+      "verify_result"
+    ],
+    "render_mutates_state": false,
+    "spot_refusal_counts_as_practice": false,
+    "verification_snapshot": true,
+    "guide_dom_position": "fixed",
+    "roadmap_practice_downgrade_blocked": true,
+    "css_layers_replaced": [
+      "28.2.81",
+      "28.2.82",
+      "28.2.83",
+      "28.2.84",
+      "28.2.86",
+      "28.2.87"
+    ],
+    "readability_min_body_px": 12,
+    "crypto_workspace_unchanged": true,
+    "metals_workspace_unchanged": true,
+    "bridge_unchanged": true,
+    "collectors_unchanged": true,
+    "github_actions_unchanged": true
   }
 }
