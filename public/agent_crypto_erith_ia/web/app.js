@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.87 — GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.88 — RECOVERY CONTEXT & PRACTICE STATUS RECONCILIATION LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.87";
-const ATLAS_BUILD = "28.2.87";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.87";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.88";
+const ATLAS_BUILD = "28.2.88";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.88";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11623,6 +11623,7 @@ const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
 const ATLAS_LEARNING_FLOW_BUILD = "28.2.87";
+const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
 const ATLAS_LEARNING_DB_NAME = "agent_crypto_learning_notebook";
 const ATLAS_LEARNING_DB_VERSION = 1;
@@ -12239,6 +12240,8 @@ async function applyLegacyLearningRecovery(options = {}) {
 async function initializeLearningNotebookStorage() {
   await atlasLearningInitializeCache();
   const result = await applyLegacyLearningRecovery({ automatic:true });
+  reconcileRoadmapFromArchivedLearningHistory();
+  await atlasLearningPersistNow("roadmap_practice_reconciliation_28_2_88");
   renderExpertRoadmap();
   renderLearningJourneyCockpit();
   renderLegacyLearningMigration(true);
@@ -12286,6 +12289,11 @@ function renderLegacyLearningMigration(forceOpen = false) {
     && auditMarker.signature === snapshot.signature
     && auditMarker.backend === "IndexedDB";
   const displayAudit = verified && auditMarker.audit ? auditMarker.audit : audit;
+  const recoveredModule = learningModuleByKey(snapshot.module_key || "market");
+  const currentCockpit = loadLearningCockpitState();
+  const currentModule = learningModuleByKey(currentCockpit.module_key || "market");
+  const currentChecked = ATLAS_LEARNING_SESSION_STEPS.filter(key => currentCockpit.steps?.[key]).length;
+  const currentStateLabel = currentCockpit.completed_at ? "session archivée" : `${currentChecked}/5 étapes`;
   const failed = auditMarker.status === "error" || auditMarker.status === "verification_failed";
   const pending = snapshot.has_data && !verified && !failed;
   if (restoreButton) restoreButton.hidden = !snapshot.has_data;
@@ -12297,7 +12305,7 @@ function renderLegacyLearningMigration(forceOpen = false) {
   }
   if (noticeTitle) noticeTitle.textContent = verified ? "Ton ancien parcours est restauré" : failed ? "La récupération a échoué" : "Récupération automatique en cours";
   if (noticeText) noticeText.textContent = verified
-    ? `Module ${learningModuleByKey(snapshot.module_key || "market").title} · ${snapshot.note_length} caractères · IndexedDB vérifiée.`
+    ? `Archive source récupérée : ${recoveredModule.title} · ${snapshot.note_length} caractères · IndexedDB vérifiée.`
     : failed
       ? "Ne clique sur aucune leçon. Les anciennes données restent intactes ; le diagnostic indique l’erreur IndexedDB."
       : "Aucun clic nécessaire. Le carnet est copié dans IndexedDB puis relu pour contrôle.";
@@ -12310,7 +12318,7 @@ function renderLegacyLearningMigration(forceOpen = false) {
     `<b>${snapshot.completed_sessions} session${snapshot.completed_sessions > 1 ? "s" : ""} retrouvée${snapshot.completed_sessions > 1 ? "s" : ""}</b>`,
     `<span>${snapshot.progressed_modules.length} module${snapshot.progressed_modules.length > 1 ? "s" : ""} avec progression</span>`,
     `<span>${snapshot.note_length} caractère${snapshot.note_length > 1 ? "s" : ""} retrouvé${snapshot.note_length > 1 ? "s" : ""}</span>`,
-    `<span>${checked}/5 étapes dans le brouillon</span>`
+    `<span>${checked}/5 étapes dans l’ancien brouillon récupéré</span>`
   ].join("");
   if (preview) preview.textContent = legacyLearningMigrationPreview(snapshot);
   if (resultBox) {
@@ -12318,8 +12326,9 @@ function renderLegacyLearningMigration(forceOpen = false) {
     const lines = verified ? [
       `<b>Ton parcours est prêt</b>`,
       `<span>Module 01 : ${escapeHtml(ATLAS_EXPERT_STATUS_META[atlasLearningNotebookCache?.roadmap?.modules?.market?.status]?.label || "restauré")}</span>`,
-      `<span>Module actif : ${escapeHtml(module.title)}</span>`,
-      `<span>Étapes récupérées : ${displayAudit.checked_steps_recovered}/${displayAudit.checked_steps_expected}</span>`,
+      `<span>Archive source : ${escapeHtml(module.title)}</span>`,
+      `<span>Parcours courant : ${escapeHtml(currentModule.title)} · ${escapeHtml(currentStateLabel)}</span>`,
+      `<span>Étapes historiques récupérées : ${displayAudit.checked_steps_recovered}/${displayAudit.checked_steps_expected}</span>`,
       `<span>Notes récupérées : ${displayAudit.notes_recovered}/${displayAudit.notes_expected} caractères</span>`,
       `<span>Stockage : IndexedDB vérifiée</span>`,
       `<span>Espace local libéré : ${Math.max(0, Math.round(Number(auditMarker.localstorage_cleanup?.bytes_released || 0) / 1024))} Ko</span>`,
@@ -12467,6 +12476,41 @@ function renderIntegratedLearningLesson(moduleKey) {
   if (els.learningLessonInterface) els.learningLessonInterface.innerHTML = currentLearningInterfaceFacts(moduleKey).map(item => `<li>${escapeHtml(item)}</li>`).join("");
   if (els.learningLessonSafety) els.learningLessonSafety.textContent = lesson.safety;
 }
+function reconcileRoadmapFromArchivedLearningHistory() {
+  const history = loadLearningHistory();
+  const roadmap = loadExpertRoadmap();
+  let changed = false;
+  const reconciled = [];
+  history.forEach(session => {
+    const key = String(session?.module_key || "");
+    const item = roadmap.modules?.[key];
+    const fullyCompleted = Boolean(
+      session?.completed_at
+      && item
+      && ATLAS_LEARNING_SESSION_STEPS.every(step => session.steps?.[step] === true)
+      && session.steps?.practice === true
+      && session.steps?.verify === true
+    );
+    if (!fullyCompleted) return;
+    const currentScore = ATLAS_EXPERT_STATUS_META[item.status]?.score ?? 0;
+    const practicedScore = ATLAS_EXPERT_STATUS_META.practiced.score;
+    if (currentScore >= practicedScore) return;
+    roadmap.modules[key] = {
+      ...item,
+      status:"practiced",
+      note:String(item.note || session.takeaway || ""),
+      updated_at:session.completed_at || new Date().toISOString(),
+      practice_evidence_session_id:session.session_id || null,
+      practice_evidence_completed_at:session.completed_at || null,
+      reconciled_by_build:ATLAS_LEARNING_RECONCILIATION_BUILD
+    };
+    changed = true;
+    reconciled.push(key);
+  });
+  if (changed) saveExpertRoadmap(roadmap);
+  return { changed, reconciled, history_count:history.length };
+}
+
 function learningRoadmapStats() {
   const data = loadExpertRoadmap();
   let discovered = 0, practiced = 0, score = 0;
@@ -12983,8 +13027,22 @@ function completeLearningSession() {
   const roadmap = loadExpertRoadmap();
   const current = roadmap.modules[cockpit.module_key];
   if (current) {
-    const nextStatus = current.status === "new" ? "discovered" : current.status === "discovered" ? "understood" : ["understood","review"].includes(current.status) ? "practiced" : current.status;
-    roadmap.modules[cockpit.module_key] = { ...current, status:nextStatus, note:cockpit.takeaway, updated_at:new Date().toISOString() };
+    const nextStatus = cockpit.steps.practice && cockpit.steps.verify
+      ? "practiced"
+      : current.status === "new"
+        ? "discovered"
+        : current.status === "discovered"
+          ? "understood"
+          : current.status;
+    roadmap.modules[cockpit.module_key] = {
+      ...current,
+      status:nextStatus,
+      note:cockpit.takeaway,
+      updated_at:new Date().toISOString(),
+      practice_evidence_session_id:cockpit.session_id,
+      practice_evidence_completed_at:cockpit.completed_at,
+      reconciled_by_build:ATLAS_LEARNING_RECONCILIATION_BUILD
+    };
     saveExpertRoadmap(roadmap);
     renderExpertRoadmap();
   }
