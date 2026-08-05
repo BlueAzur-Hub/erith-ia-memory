@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.02 — SINGLE ACTION LESSON & AUTONOMOUS GUIDED FLOW LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.03 — AUTONOMOUS ARCHIVE & GUIDED FLOW COHERENCE LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.02";
-const ATLAS_BUILD = "28.3.02";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.02";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.03";
+const ATLAS_BUILD = "28.3.03";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.03";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.02";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.03";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11626,7 +11626,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       read:{ title:"1. Comprendre les valeurs du marché", where:"LEÇON INTÉGRÉE AU COCKPIT — 01 · Marché et données", action:"Lire les définitions affichées, puis utiliser le bouton unique « J’ai lu la leçon — passer à la suite ».", why:"Un prix isolé ne suffit pas : il faut une période, une source et une heure.", result:"L’étape 1 devient verte et le cockpit conduit vers Livecheck.", remember:"Prix, 24 h, 7 j, volume, capitalisation, liquidité, source et fraîcheur sont des notions différentes." },
       open:{ title:"2. Charger les données avec Livecheck", where:"Barre LIVECHECK en haut de la page", action:"Cliquer sur « Lancer Livecheck » et attendre que le statut ne dise plus « Livecheck requis ».", why:"Le cockpit refuse d’inventer un prix ou une variation.", result:"Une source active, une heure et des lignes de marché deviennent visibles.", remember:"Livecheck charge des données ; il ne prédit pas le marché." },
       practice:{ title:"3. Lire la ligne Bitcoin dans Market Snapshot", where:"MARKET SNAPSHOT — Prix du marché des cryptomonnaies", action:"Trouver Bitcoin — BTC et lire uniquement Prix, 24 h et 7 j.", why:"Deux périodes différentes peuvent raconter deux mouvements différents.", result:"Le résumé BTC ci-dessous reprend les trois valeurs réellement chargées.", remember:"Un + sur 24 h peut coexister avec un − sur 7 j." },
-      verify:{ title:"4. Vérifier la source et l’heure des données", where:"Barre LIVECHECK : cartes « Source active » et « Heure données »", action:"Contrôler que la source et l’heure sont visibles, puis choisir la conclusion prudente.", why:"Une valeur sans origine ni date n’est pas suffisante pour une lecture fiable.", result:"Le cockpit valide la vérification seulement après source, heure et réponse prudente.", remember:"Observer décrit ce qui est affiché ; interpréter ne doit jamais devenir une certitude." },
+      verify:{ title:"4. Vérifier automatiquement la source et l’heure", where:"Bouton principal du cockpit — étape 4/5", action:"Cliquer sur « Vérifier automatiquement source + heure ». Le cockpit contrôle les cartes « Source active » et « Heure données », puis enregistre la conclusion prudente.", why:"Une valeur sans origine ni date n’est pas suffisante pour une lecture fiable.", result:"L’étape 4 devient verte immédiatement si la source et l’heure sont présentes ; aucun champ n’est à rechercher.", remember:"Observer décrit ce qui est affiché ; interpréter ne doit jamais devenir une certitude." },
       note:{ title:"5. Distinguer observation et interprétation", where:"Champ « Ce que je retiens — conclusion personnelle »", action:"Écrire avec ses propres mots ce que Prix, 24 h, 7 j, source et heure permettent réellement de dire.", why:"La compréhension ne se résume pas à cinq clics.", result:"La conclusion sauvegardée valide l’étape 5.", remember:"Les données décrivent le marché observé ; elles ne prédisent pas le prochain mouvement." }
     }
   },
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.02";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.02";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.02";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.03";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.03";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.03";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12616,7 +12616,7 @@ function foundationMarketLab(cockpit) {
   const evidence = cockpit.practice_evidence || {};
   return `
     <div class="foundation-lab-grid">
-      <article><h5>Lecture réelle de Bitcoin</h5><p>${ready ? `Prix ${escapeHtml(fmtEUR.format(Number(btc.price)))} · 24 h ${escapeHtml(atlasSignedPct(btc.change24h))} · 7 j ${escapeHtml(atlasSignedPct(btc.change7d))}` : "Livecheck requis : aucune valeur n’est inventée."}</p><small>Source : ${escapeHtml(source)} · Heure : ${escapeHtml(time)}</small>${foundationButton("J’ai lu Prix / 24 h / 7 j", "market_read_btc", !ready)}</article>
+      <article><h5>Lecture du snapshot Bitcoin</h5><p>${ready ? `Prix ${escapeHtml(fmtEUR.format(Number(btc.price)))} · 24 h ${escapeHtml(atlasSignedPct(btc.change24h))} · 7 j ${escapeHtml(atlasSignedPct(btc.change7d))}` : "Livecheck requis : aucune valeur n’est inventée."}</p><small>Snapshot Market : ${escapeHtml(source)} · Heure : ${escapeHtml(time)} · distinct du prix spot Binance affiché dans la fiche active.</small>${foundationButton("J’ai lu Prix / 24 h / 7 j", "market_read_btc", !ready)}</article>
       <article><h5>Conclusion prudente</h5><p>Laquelle est correcte ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="market_answer_prediction">Le chiffre est vert, donc il faut acheter</button><button type="button" data-foundation-action="market_answer_prudent">Ces valeurs décrivent deux périodes, sans prédire la suite</button></div><small>${evidence.market_prudent ? "Réponse prudente enregistrée." : "Une observation n’est pas une prédiction."}</small></article>
     </div>`;
 }
@@ -12664,8 +12664,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.02 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.02 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.03 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.03 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12974,7 +12974,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.02 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.03 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"J’ai lu la leçon — passer à Livecheck", text:"La leçon complète est déjà affichée juste dessous. Lis-la, puis utilise ce bouton unique : aucun second bouton n’est nécessaire." };
@@ -12982,14 +12982,14 @@ function learningActionState(cockpit) {
     if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Lire Bitcoin dans Market Snapshot" : module.key === "spot" ? "Répondre Marché / Limite" : "Créer la position BTC fictive de 50 €", text:foundation.steps.practice.action };
     if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Vérifier automatiquement source + heure" : module.key === "spot" ? "Créer la position BTC fictive de 50 €" : "Ouvrir les scénarios −3 % et +5 %", text:module.key === "market" ? "Aucun champ à chercher : ce bouton contrôle les cartes Source active et Heure données déjà chargées, puis enregistre la conclusion prudente." : foundation.steps.verify.action };
     if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:"Écrire ma conclusion", text:foundation.steps.note.action };
-    return { key:"complete", step:"5/5 étapes prêtes", title:"Terminer et archiver la session", label:"Terminer et archiver", text:"Les cinq preuves sont présentes. L’archivage conserve les notes, la conclusion et les preuves du parcours." };
+    return { key:"complete", step:"Archivage automatique", title:"Archivage automatique en cours", label:"Archivage automatique", text:"Les cinq preuves sont présentes. La session est archivée automatiquement et la feuille de route est mise à jour sans clic supplémentaire." };
   }
   if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:"Lire la leçon intégrée", label:"Lire la leçon", text:"La leçon complète est déjà dans l’interface. Lis-la puis valide-la avec le bouton placé sous son contenu." };
   if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:"Ouvrir la zone du module", label:`Ouvrir ${ATLAS_LEARNING_TARGET_LABELS[practice.target] || "la zone pédagogique"}`, text:`Le cockpit ouvre directement ${ATLAS_LEARNING_TARGET_LABELS[practice.target] || "la zone utile"} et garde un guide visible pour revenir.` };
   if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:"Faire l’exercice fictif", label:"Faire l’exercice fictif", text:practice.practice };
   if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:"Vérifier le résultat", label:"Vérifier le résultat", text:practice.verify };
   if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:"Écrire ma conclusion personnelle", label:"Écrire ma conclusion", text:"Écris avec tes propres mots ce que tu as compris. La conclusion est sauvegardée intégralement dans IndexedDB." };
-  return { key:"complete", step:"5/5 étapes prêtes", title:"Terminer et archiver la session", label:"Terminer et archiver", text:"Les cinq preuves sont présentes. L’archivage créera une carte de fin visible et ne rouvrira pas cette séance." };
+  return { key:"complete", step:"Archivage automatique", title:"Archivage automatique en cours", label:"Archivage automatique", text:"Les cinq preuves sont présentes. La session est archivée automatiquement et la feuille de route est mise à jour sans clic supplémentaire." };
 }
 function learningOpenParentDetails(target) {
   let node = target?.parentElement || null;
@@ -13205,7 +13205,7 @@ function renderLearningJourneyCockpit() {
           ? `Commence par l’unique bouton principal. Le cockpit indiquera ensuite chaque geste dans l’ordre.`
           : missing.length
             ? `Progression ${completedSteps}/5. Prochaine action : ${action.title}. Les étapes portent désormais le nom exact du panneau, de l’action et du résultat attendu.`
-            : `Les 5 étapes sont prêtes. Le bouton principal archive la session puis affiche immédiatement le module suivant.`;
+            : `Les 5 étapes sont prêtes. L’archivage automatique met à jour la feuille de route puis affiche le module suivant.`;
   }
   if (finished) {
     if (els.learningExerciseGuide) els.learningExerciseGuide.hidden = true;
@@ -13268,7 +13268,8 @@ function saveLearningSessionNotes(value, field = "notes_free") {
   if (field === "takeaway" && foundationIsActive(cockpit.module_key)) {
     renderLearningJourneyCockpit();
     if (!noteWasReady && cockpit.steps.note === true) {
-      setActionFeedback("ok", "Conclusion enregistrée · 5/5", "La dernière étape est validée automatiquement. Le bouton principal permet maintenant de terminer et archiver la session.", els.learningSessionNote);
+      setActionFeedback("ok", "Conclusion enregistrée · archivage automatique", "La dernière étape est valide. La session, la feuille de route et le module suivant sont maintenant mis à jour sans clic supplémentaire.", els.learningSessionNote);
+      completeLearningSession();
     }
     return;
   }
@@ -13577,7 +13578,7 @@ function completeLearningSession() {
   atlasLearningReviewOpen = false;
   renderLearningJourneyCockpit();
   scrollToLearningTarget("learningCompletionPanel");
-  setActionFeedback("ok", "Session archivée intégralement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans IndexedDB. La carte de fin affiche maintenant le module suivant.`);
+  setActionFeedback("ok", "Session archivée automatiquement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans IndexedDB. La feuille de route est mise à jour et le module suivant est prêt.`);
 }
 function startNextLearningModule() {
   let previous = loadLearningCockpitState();
@@ -18276,7 +18277,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.2.86",
+  interface: "Build 28.3.03",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -20527,7 +20528,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.2.86`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.3.03`
   );
 }
 
