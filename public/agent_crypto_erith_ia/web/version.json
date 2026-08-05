@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.85",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.85",
-  "published_at": "2026-08-05T01:25:00+02:00",
+  "build": "28.2.86",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.86",
+  "published_at": "2026-08-05T02:00:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -910,5 +910,41 @@
     "collectors_unchanged": true,
     "workflows_unchanged": true,
     "bridge_unchanged": true
+  },
+  "learning_notebook_indexeddb": {
+    "base": "28.2.85",
+    "state": "ready",
+    "backend": "IndexedDB",
+    "database": "agent_crypto_learning_notebook",
+    "store": "notebook",
+    "record": "learning_notebook_primary",
+    "localstorage_source_read_only": true,
+    "localstorage_quota_dependency_removed_for_learning_notebook": true,
+    "automatic_legacy_recovery": true,
+    "post_write_readback_verification": true,
+    "legacy_keys_preserved": true,
+    "expected_recovery": {
+      "completed_sessions": 1,
+      "progressed_modules": 1,
+      "active_module": "spot",
+      "compatible_steps": 3,
+      "note_characters": 550
+    },
+    "no_operator_click_required": true,
+    "retired_localstorage_targets_backed_up_in_indexeddb": true,
+    "retired_localstorage_targets_removed_after_verified_write": true,
+    "legacy_source_keys_preserved_paths": [
+      "agent_crypto_learning_journey_cockpit_28_2_81",
+      "agent_crypto_expert_roadmap_28_2_79"
+    ],
+    "learning_target_keys_retired_after_migration": [
+      "agent_crypto_learning_journey_cockpit_28_2_83",
+      "agent_crypto_learning_journey_history_28_2_83",
+      "agent_crypto_expert_roadmap_28_2_83",
+      "agent_crypto_learning_legacy_migration_28_2_84",
+      "agent_crypto_learning_legacy_backup_28_2_84",
+      "agent_crypto_learning_legacy_recovery_audit_28_2_85"
+    ],
+    "scope_limit": "learning notebook and roadmap only; simulation profile storage remains unchanged"
   }
 }

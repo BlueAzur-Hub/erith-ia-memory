@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.85
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.86
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.85
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.85
+   ATLAS_ASSET_BUILD: 28.2.86
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.86
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.85";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.85";
+  --atlas-asset-build: "28.2.86";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.86";
 }
 
 :root{
@@ -25675,7 +25675,7 @@ input[type="checkbox"]{
 
 
 /* =========================================================
-   LAYER 28.2.85 — LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX
+   LAYER 28.2.86 — LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX
    Automatic, post-write-verified recovery with explicit success/failure state.
    ========================================================= */
 .learning-legacy-recovery-result{
@@ -25709,3 +25709,22 @@ input[type="checkbox"]{
 }
 @media(max-width:900px){.learning-legacy-recovery-result{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.learning-legacy-recovery-result{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   LAYER 28.2.86 — STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK
+   The learning notebook persists in IndexedDB. The legacy localStorage
+   source remains read-only and intact, even when its quota is saturated.
+   ========================================================= */
+.learning-legacy-recovery-result[data-state="ok"] {
+  border-color: rgba(82, 224, 163, .42);
+  background: rgba(23, 93, 72, .18);
+}
+.learning-legacy-recovery-result[data-state="error"] {
+  border-color: rgba(255, 177, 72, .48);
+  background: rgba(116, 73, 22, .20);
+}
+.learning-legacy-recovery-result > span {
+  display: block;
+  margin-top: .3rem;
+}
