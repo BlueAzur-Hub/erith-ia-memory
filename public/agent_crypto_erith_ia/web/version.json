@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.2.99",
-  "build": "28.2.99",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.99",
-  "published_at": "2026-08-05T22:55:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.00",
+  "build": "28.3.00",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.00",
+  "published_at": "2026-08-05T23:15:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1269,5 +1269,18 @@
     "failure_state": "Module 01 · 1/5 with explicit message",
     "reset_28_2_98_unchanged": true,
     "market_metals_bridge_collectors_unchanged": true
+  },
+  "livecheck_step_3_market_target_lock": {
+    "base": "28.2.99",
+    "build": "28.3.00",
+    "scope": "Module 01 post-Livecheck navigation only",
+    "step_2_validation_unchanged": true,
+    "success_scroll_target": "MARKET SNAPSHOT bitcoin row",
+    "learning_foundation_panel_bounce_removed": true,
+    "success_feedback_anchor": "bitcoin row or market workspace fallback",
+    "existing_28_2_99_learning_state_compatible": true,
+    "reset_required": false,
+    "reset_28_2_98_unchanged": true,
+    "market_metals_bridge_collectors_simulation_unchanged": true
   }
 }

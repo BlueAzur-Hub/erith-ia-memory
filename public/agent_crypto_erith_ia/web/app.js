@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.99 — LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.00 — LIVECHECK STEP 3 MARKET TARGET LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.99";
-const ATLAS_BUILD = "28.2.99";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.99";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.00";
+const ATLAS_BUILD = "28.3.00";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.00";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.99";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.99";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.99";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.00";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.00";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.00";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12664,8 +12664,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.99 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.2.99 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.00 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.00 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12841,8 +12841,16 @@ async function runFoundationLivecheck() {
   }
 
   renderLearningJourneyCockpit();
-  scrollToLearningTarget("learningFoundationPanel");
-  foundationFeedback(true, "Livecheck validé — étape 2/5", "Source, heure, données de marché et ligne Bitcoin confirmées. L’étape suivante est maintenant « Lire la ligne Bitcoin dans Market Snapshot ».", els.learningFoundationPanel);
+  const marketTarget = document.getElementById("market-workspace");
+  const bitcoinRow = els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || null;
+  const nextTarget = bitcoinRow || marketTarget;
+  if (nextTarget?.scrollIntoView) {
+    learningOpenParentDetails(nextTarget);
+    nextTarget.scrollIntoView({ behavior:"smooth", block: bitcoinRow ? "center" : "start" });
+    nextTarget.classList.add("learning-target-flash");
+    setTimeout(() => nextTarget.classList.remove("learning-target-flash"), 1800);
+  }
+  setActionFeedback("ok", "Livecheck validé — étape 2/5", "Étape 3 : lis maintenant la ligne Bitcoin dans MARKET SNAPSHOT — Prix, 24 h et 7 j.", nextTarget);
   return true;
 }
 
@@ -12962,7 +12970,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.99 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.00 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
