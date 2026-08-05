@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.95 — COCKPIT RECOVERY ACTIONABILITY & SEPARATE SIMULATION RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.96 — DIRECT CURRENT ACTION & NEUTRAL UI LABEL LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.95";
-const ATLAS_BUILD = "28.2.95";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.95";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.96";
+const ATLAS_BUILD = "28.2.96";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.96";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.95";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.96";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11638,7 +11638,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       read:{ title:"1. Comprendre ordre, exécution et position", where:"LEÇON INTÉGRÉE AU COCKPIT — 02 · Spot et carnet d’ordres", action:"Lire les définitions puis cliquer sur « J’ai lu cette leçon intégrée ».", why:"Ordre, exécution et position sont trois moments différents.", result:"L’étape 1 devient verte et le carnet pédagogique est présenté.", remember:"Ordre = demande ; exécution = réalisation ; position = quantité conservée." },
       open:{ title:"2. Comprendre qui achète et qui vend", where:"Carnet d’ordres pédagogique du parcours débutant", action:"Identifier le meilleur Ask puis le meilleur Bid dans les deux colonnes.", why:"Le meilleur vendeur et le meilleur acheteur encadrent le prix immédiatement disponible.", result:"Le cockpit calcule et explique le Spread de 20 € dans l’exemple.", remember:"Ask = prix vendeur ; Bid = prix acheteur ; Spread = différence entre les deux." },
       practice:{ title:"3. Choisir entre ordre au marché et ordre limite", where:"Mini-exercice « Marché ou limite ? »", action:"Choisir l’ordre au marché pour acheter immédiatement et l’ordre limite pour refuser de dépasser un prix.", why:"L’un privilégie l’exécution ; l’autre privilégie le prix choisi.", result:"Les deux réponses correctes valident l’étape 3.", remember:"Un ordre limite peut attendre ou être exécuté partiellement." },
-      verify:{ title:"4. Simuler un achat au marché de 50 € de BTC", where:"MODE ÉCOLE GUIDÉ — Apprendre sans deviner quoi taper", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"50 € est le montant engagé ; la quantité reçue est une fraction de BTC calculée au prix d’entrée." },
+      verify:{ title:"4. Simuler un achat au marché de 50 € de BTC", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"50 € est le montant engagé ; la quantité reçue est une fraction de BTC calculée au prix d’entrée." },
       note:{ title:"5. Retrouver le prix d’entrée et la quantité reçue", where:"Portefeuille virtuel puis Journal simulation", action:"Relever BTC, quantité, prix d’entrée, valeur et montant restant, puis écrire la conclusion.", why:"Le journal permet de reconstruire l’exécution sans dépendre de la mémoire.", result:"La conclusion sauvegardée valide l’étape 5.", remember:"Le prix d’entrée est le prix d’un BTC ; la quantité est la fraction obtenue avec 50 €." }
     }
   },
@@ -11649,7 +11649,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
     steps:{
       read:{ title:"1. Comprendre capital, position et exposition", where:"LEÇON INTÉGRÉE AU COCKPIT — 03 · Frais et gestion du risque", action:"Lire les définitions puis cliquer sur « J’ai lu cette leçon intégrée ».", why:"Le capital total de 1 000 € n’est pas entièrement exposé lorsque seulement 50 € sont engagés.", result:"L’étape 1 devient verte et le cockpit conduit vers Coûts pédagogiques.", remember:"50 € engagés sur 1 000 € représentent 5 % d’exposition ; environ 950 € restent disponibles." },
       open:{ title:"2. Charger les frais dans Coûts pédagogiques", where:"COÛTS PÉDAGOGIQUES — Frais, écarts d’exécution et seuil de rentabilité", action:"Cliquer sur « Charger un exemple école ».", why:"L’aller-retour achat + vente possède des coûts estimés.", result:"0,25 % achat + 0,25 % vente + 0,05 % entrée + 0,05 % sortie = 0,60 %.", remember:"Sur 50 €, 0,60 % représente environ 0,30 € de coûts pédagogiques." },
-      practice:{ title:"3. Créer une position BTC fictive de 50 €", where:"MODE ÉCOLE GUIDÉ — Apprendre sans deviner quoi taper", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"Les scénarios ne peuvent rien calculer sans position ouverte.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"Les 50 € sont convertis en une quantité fictive de BTC ; aucun achat réel n’est envoyé." },
+      practice:{ title:"3. Créer une position BTC fictive de 50 €", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"Les scénarios ne peuvent rien calculer sans position ouverte.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"Les 50 € sont convertis en une quantité fictive de BTC ; aucun achat réel n’est envoyé." },
       verify:{ title:"4. Comparer une baisse de 3 % et une hausse de 5 %", where:"SCÉNARIOS INSTANTANÉS — Observer sans attendre le marché", action:"Cliquer d’abord sur « −3 % », lire le résultat, puis sur « +5 % » et comparer.", why:"La variation agit sur la position de 50 € ; les coûts rendent toujours le résultat net moins favorable que le résultat brut.", result:"−3 % ≈ −1,50 € avant coûts ; +5 % ≈ +2,50 € avant coûts ; le résultat après frais retire environ 0,30 € dans le modèle simplifié.", remember:"P/L signifie Profit / Loss, soit gain / perte. Brut = avant frais ; net = après frais." },
       note:{ title:"5. Expliquer le résultat après les frais", where:"Champ « Ce que je retiens — conclusion personnelle »", action:"Expliquer capital, position, exposition, gain/perte avant frais, coûts et résultat après frais.", why:"Le seuil de rentabilité est la hausse minimale nécessaire pour couvrir les coûts.", result:"La conclusion sauvegardée valide l’étape 5.", remember:"Les frais réduisent un gain et aggravent une perte ; une petite hausse ne garantit pas un bénéfice net." }
     }
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.95";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.95";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.95";
+const ATLAS_LEARNING_FLOW_BUILD = "28.2.96";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.96";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.96";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.92";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12660,8 +12660,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.95 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Pour reprendre proprement, « Recommencer ce module depuis l’étape 1 » efface la leçon lue, les cinq étapes, les notes, la conclusion et les preuves du brouillon actif. Les sessions archivées et les autres modules restent intacts.</span>`
-    : `<b>Parcours 28.2.95 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.2.96 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Pour reprendre proprement, « Recommencer ce module depuis l’étape 1 » efface la leçon lue, les cinq étapes, les notes, la conclusion et les preuves du brouillon actif. Les sessions archivées et les autres modules restent intacts.</span>`
+    : `<b>Parcours 28.2.96 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12892,13 +12892,13 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.95 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.96 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
-    if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:module.key === "market" ? "Aller à Livecheck" : module.key === "spot" ? "Ouvrir le carnet pédagogique" : "Ouvrir Coûts pédagogiques", text:foundation.steps.open.action };
-    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Aller à Market Snapshot" : module.key === "spot" ? "Faire le mini-exercice" : "Aller au Mode École guidé", text:foundation.steps.practice.action };
-    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Vérifier source et heure" : module.key === "spot" ? "Créer et lire la position BTC 50 €" : "Tester −3 % puis +5 %", text:foundation.steps.verify.action };
+    if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:module.key === "market" ? "Lancer Livecheck" : module.key === "spot" ? "Commencer l’exercice Bid / Ask" : "Charger l’exemple école", text:foundation.steps.open.action };
+    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Lire Bitcoin dans Market Snapshot" : module.key === "spot" ? "Répondre Marché / Limite" : "Créer la position BTC fictive de 50 €", text:foundation.steps.practice.action };
+    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Valider la conclusion prudente" : module.key === "spot" ? "Créer la position BTC fictive de 50 €" : "Ouvrir les scénarios −3 % et +5 %", text:foundation.steps.verify.action };
     if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:"Écrire ma conclusion", text:foundation.steps.note.action };
     return { key:"complete", step:"5/5 étapes prêtes", title:"Terminer et archiver la session", label:"Terminer et archiver", text:"Les cinq preuves sont présentes. L’archivage conserve les notes, la conclusion et les preuves du parcours." };
   }
@@ -13222,7 +13222,7 @@ function continueLearningJourney(practiceOnly = false) {
   const label = ATLAS_LEARNING_TARGET_LABELS[targetId] || "zone pédagogique";
   const message = foundationIsActive(module.key)
     ? `${module.title} · ${label}. L’étape devient verte seulement après l’action exacte décrite dans le parcours détaillé.`
-    : `${module.title} · ${label}. Le guide visible permet de revenir sans chercher.`;
+    : `${module.title} · ${label}. Le guide visible permet de revenir au Cockpit.`;
   setActionFeedback("info", practiceOnly ? "Exercice ciblé ouvert" : "Panneau exact ouvert", message, target);
   renderLearningJourneyCockpit();
 }
@@ -13344,9 +13344,63 @@ function handleLearningExerciseGuidePrimary() {
   else if (action === "verify") verifyLearningResult();
   else returnToLearningCockpit(true);
 }
+function handleFoundationPrimaryAction(cockpit, action) {
+  if (!foundationIsActive(cockpit.module_key)) return false;
+  const module = learningModuleByKey(cockpit.module_key);
+  if (module.key === "market") {
+    if (action.key === "open") {
+      const button = document.getElementById("btnLivecheck");
+      button?.click();
+      scrollToLearningTarget("livecheck");
+      setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. L’étape 2 sera validée automatiquement.");
+      return true;
+    }
+    if (action.key === "practice") {
+      handleFoundationAction("market_read_btc");
+      return true;
+    }
+    if (action.key === "verify") {
+      handleFoundationAction("market_answer_prudent");
+      return true;
+    }
+  }
+  if (module.key === "spot") {
+    if (action.key === "open" || action.key === "practice") {
+      scrollToLearningTarget("learningFoundationLab");
+      setActionFeedback("info", action.key === "open" ? "Exercice Bid / Ask" : "Exercice Marché / Limite", action.key === "open" ? "Choisis le meilleur Ask puis le meilleur Bid dans le carnet pédagogique affiché." : "Réponds aux deux situations Marché / Limite dans le carnet pédagogique affiché.", els.learningFoundationPanel);
+      return true;
+    }
+    if (action.key === "verify") {
+      runSchoolTest("safe_btc_5");
+      scrollToLearningTarget(state.liveOk && state.coins.length ? "schoolResult" : "livecheck");
+      return true;
+    }
+  }
+  if (module.key === "risk") {
+    if (action.key === "open") {
+      els.btnSimCostSchoolPreset?.click();
+      scrollToLearningTarget("simCostPanel");
+      return true;
+    }
+    if (action.key === "practice") {
+      runSchoolTest("safe_btc_5");
+      scrollToLearningTarget(state.liveOk && state.coins.length ? "schoolResult" : "livecheck");
+      return true;
+    }
+    if (action.key === "verify") {
+      scrollToLearningTarget("simScenarioPanel");
+      document.querySelector('[data-sim-scenario="-3"]')?.classList.add("learning-action-highlight");
+      document.querySelector('[data-sim-scenario="5"]')?.classList.add("learning-action-highlight");
+      setActionFeedback("info", "Comparer −3 % et +5 %", "Clique sur −3 %, lis le résultat après frais, puis clique sur +5 % et compare.", document.getElementById("simScenarioPanel"));
+      return true;
+    }
+  }
+  return false;
+}
 function handleLearningPrimaryAction() {
   const cockpit = loadLearningCockpitState();
   const action = learningActionState(cockpit);
+  if (["open","practice","verify"].includes(action.key) && handleFoundationPrimaryAction(cockpit, action)) return;
   if (action.key === "read") {
     if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
     scrollToLearningTarget("learningLessonPanel");
