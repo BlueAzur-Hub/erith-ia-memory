@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.91 — FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.92 — FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.91";
-const ATLAS_BUILD = "28.2.91";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.91";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.92";
+const ATLAS_BUILD = "28.2.92";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.92";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -1499,7 +1499,7 @@ state.memoryTruth = {
   }
 };
 
-const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), simProfileTitle: $("simProfileTitle"), simProfileBadge: $("simProfileBadge"), simProfileCapital: $("simProfileCapital"), simProfileTicket: $("simProfileTicket"), simProfileMaxOperation: $("simProfileMaxOperation"), simProfileMaxExposure: $("simProfileMaxExposure"), simProfileMinReserve: $("simProfileMinReserve"), simProfileAllowedAssets: $("simProfileAllowedAssets"), schoolSafeLabel: $("schoolSafeLabel"), schoolTooBigLabel: $("schoolTooBigLabel"), schoolForbiddenLabel: $("schoolForbiddenLabel"), schoolFillLabel: $("schoolFillLabel"), schoolExceedLabel: $("schoolExceedLabel"), schoolResetTitle: $("schoolResetTitle"), schoolResetLabel: $("schoolResetLabel"), schoolResult: $("schoolResult"), simBuyFeePct: $("simBuyFeePct"), simSellFeePct: $("simSellFeePct"), simEntryImpactPct: $("simEntryImpactPct"), simExitImpactPct: $("simExitImpactPct"), simCostsConfirmed: $("simCostsConfirmed"), simCostStatus: $("simCostStatus"), simRoundTripCost: $("simRoundTripCost"), simBreakEvenPrice: $("simBreakEvenPrice"), simNetPnL: $("simNetPnL"), simCostTruth: $("simCostTruth"), simScenarioOutput: $("simScenarioOutput"), simSecurityGateStatus: $("simSecurityGateStatus"), simSecurityGateList: $("simSecurityGateList"), simSecurityGateReading: $("simSecurityGateReading"), atlasPedagogyDrawer: $("atlasPedagogyDrawer"), atlasPedagogyTitle: $("atlasPedagogyTitle"), atlasPedagogyBody: $("atlasPedagogyBody"), btnClosePedagogy: $("btnClosePedagogy"), btnMinimizePedagogy: $("btnMinimizePedagogy"), learningCockpitStatus: $("learningCockpitStatus"), learningCockpitProfile: $("learningCockpitProfile"), learningCockpitCapital: $("learningCockpitCapital"), learningCockpitProgress: $("learningCockpitProgress"), learningCockpitModules: $("learningCockpitModules"), learningCockpitPortfolio: $("learningCockpitPortfolio"), learningCockpitExposure: $("learningCockpitExposure"), learningCockpitLastProof: $("learningCockpitLastProof"), learningCockpitLastProofTime: $("learningCockpitLastProofTime"), learningCockpitModule: $("learningCockpitModule"), learningCockpitGoal: $("learningCockpitGoal"), learningCockpitModuleState: $("learningCockpitModuleState"), learningCockpitDuration: $("learningCockpitDuration"), learningCockpitRisk: $("learningCockpitRisk"), learningPrimaryActionPanel: $("learningPrimaryActionPanel"), learningBreadcrumb: $("learningBreadcrumb"), learningPrimaryStep: $("learningPrimaryStep"), learningPrimaryActionTitle: $("learningPrimaryActionTitle"), learningPrimaryActionText: $("learningPrimaryActionText"), btnLearningPrimaryAction: $("btnLearningPrimaryAction"), learningCompletionPanel: $("learningCompletionPanel"), learningCompletionTitle: $("learningCompletionTitle"), learningCompletionDate: $("learningCompletionDate"), learningCompletionBadge: $("learningCompletionBadge"), learningCompletionSteps: $("learningCompletionSteps"), learningCompletionNotes: $("learningCompletionNotes"), learningCompletionTakeaway: $("learningCompletionTakeaway"), learningCompletionProgress: $("learningCompletionProgress"), learningCompletionSessions: $("learningCompletionSessions"), learningCompletionNextModule: $("learningCompletionNextModule"), btnLearningNextModule: $("btnLearningNextModule"), btnLearningReviewCompleted: $("btnLearningReviewCompleted"), btnLearningExportCompleted: $("btnLearningExportCompleted"), btnLearningOpenNotebook: $("btnLearningOpenNotebook"), learningExerciseGuide: $("learningExerciseGuide"), learningExerciseBreadcrumb: $("learningExerciseBreadcrumb"), learningExerciseGuideTitle: $("learningExerciseGuideTitle"), learningExerciseGuideText: $("learningExerciseGuideText"), btnLearningExerciseGuidePrimary: $("btnLearningExerciseGuidePrimary"), btnLearningExerciseBack: $("btnLearningExerciseBack"), learningNotebookGrid: $("learningNotebookGrid"), learningSecondaryActions: $("learningSecondaryActions"), learningHelpMode: $("learningHelpMode"), learningHelpModeHint: $("learningHelpModeHint"), learningSessionTitle: $("learningSessionTitle"), learningSessionProgress: $("learningSessionProgress"), learningSessionNote: $("learningSessionNote"), learningSessionNotesFree: $("learningSessionNotesFree"), learningNotesCounter: $("learningNotesCounter"), learningTakeawayCounter: $("learningTakeawayCounter"), learningLessonPanel: $("learningLessonPanel"), learningLessonTitle: $("learningLessonTitle"), learningLessonIntro: $("learningLessonIntro"), learningLessonConcepts: $("learningLessonConcepts"), learningLessonExample: $("learningLessonExample"), learningLessonInterface: $("learningLessonInterface"), learningLessonSafety: $("learningLessonSafety"), learningFoundationPanel: $("learningFoundationPanel"), learningFoundationTitle: $("learningFoundationTitle"), learningFoundationPromise: $("learningFoundationPromise"), learningFoundationRoute: $("learningFoundationRoute"), learningFoundationStepCards: $("learningFoundationStepCards"), learningFoundationLab: $("learningFoundationLab"), learningFoundationStatus: $("learningFoundationStatus"), btnFoundationResetPath: $("btnFoundationResetPath"), learningStepReadTitle: $("learningStepReadTitle"), learningStepOpenTitle: $("learningStepOpenTitle"), learningStepPracticeTitle: $("learningStepPracticeTitle"), learningStepVerifyTitle: $("learningStepVerifyTitle"), learningStepNoteTitle: $("learningStepNoteTitle"), learningStepNote: $("learningStepNote"), btnMarkLessonRead: $("btnMarkLessonRead"), btnExportLearningNotebook: $("btnExportLearningNotebook"), learningRestartNotice: $("learningRestartNotice"), learningStepRead: $("learningStepRead"), learningStepOpen: $("learningStepOpen"), learningStepPractice: $("learningStepPractice"), learningStepVerify: $("learningStepVerify"), btnNewLearningSession: $("btnNewLearningSession"), btnContinueLearning: $("btnContinueLearning"), btnOpenLearningPractice: $("btnOpenLearningPractice"), btnOpenLearningProofs: $("btnOpenLearningProofs"), btnCompleteLearningSession: $("btnCompleteLearningSession"), btnExportLearningSession: $("btnExportLearningSession"), learningCockpitReading: $("learningCockpitReading"), expertRoadmapGrid: $("expertRoadmapGrid"), expertRoadmapBadge: $("expertRoadmapBadge"), expertRoadmapProgressText: $("expertRoadmapProgressText"), expertRoadmapMasteryText: $("expertRoadmapMasteryText"), expertRoadmapProgressBar: $("expertRoadmapProgressBar"), btnExportExpertRoadmap: $("btnExportExpertRoadmap"), btnResetExpertRoadmap: $("btnResetExpertRoadmap"), transactionProofStatus: $("transactionProofStatus"), proofBuyCount: $("proofBuyCount"), proofSellCount: $("proofSellCount"), proofRefusalCount: $("proofRefusalCount"), proofRealizedPnl: $("proofRealizedPnl"), transactionProofFilter: $("transactionProofFilter"), transactionProofRows: $("transactionProofRows"), btnExportProofMarkdown: $("btnExportProofMarkdown"), btnExportProofJSON: $("btnExportProofJSON"), btnSimCostSchoolPreset: $("btnSimCostSchoolPreset"), btnSimCostReset: $("btnSimCostReset"), withdrawAsset: $("withdrawAsset"), withdrawNetwork: $("withdrawNetwork"), withdrawAmount: $("withdrawAmount"), withdrawFee: $("withdrawFee"), withdrawDestinationVerified: $("withdrawDestinationVerified"), withdrawSmallTest: $("withdrawSmallTest"), withdrawNoThirdParty: $("withdrawNoThirdParty"), btnCheckWithdrawalSafety: $("btnCheckWithdrawalSafety"), withdrawalSafetyStatus: $("withdrawalSafetyStatus"), withdrawalSafetyOutput: $("withdrawalSafetyOutput"), scamSentinelChecks: $("scamSentinelChecks"), scamSentinelStatus: $("scamSentinelStatus"), scamSentinelOutput: $("scamSentinelOutput"), btnAnalyzeScamSignals: $("btnAnalyzeScamSignals"), btnResetScamSignals: $("btnResetScamSignals"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
+const $ = (id) => document.getElementById(id); const els = { liveStatus: $("liveStatus"), sourceName: $("sourceName"), sourceTime: $("sourceTime"), sourceDecision: $("sourceDecision"), tableDecision: $("tableDecision"), offlineNotice: $("offlineNotice"), top5Track: $("top5Track"), tickerTrack: $("tickerTrack"), marketRows: $("marketRows"), tableNote: $("tableNote"), searchInput: $("searchInput"), metricMarketCap: $("metricMarketCap"), metricMarketCapHint: $("metricMarketCapHint"), metricVolume: $("metricVolume"), metricVolumeHint: $("metricVolumeHint"), metricBtcDom: $("metricBtcDom"), metricBtcDomHint: $("metricBtcDomHint"), metricSources: $("metricSources"), metricSourcesHint: $("metricSourcesHint"), sourceGrid: $("sourceGrid"), scoreRing: $("scoreRing"), scoreValue: $("scoreValue"), scoreLabel: $("scoreLabel"), scoreBreakdown: $("scoreBreakdown"), watchInput: $("watchInput"), watchCards: $("watchCards"), watchBasketSummary: $("watchBasketSummary"), riskGrid: $("riskGrid"), newsInput: $("newsInput"), newsOutput: $("newsOutput"), fomoInput: $("fomoInput"), fomoOutput: $("fomoOutput"), coldRead: $("coldRead"), beginnerSummary: $("beginnerSummary"), advancedPanel: $("advancedPanel"), advancedGrid: $("advancedGrid"), btnToggleAdvanced: $("btnToggleAdvanced"), selectedAssetTitle: $("selectedAssetTitle"), mainChart: $("mainChart"), chartCaption: $("chartCaption"), assetDetailGrid: $("assetDetailGrid"), assetDetailWhy: $("assetDetailWhy"), brokerMarket: $("brokerMarket"), brokerMarketTime: $("brokerMarketTime"), brokerSpot: $("brokerSpot"), brokerSpotTime: $("brokerSpotTime"), brokerChart: $("brokerChart"), brokerChartTime: $("brokerChartTime"), diagSourceMode: $("diagSourceMode"), diagSourceDetail: $("diagSourceDetail"), diagMarketLatency: $("diagMarketLatency"), diagUsdLatency: $("diagUsdLatency"), diagChartMode: $("diagChartMode"), diagChartLatency: $("diagChartLatency"), diagRetryCount: $("diagRetryCount"), diagLastError: $("diagLastError"), trustLockText: $("trustLockText"), sortSelect: $("sortSelect"), commandInput: $("commandInput"), commandOutput: $("commandOutput"), commandHuman: $("commandHuman"), btnRunCommand: $("btnRunCommand"), simCash: $("simCash"), simPositionsValue: $("simPositionsValue"), simTotalValue: $("simTotalValue"), simPnL: $("simPnL"), simSymbol: $("simSymbol"), simAmount: $("simAmount"), btnSimBuy: $("btnSimBuy"), btnSimSell: $("btnSimSell"), btnSimReset: $("btnSimReset"), simPositions: $("simPositions"), simLog: $("simLog"), simProfileStatus: $("simProfileStatus"), simProfileTitle: $("simProfileTitle"), simProfileBadge: $("simProfileBadge"), simProfileCapital: $("simProfileCapital"), simProfileTicket: $("simProfileTicket"), simProfileMaxOperation: $("simProfileMaxOperation"), simProfileMaxExposure: $("simProfileMaxExposure"), simProfileMinReserve: $("simProfileMinReserve"), simProfileAllowedAssets: $("simProfileAllowedAssets"), schoolSafeLabel: $("schoolSafeLabel"), schoolTooBigLabel: $("schoolTooBigLabel"), schoolForbiddenLabel: $("schoolForbiddenLabel"), schoolFillLabel: $("schoolFillLabel"), schoolExceedLabel: $("schoolExceedLabel"), schoolResetTitle: $("schoolResetTitle"), schoolResetLabel: $("schoolResetLabel"), schoolResult: $("schoolResult"), simBuyFeePct: $("simBuyFeePct"), simSellFeePct: $("simSellFeePct"), simEntryImpactPct: $("simEntryImpactPct"), simExitImpactPct: $("simExitImpactPct"), simCostsConfirmed: $("simCostsConfirmed"), simCostStatus: $("simCostStatus"), simRoundTripCost: $("simRoundTripCost"), simBreakEvenPrice: $("simBreakEvenPrice"), simNetPnL: $("simNetPnL"), simCostTruth: $("simCostTruth"), simScenarioOutput: $("simScenarioOutput"), simSecurityGateStatus: $("simSecurityGateStatus"), simSecurityGateList: $("simSecurityGateList"), simSecurityGateReading: $("simSecurityGateReading"), atlasPedagogyDrawer: $("atlasPedagogyDrawer"), atlasPedagogyTitle: $("atlasPedagogyTitle"), atlasPedagogyBody: $("atlasPedagogyBody"), btnClosePedagogy: $("btnClosePedagogy"), btnMinimizePedagogy: $("btnMinimizePedagogy"), learningCockpitStatus: $("learningCockpitStatus"), learningCockpitProfile: $("learningCockpitProfile"), learningCockpitCapital: $("learningCockpitCapital"), learningCockpitProgress: $("learningCockpitProgress"), learningCockpitModules: $("learningCockpitModules"), learningCockpitPortfolio: $("learningCockpitPortfolio"), learningCockpitExposure: $("learningCockpitExposure"), learningCockpitLastProof: $("learningCockpitLastProof"), learningCockpitLastProofTime: $("learningCockpitLastProofTime"), learningCockpitModule: $("learningCockpitModule"), learningCockpitGoal: $("learningCockpitGoal"), learningCockpitModuleState: $("learningCockpitModuleState"), learningCockpitDuration: $("learningCockpitDuration"), learningCockpitRisk: $("learningCockpitRisk"), learningPrimaryActionPanel: $("learningPrimaryActionPanel"), learningBreadcrumb: $("learningBreadcrumb"), learningPrimaryStep: $("learningPrimaryStep"), learningPrimaryActionTitle: $("learningPrimaryActionTitle"), learningPrimaryActionText: $("learningPrimaryActionText"), btnLearningPrimaryAction: $("btnLearningPrimaryAction"), learningCompletionPanel: $("learningCompletionPanel"), learningCompletionTitle: $("learningCompletionTitle"), learningCompletionDate: $("learningCompletionDate"), learningCompletionBadge: $("learningCompletionBadge"), learningCompletionSteps: $("learningCompletionSteps"), learningCompletionNotes: $("learningCompletionNotes"), learningCompletionTakeaway: $("learningCompletionTakeaway"), learningCompletionProgress: $("learningCompletionProgress"), learningCompletionSessions: $("learningCompletionSessions"), learningCompletionNextModule: $("learningCompletionNextModule"), btnLearningNextModule: $("btnLearningNextModule"), btnLearningReviewCompleted: $("btnLearningReviewCompleted"), btnLearningExportCompleted: $("btnLearningExportCompleted"), btnLearningOpenNotebook: $("btnLearningOpenNotebook"), learningExerciseGuide: $("learningExerciseGuide"), learningExerciseBreadcrumb: $("learningExerciseBreadcrumb"), learningExerciseGuideTitle: $("learningExerciseGuideTitle"), learningExerciseGuideText: $("learningExerciseGuideText"), btnLearningExerciseGuidePrimary: $("btnLearningExerciseGuidePrimary"), btnLearningExerciseBack: $("btnLearningExerciseBack"), learningNotebookGrid: $("learningNotebookGrid"), learningSecondaryActions: $("learningSecondaryActions"), learningHelpMode: $("learningHelpMode"), learningHelpModeHint: $("learningHelpModeHint"), learningSessionTitle: $("learningSessionTitle"), learningSessionProgress: $("learningSessionProgress"), learningSessionNote: $("learningSessionNote"), learningSessionNotesFree: $("learningSessionNotesFree"), learningNotesCounter: $("learningNotesCounter"), learningTakeawayCounter: $("learningTakeawayCounter"), learningLessonPanel: $("learningLessonPanel"), learningLessonTitle: $("learningLessonTitle"), learningLessonIntro: $("learningLessonIntro"), learningLessonConcepts: $("learningLessonConcepts"), learningLessonExample: $("learningLessonExample"), learningLessonInterface: $("learningLessonInterface"), learningLessonSafety: $("learningLessonSafety"), learningFoundationPanel: $("learningFoundationPanel"), learningFoundationTitle: $("learningFoundationTitle"), learningFoundationPromise: $("learningFoundationPromise"), learningFoundationRoute: $("learningFoundationRoute"), learningFoundationStepCards: $("learningFoundationStepCards"), learningFoundationLab: $("learningFoundationLab"), learningFoundationStatus: $("learningFoundationStatus"), btnFoundationResetPath: $("btnFoundationResetPath"), btnResetLearningJourney: $("btnResetLearningJourney"), learningStepReadTitle: $("learningStepReadTitle"), learningStepOpenTitle: $("learningStepOpenTitle"), learningStepPracticeTitle: $("learningStepPracticeTitle"), learningStepVerifyTitle: $("learningStepVerifyTitle"), learningStepNoteTitle: $("learningStepNoteTitle"), learningStepNote: $("learningStepNote"), btnMarkLessonRead: $("btnMarkLessonRead"), btnExportLearningNotebook: $("btnExportLearningNotebook"), learningRestartNotice: $("learningRestartNotice"), learningStepRead: $("learningStepRead"), learningStepOpen: $("learningStepOpen"), learningStepPractice: $("learningStepPractice"), learningStepVerify: $("learningStepVerify"), btnNewLearningSession: $("btnNewLearningSession"), btnContinueLearning: $("btnContinueLearning"), btnOpenLearningPractice: $("btnOpenLearningPractice"), btnOpenLearningProofs: $("btnOpenLearningProofs"), btnCompleteLearningSession: $("btnCompleteLearningSession"), btnExportLearningSession: $("btnExportLearningSession"), learningCockpitReading: $("learningCockpitReading"), expertRoadmapGrid: $("expertRoadmapGrid"), expertRoadmapBadge: $("expertRoadmapBadge"), expertRoadmapProgressText: $("expertRoadmapProgressText"), expertRoadmapMasteryText: $("expertRoadmapMasteryText"), expertRoadmapProgressBar: $("expertRoadmapProgressBar"), btnExportExpertRoadmap: $("btnExportExpertRoadmap"), btnResetExpertRoadmap: $("btnResetExpertRoadmap"), transactionProofStatus: $("transactionProofStatus"), proofBuyCount: $("proofBuyCount"), proofSellCount: $("proofSellCount"), proofRefusalCount: $("proofRefusalCount"), proofRealizedPnl: $("proofRealizedPnl"), transactionProofFilter: $("transactionProofFilter"), transactionProofRows: $("transactionProofRows"), btnExportProofMarkdown: $("btnExportProofMarkdown"), btnExportProofJSON: $("btnExportProofJSON"), btnSimCostSchoolPreset: $("btnSimCostSchoolPreset"), btnSimCostReset: $("btnSimCostReset"), withdrawAsset: $("withdrawAsset"), withdrawNetwork: $("withdrawNetwork"), withdrawAmount: $("withdrawAmount"), withdrawFee: $("withdrawFee"), withdrawDestinationVerified: $("withdrawDestinationVerified"), withdrawSmallTest: $("withdrawSmallTest"), withdrawNoThirdParty: $("withdrawNoThirdParty"), btnCheckWithdrawalSafety: $("btnCheckWithdrawalSafety"), withdrawalSafetyStatus: $("withdrawalSafetyStatus"), withdrawalSafetyOutput: $("withdrawalSafetyOutput"), scamSentinelChecks: $("scamSentinelChecks"), scamSentinelStatus: $("scamSentinelStatus"), scamSentinelOutput: $("scamSentinelOutput"), btnAnalyzeScamSignals: $("btnAnalyzeScamSignals"), btnResetScamSignals: $("btnResetScamSignals"), btnBuildSimSummary: $("btnBuildSimSummary"), btnDownloadLearningJournal: $("btnDownloadLearningJournal"), btnDownloadSimJSON: $("btnDownloadSimJSON"), simLearningOutput: $("simLearningOutput"), btnSaveCollectorSnapshot: $("btnSaveCollectorSnapshot"), btnShowCollectorMemory: $("btnShowCollectorMemory"), btnDownloadCollectorJSON: $("btnDownloadCollectorJSON"), btnDownloadCollectorJSONL: $("btnDownloadCollectorJSONL"), btnClearCollectorMemory: $("btnClearCollectorMemory"), collectorCount: $("collectorCount"), collectorLast: $("collectorLast"), collectorOutput: $("collectorOutput"), btnExploreMemory: $("btnExploreMemory"), btnCompareMemory: $("btnCompareMemory"), btnSummarizeRefusals: $("btnSummarizeRefusals"), btnDownloadMemoryReport: $("btnDownloadMemoryReport"), memoryExplorerOutput: $("memoryExplorerOutput"), btnSaveReferenceSnapshot: $("btnSaveReferenceSnapshot"), btnSaveAfterTestSnapshot: $("btnSaveAfterTestSnapshot"), btnSaveLaterSnapshot: $("btnSaveLaterSnapshot"), btnCollectionChecklist: $("btnCollectionChecklist"), btnDownloadCollectionPlan: $("btnDownloadCollectionPlan"), collectionProgressTitle: $("collectionProgressTitle"), collectionProgressText: $("collectionProgressText"), collectionProgressBar: $("collectionProgressBar"), collectionPlanOutput: $("collectionPlanOutput"), actionFeedback: $("actionFeedback"), btnShowWakePlan: $("btnShowWakePlan"), btnDownloadWakePlan: $("btnDownloadWakePlan"), btnMarkPauseReady: $("btnMarkPauseReady"), resumeAssistantOutput: $("resumeAssistantOutput"), autoModeStatus: $("autoModeStatus"), btnAutoToggle: $("btnAutoToggle"), btnAutoNow: $("btnAutoNow"), autoLastRead: $("autoLastRead"), autoNextRead: $("autoNextRead"), autoActiveCadence: $("autoActiveCadence"), autoSnapshots: $("autoSnapshots"), autoMarketPulse: $("autoMarketPulse"), autoWatchStatus: $("autoWatchStatus"), autoReaderOutput: $("autoReaderOutput"),
   autoReaderTruth: $("autoReaderTruth"), autoVisibilityTruth: $("autoVisibilityTruth"),
   autoLastSnapshotTruth: $("autoLastSnapshotTruth"), autoCollectorTruth: $("autoCollectorTruth"),
   autoGithubWriteTruth: $("autoGithubWriteTruth"), collectorIdInput: $("collectorIdInput"), collectorIdentityBadge: $("collectorIdentityBadge"), btnSaveCollectorId: $("btnSaveCollectorId"), btnExportAutoMemory: $("btnExportAutoMemory"), autoMemoryImport: $("autoMemoryImport"), btnClearAutoMemory: $("btnClearAutoMemory"), sharedCollectorId: $("sharedCollectorId"), sharedLocalCount: $("sharedLocalCount"), sharedCollectorsCount: $("sharedCollectorsCount"), sharedLastImport: $("sharedLastImport"), sharedMemoryOutput: $("sharedMemoryOutput"), githubMemoryStatus: $("githubMemoryStatus"), btnLoadGithubMemory: $("btnLoadGithubMemory"),
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.91";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.92";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11664,8 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.91";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.91";
+const ATLAS_LEARNING_FLOW_BUILD = "28.2.92";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.92";
+const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.92";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
 const ATLAS_LEARNING_DB_NAME = "agent_crypto_learning_notebook";
@@ -11788,6 +11789,8 @@ function atlasLearningNotebookPayload(record = atlasLearningNotebookCache) {
     roadmap:atlasLearningClone(safe.roadmap || null),
     recovery:atlasLearningClone(safe.recovery || {}),
     migration:atlasLearningClone(safe.migration || {}),
+    reset:atlasLearningClone(safe.reset || {}),
+    last_reset_backup:atlasLearningClone(safe.last_reset_backup || null),
     updated_at:new Date().toISOString()
   };
 }
@@ -11872,6 +11875,8 @@ function atlasLearningSeedFromLocalStorage() {
     roadmap:atlasLearningNormalizeRoadmap(roadmapValue),
     recovery:{ status:"pending", verified:false, backend:"IndexedDB", source_keys_preserved:true },
     migration:{},
+    reset:{},
+    last_reset_backup:null,
     updated_at:new Date().toISOString()
   };
 }
@@ -11921,8 +11926,10 @@ function atlasLearningNormalizeNotebook(record) {
     cockpit:atlasLearningNormalizeCockpit(record?.cockpit, history.length),
     history,
     roadmap:atlasLearningNormalizeRoadmap(record?.roadmap),
-    recovery:record?.recovery && typeof record.recovery === "object" ? record.recovery : {},
-    migration:record?.migration && typeof record.migration === "object" ? record.migration : {},
+    recovery:record?.recovery && typeof record.recovery === "object" ? atlasLearningClone(record.recovery) : {},
+    migration:record?.migration && typeof record.migration === "object" ? atlasLearningClone(record.migration) : {},
+    reset:record?.reset && typeof record.reset === "object" ? atlasLearningClone(record.reset) : {},
+    last_reset_backup:record?.last_reset_backup && typeof record.last_reset_backup === "object" ? atlasLearningClone(record.last_reset_backup) : null,
     updated_at:record?.updated_at || new Date().toISOString()
   };
 }
@@ -12181,6 +12188,27 @@ async function applyLegacyLearningRecovery(options = {}) {
   const automatic = options.automatic === true;
   await atlasLearningInitializeCache();
   const snapshot = legacyLearningSnapshot();
+  const resetMarker = atlasLearningNotebookCache?.reset || {};
+  const resetBlocksLegacy = resetMarker.status === "active"
+    && resetMarker.block_legacy_reimport === true
+    && resetMarker.legacy_signature === snapshot.signature;
+  if (resetBlocksLegacy) {
+    const result = {
+      status:"skipped_after_user_reset",
+      verified:true,
+      backend:"IndexedDB",
+      reset_at:resetMarker.reset_at || null,
+      reset_build:resetMarker.build || ATLAS_LEARNING_FULL_RESET_BUILD,
+      legacy_signature:snapshot.signature,
+      reason:"Le parcours a été volontairement recommencé depuis le Module 01. L’ancienne récupération ne doit pas recréer les sessions effacées."
+    };
+    window.__atlasLearningRecoveryLastResult = result;
+    renderExpertRoadmap();
+    renderLearningJourneyCockpit();
+    renderLegacyLearningMigration(true);
+    if (!automatic) setActionFeedback("info", "Ancien parcours non réimporté", "Le reset complet est actif. Le Module 01 reste à 0/5 et l’ancienne mémoire ne sera pas restaurée automatiquement.");
+    return result;
+  }
   if (!snapshot.has_data) {
     saveLearningRecoveryAudit({ status:"no_data", verified:false, checked_at:new Date().toISOString() });
     const persisted = await atlasLearningPersistNow("no_legacy_data");
@@ -12328,6 +12356,20 @@ function renderLegacyLearningMigration(forceOpen = false) {
   const noticeText = document.getElementById("learningMigrationNoticeText");
   if (!panel) return;
   const snapshot = legacyLearningSnapshot();
+  const resetMarker = atlasLearningNotebookCache?.reset || {};
+  const resetBlocksLegacy = resetMarker.status === "active"
+    && resetMarker.block_legacy_reimport === true
+    && resetMarker.legacy_signature === snapshot.signature;
+  if (resetBlocksLegacy) {
+    panel.hidden = true;
+    if (restoreButton) restoreButton.hidden = true;
+    if (noticeTitle) noticeTitle.textContent = "Parcours pédagogique recommencé depuis le Module 01";
+    if (noticeText) {
+      const resetDate = resetMarker.reset_at ? new Date(resetMarker.reset_at).toLocaleString("fr-FR") : "date non disponible";
+      noticeText.textContent = `Reset complet vérifié le ${resetDate}. Le carnet précédent a été sauvegardé avant effacement. Market, Métaux, Bridge, simulateur et collecteurs sont restés intacts.`;
+    }
+    return;
+  }
   const auditMarker = legacyLearningRecoveryAuditMarker();
   const audit = snapshot.has_data ? legacyLearningTargetAudit(snapshot) : { verified:false };
   const verified = snapshot.has_data
@@ -12575,8 +12617,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.91 disponible</b><span>Le brouillon actuel vient d’un ancien parcours générique. Les notes restent intactes. « Recommencer les étapes 2 à 4 » efface seulement leurs coches et preuves, jamais les archives ni les notes.</span>`
-    : `<b>Parcours 28.2.91 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification.</span>`;
+    ? `<b>Parcours 28.2.92 disponible</b><span>Le brouillon actuel vient d’un ancien parcours générique. Les notes restent intactes. « Recommencer les étapes 2 à 4 » efface seulement leurs coches et preuves, jamais les archives ni les notes.</span>`
+    : `<b>Parcours 28.2.92 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12600,7 +12642,7 @@ function handleFoundationAction(action) {
   if (!foundationIsActive(module.key) || cockpit.completed_at) return;
   cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
   if (action === "reset_path") {
-    if (typeof window !== "undefined" && !window.confirm("Recommencer uniquement les étapes 2 à 4 avec le parcours 28.2.91 ? Les notes et les archives restent intactes.")) return;
+    if (typeof window !== "undefined" && !window.confirm("Recommencer uniquement les étapes 2 à 4 avec le parcours 28.2.92 ? Les notes et les archives restent intactes.")) return;
     cockpit.steps.open = false; cockpit.steps.practice = false; cockpit.steps.verify = false;
     cockpit.practice_completed_at = null; cockpit.verify_completed_at = null; cockpit.practice_proof_id = null; cockpit.practice_evidence = {};
     cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
@@ -12765,7 +12807,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.91 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.92 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
@@ -13314,6 +13356,204 @@ function newLearningSession() {
   scrollToLearningTarget("learningPrimaryActionPanel");
   setActionFeedback("info", "Brouillon du module recommencé", `${learningModuleByKey(next.module_key).title} · notes du brouillon remises à zéro. Les sessions archivées sont intactes.`);
 }
+
+function learningFullResetStamp() {
+  return new Date().toISOString().replace(/[:.]/g, "-");
+}
+function learningFullResetBackupPayload() {
+  if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
+  const current = loadLearningCockpitState();
+  if (!current.completed_at) {
+    if (els.learningSessionNotesFree) current.notes_free = String(els.learningSessionNotesFree.value || "");
+    if (els.learningSessionNote) {
+      current.takeaway = String(els.learningSessionNote.value || "");
+      current.steps.note = Boolean(current.takeaway.trim());
+    }
+    atlasLearningNotebookCache.cockpit = atlasLearningNormalizeCockpit(current, loadLearningHistory().length);
+  }
+  const notebook = atlasLearningNotebookPayload(atlasLearningNotebookCache);
+  delete notebook.reset;
+  delete notebook.last_reset_backup;
+  return {
+    schema:"agent_crypto_learning_full_reset_backup_v1",
+    backup_id:`LEARNING-RESET-BACKUP-${Date.now().toString(36).toUpperCase()}`,
+    created_at:new Date().toISOString(),
+    source_build:ATLAS_BUILD,
+    purpose:"Sauvegarde automatique créée avant de recommencer tout le parcours pédagogique depuis le Module 01.",
+    restored_automatically:false,
+    scope:{
+      included:["brouillon pédagogique", "sessions archivées", "notes", "conclusions", "progression des modules", "diagnostic de récupération"],
+      excluded:["Market", "Métaux", "Bridge", "simulateur", "preuves de simulation", "collecteurs", "réglages généraux"]
+    },
+    notebook
+  };
+}
+function learningFullResetVerification() {
+  const cockpit = loadLearningCockpitState();
+  const history = loadLearningHistory();
+  const roadmap = loadExpertRoadmap();
+  const allStepsEmpty = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] !== true);
+  const allModulesNew = ATLAS_EXPERT_ROADMAP_MODULES.every(module => {
+    const item = roadmap.modules?.[module.key];
+    return item?.status === "new" && !String(item?.note || "").trim();
+  });
+  const backup = atlasLearningNotebookCache?.last_reset_backup || null;
+  const marker = atlasLearningNotebookCache?.reset || {};
+  return {
+    ok:Boolean(
+      cockpit.module_key === "market"
+      && cockpit.completed_at === null
+      && cockpit.completed_sessions === 0
+      && history.length === 0
+      && allStepsEmpty
+      && !String(cockpit.notes_free || "").trim()
+      && !String(cockpit.takeaway || "").trim()
+      && allModulesNew
+      && marker.status === "active"
+      && marker.block_legacy_reimport === true
+      && backup?.backup_id === marker.backup_id
+    ),
+    module_key:cockpit.module_key,
+    completed_sessions:cockpit.completed_sessions,
+    history_length:history.length,
+    all_steps_empty:allStepsEmpty,
+    notes_empty:!String(cockpit.notes_free || "").trim(),
+    takeaway_empty:!String(cockpit.takeaway || "").trim(),
+    all_modules_new:allModulesNew,
+    backup_id:backup?.backup_id || null,
+    marker_status:marker.status || null,
+    block_legacy_reimport:marker.block_legacy_reimport === true
+  };
+}
+async function resetEntireLearningJourney() {
+  const firstMessage = [
+    "Recommencer TOUT le parcours pédagogique depuis le Module 01 ?",
+    "",
+    "SERA EFFACÉ :",
+    "• brouillon actuel et ses 5 étapes",
+    "• sessions pédagogiques archivées",
+    "• notes et conclusions",
+    "• progression des 11 modules",
+    "",
+    "SERA CONSERVÉ :",
+    "• Market, Métaux et Bridge",
+    "• portefeuille et opérations fictives",
+    "• preuves de simulation et collecteurs",
+    "• réglages généraux de l’application",
+    "",
+    "Une sauvegarde JSON exacte sera téléchargée et conservée dans IndexedDB avant l’effacement."
+  ].join("\n");
+  if (typeof window !== "undefined" && !window.confirm(firstMessage)) {
+    setActionFeedback("info", "Reset complet annulé", "Aucune donnée pédagogique n’a été modifiée.");
+    return { ok:false, cancelled:true, stage:"first_confirmation" };
+  }
+  const phrase = typeof window !== "undefined"
+    ? window.prompt('Dernière confirmation : tape exactement « RECOMMENCER MODULE 01 » pour effacer le parcours pédagogique.')
+    : "";
+  if (String(phrase || "").trim() !== "RECOMMENCER MODULE 01") {
+    setActionFeedback("info", "Reset complet annulé", "La phrase de confirmation ne correspond pas. Aucune donnée pédagogique n’a été modifiée.");
+    return { ok:false, cancelled:true, stage:"typed_confirmation" };
+  }
+
+  if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
+  const previousNotebook = atlasLearningClone(atlasLearningNotebookCache);
+  const backup = learningFullResetBackupPayload();
+  const backupFilename = `agent_crypto_sauvegarde_parcours_avant_reset_${learningFullResetStamp()}.json`;
+  let downloadCreated = false;
+  try {
+    downloadTextFile(backupFilename, "application/json", JSON.stringify(backup, null, 2));
+    downloadCreated = true;
+  } catch (error) {
+    backup.download_error = String(error?.message || error || "téléchargement impossible");
+  }
+
+  const resetAt = new Date().toISOString();
+  const legacySnapshot = legacyLearningSnapshot();
+  const next = defaultLearningCockpitState();
+  next.completed_sessions = 0;
+  next.module_key = "market";
+  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  next.restart_build = ATLAS_LEARNING_FULL_RESET_BUILD;
+  next.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  next.last_action = "read";
+
+  const resetMarker = {
+    schema:"agent_crypto_learning_full_reset_v1",
+    status:"active",
+    build:ATLAS_LEARNING_FULL_RESET_BUILD,
+    reset_at:resetAt,
+    backup_id:backup.backup_id,
+    backup_filename:backupFilename,
+    backup_download_created:downloadCreated,
+    legacy_signature:legacySnapshot.signature,
+    block_legacy_reimport:true,
+    cleared:["cockpit", "history", "notes", "takeaway", "roadmap"],
+    preserved:["market", "metals", "bridge", "simulation", "transaction_proofs", "collectors", "general_settings"]
+  };
+
+  atlasLearningNotebookCache = atlasLearningNormalizeNotebook({
+    ...atlasLearningNotebookCache,
+    cockpit:next,
+    history:[],
+    roadmap:atlasLearningNormalizeRoadmap(null),
+    recovery:{ ...(atlasLearningNotebookCache.recovery || {}), status:"user_reset", verified:false, reset_at:resetAt, backend:"IndexedDB", source_keys_preserved:true },
+    migration:{ ...(atlasLearningNotebookCache.migration || {}), status:"user_reset", signature:legacySnapshot.signature, reset_at:resetAt, block_automatic_reimport:true, backend:"IndexedDB" },
+    reset:resetMarker,
+    last_reset_backup:backup,
+    updated_at:resetAt
+  });
+
+  const button = els.btnResetLearningJourney;
+  if (button) { button.disabled = true; button.textContent = "Réinitialisation vérifiée…"; }
+  const write = await atlasLearningPersistNow("full_learning_journey_reset_28_2_92");
+  if (!write.ok) {
+    atlasLearningNotebookCache = previousNotebook;
+    renderExpertRoadmap();
+    renderLearningJourneyCockpit();
+    if (button) { button.disabled = false; button.textContent = "Recommencer tout depuis le Module 01"; }
+    const result = { ok:false, stage:"indexeddb_write", write, backup_id:backup.backup_id, backup_filename:backupFilename, backup_download_created:downloadCreated };
+    window.__atlasLearningFullResetLastResult = result;
+    setActionFeedback("warn", "Reset non appliqué", `IndexedDB n’a pas confirmé l’écriture. L’ancien parcours reste chargé. Sauvegarde : ${backupFilename}.`);
+    return result;
+  }
+
+  const verification = learningFullResetVerification();
+  if (!verification.ok) {
+    atlasLearningNotebookCache = previousNotebook;
+    const rollback = await atlasLearningPersistNow("full_learning_journey_reset_rollback_28_2_92");
+    renderExpertRoadmap();
+    renderLearningJourneyCockpit();
+    if (button) { button.disabled = false; button.textContent = "Recommencer tout depuis le Module 01"; }
+    const result = { ok:false, stage:"verification", verification, rollback, backup_id:backup.backup_id, backup_filename:backupFilename, backup_download_created:downloadCreated };
+    window.__atlasLearningFullResetLastResult = result;
+    setActionFeedback("warn", "Reset annulé après contrôle", "La relecture ne correspondait pas à un Module 01 vide. L’ancien carnet a été restauré.");
+    return result;
+  }
+
+  atlasLearningReviewOpen = false;
+  if (els.learningSecondaryActions) els.learningSecondaryActions.open = false;
+  if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
+  renderExpertRoadmap();
+  renderLearningJourneyCockpit();
+  renderLegacyLearningMigration(true);
+  scrollToLearningTarget("learningPrimaryActionPanel");
+  if (button) { button.disabled = false; button.textContent = "Recommencer tout depuis le Module 01"; }
+  const result = {
+    ok:true,
+    build:ATLAS_LEARNING_FULL_RESET_BUILD,
+    reset_at:resetAt,
+    verification,
+    backup_id:backup.backup_id,
+    backup_filename:backupFilename,
+    backup_download_created:downloadCreated,
+    preserved:resetMarker.preserved,
+    cleared:resetMarker.cleared
+  };
+  window.__atlasLearningFullResetLastResult = result;
+  setActionFeedback("ok", "Parcours remis à zéro", `Module 01 · 0/5 étapes · progression 0 %. Sauvegarde créée : ${backupFilename}. Le reste de l’application est intact.`);
+  return result;
+}
+
 function showCompletedLearningReview() {
   atlasLearningReviewOpen = !atlasLearningReviewOpen;
   renderLearningJourneyCockpit();
@@ -16438,6 +16678,7 @@ els.btnOpenLearningPractice?.addEventListener("click", () => continueLearningJou
 els.btnOpenLearningProofs?.addEventListener("click", () => scrollToLearningTarget("transactionProofLedger"));
 els.btnCompleteLearningSession?.addEventListener("click", completeLearningSession);
 els.btnNewLearningSession?.addEventListener("click", newLearningSession);
+els.btnResetLearningJourney?.addEventListener("click", resetEntireLearningJourney);
 els.btnExportLearningSession?.addEventListener("click", exportLearningSession);
 els.btnExportLearningNotebook?.addEventListener("click", exportLearningNotebook);
 document.getElementById("btnPreviewLegacyLearning")?.addEventListener("click", toggleLegacyLearningPreview);

@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.91
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.92
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.91
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.91
+   ATLAS_ASSET_BUILD: 28.2.92
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.92
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.91";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.91";
+  --atlas-asset-build: "28.2.92";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.92";
 }
 
 :root{
@@ -25531,7 +25531,7 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
 
 
 /* ========================================================================== 
-   BUILD 28.2.91 — FOUNDATIONS LEARNING PATH 01–03
+   BUILD 28.2.92 — FOUNDATIONS LEARNING PATH 01–03
    Detailed beginner pedagogy only. No market, metals, Bridge or storage layout change.
    ========================================================================== */
 .learning-foundation-panel {
@@ -25594,4 +25594,49 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
   .learning-foundation-panel { padding:13px; }
   .learning-foundation-head { flex-direction:column; }
   .foundation-lab-grid, .foundation-risk-summary { grid-template-columns:1fr; }
+}
+
+
+/* ========================================================================== 
+   BUILD 28.2.92 — FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK
+   Scoped to the Cockpit learning options. No Market, Metals, Bridge or simulator style change.
+   ========================================================================== */
+.learning-session-options > div {
+  display:grid;
+  gap:10px;
+}
+.learning-full-reset-option {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:4px;
+  padding:12px 13px;
+  border:1px solid rgba(255,105,135,.26);
+  border-radius:12px;
+  background:rgba(77,22,39,.22);
+}
+.learning-full-reset-option > div {
+  display:grid;
+  gap:4px;
+  min-width:0;
+}
+.learning-full-reset-option b {
+  color:#ffe6ed;
+  font-size:13px;
+}
+.learning-full-reset-option span {
+  color:rgba(246,220,228,.76);
+  font-size:11.5px;
+  line-height:1.45;
+}
+.learning-full-reset-option .btn {
+  flex:0 0 auto;
+  max-width:260px;
+  white-space:normal;
+  line-height:1.25;
+}
+@media (max-width:760px) {
+  .learning-full-reset-option { align-items:stretch; flex-direction:column; }
+  .learning-full-reset-option .btn { width:100%; max-width:none; }
 }
