@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.2.98",
-  "build": "28.2.98",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.98",
-  "published_at": "2026-08-05T22:00:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.2.99",
+  "build": "28.2.99",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.99",
+  "published_at": "2026-08-05T22:55:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1245,5 +1245,29 @@
     "success_state": "Module 01 · 0/5 · no learning archive · default fictional capital · no position",
     "manual_browser_storage_cleanup_required": false,
     "ctrl_f5_required": false
+  },
+  "livecheck_step_2_direct_validation_lock": {
+    "base": "28.2.98",
+    "build": "28.2.99",
+    "scope": "Module 01 step 2 only",
+    "manual_livecheck_handlers": 1,
+    "polling_watcher_removed": true,
+    "validation_trigger": "successful manual runLivecheck completion",
+    "required_proofs": [
+      "live_ok",
+      "market_rows",
+      "bitcoin_row",
+      "source",
+      "timestamp",
+      "visible_source",
+      "visible_time"
+    ],
+    "learning_backend": "IndexedDB",
+    "write_readback_required": true,
+    "success_state": "Module 01 · 2/5 · step 3 enabled",
+    "success_scroll_target": "learningFoundationPanel",
+    "failure_state": "Module 01 · 1/5 with explicit message",
+    "reset_28_2_98_unchanged": true,
+    "market_metals_bridge_collectors_unchanged": true
   }
 }

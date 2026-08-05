@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.98 — INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.99 — LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.98";
-const ATLAS_BUILD = "28.2.98";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.98";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.99";
+const ATLAS_BUILD = "28.2.99";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.99";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.98";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.99";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.98";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.98";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.98";
+const ATLAS_LEARNING_FLOW_BUILD = "28.2.99";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.99";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.99";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12664,8 +12664,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.98 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.2.98 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.2.99 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.2.99 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12768,16 +12768,82 @@ function handleFoundationAction(action) {
     }
   }
 }
-function watchFoundationLivecheck() {
-  let tries = 0;
-  const timer = setInterval(() => {
-    tries += 1;
-    const cockpit = loadLearningCockpitState();
-    if (cockpit.module_key === "market" && !cockpit.completed_at && state.liveOk && state.coins?.length) {
-      cockpit.steps.open = true; cockpit.practice_evidence = cockpit.practice_evidence || {}; cockpit.practice_evidence.market_livecheck = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
-      saveLearningCockpitState(cockpit); clearInterval(timer); renderLearningJourneyCockpit(); foundationFeedback(true, "Livecheck prêt", "Source, heure et données de marché sont disponibles. Étape 2 validée.");
-    } else if (tries >= 45) clearInterval(timer);
-  }, 1000);
+async function runFoundationLivecheck() {
+  const before = loadLearningCockpitState();
+  const shouldValidateStep2 = before.module_key === "market" && !before.completed_at && before.steps.read === true && before.steps.open !== true;
+  const succeeded = await runLivecheck({ reason: "manual-livecheck" });
+
+  if (!shouldValidateStep2) return succeeded;
+  if (!succeeded) {
+    foundationFeedback(false, "Livecheck non validé", "Les données n’ont pas été confirmées. L’étape 2 reste à faire ; aucune progression n’a été fabriquée.");
+    scrollToLearningTarget("learningFoundationPanel");
+    return false;
+  }
+
+  const btc = state.coins?.find?.(coin => coin.id === "bitcoin");
+  const source = String(state.mainSource || els.sourceName?.textContent || "").trim();
+  const timestamp = String(state.timestamp || "").trim();
+  const sourceVisible = String(els.sourceName?.textContent || "").trim();
+  const timeVisible = String(els.sourceTime?.textContent || "—").trim();
+  const proofReady = Boolean(
+    state.liveOk === true &&
+    state.coins?.length &&
+    btc &&
+    source &&
+    timestamp &&
+    sourceVisible &&
+    timeVisible &&
+    timeVisible !== "—"
+  );
+
+  if (!proofReady) {
+    foundationFeedback(false, "Preuves Livecheck incomplètes", "Source, heure, données de marché et ligne Bitcoin doivent être visibles. L’étape 2 reste à faire.");
+    scrollToLearningTarget("learningFoundationPanel");
+    return false;
+  }
+
+  const previous = atlasLearningClone(before);
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.module_key !== "market" || cockpit.completed_at) return false;
+
+  cockpit.steps.open = true;
+  cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  cockpit.practice_evidence.market_livecheck = {
+    source,
+    timestamp,
+    bitcoin_available: true,
+    assets_count: state.coins.length,
+    validated_at: new Date().toISOString(),
+    build: ATLAS_FOUNDATION_VALIDATION_BUILD
+  };
+  cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  cockpit.last_action = "livecheck_validated";
+  saveLearningCockpitState(cockpit);
+  clearTimeout(atlasLearningStoragePersistTimer);
+
+  const persisted = await atlasLearningPersistNow("foundation_market_livecheck_step_2");
+  const persistedCockpit = persisted?.record?.cockpit;
+  const verified = Boolean(
+    persisted?.ok &&
+    persistedCockpit?.module_key === "market" &&
+    persistedCockpit?.steps?.open === true &&
+    persistedCockpit?.practice_evidence?.market_livecheck?.bitcoin_available === true
+  );
+
+  if (!verified) {
+    saveLearningCockpitState(previous);
+    clearTimeout(atlasLearningStoragePersistTimer);
+    await atlasLearningPersistNow("foundation_market_livecheck_step_2_rollback");
+    renderLearningJourneyCockpit();
+    foundationFeedback(false, "Étape 2 non enregistrée", "Le Livecheck a chargé les données, mais le carnet IndexedDB n’a pas confirmé l’écriture. La progression reste à 1/5.");
+    scrollToLearningTarget("learningFoundationPanel");
+    return false;
+  }
+
+  renderLearningJourneyCockpit();
+  scrollToLearningTarget("learningFoundationPanel");
+  foundationFeedback(true, "Livecheck validé — étape 2/5", "Source, heure, données de marché et ligne Bitcoin confirmées. L’étape suivante est maintenant « Lire la ligne Bitcoin dans Market Snapshot ».", els.learningFoundationPanel);
+  return true;
 }
 
 function renderIntegratedLearningLesson(moduleKey) {
@@ -12896,7 +12962,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.98 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.99 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
@@ -16956,7 +17022,6 @@ els.learningFoundationPanel?.addEventListener("click", event => {
   if (button) handleFoundationAction(button.dataset.foundationAction);
 });
 els.btnFoundationResetPath?.addEventListener("click", () => handleFoundationAction("reset_path"));
-els.btnLivecheck?.addEventListener("click", watchFoundationLivecheck);
 els.btnMarkLessonRead?.addEventListener("click", markIntegratedLessonRead);
 els.btnLearningPrimaryAction?.addEventListener("click", handleLearningPrimaryAction);
 els.btnLearningNextModule?.addEventListener("click", startNextLearningModule);
@@ -17024,7 +17089,7 @@ $("btnRecalculateCoverage")?.addEventListener("click", () => {
 });
 els.autoMemoryImport?.addEventListener("change", () => importAutoMemoryFile(els.autoMemoryImport.files?.[0]));
 els.btnClearAutoMemory?.addEventListener("click", clearAutoMemory);
-els.btnLoadGithubMemory?.addEventListener("click", () => loadGithubSharedMemory(true, "manual")); $("btnLivecheck")?.addEventListener("click", () => runLivecheck({ reason: "manual-livecheck" }));
+els.btnLoadGithubMemory?.addEventListener("click", () => loadGithubSharedMemory(true, "manual")); $("btnLivecheck")?.addEventListener("click", runFoundationLivecheck);
 $("btnRefresh")?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "market_button" }); refreshMarketOnly({ reason: "manual-market-refresh" }); });
 $("btnAddWatch")?.addEventListener("click", addWatch);
 $("watchInput")?.addEventListener("keydown", event => {
