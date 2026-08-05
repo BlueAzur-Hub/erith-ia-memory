@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-08-05T15:30:54.104920+00:00",
+  "generated_at": "2026-08-05T17:56:15.803159+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,10 +11,10 @@
     "events_24h": 17,
     "critical_24h": 17,
     "strong_24h": 0,
-    "sources_ok": 10,
+    "sources_ok": 11,
     "sources_total": 11,
-    "sources_failed": 1,
-    "lead_event_id": "feed_948041bda745a1da",
+    "sources_failed": 0,
+    "lead_event_id": "feed_cad2d60e676f315e",
     "decision": "Surveillance renforcée"
   },
   "source_status": [
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 6,
-      "latency_ms": 376,
+      "latency_ms": 251,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "ok",
       "fetched_count": 27,
       "qualified_count": 1,
-      "latency_ms": 337,
+      "latency_ms": 230,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 102,
+      "latency_ms": 105,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 458,
+      "latency_ms": 224,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 22,
-      "latency_ms": 217,
+      "latency_ms": 356,
       "error": null
     },
     {
@@ -80,8 +80,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 29,
-      "latency_ms": 92,
+      "qualified_count": 30,
+      "latency_ms": 84,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 137,
+      "latency_ms": 150,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 12,
-      "latency_ms": 772,
+      "latency_ms": 661,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 109,
+      "latency_ms": 154,
       "error": null
     },
     {
@@ -122,11 +122,11 @@
       "name": "France 24",
       "group": "world",
       "url": "https://www.france24.com/fr/rss",
-      "status": "error",
-      "fetched_count": 0,
-      "qualified_count": 0,
-      "latency_ms": 1639,
-      "error": "HTTPError: HTTP Error 404: Not Found"
+      "status": "ok",
+      "fetched_count": 24,
+      "qualified_count": 2,
+      "latency_ms": 125,
+      "error": null
     },
     {
       "id": "sec",
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 214,
+      "latency_ms": 121,
       "error": null
     }
   ],
@@ -212,6 +212,75 @@
       "observation_only": true
     },
     {
+      "id": "feed_cad2d60e676f315e",
+      "event_id": "feed_cad2d60e676f315e",
+      "fingerprint": "cad2d60e676f315e",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Coldcard exploit could boost demand for regulated bitcoin exposure, analysts say",
+      "body": "Cantor sees positive read-through for crypto custody providers, while FRNT says the breach could drive some investors toward bitcoin ETFs.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/tech/2026/08/05/coldcard-exploit-could-boost-demand-for-regulated-bitcoin-exposure-analysts-say",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/tech/2026/08/05/coldcard-exploit-could-boost-demand-for-regulated-bitcoin-exposure-analysts-say"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-08-05T15:44:08+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.166769+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.166769+00:00",
+      "freshness": {
+        "iso": "2026-08-05T15:44:08+00:00",
+        "hours": 2.2,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 99,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_948041bda745a1da",
       "event_id": "feed_948041bda745a1da",
       "fingerprint": "948041bda745a1da",
@@ -235,11 +304,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T11:20:58+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.523031+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.523031+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.177535+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.177535+00:00",
       "freshness": {
         "iso": "2026-08-05T11:20:58+00:00",
-        "hours": 4.17,
+        "hours": 6.59,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -304,12 +373,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T05:12:46+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.532690+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.532690+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.187103+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.187103+00:00",
       "freshness": {
         "iso": "2026-08-05T05:12:46+00:00",
-        "hours": 10.3,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.72,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -718,11 +787,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-04T21:16:03+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.443648+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.443648+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.972520+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.972520+00:00",
       "freshness": {
         "iso": "2026-08-04T21:16:03+00:00",
-        "hours": 18.25,
+        "hours": 20.67,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -788,11 +857,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-04T19:11:36+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.446697+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.446697+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.977960+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.977960+00:00",
       "freshness": {
         "iso": "2026-08-04T19:11:36+00:00",
-        "hours": 20.32,
+        "hours": 22.74,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -857,11 +926,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-03T20:39:33+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.459518+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.459518+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.001227+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.001227+00:00",
       "freshness": {
         "iso": "2026-08-03T20:39:33+00:00",
-        "hours": 42.86,
+        "hours": 45.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1272,11 +1341,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T10:43:05+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.402798+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.402798+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.909265+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.909265+00:00",
       "freshness": {
         "iso": "2026-08-05T10:43:05+00:00",
-        "hours": 4.8,
+        "hours": 7.22,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1551,11 +1620,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T09:55:32+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.526428+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.526428+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.180867+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.180867+00:00",
       "freshness": {
         "iso": "2026-08-05T09:55:32+00:00",
-        "hours": 5.59,
+        "hours": 8.01,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1685,12 +1754,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T15:24:38+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.434935+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.434935+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.962427+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.962427+00:00",
       "freshness": {
         "iso": "2026-08-05T15:24:38+00:00",
-        "hours": 0.1,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.53,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -1887,77 +1956,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-04T13:36:06+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.450932+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.450932+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.985268+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.985268+00:00",
       "freshness": {
         "iso": "2026-08-04T13:36:06+00:00",
-        "hours": 25.91,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 94,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "IA",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_83fb9a7f65ecd139",
-      "event_id": "feed_83fb9a7f65ecd139",
-      "fingerprint": "83fb9a7f65ecd139",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "OpenAI's Rogue AI Hacked Four More Platforms Besides Hugging Face",
-      "body": "OpenAI quietly updated its breach disclosure to confirm its agent accessed four external services beyond Hugging Face. Only one has been named so far.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/374645/openais-rogue-ai-hacked-four-more-platforms-besides-hugging-face",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/374645/openais-rogue-ai-hacked-four-more-platforms-besides-hugging-face"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-07-29T16:16:43+00:00",
-      "first_seen_at": "2026-07-31T15:31:40.376368+00:00",
-      "last_seen_at": "2026-07-31T15:31:40.376368+00:00",
-      "freshness": {
-        "iso": "2026-07-29T16:16:43+00:00",
-        "hours": 47.25,
+        "hours": 28.34,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2191,77 +2194,6 @@
         "action": "Alerte prioritaire · observation",
         "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
         "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 21,
-      "matched_topics": [
-        "crypto",
-        "macro",
-        "geopolitics",
-        "energy"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_e12a032eebbce35b",
-      "event_id": "feed_e12a032eebbce35b",
-      "fingerprint": "e12a032eebbce35b",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin price wedged into ‘most divided’ FOMC as Iran war spikes oil prices 8%",
-      "body": "Bitcoin traders weathered an oil-price surge and ongoing Asia chip-stock sell-off into the Federal Reserve interest-rate decision.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/bitcoin-price-wedged-into-most-divided-fomc-as-iran-war-spikes-oil-prices",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/bitcoin-price-wedged-into-most-divided-fomc-as-iran-war-spikes-oil-prices"
-      ],
-      "declared_status": "reported",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-07-29T17:06:55+00:00",
-      "first_seen_at": "2026-07-30T20:37:27.440258+00:00",
-      "last_seen_at": "2026-07-30T20:37:27.440258+00:00",
-      "freshness": {
-        "iso": "2026-07-29T17:06:55+00:00",
-        "hours": 27.51,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 93,
-        "level": "Critique"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
       },
       "confirmations": 1,
       "relevance_score": 21,
@@ -2571,11 +2503,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-05T13:20:01+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.397212+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.397212+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.904382+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.904382+00:00",
       "freshness": {
         "iso": "2026-08-05T13:20:01+00:00",
-        "hours": 2.18,
+        "hours": 4.6,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2642,11 +2574,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-03T19:17:37+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.460510+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.460510+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.003085+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.003085+00:00",
       "freshness": {
         "iso": "2026-08-03T19:17:37+00:00",
-        "hours": 44.22,
+        "hours": 46.64,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2712,11 +2644,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T15:00:00+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.550217+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.550217+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.106462+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.106462+00:00",
       "freshness": {
         "iso": "2026-07-30T15:00:00+00:00",
-        "hours": 144.51,
+        "hours": 146.94,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2776,11 +2708,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T15:00:00+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.551513+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.551513+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.107578+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.107578+00:00",
       "freshness": {
         "iso": "2026-07-30T15:00:00+00:00",
-        "hours": 144.51,
+        "hours": 146.94,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2840,11 +2772,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-07-30T13:53:38+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.604769+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.604769+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.017802+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.017802+00:00",
       "freshness": {
         "iso": "2026-07-30T13:53:38+00:00",
-        "hours": 145.62,
+        "hours": 148.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2906,11 +2838,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-05T12:28:39+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.520249+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.520249+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.174751+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.174751+00:00",
       "freshness": {
         "iso": "2026-08-05T12:28:39+00:00",
-        "hours": 3.04,
+        "hours": 5.46,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2972,11 +2904,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-04T16:21:59+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.538899+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.538899+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.193147+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.193147+00:00",
       "freshness": {
         "iso": "2026-08-04T16:21:59+00:00",
-        "hours": 23.15,
+        "hours": 25.57,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3150,70 +3082,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_d40bf39152aa6424",
-      "event_id": "feed_d40bf39152aa6424",
-      "fingerprint": "d40bf39152aa6424",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "SEC Ready to Provide Crypto Rules if Clarity Act Flounders: Chair Atkins",
-      "body": "Passed by the House a year ago, the bill cleared Senate Banking in May and still awaits a floor vote.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/374643/sec-ready-to-provide-crypto-rules-if-clarity-act-flounders-chair-atkins",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/374643/sec-ready-to-provide-crypto-rules-if-clarity-act-flounders-chair-atkins"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-07-29T16:09:34+00:00",
-      "first_seen_at": "2026-07-31T13:08:52.596279+00:00",
-      "last_seen_at": "2026-07-31T13:08:52.596279+00:00",
-      "freshness": {
-        "iso": "2026-07-29T16:09:34+00:00",
-        "hours": 44.99,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_0defe527be9c3653",
       "event_id": "feed_0defe527be9c3653",
       "fingerprint": "0defe527be9c3653",
@@ -3237,12 +3105,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-05T05:47:42+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.418787+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.418787+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.925639+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.925639+00:00",
       "freshness": {
         "iso": "2026-08-05T05:47:42+00:00",
-        "hours": 9.72,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.14,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3301,11 +3169,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-04T19:58:48+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.422539+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.422539+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.929134+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.929134+00:00",
       "freshness": {
         "iso": "2026-08-04T19:58:48+00:00",
-        "hours": 19.53,
+        "hours": 21.96,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3680,6 +3548,75 @@
       "observation_only": true
     },
     {
+      "id": "feed_3bfa21fb07318010",
+      "event_id": "feed_3bfa21fb07318010",
+      "fingerprint": "3bfa21fb07318010",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Circle Taps Visa, Mastercard and BlackRock as Validators for September Arc Launch",
+      "body": "Circle's USDC distribution deal with Coinbase has been renewed on existing terms, and Arc's testnet has processed half a billion transactions.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374961/circle-taps-visa-mastercard-and-blackrock-as-validators-for-september-arc-launch",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374961/circle-taps-visa-mastercard-and-blackrock-as-validators-for-september-arc-launch"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-08-05T15:38:09+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.961443+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.961443+00:00",
+      "freshness": {
+        "iso": "2026-08-05T15:38:09+00:00",
+        "hours": 2.3,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 89,
+        "level": "Critique"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [
+        "USDC"
+      ],
+      "sectors": [
+        "Stablecoins",
+        "Exchanges"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "institutional"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_c4ee5bdf9cfec94a",
       "event_id": "feed_c4ee5bdf9cfec94a",
       "fingerprint": "c4ee5bdf9cfec94a",
@@ -3703,11 +3640,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-04T16:43:46+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.449867+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.449867+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.983507+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.983507+00:00",
       "freshness": {
         "iso": "2026-08-04T16:43:46+00:00",
-        "hours": 22.79,
+        "hours": 25.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3771,11 +3708,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-04T11:40:44+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.453641+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.453641+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.991082+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.991082+00:00",
       "freshness": {
         "iso": "2026-08-04T11:40:44+00:00",
-        "hours": 27.84,
+        "hours": 30.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4316,11 +4253,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-05T09:24:18+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.682510+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.682510+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.083264+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.083264+00:00",
       "freshness": {
         "iso": "2026-08-05T09:24:18+00:00",
-        "hours": 6.11,
+        "hours": 8.53,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4448,11 +4385,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-05T13:00:00+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.517071+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.517071+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.171663+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.171663+00:00",
       "freshness": {
         "iso": "2026-08-05T13:00:00+00:00",
-        "hours": 2.51,
+        "hours": 4.94,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4512,11 +4449,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-05T11:13:17+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.524202+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.524202+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.178657+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.178657+00:00",
       "freshness": {
         "iso": "2026-08-05T11:13:17+00:00",
-        "hours": 4.29,
+        "hours": 6.72,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5104,11 +5041,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-04T17:10:04+00:00",
-      "first_seen_at": "2026-08-05T15:30:52.423845+00:00",
-      "last_seen_at": "2026-08-05T15:30:52.423845+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.930380+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.930380+00:00",
       "freshness": {
         "iso": "2026-08-04T17:10:04+00:00",
-        "hours": 22.35,
+        "hours": 24.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5346,75 +5283,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_0f335c2b5b9baa42",
-      "event_id": "feed_0f335c2b5b9baa42",
-      "fingerprint": "0f335c2b5b9baa42",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Ethereum Price Stalls as Fed Rate Decision Looms",
-      "body": "Despite being down today, ETH has clawed back from the worst levels of the year. Now it's waiting on the Fed.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/374653/ethereum-price-stalls-fed-rate-decision",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/374653/ethereum-price-stalls-fed-rate-decision"
-      ],
-      "declared_status": "reported",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-07-29T17:18:49+00:00",
-      "first_seen_at": "2026-07-31T19:56:12.079817+00:00",
-      "last_seen_at": "2026-07-31T19:56:12.079817+00:00",
-      "freshness": {
-        "iso": "2026-07-29T17:18:49+00:00",
-        "hours": 50.62,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [
-        "ETH"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "macro"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_1e4d7a2c380f8b9e",
       "event_id": "feed_1e4d7a2c380f8b9e",
       "fingerprint": "1e4d7a2c380f8b9e",
@@ -5549,6 +5417,144 @@
       "matched_topics": [
         "crypto",
         "macro"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_3e91d0ee70b68b9b",
+      "event_id": "feed_3e91d0ee70b68b9b",
+      "fingerprint": "3e91d0ee70b68b9b",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Trump Family’s American Bitcoin Tops 8,000 BTC After Record Mining Quarter",
+      "body": "The Hut 8 subsidiary increased its Bitcoin holdings by 14% in the second quarter even as Bitcoin’s price fell.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/374850/trump-american-bitcoin-8000-btc-record-mining-quarter",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/374850/trump-american-bitcoin-8000-btc-record-mining-quarter"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-08-03T16:29:15+00:00",
+      "first_seen_at": "2026-08-05T17:56:15.011928+00:00",
+      "last_seen_at": "2026-08-05T17:56:15.011928+00:00",
+      "freshness": {
+        "iso": "2026-08-03T16:29:15+00:00",
+        "hours": 49.45,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 85,
+        "level": "Critique"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "geopolitics"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_fbe7acaf352deed8",
+      "event_id": "feed_fbe7acaf352deed8",
+      "fingerprint": "fbe7acaf352deed8",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Gold hits 6-week highs on China demand as Bitcoin ignores fresh S&P 500 record",
+      "body": "Gold and US stocks stole the limelight on Wednesday as Bitcoin failed to gain significantly beyond $64,000.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/gold-hits-six-week-highs-on-china-demand",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/markets/gold-hits-six-week-highs-on-china-demand"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-08-05T15:02:16+00:00",
+      "first_seen_at": "2026-08-05T17:56:14.899404+00:00",
+      "last_seen_at": "2026-08-05T17:56:14.899404+00:00",
+      "freshness": {
+        "iso": "2026-08-05T15:02:16+00:00",
+        "hours": 2.9,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 85,
+        "level": "Critique"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "geopolitics"
       ],
       "observation_only": true
     }
