@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.93 — FOUNDATION EVIDENCE-ONLY STEPS & GUIDED COMPLETION LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.2.94 — CURRENT MODULE STEP-1 RESTART & FOUNDATION EVIDENCE LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.93";
-const ATLAS_BUILD = "28.2.93";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.93";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.94";
+const ATLAS_BUILD = "28.2.94";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.94";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11615,7 +11615,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.92";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.2.94";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11664,9 +11664,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.2.93";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.93";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.93";
+const ATLAS_LEARNING_FLOW_BUILD = "28.2.94";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.94";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.2.94";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.92";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12660,8 +12660,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.2.92 disponible</b><span>Le brouillon actuel vient d’un ancien parcours générique. Les notes restent intactes. « Recommencer les étapes 2 à 4 » efface seulement leurs coches et preuves, jamais les archives ni les notes.</span>`
-    : `<b>Parcours 28.2.92 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification.</span>`;
+    ? `<b>Parcours 28.2.94 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Pour reprendre proprement, « Recommencer ce module depuis l’étape 1 » efface la leçon lue, les cinq étapes, les notes, la conclusion et les preuves du brouillon actif. Les sessions archivées et les autres modules restent intacts.</span>`
+    : `<b>Parcours 28.2.94 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
   if (els.btnFoundationResetPath) els.btnFoundationResetPath.hidden = !oldPath || Boolean(cockpit.completed_at);
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -12679,19 +12679,61 @@ function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   return cockpit;
 }
 function foundationFeedback(ok, title, text) { setActionFeedback(ok ? "ok" : "warn", title, text, els.learningFoundationPanel); }
+function restartLearningModuleFromStepOne(options = {}) {
+  const previous = loadLearningCockpitState();
+  if (previous.completed_at) {
+    setActionFeedback("info", "Session déjà terminée", "La session archivée reste intacte. Utilise « Passer au module suivant » ou ouvre une nouvelle révision depuis la feuille de route.");
+    return { ok:false, reason:"completed" };
+  }
+  const module = learningModuleByKey(previous.module_key);
+  const hasContent = Boolean(
+    previous.lesson_read_at
+    || previous.notes_free
+    || previous.takeaway
+    || previous.practice_proof_id
+    || previous.practice_completed_at
+    || previous.verify_completed_at
+    || Object.keys(previous.practice_evidence || {}).length
+    || ATLAS_LEARNING_SESSION_STEPS.some(key => previous.steps?.[key] === true)
+  );
+  const forceConfirm = options.forceConfirm === true;
+  const confirmation = [
+    `Recommencer « ${module.title} » depuis l’étape 1 ?`,
+    "",
+    "Ce brouillon actif perdra :",
+    "• la leçon marquée comme lue",
+    "• les cinq étapes",
+    "• les notes et la conclusion",
+    "• les preuves pédagogiques du module",
+    "",
+    "Les sessions archivées, les autres modules, Market, Métaux, Bridge, le simulateur et les collecteurs resteront intacts."
+  ].join("\n");
+  if ((forceConfirm || hasContent) && typeof window !== "undefined" && !window.confirm(confirmation)) {
+    setActionFeedback("info", "Reprise du module annulée", "Aucune donnée pédagogique n’a été modifiée.");
+    return { ok:false, cancelled:true };
+  }
+  const next = defaultLearningCockpitState();
+  next.completed_sessions = loadLearningHistory().length;
+  next.module_key = module.key;
+  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  next.restart_build = ATLAS_LEARNING_FLOW_BUILD;
+  next.foundation_path_build = foundationIsActive(module.key) ? ATLAS_FOUNDATION_LEARNING_BUILD : null;
+  next.last_action = "read";
+  saveLearningCockpitState(next);
+  atlasLearningReviewOpen = false;
+  if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
+  renderLearningJourneyCockpit();
+  scrollToLearningTarget("learningLessonPanel");
+  setActionFeedback("info", "Module recommencé depuis l’étape 1", `${module.title} · leçon, cinq étapes, notes, conclusion et preuves du brouillon remises à zéro. Les archives et les autres modules sont intacts.`);
+  return { ok:true, module_key:module.key, steps:{ ...next.steps } };
+}
 function handleFoundationAction(action) {
   const cockpit = loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
   if (!foundationIsActive(module.key) || cockpit.completed_at) return;
   cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
   if (action === "reset_path") {
-    if (typeof window !== "undefined" && !window.confirm("Recommencer uniquement les étapes 2 à 4 avec le parcours 28.2.92 ? Les notes et les archives restent intactes.")) return;
-    cockpit.steps.open = false; cockpit.steps.practice = false; cockpit.steps.verify = false;
-    cockpit.practice_completed_at = null; cockpit.verify_completed_at = null; cockpit.practice_proof_id = null; cockpit.practice_evidence = {};
-    cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
-    cockpit.last_action = "foundation_path_reset";
-    saveLearningCockpitState(cockpit); renderLearningJourneyCockpit();
-    foundationFeedback(true, "Parcours débutant réinitialisé", "Étapes 2 à 4 remises à zéro. Leçon, notes, conclusion et sessions archivées sont conservées.");
+    restartLearningModuleFromStepOne({ forceConfirm:true, source:"foundation_path_upgrade" });
     return;
   }
   if (module.key === "market") {
@@ -12850,7 +12892,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.92 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.2.94 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:"Lire la leçon intégrée", text:foundation.steps.read.action };
@@ -13399,22 +13441,7 @@ function startNextLearningModule() {
   setActionFeedback("ok", "Module suivant prêt", `${nextModule.title} · nouvelle séance créée. Les ${next.completed_sessions} anciennes sessions restent archivées.`);
 }
 function newLearningSession() {
-  const previous = loadLearningCockpitState();
-  if (previous.completed_at) {
-    setActionFeedback("info", "Session déjà terminée", "Utilise « Passer au module suivant ». Recommencer n’efface jamais une session archivée.");
-    return;
-  }
-  const hasContent = Boolean(previous.notes_free || previous.takeaway || ATLAS_LEARNING_SESSION_STEPS.some(key => previous.steps[key]));
-  if (hasContent && typeof window !== "undefined" && !window.confirm("Recommencer uniquement le brouillon actuel ? Les sessions archivées resteront conservées.")) return;
-  const next = defaultLearningCockpitState();
-  next.completed_sessions = loadLearningHistory().length;
-  next.module_key = learningModuleByKey(previous.module_key).key;
-  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
-  saveLearningCockpitState(next);
-  atlasLearningReviewOpen = false;
-  renderLearningJourneyCockpit();
-  scrollToLearningTarget("learningPrimaryActionPanel");
-  setActionFeedback("info", "Brouillon du module recommencé", `${learningModuleByKey(next.module_key).title} · notes du brouillon remises à zéro. Les sessions archivées sont intactes.`);
+  return restartLearningModuleFromStepOne({ source:"session_options" });
 }
 
 function learningFullResetStamp() {
