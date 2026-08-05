@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.2.90" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.90" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.90 — COCKPIT INTERACTION RESTORATION & READABILITY LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK</title>
+  <meta name="atlas-build" content="28.2.91" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.2.91" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.2.91 — FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.90" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.2.91" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.90"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.2.91"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.90</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.2.91</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.86</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.2.91</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -229,7 +229,7 @@
       </section>
 
       <section class="command-bar" id="livecheck">
-        <button class="btn primary" id="btnLivecheck">Relancer maintenant</button>
+        <button class="btn primary" id="btnLivecheck">Lancer Livecheck</button>
         <button class="btn" id="btnRefresh">Rafraîchir marché</button>
         <div class="source-card live-decision" id="decisionCard" data-v2-complete-control>
           <span>Décision tableau</span>
@@ -2784,7 +2784,7 @@
         <div class="sim-cost-summary">
           <article><b>Coût aller-retour estimé</b><span id="simRoundTripCost">0,00 %</span></article>
           <article><b>Prix d’équilibre estimé</b><span id="simBreakEvenPrice">Aucune position</span></article>
-          <article><b>P/L net estimé</b><span id="simNetPnL">0,00 €</span></article>
+          <article><b>Gain ou perte après frais <small>(P/L net estimé)</small></b><span id="simNetPnL">0,00 €</span></article>
           <article><b>Statut</b><span id="simCostTruth">Hypothèses non confirmées</span></article>
         </div>
         <p class="rule-line sim-cost-warning">Exemple école ≠ tarif Kraken. Le taux réel dépend de la paire, du type d’ordre, du niveau du compte, du spread et des conditions du marché.</p>
@@ -2808,7 +2808,7 @@
           <button type="button" data-sim-scenario="3">+3 %</button>
           <button type="button" data-sim-scenario="5">+5 %</button>
         </div>
-        <div class="sim-scenario-output" id="simScenarioOutput">Ouvre une position fictive pour calculer les scénarios.</div>
+        <div class="sim-scenario-output" id="simScenarioOutput">Crée d’abord la position BTC de 50 € dans « Mode École guidé » avec « 1 · Tester une opération prudente ». Les scénarios afficheront ensuite le gain ou la perte avant frais, les coûts et le résultat après frais.</div>
       </section>
 
 
@@ -2941,6 +2941,21 @@
           </div>
         </details>
 
+        <section class="learning-foundation-panel" id="learningFoundationPanel" aria-labelledby="learningFoundationTitle">
+          <header class="learning-foundation-head">
+            <div>
+              <p class="eyebrow">PARCOURS DÉBUTANT DÉTAILLÉ · BUILD 28.2.91</p>
+              <h4 id="learningFoundationTitle">01 · Marché et données</h4>
+              <p id="learningFoundationPromise">Chaque notion est définie avant son utilisation.</p>
+            </div>
+            <button class="btn small" id="btnFoundationResetPath" type="button" hidden>Recommencer les étapes 2 à 4</button>
+          </header>
+          <div class="learning-foundation-status" id="learningFoundationStatus" aria-live="polite"></div>
+          <div class="learning-foundation-route" id="learningFoundationRoute" aria-label="Ordre exact du parcours"></div>
+          <div class="learning-foundation-steps" id="learningFoundationStepCards"></div>
+          <section class="learning-foundation-lab" id="learningFoundationLab" aria-label="Exercice pédagogique du module"></section>
+        </section>
+
         <div class="learning-session-plan" id="learningSessionPlan">
           <div class="learning-session-plan-head">
             <div><b id="learningSessionTitle">Session du jour</b><span id="learningSessionProgress">0/5 étapes</span></div>
@@ -2952,11 +2967,11 @@
               </div>
             </details>
           </div>
-          <label><input type="checkbox" data-learning-step="read" /> <span><b>1. Lire la leçon intégrée</b><em id="learningStepRead">Le contenu complet se trouve juste au-dessus, dans l’interface.</em></span></label>
-          <label><input type="checkbox" data-learning-step="open" /> <span><b>2. Ouvrir la bonne zone</b><em id="learningStepOpen">Le Cockpit t’y conduit et valide cette étape.</em></span></label>
-          <label><input type="checkbox" data-learning-step="practice" /> <span><b>3. Faire un exercice fictif</b><em id="learningStepPractice">Aucun argent réel et aucun ordre externe.</em></span></label>
-          <label><input type="checkbox" data-learning-step="verify" /> <span><b>4. Vérifier le résultat</b><em id="learningStepVerify">Comparer ce qui était attendu avec les données réellement affichées.</em></span></label>
-          <label><input type="checkbox" data-learning-step="note" /> <span><b>5. Écrire ta conclusion personnelle</b><em>La conclusion est séparée de tes notes longues et elle n’est pas tronquée.</em></span></label>
+          <label><input type="checkbox" data-learning-step="read" /> <span><b id="learningStepReadTitle">1. Comprendre la leçon</b><em id="learningStepRead">Le contenu complet se trouve juste au-dessus, dans l’interface.</em></span></label>
+          <label><input type="checkbox" data-learning-step="open" /> <span><b id="learningStepOpenTitle">2. Ouvrir le panneau exact</b><em id="learningStepOpen">Le Cockpit nomme le panneau et l’action attendue.</em></span></label>
+          <label><input type="checkbox" data-learning-step="practice" /> <span><b id="learningStepPracticeTitle">3. Faire l’exercice expliqué</b><em id="learningStepPractice">Aucun argent réel et aucun ordre externe.</em></span></label>
+          <label><input type="checkbox" data-learning-step="verify" /> <span><b id="learningStepVerifyTitle">4. Lire le résultat expliqué</b><em id="learningStepVerify">Le résultat, son emplacement et son sens sont indiqués.</em></span></label>
+          <label><input type="checkbox" data-learning-step="note" /> <span><b id="learningStepNoteTitle">5. Écrire ta conclusion personnelle</b><em id="learningStepNote">La conclusion est séparée de tes notes longues et elle n’est pas tronquée.</em></span></label>
         </div>
 
         <div class="learning-notebook-grid" id="learningNotebookGrid">
@@ -3356,7 +3371,7 @@
       <div class="sim-columns">
         <div>
           <h3>Portefeuille virtuel <button class="atlas-info-button" type="button" data-info-key="virtual_portfolio" aria-label="Expliquer le portefeuille virtuel">ⓘ</button></h3>
-          <div class="sim-position-legend"><span>Actif</span><span>Quantité</span><span>Entrée</span><span>Prix actuel</span><span>Valeur</span><span>P/L brut</span><span>P/L net estimé</span></div>
+          <div class="sim-position-legend"><span>Actif</span><span>Quantité</span><span>Entrée</span><span>Prix actuel</span><span>Valeur</span><span>Gain/perte avant frais</span><span>Gain/perte après frais</span></div>
           <div class="sim-positions" id="simPositions">Aucune position simulée.</div>
         </div>
         <div>
@@ -3895,7 +3910,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.90</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.2.91</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3921,6 +3936,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.90"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.2.91"></script>
 </body>
 </html>
