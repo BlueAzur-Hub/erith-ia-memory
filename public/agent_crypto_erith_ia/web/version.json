@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
   "release": "Market Core V2.0-Alpha",
-  "build": "28.2.86",
-  "asset_token": "market-core-v2.0-alpha-build-28.2.86",
-  "published_at": "2026-08-05T02:00:00+02:00",
+  "build": "28.2.87",
+  "asset_token": "market-core-v2.0-alpha-build-28.2.87",
+  "published_at": "2026-08-05T03:12:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -946,5 +946,35 @@
       "agent_crypto_learning_legacy_recovery_audit_28_2_85"
     ],
     "scope_limit": "learning notebook and roadmap only; simulation profile storage remains unchanged"
+  },
+  "guided_learning_flow_readme_canonical_reset_lock": {
+    "base": "28.2.86",
+    "state": "ready_for_public_firefox_validation",
+    "title": "GUIDED LEARNING FLOW & CANONICAL README RESET LOCK",
+    "mission": "one_primary_action_from_lesson_to_next_module_without_guessing",
+    "reopened_archived_session_repair": true,
+    "archive_idempotent_by_session_id": true,
+    "completed_at_cleared_only_by_explicit_new_session": true,
+    "completion_card_visible": true,
+    "next_module_button_visible": true,
+    "automatic_proof_checkboxes_read_only": true,
+    "exercise_return_guide": true,
+    "risk_module_evidence": [
+      "school_cost_example",
+      "scenario_minus_3_percent",
+      "scenario_plus_5_percent"
+    ],
+    "current_expected_transition": "02_spot_archived_to_03_fees_and_risk",
+    "learning_storage_backend": "IndexedDB",
+    "learning_storage_keys_changed": false,
+    "simulation_storage_changed": false,
+    "market_collectors_changed": false,
+    "metals_changed": false,
+    "bridge_changed": false,
+    "decision_board_changed": false,
+    "real_order_performed": false,
+    "wallet_connected": false,
+    "github_write_performed": false,
+    "canonical_readme_replaced_in_delivery": true
   }
 }

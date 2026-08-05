@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.86
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.87
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.86
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.86
+   ATLAS_ASSET_BUILD: 28.2.87
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.87
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.86";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.86";
+  --atlas-asset-build: "28.2.87";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.87";
 }
 
 :root{
@@ -25728,3 +25728,62 @@ input[type="checkbox"]{
   display: block;
   margin-top: .3rem;
 }
+
+
+/* =========================================================
+   LAYER 28.2.87 — GUIDED LEARNING FLOW & CANONICAL README RESET LOCK
+   One primary action, visible completion proof, idempotent archive,
+   next-module transition and guided return from every exercise target.
+   ========================================================= */
+.learning-primary-action{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;
+  margin-top:11px;padding:14px;border:1px solid rgba(83,202,255,.30);border-radius:13px;
+  background:linear-gradient(135deg,rgba(28,104,172,.18),rgba(33,161,126,.10));
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+}
+.learning-primary-action[data-state="next_module"],.learning-primary-action[data-state="complete"]{border-color:rgba(76,225,158,.38);background:linear-gradient(135deg,rgba(29,137,94,.19),rgba(33,161,126,.09))}
+.learning-primary-action-copy{display:grid;gap:5px;min-width:0}
+.learning-breadcrumb{margin:0;color:#88a8bf;font-size:8px;font-weight:850;letter-spacing:.06em}
+.learning-primary-step{width:max-content;padding:4px 7px;border:1px solid rgba(98,236,255,.22);border-radius:999px;background:rgba(2,12,22,.55);color:#a8eaff;font-size:8px;font-weight:900}
+.learning-primary-action h4{margin:0;color:#fff0c8;font-size:15px}
+.learning-primary-action p:not(.learning-breadcrumb){margin:0;max-width:860px;color:#bad0de;font-size:10px;line-height:1.55}
+.learning-primary-button{min-width:240px;min-height:44px;font-size:11px!important;white-space:normal;text-align:center}
+.learning-completion-panel{display:grid;gap:12px;margin-top:11px;padding:14px;border:1px solid rgba(71,223,145,.38);border-radius:13px;background:linear-gradient(145deg,rgba(26,118,80,.17),rgba(3,16,27,.86))}
+.learning-completion-panel[hidden]{display:none!important}
+.learning-completion-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.learning-completion-head h4{margin:3px 0 5px;color:#e7fff3;font-size:16px}
+.learning-completion-head p:not(.eyebrow){margin:0;color:#a8c7ba;font-size:9px;line-height:1.5}
+.learning-completion-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.learning-completion-grid article{display:grid;gap:4px;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(2,13,22,.5)}
+.learning-completion-grid b{color:#83a89a;font-size:8px;text-transform:uppercase;letter-spacing:.07em}
+.learning-completion-grid span{color:#f1fff8;font-size:13px;font-weight:900}
+.learning-completion-grid em{color:#759487;font-size:8px;font-style:normal}
+.learning-completion-next{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px;border:1px solid rgba(255,216,130,.25);border-radius:11px;background:rgba(126,87,18,.09)}
+.learning-completion-next>div{display:grid;gap:4px}.learning-completion-next b{color:#a89565;font-size:8px;text-transform:uppercase;letter-spacing:.08em}.learning-completion-next span{color:#ffeab5;font-size:12px;font-weight:900}
+.learning-completion-actions{display:flex;flex-wrap:wrap;gap:8px}
+.learning-session-options{position:relative}
+.learning-session-options summary,.learning-secondary-actions summary{cursor:pointer;color:#9ab2c4;font-size:9px;font-weight:850;list-style:none}
+.learning-session-options summary::-webkit-details-marker,.learning-secondary-actions summary::-webkit-details-marker{display:none}
+.learning-session-options summary::before,.learning-secondary-actions summary::before{content:"▸ ";color:#62d4ff}.learning-session-options[open] summary::before,.learning-secondary-actions[open] summary::before{content:"▾ "}
+.learning-session-options>div{display:grid;gap:7px;margin-top:8px;padding:9px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(2,10,18,.86)}
+.learning-session-options span{max-width:280px;color:#7d94a7;font-size:8px;line-height:1.4}
+.learning-session-plan>label{cursor:default!important}
+.learning-session-plan>label>input:disabled{opacity:1!important;cursor:default!important}
+.learning-secondary-actions{margin-top:10px;padding:10px 11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(2,10,18,.35)}
+.learning-secondary-actions .learning-cockpit-actions{margin-top:9px}
+.learning-exercise-guide{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:10px 0;padding:11px 12px;border:1px solid rgba(98,236,255,.32);border-radius:12px;
+  background:linear-gradient(135deg,rgba(24,93,144,.26),rgba(5,22,35,.94));
+  box-shadow:0 12px 28px rgba(0,0,0,.2);position:sticky;top:8px;z-index:24;
+}
+.learning-exercise-guide[hidden]{display:none!important}
+.learning-exercise-guide-copy{display:grid;gap:4px;min-width:0}.learning-exercise-guide-copy>b{color:#fff0c8;font-size:11px}.learning-exercise-guide-copy>span{color:#b9d0df;font-size:9px;line-height:1.45}
+.learning-exercise-guide-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.learning-session-note textarea:disabled{opacity:.86;cursor:default;background:rgba(2,9,18,.5)}
+@media(max-width:980px){
+  .learning-primary-action{grid-template-columns:1fr}.learning-primary-button{min-width:0;width:100%}
+  .learning-completion-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .learning-completion-next,.learning-exercise-guide{display:grid}.learning-exercise-guide-actions{justify-content:stretch}.learning-exercise-guide-actions .btn{flex:1 1 180px}
+}
+@media(max-width:560px){.learning-completion-grid{grid-template-columns:1fr}.learning-completion-head{display:grid}}
