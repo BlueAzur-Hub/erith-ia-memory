@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.2.92
+   ATLAS PUBLICATION IDENTITY — BUILD 28.2.93
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.2.92
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.92
+   ATLAS_ASSET_BUILD: 28.2.93
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.93
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.92";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.92";
+  --atlas-asset-build: "28.2.93";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.93";
 }
 
 :root{
@@ -25639,4 +25639,49 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
 @media (max-width:760px) {
   .learning-full-reset-option { align-items:stretch; flex-direction:column; }
   .learning-full-reset-option .btn { width:100%; max-width:none; }
+}
+
+
+/* ==========================================================================
+   BUILD 28.2.93 — FOUNDATION EVIDENCE-ONLY STEPS & GUIDED COMPLETION LOCK
+   ========================================================================== */
+.learning-evidence-lock {
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:2px 0 4px;
+  padding:11px 13px;
+  border:1px solid rgba(93,220,196,.24);
+  border-radius:10px;
+  background:rgba(29,95,84,.16);
+}
+.learning-evidence-lock b {
+  flex:0 0 auto;
+  color:#80ead2;
+  font-size:12px;
+  line-height:1.45;
+}
+.learning-evidence-lock span {
+  color:#c8dce2;
+  font-size:12px;
+  line-height:1.5;
+}
+.learning-session-plan>label.is-evidence-locked {
+  cursor:default;
+  opacity:1;
+}
+.learning-session-plan>label.is-evidence-locked>input:disabled {
+  opacity:1;
+  cursor:default;
+  filter:none;
+}
+.learning-session-plan>label.is-evidence-locked:has(input:not(:checked)) {
+  border-style:dashed;
+}
+.learning-session-plan>label.is-evidence-locked:has(input:checked) {
+  border-color:rgba(69,223,160,.34);
+  box-shadow:inset 3px 0 0 rgba(69,223,160,.72);
+}
+@media (max-width:760px) {
+  .learning-evidence-lock { flex-direction:column; gap:4px; }
 }
