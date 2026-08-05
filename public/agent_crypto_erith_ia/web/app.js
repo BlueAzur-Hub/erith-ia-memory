@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.2.89 — LEARNING COCKPIT CORE CONSOLIDATION, READABILITY & VERIFIED PERSISTENCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK
+/* Market Core V2.0-Alpha · Build 28.2.90 — COCKPIT INTERACTION RESTORATION & READABILITY LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.89";
-const ATLAS_BUILD = "28.2.89";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.89";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.2.90";
+const ATLAS_BUILD = "28.2.90";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.2.90";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11623,11 +11623,9 @@ const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
 const ATLAS_LEARNING_FLOW_BUILD = "28.2.87";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.2.90";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
-const ATLAS_LEARNING_CORE_BUILD = "28.2.89";
-const ATLAS_LEARNING_NOTEBOOK_SCHEMA_VERSION = 2;
 let atlasLearningReviewOpen = false;
-let atlasLearningCommitQueue = Promise.resolve();
 const ATLAS_LEARNING_DB_NAME = "agent_crypto_learning_notebook";
 const ATLAS_LEARNING_DB_VERSION = 1;
 const ATLAS_LEARNING_DB_STORE = "notebook";
@@ -11739,13 +11737,8 @@ function atlasLearningNotebookPayload(record = atlasLearningNotebookCache) {
   const safe = record && typeof record === "object" ? record : {};
   return {
     id:ATLAS_LEARNING_DB_RECORD_ID,
-    schema:"agent_crypto_learning_notebook_indexeddb_v2",
-    schema_version:ATLAS_LEARNING_NOTEBOOK_SCHEMA_VERSION,
-    build:ATLAS_LEARNING_CORE_BUILD,
-    created_by_build:safe.created_by_build || safe.build || ATLAS_LEARNING_RECOVERY_BUILD,
-    last_written_by_build:ATLAS_LEARNING_CORE_BUILD,
-    last_migrated_by_build:safe.last_migrated_by_build || safe.migration?.verified_by_build || ATLAS_LEARNING_RECOVERY_BUILD,
-    recovery_source_build:safe.recovery_source_build || ATLAS_LEARNING_RECOVERY_BUILD,
+    schema:"agent_crypto_learning_notebook_indexeddb_v1",
+    build:ATLAS_LEARNING_RECOVERY_BUILD,
     cockpit:atlasLearningClone(safe.cockpit || null),
     history:atlasLearningClone(Array.isArray(safe.history) ? safe.history.slice(0,200) : []),
     roadmap:atlasLearningClone(safe.roadmap || null),
@@ -11811,9 +11804,6 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
     practice_completed_at:source.practice_completed_at || null,
     verify_completed_at:source.verify_completed_at || null,
     practice_evidence:source.practice_evidence && typeof source.practice_evidence === "object" ? atlasLearningClone(source.practice_evidence) : {},
-    verification_snapshot:source.verification_snapshot && typeof source.verification_snapshot === "object" ? atlasLearningClone(source.verification_snapshot) : null,
-    previous_session_id:source.previous_session_id || null,
-    reopened_archive_repaired_at:source.reopened_archive_repaired_at || null,
     last_target:source.last_target || null,
     last_action:source.last_action || null,
     flow_build:source.flow_build || null,
@@ -11830,13 +11820,8 @@ function atlasLearningSeedFromLocalStorage() {
   const roadmapValue = (() => { try { return JSON.parse(localStorage.getItem(ATLAS_EXPERT_ROADMAP_KEY) || "null"); } catch { return null; } })();
   return {
     id:ATLAS_LEARNING_DB_RECORD_ID,
-    schema:"agent_crypto_learning_notebook_indexeddb_v2",
-    schema_version:ATLAS_LEARNING_NOTEBOOK_SCHEMA_VERSION,
-    build:ATLAS_LEARNING_CORE_BUILD,
-    created_by_build:ATLAS_LEARNING_RECOVERY_BUILD,
-    last_written_by_build:ATLAS_LEARNING_CORE_BUILD,
-    last_migrated_by_build:ATLAS_LEARNING_RECOVERY_BUILD,
-    recovery_source_build:ATLAS_LEARNING_RECOVERY_BUILD,
+    schema:"agent_crypto_learning_notebook_indexeddb_v1",
+    build:ATLAS_LEARNING_RECOVERY_BUILD,
     cockpit:atlasLearningNormalizeCockpit(cockpitValue, history.length),
     history:history.slice(0,200),
     roadmap:atlasLearningNormalizeRoadmap(roadmapValue),
@@ -11883,23 +11868,17 @@ function atlasLearningReleaseRetiredLocalStorage(records = []) {
 }
 
 function atlasLearningNormalizeNotebook(record) {
-  const source = record && typeof record === "object" ? record : {};
-  const history = Array.isArray(source.history) ? source.history.slice(0,200) : [];
+  const history = Array.isArray(record?.history) ? record.history.slice(0,200) : [];
   return {
     id:ATLAS_LEARNING_DB_RECORD_ID,
-    schema:"agent_crypto_learning_notebook_indexeddb_v2",
-    schema_version:ATLAS_LEARNING_NOTEBOOK_SCHEMA_VERSION,
-    build:ATLAS_LEARNING_CORE_BUILD,
-    created_by_build:source.created_by_build || source.build || ATLAS_LEARNING_RECOVERY_BUILD,
-    last_written_by_build:source.last_written_by_build || source.build || ATLAS_LEARNING_CORE_BUILD,
-    last_migrated_by_build:source.last_migrated_by_build || source.migration?.verified_by_build || ATLAS_LEARNING_RECOVERY_BUILD,
-    recovery_source_build:source.recovery_source_build || ATLAS_LEARNING_RECOVERY_BUILD,
-    cockpit:atlasLearningNormalizeCockpit(source.cockpit, history.length),
+    schema:"agent_crypto_learning_notebook_indexeddb_v1",
+    build:ATLAS_LEARNING_RECOVERY_BUILD,
+    cockpit:atlasLearningNormalizeCockpit(record?.cockpit, history.length),
     history,
-    roadmap:atlasLearningNormalizeRoadmap(source.roadmap),
-    recovery:source.recovery && typeof source.recovery === "object" ? source.recovery : {},
-    migration:source.migration && typeof source.migration === "object" ? source.migration : {},
-    updated_at:source.updated_at || new Date().toISOString()
+    roadmap:atlasLearningNormalizeRoadmap(record?.roadmap),
+    recovery:record?.recovery && typeof record.recovery === "object" ? record.recovery : {},
+    migration:record?.migration && typeof record.migration === "object" ? record.migration : {},
+    updated_at:record?.updated_at || new Date().toISOString()
   };
 }
 async function atlasLearningPersistNow(reason = "save") {
@@ -11910,52 +11889,16 @@ async function atlasLearningPersistNow(reason = "save") {
   window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
   return result;
 }
-
-function atlasLearningCommit(reason, mutator, options = {}) {
-  const run = async () => {
-    await atlasLearningInitializeCache();
-    const before = atlasLearningClone(atlasLearningNotebookCache);
-    const draft = atlasLearningNormalizeNotebook(before);
-    let value = null;
-    try {
-      value = typeof mutator === "function" ? await mutator(draft) : null;
-      draft.last_written_by_build = ATLAS_LEARNING_CORE_BUILD;
-      const write = await atlasLearningDbWriteVerified(draft);
-      atlasLearningStorageLastResult = { ...write, reason, at:new Date().toISOString() };
-      window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
-      if (!write.ok) throw Object.assign(new Error(write.error_message || "écriture IndexedDB impossible"), { name:write.error_name || "IndexedDBError", write });
-      atlasLearningNotebookCache = atlasLearningNormalizeNotebook(write.record);
-      return { ok:true, value, record:atlasLearningClone(atlasLearningNotebookCache), write };
-    } catch (error) {
-      atlasLearningNotebookCache = before;
-      const write = error?.write || { ok:false, backend:"IndexedDB", error_name:String(error?.name || "LearningCommitError"), error_message:String(error?.message || error) };
-      atlasLearningStorageLastResult = { ...write, reason, at:new Date().toISOString() };
-      window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
-      if (!options.silent) setActionFeedback("warn", options.failureTitle || "Carnet non sauvegardé", `IndexedDB : ${write.error_name || "erreur"} — ${write.error_message || "écriture impossible"}. L’état précédent a été restauré.`);
-      return { ok:false, error:write, record:atlasLearningClone(before) };
-    }
-  };
-  const task = atlasLearningCommitQueue.then(run, run);
-  atlasLearningCommitQueue = task.then(() => undefined, () => undefined);
-  return task;
-}
-
 function atlasLearningSchedulePersist(reason = "save") {
   clearTimeout(atlasLearningStoragePersistTimer);
-  atlasLearningStoragePersistTimer = setTimeout(() => {
-    atlasLearningCommit(reason, null, { silent:true }).then(result => {
-      if (result.ok) {
-        const cockpit = loadLearningCockpitState();
-        renderLearningTextCounters(cockpit, false);
-        return;
-      }
+  atlasLearningStoragePersistTimer = setTimeout(() => { atlasLearningPersistNow(reason).then(result => {
+    if (!result.ok) {
       const noticeTitle = document.getElementById("learningMigrationNoticeTitle");
       const noticeText = document.getElementById("learningMigrationNoticeText");
       if (noticeTitle) noticeTitle.textContent = "Carnet non sauvegardé";
-      if (noticeText) noticeText.textContent = `IndexedDB : ${result.error?.error_name || "erreur"}. Tes anciennes données restent intactes.`;
-      renderLearningTextCounters(loadLearningCockpitState(), false);
-    });
-  }, 220);
+      if (noticeText) noticeText.textContent = `IndexedDB : ${result.error_name || "erreur"}. Tes anciennes données restent intactes.`;
+    }
+  }); }, 180);
 }
 async function atlasLearningInitializeCache() {
   if (atlasLearningStorageReady) return atlasLearningNotebookCache;
@@ -12297,22 +12240,13 @@ async function applyLegacyLearningRecovery(options = {}) {
 }
 async function initializeLearningNotebookStorage() {
   await atlasLearningInitializeCache();
-  const recovery = await applyLegacyLearningRecovery({ automatic:true });
-  const consolidation = await atlasLearningCommit("learning_core_startup_consolidation_28_2_89", draft => {
-    const current = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    const repaired = restoreReopenedArchivedLearningSession(current, draft.history);
-    const cockpit = repaired.cockpit;
-    if (!cockpit.completed_at && String(cockpit.takeaway || "").trim()) cockpit.steps.note = true;
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    const reconciliation = reconcileRoadmapFromArchivedLearningHistory(draft);
-    draft.last_migrated_by_build = ATLAS_LEARNING_CORE_BUILD;
-    return { repaired:repaired.repaired, reconciliation };
-  }, { silent:true });
+  const result = await applyLegacyLearningRecovery({ automatic:true });
+  reconcileRoadmapFromArchivedLearningHistory();
+  await atlasLearningPersistNow("roadmap_practice_reconciliation_28_2_88");
   renderExpertRoadmap();
   renderLearningJourneyCockpit();
   renderLegacyLearningMigration(true);
-  return { recovery, consolidation };
+  return result;
 }
 function runLegacyLearningRecoveryAtStartup() {
   return initializeLearningNotebookStorage();
@@ -12496,14 +12430,9 @@ function saveLearningCockpitState(data) {
   atlasLearningSchedulePersist("learning_cockpit");
 }
 function learningTextCount(value) { return Array.from(String(value || "")).length; }
-function renderLearningTextCounters(cockpit, pending = false) {
-  const status = pending
-    ? "enregistrement IndexedDB…"
-    : atlasLearningStorageLastResult.ok
-      ? "IndexedDB vérifiée"
-      : "sauvegarde IndexedDB en attente";
-  if (els.learningNotesCounter) els.learningNotesCounter.textContent = `${learningTextCount(cockpit.notes_free)} caractère${learningTextCount(cockpit.notes_free) > 1 ? "s" : ""} · ${status}`;
-  if (els.learningTakeawayCounter) els.learningTakeawayCounter.textContent = `${learningTextCount(cockpit.takeaway)} caractère${learningTextCount(cockpit.takeaway) > 1 ? "s" : ""} · ${status}`;
+function renderLearningTextCounters(cockpit) {
+  if (els.learningNotesCounter) els.learningNotesCounter.textContent = `${learningTextCount(cockpit.notes_free)} caractère${learningTextCount(cockpit.notes_free) > 1 ? "s" : ""} · sauvegarde IndexedDB complète`;
+  if (els.learningTakeawayCounter) els.learningTakeawayCounter.textContent = `${learningTextCount(cockpit.takeaway)} caractère${learningTextCount(cockpit.takeaway) > 1 ? "s" : ""} · sauvegarde IndexedDB complète`;
 }
 function currentLearningInterfaceFacts(moduleKey) {
   if (!state.sim) loadSimulation();
@@ -12548,10 +12477,9 @@ function renderIntegratedLearningLesson(moduleKey) {
   if (els.learningLessonInterface) els.learningLessonInterface.innerHTML = currentLearningInterfaceFacts(moduleKey).map(item => `<li>${escapeHtml(item)}</li>`).join("");
   if (els.learningLessonSafety) els.learningLessonSafety.textContent = lesson.safety;
 }
-function reconcileRoadmapFromArchivedLearningHistory(notebook = atlasLearningNotebookCache) {
-  const safe = notebook && typeof notebook === "object" ? notebook : atlasLearningNormalizeNotebook(null);
-  const history = Array.isArray(safe.history) ? safe.history : [];
-  const roadmap = atlasLearningNormalizeRoadmap(safe.roadmap);
+function reconcileRoadmapFromArchivedLearningHistory() {
+  const history = loadLearningHistory();
+  const roadmap = loadExpertRoadmap();
   let changed = false;
   const reconciled = [];
   history.forEach(session => {
@@ -12575,12 +12503,12 @@ function reconcileRoadmapFromArchivedLearningHistory(notebook = atlasLearningNot
       updated_at:session.completed_at || new Date().toISOString(),
       practice_evidence_session_id:session.session_id || null,
       practice_evidence_completed_at:session.completed_at || null,
-      reconciled_by_build:ATLAS_LEARNING_CORE_BUILD
+      reconciled_by_build:ATLAS_LEARNING_RECONCILIATION_BUILD
     };
     changed = true;
     reconciled.push(key);
   });
-  safe.roadmap = roadmap;
+  if (changed) saveExpertRoadmap(roadmap);
   return { changed, reconciled, history_count:history.length };
 }
 
@@ -12623,19 +12551,19 @@ function learningModuleButtonLabel(module) {
 function learningArchivedSessionMatch(cockpit, history = loadLearningHistory()) {
   return history.find(entry => entry?.session_id === cockpit?.session_id && entry?.completed_at) || null;
 }
-function restoreReopenedArchivedLearningSession(cockpit, history = loadLearningHistory()) {
+function restoreReopenedArchivedLearningSession(cockpit) {
   if (cockpit.completed_at) return { cockpit, repaired:false };
-  const archived = learningArchivedSessionMatch(cockpit, history);
+  const archived = learningArchivedSessionMatch(cockpit);
   const completeSteps = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] === true);
   if (!archived || !completeSteps) return { cockpit, repaired:false };
   return {
     cockpit:atlasLearningNormalizeCockpit({
       ...cockpit,
       completed_at:archived.completed_at,
-      flow_build:ATLAS_LEARNING_CORE_BUILD,
+      flow_build:ATLAS_LEARNING_FLOW_BUILD,
       last_action:"next_module",
       reopened_archive_repaired_at:new Date().toISOString()
-    }, history.length),
+    }, loadLearningHistory().length),
     repaired:true
   };
 }
@@ -12670,6 +12598,7 @@ function learningOpenParentDetails(target) {
 function positionLearningExerciseGuide(target, cockpit) {
   if (!els.learningExerciseGuide || !target || target === els.learningExerciseGuide) return;
   learningOpenParentDetails(target);
+  target.parentNode?.insertBefore(els.learningExerciseGuide, target);
   els.learningExerciseGuide.hidden = false;
   renderLearningExerciseGuide(cockpit);
 }
@@ -12740,14 +12669,31 @@ function renderLearningExerciseGuide(cockpitInput = null) {
 function renderLearningJourneyCockpit() {
   if (!els.learningCockpitStatus) return;
   if (!state.sim) loadSimulation();
-  const cockpit = loadLearningCockpitState();
+  let cockpit = loadLearningCockpitState();
+  const repaired = restoreReopenedArchivedLearningSession(cockpit);
+  cockpit = repaired.cockpit;
+  if (repaired.repaired) saveLearningCockpitState(cockpit);
   const stats = learningRoadmapStats();
   const recommended = learningModuleByKey(cockpit.module_key);
+  cockpit.module_key = recommended.key;
   const item = stats.data.modules[recommended.key];
   const practice = ATLAS_LEARNING_PRACTICE_MAP[recommended.key] || ATLAS_LEARNING_PRACTICE_MAP.market;
   const totals = getSimulationTotals();
   const symbols = Object.keys(state.sim.positions || {});
   const latest = latestLearningProof();
+  let stateChanged = repaired.repaired;
+  if (!cockpit.completed_at && ["spot","records"].includes(recommended.key) && latest?.time && new Date(latest.time).getTime() >= new Date(cockpit.started_at).getTime()) {
+    if (!cockpit.steps.practice) stateChanged = true;
+    cockpit.steps.practice = true;
+    cockpit.practice_proof_id = latest.proof_id || null;
+    cockpit.practice_completed_at = cockpit.practice_completed_at || latest.time || new Date().toISOString();
+  }
+  if (!cockpit.completed_at && String(cockpit.takeaway || "").trim() && !cockpit.steps.note) {
+    cockpit.steps.note = true;
+    stateChanged = true;
+  }
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  if (stateChanged) saveLearningCockpitState(cockpit);
   const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
   const finished = Boolean(cockpit.completed_at);
   const action = learningActionState(cockpit);
@@ -12774,15 +12720,16 @@ function renderLearningJourneyCockpit() {
   if (els.learningStepVerify) els.learningStepVerify.textContent = cockpit.steps.verify ? "Résultat relu et vérification enregistrée." : practice.verify;
   document.querySelectorAll("[data-learning-step]").forEach(input => {
     input.checked = cockpit.steps[input.dataset.learningStep] === true;
-    input.disabled = true;
-    input.setAttribute("aria-disabled", "true");
+    input.disabled = finished;
+    if (finished) input.setAttribute("aria-disabled", "true");
+    else input.removeAttribute("aria-disabled");
   });
   if (els.learningSessionNotesFree && document.activeElement !== els.learningSessionNotesFree) els.learningSessionNotesFree.value = cockpit.notes_free || "";
   if (els.learningSessionNote && document.activeElement !== els.learningSessionNote) els.learningSessionNote.value = cockpit.takeaway || "";
   if (els.learningSessionNotesFree) els.learningSessionNotesFree.disabled = finished;
   if (els.learningSessionNote) els.learningSessionNote.disabled = finished;
   if (els.btnMarkLessonRead) els.btnMarkLessonRead.disabled = finished;
-  renderLearningTextCounters(cockpit, false);
+  renderLearningTextCounters(cockpit);
   renderIntegratedLearningLesson(recommended.key);
   renderLearningPrimaryAction(cockpit, action);
   renderLearningCompletionPanel(cockpit, stats);
@@ -12794,17 +12741,20 @@ function renderLearningJourneyCockpit() {
   if (els.learningCockpitReading) {
     const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]).map(learningStepLabel);
     els.learningCockpitReading.textContent = finished
-      ? "Session archivée intégralement. Utilise « Passer au module suivant » : aucune étape terminée ne sera remise à zéro."
-      : completedSteps === 0
-        ? "Commence par l’unique bouton principal. Le cockpit indiquera ensuite chaque geste dans l’ordre."
-        : missing.length
-          ? `Progression ${completedSteps}/5. Prochaine action : ${action.title}. Les cases sont des preuves automatiques, pas des commandes à deviner.`
-          : "Les 5 étapes sont prêtes. Le bouton principal archive la session puis affiche immédiatement le module suivant.";
+      ? `Session archivée intégralement. Utilise « Passer au module suivant » : aucune étape terminée ne sera remise à zéro.`
+      : repaired.repaired
+        ? `La séance déjà archivée a été restaurée après l’ancien bouton « Continuer mon parcours ». Aucun doublon n’a été créé.`
+        : completedSteps === 0
+          ? `Commence par l’unique bouton principal. Le cockpit indiquera ensuite chaque geste dans l’ordre.`
+          : missing.length
+            ? `Progression ${completedSteps}/5. Prochaine action : ${action.title}. Les cases sont des preuves automatiques, pas des commandes à deviner.`
+            : `Les 5 étapes sont prêtes. Le bouton principal archive la session puis affiche immédiatement le module suivant.`;
   }
-  if (finished || !cockpit.steps.open) {
+  if (finished) {
     if (els.learningExerciseGuide) els.learningExerciseGuide.hidden = true;
-  } else {
-    renderLearningExerciseGuide(cockpit);
+  } else if (cockpit.steps.open && cockpit.last_target) {
+    const target = document.getElementById(cockpit.last_target);
+    if (target) positionLearningExerciseGuide(target, cockpit);
   }
   renderLearningHelpMode();
 }
@@ -12817,29 +12767,25 @@ function saveLearningStep(step, checked) {
   if (step === "note" && checked && !String(cockpit.takeaway || "").trim()) cockpit.steps.note = false;
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  cockpit.interaction_build = ATLAS_LEARNING_INTERACTION_BUILD;
   saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
 }
-async function markIntegratedLessonRead() {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) {
+function markIntegratedLessonRead() {
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.completed_at) {
     setActionFeedback("info", "Session déjà archivée", "La leçon peut être relue, mais la preuve archivée n’est pas modifiée.");
     return;
   }
-  const result = await atlasLearningCommit("learning_mark_lesson_read_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    cockpit.steps.read = true;
-    cockpit.lesson_read_at = cockpit.lesson_read_at || new Date().toISOString();
-    cockpit.last_action = "read";
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { module_key:cockpit.module_key };
-  });
-  if (!result.ok) return;
+  cockpit.steps.read = true;
+  cockpit.lesson_read_at = cockpit.lesson_read_at || new Date().toISOString();
+  cockpit.last_action = "read";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
   if (els.learningLessonPanel) els.learningLessonPanel.open = false;
   renderLearningJourneyCockpit();
   scrollToLearningTarget("learningPrimaryActionPanel");
-  setActionFeedback("ok", "Leçon intégrée lue et sauvegardée", `${learningModuleByKey(result.record.cockpit.module_key).title} · étape 1 validée après relecture IndexedDB.`);
+  setActionFeedback("ok", "Leçon intégrée lue", `${learningModuleByKey(cockpit.module_key).title} · étape 1 validée. Le bouton principal indique maintenant la suite.`);
 }
 function saveLearningSessionNotes(value, field = "notes_free") {
   const cockpit = loadLearningCockpitState();
@@ -12851,11 +12797,9 @@ function saveLearningSessionNotes(value, field = "notes_free") {
     cockpit.notes_free = String(value || "");
   }
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
-  cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-  if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
-  atlasLearningNotebookCache.cockpit = atlasLearningNormalizeCockpit(cockpit, loadLearningHistory().length);
-  renderLearningTextCounters(cockpit, true);
-  atlasLearningSchedulePersist(field === "takeaway" ? "learning_takeaway_28_2_89" : "learning_notes_28_2_89");
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
+  renderLearningTextCounters(cockpit);
   const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
   if (els.learningSessionProgress) els.learningSessionProgress.textContent = `${completedSteps}/5 étapes`;
   document.querySelectorAll('[data-learning-step="note"]').forEach(input => { input.checked = cockpit.steps.note; });
@@ -12876,135 +12820,86 @@ function scrollToLearningTarget(targetId) {
   setTimeout(() => target.classList.remove("learning-target-flash"), 1800);
   return true;
 }
-async function continueLearningJourney(practiceOnly = false) {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) {
-    await startNextLearningModule();
+function continueLearningJourney(practiceOnly = false) {
+  let cockpit = loadLearningCockpitState();
+  const repaired = restoreReopenedArchivedLearningSession(cockpit);
+  cockpit = repaired.cockpit;
+  if (cockpit.completed_at) {
+    saveLearningCockpitState(cockpit);
+    startNextLearningModule();
     return;
   }
-  const module = learningModuleByKey(current.module_key);
+  const module = learningModuleByKey(cockpit.module_key);
+  cockpit.module_key = module.key;
+  cockpit.steps.open = true;
   const targetId = learningTargetForModule(module.key, practiceOnly);
-  const result = await atlasLearningCommit(practiceOnly ? "learning_open_practice_28_2_89" : "learning_open_target_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.completed_at) return { blocked:true };
-    cockpit.module_key = module.key;
-    cockpit.steps.open = true;
-    cockpit.last_target = targetId;
-    cockpit.last_action = practiceOnly ? "practice" : "open";
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { targetId, module_key:module.key };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  cockpit.last_target = targetId;
+  cockpit.last_action = practiceOnly ? "practice" : "open";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
   const target = document.getElementById(targetId);
-  if (target) positionLearningExerciseGuide(target, result.record.cockpit);
+  if (target) positionLearningExerciseGuide(target, cockpit);
   scrollToLearningTarget(targetId);
-  setActionFeedback("info", practiceOnly ? "Exercice fictif ouvert" : "Bonne zone ouverte", `${module.title} · ${ATLAS_LEARNING_TARGET_LABELS[targetId] || "zone pédagogique"}. Le retour au cockpit reste visible.`);
+  setActionFeedback("info", practiceOnly ? "Exercice fictif ouvert" : "Bonne zone ouverte", `${module.title} · ${ATLAS_LEARNING_TARGET_LABELS[targetId] || "zone pédagogique"}. Le guide visible permet de revenir sans chercher.`);
   renderLearningJourneyCockpit();
 }
-async function recordLearningPracticeEvidence(kind, value = true) {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) return;
-  const module = learningModuleByKey(current.module_key);
-  if (module.key !== "risk") return;
-  const result = await atlasLearningCommit("learning_record_risk_evidence_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.completed_at || cockpit.session_id !== current.session_id || cockpit.module_key !== "risk") return { ignored:true };
-    cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
-    cockpit.practice_evidence.session_id = cockpit.session_id;
-    cockpit.practice_evidence.module_key = "risk";
-    if (kind === "scenario") {
-      const values = Array.isArray(cockpit.practice_evidence.scenarios) ? cockpit.practice_evidence.scenarios.slice() : [];
-      const number = Number(value);
-      if (Number.isFinite(number) && !values.includes(number)) values.push(number);
-      cockpit.practice_evidence.scenarios = values;
-    } else {
-      cockpit.practice_evidence[kind] = value;
-    }
+function recordLearningPracticeEvidence(kind, value = true) {
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.completed_at) return;
+  const module = learningModuleByKey(cockpit.module_key);
+  cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  if (kind === "scenario") {
+    const values = Array.isArray(cockpit.practice_evidence.scenarios) ? cockpit.practice_evidence.scenarios.slice() : [];
+    const number = Number(value);
+    if (Number.isFinite(number) && !values.includes(number)) values.push(number);
+    cockpit.practice_evidence.scenarios = values;
+  } else {
+    cockpit.practice_evidence[kind] = value;
+  }
+  if (module.key === "risk") {
     const scenarios = cockpit.practice_evidence.scenarios || [];
     if (cockpit.practice_evidence.cost_example && scenarios.includes(-3) && scenarios.includes(5)) {
       cockpit.steps.practice = true;
       cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
     }
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { ignored:false };
-  }, { silent:true });
-  if (result.ok && !result.value?.ignored) renderLearningJourneyCockpit();
+  }
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
+  renderLearningJourneyCockpit();
 }
-
-function latestQualifyingLearningProof(cockpit, moduleKey) {
-  const startedAt = new Date(cockpit?.started_at || 0).getTime();
-  const allowed = moduleKey === "spot" ? new Set(["SIM_BUY", "SIM_SELL"]) : new Set(["SIM_BUY", "SIM_SELL", "REFUS"]);
-  return transactionProofEntries("all").find(entry => {
-    const timestamp = entry?.time ? new Date(entry.time).getTime() : 0;
-    return allowed.has(entry?.type) && timestamp >= startedAt;
-  }) || null;
-}
-function learningVerificationSnapshot(cockpit) {
+function completeLearningPracticeStep() {
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.completed_at) return;
   const module = learningModuleByKey(cockpit.module_key);
-  const totals = getSimulationTotals();
-  const costs = readSimCostInputs();
-  const netTotals = getSimulationNetTotals(atlasSimulationScenarioPct, costs);
-  return {
-    schema:"agent_crypto_learning_verification_snapshot_v1",
-    session_id:cockpit.session_id,
-    module_key:module.key,
-    verified_at:new Date().toISOString(),
-    profile_key:SIM_PROFILE.key,
-    scenario_pct:atlasFiniteNumber(atlasSimulationScenarioPct, 0),
-    gross_pnl_eur:atlasZeroCurrency(totals.pnl),
-    net_pnl_eur:atlasZeroCurrency(netTotals.pnl),
-    round_trip_cost_pct:getSimRoundTripCostPct(costs),
-    cost_assumptions:{ ...costs },
-    interface_facts:currentLearningInterfaceFacts(module.key)
-  };
-}
-
-async function completeLearningPracticeStep() {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) return;
-  const module = learningModuleByKey(current.module_key);
-  const qualifyingProof = ["spot","records"].includes(module.key) ? latestQualifyingLearningProof(current, module.key) : null;
-  if (["spot","records"].includes(module.key) && !qualifyingProof) {
-    setActionFeedback("warn", "Preuve fictive absente", module.key === "spot"
-      ? "Effectue d’abord un achat ou une vente Spot fictive. Un refus ne valide jamais la pratique Spot."
-      : "Effectue d’abord l’exercice demandé et crée une preuve récente dans le journal local.");
-    return;
+  if (["spot","records"].includes(module.key)) {
+    const latest = latestLearningProof();
+    const recent = latest?.time && new Date(latest.time).getTime() >= new Date(cockpit.started_at).getTime();
+    if (!recent) {
+      setActionFeedback("warn", "Preuve fictive absente", "Effectue d’abord l’exercice demandé. Le cockpit ne valide pas une opération Spot sans preuve récente dans le journal local.");
+      return;
+    }
+    cockpit.practice_proof_id = latest.proof_id || null;
   }
   if (module.key === "risk") {
-    const evidence = current.practice_evidence || {};
+    const evidence = cockpit.practice_evidence || {};
     const scenarios = evidence.scenarios || [];
     const missing = [];
     if (!evidence.cost_example) missing.push("charger l’exemple école");
     if (!scenarios.includes(-3)) missing.push("tester −3 %");
     if (!scenarios.includes(5)) missing.push("tester +5 %");
     if (missing.length) {
-      setActionFeedback("warn", "Exercice de risque incomplet", `Il reste à ${missing.join(" puis ")}. Le cockpit attend les trois preuves de cette session.`);
+      setActionFeedback("warn", "Exercice de risque incomplet", `Il reste à ${missing.join(" puis ")}. Le guide ne valide pas l’étape avant ces trois preuves.`);
       return;
     }
   }
-  const result = await atlasLearningCommit("learning_complete_practice_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.completed_at || cockpit.session_id !== current.session_id) return { blocked:true };
-    if (qualifyingProof) {
-      cockpit.practice_proof_id = qualifyingProof.proof_id || null;
-      cockpit.practice_evidence = {
-        ...(cockpit.practice_evidence || {}),
-        proof:{ session_id:cockpit.session_id, proof_id:qualifyingProof.proof_id || null, type:qualifyingProof.type, symbol:qualifyingProof.symbol || null, time:qualifyingProof.time || null, profile_key:SIM_PROFILE.key }
-      };
-    }
-    cockpit.steps.practice = true;
-    cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
-    cockpit.last_action = "practice_complete";
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { blocked:false };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  cockpit.steps.practice = true;
+  cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
+  cockpit.last_action = "practice_complete";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
-  renderLearningExerciseGuide(result.record.cockpit);
-  setActionFeedback("ok", "Exercice fictif enregistré et vérifié", `${module.title} · étape 3 sauvegardée dans IndexedDB. La prochaine action est de vérifier le résultat.`);
+  renderLearningExerciseGuide(cockpit);
+  setActionFeedback("ok", "Exercice fictif enregistré", `${module.title} · étape 3 validée. La prochaine action est de vérifier le résultat.`);
 }
 function learningVerificationTargetForModule(moduleKey) {
   const map = {
@@ -13017,54 +12912,40 @@ function learningVerificationTargetForModule(moduleKey) {
   };
   return map[moduleKey] || learningTargetForModule(moduleKey, true);
 }
-async function openLearningVerificationTarget() {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) return;
-  if (!current.steps.practice) {
+function openLearningVerificationTarget() {
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.completed_at) return;
+  if (!cockpit.steps.practice) {
     setActionFeedback("warn", "Exercice requis", "Le résultat ne peut pas être vérifié avant l’exercice fictif.");
     return;
   }
-  const module = learningModuleByKey(current.module_key);
+  const module = learningModuleByKey(cockpit.module_key);
   const targetId = learningVerificationTargetForModule(module.key);
-  const result = await atlasLearningCommit("learning_open_verification_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.completed_at || cockpit.session_id !== current.session_id) return { blocked:true };
-    cockpit.last_target = targetId;
-    cockpit.last_action = "verify_open";
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { blocked:false };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  cockpit.last_target = targetId;
+  cockpit.last_action = "verify_open";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
   const target = document.getElementById(targetId);
-  if (target) positionLearningExerciseGuide(target, result.record.cockpit);
+  if (target) positionLearningExerciseGuide(target, cockpit);
   scrollToLearningTarget(targetId);
   setActionFeedback("info", "Résultat ouvert", `${module.title} · relis les valeurs affichées puis utilise le guide « J’ai vérifié le résultat ».`);
   renderLearningJourneyCockpit();
 }
-async function verifyLearningResult() {
-  const current = loadLearningCockpitState();
-  if (current.completed_at) return;
-  if (!current.steps.practice) {
+function verifyLearningResult() {
+  const cockpit = loadLearningCockpitState();
+  if (cockpit.completed_at) return;
+  if (!cockpit.steps.practice) {
     setActionFeedback("warn", "Exercice requis", "Le résultat ne peut pas être validé avant l’exercice fictif.");
     return;
   }
-  const snapshot = learningVerificationSnapshot(current);
-  const result = await atlasLearningCommit("learning_verify_result_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.completed_at || cockpit.session_id !== current.session_id) return { blocked:true };
-    cockpit.steps.verify = true;
-    cockpit.verify_completed_at = cockpit.verify_completed_at || snapshot.verified_at;
-    cockpit.verification_snapshot = snapshot;
-    cockpit.last_action = "verify";
-    cockpit.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = cockpit;
-    return { blocked:false };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  cockpit.steps.verify = true;
+  cockpit.verify_completed_at = cockpit.verify_completed_at || new Date().toISOString();
+  cockpit.last_action = "verify";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
   returnToLearningCockpit(true);
-  setActionFeedback("ok", "Résultat vérifié et sauvegardé", `${learningModuleByKey(current.module_key).title} · étape 4 validée avec un instantané pédagogique IndexedDB.`);
+  setActionFeedback("ok", "Résultat vérifié", `${learningModuleByKey(cockpit.module_key).title} · étape 4 validée. Écris maintenant ta conclusion personnelle.`);
 }
 function focusLearningConclusion() {
   const cockpit = loadLearningCockpitState();
@@ -13084,19 +12965,19 @@ function handleLearningExerciseGuidePrimary() {
   else if (action === "verify") verifyLearningResult();
   else returnToLearningCockpit(true);
 }
-async function handleLearningPrimaryAction() {
+function handleLearningPrimaryAction() {
   const cockpit = loadLearningCockpitState();
   const action = learningActionState(cockpit);
   if (action.key === "read") {
     if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
     scrollToLearningTarget("learningLessonPanel");
     setActionFeedback("info", "Leçon ouverte", "Lis le contenu puis clique sur « J’ai lu cette leçon intégrée ». Le cockpit indiquera ensuite l’étape 2.");
-  } else if (action.key === "open") await continueLearningJourney(false);
-  else if (action.key === "practice") await continueLearningJourney(true);
-  else if (action.key === "verify") await openLearningVerificationTarget();
+  } else if (action.key === "open") continueLearningJourney(false);
+  else if (action.key === "practice") continueLearningJourney(true);
+  else if (action.key === "verify") openLearningVerificationTarget();
   else if (action.key === "note") focusLearningConclusion();
-  else if (action.key === "complete") await completeLearningSession();
-  else if (action.key === "next_module") await startNextLearningModule();
+  else if (action.key === "complete") completeLearningSession();
+  else if (action.key === "next_module") startNextLearningModule();
 }
 function learningSessionSnapshot(cockpit) {
   const module = learningModuleByKey(cockpit.module_key);
@@ -13113,90 +12994,89 @@ function learningSessionSnapshot(cockpit) {
     interface_facts:currentLearningInterfaceFacts(module.key)
   };
 }
-async function completeLearningSession() {
-  const current = loadLearningCockpitState();
-  const archived = learningArchivedSessionMatch(current);
-  if (current.completed_at || archived) {
+function completeLearningSession() {
+  let cockpit = loadLearningCockpitState();
+  const repaired = restoreReopenedArchivedLearningSession(cockpit);
+  cockpit = repaired.cockpit;
+  if (cockpit.completed_at) {
+    saveLearningCockpitState(cockpit);
     renderLearningJourneyCockpit();
     scrollToLearningTarget("learningCompletionPanel");
     setActionFeedback("ok", "Session déjà archivée", "Aucun doublon n’a été créé. Le bouton principal conduit au module suivant.");
     return;
   }
-  const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !current.steps[key]);
+  const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]);
   if (missing.length) {
     setActionFeedback("warn", "Session incomplète", `Étapes restantes : ${missing.map(learningStepLabel).join(", ")}. Le bouton principal indique la première action manquante.`);
     renderLearningJourneyCockpit();
     return;
   }
-  if (!String(current.takeaway || "").trim()) {
+  if (!String(cockpit.takeaway || "").trim()) {
     setActionFeedback("warn", "Conclusion personnelle manquante", "Écris ce que tu retiens avec tes propres mots. Tes notes longues peuvent rester dans le premier champ.");
     focusLearningConclusion();
     return;
   }
-  const completedAt = new Date().toISOString();
-  const prepared = atlasLearningNormalizeCockpit({ ...current, completed_at:completedAt, last_action:"complete", flow_build:ATLAS_LEARNING_CORE_BUILD }, loadLearningHistory().length);
-  const snapshot = learningSessionSnapshot(prepared);
-  const result = await atlasLearningCommit("learning_archive_session_28_2_89", draft => {
-    const cockpit = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (cockpit.session_id !== current.session_id) return { blocked:true, reason:"session_changed" };
-    const existingIndex = draft.history.findIndex(entry => entry?.session_id === cockpit.session_id);
-    if (existingIndex >= 0 && draft.history[existingIndex]?.completed_at) {
-      draft.cockpit = atlasLearningNormalizeCockpit(draft.history[existingIndex], draft.history.length);
-      return { already:true, history_length:draft.history.length };
-    }
-    if (existingIndex >= 0) draft.history[existingIndex] = snapshot;
-    else draft.history.unshift(snapshot);
-    draft.history = draft.history.slice(0,200);
-    prepared.completed_sessions = draft.history.length;
-    draft.cockpit = atlasLearningNormalizeCockpit(prepared, draft.history.length);
-    const roadmap = atlasLearningNormalizeRoadmap(draft.roadmap);
-    const item = roadmap.modules[prepared.module_key];
-    if (item) roadmap.modules[prepared.module_key] = {
-      ...item,
-      status:"practiced",
-      note:prepared.takeaway,
-      updated_at:completedAt,
-      practice_evidence_session_id:prepared.session_id,
-      practice_evidence_completed_at:completedAt,
-      reconciled_by_build:ATLAS_LEARNING_CORE_BUILD
+  cockpit.completed_at = new Date().toISOString();
+  cockpit.last_action = "complete";
+  cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  const history = loadLearningHistory();
+  const snapshot = learningSessionSnapshot(cockpit);
+  const existingIndex = history.findIndex(entry => entry?.session_id === cockpit.session_id);
+  if (existingIndex >= 0) history[existingIndex] = snapshot;
+  else history.unshift(snapshot);
+  saveLearningHistory(history);
+  cockpit.completed_sessions = history.length;
+  saveLearningCockpitState(cockpit);
+  const roadmap = loadExpertRoadmap();
+  const current = roadmap.modules[cockpit.module_key];
+  if (current) {
+    const nextStatus = cockpit.steps.practice && cockpit.steps.verify
+      ? "practiced"
+      : current.status === "new"
+        ? "discovered"
+        : current.status === "discovered"
+          ? "understood"
+          : current.status;
+    roadmap.modules[cockpit.module_key] = {
+      ...current,
+      status:nextStatus,
+      note:cockpit.takeaway,
+      updated_at:new Date().toISOString(),
+      practice_evidence_session_id:cockpit.session_id,
+      practice_evidence_completed_at:cockpit.completed_at,
+      reconciled_by_build:ATLAS_LEARNING_RECONCILIATION_BUILD
     };
-    draft.roadmap = roadmap;
-    return { already:false, history_length:draft.history.length };
-  });
-  if (!result.ok || result.value?.blocked) return;
+    saveExpertRoadmap(roadmap);
+    renderExpertRoadmap();
+  }
   atlasLearningReviewOpen = false;
-  renderExpertRoadmap();
   renderLearningJourneyCockpit();
   scrollToLearningTarget("learningCompletionPanel");
-  setActionFeedback("ok", result.value?.already ? "Session déjà archivée" : "Session archivée et relue", `${result.value?.history_length || result.record.history.length} session${(result.value?.history_length || result.record.history.length) > 1 ? "s" : ""} conservée${(result.value?.history_length || result.record.history.length) > 1 ? "s" : ""} dans IndexedDB. La réussite n’est annoncée qu’après relecture.`);
+  setActionFeedback("ok", "Session archivée intégralement", `${history.length} session${history.length > 1 ? "s" : ""} conservée${history.length > 1 ? "s" : ""} dans IndexedDB. La carte de fin affiche maintenant le module suivant.`);
 }
-async function startNextLearningModule() {
-  const previous = loadLearningCockpitState();
-  if (!previous.completed_at && !learningArchivedSessionMatch(previous)) {
+function startNextLearningModule() {
+  let previous = loadLearningCockpitState();
+  const repaired = restoreReopenedArchivedLearningSession(previous);
+  previous = repaired.cockpit;
+  if (!previous.completed_at) {
     setActionFeedback("warn", "Session encore en cours", "Termine et archive la séance actuelle avant de créer le module suivant.");
     renderLearningJourneyCockpit();
     return;
   }
   const nextModule = learningModuleAfterCompleted(previous);
-  const result = await atlasLearningCommit("learning_start_next_module_28_2_89", draft => {
-    const existing = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (!existing.completed_at && !draft.history.some(entry => entry?.session_id === existing.session_id && entry?.completed_at)) return { blocked:true };
-    const next = defaultLearningCockpitState();
-    next.completed_sessions = draft.history.length;
-    next.module_key = nextModule.key;
-    next.previous_session_id = existing.session_id;
-    next.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = atlasLearningNormalizeCockpit(next, draft.history.length);
-    return { blocked:false, next_module_key:nextModule.key, history_length:draft.history.length };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  const next = defaultLearningCockpitState();
+  next.completed_sessions = loadLearningHistory().length;
+  next.module_key = nextModule.key;
+  next.previous_session_id = previous.session_id;
+  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(next);
   atlasLearningReviewOpen = false;
   if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
   renderLearningJourneyCockpit();
   scrollToLearningTarget("learningPrimaryActionPanel");
-  setActionFeedback("ok", "Module suivant prêt et sauvegardé", `${nextModule.title} · nouvelle séance relue dans IndexedDB. Les ${result.value.history_length} anciennes sessions restent archivées.`);
+  setActionFeedback("ok", "Module suivant prêt", `${nextModule.title} · nouvelle séance créée. Les ${next.completed_sessions} anciennes sessions restent archivées.`);
 }
-async function newLearningSession() {
+function newLearningSession() {
   const previous = loadLearningCockpitState();
   if (previous.completed_at) {
     setActionFeedback("info", "Session déjà terminée", "Utilise « Passer au module suivant ». Recommencer n’efface jamais une session archivée.");
@@ -13204,22 +13084,15 @@ async function newLearningSession() {
   }
   const hasContent = Boolean(previous.notes_free || previous.takeaway || ATLAS_LEARNING_SESSION_STEPS.some(key => previous.steps[key]));
   if (hasContent && typeof window !== "undefined" && !window.confirm("Recommencer uniquement le brouillon actuel ? Les sessions archivées resteront conservées.")) return;
-  const module = learningModuleByKey(previous.module_key);
-  const result = await atlasLearningCommit("learning_restart_draft_28_2_89", draft => {
-    const current = atlasLearningNormalizeCockpit(draft.cockpit, draft.history.length);
-    if (current.completed_at) return { blocked:true };
-    const next = defaultLearningCockpitState();
-    next.completed_sessions = draft.history.length;
-    next.module_key = module.key;
-    next.flow_build = ATLAS_LEARNING_CORE_BUILD;
-    draft.cockpit = atlasLearningNormalizeCockpit(next, draft.history.length);
-    return { blocked:false };
-  });
-  if (!result.ok || result.value?.blocked) return;
+  const next = defaultLearningCockpitState();
+  next.completed_sessions = loadLearningHistory().length;
+  next.module_key = learningModuleByKey(previous.module_key).key;
+  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(next);
   atlasLearningReviewOpen = false;
   renderLearningJourneyCockpit();
   scrollToLearningTarget("learningPrimaryActionPanel");
-  setActionFeedback("info", "Brouillon recommencé et sauvegardé", `${module.title} · notes du brouillon remises à zéro après relecture IndexedDB. Les sessions archivées sont intactes.`);
+  setActionFeedback("info", "Brouillon du module recommencé", `${learningModuleByKey(next.module_key).title} · notes du brouillon remises à zéro. Les sessions archivées sont intactes.`);
 }
 function showCompletedLearningReview() {
   atlasLearningReviewOpen = !atlasLearningReviewOpen;
@@ -13377,16 +13250,9 @@ function updateExpertRoadmapFromCard(card) {
   const key = card?.dataset?.roadmapKey;
   if (!key) return;
   const data = loadExpertRoadmap();
-  const requested = card.querySelector("[data-roadmap-status]")?.value || "new";
+  const status = card.querySelector("[data-roadmap-status]")?.value || "new";
   const note = card.querySelector("[data-roadmap-note]")?.value || "";
-  const previous = data.modules[key] || { status:"new", note:"" };
-  const hasArchivedPractice = Boolean(previous.practice_evidence_session_id) || loadLearningHistory().some(session => session?.module_key === key && session?.completed_at && session?.steps?.practice && session?.steps?.verify);
-  if (hasArchivedPractice && requested !== "practiced") {
-    setActionFeedback("warn", "Preuve pratiquée protégée", "Une session archivée ne peut pas être rétrogradée par le sélecteur. Ajoute une note de révision sans effacer la preuve.");
-    renderExpertRoadmap();
-    return;
-  }
-  data.modules[key] = { ...previous, status:ATLAS_EXPERT_STATUS_META[requested] ? requested : "new", note:String(note), updated_at:new Date().toISOString() };
+  data.modules[key] = { status: ATLAS_EXPERT_STATUS_META[status] ? status : "new", note: String(note), updated_at:new Date().toISOString() };
   saveExpertRoadmap(data);
   renderExpertRoadmap();
 }
@@ -16323,6 +16189,9 @@ els.btnExportExpertRoadmap?.addEventListener("click", exportExpertRoadmap);
 els.btnResetExpertRoadmap?.addEventListener("click", resetExpertRoadmap);
 
 els.learningHelpMode?.addEventListener("change", () => saveLearningHelpMode(els.learningHelpMode.value));
+document.querySelectorAll("[data-learning-step]").forEach(input => {
+  input.addEventListener("change", () => saveLearningStep(input.dataset.learningStep, input.checked));
+});
 els.learningSessionNotesFree?.addEventListener("input", () => { clearTimeout(els.learningSessionNotesFree._saveTimer); els.learningSessionNotesFree._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNotesFree.value, "notes_free"), 220); });
 els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.learningSessionNote._saveTimer); els.learningSessionNote._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNote.value, "takeaway"), 220); });
 els.btnMarkLessonRead?.addEventListener("click", markIntegratedLessonRead);
