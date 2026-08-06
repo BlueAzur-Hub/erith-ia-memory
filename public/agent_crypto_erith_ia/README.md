@@ -1,9 +1,67 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.2.99  
-**Mission du Build :** Livecheck Step 2 Direct Validation Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.05  
+**Mission du Build :** Explicit Lesson Validation & Verified Archive Lock
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+
+
+## Build 28.3.05 — Module 01 guidé de bout en bout
+
+Correctif limité à la pédagogie du Module 01 :
+
+- la leçon 1 reste ouverte et validée par son bouton visible sous le contenu ;
+- Livecheck conserve sa validation par preuve et relecture IndexedDB ;
+- l’étape 3 présente Prix, 24 h et 7 j, permet d’ouvrir la ligne Bitcoin, puis demande une confirmation explicite ;
+- l’étape 4 affiche directement la source et l’heure et les valide séparément ;
+- l’étape 5 fournit d’abord une synthèse construite avec les valeurs chargées ;
+- la seule question est : les données permettent-elles de prédire avec certitude le prochain mouvement ? La réponse correcte est « Non » ;
+- aucune rédaction libre n’est obligatoire pour terminer le Module 01 ;
+- les notes personnelles restent facultatives et ne peuvent fabriquer une progression ;
+- une ancienne conclusion longue de 28.3.04 ne conserve plus artificiellement l’étape 5 sans la nouvelle preuve guidée ;
+- l’archivage reste distinct, vérifié par relecture IndexedDB, puis le passage au Module 02 reste séparé ;
+- reset, Market, Métaux, Bridge, collecteurs, simulation fictive et archives existantes restent inchangés.
+
+## Build 28.3.03 — Archivage autonome et cohérence visible du parcours
+
+- L’étape 5 archive automatiquement la session dès que la conclusion personnelle est valide.
+- La feuille de route est mise à jour immédiatement : le Module 01 ne reste plus à 0 % après un affichage 5/5.
+- Les libellés publics de version sont synchronisés sur le Build 28.3.03, y compris le pied de page et Situation du projet.
+- « Lecture réelle de Bitcoin » devient « Lecture du snapshot Bitcoin » afin de distinguer clairement CoinGecko du prix spot Binance.
+- L’étape 4 décrit désormais exactement son fonctionnement automatique : source + heure + conclusion prudente, sans champ à chercher.
+
+- supprime la boucle « Lire la leçon » puis « J’ai lu cette leçon » ;
+- la leçon reste visible et le bouton unique « J’ai lu la leçon — passer à Livecheck » valide directement l’étape 1 ;
+- masque l’ancien second bouton de confirmation ;
+- l’étape 4 devient « Vérifier automatiquement source + heure » et ne demande plus de chercher un champ ;
+- conserve les sessions actives 28.3.02 sans imposer de reset ;
+- ne modifie ni Market, ni Métaux, ni Bridge, ni collecteurs, ni simulation.
+
+## Build 28.3.01 — Conclusion autonome et validation immédiate 5/5
+
+Correctif strictement limité à la dernière étape du Module 01 :
+
+- après l’étape 4, l’interface cible directement le champ exact « Ce que je retiens — conclusion personnelle » ;
+- un repère autonome intégré indique les trois éléments à formuler, sans dépendre d’une IA externe ;
+- après 20 caractères utiles et les étapes 1 à 4 validées, la saisie met immédiatement le parcours à 5/5 ;
+- le cockpit complet, la case témoin, le compteur et le bouton principal se mettent à jour sans rechargement ni clic supplémentaire ;
+- le bouton devient « Terminer et archiver » ;
+- l’état 28.3.00 reste compatible et aucun reset n’est requis ;
+- reset, Market, Métaux, Bridge, collecteurs et simulation restent inchangés.
+
+
+## Build 28.3.00 — Navigation directe vers Bitcoin après Livecheck
+
+Correctif strictement limité au déplacement qui suit la validation de l’étape 2 :
+
+- le Livecheck conserve sa validation directe et son écriture IndexedDB de la 28.2.99 ;
+- après réussite, l’interface ne revient plus au début du parcours détaillé ;
+- elle se place directement sur la ligne Bitcoin du MARKET SNAPSHOT ;
+- la ligne Bitcoin reçoit le repère visuel de l’étape 3 ;
+- le message indique uniquement de lire Prix, 24 h et 7 j ;
+- l’état pédagogique 28.2.99 reste compatible : aucun nouveau reset n’est requis ;
+- reset, Market, Métaux, Bridge, collecteurs et simulation restent inchangés.
 
 
 ## Build 28.2.99 — Validation directe de l’étape 2 après Livecheck
