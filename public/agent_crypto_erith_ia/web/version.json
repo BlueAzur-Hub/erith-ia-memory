@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.05",
-  "build": "28.3.05",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.05",
-  "published_at": "2026-08-06T03:45:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.06",
+  "build": "28.3.06",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.06",
+  "published_at": "2026-08-06T04:02:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1376,7 +1376,7 @@
   },
   "module_01_guided_conclusion_pedagogy_lock": {
     "base": "28.3.04",
-    "build": "28.3.05",
+    "build": "28.3.06",
     "scope": "Module 01 pedagogy only",
     "step_1": "explicit lesson opening and visible post-reading validation preserved",
     "step_2": "Livecheck proof with IndexedDB read-back preserved",
@@ -1399,5 +1399,38 @@
       "fictional simulation",
       "existing archives"
     ]
+  },
+  "foundations_guided_pedagogy_01_03": {
+    "base": "28.3.05",
+    "state": "ready",
+    "modules": [
+      "01 · Marché et données",
+      "02 · Spot et carnet d’ordres",
+      "03 · Frais et gestion du risque"
+    ],
+    "module_01_polish": [
+      "indexeddb_archive_count_message",
+      "market_snapshot_vs_binance_spot_explicit"
+    ],
+    "module_02_flow": [
+      "lesson",
+      "best_bid_ask",
+      "market_vs_limit",
+      "fictional_btc_50_position",
+      "guided_execution_conclusion"
+    ],
+    "module_03_flow": [
+      "lesson",
+      "school_cost_example",
+      "fictional_btc_50_position",
+      "minus3_plus5_scenarios",
+      "guided_net_result_conclusion"
+    ],
+    "free_text_required": false,
+    "archive_separate": true,
+    "next_module_separate": true,
+    "real_orders": false,
+    "wallet": false,
+    "api_keys": false
   }
 }
