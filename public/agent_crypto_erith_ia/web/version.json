@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.09",
-  "build": "28.3.09",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.09",
-  "published_at": "2026-08-06T08:21:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.10",
+  "build": "28.3.10",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.10",
+  "published_at": "2026-08-06T08:50:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1541,5 +1541,30 @@
     "free_notes_required": false,
     "archive_separate_from_next_module": true,
     "active_draft_migration": "preserve_step_1_clear_steps_2_5_for_modules_06_08"
+  },
+  "mastery_guided_pedagogy_09_11": {
+    "build": "28.3.10",
+    "base": "28.3.09",
+    "scope": [
+      "module_09_derivatives_liquidation",
+      "module_10_scams_investigation",
+      "module_11_records_tax"
+    ],
+    "modules_01_08_changed": false,
+    "market_changed": false,
+    "metals_changed": false,
+    "bridge_changed": false,
+    "collectors_changed": false,
+    "reset_changed": false,
+    "simulation_engine_changed": false,
+    "real_derivative_opened": false,
+    "real_entity_assessed": false,
+    "real_personal_data_collected": false,
+    "real_tax_calculation": false,
+    "personalized_tax_advice": false,
+    "evidence_mode": "frozen_at_validation",
+    "free_notes_required": false,
+    "archive_separate_from_next_module": true,
+    "active_draft_migration": "preserve_step_1_clear_steps_2_5_for_modules_09_11"
   }
 }
