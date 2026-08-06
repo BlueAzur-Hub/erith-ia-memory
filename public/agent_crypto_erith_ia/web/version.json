@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.07",
-  "build": "28.3.07",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.07",
-  "published_at": "2026-08-06T04:31:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.08",
+  "build": "28.3.08",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.08",
+  "published_at": "2026-08-06T06:01:30+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1477,5 +1477,44 @@
     "real_orders": false,
     "wallet": false,
     "api_keys": false
+  },
+  "security_guided_pedagogy_04_05": {
+    "base": "28.3.07",
+    "build": "28.3.08",
+    "status": "ready_for_local_chromium_and_public_firefox_validation",
+    "scope": [
+      "module_04_account_security",
+      "module_05_wallet_withdrawals"
+    ],
+    "module_04_evidence": [
+      "security_stack",
+      "fake_support_refusal",
+      "security_plan_snapshot",
+      "guided_conclusion"
+    ],
+    "module_05_evidence": [
+      "asset_network_match",
+      "independent_destination_method",
+      "small_test_and_trace_plan",
+      "guided_conclusion"
+    ],
+    "real_credentials_collected": false,
+    "real_address_collected": false,
+    "real_transaction_performed": false,
+    "notes_optional": true,
+    "archive_and_next_module_separate": true,
+    "old_unfinished_04_05_draft_policy": "preserve_lesson_read_then_restart_at_step_2",
+    "modules_01_03_changed": false,
+    "market_changed": false,
+    "metals_changed": false,
+    "bridge_changed": false,
+    "collectors_changed": false,
+    "reset_changed": false,
+    "simulation_engine_changed": false,
+    "research_basis": [
+      "ANSSI MFA and password recommendations",
+      "AMF PSCA and unauthorized actor warnings",
+      "Kraken account security, GSL, withdrawal network and confirmation documentation"
+    ]
   }
 }

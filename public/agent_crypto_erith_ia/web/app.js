@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.07 — FOUNDATIONS 01–03 EVIDENCE SNAPSHOT CONSOLIDATION LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.08 — SECURITY 04–05 EVIDENCE GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.07";
-const ATLAS_BUILD = "28.3.07";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.07";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.08";
+const ATLAS_BUILD = "28.3.08";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.08";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,8 +11614,8 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.07";
-const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.08";
+const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
     title:"01 · Marché et données",
@@ -11652,6 +11652,30 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       verify:{ title:"4. Comparer une baisse de 3 % et une hausse de 5 %", where:"SCÉNARIOS INSTANTANÉS — Observer sans attendre le marché", action:"Cliquer d’abord sur « −3 % », lire le résultat, puis sur « +5 % » et comparer.", why:"La variation agit sur la position de 50 € ; les coûts rendent toujours le résultat net moins favorable que le résultat brut.", result:"−3 % ≈ −1,50 € avant coûts ; +5 % ≈ +2,50 € avant coûts ; le résultat après frais retire environ 0,30 € dans le modèle simplifié.", remember:"P/L signifie Profit / Loss, soit gain / perte. Brut = avant frais ; net = après frais." },
       note:{ title:"5. Comprendre le résultat net", where:"Carte « Synthèse guidée du Module 03 »", action:"Lire la comparaison −3 % / +5 % construite avec les coûts pédagogiques, puis répondre à la question « Les frais réduisent-ils le résultat disponible ? ».", why:"Le cockpit doit montrer la différence entre résultat brut et résultat net avant de demander de la reconnaître.", result:"La réponse « Oui » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Les frais réduisent un gain et aggravent une perte ; une petite hausse ne garantit pas un bénéfice net." }
     }
+  },
+  account:{
+    title:"04 · Sécurité du compte",
+    promise:"Construire la protection du compte avant tout dépôt, sans saisir aucun secret réel.",
+    route:["LEÇON INTÉGRÉE", "SOCLE DU COMPTE", "FAUX SUPPORT", "PLAN DE VERROUILLAGE", "AUCUN SECRET TRANSMIS"],
+    steps:{
+      read:{ title:"1. Comprendre les couches de protection", where:"LEÇON INTÉGRÉE AU COCKPIT — 04 · Sécurité du compte", action:"Lire les définitions affichées, puis utiliser le bouton visible « Valider l’étape 1 après lecture » placé sous la leçon.", why:"Un compte crypto dépend aussi de l’email, de la récupération et des moyens d’authentification.", result:"L’étape 1 devient verte et le laboratoire de sécurité du compte est présenté.", remember:"La sécurité commence avant le premier dépôt : mot de passe unique, authentification forte et email protégé." },
+      open:{ title:"2. Choisir un socle de compte cohérent", where:"Carte « Socle du compte » du parcours détaillé", action:"Choisir la combinaison : mot de passe unique + passkey ou 2FA + email sécurisé.", why:"Réutiliser un mot de passe ou dépendre d’un seul facteur facilite la compromission en chaîne.", result:"Le socle fictif est enregistré comme preuve, sans demander aucun identifiant réel.", remember:"Un facteur supplémentaire indépendant limite l’effet du vol d’un mot de passe." },
+      practice:{ title:"3. Refuser un faux support", where:"Carte « Appel urgent du support »", action:"Choisir : interrompre l’échange, ne transmettre aucun code et ouvrir soi-même le canal officiel.", why:"L’urgence, la demande de code et l’accès distant sont des signaux d’arrêt.", result:"La réponse de protection est enregistrée ; aucune donnée de compte n’est collectée.", remember:"Un support ne doit recevoir ni mot de passe, ni code 2FA, ni phrase de récupération, ni accès distant." },
+      verify:{ title:"4. Ordonner la mise en sécurité avant dépôt", where:"Carte « Plan de verrouillage fictif »", action:"Valider l’ordre : sécuriser email et connexion, préparer la récupération, puis activer les verrous de paramètres ou de retraits disponibles.", why:"Un verrou de paramètres se configure après les moyens de récupération nécessaires, pas au milieu d’une urgence.", result:"Un instantané du plan de sécurité est figé dans le carnet pédagogique.", remember:"Configurer d’abord, verrouiller ensuite, puis contrôler les notifications et les sessions." },
+      note:{ title:"5. Comprendre la limite du support", where:"Carte « Synthèse guidée du Module 04 »", action:"Lire la synthèse puis répondre à la question sur la transmission des secrets et l’accès distant.", why:"La protection doit rester applicable même sous pression.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"En cas de doute : couper l’échange et revenir au service officiel ouvert indépendamment." }
+    }
+  },
+  wallet:{
+    title:"05 · Portefeuilles et retraits",
+    promise:"Construire un trajet de retrait fictif contrôlable avant toute manipulation réelle.",
+    route:["LEÇON INTÉGRÉE", "ACTIF + RÉSEAU", "DESTINATION INDÉPENDANTE", "PETIT TEST + TRACE", "RÉSEAU ≠ ADRESSE"],
+    steps:{
+      read:{ title:"1. Comprendre les éléments d’un retrait", where:"LEÇON INTÉGRÉE AU COCKPIT — 05 · Portefeuilles et retraits", action:"Lire actif, réseau, adresse, memo/tag, frais, TXID et confirmations, puis valider l’étape 1 sous la leçon.", why:"Un retrait n’est pas un simple copier-coller d’adresse.", result:"L’étape 1 devient verte et le trajet fictif est présenté.", remember:"Actif, réseau et format de destination doivent être compatibles des deux côtés." },
+      open:{ title:"2. Faire correspondre actif et réseau", where:"Carte « Actif et réseau de démonstration »", action:"Pour BTC dans cet exercice, choisir le réseau Bitcoin.", why:"Une adresse qui semble plausible ne garantit pas que le réseau choisi soit accepté à l’arrivée.", result:"La paire fictive BTC / Bitcoin est figée comme preuve du trajet.", remember:"Le réseau de départ doit être exactement celui accepté par la destination." },
+      practice:{ title:"3. Vérifier la destination sans tiers", where:"Carte « Destination indépendante »", action:"Choisir : obtenir la destination depuis le service receveur, la contrôler après collage et refuser toute adresse dictée par un tiers.", why:"La pression et le remplacement d’adresse peuvent détourner un transfert irréversible.", result:"La méthode de vérification est enregistrée sans utiliser d’adresse réelle.", remember:"Ne jamais saisir manuellement une longue adresse ; contrôler le début, la fin, le type et le réseau après collage." },
+      verify:{ title:"4. Préparer un petit test et sa trace", where:"Carte « Petit test, frais et confirmations »", action:"Valider le contrôle du minimum, des frais, du memo/tag éventuel, puis prévoir un petit test et suivre TXID, statut et confirmations.", why:"Le premier transfert doit prouver le trajet avant un montant plus important.", result:"Le plan fictif de test et de traçabilité est figé dans le carnet.", remember:"Un TXID identifie la transaction ; les confirmations indiquent son avancement sur le réseau." },
+      note:{ title:"5. Comprendre la différence réseau / adresse", where:"Carte « Synthèse guidée du Module 05 »", action:"Lire la synthèse puis répondre à la question : une adresse ressemblante suffit-elle si le réseau ne correspond pas ?", why:"L’erreur de réseau peut être irréversible même lorsque l’adresse semble correcte.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Toujours vérifier ensemble : actif, réseau, destination, memo/tag, frais, petit test et confirmations." }
+    }
   }
 });
 
@@ -11663,9 +11687,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.07";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.07";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.07";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.08";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.08";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.08";
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
@@ -11882,6 +11906,17 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
         normalized.takeaway = "";
         normalized.last_action = "risk_scenarios_refresh_required";
       } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
+    } else if (["account", "wallet"].includes(normalized.module_key)) {
+      const prefix = normalized.module_key === "account" ? "account_" : "wallet_";
+      Object.keys(normalized.practice_evidence).filter(key => key.startsWith(prefix) || key.startsWith("foundation_")).forEach(key => delete normalized.practice_evidence[key]);
+      normalized.steps.open = false;
+      normalized.steps.practice = false;
+      normalized.steps.verify = false;
+      normalized.steps.note = false;
+      normalized.practice_completed_at = null;
+      normalized.verify_completed_at = null;
+      normalized.takeaway = "";
+      normalized.last_action = `${normalized.module_key}_guided_path_refresh_required`;
     } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
   }
   return normalized;
@@ -12595,7 +12630,8 @@ function foundationStepsBeforeConclusionComplete(cockpit) {
   return ["read", "open", "practice", "verify"].every(key => cockpit?.steps?.[key] === true);
 }
 function foundationGuidedEvidenceKey(moduleKey) {
-  return moduleKey === "market" ? "market_guided_conclusion" : moduleKey === "spot" ? "spot_guided_conclusion" : moduleKey === "risk" ? "risk_guided_conclusion" : null;
+  const map = { market:"market_guided_conclusion", spot:"spot_guided_conclusion", risk:"risk_guided_conclusion", account:"account_guided_conclusion", wallet:"wallet_guided_conclusion" };
+  return map[moduleKey] || null;
 }
 function foundationGuidedConclusionReady(cockpit) {
   const key = foundationGuidedEvidenceKey(cockpit?.module_key);
@@ -12617,10 +12653,14 @@ function foundationApplyConclusionValidation(cockpit) {
 function foundationConclusionGuidance(cockpit) {
   if (!foundationStepsBeforeConclusionComplete(cockpit)) return "Étape 5 disponible après les étapes 1 à 4";
   if (foundationGuidedConclusionReady(cockpit)) return "Synthèse guidée comprise · réponse pédagogique enregistrée";
-  if (cockpit?.module_key === "market") return "Lis la synthèse guidée puis réponds à la question de prédiction";
-  if (cockpit?.module_key === "spot") return "Lis la synthèse d’exécution puis réponds à la question sur l’ordre limite";
-  if (cockpit?.module_key === "risk") return "Lis la comparaison brut / net puis réponds à la question sur les frais";
-  return "Réponse guidée requise";
+  const map = {
+    market:"Lis la synthèse guidée puis réponds à la question de prédiction",
+    spot:"Lis la synthèse d’exécution puis réponds à la question sur l’ordre limite",
+    risk:"Lis la comparaison brut / net puis réponds à la question sur les frais",
+    account:"Lis le plan de sécurité puis réponds à la question sur les secrets et l’accès distant",
+    wallet:"Lis le trajet de retrait puis réponds à la question sur la compatibilité du réseau"
+  };
+  return map[cockpit?.module_key] || "Réponse guidée requise";
 }
 function foundationButton(label, action, disabled = false) {
   return `<button class="btn small ${disabled ? "" : "primary"}" type="button" data-foundation-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${escapeHtml(label)}</button>`;
@@ -12833,6 +12873,112 @@ function foundationRiskLab(cockpit) {
       </article>
     </div>`;
 }
+
+function foundationAccountGuidedSummary(cockpit) {
+  const evidence = cockpit?.practice_evidence || {};
+  const stack = evidence.account_security_stack || null;
+  const support = evidence.account_support_response || null;
+  const plan = evidence.account_security_plan || null;
+  const ready = Boolean(cockpit?.steps?.verify && stack && support && plan);
+  const text = ready
+    ? "Le plan fictif protège d’abord l’email et la connexion avec un mot de passe unique et une passkey ou une 2FA indépendante. Il prévoit ensuite les moyens de récupération, puis un verrou des paramètres ou des retraits lorsqu’il existe. Face à un appel urgent demandant un mot de passe, un code 2FA, une phrase de récupération ou un accès distant, la réponse correcte est d’interrompre l’échange et d’ouvrir soi-même le canal officiel. Aucun secret réel n’a été saisi dans ce module."
+    : "La synthèse sera construite après le choix du socle, le refus du faux support et la validation du plan de verrouillage fictif.";
+  return { ready, stack, support, plan, text };
+}
+function foundationAccountLab(cockpit) {
+  const e = cockpit.practice_evidence || {};
+  const summary = foundationAccountGuidedSummary(cockpit);
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-security-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · SOCLE DU COMPTE</span>
+        <h5>Quelle combinaison protège réellement le compte ?</h5>
+        <div class="foundation-choice-row">
+          <button type="button" data-foundation-action="account_stack_weak" ${step2Done ? "disabled" : ""}>Même mot de passe + code reçu par message</button>
+          <button type="button" data-foundation-action="account_stack_strong" ${step2Done ? "disabled" : ""}>Mot de passe unique + passkey/2FA + email sécurisé</button>
+        </div>
+        <small>${e.account_security_stack ? "Socle fictif enregistré : aucun identifiant réel n’a été demandé." : "Le second facteur doit rester indépendant du mot de passe."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · FAUX SUPPORT</span>
+        <h5>Un appel urgent demande ton code 2FA et l’installation d’un accès distant</h5>
+        <div class="foundation-choice-row">
+          <button type="button" data-foundation-action="account_support_comply" ${!step2Done || step3Done ? "disabled" : ""}>Coopérer pour sauver le compte</button>
+          <button type="button" data-foundation-action="account_support_stop" ${!step2Done || step3Done ? "disabled" : ""}>Couper l’échange et ouvrir le support officiel soi-même</button>
+        </div>
+        <small>${e.account_support_response ? "Réponse de protection enregistrée : aucun code, aucun secret, aucun accès distant." : "L’urgence artificielle ne change jamais la règle de confidentialité."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · PLAN DE VERROUILLAGE</span>
+        <h5>Ordre de mise en sécurité avant dépôt</h5>
+        <ol class="foundation-guided-list"><li>Sécuriser l’email et créer un mot de passe unique.</li><li>Activer passkey ou 2FA et préparer la récupération.</li><li>Révoquer les sessions inconnues.</li><li>Activer ensuite le verrou des paramètres/retraits disponible.</li></ol>
+        ${foundationButton(step4Done ? "Plan de sécurité enregistré" : "Valider ce plan fictif", "account_validate_plan", !step3Done || step4Done)}
+        <small>${e.account_security_plan ? "Instantané figé dans le carnet ; aucune configuration réelle n’a été modifiée." : "Ce module enseigne l’ordre des contrôles, il ne configure aucun compte."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 04</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> un support légitime peut-il demander ton mot de passe, ton code 2FA, ta phrase de récupération ou l’accès distant à ton ordinateur ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="account_support_secret_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="account_support_secret_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${e.account_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La règle est absolue : aucun secret et aucun accès distant transmis au support." : "Disponible après le plan de verrouillage fictif."}</small>
+      </article>
+    </div>`;
+}
+function foundationWalletGuidedSummary(cockpit) {
+  const evidence = cockpit?.practice_evidence || {};
+  const route = evidence.wallet_network_match || null;
+  const destination = evidence.wallet_destination_method || null;
+  const trace = evidence.wallet_test_trace || null;
+  const ready = Boolean(cockpit?.steps?.verify && route && destination && trace);
+  const text = ready
+    ? "Le retrait fictif associe BTC au réseau Bitcoin, puis impose une destination obtenue directement depuis le service receveur et contrôlée après collage. Le plan vérifie le minimum, les frais et le memo ou tag lorsqu’il est requis, commence par un petit test et suit ensuite le TXID, le statut et les confirmations. Une adresse qui ressemble correcte ne compense jamais un mauvais réseau. Aucune adresse ni transaction réelle n’a été utilisée."
+    : "La synthèse sera construite après la correspondance actif/réseau, la vérification indépendante de la destination et le plan de petit test traçable.";
+  return { ready, route, destination, trace, text };
+}
+function foundationWalletLab(cockpit) {
+  const e = cockpit.practice_evidence || {};
+  const summary = foundationWalletGuidedSummary(cockpit);
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-wallet-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · ACTIF + RÉSEAU</span>
+        <h5>Retrait fictif de BTC : quel réseau choisir dans cet exercice ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_ethereum" ${step2Done ? "disabled" : ""}>Ethereum</button><button type="button" data-foundation-action="wallet_network_bitcoin" ${step2Done ? "disabled" : ""}>Bitcoin</button><button type="button" data-foundation-action="wallet_network_solana" ${step2Done ? "disabled" : ""}>Solana</button></div>
+        <small>${e.wallet_network_match ? "Paire fictive figée : BTC / Bitcoin." : "Le réseau doit être accepté à la fois au départ et à l’arrivée."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · DESTINATION INDÉPENDANTE</span>
+        <h5>Comment obtenir et contrôler la destination ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_destination_third_party" ${!step2Done || step3Done ? "disabled" : ""}>Utiliser l’adresse urgente envoyée par un tiers</button><button type="button" data-foundation-action="wallet_destination_independent" ${!step2Done || step3Done ? "disabled" : ""}>Ouvrir le service receveur, copier puis contrôler l’adresse</button></div>
+        <small>${e.wallet_destination_method ? "Méthode enregistrée sans adresse réelle : source indépendante, contrôle après collage, aucun tiers." : "Une adresse ne doit jamais être dictée par une personne qui met la pression."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · PETIT TEST + TRACE</span>
+        <h5>Plan fictif avant un montant plus important</h5>
+        <ul class="foundation-guided-list"><li>Vérifier minimum, frais et montant net.</li><li>Ajouter le memo/tag uniquement lorsqu’il est requis.</li><li>Envoyer d’abord un petit test.</li><li>Suivre TXID, statut et confirmations jusqu’à réception.</li></ul>
+        ${foundationButton(step4Done ? "Plan de test enregistré" : "Valider le petit test traçable", "wallet_validate_test_trace", !step3Done || step4Done)}
+        <small>${e.wallet_test_trace ? "Instantané figé : petit test, frais, memo/tag éventuel, TXID et confirmations." : "Aucune transaction réelle n’est déclenchée."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 05</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> une adresse qui semble correcte suffit-elle si le réseau sélectionné ne correspond pas au réseau accepté à l’arrivée ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_mismatch_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="wallet_network_mismatch_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${e.wallet_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La compatibilité du réseau reste obligatoire, indépendamment de l’apparence de l’adresse." : "Disponible après le plan de petit test traçable."}</small>
+      </article>
+    </div>`;
+}
+
 function renderFoundationLearningPanel(cockpitInput = null) {
   const cockpit = cockpitInput || loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
@@ -12848,12 +12994,14 @@ function renderFoundationLearningPanel(cockpitInput = null) {
     return `<article class="foundation-step-card ${cockpit.steps[key] ? "is-done" : ""}"><header><b>${escapeHtml(step.title)}</b><span>${escapeHtml(foundationStepStatus(cockpit, key))}</span></header><dl><div><dt>Où ?</dt><dd>${escapeHtml(step.where)}</dd></div><div><dt>Action exacte</dt><dd>${escapeHtml(step.action)}</dd></div><div><dt>Pourquoi ?</dt><dd>${escapeHtml(step.why)}</dd></div><div><dt>Résultat attendu</dt><dd>${escapeHtml(step.result)}</dd></div><div><dt>À retenir</dt><dd>${escapeHtml(step.remember)}</dd></div></dl></article>`;
   }).join("");
   if (els.learningFoundationLab) {
-    els.learningFoundationLab.innerHTML = module.key === "market" ? foundationMarketLab(cockpit) : module.key === "spot" ? foundationSpotLab(cockpit) : foundationRiskLab(cockpit);
+    const labs = { market:foundationMarketLab, spot:foundationSpotLab, risk:foundationRiskLab, account:foundationAccountLab, wallet:foundationWalletLab };
+    const renderLab = labs[module.key];
+    els.learningFoundationLab.innerHTML = renderLab ? renderLab(cockpit) : "";
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.07 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.07 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.08 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.08 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
@@ -12997,6 +13145,65 @@ function handleFoundationAction(action) {
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 03 · 5/5", "La synthèse brut / net est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
+  if (module.key === "account") {
+    if (action === "account_stack_weak") return foundationFeedback(false, "Protection insuffisante", "Réutiliser un mot de passe et dépendre d’un seul canal ne crée pas un socle indépendant.");
+    if (action === "account_stack_strong") {
+      cockpit.practice_evidence.account_security_stack = { password:"unique_long", authentication:"passkey_or_independent_2fa", email:"secured", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_security_stack_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Mot de passe unique, passkey/2FA et email sécurisé sont enregistrés comme plan fictif.");
+    }
+    if (action === "account_support_comply") return foundationFeedback(false, "Arrêt nécessaire", "Ne transmets aucun code et n’installe aucun accès distant. Coupe l’échange puis ouvre toi-même le canal officiel.");
+    if (action === "account_support_stop") {
+      if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Choisis d’abord le socle du compte.");
+      cockpit.practice_evidence.account_support_response = { action:"stop_and_open_official_channel", secrets_shared:false, remote_access:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_fake_support_refused";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Faux support refusé : aucun secret et aucun accès distant.");
+    }
+    if (action === "account_validate_plan") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Refuse d’abord le scénario de faux support.");
+      cockpit.practice_evidence.account_security_plan = { sequence:["secure_email_and_unique_password","enable_passkey_or_2fa_and_recovery","revoke_unknown_sessions","enable_settings_or_withdrawal_lock"], real_account_modified:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_security_plan_verified";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Le plan de mise en sécurité est figé dans le carnet, sans modifier de compte réel.");
+    }
+    if (action === "account_support_secret_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Un support légitime ne doit recevoir ni mot de passe, ni code 2FA, ni phrase de récupération, ni accès distant.");
+    if (action === "account_support_secret_no") {
+      const summary = foundationAccountGuidedSummary(cockpit);
+      if (!summary.ready) return foundationFeedback(false, "Plan requis", "Valide d’abord le plan de mise en sécurité fictif.");
+      cockpit.practice_evidence.account_guided_conclusion = true; cockpit.practice_evidence.account_guided_summary = summary.text; cockpit.practice_evidence.account_guided_answer = "non"; cockpit.practice_evidence.account_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 04 · 5/5", "La synthèse de sécurité du compte est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+    }
+  }
+  if (module.key === "wallet") {
+    if (["wallet_network_ethereum", "wallet_network_solana"].includes(action)) return foundationFeedback(false, "Réseau incorrect pour cet exercice", "Le retrait fictif porte sur BTC via le réseau Bitcoin. Le réseau doit correspondre à celui accepté par la destination.");
+    if (action === "wallet_network_bitcoin") {
+      cockpit.practice_evidence.wallet_network_match = { asset:"BTC", network:"Bitcoin", real_address_used:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_network_match_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Paire fictive BTC / Bitcoin enregistrée.");
+    }
+    if (action === "wallet_destination_third_party") return foundationFeedback(false, "Destination refusée", "Une adresse dictée par un tiers sous pression ne doit pas être utilisée. Ouvre directement le service receveur.");
+    if (action === "wallet_destination_independent") {
+      if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Fais d’abord correspondre l’actif et le réseau.");
+      cockpit.practice_evidence.wallet_destination_method = { source:"receiver_opened_independently", copy_paste:true, post_paste_check:true, third_party_address:false, real_address_used:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_destination_method_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Méthode de destination indépendante enregistrée, sans adresse réelle.");
+    }
+    if (action === "wallet_validate_test_trace") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Valide d’abord la méthode de destination indépendante.");
+      cockpit.practice_evidence.wallet_test_trace = { minimum_checked:true, fee_checked:true, memo_tag_checked_if_required:true, small_test_first:true, txid_tracked:true, status_and_confirmations_tracked:true, real_transaction:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_test_trace_verified";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Petit test, frais, memo/tag éventuel, TXID et confirmations sont figés dans le plan fictif.");
+    }
+    if (action === "wallet_network_mismatch_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une adresse ressemblante ne rend pas compatible un réseau incorrect.");
+    if (action === "wallet_network_mismatch_no") {
+      const summary = foundationWalletGuidedSummary(cockpit);
+      if (!summary.ready) return foundationFeedback(false, "Plan requis", "Valide d’abord le petit test traçable.");
+      cockpit.practice_evidence.wallet_guided_conclusion = true; cockpit.practice_evidence.wallet_guided_summary = summary.text; cockpit.practice_evidence.wallet_guided_answer = "non"; cockpit.practice_evidence.wallet_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 05 · 5/5", "La synthèse de retrait sécurisé est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+    }
+  }
+
 }
 async function runFoundationSchoolPosition(moduleKey) {
   const cockpit = loadLearningCockpitState();
@@ -13218,14 +13425,21 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.07 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.08 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
+    const labels = {
+      market:{open:"Lancer Livecheck",practice:"Relever Prix / 24 h / 7 j",verify:"Vérifier source + heure",note:"Comprendre la conclusion guidée"},
+      spot:{open:"Commencer l’exercice Bid / Ask",practice:"Répondre Marché / Limite",verify:"Créer la position BTC fictive de 50 €",note:"Comprendre l’exécution guidée"},
+      risk:{open:"Charger l’exemple école",practice:"Créer la position BTC fictive de 50 €",verify:"Ouvrir les scénarios −3 % et +5 %",note:"Comprendre le résultat net"},
+      account:{open:"Choisir le socle du compte",practice:"Refuser le faux support",verify:"Valider le plan de verrouillage",note:"Comprendre la limite du support"},
+      wallet:{open:"Choisir actif + réseau",practice:"Vérifier la destination",verify:"Valider le petit test traçable",note:"Comprendre réseau et adresse"}
+    }[module.key] || {};
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:`Ouvrir la leçon du Module ${module.title.split(" · ")[0]}`, text:"Ce bouton ouvre seulement la leçon. Après lecture, valide l’étape avec le bouton visible placé sous son contenu." };
-    if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:module.key === "market" ? "Lancer Livecheck" : module.key === "spot" ? "Commencer l’exercice Bid / Ask" : "Charger l’exemple école", text:foundation.steps.open.action };
-    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Relever Prix / 24 h / 7 j" : module.key === "spot" ? "Répondre Marché / Limite" : "Créer la position BTC fictive de 50 €", text:foundation.steps.practice.action };
-    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Vérifier source + heure" : module.key === "spot" ? "Créer la position BTC fictive de 50 €" : "Ouvrir les scénarios −3 % et +5 %", text:module.key === "market" ? "La carte affiche directement la source active et l’heure. Valide-les sans chercher ailleurs dans la page." : foundation.steps.verify.action };
-    if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:module.key === "market" ? "Comprendre la conclusion guidée" : module.key === "spot" ? "Comprendre l’exécution guidée" : "Comprendre le résultat net", text:foundation.steps.note.action };
+    if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:labels.open || foundation.steps.open.title, text:foundation.steps.open.action };
+    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:labels.practice || foundation.steps.practice.title, text:foundation.steps.practice.action };
+    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:labels.verify || foundation.steps.verify.title, text:foundation.steps.verify.action };
+    if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:labels.note || foundation.steps.note.title, text:foundation.steps.note.action };
     return { key:"complete", step:"5/5 prêt à archiver", title:"Validation finale séparée", label:"Aller au bouton « Terminer et archiver »", text:"Les cinq preuves sont présentes. L’archivage reste une action distincte et explicite sous le carnet." };
   }
   if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:"Lire la leçon intégrée", label:"Lire la leçon", text:"La leçon complète est déjà dans l’interface. Lis-la puis valide-la avec le bouton placé sous son contenu." };
@@ -13721,7 +13935,7 @@ function focusLearningConclusion() {
     const card = els.learningFoundationLab?.querySelector?.('[data-foundation-stage="5"]') || els.learningFoundationLab;
     card?.classList?.add("learning-action-highlight");
     setTimeout(() => card?.classList?.remove("learning-action-highlight"), 1800);
-    const titles = { market:"Conclusion guidée", spot:"Exécution guidée", risk:"Résultat net guidé" };
+    const titles = { market:"Conclusion guidée", spot:"Exécution guidée", risk:"Résultat net guidé", account:"Sécurité du compte guidée", wallet:"Retrait guidé" };
     setActionFeedback("info", titles[cockpit.module_key] || "Synthèse guidée", "Lis la synthèse construite par le cockpit, puis réponds à la question. Aucune rédaction libre n’est obligatoire.", card);
     return;
   }
@@ -13759,7 +13973,9 @@ function handleFoundationPrimaryAction(cockpit, action) {
     const messages = {
       market:{ practice:["Étape 3 · relever Bitcoin","Lis les trois valeurs affichées, consulte la ligne Bitcoin si nécessaire, puis confirme-les."], verify:["Étape 4 · vérifier la provenance","La source et l’heure sont affichées dans la carte. Valide-les."], note:["Étape 5 · conclusion guidée","Lis la synthèse puis réponds à la question."] },
       spot:{ open:["Étape 2 · Bid / Ask","Identifie le meilleur Ask puis le meilleur Bid."], practice:["Étape 3 · Marché / Limite","Réponds aux deux situations dans la carte."], note:["Étape 5 · exécution guidée","Lis la position créée puis réponds à la question sur l’ordre limite."] },
-      risk:{ verify:["Étape 4 · scénarios","Teste −3 %, puis +5 %, et compare brut / net."], note:["Étape 5 · résultat net","Lis la comparaison puis réponds à la question sur les frais."] }
+      risk:{ verify:["Étape 4 · scénarios","Teste −3 %, puis +5 %, et compare brut / net."], note:["Étape 5 · résultat net","Lis la comparaison puis réponds à la question sur les frais."] },
+      account:{ open:["Étape 2 · socle du compte","Choisis la combinaison qui sépare mot de passe, authentification forte et email."], practice:["Étape 3 · faux support","Refuse la demande de code et d’accès distant."], verify:["Étape 4 · plan de verrouillage","Lis l’ordre de mise en sécurité puis valide le plan fictif."], note:["Étape 5 · limite du support","Lis la synthèse puis réponds à la question sur les secrets."] },
+      wallet:{ open:["Étape 2 · actif et réseau","Associe BTC au réseau Bitcoin pour cet exercice."], practice:["Étape 3 · destination","Choisis une destination obtenue et vérifiée indépendamment."], verify:["Étape 4 · petit test","Valide le contrôle des frais, du memo/tag éventuel, du TXID et des confirmations."], note:["Étape 5 · réseau et adresse","Lis la synthèse puis réponds à la question de compatibilité."] }
     };
     const msg = messages[module.key]?.[action.key] || [action.title, action.text];
     setActionFeedback("info", msg[0], msg[1], card); return true;
@@ -13864,7 +14080,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_07");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_08");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
@@ -18588,7 +18804,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.3.07",
+  interface: "Build 28.3.08",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -20839,7 +21055,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.3.07`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.3.08`
   );
 }
 
