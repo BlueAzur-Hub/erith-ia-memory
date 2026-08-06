@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.11",
-  "build": "28.3.11",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.11",
-  "published_at": "2026-08-06T09:05:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.12",
+  "build": "28.3.12",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.12",
+  "published_at": "2026-08-06T10:44:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1602,5 +1602,38 @@
     "reset_changed": false,
     "simulation_engine_changed": false,
     "public_firefox_indexeddb_validation_required": true
+  },
+  "real_browser_persistence_recovery_evidence_lock": {
+    "base": "28.3.11",
+    "scope": [
+      "indexeddb_write_readback",
+      "serialized_persistence_queue",
+      "reload_and_reopen_recovery",
+      "non_destructive_integrity_diagnostic",
+      "explicit_storage_error_codes",
+      "simulation_store_separation"
+    ],
+    "notebook_schema": "agent_crypto_learning_notebook_indexeddb_v2",
+    "persistence_evidence_schema": "agent_crypto_learning_persistence_evidence_v1",
+    "diagnostic_schema": "agent_crypto_learning_integrity_report_v1",
+    "error_codes": [
+      "LEARNING-IDB-OPEN",
+      "LEARNING-IDB-BLOCKED",
+      "LEARNING-IDB-READ",
+      "LEARNING-IDB-WRITE",
+      "LEARNING-IDB-VERIFY",
+      "LEARNING-STORAGE-QUOTA"
+    ],
+    "automatic_repair": false,
+    "automatic_reset": false,
+    "market_changed": false,
+    "metals_changed": false,
+    "bridge_changed": false,
+    "collectors_changed": false,
+    "pedagogy_content_changed": false,
+    "simulation_engine_changed": false,
+    "reset_changed": false,
+    "chromium_real_indexeddb_tested": true,
+    "public_firefox_existing_profile_validation_required": true
   }
 }

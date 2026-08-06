@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.3.11" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.3.11" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.3.11 — LEARNING STATE CONTINUITY, ORDER & COMPLETION LOCK</title>
+  <meta name="atlas-build" content="28.3.12" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.3.12" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.3.12 — REAL BROWSER PERSISTENCE, RECOVERY & EVIDENCE LOCK</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.3.11" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.3.12" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -64,7 +64,7 @@
             aria-atomic="true"
             aria-label="Version installée : Market Core V2.0-Alpha, Build 28.3.11"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.3.11</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.3.12</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.3.11</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.3.12</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2363,7 +2363,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.3.11 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.3.12 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2944,7 +2944,7 @@
         <section class="learning-foundation-panel" id="learningFoundationPanel" aria-labelledby="learningFoundationTitle">
           <header class="learning-foundation-head">
             <div>
-              <p class="eyebrow">PARCOURS DÉBUTANT DÉTAILLÉ · BUILD 28.3.11</p>
+              <p class="eyebrow">PARCOURS DÉBUTANT DÉTAILLÉ · BUILD 28.3.12</p>
               <h4 id="learningFoundationTitle">01 · Marché et données</h4>
               <p id="learningFoundationPromise">Chaque notion est définie avant son utilisation.</p>
             </div>
@@ -2998,7 +2998,18 @@
             <button class="btn small" id="btnOpenLearningProofs" type="button">Voir les preuves de simulation</button>
             <button class="btn small" id="btnExportLearningSession" type="button">Exporter cette session .md</button>
             <button class="btn small" id="btnExportLearningNotebook" type="button">Exporter mon carnet complet .md</button>
+            <button class="btn small" id="btnVerifyLearningIntegrity" type="button">Vérifier l’intégrité du parcours</button>
           </div>
+          <section class="learning-integrity-panel" id="learningIntegrityPanel" hidden aria-labelledby="learningIntegrityTitle">
+            <header>
+              <div><b id="learningIntegrityTitle">Diagnostic non destructif du carnet</b><span>Lecture IndexedDB, brouillon, archives, feuille de route et séparation de la simulation.</span></div>
+              <span class="pill warn" id="learningIntegrityBadge">NON VÉRIFIÉ</span>
+            </header>
+            <div class="learning-integrity-summary" id="learningIntegritySummary"></div>
+            <pre class="learning-integrity-details" id="learningIntegrityDetails">Aucune vérification lancée.</pre>
+            <div class="learning-integrity-actions"><button class="btn small" id="btnExportLearningIntegrity" type="button" disabled>Télécharger le diagnostic JSON</button></div>
+            <p>Aucune réparation automatique, aucun reset et aucun effacement ne sont exécutés par ce diagnostic.</p>
+          </section>
         </details>
 
         <div class="learning-cockpit-reading" id="learningCockpitReading">Commence par lire la leçon intégrée. Tes notes sont sauvegardées automatiquement et intégralement dans ce navigateur.</div>
@@ -3938,6 +3949,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.3.11"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.3.12"></script>
 </body>
 </html>

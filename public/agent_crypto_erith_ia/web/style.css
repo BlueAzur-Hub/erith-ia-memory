@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.3.11
+   ATLAS PUBLICATION IDENTITY — BUILD 28.3.12
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.3.11
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.11
+   ATLAS_ASSET_BUILD: 28.3.12
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.12
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.3.11";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.11";
+  --atlas-asset-build: "28.3.12";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.12";
 }
 
 :root{
@@ -25862,3 +25862,12 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
 /* Build 28.3.09 — Knowledge 06–08 guided pedagogy; existing layout primitives reused, no geometry change. */
 
 /* Build 28.3.10 — Mastery 09–11 guided pedagogy; existing layout reused, no geometry change. */
+
+
+/* Build 28.3.12 — Real Browser Persistence, Recovery & Evidence Lock */
+.learning-integrity-panel{margin-top:12px;padding:12px;border:1px solid rgba(98,236,255,.22);border-radius:10px;background:rgba(4,17,29,.72)}
+.learning-integrity-panel>header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.learning-integrity-panel>header div{display:grid;gap:4px}.learning-integrity-panel>header b{color:#e8f9ff;font-size:12.5px}.learning-integrity-panel>header span:not(.pill){color:#9fb8c7;font-size:11px;line-height:1.45}
+.learning-integrity-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.learning-integrity-summary article{display:grid;gap:4px;padding:9px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(2,10,18,.56)}.learning-integrity-summary b{color:#9fb8c7;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em}.learning-integrity-summary span{color:#f6e7bd;font-size:13px;font-weight:850}.learning-integrity-summary em{color:#8ea5b4;font-size:10.5px;font-style:normal}
+.learning-integrity-details{margin:10px 0 0;padding:10px;max-height:180px;overflow:auto;white-space:pre-wrap;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(1,8,14,.72);color:#c7dae4;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.learning-integrity-actions{display:flex;justify-content:flex-end;margin-top:9px}.learning-integrity-panel>p{margin:9px 0 0;color:#8ea5b4;font-size:10.5px;line-height:1.45}
+@media(max-width:760px){.learning-integrity-panel>header{display:grid}.learning-integrity-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
