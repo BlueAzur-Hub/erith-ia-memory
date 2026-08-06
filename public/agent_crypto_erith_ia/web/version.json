@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.03",
-  "build": "28.3.03",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.03",
-  "published_at": "2026-08-06T00:50:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.04",
+  "build": "28.3.04",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.04",
+  "published_at": "2026-08-06T01:35:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1341,6 +1341,37 @@
       "collectors",
       "fictional simulation",
       "existing learning archives"
+    ]
+  },
+  "explicit_lesson_validation_verified_archive_lock": {
+    "base": "28.3.03",
+    "build": "28.3.04",
+    "scope": "guided learning interaction correction only",
+    "step_1_primary_action": "opens and scrolls to the lesson only",
+    "step_1_validation_button": "visible below the lesson",
+    "lesson_remains_available_after_validation": true,
+    "step_5_effect": "validates conclusion only",
+    "archive_action": "distinct visible Terminer et archiver button",
+    "archive_persistence": "IndexedDB write followed by verified read-back",
+    "archive_failure": "rollback to visible 5/5 unarchived state with explicit error",
+    "completed_module_visibility": "lesson, five-step plan and notebook remain visible",
+    "next_module_action": "distinct button in completion panel",
+    "no_claim_of_human_comprehension": "completed cards say Preuve enregistrée",
+    "reset_required": false,
+    "preserved": [
+      "reset",
+      "Market",
+      "Metals",
+      "Bridge",
+      "collectors",
+      "fictional simulation",
+      "existing learning archives"
+    ],
+    "dead_dom_references_removed": [
+      "offlineNotice",
+      "btnFoundationResetPath",
+      "btnNewLearningSession",
+      "btnResetLearningSimulation"
     ]
   }
 }
