@@ -1,9 +1,23 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.11  
-**Mission du Build :** Learning State Continuity, Order & Completion Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.12  
+**Mission du Build :** Real Browser Persistence, Recovery & Evidence Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.12 — Persistance navigateur, reprise et preuve
+
+Consolidation technique du carnet pédagogique sans nouvelle leçon :
+
+- écritures IndexedDB sérialisées pour éviter les courses entre sauvegardes ;
+- fermeture de transaction, relecture réelle et comparaison d’empreinte avant confirmation ;
+- schéma de carnet `indexeddb_v2` avec versions séparées du carnet, du cockpit, des archives, de la feuille de route et de la pédagogie par module ;
+- codes explicites `LEARNING-IDB-*` et `LEARNING-STORAGE-QUOTA` ;
+- diagnostic secondaire « Vérifier l’intégrité du parcours », strictement non destructif ;
+- contrôle du brouillon actif, de l’ordre des étapes, des doublons d’archives, de la feuille de route, de la fin 11/11 et de la séparation des données de simulation ;
+- export JSON du diagnostic ;
+- aucune réparation automatique, aucun reset et aucun effacement ;
+- aucun changement de Market, Métaux, Bridge, collecteurs, contenu pédagogique, simulation ou reset.
 
 ## Build 28.3.11 — Continuité, ordre et fin de parcours
 
