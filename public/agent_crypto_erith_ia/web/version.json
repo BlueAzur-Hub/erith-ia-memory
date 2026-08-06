@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.06",
-  "build": "28.3.06",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.06",
-  "published_at": "2026-08-06T04:02:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.07",
+  "build": "28.3.07",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.07",
+  "published_at": "2026-08-06T04:31:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1068,7 +1068,7 @@
   },
   "foundation_evidence_only_validation": {
     "base": "28.2.92",
-    "state": "ready",
+    "state": "historical_superseded",
     "modules": [
       "market",
       "spot",
@@ -1093,7 +1093,9 @@
     "early_text_preserved": true,
     "non_foundation_modules_unchanged": true,
     "full_learning_reset_preserved": true,
-    "market_metals_bridge_collectors_unchanged": true
+    "market_metals_bridge_collectors_unchanged": true,
+    "superseded_by": "module_01_guided_conclusion_pedagogy_lock",
+    "current_conclusion_validation": "guided evidence answer; no character threshold"
   },
   "current_module_step_one_restart_lock": {
     "base": "28.2.92",
@@ -1376,7 +1378,7 @@
   },
   "module_01_guided_conclusion_pedagogy_lock": {
     "base": "28.3.04",
-    "build": "28.3.06",
+    "build": "28.3.05",
     "scope": "Module 01 pedagogy only",
     "step_1": "explicit lesson opening and visible post-reading validation preserved",
     "step_2": "Livecheck proof with IndexedDB read-back preserved",
@@ -1429,6 +1431,49 @@
     "free_text_required": false,
     "archive_separate": true,
     "next_module_separate": true,
+    "real_orders": false,
+    "wallet": false,
+    "api_keys": false
+  },
+  "foundations_evidence_snapshot_consolidation_01_03": {
+    "base": "28.3.06",
+    "build": "28.3.07",
+    "state": "ready",
+    "scope": "Foundations 01–03 evidence stability and code/test consolidation",
+    "module_01": {
+      "price_24h_7d": "frozen at explicit step 3 validation",
+      "source_time": "frozen at explicit step 4 validation",
+      "live_market_can_continue_without_mutating_session": true,
+      "archive_uses_frozen_evidence": true
+    },
+    "module_02": {
+      "position_summary": "already evidence-backed and preserved",
+      "behavior_changed": false
+    },
+    "module_03": {
+      "scenario_anchor": "position entry price and invested amount",
+      "scenario_model": "simplified gross change minus explicit round-trip pedagogical costs",
+      "minus_3_and_plus_5_frozen_at_test": true,
+      "live_market_can_continue_without_mutating_scenario_evidence": true,
+      "active_28_3_06_draft_migration": "legacy scenario evidence returns to step 4 only; earlier steps and completed archives are preserved"
+    },
+    "code_cleanup": [
+      "remove unused free-text threshold constant",
+      "remove unused conclusion length helper",
+      "update persistence reason build marker",
+      "repair current contract harness"
+    ],
+    "preserved": [
+      "Module 01 archive",
+      "roadmap progression",
+      "Market",
+      "Metals",
+      "Bridge",
+      "collectors",
+      "reset 28.2.98",
+      "fictional simulation safety"
+    ],
+    "reset_required": false,
     "real_orders": false,
     "wallet": false,
     "api_keys": false

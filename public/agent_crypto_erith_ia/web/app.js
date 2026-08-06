@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.06 — FOUNDATIONS 01–03 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.07 — FOUNDATIONS 01–03 EVIDENCE SNAPSHOT CONSOLIDATION LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.06";
-const ATLAS_BUILD = "28.3.06";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.06";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.07";
+const ATLAS_BUILD = "28.3.07";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.07";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,7 +11614,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.06";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.07";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11663,10 +11663,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.06";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.06";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.06";
-const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.07";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.07";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.07";
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
@@ -11867,7 +11866,23 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
   };
   if (!source.completed_at && ATLAS_FOUNDATION_MODULE_KEYS.includes(normalized.module_key) && source.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD) {
     const evidenceKey = foundationGuidedEvidenceKey(normalized.module_key);
-    if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
+    if (normalized.module_key === "risk") {
+      const scenarios = Array.isArray(normalized.practice_evidence?.scenarios) ? normalized.practice_evidence.scenarios : [];
+      const results = normalized.practice_evidence?.risk_scenario_results && typeof normalized.practice_evidence.risk_scenario_results === "object" ? normalized.practice_evidence.risk_scenario_results : {};
+      const stableScenarioEvidence = [-3, 5].every(pct => results[String(pct)]?.model === "entry_anchored_simplified");
+      if (scenarios.length && !stableScenarioEvidence) {
+        normalized.practice_evidence.scenarios = [];
+        delete normalized.practice_evidence.risk_scenario_results;
+        delete normalized.practice_evidence.risk_guided_conclusion;
+        delete normalized.practice_evidence.risk_guided_summary;
+        delete normalized.practice_evidence.risk_guided_answer;
+        normalized.steps.verify = false;
+        normalized.verify_completed_at = null;
+        normalized.steps.note = false;
+        normalized.takeaway = "";
+        normalized.last_action = "risk_scenarios_refresh_required";
+      } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
+    } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
   }
   return normalized;
 }
@@ -12579,9 +12594,6 @@ function foundationStepStatus(cockpit, key) { return cockpit.steps?.[key] === tr
 function foundationStepsBeforeConclusionComplete(cockpit) {
   return ["read", "open", "practice", "verify"].every(key => cockpit?.steps?.[key] === true);
 }
-function foundationConclusionLength(cockpit) {
-  return learningTextCount(String(cockpit?.takeaway || "").trim());
-}
 function foundationGuidedEvidenceKey(moduleKey) {
   return moduleKey === "market" ? "market_guided_conclusion" : moduleKey === "spot" ? "spot_guided_conclusion" : moduleKey === "risk" ? "risk_guided_conclusion" : null;
 }
@@ -12613,21 +12625,32 @@ function foundationConclusionGuidance(cockpit) {
 function foundationButton(label, action, disabled = false) {
   return `<button class="btn small ${disabled ? "" : "primary"}" type="button" data-foundation-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${escapeHtml(label)}</button>`;
 }
-function foundationMarketGuidedSummary() {
+function foundationMarketGuidedSummary(cockpitInput = null) {
+  const cockpit = cockpitInput || loadLearningCockpitState();
+  const evidence = cockpit?.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  const readProof = evidence.market_btc_read && typeof evidence.market_btc_read === "object" ? evidence.market_btc_read : null;
+  const provenanceProof = evidence.market_source_time && typeof evidence.market_source_time === "object" ? evidence.market_source_time : null;
   const btc = state.coins?.find?.(coin => coin.id === "bitcoin");
-  const source = String(state.mainSource || els.sourceName?.textContent || "non disponible").trim();
-  const time = String(els.sourceTime?.textContent || "—").trim();
-  const ready = Boolean(state.liveOk && btc && source && time && time !== "—");
-  const price = ready ? fmtEUR.format(Number(btc.price)) : "—";
-  const change24 = ready ? atlasSignedPct(btc.change24h) : "—";
-  const change7 = ready ? atlasSignedPct(btc.change7d) : "—";
+  const liveSource = String(state.mainSource || els.sourceName?.textContent || "non disponible").trim();
+  const liveTime = String(els.sourceTime?.textContent || "—").trim();
+  const liveReady = Boolean(state.liveOk && btc && liveSource && liveTime && liveTime !== "—");
+  const price = String(readProof?.price || (liveReady ? fmtEUR.format(Number(btc.price)) : "—"));
+  const change24 = String(readProof?.change_24h || (liveReady ? atlasSignedPct(btc.change24h) : "—"));
+  const change7 = String(readProof?.change_7d || (liveReady ? atlasSignedPct(btc.change7d) : "—"));
+  const source = String(provenanceProof?.source || liveSource || "non disponible").trim();
+  const time = String(provenanceProof?.time || liveTime || "—").trim();
+  const valuesFrozen = Boolean(readProof);
+  const provenanceFrozen = Boolean(provenanceProof);
+  const valuesReady = valuesFrozen || Boolean(liveReady && price !== "—" && change24 !== "—" && change7 !== "—");
+  const provenanceReady = provenanceFrozen || Boolean(liveReady && source && source !== "non disponible" && time && time !== "—");
+  const ready = Boolean(valuesReady && provenanceReady);
   const text = ready
-    ? `Au moment observé, la ligne Bitcoin affiche un prix de ${price}, une variation de ${change24} sur 24 heures et de ${change7} sur 7 jours. La carte pédagogique reprend le Market Snapshot issu de « ${source} » à ${time}. Le prix spot Binance affiché dans la fiche active reste une donnée distincte. Ces données décrivent l’écran observé, mais ne permettent pas de prédire avec certitude le prochain mouvement.`
+    ? `Au moment observé, la ligne Bitcoin affiche un prix de ${price}, une variation de ${change24} sur 24 heures et de ${change7} sur 7 jours. La carte pédagogique reprend le Market Snapshot issu de « ${source} » à ${time}. Le prix spot Binance affiché dans la fiche active reste une donnée distincte. Ces preuves sont figées au moment de leur validation : les valeurs live peuvent ensuite évoluer sans modifier la session. Elles décrivent l’écran observé, mais ne permettent pas de prédire avec certitude le prochain mouvement.`
     : "La synthèse sera construite uniquement après Livecheck, sans inventer de valeur.";
-  return { ready, btc, source, time, price, change24, change7, text };
+  return { ready, btc, source, time, price, change24, change7, text, valuesFrozen, provenanceFrozen };
 }
 function foundationMarketLab(cockpit) {
-  const summary = foundationMarketGuidedSummary();
+  const summary = foundationMarketGuidedSummary(cockpit);
   const evidence = cockpit.practice_evidence || {};
   const step3Ready = Boolean(cockpit.steps.open && summary.ready);
   const step4Ready = Boolean(cockpit.steps.practice && summary.ready);
@@ -12638,7 +12661,7 @@ function foundationMarketLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 3 · RELEVER</span>
         <h5>Les trois valeurs Bitcoin</h5>
         <p>${summary.ready ? `Prix <b>${escapeHtml(summary.price)}</b> · 24 h <b>${escapeHtml(summary.change24)}</b> · 7 j <b>${escapeHtml(summary.change7)}</b>` : "Livecheck requis : aucune valeur n’est inventée."}</p>
-        <small>Ces trois valeurs sont reprises directement de la ligne Bitcoin affichée dans Market Snapshot.</small>
+        <small>${summary.valuesFrozen ? "Valeurs figées lors de la validation de l’étape 3 ; la ligne live peut évoluer ensuite." : "Ces trois valeurs sont reprises directement de la ligne Bitcoin affichée dans Market Snapshot."}</small>
         <div class="foundation-choice-row">
           ${foundationButton("Voir la ligne Bitcoin", "market_show_btc_row", !step3Ready)}
           ${foundationButton(cockpit.steps.practice ? "Trois valeurs relevées" : "J’ai relevé Prix / 24 h / 7 j", "market_read_btc", !step3Ready || cockpit.steps.practice)}
@@ -12648,7 +12671,7 @@ function foundationMarketLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 4 · PROVENANCE</span>
         <h5>Source, heure et fraîcheur</h5>
         <p><b>Source active :</b> ${escapeHtml(summary.source || "non disponible")}<br><b>Heure des données :</b> ${escapeHtml(summary.time || "—")}</p>
-        <small>Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable.</small>
+        <small>${summary.provenanceFrozen ? "Source et heure figées lors de la validation de l’étape 4." : "Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable."}</small>
         ${foundationButton(cockpit.steps.verify ? "Source et heure validées" : "Valider la source et l’heure", "market_verify_source_time", !step4Ready || cockpit.steps.verify)}
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
@@ -12726,25 +12749,52 @@ function foundationSpotLab(cockpit) {
       </article>
     </div>`;
 }
-function foundationRiskScenarioSnapshot(pct) {
-  const costs = readSimCostInputs();
-  const pos = state.sim?.positions?.BTC;
-  if (!pos) return { ready:false, pct, grossPnl:0, netPnl:0 };
-  const exit = estimatePositionExit("BTC", pct, costs);
-  return { ready:Boolean(exit), pct, grossPnl:Number(exit?.grossPnlEur || 0), netPnl:Number(exit?.netPnlEur || 0), marketPrice:Number(exit?.marketPrice || 0) };
+function foundationRiskScenarioSnapshot(pct, cockpitInput = null) {
+  const cockpit = cockpitInput || loadLearningCockpitState();
+  const evidence = cockpit?.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  const stored = evidence.risk_scenario_results?.[String(Number(pct))];
+  if (stored?.model === "entry_anchored_simplified" && Number.isFinite(Number(stored.gross_pnl_eur)) && Number.isFinite(Number(stored.net_pnl_eur))) {
+    return {
+      ready:true,
+      pct:Number(pct),
+      grossPnl:Number(stored.gross_pnl_eur),
+      netPnl:Number(stored.net_pnl_eur),
+      marketPrice:Number(stored.scenario_price_eur || 0),
+      invested:Number(stored.amount_eur || SIM_PROFILE.defaultAmount),
+      roundTrip:Number(stored.round_trip_pct || 0),
+      model:"entry_anchored_simplified"
+    };
+  }
+  const details = evidence.risk_position_details || {};
+  const pos = state.sim?.positions?.BTC || null;
+  const invested = Number(details.amount_eur ?? pos?.invested ?? SIM_PROFILE.defaultAmount);
+  const entryPrice = Number(details.entry_price_eur ?? pos?.avgPrice ?? 0);
+  const quantity = Number(details.quantity ?? pos?.qty ?? 0);
+  const roundTrip = getSimRoundTripCostPct(readSimCostInputs());
+  const rate = Number(pct);
+  const ready = Boolean(evidence.risk_position && Number.isFinite(invested) && invested > 0 && Number.isFinite(entryPrice) && entryPrice > 0 && Number.isFinite(quantity) && quantity > 0 && Number.isFinite(rate));
+  if (!ready) return { ready:false, pct:rate, grossPnl:0, netPnl:0, marketPrice:0, invested:0, roundTrip, model:"entry_anchored_simplified" };
+  const grossPnl = invested * rate / 100;
+  const estimatedRoundTripCost = invested * roundTrip / 100;
+  const netPnl = grossPnl - estimatedRoundTripCost;
+  const marketPrice = entryPrice * (1 + rate / 100);
+  return { ready:true, pct:rate, grossPnl, netPnl, marketPrice, invested, roundTrip, estimatedRoundTripCost, model:"entry_anchored_simplified" };
 }
 function foundationRiskGuidedSummary(cockpit) {
   const evidence = cockpit?.practice_evidence || {};
   const scenarios = Array.isArray(evidence.scenarios) ? evidence.scenarios : [];
-  const costs = readSimCostInputs();
-  const roundTrip = getSimRoundTripCostPct(costs);
-  const minus = foundationRiskScenarioSnapshot(-3);
-  const plus = foundationRiskScenarioSnapshot(5);
-  const ready = Boolean(cockpit?.steps?.verify && evidence.cost_example && evidence.risk_position && scenarios.includes(-3) && scenarios.includes(5) && minus.ready && plus.ready);
+  const currentRoundTrip = getSimRoundTripCostPct(readSimCostInputs());
+  const minus = foundationRiskScenarioSnapshot(-3, cockpit);
+  const plus = foundationRiskScenarioSnapshot(5, cockpit);
+  const minusTested = scenarios.includes(-3);
+  const plusTested = scenarios.includes(5);
+  const frozenRoundTrip = minusTested && minus.ready ? Number(minus.roundTrip) : plusTested && plus.ready ? Number(plus.roundTrip) : currentRoundTrip;
+  const roundTrip = Number.isFinite(frozenRoundTrip) ? frozenRoundTrip : currentRoundTrip;
+  const ready = Boolean(cockpit?.steps?.verify && evidence.cost_example && evidence.risk_position && minusTested && plusTested && minus.ready && plus.ready);
   const text = ready
-    ? `La position fictive de 50 € produit, dans le scénario −3 %, ${atlasSignedEUR(minus.grossPnl)} avant frais et ${atlasSignedEUR(minus.netPnl)} après frais estimés. Dans le scénario +5 %, elle produit ${atlasSignedEUR(plus.grossPnl)} avant frais et ${atlasSignedEUR(plus.netPnl)} après frais estimés. Le modèle pédagogique applique ${roundTrip.toFixed(2)} % de coûts aller-retour : le résultat net reste donc inférieur au résultat brut.`
+    ? `La position fictive de ${fmtEUR.format(minus.invested)} est comparée à son prix d’entrée. Dans le scénario −3 %, le résultat est ${atlasSignedEUR(minus.grossPnl)} avant les coûts pédagogiques et ${atlasSignedEUR(minus.netPnl)} après leur estimation. Dans le scénario +5 %, il est ${atlasSignedEUR(plus.grossPnl)} avant coûts et ${atlasSignedEUR(plus.netPnl)} après coûts. Le modèle pédagogique applique ${roundTrip.toFixed(2)} % de coûts aller-retour et fige ces deux preuves au moment du test : une modification ultérieure du marché ou des champs de coûts ne réécrit pas la session. Le résultat net reste donc inférieur au résultat brut.`
     : "La synthèse sera construite après le chargement des coûts, la position BTC fictive et les deux scénarios −3 % / +5 %.";
-  return { ready, roundTrip, minus, plus, text };
+  return { ready, roundTrip, minus, plus, minusTested, plusTested, text };
 }
 function foundationRiskLab(cockpit) {
   const e = cockpit.practice_evidence || {};
@@ -12771,7 +12821,7 @@ function foundationRiskLab(cockpit) {
       <article data-foundation-stage="4" class="foundation-lab-wide ${cockpit.steps.verify ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · SCÉNARIOS</span><h5>Comparer −3 % et +5 %</h5>
         <div class="foundation-choice-row">${foundationButton(scenarios.includes(-3) ? "−3 % testé" : "Tester −3 %", "risk_scenario_minus3", !cockpit.steps.practice || scenarios.includes(-3))}${foundationButton(scenarios.includes(5) ? "+5 % testé" : "Tester +5 %", "risk_scenario_plus5", !cockpit.steps.practice || scenarios.includes(5))}</div>
-        <p><b>−3 % :</b> ${summary.minus.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "à tester"}<br><b>+5 % :</b> ${summary.plus.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "à tester"}</p>
+        <p><b>−3 % :</b> ${summary.minusTested && summary.minus.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "à tester"}<br><b>+5 % :</b> ${summary.plusTested && summary.plus.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "à tester"}</p>
         <small>Les scénarios ne modifient pas la position. Ils comparent seulement des résultats fictifs.</small>
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
@@ -12802,8 +12852,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.06 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.06 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.07 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.07 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
@@ -12878,7 +12928,7 @@ function handleFoundationAction(action) {
     return;
   }
   if (module.key === "market") {
-    const summary = foundationMarketGuidedSummary();
+    const summary = foundationMarketGuidedSummary(cockpit);
     if (action === "market_answer_prudent") action = "market_verify_source_time";
     if (action === "market_answer_prediction") action = "market_prediction_yes";
     if (action === "market_show_btc_row") {
@@ -12892,14 +12942,14 @@ function handleFoundationAction(action) {
     if (action === "market_read_btc") {
       if (!cockpit.steps.open || !summary.ready) return foundationFeedback(false, "Livecheck requis", "Clique sur « Lancer Livecheck » puis attends la source et l’heure avant de relever Bitcoin.");
       cockpit.steps.practice = true;
-      cockpit.practice_evidence.market_btc_read = { price:summary.price, change_24h:summary.change24, change_7d:summary.change7, validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD };
+      cockpit.practice_evidence.market_btc_read = { price:summary.price, price_eur:Number(summary.btc?.price), change_24h:summary.change24, change_24h_pct:Number(summary.btc?.change24h), change_7d:summary.change7, change_7d_pct:Number(summary.btc?.change7d), validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
       cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "market_btc_values_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", `Prix ${summary.price} · 24 h ${summary.change24} · 7 j ${summary.change7}.`);
     }
     if (action === "market_verify_source_time") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Relève d’abord Prix, 24 h et 7 j dans la carte précédente.");
       if (!summary.ready) return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
-      cockpit.practice_evidence.market_source_time = { source:summary.source, time:summary.time, validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD };
+      cockpit.practice_evidence.market_source_time = { source:summary.source, time:summary.time, validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
       cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "market_source_time_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); setActionFeedback("ok", "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. Lis maintenant la synthèse guidée de l’étape 5.`, els.learningFoundationLab); return;
     }
@@ -13168,7 +13218,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.06 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.07 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:`Ouvrir la leçon du Module ${module.title.split(" · ")[0]}`, text:"Ce bouton ouvre seulement la leçon. Après lecture, valide l’étape avec le bouton visible placé sous son contenu." };
@@ -13571,9 +13621,9 @@ function recordLearningPracticeEvidence(kind, value = true) {
     };
   }
   if (module.key === "risk" && kind === "scenario") {
-    const number = Number(value); const snap = foundationRiskScenarioSnapshot(number);
+    const number = Number(value); const snap = foundationRiskScenarioSnapshot(number, cockpit);
     cockpit.practice_evidence.risk_scenario_results = cockpit.practice_evidence.risk_scenario_results || {};
-    cockpit.practice_evidence.risk_scenario_results[String(number)] = { gross_pnl_eur:snap.grossPnl, net_pnl_eur:snap.netPnl, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD };
+    cockpit.practice_evidence.risk_scenario_results[String(number)] = { gross_pnl_eur:snap.grossPnl, net_pnl_eur:snap.netPnl, scenario_price_eur:snap.marketPrice, amount_eur:snap.invested, round_trip_pct:snap.roundTrip, model:snap.model, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD };
   }
   if (module.key === "risk") {
     if (kind === "cost_example") cockpit.steps.open = true;
@@ -13814,7 +13864,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_05");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_07");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
@@ -18538,7 +18588,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.3.06",
+  interface: "Build 28.3.07",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -20789,7 +20839,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.3.06`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.3.07`
   );
 }
 
