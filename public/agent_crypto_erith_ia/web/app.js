@@ -13709,7 +13709,7 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
     ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
-    : `<b>Parcours 28.3.11 actif</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
+    : `<b>Parcours 28.3.13 actif</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
@@ -14307,7 +14307,7 @@ function learningActionState(cockpit) {
       text:"Les onze modules sont pratiqués et archivés. Aucune nouvelle session Module 01 n’est créée automatiquement.",
       next:null
     };
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.11 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.13 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     const labels = {
