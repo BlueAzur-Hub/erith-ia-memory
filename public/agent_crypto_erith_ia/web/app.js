@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.08 — SECURITY 04–05 EVIDENCE GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.09 — KNOWLEDGE 06–08 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.08";
-const ATLAS_BUILD = "28.3.08";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.08";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.09";
+const ATLAS_BUILD = "28.3.09";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.09";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,8 +11614,8 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.08";
-const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet"]);
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.09";
+const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet", "tokenomics", "defi", "yield"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
     title:"01 · Marché et données",
@@ -11676,6 +11676,42 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       verify:{ title:"4. Préparer un petit test et sa trace", where:"Carte « Petit test, frais et confirmations »", action:"Valider le contrôle du minimum, des frais, du memo/tag éventuel, puis prévoir un petit test et suivre TXID, statut et confirmations.", why:"Le premier transfert doit prouver le trajet avant un montant plus important.", result:"Le plan fictif de test et de traçabilité est figé dans le carnet.", remember:"Un TXID identifie la transaction ; les confirmations indiquent son avancement sur le réseau." },
       note:{ title:"5. Comprendre la différence réseau / adresse", where:"Carte « Synthèse guidée du Module 05 »", action:"Lire la synthèse puis répondre à la question : une adresse ressemblante suffit-elle si le réseau ne correspond pas ?", why:"L’erreur de réseau peut être irréversible même lorsque l’adresse semble correcte.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Toujours vérifier ensemble : actif, réseau, destination, memo/tag, frais, petit test et confirmations." }
     }
+  },
+  tokenomics:{
+    title:"06 · Stablecoins et tokenomics",
+    promise:"Lire la stabilité annoncée, l’offre et la valorisation sans confondre prix unitaire et taille économique.",
+    route:["LEÇON INTÉGRÉE", "STABLECOIN ≠ SANS RISQUE", "CAPITALISATION + FDV", "UNLOCKS + CONCENTRATION", "PRIX UNITAIRE ≠ BON MARCHÉ"],
+    steps:{
+      read:{ title:"1. Comprendre stablecoin, offre et valorisation", where:"LEÇON INTÉGRÉE AU COCKPIT — 06 · Stablecoins et tokenomics", action:"Lire les définitions de réserve, depeg, offre en circulation, offre maximale, capitalisation, FDV, inflation, burn et unlock, puis valider l’étape 1 sous la leçon.", why:"Le prix d’une unité ne décrit ni les réserves d’un stablecoin ni la valeur totale d’un projet.", result:"L’étape 1 devient verte et le laboratoire de valorisation est présenté.", remember:"Stable ne signifie pas sans risque ; prix unitaire ne signifie pas valorisation." },
+      open:{ title:"2. Identifier le risque propre à un stablecoin", where:"Carte « Stablecoin : stabilité annoncée et risques »", action:"Refuser l’affirmation qu’un stablecoin vaut toujours exactement 1 € ou 1 $ sans risque, puis retenir les contrôles émetteur, réserves, remboursement, liquidité et depeg.", why:"La stabilité dépend d’un mécanisme, de réserves, d’un émetteur ou d’un protocole et de la capacité de remboursement.", result:"Le risque stablecoin est enregistré sans recommander ni sélectionner un actif.", remember:"Une cible de stabilité peut échouer temporairement ou durablement." },
+      practice:{ title:"3. Distinguer capitalisation et FDV", where:"Carte « Exemple de valorisation »", action:"Pour un jeton fictif à 1 €, avec 100 millions d’unités en circulation et 1 milliard au maximum, choisir capitalisation 100 M€ et FDV 1 Md€.", why:"La capitalisation utilise l’offre en circulation ; la FDV projette l’offre totale ou maximale au prix actuel.", result:"Les deux calculs sont figés comme preuve pédagogique.", remember:"Un faible prix unitaire peut coexister avec une valorisation très élevée." },
+      verify:{ title:"4. Contrôler unlocks, inflation et concentration", where:"Carte « Pression d’offre potentielle »", action:"Valider la checklist : calendrier d’unlock, émissions, burn, concentration, utilité et sources officielles datées.", why:"Une augmentation future de l’offre ou une forte concentration peut modifier le risque sans changer immédiatement le prix affiché.", result:"La checklist d’analyse est enregistrée sans produire de score d’achat.", remember:"Tokenomics décrit des mécanismes d’offre ; elle ne prédit pas seule le prix." },
+      note:{ title:"5. Comprendre pourquoi 0,01 € ne signifie pas bon marché", where:"Carte « Synthèse guidée du Module 06 »", action:"Lire la synthèse puis répondre à la question : un jeton à prix unitaire plus faible est-il nécessairement moins cher économiquement ?", why:"La comparaison doit porter sur l’offre, la capitalisation, la FDV et les risques, pas sur le nombre de décimales.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Comparer prix, offre, capitalisation, FDV, émissions, unlocks et concentration." }
+    }
+  },
+  defi:{
+    title:"07 · Smart contracts et DeFi",
+    promise:"Comprendre ce qu’une lecture, une transaction, une signature et une autorisation peuvent réellement faire.",
+    route:["LEÇON INTÉGRÉE", "LIRE ≠ ÉCRIRE", "APPROVAL LIMITÉ", "GAS + CONTRAT + DÉPENDANCES", "SIGNATURE ≠ INOFFENSIVE"],
+    steps:{
+      read:{ title:"1. Comprendre contrat, transaction et autorisation", where:"LEÇON INTÉGRÉE AU COCKPIT — 07 · Smart contracts et DeFi", action:"Lire smart contract, lecture, écriture, gas, approval, DEX, oracle et bridge, puis valider l’étape 1 sous la leçon.", why:"Une interface peut demander une simple lecture ou une action irréversible ; ces gestes ne sont pas équivalents.", result:"L’étape 1 devient verte et le laboratoire d’interaction est présenté.", remember:"Lire ne modifie pas la chaîne ; écrire ou autoriser peut modifier un état ou donner un droit de dépense." },
+      open:{ title:"2. Distinguer lecture et écriture", where:"Carte « Que fait cette interaction ? »", action:"Choisir l’action qui change potentiellement l’état : signer/envoyer une transaction d’écriture, et non consulter un solde.", why:"Une lecture est une requête ; une écriture est une transaction qui exécute une fonction et peut coûter du gas.", result:"La distinction lecture / écriture est enregistrée.", remember:"Le bouton d’une dApp ne décrit pas toujours clairement la fonction appelée." },
+      practice:{ title:"3. Limiter une autorisation de dépense", where:"Carte « Approval ERC-20 »", action:"Choisir une autorisation limitée au montant et à l’usage compris plutôt qu’une autorisation illimitée par défaut.", why:"Une approval autorise un contrat à transférer des jetons jusqu’à une limite donnée.", result:"Le principe du moindre privilège est figé comme preuve.", remember:"Ne jamais approuver un contrat, un montant ou une durée que l’on ne comprend pas." },
+      verify:{ title:"4. Vérifier contrat, réseau, gas et dépendances", where:"Carte « Checklist avant interaction »", action:"Valider la vérification du domaine, du réseau, de l’adresse du contrat, de la fonction, du montant autorisé, du gas, de l’oracle et du bridge éventuel.", why:"La composabilité ajoute des dépendances : un protocole peut dépendre d’autres contrats, d’oracles ou de bridges.", result:"La checklist fictive est enregistrée ; aucun wallet n’est connecté.", remember:"Une interface connue ne rend pas automatiquement chaque contrat, signature ou dépendance sûre." },
+      note:{ title:"5. Comprendre le risque d’une signature", where:"Carte « Synthèse guidée du Module 07 »", action:"Lire la synthèse puis répondre : une signature présentée comme vérification est-elle forcément inoffensive si la seed n’est pas partagée ?", why:"Une signature ou transaction peut accorder un droit ou exécuter une fonction sans révéler la phrase de récupération.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Ne rien signer tant que contrat, fonction, réseau, montant, gas et conséquences ne sont pas compris." }
+    }
+  },
+  yield:{
+    title:"08 · Staking et rendements",
+    promise:"Distinguer récompense nominale, valeur en euros, blocage et risques avant de parler de rendement.",
+    route:["LEÇON INTÉGRÉE", "SOURCE DU RENDEMENT", "JETONS ≠ EUROS", "BLOCAGE + SLASHING + CONTREPARTIE", "TAUX ≠ GARANTIE"],
+    steps:{
+      read:{ title:"1. Comprendre staking, récompense et rendement net", where:"LEÇON INTÉGRÉE AU COCKPIT — 08 · Staking et rendements", action:"Lire staking natif, prestataire, récompense nominale, inflation, blocage, délai de retrait, slashing et contrepartie, puis valider l’étape 1 sous la leçon.", why:"Un pourcentage affiché ne dit pas d’où vient le rendement ni quel risque le finance.", result:"L’étape 1 devient verte et le laboratoire de rendement est présenté.", remember:"Identifier la source, l’actif payé, les coûts, les délais et les risques." },
+      open:{ title:"2. Identifier la source du rendement", where:"Carte « D’où viennent les récompenses ? »", action:"Refuser l’idée d’un intérêt gratuit et retenir que les récompenses peuvent provenir du protocole, des frais, des émissions ou d’une activité de prêt avec contrepartie.", why:"Chaque source implique des hypothèses et des risques différents.", result:"La source du rendement est enregistrée comme élément à vérifier.", remember:"Un taux sans mécanisme explicable est un signal de prudence." },
+      practice:{ title:"3. Comparer jetons reçus et valeur en euros", where:"Carte « Exemple nominal contre valeur réelle »", action:"Pour 100 jetons à 10 € puis 108 jetons à 7 €, choisir 756 € et une baisse de 24,4 % malgré +8 % de jetons.", why:"La quantité de jetons et leur valeur en monnaie de référence peuvent évoluer dans des directions opposées.", result:"Le calcul nominal / euros est figé comme preuve.", remember:"+8 % de jetons ne compense pas automatiquement une baisse de prix de 30 %." },
+      verify:{ title:"4. Contrôler blocage, retrait et risques", where:"Carte « Checklist de rendement »", action:"Valider la vérification : durée de blocage, délai de retrait, pénalités/slashing, inflation, coûts, prestataire, smart contract et liquidité du jeton reçu.", why:"Le rendement brut peut être réduit par les coûts, l’inflation, la baisse du prix ou l’impossibilité de sortir rapidement.", result:"La checklist fictive est enregistrée sans dépôt ni staking réel.", remember:"Comparer rendement nominal, rendement net, disponibilité des fonds et hypothèses de confiance." },
+      note:{ title:"5. Comprendre qu’un taux ne garantit pas un gain", where:"Carte « Synthèse guidée du Module 08 »", action:"Lire la synthèse puis répondre : une récompense annoncée à 8 % garantit-elle un gain en euros ?", why:"Le prix, l’inflation, les coûts, le blocage et les risques de protocole ou de prestataire restent déterminants.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un rendement élevé est une information à expliquer, jamais une garantie." }
+    }
   }
 });
 
@@ -11687,9 +11723,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.08";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.08";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.08";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.09";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.09";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.09";
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
@@ -11906,8 +11942,8 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
         normalized.takeaway = "";
         normalized.last_action = "risk_scenarios_refresh_required";
       } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
-    } else if (["account", "wallet"].includes(normalized.module_key)) {
-      const prefix = normalized.module_key === "account" ? "account_" : "wallet_";
+    } else if (["account", "wallet", "tokenomics", "defi", "yield"].includes(normalized.module_key)) {
+      const prefix = `${normalized.module_key}_`;
       Object.keys(normalized.practice_evidence).filter(key => key.startsWith(prefix) || key.startsWith("foundation_")).forEach(key => delete normalized.practice_evidence[key]);
       normalized.steps.open = false;
       normalized.steps.practice = false;
@@ -12630,7 +12666,7 @@ function foundationStepsBeforeConclusionComplete(cockpit) {
   return ["read", "open", "practice", "verify"].every(key => cockpit?.steps?.[key] === true);
 }
 function foundationGuidedEvidenceKey(moduleKey) {
-  const map = { market:"market_guided_conclusion", spot:"spot_guided_conclusion", risk:"risk_guided_conclusion", account:"account_guided_conclusion", wallet:"wallet_guided_conclusion" };
+  const map = { market:"market_guided_conclusion", spot:"spot_guided_conclusion", risk:"risk_guided_conclusion", account:"account_guided_conclusion", wallet:"wallet_guided_conclusion", tokenomics:"tokenomics_guided_conclusion", defi:"defi_guided_conclusion", yield:"yield_guided_conclusion" };
   return map[moduleKey] || null;
 }
 function foundationGuidedConclusionReady(cockpit) {
@@ -12658,7 +12694,10 @@ function foundationConclusionGuidance(cockpit) {
     spot:"Lis la synthèse d’exécution puis réponds à la question sur l’ordre limite",
     risk:"Lis la comparaison brut / net puis réponds à la question sur les frais",
     account:"Lis le plan de sécurité puis réponds à la question sur les secrets et l’accès distant",
-    wallet:"Lis le trajet de retrait puis réponds à la question sur la compatibilité du réseau"
+    wallet:"Lis le trajet de retrait puis réponds à la question sur la compatibilité du réseau",
+    tokenomics:"Lis la synthèse de valorisation puis réponds à la question sur le prix unitaire",
+    defi:"Lis la synthèse d’interaction puis réponds à la question sur la signature",
+    yield:"Lis la synthèse de rendement puis réponds à la question sur le gain en euros"
   };
   return map[cockpit?.module_key] || "Réponse guidée requise";
 }
@@ -12979,6 +13018,156 @@ function foundationWalletLab(cockpit) {
     </div>`;
 }
 
+function foundationTokenomicsGuidedSummary(cockpit) {
+  const evidence = cockpit?.practice_evidence || {};
+  const stable = evidence.tokenomics_stablecoin_risk || null;
+  const valuation = evidence.tokenomics_valuation_example || null;
+  const supply = evidence.tokenomics_supply_checklist || null;
+  const ready = Boolean(cockpit?.steps?.verify && stable && valuation && supply);
+  const text = ready
+    ? "Un stablecoin vise une valeur stable, mais cette cible dépend de son mécanisme, de l’émetteur ou du protocole, des réserves, de la liquidité et de la capacité de remboursement ; un depeg reste possible. Dans l’exemple fictif, 1 € multiplié par 100 millions d’unités en circulation produit 100 M€ de capitalisation, tandis que 1 milliard d’unités maximales produit 1 Md€ de FDV. Les unlocks, émissions, burns et concentrations doivent être lus dans des sources officielles datées. Un prix unitaire faible ne prouve donc jamais qu’un projet est économiquement bon marché."
+    : "La synthèse sera construite après l’analyse du risque stablecoin, le calcul capitalisation / FDV et la checklist d’offre.";
+  return { ready, stable, valuation, supply, text };
+}
+function foundationTokenomicsLab(cockpit) {
+  const e = cockpit.practice_evidence || {};
+  const summary = foundationTokenomicsGuidedSummary(cockpit);
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-tokenomics-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · STABILITÉ ET RISQUES</span>
+        <h5>Un stablecoin est-il automatiquement sans risque parce qu’il vise 1 € ou 1 $ ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_yes" ${step2Done ? "disabled" : ""}>Oui, la parité est garantie</button><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_no" ${step2Done ? "disabled" : ""}>Non, vérifier mécanisme, réserves, remboursement, liquidité et depeg</button></div>
+        <small>${e.tokenomics_stablecoin_risk ? "Risque stablecoin enregistré : cible de stabilité, pas absence de risque." : "Une réserve publiée par un émetteur est une preuve à lire, pas une propriété universelle de tous les stablecoins."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · CAPITALISATION ET FDV</span>
+        <h5>Jeton fictif : prix 1 € · 100 M en circulation · 1 Md maximum</h5>
+        <p>Quelle lecture est correcte ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_valuation_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Capitalisation 1 M€ · FDV 100 M€</button><button type="button" data-foundation-action="tokenomics_valuation_correct" ${!step2Done || step3Done ? "disabled" : ""}>Capitalisation 100 M€ · FDV 1 Md€</button></div>
+        <small>${e.tokenomics_valuation_example ? "Calcul figé : prix × offre en circulation, puis prix × offre maximale." : "La FDV ne dit pas que toute l’offre existe déjà ; elle projette une valorisation au prix actuel."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · PRESSION D’OFFRE POTENTIELLE</span>
+        <h5>Checklist avant toute interprétation</h5>
+        <ul class="foundation-guided-list"><li>Calendrier d’unlock et vesting.</li><li>Émissions, inflation et burn.</li><li>Concentration des détenteurs.</li><li>Offre en circulation contre offre maximale.</li><li>Sources officielles datées et utilité réelle du jeton.</li></ul>
+        ${foundationButton(step4Done ? "Checklist d’offre enregistrée" : "Valider la checklist tokenomics", "tokenomics_validate_supply", !step3Done || step4Done)}
+        <small>${e.tokenomics_supply_checklist ? "Instantané figé : offre, unlocks, émissions, burn, concentration et sources." : "Cette checklist n’attribue aucun score d’achat et ne prédit aucun prix."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 06</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> un jeton à 0,01 € est-il nécessairement économiquement moins cher qu’un jeton à 100 € ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_low_price_cheap_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="tokenomics_low_price_cheap_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${e.tokenomics_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Le prix unitaire doit être relié à l’offre, à la capitalisation et à la FDV." : "Disponible après la checklist tokenomics."}</small>
+      </article>
+    </div>`;
+}
+function foundationDefiGuidedSummary(cockpit) {
+  const evidence = cockpit?.practice_evidence || {};
+  const interaction = evidence.defi_interaction_type || null;
+  const approval = evidence.defi_approval_scope || null;
+  const dependencies = evidence.defi_dependency_checklist || null;
+  const ready = Boolean(cockpit?.steps?.verify && interaction && approval && dependencies);
+  const text = ready
+    ? "Un smart contract est un programme déployé sur une blockchain. Lire une donnée ne modifie pas l’état, tandis qu’une transaction d’écriture exécute une fonction, peut coûter du gas et produire un effet irréversible. Une approval ERC-20 accorde à un contrat un droit de dépense jusqu’à une limite : le moindre privilège impose de comprendre le contrat, l’usage et le montant plutôt que d’accepter une autorisation illimitée. Avant toute interaction, il faut vérifier domaine, réseau, adresse du contrat, fonction, montant, gas, oracle et bridge éventuel. Une signature peut donc être dangereuse même sans révéler la seed."
+    : "La synthèse sera construite après la distinction lecture / écriture, l’approval limitée et la checklist de dépendances.";
+  return { ready, interaction, approval, dependencies, text };
+}
+function foundationDefiLab(cockpit) {
+  const e = cockpit.practice_evidence || {};
+  const summary = foundationDefiGuidedSummary(cockpit);
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-defi-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · LIRE OU ÉCRIRE</span>
+        <h5>Quelle interaction peut modifier l’état de la blockchain ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_read_balance" ${step2Done ? "disabled" : ""}>Consulter un solde</button><button type="button" data-foundation-action="defi_write_transaction" ${step2Done ? "disabled" : ""}>Signer et envoyer une transaction d’écriture</button></div>
+        <small>${e.defi_interaction_type ? "Distinction figée : lecture gratuite de l’état contre écriture transactionnelle." : "Une interface peut masquer la fonction exacte derrière un bouton simple."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · APPROVAL ERC-20</span>
+        <h5>Quelle autorisation respecte le moindre privilège ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_approval_unlimited" ${!step2Done || step3Done ? "disabled" : ""}>Autorisation illimitée par défaut</button><button type="button" data-foundation-action="defi_approval_limited" ${!step2Done || step3Done ? "disabled" : ""}>Montant limité à l’usage compris</button></div>
+        <small>${e.defi_approval_scope ? "Approval fictive limitée enregistrée ; aucun wallet ni contrat réel." : "Une approval peut permettre à un contrat d’utiliser des jetons via transferFrom jusqu’à la limite accordée."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · CONTRAT ET DÉPENDANCES</span>
+        <h5>Checklist avant interaction</h5>
+        <ul class="foundation-guided-list"><li>Domaine et réseau.</li><li>Adresse du contrat et fonction appelée.</li><li>Montant autorisé et destinataire.</li><li>Gas et effet attendu.</li><li>Oracle, liquidité, bridge ou contrats dépendants.</li></ul>
+        ${foundationButton(step4Done ? "Checklist DeFi enregistrée" : "Valider contrat + dépendances", "defi_validate_dependencies", !step3Done || step4Done)}
+        <small>${e.defi_dependency_checklist ? "Instantané fictif figé ; aucune connexion et aucune signature réelle." : "La composabilité augmente les capacités, mais aussi les dépendances à vérifier."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 07</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> une signature présentée comme une simple vérification est-elle forcément inoffensive si la phrase de récupération n’est pas partagée ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_signature_harmless_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="defi_signature_harmless_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${e.defi_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Une signature peut accorder un droit ou exécuter une fonction sans révéler la seed." : "Disponible après la checklist DeFi."}</small>
+      </article>
+    </div>`;
+}
+function foundationYieldGuidedSummary(cockpit) {
+  const evidence = cockpit?.practice_evidence || {};
+  const source = evidence.yield_source_model || null;
+  const value = evidence.yield_nominal_vs_euro || null;
+  const risks = evidence.yield_risk_checklist || null;
+  const ready = Boolean(cockpit?.steps?.verify && source && value && risks);
+  const text = ready
+    ? "Un rendement doit avoir une source explicable : récompenses du protocole, frais, émissions ou activité de prêt avec risque de contrepartie. Dans l’exemple fictif, 100 jetons à 10 € valent 1 000 € ; après +8 % de jetons et une baisse du prix à 7 €, 108 jetons valent 756 €, soit −244 € ou −24,4 %. Il faut ensuite intégrer inflation, coûts, blocage, délai de retrait, slashing, smart contract, prestataire et liquidité. Un taux annoncé à 8 % ne garantit donc aucun gain en euros."
+    : "La synthèse sera construite après l’identification de la source, le calcul jetons / euros et la checklist de risques.";
+  return { ready, source, value, risks, text };
+}
+function foundationYieldLab(cockpit) {
+  const e = cockpit.practice_evidence || {};
+  const summary = foundationYieldGuidedSummary(cockpit);
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-yield-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · SOURCE DU RENDEMENT</span>
+        <h5>Comment lire une récompense annoncée ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_free_interest" ${step2Done ? "disabled" : ""}>Comme un intérêt gratuit garanti</button><button type="button" data-foundation-action="yield_source_rewards" ${step2Done ? "disabled" : ""}>Identifier protocole, frais, émissions ou prêt et leurs risques</button></div>
+        <small>${e.yield_source_model ? "Source du rendement enregistrée comme hypothèse à vérifier." : "Un pourcentage sans mécanisme, actif payé ni conditions n’est pas interprétable."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · JETONS CONTRE EUROS</span>
+        <h5>100 jetons à 10 € deviennent 108 jetons à 7 €</h5>
+        <p>Quelle valeur finale est correcte ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_value_1080" ${!step2Done || step3Done ? "disabled" : ""}>1 080 € · gain de 8 %</button><button type="button" data-foundation-action="yield_value_756" ${!step2Done || step3Done ? "disabled" : ""}>756 € · perte de 244 € soit 24,4 %</button></div>
+        <small>${e.yield_nominal_vs_euro ? "Calcul figé : 108 × 7 € = 756 € malgré +8 % de jetons." : "Le rendement nominal en jetons doit être converti dans la monnaie de référence."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · DISPONIBILITÉ ET RISQUES</span>
+        <h5>Checklist avant toute mise en jeu</h5>
+        <ul class="foundation-guided-list"><li>Blocage et délai de retrait.</li><li>Pénalités, indisponibilité et slashing.</li><li>Inflation et actif de récompense.</li><li>Frais, smart contract et liquidité.</li><li>Prestataire, garde et hypothèses de confiance.</li></ul>
+        ${foundationButton(step4Done ? "Checklist rendement enregistrée" : "Valider la checklist de rendement", "yield_validate_risks", !step3Done || step4Done)}
+        <small>${e.yield_risk_checklist ? "Instantané fictif figé ; aucun dépôt ni staking réel." : "Les options de staking diffèrent par leurs risques, récompenses et hypothèses de confiance."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 08</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> une récompense annoncée à 8 % garantit-elle un gain en euros ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_guaranteed_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="yield_guaranteed_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${e.yield_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Le taux nominal ne neutralise ni la variation du prix, ni les coûts, ni les risques." : "Disponible après la checklist de rendement."}</small>
+      </article>
+    </div>`;
+}
+
 function renderFoundationLearningPanel(cockpitInput = null) {
   const cockpit = cockpitInput || loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
@@ -12994,14 +13183,14 @@ function renderFoundationLearningPanel(cockpitInput = null) {
     return `<article class="foundation-step-card ${cockpit.steps[key] ? "is-done" : ""}"><header><b>${escapeHtml(step.title)}</b><span>${escapeHtml(foundationStepStatus(cockpit, key))}</span></header><dl><div><dt>Où ?</dt><dd>${escapeHtml(step.where)}</dd></div><div><dt>Action exacte</dt><dd>${escapeHtml(step.action)}</dd></div><div><dt>Pourquoi ?</dt><dd>${escapeHtml(step.why)}</dd></div><div><dt>Résultat attendu</dt><dd>${escapeHtml(step.result)}</dd></div><div><dt>À retenir</dt><dd>${escapeHtml(step.remember)}</dd></div></dl></article>`;
   }).join("");
   if (els.learningFoundationLab) {
-    const labs = { market:foundationMarketLab, spot:foundationSpotLab, risk:foundationRiskLab, account:foundationAccountLab, wallet:foundationWalletLab };
+    const labs = { market:foundationMarketLab, spot:foundationSpotLab, risk:foundationRiskLab, account:foundationAccountLab, wallet:foundationWalletLab, tokenomics:foundationTokenomicsLab, defi:foundationDefiLab, yield:foundationYieldLab };
     const renderLab = labs[module.key];
     els.learningFoundationLab.innerHTML = renderLab ? renderLab(cockpit) : "";
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.08 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.08 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.09 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.09 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
@@ -13201,6 +13390,93 @@ function handleFoundationAction(action) {
       cockpit.practice_evidence.wallet_guided_conclusion = true; cockpit.practice_evidence.wallet_guided_summary = summary.text; cockpit.practice_evidence.wallet_guided_answer = "non"; cockpit.practice_evidence.wallet_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 05 · 5/5", "La synthèse de retrait sécurisé est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+    }
+  }
+  if (module.key === "tokenomics") {
+    if (action === "tokenomics_stablecoin_riskfree_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une cible de parité dépend d’un mécanisme, de réserves, d’un émetteur ou protocole, de la liquidité et du remboursement ; un depeg reste possible.");
+    if (action === "tokenomics_stablecoin_riskfree_no") {
+      cockpit.practice_evidence.tokenomics_stablecoin_risk = { stable_target_not_guarantee:true, issuer_or_protocol_checked:true, reserves_and_redemption_checked:true, liquidity_and_depeg_checked:true, real_asset_selected:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_stablecoin_risk_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Stablecoin : cible de stabilité, réserves et remboursement à vérifier, risque de depeg conservé.");
+    }
+    if (action === "tokenomics_valuation_wrong") return foundationFeedback(false, "Calcul à revoir", "Capitalisation = 1 € × 100 M = 100 M€. FDV = 1 € × 1 Md = 1 Md€.");
+    if (action === "tokenomics_valuation_correct") {
+      if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Analyse d’abord le risque stablecoin.");
+      cockpit.practice_evidence.tokenomics_valuation_example = { unit_price_eur:1, circulating_supply:100000000, max_supply:1000000000, market_cap_eur:100000000, fdv_eur:1000000000, model:"price_times_supply", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_valuation_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Capitalisation 100 M€ et FDV 1 Md€ enregistrées.");
+    }
+    if (action === "tokenomics_validate_supply") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Calcule d’abord capitalisation et FDV.");
+      cockpit.practice_evidence.tokenomics_supply_checklist = { unlock_calendar:true, emissions_and_inflation:true, burn:true, holder_concentration:true, circulating_vs_max_supply:true, dated_official_sources:true, buy_score_generated:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_supply_checklist_verified";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Unlocks, émissions, burn, concentration, offre et sources sont figés sans score d’achat.");
+    }
+    if (action === "tokenomics_low_price_cheap_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Le prix unitaire doit être multiplié par l’offre et complété par la FDV, les unlocks, l’inflation et la concentration.");
+    if (action === "tokenomics_low_price_cheap_no") {
+      const summary = foundationTokenomicsGuidedSummary(cockpit);
+      if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord la checklist tokenomics.");
+      cockpit.practice_evidence.tokenomics_guided_conclusion = true; cockpit.practice_evidence.tokenomics_guided_summary = summary.text; cockpit.practice_evidence.tokenomics_guided_answer = "non"; cockpit.practice_evidence.tokenomics_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 06 · 5/5", "La synthèse stablecoin / valorisation est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+    }
+  }
+  if (module.key === "defi") {
+    if (action === "defi_read_balance") return foundationFeedback(false, "Lecture seulement", "Consulter un solde lit un état existant. L’action qui peut modifier la chaîne est la transaction d’écriture signée et envoyée.");
+    if (action === "defi_write_transaction") {
+      cockpit.practice_evidence.defi_interaction_type = { read_changes_state:false, write_transaction_changes_state:true, gas_may_apply:true, real_transaction:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_interaction_type_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Lecture et écriture distinguées ; aucune transaction réelle.");
+    }
+    if (action === "defi_approval_unlimited") return foundationFeedback(false, "Autorisation trop large", "Une approval illimitée par défaut dépasse l’usage compris. Le moindre privilège limite montant, contrat et finalité.");
+    if (action === "defi_approval_limited") {
+      if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Distingue d’abord lecture et écriture.");
+      cockpit.practice_evidence.defi_approval_scope = { allowance_limited:true, contract_verified_before_use:true, purpose_understood:true, unlimited_default_refused:true, real_approval:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_approval_scope_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Approval limitée au montant et à l’usage compris, sans wallet réel.");
+    }
+    if (action === "defi_validate_dependencies") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Choisis d’abord une approval limitée.");
+      cockpit.practice_evidence.defi_dependency_checklist = { domain:true, network:true, contract_address:true, function_and_recipient:true, amount_and_allowance:true, gas:true, oracle_and_liquidity:true, bridge_or_dependencies:true, real_signature:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_dependencies_verified";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Contrat, fonction, réseau, gas, oracle, liquidité et bridge éventuel sont figés dans la checklist fictive.");
+    }
+    if (action === "defi_signature_harmless_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une signature ou transaction peut accorder une permission ou exécuter une fonction sans révéler la phrase de récupération.");
+    if (action === "defi_signature_harmless_no") {
+      const summary = foundationDefiGuidedSummary(cockpit);
+      if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord contrat et dépendances.");
+      cockpit.practice_evidence.defi_guided_conclusion = true; cockpit.practice_evidence.defi_guided_summary = summary.text; cockpit.practice_evidence.defi_guided_answer = "non"; cockpit.practice_evidence.defi_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 07 · 5/5", "La synthèse smart contract / DeFi est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+    }
+  }
+  if (module.key === "yield") {
+    if (action === "yield_free_interest") return foundationFeedback(false, "Source manquante", "Un rendement n’est pas gratuit. Il faut identifier protocole, frais, émissions ou prêt, puis leurs risques.");
+    if (action === "yield_source_rewards") {
+      cockpit.practice_evidence.yield_source_model = { protocol_rewards:true, fees_or_emissions_possible:true, lending_counterparty_possible:true, free_guaranteed_interest:false, real_product_selected:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_source_model_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Source et hypothèses du rendement enregistrées comme éléments à vérifier.");
+    }
+    if (action === "yield_value_1080") return foundationFeedback(false, "Calcul à revoir", "108 jetons × 7 € = 756 €, pas 1 080 €. La quantité augmente mais le prix baisse.");
+    if (action === "yield_value_756") {
+      if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Identifie d’abord la source du rendement.");
+      cockpit.practice_evidence.yield_nominal_vs_euro = { initial_tokens:100, initial_price_eur:10, initial_value_eur:1000, reward_rate_pct:8, final_tokens:108, final_price_eur:7, final_value_eur:756, pnl_eur:-244, pnl_pct:-24.4, model:"token_quantity_times_reference_price", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_nominal_vs_euro_recorded";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "108 jetons × 7 € = 756 € ; perte fictive de 244 € soit 24,4 %.");
+    }
+    if (action === "yield_validate_risks") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Calcule d’abord la valeur finale en euros.");
+      cockpit.practice_evidence.yield_risk_checklist = { lockup_and_withdrawal_delay:true, penalties_and_slashing:true, inflation_and_reward_asset:true, costs_and_liquidity:true, smart_contract:true, provider_and_custody:true, real_staking:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_risks_verified";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Blocage, retrait, slashing, inflation, coûts, contrat et prestataire sont figés sans staking réel.");
+    }
+    if (action === "yield_guaranteed_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Le taux nominal ne neutralise ni la baisse du prix, ni l’inflation, ni les coûts, ni les risques ou délais de retrait.");
+    if (action === "yield_guaranteed_no") {
+      const summary = foundationYieldGuidedSummary(cockpit);
+      if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord la checklist de rendement.");
+      cockpit.practice_evidence.yield_guided_conclusion = true; cockpit.practice_evidence.yield_guided_summary = summary.text; cockpit.practice_evidence.yield_guided_answer = "non"; cockpit.practice_evidence.yield_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 08 · 5/5", "La synthèse staking / rendement est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
 
@@ -13425,7 +13701,7 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.08 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.09 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     const labels = {
@@ -13433,7 +13709,10 @@ function learningActionState(cockpit) {
       spot:{open:"Commencer l’exercice Bid / Ask",practice:"Répondre Marché / Limite",verify:"Créer la position BTC fictive de 50 €",note:"Comprendre l’exécution guidée"},
       risk:{open:"Charger l’exemple école",practice:"Créer la position BTC fictive de 50 €",verify:"Ouvrir les scénarios −3 % et +5 %",note:"Comprendre le résultat net"},
       account:{open:"Choisir le socle du compte",practice:"Refuser le faux support",verify:"Valider le plan de verrouillage",note:"Comprendre la limite du support"},
-      wallet:{open:"Choisir actif + réseau",practice:"Vérifier la destination",verify:"Valider le petit test traçable",note:"Comprendre réseau et adresse"}
+      wallet:{open:"Choisir actif + réseau",practice:"Vérifier la destination",verify:"Valider le petit test traçable",note:"Comprendre réseau et adresse"},
+      tokenomics:{open:"Analyser le risque stablecoin",practice:"Calculer capitalisation + FDV",verify:"Valider offre + unlocks",note:"Comprendre le prix unitaire"},
+      defi:{open:"Distinguer lecture + écriture",practice:"Limiter l’approval",verify:"Valider contrat + dépendances",note:"Comprendre le risque de signature"},
+      yield:{open:"Identifier la source du rendement",practice:"Calculer jetons + euros",verify:"Valider blocage + risques",note:"Comprendre le rendement net"}
     }[module.key] || {};
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:`Ouvrir la leçon du Module ${module.title.split(" · ")[0]}`, text:"Ce bouton ouvre seulement la leçon. Après lecture, valide l’étape avec le bouton visible placé sous son contenu." };
     if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:labels.open || foundation.steps.open.title, text:foundation.steps.open.action };
@@ -14080,7 +14359,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_08");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_09");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
