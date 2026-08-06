@@ -1,9 +1,23 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.12  
-**Mission du Build :** Real Browser Persistence, Recovery & Evidence Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.13  
+**Mission du Build :** Fail-Closed Persistence, Reset Serialization & Diagnostic Truth Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.13 — Persistance fermée, reset sérialisé et diagnostic vrai
+
+Correction ciblée de la couche IndexedDB 28.3.12 :
+
+- une erreur de lecture initiale place le carnet en lecture seule et interdit toute migration, réconciliation ou écriture ;
+- les écritures utilisent une génération de stockage et refusent les sauvegardes obsolètes ;
+- le reset annule le timer, attend la file canonique, change de génération et écrit dans cette même file ;
+- la preuve IndexedDB est enregistrée en deux phases : tentative, relecture, puis métadonnées vérifiées ;
+- le diagnostic calcule tout depuis le record relu, sans cache global ni DOM ;
+- cohérence bidirectionnelle : archive complète ↔ statut Pratiqué ;
+- sauvegarde différée déclenchée immédiatement lors de `visibilitychange` caché ou `pagehide` ;
+- le manifeste n’affirme plus un test IndexedDB natif non exécuté ;
+- aucun changement de Market, Métaux, Bridge, collecteurs, pédagogie ou simulation.
 
 ## Build 28.3.12 — Persistance navigateur, reprise et preuve
 
