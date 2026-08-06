@@ -1,9 +1,19 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.13  
-**Mission du Build :** Fail-Closed Persistence, Reset Serialization & Diagnostic Truth Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.14  
+**Mission du Build :** Publication Identity Immutability & Cache Recovery Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.14 — Identité de publication immuable et récupération du cache
+
+Correction du protocole de version après la republication fautive de fichiers sous le même numéro et le même token 28.3.13 :
+
+- nouvelle identité publique complète `28.3.14` dans `index.html`, `app.js`, `style.css` et `version.json` ;
+- nouveau token d’asset `market-core-v2.0-alpha-build-28.3.14` ;
+- détection défensive d’un changement futur de token même si un numéro de Build était réutilisé par erreur ;
+- interdiction documentaire de republier des assets modifiés sous une identité déjà publiée ;
+- aucune modification de la pédagogie 01–11, de la persistance IndexedDB, du Market, des Métaux, du Bridge, des collecteurs ou de la simulation.
 
 ## Build 28.3.13 — Persistance fermée, reset sérialisé et diagnostic vrai
 

@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.13",
-  "build": "28.3.13",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.13",
-  "published_at": "2026-08-06T12:00:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.14",
+  "build": "28.3.14",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.14",
+  "published_at": "2026-08-06T14:38:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1662,5 +1662,34 @@
     "collectors_changed": false,
     "pedagogy_content_changed": false,
     "simulation_engine_changed": false
+  },
+  "publication_identity_immutability_cache_recovery_lock": {
+    "build": "28.3.14",
+    "base": "28.3.13",
+    "cause": "same_build_republication_reused_asset_token_after_app_and_index_changed",
+    "scope": [
+      "unique_build_identity",
+      "unique_asset_token",
+      "four_asset_identity_alignment",
+      "same_build_token_change_detection",
+      "cache_recovery"
+    ],
+    "same_build_republication_forbidden": true,
+    "previous_same_build_hotfix_invalidated": true,
+    "active_assets": [
+      "index.html",
+      "app.js",
+      "style.css",
+      "version.json"
+    ],
+    "remote_update_requires_newer_build_or_changed_token": true,
+    "pedagogy_schema_changed": false,
+    "persistence_schema_changed": false,
+    "market_changed": false,
+    "metals_changed": false,
+    "bridge_changed": false,
+    "collectors_changed": false,
+    "simulation_engine_changed": false,
+    "firefox_existing_profile_validation_required": true
   }
 }
