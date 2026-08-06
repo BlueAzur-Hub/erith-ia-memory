@@ -1,9 +1,20 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.06  
-**Mission du Build :** Foundations 01–03 Guided Pedagogy Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.07  
+**Mission du Build :** Foundations 01–03 Evidence Snapshot Consolidation Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.07 — Consolidation des preuves pédagogiques 01 à 03
+
+Version de consolidation sans changement de Destination :
+
+- Module 01 : Prix, 24 h, 7 j, source et heure sont figés lors de leur validation ; les variations live suivantes ne réécrivent plus la session ni son archive ;
+- Module 02 : synthèse de position déjà fondée sur la preuve enregistrée, comportement préservé ;
+- Module 03 : scénarios −3 % et +5 % ancrés sur le prix d’entrée et le montant fictif, puis figés avec le coût aller-retour pédagogique ; un brouillon 28.3.06 ayant déjà exécuté les anciens scénarios revient uniquement à l’étape 4, sans reset du module ;
+- suppression du seuil de caractères devenu obsolète ;
+- correction des marqueurs internes et du harness de contrat ;
+- aucune modification de Market, Métaux, Bridge, collecteurs, reset ou sécurité de simulation.
 
 ## Build 28.3.06 — Fondations guidées 01 à 03
 
