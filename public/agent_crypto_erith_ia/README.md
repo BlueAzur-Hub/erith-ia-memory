@@ -1,9 +1,143 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.07  
-**Mission du Build :** Foundations 01–03 Evidence Snapshot Consolidation Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.11  
+**Mission du Build :** Learning State Continuity, Order & Completion Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.11 — Continuité, ordre et fin de parcours
+
+Correction consolidée de la machine pédagogique, sans nouvelle leçon :
+
+- version pédagogique propre à chaque module ;
+- conservation des brouillons des modules inchangés entre les Builds ;
+- verrou UI et JavaScript de l’ordre 1 → 2 → 3 → 4 → 5 pour les Modules 04 à 11 ;
+- fin explicite `Parcours pédagogique terminé · 11/11` après archivage du Module 11 ;
+- aucune création automatique d’une nouvelle session Module 01 ;
+- aucun changement de Market, Métaux, Bridge, collecteurs, simulation ou reset.
+
+
+
+## Build 28.3.10 — Maîtrise guidée 09 à 11
+
+Extension finale des onze modules avec la même machine d’état pédagogique, sans rouvrir les Modules 01 à 08.
+
+### Module 09 — Dérivés et liquidation
+
+- exemple figé : 100 € de marge ×5 = 500 € d’exposition ;
+- mouvement défavorable de 5 % = environ 25 € de perte brute, soit 25 % de la marge avant frais et funding ;
+- checklist mark price, liquidation, marge isolée/croisée, funding, frais et protections applicables ;
+- aucun produit dérivé, aucune marge et aucun levier réel.
+
+### Module 10 — Arnaques et investigation
+
+- reconnaissance des garanties, urgences, faux supports, accès distant, demandes de secrets, adresses imposées et frais de récupération ;
+- protocole Stop : ne rien envoyer, signer ou communiquer, puis ouvrir soi-même le canal officiel ;
+- dossier de preuve fictif : domaine, messages, dates, captures, adresses publiques, TXID et justificatifs ;
+- conclusion : une liste noire utile n’est jamais exhaustive et son absence ne prouve pas une autorisation.
+
+### Module 11 — Traçabilité et fiscalité
+
+- fiche d’opération complète et reconstructible ;
+- valeur manquante conservée comme incomplète, jamais inventée ;
+- repères France 2026 : annexe 2086 et déclaration 3916-3916 bis, à revérifier selon l’année et la situation ;
+- aucun calcul d’impôt, aucune qualification automatique et aucun conseil fiscal personnalisé.
+
+### Sources officielles de cadrage
+
+- ESMA, 24 février 2026 : les perpétuels à effet de levier pouvant relever des mesures CFD impliquent notamment limites de levier, avertissement de risque, clôture sur marge et protection contre solde négatif ;
+- AMF / ACPR, 9 juillet 2026 : mises en garde contre les acteurs non autorisés proposant des dérivés sur crypto-actifs ;
+- AMF, 8 juillet 2026 : listes noires non exhaustives et vérification de la liste blanche PSCA ;
+- Cybermalveillance.gouv.fr, mise à jour 8 juin 2026 : faux employés, faux services anti-fraude et demandes de seeds, codes, accès ou validation d’opérations ;
+- impots.gouv.fr / BOFiP : annexe 2086 pour les plus ou moins-values de cessions et 3916-3916 bis pour certains comptes d’actifs numériques à l’étranger.
+
+### Verrous
+
+- progression et archives 01–08 préservées ;
+- ancien brouillon 09–11 : étape 1 conservée, étapes 2–5 reconstruites sur les nouvelles preuves ;
+- notes personnelles facultatives ;
+- archivage distinct du passage au module suivant ;
+- aucun changement de Market, Métaux, Bridge, collecteurs, reset ou simulation.
+
+
+## Build 28.3.09 — Analyse guidée 06 à 08
+
+Extension substantielle de la même machine d’état pédagogique, sans rouvrir les Modules 01 à 05 :
+
+### Module 06 — Stablecoins et tokenomics
+
+- stablecoin présenté comme cible de stabilité, jamais comme absence de risque ;
+- contrôles guidés : mécanisme, émetteur ou protocole, réserves, remboursement, liquidité et depeg ;
+- exemple figé capitalisation / FDV : 1 € × 100 M = 100 M€ ; 1 € × 1 Md = 1 Md€ ;
+- checklist unlocks, émissions, inflation, burn, concentration et sources officielles datées ;
+- conclusion guidée : un faible prix unitaire ne prouve pas qu’un projet est bon marché.
+
+### Module 07 — Smart contracts et DeFi
+
+- distinction explicite entre lecture d’état et transaction d’écriture ;
+- approval ERC-20 limitée selon le principe du moindre privilège ;
+- checklist domaine, réseau, contrat, fonction, destinataire, montant, gas, oracle, liquidité et bridge ;
+- conclusion guidée : une signature peut accorder une permission ou exécuter une fonction sans révéler la seed ;
+- aucun wallet, contrat, approval ou signature réelle.
+
+### Module 08 — Staking et rendements
+
+- identification obligatoire de la source du rendement ;
+- calcul figé : 100 jetons à 10 € deviennent 108 jetons à 7 € = 756 €, soit −24,4 % malgré +8 % de jetons ;
+- checklist blocage, délai de retrait, slashing, inflation, coûts, liquidité, smart contract et prestataire ;
+- conclusion guidée : un taux nominal ne garantit pas un gain en euros ;
+- aucun dépôt ni staking réel.
+
+### Verrous
+
+- archives et progression des Modules 01 à 05 préservées ;
+- ancien brouillon 06–08 : étape 1 conservée, étapes 2–5 reconstruites sur les nouvelles preuves ;
+- notes personnelles facultatives ;
+- archivage et passage au module suivant séparés ;
+- aucune modification de Market, Métaux, Bridge, collecteurs, reset ou moteur de simulation.
+
+### Base documentaire de la pédagogie
+
+- EBA / MiCA : distinction et encadrement des jetons se référant à des actifs et des jetons de monnaie électronique ;
+- Circle Transparency : exemple d’informations de réserves, d’émission, de remboursement et d’attestations propres à un émetteur — non généralisables à tous les stablecoins ;
+- Ethereum.org : smart contracts, lecture/écriture, gas, composabilité et interactions irréversibles ;
+- standard ERC-20 : approval, allowance et transferFrom ;
+- Ethereum.org Staking : options différentes selon risques, récompenses et hypothèses de confiance, avec pénalités et slashing possibles.
+
+
+## Build 28.3.08 — Sécurité guidée 04 à 05
+
+Extension substantielle de la machine pédagogique validée, sans rouvrir les Fondations 01 à 03 :
+
+### Module 04 — Sécurité du compte
+
+- socle fictif : mot de passe unique, passkey ou 2FA indépendante et email sécurisé ;
+- scénario de faux support avec refus obligatoire des codes, secrets et accès distant ;
+- plan ordonné : sécuriser, préparer la récupération, révoquer les sessions inconnues, puis activer les verrous disponibles ;
+- synthèse guidée et preuve figée ;
+- aucune donnée de compte réelle demandée.
+
+### Module 05 — Portefeuilles et retraits
+
+- correspondance guidée entre actif et réseau ;
+- destination obtenue et contrôlée indépendamment, sans adresse réelle ;
+- contrôle du minimum, des frais et du memo/tag éventuel ;
+- petit test fictif puis suivi TXID, statut et confirmations ;
+- synthèse guidée sur la différence entre adresse et réseau.
+
+### Verrous
+
+- les Modules 01 à 03 et leurs archives restent inchangés ;
+- les notes personnelles restent facultatives ;
+- l’archivage et le passage au module suivant restent séparés ;
+- aucun mot de passe, code 2FA, seed, adresse ou transfert réel ;
+- aucune modification de Market, Métaux, Bridge, collecteurs, reset ou moteur de simulation.
+
+### Base documentaire de la pédagogie
+
+- recommandations ANSSI sur les mots de passe et l’authentification multifacteur ;
+- listes blanches et mises en garde crypto de l’AMF ;
+- documentation Kraken sur passkeys/2FA, GSL, faux support, réseaux de retrait, adresses confirmées et confirmations blockchain.
 
 ## Build 28.3.07 — Consolidation des preuves pédagogiques 01 à 03
 
