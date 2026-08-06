@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.12 — REAL BROWSER PERSISTENCE, RECOVERY & EVIDENCE LOCK · MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.13 — FAIL-CLOSED PERSISTENCE, RESET SERIALIZATION & DIAGNOSTIC TRUTH LOCK · MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.12";
-const ATLAS_BUILD = "28.3.12";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.12";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.13";
+const ATLAS_BUILD = "28.3.13";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.13";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,7 +11614,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.12";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.13";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet", "tokenomics", "defi", "yield", "derivatives", "scams", "records"]);
 const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
   market:"28.3.07",
@@ -11775,9 +11775,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.12";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.12";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.12";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.13";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.13";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.13";
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
@@ -11805,10 +11805,14 @@ let atlasLearningStoragePersistTimer = 0;
 let atlasLearningStorageLastResult = { ok:false, backend:"IndexedDB", status:"not_started" };
 let atlasLearningStorageWriteChain = Promise.resolve();
 let atlasLearningStorageRevision = 0;
+let atlasLearningStorageGeneration = 0;
+let atlasLearningStorageReadBlocked = false;
+let atlasLearningStorageResetting = false;
+let atlasLearningStorageDirty = false;
 let atlasLearningIntegrityLastReport = null;
 const ATLAS_LEARNING_NOTEBOOK_SCHEMA = "agent_crypto_learning_notebook_indexeddb_v2";
-const ATLAS_LEARNING_PERSISTENCE_SCHEMA = "agent_crypto_learning_persistence_evidence_v1";
-const ATLAS_LEARNING_DIAGNOSTIC_SCHEMA = "agent_crypto_learning_integrity_report_v1";
+const ATLAS_LEARNING_PERSISTENCE_SCHEMA = "agent_crypto_learning_persistence_evidence_v2";
+const ATLAS_LEARNING_DIAGNOSTIC_SCHEMA = "agent_crypto_learning_integrity_report_v2";
 
 function atlasLearningClone(value) {
   if (value === undefined) return undefined;
@@ -11831,6 +11835,7 @@ function atlasLearningStorageJson(key, fallback = null) {
 }
 function atlasLearningStorageWriteVerified(key, value) {
   if ([ATLAS_LEARNING_COCKPIT_KEY, ATLAS_LEARNING_HISTORY_KEY, ATLAS_EXPERT_ROADMAP_KEY, ATLAS_LEARNING_RECOVERY_AUDIT_KEY, ATLAS_LEARNING_MIGRATION_KEY].includes(key)) {
+    if (!atlasLearningCanMutate()) return { ok:false, key, backend:"IndexedDB", blocked:true };
     if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
     if (key === ATLAS_LEARNING_COCKPIT_KEY) atlasLearningNotebookCache.cockpit = atlasLearningClone(value);
     if (key === ATLAS_LEARNING_HISTORY_KEY) atlasLearningNotebookCache.history = atlasLearningClone(value);
@@ -11921,8 +11926,10 @@ function atlasLearningNotebookPayload(record = atlasLearningNotebookCache) {
       last_attempt_at:previousPersistence.last_attempt_at || null,
       last_verified_at:previousPersistence.last_verified_at || null,
       last_verified_digest:previousPersistence.last_verified_digest || null,
+      pending_digest:previousPersistence.pending_digest || null,
+      pending_at:previousPersistence.pending_at || null,
       last_reason:previousPersistence.last_reason || null,
-      last_error:null
+      last_error:previousPersistence.last_error || null
     },
     last_reset_backup:atlasLearningClone(safe.last_reset_backup || null),
     updated_at:new Date().toISOString()
@@ -11935,6 +11942,8 @@ function atlasLearningNotebookDigest(record) {
     delete comparable.persistence.last_attempt_at;
     delete comparable.persistence.last_verified_at;
     delete comparable.persistence.last_verified_digest;
+    delete comparable.persistence.pending_digest;
+    delete comparable.persistence.pending_at;
     delete comparable.persistence.last_error;
   }
   return atlasLegacyLearningHash(JSON.stringify(comparable));
@@ -11950,31 +11959,37 @@ function atlasLearningPersistenceErrorCode(error, phase = "write") {
   if (phase === "verify") return "LEARNING-IDB-VERIFY";
   return "LEARNING-IDB-WRITE";
 }
+async function atlasLearningDbPutRecord(record) {
+  const db = await atlasLearningDbOpen();
+  try {
+    const tx = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
+    const done = atlasLearningDbTransactionDone(tx);
+    const request = tx.objectStore(ATLAS_LEARNING_DB_STORE).put(record);
+    await atlasLearningDbRequest(request);
+    await done;
+    return true;
+  } finally { db.close(); }
+}
 async function atlasLearningDbWriteVerified(record = atlasLearningNotebookCache, options = {}) {
   const reason = String(options.reason || "save");
   const attemptAt = new Date().toISOString();
-  const payload = atlasLearningNotebookPayload(record);
-  payload.persistence = {
-    ...(payload.persistence || {}),
+  const pending = atlasLearningNotebookPayload(record);
+  pending.persistence = {
+    ...(pending.persistence || {}),
     schema:ATLAS_LEARNING_PERSISTENCE_SCHEMA,
     last_attempt_at:attemptAt,
-    last_verified_at:attemptAt,
+    last_verified_at:null,
+    last_verified_digest:null,
+    pending_digest:null,
+    pending_at:attemptAt,
     last_reason:reason,
     last_error:null
   };
-  const expected = atlasLearningNotebookDigest(payload);
-  payload.persistence.last_verified_digest = expected;
-  let db = null;
-  let phase = "open";
+  const expected = atlasLearningNotebookDigest(pending);
+  pending.persistence.pending_digest = expected;
+  let phase = "write";
   try {
-    db = await atlasLearningDbOpen();
-    phase = "write";
-    const tx = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
-    const done = atlasLearningDbTransactionDone(tx);
-    const request = tx.objectStore(ATLAS_LEARNING_DB_STORE).put(payload);
-    await atlasLearningDbRequest(request);
-    await done;
-    db.close(); db = null;
+    await atlasLearningDbPutRecord(pending);
     phase = "read";
     const readBack = await atlasLearningDbReadRecord();
     phase = "verify";
@@ -11984,16 +11999,29 @@ async function atlasLearningDbWriteVerified(record = atlasLearningNotebookCache,
       failure.name = "StorageVerificationError";
       throw failure;
     }
-    const bytes = new Blob([JSON.stringify(readBack)]).size;
-    return { ok:true, backend:"IndexedDB", bytes, digest:actual, reason, verified_at:attemptAt, record:readBack };
+    phase = "commit";
+    const verified = atlasLearningClone(readBack);
+    verified.persistence = {
+      ...(verified.persistence || {}),
+      schema:ATLAS_LEARNING_PERSISTENCE_SCHEMA,
+      last_attempt_at:attemptAt,
+      last_verified_at:new Date().toISOString(),
+      last_verified_digest:expected,
+      pending_digest:null,
+      pending_at:null,
+      last_reason:reason,
+      last_error:null
+    };
+    await atlasLearningDbPutRecord(verified);
+    const bytes = new Blob([JSON.stringify(verified)]).size;
+    return { ok:true, backend:"IndexedDB", bytes, digest:expected, reason, verified_at:verified.persistence.last_verified_at, record:verified };
   } catch (error) {
-    if (db) db.close();
     const name = String(error?.name || "IndexedDBError");
     const message = String(error?.message || error || "écriture IndexedDB impossible");
     return {
       ok:false,
       backend:"IndexedDB",
-      error_code:atlasLearningPersistenceErrorCode(error, phase),
+      error_code:atlasLearningPersistenceErrorCode(error, phase === "commit" ? "write" : phase),
       error_name:name,
       error_message:message,
       phase,
@@ -12092,7 +12120,7 @@ function atlasLearningSeedFromLocalStorage() {
     recovery:{ status:"pending", verified:false, backend:"IndexedDB", source_keys_preserved:true },
     migration:{},
     reset:{},
-    persistence:{ schema:ATLAS_LEARNING_PERSISTENCE_SCHEMA, last_attempt_at:null, last_verified_at:null, last_verified_digest:null, last_reason:null, last_error:null },
+    persistence:{ schema:ATLAS_LEARNING_PERSISTENCE_SCHEMA, last_attempt_at:null, last_verified_at:null, last_verified_digest:null, pending_digest:null, pending_at:null, last_reason:null, last_error:null },
     last_reset_backup:null,
     updated_at:new Date().toISOString()
   };
@@ -12160,6 +12188,8 @@ function atlasLearningNormalizeNotebook(record) {
       last_attempt_at:incomingPersistence.last_attempt_at || null,
       last_verified_at:incomingPersistence.last_verified_at || null,
       last_verified_digest:incomingPersistence.last_verified_digest || null,
+      pending_digest:incomingPersistence.pending_digest || null,
+      pending_at:incomingPersistence.pending_at || null,
       last_reason:incomingPersistence.last_reason || null,
       last_error:incomingPersistence.last_error || null
     },
@@ -12167,26 +12197,65 @@ function atlasLearningNormalizeNotebook(record) {
     updated_at:record?.updated_at || new Date().toISOString()
   };
 }
-async function atlasLearningPersistNow(reason = "save") {
-  if (!atlasLearningNotebookCache) return { ok:false, backend:"IndexedDB", error_code:"LEARNING-CACHE-UNAVAILABLE", error_name:"LearningCacheUnavailable", error_message:"Carnet non initialisé" };
-  clearTimeout(atlasLearningStoragePersistTimer);
-  const revisionAtQueue = atlasLearningStorageRevision;
-  const snapshot = atlasLearningClone(atlasLearningNotebookCache);
+function atlasLearningStorageBlockedResult(reason = "save") {
+  const code = atlasLearningStorageReadBlocked ? "LEARNING-IDB-READ-BLOCKED" : "LEARNING-RESET-IN-PROGRESS";
+  return { ok:false, backend:"IndexedDB", error_code:code, error_name:code, error_message:atlasLearningStorageReadBlocked ? "Lecture initiale IndexedDB non confirmée : aucune écriture autorisée." : "Réinitialisation en cours : sauvegarde différée refusée.", phase:"guard", reason };
+}
+function atlasLearningCanMutate() {
+  if (!atlasLearningStorageReadBlocked && !atlasLearningStorageResetting) return true;
+  const result = atlasLearningStorageBlockedResult("mutation_guard");
+  atlasLearningStorageLastResult = result;
+  window.__atlasLearningNotebookPersist = result;
+  renderLearningPersistenceNotice(result);
+  return false;
+}
+function atlasLearningQueueRecordWrite(snapshot, options = {}) {
+  const reason = String(options.reason || "save");
+  const generationAtQueue = Number.isFinite(options.generation) ? options.generation : atlasLearningStorageGeneration;
+  const allowDuringReset = options.allowDuringReset === true;
   const execute = async () => {
-    const result = await atlasLearningDbWriteVerified(snapshot, { reason });
-    atlasLearningStorageLastResult = { ...result, reason, at:new Date().toISOString(), revision:revisionAtQueue };
-    if (result.ok && revisionAtQueue === atlasLearningStorageRevision) atlasLearningNotebookCache = atlasLearningNormalizeNotebook(result.record);
-    window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
-    renderLearningPersistenceNotice(result);
-    return result;
+    if (generationAtQueue !== atlasLearningStorageGeneration) return { ok:false, skipped:true, backend:"IndexedDB", error_code:"LEARNING-STALE-GENERATION", reason };
+    if (atlasLearningStorageReadBlocked) return atlasLearningStorageBlockedResult(reason);
+    if (atlasLearningStorageResetting && !allowDuringReset) return atlasLearningStorageBlockedResult(reason);
+    return atlasLearningDbWriteVerified(snapshot, { reason });
   };
   atlasLearningStorageWriteChain = atlasLearningStorageWriteChain.catch(() => null).then(execute);
   return atlasLearningStorageWriteChain;
 }
+async function atlasLearningPersistNow(reason = "save", options = {}) {
+  if (!atlasLearningNotebookCache) return { ok:false, backend:"IndexedDB", error_code:"LEARNING-CACHE-UNAVAILABLE", error_name:"LearningCacheUnavailable", error_message:"Carnet non initialisé" };
+  clearTimeout(atlasLearningStoragePersistTimer);
+  atlasLearningStoragePersistTimer = 0;
+  atlasLearningStorageDirty = false;
+  if (atlasLearningStorageReadBlocked || (atlasLearningStorageResetting && options.allowDuringReset !== true)) {
+    const blocked = atlasLearningStorageBlockedResult(reason);
+    atlasLearningStorageLastResult = blocked;
+    renderLearningPersistenceNotice(blocked);
+    return blocked;
+  }
+  const revisionAtQueue = atlasLearningStorageRevision;
+  const generationAtQueue = Number.isFinite(options.generation) ? options.generation : atlasLearningStorageGeneration;
+  const snapshot = atlasLearningClone(options.record || atlasLearningNotebookCache);
+  const result = await atlasLearningQueueRecordWrite(snapshot, { reason, generation:generationAtQueue, allowDuringReset:options.allowDuringReset === true });
+  atlasLearningStorageLastResult = { ...result, reason, at:new Date().toISOString(), revision:revisionAtQueue, generation:generationAtQueue };
+  if (result.ok && generationAtQueue === atlasLearningStorageGeneration && revisionAtQueue === atlasLearningStorageRevision) atlasLearningNotebookCache = atlasLearningNormalizeNotebook(result.record);
+  window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
+  renderLearningPersistenceNotice(result);
+  return result;
+}
 function atlasLearningSchedulePersist(reason = "save") {
+  if (atlasLearningStorageReadBlocked || atlasLearningStorageResetting) return atlasLearningStorageBlockedResult(reason);
   atlasLearningStorageRevision += 1;
+  atlasLearningStorageDirty = true;
   clearTimeout(atlasLearningStoragePersistTimer);
   atlasLearningStoragePersistTimer = setTimeout(() => { atlasLearningPersistNow(reason); }, 180);
+  return { ok:true, queued:true, reason };
+}
+function atlasLearningFlushScheduledPersist(reason = "pagehide") {
+  if (!atlasLearningStorageDirty || atlasLearningStorageReadBlocked || atlasLearningStorageResetting || !atlasLearningNotebookCache) return Promise.resolve({ ok:false, skipped:true, reason });
+  clearTimeout(atlasLearningStoragePersistTimer);
+  atlasLearningStoragePersistTimer = 0;
+  return atlasLearningPersistNow(reason);
 }
 function renderLearningPersistenceNotice(result = atlasLearningStorageLastResult) {
   const noticeTitle = document.getElementById("learningMigrationNoticeTitle");
@@ -12198,7 +12267,7 @@ function renderLearningPersistenceNotice(result = atlasLearningStorageLastResult
     return;
   }
   const code = result.error_code || atlasLearningPersistenceErrorCode(result, result.phase || "write");
-  noticeTitle.textContent = "Carnet non sauvegardé";
+  noticeTitle.textContent = atlasLearningStorageReadBlocked ? "Carnet en lecture seule" : "Carnet non sauvegardé";
   noticeText.textContent = `${code} · ${result.error_name || "IndexedDB"}. L’ancien état enregistré reste intact ; aucune donnée n’a été effacée automatiquement.`;
 }
 async function atlasLearningInitializeCache() {
@@ -12207,20 +12276,22 @@ async function atlasLearningInitializeCache() {
   atlasLearningStorageInitPromise = (async () => {
     try {
       const stored = await atlasLearningDbReadRecord();
+      atlasLearningStorageReadBlocked = false;
       atlasLearningNotebookCache = stored ? atlasLearningNormalizeNotebook(stored) : atlasLearningSeedFromLocalStorage();
       atlasLearningStorageReady = true;
       return atlasLearningNotebookCache;
     } catch (error) {
+      atlasLearningStorageReadBlocked = true;
       atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
       atlasLearningStorageReady = true;
-      atlasLearningStorageLastResult = { ok:false, backend:"IndexedDB", error_code:atlasLearningPersistenceErrorCode(error, "read"), error_name:String(error?.name || "IndexedDBError"), error_message:String(error?.message || error), status:"init_failed" };
+      atlasLearningStorageLastResult = { ok:false, backend:"IndexedDB", error_code:"LEARNING-IDB-READ-BLOCKED", error_name:String(error?.name || "IndexedDBError"), error_message:String(error?.message || error), status:"read_blocked", phase:"read" };
       window.__atlasLearningNotebookPersist = atlasLearningStorageLastResult;
+      document.documentElement.dataset.learningStorageMode = "read-blocked";
       return atlasLearningNotebookCache;
     }
   })();
   return atlasLearningStorageInitPromise;
 }
-
 function atlasLearningStepsAreOrdered(steps = {}) {
   let gap = false;
   for (const key of ATLAS_LEARNING_SESSION_STEPS) {
@@ -12239,60 +12310,47 @@ function atlasLearningIntegrityReportFromRecord(record, options = {}) {
   const archiveIds = history.map(entry => String(entry?.session_id || "")).filter(Boolean);
   const duplicateArchiveIds = [...new Set(archiveIds.filter((id, index) => archiveIds.indexOf(id) !== index))];
   const completeArchives = history.filter(entry => entry?.completed_at && ATLAS_LEARNING_SESSION_STEPS.every(key => entry.steps?.[key] === true));
-  const archivedModuleKeys = [...new Set(completeArchives.map(entry => entry.module_key).filter(key => ATLAS_FOUNDATION_MODULE_KEYS.includes(key)))];
+  const archiveCounts = Object.fromEntries(ATLAS_EXPERT_ROADMAP_MODULES.map(module => [module.key, completeArchives.filter(entry => entry.module_key === module.key).length]));
+  const archivedModuleKeys = ATLAS_EXPERT_ROADMAP_MODULES.filter(module => archiveCounts[module.key] > 0).map(module => module.key);
   const practicedModuleKeys = ATLAS_EXPERT_ROADMAP_MODULES.filter(module => roadmapModules[module.key]?.status === "practiced").map(module => module.key);
   const missingRoadmapPractice = archivedModuleKeys.filter(key => !practicedModuleKeys.includes(key));
+  const missingArchiveForPractice = practicedModuleKeys.filter(key => !archivedModuleKeys.includes(key));
+  const consistentModuleKeys = ATLAS_EXPERT_ROADMAP_MODULES.filter(module => practicedModuleKeys.includes(module.key) && archivedModuleKeys.includes(module.key)).map(module => module.key);
   const activeArchive = cockpit.completed_at ? history.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at) : null;
   const digest = record ? atlasLearningNotebookDigest(record) : null;
   const expectedDigest = record?.persistence?.last_verified_digest || null;
+  const pendingDigest = record?.persistence?.pending_digest || null;
   const simulationKeysInsideNotebook = ["sim", "simulation", "positions", "transaction_proofs", "proofs"].filter(key => Object.prototype.hasOwnProperty.call(record || {}, key));
   const failures = [];
   const warnings = [];
   if (!record) failures.push({ code:"LEARNING-IDB-READ", message:"Aucun carnet IndexedDB n’a été relu." });
   if (record && record.id !== ATLAS_LEARNING_DB_RECORD_ID) failures.push({ code:"LEARNING-IDB-RECORD", message:"Identifiant du carnet inattendu." });
   if (record && record.schema !== ATLAS_LEARNING_NOTEBOOK_SCHEMA) warnings.push({ code:"LEARNING-SCHEMA-LEGACY", message:"Le carnet relu utilise encore le schéma précédent ; la prochaine sauvegarde normale effectuera la migration vérifiée." });
-  if (record && !expectedDigest) warnings.push({ code:"LEARNING-EVIDENCE-MISSING", message:"Ce carnet ne possède pas encore d’empreinte 28.3.12 ; aucune incohérence n’est affirmée avant une prochaine sauvegarde vérifiée." });
+  if (record && pendingDigest) warnings.push({ code:"LEARNING-EVIDENCE-PENDING", message:"Une écriture a été engagée mais sa preuve finale n’a pas été confirmée." });
+  if (record && !expectedDigest) warnings.push({ code:"LEARNING-EVIDENCE-MISSING", message:"Ce carnet ne possède pas encore d’empreinte vérifiée ; aucune intégrité complète n’est affirmée." });
   if (record && (!record.versions || typeof record.versions !== "object")) warnings.push({ code:"LEARNING-VERSION-METADATA", message:"Les métadonnées de version séparées seront ajoutées lors de la prochaine sauvegarde normale." });
   if (!ATLAS_FOUNDATION_MODULE_KEYS.includes(cockpit.module_key)) failures.push({ code:"LEARNING-COCKPIT-MODULE", message:"Module actif inconnu." });
   if (!atlasLearningStepsAreOrdered(cockpit.steps)) failures.push({ code:"LEARNING-STEP-ORDER", message:"Les étapes du module actif ne suivent pas 1 → 5." });
   if (duplicateArchiveIds.length) failures.push({ code:"LEARNING-ARCHIVE-DUPLICATE", message:`Archives dupliquées : ${duplicateArchiveIds.join(", ")}.` });
   if (cockpit.completed_at && !activeArchive) failures.push({ code:"LEARNING-ACTIVE-ARCHIVE", message:"La session marquée terminée n’existe pas dans l’historique relu." });
   if (missingRoadmapPractice.length) failures.push({ code:"LEARNING-ROADMAP-MISMATCH", message:`Archives sans statut Pratiqué : ${missingRoadmapPractice.join(", ")}.` });
+  if (missingArchiveForPractice.length) failures.push({ code:"LEARNING-ARCHIVE-MISSING", message:`Statuts Pratiqué sans archive complète : ${missingArchiveForPractice.join(", ")}.` });
   if (simulationKeysInsideNotebook.length) failures.push({ code:"LEARNING-SIMULATION-SEPARATION", message:`Données de simulation trouvées dans le carnet : ${simulationKeysInsideNotebook.join(", ")}.` });
   if (expectedDigest && digest !== expectedDigest) failures.push({ code:"LEARNING-IDB-VERIFY", message:"L’empreinte relue ne correspond pas à la dernière empreinte vérifiée." });
   if (history.some(entry => entry?.completed_at && !ATLAS_LEARNING_SESSION_STEPS.every(key => entry.steps?.[key] === true))) warnings.push({ code:"LEARNING-LEGACY-ARCHIVE", message:"Une archive historique ne possède pas les cinq preuves du format actuel." });
-  const journeyComplete = practicedModuleKeys.length === ATLAS_EXPERT_ROADMAP_MODULES.length;
-  if (journeyComplete && learningModuleAfterCompleted(cockpit) !== null) failures.push({ code:"LEARNING-JOURNEY-COMPLETION", message:"Le parcours 11/11 propose encore un module suivant." });
+  const journeyComplete = consistentModuleKeys.length === ATLAS_EXPERT_ROADMAP_MODULES.length && !missingRoadmapPractice.length && !missingArchiveForPractice.length;
+  const nextModule = journeyComplete ? null : ATLAS_EXPERT_ROADMAP_MODULES.find(module => !consistentModuleKeys.includes(module.key)) || null;
   const status = failures.length ? "error" : warnings.length ? "warning" : "ok";
   return {
     schema:ATLAS_LEARNING_DIAGNOSTIC_SCHEMA,
     build:ATLAS_BUILD,
     checked_at:checkedAt,
     status,
-    persistence:{
-      backend:"IndexedDB",
-      record_found:Boolean(record),
-      schema:record?.schema || null,
-      record_build:record?.build || null,
-      updated_at:record?.updated_at || null,
-      digest,
-      expected_digest:expectedDigest,
-      digest_verified:Boolean(expectedDigest && digest === expectedDigest),
-      last_verified_at:record?.persistence?.last_verified_at || null,
-      last_reason:record?.persistence?.last_reason || null,
-      bytes:Number(options.bytes || 0) || null
-    },
-    cockpit:{
-      session_id:cockpit.session_id,
-      module_key:cockpit.module_key,
-      completed_at:cockpit.completed_at || null,
-      completed_sessions:Number(cockpit.completed_sessions || 0),
-      steps:atlasLearningClone(cockpit.steps || {}),
-      step_order_valid:atlasLearningStepsAreOrdered(cockpit.steps)
-    },
-    archives:{ total:history.length, complete_current_format:completeArchives.length, unique_ids:duplicateArchiveIds.length === 0, duplicate_ids:duplicateArchiveIds },
-    roadmap:{ practiced:practicedModuleKeys.length, total:ATLAS_EXPERT_ROADMAP_MODULES.length, practiced_module_keys:practicedModuleKeys, archived_module_keys:archivedModuleKeys, missing_practice_for_archives:missingRoadmapPractice },
-    journey:{ complete:journeyComplete, next_module:learningModuleAfterCompleted(cockpit)?.key || null },
+    persistence:{ backend:"IndexedDB", record_found:Boolean(record), schema:record?.schema || null, record_build:record?.build || null, updated_at:record?.updated_at || null, digest, expected_digest:expectedDigest, pending_digest:pendingDigest, digest_verified:Boolean(expectedDigest && digest === expectedDigest && !pendingDigest), last_verified_at:record?.persistence?.last_verified_at || null, last_reason:record?.persistence?.last_reason || null, bytes:Number(options.bytes || 0) || null },
+    cockpit:{ session_id:cockpit.session_id, module_key:cockpit.module_key, completed_at:cockpit.completed_at || null, completed_sessions:Number(cockpit.completed_sessions || 0), steps:atlasLearningClone(cockpit.steps || {}), step_order_valid:atlasLearningStepsAreOrdered(cockpit.steps) },
+    archives:{ total:history.length, complete_current_format:completeArchives.length, unique_ids:duplicateArchiveIds.length === 0, duplicate_ids:duplicateArchiveIds, counts_by_module:archiveCounts },
+    roadmap:{ practiced:practicedModuleKeys.length, total:ATLAS_EXPERT_ROADMAP_MODULES.length, practiced_module_keys:practicedModuleKeys, archived_module_keys:archivedModuleKeys, consistent_module_keys:consistentModuleKeys, missing_practice_for_archives:missingRoadmapPractice, missing_archives_for_practice:missingArchiveForPractice },
+    journey:{ complete:journeyComplete, next_module:nextModule?.key || null },
     separation:{ simulation_inside_notebook:simulationKeysInsideNotebook.length > 0, unexpected_keys:simulationKeysInsideNotebook, simulation_storage:"separate" },
     failures,
     warnings
@@ -12360,6 +12418,11 @@ function exportLearningIntegrityReport() {
   link.download = `agent_crypto_learning_integrity_${ATLAS_BUILD.replaceAll(".", "_")}.json`;
   document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(link.href), 1500);
 }
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") atlasLearningFlushScheduledPersist("visibility_hidden");
+});
+window.addEventListener("pagehide", () => { atlasLearningFlushScheduledPersist("pagehide"); }, { capture:true });
 
 function legacyLearningSnapshot() {
   let cockpitRaw = "", roadmapRaw = "";
@@ -12569,6 +12632,7 @@ function learningRecoveryFailureText(result) {
   return `${result.error_name || "StorageError"} : ${result.error_message || "écriture impossible"}. Les anciennes données restent intactes.`;
 }
 function saveLearningRecoveryAudit(data) {
+  if (!atlasLearningCanMutate()) return { ok:false, blocked:true };
   if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
   const payload = { schema:"agent_crypto_learning_legacy_recovery_audit_v2", build:ATLAS_LEARNING_RECOVERY_BUILD, backend:"IndexedDB", ...data };
   atlasLearningNotebookCache.recovery = payload;
@@ -12704,6 +12768,13 @@ async function applyLegacyLearningRecovery(options = {}) {
 }
 async function initializeLearningNotebookStorage() {
   await atlasLearningInitializeCache();
+  if (atlasLearningStorageReadBlocked) {
+    renderExpertRoadmap();
+    renderLearningJourneyCockpit();
+    renderLegacyLearningMigration(true);
+    renderLearningPersistenceNotice(atlasLearningStorageLastResult);
+    return { status:"read_blocked", verified:false, error_code:"LEARNING-IDB-READ-BLOCKED", writes_performed:0 };
+  }
   const result = await applyLegacyLearningRecovery({ automatic:true });
   reconcileRoadmapFromArchivedLearningHistory();
   await atlasLearningPersistNow("roadmap_practice_reconciliation_28_2_88");
@@ -12719,6 +12790,7 @@ function importLegacyLearningData() {
   return applyLegacyLearningRecovery({ automatic:false });
 }
 function ignoreLegacyLearningData() {
+  if (!atlasLearningCanMutate()) return;
   if (!atlasLearningNotebookCache) return;
   atlasLearningNotebookCache.recovery = { ...(atlasLearningNotebookCache.recovery || {}), status:"hidden", hidden_at:new Date().toISOString(), source_keys_preserved:true, backend:"IndexedDB" };
   atlasLearningSchedulePersist("hide_recovery_diagnostic");
@@ -12895,6 +12967,7 @@ function loadLearningHistory() {
   } catch { return []; }
 }
 function saveLearningHistory(history) {
+  if (!atlasLearningCanMutate()) return { ok:false, blocked:true };
   if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
   atlasLearningNotebookCache.history = Array.isArray(history) ? atlasLearningClone(history.slice(0,200)) : [];
   if (atlasLearningNotebookCache.cockpit) atlasLearningNotebookCache.cockpit.completed_sessions = atlasLearningNotebookCache.history.length;
@@ -12906,6 +12979,7 @@ function loadLearningCockpitState() {
   return atlasLearningNormalizeCockpit(data, historyLength);
 }
 function saveLearningCockpitState(data) {
+  if (!atlasLearningCanMutate()) return { ok:false, blocked:true };
   if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
   const validated = foundationApplyConclusionValidation(data);
   atlasLearningNotebookCache.cockpit = atlasLearningNormalizeCockpit(validated, loadLearningHistory().length);
@@ -14904,7 +14978,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_12");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_13");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
@@ -15099,21 +15173,14 @@ async function agentCryptoResetReadNotebook() {
 }
 
 async function agentCryptoResetWriteNotebook(record) {
-  let db = null;
-  try {
-    db = await atlasLearningDbOpen();
-    const transaction = db.transaction(ATLAS_LEARNING_DB_STORE, "readwrite");
-    const done = agentCryptoResetDbTransaction(transaction, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-WRITE-TRANSACTION`);
-    const request = transaction.objectStore(ATLAS_LEARNING_DB_STORE).put(record);
-    await agentCryptoResetDbRequest(request, `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-WRITE`);
-    await done;
-    return true;
-  } catch (error) {
-    if (!error.code) error.code = `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-OPEN`;
-    throw error;
-  } finally {
-    if (db) db.close();
+  const generation = atlasLearningStorageGeneration;
+  const result = await atlasLearningPersistNow("internal_clean_reset", { record, allowDuringReset:true, generation });
+  if (!result.ok) {
+    const failure = new Error(String(result.error_message || "écriture reset IndexedDB impossible"));
+    failure.code = result.error_code || `${AGENT_CRYPTO_RESET_ERROR_PREFIX}-IDB-WRITE`;
+    throw failure;
   }
+  return true;
 }
 
 async function agentCryptoResetDeleteNotebookRecord() {
@@ -15199,6 +15266,20 @@ function agentCryptoShowResetSuccessOnBoot() {
   return true;
 }
 
+async function atlasLearningBeginResetBarrier() {
+  atlasLearningStorageResetting = true;
+  atlasLearningStorageDirty = false;
+  clearTimeout(atlasLearningStoragePersistTimer);
+  atlasLearningStoragePersistTimer = 0;
+  atlasLearningStorageRevision += 1;
+  atlasLearningStorageGeneration += 1;
+  await atlasLearningStorageWriteChain.catch(() => null);
+  return atlasLearningStorageGeneration;
+}
+function atlasLearningEndResetBarrier() {
+  atlasLearningStorageResetting = false;
+}
+
 async function resetEntireLearningJourney() {
   const message = [
     "Repartir de zéro dans Agent-Crypto ?",
@@ -15228,6 +15309,7 @@ async function resetEntireLearningJourney() {
   let notebookChanged = false;
 
   try {
+    await atlasLearningBeginResetBarrier();
     previousNotebook = await agentCryptoResetReadNotebook();
     storageKeys = agentCryptoResetLocalStorageTargets();
     storageSnapshot = agentCryptoSnapshotLocalStorage(storageKeys);
@@ -15253,6 +15335,7 @@ async function resetEntireLearningJourney() {
     try {
       sessionStorage.setItem(AGENT_CRYPTO_RESET_SUCCESS_KEY, JSON.stringify({ build:ATLAS_BUILD, reset_at:resetAt }));
     } catch {}
+    atlasLearningEndResetBarrier();
     window.location.reload();
     return { ok:true, build:ATLAS_BUILD, reset_at:resetAt };
   } catch (error) {
@@ -15279,6 +15362,7 @@ async function resetEntireLearningJourney() {
     );
     const result = { ok:false, code, error:String(error?.message || error), local_restore:localRestore, notebook_restore:notebookRestore };
     window.__atlasLearningFullResetLastResult = result;
+    atlasLearningEndResetBarrier();
     return result;
   }
 }
@@ -15408,6 +15492,7 @@ function loadExpertRoadmap() {
   return atlasLearningNormalizeRoadmap(data);
 }
 function saveExpertRoadmap(data) {
+  if (!atlasLearningCanMutate()) return { ok:false, blocked:true };
   if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
   atlasLearningNotebookCache.roadmap = atlasLearningNormalizeRoadmap(data);
   atlasLearningSchedulePersist("expert_roadmap");
@@ -15468,6 +15553,7 @@ function exportExpertRoadmap() {
   downloadTextFile(`agent_crypto_feuille_de_route_expert_${stamp}.md`, "text/markdown", buildExpertRoadmapMarkdown());
 }
 function resetExpertRoadmap() {
+  if (!atlasLearningCanMutate()) return;
   if (!confirm("Réinitialiser uniquement le suivi pédagogique IndexedDB ? Les anciennes clés restent intactes.")) return;
   if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
   atlasLearningNotebookCache.roadmap = atlasLearningNormalizeRoadmap(null);
