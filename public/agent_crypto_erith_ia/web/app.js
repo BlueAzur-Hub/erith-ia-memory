@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.04 — EXPLICIT LESSON VALIDATION & VERIFIED ARCHIVE LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.05 — MODULE 01 GUIDED CONCLUSION & PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.04";
-const ATLAS_BUILD = "28.3.04";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.04";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.05";
+const ATLAS_BUILD = "28.3.05";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.05";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,7 +11614,7 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.04";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.05";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk"]);
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
@@ -11624,9 +11624,9 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
     steps:{
       read:{ title:"1. Comprendre les valeurs du marché", where:"LEÇON INTÉGRÉE AU COCKPIT — 01 · Marché et données", action:"Lire les définitions affichées, puis utiliser le bouton visible « Valider l’étape 1 après lecture » placé sous la leçon.", why:"Un prix isolé ne suffit pas : il faut une période, une source et une heure.", result:"L’étape 1 devient verte et le cockpit conduit vers Livecheck.", remember:"Prix, 24 h, 7 j, volume, capitalisation, liquidité, source et fraîcheur sont des notions différentes." },
       open:{ title:"2. Charger les données avec Livecheck", where:"Barre LIVECHECK en haut de la page", action:"Cliquer sur « Lancer Livecheck » et attendre que le statut ne dise plus « Livecheck requis ».", why:"Le cockpit refuse d’inventer un prix ou une variation.", result:"Une source active, une heure et des lignes de marché deviennent visibles.", remember:"Livecheck charge des données ; il ne prédit pas le marché." },
-      practice:{ title:"3. Lire la ligne Bitcoin dans Market Snapshot", where:"MARKET SNAPSHOT — Prix du marché des cryptomonnaies", action:"Trouver Bitcoin — BTC et lire uniquement Prix, 24 h et 7 j.", why:"Deux périodes différentes peuvent raconter deux mouvements différents.", result:"Le résumé BTC ci-dessous reprend les trois valeurs réellement chargées.", remember:"Un + sur 24 h peut coexister avec un − sur 7 j." },
-      verify:{ title:"4. Vérifier automatiquement la source et l’heure", where:"Bouton principal du cockpit — étape 4/5", action:"Cliquer sur « Vérifier automatiquement source + heure ». Le cockpit contrôle les cartes « Source active » et « Heure données », puis enregistre la conclusion prudente.", why:"Une valeur sans origine ni date n’est pas suffisante pour une lecture fiable.", result:"L’étape 4 devient verte immédiatement si la source et l’heure sont présentes ; aucun champ n’est à rechercher.", remember:"Observer décrit ce qui est affiché ; interpréter ne doit jamais devenir une certitude." },
-      note:{ title:"5. Distinguer observation et interprétation", where:"Champ « Ce que je retiens — conclusion personnelle »", action:"Écrire avec ses propres mots ce que Prix, 24 h, 7 j, source et heure permettent réellement de dire.", why:"La compréhension ne se résume pas à cinq clics.", result:"La conclusion sauvegardée valide l’étape 5.", remember:"Les données décrivent le marché observé ; elles ne prédisent pas le prochain mouvement." }
+      practice:{ title:"3. Relever Prix, 24 h et 7 j", where:"Carte « Les trois valeurs Bitcoin » du parcours détaillé", action:"Lire les trois valeurs affichées. Le bouton « Voir la ligne Bitcoin » permet de contrôler leur origine dans Market Snapshot ; le bouton « J’ai relevé Prix / 24 h / 7 j » valide l’étape.", why:"Deux périodes différentes peuvent raconter deux mouvements différents.", result:"Prix, variation 24 h et variation 7 j sont enregistrés comme preuve distincte.", remember:"Un + sur 24 h peut coexister avec un − sur 7 j." },
+      verify:{ title:"4. Vérifier la source et l’heure", where:"Carte « Source, heure et fraîcheur » du parcours détaillé", action:"Lire la source active et l’heure affichées, puis cliquer sur « Valider la source et l’heure ».", why:"Une valeur sans origine ni date n’est pas suffisante pour une lecture fiable.", result:"La source et l’heure sont enregistrées séparément ; aucun champ n’est à rechercher ailleurs.", remember:"Une observation fiable indique toujours d’où vient la donnée et quand elle a été relevée." },
+      note:{ title:"5. Comprendre la conclusion guidée", where:"Carte « Synthèse guidée du Module 01 »", action:"Lire la synthèse construite avec les valeurs affichées, puis répondre à la question « Peut-on prédire avec certitude le prochain mouvement ? ».", why:"Le cockpit doit d’abord enseigner la conclusion avant de demander de la reconnaître.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Les données décrivent l’état observé ; elles ne permettent pas de prédire avec certitude le prochain mouvement." }
     }
   },
   spot:{
@@ -11663,9 +11663,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.04";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.04";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.04";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.05";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.05";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.05";
 const ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS = 20;
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
@@ -12574,7 +12574,13 @@ function foundationStepsBeforeConclusionComplete(cockpit) {
 function foundationConclusionLength(cockpit) {
   return learningTextCount(String(cockpit?.takeaway || "").trim());
 }
+function foundationMarketGuidedConclusionReady(cockpit) {
+  return cockpit?.module_key === "market"
+    && foundationStepsBeforeConclusionComplete(cockpit)
+    && cockpit?.practice_evidence?.market_guided_conclusion === true;
+}
 function foundationConclusionReady(cockpit) {
+  if (cockpit?.module_key === "market") return foundationMarketGuidedConclusionReady(cockpit);
   return foundationIsActive(cockpit?.module_key)
     && foundationStepsBeforeConclusionComplete(cockpit)
     && foundationConclusionLength(cockpit) >= ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS;
@@ -12582,6 +12588,14 @@ function foundationConclusionReady(cockpit) {
 function foundationApplyConclusionValidation(cockpit) {
   if (!cockpit || !foundationIsActive(cockpit.module_key) || cockpit.completed_at) return cockpit;
   cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  if (cockpit.module_key === "market") {
+    const ready = foundationMarketGuidedConclusionReady(cockpit);
+    cockpit.practice_evidence.foundation_conclusion_ready = ready;
+    cockpit.practice_evidence.foundation_conclusion_mode = "guided_market_answer";
+    cockpit.practice_evidence.foundation_validation_build = ATLAS_FOUNDATION_VALIDATION_BUILD;
+    cockpit.steps.note = ready;
+    return cockpit;
+  }
   const length = foundationConclusionLength(cockpit);
   const prerequisites = foundationStepsBeforeConclusionComplete(cockpit);
   const ready = prerequisites && length >= ATLAS_FOUNDATION_CONCLUSION_MIN_CHARS;
@@ -12593,6 +12607,12 @@ function foundationApplyConclusionValidation(cockpit) {
   return cockpit;
 }
 function foundationConclusionGuidance(cockpit) {
+  if (cockpit?.module_key === "market") {
+    if (!foundationStepsBeforeConclusionComplete(cockpit)) return "Étape 5 disponible après les étapes 1 à 4";
+    return foundationMarketGuidedConclusionReady(cockpit)
+      ? "Synthèse guidée comprise · réponse prudente enregistrée"
+      : "Lis la synthèse guidée puis réponds à la question de prédiction";
+  }
   const length = foundationConclusionLength(cockpit);
   if (!foundationStepsBeforeConclusionComplete(cockpit)) {
     return length
@@ -12607,16 +12627,55 @@ function foundationConclusionGuidance(cockpit) {
 function foundationButton(label, action, disabled = false) {
   return `<button class="btn small ${disabled ? "" : "primary"}" type="button" data-foundation-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${escapeHtml(label)}</button>`;
 }
-function foundationMarketLab(cockpit) {
+function foundationMarketGuidedSummary() {
   const btc = state.coins?.find?.(coin => coin.id === "bitcoin");
-  const ready = Boolean(state.liveOk && btc);
-  const source = String(state.mainSource || els.sourceName?.textContent || "non disponible");
-  const time = String(els.sourceTime?.textContent || "—");
+  const source = String(state.mainSource || els.sourceName?.textContent || "non disponible").trim();
+  const time = String(els.sourceTime?.textContent || "—").trim();
+  const ready = Boolean(state.liveOk && btc && source && time && time !== "—");
+  const price = ready ? fmtEUR.format(Number(btc.price)) : "—";
+  const change24 = ready ? atlasSignedPct(btc.change24h) : "—";
+  const change7 = ready ? atlasSignedPct(btc.change7d) : "—";
+  const text = ready
+    ? `Au moment observé, la ligne Bitcoin affiche un prix de ${price}, une variation de ${change24} sur 24 heures et de ${change7} sur 7 jours. La barre Livecheck indique la source « ${source} » à ${time}. Ces données décrivent l’écran observé, mais ne permettent pas de prédire avec certitude le prochain mouvement.`
+    : "La synthèse sera construite uniquement après Livecheck, sans inventer de valeur.";
+  return { ready, btc, source, time, price, change24, change7, text };
+}
+function foundationMarketLab(cockpit) {
+  const summary = foundationMarketGuidedSummary();
   const evidence = cockpit.practice_evidence || {};
+  const step3Ready = Boolean(cockpit.steps.open && summary.ready);
+  const step4Ready = Boolean(cockpit.steps.practice && summary.ready);
+  const step5Ready = Boolean(cockpit.steps.verify && summary.ready);
   return `
-    <div class="foundation-lab-grid">
-      <article><h5>Lecture du snapshot Bitcoin</h5><p>${ready ? `Prix ${escapeHtml(fmtEUR.format(Number(btc.price)))} · 24 h ${escapeHtml(atlasSignedPct(btc.change24h))} · 7 j ${escapeHtml(atlasSignedPct(btc.change7d))}` : "Livecheck requis : aucune valeur n’est inventée."}</p><small>Snapshot Market : ${escapeHtml(source)} · Heure : ${escapeHtml(time)} · distinct du prix spot Binance affiché dans la fiche active.</small>${foundationButton("J’ai lu Prix / 24 h / 7 j", "market_read_btc", !ready)}</article>
-      <article><h5>Conclusion prudente</h5><p>Laquelle est correcte ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="market_answer_prediction">Le chiffre est vert, donc il faut acheter</button><button type="button" data-foundation-action="market_answer_prudent">Ces valeurs décrivent deux périodes, sans prédire la suite</button></div><small>${evidence.market_prudent ? "Réponse prudente enregistrée." : "Une observation n’est pas une prédiction."}</small></article>
+    <div class="foundation-lab-grid foundation-market-guided-lab">
+      <article data-foundation-stage="3" class="${cockpit.steps.practice ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · RELEVER</span>
+        <h5>Les trois valeurs Bitcoin</h5>
+        <p>${summary.ready ? `Prix <b>${escapeHtml(summary.price)}</b> · 24 h <b>${escapeHtml(summary.change24)}</b> · 7 j <b>${escapeHtml(summary.change7)}</b>` : "Livecheck requis : aucune valeur n’est inventée."}</p>
+        <small>Ces trois valeurs sont reprises directement de la ligne Bitcoin affichée dans Market Snapshot.</small>
+        <div class="foundation-choice-row">
+          ${foundationButton("Voir la ligne Bitcoin", "market_show_btc_row", !step3Ready)}
+          ${foundationButton(cockpit.steps.practice ? "Trois valeurs relevées" : "J’ai relevé Prix / 24 h / 7 j", "market_read_btc", !step3Ready || cockpit.steps.practice)}
+        </div>
+      </article>
+      <article data-foundation-stage="4" class="${cockpit.steps.verify ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · PROVENANCE</span>
+        <h5>Source, heure et fraîcheur</h5>
+        <p><b>Source active :</b> ${escapeHtml(summary.source || "non disponible")}<br><b>Heure des données :</b> ${escapeHtml(summary.time || "—")}</p>
+        <small>Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable.</small>
+        ${foundationButton(cockpit.steps.verify ? "Source et heure validées" : "Valider la source et l’heure", "market_verify_source_time", !step4Ready || cockpit.steps.verify)}
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 01</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> ces données permettent-elles de prédire avec certitude le prochain mouvement de Bitcoin ?</p>
+        <div class="foundation-choice-row">
+          <button type="button" data-foundation-action="market_prediction_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button>
+          <button type="button" data-foundation-action="market_prediction_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button>
+        </div>
+        <small>${evidence.market_guided_conclusion ? "Réponse prudente enregistrée. La synthèse ci-dessus sera conservée dans l’archive." : step5Ready ? "La leçon vient de fournir la réponse : les données décrivent, elles ne prédisent pas avec certitude." : "Disponible après la validation de la source et de l’heure."}</small>
+      </article>
     </div>`;
 }
 function foundationSpotLab(cockpit) {
@@ -12663,8 +12722,8 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   }
   const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.04 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.04 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours 28.3.05 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
+    : `<b>Parcours 28.3.05 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
@@ -12739,20 +12798,75 @@ function handleFoundationAction(action) {
     return;
   }
   if (module.key === "market") {
-    if (action === "market_read_btc") {
-      const btc = state.coins?.find?.(coin => coin.id === "bitcoin");
-      if (!state.liveOk || !btc) return foundationFeedback(false, "Livecheck requis", "Clique sur « Lancer Livecheck » puis attends la source et l’heure avant de lire Bitcoin.");
-      cockpit.steps.open = true; cockpit.steps.practice = true; cockpit.practice_evidence.market_btc_read = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); return foundationFeedback(true, "Lecture Bitcoin enregistrée", "Prix, 24 h et 7 j ont été lus à partir des données réellement chargées.");
+    const summary = foundationMarketGuidedSummary();
+    if (action === "market_answer_prudent") action = "market_verify_source_time";
+    if (action === "market_answer_prediction") action = "market_prediction_yes";
+    if (action === "market_show_btc_row") {
+      if (!cockpit.steps.open || !summary.ready) return foundationFeedback(false, "Livecheck requis", "Valide d’abord l’étape 2 afin d’afficher une ligne Bitcoin réelle.");
+      const bitcoinRow = els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || document.getElementById("market-workspace");
+      if (bitcoinRow?.scrollIntoView) {
+        learningOpenParentDetails(bitcoinRow);
+        bitcoinRow.scrollIntoView({ behavior:"smooth", block:"center" });
+        bitcoinRow.classList.add("learning-target-flash");
+        setTimeout(() => bitcoinRow.classList.remove("learning-target-flash"), 1800);
+      }
+      setActionFeedback("info", "Ligne Bitcoin affichée", "Lis uniquement Prix, 24 h et 7 j. Reviens ensuite au Cockpit et clique sur « J’ai relevé Prix / 24 h / 7 j ».", bitcoinRow);
+      return;
     }
-    if (action === "market_answer_prediction") return foundationFeedback(false, "Conclusion refusée", "Un chiffre vert ne constitue ni une prévision ni un ordre d’achat.");
-    if (action === "market_answer_prudent") {
-      if (!state.liveOk || !String(els.sourceName?.textContent || "").trim() || String(els.sourceTime?.textContent || "—").trim() === "—") return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
-      cockpit.practice_evidence.market_prudent = true; cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+    if (action === "market_read_btc") {
+      if (!cockpit.steps.open || !summary.ready) return foundationFeedback(false, "Livecheck requis", "Clique sur « Lancer Livecheck » puis attends la source et l’heure avant de relever Bitcoin.");
+      cockpit.steps.practice = true;
+      cockpit.practice_evidence.market_btc_read = {
+        price:summary.price,
+        change_24h:summary.change24,
+        change_7d:summary.change7,
+        validated_at:new Date().toISOString(),
+        build:ATLAS_FOUNDATION_VALIDATION_BUILD
+      };
+      cockpit.practice_completed_at = new Date().toISOString();
+      cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+      cockpit.last_action = "market_btc_values_recorded";
       saveLearningCockpitState(cockpit);
       renderLearningJourneyCockpit();
-      focusLearningConclusion();
-      setActionFeedback("ok", "Étape 4 validée · conclusion personnelle", "Le champ exact « Ce que je retiens » est maintenant ciblé. Utilise le repère autonome affiché au-dessus du champ ; aucune IA n’est nécessaire.", els.learningSessionNote);
+      scrollToLearningTarget("learningFoundationLab");
+      return foundationFeedback(true, "Étape 3 validée", `Prix ${summary.price} · 24 h ${summary.change24} · 7 j ${summary.change7}.`);
+    }
+    if (action === "market_verify_source_time") {
+      if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Relève d’abord Prix, 24 h et 7 j dans la carte précédente.");
+      if (!summary.ready) return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
+      cockpit.practice_evidence.market_source_time = {
+        source:summary.source,
+        time:summary.time,
+        validated_at:new Date().toISOString(),
+        build:ATLAS_FOUNDATION_VALIDATION_BUILD
+      };
+      cockpit.steps.verify = true;
+      cockpit.verify_completed_at = new Date().toISOString();
+      cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+      cockpit.last_action = "market_source_time_verified";
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToLearningTarget("learningFoundationLab");
+      setActionFeedback("ok", "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. Lis maintenant la synthèse guidée de l’étape 5.`, els.learningFoundationLab);
+      return;
+    }
+    if (action === "market_prediction_yes") {
+      return foundationFeedback(false, "Réponse à revoir", "Non. Les valeurs décrivent l’état observé à une heure donnée ; elles ne permettent pas de prédire avec certitude le prochain mouvement.");
+    }
+    if (action === "market_prediction_no") {
+      if (!cockpit.steps.verify || !summary.ready) return foundationFeedback(false, "Étape 4 requise", "Valide d’abord la source et l’heure.");
+      cockpit.practice_evidence.market_guided_conclusion = true;
+      cockpit.practice_evidence.market_guided_summary = summary.text;
+      cockpit.practice_evidence.market_guided_answer = "non";
+      cockpit.practice_evidence.market_guided_validated_at = new Date().toISOString();
+      cockpit.takeaway = summary.text;
+      cockpit.steps.note = true;
+      cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+      cockpit.last_action = "market_guided_conclusion_validated";
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToLearningTarget("learningCompletionAction");
+      setActionFeedback("ok", "Module 01 · 5/5", "La synthèse guidée est enregistrée. Ta note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction);
       return;
     }
   }
@@ -12852,7 +12966,7 @@ async function runFoundationLivecheck() {
     nextTarget.classList.add("learning-target-flash");
     setTimeout(() => nextTarget.classList.remove("learning-target-flash"), 1800);
   }
-  setActionFeedback("ok", "Livecheck validé — étape 2/5", "Étape 3 : lis maintenant la ligne Bitcoin dans MARKET SNAPSHOT — Prix, 24 h et 7 j.", nextTarget);
+  setActionFeedback("ok", "Livecheck validé — étape 2/5", "Lis Prix, 24 h et 7 j sur la ligne Bitcoin. Reviens ensuite au Cockpit et utilise la carte « Les trois valeurs Bitcoin » pour enregistrer l’étape 3.", nextTarget);
   return true;
 }
 
@@ -12972,14 +13086,14 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.04 peut être relu sans modifier l’archive.`, next };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.05 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:foundation.steps.read.title, label:`Ouvrir la leçon du Module ${module.title.split(" · ")[0]}`, text:"Ce bouton ouvre seulement la leçon. Après lecture, valide l’étape avec le bouton visible placé sous son contenu." };
     if (!cockpit.steps.open) return { key:"open", step:"Étape 2/5", title:foundation.steps.open.title, label:module.key === "market" ? "Lancer Livecheck" : module.key === "spot" ? "Commencer l’exercice Bid / Ask" : "Charger l’exemple école", text:foundation.steps.open.action };
-    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Lire Bitcoin dans Market Snapshot" : module.key === "spot" ? "Répondre Marché / Limite" : "Créer la position BTC fictive de 50 €", text:foundation.steps.practice.action };
-    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Vérifier automatiquement source + heure" : module.key === "spot" ? "Créer la position BTC fictive de 50 €" : "Ouvrir les scénarios −3 % et +5 %", text:module.key === "market" ? "Aucun champ à chercher : ce bouton contrôle les cartes Source active et Heure données déjà chargées, puis enregistre la conclusion prudente." : foundation.steps.verify.action };
-    if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:"Écrire ma conclusion", text:foundation.steps.note.action };
+    if (!cockpit.steps.practice) return { key:"practice", step:"Étape 3/5", title:foundation.steps.practice.title, label:module.key === "market" ? "Relever Prix / 24 h / 7 j" : module.key === "spot" ? "Répondre Marché / Limite" : "Créer la position BTC fictive de 50 €", text:foundation.steps.practice.action };
+    if (!cockpit.steps.verify) return { key:"verify", step:"Étape 4/5", title:foundation.steps.verify.title, label:module.key === "market" ? "Vérifier source + heure" : module.key === "spot" ? "Créer la position BTC fictive de 50 €" : "Ouvrir les scénarios −3 % et +5 %", text:module.key === "market" ? "La carte affiche directement la source active et l’heure. Valide-les sans chercher ailleurs dans la page." : foundation.steps.verify.action };
+    if (!cockpit.steps.note) return { key:"note", step:"Étape 5/5", title:foundation.steps.note.title, label:module.key === "market" ? "Comprendre la conclusion guidée" : "Écrire ma conclusion", text:foundation.steps.note.action };
     return { key:"complete", step:"5/5 prêt à archiver", title:"Validation finale séparée", label:"Aller au bouton « Terminer et archiver »", text:"Les cinq preuves sont présentes. L’archivage reste une action distincte et explicite sous le carnet." };
   }
   if (!cockpit.steps.read) return { key:"read", step:"Étape 1/5", title:"Lire la leçon intégrée", label:"Lire la leçon", text:"La leçon complète est déjà dans l’interface. Lis-la puis valide-la avec le bouton placé sous son contenu." };
@@ -13176,12 +13290,19 @@ function renderLearningJourneyCockpit() {
   });
   if (els.learningEvidenceLock) {
     els.learningEvidenceLock.hidden = !foundation;
-    if (foundation) els.learningEvidenceLock.innerHTML = `<b>Validation automatique par preuves · ${escapeHtml(recommended.title)}</b><span>Les cases sont des témoins en lecture seule. Leçon lue, Livecheck, réponses, simulation et scénarios sont enregistrés par leurs contrôles exacts ; aucun clic manuel sur une case ne peut fabriquer une progression.</span>`;
+    if (foundation) els.learningEvidenceLock.innerHTML = `<b>Validation automatique par preuves · ${escapeHtml(recommended.title)}</b><span>${recommended.key === "market" ? "Les cases sont des témoins en lecture seule : leçon validée, Livecheck, trois valeurs Bitcoin, source + heure et réponse guidée. La longueur d’un texte ne peut plus valider le Module 01." : "Les cases sont des témoins en lecture seule. Leçon lue, réponses, simulation et scénarios sont enregistrés par leurs contrôles exacts ; aucun clic manuel sur une case ne peut fabriquer une progression."}</span>`;
   }
   if (els.learningSessionNotesFree && document.activeElement !== els.learningSessionNotesFree) els.learningSessionNotesFree.value = cockpit.notes_free || "";
   if (els.learningSessionNote && document.activeElement !== els.learningSessionNote) els.learningSessionNote.value = cockpit.takeaway || "";
-  if (els.learningSessionNotesFree) els.learningSessionNotesFree.disabled = finished;
-  if (els.learningSessionNote) els.learningSessionNote.disabled = finished;
+  if (els.learningSessionNotesFree) {
+    els.learningSessionNotesFree.disabled = finished;
+    els.learningSessionNotesFree.placeholder = recommended.key === "market"
+      ? "Note personnelle facultative : écris seulement ce que tu souhaites conserver. Cette note ne valide aucune étape."
+      : "Copie les définitions, ajoute tes observations, tes questions et tout ce que tu veux conserver. Aucun texte n’est volontairement tronqué.";
+  }
+  const takeawayField = els.learningSessionNote?.closest?.(".learning-session-takeaway");
+  if (takeawayField) takeawayField.hidden = recommended.key === "market";
+  if (els.learningSessionNote) els.learningSessionNote.disabled = finished || recommended.key === "market";
   if (els.btnMarkLessonRead) {
     const lessonValidated = cockpit.steps.read === true;
     els.btnMarkLessonRead.hidden = false;
@@ -13191,7 +13312,8 @@ function renderLearningJourneyCockpit() {
   }
   if (els.learningCompletionAction) els.learningCompletionAction.hidden = false;
   if (els.btnCompleteLearningSession) {
-    const archiveReady = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] === true) && Boolean(String(cockpit.takeaway || "").trim());
+    const archiveReady = ATLAS_LEARNING_SESSION_STEPS.every(key => cockpit.steps?.[key] === true)
+      && (cockpit.module_key === "market" ? cockpit.practice_evidence?.market_guided_conclusion === true : Boolean(String(cockpit.takeaway || "").trim()));
     els.btnCompleteLearningSession.hidden = false;
     els.btnCompleteLearningSession.disabled = finished || !archiveReady;
     els.btnCompleteLearningSession.textContent = finished ? "Session archivée" : "Terminer et archiver le module";
@@ -13443,6 +13565,14 @@ function verifyLearningResult() {
 function focusLearningConclusion() {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at) return;
+  if (cockpit.module_key === "market") {
+    scrollToLearningTarget("learningFoundationLab");
+    const card = els.learningFoundationLab?.querySelector?.('[data-foundation-stage="5"]') || els.learningFoundationLab;
+    card?.classList?.add("learning-action-highlight");
+    setTimeout(() => card?.classList?.remove("learning-action-highlight"), 1800);
+    setActionFeedback("info", "Conclusion guidée", "Lis la synthèse construite avec les valeurs réelles, puis réponds à la question. Aucune rédaction libre n’est obligatoire.", card);
+    return;
+  }
   learningOpenParentDetails(els.learningSessionNote);
   els.learningSessionNote?.scrollIntoView({ behavior:"smooth", block:"center" });
   setTimeout(() => els.learningSessionNote?.focus(), 450);
@@ -13466,15 +13596,21 @@ function handleFoundationPrimaryAction(cockpit, action) {
       const button = document.getElementById("btnLivecheck");
       button?.click();
       scrollToLearningTarget("livecheck");
-      setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. L’étape 2 sera validée automatiquement.");
+      setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. L’étape 2 sera validée après écriture et relecture IndexedDB.");
       return true;
     }
-    if (action.key === "practice") {
-      handleFoundationAction("market_read_btc");
-      return true;
-    }
-    if (action.key === "verify") {
-      handleFoundationAction("market_answer_prudent");
+    if (["practice", "verify", "note"].includes(action.key)) {
+      scrollToLearningTarget("learningFoundationLab");
+      const stage = action.key === "practice" ? "3" : action.key === "verify" ? "4" : "5";
+      const card = els.learningFoundationLab?.querySelector?.(`[data-foundation-stage="${stage}"]`) || els.learningFoundationLab;
+      card?.classList?.add("learning-action-highlight");
+      setTimeout(() => card?.classList?.remove("learning-action-highlight"), 1800);
+      const messages = {
+        practice:["Étape 3 · relever Bitcoin", "Lis les trois valeurs affichées, consulte la ligne Bitcoin si nécessaire, puis clique sur « J’ai relevé Prix / 24 h / 7 j »."],
+        verify:["Étape 4 · vérifier la provenance", "La source et l’heure sont affichées dans la carte. Clique sur « Valider la source et l’heure »."],
+        note:["Étape 5 · conclusion guidée", "Lis la synthèse construite par le cockpit, puis réponds à la question. Aucune rédaction libre n’est obligatoire."]
+      };
+      setActionFeedback("info", messages[action.key][0], messages[action.key][1], card);
       return true;
     }
   }
@@ -13514,7 +13650,7 @@ function handleFoundationPrimaryAction(cockpit, action) {
 function handleLearningPrimaryAction() {
   const cockpit = loadLearningCockpitState();
   const action = learningActionState(cockpit);
-  if (["open","practice","verify"].includes(action.key) && handleFoundationPrimaryAction(cockpit, action)) return;
+  if (["open","practice","verify","note"].includes(action.key) && handleFoundationPrimaryAction(cockpit, action)) return;
   if (action.key === "read") {
     if (els.learningLessonPanel) { els.learningLessonPanel.hidden = false; els.learningLessonPanel.open = true; }
     scrollToLearningTarget("learningLessonPanel");
@@ -13561,7 +13697,12 @@ async function completeLearningSession() {
     renderLearningJourneyCockpit();
     return { ok:false, reason:"missing_steps", missing };
   }
-  if (!String(cockpit.takeaway || "").trim()) {
+  if (cockpit.module_key === "market" && cockpit.practice_evidence?.market_guided_conclusion !== true) {
+    setActionFeedback("warn", "Conclusion guidée non validée", "Lis la synthèse du Module 01 et réponds à la question de prédiction avant l’archivage.");
+    focusLearningConclusion();
+    return { ok:false, reason:"missing_guided_conclusion" };
+  }
+  if (cockpit.module_key !== "market" && !String(cockpit.takeaway || "").trim()) {
     setActionFeedback("warn", "Conclusion personnelle manquante", "Écris ce que tu retiens avec tes propres mots. Tes notes longues peuvent rester dans le premier champ.");
     focusLearningConclusion();
     return { ok:false, reason:"missing_takeaway" };
@@ -13604,7 +13745,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_04");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_05");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
@@ -18326,7 +18467,7 @@ const ATLAS_SHARED_SYNTHESIS_RECORD_ID = "current";
 const ATLAS_SHARED_SYNTHESIS_STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES = 5 * 1024 * 1024;
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.3.04",
+  interface: "Build 28.3.05",
   controlCenter: "V2.1.0R1",
   bridge: "V1.7.6",
   bridgeNumeric: "1.7.6",
@@ -20577,7 +20718,7 @@ function atlasSyncReleaseLabels() {
   setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.3.04`
+    `Agent-Crypto @erith.IA · Market Core · Build 28.3.05`
   );
 }
 

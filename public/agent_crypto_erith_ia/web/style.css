@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ATLAS PUBLICATION IDENTITY — BUILD 28.3.04
+   ATLAS PUBLICATION IDENTITY — BUILD 28.3.05
    Single active identity source. Historical Build annotations below are
    intentionally non-active and cannot be selected by the update controller.
-   ATLAS_ASSET_BUILD: 28.3.04
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.04
+   ATLAS_ASSET_BUILD: 28.3.05
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.3.05
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.3.04";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.04";
+  --atlas-asset-build: "28.3.05";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-28.3.05";
 }
 
 :root{
@@ -25835,8 +25835,16 @@ input[type="checkbox"]{width:17px;min-width:17px;max-width:17px;height:17px;min-
 }
 
 
-/* BUILD 28.3.04 — EXPLICIT LESSON VALIDATION & VERIFIED ARCHIVE LOCK */
+/* BUILD 28.3.05 — MODULE 01 GUIDED CONCLUSION & PEDAGOGY LOCK */
 .learning-session-complete-action{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;padding:13px 14px;border:1px solid rgba(255,216,130,.30);border-radius:11px;background:rgba(126,87,18,.10)}
 .learning-session-complete-action>span{color:#d8c99f;font-size:12px;line-height:1.5}
 .learning-session-complete-action .btn:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:760px){.learning-session-complete-action{align-items:stretch;flex-direction:column}.learning-session-complete-action .btn{width:100%}}
+
+
+/* BUILD 28.3.05 — MODULE 01 GUIDED CONCLUSION & PEDAGOGY LOCK */
+.foundation-market-guided-lab article.is-done{border-color:rgba(68,210,171,.42);box-shadow:inset 3px 0 0 rgba(68,210,171,.72)}
+.foundation-stage-kicker{display:block;margin-bottom:6px;color:#75dcd5;font-size:10px;font-weight:850;letter-spacing:.08em}
+.foundation-guided-summary{padding:12px 13px;border-left:3px solid rgba(95,211,205,.72);border-radius:8px;background:rgba(24,91,97,.18)}
+.foundation-choice-row button:disabled{opacity:.48;cursor:not-allowed}
+.learning-session-takeaway[hidden]{display:none!important}

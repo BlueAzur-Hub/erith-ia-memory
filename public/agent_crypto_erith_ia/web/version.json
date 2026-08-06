@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.04",
-  "build": "28.3.04",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.04",
-  "published_at": "2026-08-06T01:35:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 28.3.05",
+  "build": "28.3.05",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.05",
+  "published_at": "2026-08-06T03:45:00+02:00",
   "assets": {
     "atlas_math_core_background": "assets/images/atlas_math_core_observatory_bg.png",
     "missions_de_vie_constellation_background": "assets/images/missions_de_vie_constellation_bg.png",
@@ -1372,6 +1372,32 @@
       "btnFoundationResetPath",
       "btnNewLearningSession",
       "btnResetLearningSimulation"
+    ]
+  },
+  "module_01_guided_conclusion_pedagogy_lock": {
+    "base": "28.3.04",
+    "build": "28.3.05",
+    "scope": "Module 01 pedagogy only",
+    "step_1": "explicit lesson opening and visible post-reading validation preserved",
+    "step_2": "Livecheck proof with IndexedDB read-back preserved",
+    "step_3": "explicit BTC price 24h 7d observation with separate confirmation",
+    "step_4": "explicit source and time confirmation; no hidden search",
+    "step_5": "generated factual synthesis plus explicit prediction question",
+    "correct_answer": "Non",
+    "mandatory_free_text_removed": true,
+    "personal_notes": "optional and never validate Module 01",
+    "archive": "separate explicit button with IndexedDB verification",
+    "next_module": "separate action after archived Module 01 remains visible",
+    "active_28_3_04_draft_migration": "old text length cannot preserve step 5 without guided evidence",
+    "reset_required": false,
+    "preserved": [
+      "reset 28.2.98",
+      "Market",
+      "Metals",
+      "Bridge",
+      "collectors",
+      "fictional simulation",
+      "existing archives"
     ]
   }
 }
