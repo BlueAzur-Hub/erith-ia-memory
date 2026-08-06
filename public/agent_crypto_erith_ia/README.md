@@ -1,27 +1,45 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.05  
-**Mission du Build :** Explicit Lesson Validation & Verified Archive Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.06  
+**Mission du Build :** Foundations 01–03 Guided Pedagogy Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
 
+## Build 28.3.06 — Fondations guidées 01 à 03
 
+Version consolidée du parcours pédagogique :
 
-## Build 28.3.05 — Module 01 guidé de bout en bout
+### Module 01 — Marché et données
 
-Correctif limité à la pédagogie du Module 01 :
+- message IndexedDB cohérent après archivage ;
+- distinction explicite entre le Market Snapshot pédagogique et le prix spot Binance ;
+- cycle validé : 0/5 → 5/5 → archive → 1/11 pratiqué → Module 02.
 
-- la leçon 1 reste ouverte et validée par son bouton visible sous le contenu ;
-- Livecheck conserve sa validation par preuve et relecture IndexedDB ;
-- l’étape 3 présente Prix, 24 h et 7 j, permet d’ouvrir la ligne Bitcoin, puis demande une confirmation explicite ;
-- l’étape 4 affiche directement la source et l’heure et les valide séparément ;
-- l’étape 5 fournit d’abord une synthèse construite avec les valeurs chargées ;
-- la seule question est : les données permettent-elles de prédire avec certitude le prochain mouvement ? La réponse correcte est « Non » ;
-- aucune rédaction libre n’est obligatoire pour terminer le Module 01 ;
-- les notes personnelles restent facultatives et ne peuvent fabriquer une progression ;
-- une ancienne conclusion longue de 28.3.04 ne conserve plus artificiellement l’étape 5 sans la nouvelle preuve guidée ;
-- l’archivage reste distinct, vérifié par relecture IndexedDB, puis le passage au Module 02 reste séparé ;
-- reset, Market, Métaux, Bridge, collecteurs, simulation fictive et archives existantes restent inchangés.
+### Module 02 — Spot et carnet d’ordres
+
+- meilleur Ask, meilleur Bid et Spread dans une carte guidée ;
+- exercice Marché / Limite avec refus pédagogique des réponses incorrectes ;
+- création autonome d’une position BTC fictive de 50 €, avec Livecheck automatique si nécessaire ;
+- synthèse réelle de l’exécution : montant, prix d’entrée, quantité reçue et capital restant ;
+- question guidée sur l’absence de garantie d’exécution immédiate d’un ordre limite ;
+- aucune rédaction libre obligatoire.
+
+### Module 03 — Frais et gestion du risque
+
+- exemple école de coûts à 0,60 % aller-retour ;
+- position BTC fictive de 50 € ;
+- scénarios −3 % et +5 % sans modification de la position ;
+- comparaison résultat brut / résultat net ;
+- question guidée sur l’effet des frais ;
+- aucune rédaction libre obligatoire.
+
+### Verrous communs
+
+- les notes personnelles restent facultatives et ne fabriquent aucune progression ;
+- archivage et passage au module suivant restent deux actions séparées ;
+- les Modules 01, 02 et 03 restent visibles et comptabilisés après archivage ;
+- aucune opération réelle, aucune clé API et aucun wallet ;
+- Market, Métaux, Bridge, collecteurs et reset 28.2.98 préservés.
 
 ## Build 28.3.03 — Archivage autonome et cohérence visible du parcours
 
