@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.10 — MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.11 — LEARNING STATE CONTINUITY, ORDER & COMPLETION LOCK · MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.10";
-const ATLAS_BUILD = "28.3.10";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.10";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.11";
+const ATLAS_BUILD = "28.3.11";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.11";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -11614,8 +11614,24 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.10";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.11";
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet", "tokenomics", "defi", "yield", "derivatives", "scams", "records"]);
+const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
+  market:"28.3.07",
+  spot:"28.3.07",
+  risk:"28.3.07",
+  account:"28.3.08",
+  wallet:"28.3.08",
+  tokenomics:"28.3.09",
+  defi:"28.3.09",
+  yield:"28.3.09",
+  derivatives:"28.3.10",
+  scams:"28.3.10",
+  records:"28.3.10"
+});
+function foundationPathBuildForModule(moduleKey) {
+  return ATLAS_FOUNDATION_MODULE_BUILDS[moduleKey] || null;
+}
 const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   market:{
     title:"01 · Marché et données",
@@ -11759,9 +11775,9 @@ const ATLAS_LEARNING_MIGRATION_KEY = "agent_crypto_learning_legacy_migration_28_
 const ATLAS_LEARNING_MIGRATION_BACKUP_KEY = "agent_crypto_learning_legacy_backup_28_2_84";
 const ATLAS_LEARNING_RECOVERY_AUDIT_KEY = "agent_crypto_learning_legacy_recovery_audit_28_2_85";
 const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
-const ATLAS_LEARNING_FLOW_BUILD = "28.3.10";
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.10";
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.10";
+const ATLAS_LEARNING_FLOW_BUILD = "28.3.11";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.11";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.11";
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 const ATLAS_LEARNING_RECONCILIATION_BUILD = "28.2.88";
 let atlasLearningReviewOpen = false;
@@ -11936,13 +11952,15 @@ function atlasLearningNormalizeRoadmap(data) {
 }
 function atlasLearningNormalizeCockpit(data, historyLength = 0) {
   const source = data && typeof data === "object" ? data : {};
+  const moduleKey = ATLAS_EXPERT_ROADMAP_MODULES.some(module => module.key === source.module_key) ? source.module_key : null;
+  const expectedFoundationBuild = foundationPathBuildForModule(moduleKey);
   const normalized = {
     schema:"agent_crypto_learning_journey_cockpit_v2",
     session_id:source.session_id || `LEARN-${Date.now().toString(36).toUpperCase()}`,
     started_at:source.started_at || new Date().toISOString(),
     completed_at:source.completed_at || null,
     completed_sessions:historyLength,
-    module_key:ATLAS_EXPERT_ROADMAP_MODULES.some(module => module.key === source.module_key) ? source.module_key : null,
+    module_key:moduleKey,
     steps:Object.fromEntries(ATLAS_LEARNING_SESSION_STEPS.map(key => [key, source.steps?.[key] === true])),
     lesson_read_at:source.lesson_read_at || null,
     notes_free:String(source.notes_free ?? source.note ?? ""),
@@ -11958,10 +11976,15 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
     legacy_signature:source.legacy_signature || null,
     legacy_source:source.legacy_source || null,
     migration_build:source.migration_build || null,
-    foundation_path_build:source.completed_at ? (source.foundation_path_build || null) : ATLAS_FOUNDATION_LEARNING_BUILD
+    foundation_path_build:source.foundation_path_build || expectedFoundationBuild
   };
-  if (!source.completed_at && ATLAS_FOUNDATION_MODULE_KEYS.includes(normalized.module_key) && source.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD) {
+
+  if (!source.completed_at && expectedFoundationBuild && source.foundation_path_build !== expectedFoundationBuild) {
     const evidenceKey = foundationGuidedEvidenceKey(normalized.module_key);
+
+    // The only still-supported destructive migration is the historical Module 03
+    // scenario correction introduced by 28.3.07. Every other unchanged module
+    // keeps its active draft intact when the application Build changes.
     if (normalized.module_key === "risk") {
       const scenarios = Array.isArray(normalized.practice_evidence?.scenarios) ? normalized.practice_evidence.scenarios : [];
       const results = normalized.practice_evidence?.risk_scenario_results && typeof normalized.practice_evidence.risk_scenario_results === "object" ? normalized.practice_evidence.risk_scenario_results : {};
@@ -11977,19 +12000,14 @@ function atlasLearningNormalizeCockpit(data, historyLength = 0) {
         normalized.steps.note = false;
         normalized.takeaway = "";
         normalized.last_action = "risk_scenarios_refresh_required";
-      } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
-    } else if (["account", "wallet", "tokenomics", "defi", "yield", "derivatives", "scams", "records"].includes(normalized.module_key)) {
-      const prefix = `${normalized.module_key}_`;
-      Object.keys(normalized.practice_evidence).filter(key => key.startsWith(prefix) || key.startsWith("foundation_")).forEach(key => delete normalized.practice_evidence[key]);
-      normalized.steps.open = false;
-      normalized.steps.practice = false;
-      normalized.steps.verify = false;
+      } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) {
+        normalized.steps.note = false;
+      }
+    } else if (["market", "spot"].includes(normalized.module_key) && (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true)) {
       normalized.steps.note = false;
-      normalized.practice_completed_at = null;
-      normalized.verify_completed_at = null;
-      normalized.takeaway = "";
-      normalized.last_action = `${normalized.module_key}_guided_path_refresh_required`;
-    } else if (!evidenceKey || normalized.practice_evidence?.[evidenceKey] !== true) normalized.steps.note = false;
+    }
+
+    normalized.foundation_path_build = expectedFoundationBuild;
   }
   return normalized;
 }
@@ -12272,7 +12290,8 @@ function legacyLearningRecoveryPlan(snapshot = legacyLearningSnapshot()) {
     progressRecordsAdded += 1;
   }
 
-  const legacyModule = learningModuleByKey(snapshot.module_key || recommendedLearningModule().key);
+  const legacyRecommended = recommendedLearningModule() || ATLAS_EXPERT_ROADMAP_MODULES[0];
+  const legacyModule = learningModuleByKey(snapshot.module_key || legacyRecommended.key);
   const oldSteps = { read:snapshot.steps.read, open:snapshot.steps.open, practice:snapshot.steps.practice, verify:snapshot.steps.verify, note:false };
   const pristine = learningMigrationCurrentIsPristine(currentBefore, historyBefore);
   let cockpit = { ...currentBefore };
@@ -12965,6 +12984,7 @@ function foundationAccountGuidedSummary(cockpit) {
 }
 function foundationAccountLab(cockpit) {
   const e = cockpit.practice_evidence || {};
+  const step1Done = cockpit.steps.read === true;
   const summary = foundationAccountGuidedSummary(cockpit);
   const step2Done = cockpit.steps.open === true;
   const step3Done = cockpit.steps.practice === true;
@@ -12976,8 +12996,8 @@ function foundationAccountLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · SOCLE DU COMPTE</span>
         <h5>Quelle combinaison protège réellement le compte ?</h5>
         <div class="foundation-choice-row">
-          <button type="button" data-foundation-action="account_stack_weak" ${step2Done ? "disabled" : ""}>Même mot de passe + code reçu par message</button>
-          <button type="button" data-foundation-action="account_stack_strong" ${step2Done ? "disabled" : ""}>Mot de passe unique + passkey/2FA + email sécurisé</button>
+          <button type="button" data-foundation-action="account_stack_weak" ${!step1Done || step2Done ? "disabled" : ""}>Même mot de passe + code reçu par message</button>
+          <button type="button" data-foundation-action="account_stack_strong" ${!step1Done || step2Done ? "disabled" : ""}>Mot de passe unique + passkey/2FA + email sécurisé</button>
         </div>
         <small>${e.account_security_stack ? "Socle fictif enregistré : aucun identifiant réel n’a été demandé." : "Le second facteur doit rester indépendant du mot de passe."}</small>
       </article>
@@ -13020,6 +13040,7 @@ function foundationWalletGuidedSummary(cockpit) {
 }
 function foundationWalletLab(cockpit) {
   const e = cockpit.practice_evidence || {};
+  const step1Done = cockpit.steps.read === true;
   const summary = foundationWalletGuidedSummary(cockpit);
   const step2Done = cockpit.steps.open === true;
   const step3Done = cockpit.steps.practice === true;
@@ -13030,7 +13051,7 @@ function foundationWalletLab(cockpit) {
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 2 · ACTIF + RÉSEAU</span>
         <h5>Retrait fictif de BTC : quel réseau choisir dans cet exercice ?</h5>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_ethereum" ${step2Done ? "disabled" : ""}>Ethereum</button><button type="button" data-foundation-action="wallet_network_bitcoin" ${step2Done ? "disabled" : ""}>Bitcoin</button><button type="button" data-foundation-action="wallet_network_solana" ${step2Done ? "disabled" : ""}>Solana</button></div>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_ethereum" ${!step1Done || step2Done ? "disabled" : ""}>Ethereum</button><button type="button" data-foundation-action="wallet_network_bitcoin" ${!step1Done || step2Done ? "disabled" : ""}>Bitcoin</button><button type="button" data-foundation-action="wallet_network_solana" ${!step1Done || step2Done ? "disabled" : ""}>Solana</button></div>
         <small>${e.wallet_network_match ? "Paire fictive figée : BTC / Bitcoin." : "Le réseau doit être accepté à la fois au départ et à l’arrivée."}</small>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
@@ -13070,6 +13091,7 @@ function foundationTokenomicsGuidedSummary(cockpit) {
 }
 function foundationTokenomicsLab(cockpit) {
   const e = cockpit.practice_evidence || {};
+  const step1Done = cockpit.steps.read === true;
   const summary = foundationTokenomicsGuidedSummary(cockpit);
   const step2Done = cockpit.steps.open === true;
   const step3Done = cockpit.steps.practice === true;
@@ -13080,7 +13102,7 @@ function foundationTokenomicsLab(cockpit) {
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 2 · STABILITÉ ET RISQUES</span>
         <h5>Un stablecoin est-il automatiquement sans risque parce qu’il vise 1 € ou 1 $ ?</h5>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_yes" ${step2Done ? "disabled" : ""}>Oui, la parité est garantie</button><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_no" ${step2Done ? "disabled" : ""}>Non, vérifier mécanisme, réserves, remboursement, liquidité et depeg</button></div>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_yes" ${!step1Done || step2Done ? "disabled" : ""}>Oui, la parité est garantie</button><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_no" ${!step1Done || step2Done ? "disabled" : ""}>Non, vérifier mécanisme, réserves, remboursement, liquidité et depeg</button></div>
         <small>${e.tokenomics_stablecoin_risk ? "Risque stablecoin enregistré : cible de stabilité, pas absence de risque." : "Une réserve publiée par un émetteur est une preuve à lire, pas une propriété universelle de tous les stablecoins."}</small>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
@@ -13120,6 +13142,7 @@ function foundationDefiGuidedSummary(cockpit) {
 }
 function foundationDefiLab(cockpit) {
   const e = cockpit.practice_evidence || {};
+  const step1Done = cockpit.steps.read === true;
   const summary = foundationDefiGuidedSummary(cockpit);
   const step2Done = cockpit.steps.open === true;
   const step3Done = cockpit.steps.practice === true;
@@ -13130,7 +13153,7 @@ function foundationDefiLab(cockpit) {
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 2 · LIRE OU ÉCRIRE</span>
         <h5>Quelle interaction peut modifier l’état de la blockchain ?</h5>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_read_balance" ${step2Done ? "disabled" : ""}>Consulter un solde</button><button type="button" data-foundation-action="defi_write_transaction" ${step2Done ? "disabled" : ""}>Signer et envoyer une transaction d’écriture</button></div>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_read_balance" ${!step1Done || step2Done ? "disabled" : ""}>Consulter un solde</button><button type="button" data-foundation-action="defi_write_transaction" ${!step1Done || step2Done ? "disabled" : ""}>Signer et envoyer une transaction d’écriture</button></div>
         <small>${e.defi_interaction_type ? "Distinction figée : lecture gratuite de l’état contre écriture transactionnelle." : "Une interface peut masquer la fonction exacte derrière un bouton simple."}</small>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
@@ -13169,6 +13192,7 @@ function foundationYieldGuidedSummary(cockpit) {
 }
 function foundationYieldLab(cockpit) {
   const e = cockpit.practice_evidence || {};
+  const step1Done = cockpit.steps.read === true;
   const summary = foundationYieldGuidedSummary(cockpit);
   const step2Done = cockpit.steps.open === true;
   const step3Done = cockpit.steps.practice === true;
@@ -13179,7 +13203,7 @@ function foundationYieldLab(cockpit) {
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 2 · SOURCE DU RENDEMENT</span>
         <h5>Comment lire une récompense annoncée ?</h5>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_free_interest" ${step2Done ? "disabled" : ""}>Comme un intérêt gratuit garanti</button><button type="button" data-foundation-action="yield_source_rewards" ${step2Done ? "disabled" : ""}>Identifier protocole, frais, émissions ou prêt et leurs risques</button></div>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_free_interest" ${!step1Done || step2Done ? "disabled" : ""}>Comme un intérêt gratuit garanti</button><button type="button" data-foundation-action="yield_source_rewards" ${!step1Done || step2Done ? "disabled" : ""}>Identifier protocole, frais, émissions ou prêt et leurs risques</button></div>
         <small>${e.yield_source_model ? "Source du rendement enregistrée comme hypothèse à vérifier." : "Un pourcentage sans mécanisme, actif payé ni conditions n’est pas interprétable."}</small>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
@@ -13213,12 +13237,51 @@ function foundationDerivativesGuidedSummary(cockpit) {
   return {ready,exposure,loss,risks,text};
 }
 function foundationDerivativesLab(cockpit) {
-  const e=cockpit.practice_evidence||{}, summary=foundationDerivativesGuidedSummary(cockpit), s2=cockpit.steps.open===true,s3=cockpit.steps.practice===true,s4=cockpit.steps.verify===true,s5=s4&&summary.ready;
-  return `<div class="foundation-lab-grid foundation-derivatives-guided-lab">
-  <article data-foundation-stage="2" class="foundation-lab-wide ${s2?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 2 · EXPOSITION</span><h5>100 € de marge avec un levier ×5</h5><p>Quelle exposition est créée ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="derivatives_exposure_100" ${s2?'disabled':''}>100 €</button><button type="button" data-foundation-action="derivatives_exposure_500" ${s2?'disabled':''}>500 €</button></div><small>${e.derivatives_exposure_example?'Preuve figée : 100 € ×5 = 500 € d’exposition.':'Le levier multiplie l’exposition, pas le solde disponible.'}</small></article>
-  <article data-foundation-stage="3" class="foundation-lab-wide ${s3?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 3 · MOUVEMENT DÉFAVORABLE</span><h5>Le marché baisse de 5 %</h5><p>Sur 500 € d’exposition, quelle perte brute approximative cela représente-t-il ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="derivatives_loss_5" ${!s2||s3?'disabled':''}>5 € · 5 % de la marge</button><button type="button" data-foundation-action="derivatives_loss_25" ${!s2||s3?'disabled':''}>25 € · 25 % de la marge</button></div><small>${e.derivatives_loss_example?'Preuve figée : −5 % × 500 € = −25 €, avant frais et funding.':'Le mouvement s’applique à l’exposition totale.'}</small></article>
-  <article data-foundation-stage="4" class="foundation-lab-wide ${s4?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 4 · LIQUIDATION</span><h5>Checklist dérivés</h5><ul class="foundation-guided-list"><li>Prix d’entrée, mark price et prix de liquidation.</li><li>Marge isolée ou croisée.</li><li>Funding, frais et taille.</li><li>Clôture sur marge et protection contre solde négatif lorsqu’applicable.</li><li>Produit, prestataire et autorisation vérifiés.</li></ul>${foundationButton(s4?'Checklist dérivés enregistrée':'Valider la checklist dérivés','derivatives_validate_risks',!s3||s4)}<small>${e.derivatives_risk_checklist?'Aucun produit dérivé réel n’a été ouvert.':'Ces paramètres changent selon le produit et la plateforme.'}</small></article>
-  <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span><h5>Synthèse guidée du Module 09</h5><p class="foundation-guided-summary">${escapeHtml(summary.text)}</p><p><b>Question :</b> avec un levier ×5, une variation défavorable de 5 % limite-t-elle la perte à 5 % de la marge ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="derivatives_leverage_safe_yes" ${s5&&!cockpit.steps.note?'':'disabled'}>Oui</button><button type="button" data-foundation-action="derivatives_leverage_safe_no" ${s5&&!cockpit.steps.note?'':'disabled'}>Non</button></div><small>${e.derivatives_guided_conclusion?'Réponse enregistrée.':s5?'Le levier amplifie le résultat sur la marge.':'Disponible après la checklist dérivés.'}</small></article></div>`;
+  const evidence = cockpit.practice_evidence || {};
+  const summary = foundationDerivativesGuidedSummary(cockpit);
+  const step1Done = cockpit.steps.read === true;
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-derivatives-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · EXPOSITION</span>
+        <h5>100 € de marge avec un levier ×5</h5>
+        <p>Quelle exposition est créée ?</p>
+        <div class="foundation-choice-row">
+          <button type="button" data-foundation-action="derivatives_exposure_100" ${!step1Done || step2Done ? "disabled" : ""}>100 €</button>
+          <button type="button" data-foundation-action="derivatives_exposure_500" ${!step1Done || step2Done ? "disabled" : ""}>500 €</button>
+        </div>
+        <small>${evidence.derivatives_exposure_example ? "Preuve figée : 100 € ×5 = 500 € d’exposition." : "Le levier multiplie l’exposition, pas le solde disponible."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · MOUVEMENT DÉFAVORABLE</span>
+        <h5>Le marché baisse de 5 %</h5>
+        <p>Sur 500 € d’exposition, quelle perte brute approximative cela représente-t-il ?</p>
+        <div class="foundation-choice-row">
+          <button type="button" data-foundation-action="derivatives_loss_5" ${!step2Done || step3Done ? "disabled" : ""}>5 € · 5 % de la marge</button>
+          <button type="button" data-foundation-action="derivatives_loss_25" ${!step2Done || step3Done ? "disabled" : ""}>25 € · 25 % de la marge</button>
+        </div>
+        <small>${evidence.derivatives_loss_example ? "Preuve figée : −5 % × 500 € = −25 €, avant frais et funding." : "Le mouvement s’applique à l’exposition totale."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · LIQUIDATION</span>
+        <h5>Checklist dérivés</h5>
+        <ul class="foundation-guided-list"><li>Prix d’entrée, mark price et prix de liquidation.</li><li>Marge isolée ou croisée.</li><li>Funding, frais et taille.</li><li>Clôture sur marge et protection contre solde négatif lorsqu’applicable.</li><li>Produit, prestataire et autorisation vérifiés.</li></ul>
+        ${foundationButton(step4Done ? "Checklist dérivés enregistrée" : "Valider la checklist dérivés", "derivatives_validate_risks", !step3Done || step4Done)}
+        <small>${evidence.derivatives_risk_checklist ? "Aucun produit dérivé réel n’a été ouvert." : "Ces paramètres changent selon le produit et la plateforme."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 09</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> avec un levier ×5, une variation défavorable de 5 % limite-t-elle la perte à 5 % de la marge ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="derivatives_leverage_safe_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="derivatives_leverage_safe_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${evidence.derivatives_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Le levier amplifie le résultat sur la marge." : "Disponible après la checklist dérivés."}</small>
+      </article>
+    </div>`;
 }
 function foundationScamsGuidedSummary(cockpit) {
   const e=cockpit?.practice_evidence||{}; const red=e.scams_red_flags||null, stop=e.scams_stop_protocol||null, proof=e.scams_evidence_dossier||null; const ready=Boolean(cockpit?.steps?.verify&&red&&stop&&proof);
@@ -13226,12 +13289,44 @@ function foundationScamsGuidedSummary(cockpit) {
   return {ready,red,stop,proof,text};
 }
 function foundationScamsLab(cockpit) {
-  const e=cockpit.practice_evidence||{}, summary=foundationScamsGuidedSummary(cockpit),s2=cockpit.steps.open===true,s3=cockpit.steps.practice===true,s4=cockpit.steps.verify===true,s5=s4&&summary.ready;
-  return `<div class="foundation-lab-grid foundation-scams-guided-lab">
-  <article data-foundation-stage="2" class="foundation-lab-wide ${s2?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 2 · SIGNAUX ROUGES</span><h5>Message fictif reçu</h5><p>« Gain garanti, urgence, installez un accès distant, donnez le code et payez une taxe pour débloquer le retrait. »</p><div class="foundation-choice-row"><button type="button" data-foundation-action="scams_message_safe" ${s2?'disabled':''}>Conseiller rassurant</button><button type="button" data-foundation-action="scams_red_flags" ${s2?'disabled':''}>Plusieurs signaux d’arnaque</button></div><small>${e.scams_red_flags?'Urgence, garantie, accès distant, secret et paiement préalable enregistrés.':'Une présentation professionnelle ne neutralise pas ces signaux.'}</small></article>
-  <article data-foundation-stage="3" class="foundation-lab-wide ${s3?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 3 · ACTION IMMÉDIATE</span><h5>Que faire ?</h5><div class="foundation-choice-row"><button type="button" data-foundation-action="scams_continue_contact" ${!s2||s3?'disabled':''}>Continuer pour obtenir des explications</button><button type="button" data-foundation-action="scams_stop_official" ${!s2||s3?'disabled':''}>Stop · aucun secret · canal officiel ouvert manuellement</button></div><small>${e.scams_stop_protocol?'Protocole Stop enregistré.':'Ne jamais rester dans le canal fourni par l’interlocuteur suspect.'}</small></article>
-  <article data-foundation-stage="4" class="foundation-lab-wide ${s4?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 4 · PREUVES</span><h5>Dossier factuel</h5><ul class="foundation-guided-list"><li>URL et domaine exacts.</li><li>Messages, dates, captures et numéros utilisés.</li><li>Adresses publiques, TXID et justificatifs disponibles.</li><li>Signalement au service, à la banque ou aux autorités compétentes.</li><li>Aucun paiement de récupération improvisé.</li></ul>${foundationButton(s4?'Dossier de preuve enregistré':'Valider le dossier de preuve','scams_validate_evidence',!s3||s4)}<small>${e.scams_evidence_dossier?'Dossier fictif figé ; aucune donnée réelle collectée.':'Conserver sans relancer ni provoquer l’interlocuteur.'}</small></article>
-  <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span><h5>Synthèse guidée du Module 10</h5><p class="foundation-guided-summary">${escapeHtml(summary.text)}</p><p><b>Question :</b> l’absence d’un service dans une liste noire prouve-t-elle qu’il est autorisé et sûr ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="scams_blacklist_complete_yes" ${s5&&!cockpit.steps.note?'':'disabled'}>Oui</button><button type="button" data-foundation-action="scams_blacklist_complete_no" ${s5&&!cockpit.steps.note?'':'disabled'}>Non</button></div><small>${e.scams_guided_conclusion?'Réponse enregistrée.':s5?'Une liste noire n’est pas exhaustive.':'Disponible après le dossier de preuve.'}</small></article></div>`;
+  const evidence = cockpit.practice_evidence || {};
+  const summary = foundationScamsGuidedSummary(cockpit);
+  const step1Done = cockpit.steps.read === true;
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-scams-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · SIGNAUX ROUGES</span>
+        <h5>Message fictif reçu</h5>
+        <p>« Gain garanti, urgence, installez un accès distant, donnez le code et payez une taxe pour débloquer le retrait. »</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_message_safe" ${!step1Done || step2Done ? "disabled" : ""}>Conseiller rassurant</button><button type="button" data-foundation-action="scams_red_flags" ${!step1Done || step2Done ? "disabled" : ""}>Plusieurs signaux d’arnaque</button></div>
+        <small>${evidence.scams_red_flags ? "Urgence, garantie, accès distant, secret et paiement préalable enregistrés." : "Une présentation professionnelle ne neutralise pas ces signaux."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · ACTION IMMÉDIATE</span>
+        <h5>Que faire ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_continue_contact" ${!step2Done || step3Done ? "disabled" : ""}>Continuer pour obtenir des explications</button><button type="button" data-foundation-action="scams_stop_official" ${!step2Done || step3Done ? "disabled" : ""}>Stop · aucun secret · canal officiel ouvert manuellement</button></div>
+        <small>${evidence.scams_stop_protocol ? "Protocole Stop enregistré." : "Ne jamais rester dans le canal fourni par l’interlocuteur suspect."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · PREUVES</span>
+        <h5>Dossier factuel</h5>
+        <ul class="foundation-guided-list"><li>URL et domaine exacts.</li><li>Messages, dates, captures et numéros utilisés.</li><li>Adresses publiques, TXID et justificatifs disponibles.</li><li>Signalement au service, à la banque ou aux autorités compétentes.</li><li>Aucun paiement de récupération improvisé.</li></ul>
+        ${foundationButton(step4Done ? "Dossier de preuve enregistré" : "Valider le dossier de preuve", "scams_validate_evidence", !step3Done || step4Done)}
+        <small>${evidence.scams_evidence_dossier ? "Dossier fictif figé ; aucune donnée réelle collectée." : "Conserver sans relancer ni provoquer l’interlocuteur."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 10</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> l’absence d’un service dans une liste noire prouve-t-elle qu’il est autorisé et sûr ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_blacklist_complete_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="scams_blacklist_complete_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${evidence.scams_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Une liste noire n’est pas exhaustive." : "Disponible après le dossier de preuve."}</small>
+      </article>
+    </div>`;
 }
 function foundationRecordsGuidedSummary(cockpit) {
   const e=cockpit?.practice_evidence||{}; const schema=e.records_transaction_schema||null, integrity=e.records_evidence_integrity||null, routes=e.records_official_route_check||null; const ready=Boolean(cockpit?.steps?.verify&&schema&&integrity&&routes);
@@ -13239,12 +13334,43 @@ function foundationRecordsGuidedSummary(cockpit) {
   return {ready,schema,integrity,routes,text};
 }
 function foundationRecordsLab(cockpit) {
-  const e=cockpit.practice_evidence||{}, summary=foundationRecordsGuidedSummary(cockpit),s2=cockpit.steps.open===true,s3=cockpit.steps.practice===true,s4=cockpit.steps.verify===true,s5=s4&&summary.ready;
-  return `<div class="foundation-lab-grid foundation-records-guided-lab">
-  <article data-foundation-stage="2" class="foundation-lab-wide ${s2?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 2 · FICHE D’OPÉRATION</span><h5>Quel dossier est reconstructible ?</h5><div class="foundation-choice-row"><button type="button" data-foundation-action="records_minimal_note" ${s2?'disabled':''}>« Achat BTC · 50 € »</button><button type="button" data-foundation-action="records_complete_schema" ${s2?'disabled':''}>Date, plateforme, paire, sens, type, quantité, prix, frais, EUR et preuve</button></div><small>${e.records_transaction_schema?'Schéma complet enregistré sans compte réel.':'Un montant seul ne permet pas de refaire le calcul.'}</small></article>
-  <article data-foundation-stage="3" class="foundation-lab-wide ${s3?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 3 · INTÉGRITÉ</span><h5>Un prix ou des frais manquent</h5><div class="foundation-choice-row"><button type="button" data-foundation-action="records_invent_missing" ${!s2||s3?'disabled':''}>Estimer silencieusement</button><button type="button" data-foundation-action="records_mark_incomplete" ${!s2||s3?'disabled':''}>Marquer incomplet et retrouver la source</button></div><small>${e.records_evidence_integrity?'Règle d’intégrité enregistrée.':'Une hypothèse doit toujours être identifiée comme telle.'}</small></article>
-  <article data-foundation-stage="4" class="foundation-lab-wide ${s4?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 4 · REPÈRES OFFICIELS</span><h5>France · références à vérifier pour l’année concernée</h5><ul class="foundation-guided-list"><li>Exports de plateforme, relevés bancaires, factures et TXID.</li><li>Annexe 2086 : plus ou moins-values de cessions d’actifs numériques.</li><li>3916-3916 bis : certains comptes d’actifs numériques ouverts, détenus, utilisés ou clos à l’étranger.</li><li>Aucune qualification automatique d’une opération.</li><li>Aucun calcul fiscal personnalisé.</li></ul>${foundationButton(s4?'Repères officiels enregistrés':'Valider les repères officiels','records_validate_official_routes',!s3||s4)}<small>${e.records_official_route_check?'Références 2026 figées ; elles devront être revérifiées chaque année.':'Le cockpit prépare la preuve, pas la déclaration.'}</small></article>
-  <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note?'is-done':''}"><span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span><h5>Synthèse guidée du Module 11</h5><p class="foundation-guided-summary">${escapeHtml(summary.text)}</p><p><b>Question :</b> le journal local suffit-il à déterminer avec certitude l’impôt dû et à remplir seul la déclaration ?</p><div class="foundation-choice-row"><button type="button" data-foundation-action="records_journal_sufficient_yes" ${s5&&!cockpit.steps.note?'':'disabled'}>Oui</button><button type="button" data-foundation-action="records_journal_sufficient_no" ${s5&&!cockpit.steps.note?'':'disabled'}>Non</button></div><small>${e.records_guided_conclusion?'Réponse enregistrée.':s5?'Le journal fournit les faits ; la règle fiscale doit être vérifiée.':'Disponible après les repères officiels.'}</small></article></div>`;
+  const evidence = cockpit.practice_evidence || {};
+  const summary = foundationRecordsGuidedSummary(cockpit);
+  const step1Done = cockpit.steps.read === true;
+  const step2Done = cockpit.steps.open === true;
+  const step3Done = cockpit.steps.practice === true;
+  const step4Done = cockpit.steps.verify === true;
+  const step5Ready = step4Done && summary.ready;
+  return `
+    <div class="foundation-lab-grid foundation-records-guided-lab">
+      <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 2 · FICHE D’OPÉRATION</span>
+        <h5>Quel dossier est reconstructible ?</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="records_minimal_note" ${!step1Done || step2Done ? "disabled" : ""}>« Achat BTC · 50 € »</button><button type="button" data-foundation-action="records_complete_schema" ${!step1Done || step2Done ? "disabled" : ""}>Date, plateforme, paire, sens, type, quantité, prix, frais, EUR et preuve</button></div>
+        <small>${evidence.records_transaction_schema ? "Schéma complet enregistré sans compte réel." : "Un montant seul ne permet pas de refaire le calcul."}</small>
+      </article>
+      <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 3 · INTÉGRITÉ</span>
+        <h5>Un prix ou des frais manquent</h5>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="records_invent_missing" ${!step2Done || step3Done ? "disabled" : ""}>Estimer silencieusement</button><button type="button" data-foundation-action="records_mark_incomplete" ${!step2Done || step3Done ? "disabled" : ""}>Marquer incomplet et retrouver la source</button></div>
+        <small>${evidence.records_evidence_integrity ? "Règle d’intégrité enregistrée." : "Une hypothèse doit toujours être identifiée comme telle."}</small>
+      </article>
+      <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 4 · REPÈRES OFFICIELS</span>
+        <h5>France · références à vérifier pour l’année concernée</h5>
+        <ul class="foundation-guided-list"><li>Exports de plateforme, relevés bancaires, factures et TXID.</li><li>Annexe 2086 : plus ou moins-values de cessions d’actifs numériques.</li><li>3916-3916 bis : certains comptes d’actifs numériques ouverts, détenus, utilisés ou clos à l’étranger.</li><li>Aucune qualification automatique d’une opération.</li><li>Aucun calcul fiscal personnalisé.</li></ul>
+        ${foundationButton(step4Done ? "Repères officiels enregistrés" : "Valider les repères officiels", "records_validate_official_routes", !step3Done || step4Done)}
+        <small>${evidence.records_official_route_check ? "Références 2026 figées ; elles devront être revérifiées chaque année." : "Le cockpit prépare la preuve, pas la déclaration."}</small>
+      </article>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
+        <h5>Synthèse guidée du Module 11</h5>
+        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p><b>Question :</b> le journal local suffit-il à déterminer avec certitude l’impôt dû et à remplir seul la déclaration ?</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="records_journal_sufficient_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="records_journal_sufficient_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
+        <small>${evidence.records_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Le journal fournit les faits ; la règle fiscale doit être vérifiée." : "Disponible après les repères officiels."}</small>
+      </article>
+    </div>`;
 }
 function renderFoundationLearningPanel(cockpitInput = null) {
   const cockpit = cockpitInput || loadLearningCockpitState();
@@ -13265,15 +13391,16 @@ function renderFoundationLearningPanel(cockpitInput = null) {
     const renderLab = labs[module.key];
     els.learningFoundationLab.innerHTML = renderLab ? renderLab(cockpit) : "";
   }
-  const oldPath = cockpit.foundation_path_build !== ATLAS_FOUNDATION_LEARNING_BUILD;
+  const expectedPathBuild = foundationPathBuildForModule(module.key);
+  const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
-    ? `<b>Parcours 28.3.10 disponible</b><span>Le brouillon actuel vient d’un parcours antérieur. Le bouton unique « Repartir de zéro » remet exclusivement Agent-Crypto au Module 01 · 0/5 et réinitialise ses simulations fictives, sans toucher au navigateur ni aux autres interfaces BlueAzur.</span>`
-    : `<b>Parcours 28.3.10 actif</b><span>Chaque consigne nomme le panneau, le contrôle, le résultat et sa signification. Toute reprise du module recommence depuis l’étape 1.</span>`;
+    ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
+    : `<b>Parcours 28.3.11 actif</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at || !foundationIsActive(cockpit.module_key)) return cockpit;
-  cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
   cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
   if (evidenceKey) cockpit.practice_evidence[evidenceKey] = evidenceValue;
   cockpit.steps[step] = true;
@@ -13285,6 +13412,52 @@ function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   return cockpit;
 }
 function foundationFeedback(ok, title, text) { setActionFeedback(ok ? "ok" : "warn", title, text, els.learningFoundationPanel); }
+
+const ATLAS_FOUNDATION_ACTION_ORDER = Object.freeze({
+  account_stack_weak:"read", account_stack_strong:"read",
+  account_support_comply:"open", account_support_stop:"open",
+  account_validate_plan:"practice",
+  account_support_secret_yes:"verify", account_support_secret_no:"verify",
+  wallet_network_ethereum:"read", wallet_network_bitcoin:"read", wallet_network_solana:"read",
+  wallet_destination_third_party:"open", wallet_destination_independent:"open",
+  wallet_validate_test_trace:"practice",
+  wallet_network_mismatch_yes:"verify", wallet_network_mismatch_no:"verify",
+  tokenomics_stablecoin_riskfree_yes:"read", tokenomics_stablecoin_riskfree_no:"read",
+  tokenomics_valuation_wrong:"open", tokenomics_valuation_correct:"open",
+  tokenomics_validate_supply:"practice",
+  tokenomics_low_price_cheap_yes:"verify", tokenomics_low_price_cheap_no:"verify",
+  defi_read_balance:"read", defi_write_transaction:"read",
+  defi_approval_unlimited:"open", defi_approval_limited:"open",
+  defi_validate_dependencies:"practice",
+  defi_signature_harmless_yes:"verify", defi_signature_harmless_no:"verify",
+  yield_free_interest:"read", yield_source_rewards:"read",
+  yield_value_1080:"open", yield_value_756:"open",
+  yield_validate_risks:"practice",
+  yield_guaranteed_yes:"verify", yield_guaranteed_no:"verify",
+  derivatives_exposure_100:"read", derivatives_exposure_500:"read",
+  derivatives_loss_5:"open", derivatives_loss_25:"open",
+  derivatives_validate_risks:"practice",
+  derivatives_leverage_safe_yes:"verify", derivatives_leverage_safe_no:"verify",
+  scams_message_safe:"read", scams_red_flags:"read",
+  scams_continue_contact:"open", scams_stop_official:"open",
+  scams_validate_evidence:"practice",
+  scams_blacklist_complete_yes:"verify", scams_blacklist_complete_no:"verify",
+  records_minimal_note:"read", records_complete_schema:"read",
+  records_invent_missing:"open", records_mark_incomplete:"open",
+  records_validate_official_routes:"practice",
+  records_journal_sufficient_yes:"verify", records_journal_sufficient_no:"verify"
+});
+function foundationRequiredStepForAction(action) {
+  return ATLAS_FOUNDATION_ACTION_ORDER[action] || null;
+}
+function foundationOrderGate(cockpit, action) {
+  const requiredStep = foundationRequiredStepForAction(action);
+  if (!requiredStep || cockpit.steps?.[requiredStep] === true) return true;
+  const requiredIndex = ATLAS_LEARNING_SESSION_STEPS.indexOf(requiredStep) + 1;
+  const blockedIndex = requiredIndex + 1;
+  foundationFeedback(false, `Étape ${requiredIndex} requise`, `L’étape ${blockedIndex} reste verrouillée. Termine d’abord « ${learningStepLabel(requiredStep, cockpit.module_key)} ».`);
+  return false;
+}
 function restartLearningModuleFromStepOne(options = {}) {
   const previous = loadLearningCockpitState();
   if (previous.completed_at) {
@@ -13323,7 +13496,7 @@ function restartLearningModuleFromStepOne(options = {}) {
   next.module_key = module.key;
   next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   next.restart_build = ATLAS_LEARNING_FLOW_BUILD;
-  next.foundation_path_build = foundationIsActive(module.key) ? ATLAS_FOUNDATION_LEARNING_BUILD : null;
+  next.foundation_path_build = foundationIsActive(module.key) ? foundationPathBuildForModule(module.key) : null;
   next.last_action = "read";
   saveLearningCockpitState(next);
   atlasLearningReviewOpen = false;
@@ -13342,6 +13515,7 @@ function handleFoundationAction(action) {
     restartLearningModuleFromStepOne({ forceConfirm:true, source:"foundation_path_upgrade" });
     return;
   }
+  if (!foundationOrderGate(cockpit, action)) return;
   if (module.key === "market") {
     const summary = foundationMarketGuidedSummary(cockpit);
     if (action === "market_answer_prudent") action = "market_verify_source_time";
@@ -13358,21 +13532,21 @@ function handleFoundationAction(action) {
       if (!cockpit.steps.open || !summary.ready) return foundationFeedback(false, "Livecheck requis", "Clique sur « Lancer Livecheck » puis attends la source et l’heure avant de relever Bitcoin.");
       cockpit.steps.practice = true;
       cockpit.practice_evidence.market_btc_read = { price:summary.price, price_eur:Number(summary.btc?.price), change_24h:summary.change24, change_24h_pct:Number(summary.btc?.change24h), change_7d:summary.change7, change_7d_pct:Number(summary.btc?.change7d), validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "market_btc_values_recorded";
+      cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_btc_values_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", `Prix ${summary.price} · 24 h ${summary.change24} · 7 j ${summary.change7}.`);
     }
     if (action === "market_verify_source_time") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Relève d’abord Prix, 24 h et 7 j dans la carte précédente.");
       if (!summary.ready) return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
       cockpit.practice_evidence.market_source_time = { source:summary.source, time:summary.time, validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "market_source_time_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_source_time_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); setActionFeedback("ok", "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. Lis maintenant la synthèse guidée de l’étape 5.`, els.learningFoundationLab); return;
     }
     if (action === "market_prediction_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Les valeurs décrivent l’état observé à une heure donnée ; elles ne permettent pas de prédire avec certitude le prochain mouvement.");
     if (action === "market_prediction_no") {
       if (!cockpit.steps.verify || !summary.ready) return foundationFeedback(false, "Étape 4 requise", "Valide d’abord la source et l’heure.");
       cockpit.practice_evidence.market_guided_conclusion = true; cockpit.practice_evidence.market_guided_summary = summary.text; cockpit.practice_evidence.market_guided_answer = "non"; cockpit.practice_evidence.market_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "market_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 01 · 5/5", "La synthèse guidée est enregistrée. Ta note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13384,7 +13558,7 @@ function handleFoundationAction(action) {
       cockpit.practice_evidence[good[action][0]] = true; const e = cockpit.practice_evidence;
       if (e.spot_best_ask && e.spot_best_bid) cockpit.steps.open = true;
       if (e.spot_market_choice && e.spot_limit_choice) { cockpit.steps.practice = true; cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString(); }
-      cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Réponse correcte", `${good[action][1]}. Spread pédagogique : 60 010 € − 59 990 € = 20 €.`);
+      cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Réponse correcte", `${good[action][1]}. Spread pédagogique : 60 010 € − 59 990 € = 20 €.`);
     }
     if (action === "spot_run_safe_btc") { runFoundationSchoolPosition("spot"); return; }
     if (action === "spot_limit_guarantee_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Un ordre limite protège le prix choisi, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté.");
@@ -13392,7 +13566,7 @@ function handleFoundationAction(action) {
       const summary = foundationSpotGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Position requise", "Crée d’abord la position BTC fictive de 50 €.");
       cockpit.practice_evidence.spot_guided_conclusion = true; cockpit.practice_evidence.spot_guided_summary = summary.text; cockpit.practice_evidence.spot_guided_answer = "non"; cockpit.practice_evidence.spot_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "spot_guided_conclusion_validated"; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "spot_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 02 · 5/5", "La synthèse d’exécution est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13408,7 +13582,7 @@ function handleFoundationAction(action) {
       const summary = foundationRiskGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Scénarios requis", "Teste d’abord −3 % puis +5 %.");
       cockpit.practice_evidence.risk_guided_conclusion = true; cockpit.practice_evidence.risk_guided_summary = summary.text; cockpit.practice_evidence.risk_guided_answer = "oui"; cockpit.practice_evidence.risk_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "risk_guided_conclusion_validated"; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "risk_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 03 · 5/5", "La synthèse brut / net est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13416,20 +13590,20 @@ function handleFoundationAction(action) {
     if (action === "account_stack_weak") return foundationFeedback(false, "Protection insuffisante", "Réutiliser un mot de passe et dépendre d’un seul canal ne crée pas un socle indépendant.");
     if (action === "account_stack_strong") {
       cockpit.practice_evidence.account_security_stack = { password:"unique_long", authentication:"passkey_or_independent_2fa", email:"secured", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_security_stack_recorded";
+      cockpit.steps.open = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "account_security_stack_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Mot de passe unique, passkey/2FA et email sécurisé sont enregistrés comme plan fictif.");
     }
     if (action === "account_support_comply") return foundationFeedback(false, "Arrêt nécessaire", "Ne transmets aucun code et n’installe aucun accès distant. Coupe l’échange puis ouvre toi-même le canal officiel.");
     if (action === "account_support_stop") {
       if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Choisis d’abord le socle du compte.");
       cockpit.practice_evidence.account_support_response = { action:"stop_and_open_official_channel", secrets_shared:false, remote_access:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_fake_support_refused";
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "account_fake_support_refused";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Faux support refusé : aucun secret et aucun accès distant.");
     }
     if (action === "account_validate_plan") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Refuse d’abord le scénario de faux support.");
       cockpit.practice_evidence.account_security_plan = { sequence:["secure_email_and_unique_password","enable_passkey_or_2fa_and_recovery","revoke_unknown_sessions","enable_settings_or_withdrawal_lock"], real_account_modified:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_security_plan_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "account_security_plan_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Le plan de mise en sécurité est figé dans le carnet, sans modifier de compte réel.");
     }
     if (action === "account_support_secret_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Un support légitime ne doit recevoir ni mot de passe, ni code 2FA, ni phrase de récupération, ni accès distant.");
@@ -13437,7 +13611,7 @@ function handleFoundationAction(action) {
       const summary = foundationAccountGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Plan requis", "Valide d’abord le plan de mise en sécurité fictif.");
       cockpit.practice_evidence.account_guided_conclusion = true; cockpit.practice_evidence.account_guided_summary = summary.text; cockpit.practice_evidence.account_guided_answer = "non"; cockpit.practice_evidence.account_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "account_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "account_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 04 · 5/5", "La synthèse de sécurité du compte est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13445,20 +13619,20 @@ function handleFoundationAction(action) {
     if (["wallet_network_ethereum", "wallet_network_solana"].includes(action)) return foundationFeedback(false, "Réseau incorrect pour cet exercice", "Le retrait fictif porte sur BTC via le réseau Bitcoin. Le réseau doit correspondre à celui accepté par la destination.");
     if (action === "wallet_network_bitcoin") {
       cockpit.practice_evidence.wallet_network_match = { asset:"BTC", network:"Bitcoin", real_address_used:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_network_match_recorded";
+      cockpit.steps.open = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "wallet_network_match_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Paire fictive BTC / Bitcoin enregistrée.");
     }
     if (action === "wallet_destination_third_party") return foundationFeedback(false, "Destination refusée", "Une adresse dictée par un tiers sous pression ne doit pas être utilisée. Ouvre directement le service receveur.");
     if (action === "wallet_destination_independent") {
       if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Fais d’abord correspondre l’actif et le réseau.");
       cockpit.practice_evidence.wallet_destination_method = { source:"receiver_opened_independently", copy_paste:true, post_paste_check:true, third_party_address:false, real_address_used:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_destination_method_recorded";
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "wallet_destination_method_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Méthode de destination indépendante enregistrée, sans adresse réelle.");
     }
     if (action === "wallet_validate_test_trace") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Valide d’abord la méthode de destination indépendante.");
       cockpit.practice_evidence.wallet_test_trace = { minimum_checked:true, fee_checked:true, memo_tag_checked_if_required:true, small_test_first:true, txid_tracked:true, status_and_confirmations_tracked:true, real_transaction:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_test_trace_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "wallet_test_trace_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Petit test, frais, memo/tag éventuel, TXID et confirmations sont figés dans le plan fictif.");
     }
     if (action === "wallet_network_mismatch_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une adresse ressemblante ne rend pas compatible un réseau incorrect.");
@@ -13466,7 +13640,7 @@ function handleFoundationAction(action) {
       const summary = foundationWalletGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Plan requis", "Valide d’abord le petit test traçable.");
       cockpit.practice_evidence.wallet_guided_conclusion = true; cockpit.practice_evidence.wallet_guided_summary = summary.text; cockpit.practice_evidence.wallet_guided_answer = "non"; cockpit.practice_evidence.wallet_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "wallet_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "wallet_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 05 · 5/5", "La synthèse de retrait sécurisé est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13474,20 +13648,20 @@ function handleFoundationAction(action) {
     if (action === "tokenomics_stablecoin_riskfree_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une cible de parité dépend d’un mécanisme, de réserves, d’un émetteur ou protocole, de la liquidité et du remboursement ; un depeg reste possible.");
     if (action === "tokenomics_stablecoin_riskfree_no") {
       cockpit.practice_evidence.tokenomics_stablecoin_risk = { stable_target_not_guarantee:true, issuer_or_protocol_checked:true, reserves_and_redemption_checked:true, liquidity_and_depeg_checked:true, real_asset_selected:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_stablecoin_risk_recorded";
+      cockpit.steps.open = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "tokenomics_stablecoin_risk_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Stablecoin : cible de stabilité, réserves et remboursement à vérifier, risque de depeg conservé.");
     }
     if (action === "tokenomics_valuation_wrong") return foundationFeedback(false, "Calcul à revoir", "Capitalisation = 1 € × 100 M = 100 M€. FDV = 1 € × 1 Md = 1 Md€.");
     if (action === "tokenomics_valuation_correct") {
       if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Analyse d’abord le risque stablecoin.");
       cockpit.practice_evidence.tokenomics_valuation_example = { unit_price_eur:1, circulating_supply:100000000, max_supply:1000000000, market_cap_eur:100000000, fdv_eur:1000000000, model:"price_times_supply", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_valuation_recorded";
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "tokenomics_valuation_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Capitalisation 100 M€ et FDV 1 Md€ enregistrées.");
     }
     if (action === "tokenomics_validate_supply") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Calcule d’abord capitalisation et FDV.");
       cockpit.practice_evidence.tokenomics_supply_checklist = { unlock_calendar:true, emissions_and_inflation:true, burn:true, holder_concentration:true, circulating_vs_max_supply:true, dated_official_sources:true, buy_score_generated:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_supply_checklist_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "tokenomics_supply_checklist_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Unlocks, émissions, burn, concentration, offre et sources sont figés sans score d’achat.");
     }
     if (action === "tokenomics_low_price_cheap_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Le prix unitaire doit être multiplié par l’offre et complété par la FDV, les unlocks, l’inflation et la concentration.");
@@ -13495,7 +13669,7 @@ function handleFoundationAction(action) {
       const summary = foundationTokenomicsGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord la checklist tokenomics.");
       cockpit.practice_evidence.tokenomics_guided_conclusion = true; cockpit.practice_evidence.tokenomics_guided_summary = summary.text; cockpit.practice_evidence.tokenomics_guided_answer = "non"; cockpit.practice_evidence.tokenomics_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "tokenomics_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "tokenomics_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 06 · 5/5", "La synthèse stablecoin / valorisation est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13503,20 +13677,20 @@ function handleFoundationAction(action) {
     if (action === "defi_read_balance") return foundationFeedback(false, "Lecture seulement", "Consulter un solde lit un état existant. L’action qui peut modifier la chaîne est la transaction d’écriture signée et envoyée.");
     if (action === "defi_write_transaction") {
       cockpit.practice_evidence.defi_interaction_type = { read_changes_state:false, write_transaction_changes_state:true, gas_may_apply:true, real_transaction:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_interaction_type_recorded";
+      cockpit.steps.open = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "defi_interaction_type_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Lecture et écriture distinguées ; aucune transaction réelle.");
     }
     if (action === "defi_approval_unlimited") return foundationFeedback(false, "Autorisation trop large", "Une approval illimitée par défaut dépasse l’usage compris. Le moindre privilège limite montant, contrat et finalité.");
     if (action === "defi_approval_limited") {
       if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Distingue d’abord lecture et écriture.");
       cockpit.practice_evidence.defi_approval_scope = { allowance_limited:true, contract_verified_before_use:true, purpose_understood:true, unlimited_default_refused:true, real_approval:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_approval_scope_recorded";
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "defi_approval_scope_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "Approval limitée au montant et à l’usage compris, sans wallet réel.");
     }
     if (action === "defi_validate_dependencies") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Choisis d’abord une approval limitée.");
       cockpit.practice_evidence.defi_dependency_checklist = { domain:true, network:true, contract_address:true, function_and_recipient:true, amount_and_allowance:true, gas:true, oracle_and_liquidity:true, bridge_or_dependencies:true, real_signature:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_dependencies_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "defi_dependencies_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Contrat, fonction, réseau, gas, oracle, liquidité et bridge éventuel sont figés dans la checklist fictive.");
     }
     if (action === "defi_signature_harmless_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Une signature ou transaction peut accorder une permission ou exécuter une fonction sans révéler la phrase de récupération.");
@@ -13524,7 +13698,7 @@ function handleFoundationAction(action) {
       const summary = foundationDefiGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord contrat et dépendances.");
       cockpit.practice_evidence.defi_guided_conclusion = true; cockpit.practice_evidence.defi_guided_summary = summary.text; cockpit.practice_evidence.defi_guided_answer = "non"; cockpit.practice_evidence.defi_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "defi_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "defi_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 07 · 5/5", "La synthèse smart contract / DeFi est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
@@ -13532,20 +13706,20 @@ function handleFoundationAction(action) {
     if (action === "yield_free_interest") return foundationFeedback(false, "Source manquante", "Un rendement n’est pas gratuit. Il faut identifier protocole, frais, émissions ou prêt, puis leurs risques.");
     if (action === "yield_source_rewards") {
       cockpit.practice_evidence.yield_source_model = { protocol_rewards:true, fees_or_emissions_possible:true, lending_counterparty_possible:true, free_guaranteed_interest:false, real_product_selected:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.open = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_source_model_recorded";
+      cockpit.steps.open = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "yield_source_model_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 2 validée", "Source et hypothèses du rendement enregistrées comme éléments à vérifier.");
     }
     if (action === "yield_value_1080") return foundationFeedback(false, "Calcul à revoir", "108 jetons × 7 € = 756 €, pas 1 080 €. La quantité augmente mais le prix baisse.");
     if (action === "yield_value_756") {
       if (!cockpit.steps.open) return foundationFeedback(false, "Étape 2 requise", "Identifie d’abord la source du rendement.");
       cockpit.practice_evidence.yield_nominal_vs_euro = { initial_tokens:100, initial_price_eur:10, initial_value_eur:1000, reward_rate_pct:8, final_tokens:108, final_price_eur:7, final_value_eur:756, pnl_eur:-244, pnl_pct:-24.4, model:"token_quantity_times_reference_price", captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_nominal_vs_euro_recorded";
+      cockpit.steps.practice = true; cockpit.practice_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "yield_nominal_vs_euro_recorded";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 3 validée", "108 jetons × 7 € = 756 € ; perte fictive de 244 € soit 24,4 %.");
     }
     if (action === "yield_validate_risks") {
       if (!cockpit.steps.practice) return foundationFeedback(false, "Étape 3 requise", "Calcule d’abord la valeur finale en euros.");
       cockpit.practice_evidence.yield_risk_checklist = { lockup_and_withdrawal_delay:true, penalties_and_slashing:true, inflation_and_reward_asset:true, costs_and_liquidity:true, smart_contract:true, provider_and_custody:true, real_staking:false, captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
-      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_risks_verified";
+      cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "yield_risks_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Étape 4 validée", "Blocage, retrait, slashing, inflation, coûts, contrat et prestataire sont figés sans staking réel.");
     }
     if (action === "yield_guaranteed_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Le taux nominal ne neutralise ni la baisse du prix, ni l’inflation, ni les coûts, ni les risques ou délais de retrait.");
@@ -13553,36 +13727,36 @@ function handleFoundationAction(action) {
       const summary = foundationYieldGuidedSummary(cockpit);
       if (!summary.ready) return foundationFeedback(false, "Checklist requise", "Valide d’abord la checklist de rendement.");
       cockpit.practice_evidence.yield_guided_conclusion = true; cockpit.practice_evidence.yield_guided_summary = summary.text; cockpit.practice_evidence.yield_guided_answer = "non"; cockpit.practice_evidence.yield_guided_validated_at = new Date().toISOString();
-      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action = "yield_guided_conclusion_validated";
+      cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "yield_guided_conclusion_validated";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 08 · 5/5", "La synthèse staking / rendement est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
   if (module.key === "derivatives") {
     if (action === "derivatives_exposure_100") return foundationFeedback(false,"Calcul à revoir","100 € est la marge. Avec un levier ×5, l’exposition est 500 €.");
-    if (action === "derivatives_exposure_500") { cockpit.practice_evidence.derivatives_exposure_example={margin_eur:100,leverage:5,exposure_eur:500,real_position:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="derivatives_exposure_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","100 € ×5 = 500 € d’exposition fictive."); }
+    if (action === "derivatives_exposure_500") { cockpit.practice_evidence.derivatives_exposure_example={margin_eur:100,leverage:5,exposure_eur:500,real_position:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="derivatives_exposure_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","100 € ×5 = 500 € d’exposition fictive."); }
     if (action === "derivatives_loss_5") return foundationFeedback(false,"Calcul à revoir","5 % de 500 € représentent 25 €, pas 5 €.");
-    if (action === "derivatives_loss_25") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Calcule d’abord l’exposition."); cockpit.practice_evidence.derivatives_loss_example={market_move_pct:-5,exposure_eur:500,pnl_eur:-25,margin_eur:100,pnl_on_margin_pct:-25,before_fees_and_funding:true,real_position:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="derivatives_loss_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","−5 % sur 500 € = −25 €, soit −25 % de la marge de 100 €, avant coûts."); }
-    if (action === "derivatives_validate_risks") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Calcule d’abord la perte sur marge."); cockpit.practice_evidence.derivatives_risk_checklist={entry_price:true,mark_price:true,liquidation_price:true,isolated_or_cross_margin:true,funding_and_fees:true,position_size:true,margin_closeout_and_negative_balance_protection_when_applicable:true,provider_authorisation_check:true,real_derivative:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="derivatives_risks_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Mark price, liquidation, marge, funding, frais et protections sont figés sans produit réel."); }
+    if (action === "derivatives_loss_25") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Calcule d’abord l’exposition."); cockpit.practice_evidence.derivatives_loss_example={market_move_pct:-5,exposure_eur:500,pnl_eur:-25,margin_eur:100,pnl_on_margin_pct:-25,before_fees_and_funding:true,real_position:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="derivatives_loss_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","−5 % sur 500 € = −25 €, soit −25 % de la marge de 100 €, avant coûts."); }
+    if (action === "derivatives_validate_risks") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Calcule d’abord la perte sur marge."); cockpit.practice_evidence.derivatives_risk_checklist={entry_price:true,mark_price:true,liquidation_price:true,isolated_or_cross_margin:true,funding_and_fees:true,position_size:true,margin_closeout_and_negative_balance_protection_when_applicable:true,provider_authorisation_check:true,real_derivative:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="derivatives_risks_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Mark price, liquidation, marge, funding, frais et protections sont figés sans produit réel."); }
     if (action === "derivatives_leverage_safe_yes") return foundationFeedback(false,"Réponse à revoir","Non. Dans l’exemple, −5 % sur le marché produit environ −25 % sur la marge avant coûts.");
-    if (action === "derivatives_leverage_safe_no") { const summary=foundationDerivativesGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Checklist requise","Valide d’abord la checklist dérivés."); cockpit.practice_evidence.derivatives_guided_conclusion=true; cockpit.practice_evidence.derivatives_guided_summary=summary.text; cockpit.practice_evidence.derivatives_guided_answer="non"; cockpit.practice_evidence.derivatives_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="derivatives_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 09 · 5/5","La synthèse dérivés est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
+    if (action === "derivatives_leverage_safe_no") { const summary=foundationDerivativesGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Checklist requise","Valide d’abord la checklist dérivés."); cockpit.practice_evidence.derivatives_guided_conclusion=true; cockpit.practice_evidence.derivatives_guided_summary=summary.text; cockpit.practice_evidence.derivatives_guided_answer="non"; cockpit.practice_evidence.derivatives_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="derivatives_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 09 · 5/5","La synthèse dérivés est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
   }
   if (module.key === "scams") {
     if (action === "scams_message_safe") return foundationFeedback(false,"Alerte critique","Garantie, urgence, accès distant, code et paiement préalable sont plusieurs signaux d’arnaque.");
-    if (action === "scams_red_flags") { cockpit.practice_evidence.scams_red_flags={guaranteed_return:true,artificial_urgency:true,remote_access_request:true,secret_or_code_request:true,imposed_address:true,recovery_fee:true,real_entity_assessed:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="scams_red_flags_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","Les signaux rouges sont enregistrés sans certifier un site réel."); }
+    if (action === "scams_red_flags") { cockpit.practice_evidence.scams_red_flags={guaranteed_return:true,artificial_urgency:true,remote_access_request:true,secret_or_code_request:true,imposed_address:true,recovery_fee:true,real_entity_assessed:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="scams_red_flags_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","Les signaux rouges sont enregistrés sans certifier un site réel."); }
     if (action === "scams_continue_contact") return foundationFeedback(false,"Stop","Ne continue pas dans le canal suspect. Coupe l’échange et ouvre toi-même le canal officiel.");
-    if (action === "scams_stop_official") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Identifie d’abord les signaux rouges."); cockpit.practice_evidence.scams_stop_protocol={send_nothing:true,sign_nothing:true,share_no_code_or_seed:true,stop_remote_access:true,open_official_channel_independently:true,real_contact:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="scams_stop_protocol_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","Stop, aucun secret, aucune signature et canal officiel indépendant."); }
-    if (action === "scams_validate_evidence") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Applique d’abord le protocole Stop."); cockpit.practice_evidence.scams_evidence_dossier={url_and_domain:true,messages_dates_screenshots:true,public_addresses_and_txid_when_available:true,payment_proofs:true,official_reports:true,no_recovery_fee:true,no_real_personal_data:true,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="scams_evidence_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Dossier fictif conservé sans donnée réelle ni service de récupération improvisé."); }
+    if (action === "scams_stop_official") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Identifie d’abord les signaux rouges."); cockpit.practice_evidence.scams_stop_protocol={send_nothing:true,sign_nothing:true,share_no_code_or_seed:true,stop_remote_access:true,open_official_channel_independently:true,real_contact:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="scams_stop_protocol_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","Stop, aucun secret, aucune signature et canal officiel indépendant."); }
+    if (action === "scams_validate_evidence") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Applique d’abord le protocole Stop."); cockpit.practice_evidence.scams_evidence_dossier={url_and_domain:true,messages_dates_screenshots:true,public_addresses_and_txid_when_available:true,payment_proofs:true,official_reports:true,no_recovery_fee:true,no_real_personal_data:true,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="scams_evidence_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Dossier fictif conservé sans donnée réelle ni service de récupération improvisé."); }
     if (action === "scams_blacklist_complete_yes") return foundationFeedback(false,"Réponse à revoir","Non. Les autorités précisent que les listes noires sont mises à jour mais ne sont pas exhaustives.");
-    if (action === "scams_blacklist_complete_no") { const summary=foundationScamsGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Dossier requis","Valide d’abord le dossier de preuve."); cockpit.practice_evidence.scams_guided_conclusion=true; cockpit.practice_evidence.scams_guided_summary=summary.text; cockpit.practice_evidence.scams_guided_answer="non"; cockpit.practice_evidence.scams_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="scams_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 10 · 5/5","La synthèse anti-arnaque est enregistrée. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
+    if (action === "scams_blacklist_complete_no") { const summary=foundationScamsGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Dossier requis","Valide d’abord le dossier de preuve."); cockpit.practice_evidence.scams_guided_conclusion=true; cockpit.practice_evidence.scams_guided_summary=summary.text; cockpit.practice_evidence.scams_guided_answer="non"; cockpit.practice_evidence.scams_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="scams_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 10 · 5/5","La synthèse anti-arnaque est enregistrée. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
   }
   if (module.key === "records") {
     if (action === "records_minimal_note") return foundationFeedback(false,"Dossier incomplet","« Achat BTC · 50 € » ne contient ni quantité, ni prix, ni frais, ni date, ni référence de preuve.");
-    if (action === "records_complete_schema") { cockpit.practice_evidence.records_transaction_schema={date_time:true,platform_or_wallet:true,pair_or_asset:true,direction_and_operation_type:true,order_type:true,quantity:true,average_price:true,fees:true,euro_value:true,evidence_reference:true,real_account_imported:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="records_schema_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","Le schéma de fiche reconstructible est enregistré."); }
+    if (action === "records_complete_schema") { cockpit.practice_evidence.records_transaction_schema={date_time:true,platform_or_wallet:true,pair_or_asset:true,direction_and_operation_type:true,order_type:true,quantity:true,average_price:true,fees:true,euro_value:true,evidence_reference:true,real_account_imported:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.open=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="records_schema_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 2 validée","Le schéma de fiche reconstructible est enregistré."); }
     if (action === "records_invent_missing") return foundationFeedback(false,"Intégrité refusée","Une valeur estimée silencieusement ne peut pas devenir une preuve.");
-    if (action === "records_mark_incomplete") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Construis d’abord la fiche complète."); cockpit.practice_evidence.records_evidence_integrity={missing_value_marked_incomplete:true,source_retrieval_required:true,estimate_must_be_labelled:true,no_silent_invention:true,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="records_integrity_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","Valeur manquante = dossier incomplet jusqu’au retour à la source."); }
-    if (action === "records_validate_official_routes") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Valide d’abord la règle d’intégrité."); cockpit.practice_evidence.records_official_route_check={country_context:"France",reference_year:2026,form_2086_reference:true,form_3916_3916_bis_reference:true,annual_rule_check_required:true,activity_and_household_context_required:true,tax_calculation_performed:false,personalized_tax_advice:false,real_tax_data:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="records_official_routes_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Repères officiels 2026 enregistrés sans calcul fiscal personnalisé."); }
+    if (action === "records_mark_incomplete") { if(!cockpit.steps.open)return foundationFeedback(false,"Étape 2 requise","Construis d’abord la fiche complète."); cockpit.practice_evidence.records_evidence_integrity={missing_value_marked_incomplete:true,source_retrieval_required:true,estimate_must_be_labelled:true,no_silent_invention:true,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.practice=true; cockpit.practice_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="records_integrity_recorded"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 3 validée","Valeur manquante = dossier incomplet jusqu’au retour à la source."); }
+    if (action === "records_validate_official_routes") { if(!cockpit.steps.practice)return foundationFeedback(false,"Étape 3 requise","Valide d’abord la règle d’intégrité."); cockpit.practice_evidence.records_official_route_check={country_context:"France",reference_year:2026,form_2086_reference:true,form_3916_3916_bis_reference:true,annual_rule_check_required:true,activity_and_household_context_required:true,tax_calculation_performed:false,personalized_tax_advice:false,real_tax_data:false,captured_at:new Date().toISOString(),build:ATLAS_FOUNDATION_VALIDATION_BUILD,evidence_mode:"frozen_at_validation"}; cockpit.steps.verify=true; cockpit.verify_completed_at=new Date().toISOString(); cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="records_official_routes_verified"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true,"Étape 4 validée","Repères officiels 2026 enregistrés sans calcul fiscal personnalisé."); }
     if (action === "records_journal_sufficient_yes") return foundationFeedback(false,"Réponse à revoir","Non. Le journal prépare les faits ; les règles applicables et la situation réelle doivent être vérifiées.");
-    if (action === "records_journal_sufficient_no") { const summary=foundationRecordsGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Repères requis","Valide d’abord les repères officiels."); cockpit.practice_evidence.records_guided_conclusion=true; cockpit.practice_evidence.records_guided_summary=summary.text; cockpit.practice_evidence.records_guided_answer="non"; cockpit.practice_evidence.records_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=ATLAS_FOUNDATION_LEARNING_BUILD; cockpit.last_action="records_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 11 · 5/5","La synthèse de traçabilité est enregistrée. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
+    if (action === "records_journal_sufficient_no") { const summary=foundationRecordsGuidedSummary(cockpit); if(!summary.ready)return foundationFeedback(false,"Repères requis","Valide d’abord les repères officiels."); cockpit.practice_evidence.records_guided_conclusion=true; cockpit.practice_evidence.records_guided_summary=summary.text; cockpit.practice_evidence.records_guided_answer="non"; cockpit.practice_evidence.records_guided_validated_at=new Date().toISOString(); cockpit.takeaway=summary.text; cockpit.steps.note=true; cockpit.foundation_path_build=foundationPathBuildForModule(cockpit.module_key); cockpit.last_action="records_guided_conclusion_validated"; saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok","Module 11 · 5/5","La synthèse de traçabilité est enregistrée. Utilise maintenant « Terminer et archiver le module ».",els.learningCompletionAction); return; }
   }
 
 
@@ -13653,7 +13827,7 @@ async function runFoundationLivecheck() {
     validated_at: new Date().toISOString(),
     build: ATLAS_FOUNDATION_VALIDATION_BUILD
   };
-  cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
   cockpit.last_action = "livecheck_validated";
   saveLearningCockpitState(cockpit);
   clearTimeout(atlasLearningStoragePersistTimer);
@@ -13749,21 +13923,23 @@ function learningRoadmapStats() {
   });
   return { data, discovered, practiced, percent:maxScore ? Math.round(score / maxScore * 100) : 0 };
 }
+function learningJourneyIsComplete(stats = learningRoadmapStats()) {
+  return stats.practiced === ATLAS_EXPERT_ROADMAP_MODULES.length;
+}
 function recommendedLearningModule() {
   const stats = learningRoadmapStats();
   const review = ATLAS_EXPERT_ROADMAP_MODULES.find(module => stats.data.modules[module.key].status === "review");
   if (review) return review;
   const fresh = ATLAS_EXPERT_ROADMAP_MODULES.find(module => stats.data.modules[module.key].status === "new");
   if (fresh) return fresh;
-  const unfinished = ATLAS_EXPERT_ROADMAP_MODULES.find(module => stats.data.modules[module.key].status !== "practiced");
-  return unfinished || ATLAS_EXPERT_ROADMAP_MODULES[0];
+  return ATLAS_EXPERT_ROADMAP_MODULES.find(module => stats.data.modules[module.key].status !== "practiced") || null;
 }
 function latestLearningProof() {
   if (!state.sim) loadSimulation();
   return transactionProofEntries("all")[0] || null;
 }
 function learningModuleByKey(key) {
-  return ATLAS_EXPERT_ROADMAP_MODULES.find(module => module.key === key) || recommendedLearningModule();
+  return ATLAS_EXPERT_ROADMAP_MODULES.find(module => module.key === key) || recommendedLearningModule() || ATLAS_EXPERT_ROADMAP_MODULES[0];
 }
 function learningStepLabel(key, moduleKey = null) {
   const module = moduleKey ? learningModuleByKey(moduleKey) : null;
@@ -13795,11 +13971,13 @@ function restoreReopenedArchivedLearningSession(cockpit) {
   };
 }
 function learningModuleAfterCompleted(cockpit) {
+  const stats = learningRoadmapStats();
+  if (learningJourneyIsComplete(stats)) return null;
   const current = learningModuleByKey(cockpit.module_key);
   const recommended = recommendedLearningModule();
   if (recommended?.key && recommended.key !== current.key) return recommended;
   const index = ATLAS_EXPERT_ROADMAP_MODULES.findIndex(module => module.key === current.key);
-  return ATLAS_EXPERT_ROADMAP_MODULES[index + 1] || ATLAS_EXPERT_ROADMAP_MODULES[0];
+  return ATLAS_EXPERT_ROADMAP_MODULES[index + 1] || null;
 }
 function learningActionState(cockpit) {
   const module = learningModuleByKey(cockpit.module_key);
@@ -13807,7 +13985,15 @@ function learningActionState(cockpit) {
   const foundation = ATLAS_FOUNDATION_LEARNING_PATHS[module.key] || null;
   if (cockpit.completed_at) {
     const next = learningModuleAfterCompleted(cockpit);
-    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.10 peut être relu sans modifier l’archive.`, next };
+    if (!next) return {
+      key:"journey_complete",
+      step:"Parcours terminé · 11/11",
+      title:"Parcours pédagogique terminé · 11/11",
+      label:"Voir mon carnet complet",
+      text:"Les onze modules sont pratiqués et archivés. Aucune nouvelle session Module 01 n’est créée automatiquement.",
+      next:null
+    };
+    return { key:"next_module", step:"Session archivée", title:learningModuleButtonLabel(next), label:learningModuleButtonLabel(next), text:`La séance ${module.title} reste figée dans le carnet. Le parcours détaillé 28.3.11 peut être relu sans modifier l’archive.`, next };
   }
   if (foundation) {
     const labels = {
@@ -13880,8 +14066,8 @@ function renderLearningCompletionPanel(cockpit, stats) {
   if (els.learningCompletionTakeaway) els.learningCompletionTakeaway.textContent = `${takeaway} caractère${takeaway > 1 ? "s" : ""}`;
   if (els.learningCompletionProgress) els.learningCompletionProgress.textContent = `${stats.percent} %`;
   if (els.learningCompletionSessions) els.learningCompletionSessions.textContent = `${cockpit.completed_sessions} session${cockpit.completed_sessions > 1 ? "s" : ""} archivée${cockpit.completed_sessions > 1 ? "s" : ""}`;
-  if (els.learningCompletionNextModule) els.learningCompletionNextModule.textContent = next.title;
-  if (els.btnLearningNextModule) els.btnLearningNextModule.textContent = learningModuleButtonLabel(next);
+  if (els.learningCompletionNextModule) els.learningCompletionNextModule.textContent = next ? next.title : "Parcours pédagogique terminé · 11/11";
+  if (els.btnLearningNextModule) els.btnLearningNextModule.textContent = next ? learningModuleButtonLabel(next) : "Voir mon carnet complet";
 }
 function renderLearningExerciseGuide(cockpitInput = null) {
   if (!els.learningExerciseGuide) return;
@@ -13956,8 +14142,9 @@ function renderLearningJourneyCockpit() {
   if (stateChanged) saveLearningCockpitState(cockpit);
   const completedSteps = ATLAS_LEARNING_SESSION_STEPS.filter(key => cockpit.steps[key]).length;
   const finished = Boolean(cockpit.completed_at);
+  const journeyComplete = finished && learningJourneyIsComplete(stats);
   const action = learningActionState(cockpit);
-  els.learningCockpitStatus.textContent = finished ? `Session archivée · ${cockpit.completed_sessions}` : `${completedSteps}/5 étapes`;
+  els.learningCockpitStatus.textContent = journeyComplete ? "Parcours terminé · 11/11" : finished ? `Session archivée · ${cockpit.completed_sessions}` : `${completedSteps}/5 étapes`;
   els.learningCockpitStatus.className = finished ? "pill ok" : completedSteps ? "pill warn" : "pill ok";
   if (els.learningCockpitProfile) els.learningCockpitProfile.textContent = SIM_PROFILE.label;
   if (els.learningCockpitCapital) els.learningCockpitCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels · ticket ${fmtEUR.format(SIM_PROFILE.defaultAmount)}`;
@@ -13967,9 +14154,16 @@ function renderLearningJourneyCockpit() {
   if (els.learningCockpitExposure) els.learningCockpitExposure.textContent = `${fmtEUR.format(totals.positionsValue)} exposé · ${fmtEUR.format(state.sim.cash)} disponible`;
   if (els.learningCockpitLastProof) els.learningCockpitLastProof.textContent = latest ? `${proofTypeLabel(latest.type)} · ${latest.symbol || "—"} · ${Number.isFinite(Number(latest.amount_eur)) ? fmtEUR.format(Number(latest.amount_eur)) : "—"}` : "Aucune simulation";
   if (els.learningCockpitLastProofTime) els.learningCockpitLastProofTime.textContent = latest?.time ? new Date(latest.time).toLocaleString("fr-FR") : "Journal local vide";
-  if (els.learningCockpitModule) els.learningCockpitModule.textContent = finished ? `${recommended.title} · terminé` : recommended.title;
-  if (els.learningCockpitGoal) els.learningCockpitGoal.textContent = finished ? `Cette séance est figée dans le carnet. Prochaine destination : ${learningModuleAfterCompleted(cockpit).title}.` : recommended.goal;
-  if (els.learningCockpitModuleState) els.learningCockpitModuleState.textContent = ATLAS_EXPERT_STATUS_META[item.status]?.label || "À découvrir";
+  if (els.learningCockpitModule) els.learningCockpitModule.textContent = journeyComplete ? "Parcours pédagogique terminé · 11/11" : finished ? `${recommended.title} · terminé` : recommended.title;
+  if (els.learningCockpitGoal) {
+    const nextModule = finished ? learningModuleAfterCompleted(cockpit) : null;
+    els.learningCockpitGoal.textContent = journeyComplete
+      ? "Les onze modules sont archivés. Relis ou exporte le carnet ; aucune reprise automatique du Module 01."
+      : finished
+        ? `Cette séance est figée dans le carnet. Prochaine destination : ${nextModule?.title || "carnet complet"}.`
+        : recommended.goal;
+  }
+  if (els.learningCockpitModuleState) els.learningCockpitModuleState.textContent = journeyComplete ? "Terminé" : ATLAS_EXPERT_STATUS_META[item.status]?.label || "À découvrir";
   if (els.learningCockpitDuration) els.learningCockpitDuration.textContent = `Session 15 min · ${cockpit.completed_sessions} archivée${cockpit.completed_sessions > 1 ? "s" : ""}`;
   if (els.learningCockpitRisk) els.learningCockpitRisk.textContent = "100 % fictif · aucun risque financier";
   if (els.learningSessionTitle) els.learningSessionTitle.textContent = `${recommended.title} · session guidée`;
@@ -14082,8 +14276,10 @@ function renderLearningJourneyCockpit() {
   if (els.learningSecondaryActions) els.learningSecondaryActions.hidden = false;
   if (els.learningCockpitReading) {
     const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]).map(key => learningStepLabel(key, recommended.key));
-    els.learningCockpitReading.textContent = finished
-      ? `Session archivée intégralement. Utilise « Passer au module suivant » : aucune étape terminée ne sera remise à zéro.`
+    els.learningCockpitReading.textContent = journeyComplete
+      ? "Parcours pédagogique terminé · 11/11. Les archives restent intactes ; utilise le carnet complet pour relire ou exporter."
+      : finished
+        ? `Session archivée intégralement. Utilise « Passer au module suivant » : aucune étape terminée ne sera remise à zéro.`
       : repaired.repaired
         ? `La séance déjà archivée a été restaurée après l’ancien bouton « Continuer mon parcours ». Aucun doublon n’a été créé.`
         : completedSteps === 0
@@ -14128,7 +14324,7 @@ function markIntegratedLessonRead() {
   cockpit.steps.read = true;
   cockpit.lesson_read_at = cockpit.lesson_read_at || new Date().toISOString();
   cockpit.last_action = "read";
-  if (foundationIsActive(cockpit.module_key)) cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  if (foundationIsActive(cockpit.module_key)) cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
@@ -14238,14 +14434,14 @@ function recordLearningPracticeEvidence(kind, value = true) {
       cockpit.steps.verify = true;
       cockpit.verify_completed_at = cockpit.verify_completed_at || new Date().toISOString();
     }
-    cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+    cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
   }
   if (module.key === "spot" && kind === "spot_position") {
     if (cockpit.steps.practice) {
       cockpit.steps.verify = true;
       cockpit.verify_completed_at = cockpit.verify_completed_at || new Date().toISOString();
     }
-    cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+    cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
   }
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(cockpit);
@@ -14386,7 +14582,7 @@ function handleLearningPrimaryAction() {
     scrollToLearningTarget("learningCompletionAction");
     setActionFeedback("info", "Archivage séparé", "Clique sur « Terminer et archiver le module ». L’application écrira puis relira l’archive avant d’annoncer la réussite.", els.learningCompletionAction);
   }
-  else if (action.key === "next_module") startNextLearningModule();
+  else if (action.key === "next_module" || action.key === "journey_complete") startNextLearningModule();
 }
 function learningSessionSnapshot(cockpit) {
   const module = learningModuleByKey(cockpit.module_key);
@@ -14468,7 +14664,7 @@ async function completeLearningSession() {
   }
 
   if (els.btnCompleteLearningSession) els.btnCompleteLearningSession.disabled = true;
-  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_10");
+  const persisted = await atlasLearningPersistNow("complete_learning_session_28_3_11");
   const persistedHistory = Array.isArray(persisted?.record?.history) ? persisted.record.history : [];
   const persistedArchive = persistedHistory.find(entry => entry?.session_id === cockpit.session_id && entry?.completed_at);
   const persistedRoadmap = persisted?.record?.roadmap?.modules?.[moduleKey] || null;
@@ -14508,6 +14704,14 @@ function startNextLearningModule() {
     return;
   }
   const nextModule = learningModuleAfterCompleted(previous);
+  if (!nextModule) {
+    atlasLearningReviewOpen = false;
+    renderExpertRoadmap();
+    renderLearningJourneyCockpit();
+    scrollToLearningTarget("expertLearningRoadmap");
+    setActionFeedback("ok", "Parcours pédagogique terminé · 11/11", "Les onze modules sont pratiqués et archivés. Aucune session Module 01 n’a été recréée. Relis ou exporte maintenant le carnet complet.", els.expertRoadmapGrid || els.learningCompletionPanel);
+    return { ok:true, journey_complete:true };
+  }
   const next = defaultLearningCockpitState();
   next.completed_sessions = loadLearningHistory().length;
   next.module_key = nextModule.key;
@@ -14693,7 +14897,7 @@ function agentCryptoBlankNotebook(resetAt) {
   cockpit.module_key = "market";
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   cockpit.restart_build = ATLAS_BUILD;
-  cockpit.foundation_path_build = ATLAS_FOUNDATION_LEARNING_BUILD;
+  cockpit.foundation_path_build = foundationPathBuildForModule("market");
   cockpit.last_action = null;
   return atlasLearningNormalizeNotebook({
     id:ATLAS_LEARNING_DB_RECORD_ID,
