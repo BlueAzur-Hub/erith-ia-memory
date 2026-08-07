@@ -1,9 +1,31 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.16  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.17  
 **Mission du Build :** Historical Version Control Restoration Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+
+## Build 28.3.17 — Human Code Architecture Foundation Lock
+
+Refactoring structurel uniquement, à comportement constant depuis la Build 28.3.16 validée.
+
+### Règle d’architecture humaine
+
+Les trois fichiers principaux utilisent une navigation commune par blocs :
+
+`01 HEADER / MENU` → `02 GRAPHIQUE` → `03 TARGET TOP 5` → `04 MARKET FLOW` → `05 MARKET` → `06 MATH CORE` → puis les blocs fonctionnels suivants.
+
+- `index.html` suit l’ordre visuel de l’interface et porte de grands séparateurs recherchables avec `Ctrl+F`.
+- `style.css` regroupe les règles par zone visible au lieu d’empiler des correctifs chronologiques de Build.
+- `app.js` regroupe les fonctions par responsabilité ; les anciennes couches de remplacement V96/V97, R12/R13 et V56/V57 ont été consolidées dans leurs fonctions canoniques actives.
+- Une zone validée ne doit pas être modifiée par une mission qui concerne une autre zone.
+- Aucun changement fonctionnel, visuel, de données, de pédagogie, de simulation, de Market, de Métaux ou de Bridge n’est volontaire dans cette Build.
+- Le contrôle de version 28.3.16 restauré est conservé fonctionnellement ; son code est maintenant regroupé dans `14 — VERSION CONTROL — PROTECTED CORE` dans `app.js`.
+
+### Navigation
+
+Chercher le numéro ou le titre du bloc, par exemple `05 — MARKET`, dans HTML, CSS ou JavaScript.
 
 ## Build 28.3.16 — Restauration du contrôle de version historique
 

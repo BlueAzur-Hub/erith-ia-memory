@@ -1,20 +1,63 @@
 <!doctype html>
+<!--
+================================================================
+AGENT-CRYPTO — HUMAN HTML ARCHITECTURE
+Build 28.3.17 — refactoring structurel à comportement constant
+
+NAVIGATION HUMAINE — CTRL+F -> numéro ou titre du bloc
+00 — DOCUMENT / CONFIGURATION
+01 — HEADER / MENU
+02 — GRAPHIQUE
+03 — TARGET TOP 5
+04 — MARKET FLOW
+05 — MARKET
+06 — MATH CORE
+07 — NEWS SENTINEL
+08 — DECISION / WATCHLIST / ANALYSE
+09 — PARCOURS / APPRENTISSAGE
+10 — SIMULATION COCKPIT
+11 — METAUX
+12 — MEMOIRE / PERSISTANCE
+13 — SOURCES / BRIDGE / COLLECTE
+14 — VERSION CONTROL — TEMOINS HTML DE COMPATIBILITE
+15 — INITIALISATION / SCRIPTS
+
+Une zone visible = un bloc identifiable.
+Un bloc valide ne doit pas etre modifie par une mission exterieure.
+================================================================
+-->
 <html lang="fr">
 <head>
+<!-- ============================================================
+     00 — DOCUMENT / CONFIGURATION
+     ============================================================ -->
+
+<!-- ============================================================
+     14.A — VERSION CONTROL / IDENTITE HTML
+     ============================================================ -->
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="28.3.16" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.3.16" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.3.16 — HISTORICAL VERSION CONTROL RESTORATION LOCK</title>
+  <meta name="atlas-build" content="28.3.17" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-28.3.17" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 28.3.17</title>
+
+<!-- ============================================================
+     FIN 14.A — VERSION CONTROL / IDENTITE HTML
+     ============================================================ -->
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.3.16" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-28.3.17" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
   <main class="shell compact-ui terminal-ui">
-    <header class="hero glass" id="accueil">
+    
+<!-- ============================================================
+     01 — HEADER / MENU
+     ============================================================ -->
+<header class="hero glass" id="accueil">
       <div class="hero-top">
         <div class="title-block">
           <p class="eyebrow">ERITH.IA · MARKETS OBSERVATORY</p>
@@ -62,9 +105,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.3.16"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 28.3.17"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.3.16</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 28.3.17</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +122,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.3.16</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 28.3.17</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -273,8 +316,16 @@
         </div>
       </section>
     </header>
+<!-- ============================================================
+     FIN 01 — HEADER / MENU
+     ============================================================ -->
 
-    <dialog class="atlas-access-dialog" id="atlasAccessDialog" aria-labelledby="atlasAccessTitle">
+
+    
+<!-- ============================================================
+     01.A — ACCES LOCAL
+     ============================================================ -->
+<dialog class="atlas-access-dialog" id="atlasAccessDialog" aria-labelledby="atlasAccessTitle">
       <form class="atlas-access-card" id="atlasAccessForm" method="dialog">
         <div class="atlas-access-head">
           <div>
@@ -308,6 +359,10 @@
         <p class="atlas-access-warning"><b>Verrou d’interface local V1.</b> Il masque l’administration dans ce navigateur, sans remplacer le futur Bridge privé du Ryzen.</p>
       </form>
     </dialog>
+<!-- ============================================================
+     FIN 01.A — ACCES LOCAL
+     ============================================================ -->
+
 
 <section class="metrics metrics-prime is-metrics-hidden" id="marche" hidden aria-hidden="true">
       <article class="metric glass">
@@ -336,7 +391,11 @@
 
 
     <section class="atlas-market-zone" id="market-zone" aria-label="Zone marché Atlas">
-    <section class="analyst-deck champagne-clean-lens detail-collapsed" id="analyste">
+    
+<!-- ============================================================
+     02 — GRAPHIQUE
+     ============================================================ -->
+<section class="analyst-deck champagne-clean-lens detail-collapsed" id="analyste">
       <article class="panel glass chart-panel">
         <div class="section-head compact chart-v2-recovery-line">
           <div class="chart-v2-title-block atlas-market-domain-title-block">
@@ -825,11 +884,19 @@
         <span>DÉTAIL ACTIF <b aria-hidden="true">▼</b></span>
       </button>
     </section>
+<!-- ============================================================
+     FIN 02 — GRAPHIQUE
+     ============================================================ -->
+
 
 
 
     <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">
-      <section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
+      
+<!-- ============================================================
+     03 — TARGET TOP 5
+     ============================================================ -->
+<section class="top5-ribbon glass" aria-label="Top 5 crypto en direct">
         <button type="button" class="market-ribbon-label target-top5-cycle-control" id="targetTop5Cycle" data-cycle-preset="rank-5"
                 aria-label="Afficher la vue graphique suivante" title="Vue suivante : Hausses 5">
           <span id="targetTop5CycleLabel">TARGET TOP 5 LIVE</span>
@@ -840,8 +907,16 @@
           <span class="market-ribbon-empty">Livecheck requis</span>
         </div>
       </section>
+<!-- ============================================================
+     FIN 03 — TARGET TOP 5
+     ============================================================ -->
 
-      <section class="ticker glass market-flow-ribbon" aria-label="Flux du reste du marché">
+
+      
+<!-- ============================================================
+     04 — MARKET FLOW
+     ============================================================ -->
+<section class="ticker glass market-flow-ribbon" aria-label="Flux du reste du marché">
         <button type="button" class="market-flow-label" id="marketFlowCycle"
                 aria-label="Filtrer Market Flow : afficher uniquement les hausses" title="Filtrer : hausses uniquement">
           <span id="marketFlowCycleLabel">MARKET FLOW</span>
@@ -854,6 +929,10 @@
           </div>
         </div>
       </section>
+<!-- ============================================================
+     FIN 04 — MARKET FLOW
+     ============================================================ -->
+
     </section>
 
 
@@ -863,7 +942,11 @@
              hidden></section>
 
 
-    <section class="atlas-metals-market-area"
+    
+<!-- ============================================================
+     11.A — METAUX / MARKET ALTERNATIF
+     ============================================================ -->
+<section class="atlas-metals-market-area"
              id="atlasMetalsMarketArea"
              aria-label="Market Métaux"
              hidden>
@@ -966,11 +1049,19 @@
         </aside>
       </section>
     </section>
+<!-- ============================================================
+     FIN 11.A — METAUX / MARKET ALTERNATIF
+     ============================================================ -->
+
 
 
     <div class="math-top-dock" id="mathTopDock" hidden></div>
     <section class="layout-two market-workspace-grid" id="marketWorkspaceGrid">
-      <article class="panel glass wide market-snapshot-panel" id="marketSnapshotPanel">
+      
+<!-- ============================================================
+     05 — MARKET
+     ============================================================ -->
+<article class="panel glass wide market-snapshot-panel" id="marketSnapshotPanel">
         <div class="section-head">
           <div>
             <p class="eyebrow">MARKET SNAPSHOT</p>
@@ -1037,8 +1128,16 @@
         </div>
         <p class="table-note" id="tableNote">Les données chiffrées apparaissent uniquement si une source réelle répond.</p>
       </article>
+<!-- ============================================================
+     FIN 05 — MARKET
+     ============================================================ -->
 
-      <aside class="panel glass score-panel atlas-math-dock" id="math" data-math-dock="side">
+
+      
+<!-- ============================================================
+     06 — MATH CORE
+     ============================================================ -->
+<aside class="panel glass score-panel atlas-math-dock" id="math" data-math-dock="side">
         <div class="atlas-math-dock-head">
           <div>
             <p class="eyebrow">ATLAS MATH CORE V3</p>
@@ -1097,13 +1196,21 @@
         </details>
         <div class="atlas-verdict" id="atlasMathVerdict"><b>Mode observation</b> · aucune exécution réelle</div>
       </aside>
+<!-- ============================================================
+     FIN 06 — MATH CORE
+     ============================================================ -->
+
     </section>
 
 
 
 
     </section>
-    <section class="atlas-metals-analysis-foundation"
+    
+<!-- ============================================================
+     11.B — METAUX / ANALYSE
+     ============================================================ -->
+<section class="atlas-metals-analysis-foundation"
              id="atlasMetalsAnalysisFoundation"
              aria-labelledby="atlasMetalsAnalysisTitle"
              hidden>
@@ -1232,6 +1339,10 @@
         <small class="atlas-shared-synthesis-note">Données publiées automatiquement · rapport construit dans l’interface · lecture identique Ryzen et Transformer Book · aucune publication manuelle.</small>
       </section>
     </section>
+<!-- ============================================================
+     FIN 11.B — METAUX / ANALYSE
+     ============================================================ -->
+
 
     <section class="atlas-layout-family atlas-layout-family-analysis" aria-labelledby="atlasLayoutFamily01">
       <span class="atlas-layout-family-index" aria-hidden="true">01</span>
@@ -1286,7 +1397,11 @@
       </details>
     </section>
 
-    <details class="atlas-collapse glass news-sentinel-collapse atlas-family-member atlas-tone-analysis" id="news-sentinel" data-collapse-key="news-sentinel" data-layout-family="analysis">
+    
+<!-- ============================================================
+     07 — NEWS SENTINEL
+     ============================================================ -->
+<details class="atlas-collapse glass news-sentinel-collapse atlas-family-member atlas-tone-analysis" id="news-sentinel" data-collapse-key="news-sentinel" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-copy">
           <span class="atlas-collapse-title">News Sentinel — veille événementielle</span>
@@ -1442,6 +1557,10 @@
         </section>
       </div>
     </details>
+<!-- ============================================================
+     FIN 07 — NEWS SENTINEL
+     ============================================================ -->
+
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="news-plan" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
@@ -1479,7 +1598,11 @@
       </div>
     </details>
 
-    <section class="decision-board glass atlas-family-member atlas-tone-analysis" id="decision-board" aria-label="Atlas Decision Board" data-layout-family="analysis">
+    
+<!-- ============================================================
+     08.A — DECISION BOARD
+     ============================================================ -->
+<section class="decision-board glass atlas-family-member atlas-tone-analysis" id="decision-board" aria-label="Atlas Decision Board" data-layout-family="analysis">
       <div class="section-head compact">
         <div>
           <p class="eyebrow">ATLAS DECISION BOARD</p>
@@ -1529,7 +1652,15 @@
         Décision Atlas : attendre le Livecheck. Pas de prix fictif, pas de signal magique.
       </div>
     </section>
+<!-- ============================================================
+     FIN 08.A — DECISION BOARD
+     ============================================================ -->
 
+
+
+<!-- ============================================================
+     08.B — LECTURE FROIDE
+     ============================================================ -->
 <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis" data-collapse-key="lecture-verrou" id="lecture-froide" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
@@ -1557,6 +1688,10 @@
     </section>
       </div>
     </details>
+<!-- ============================================================
+     FIN 08.B — LECTURE FROIDE
+     ============================================================ -->
+
 
     <details class="atlas-collapse glass v2-advanced-only atlas-family-member atlas-tone-analysis" data-collapse-key="mode-debutant-avance" data-v2-section="advanced" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
@@ -1831,7 +1966,11 @@
         <span class="atlas-collapse-subtitle">Profils locaux du Ryzen · Ollama / LM Studio / AnythingLLM</span>
       </summary>
       <div class="atlas-collapse-body">
-        <section class="panel glass atlas-local-ai-hub" id="local-ai-hub" aria-labelledby="local-ai-title">
+        
+<!-- ============================================================
+     13.A — LOCAL AI / BRIDGE LOCAL
+     ============================================================ -->
+<section class="panel glass atlas-local-ai-hub" id="local-ai-hub" aria-labelledby="local-ai-title">
           <div class="section-head">
             <div>
               <p class="eyebrow">LOCAL AI PROFILES · RYZEN 7</p>
@@ -2114,10 +2253,18 @@
             </section>
           </section>
         </section>
+<!-- ============================================================
+     FIN 13.A — LOCAL AI / BRIDGE LOCAL
+     ============================================================ -->
+
       </div>
     </details>
 
-    <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse atlas-family-member atlas-tone-creation" data-collapse-key="forge-aerith" id="forge-aerith" data-layout-family="creation">
+    
+<!-- ============================================================
+     13.B — FORGE / ATELIER
+     ============================================================ -->
+<details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse atlas-family-member atlas-tone-creation" data-collapse-key="forge-aerith" id="forge-aerith" data-layout-family="creation">
   <summary class="atlas-collapse-summary">
     <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
     <span class="atlas-collapse-title">✦ Forge d’Aerith Pro</span>
@@ -2158,6 +2305,10 @@
     </section>
   </div>
 </details>
+<!-- ============================================================
+     FIN 13.B — FORGE / ATELIER
+     ============================================================ -->
+
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="auto-reader" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
@@ -2167,6 +2318,10 @@
       </summary>
       <div class="atlas-collapse-body">
 
+
+<!-- ============================================================
+     12.A — MEMOIRE / AUTO READER
+     ============================================================ -->
 <section class="panel glass auto-reader-panel memory-truth-panel" id="auto-reader">
       <div class="section-head">
         <div>
@@ -2203,6 +2358,10 @@
 
       <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture locale se lance automatiquement si l’onglet reste visible.</pre>
     </section>
+<!-- ============================================================
+     FIN 12.A — MEMOIRE / AUTO READER
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -2215,7 +2374,11 @@
       <div class="atlas-collapse-body">
 
 
-    <section class="panel glass shared-memory-panel" id="shared-memory">
+    
+<!-- ============================================================
+     12.B — MEMOIRE PARTAGEE
+     ============================================================ -->
+<section class="panel glass shared-memory-panel" id="shared-memory">
       <div class="section-head">
         <div>
           <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
@@ -2280,6 +2443,10 @@
 
       <pre class="shared-memory-output" id="sharedMemoryOutput">Statut import/export affiché ici. Un import réussi indique les snapshots ajoutés, le total et les collecteurs fusionnés.</pre>
     </section>
+<!-- ============================================================
+     FIN 12.B — MEMOIRE PARTAGEE
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -2292,7 +2459,11 @@
       <div class="atlas-collapse-body">
 
 
-    <section class="panel glass github-memory-panel memory-truth-panel" id="github-memory">
+    
+<!-- ============================================================
+     12.C — MEMOIRE GITHUB
+     ============================================================ -->
+<section class="panel glass github-memory-panel memory-truth-panel" id="github-memory">
       <div class="section-head">
         <div>
           <p class="eyebrow">ATLAS GITHUB SHARED MEMORY</p>
@@ -2325,6 +2496,10 @@
 
       <pre class="github-memory-output" id="githubMemoryOutput">Lecture GitHub automatique en attente. La mémoire locale reste disponible même si GitHub ne répond pas.</pre>
     </section>
+<!-- ============================================================
+     FIN 12.C — MEMOIRE GITHUB
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -2354,7 +2529,11 @@
 
 
 
-    <section class="panel glass situation-layer" id="situation">
+    
+<!-- ============================================================
+     13.C — SITUATION
+     ============================================================ -->
+<section class="panel glass situation-layer" id="situation">
       <div class="section-head">
         <div>
           <p class="eyebrow">SITUATION DU PROJET</p>
@@ -2363,7 +2542,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.3.16 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 28.3.17 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -2428,6 +2607,10 @@
         <button class="cmd-preset" data-command="boundaries">Limites verrouillées</button>
       </div>
     </section>
+<!-- ============================================================
+     FIN 13.C — SITUATION
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -2613,7 +2796,11 @@
 
 
 
-    <section class="planning-deck" id="planning">
+    
+<!-- ============================================================
+     13.D — PLANNING
+     ============================================================ -->
+<section class="planning-deck" id="planning">
       <article class="panel glass exchange-plan">
         <div class="section-head">
           <div>
@@ -2671,6 +2858,10 @@
         </p>
       </article>
     </section>
+<!-- ============================================================
+     FIN 13.D — PLANNING
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -2694,7 +2885,11 @@
 
 
 
-    <section class="panel glass sim-layer" id="simulation">
+    
+<!-- ============================================================
+     10 — SIMULATION COCKPIT
+     ============================================================ -->
+<section class="panel glass sim-layer" id="simulation">
       <div class="section-head">
         <div>
           <p class="eyebrow">△ PAPER TRADING SANDBOX</p>
@@ -2812,7 +3007,11 @@
       </section>
 
 
-      <section class="learning-journey-cockpit" id="learningJourneyCockpit" aria-labelledby="learningCockpitTitle">
+      
+<!-- ============================================================
+     09 — PARCOURS / APPRENTISSAGE
+     ============================================================ -->
+<section class="learning-journey-cockpit" id="learningJourneyCockpit" aria-labelledby="learningCockpitTitle">
         <div class="learning-cockpit-head">
           <div>
             <p class="eyebrow">☉ COCKPIT D’APPRENTISSAGE · ARGENT 100 % FICTIF</p>
@@ -3014,6 +3213,10 @@
 
         <div class="learning-cockpit-reading" id="learningCockpitReading">Commence par lire la leçon intégrée. Tes notes sont sauvegardées automatiquement et intégralement dans ce navigateur.</div>
       </section>
+<!-- ============================================================
+     FIN 09 — PARCOURS / APPRENTISSAGE
+     ============================================================ -->
+
 
       <section class="expert-roadmap-panel" id="expertLearningRoadmap" aria-labelledby="expertRoadmapTitle">
         <div class="expert-roadmap-head">
@@ -3432,6 +3635,10 @@
         Verrou : la simulation ne remplace pas une stratégie. Tout passage réel devra exiger backend sécurisé, logs, limites, dry-run prolongé et validation humaine.
       </p>
     </section>
+<!-- ============================================================
+     FIN 10 — SIMULATION COCKPIT
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -3523,7 +3730,11 @@
 
 
 
-    <section class="panel glass backend-layer" id="backend">
+    
+<!-- ============================================================
+     13.E — BACKEND / API
+     ============================================================ -->
+<section class="panel glass backend-layer" id="backend">
       <div class="section-head">
         <div>
           <p class="eyebrow">ARCHITECTURE PRIVÉE</p>
@@ -3594,6 +3805,10 @@
         Prochaine étape réelle : continuer la préparation sans clé réelle. Aucun ordre, aucun retrait, aucun secret dans le dépôt public.
       </p>
     </section>
+<!-- ============================================================
+     FIN 13.E — BACKEND / API
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -3607,7 +3822,11 @@
 
 
 
-    <section class="panel glass safety-layer" id="safety">
+    
+<!-- ============================================================
+     13.F — SECURITE LOGICIELLE
+     ============================================================ -->
+<section class="panel glass safety-layer" id="safety">
       <div class="section-head">
         <div>
           <p class="eyebrow">SÉCURITÉ</p>
@@ -3662,6 +3881,10 @@
         GitHub Pages reste observation + simulation. L’accès distant réel, les clés Kraken et les logs doivent vivre dans un backend ou une machine sécurisée hors dépôt public.
       </p>
     </section>
+<!-- ============================================================
+     FIN 13.F — SECURITE LOGICIELLE
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -3674,7 +3897,11 @@
       <div class="atlas-collapse-body">
 
 
-    <section class="panel glass physical-layer" id="physical-security">
+    
+<!-- ============================================================
+     13.G — SECURITE PHYSIQUE
+     ============================================================ -->
+<section class="panel glass physical-layer" id="physical-security">
       <div class="section-head">
         <div>
           <p class="eyebrow">PHYSICAL SECURITY LAYER</p>
@@ -3714,6 +3941,10 @@
         <span>L’IA peut observer et simuler. L’humain valide. Le matériel protège. Le réel reste verrouillé.</span>
       </div>
     </section>
+<!-- ============================================================
+     FIN 13.G — SECURITE PHYSIQUE
+     ============================================================ -->
+
       </div>
     </details>
 
@@ -3907,7 +4138,11 @@
 
 
 
-    <section class="panel glass" id="sources">
+    
+<!-- ============================================================
+     13.H — SOURCES
+     ============================================================ -->
+<section class="panel glass" id="sources">
       <div class="section-head">
         <div>
           <p class="eyebrow">LIVE SOURCES</p>
@@ -3919,11 +4154,15 @@
       <div class="source-grid" id="sourceGrid"></div>
       <p class="source-help">Aucune clé privée n’est exposée. Ordre public : snapshot GitHub Actions CoinGecko USD + conversion BCE EUR → dernier cache navigateur seulement si le JSON public est indisponible.</p>
     </section>
+<!-- ============================================================
+     FIN 13.H — SOURCES
+     ============================================================ -->
+
       </div>
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.3.16</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 28.3.17</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3948,7 +4187,15 @@
   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
+
+<!-- ============================================================
+     15 — INITIALISATION / SCRIPTS
+     ============================================================ -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-28.3.16"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-28.3.17"></script>
+
+<!-- ============================================================
+     FIN 15 — INITIALISATION / SCRIPTS
+     ============================================================ -->
 </body>
 </html>
