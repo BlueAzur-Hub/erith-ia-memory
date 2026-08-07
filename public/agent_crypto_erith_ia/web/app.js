@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.28 — cadrage pédagogique déterministe et retour reset au Module 01.
+  Build 28.3.29 — stabilisation du viewport pédagogique après rerender et reset.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -20476,6 +20476,9 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
 
 const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
+const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
+const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
+const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [120, 420, 1000];
 
 function atlasLearningSetManualScrollRestoration() {
   try {
@@ -20491,16 +20494,22 @@ function atlasLearningPositionTarget(target, options = {}) {
   if (!target) return false;
   learningOpenParentDetails(target);
   const topGap = Number(options.topGap ?? ATLAS_LEARNING_STAGE_TOP_GAP);
+  const tolerance = Math.max(0, Number(options.tolerance ?? ATLAS_LEARNING_FOCUS_TOLERANCE_PX));
   const rect = target.getBoundingClientRect();
-  const top = Math.max(0, window.scrollY + rect.top - topGap);
+  const drift = rect.top - topGap;
   const root = document.documentElement;
   const previousScrollBehavior = root.style.scrollBehavior;
   const smooth = options.smooth === true;
-  if (!smooth) root.style.scrollBehavior = "auto";
-  window.scrollTo({ top, behavior:smooth ? "smooth" : "auto" });
-  if (!smooth) requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
-  target.classList.add("learning-target-flash");
-  window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+  if (Math.abs(drift) > tolerance) {
+    const top = Math.max(0, window.scrollY + drift);
+    if (!smooth) root.style.scrollBehavior = "auto";
+    window.scrollTo({ top, behavior:smooth ? "smooth" : "auto" });
+    if (!smooth) requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
+  }
+  if (options.flash !== false) {
+    target.classList.add("learning-target-flash");
+    window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+  }
   return true;
 }
 
@@ -20508,8 +20517,20 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
   const resolveTarget = typeof targetResolver === "function"
     ? targetResolver
     : () => targetResolver;
+  const settleDelays = Array.isArray(options.settleDelays)
+    ? options.settleDelays
+    : ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS;
+  const position = flash => {
+    const target = resolveTarget();
+    if (!target) return false;
+    return atlasLearningPositionTarget(target, { ...options, flash });
+  };
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    atlasLearningPositionTarget(resolveTarget(), options);
+    position(true);
+    settleDelays.forEach(delay => {
+      const ms = Math.max(0, Number(delay) || 0);
+      window.setTimeout(() => position(false), ms);
+    });
   }));
   return true;
 }
@@ -21090,7 +21111,10 @@ function agentCryptoShowResetSuccessOnBoot() {
     "Réinitialisation terminée",
     `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
   );
-  scrollToLearningTarget(marker.target || "learningSessionPlan");
+  scrollToLearningTarget(marker.target || "learningSessionPlan", {
+    settleDelays:ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS,
+    topGap:ATLAS_LEARNING_STAGE_TOP_GAP
+  });
   return true;
 }
 
@@ -34218,11 +34242,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.28";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.29";
 
-const ATLAS_BUILD = "28.3.28";
+const ATLAS_BUILD = "28.3.29";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.28";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.29";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

@@ -1,9 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.28  
-**Build :** 28.3.28  
-**Mission :** Learning Viewport Focus & Reset Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.29  
+**Build :** 28.3.29  
+**Mission :** Learning Viewport Settle & Reset Hover Lock
 
+
+
+## Build 28.3.29 — Learning Viewport Settle & Reset Hover Lock
+
+Cette Build part exactement de la 28.3.28 testée visuellement.
+
+### Mission unique
+
+Corriger le cadrage encore trop bas après certains rerenders, en particulier après `Repartir de zéro`, sans toucher aux données du parcours ni au Version Control Protected Core.
+
+- Le moteur de focus pédagogique garde une cible unique, mais vérifie maintenant sa position après les petits changements de mise en page qui suivent un clic.
+- Le premier cadrage reste immédiat ; deux contrôles courts corrigent uniquement une dérive réelle supérieure à 4 px.
+- Après un reset/rechargement, trois contrôles dédiés à 120 ms, 420 ms et 1000 ms ramènent `learningSessionPlan` à 18 px du haut si Firefox l'a décalé pendant la stabilisation de la page.
+- Aucun scroll supplémentaire n'est effectué si la cible est déjà correctement placée.
+- Le bouton `Repartir de zéro` reçoit une bulle native au survol qui précise exactement ce qui est effacé et ce qui est conservé.
+- Fichiers fonctionnels modifiés : `web/app.js` et la seule balise du bouton reset dans `web/index.html`.
+- `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d'identité passent à 28.3.29.
 
 
 ## Build 28.3.28 — Learning Viewport Focus & Reset Lock

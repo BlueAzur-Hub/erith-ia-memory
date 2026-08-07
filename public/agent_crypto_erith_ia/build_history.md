@@ -1,5 +1,17 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.29 — Learning Viewport Settle & Reset Hover Lock
+
+- Base : Build 28.3.28.
+- Le cadrage pédagogique devient convergent : après le premier positionnement, il vérifie la dérive réelle et ne corrige que si la cible s'est déplacée de plus de 4 px.
+- Les transitions ordinaires utilisent deux contrôles courts ; le retour après `Repartir de zéro` utilise trois contrôles dédiés jusqu'à 1000 ms afin d'absorber les rerenders tardifs de Firefox.
+- La destination du reset reste `learningSessionPlan` : `01 · Marché et données · session guidée · 0/5 étapes`.
+- Ajout d'une bulle native sur `Repartir de zéro` expliquant ce qui est effacé et ce qui reste conservé.
+- `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.29.
+
+---
+
 ## Build 28.3.28 — Learning Viewport Focus & Reset Lock
 
 - Base : Build 28.3.27 validé sur Transformer Book et Ryzen.
