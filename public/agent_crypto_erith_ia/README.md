@@ -1,8 +1,26 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.22  
-**Build :** 28.3.22  
-**Mission :** Guided Step Focus & Pedagogy Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.23  
+**Build :** 28.3.23  
+**Mission :** Module 02 Auto-Synthesis & Archive Prefill Lock
+
+## Build 28.3.23 — Module 02 Auto-Synthesis & Archive Prefill Lock
+
+Cette Build part exactement de la 28.3.22 validée dans le parcours Module 02.
+
+### Mission unique
+
+À la validation 5/5 de `02 · Spot et carnet d’ordres`, le cockpit transforme automatiquement les preuves déjà produites en mémoire pédagogique exploitable.
+
+- Préremplissage automatique de `Mes notes libres` avec une auto-synthèse clairement balisée.
+- Les éventuelles notes personnelles existantes sont conservées intégralement.
+- Création d’un objet `spot_archive_prefill` dans les preuves pédagogiques : Ask, Bid, spread, types d’ordre, position fictive, capital restant, conclusion et sécurité.
+- Création d’un journal pédagogique dérivé de ces mêmes preuves.
+- Les frais réels, spreads réels de plateforme et slippage réel restent explicitement `non vérifiés` ; aucune valeur n’est inventée.
+- Une session Module 02 déjà à 5/5 en 28.3.22 reçoit automatiquement le préremplissage lors du premier rendu 28.3.23.
+- L’archive IndexedDB conserve automatiquement ces données lorsque l’utilisateur clique sur `Terminer et archiver le module`.
+- `index.html`, `style.css` et `runtime_config.json` restent strictement inchangés.
+- Le noyau de versionnage reste inchangé ; seules les constantes d’identité Build/token passent à 28.3.23.
 
 ## Build 28.3.22 — Guided Step Focus & Pedagogy Lock
 

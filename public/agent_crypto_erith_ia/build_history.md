@@ -3,6 +3,21 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.23 — Module 02 Auto-Synthesis & Archive Prefill Lock
+
+- Base : Build 28.3.22, parcours Module 02 guidé et cadrage validés.
+- Mission : transformer automatiquement les preuves du Module 02 en synthèse lisible et données d’archive sans demander de ressaisie inutile.
+- À 5/5, `notes_free` reçoit un bloc `[AUTO-SYNTHÈSE MODULE 02]` généré depuis les preuves réelles de la session.
+- Les notes personnelles déjà présentes sont conservées ; le bloc automatique est remplaçable/idempotent et n’est pas dupliqué.
+- `spot_archive_prefill` conserve Ask 60 010 €, Bid 59 990 €, spread 20 €, choix Marché/Limite, position BTC fictive, capital restant, conclusion et verrous de sécurité.
+- `spot_learning_journal` conserve la synthèse pédagogique dérivée.
+- Frais réels, spread réel de plateforme et slippage réel restent `not_verified` avec valeurs nulles ; aucune donnée financière non vérifiée n’est fabriquée.
+- Migration douce : un brouillon Module 02 déjà 5/5 provenant de 28.3.22 est prérempli automatiquement au premier rendu 28.3.23.
+- `index.html`, `style.css` et `runtime_config.json` strictement inchangés.
+- Version Control Protected Core : logique intacte ; identité locale passée à 28.3.23.
+
+---
+
 ## Build 28.3.22 — Guided Step Focus & Pedagogy Lock
 
 - Base : Build 28.3.21 validé sous Firefox.

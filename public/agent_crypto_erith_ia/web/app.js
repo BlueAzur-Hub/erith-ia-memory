@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.22 — navigation pédagogique cadrée et lisibilité Bid / Ask.
+  Build 28.3.23 — auto-synthèse et préremplissage d’archive du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -18485,6 +18485,83 @@ function foundationMarketLab(cockpit) {
     </div>`;
 }
 
+function spotModule02AutoBlockText(cockpit, summary) {
+  const evidence = cockpit?.practice_evidence || {};
+  const ask = evidence.spot_best_ask ? 60010 : null;
+  const bid = evidence.spot_best_bid ? 59990 : null;
+  const spread = ask !== null && bid !== null ? ask - bid : null;
+  const lines = [
+    "[AUTO-SYNTHÈSE MODULE 02]",
+    "Module 02 · Spot et carnet d’ordres — parcours guidé 5/5.",
+    ask !== null ? `Ask : prix demandé par le vendeur · meilleur Ask identifié : ${fmtEUR.format(ask)}.` : null,
+    bid !== null ? `Bid : prix proposé par l’acheteur · meilleur Bid identifié : ${fmtEUR.format(bid)}.` : null,
+    spread !== null ? `Spread pédagogique : ${fmtEUR.format(ask)} − ${fmtEUR.format(bid)} = ${fmtEUR.format(spread)}.` : null,
+    evidence.spot_market_choice ? "Ordre au marché : utilisé lorsqu’on privilégie l’exécution immédiate, avec un prix exact susceptible de varier." : null,
+    evidence.spot_limit_choice ? "Ordre limite : fixe un prix maximum d’achat ; il peut attendre, être exécuté partiellement ou ne pas être exécuté." : null,
+    summary?.ready ? `Simulation fictive : ${summary.investedText} de BTC au prix d’entrée ${summary.entryText}, quantité ${summary.quantityText} BTC, ${summary.cashText} disponibles après l’exécution.` : null,
+    evidence.spot_guided_answer === "non" ? "Conclusion : non, un ordre limite ne garantit pas une exécution immédiate." : null,
+    "Frais réels, spread réel de plateforme et slippage réel : non vérifiés / à renseigner depuis une source officielle. Aucune valeur n’est inventée.",
+    "[/AUTO-SYNTHÈSE MODULE 02]"
+  ].filter(Boolean);
+  return lines.join("\n");
+}
+
+function spotModule02UpsertAutoBlock(existingText, autoBlock) {
+  const start = "[AUTO-SYNTHÈSE MODULE 02]";
+  const end = "[/AUTO-SYNTHÈSE MODULE 02]";
+  const source = String(existingText || "");
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end);
+  let personal = source;
+  if (startIndex >= 0 && endIndex >= startIndex) {
+    personal = `${source.slice(0, startIndex)}${source.slice(endIndex + end.length)}`.trim();
+  }
+  return personal ? `${autoBlock}\n\n${personal}` : autoBlock;
+}
+
+function ensureSpotModule02AutoPrefill(cockpit) {
+  if (!cockpit || cockpit.module_key !== "spot" || cockpit.completed_at || cockpit.steps?.note !== true) return false;
+  const summary = foundationSpotGuidedSummary(cockpit);
+  if (!summary.ready || cockpit.practice_evidence?.spot_guided_answer !== "non") return false;
+  cockpit.practice_evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  const generatedAt = cockpit.practice_evidence.spot_archive_prefill?.generated_at || new Date().toISOString();
+  const autoBlock = spotModule02AutoBlockText(cockpit, summary);
+  const nextNotes = spotModule02UpsertAutoBlock(cockpit.notes_free, autoBlock);
+  const prefill = {
+    schema:"agent_crypto_spot_module_02_archive_prefill_v1",
+    generated_at:generatedAt,
+    module_key:"spot",
+    module_title:"02 · Spot et carnet d’ordres",
+    steps_completed:5,
+    status:"ready_for_archive",
+    orderbook:{ best_ask_eur:60010, best_bid_eur:59990, spread_eur:20 },
+    order_types:{ immediate:"market", max_buy_price_eur:59500, max_buy_order_type:"limit" },
+    simulation:{
+      real_order:false,
+      amount_eur:Number(summary.invested),
+      entry_price_eur:Number(summary.entryPrice),
+      quantity_btc:Number(summary.quantity),
+      cash_remaining_eur:Number(summary.cashRemaining)
+    },
+    conclusion:{ limit_guarantees_immediate_execution:false },
+    fees:{ status:"not_verified", buy_pct:null, sell_pct:null, execution_spread_pct:null, slippage_pct:null, source:null },
+    safety:{ api_key_used:false, wallet_connected:false, real_transaction:false },
+    provenance:"preuves du Module 02 + portefeuille virtuel local"
+  };
+  const previous = cockpit.practice_evidence.spot_archive_prefill;
+  const prefillChanged = JSON.stringify(previous || null) !== JSON.stringify(prefill);
+  const notesChanged = String(cockpit.notes_free || "") !== nextNotes;
+  cockpit.practice_evidence.spot_archive_prefill = prefill;
+  cockpit.practice_evidence.spot_learning_journal = {
+    generated_at:generatedAt,
+    summary:autoBlock,
+    fees_status:"not_verified",
+    archive_ready:true
+  };
+  cockpit.notes_free = nextNotes;
+  return prefillChanged || notesChanged;
+}
+
 function foundationSpotGuidedSummary(cockpit) {
   const evidence = cockpit?.practice_evidence || {};
   const details = evidence.spot_position_details || {};
@@ -19274,7 +19351,8 @@ function handleFoundationAction(action) {
       if (!summary.ready) return spotFoundationFeedback(false, "Position requise", "Crée d’abord la position BTC fictive de 50 €.");
       cockpit.practice_evidence.spot_guided_conclusion = true; cockpit.practice_evidence.spot_guided_summary = summary.text; cockpit.practice_evidence.spot_guided_answer = "non"; cockpit.practice_evidence.spot_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "spot_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 02 · 5/5", "La synthèse d’exécution est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+      ensureSpotModule02AutoPrefill(cockpit);
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 02 · 5/5", "Auto-synthèse, journal pédagogique et archive sont préremplis à partir des preuves de la session. Les frais réels restent non vérifiés. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
     }
   }
   if (module.key === "risk") {
@@ -19868,6 +19946,7 @@ function renderLearningJourneyCockpit() {
     if (foundationIsActive(cockpit.module_key)) foundationApplyConclusionValidation(cockpit);
     else if (String(cockpit.takeaway || "").trim()) cockpit.steps.note = true;
     if (cockpit.steps.note !== noteBeforeRepair) stateChanged = true;
+    if (cockpit.module_key === "spot" && cockpit.steps.note === true && ensureSpotModule02AutoPrefill(cockpit)) stateChanged = true;
   }
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   if (stateChanged) saveLearningCockpitState(cockpit);
@@ -19988,7 +20067,9 @@ function renderLearningJourneyCockpit() {
       els.learningCompletionActionHint.textContent = finished
         ? "Le module terminé reste visible ci-dessous. Le passage au module suivant est une action distincte."
         : archiveReady
-          ? "Les 5 étapes sont validées. Clique ici pour écrire et relire l’archive IndexedDB."
+          ? (cockpit.module_key === "spot" && cockpit.practice_evidence?.spot_archive_prefill
+              ? "Les 5 étapes sont validées. Auto-synthèse, journal et archive sont préremplis ; clique ici pour écrire puis relire l’archive IndexedDB."
+              : "Les 5 étapes sont validées. Clique ici pour écrire et relire l’archive IndexedDB.")
           : `Progression technique : ${completedSteps}/5. L’archivage reste verrouillé jusqu’à la fin du parcours.`;
     }
   }
@@ -20415,6 +20496,10 @@ async function completeLearningSession() {
     setActionFeedback("warn", "Synthèse guidée non validée", "Lis la synthèse du module et réponds à sa question avant l’archivage.");
     focusLearningConclusion();
     return { ok:false, reason:"missing_guided_conclusion" };
+  }
+  if (cockpit.module_key === "spot" && cockpit.steps.note === true) {
+    ensureSpotModule02AutoPrefill(cockpit);
+    saveLearningCockpitState(cockpit);
   }
   if (!foundationIsActive(cockpit.module_key) && !String(cockpit.takeaway || "").trim()) {
     setActionFeedback("warn", "Conclusion personnelle manquante", "Écris ce que tu retiens avec tes propres mots. Tes notes longues peuvent rester dans le premier champ.");
@@ -33785,11 +33870,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.22";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.23";
 
-const ATLAS_BUILD = "28.3.22";
+const ATLAS_BUILD = "28.3.23";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.22";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.23";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
