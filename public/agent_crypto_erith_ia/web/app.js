@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.21 — versionnage final limité à app.js + version.json.
+  Build 28.3.22 — navigation pédagogique cadrée et lisibilité Bid / Ask.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -18517,8 +18517,8 @@ function foundationSpotLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · CARNET D’ORDRES</span>
         <h5>Identifier le meilleur Ask et le meilleur Bid</h5>
         <div class="foundation-orderbook-columns">
-          <section><b>Vendeurs — Ask</b><button type="button" data-foundation-action="spot_ask_60020" ${step2Done ? "disabled" : ""}>60 020 € · 0,002 BTC</button><button type="button" data-foundation-action="spot_ask_60010" ${step2Done ? "disabled" : ""}>60 010 € · 0,003 BTC</button><small>Meilleur Ask : prix vendeur le plus bas.</small></section>
-          <section><b>Acheteurs — Bid</b><button type="button" data-foundation-action="spot_bid_59990" ${step2Done ? "disabled" : ""}>59 990 € · 0,004 BTC</button><button type="button" data-foundation-action="spot_bid_59980" ${step2Done ? "disabled" : ""}>59 980 € · 0,006 BTC</button><small>Meilleur Bid : prix acheteur le plus haut.</small></section>
+          <section><b>Vendeurs — Ask · prix qu’ils demandent</b><button type="button" data-foundation-action="spot_ask_60020" ${step2Done ? "disabled" : ""}>60 020 € · 0,002 BTC</button><button type="button" data-foundation-action="spot_ask_60010" ${step2Done ? "disabled" : ""}>60 010 € · 0,003 BTC</button><small>Meilleur Ask = vendeur le moins cher : si tu achètes maintenant, tu cherches le prix vendeur le plus bas.</small></section>
+          <section><b>Acheteurs — Bid · prix qu’ils proposent</b><button type="button" data-foundation-action="spot_bid_59990" ${step2Done ? "disabled" : ""}>59 990 € · 0,004 BTC</button><button type="button" data-foundation-action="spot_bid_59980" ${step2Done ? "disabled" : ""}>59 980 € · 0,006 BTC</button><small>Meilleur Bid = acheteur qui paie le plus : si tu vends maintenant, tu cherches la proposition la plus haute.</small></section>
         </div>
         <p><b>Spread pédagogique :</b> ${e.spot_best_ask && e.spot_best_bid ? "60 010 € − 59 990 € = 20 €." : "identifie les deux meilleurs prix pour le calculer."}</p>
       </article>
@@ -18527,7 +18527,7 @@ function foundationSpotLab(cockpit) {
         <h5>Marché ou limite ?</h5>
         <p><b>Situation A :</b> acheter immédiatement, même si le prix exact varie légèrement.</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_market_correct" ${!step2Done || step3Done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_market_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Ordre limite</button></div>
-        <p><b>Situation B :</b> refuser d’acheter au-dessus de 59 500 €.</p>
+        <p><b>Situation B :</b> tu veux acheter, mais jamais au-dessus de 59 500 €. Quel ordre fixe ce prix maximum ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_limit_correct" ${!step2Done || step3Done ? "disabled" : ""}>Ordre limite à 59 500 €</button></div>
         <small>État : Marché ${e.spot_market_choice ? "✓" : "—"} · Limite ${e.spot_limit_choice ? "✓" : "—"}</small>
       </article>
@@ -19094,6 +19094,11 @@ function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
 
 function foundationFeedback(ok, title, text) { setActionFeedback(ok ? "ok" : "warn", title, text, els.learningFoundationPanel); }
 
+function spotFoundationFeedback(ok, title, text) {
+  // Module 02 owns its viewport navigation explicitly; feedback must not launch a second scroll.
+  setActionFeedback(ok ? "ok" : "warn", title, text);
+}
+
 const ATLAS_FOUNDATION_ACTION_ORDER = Object.freeze({
   account_stack_weak:"read", account_stack_strong:"read",
   account_support_comply:"open", account_support_stop:"open",
@@ -19238,18 +19243,35 @@ function handleFoundationAction(action) {
   if (module.key === "spot") {
     const good = { spot_ask_60010:["spot_best_ask","Meilleur Ask identifié : 60 010 €"], spot_bid_59990:["spot_best_bid","Meilleur Bid identifié : 59 990 €"], spot_market_correct:["spot_market_choice","Ordre au marché : exécution immédiate privilégiée"], spot_limit_correct:["spot_limit_choice","Ordre limite : prix maximal choisi"] };
     const wrong = { spot_ask_60020:"60 020 € n’est pas le vendeur le moins cher.", spot_bid_59980:"59 980 € n’est pas l’acheteur offrant le prix le plus élevé.", spot_market_wrong:"Pour acheter immédiatement, l’ordre au marché est la réponse attendue.", spot_limit_wrong:"Pour refuser de dépasser 59 500 €, il faut un ordre limite." };
-    if (wrong[action]) return foundationFeedback(false, "Réponse à revoir", wrong[action]);
+    if (wrong[action]) return spotFoundationFeedback(false, "Réponse à revoir", wrong[action]);
     if (good[action]) {
-      cockpit.practice_evidence[good[action][0]] = true; const e = cockpit.practice_evidence;
-      if (e.spot_best_ask && e.spot_best_bid) cockpit.steps.open = true;
-      if (e.spot_market_choice && e.spot_limit_choice) { cockpit.steps.practice = true; cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString(); }
-      cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningFoundationLab"); return foundationFeedback(true, "Réponse correcte", `${good[action][1]}. Spread pédagogique : 60 010 € − 59 990 € = 20 €.`);
+      cockpit.practice_evidence[good[action][0]] = true;
+      const e = cockpit.practice_evidence;
+      const step2Complete = Boolean(e.spot_best_ask && e.spot_best_bid);
+      const step3Complete = Boolean(e.spot_market_choice && e.spot_limit_choice);
+      if (step2Complete) cockpit.steps.open = true;
+      if (step3Complete) {
+        cockpit.steps.practice = true;
+        cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
+      }
+      cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      const nextStage = step3Complete ? 4 : step2Complete ? 3 : action.startsWith("spot_ask_") || action.startsWith("spot_bid_") ? 2 : 3;
+      scrollToFoundationStage(nextStage);
+      const feedbackText = step2Complete && !step3Complete
+        ? `${good[action][1]}. Spread pédagogique : 60 010 € − 59 990 € = 20 €. Étape 3 ouverte.`
+        : step3Complete
+          ? `${good[action][1]}. Les deux situations sont correctes. Étape 4 ouverte.`
+          : `${good[action][1]}. Complète l’autre choix de cette même étape.`;
+      spotFoundationFeedback(true, "Réponse correcte", feedbackText);
+      return;
     }
     if (action === "spot_run_safe_btc") { runFoundationSchoolPosition("spot"); return; }
-    if (action === "spot_limit_guarantee_yes") return foundationFeedback(false, "Réponse à revoir", "Non. Un ordre limite protège le prix choisi, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté.");
+    if (action === "spot_limit_guarantee_yes") return spotFoundationFeedback(false, "Réponse à revoir", "Non. Un ordre limite protège le prix choisi, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté.");
     if (action === "spot_limit_guarantee_no") {
       const summary = foundationSpotGuidedSummary(cockpit);
-      if (!summary.ready) return foundationFeedback(false, "Position requise", "Crée d’abord la position BTC fictive de 50 €.");
+      if (!summary.ready) return spotFoundationFeedback(false, "Position requise", "Crée d’abord la position BTC fictive de 50 €.");
       cockpit.practice_evidence.spot_guided_conclusion = true; cockpit.practice_evidence.spot_guided_summary = summary.text; cockpit.practice_evidence.spot_guided_answer = "non"; cockpit.practice_evidence.spot_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "spot_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 02 · 5/5", "La synthèse d’exécution est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
@@ -19459,10 +19481,15 @@ async function runFoundationSchoolPosition(moduleKey) {
     }
   }
   runSchoolTest("safe_btc_5");
-  scrollToLearningTarget("learningFoundationLab");
   const current = loadLearningCockpitState();
   const ok = moduleKey === "spot" ? current.steps.verify === true : current.steps.practice === true;
-  foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
+  if (moduleKey === "spot" && ok) {
+    scrollToFoundationStage(5);
+    spotFoundationFeedback(true, "Position fictive créée", "La preuve du portefeuille virtuel et du journal local a été enregistrée. Étape 5 ouverte.");
+  } else {
+    scrollToLearningTarget("learningFoundationLab");
+    foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
+  }
   return ok;
 }
 
@@ -20034,7 +20061,8 @@ function markIntegratedLessonRead() {
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
-  scrollToLearningTarget("learningPrimaryActionPanel");
+  if (cockpit.module_key === "spot" && foundationIsActive(cockpit.module_key)) scrollToFoundationStage(2);
+  else scrollToLearningTarget("learningPrimaryActionPanel");
   const nextAction = learningActionState(loadLearningCockpitState());
   setActionFeedback("ok", "Étape 1 validée", `${learningModuleByKey(cockpit.module_key).title} · la prochaine action est « ${nextAction.label} ». La leçon reste disponible pour relecture.`);
 }
@@ -20076,6 +20104,38 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
   const map = ATLAS_LEARNING_PRACTICE_MAP[moduleKey] || ATLAS_LEARNING_PRACTICE_MAP.market;
   if (practiceOnly && ["tokenomics", "yield"].includes(moduleKey)) return "schoolPanel";
   return map.target;
+}
+
+const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
+
+function scrollToFoundationStage(stage, options = {}) {
+  const stageNumber = String(stage || "").trim();
+  if (!stageNumber) return false;
+  const schedule = () => {
+    const lab = els.learningFoundationLab || document.getElementById("learningFoundationLab");
+    const target = lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
+    if (!target) return;
+    learningOpenParentDetails(target);
+    const rect = target.getBoundingClientRect();
+    const top = Math.max(0, window.scrollY + rect.top - Number(options.topGap ?? ATLAS_LEARNING_STAGE_TOP_GAP));
+    if (options.smooth === true) {
+      window.scrollTo({ top, behavior:"smooth" });
+    } else {
+      // The global stylesheet uses html { scroll-behavior:smooth }.
+      // Temporarily neutralize it so a pedagogical step never "travels" through the page.
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo({ top, behavior:"auto" });
+      requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
+    }
+    target.classList.add("learning-target-flash");
+    window.setTimeout(() => target.classList.remove("learning-target-flash"), 1400);
+  };
+  // Two frames: first lets renderLearningJourneyCockpit replace the DOM,
+  // second positions the newly created canonical stage exactly once.
+  requestAnimationFrame(() => requestAnimationFrame(schedule));
+  return true;
 }
 
 function scrollToLearningTarget(targetId) {
@@ -20269,6 +20329,18 @@ function handleFoundationPrimaryAction(cockpit, action) {
   if (module.key === "risk" && action.key === "open") { handleFoundationAction("risk_load_costs"); return true; }
   if (module.key === "spot" && action.key === "verify") { handleFoundationAction("spot_run_safe_btc"); return true; }
   if (module.key === "risk" && action.key === "practice") { handleFoundationAction("risk_run_safe_btc"); return true; }
+  if (module.key === "spot" && ["open","practice","note"].includes(action.key)) {
+    const stage = action.key === "open" ? 2 : action.key === "practice" ? 3 : 5;
+    const messages = {
+      open:["Étape 2 · Bid / Ask","Ask = prix demandé par les vendeurs ; Bid = prix proposé par les acheteurs. Identifie le vendeur le moins cher puis l’acheteur qui paie le plus."],
+      practice:["Étape 3 · Marché / Limite","Situation A : achat immédiat = ordre au marché. Situation B : prix maximum 59 500 € = ordre limite."],
+      note:["Étape 5 · exécution guidée","Lis la position créée puis réponds à la question sur l’ordre limite."]
+    };
+    const msg = messages[action.key];
+    scrollToFoundationStage(stage);
+    setActionFeedback("info", msg[0], msg[1]);
+    return true;
+  }
   if (["open","practice","verify","note"].includes(action.key)) {
     scrollToLearningTarget("learningFoundationLab");
     const stage = action.key === "open" ? "2" : action.key === "practice" ? "3" : action.key === "verify" ? "4" : "5";
@@ -33713,11 +33785,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.21";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.22";
 
-const ATLAS_BUILD = "28.3.21";
+const ATLAS_BUILD = "28.3.22";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.21";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.22";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

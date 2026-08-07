@@ -1,8 +1,25 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.21  
-**Build :** 28.3.21  
-**Mission :** Two-File Version Control Final Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.22  
+**Build :** 28.3.22  
+**Mission :** Guided Step Focus & Pedagogy Lock
+
+## Build 28.3.22 — Guided Step Focus & Pedagogy Lock
+
+Cette Build part exactement de la 28.3.21 validée sous Firefox.
+
+### Mission unique
+
+Corriger l’ergonomie du Module 02 — Spot et carnet d’ordres : un clic, un rerender, un seul cadrage sur l’étape suivante.
+
+- Étape 1 validée → cadrage Étape 2.
+- Bid / Ask terminés → cadrage Étape 3.
+- Marché / Limite terminés → cadrage Étape 4.
+- Position BTC fictive créée → cadrage Étape 5.
+- Le feedback n’effectue plus de scroll concurrent.
+- Ask / Bid et la Situation B sont reformulés pour réduire l’ambiguïté pédagogique.
+- Aucun changement HTML/CSS/runtime_config.
+- Noyau de versionnage 28.3.21 conservé ; seules les constantes d’identité Build/token évoluent.
 
 ## Build 28.3.21 — Two-File Version Control Final Lock
 

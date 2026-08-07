@@ -3,6 +3,20 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.22 — Guided Step Focus & Pedagogy Lock
+
+- Base : Build 28.3.21 validé sous Firefox.
+- Mission : stabiliser la navigation du Module 02 sans toucher aux autres zones.
+- Après chaque action correcte, le DOM est d’abord rerendu puis un unique cadrage place l’étape suivante en haut de la fenêtre.
+- Suppression du double scroll parasite provoqué par le feedback pédagogique.
+- Étape 1 → 2, fin de Bid/Ask → 3, fin de Marché/Limite → 4, position fictive → 5.
+- Bid / Ask reformulés : Ask = prix demandé par les vendeurs ; Bid = prix proposé par les acheteurs.
+- Situation B reformulée comme prix maximum d’achat à 59 500 €.
+- `index.html`, `style.css` et `runtime_config.json` restent strictement inchangés.
+- Version Control : logique inchangée ; seule l’identité de Build dans `app.js` / `version.json` évolue.
+
+---
+
 ## Build 28.3.21 — Two-File Version Control Final Lock
 
 - Base : Build 28.3.20 validé sous Firefox.
