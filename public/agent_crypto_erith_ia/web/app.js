@@ -1,4 +1,4 @@
-/* Market Core V2.0-Alpha · Build 28.3.14 — PUBLICATION IDENTITY IMMUTABILITY & CACHE RECOVERY LOCK · FAIL-CLOSED PERSISTENCE, RESET SERIALIZATION & DIAGNOSTIC TRUTH LOCK · MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
+/* Market Core V2.0-Alpha · Build 28.3.16 — HISTORICAL VERSION CONTROL RESTORATION LOCK · FAIL-CLOSED PERSISTENCE, RESET SERIALIZATION & DIAGNOSTIC TRUTH LOCK · MASTERY 09–11 GUIDED PEDAGOGY LOCK · CONCLUSION STEP 5 INSTANT VALIDATION & AUTONOMOUS GUIDANCE LOCK · LIVECHECK STEP 2 DIRECT VALIDATION LOCK · INTERNAL AGENT-CRYPTO CLEAN RESET LOCK · FULL LEARNING JOURNEY RESET & MODULE 01 RESTART LOCK · FOUNDATIONS LEARNING PATH 01–03 & BEGINNER GUIDANCE LOCK · GUIDED LEARNING FLOW & CANONICAL README RESET LOCK · STORAGE QUOTA RECOVERY & INDEXED NOTEBOOK MIGRATION LOCK · LEGACY RECOVERY ACTION & PROGRESS RESTORE FIX · LEGACY LEARNING RECOVERY & NOTEBOOK MIGRATION LOCK · GUIDED LESSON NOTEBOOK & COCKPIT RESTART LOCK · CHECKBOX LAYOUT & GUIDED SESSION UI FIX · LEARNING JOURNEY COCKPIT & GUIDED PRACTICE LOCK · DUAL CAPITAL SIMULATION PROFILE LOCK · PEDAGOGY SECURITY GATE LOCK · CANONICAL SNAPSHOT MEMORY DEDUPLICATION LOCK · PUBLICATION IDENTITY SINGLE SOURCE LOCK · PUBLIC CRYPTO MARKET ARCHIVE LOCK · COINGECKO USD→EUR MARKET FALLBACK LOCK · DECISION BOARD TRUTH CONTRACT LOCK · BRIDGE CANONICAL STACK RECOVERY LOCK · METALS INSPECTOR FULL 5/5 LAYOUT LOCK · SCANNER RECOVERY FULL STACK LOCK · ANALYTICAL TRUTH & EVIDENCE · CLEAN HOME · INLINE DATA STATUS · GRAPH THREE-STATE · TOP5 FLOW PERSISTENCE · ADMIN GRAPH TOGGLE · MARKET RECENTER · FORGE PRO BRIDGE
    SINGLE TIMELINE LOCK
    Correction cumulative du Graphique Analyste.
    - largeur réelle : Détail actif superposé, aucune colonne retirée au canvas ;
@@ -17,9 +17,9 @@
    - comparaison construite sur les points CoinGecko natifs, sans interpolation synthétique ;
    - statut de rafraîchissement exclusivement en surimpression, sans déplacement du graphique.
 */
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.14";
-const ATLAS_BUILD = "28.3.14";
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.14";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.16";
+const ATLAS_BUILD = "28.3.16";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.16";
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
   index: "./index.html",
@@ -2321,11 +2321,7 @@ async function atlasVersionCheck(options = {}) {
     atlasVersionAwarenessState.lastCheckedAt =
       Date.now();
 
-    const sameBuildTokenChanged =
-      comparison === 0
-      && remote.token !== ATLAS_ASSET_TOKEN;
-
-    if (comparison > 0 || sameBuildTokenChanged) {
+    if (comparison > 0) {
       const publication =
         await atlasVerifyRemotePublication(remote);
 
@@ -2503,14 +2499,10 @@ async function atlasApplyVersionUpdate(options = {}) {
       remote.build,
       ATLAS_BUILD
     );
-    const sameBuildTokenChanged =
-      comparison === 0
-      && remote.token !== ATLAS_ASSET_TOKEN;
     const repairCurrent =
       comparison === 0
       && (
-        sameBuildTokenChanged
-        || options.allowSameBuild === true
+        options.allowSameBuild === true
         || control?.dataset?.state === "repair"
       );
 
@@ -13717,7 +13709,7 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
     ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
-    : `<b>Parcours pédagogique 28.3.13 actif · Interface 28.3.14</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
+    : `<b>Parcours pédagogique 28.3.13 actif · Interface 28.3.16</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   const cockpit = loadLearningCockpitState();

@@ -1,9 +1,21 @@
 # Agent-Crypto @erith.IA
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.14  
-**Mission du Build :** Publication Identity Immutability & Cache Recovery Lock  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.16  
+**Mission du Build :** Historical Version Control Restoration Lock  
 **Dépôt cible :** `BlueAzur-Hub/erith-ia-memory`  
 **Répertoire :** `public/agent_crypto_erith_ia/`
+
+## Build 28.3.16 — Restauration du contrôle de version historique
+
+Correction chirurgicale du contrôleur de version à partir de la 28.3.14 publique, sans rollback fonctionnel :
+
+- conservation intégrale du code fonctionnel de la 28.3.14 hors contrôleur de version ;
+- suppression des deux branches `sameBuildTokenChanged` introduites en 28.3.14 ;
+- restauration du comportement hérité et identique des Builds 28.3.12 et 28.3.13 : une mise à jour distante normale exige un numéro de Build strictement supérieur ;
+- conservation du mode historique de réparation locale à Build identique quand les marqueurs runtime chargés sont incohérents ;
+- nouvelle identité publique unique `28.3.16` dans `index.html`, `app.js`, `style.css` et `version.json` ;
+- nouveau token d’asset `market-core-v2.0-alpha-build-28.3.16` ;
+- aucune modification de la pédagogie 01–11, de la persistance IndexedDB, du Market, des Métaux, du Bridge, des collecteurs, de la simulation ou du layout.
 
 ## Build 28.3.14 — Identité de publication immuable et récupération du cache
 
