@@ -3,6 +3,20 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.24 — Module 01 Review Focus & Auto-Synthesis Lock
+
+- Base : Build 28.3.23, Module 02 archivé et auto-synthèse validée sous Firefox.
+- Mission : préparer la relecture complète du Module 01 avec le même standard de navigation et de mémoire.
+- Le parcours Module 01 reste identique sur le fond : Livecheck, lecture Prix / 24 h / 7 j, provenance, conclusion observation ≠ prédiction.
+- Étapes 3 → 4 → 5 : cadrage unique après rerender ; suppression du feedback qui relançait un second scroll.
+- Une mauvaise réponse à la conclusion ne déplace pas la page.
+- À 5/5, `notes_free` reçoit `[AUTO-SYNTHÈSE MODULE 01]` sans écraser les notes personnelles.
+- `market_archive_prefill` et `market_learning_journal` sont construits exclusivement à partir des preuves figées.
+- Aucune recommandation ni prédiction n’est générée.
+- Module 02, HTML, CSS, runtime_config et logique du Version Control restent inchangés.
+
+---
+
 ## Build 28.3.23 — Module 02 Auto-Synthesis & Archive Prefill Lock
 
 - Base : Build 28.3.22, parcours Module 02 guidé et cadrage validés.

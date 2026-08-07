@@ -1,8 +1,28 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.23  
-**Build :** 28.3.23  
-**Mission :** Module 02 Auto-Synthesis & Archive Prefill Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.24  
+**Build :** 28.3.24  
+**Mission :** Module 01 Review Focus & Auto-Synthesis Lock
+
+
+## Build 28.3.24 — Module 01 Review Focus & Auto-Synthesis Lock
+
+Cette Build part exactement de la 28.3.23 validée avec le Module 02 archivé.
+
+### Mission unique
+
+Mettre `01 · Marché et données` au même niveau d’ergonomie et de mémoire pédagogique que le Module 02 avant la relecture complète de Christophe.
+
+- Parcours fonctionnel Module 01 conservé : Livecheck, Prix / 24 h / 7 j, source + heure, conclusion guidée.
+- Navigation des étapes 3 → 4 → 5 stabilisée : un rerender, un seul cadrage, aucun feedback concurrent.
+- Les mauvaises réponses ne déplacent plus la page.
+- À 5/5, `Mes notes libres` reçoit un bloc `[AUTO-SYNTHÈSE MODULE 01]` construit uniquement à partir des preuves figées de la session.
+- Les notes personnelles existantes sont conservées.
+- `market_archive_prefill` conserve observation BTC, variations 24 h / 7 j, source, heure, conclusion et verrous de sécurité.
+- `market_learning_journal` conserve la synthèse pédagogique dérivée.
+- Aucune recommandation, prédiction ou donnée manquante n’est inventée.
+- Module 02 et Version Control Protected Core restent inchangés.
+- `index.html`, `style.css` et `runtime_config.json` restent strictement inchangés.
 
 ## Build 28.3.23 — Module 02 Auto-Synthesis & Archive Prefill Lock
 
