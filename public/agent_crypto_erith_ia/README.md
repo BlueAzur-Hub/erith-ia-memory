@@ -1,47 +1,61 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.20  
-**Build :** 28.3.20  
-**Mission :** Two-File Version Control Transition Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.21  
+**Build :** 28.3.21  
+**Mission :** Two-File Version Control Final Lock
 
-## Build 28.3.20 — Two-File Version Control Transition Lock
+## Build 28.3.21 — Two-File Version Control Final Lock
 
-Cette Build part exactement de la 28.3.19 validée sous Firefox.
+Cette Build part exactement de la 28.3.20 validée sous Firefox.
 
 ### Mission unique
 
-Installer le nouveau noyau de versionnage centré sur :
+Terminer la séparation du versionnage.
 
-- `web/app.js` → contrôleur et identité locale exécutée ;
-- `web/version.json` → identité et intégrité de la publication.
+Le noyau actif est désormais :
 
-### Transition sûre
+- `web/app.js` → identité locale exécutée + contrôleur de mise à jour ;
+- `web/version.json` → identité distante publiée + empreintes d’intégrité.
 
-La Build 28.3.19 exige encore des marqueurs Build/token dans `index.html` et `style.css` pour accepter une mise à jour.
+### `index.html` libéré
 
-Ils sont donc conservés **une dernière fois** dans cette 28.3.20, uniquement comme pont de compatibilité entrant.
+`index.html` ne contient plus :
 
-Le contrôleur 28.3.20, lui, ne les lit plus.
+- `meta[name="atlas-build"]` ;
+- `meta[name="atlas-asset-token"]` ;
+- numéro de Build dans les URLs de `style.css` et `app.js`.
 
-### Nouveau contrôle de publication
+Les libellés visibles de version sont remplis dynamiquement par `app.js`.
 
-`version.json` utilise le schéma `agent_crypto_version_manifest_v2` et contient des empreintes SHA-256 pour :
+### `style.css` libéré
+
+`style.css` ne contient plus :
+
+- `ATLAS_ASSET_BUILD` ;
+- `ATLAS_ASSET_TOKEN` ;
+- `--atlas-asset-build` ;
+- `--atlas-asset-token`.
+
+La feuille de style ne porte plus le numéro de Build.
+
+### Intégrité de publication
+
+`version.json` conserve les empreintes SHA-256 de :
 
 - `app.js` ;
 - `index.html` ;
 - `style.css` ;
 - `runtime_config.json`.
 
-Le contrôleur vérifie ces empreintes avant de proposer ou d’installer une publication.
+Cela ne versionne pas HTML/CSS : cela permet seulement au contrôleur de vérifier qu’une publication distante est complète avant de proposer ou d’installer la mise à jour.
 
-Avant le rechargement, il recharge également les URLs canoniques avec `cache: reload` afin de mettre à jour le cache HTTP du navigateur sans dépendre d’un numéro de Build dans le HTML ou le CSS.
+### Conséquence pour les prochaines Builds
 
-### Fichier stable non modifié
+Si une future Build ne modifie ni HTML, ni CSS, ni configuration runtime :
 
-`runtime_config.json` est strictement identique à la 28.3.19 et n’a pas besoin d’être réuploadé.
+- `index.html` reste inchangé ;
+- `style.css` reste inchangé ;
+- `runtime_config.json` reste inchangé ;
+- le versionnage peut évoluer uniquement avec `app.js` + `version.json`.
 
-### Étape suivante
-
-Après validation Firefox de la 28.3.20, la Build suivante pourra retirer définitivement les marqueurs Build/token de `index.html` et `style.css`.
-
-À partir de là, une Build de versionnage seule n’aura plus besoin de modifier ces deux fichiers.
+`build_history.md` et `README.md` restent documentaires et peuvent être mis à jour sans être lus par le runtime.

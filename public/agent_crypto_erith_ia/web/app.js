@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.20 — transition vers un versionnage app.js + version.json.
+  Build 28.3.21 — versionnage final limité à app.js + version.json.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -33713,11 +33713,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.20";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.21";
 
-const ATLAS_BUILD = "28.3.20";
+const ATLAS_BUILD = "28.3.21";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.20";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.21";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

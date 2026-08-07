@@ -3,6 +3,21 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.21 — Two-File Version Control Final Lock
+
+- Base : Build 28.3.20 validé sous Firefox.
+- Mission : terminer la séparation du versionnage et supprimer définitivement l’identité Build/token de `index.html` et `style.css`.
+- Versionnage actif : `web/app.js` + `web/version.json`.
+- `index.html` ne contient plus de meta Build/token et charge `style.css` / `app.js` par leurs URLs canoniques sans paramètre de Build.
+- `style.css` ne contient plus de marqueur Build/token ni de variables CSS de version.
+- Les libellés de version visibles dans l’interface sont injectés au runtime par `app.js`.
+- `version.json` conserve les empreintes SHA-256 des ressources publiées : elles servent à l’intégrité de publication, pas à leur donner une identité de version.
+- `runtime_config.json` reste strictement inchangé.
+- Nouvelle fonctionnalité produit : aucune.
+- À partir de cette Build, si HTML/CSS/configuration ne changent pas, une future Build de versionnage n’a plus besoin de les modifier ni de les réuploader.
+
+---
+
 ## Build 28.3.20 — Two-File Version Control Transition Lock
 
 - Base : Build 28.3.19 validé sous Firefox.
