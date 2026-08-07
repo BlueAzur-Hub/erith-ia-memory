@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.25 — révision guidée, cadrage stable et auto-synthèse du Module 03.
+  Build 28.3.26 — revérification stable du Build courant, sans faux contrôle des fichiers non versionnés.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -34103,11 +34103,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.25";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.26";
 
-const ATLAS_BUILD = "28.3.25";
+const ATLAS_BUILD = "28.3.26";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.25";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.26";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
@@ -34977,18 +34977,23 @@ async function atlasVersionCheck(options = {}) {
       return false;
     }
 
-    if (force || userInitiated) {
-      const publication =
-        await atlasVerifyRemotePublication(remote);
-
-      if (!publication.ok) {
-        atlasVersionShowPublishing(
-          remote.build,
-          remote.token,
-          publication
-        );
-        return false;
-      }
+    // Build courant : la revérification doit rester centrée sur
+    // l'identité de version réellement active : app.js + version.json.
+    // Les autres ressources ne portent plus l'identité de Build depuis 28.3.21.
+    // Une vérification SHA complète reste obligatoire pour toute Build supérieure
+    // avant installation (branche comparison > 0 ci-dessus).
+    if (remote.token !== ATLAS_ASSET_TOKEN) {
+      atlasVersionShowPublishing(
+        remote.build,
+        remote.token,
+        {
+          ok: false,
+          reason: "same_build_token_conflict",
+          loadedBuild: ATLAS_BUILD,
+          loadedToken: ATLAS_ASSET_TOKEN
+        }
+      );
+      return false;
     }
 
     const runtime = atlasVersionRuntimeIdentity();

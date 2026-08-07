@@ -1,8 +1,24 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.25  
-**Build :** 28.3.25  
-**Mission :** Module 03 Review Focus & Auto-Synthesis Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.26  
+**Build :** 28.3.26  
+**Mission :** Current Build Reverify Stability Lock
+
+
+
+## Build 28.3.26 — Current Build Reverify Stability Lock
+
+Cette Build part exactement de la 28.3.25 publiée.
+
+### Mission unique
+
+Corriger le faux état « Publication Build courant incomplète » observé sur le Transformer Book lors d’une revérification manuelle du Build déjà chargé.
+
+- Si `version.json` annonce le même Build et le même token que `app.js`, le contrôleur confirme désormais l’identité courante sans retélécharger ni re-hasher HTML/CSS/runtime_config.
+- Une incohérence même-Build / token différent reste refusée.
+- Toute Build supérieure continue d’être vérifiée avec l’intégrité SHA-256 complète avant proposition d’installation.
+- Le préchargement fort avant installation d’une nouvelle Build reste inchangé.
+- Modules 01, 02, 03, Market, Graphique, Métaux, Simulation, HTML, CSS et runtime_config restent inchangés.
 
 
 

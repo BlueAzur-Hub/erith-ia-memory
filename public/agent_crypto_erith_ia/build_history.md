@@ -3,6 +3,17 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.26 — Current Build Reverify Stability Lock
+
+- Base : Build 28.3.25.
+- Mission : corriger la revérification manuelle du Build déjà chargé sur les navigateurs où une relecture distante d’un fichier auxiliaire pouvait provoquer un faux « publication incomplète ».
+- Même Build + même token : validation de l’identité active via `app.js` + `version.json`, sans re-hash des ressources non versionnées.
+- Même Build + token différent : refus explicite, jamais traité comme une nouvelle version.
+- Build supérieur : vérification SHA-256 complète conservée avant installation.
+- Aucune modification fonctionnelle des Modules 01/02/03 ni des autres zones produit.
+
+---
+
 ## Build 28.3.25 — Module 03 Review Focus & Auto-Synthesis Lock
 
 - Base : Build 28.3.24.
