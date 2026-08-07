@@ -1,9 +1,26 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.27  
-**Build :** 28.3.27  
-**Mission :** Active Recall & Learning Guidance Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.28  
+**Build :** 28.3.28  
+**Mission :** Learning Viewport Focus & Reset Lock
 
+
+
+## Build 28.3.28 — Learning Viewport Focus & Reset Lock
+
+Cette Build part exactement de la 28.3.27 validée sur le Transformer Book et le Ryzen.
+
+### Mission unique
+
+Stabiliser le cadrage du parcours pédagogique après les clics, et garantir qu’un « Repartir de zéro » revient bien sur `01 · Marché et données · session guidée` à `0/5 étapes`.
+
+- Le reset conserve son effacement limité à Agent-Crypto, puis recharge proprement l’application.
+- Après rechargement, Firefox ne doit plus restaurer l’ancienne position verticale : le cockpit revient sur `learningSessionPlan`.
+- Le gestionnaire de focus pédagogique résout désormais la cible **après** le rerender du cockpit (double `requestAnimationFrame`), puis la place en haut avec un décalage constant.
+- Le scroll pédagogique est immédiat par défaut : plus de long déplacement fluide à travers la page (« envoyé valser »).
+- Toutes les actions existantes qui utilisent `scrollToLearningTarget()` bénéficient de ce cadrage sans réécriture de leurs blocs fonctionnels.
+- Aucun changement de contenu pédagogique, Market, Graphique, Simulation, Métaux, Bridge, IndexedDB schema, HTML, CSS ou `runtime_config.json`.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.28.
 
 
 ## Build 28.3.27 — Active Recall & Learning Guidance Lock

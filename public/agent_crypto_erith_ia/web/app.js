@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.27 — rappel actif, synthèse séparée et aides contextuelles pédagogiques.
+  Build 28.3.28 — cadrage pédagogique déterministe et retour reset au Module 01.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -20475,45 +20475,61 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
 }
 
 const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
+const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
+
+function atlasLearningSetManualScrollRestoration() {
+  try {
+    if (typeof history !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+function atlasLearningPositionTarget(target, options = {}) {
+  if (!target) return false;
+  learningOpenParentDetails(target);
+  const topGap = Number(options.topGap ?? ATLAS_LEARNING_STAGE_TOP_GAP);
+  const rect = target.getBoundingClientRect();
+  const top = Math.max(0, window.scrollY + rect.top - topGap);
+  const root = document.documentElement;
+  const previousScrollBehavior = root.style.scrollBehavior;
+  const smooth = options.smooth === true;
+  if (!smooth) root.style.scrollBehavior = "auto";
+  window.scrollTo({ top, behavior:smooth ? "smooth" : "auto" });
+  if (!smooth) requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
+  target.classList.add("learning-target-flash");
+  window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+  return true;
+}
+
+function atlasLearningScheduleTarget(targetResolver, options = {}) {
+  const resolveTarget = typeof targetResolver === "function"
+    ? targetResolver
+    : () => targetResolver;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    atlasLearningPositionTarget(resolveTarget(), options);
+  }));
+  return true;
+}
 
 function scrollToFoundationStage(stage, options = {}) {
   const stageNumber = String(stage || "").trim();
   if (!stageNumber) return false;
-  const schedule = () => {
+  return atlasLearningScheduleTarget(() => {
     const lab = els.learningFoundationLab || document.getElementById("learningFoundationLab");
-    const target = lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
-    if (!target) return;
-    learningOpenParentDetails(target);
-    const rect = target.getBoundingClientRect();
-    const top = Math.max(0, window.scrollY + rect.top - Number(options.topGap ?? ATLAS_LEARNING_STAGE_TOP_GAP));
-    if (options.smooth === true) {
-      window.scrollTo({ top, behavior:"smooth" });
-    } else {
-      // The global stylesheet uses html { scroll-behavior:smooth }.
-      // Temporarily neutralize it so a pedagogical step never "travels" through the page.
-      const root = document.documentElement;
-      const previousScrollBehavior = root.style.scrollBehavior;
-      root.style.scrollBehavior = "auto";
-      window.scrollTo({ top, behavior:"auto" });
-      requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
-    }
-    target.classList.add("learning-target-flash");
-    window.setTimeout(() => target.classList.remove("learning-target-flash"), 1400);
-  };
-  // Two frames: first lets renderLearningJourneyCockpit replace the DOM,
-  // second positions the newly created canonical stage exactly once.
-  requestAnimationFrame(() => requestAnimationFrame(schedule));
-  return true;
+    return lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
+  }, options);
 }
 
-function scrollToLearningTarget(targetId) {
-  const target = document.getElementById(targetId);
-  if (!target) return false;
-  learningOpenParentDetails(target);
-  target.scrollIntoView({ behavior:"smooth", block:"start" });
-  target.classList.add("learning-target-flash");
-  setTimeout(() => target.classList.remove("learning-target-flash"), 1800);
-  return true;
+function scrollToLearningTarget(targetId, options = {}) {
+  const id = String(targetId || "").trim();
+  if (!id) return false;
+  // Resolve the target after the current render cycle. Several cockpit actions
+  // rebuild their DOM before the next step is shown; resolving here prevents
+  // a scroll toward an element that has just been replaced.
+  return atlasLearningScheduleTarget(() => document.getElementById(id), options);
 }
 
 function continueLearningJourney(practiceOnly = false) {
@@ -21068,12 +21084,13 @@ function agentCryptoShowResetSuccessOnBoot() {
     sessionStorage.removeItem(AGENT_CRYPTO_RESET_SUCCESS_KEY);
   } catch {}
   if (!marker || marker.build !== ATLAS_BUILD) return false;
+  atlasLearningSetManualScrollRestoration();
   setActionFeedback(
     "ok",
     "Réinitialisation terminée",
     `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
   );
-  scrollToLearningTarget("learningPrimaryActionPanel");
+  scrollToLearningTarget(marker.target || "learningSessionPlan");
   return true;
 }
 
@@ -21145,8 +21162,13 @@ async function resetEntireLearningJourney() {
     atlasSimulationScenarioPct = 0;
 
     try {
-      sessionStorage.setItem(AGENT_CRYPTO_RESET_SUCCESS_KEY, JSON.stringify({ build:ATLAS_BUILD, reset_at:resetAt }));
+      sessionStorage.setItem(AGENT_CRYPTO_RESET_SUCCESS_KEY, JSON.stringify({
+        build:ATLAS_BUILD,
+        reset_at:resetAt,
+        target:"learningSessionPlan"
+      }));
     } catch {}
+    atlasLearningSetManualScrollRestoration();
     atlasLearningEndResetBarrier();
     window.location.reload();
     return { ok:true, build:ATLAS_BUILD, reset_at:resetAt };
@@ -34196,11 +34218,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.27";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.28";
 
-const ATLAS_BUILD = "28.3.27";
+const ATLAS_BUILD = "28.3.28";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.27";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.28";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

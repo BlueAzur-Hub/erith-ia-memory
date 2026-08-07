@@ -1,5 +1,18 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.28 — Learning Viewport Focus & Reset Lock
+
+- Base : Build 28.3.27 validé sur Transformer Book et Ryzen.
+- `Repartir de zéro` conserve le reset vérifié IndexedDB/localStorage mais enregistre maintenant explicitement `learningSessionPlan` comme destination de reprise.
+- La restauration automatique de position du navigateur est neutralisée pour ce reset afin d’éviter le retour à l’ancienne hauteur de page.
+- `scrollToLearningTarget()` ne capture plus un élément avant rerender : la cible est retrouvée après deux frames, puis cadrée une seule fois.
+- Le cadrage pédagogique utilise par défaut un saut immédiat avec marge haute constante, sans déplacement fluide à travers de longues zones.
+- `scrollToFoundationStage()` et les autres appels pédagogiques partagent le même mécanisme de positionnement.
+- `index.html`, `style.css` et `runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique inchangée ; identité locale passée à 28.3.28.
+
+---
+
 ## Build 28.3.27 — Active Recall & Learning Guidance Lock
 
 - Base : Build 28.3.26.
