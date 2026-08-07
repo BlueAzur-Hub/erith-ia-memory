@@ -1,8 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.29  
-**Build :** 28.3.29  
-**Mission :** Learning Viewport Settle & Reset Hover Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.30  
+**Build :** 28.3.30  
+**Mission :** Livecheck Direct Market Focus Lock
+
+
+
+## Build 28.3.30 — Livecheck Direct Market Focus Lock
+
+Cette Build part exactement de la 28.3.29.
+
+### Mission unique
+
+Supprimer le détour visuel observé au clic sur `Lancer Livecheck` pendant le Module 01 : le parcours doit aller directement au Market, sans passage bref par l’ancienne position ou le haut de page.
+
+- Avant de lancer le rafraîchissement réseau, le cockpit cadre immédiatement `market-workspace`.
+- La couche de continuité du Market mémorise donc le bon viewport avant la reconstruction de la table.
+- Le Livecheck, le Market Snapshot, la ligne Bitcoin, les preuves pédagogiques et IndexedDB ne changent pas.
+- Le ciblage final de la ligne Bitcoin après validation de l’étape 2 reste en place.
+- En cas d’échec Livecheck, le retour vers la zone pédagogique reste inchangé.
+- Modification fonctionnelle : `web/app.js` uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.30.
 
 
 

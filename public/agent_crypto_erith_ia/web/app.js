@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.29 — stabilisation du viewport pédagogique après rerender et reset.
+  Build 28.3.30 — Livecheck direct vers le Market sans détour de viewport.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19802,9 +19802,26 @@ async function runFoundationSchoolPosition(moduleKey) {
   return ok;
 }
 
+function atlasLearningPrimeLivecheckMarketFocus() {
+  const target = document.getElementById("market-workspace");
+  if (!target) return false;
+  return atlasLearningPositionTarget(target, {
+    smooth: false,
+    flash: false,
+    topGap: ATLAS_LEARNING_STAGE_TOP_GAP,
+    tolerance: 0
+  });
+}
+
 async function runFoundationLivecheck() {
   const before = loadLearningCockpitState();
   const shouldValidateStep2 = before.module_key === "market" && !before.completed_at && before.steps.read === true && before.steps.open !== true;
+
+  // Cadrer d’abord le Market avant que le Livecheck ne reconstruise la table.
+  // La continuité d’interface mémorise alors la bonne destination et n’a plus
+  // besoin de restaurer brièvement l’ancienne position du cockpit.
+  if (shouldValidateStep2) atlasLearningPrimeLivecheckMarketFocus();
+
   const succeeded = await runLivecheck({ reason: "manual-livecheck" });
 
   if (!shouldValidateStep2) return succeeded;
@@ -34242,11 +34259,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.29";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.30";
 
-const ATLAS_BUILD = "28.3.29";
+const ATLAS_BUILD = "28.3.30";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.29";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.30";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

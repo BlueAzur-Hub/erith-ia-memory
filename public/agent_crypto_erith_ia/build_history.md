@@ -1,5 +1,18 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.30 — Livecheck Direct Market Focus Lock
+
+- Base : Build 28.3.29.
+- Lors du Module 01, le clic `Lancer Livecheck` pouvait provoquer un détour visuel : ancien viewport / haut de page, puis Market.
+- Le cockpit positionne désormais immédiatement `market-workspace` avant la reconstruction de la table par le Livecheck.
+- La couche de continuité du Market capture donc directement la bonne destination au lieu de restaurer brièvement l’ancienne position pédagogique.
+- Après succès, la logique existante de preuve, IndexedDB et ciblage de la ligne Bitcoin reste inchangée.
+- En cas d’échec, le retour pédagogique existant vers le cockpit reste inchangé.
+- `index.html`, `style.css` et `runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core inchangé ; seules les constantes d’identité passent à 28.3.30.
+
+---
+
 ## Build 28.3.29 — Learning Viewport Settle & Reset Hover Lock
 
 - Base : Build 28.3.28.
