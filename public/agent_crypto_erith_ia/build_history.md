@@ -3,6 +3,16 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.19 — Runtime Config Separation Lock
+
+- Base : Build 28.3.18.
+- Mission : sortir la configuration runtime de `version.json`.
+- Nouvelle fonction produit : aucune.
+- Comportement volontairement modifié : aucun.
+- `assets` et `registries` sont déplacés sans modification vers `web/runtime_config.json`.
+- `version.json` conserve uniquement l’identité de publication et le contrat de cohérence encore requis par le contrôleur actuel.
+- `runtime_config.json` ne porte aucun numéro de Build : il ne change que lorsque la configuration change.
+
 ## Build 28.3.18 — Version Manifest Separation Lock
 
 - Base : Build 28.3.17.
