@@ -3,6 +3,19 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.25 — Module 03 Review Focus & Auto-Synthesis Lock
+
+- Base : Build 28.3.24.
+- Mission : aligner le Module 03 sur le standard humain de navigation et d’archivage des Modules 01/02.
+- Coûts école 0,60 %, position fictive BTC 50 €, scénarios −3 % / +5 % et brut/net restent les preuves fonctionnelles existantes.
+- Chaque transition du Module 03 possède désormais un seul propriétaire de viewport et un seul cadrage après rerender.
+- À 5/5, `notes_free` reçoit `[AUTO-SYNTHÈSE MODULE 03]` sans écraser les notes personnelles.
+- `risk_archive_prefill` et `risk_learning_journal` sont construits exclusivement depuis les preuves figées de la session.
+- Frais/spread/slippage réels restent `non vérifiés`; aucune donnée réelle n’est inventée.
+- Modules 01/02, HTML, CSS, runtime_config et Version Control Protected Core restent inchangés.
+
+---
+
 ## Build 28.3.24 — Module 01 Review Focus & Auto-Synthesis Lock
 
 - Base : Build 28.3.23, Module 02 archivé et auto-synthèse validée sous Firefox.

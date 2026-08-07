@@ -1,9 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.24  
-**Build :** 28.3.24  
-**Mission :** Module 01 Review Focus & Auto-Synthesis Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.25  
+**Build :** 28.3.25  
+**Mission :** Module 03 Review Focus & Auto-Synthesis Lock
 
+
+
+## Build 28.3.25 — Module 03 Review Focus & Auto-Synthesis Lock
+
+Cette Build part exactement de la 28.3.24 validée.
+
+### Mission unique
+
+Mettre `03 · Frais et gestion du risque` au même standard de navigation et de mémoire que les Modules 01 et 02 avant la reprise pédagogique de Christophe.
+
+- Parcours fonctionnel conservé : coûts école, position BTC fictive de 50 €, scénarios −3 % / +5 %, brut / net et conclusion guidée.
+- Étapes 1 → 2 → 3 → 4 → 5 : cadrage unique sur la carte canonique après rerender.
+- Suppression des doubles scrolls concurrents propres au Module 03 ; une mauvaise réponse ne déplace pas la page.
+- À 5/5, `Mes notes libres` reçoit `[AUTO-SYNTHÈSE MODULE 03]` sans écraser les notes personnelles.
+- `risk_archive_prefill` conserve modèle de coûts école, position figée, scénarios figés, conclusion et verrous de sécurité.
+- Les frais réels, le spread réel et le slippage réel restent explicitement non vérifiés ; aucune valeur réelle n’est inventée.
+- `risk_learning_journal` conserve la synthèse pédagogique dérivée.
+- Modules 01/02, HTML, CSS, runtime_config et logique du Version Control Protected Core restent inchangés.
 
 ## Build 28.3.24 — Module 01 Review Focus & Auto-Synthesis Lock
 

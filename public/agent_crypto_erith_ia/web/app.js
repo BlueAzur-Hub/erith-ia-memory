@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.24 — révision guidée, cadrage stable et auto-synthèse du Module 01.
+  Build 28.3.25 — révision guidée, cadrage stable et auto-synthèse du Module 03.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -18752,6 +18752,89 @@ function foundationRiskGuidedSummary(cockpit) {
   return { ready, roundTrip, minus, plus, minusTested, plusTested, text };
 }
 
+function riskModule03AutoBlockText(cockpit, summary) {
+  const evidence = cockpit?.practice_evidence || {};
+  const details = evidence.risk_position_details || {};
+  const lines = [
+    "[AUTO-SYNTHÈSE MODULE 03]",
+    "Module 03 · Frais et gestion du risque — parcours guidé 5/5.",
+    `Exposition pédagogique : ${Number.isFinite(Number(details.amount_eur)) ? fmtEUR.format(Number(details.amount_eur)) : fmtEUR.format(SIM_PROFILE.defaultAmount)} engagés sur ${fmtEUR.format(SIM_PROFILE.startCash)} de capital virtuel.`,
+    `Coûts pédagogiques aller-retour : ${Number(summary.roundTrip || 0).toFixed(2)} % dans l’exemple école ; ce n’est pas un tarif réel de plateforme.`,
+    summary.minus?.ready ? `Scénario −3 % : ${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net.` : null,
+    summary.plus?.ready ? `Scénario +5 % : ${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net.` : null,
+    "Lecture : brut = avant coûts ; net = après coûts. Les coûts réduisent un gain disponible et aggravent une perte.",
+    "Les scénarios sont fictifs et figés au moment du test ; ils ne prédisent pas le marché et ne modifient pas la position.",
+    "Frais réels, spread réel et slippage réel : non vérifiés / à renseigner depuis une source officielle. Aucune valeur réelle n’est inventée.",
+    "[/AUTO-SYNTHÈSE MODULE 03]"
+  ].filter(Boolean);
+  return lines.join("\n");
+}
+
+function riskModule03UpsertAutoBlock(existingText, autoBlock) {
+  const start = "[AUTO-SYNTHÈSE MODULE 03]";
+  const end = "[/AUTO-SYNTHÈSE MODULE 03]";
+  const source = String(existingText || "");
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end);
+  let personal = source;
+  if (startIndex >= 0 && endIndex >= startIndex) {
+    personal = `${source.slice(0, startIndex)}${source.slice(endIndex + end.length)}`.trim();
+  }
+  return personal ? `${autoBlock}\n\n${personal}` : autoBlock;
+}
+
+function ensureRiskModule03AutoPrefill(cockpit) {
+  if (!cockpit || cockpit.module_key !== "risk" || cockpit.completed_at || cockpit.steps?.note !== true) return false;
+  const summary = foundationRiskGuidedSummary(cockpit);
+  const evidence = cockpit.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
+  const details = evidence.risk_position_details && typeof evidence.risk_position_details === "object" ? evidence.risk_position_details : null;
+  if (!summary.ready || evidence.risk_guided_answer !== "oui" || !details || !summary.minus?.ready || !summary.plus?.ready) return false;
+  cockpit.practice_evidence = evidence;
+  const generatedAt = evidence.risk_archive_prefill?.generated_at || new Date().toISOString();
+  const autoBlock = riskModule03AutoBlockText(cockpit, summary);
+  const nextNotes = riskModule03UpsertAutoBlock(cockpit.notes_free, autoBlock);
+  const prefill = {
+    schema:"agent_crypto_risk_module_03_archive_prefill_v1",
+    generated_at:generatedAt,
+    module_key:"risk",
+    module_title:"03 · Frais et gestion du risque",
+    steps_completed:5,
+    status:"ready_for_archive",
+    cost_model:{
+      source:"school_example",
+      buy_fee_pct:0.25,
+      sell_fee_pct:0.25,
+      entry_impact_pct:0.05,
+      exit_impact_pct:0.05,
+      round_trip_pct:Number(summary.roundTrip),
+      real_platform_fee_verified:false,
+      real_spread_verified:false,
+      real_slippage_verified:false
+    },
+    position:{
+      asset:"BTC",
+      amount_eur:Number(details.amount_eur || SIM_PROFILE.defaultAmount),
+      quantity:Number(details.quantity || 0),
+      entry_price_eur:Number(details.entry_price_eur || 0),
+      cash_remaining_eur:Number(details.cash_remaining_eur || 0),
+      evidence_mode:"frozen_at_validation"
+    },
+    scenarios:{
+      minus_3_pct:{ gross_pnl_eur:Number(summary.minus.grossPnl), net_pnl_eur:Number(summary.minus.netPnl), scenario_price_eur:Number(summary.minus.marketPrice), round_trip_pct:Number(summary.minus.roundTrip), model:String(summary.minus.model || "entry_anchored_simplified") },
+      plus_5_pct:{ gross_pnl_eur:Number(summary.plus.grossPnl), net_pnl_eur:Number(summary.plus.netPnl), scenario_price_eur:Number(summary.plus.marketPrice), round_trip_pct:Number(summary.plus.roundTrip), model:String(summary.plus.model || "entry_anchored_simplified") }
+    },
+    conclusion:{ costs_reduce_available_result:true, gross_and_net_are_distinct:true, scenario_is_prediction:false },
+    safety:{ recommendation_generated:false, real_order:false, api_key_used:false, wallet_connected:false }
+  };
+  const previous = evidence.risk_archive_prefill;
+  const prefillChanged = JSON.stringify(previous || null) !== JSON.stringify(prefill);
+  const notesChanged = String(cockpit.notes_free || "") !== nextNotes;
+  evidence.risk_archive_prefill = prefill;
+  evidence.risk_learning_journal = { generated_at:generatedAt, summary:autoBlock, archive_ready:true, real_fee_verified:false, prediction_claim:false };
+  cockpit.notes_free = nextNotes;
+  return prefillChanged || notesChanged;
+}
+
 function foundationRiskLab(cockpit) {
   const e = cockpit.practice_evidence || {};
   const scenarios = Array.isArray(e.scenarios) ? e.scenarios : [];
@@ -19253,6 +19336,11 @@ function marketFoundationFeedback(ok, title, text) {
   setActionFeedback(ok ? "ok" : "warn", title, text);
 }
 
+function riskFoundationFeedback(ok, title, text) {
+  // Module 03 owns its viewport navigation explicitly; feedback must not launch a second scroll.
+  setActionFeedback(ok ? "ok" : "warn", title, text);
+}
+
 function spotFoundationFeedback(ok, title, text) {
   // Module 02 owns its viewport navigation explicitly; feedback must not launch a second scroll.
   setActionFeedback(ok ? "ok" : "warn", title, text);
@@ -19439,19 +19527,35 @@ function handleFoundationAction(action) {
     }
   }
   if (module.key === "risk") {
-    if (action === "risk_load_costs") { els.btnSimCostSchoolPreset?.click(); scrollToLearningTarget("learningFoundationLab"); return; }
+    if (action === "risk_load_costs") {
+      els.btnSimCostSchoolPreset?.click();
+      const current = loadLearningCockpitState();
+      if (current.steps.open === true) {
+        scrollToFoundationStage(3);
+        riskFoundationFeedback(true, "Étape 2 validée", "Exemple école chargé : 0,60 % aller-retour dans le modèle pédagogique. Étape 3 ouverte.");
+      } else riskFoundationFeedback(false, "Exemple non chargé", "Le cockpit n’a pas confirmé l’exemple de coûts pédagogiques.");
+      return;
+    }
     if (action === "risk_run_safe_btc") { runFoundationSchoolPosition("risk"); return; }
     if (action === "risk_scenario_minus3" || action === "risk_scenario_plus5") {
       const pct = action === "risk_scenario_minus3" ? -3 : 5;
-      atlasSimulationScenarioPct = pct; renderSimulationScenario(); recordLearningPracticeEvidence("scenario", pct); scrollToLearningTarget("learningFoundationLab"); foundationFeedback(true, `Scénario ${atlasSignedPct(pct)} enregistré`, "Le résultat brut et le résultat net sont affichés dans la carte du Module 03."); return;
+      atlasSimulationScenarioPct = pct;
+      renderSimulationScenario();
+      recordLearningPracticeEvidence("scenario", pct);
+      const current = loadLearningCockpitState();
+      const complete = current.steps.verify === true;
+      scrollToFoundationStage(complete ? 5 : 4);
+      riskFoundationFeedback(true, `Scénario ${atlasSignedPct(pct)} enregistré`, complete ? "Les deux scénarios sont figés. Étape 5 ouverte." : "Lis le résultat brut et net, puis teste l’autre scénario.");
+      return;
     }
-    if (action === "risk_costs_reduce_no") return foundationFeedback(false, "Réponse à revoir", "Oui. Les commissions et écarts estimés diminuent le résultat disponible par rapport au résultat brut.");
+    if (action === "risk_costs_reduce_no") return riskFoundationFeedback(false, "Réponse à revoir", "Oui. Les coûts estimés diminuent le résultat disponible par rapport au résultat brut.");
     if (action === "risk_costs_reduce_yes") {
       const summary = foundationRiskGuidedSummary(cockpit);
-      if (!summary.ready) return foundationFeedback(false, "Scénarios requis", "Teste d’abord −3 % puis +5 %.");
+      if (!summary.ready) return riskFoundationFeedback(false, "Scénarios requis", "Teste d’abord −3 % puis +5 %.");
       cockpit.practice_evidence.risk_guided_conclusion = true; cockpit.practice_evidence.risk_guided_summary = summary.text; cockpit.practice_evidence.risk_guided_answer = "oui"; cockpit.practice_evidence.risk_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "risk_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); setActionFeedback("ok", "Module 03 · 5/5", "La synthèse brut / net est enregistrée. La note personnelle reste facultative. Utilise maintenant « Terminer et archiver le module ».", els.learningCompletionAction); return;
+      ensureRiskModule03AutoPrefill(cockpit);
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); riskFoundationFeedback(true, "Module 03 · 5/5", "Auto-synthèse, journal pédagogique et archive sont préremplis à partir des preuves figées. Les frais réels restent non vérifiés. Utilise maintenant « Terminer et archiver le module »."); return;
     }
   }
   if (module.key === "account") {
@@ -19647,6 +19751,11 @@ async function runFoundationSchoolPosition(moduleKey) {
   if (moduleKey === "spot" && ok) {
     scrollToFoundationStage(5);
     spotFoundationFeedback(true, "Position fictive créée", "La preuve du portefeuille virtuel et du journal local a été enregistrée. Étape 5 ouverte.");
+  } else if (moduleKey === "risk" && ok) {
+    scrollToFoundationStage(4);
+    riskFoundationFeedback(true, "Étape 3 validée", "Position BTC fictive de 50 € enregistrée. Étape 4 ouverte : compare −3 % puis +5 %.");
+  } else if (moduleKey === "risk") {
+    riskFoundationFeedback(false, "Position non créée", "Le simulateur n’a pas confirmé la position BTC fictive de 50 €.");
   } else {
     scrollToLearningTarget("learningFoundationLab");
     foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
@@ -20031,6 +20140,7 @@ function renderLearningJourneyCockpit() {
     if (cockpit.steps.note !== noteBeforeRepair) stateChanged = true;
     if (cockpit.module_key === "market" && cockpit.steps.note === true && ensureMarketModule01AutoPrefill(cockpit)) stateChanged = true;
     if (cockpit.module_key === "spot" && cockpit.steps.note === true && ensureSpotModule02AutoPrefill(cockpit)) stateChanged = true;
+    if (cockpit.module_key === "risk" && cockpit.steps.note === true && ensureRiskModule03AutoPrefill(cockpit)) stateChanged = true;
   }
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   if (stateChanged) saveLearningCockpitState(cockpit);
@@ -20151,7 +20261,7 @@ function renderLearningJourneyCockpit() {
       els.learningCompletionActionHint.textContent = finished
         ? "Le module terminé reste visible ci-dessous. Le passage au module suivant est une action distincte."
         : archiveReady
-          ? ((cockpit.module_key === "market" && cockpit.practice_evidence?.market_archive_prefill) || (cockpit.module_key === "spot" && cockpit.practice_evidence?.spot_archive_prefill)
+          ? ((cockpit.module_key === "market" && cockpit.practice_evidence?.market_archive_prefill) || (cockpit.module_key === "spot" && cockpit.practice_evidence?.spot_archive_prefill) || (cockpit.module_key === "risk" && cockpit.practice_evidence?.risk_archive_prefill)
               ? "Les 5 étapes sont validées. Auto-synthèse, journal et archive sont préremplis ; clique ici pour écrire puis relire l’archive IndexedDB."
               : "Les 5 étapes sont validées. Clique ici pour écrire et relire l’archive IndexedDB.")
           : `Progression technique : ${completedSteps}/5. L’archivage reste verrouillé jusqu’à la fin du parcours.`;
@@ -20226,7 +20336,7 @@ function markIntegratedLessonRead() {
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(cockpit);
   renderLearningJourneyCockpit();
-  if (cockpit.module_key === "spot" && foundationIsActive(cockpit.module_key)) scrollToFoundationStage(2);
+  if (["spot", "risk"].includes(cockpit.module_key) && foundationIsActive(cockpit.module_key)) scrollToFoundationStage(2);
   else scrollToLearningTarget("learningPrimaryActionPanel");
   const nextAction = learningActionState(loadLearningCockpitState());
   setActionFeedback("ok", "Étape 1 validée", `${learningModuleByKey(cockpit.module_key).title} · la prochaine action est « ${nextAction.label} ». La leçon reste disponible pour relecture.`);
@@ -20461,6 +20571,11 @@ function focusLearningConclusion() {
     marketFoundationFeedback(true, "Conclusion guidée", "Lis la synthèse construite par le cockpit, puis réponds à la question. Aucune rédaction libre n’est obligatoire.");
     return;
   }
+  if (cockpit.module_key === "risk" && foundationIsActive(cockpit.module_key)) {
+    scrollToFoundationStage(5);
+    riskFoundationFeedback(true, "Résultat net guidé", "Lis la comparaison −3 % / +5 % figée, puis réponds à la question. Aucune rédaction libre n’est obligatoire.");
+    return;
+  }
   if (foundationIsActive(cockpit.module_key)) {
     scrollToLearningTarget("learningFoundationLab");
     const card = els.learningFoundationLab?.querySelector?.('[data-foundation-stage="5"]') || els.learningFoundationLab;
@@ -20511,6 +20626,15 @@ function handleFoundationPrimaryAction(cockpit, action) {
   if (module.key === "risk" && action.key === "open") { handleFoundationAction("risk_load_costs"); return true; }
   if (module.key === "spot" && action.key === "verify") { handleFoundationAction("spot_run_safe_btc"); return true; }
   if (module.key === "risk" && action.key === "practice") { handleFoundationAction("risk_run_safe_btc"); return true; }
+  if (module.key === "risk" && ["verify", "note"].includes(action.key)) {
+    const stage = action.key === "verify" ? 4 : 5;
+    const msg = action.key === "verify"
+      ? ["Étape 4 · scénarios", "Teste −3 %, puis +5 %. Compare résultat brut et résultat net."]
+      : ["Étape 5 · résultat net", "Lis la synthèse figée, puis réponds à la question sur l’effet des coûts."];
+    scrollToFoundationStage(stage);
+    riskFoundationFeedback(true, msg[0], msg[1]);
+    return true;
+  }
   if (module.key === "spot" && ["open","practice","note"].includes(action.key)) {
     const stage = action.key === "open" ? 2 : action.key === "practice" ? 3 : 5;
     const messages = {
@@ -20604,6 +20728,10 @@ async function completeLearningSession() {
   }
   if (cockpit.module_key === "spot" && cockpit.steps.note === true) {
     ensureSpotModule02AutoPrefill(cockpit);
+    saveLearningCockpitState(cockpit);
+  }
+  if (cockpit.module_key === "risk" && cockpit.steps.note === true) {
+    ensureRiskModule03AutoPrefill(cockpit);
     saveLearningCockpitState(cockpit);
   }
   if (!foundationIsActive(cockpit.module_key) && !String(cockpit.takeaway || "").trim()) {
@@ -33975,11 +34103,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.24";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.25";
 
-const ATLAS_BUILD = "28.3.24";
+const ATLAS_BUILD = "28.3.25";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.24";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.25";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
