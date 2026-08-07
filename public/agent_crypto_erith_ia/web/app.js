@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.17 — refactoring structurel à comportement constant.
+  Build 28.3.18 — refactoring structurel à comportement constant.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19074,7 +19074,7 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
     ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
-    : `<b>Parcours pédagogique 28.3.13 actif · Interface 28.3.17</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
+    : `<b>Parcours pédagogique 28.3.13 actif · Interface 28.3.18</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -33713,11 +33713,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.17";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.18";
 
-const ATLAS_BUILD = "28.3.17";
+const ATLAS_BUILD = "28.3.18";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.17";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.18";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
