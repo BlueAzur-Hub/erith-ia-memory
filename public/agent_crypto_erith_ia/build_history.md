@@ -3,6 +3,21 @@
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
+## Build 28.3.20 — Two-File Version Control Transition Lock
+
+- Base : Build 28.3.19 validé sous Firefox.
+- Mission : installer le nouveau noyau de versionnage centré sur `app.js` + `version.json`.
+- `version.json` abandonne `coherence_contract` et devient le manifeste d’identité + intégrité SHA-256.
+- `app.js` vérifie désormais l’identité distante par ses propres constantes Build/token et contrôle les empreintes des fichiers publiés.
+- `index.html` et `style.css` conservent leurs marqueurs Build/token **une dernière fois**, uniquement pour que le contrôleur 28.3.19 puisse accepter et installer cette Build.
+- Le nouveau contrôleur 28.3.20 n’utilise plus ces marqueurs HTML/CSS.
+- Avant rechargement, les ressources publiées sont relues avec `cache: reload` et leur SHA-256 est contrôlé afin de rafraîchir le cache HTTP sans dépendre d’un numéro de Build dans le CSS ou le HTML.
+- `runtime_config.json` reste strictement inchangé.
+- Nouvelle fonctionnalité produit : aucune.
+- Prochaine étape : suppression définitive des marqueurs Build/token de `index.html` et `style.css` dans la Build suivante, une fois cette transition validée sous Firefox.
+
+---
+
 ## Build 28.3.19 — Runtime Config Separation Lock
 
 - Base : Build 28.3.18.

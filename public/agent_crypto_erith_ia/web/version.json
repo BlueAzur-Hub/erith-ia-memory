@@ -1,30 +1,16 @@
 {
-  "schema": "agent_crypto_version_manifest_v1",
-  "release": "Market Core V2.0-Alpha · Build 28.3.19",
-  "build": "28.3.19",
-  "asset_token": "market-core-v2.0-alpha-build-28.3.19",
-  "published_at": "2026-08-07T08:30:00+02:00",
-  "coherence_contract": {
-    "index": {
-      "path": "index.html",
-      "build_marker": "meta[name=atlas-build]",
-      "token_marker": "meta[name=atlas-asset-token]"
-    },
-    "app": {
-      "path": "app.js",
-      "build_marker": "ATLAS_BUILD",
-      "token_marker": "ATLAS_ASSET_TOKEN"
-    },
-    "style": {
-      "path": "style.css",
-      "build_marker": "ATLAS_ASSET_BUILD",
-      "token_marker": "ATLAS_ASSET_TOKEN"
-    },
-    "active_marker_policy": {
-      "required_count_per_build_marker": 1,
-      "required_count_per_token_marker": 1,
-      "historical_markers_are_non_active": true,
-      "remote_publication_rejected_on_duplicate_active_marker": true
+  "schema": "agent_crypto_version_manifest_v2",
+  "release": "Market Core V2.0-Alpha · Build 28.3.20",
+  "build": "28.3.20",
+  "asset_token": "market-core-v2.0-alpha-build-28.3.20",
+  "published_at": "2026-08-07T08:41:00+02:00",
+  "integrity": {
+    "algorithm": "SHA-256",
+    "files": {
+      "app.js": "0abb991241ce85f2199010921b1c3fc717bfb6f0b372f90115c93b3c994d5865",
+      "index.html": "e0858547014c7ad2e189cabf9f516989b93c677891e9c8fcf7fc73b56f8daf77",
+      "style.css": "02c2caf44a628a35d81e046a19c6c20c5968392105bdeb878799cc854c950cc7",
+      "runtime_config.json": "32405d4a33fc2d4a60b31019e4fd0d3d8787d3eeb219e7547c47cb145e32adab"
     }
   }
 }

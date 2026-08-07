@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.19 — refactoring structurel à comportement constant.
+  Build 28.3.20 — transition vers un versionnage app.js + version.json.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19074,7 +19074,7 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
     ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
-    : `<b>Parcours pédagogique 28.3.13 actif · Interface 28.3.19</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
+    : `<b>Parcours pédagogique 28.3.13 actif · Interface ${ATLAS_BUILD}</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -33713,18 +33713,19 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.19";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.20";
 
-const ATLAS_BUILD = "28.3.19";
+const ATLAS_BUILD = "28.3.20";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.19";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.20";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
 const ATLAS_VERSION_ASSET_URLS = Object.freeze({
-  index: "./index.html",
-  app: "./app.js",
-  style: "./style.css"
+  "app.js": "./app.js",
+  "index.html": "./index.html",
+  "style.css": "./style.css",
+  "runtime_config.json": "./runtime_config.json"
 });
 
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
@@ -34136,17 +34137,88 @@ function atlasVersionManifestToken(manifest) {
   ).trim();
 }
 
-async function atlasFetchVersionText(path, stamp = Date.now()) {
-  const response = await fetch(
-    atlasVersionRequestUrl(path, stamp),
-    {
-      cache: "no-store",
-      credentials: "same-origin",
-      headers: {
-        accept: "text/plain, text/html, text/css, application/javascript"
-      }
-    }
+function atlasVersionManifestIntegrity(manifest) {
+  const algorithm = String(
+    manifest?.integrity?.algorithm || ""
+  ).trim().toUpperCase();
+
+  if (algorithm !== "SHA-256") {
+    throw new Error(
+      "Algorithme d’intégrité de publication invalide"
+    );
+  }
+
+  const files = manifest?.integrity?.files;
+  if (!files || typeof files !== "object") {
+    throw new Error(
+      "Empreintes de publication absentes"
+    );
+  }
+
+  const required = Object.keys(
+    ATLAS_VERSION_ASSET_URLS
   );
+  const normalized = {};
+
+  for (const name of required) {
+    const value = String(files?.[name] || "")
+      .trim()
+      .toLowerCase();
+
+    if (!/^[a-f0-9]{64}$/.test(value)) {
+      throw new Error(
+        `Empreinte SHA-256 invalide : ${name}`
+      );
+    }
+
+    normalized[name] = value;
+  }
+
+  return {
+    algorithm,
+    files: normalized
+  };
+}
+
+async function atlasVersionSha256(buffer) {
+  if (!globalThis.crypto?.subtle) {
+    throw new Error("SHA-256 navigateur indisponible");
+  }
+
+  const digest = await globalThis.crypto.subtle.digest(
+    "SHA-256",
+    buffer
+  );
+
+  return Array.from(
+    new Uint8Array(digest),
+    byte => byte.toString(16).padStart(2, "0")
+  ).join("");
+}
+
+async function atlasFetchVersionAsset(
+  path,
+  options = {}
+) {
+  const stamp = Number(options.stamp || Date.now());
+  const cacheMode = String(
+    options.cacheMode || "no-store"
+  );
+
+  const url = options.cacheBust === false
+    ? new URL(
+        path,
+        document.baseURI || window.location.href
+      ).toString()
+    : atlasVersionRequestUrl(path, stamp);
+
+  const response = await fetch(url, {
+    cache: cacheMode,
+    credentials: "same-origin",
+    headers: {
+      accept: "text/plain, text/html, text/css, application/javascript, application/json"
+    }
+  });
 
   if (!response.ok) {
     throw new Error(
@@ -34154,7 +34226,17 @@ async function atlasFetchVersionText(path, stamp = Date.now()) {
     );
   }
 
-  return response.text();
+  const buffer = await response.arrayBuffer();
+  const hash = await atlasVersionSha256(buffer);
+  const text = new TextDecoder("utf-8").decode(buffer);
+
+  return {
+    path,
+    url,
+    text,
+    hash,
+    bytes: buffer.byteLength
+  };
 }
 
 async function atlasFetchVersionManifest(stamp = Date.now()) {
@@ -34194,59 +34276,15 @@ async function atlasFetchVersionManifest(stamp = Date.now()) {
   };
 }
 
-function atlasVersionMetaValue(name) {
-  return String(
-    document
-      .querySelector(`meta[name="${name}"]`)
-      ?.getAttribute("content")
-    || ""
-  ).trim();
-}
-
-function atlasVersionCssIdentityValue(name) {
-  try {
-    return String(
-      getComputedStyle(document.documentElement)
-        .getPropertyValue(name)
-      || ""
-    )
-      .trim()
-      .replace(/^["']|["']$/g, "");
-  } catch {
-    return "";
-  }
-}
-
 function atlasVersionRuntimeIdentity() {
   const identity = {
-    indexBuild: atlasVersionMetaValue("atlas-build"),
-    indexToken: atlasVersionMetaValue(
-      "atlas-asset-token"
-    ),
     appBuild: ATLAS_BUILD,
-    appToken: ATLAS_ASSET_TOKEN,
-    styleBuild: atlasVersionCssIdentityValue(
-      "--atlas-asset-build"
-    ),
-    styleToken: atlasVersionCssIdentityValue(
-      "--atlas-asset-token"
-    )
+    appToken: ATLAS_ASSET_TOKEN
   };
 
-  const builds = [
-    identity.indexBuild,
-    identity.appBuild,
-    identity.styleBuild
-  ];
-  const tokens = [
-    identity.indexToken,
-    identity.appToken,
-    identity.styleToken
-  ];
-
   identity.ok =
-    builds.every(value => value === ATLAS_BUILD)
-    && tokens.every(value => value === ATLAS_ASSET_TOKEN);
+    identity.appBuild === ATLAS_BUILD
+    && identity.appToken === ATLAS_ASSET_TOKEN;
 
   return identity;
 }
@@ -34269,58 +34307,16 @@ function atlasVersionIdentityMarker(source, expression) {
   };
 }
 
-function atlasVersionExtractIdentity(kind, text) {
+function atlasVersionExtractAppIdentity(text) {
   const source = String(text || "");
-
-  if (kind === "index") {
-    const buildMarker = atlasVersionIdentityMarker(
-      source,
-      /<meta\s+name=["']atlas-build["']\s+content=["']([^"']+)["']/i
-    );
-    const tokenMarker = atlasVersionIdentityMarker(
-      source,
-      /<meta\s+name=["']atlas-asset-token["']\s+content=["']([^"']+)["']/i
-    );
-
-    return {
-      build: buildMarker.value,
-      token: tokenMarker.value,
-      buildMarkerCount: buildMarker.count,
-      tokenMarkerCount: tokenMarker.count,
-      referencesApp:
-        /<script[^>]+src=["']\.\/app\.js(?:\?[^"']*)?["']/i
-          .test(source),
-      referencesStyle:
-        /<link[^>]+href=["']\.\/style\.css(?:\?[^"']*)?["']/i
-          .test(source)
-    };
-  }
-
-  if (kind === "app") {
-    const buildMarker = atlasVersionIdentityMarker(
-      source,
-      /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
-    );
-    const tokenMarker = atlasVersionIdentityMarker(
-      source,
-      /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
-    );
-
-    return {
-      build: buildMarker.value,
-      token: tokenMarker.value,
-      buildMarkerCount: buildMarker.count,
-      tokenMarkerCount: tokenMarker.count
-    };
-  }
 
   const buildMarker = atlasVersionIdentityMarker(
     source,
-    /ATLAS_ASSET_BUILD:\s*([0-9A-Za-z._-]+)/
+    /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
   );
   const tokenMarker = atlasVersionIdentityMarker(
     source,
-    /ATLAS_ASSET_TOKEN:\s*([a-z0-9._-]+)/
+    /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
   );
 
   return {
@@ -34333,65 +34329,124 @@ function atlasVersionExtractIdentity(kind, text) {
 
 async function atlasVerifyRemotePublication(remote) {
   const stamp = Date.now();
-  const [indexText, appText, styleText] =
-    await Promise.all([
-      atlasFetchVersionText(
-        ATLAS_VERSION_ASSET_URLS.index,
-        stamp
-      ),
-      atlasFetchVersionText(
-        ATLAS_VERSION_ASSET_URLS.app,
-        stamp
-      ),
-      atlasFetchVersionText(
-        ATLAS_VERSION_ASSET_URLS.style,
-        stamp
-      )
-    ]);
+  const integrity =
+    atlasVersionManifestIntegrity(remote?.manifest);
 
-  const identities = {
-    index: atlasVersionExtractIdentity(
-      "index",
-      indexText
-    ),
-    app: atlasVersionExtractIdentity(
-      "app",
-      appText
-    ),
-    style: atlasVersionExtractIdentity(
-      "style",
-      styleText
+  const entries = await Promise.all(
+    Object.entries(ATLAS_VERSION_ASSET_URLS).map(
+      async ([name, path]) => {
+        const asset = await atlasFetchVersionAsset(
+          path,
+          {
+            stamp,
+            cacheMode: "no-store",
+            cacheBust: true
+          }
+        );
+
+        return [name, asset];
+      }
     )
-  };
+  );
+
+  const assets = Object.fromEntries(entries);
+  const hashes = Object.fromEntries(
+    Object.entries(assets).map(
+      ([name, asset]) => [name, asset.hash]
+    )
+  );
+
+  const hashOk = Object.keys(
+    ATLAS_VERSION_ASSET_URLS
+  ).every(
+    name => hashes[name] === integrity.files[name]
+  );
+
+  const appIdentity = atlasVersionExtractAppIdentity(
+    assets["app.js"]?.text
+  );
 
   const expectedBuild = String(remote?.build || "");
   const expectedToken = String(remote?.token || "");
 
-  const buildOk = Object.values(identities).every(
-    identity => identity.build === expectedBuild
-  );
-  const tokenOk = Object.values(identities).every(
-    identity => identity.token === expectedToken
-  );
-  const markerCountsOk = Object.values(identities).every(
-    identity =>
-      identity.buildMarkerCount === 1
-      && identity.tokenMarkerCount === 1
-  );
-  const referencesOk =
-    identities.index.referencesApp === true
-    && identities.index.referencesStyle === true;
+  const appIdentityOk =
+    appIdentity.build === expectedBuild
+    && appIdentity.token === expectedToken
+    && appIdentity.buildMarkerCount === 1
+    && appIdentity.tokenMarkerCount === 1;
 
   return {
-    ok: buildOk && tokenOk && markerCountsOk && referencesOk,
+    ok: hashOk && appIdentityOk,
     build: expectedBuild,
     token: expectedToken,
-    identities,
-    buildOk,
-    tokenOk,
-    markerCountsOk,
-    referencesOk,
+    integrity,
+    hashes,
+    assets: Object.fromEntries(
+      Object.entries(assets).map(
+        ([name, asset]) => [
+          name,
+          {
+            hash: asset.hash,
+            bytes: asset.bytes
+          }
+        ]
+      )
+    ),
+    appIdentity,
+    hashOk,
+    appIdentityOk,
     checkedAt: Date.now()
+  };
+}
+
+async function atlasPrimePublishedAssets(remote) {
+  const integrity =
+    atlasVersionManifestIntegrity(remote?.manifest);
+
+  const entries = await Promise.all(
+    Object.entries(ATLAS_VERSION_ASSET_URLS).map(
+      async ([name, path]) => {
+        const asset = await atlasFetchVersionAsset(
+          path,
+          {
+            cacheMode: "reload",
+            cacheBust: false
+          }
+        );
+
+        return [name, asset];
+      }
+    )
+  );
+
+  const assets = Object.fromEntries(entries);
+
+  const ok = Object.keys(
+    ATLAS_VERSION_ASSET_URLS
+  ).every(
+    name =>
+      assets[name]?.hash === integrity.files[name]
+  );
+
+  if (!ok) {
+    throw new Error(
+      "Préchargement HTTP de la publication incohérent"
+    );
+  }
+
+  return {
+    ok: true,
+    files: Object.fromEntries(
+      Object.entries(assets).map(
+        ([name, asset]) => [
+          name,
+          {
+            hash: asset.hash,
+            bytes: asset.bytes
+          }
+        ]
+      )
+    )
   };
 }
 
@@ -34722,6 +34777,8 @@ async function atlasApplyVersionUpdate(options = {}) {
       remote.build,
       remote.token
     );
+
+    await atlasPrimePublishedAssets(remote);
     await atlasClearSameOriginCacheStorage();
 
     const target = atlasBuildVersionRefreshUrl(
@@ -34921,11 +34978,20 @@ function atlasCompactReleaseLabel() {
 }
 
 function atlasSyncReleaseLabels() {
-  setText(document.getElementById("atlasV2ReleaseBadge"), atlasCompactReleaseLabel());
-  setText(document.getElementById("situationReleaseBadge"), `${ATLAS_RELEASE} · Math Core V3`);
+  document.title =
+    `Agent-Crypto @erith.IA — ${ATLAS_RELEASE}`;
+
+  setText(
+    document.getElementById("atlasV2ReleaseBadge"),
+    atlasCompactReleaseLabel()
+  );
+  setText(
+    document.getElementById("situationReleaseBadge"),
+    `${ATLAS_RELEASE} · Math Core V3`
+  );
   setText(
     document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build 28.3.08`
+    `Agent-Crypto @erith.IA · Market Core · Build ${ATLAS_BUILD}`
   );
 }
 

@@ -1,33 +1,47 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.19  
-**Build :** 28.3.19  
-**Mission :** Runtime Config Separation Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.20  
+**Build :** 28.3.20  
+**Mission :** Two-File Version Control Transition Lock
 
-## Build 28.3.19 — Runtime Config Separation Lock
+## Build 28.3.20 — Two-File Version Control Transition Lock
 
-Cette Build part exactement de la 28.3.18 validée et ne change volontairement aucune fonctionnalité du produit.
+Cette Build part exactement de la 28.3.19 validée sous Firefox.
 
-### Changement structurel unique
+### Mission unique
 
-- `version.json` : manifeste de version encore allégé ;
-- `web/runtime_config.json` : nouveau fichier dédié à la configuration stable des assets et registries ;
-- `assets` et `registries` sont déplacés à l’identique depuis `version.json` ;
-- `coherence_contract` reste temporairement dans `version.json`, car il appartient encore au contrôleur de version actuel ;
-- `app.js`, `index.html` et `style.css` ne changent fonctionnellement pas : seule l’identité Build/token passe à 28.3.19.
+Installer le nouveau noyau de versionnage centré sur :
 
-### Principe
+- `web/app.js` → contrôleur et identité locale exécutée ;
+- `web/version.json` → identité et intégrité de la publication.
 
-Une responsabilité par fichier :
+### Transition sûre
 
-- `version.json` → identité de publication ;
-- `runtime_config.json` → configuration runtime stable ;
-- `build_history.md` → historique humain.
+La Build 28.3.19 exige encore des marqueurs Build/token dans `index.html` et `style.css` pour accepter une mise à jour.
 
-### Étape suivante prévue
+Ils sont donc conservés **une dernière fois** dans cette 28.3.20, uniquement comme pont de compatibilité entrant.
 
-La prochaine chirurgie dédiée pourra réduire le versionnage au noyau `app.js` + `version.json` et retirer les marqueurs de version de `index.html` et `style.css`, après validation Firefox de cette Build.
+Le contrôleur 28.3.20, lui, ne les lit plus.
 
-### Base
+### Nouveau contrôle de publication
 
-Build 28.3.18 — Version Manifest Separation Lock.
+`version.json` utilise le schéma `agent_crypto_version_manifest_v2` et contient des empreintes SHA-256 pour :
+
+- `app.js` ;
+- `index.html` ;
+- `style.css` ;
+- `runtime_config.json`.
+
+Le contrôleur vérifie ces empreintes avant de proposer ou d’installer une publication.
+
+Avant le rechargement, il recharge également les URLs canoniques avec `cache: reload` afin de mettre à jour le cache HTTP du navigateur sans dépendre d’un numéro de Build dans le HTML ou le CSS.
+
+### Fichier stable non modifié
+
+`runtime_config.json` est strictement identique à la 28.3.19 et n’a pas besoin d’être réuploadé.
+
+### Étape suivante
+
+Après validation Firefox de la 28.3.20, la Build suivante pourra retirer définitivement les marqueurs Build/token de `index.html` et `style.css`.
+
+À partir de là, une Build de versionnage seule n’aura plus besoin de modifier ces deux fichiers.
