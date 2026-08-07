@@ -3160,10 +3160,18 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
           <label><input type="checkbox" data-learning-step="note" /> <span><b id="learningStepNoteTitle">5. Écrire ta conclusion personnelle</b><em id="learningStepNote">La conclusion est séparée de tes notes longues et elle n’est pas tronquée.</em><button class="btn small learning-step-action" type="button" data-learning-step-action="note">Ouvrir cette étape</button></span></label>
         </div>
 
+        <!-- ------------------------------------------------------------
+             09.A — SYNTHÈSE AUTOMATIQUE / NOTES PERSONNELLES
+             ------------------------------------------------------------ -->
         <div class="learning-notebook-grid" id="learningNotebookGrid">
+          <section class="learning-auto-summary-panel" id="learningAutoSummaryPanel" hidden aria-labelledby="learningAutoSummaryTitle">
+            <span id="learningAutoSummaryTitle">Synthèse automatique — générée à partir des preuves</span>
+            <pre id="learningAutoSummaryText">La synthèse automatique apparaîtra ici lorsque les preuves du module seront validées.</pre>
+            <em id="learningAutoSummaryHint">Lecture seule · aucune conclusion n’est générée sans preuve.</em>
+          </section>
           <label class="learning-session-note learning-session-note-free">
-            <span>Mes notes libres — sauvegarde automatique complète</span>
-            <textarea id="learningSessionNotesFree" placeholder="Copie les définitions, ajoute tes observations, tes questions et tout ce que tu veux conserver. Aucun texte n’est volontairement tronqué."></textarea>
+            <span id="learningPersonalNotesLabel">Mes notes libres — sauvegarde automatique complète</span>
+            <textarea id="learningSessionNotesFree" placeholder="Écris seulement ce que tu veux retenir, vérifier ou reformuler avec tes propres mots. La synthèse automatique reste séparée."></textarea>
             <em id="learningNotesCounter">0 caractère · sauvegarde locale complète</em>
           </label>
           <label class="learning-session-note learning-session-takeaway" id="learningTakeawayField">

@@ -1,9 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.26  
-**Build :** 28.3.26  
-**Mission :** Current Build Reverify Stability Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.27  
+**Build :** 28.3.27  
+**Mission :** Active Recall & Learning Guidance Lock
 
+
+
+## Build 28.3.27 — Active Recall & Learning Guidance Lock
+
+Cette Build part exactement de la 28.3.26 validée après rechargement forcé sur le Transformer Book.
+
+### Mission unique
+
+Renforcer l’apprentissage du Module 01 sans modifier son contenu de marché ni le Version Control Protected Core.
+
+- Étape 5 : les preuves sont affichées avant la question, mais la conclusion n’est plus donnée avant la réponse.
+- Ordre pédagogique : **question → réponse → validation → explication**.
+- La première réponse est conservée comme trace d’apprentissage ; une erreur ne détruit aucune progression.
+- La réponse correcte `Non` valide l’étape et révèle l’explication complète avant l’archivage.
+- `Synthèse automatique` et `Notes personnelles` sont désormais deux zones visuellement distinctes ; le stockage historique reste compatible.
+- Les anciennes auto-synthèses Modules 01/02/03 sont séparées à l’affichage sans migration destructive des archives.
+- Ajout de bulles `ⓘ` accessibles au survol et au clavier sur Prix/24 h/7 j, provenance et rappel actif.
+- Aucun changement Market, Graphique, Simulation, Métaux, Bridge, IndexedDB schema ou logique Version Control.
 
 
 ## Build 28.3.26 — Current Build Reverify Stability Lock

@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.26 — revérification stable du Build courant, sans faux contrôle des fichiers non versionnés.
+  Build 28.3.27 — rappel actif, synthèse séparée et aides contextuelles pédagogiques.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -16895,7 +16895,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Charger les données avec Livecheck", where:"Barre LIVECHECK en haut de la page", action:"Cliquer sur « Lancer Livecheck » et attendre que le statut ne dise plus « Livecheck requis ».", why:"Le cockpit refuse d’inventer un prix ou une variation.", result:"Une source active, une heure et des lignes de marché deviennent visibles.", remember:"Livecheck charge des données ; il ne prédit pas le marché." },
       practice:{ title:"3. Relever Prix, 24 h et 7 j", where:"Carte « Les trois valeurs Bitcoin » du parcours détaillé", action:"Lire les trois valeurs affichées. Le bouton « Voir la ligne Bitcoin » permet de contrôler leur origine dans Market Snapshot ; le bouton « J’ai relevé Prix / 24 h / 7 j » valide l’étape.", why:"Deux périodes différentes peuvent raconter deux mouvements différents.", result:"Prix, variation 24 h et variation 7 j sont enregistrés comme preuve distincte.", remember:"Un + sur 24 h peut coexister avec un − sur 7 j." },
       verify:{ title:"4. Vérifier la source et l’heure", where:"Carte « Source, heure et fraîcheur » du parcours détaillé", action:"Lire la source active et l’heure affichées, puis cliquer sur « Valider la source et l’heure ».", why:"Une valeur sans origine ni date n’est pas suffisante pour une lecture fiable.", result:"La source et l’heure sont enregistrées séparément ; aucun champ n’est à rechercher ailleurs.", remember:"Une observation fiable indique toujours d’où vient la donnée et quand elle a été relevée." },
-      note:{ title:"5. Comprendre la conclusion guidée", where:"Carte « Synthèse guidée du Module 01 »", action:"Lire la synthèse construite avec les valeurs affichées, puis répondre à la question « Peut-on prédire avec certitude le prochain mouvement ? ».", why:"Le cockpit doit d’abord enseigner la conclusion avant de demander de la reconnaître.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Les données décrivent l’état observé ; elles ne permettent pas de prédire avec certitude le prochain mouvement." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Rappel actif · Module 01 »", action:"Relire uniquement les preuves observées, répondre de mémoire à la question « Peut-on prédire avec certitude le prochain mouvement ? », puis lire l’explication affichée après la réponse.", why:"Récupérer l’information de mémoire avant de revoir la règle renforce l’apprentissage actif.", result:"La première réponse est mémorisée comme tentative. La réponse « Non » valide l’étape 5, puis l’explication et l’auto-synthèse deviennent visibles. La note personnelle reste facultative.", remember:"Les données décrivent l’état observé ; elles ne permettent pas de prédire avec certitude le prochain mouvement." }
     }
   },
   spot:{
@@ -18321,7 +18321,8 @@ function saveLearningCockpitState(data) {
 function learningTextCount(value) { return Array.from(String(value || "")).length; }
 
 function renderLearningTextCounters(cockpit) {
-  if (els.learningNotesCounter) els.learningNotesCounter.textContent = `${learningTextCount(cockpit.notes_free)} caractère${learningTextCount(cockpit.notes_free) > 1 ? "s" : ""} · sauvegarde IndexedDB complète`;
+  const visibleNotes = foundationIsActive(cockpit.module_key) ? foundationNotebookParts(cockpit).personal_notes : cockpit.notes_free;
+  if (els.learningNotesCounter) els.learningNotesCounter.textContent = `${learningTextCount(visibleNotes)} caractère${learningTextCount(visibleNotes) > 1 ? "s" : ""} · sauvegarde IndexedDB complète`;
   if (els.learningTakeawayCounter) {
     els.learningTakeawayCounter.textContent = foundationIsActive(cockpit.module_key)
       ? foundationConclusionGuidance(cockpit)
@@ -18421,6 +18422,10 @@ function foundationButton(label, action, disabled = false) {
   return `<button class="btn small ${disabled ? "" : "primary"}" type="button" data-foundation-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${escapeHtml(label)}</button>`;
 }
 
+function foundationHelpBubble(text, label = "Aide contextuelle") {
+  return `<span class="learning-help-bubble" tabindex="0" role="note" aria-label="${escapeHtml(label)}" data-learning-help="${escapeHtml(text)}">ⓘ</span>`;
+}
+
 function foundationMarketGuidedSummary(cockpitInput = null) {
   const cockpit = cockpitInput || loadLearningCockpitState();
   const evidence = cockpit?.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
@@ -18440,10 +18445,14 @@ function foundationMarketGuidedSummary(cockpitInput = null) {
   const valuesReady = valuesFrozen || Boolean(liveReady && price !== "—" && change24 !== "—" && change7 !== "—");
   const provenanceReady = provenanceFrozen || Boolean(liveReady && source && source !== "non disponible" && time && time !== "—");
   const ready = Boolean(valuesReady && provenanceReady);
-  const text = ready
-    ? `Au moment observé, la ligne Bitcoin affiche un prix de ${price}, une variation de ${change24} sur 24 heures et de ${change7} sur 7 jours. La carte pédagogique reprend le Market Snapshot issu de « ${source} » à ${time}. Le prix spot Binance affiché dans la fiche active reste une donnée distincte. Ces preuves sont figées au moment de leur validation : les valeurs live peuvent ensuite évoluer sans modifier la session. Elles décrivent l’écran observé, mais ne permettent pas de prédire avec certitude le prochain mouvement.`
-    : "La synthèse sera construite uniquement après Livecheck, sans inventer de valeur.";
-  return { ready, btc, source, time, price, change24, change7, text, valuesFrozen, provenanceFrozen };
+  const observationText = ready
+    ? `Preuves observées : Bitcoin ${price} · 24 h ${change24} · 7 j ${change7}. Source « ${source} » · heure ${time}. Ces valeurs sont figées pour cette session même si le marché live évolue ensuite.`
+    : "Les preuves observées apparaîtront après Livecheck, sans valeur inventée.";
+  const explanationText = ready
+    ? "Ces données décrivent un état observé à un instant donné. Elles peuvent aider à comparer des horizons et à vérifier une source, mais elles ne permettent pas de prédire avec certitude le prochain mouvement de Bitcoin. Le prix spot Binance de la fiche active reste une donnée distincte du Market Snapshot pédagogique."
+    : "L’explication sera disponible après la collecte des preuves.";
+  const text = ready ? `${observationText} ${explanationText}` : "La synthèse sera construite uniquement après Livecheck, sans inventer de valeur.";
+  return { ready, btc, source, time, price, change24, change7, observationText, explanationText, text, valuesFrozen, provenanceFrozen };
 }
 
 function marketModule01AutoBlockText(cockpit, summary) {
@@ -18529,11 +18538,16 @@ function foundationMarketLab(cockpit) {
   const step3Ready = Boolean(cockpit.steps.open && summary.ready);
   const step4Ready = Boolean(cockpit.steps.practice && summary.ready);
   const step5Ready = Boolean(cockpit.steps.verify && summary.ready);
+  const firstAnswer = String(evidence.market_prediction_first_answer || "").trim().toLowerCase();
+  const hasRecallAttempt = ["oui", "non"].includes(firstAnswer);
+  const firstAnswerCorrect = firstAnswer === "non";
+  const explanationVisible = hasRecallAttempt || cockpit.steps.note === true;
+  const attempts = Math.max(0, Number(evidence.market_prediction_attempts || 0));
   return `
     <div class="foundation-lab-grid foundation-market-guided-lab">
       <article data-foundation-stage="3" class="${cockpit.steps.practice ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · RELEVER</span>
-        <h5>Les trois valeurs Bitcoin</h5>
+        <h5>Les trois valeurs Bitcoin ${foundationHelpBubble("Prix = dernière valeur observée. 24 h et 7 j = variations sur deux horizons différents. Elles peuvent raconter des mouvements différents.", "Aide sur Prix, 24 h et 7 j")}</h5>
         <p>${summary.ready ? `Prix <b>${escapeHtml(summary.price)}</b> · 24 h <b>${escapeHtml(summary.change24)}</b> · 7 j <b>${escapeHtml(summary.change7)}</b>` : "Livecheck requis : aucune valeur n’est inventée."}</p>
         <small>${summary.valuesFrozen ? "Valeurs figées lors de la validation de l’étape 3 ; la ligne live peut évoluer ensuite." : "Ces trois valeurs sont reprises directement de la ligne Bitcoin affichée dans Market Snapshot."}</small>
         <div class="foundation-choice-row">
@@ -18543,21 +18557,22 @@ function foundationMarketLab(cockpit) {
       </article>
       <article data-foundation-stage="4" class="${cockpit.steps.verify ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · PROVENANCE</span>
-        <h5>Source, heure et fraîcheur</h5>
+        <h5>Source, heure et fraîcheur ${foundationHelpBubble("Une valeur sans provenance ni horodatage est difficile à vérifier. La fraîcheur indique si l’observation est encore représentative de l’écran étudié.", "Aide sur la provenance")}</h5>
         <p><b>Source active :</b> ${escapeHtml(summary.source || "non disponible")}<br><b>Heure des données :</b> ${escapeHtml(summary.time || "—")}</p>
         <small>${summary.provenanceFrozen ? "Source et heure figées lors de la validation de l’étape 4." : "Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable."}</small>
         ${foundationButton(cockpit.steps.verify ? "Source et heure validées" : "Valider la source et l’heure", "market_verify_source_time", !step4Ready || cockpit.steps.verify)}
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 01</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · RAPPEL ACTIF</span>
+        <h5>Répondre avant de lire l’explication ${foundationHelpBubble("Lis seulement les preuves, réponds de mémoire, puis compare ton raisonnement avec l’explication. Une première erreur n’efface rien : elle devient une information d’apprentissage.", "Aide sur le rappel actif")}</h5>
+        <p class="foundation-recall-evidence">${escapeHtml(summary.observationText)}</p>
         <p><b>Question :</b> ces données permettent-elles de prédire avec certitude le prochain mouvement de Bitcoin ?</p>
         <div class="foundation-choice-row">
           <button type="button" data-foundation-action="market_prediction_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button>
           <button type="button" data-foundation-action="market_prediction_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button>
         </div>
-        <small>${evidence.market_guided_conclusion ? "Réponse prudente enregistrée. La synthèse ci-dessus sera conservée dans l’archive." : step5Ready ? "La leçon vient de fournir la réponse : les données décrivent, elles ne prédisent pas avec certitude." : "Disponible après la validation de la source et de l’heure."}</small>
+        <small>${cockpit.steps.note ? `Réponse finale validée : Non.${attempts > 1 ? ` ${attempts} tentatives enregistrées.` : ""}` : hasRecallAttempt ? "Première tentative enregistrée. Lis l’explication, puis corrige si nécessaire." : step5Ready ? "Réponds d’abord de mémoire : l’explication n’apparaît qu’après ton premier choix." : "Disponible après la validation de la source et de l’heure."}</small>
+        ${explanationVisible ? `<div class="foundation-recall-feedback ${firstAnswerCorrect ? "is-correct" : "is-review"}"><b>${firstAnswerCorrect ? "Première réponse correcte" : "Première réponse à revoir"}</b><p>${escapeHtml(summary.explanationText)}</p>${cockpit.steps.note && !firstAnswerCorrect ? "<em>La correction finale « Non » est enregistrée ; la première tentative reste conservée comme trace d’apprentissage.</em>" : ""}</div>` : ""}
       </article>
     </div>`;
 }
@@ -19479,13 +19494,37 @@ function handleFoundationAction(action) {
       cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_source_time_verified";
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToFoundationStage(5); marketFoundationFeedback(true, "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. Lis maintenant la synthèse guidée de l’étape 5.`); return;
     }
-    if (action === "market_prediction_yes") return marketFoundationFeedback(false, "Réponse à revoir", "Non. Les valeurs décrivent l’état observé à une heure donnée ; elles ne permettent pas de prédire avec certitude le prochain mouvement.");
+    if (action === "market_prediction_yes") {
+      if (!cockpit.steps.verify || !summary.ready) return foundationFeedback(false, "Étape 4 requise", "Valide d’abord la source et l’heure.");
+      cockpit.practice_evidence.market_prediction_attempts = Math.max(0, Number(cockpit.practice_evidence.market_prediction_attempts || 0)) + 1;
+      if (!cockpit.practice_evidence.market_prediction_first_answer) {
+        cockpit.practice_evidence.market_prediction_first_answer = "oui";
+        cockpit.practice_evidence.market_prediction_first_answer_correct = false;
+        cockpit.practice_evidence.market_prediction_first_answer_at = new Date().toISOString();
+      }
+      cockpit.practice_evidence.market_prediction_last_answer = "oui";
+      cockpit.practice_evidence.market_prediction_last_answer_at = new Date().toISOString();
+      cockpit.last_action = "market_prediction_recall_attempt";
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToFoundationStage(5);
+      marketFoundationFeedback(false, "Réponse à revoir", summary.explanationText);
+      return;
+    }
     if (action === "market_prediction_no") {
       if (!cockpit.steps.verify || !summary.ready) return foundationFeedback(false, "Étape 4 requise", "Valide d’abord la source et l’heure.");
+      cockpit.practice_evidence.market_prediction_attempts = Math.max(0, Number(cockpit.practice_evidence.market_prediction_attempts || 0)) + 1;
+      if (!cockpit.practice_evidence.market_prediction_first_answer) {
+        cockpit.practice_evidence.market_prediction_first_answer = "non";
+        cockpit.practice_evidence.market_prediction_first_answer_correct = true;
+        cockpit.practice_evidence.market_prediction_first_answer_at = new Date().toISOString();
+      }
+      cockpit.practice_evidence.market_prediction_last_answer = "non";
+      cockpit.practice_evidence.market_prediction_last_answer_at = new Date().toISOString();
       cockpit.practice_evidence.market_guided_conclusion = true; cockpit.practice_evidence.market_guided_summary = summary.text; cockpit.practice_evidence.market_guided_answer = "non"; cockpit.practice_evidence.market_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_guided_conclusion_validated";
       ensureMarketModule01AutoPrefill(cockpit);
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); marketFoundationFeedback(true, "Module 01 · 5/5", "Auto-synthèse, journal pédagogique et archive sont préremplis à partir des preuves de la session. Utilise maintenant « Terminer et archiver le module »."); return;
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("learningCompletionAction"); marketFoundationFeedback(true, "Module 01 · 5/5", "Réponse validée après rappel actif. L’explication, l’auto-synthèse, le journal pédagogique et l’archive sont maintenant disponibles. Utilise « Terminer et archiver le module »."); return;
     }
   }
   if (module.key === "spot") {
@@ -20055,7 +20094,7 @@ function renderLearningCompletionPanel(cockpit, stats) {
   if (!finished) return;
   const module = learningModuleByKey(cockpit.module_key);
   const next = learningModuleAfterCompleted(cockpit);
-  const notes = learningTextCount(cockpit.notes_free);
+  const notes = learningTextCount(foundationIsActive(cockpit.module_key) ? foundationNotebookParts(cockpit).personal_notes : cockpit.notes_free);
   const takeaway = learningTextCount(cockpit.takeaway);
   if (els.learningCompletionTitle) els.learningCompletionTitle.textContent = module.title;
   if (els.learningCompletionDate) els.learningCompletionDate.textContent = `Archivée le ${new Date(cockpit.completed_at).toLocaleString("fr-FR")} · session ${cockpit.session_id}`;
@@ -20109,6 +20148,56 @@ function renderLearningExerciseGuide(cockpitInput = null) {
       els.btnLearningExerciseGuidePrimary.textContent = "Revenir écrire ma conclusion";
     }
   }
+}
+
+function foundationNotebookMarkers(moduleKey) {
+  const markers = {
+    market:["[AUTO-SYNTHÈSE MODULE 01]", "[/AUTO-SYNTHÈSE MODULE 01]"],
+    spot:["[AUTO-SYNTHÈSE MODULE 02]", "[/AUTO-SYNTHÈSE MODULE 02]"],
+    risk:["[AUTO-SYNTHÈSE MODULE 03]", "[/AUTO-SYNTHÈSE MODULE 03]"]
+  };
+  return markers[moduleKey] || null;
+}
+
+function foundationNotebookParts(cockpit) {
+  const source = String(cockpit?.notes_free || "");
+  const markers = foundationNotebookMarkers(cockpit?.module_key);
+  if (!markers) return { auto_summary:"", personal_notes:source };
+  const [start, end] = markers;
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end);
+  if (startIndex < 0 || endIndex < startIndex) return { auto_summary:"", personal_notes:source };
+  const autoSummary = source.slice(startIndex, endIndex + end.length).trim();
+  const personalNotes = `${source.slice(0, startIndex)}${source.slice(endIndex + end.length)}`.trim();
+  return { auto_summary:autoSummary, personal_notes:personalNotes };
+}
+
+function foundationMergePersonalNotes(cockpit, personalText) {
+  const parts = foundationNotebookParts(cockpit);
+  const personal = String(personalText || "").trim();
+  return parts.auto_summary ? (personal ? `${parts.auto_summary}
+
+${personal}` : parts.auto_summary) : personal;
+}
+
+function renderLearningNotebookSeparation(cockpit, foundation) {
+  const panel = document.getElementById("learningAutoSummaryPanel");
+  const text = document.getElementById("learningAutoSummaryText");
+  const hint = document.getElementById("learningAutoSummaryHint");
+  const notesLabel = document.getElementById("learningPersonalNotesLabel");
+  if (!panel || !text || !hint || !notesLabel) return;
+  if (!foundation) {
+    panel.hidden = true;
+    notesLabel.textContent = "Mes notes libres — sauvegarde automatique complète";
+    return;
+  }
+  const parts = foundationNotebookParts(cockpit);
+  panel.hidden = false;
+  notesLabel.textContent = "Notes personnelles — sauvegarde automatique complète";
+  text.textContent = parts.auto_summary || "La synthèse automatique apparaîtra ici lorsque les cinq preuves du module seront validées.";
+  hint.textContent = parts.auto_summary
+    ? "Lecture seule · générée uniquement à partir des preuves de la session. Tes notes personnelles restent séparées juste à côté."
+    : "Lecture seule · aucune conclusion n’est générée avant les preuves requises.";
 }
 
 function renderLearningJourneyCockpit() {
@@ -20231,8 +20320,10 @@ function renderLearningJourneyCockpit() {
       els.learningEvidenceLock.innerHTML = `<b>Validation automatique par preuves · ${escapeHtml(recommended.title)}</b><span>Les cases sont des témoins en lecture seule : ${escapeHtml(proofText)} La longueur d’un texte ne valide aucun module de fondation.</span>`;
     }
   }
-  if (els.learningSessionNotesFree && document.activeElement !== els.learningSessionNotesFree) els.learningSessionNotesFree.value = cockpit.notes_free || "";
+  const notebookParts = foundation ? foundationNotebookParts(cockpit) : { auto_summary:"", personal_notes:String(cockpit.notes_free || "") };
+  if (els.learningSessionNotesFree && document.activeElement !== els.learningSessionNotesFree) els.learningSessionNotesFree.value = notebookParts.personal_notes;
   if (els.learningSessionNote && document.activeElement !== els.learningSessionNote) els.learningSessionNote.value = cockpit.takeaway || "";
+  renderLearningNotebookSeparation(cockpit, foundation);
   if (els.learningSessionNotesFree) {
     els.learningSessionNotesFree.disabled = finished;
     els.learningSessionNotesFree.placeholder = foundation
@@ -20351,7 +20442,9 @@ function saveLearningSessionNotes(value, field = "notes_free") {
     if (foundationIsActive(cockpit.module_key)) foundationApplyConclusionValidation(cockpit);
     else cockpit.steps.note = Boolean(cockpit.takeaway.trim());
   } else {
-    cockpit.notes_free = String(value || "");
+    cockpit.notes_free = foundationIsActive(cockpit.module_key)
+      ? foundationMergePersonalNotes(cockpit, value)
+      : String(value || "");
   }
   cockpit.module_key = learningModuleByKey(cockpit.module_key).key;
   cockpit.flow_build = ATLAS_LEARNING_FLOW_BUILD;
@@ -34103,11 +34196,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.26";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.27";
 
-const ATLAS_BUILD = "28.3.26";
+const ATLAS_BUILD = "28.3.27";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.26";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.27";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

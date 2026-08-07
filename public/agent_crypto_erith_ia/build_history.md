@@ -1,5 +1,18 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.27 — Active Recall & Learning Guidance Lock
+
+- Base : Build 28.3.26.
+- Module 01 Étape 5 passe en rappel actif : preuves visibles, question, réponse, puis explication.
+- La première tentative `Oui/Non` est conservée dans `practice_evidence`; seule la réponse finale correcte valide l’étape.
+- L’explication n’est plus visible avant le premier choix.
+- La synthèse automatique et les notes personnelles sont séparées dans l’interface sans casser le format historique `notes_free`.
+- Les auto-synthèses Modules 01/02/03 restent compatibles avec les archives existantes.
+- Bulles d’aide `ⓘ` au survol/focus ajoutées aux notions clés du Module 01.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.27.
+
+---
+
 > Historique humain extrait du manifeste `version.json` lors du Build 28.3.18.
 > Ce fichier est documentaire : le runtime ne le lit pas.
 
