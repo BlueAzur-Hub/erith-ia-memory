@@ -1,3 +1,21 @@
+## Build 28.3.44 — 11 Modules Active Recall + Automatic Memory Parity Lock
+
+- Base : 28.3.43.
+- Audit du fil Crypto et de la pédagogie des Modules 01 à 11.
+- Invariant commun : preuve → réponse de mémoire → première tentative conservée → validation/correction → explication → archive.
+- Module 01 : rappel actif existant conservé.
+- Module 02 : suppression de la fuite de réponse avant la question finale ; logique Ask/Bid et Marché/Limite conservée.
+- Module 03 : scénarios figés conservés ; explication finale déplacée après la première réponse.
+- Modules 04–11 : premières tentatives enregistrées aux étapes de choix 2/3 et à la question finale.
+- Fiches d'étapes : les indices qui révélaient la réponse sont masqués jusqu'à la première tentative.
+- Compatibilité historique : aucune première tentative n'est inventée pour une ancienne preuve déjà validée.
+- Journal + Data Collector automatiques étendus des Modules 01–02 aux Modules 01–11.
+- Mémoire dérivée dédupliquée depuis les archives pédagogiques canoniques ; aucune donnée manquante inventée.
+- Aucune nouvelle image générée ; étude des futures vues explicatives documentée séparément.
+- `style.css`, `runtime_config.json`, workflow marché et Version Control Protected Core inchangés hors identité 28.3.44.
+
+---
+
 ## Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock
 
 - Base : 28.3.42.

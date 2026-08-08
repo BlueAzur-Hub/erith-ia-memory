@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock.
+  Build 28.3.44 — 11 Modules Active Recall + Automatic Memory Parity Lock.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -16897,22 +16897,22 @@ const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   records:{ target:"transactionProofLedger", practice:"Relire une preuve locale ou exporter le journal.", verify:"Vérifier heure, type, montant, coûts et résultat réalisé." }
 });
 
-const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.13";
+const ATLAS_FOUNDATION_LEARNING_BUILD = "28.3.44";
 
 const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "account", "wallet", "tokenomics", "defi", "yield", "derivatives", "scams", "records"]);
 
 const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
   market:"28.3.07",
-  spot:"28.3.07",
-  risk:"28.3.07",
-  account:"28.3.08",
-  wallet:"28.3.08",
-  tokenomics:"28.3.09",
-  defi:"28.3.09",
-  yield:"28.3.09",
-  derivatives:"28.3.10",
-  scams:"28.3.10",
-  records:"28.3.10"
+  spot:"28.3.44",
+  risk:"28.3.44",
+  account:"28.3.44",
+  wallet:"28.3.44",
+  tokenomics:"28.3.44",
+  defi:"28.3.44",
+  yield:"28.3.44",
+  derivatives:"28.3.44",
+  scams:"28.3.44",
+  records:"28.3.44"
 });
 
 function foundationPathBuildForModule(moduleKey) {
@@ -16941,7 +16941,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Comprendre qui achète et qui vend", where:"Carnet d’ordres pédagogique du parcours débutant", action:"Répondre d’abord dans les deux colonnes : choisir un vendeur pour un achat immédiat, puis un acheteur pour une vente immédiate. La règle n’est expliquée qu’après la première tentative.", why:"Le rappel actif oblige à distinguer réellement le côté vendeur du côté acheteur avant de relire la règle.", result:"Après chaque première réponse, le cockpit valide ou demande une correction, puis explique Ask ou Bid. Deux réponses correctes calculent le Spread et ouvrent l’étape 3.", remember:"La règle Ask / Bid et le calcul du Spread apparaissent après tes réponses, pas avant." },
       practice:{ title:"3. Choisir entre ordre au marché et ordre limite", where:"Mini-exercice « Marché ou limite ? »", action:"Choisir l’ordre au marché pour acheter immédiatement et l’ordre limite pour refuser de dépasser un prix.", why:"L’un privilégie l’exécution ; l’autre privilégie le prix choisi.", result:"Les deux réponses correctes valident l’étape 3.", remember:"Un ordre limite peut attendre ou être exécuté partiellement." },
       verify:{ title:"4. Simuler un achat fictif de 50 € de BTC", where:"Cockpit pédagogique — étape 4", action:"Cliquer une seule fois sur « Simuler 50 € de BTC (fictif) ». Le cockpit vérifie les données puis effectue la simulation en arrière-plan.", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"Le résultat apparaît dans cette carte, puis l’étape 5 s’ouvre automatiquement.", remember:"Une position est simplement la quantité de BTC détenue virtuellement après l’achat." },
-      note:{ title:"5. Comprendre le résultat", where:"Carte « Synthèse guidée du Module 02 »", action:"Lire le résultat de la simulation puis répondre à la question « Un ordre limite garantit-il une exécution immédiate ? ».", why:"Le cockpit relie le type d’ordre, la quantité fictive reçue et l’argent virtuel restant avant de vérifier la compréhension.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un ordre limite protège un prix maximal, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 02 »", action:"Relire seulement le résultat de la simulation, répondre de mémoire à la question sur l’ordre limite, puis lire l’explication affichée après la première tentative.", why:"Le résultat de la simulation sert de preuve ; la règle ne doit pas être relue avant le rappel actif.", result:"La première réponse est mémorisée comme tentative. La réponse correcte valide l’étape 5, puis l’explication et la synthèse deviennent visibles.", remember:"Un ordre limite protège un prix maximal, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté." }
     }
   },
   risk:{
@@ -16953,7 +16953,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Charger les frais dans Coûts pédagogiques", where:"COÛTS PÉDAGOGIQUES — Frais, écarts d’exécution et seuil de rentabilité", action:"Cliquer sur « Charger un exemple école ».", why:"L’aller-retour achat + vente possède des coûts estimés.", result:"0,25 % achat + 0,25 % vente + 0,05 % entrée + 0,05 % sortie = 0,60 %.", remember:"Sur 50 €, 0,60 % représente environ 0,30 € de coûts pédagogiques." },
       practice:{ title:"3. Créer une position BTC fictive de 50 €", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"Les scénarios ne peuvent rien calculer sans position ouverte.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"Les 50 € sont convertis en une quantité fictive de BTC ; aucun achat réel n’est envoyé." },
       verify:{ title:"4. Comparer une baisse de 3 % et une hausse de 5 %", where:"SCÉNARIOS INSTANTANÉS — Observer sans attendre le marché", action:"Cliquer d’abord sur « −3 % », lire le résultat, puis sur « +5 % » et comparer.", why:"La variation agit sur la position de 50 € ; les coûts rendent toujours le résultat net moins favorable que le résultat brut.", result:"−3 % ≈ −1,50 € avant coûts ; +5 % ≈ +2,50 € avant coûts ; le résultat après frais retire environ 0,30 € dans le modèle simplifié.", remember:"P/L signifie Profit / Loss, soit gain / perte. Brut = avant frais ; net = après frais." },
-      note:{ title:"5. Comprendre le résultat net", where:"Carte « Synthèse guidée du Module 03 »", action:"Lire la comparaison −3 % / +5 % construite avec les coûts pédagogiques, puis répondre à la question « Les frais réduisent-ils le résultat disponible ? ».", why:"Le cockpit doit montrer la différence entre résultat brut et résultat net avant de demander de la reconnaître.", result:"La réponse « Oui » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Les frais réduisent un gain et aggravent une perte ; une petite hausse ne garantit pas un bénéfice net." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 03 »", action:"Relire les résultats brut/net des scénarios, répondre de mémoire, puis lire l’explication affichée après la première tentative.", why:"Comparer les chiffres avant de relire la règle vérifie la compréhension du résultat net.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Les frais réduisent un gain et aggravent une perte ; une petite hausse ne garantit pas un bénéfice net." }
     }
   },
   account:{
@@ -16965,7 +16965,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Choisir un socle de compte cohérent", where:"Carte « Socle du compte » du parcours détaillé", action:"Choisir la combinaison : mot de passe unique + passkey ou 2FA + email sécurisé.", why:"Réutiliser un mot de passe ou dépendre d’un seul facteur facilite la compromission en chaîne.", result:"Le socle fictif est enregistré comme preuve, sans demander aucun identifiant réel.", remember:"Un facteur supplémentaire indépendant limite l’effet du vol d’un mot de passe." },
       practice:{ title:"3. Refuser un faux support", where:"Carte « Appel urgent du support »", action:"Choisir : interrompre l’échange, ne transmettre aucun code et ouvrir soi-même le canal officiel.", why:"L’urgence, la demande de code et l’accès distant sont des signaux d’arrêt.", result:"La réponse de protection est enregistrée ; aucune donnée de compte n’est collectée.", remember:"Un support ne doit recevoir ni mot de passe, ni code 2FA, ni phrase de récupération, ni accès distant." },
       verify:{ title:"4. Ordonner la mise en sécurité avant dépôt", where:"Carte « Plan de verrouillage fictif »", action:"Valider l’ordre : sécuriser email et connexion, préparer la récupération, puis activer les verrous de paramètres ou de retraits disponibles.", why:"Un verrou de paramètres se configure après les moyens de récupération nécessaires, pas au milieu d’une urgence.", result:"Un instantané du plan de sécurité est figé dans le carnet pédagogique.", remember:"Configurer d’abord, verrouiller ensuite, puis contrôler les notifications et les sessions." },
-      note:{ title:"5. Comprendre la limite du support", where:"Carte « Synthèse guidée du Module 04 »", action:"Lire la synthèse puis répondre à la question sur la transmission des secrets et l’accès distant.", why:"La protection doit rester applicable même sous pression.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"En cas de doute : couper l’échange et revenir au service officiel ouvert indépendamment." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 04 »", action:"Relire les preuves des étapes 2 à 4, répondre de mémoire, puis lire l’explication affichée après la première tentative.", why:"La règle de protection doit être récupérée de mémoire même sous pression.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"En cas de doute : couper l’échange et revenir au service officiel ouvert indépendamment." }
     }
   },
   wallet:{
@@ -16977,7 +16977,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Faire correspondre actif et réseau", where:"Carte « Actif et réseau de démonstration »", action:"Pour BTC dans cet exercice, choisir le réseau Bitcoin.", why:"Une adresse qui semble plausible ne garantit pas que le réseau choisi soit accepté à l’arrivée.", result:"La paire fictive BTC / Bitcoin est figée comme preuve du trajet.", remember:"Le réseau de départ doit être exactement celui accepté par la destination." },
       practice:{ title:"3. Vérifier la destination sans tiers", where:"Carte « Destination indépendante »", action:"Choisir : obtenir la destination depuis le service receveur, la contrôler après collage et refuser toute adresse dictée par un tiers.", why:"La pression et le remplacement d’adresse peuvent détourner un transfert irréversible.", result:"La méthode de vérification est enregistrée sans utiliser d’adresse réelle.", remember:"Ne jamais saisir manuellement une longue adresse ; contrôler le début, la fin, le type et le réseau après collage." },
       verify:{ title:"4. Préparer un petit test et sa trace", where:"Carte « Petit test, frais et confirmations »", action:"Valider le contrôle du minimum, des frais, du memo/tag éventuel, puis prévoir un petit test et suivre TXID, statut et confirmations.", why:"Le premier transfert doit prouver le trajet avant un montant plus important.", result:"Le plan fictif de test et de traçabilité est figé dans le carnet.", remember:"Un TXID identifie la transaction ; les confirmations indiquent son avancement sur le réseau." },
-      note:{ title:"5. Comprendre la différence réseau / adresse", where:"Carte « Synthèse guidée du Module 05 »", action:"Lire la synthèse puis répondre à la question : une adresse ressemblante suffit-elle si le réseau ne correspond pas ?", why:"L’erreur de réseau peut être irréversible même lorsque l’adresse semble correcte.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Toujours vérifier ensemble : actif, réseau, destination, memo/tag, frais, petit test et confirmations." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 05 »", action:"Relire les preuves du retrait fictif, répondre de mémoire, puis lire l’explication affichée après la première tentative.", why:"La compatibilité réseau doit être comprise, pas simplement relue.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Toujours vérifier ensemble : actif, réseau, destination, memo/tag, frais, petit test et confirmations." }
     }
   },
   tokenomics:{
@@ -16989,7 +16989,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Identifier le risque propre à un stablecoin", where:"Carte « Stablecoin : stabilité annoncée et risques »", action:"Refuser l’affirmation qu’un stablecoin vaut toujours exactement 1 € ou 1 $ sans risque, puis retenir les contrôles émetteur, réserves, remboursement, liquidité et depeg.", why:"La stabilité dépend d’un mécanisme, de réserves, d’un émetteur ou d’un protocole et de la capacité de remboursement.", result:"Le risque stablecoin est enregistré sans recommander ni sélectionner un actif.", remember:"Une cible de stabilité peut échouer temporairement ou durablement." },
       practice:{ title:"3. Distinguer capitalisation et FDV", where:"Carte « Exemple de valorisation »", action:"Pour un jeton fictif à 1 €, avec 100 millions d’unités en circulation et 1 milliard au maximum, choisir capitalisation 100 M€ et FDV 1 Md€.", why:"La capitalisation utilise l’offre en circulation ; la FDV projette l’offre totale ou maximale au prix actuel.", result:"Les deux calculs sont figés comme preuve pédagogique.", remember:"Un faible prix unitaire peut coexister avec une valorisation très élevée." },
       verify:{ title:"4. Contrôler unlocks, inflation et concentration", where:"Carte « Pression d’offre potentielle »", action:"Valider la checklist : calendrier d’unlock, émissions, burn, concentration, utilité et sources officielles datées.", why:"Une augmentation future de l’offre ou une forte concentration peut modifier le risque sans changer immédiatement le prix affiché.", result:"La checklist d’analyse est enregistrée sans produire de score d’achat.", remember:"Tokenomics décrit des mécanismes d’offre ; elle ne prédit pas seule le prix." },
-      note:{ title:"5. Comprendre pourquoi 0,01 € ne signifie pas bon marché", where:"Carte « Synthèse guidée du Module 06 »", action:"Lire la synthèse puis répondre à la question : un jeton à prix unitaire plus faible est-il nécessairement moins cher économiquement ?", why:"La comparaison doit porter sur l’offre, la capitalisation, la FDV et les risques, pas sur le nombre de décimales.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Comparer prix, offre, capitalisation, FDV, émissions, unlocks et concentration." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 06 »", action:"Relire les preuves de valorisation et d’offre, répondre de mémoire, puis lire l’explication affichée après la première tentative.", why:"Le prix unitaire doit être interprété à partir des preuves, pas d’une règle relue juste avant de répondre.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Comparer prix, offre, capitalisation, FDV, émissions, unlocks et concentration." }
     }
   },
   defi:{
@@ -17001,7 +17001,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Distinguer lecture et écriture", where:"Carte « Que fait cette interaction ? »", action:"Choisir l’action qui change potentiellement l’état : signer/envoyer une transaction d’écriture, et non consulter un solde.", why:"Une lecture est une requête ; une écriture est une transaction qui exécute une fonction et peut coûter du gas.", result:"La distinction lecture / écriture est enregistrée.", remember:"Le bouton d’une dApp ne décrit pas toujours clairement la fonction appelée." },
       practice:{ title:"3. Limiter une autorisation de dépense", where:"Carte « Approval ERC-20 »", action:"Choisir une autorisation limitée au montant et à l’usage compris plutôt qu’une autorisation illimitée par défaut.", why:"Une approval autorise un contrat à transférer des jetons jusqu’à une limite donnée.", result:"Le principe du moindre privilège est figé comme preuve.", remember:"Ne jamais approuver un contrat, un montant ou une durée que l’on ne comprend pas." },
       verify:{ title:"4. Vérifier contrat, réseau, gas et dépendances", where:"Carte « Checklist avant interaction »", action:"Valider la vérification du domaine, du réseau, de l’adresse du contrat, de la fonction, du montant autorisé, du gas, de l’oracle et du bridge éventuel.", why:"La composabilité ajoute des dépendances : un protocole peut dépendre d’autres contrats, d’oracles ou de bridges.", result:"La checklist fictive est enregistrée ; aucun wallet n’est connecté.", remember:"Une interface connue ne rend pas automatiquement chaque contrat, signature ou dépendance sûre." },
-      note:{ title:"5. Comprendre le risque d’une signature", where:"Carte « Synthèse guidée du Module 07 »", action:"Lire la synthèse puis répondre : une signature présentée comme vérification est-elle forcément inoffensive si la seed n’est pas partagée ?", why:"Une signature ou transaction peut accorder un droit ou exécuter une fonction sans révéler la phrase de récupération.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Ne rien signer tant que contrat, fonction, réseau, montant, gas et conséquences ne sont pas compris." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 07 »", action:"Relire les preuves lecture/écriture, approval et dépendances, répondre de mémoire, puis lire l’explication après la première tentative.", why:"Le risque d’une signature doit être reconnu sans que la conclusion soit donnée d’avance.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Ne rien signer tant que contrat, fonction, réseau, montant, gas et conséquences ne sont pas compris." }
     }
   },
   yield:{
@@ -17013,7 +17013,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Identifier la source du rendement", where:"Carte « D’où viennent les récompenses ? »", action:"Refuser l’idée d’un intérêt gratuit et retenir que les récompenses peuvent provenir du protocole, des frais, des émissions ou d’une activité de prêt avec contrepartie.", why:"Chaque source implique des hypothèses et des risques différents.", result:"La source du rendement est enregistrée comme élément à vérifier.", remember:"Un taux sans mécanisme explicable est un signal de prudence." },
       practice:{ title:"3. Comparer jetons reçus et valeur en euros", where:"Carte « Exemple nominal contre valeur réelle »", action:"Pour 100 jetons à 10 € puis 108 jetons à 7 €, choisir 756 € et une baisse de 24,4 % malgré +8 % de jetons.", why:"La quantité de jetons et leur valeur en monnaie de référence peuvent évoluer dans des directions opposées.", result:"Le calcul nominal / euros est figé comme preuve.", remember:"+8 % de jetons ne compense pas automatiquement une baisse de prix de 30 %." },
       verify:{ title:"4. Contrôler blocage, retrait et risques", where:"Carte « Checklist de rendement »", action:"Valider la vérification : durée de blocage, délai de retrait, pénalités/slashing, inflation, coûts, prestataire, smart contract et liquidité du jeton reçu.", why:"Le rendement brut peut être réduit par les coûts, l’inflation, la baisse du prix ou l’impossibilité de sortir rapidement.", result:"La checklist fictive est enregistrée sans dépôt ni staking réel.", remember:"Comparer rendement nominal, rendement net, disponibilité des fonds et hypothèses de confiance." },
-      note:{ title:"5. Comprendre qu’un taux ne garantit pas un gain", where:"Carte « Synthèse guidée du Module 08 »", action:"Lire la synthèse puis répondre : une récompense annoncée à 8 % garantit-elle un gain en euros ?", why:"Le prix, l’inflation, les coûts, le blocage et les risques de protocole ou de prestataire restent déterminants.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un rendement élevé est une information à expliquer, jamais une garantie." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 08 »", action:"Relire les preuves du rendement nominal et de la valeur en euros, répondre de mémoire, puis lire l’explication après la première tentative.", why:"La différence entre jetons reçus et valeur en euros doit être réellement comprise.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Un rendement élevé est une information à expliquer, jamais une garantie." }
     }
   },
   derivatives:{
@@ -17025,7 +17025,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Calculer l’exposition créée par le levier", where:"Carte « Marge et exposition »", action:"Avec 100 € de marge et un levier ×5, choisir 500 € d’exposition.", why:"Le levier multiplie l’exposition, pas le capital réellement disponible.", result:"100 € ×5 = 500 € sont figés comme preuve pédagogique.", remember:"Une position de 500 € peut bouger cinq fois plus vite que la marge de 100 €." },
       practice:{ title:"3. Relier le mouvement du marché à la marge", where:"Carte « Mouvement défavorable fictif »", action:"Pour une baisse de 5 % sur 500 € d’exposition, choisir environ 25 € de perte brute, soit 25 % de la marge de 100 €, avant frais et funding.", why:"Le pourcentage du marché s’applique à l’exposition totale.", result:"Le calcul perte marché / perte sur marge est enregistré sans position réelle.", remember:"−5 % sur le marché ne signifie pas −5 % sur la marge lorsque le levier est ×5." },
       verify:{ title:"4. Contrôler liquidation, mark price et funding", where:"Carte « Checklist dérivés »", action:"Valider la checklist : prix d’entrée, mark price, prix de liquidation, marge isolée ou croisée, funding, frais, taille et protection contre solde négatif.", why:"La liquidation peut dépendre d’un prix de référence et de règles propres à la plateforme.", result:"La checklist est figée ; aucune marge, aucun levier et aucun contrat ne sont activés.", remember:"Le funding, les frais et le mode de marge modifient le résultat et le risque." },
-      note:{ title:"5. Comprendre que le levier ne protège pas", where:"Carte « Synthèse guidée du Module 09 »", action:"Lire la synthèse puis répondre : avec un levier ×5, une variation défavorable de 5 % limite-t-elle la perte à 5 % de la marge ?", why:"Le levier amplifie le résultat sur la marge et rapproche la liquidation.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un produit complexe et levierisé exige une évaluation d’adéquation et des protections spécifiques ; il ne convient pas au parcours Spot débutant." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 09 »", action:"Relire les calculs exposition/perte et la checklist dérivés, répondre de mémoire, puis lire l’explication après la première tentative.", why:"Le levier doit être compris par ses effets chiffrés avant toute conclusion.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Le levier amplifie gains et pertes sur la marge ; les dérivés restent hors du parcours Spot débutant." }
     }
   },
   scams:{
@@ -17037,7 +17037,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Identifier les signaux rouges", where:"Carte « Message reçu »", action:"Repérer ensemble : rendement garanti, urgence, demande de code ou d’accès distant, adresse imposée et paiement préalable pour récupérer des fonds.", why:"Les escroqueries combinent souvent confiance, pression et déplacement vers un canal privé.", result:"Les signaux rouges sont enregistrés sans analyser ni certifier un site réel.", remember:"Une promesse sans risque et une urgence imposée exigent l’arrêt." },
       practice:{ title:"3. Choisir la réaction immédiate", where:"Carte « Action de sécurité »", action:"Choisir : ne rien envoyer, ne rien signer, ne donner aucun code, couper l’accès distant et ouvrir soi-même le canal officiel.", why:"Répondre dans le canal fourni par l’interlocuteur maintient la victime dans son environnement contrôlé.", result:"Le protocole Stop + canal officiel indépendant est figé.", remember:"Un support légitime n’a pas besoin de seed, de code 2FA ni d’une adresse de sécurité dictée par téléphone." },
       verify:{ title:"4. Conserver les preuves sans relancer l’escroc", where:"Carte « Dossier de preuve »", action:"Valider la conservation de l’URL, du domaine, des messages, dates, captures, adresses publiques, TXID, justificatifs et signalements, sans payer un service de récupération improvisé.", why:"Une chronologie factuelle aide le support officiel, la banque, la plateforme et les autorités.", result:"Le dossier fictif est figé ; aucune donnée personnelle ou adresse réelle n’est demandée.", remember:"Ne jamais inventer une preuve manquante ni payer pour prétendument débloquer un retrait." },
-      note:{ title:"5. Comprendre la limite des listes noires", where:"Carte « Synthèse guidée du Module 10 »", action:"Lire la synthèse puis répondre : l’absence d’un nom dans une liste noire prouve-t-elle que le service est autorisé et sûr ?", why:"Les listes sont utiles mais ne peuvent pas être exhaustives face à l’apparition continue de nouveaux acteurs.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Vérifier la liste blanche officielle et le domaine exact ; une absence de liste noire n’est jamais une autorisation." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 10 »", action:"Relire les signaux rouges, le protocole Stop et le dossier de preuve, répondre de mémoire, puis lire l’explication après la première tentative.", why:"L’enquête doit rester factuelle sans transformer une absence d’alerte en preuve de sécurité.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Vérifier les sources officielles et le domaine exact ; une absence de liste noire n’est jamais une autorisation." }
     }
   },
   records:{
@@ -17049,7 +17049,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       open:{ title:"2. Construire une fiche d’opération complète", where:"Carte « Opération fictive à documenter »", action:"Choisir la fiche contenant date/heure, plateforme, paire, sens, type d’ordre, quantité, prix moyen, frais, valeur en euros et référence de preuve.", why:"Un montant isolé ne permet pas de reconstituer le coût, le résultat ou la nature de l’opération.", result:"Le schéma minimal de traçabilité est figé sans importer de compte réel.", remember:"Conserver les unités originales et la valeur en euros documentée au moment pertinent." },
       practice:{ title:"3. Refuser d’inventer une donnée manquante", where:"Carte « Intégrité du dossier »", action:"Choisir « Marquer incomplet et retrouver la source » plutôt que calculer au hasard un prix, des frais ou une date.", why:"Une estimation non identifiée peut contaminer tout le calcul ultérieur.", result:"La règle preuve manquante = dossier incomplet est enregistrée.", remember:"Hypothèse, estimation et valeur officielle doivent rester distinguées." },
       verify:{ title:"4. Relier le journal aux sources officielles", where:"Carte « Repères France — à vérifier chaque année »", action:"Valider la conservation des exports et justificatifs, puis les repères actuels : annexe 2086 pour les plus ou moins-values de cessions d’actifs numériques et 3916-3916 bis pour certains comptes d’actifs numériques à l’étranger.", why:"Les formulaires et règles peuvent évoluer ; le cockpit ne doit pas improviser une déclaration.", result:"Les références officielles 2026 sont figées sans calcul d’impôt ni conseil personnalisé.", remember:"Toujours vérifier l’année, le pays, le type d’activité et la situation du foyer sur les sources fiscales officielles." },
-      note:{ title:"5. Comprendre la limite du carnet local", where:"Carte « Synthèse guidée du Module 11 »", action:"Lire la synthèse puis répondre : le journal local suffit-il à déterminer avec certitude l’impôt dû et remplir seul la déclaration ?", why:"Le journal fournit les faits ; la qualification fiscale dépend des règles applicables et de la situation réelle.", result:"La réponse « Non » conserve la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Traçabilité d’abord ; qualification et déclaration ensuite, à partir des sources officielles en vigueur." }
+      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 11 »", action:"Relire la fiche, la règle d’intégrité et les repères officiels, répondre de mémoire, puis lire l’explication après la première tentative.", why:"Le rôle du journal doit être distingué de la qualification fiscale sans révéler la conclusion avant la réponse.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Traçabilité d’abord ; qualification et déclaration ensuite, à partir des sources officielles en vigueur." }
     }
   }
 });
@@ -17072,9 +17072,9 @@ const ATLAS_LEARNING_RECOVERY_BUILD = "28.2.86";
 
 const ATLAS_LEARNING_FLOW_BUILD = "28.3.13";
 
-const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.13";
+const ATLAS_LEARNING_INTERACTION_BUILD = "28.3.44";
 
-const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.13";
+const ATLAS_FOUNDATION_VALIDATION_BUILD = "28.3.44";
 
 const ATLAS_LEARNING_FULL_RESET_BUILD = "28.2.98";
 
@@ -18751,6 +18751,147 @@ function foundationSpotVisualRecapMarkup(summary) {
       </div>`;
 }
 
+
+const ATLAS_FOUNDATION_CHOICE_RECALL_ACTIONS = Object.freeze({
+  account_stack_weak:{ module:"account", stage:2, prefix:"account_stack", choice:"weak", correct:false },
+  account_stack_strong:{ module:"account", stage:2, prefix:"account_stack", choice:"strong", correct:true },
+  account_support_comply:{ module:"account", stage:3, prefix:"account_support", choice:"comply", correct:false },
+  account_support_stop:{ module:"account", stage:3, prefix:"account_support", choice:"stop", correct:true },
+  wallet_network_ethereum:{ module:"wallet", stage:2, prefix:"wallet_network", choice:"ethereum", correct:false },
+  wallet_network_bitcoin:{ module:"wallet", stage:2, prefix:"wallet_network", choice:"bitcoin", correct:true },
+  wallet_network_solana:{ module:"wallet", stage:2, prefix:"wallet_network", choice:"solana", correct:false },
+  wallet_destination_third_party:{ module:"wallet", stage:3, prefix:"wallet_destination", choice:"third_party", correct:false },
+  wallet_destination_independent:{ module:"wallet", stage:3, prefix:"wallet_destination", choice:"independent", correct:true },
+  tokenomics_stablecoin_riskfree_yes:{ module:"tokenomics", stage:2, prefix:"tokenomics_stablecoin", choice:"oui", correct:false },
+  tokenomics_stablecoin_riskfree_no:{ module:"tokenomics", stage:2, prefix:"tokenomics_stablecoin", choice:"non", correct:true },
+  tokenomics_valuation_wrong:{ module:"tokenomics", stage:3, prefix:"tokenomics_valuation", choice:"wrong", correct:false },
+  tokenomics_valuation_correct:{ module:"tokenomics", stage:3, prefix:"tokenomics_valuation", choice:"correct", correct:true },
+  defi_read_balance:{ module:"defi", stage:2, prefix:"defi_interaction", choice:"read", correct:false },
+  defi_write_transaction:{ module:"defi", stage:2, prefix:"defi_interaction", choice:"write", correct:true },
+  defi_approval_unlimited:{ module:"defi", stage:3, prefix:"defi_approval", choice:"unlimited", correct:false },
+  defi_approval_limited:{ module:"defi", stage:3, prefix:"defi_approval", choice:"limited", correct:true },
+  yield_free_interest:{ module:"yield", stage:2, prefix:"yield_source", choice:"free_interest", correct:false },
+  yield_source_rewards:{ module:"yield", stage:2, prefix:"yield_source", choice:"identified_source", correct:true },
+  yield_value_1080:{ module:"yield", stage:3, prefix:"yield_value", choice:"1080", correct:false },
+  yield_value_756:{ module:"yield", stage:3, prefix:"yield_value", choice:"756", correct:true },
+  derivatives_exposure_100:{ module:"derivatives", stage:2, prefix:"derivatives_exposure", choice:"100", correct:false },
+  derivatives_exposure_500:{ module:"derivatives", stage:2, prefix:"derivatives_exposure", choice:"500", correct:true },
+  derivatives_loss_5:{ module:"derivatives", stage:3, prefix:"derivatives_loss", choice:"5", correct:false },
+  derivatives_loss_25:{ module:"derivatives", stage:3, prefix:"derivatives_loss", choice:"25", correct:true },
+  scams_message_safe:{ module:"scams", stage:2, prefix:"scams_message", choice:"safe", correct:false },
+  scams_red_flags:{ module:"scams", stage:2, prefix:"scams_message", choice:"red_flags", correct:true },
+  scams_continue_contact:{ module:"scams", stage:3, prefix:"scams_action", choice:"continue", correct:false },
+  scams_stop_official:{ module:"scams", stage:3, prefix:"scams_action", choice:"stop_official", correct:true },
+  records_minimal_note:{ module:"records", stage:2, prefix:"records_schema", choice:"minimal", correct:false },
+  records_complete_schema:{ module:"records", stage:2, prefix:"records_schema", choice:"complete", correct:true },
+  records_invent_missing:{ module:"records", stage:3, prefix:"records_integrity", choice:"invent", correct:false },
+  records_mark_incomplete:{ module:"records", stage:3, prefix:"records_integrity", choice:"mark_incomplete", correct:true }
+});
+
+const ATLAS_FOUNDATION_FINAL_RECALL = Object.freeze({
+  spot:{ prefix:"spot_limit_guarantee", correct:"non", yesAction:"spot_limit_guarantee_yes", noAction:"spot_limit_guarantee_no" },
+  risk:{ prefix:"risk_costs_reduce", correct:"oui", yesAction:"risk_costs_reduce_yes", noAction:"risk_costs_reduce_no" },
+  account:{ prefix:"account_support_secret", correct:"non", yesAction:"account_support_secret_yes", noAction:"account_support_secret_no" },
+  wallet:{ prefix:"wallet_network_mismatch", correct:"non", yesAction:"wallet_network_mismatch_yes", noAction:"wallet_network_mismatch_no" },
+  tokenomics:{ prefix:"tokenomics_low_price_cheap", correct:"non", yesAction:"tokenomics_low_price_cheap_yes", noAction:"tokenomics_low_price_cheap_no" },
+  defi:{ prefix:"defi_signature_harmless", correct:"non", yesAction:"defi_signature_harmless_yes", noAction:"defi_signature_harmless_no" },
+  yield:{ prefix:"yield_guaranteed", correct:"non", yesAction:"yield_guaranteed_yes", noAction:"yield_guaranteed_no" },
+  derivatives:{ prefix:"derivatives_leverage_safe", correct:"non", yesAction:"derivatives_leverage_safe_yes", noAction:"derivatives_leverage_safe_no" },
+  scams:{ prefix:"scams_blacklist_complete", correct:"non", yesAction:"scams_blacklist_complete_yes", noAction:"scams_blacklist_complete_no" },
+  records:{ prefix:"records_journal_sufficient", correct:"non", yesAction:"records_journal_sufficient_yes", noAction:"records_journal_sufficient_no" }
+});
+
+function foundationRecallStateFromPrefix(cockpit, prefix, correctChoice) {
+  const evidence = cockpit?.practice_evidence || {};
+  const firstChoice = String(evidence[`${prefix}_first_choice`] ?? evidence[`${prefix}_first_answer`] ?? "").trim().toLowerCase();
+  const attempts = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0));
+  const attempted = attempts > 0 || Boolean(firstChoice);
+  const normalizedCorrect = String(correctChoice ?? "").trim().toLowerCase();
+  const firstCorrect = firstChoice ? firstChoice === normalizedCorrect : false;
+  return { prefix, firstChoice, attempts, attempted, firstCorrect, correctChoice:normalizedCorrect };
+}
+
+function foundationRecordRecallAttempt(cockpit, prefix, choice, correct) {
+  if (!cockpit || !prefix) return false;
+  if (!cockpit.practice_evidence || typeof cockpit.practice_evidence !== "object") cockpit.practice_evidence = {};
+  const evidence = cockpit.practice_evidence;
+  const choiceText = String(choice ?? "").trim().toLowerCase();
+  evidence[`${prefix}_attempts`] = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0)) + 1;
+  if (!evidence[`${prefix}_first_choice`] && !evidence[`${prefix}_first_answer`]) {
+    evidence[`${prefix}_first_choice`] = choiceText;
+    evidence[`${prefix}_first_answer`] = choiceText;
+    evidence[`${prefix}_first_choice_correct`] = correct === true;
+    evidence[`${prefix}_first_answer_correct`] = correct === true;
+    evidence[`${prefix}_first_choice_at`] = new Date().toISOString();
+    evidence[`${prefix}_first_answer_at`] = evidence[`${prefix}_first_choice_at`];
+  }
+  evidence[`${prefix}_last_choice`] = choiceText;
+  evidence[`${prefix}_last_answer`] = choiceText;
+  evidence[`${prefix}_last_choice_correct`] = correct === true;
+  evidence[`${prefix}_last_answer_correct`] = correct === true;
+  evidence[`${prefix}_last_choice_at`] = new Date().toISOString();
+  evidence[`${prefix}_last_answer_at`] = evidence[`${prefix}_last_choice_at`];
+  return true;
+}
+
+function foundationChoiceRecallState(cockpit, prefix, correctChoice) {
+  return foundationRecallStateFromPrefix(cockpit, prefix, correctChoice);
+}
+
+function foundationChoiceRecallConfigForStage(moduleKey, stage) {
+  const choices = Object.values(ATLAS_FOUNDATION_CHOICE_RECALL_ACTIONS).filter(meta => meta.module === moduleKey && Number(meta.stage) === Number(stage));
+  const correct = choices.find(meta => meta.correct === true) || null;
+  return correct ? { prefix:correct.prefix, correctChoice:correct.choice, stage:Number(stage) } : null;
+}
+
+function foundationChoiceRecallAttemptedForStage(cockpit, moduleKey, stage) {
+  const config = foundationChoiceRecallConfigForStage(moduleKey, stage);
+  if (!config) return false;
+  return foundationChoiceRecallState(cockpit, config.prefix, config.correctChoice).attempted;
+}
+
+function foundationChoiceRecallFeedbackMarkup(cockpit, prefix, correctChoice, explanation, done = false) {
+  const recall = foundationChoiceRecallState(cockpit, prefix, correctChoice);
+  if (!recall.attempted) {
+    if (done) return `<div class="foundation-recall-feedback is-correct"><b>Étape déjà validée</b><p>${escapeHtml(explanation)}</p><em>Cette ancienne preuve ne possédait pas encore de trace de première tentative ; elle est conservée sans en inventer une.</em></div>`;
+    return '<small>Choisis d’abord de mémoire. L’explication apparaîtra après ta première tentative.</small>';
+  }
+  const corrected = done && !recall.firstCorrect;
+  return `<div class="foundation-recall-feedback ${recall.firstCorrect ? "is-correct" : "is-review"}"><b>${recall.firstCorrect ? "Première réponse correcte" : "Première réponse à revoir"}</b><p>${escapeHtml(explanation)}</p>${corrected ? "<em>La correction est enregistrée ; la première tentative reste conservée comme trace d’apprentissage.</em>" : ""}</div>`;
+}
+
+function foundationFinalRecallState(cockpit, moduleKey) {
+  const config = ATLAS_FOUNDATION_FINAL_RECALL[moduleKey];
+  if (!config) return { attempted:false, firstCorrect:false, attempts:0, correctChoice:"" };
+  return foundationRecallStateFromPrefix(cockpit, config.prefix, config.correct);
+}
+
+function foundationFinalRecallActionMeta(moduleKey, action) {
+  const config = ATLAS_FOUNDATION_FINAL_RECALL[moduleKey];
+  if (!config) return null;
+  if (action === config.yesAction) return { ...config, answer:"oui", correct:config.correct === "oui" };
+  if (action === config.noAction) return { ...config, answer:"non", correct:config.correct === "non" };
+  return null;
+}
+
+function foundationFinalRecallFeedbackMarkup(cockpit, moduleKey, explanation) {
+  const recall = foundationFinalRecallState(cockpit, moduleKey);
+  if (!recall.attempted) {
+    if (cockpit?.steps?.note === true) return `<div class="foundation-recall-feedback is-correct"><b>Réponse validée dans une preuve antérieure</b><p>${escapeHtml(explanation)}</p><em>Aucune première tentative n’est inventée rétroactivement.</em></div>`;
+    return '<small>Réponds d’abord de mémoire. L’explication n’apparaît qu’après ton premier choix.</small>';
+  }
+  const corrected = cockpit?.steps?.note === true && !recall.firstCorrect;
+  return `<div class="foundation-recall-feedback ${recall.firstCorrect ? "is-correct" : "is-review"}"><b>${recall.firstCorrect ? "Première réponse correcte" : "Première réponse à revoir"}</b><p>${escapeHtml(explanation)}</p>${corrected ? "<em>La réponse finale est corrigée et enregistrée ; la première tentative reste conservée comme trace d’apprentissage.</em>" : ""}</div>`;
+}
+
+function foundationFinalRecallAttempted(cockpit) {
+  if (cockpit?.module_key === "market") {
+    const evidence = cockpit.practice_evidence || {};
+    return Boolean(evidence.market_prediction_first_answer || Number(evidence.market_prediction_attempts || 0) > 0 || cockpit.steps?.note);
+  }
+  return foundationFinalRecallState(cockpit, cockpit?.module_key).attempted || cockpit?.steps?.note === true;
+}
+
 function foundationSpotRecallState(cockpit, side) {
   const evidence = cockpit?.practice_evidence || {};
   const isBid = side === "bid";
@@ -18895,13 +19036,13 @@ function foundationSpotLab(cockpit) {
         <small id="spotFoundationPurchaseStatus">${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · entrée ${escapeHtml(summary.entryText)} · ${escapeHtml(summary.quoteSourceText)} · relevé ${escapeHtml(summary.quoteTimeText)} · disponible ${escapeHtml(summary.cashText)}.` : "Clique une fois : le cockpit cherche une cotation Binance fraîche, simule, puis ouvre l’étape 5."}</small>
         ${summary.ready ? foundationSpotVisualRecapMarkup(summary) : ""}
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
         <h5>À toi de répondre</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+        <p class="foundation-recall-evidence">Simulation fictive : ${escapeHtml(summary.investedText)} placés · ${escapeHtml(summary.quantityText)} BTC · entrée ${escapeHtml(summary.entryText)} · ${escapeHtml(summary.cashText)} encore disponibles · source ${escapeHtml(summary.quoteSourceText)} · relevé ${escapeHtml(summary.quoteTimeText)}.</p>
         <p><b>Question :</b> un ordre limite garantit-il une exécution immédiate ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_guarantee_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="spot_limit_guarantee_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.spot_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La simulation est terminée : réponds maintenant de mémoire." : "Disponible après la simulation fictive de 50 €."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "spot", summary.text)}
       </article>
     </div>`;
 }
@@ -19066,12 +19207,12 @@ function foundationRiskLab(cockpit) {
         <p><b>−3 % :</b> ${summary.minusTested && summary.minus.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "à tester"}<br><b>+5 % :</b> ${summary.plusTested && summary.plus.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "à tester"}</p>
         <small>Les scénarios ne modifient pas la position. Ils comparent seulement des résultats fictifs.</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span><h5>Synthèse guidée du Module 03</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span><h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Preuves figées : −3 % = ${summary.minus?.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "—"} ; +5 % = ${summary.plus?.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "—"}. Coûts pédagogiques aller-retour : ${Number(summary.roundTrip || 0).toFixed(2)} %.</p>
         <p><b>Question :</b> les frais réduisent-ils le résultat disponible par rapport au résultat brut ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="risk_costs_reduce_yes" ${summary.ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="risk_costs_reduce_no" ${summary.ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.risk_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : summary.ready ? "La comparaison ci-dessus montre que le résultat net est inférieur au résultat brut." : "Disponible après les deux scénarios."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "risk", summary.text)}
       </article>
     </div>`;
 }
@@ -19105,7 +19246,7 @@ function foundationAccountLab(cockpit) {
           <button type="button" data-foundation-action="account_stack_weak" ${!step1Done || step2Done ? "disabled" : ""}>Même mot de passe + code reçu par message</button>
           <button type="button" data-foundation-action="account_stack_strong" ${!step1Done || step2Done ? "disabled" : ""}>Mot de passe unique + passkey/2FA + email sécurisé</button>
         </div>
-        <small>${e.account_security_stack ? "Socle fictif enregistré : aucun identifiant réel n’a été demandé." : "Le second facteur doit rester indépendant du mot de passe."}</small>
+        ${e.account_security_stack ? '<small>Socle fictif enregistré : aucun identifiant réel n’a été demandé.</small>' : foundationChoiceRecallFeedbackMarkup(cockpit, "account_stack", "strong", "Un socle solide combine un mot de passe unique, un facteur d’authentification indépendant et un email sécurisé. Plusieurs couches indépendantes limitent l’effet d’un seul secret compromis.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · FAUX SUPPORT</span>
@@ -19114,7 +19255,7 @@ function foundationAccountLab(cockpit) {
           <button type="button" data-foundation-action="account_support_comply" ${!step2Done || step3Done ? "disabled" : ""}>Coopérer pour sauver le compte</button>
           <button type="button" data-foundation-action="account_support_stop" ${!step2Done || step3Done ? "disabled" : ""}>Couper l’échange et ouvrir le support officiel soi-même</button>
         </div>
-        <small>${e.account_support_response ? "Réponse de protection enregistrée : aucun code, aucun secret, aucun accès distant." : "L’urgence artificielle ne change jamais la règle de confidentialité."}</small>
+        ${e.account_support_response ? foundationChoiceRecallFeedbackMarkup(cockpit, "account_support", "stop", "Un support légitime ne doit pas obtenir ton code 2FA, tes secrets ni un accès distant. Coupe l’échange et ouvre toi-même le canal officiel.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "account_support", "stop", "Un support légitime ne doit pas obtenir ton code 2FA, tes secrets ni un accès distant. Coupe l’échange et ouvre toi-même le canal officiel.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · PLAN DE VERROUILLAGE</span>
@@ -19123,13 +19264,13 @@ function foundationAccountLab(cockpit) {
         ${foundationButton(step4Done ? "Plan de sécurité enregistré" : "Valider ce plan fictif", "account_validate_plan", !step3Done || step4Done)}
         <small>${e.account_security_plan ? "Instantané figé dans le carnet ; aucune configuration réelle n’a été modifiée." : "Ce module enseigne l’ordre des contrôles, il ne configure aucun compte."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 04</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : socle du compte choisi, scénario de faux support traité et plan de verrouillage fictif validé.</p>
         <p><b>Question :</b> un support légitime peut-il demander ton mot de passe, ton code 2FA, ta phrase de récupération ou l’accès distant à ton ordinateur ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="account_support_secret_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="account_support_secret_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.account_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La règle est absolue : aucun secret et aucun accès distant transmis au support." : "Disponible après le plan de verrouillage fictif."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "account", summary.text)}
       </article>
     </div>`;
 }
@@ -19160,13 +19301,13 @@ function foundationWalletLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · ACTIF + RÉSEAU</span>
         <h5>Retrait fictif de BTC : quel réseau choisir dans cet exercice ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_ethereum" ${!step1Done || step2Done ? "disabled" : ""}>Ethereum</button><button type="button" data-foundation-action="wallet_network_bitcoin" ${!step1Done || step2Done ? "disabled" : ""}>Bitcoin</button><button type="button" data-foundation-action="wallet_network_solana" ${!step1Done || step2Done ? "disabled" : ""}>Solana</button></div>
-        <small>${e.wallet_network_match ? "Paire fictive figée : BTC / Bitcoin." : "Le réseau doit être accepté à la fois au départ et à l’arrivée."}</small>
+        ${e.wallet_network_match ? foundationChoiceRecallFeedbackMarkup(cockpit, "wallet_network", "bitcoin", "Dans cet exercice, le retrait fictif porte sur BTC via le réseau Bitcoin. Le réseau sélectionné doit correspondre à celui accepté par la destination.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "wallet_network", "bitcoin", "Dans cet exercice, le retrait fictif porte sur BTC via le réseau Bitcoin. Le réseau sélectionné doit correspondre à celui accepté par la destination.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · DESTINATION INDÉPENDANTE</span>
         <h5>Comment obtenir et contrôler la destination ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_destination_third_party" ${!step2Done || step3Done ? "disabled" : ""}>Utiliser l’adresse urgente envoyée par un tiers</button><button type="button" data-foundation-action="wallet_destination_independent" ${!step2Done || step3Done ? "disabled" : ""}>Ouvrir le service receveur, copier puis contrôler l’adresse</button></div>
-        <small>${e.wallet_destination_method ? "Méthode enregistrée sans adresse réelle : source indépendante, contrôle après collage, aucun tiers." : "Une adresse ne doit jamais être dictée par une personne qui met la pression."}</small>
+        ${e.wallet_destination_method ? foundationChoiceRecallFeedbackMarkup(cockpit, "wallet_destination", "independent", "La destination doit venir du service receveur ouvert indépendamment. Après collage, elle doit être contrôlée ; une adresse imposée par un tiers sous pression est refusée.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "wallet_destination", "independent", "La destination doit venir du service receveur ouvert indépendamment. Après collage, elle doit être contrôlée ; une adresse imposée par un tiers sous pression est refusée.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · PETIT TEST + TRACE</span>
@@ -19175,13 +19316,13 @@ function foundationWalletLab(cockpit) {
         ${foundationButton(step4Done ? "Plan de test enregistré" : "Valider le petit test traçable", "wallet_validate_test_trace", !step3Done || step4Done)}
         <small>${e.wallet_test_trace ? "Instantané figé : petit test, frais, memo/tag éventuel, TXID et confirmations." : "Aucune transaction réelle n’est déclenchée."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 05</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : actif + réseau, destination obtenue indépendamment, contrôle après collage et plan de petit test traçable.</p>
         <p><b>Question :</b> une adresse qui semble correcte suffit-elle si le réseau sélectionné ne correspond pas au réseau accepté à l’arrivée ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="wallet_network_mismatch_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="wallet_network_mismatch_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.wallet_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La compatibilité du réseau reste obligatoire, indépendamment de l’apparence de l’adresse." : "Disponible après le plan de petit test traçable."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "wallet", summary.text)}
       </article>
     </div>`;
 }
@@ -19212,14 +19353,14 @@ function foundationTokenomicsLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · STABILITÉ ET RISQUES</span>
         <h5>Un stablecoin est-il automatiquement sans risque parce qu’il vise 1 € ou 1 $ ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_yes" ${!step1Done || step2Done ? "disabled" : ""}>Oui, la parité est garantie</button><button type="button" data-foundation-action="tokenomics_stablecoin_riskfree_no" ${!step1Done || step2Done ? "disabled" : ""}>Non, vérifier mécanisme, réserves, remboursement, liquidité et depeg</button></div>
-        <small>${e.tokenomics_stablecoin_risk ? "Risque stablecoin enregistré : cible de stabilité, pas absence de risque." : "Une réserve publiée par un émetteur est une preuve à lire, pas une propriété universelle de tous les stablecoins."}</small>
+        ${e.tokenomics_stablecoin_risk ? foundationChoiceRecallFeedbackMarkup(cockpit, "tokenomics_stablecoin", "non", "Un stablecoin vise une parité, mais conserve des risques de mécanisme, réserves, liquidité, remboursement et depeg. Stabilité visée ne signifie pas absence de risque.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "tokenomics_stablecoin", "non", "Un stablecoin vise une parité, mais conserve des risques de mécanisme, réserves, liquidité, remboursement et depeg. Stabilité visée ne signifie pas absence de risque.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · CAPITALISATION ET FDV</span>
         <h5>Jeton fictif : prix 1 € · 100 M en circulation · 1 Md maximum</h5>
         <p>Quelle lecture est correcte ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_valuation_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Capitalisation 1 M€ · FDV 100 M€</button><button type="button" data-foundation-action="tokenomics_valuation_correct" ${!step2Done || step3Done ? "disabled" : ""}>Capitalisation 100 M€ · FDV 1 Md€</button></div>
-        <small>${e.tokenomics_valuation_example ? "Calcul figé : prix × offre en circulation, puis prix × offre maximale." : "La FDV ne dit pas que toute l’offre existe déjà ; elle projette une valorisation au prix actuel."}</small>
+        ${e.tokenomics_valuation_example ? foundationChoiceRecallFeedbackMarkup(cockpit, "tokenomics_valuation", "correct", "À 1 € l’unité : 100 millions en circulation donnent 100 M€ de capitalisation ; 1 milliard maximum donne 1 Md€ de FDV. La FDV est une projection au prix actuel.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "tokenomics_valuation", "correct", "À 1 € l’unité : 100 millions en circulation donnent 100 M€ de capitalisation ; 1 milliard maximum donne 1 Md€ de FDV. La FDV est une projection au prix actuel.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · PRESSION D’OFFRE POTENTIELLE</span>
@@ -19228,13 +19369,13 @@ function foundationTokenomicsLab(cockpit) {
         ${foundationButton(step4Done ? "Checklist d’offre enregistrée" : "Valider la checklist tokenomics", "tokenomics_validate_supply", !step3Done || step4Done)}
         <small>${e.tokenomics_supply_checklist ? "Instantané figé : offre, unlocks, émissions, burn, concentration et sources." : "Cette checklist n’attribue aucun score d’achat et ne prédit aucun prix."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 06</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : risques du stablecoin, calcul capitalisation / FDV et checklist d’offre, unlocks, émissions et concentration.</p>
         <p><b>Question :</b> un jeton à 0,01 € est-il nécessairement économiquement moins cher qu’un jeton à 100 € ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="tokenomics_low_price_cheap_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="tokenomics_low_price_cheap_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.tokenomics_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Le prix unitaire doit être relié à l’offre, à la capitalisation et à la FDV." : "Disponible après la checklist tokenomics."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "tokenomics", summary.text)}
       </article>
     </div>`;
 }
@@ -19265,13 +19406,13 @@ function foundationDefiLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · LIRE OU ÉCRIRE</span>
         <h5>Quelle interaction peut modifier l’état de la blockchain ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_read_balance" ${!step1Done || step2Done ? "disabled" : ""}>Consulter un solde</button><button type="button" data-foundation-action="defi_write_transaction" ${!step1Done || step2Done ? "disabled" : ""}>Signer et envoyer une transaction d’écriture</button></div>
-        <small>${e.defi_interaction_type ? "Distinction figée : lecture gratuite de l’état contre écriture transactionnelle." : "Une interface peut masquer la fonction exacte derrière un bouton simple."}</small>
+        ${e.defi_interaction_type ? foundationChoiceRecallFeedbackMarkup(cockpit, "defi_interaction", "write", "Consulter un solde lit l’état. Signer et envoyer une transaction d’écriture peut modifier l’état de la blockchain et produire des conséquences réelles.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "defi_interaction", "write", "Consulter un solde lit l’état. Signer et envoyer une transaction d’écriture peut modifier l’état de la blockchain et produire des conséquences réelles.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · APPROVAL ERC-20</span>
         <h5>Quelle autorisation respecte le moindre privilège ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_approval_unlimited" ${!step2Done || step3Done ? "disabled" : ""}>Autorisation illimitée par défaut</button><button type="button" data-foundation-action="defi_approval_limited" ${!step2Done || step3Done ? "disabled" : ""}>Montant limité à l’usage compris</button></div>
-        <small>${e.defi_approval_scope ? "Approval fictive limitée enregistrée ; aucun wallet ni contrat réel." : "Une approval peut permettre à un contrat d’utiliser des jetons via transferFrom jusqu’à la limite accordée."}</small>
+        ${e.defi_approval_scope ? foundationChoiceRecallFeedbackMarkup(cockpit, "defi_approval", "limited", "Le moindre privilège consiste à limiter l’autorisation au montant et à l’usage compris. Une approval illimitée donne potentiellement un droit beaucoup plus large.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "defi_approval", "limited", "Le moindre privilège consiste à limiter l’autorisation au montant et à l’usage compris. Une approval illimitée donne potentiellement un droit beaucoup plus large.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · CONTRAT ET DÉPENDANCES</span>
@@ -19280,13 +19421,13 @@ function foundationDefiLab(cockpit) {
         ${foundationButton(step4Done ? "Checklist DeFi enregistrée" : "Valider contrat + dépendances", "defi_validate_dependencies", !step3Done || step4Done)}
         <small>${e.defi_dependency_checklist ? "Instantané fictif figé ; aucune connexion et aucune signature réelle." : "La composabilité augmente les capacités, mais aussi les dépendances à vérifier."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 07</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : lecture / écriture, portée d’une approval et checklist contrat + dépendances.</p>
         <p><b>Question :</b> une signature présentée comme une simple vérification est-elle forcément inoffensive si la phrase de récupération n’est pas partagée ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="defi_signature_harmless_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="defi_signature_harmless_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.defi_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Une signature peut accorder un droit ou exécuter une fonction sans révéler la seed." : "Disponible après la checklist DeFi."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "defi", summary.text)}
       </article>
     </div>`;
 }
@@ -19317,14 +19458,14 @@ function foundationYieldLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · SOURCE DU RENDEMENT</span>
         <h5>Comment lire une récompense annoncée ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_free_interest" ${!step1Done || step2Done ? "disabled" : ""}>Comme un intérêt gratuit garanti</button><button type="button" data-foundation-action="yield_source_rewards" ${!step1Done || step2Done ? "disabled" : ""}>Identifier protocole, frais, émissions ou prêt et leurs risques</button></div>
-        <small>${e.yield_source_model ? "Source du rendement enregistrée comme hypothèse à vérifier." : "Un pourcentage sans mécanisme, actif payé ni conditions n’est pas interprétable."}</small>
+        ${e.yield_source_model ? foundationChoiceRecallFeedbackMarkup(cockpit, "yield_source", "identified_source", "Un rendement doit être relié à son mécanisme : récompenses de protocole, frais, émissions ou prêt, ainsi qu’aux risques correspondants. Un pourcentage isolé n’est pas une garantie.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "yield_source", "identified_source", "Un rendement doit être relié à son mécanisme : récompenses de protocole, frais, émissions ou prêt, ainsi qu’aux risques correspondants. Un pourcentage isolé n’est pas une garantie.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · JETONS CONTRE EUROS</span>
         <h5>100 jetons à 10 € deviennent 108 jetons à 7 €</h5>
         <p>Quelle valeur finale est correcte ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_value_1080" ${!step2Done || step3Done ? "disabled" : ""}>1 080 € · gain de 8 %</button><button type="button" data-foundation-action="yield_value_756" ${!step2Done || step3Done ? "disabled" : ""}>756 € · perte de 244 € soit 24,4 %</button></div>
-        <small>${e.yield_nominal_vs_euro ? "Calcul figé : 108 × 7 € = 756 € malgré +8 % de jetons." : "Le rendement nominal en jetons doit être converti dans la monnaie de référence."}</small>
+        ${e.yield_nominal_vs_euro ? foundationChoiceRecallFeedbackMarkup(cockpit, "yield_value", "756", "108 jetons à 7 € valent 756 €. Le nombre de jetons a augmenté de 8 %, mais leur valeur totale en euros a baissé de 244 €, soit 24,4 %.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "yield_value", "756", "108 jetons à 7 € valent 756 €. Le nombre de jetons a augmenté de 8 %, mais leur valeur totale en euros a baissé de 244 €, soit 24,4 %.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · DISPONIBILITÉ ET RISQUES</span>
@@ -19333,13 +19474,13 @@ function foundationYieldLab(cockpit) {
         ${foundationButton(step4Done ? "Checklist rendement enregistrée" : "Valider la checklist de rendement", "yield_validate_risks", !step3Done || step4Done)}
         <small>${e.yield_risk_checklist ? "Instantané fictif figé ; aucun dépôt ni staking réel." : "Les options de staking diffèrent par leurs risques, récompenses et hypothèses de confiance."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 08</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : source du rendement, exemple 100 → 108 jetons avec baisse du prix et checklist de disponibilité / risques.</p>
         <p><b>Question :</b> une récompense annoncée à 8 % garantit-elle un gain en euros ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="yield_guaranteed_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="yield_guaranteed_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.yield_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "Le taux nominal ne neutralise ni la variation du prix, ni les coûts, ni les risques." : "Disponible après la checklist de rendement."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "yield", summary.text)}
       </article>
     </div>`;
 }
@@ -19368,7 +19509,7 @@ function foundationDerivativesLab(cockpit) {
           <button type="button" data-foundation-action="derivatives_exposure_100" ${!step1Done || step2Done ? "disabled" : ""}>100 €</button>
           <button type="button" data-foundation-action="derivatives_exposure_500" ${!step1Done || step2Done ? "disabled" : ""}>500 €</button>
         </div>
-        <small>${evidence.derivatives_exposure_example ? "Preuve figée : 100 € ×5 = 500 € d’exposition." : "Le levier multiplie l’exposition, pas le solde disponible."}</small>
+        ${evidence.derivatives_exposure_example ? foundationChoiceRecallFeedbackMarkup(cockpit, "derivatives_exposure", "500", "100 € de marge avec un levier ×5 créent 500 € d’exposition. Le levier multiplie l’exposition au mouvement du marché.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "derivatives_exposure", "500", "100 € de marge avec un levier ×5 créent 500 € d’exposition. Le levier multiplie l’exposition au mouvement du marché.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · MOUVEMENT DÉFAVORABLE</span>
@@ -19378,7 +19519,7 @@ function foundationDerivativesLab(cockpit) {
           <button type="button" data-foundation-action="derivatives_loss_5" ${!step2Done || step3Done ? "disabled" : ""}>5 € · 5 % de la marge</button>
           <button type="button" data-foundation-action="derivatives_loss_25" ${!step2Done || step3Done ? "disabled" : ""}>25 € · 25 % de la marge</button>
         </div>
-        <small>${evidence.derivatives_loss_example ? "Preuve figée : −5 % × 500 € = −25 €, avant frais et funding." : "Le mouvement s’applique à l’exposition totale."}</small>
+        ${evidence.derivatives_loss_example ? foundationChoiceRecallFeedbackMarkup(cockpit, "derivatives_loss", "25", "Une baisse de 5 % appliquée à 500 € d’exposition représente environ 25 € de perte brute, soit 25 % de la marge de 100 €, avant frais et funding.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "derivatives_loss", "25", "Une baisse de 5 % appliquée à 500 € d’exposition représente environ 25 € de perte brute, soit 25 % de la marge de 100 €, avant frais et funding.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · LIQUIDATION</span>
@@ -19387,13 +19528,13 @@ function foundationDerivativesLab(cockpit) {
         ${foundationButton(step4Done ? "Checklist dérivés enregistrée" : "Valider la checklist dérivés", "derivatives_validate_risks", !step3Done || step4Done)}
         <small>${evidence.derivatives_risk_checklist ? "Aucun produit dérivé réel n’a été ouvert." : "Ces paramètres changent selon le produit et la plateforme."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 09</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : 100 € de marge avec levier ×5, exposition calculée, perte sur −5 % et checklist liquidation / funding / marge.</p>
         <p><b>Question :</b> avec un levier ×5, une variation défavorable de 5 % limite-t-elle la perte à 5 % de la marge ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="derivatives_leverage_safe_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="derivatives_leverage_safe_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${evidence.derivatives_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Le levier amplifie le résultat sur la marge." : "Disponible après la checklist dérivés."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "derivatives", summary.text)}
       </article>
     </div>`;
 }
@@ -19419,13 +19560,13 @@ function foundationScamsLab(cockpit) {
         <h5>Message fictif reçu</h5>
         <p>« Gain garanti, urgence, installez un accès distant, donnez le code et payez une taxe pour débloquer le retrait. »</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_message_safe" ${!step1Done || step2Done ? "disabled" : ""}>Conseiller rassurant</button><button type="button" data-foundation-action="scams_red_flags" ${!step1Done || step2Done ? "disabled" : ""}>Plusieurs signaux d’arnaque</button></div>
-        <small>${evidence.scams_red_flags ? "Urgence, garantie, accès distant, secret et paiement préalable enregistrés." : "Une présentation professionnelle ne neutralise pas ces signaux."}</small>
+        ${evidence.scams_red_flags ? foundationChoiceRecallFeedbackMarkup(cockpit, "scams_message", "red_flags", "Garantie de gain, urgence artificielle, accès distant, demande de code et paiement préalable sont plusieurs signaux rouges simultanés. L’apparence professionnelle ne les neutralise pas.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "scams_message", "red_flags", "Garantie de gain, urgence artificielle, accès distant, demande de code et paiement préalable sont plusieurs signaux rouges simultanés. L’apparence professionnelle ne les neutralise pas.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · ACTION IMMÉDIATE</span>
         <h5>Que faire ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_continue_contact" ${!step2Done || step3Done ? "disabled" : ""}>Continuer pour obtenir des explications</button><button type="button" data-foundation-action="scams_stop_official" ${!step2Done || step3Done ? "disabled" : ""}>Stop · aucun secret · canal officiel ouvert manuellement</button></div>
-        <small>${evidence.scams_stop_protocol ? "Protocole Stop enregistré." : "Ne jamais rester dans le canal fourni par l’interlocuteur suspect."}</small>
+        ${evidence.scams_stop_protocol ? foundationChoiceRecallFeedbackMarkup(cockpit, "scams_action", "stop_official", "Face à plusieurs signaux rouges : stop, aucun secret, aucune signature, aucun paiement supplémentaire, puis ouverture indépendante du canal officiel.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "scams_action", "stop_official", "Face à plusieurs signaux rouges : stop, aucun secret, aucune signature, aucun paiement supplémentaire, puis ouverture indépendante du canal officiel.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · PREUVES</span>
@@ -19434,13 +19575,13 @@ function foundationScamsLab(cockpit) {
         ${foundationButton(step4Done ? "Dossier de preuve enregistré" : "Valider le dossier de preuve", "scams_validate_evidence", !step3Done || step4Done)}
         <small>${evidence.scams_evidence_dossier ? "Dossier fictif figé ; aucune donnée réelle collectée." : "Conserver sans relancer ni provoquer l’interlocuteur."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 10</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : signaux rouges, protocole Stop et dossier factuel conservé sans relancer l’interlocuteur.</p>
         <p><b>Question :</b> l’absence d’un service dans une liste noire prouve-t-elle qu’il est autorisé et sûr ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="scams_blacklist_complete_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="scams_blacklist_complete_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${evidence.scams_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Une liste noire n’est pas exhaustive." : "Disponible après le dossier de preuve."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "scams", summary.text)}
       </article>
     </div>`;
 }
@@ -19465,13 +19606,13 @@ function foundationRecordsLab(cockpit) {
         <span class="foundation-stage-kicker">ÉTAPE 2 · FICHE D’OPÉRATION</span>
         <h5>Quel dossier est reconstructible ?</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="records_minimal_note" ${!step1Done || step2Done ? "disabled" : ""}>« Achat BTC · 50 € »</button><button type="button" data-foundation-action="records_complete_schema" ${!step1Done || step2Done ? "disabled" : ""}>Date, plateforme, paire, sens, type, quantité, prix, frais, EUR et preuve</button></div>
-        <small>${evidence.records_transaction_schema ? "Schéma complet enregistré sans compte réel." : "Un montant seul ne permet pas de refaire le calcul."}</small>
+        ${evidence.records_transaction_schema ? foundationChoiceRecallFeedbackMarkup(cockpit, "records_schema", "complete", "Une opération reconstructible exige date, plateforme ou wallet, paire ou actif, sens, type, quantité, prix, frais, valeur en euros et référence de preuve. Un montant seul est insuffisant.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "records_schema", "complete", "Une opération reconstructible exige date, plateforme ou wallet, paire ou actif, sens, type, quantité, prix, frais, valeur en euros et référence de preuve. Un montant seul est insuffisant.", false)}
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · INTÉGRITÉ</span>
         <h5>Un prix ou des frais manquent</h5>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="records_invent_missing" ${!step2Done || step3Done ? "disabled" : ""}>Estimer silencieusement</button><button type="button" data-foundation-action="records_mark_incomplete" ${!step2Done || step3Done ? "disabled" : ""}>Marquer incomplet et retrouver la source</button></div>
-        <small>${evidence.records_evidence_integrity ? "Règle d’intégrité enregistrée." : "Une hypothèse doit toujours être identifiée comme telle."}</small>
+        ${evidence.records_evidence_integrity ? foundationChoiceRecallFeedbackMarkup(cockpit, "records_integrity", "mark_incomplete", "Une donnée manquante ne doit pas être inventée silencieusement : elle reste marquée incomplète jusqu’au retour à la source ; toute estimation éventuelle doit être explicitement identifiée.", true) : foundationChoiceRecallFeedbackMarkup(cockpit, "records_integrity", "mark_incomplete", "Une donnée manquante ne doit pas être inventée silencieusement : elle reste marquée incomplète jusqu’au retour à la source ; toute estimation éventuelle doit être explicitement identifiée.", false)}
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · REPÈRES OFFICIELS</span>
@@ -19480,13 +19621,13 @@ function foundationRecordsLab(cockpit) {
         ${foundationButton(step4Done ? "Repères officiels enregistrés" : "Valider les repères officiels", "records_validate_official_routes", !step3Done || step4Done)}
         <small>${evidence.records_official_route_check ? "Références 2026 figées ; elles devront être revérifiées chaque année." : "Le cockpit prépare la preuve, pas la déclaration."}</small>
       </article>
-      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 11</h5>
-        <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
+      <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
+        <p class="foundation-recall-evidence">Relis uniquement tes preuves : fiche reconstructible, règle d’intégrité des données manquantes et repères officiels à revérifier pour l’année concernée.</p>
         <p><b>Question :</b> le journal local suffit-il à déterminer avec certitude l’impôt dû et à remplir seul la déclaration ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="records_journal_sufficient_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="records_journal_sufficient_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${evidence.records_guided_conclusion ? "Réponse enregistrée." : step5Ready ? "Le journal fournit les faits ; la règle fiscale doit être vérifiée." : "Disponible après les repères officiels."}</small>
+        ${foundationFinalRecallFeedbackMarkup(cockpit, "records", summary.text)}
       </article>
     </div>`;
 }
@@ -19503,7 +19644,16 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   if (els.learningFoundationRoute) els.learningFoundationRoute.innerHTML = foundation.route.map((item, index) => `<span><b>${index + 1}</b>${escapeHtml(item)}</span>`).join("");
   if (els.learningFoundationStepCards) els.learningFoundationStepCards.innerHTML = ATLAS_LEARNING_SESSION_STEPS.map(key => {
     const step = foundation.steps[key];
-    return `<article class="foundation-step-card ${cockpit.steps[key] ? "is-done" : ""}"><header><b>${escapeHtml(step.title)}</b><span>${escapeHtml(foundationStepStatus(cockpit, key))}</span></header><dl><div><dt>Où ?</dt><dd>${escapeHtml(step.where)}</dd></div><div><dt>Action exacte</dt><dd>${escapeHtml(step.action)}</dd></div><div><dt>Pourquoi ?</dt><dd>${escapeHtml(step.why)}</dd></div><div><dt>Résultat attendu</dt><dd>${escapeHtml(step.result)}</dd></div><div><dt>À retenir</dt><dd>${escapeHtml(step.remember)}</dd></div></dl></article>`;
+    const choiceStage = key === "open" ? 2 : key === "practice" ? 3 : null;
+    const choiceRecallConfig = choiceStage ? foundationChoiceRecallConfigForStage(cockpit.module_key, choiceStage) : null;
+    const choiceRecallLocked = Boolean(choiceRecallConfig && !foundationChoiceRecallAttemptedForStage(cockpit, cockpit.module_key, choiceStage));
+    const finalRecallLocked = key === "note" && !foundationFinalRecallAttempted(cockpit);
+    const recallLocked = choiceRecallLocked || finalRecallLocked;
+    const actionText = recallLocked ? "Réponds d’abord dans l’exercice de mémoire. L’explication et le repère détaillé apparaîtront après ta première tentative." : step.action;
+    const whyText = recallLocked ? "La récupération active doit précéder l’explication afin de vérifier ce que tu as réellement compris." : step.why;
+    const resultText = recallLocked ? "La première tentative sera conservée. Une correction restera possible sans effacer cette trace d’apprentissage." : step.result;
+    const rememberText = recallLocked ? "Repère masqué jusqu’à ta première tentative." : step.remember;
+    return `<article class="foundation-step-card ${cockpit.steps[key] ? "is-done" : ""}"><header><b>${escapeHtml(step.title)}</b><span>${escapeHtml(foundationStepStatus(cockpit, key))}</span></header><dl><div><dt>Où ?</dt><dd>${escapeHtml(step.where)}</dd></div><div><dt>Action exacte</dt><dd>${escapeHtml(actionText)}</dd></div><div><dt>Pourquoi ?</dt><dd>${escapeHtml(whyText)}</dd></div><div><dt>Résultat attendu</dt><dd>${escapeHtml(resultText)}</dd></div><div><dt>À retenir</dt><dd>${escapeHtml(rememberText)}</dd></div></dl></article>`;
   }).join("");
   if (els.learningFoundationLab) {
     const labs = { market:foundationMarketLab, spot:foundationSpotLab, risk:foundationRiskLab, account:foundationAccountLab, wallet:foundationWalletLab, tokenomics:foundationTokenomicsLab, defi:foundationDefiLab, yield:foundationYieldLab, derivatives:foundationDerivativesLab, scams:foundationScamsLab, records:foundationRecordsLab };
@@ -19514,7 +19664,7 @@ function renderFoundationLearningPanel(cockpitInput = null) {
   const oldPath = Boolean(expectedPathBuild && cockpit.foundation_path_build !== expectedPathBuild);
   if (els.learningFoundationStatus) els.learningFoundationStatus.innerHTML = oldPath
     ? `<b>Parcours pédagogique ${escapeHtml(expectedPathBuild || ATLAS_FOUNDATION_LEARNING_BUILD)} réconcilié</b><span>Le brouillon actif est conservé. Une migration ne peut modifier que le module dont la version pédagogique a réellement changé.</span>`
-    : `<b>Parcours pédagogique 28.3.13 actif · Interface ${ATLAS_BUILD}</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
+    : `<b>Parcours pédagogique ${ATLAS_FOUNDATION_LEARNING_BUILD} actif · Interface ${ATLAS_BUILD}</b><span>Chaque consigne suit strictement l’ordre 1 → 2 → 3 → 4 → 5. Les réponses de rappel actif précèdent leurs explications ; les brouillons des modules inchangés restent conservés entre les Builds.</span>`;
 }
 
 function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
@@ -19656,6 +19806,29 @@ function handleFoundationAction(action) {
     return;
   }
   if (!foundationOrderGate(cockpit, action)) return;
+
+  const choiceRecallMeta = ATLAS_FOUNDATION_CHOICE_RECALL_ACTIONS[action] || null;
+  if (choiceRecallMeta && choiceRecallMeta.module === module.key) {
+    foundationRecordRecallAttempt(cockpit, choiceRecallMeta.prefix, choiceRecallMeta.choice, choiceRecallMeta.correct);
+    if (!choiceRecallMeta.correct) {
+      cockpit.last_action = `${choiceRecallMeta.prefix}_recall_attempt`;
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToFoundationStage(choiceRecallMeta.stage);
+    }
+  }
+
+  const finalRecallMeta = foundationFinalRecallActionMeta(module.key, action);
+  if (finalRecallMeta && cockpit.steps.verify === true) {
+    foundationRecordRecallAttempt(cockpit, finalRecallMeta.prefix, finalRecallMeta.answer, finalRecallMeta.correct);
+    if (!finalRecallMeta.correct) {
+      cockpit.last_action = `${finalRecallMeta.prefix}_recall_attempt`;
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToFoundationStage(5);
+    }
+  }
+
   if (module.key === "market") {
     const summary = foundationMarketGuidedSummary(cockpit);
     if (action === "market_answer_prudent") action = "market_verify_source_time";
@@ -28350,7 +28523,7 @@ function memoryExplorerEmptyText() {
     "MÉMOIRE VIDE",
     "",
     "Aucune trace locale à explorer pour l’instant.",
-    "Les Modules 01 et 02 archivés créeront automatiquement leur mémoire pédagogique.",
+    "Les Modules 01 à 11 archivés créeront automatiquement leur mémoire pédagogique.",
     "Aucune collecte manuelle n’est nécessaire pour continuer à apprendre."
   ].join("\n");
 }
@@ -32774,8 +32947,20 @@ function renderSourceGrid() { atlasRenderDiagnostics(); if (!els.sourceGrid) { r
 }
 
 
-const ATLAS_AUTOMATIC_LEARNING_MEMORY_SCHEMA = "agent_crypto_learning_memory_auto_v1";
-const ATLAS_AUTOMATIC_LEARNING_MEMORY_MODULES = Object.freeze(["market", "spot"]);
+const ATLAS_AUTOMATIC_LEARNING_MEMORY_SCHEMA = "agent_crypto_learning_memory_auto_v2";
+const ATLAS_AUTOMATIC_LEARNING_MEMORY_MODULES = Object.freeze([...ATLAS_FOUNDATION_MODULE_KEYS]);
+
+const ATLAS_AUTOMATIC_LEARNING_MEMORY_GENERIC = Object.freeze({
+  risk:{ number:"03", summaryKey:"risk_guided_summary", finalPrefix:"risk_costs_reduce", correct:"oui", tags:["fees", "risk", "scenarios", "active_recall"], proofs:[["cost_example","coûts pédagogiques"],["risk_position","position BTC fictive"],["risk_scenario_results","scénarios −3 % / +5 %"]] },
+  account:{ number:"04", summaryKey:"account_guided_summary", finalPrefix:"account_support_secret", correct:"non", tags:["account_security", "fake_support", "active_recall"], proofs:[["account_security_stack","socle du compte"],["account_support_response","réponse au faux support"],["account_security_plan","plan de verrouillage"]] },
+  wallet:{ number:"05", summaryKey:"wallet_guided_summary", finalPrefix:"wallet_network_mismatch", correct:"non", tags:["wallet_safety", "network_match", "active_recall"], proofs:[["wallet_network_match","actif + réseau"],["wallet_destination_method","destination indépendante"],["wallet_test_trace","petit test + trace"]] },
+  tokenomics:{ number:"06", summaryKey:"tokenomics_guided_summary", finalPrefix:"tokenomics_low_price_cheap", correct:"non", tags:["tokenomics", "stablecoin", "valuation", "active_recall"], proofs:[["tokenomics_stablecoin_risk","risques stablecoin"],["tokenomics_valuation_example","capitalisation / FDV"],["tokenomics_supply_checklist","offre / unlocks / concentration"]] },
+  defi:{ number:"07", summaryKey:"defi_guided_summary", finalPrefix:"defi_signature_harmless", correct:"non", tags:["defi", "approval", "smart_contract", "active_recall"], proofs:[["defi_interaction_type","lecture / écriture"],["defi_approval_scope","portée approval"],["defi_dependency_checklist","contrat + dépendances"]] },
+  yield:{ number:"08", summaryKey:"yield_guided_summary", finalPrefix:"yield_guaranteed", correct:"non", tags:["staking", "yield", "risk", "active_recall"], proofs:[["yield_source_model","source du rendement"],["yield_nominal_vs_euro","jetons / valeur euro"],["yield_risk_checklist","blocage / slashing / contrepartie"]] },
+  derivatives:{ number:"09", summaryKey:"derivatives_guided_summary", finalPrefix:"derivatives_leverage_safe", correct:"non", tags:["derivatives", "leverage", "liquidation", "active_recall"], proofs:[["derivatives_exposure_example","exposition levier"],["derivatives_loss_example","perte sur marge"],["derivatives_risk_checklist","checklist liquidation / funding"]] },
+  scams:{ number:"10", summaryKey:"scams_guided_summary", finalPrefix:"scams_blacklist_complete", correct:"non", tags:["scam_defense", "red_flags", "evidence", "active_recall"], proofs:[["scams_red_flags","signaux rouges"],["scams_stop_protocol","protocole Stop"],["scams_evidence_dossier","dossier de preuve"]] },
+  records:{ number:"11", summaryKey:"records_guided_summary", finalPrefix:"records_journal_sufficient", correct:"non", tags:["records", "traceability", "tax_sources", "active_recall"], proofs:[["records_transaction_schema","fiche reconstructible"],["records_evidence_integrity","intégrité des données"],["records_official_route_check","repères officiels"]] }
+});
 
 function atlasLearningMemoryEligibleArchive(entry) {
   return Boolean(
@@ -32869,8 +33054,33 @@ function atlasLearningMemoryArchiveSummary(entry) {
       `- Bid : ${atlasLearningMemoryAnswerTrace(evidence, "spot_bid", "59990")}.`,
       `- Marché : ${atlasLearningMemoryAnswerTrace(evidence, "spot_market", "market")}.`,
       `- Limite : ${atlasLearningMemoryAnswerTrace(evidence, "spot_limit", "limit")}.`,
+      `- Question finale : ${atlasLearningMemoryAnswerTrace(evidence, "spot_limit_guarantee", "non")}.`,
       "",
       "À retenir : une partie du capital virtuel devient une position BTC fictive ; l’argent disponible baisse du même montant au moment de l’achat simulé."
+    ].join("\n");
+  }
+  const generic = ATLAS_AUTOMATIC_LEARNING_MEMORY_GENERIC[entry?.module_key];
+  if (generic) {
+    const guidedSummary = String(evidence[generic.summaryKey] || entry?.takeaway || "Synthèse guidée non disponible dans cette archive historique.").trim();
+    const finalTrace = atlasLearningMemoryAnswerTrace(evidence, generic.finalPrefix, generic.correct);
+    const proofLines = generic.proofs
+      .filter(([key]) => evidence?.[key])
+      .map(([, label]) => `- ${label} : preuve enregistrée.`);
+    return [
+      `MODULE ${generic.number} · ${String(entry?.module_title || learningModuleByKey(entry?.module_key)?.title || entry?.module_key || "MODULE").replace(/^\d+ · /, "").toUpperCase()}`,
+      `Archivé : ${when}`,
+      "",
+      "Ce que j’ai appris :",
+      guidedSummary,
+      "",
+      "Preuves conservées :",
+      ...(proofLines.length ? proofLines : ["- archive historique : preuves détaillées non disponibles dans ce format."]),
+      "",
+      "Rappel actif :",
+      `- Première réponse : ${finalTrace}.`,
+      `- Réponse finale attendue et validée : ${generic.correct === "oui" ? "Oui" : "Non"}.`,
+      "",
+      "Sécurité : aucune opération réelle n’est déclenchée par cette mémoire pédagogique."
     ].join("\n");
   }
   return "Archive pédagogique non prise en charge par la mémoire automatique actuelle.";
@@ -32885,13 +33095,13 @@ function buildAutomaticLearningJournalMarkdown() {
       `Version : ${ATLAS_RELEASE}`,
       `Date : ${new Date().toISOString()}`,
       "",
-      "Aucun Module 01 ou 02 archivé n’est encore disponible dans le carnet IndexedDB.",
+      "Aucun module du parcours 01 à 11 n’est encore archivé dans le carnet IndexedDB.",
       "Aucune action supplémentaire n’est requise : le prochain archivage compatible remplira ce journal automatiquement.",
       "",
       "Sécurité : aucune clé API, aucun wallet, aucun ordre réel."
     ].join("\n");
   }
-  const recent = archives.slice(-2).reverse();
+  const recent = archives.slice(-3).reverse();
   return [
     "# JOURNAL PÉDAGOGIQUE AUTOMATIQUE — Agent-Crypto @erith.IA",
     "",
@@ -32899,7 +33109,7 @@ function buildAutomaticLearningJournalMarkdown() {
     `Généré : ${new Date().toISOString()}`,
     `Modules pédagogiques mémorisés ici : ${archives.length}`,
     "",
-    "Le journal ci-dessous est reconstruit automatiquement depuis les archives pédagogiques vérifiées. Aucun clic de résumé n’est nécessaire.",
+    "Le journal ci-dessous est reconstruit automatiquement depuis les archives pédagogiques vérifiées. Il affiche les trois sessions les plus récentes ; toutes les archives restent conservées. Aucun clic de résumé n’est nécessaire.",
     "",
     ...recent.flatMap((entry, index) => [
       index ? "---" : "",
@@ -32918,27 +33128,51 @@ function atlasLearningMemoryRecordFromArchive(entry) {
   const sessionId = String(entry.session_id);
   const startCash = Number(SIM_PROFILE.startCash || 0);
   let source = "archive pédagogique IndexedDB";
-  let symbols = ["BTC"];
+  let symbols = [];
   let cash = startCash;
   let exposure = 0;
   let total = startCash;
-  let learningTags = [moduleKey === "market" ? "module_01" : "module_02", "archive_pedagogique", "memoire_automatique"];
+  const moduleIndex = ATLAS_FOUNDATION_MODULE_KEYS.indexOf(moduleKey) + 1;
+  let learningTags = [`module_${String(moduleIndex || 0).padStart(2, "0")}`, "archive_pedagogique", "memoire_automatique"];
   let evidencePayload = {};
 
   if (moduleKey === "market") {
     const prefill = evidence.market_archive_prefill || {};
     source = String(prefill?.provenance?.source || evidence.market_source_time?.source || source);
+    symbols = ["BTC"];
     learningTags.push("market_learning", "source_verified", "active_recall");
     evidencePayload = prefill;
   } else if (moduleKey === "spot") {
     const prefill = evidence.spot_archive_prefill || {};
     const sim = prefill.simulation || evidence.spot_position_details || {};
     source = String(sim.quote_source || source);
+    symbols = ["BTC"];
     cash = Number.isFinite(Number(sim.cash_remaining_eur)) ? Number(sim.cash_remaining_eur) : startCash;
     exposure = Number.isFinite(Number(sim.amount_eur)) ? Number(sim.amount_eur) : 0;
     total = cash + exposure;
     learningTags.push("ask_bid", "market_limit", "achat_simule", "active_recall");
     evidencePayload = prefill;
+  } else {
+    const generic = ATLAS_AUTOMATIC_LEARNING_MEMORY_GENERIC[moduleKey] || null;
+    if (moduleKey === "risk") {
+      const details = evidence.risk_position_details || {};
+      symbols = ["BTC"];
+      cash = Number.isFinite(Number(details.cash_remaining_eur)) ? Number(details.cash_remaining_eur) : startCash;
+      exposure = Number.isFinite(Number(details.amount_eur)) ? Number(details.amount_eur) : 0;
+      total = cash + exposure;
+    }
+    if (generic) {
+      learningTags.push(...generic.tags);
+      evidencePayload = {
+        guided_summary:String(evidence[generic.summaryKey] || entry?.takeaway || ""),
+        final_recall:{
+          correct_answer:generic.correct,
+          first_answer:String(evidence[`${generic.finalPrefix}_first_answer`] || evidence[`${generic.finalPrefix}_first_choice`] || ""),
+          attempts:Number(evidence[`${generic.finalPrefix}_attempts`] || 0)
+        },
+        proof_keys:generic.proofs.filter(([key]) => Boolean(evidence[key])).map(([key]) => key)
+      };
+    }
   }
 
   return {
@@ -33330,7 +33564,7 @@ function collectorPreview(records) {
       "",
       storageLine,
       "Aucune action supplémentaire n’est requise.",
-      "Les Modules 01 et 02 archivés alimenteront automatiquement la mémoire pédagogique.",
+      "Les Modules 01 à 11 archivés alimenteront automatiquement la mémoire pédagogique.",
       "Les observations marché supplémentaires restent facultatives."
     ].join("\n");
   }
@@ -33404,7 +33638,7 @@ async function clearCollectorMemory() {
   renderAutomaticLearningMemoryPanels();
   if (els.collectorOutput) {
     els.collectorOutput.textContent = persisted.ok
-      ? ["MÉMOIRE COLLECTOR EFFACÉE", "", "Les archives pédagogiques IndexedDB restent intactes.", "Les Modules 01 et 02 pourront recréer leurs traces automatiquement au prochain chargement.", "Cela ne touche pas GitHub ni aucun compte réel."].join("\n")
+      ? ["MÉMOIRE COLLECTOR EFFACÉE", "", "Les archives pédagogiques IndexedDB restent intactes.", "Les Modules 01 à 11 pourront recréer leurs traces automatiquement au prochain chargement.", "Cela ne touche pas GitHub ni aucun compte réel."].join("\n")
       : `EFFACEMENT NON CONFIRMÉ
 
 ${persisted.error_message || "Écriture IndexedDB non vérifiée."}`;
@@ -33528,7 +33762,7 @@ function collectionPlanText(records = readCollectorMemory()) {
     `Comparaison : ${stats.comparisonReady ? "disponible" : "en attente d’une deuxième observation marché"}`,
     "",
     "Les sessions pédagogiques et les observations marché sont deux types de mémoire différents.",
-    "Les Modules 01 et 02 sont conservés automatiquement et ne comptent pas artificiellement comme plusieurs observations de marché.",
+    "Les Modules 01 à 11 sont conservés automatiquement et ne comptent pas artificiellement comme plusieurs observations de marché.",
     ""
   ];
   if (stats.marketCount === 0) lines.push("Aucune observation marché dédiée. Ce n’est pas un blocage pour apprendre.");
@@ -35767,11 +36001,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.43";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.44";
 
-const ATLAS_BUILD = "28.3.43";
+const ATLAS_BUILD = "28.3.44";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.43";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.44";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

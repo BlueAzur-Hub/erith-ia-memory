@@ -1,9 +1,53 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.43  
-**Build :** 28.3.43  
-**Mission :** Memory Provenance + Distinct Snapshot Audit Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.44  
+**Build :** 28.3.44  
+**Mission :** 11 Modules Active Recall + Automatic Memory Parity Lock
 
+
+
+## Build 28.3.44 — 11 Modules Active Recall + Automatic Memory Parity Lock
+
+Cette Build part exactement de la 28.3.43 et applique aux **11 modules** les principes pédagogiques validés pendant la reprise détaillée des Modules 01 et 02.
+
+### Invariant pédagogique commun
+
+Le parcours suit désormais partout la même logique lorsqu'une question sert réellement à vérifier la compréhension :
+
+**preuve / situation → réponse de mémoire → première tentative conservée → validation ou correction → explication → archive**.
+
+L'application ne doit plus donner la conclusion d'une question dans le texte placé juste avant cette même question.
+
+### Corrections principales
+
+- Module 01 conserve son rappel actif déjà validé : observation BTC, provenance, première réponse, correction et explication.
+- Module 02 conserve Ask/Bid et Marché/Limite en rappel actif ; sa question finale ne reçoit plus sa réponse dans la synthèse affichée avant le choix.
+- Module 03 conserve ses scénarios figés −3 % / +5 % ; la question finale sur l'effet des coûts est désormais posée avant l'explication.
+- Modules 04 à 11 : les choix pédagogiques des étapes 2 et 3 enregistrent désormais la première tentative avant d'afficher l'explication.
+- Modules 04 à 11 : les fiches d'étapes masquent également le repère « À retenir » lorsqu'il révélerait la réponse avant la première tentative.
+- Modules 02 à 11 : la question finale est présentée sans conclusion pré-écrite ; l'explication complète apparaît après le premier choix.
+- Une première erreur reste conservée comme trace d'apprentissage ; une correction ultérieure ne l'efface pas.
+- Les anciens modules déjà validés sont conservés : aucune première tentative historique n'est inventée rétroactivement.
+
+### Mémoire automatique 01 → 11
+
+- Le Journal pédagogique et le Data Collector automatique ne s'arrêtent plus aux Modules 01 et 02.
+- Les archives vérifiées des Modules 03 à 11 produisent elles aussi une trace pédagogique dérivée, dédupliquée, sans clic supplémentaire.
+- Les résumés conservent uniquement les preuves réellement présentes dans l'archive ; une preuve absente n'est pas inventée.
+- Le Journal automatique montre les trois séances les plus récentes, tandis que toutes les archives restent conservées dans IndexedDB.
+- L'archive pédagogique canonique reste la source de vérité ; la mémoire Collector reste une copie structurée dérivée.
+
+### Images pédagogiques
+
+Aucune nouvelle image n'est générée dans cette Build. L'audit identifie seulement les modules où une future vue expliquée serait utile. Les captures de base seront validées avec l'utilisateur au moment de reprendre chaque module.
+
+### Préservation
+
+- Aucun ordre réel, wallet réel ou clé API.
+- Aucun reset global.
+- Simulation Binance, Market, graphiques, Métaux, Bridge et workflow marché inchangés.
+- `web/style.css` et `web/runtime_config.json` inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les trois constantes d'identité passent à 28.3.44.
 
 
 ## Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock
