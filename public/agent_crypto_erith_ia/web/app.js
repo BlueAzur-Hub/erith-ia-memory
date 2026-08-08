@@ -18682,6 +18682,42 @@ function foundationSpotGuidedSummary(cockpit) {
   return { ready, quantity, entryPrice, invested, cashRemaining, quantityText, entryText, investedText, cashText, quoteSource, quoteTimestamp, quoteSourceText, quoteTimeText, text };
 }
 
+
+function foundationSpotVisualRecapMarkup(summary) {
+  if (!summary?.ready) return "";
+  const startCashText = escapeHtml(fmtEUR.format(SIM_PROFILE.startCash));
+  const investedText = escapeHtml(summary.investedText);
+  const cashText = escapeHtml(summary.cashText);
+  const exposureText = escapeHtml(`${summary.investedText} / ${fmtEUR.format(SIM_PROFILE.maxExposure)}`);
+  const reserveText = escapeHtml(fmtEUR.format(SIM_PROFILE.minReserve));
+  const quantityText = escapeHtml(summary.quantityText);
+  const entryText = escapeHtml(summary.entryText);
+  const sourceText = escapeHtml(summary.quoteSourceText);
+  const timeText = escapeHtml(summary.quoteTimeText);
+  return `
+      <div id="spotFoundationVisualRecap" class="foundation-visual-recap" aria-live="polite">
+        <div class="foundation-visual-recap-media">
+          <img src="assets/learning/module_02_spot_visual_recap.png" alt="Vue pédagogique annotée du tableau de bord crypto montrant en vert les zones à observer après la simulation : argent disponible 950 euros, montant placé 50 euros et exposition 50 euros sur 300 euros." loading="lazy" decoding="async">
+          <small>L’image sert de repère visuel : elle montre où lire le résultat de la simulation. Les chiffres de ce module restent stables tant que le profil pédagogique garde 1 000 € de départ et un achat fictif de 50 €.</small>
+        </div>
+        <div class="foundation-visual-recap-copy">
+          <span class="foundation-stage-kicker">VUE EXPLIQUÉE · APRÈS LA SIMULATION</span>
+          <h5>Ce que tu dois voir maintenant</h5>
+          <ul class="foundation-visual-points">
+            <li><b>Avant :</b> ${startCashText} virtuels disponibles.</li>
+            <li><b>Après :</b> ${cashText} restent disponibles, car ${investedText} ont été placés fictivement en BTC.</li>
+            <li><b>Position fictive :</b> le portefeuille détient maintenant ${quantityText} BTC au prix d’entrée ${entryText}.</li>
+            <li><b>Exposition :</b> ${exposureText} engagés. La réserve minimale du profil reste ${reserveText}.</li>
+            <li><b>Source utilisée :</b> ${sourceText} · relevé ${timeText}.</li>
+          </ul>
+          <div class="foundation-visual-callout">
+            <b>À retenir :</b>
+            ton argent n’a pas disparu. Une partie du capital virtuel est simplement devenue une <b>position BTC fictive</b>. Tu dois maintenant être capable de relire ce résultat avant de répondre à la question finale.
+          </div>
+        </div>
+      </div>`;
+}
+
 function foundationSpotRecallState(cockpit, side) {
   const evidence = cockpit?.practice_evidence || {};
   const isBid = side === "bid";
@@ -18824,10 +18860,11 @@ function foundationSpotLab(cockpit) {
         <p><b>Un seul clic suffit.</b> Le prix de l’exercice vient d’une cotation Binance fraîche. Le snapshot CoinGecko sert au panorama du marché, pas au prix d’exécution de cette simulation.</p>
         ${foundationButton(step4Done ? "Achat fictif de 50 € simulé" : "Simuler 50 € de BTC (fictif)", "spot_run_safe_btc", !step3Done || step4Done)}
         <small id="spotFoundationPurchaseStatus">${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · entrée ${escapeHtml(summary.entryText)} · ${escapeHtml(summary.quoteSourceText)} · relevé ${escapeHtml(summary.quoteTimeText)} · disponible ${escapeHtml(summary.cashText)}.` : "Clique une fois : le cockpit cherche une cotation Binance fraîche, simule, puis ouvre l’étape 5."}</small>
+        ${summary.ready ? foundationSpotVisualRecapMarkup(summary) : ""}
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
-        <h5>Synthèse guidée du Module 02</h5>
+        <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span>
+        <h5>À toi de répondre</h5>
         <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
         <p><b>Question :</b> un ordre limite garantit-il une exécution immédiate ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_guarantee_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="spot_limit_guarantee_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
@@ -20992,7 +21029,7 @@ function completeLearningPracticeStep() {
 }
 
 function learningVerificationTargetForModule(moduleKey) {
-  const map = { market:"livecheck", spot:"schoolPanel", risk:"simScenarioPanel", account:"simSecurityGate", wallet:"withdrawalSafetyLab", scams:"scamSentinelPanel", records:"transactionProofLedger" };
+  const map = { market:"livecheck", spot:"learningFoundationPanel", risk:"simScenarioPanel", account:"simSecurityGate", wallet:"withdrawalSafetyLab", scams:"scamSentinelPanel", records:"transactionProofLedger" };
   return map[moduleKey] || learningTargetForModule(moduleKey, true);
 }
 

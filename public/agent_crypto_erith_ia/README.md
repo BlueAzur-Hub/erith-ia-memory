@@ -1,9 +1,29 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.38  
-**Build :** 28.3.38  
-**Mission :** Resilient Binance Execution Quote Router + Public Snapshot Publication Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.39  
+**Build :** 28.3.39  
+**Mission :** Module 02 Visual Recap + Pedagogical Isolation Lock
 
+
+
+## Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock
+
+Cette Build part exactement de la 28.3.38.
+
+### Mission unique
+
+Transformer le résultat de la simulation fictive du **Module 02** en une **vue pédagogique lisible** sans renvoyer visuellement l’utilisateur dans le grand `PAPER TRADING SANDBOX`.
+
+- Une **vue expliquée** est ajoutée juste après l’étape 4, dans le cockpit du Module 02.
+- Cette vue affiche l’image pédagogique annotée et un bloc explicatif court : avant / après, argent disponible, montant placé, exposition et source de la cotation.
+- L’image sert de repère visuel pour comprendre immédiatement les zones importantes : **950 € disponibles**, **50 € placés**, **exposition 50 € / 300 €**.
+- Le titre de l’étape 5 devient plus clair : **« À toi de répondre »**.
+- Le chemin de vérification du Module 02 reste maintenant ancré sur `learningFoundationPanel` ; il ne doit plus cibler `schoolPanel` comme destination pédagogique.
+- Le moteur de simulation, Binance, CoinGecko, le contrôleur de version canonisé et les autres modules restent inchangés.
+- Fichiers fonctionnels modifiés : `web/app.js`, `web/style.css`.
+- Nouvel asset pédagogique : `web/assets/learning/module_02_spot_visual_recap.png`.
+- `web/index.html` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.39.
 
 
 ## Build 28.3.38 — Resilient Binance Execution Quote Router + Public Snapshot Publication Lock

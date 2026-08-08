@@ -1,3 +1,22 @@
+## Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock
+
+Cette Build part exactement de la 28.3.38.
+
+### Mission unique
+
+Ajouter une **vue expliquée** dans le Module 02 pour transformer le résultat de la simulation fictive en lecture pédagogique claire.
+
+- Bloc visuel ajouté après l’étape 4 avec image annotée + texte explicatif.
+- Focus pédagogique : 1 000 € de départ → 950 € disponibles + 50 € placés fictivement.
+- Exposition et réserve du profil rappelées directement dans le cockpit.
+- L’étape 5 devient **« À toi de répondre »** afin de séparer lecture du résultat et question finale.
+- La destination pédagogique Spot reste `learningFoundationPanel` et n’utilise plus `schoolPanel` comme repère de vérification.
+- Fichiers fonctionnels modifiés : `web/app.js`, `web/style.css`.
+- Nouvel asset : `web/assets/learning/module_02_spot_visual_recap.png`.
+- `web/index.html` et `web/runtime_config.json` restent inchangés.
+
+---
+
 # Agent-Crypto — historique des builds
 
 ## Build 28.3.38 — Resilient Binance Execution Quote Router + Public Snapshot Publication Lock
