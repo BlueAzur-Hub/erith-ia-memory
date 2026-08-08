@@ -1,9 +1,29 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.37  
-**Build :** 28.3.37  
-**Mission :** Module 02 Spot Single Click + Silent Simulation Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.38  
+**Build :** 28.3.38  
+**Mission :** Resilient Binance Execution Quote Router + Public Snapshot Publication Lock
 
+
+
+## Build 28.3.38 — Resilient Binance Execution Quote Router + Public Snapshot Publication Lock
+
+Cette Build part exactement de la 28.3.37.
+
+### Mission unique
+
+Séparer définitivement **prix d’exécution fictive** et **snapshot large de marché**.
+
+- Les actifs couverts BTC / ETH / BNB / XRP / SOL utilisent d’abord le WebSocket Binance existant.
+- Si le WebSocket ne fournit pas une cotation fraîche au moment exact de l’action, le navigateur demande une cotation publique Binance REST ponctuelle.
+- Une simulation ne peut plus utiliser silencieusement un snapshot CoinGecko de plusieurs heures comme prix d’exécution.
+- Le Module 02 demande directement une cotation Binance fraîche puis exécute son achat fictif de 50 € en un seul clic.
+- La preuve pédagogique conserve maintenant la source et l’heure de la cotation utilisée.
+- La valorisation d’une position virtuelle privilégie le WebSocket Binance frais, puis le dernier prix d’exécution enregistré ; CoinGecko n’est plus prioritaire pour cette fonction.
+- Le snapshot public CoinGecko reste la source de largeur de marché (univers, capitalisation, volumes, rangs, historique) et peut rester affiché comme archive, mais il cesse d’être considéré comme analyse active après 45 minutes.
+- Le workflow public CoinGecko passe à une cible de 30 minutes (minutes 17 et 47) et publie avec resynchronisation non destructive en cas de commit concurrent, sans `force push`.
+- GitHub Actions reste un cache/snapshot : aucune promesse de temps réel n’est attachée à ce workflow.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.38.
 
 
 ## Build 28.3.37 — Module 02 Spot Single Click + Silent Simulation Focus Lock

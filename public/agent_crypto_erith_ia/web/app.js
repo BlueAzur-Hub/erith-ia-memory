@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.37 — clic unique Spot, simulation silencieuse et cadrage stable du Module 02.
+  Build 28.3.38 — cotation Binance fraîche pour exécution fictive et snapshot CoinGecko explicitement secondaire.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -9238,7 +9238,7 @@ function atlasMarketRetryLabel(failureCount = 1) {
 
 const ATLAS_MARKET_REFRESH_MS = 5 * 60 * 1000;
 
-const ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS = 3 * 60 * 60 * 1000;
+const ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS = 45 * 60 * 1000;
 
 const ATLAS_PUBLIC_MARKET_DISPLAY_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
@@ -10944,7 +10944,10 @@ function getPositionMarketPrice(symbol, scenarioPct = 0) {
   const pos = state.sim.positions[symbol];
   if (!pos) return 0;
   const coin = findCoinByQuery(symbol);
-  const price = coin?.price ?? pos.lastPrice ?? pos.avgPrice ?? 0;
+  const liveQuote = atlasExchangeQuoteForCoin(coin?.id || symbol);
+  const price = atlasExecutionQuoteIsFreshBinance(liveQuote)
+    ? Number(liveQuote.price)
+    : Number(pos.lastPrice ?? coin?.price ?? pos.avgPrice ?? 0);
   return Math.max(0, price * (1 + atlasFiniteNumber(scenarioPct, 0) / 100));
 }
 
@@ -18633,7 +18636,9 @@ function ensureSpotModule02AutoPrefill(cockpit) {
       amount_eur:Number(summary.invested),
       entry_price_eur:Number(summary.entryPrice),
       quantity_btc:Number(summary.quantity),
-      cash_remaining_eur:Number(summary.cashRemaining)
+      cash_remaining_eur:Number(summary.cashRemaining),
+      quote_source:summary.quoteSource || null,
+      quote_timestamp:summary.quoteTimestamp || null
     },
     conclusion:{ limit_guarantees_immediate_execution:false },
     fees:{ status:"not_verified", buy_pct:null, sell_pct:null, execution_spread_pct:null, slippage_pct:null, source:null },
@@ -18667,10 +18672,14 @@ function foundationSpotGuidedSummary(cockpit) {
   const entryText = ready ? fmtEUR.format(entryPrice) : "—";
   const investedText = ready ? fmtEUR.format(invested) : "—";
   const cashText = ready ? fmtEUR.format(cashRemaining) : "—";
+  const quoteSource = String(details.quote_source || pos?.lastPriceSource || "").trim();
+  const quoteTimestamp = details.quote_timestamp || pos?.lastPriceTimestamp || null;
+  const quoteSourceText = quoteSource || "source non enregistrée";
+  const quoteTimeText = quoteTimestamp ? atlasExactTimestampLabel(quoteTimestamp) : "heure non enregistrée";
   const text = ready
-    ? `Le simulateur a exécuté un achat entièrement fictif de ${investedText} de BTC au prix moyen de ${entryText} par BTC. Il reste ${cashText} disponibles et le portefeuille virtuel détient maintenant ${quantityText} BTC. Cette quantité détenue virtuellement est ce que l’on appelle ici une « position ». Un ordre au marché privilégie l’exécution ; un ordre limite protège un prix choisi, mais ne garantit pas une exécution immédiate.`
+    ? `Le simulateur a exécuté un achat entièrement fictif de ${investedText} de BTC au prix moyen de ${entryText} par BTC. Cotation utilisée : ${quoteSourceText}, relevée ${quoteTimeText}. Il reste ${cashText} disponibles et le portefeuille virtuel détient maintenant ${quantityText} BTC. Cette quantité détenue virtuellement est ce que l’on appelle ici une « position ». Un ordre au marché privilégie l’exécution ; un ordre limite protège un prix choisi, mais ne garantit pas une exécution immédiate.`
     : "La synthèse sera construite après la simulation vérifiée de l’achat fictif de 50 € de BTC.";
-  return { ready, quantity, entryPrice, invested, cashRemaining, quantityText, entryText, investedText, cashText, text };
+  return { ready, quantity, entryPrice, invested, cashRemaining, quantityText, entryText, investedText, cashText, quoteSource, quoteTimestamp, quoteSourceText, quoteTimeText, text };
 }
 
 function foundationSpotRecallState(cockpit, side) {
@@ -18812,9 +18821,9 @@ function foundationSpotLab(cockpit) {
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · ACHAT FICTIF</span>
         <h5>Simuler 50 € de BTC ${foundationHelpBubble("Une « position » est simplement la quantité de BTC détenue dans ton portefeuille virtuel après l’achat. Rien n’est acheté réellement.", "Que signifie position ?")}</h5>
-        <p><b>Un seul clic suffit.</b> Le cockpit vérifie les données puis simule l’achat en arrière-plan. Aucun ordre réel, aucune clé API et aucun wallet.</p>
+        <p><b>Un seul clic suffit.</b> Le prix de l’exercice vient d’une cotation Binance fraîche. Le snapshot CoinGecko sert au panorama du marché, pas au prix d’exécution de cette simulation.</p>
         ${foundationButton(step4Done ? "Achat fictif de 50 € simulé" : "Simuler 50 € de BTC (fictif)", "spot_run_safe_btc", !step3Done || step4Done)}
-        <small id="spotFoundationPurchaseStatus">${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · prix d’entrée ${escapeHtml(summary.entryText)} · argent disponible ${escapeHtml(summary.cashText)}.` : "Clique une fois : le résultat s’affichera ici, puis l’étape 5 s’ouvrira."}</small>
+        <small id="spotFoundationPurchaseStatus">${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · entrée ${escapeHtml(summary.entryText)} · ${escapeHtml(summary.quoteSourceText)} · relevé ${escapeHtml(summary.quoteTimeText)} · disponible ${escapeHtml(summary.cashText)}.` : "Clique une fois : le cockpit cherche une cotation Binance fraîche, simule, puis ouvre l’étape 5."}</small>
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
@@ -19997,7 +20006,7 @@ function atlasLearningSpotPurchaseUi(stateName, text = "") {
 
 async function runSpotFoundationSchoolPosition(cockpit) {
   // Un clic = une transaction. Tant qu’elle est en cours, aucun second clic ne
-  // peut lancer une seconde simulation ou une seconde chaîne de Livecheck.
+  // peut lancer une seconde simulation ou une seconde lecture de cotation.
   if (atlasSpotFoundationPurchaseBusy) return false;
   atlasSpotFoundationPurchaseBusy = true;
 
@@ -20013,24 +20022,27 @@ async function runSpotFoundationSchoolPosition(cockpit) {
   atlasLearningSetManualScrollRestoration();
   if (root?.style) root.style.overflowAnchor = "none";
   if (body?.style) body.style.overflowAnchor = "none";
-  atlasLearningSpotPurchaseUi("busy", "Vérification des données puis simulation fictive en cours… Un seul clic suffit.");
+  atlasLearningSpotPurchaseUi("busy", "Recherche d’une cotation Binance fraîche puis simulation fictive… Un seul clic suffit.");
 
   try {
-    const marketReady = await atlasLearningEnsureFoundationMarketReady("foundation_spot_school_position");
-    if (!marketReady) {
-      atlasLearningSpotPurchaseUi("retry", "Données de marché indisponibles pour l’instant : aucun achat fictif n’a été créé. Réessaie ce même bouton.");
+    const executionQuote = await atlasEnsureExecutionQuoteForCoin("bitcoin");
+    if (!atlasExecutionQuoteIsFreshBinance(executionQuote)) {
+      atlasLearningSpotPurchaseUi("retry", "Cotation Binance fraîche indisponible : aucun achat fictif n’a été créé. Réessaie ce même bouton.");
       atlasLearningFinishSpotViewport(4, viewport, { flash:false });
       return false;
     }
 
-    // Le moteur de simulation travaille ici sans rerendre le grand panneau
-    // Paper Trading situé au-dessus du cockpit. Son état local est bien écrit,
-    // mais l’interface technique n’est pas reconstruite pendant cette action.
-    // Cela supprime la variation de hauteur qui provoquait la « valse ».
+    // Le moteur travaille sans rerendre le grand panneau Paper Trading. La
+    // cotation Binance fraîche est injectée explicitement ; le snapshot
+    // CoinGecko, même affichable, ne peut pas devenir un prix d’exécution.
     atlasLearningHoldCockpitRender();
     let result = null;
     try {
-      result = runSchoolTest("safe_btc_5", { render:false, output:false });
+      result = runSchoolTest("safe_btc_5", {
+        render:false,
+        output:false,
+        marketQuote:executionQuote
+      });
     } finally {
       atlasLearningReleaseCockpitRender();
     }
@@ -20043,8 +20055,6 @@ async function runSpotFoundationSchoolPosition(cockpit) {
       return false;
     }
 
-    // Une seule reconstruction pédagogique a déjà eu lieu à la libération du
-    // hold. Un seul cadrage final vise maintenant l’étape 5.
     atlasLearningFinishSpotViewport(5, viewport, { flash:true });
     return true;
   } catch (error) {
@@ -20917,7 +20927,14 @@ function recordLearningPracticeEvidence(kind, value = true) {
   if ((module.key === "spot" || module.key === "risk") && (kind === "spot_position" || kind === "risk_position")) {
     const pos = state.sim?.positions?.BTC;
     if (pos) cockpit.practice_evidence[`${module.key}_position_details`] = {
-      amount_eur:Number(pos.invested || SIM_PROFILE.defaultAmount), quantity:Number(pos.qty || 0), entry_price_eur:Number(pos.avgPrice || 0), cash_remaining_eur:Number(state.sim?.cash || 0), captured_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD
+      amount_eur:Number(pos.invested || SIM_PROFILE.defaultAmount),
+      quantity:Number(pos.qty || 0),
+      entry_price_eur:Number(pos.avgPrice || 0),
+      cash_remaining_eur:Number(state.sim?.cash || 0),
+      quote_source:String(pos.lastPriceSource || ""),
+      quote_timestamp:pos.lastPriceTimestamp || null,
+      captured_at:new Date().toISOString(),
+      build:ATLAS_FOUNDATION_VALIDATION_BUILD
     };
   }
   if (module.key === "risk" && kind === "scenario") {
@@ -22094,17 +22111,27 @@ function simulationPayload() {
 }
 
 function simulateOrder(side, symbolInput = null, amountInput = null, options = {}) {
-  if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload(), options);
   const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
   const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
   if (!symbol) return simulationRefusal("Actif manquant.", {}, options);
   if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.", {}, options);
   if (!SIM_PROFILE.allowedSymbols.includes(symbol)) return simulationRefusal(`${SIM_PROFILE.label} : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol }, options);
-  const coin = findCoinByQuery(symbol);
-  if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol }, options);
+  const coin = findCoinByQuery(symbol)
+    || Object.values(ATLAS_EXECUTION_ASSET_META).find(meta => meta.symbol === symbol)
+    || null;
+  if (!coin) return simulationRefusal(`Actif autorisé mais sans route de cotation : ${symbol}.`, { requested_symbol: symbol }, options);
   if (!state.sim) loadSimulation();
-  const marketPrice = coin.price;
-  if (!Number.isFinite(marketPrice) || marketPrice <= 0) return simulationRefusal("Prix indisponible pour simulation.", {}, options);
+  const injectedQuote = atlasExecutionQuoteIsFreshBinance(options.marketQuote) ? options.marketQuote : null;
+  const executionQuote = injectedQuote || atlasExchangeQuoteForCoin(coin.id);
+  if (!atlasExecutionQuoteIsFreshBinance(executionQuote)) {
+    return simulationRefusal(
+      "Simulation suspendue : une cotation Binance fraîche est requise. Le snapshot CoinGecko n’est pas utilisé comme prix d’exécution.",
+      { requested_symbol:symbol, exchange_feed:state.dataBroker?.exchangeFeed?.status || "indisponible" },
+      options
+    );
+  }
+  const marketPrice = Number(executionQuote.price);
+  if (!Number.isFinite(marketPrice) || marketPrice <= 0) return simulationRefusal("Cotation Binance invalide pour simulation.", {}, options);
   const sym = coin.symbol.toUpperCase();
   if (amount > SIM_PROFILE.maxPerOperation) return simulationRefusal(`${SIM_PROFILE.label} : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount }, options);
   const costs = readSimCostInputs();
@@ -22128,11 +22155,13 @@ function simulateOrder(side, symbolInput = null, amountInput = null, options = {
     pos.qty = newQty;
     pos.invested += amount;
     pos.lastPrice = marketPrice;
+    pos.lastPriceSource = String(executionQuote.source || "Binance");
+    pos.lastPriceTimestamp = new Date(Number(executionQuote.timestamp) || Date.now()).toISOString();
     pos.buyFeesEur += buyFeeEur;
     pos.entryImpactEur += entryImpactEur;
     state.sim.positions[sym] = pos;
     state.sim.cash -= amount;
-    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, market_price_eur: marketPrice, execution_price_eur: executionPrice, buy_fee_eur: buyFeeEur, entry_impact_eur: entryImpactEur, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · frais ${fmtEUR.format(buyFeeEur)} · quantité ${qty.toFixed(8)}.` });
+    simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, market_price_eur: marketPrice, execution_price_eur: executionPrice, market_source:String(executionQuote.source || "Binance"), market_timestamp:new Date(Number(executionQuote.timestamp) || Date.now()).toISOString(), buy_fee_eur: buyFeeEur, entry_impact_eur: entryImpactEur, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · cotation ${String(executionQuote.source || "Binance")} · frais ${fmtEUR.format(buyFeeEur)} · quantité ${qty.toFixed(8)}.` });
   } else if (side === "sell") {
     if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`, {}, options);
     const maxMarketValue = pos.qty * marketPrice;
@@ -22148,14 +22177,16 @@ function simulateOrder(side, symbolInput = null, amountInput = null, options = {
     pos.qty -= qty;
     pos.invested = Math.max(0, pos.invested - allocatedCostBasis);
     pos.lastPrice = marketPrice;
+    pos.lastPriceSource = String(executionQuote.source || "Binance");
+    pos.lastPriceTimestamp = new Date(Number(executionQuote.timestamp) || Date.now()).toISOString();
     state.sim.cash += netProceedsEur;
     state.sim.realizedPnl = atlasFiniteNumber(state.sim.realizedPnl, 0) + realizedPnlEur;
     if (pos.qty <= 0.00000001) delete state.sim.positions[sym]; else state.sim.positions[sym] = pos;
-    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: grossExecutionValue, market_price_eur: marketPrice, execution_price_eur: executionPrice, sell_fee_eur: sellFeeEur, net_proceeds_eur: netProceedsEur, realized_pnl_eur: realizedPnlEur, qty, message: `Vente simulée ${sym} · brut ${fmtEUR.format(grossExecutionValue)} · net ${fmtEUR.format(netProceedsEur)} · résultat ${atlasSignedEUR(realizedPnlEur)}.` });
+    simLog({ type: "SIM_SELL", symbol: sym, amount_eur: grossExecutionValue, market_price_eur: marketPrice, execution_price_eur: executionPrice, market_source:String(executionQuote.source || "Binance"), market_timestamp:new Date(Number(executionQuote.timestamp) || Date.now()).toISOString(), sell_fee_eur: sellFeeEur, net_proceeds_eur: netProceedsEur, realized_pnl_eur: realizedPnlEur, qty, message: `Vente simulée ${sym} · cotation ${String(executionQuote.source || "Binance")} · brut ${fmtEUR.format(grossExecutionValue)} · net ${fmtEUR.format(netProceedsEur)} · résultat ${atlasSignedEUR(realizedPnlEur)}.` });
   }
   saveSimulation();
   if (options.render !== false) renderSimulation();
-  return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, market_price_eur: marketPrice, costs, portfolio: simulationPayload() });
+  return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, market_price_eur: marketPrice, market_source:String(executionQuote.source || "Binance"), market_timestamp:new Date(Number(executionQuote.timestamp) || Date.now()).toISOString(), costs, portfolio: simulationPayload() });
 }
 
 function simLogTypeLabel(type) {
@@ -22497,12 +22528,12 @@ function runSchoolTest(testName, options = {}) {
     if (renderUi) renderSchoolResult("neutral", `Simulateur remis à ${fmtEUR.format(SIM_PROFILE.startCash)}`, "Tu repars avec un portefeuille virtuel propre pour le profil actif.", [ `Capital virtuel : ${fmtEUR.format(SIM_PROFILE.startCash)}.`, "Position : 0 €.", "L’autre profil reste conservé." ]);
     return true;
   }
-  if (schoolNeedsLivecheck()) return;
+  if (!atlasExecutionQuoteIsFreshBinance(options.marketQuote) && schoolNeedsLivecheck()) return;
   let result = null;
   if (testName === "safe_btc_5") {
     resetSimulation({ render:renderUi });
     setSimManualFields("BTC", safeAmount);
-    result = simulateOrder("buy", "BTC", safeAmount, { render:renderUi });
+    result = simulateOrder("buy", "BTC", safeAmount, { render:renderUi, marketQuote:options.marketQuote || null });
     if (renderOutput) renderCommandOutput(result);
     if (renderUi) renderSchoolResult(result?.ok ? "ok" : "err", result?.ok ? "Accepté : opération prudente" : "Erreur inattendue", result?.ok ? `BTC ${fmtEUR.format(safeAmount)} est accepté : ticket conseillé ${fmtEUR.format(SIM_PROFILE.defaultAmount)}, maximum ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.` : (result?.error || "Le test n’a pas donné le résultat attendu."), result?.ok ? [ `Tu as investi ${fmtEUR.format(safeAmount)} virtuels.`, `Il reste environ ${fmtEUR.format(state.sim.cash)} virtuels disponibles.`, "Une quantité fictive de BTC apparaît dans Portefeuille virtuel." ] : [ "Aucun argent réel.", "Regarde le journal pour le détail." ]);
     if (result?.ok) {
@@ -30728,6 +30759,153 @@ function atlasExchangeQuoteForCoin(coinOrId, now = Date.now()) {
   };
 }
 
+
+// A simulation is an execution-like action, even when it is 100 % fictitious.
+// Therefore it may use a fresh exchange quote, but never a delayed market
+// snapshot merely because that snapshot is still displayable.
+const ATLAS_BINANCE_REST_QUOTE_MAX_AGE_MS = 30_000;
+const ATLAS_BINANCE_REST_ENDPOINTS = Object.freeze([
+  "https://data-api.binance.vision",
+  "https://api.binance.com"
+]);
+const ATLAS_EXECUTION_ASSET_META = Object.freeze({
+  bitcoin:Object.freeze({ id:"bitcoin", symbol:"BTC", name:"Bitcoin" }),
+  ethereum:Object.freeze({ id:"ethereum", symbol:"ETH", name:"Ethereum" }),
+  binancecoin:Object.freeze({ id:"binancecoin", symbol:"BNB", name:"BNB" }),
+  ripple:Object.freeze({ id:"ripple", symbol:"XRP", name:"XRP" }),
+  solana:Object.freeze({ id:"solana", symbol:"SOL", name:"Solana" })
+});
+const atlasBinanceRestQuoteInflight = new Map();
+
+function atlasExecutionCoinId(coinOrId) {
+  const explicit = typeof coinOrId === "string" ? coinOrId.trim() : String(coinOrId?.id || "").trim();
+  if (ATLAS_EXCHANGE_PRODUCT_MAP[explicit]) return explicit;
+  const upper = explicit.toUpperCase();
+  const metaEntry = Object.entries(ATLAS_EXECUTION_ASSET_META).find(([, meta]) => meta.symbol === upper);
+  if (metaEntry) return metaEntry[0];
+  const coin = typeof coinOrId === "object" && coinOrId ? coinOrId : findCoinByQuery(explicit);
+  return coin?.id && ATLAS_EXCHANGE_PRODUCT_MAP[coin.id] ? coin.id : null;
+}
+
+function atlasExecutionQuoteIsFreshBinance(quote, now = Date.now()) {
+  if (!quote || !String(quote.source || "").toLowerCase().includes("binance")) return false;
+  const price = atlasExchangeFinitePositive(quote.price);
+  const timestamp = Number(quote.timestamp);
+  if (!price || !Number.isFinite(timestamp)) return false;
+  const maxAge = quote.status === "live" ? ATLAS_EXCHANGE_FRESH_MS : ATLAS_BINANCE_REST_QUOTE_MAX_AGE_MS;
+  return now - timestamp >= -5_000 && now - timestamp <= maxAge;
+}
+
+function atlasBinanceRestTickerRow(payload, requestedSymbol) {
+  const symbol = String(payload?.symbol || requestedSymbol || "").toUpperCase();
+  const price = atlasExchangeFinitePositive(payload?.lastPrice ?? payload?.price);
+  if (!symbol || !price) return null;
+  return {
+    symbol,
+    price,
+    bid:atlasExchangeFinitePositive(payload?.bidPrice),
+    ask:atlasExchangeFinitePositive(payload?.askPrice),
+    change24h:Number.isFinite(Number(payload?.priceChangePercent)) ? Number(payload.priceChangePercent) : null,
+    timestamp:Date.now(),
+    exchangeTimestamp:Number.isFinite(Number(payload?.closeTime)) ? Number(payload.closeTime) : null
+  };
+}
+
+async function atlasFetchBinanceRestTicker(symbol, options = {}) {
+  const normalized = String(symbol || "").toUpperCase();
+  if (!normalized) throw new Error("Symbole Binance manquant");
+  let lastError = null;
+  for (const base of ATLAS_BINANCE_REST_ENDPOINTS) {
+    try {
+      const payload = await fetchJsonWithRetry(
+        `${base}/api/v3/ticker/24hr?symbol=${encodeURIComponent(normalized)}`,
+        { signal:options.signal },
+        6_000,
+        1
+      );
+      const row = atlasBinanceRestTickerRow(payload, normalized);
+      if (!row) throw new Error(`Cotation Binance ${normalized} invalide`);
+      return row;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error(`Cotation Binance ${normalized} indisponible`);
+}
+
+async function atlasFetchBinanceRestQuoteForCoin(coinOrId, options = {}) {
+  const coinId = atlasExecutionCoinId(coinOrId);
+  const config = coinId ? ATLAS_EXCHANGE_PRODUCT_MAP[coinId] : null;
+  if (!coinId || !config) throw new Error("Actif non couvert par le routeur Binance");
+  if (atlasBinanceRestQuoteInflight.has(coinId)) return atlasBinanceRestQuoteInflight.get(coinId);
+
+  const task = (async () => {
+    let directError = null;
+    try {
+      const direct = await atlasFetchBinanceRestTicker(config.direct, options);
+      return {
+        status:"direct",
+        kind:"exchange-direct-eur-rest",
+        coinId,
+        price:direct.price,
+        change24h:direct.change24h,
+        bid:direct.bid,
+        ask:direct.ask,
+        timestamp:direct.timestamp,
+        source:`Binance ${config.direct} REST`
+      };
+    } catch (error) {
+      directError = error;
+    }
+
+    try {
+      const [crypto, eur] = await Promise.all([
+        atlasFetchBinanceRestTicker(config.usdt, options),
+        atlasFetchBinanceRestTicker("EURUSDT", options)
+      ]);
+      const price = crypto.price / eur.price;
+      if (!(Number.isFinite(price) && price > 0)) throw new Error("Conversion Binance USDT/EUR invalide");
+      const bid = crypto.bid && eur.ask ? crypto.bid / eur.ask : null;
+      const ask = crypto.ask && eur.bid ? crypto.ask / eur.bid : null;
+      return {
+        status:"direct",
+        kind:"exchange-derived-eur-rest",
+        coinId,
+        price,
+        change24h:atlasExchangeChangeDerived(crypto.change24h, eur.change24h),
+        bid:Number.isFinite(bid) && bid > 0 ? bid : null,
+        ask:Number.isFinite(ask) && ask > 0 ? ask : null,
+        timestamp:Math.min(crypto.timestamp, eur.timestamp),
+        source:`Binance ${config.usdt} ÷ EURUSDT REST`
+      };
+    } catch (derivedError) {
+      throw new Error(`Cotation Binance indisponible : ${derivedError?.message || directError?.message || "échec réseau"}`);
+    }
+  })().finally(() => atlasBinanceRestQuoteInflight.delete(coinId));
+
+  atlasBinanceRestQuoteInflight.set(coinId, task);
+  return task;
+}
+
+async function atlasEnsureExecutionQuoteForCoin(coinOrId, options = {}) {
+  const coinId = atlasExecutionCoinId(coinOrId);
+  if (!coinId) return null;
+
+  const live = atlasExchangeQuoteForCoin(coinId);
+  if (atlasExecutionQuoteIsFreshBinance(live)) return live;
+
+  // Keep the WebSocket alive for subsequent updates, but do not make the user
+  // wait for it when a tiny public REST quote can answer immediately.
+  atlasStartExchangeFeed();
+  try {
+    const direct = await atlasFetchBinanceRestQuoteForCoin(coinId, options);
+    return atlasExecutionQuoteIsFreshBinance(direct) ? direct : null;
+  } catch (error) {
+    console.warn("Cotation d’exécution Binance :", error);
+    return null;
+  }
+}
+
 function atlasQuoteDisplaySource(quote) {
   return atlasQuoteIsUsable(quote)
     ? `${atlasQuoteStatusLabel(quote)} · ${quote.source}`
@@ -34569,11 +34747,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.37";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.38";
 
-const ATLAS_BUILD = "28.3.37";
+const ATLAS_BUILD = "28.3.38";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.37";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.38";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

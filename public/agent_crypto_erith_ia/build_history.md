@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.38 — Resilient Binance Execution Quote Router + Public Snapshot Publication Lock
+
+- Base : Build 28.3.37.
+- Diagnostic : le moteur de simulation exigeait encore `atlasAnalysisLiveReady()` puis utilisait `coin.price`, donc le prix d’exécution fictive pouvait dépendre du snapshot public CoinGecko. Le seuil public autorisait jusqu’à 3 heures.
+- Correction : une exécution fictive sur actif couvert exige désormais une cotation Binance fraîche. WebSocket d’abord ; REST public ponctuel en secours.
+- Le Module 02 injecte explicitement cette cotation dans le moteur de simulation ; CoinGecko ne peut plus être choisi implicitement comme prix d’exécution.
+- Les preuves Spot enregistrent source + horodatage de la cotation.
+- Valorisation du portefeuille : WebSocket Binance frais → dernier prix d’exécution local → historique seulement en dernier affichage.
+- Snapshot public CoinGecko : seuil d’analyse active réduit de 3 h à 45 min ; affichage d’archive conservé.
+- Workflow public : cible 30 min et publication protégée contre les non-fast-forward par fetch/reset propre + restauration du snapshot généré + trois tentatives de push, jamais de force push.
+- `index.html`, `style.css`, `runtime_config.json` inchangés byte pour byte.
+- Version Control Protected Core inchangé ; identité passée à 28.3.38.
+
+---
+
 ## Build 28.3.37 — Module 02 Spot Single Click + Silent Simulation Focus Lock
 
 - Base : Build 28.3.36.
