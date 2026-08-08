@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock.
+  Build 28.3.40 — Module 02 Visual Recap + Pedagogical Isolation Lock.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -20005,10 +20005,13 @@ async function atlasLearningEnsureFoundationMarketReady(reason) {
 
 function atlasLearningFinishSpotViewport(stage, viewport, options = {}) {
   const stageNumber = String(stage || "").trim();
+  const targetId = String(options.targetId || "").trim();
   const flash = options.flash !== false;
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const lab = document.getElementById("learningFoundationLab");
-    const target = stageNumber ? lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) : null;
+    const explicitTarget = targetId ? document.getElementById(targetId) : null;
+    const stageTarget = stageNumber ? lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) : null;
+    const target = explicitTarget || stageTarget;
     if (target) {
       atlasLearningPositionTarget(target, {
         smooth:false,
@@ -20092,7 +20095,7 @@ async function runSpotFoundationSchoolPosition(cockpit) {
       return false;
     }
 
-    atlasLearningFinishSpotViewport(5, viewport, { flash:true });
+    atlasLearningFinishSpotViewport(5, viewport, { flash:true, targetId:"spotFoundationVisualRecap" });
     return true;
   } catch (error) {
     atlasLearningSpotPurchaseUi("retry", "La simulation a été interrompue sans modifier la progression. Réessaie ce même bouton.");
@@ -34784,11 +34787,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.39";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.40";
 
-const ATLAS_BUILD = "28.3.39";
+const ATLAS_BUILD = "28.3.40";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.39";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.40";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

@@ -1,9 +1,26 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.39  
-**Build :** 28.3.39  
-**Mission :** Module 02 Visual Recap + Pedagogical Isolation Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.40  
+**Build :** 28.3.40  
+**Mission :** Module 02 Visual Recap Focus Lock
 
+
+
+## Build 28.3.40 — Module 02 Visual Recap Focus Lock
+
+Cette Build part exactement de la 28.3.39 réparée.
+
+### Mission unique
+
+Après la simulation fictive de 50 € BTC, cadrer directement la **Vue expliquée** ajoutée en 28.3.39 au lieu de sauter à l’étape 5.
+
+- La simulation Binance et les preuves restent strictement inchangées.
+- Le grand `PAPER TRADING SANDBOX` reste un moteur secondaire, pas une destination pédagogique.
+- En cas de succès, le viewport vise `spotFoundationVisualRecap`.
+- L’étape 5 reste immédiatement sous la vue expliquée et n’exige aucun bouton supplémentaire.
+- En cas d’échec, le comportement de retour à l’étape 4 reste inchangé.
+- `web/style.css`, l’image pédagogique, `web/index.html` et `web/runtime_config.json` restent inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.40.
 
 
 ## Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock

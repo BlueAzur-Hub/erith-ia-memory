@@ -1,3 +1,14 @@
+## Build 28.3.40 — Module 02 Visual Recap Focus Lock
+
+Base : 28.3.39 réparée.
+
+- Après réussite de l’achat fictif de 50 € BTC, le cadrage vise désormais `spotFoundationVisualRecap`.
+- L’étape 5 reste juste sous cette lecture visuelle.
+- Aucun changement de simulation, source marché, style, image, IndexedDB ou contrôleur de version.
+- Modification fonctionnelle : `web/app.js` uniquement.
+
+---
+
 ## Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock
 
 Cette Build part exactement de la 28.3.38.
