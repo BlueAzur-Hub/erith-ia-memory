@@ -1,9 +1,31 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.41  
-**Build :** 28.3.41  
-**Mission :** Automatic Learning Memory Pipeline Lock — Modules 01 + 02
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.42  
+**Build :** 28.3.42  
+**Mission :** Unified IndexedDB Memory + Panel Coherence Lock
 
+
+
+## Build 28.3.42 — Unified IndexedDB Memory + Panel Coherence Lock
+
+Cette Build part exactement de la 28.3.41.
+
+### Mission unique
+
+Faire raconter la même vérité au Data Collector, à l’Explorateur, au Plan de collecte et à l’Assistant de reprise, tout en supprimant la dépendance lourde du Data Collector à `localStorage`.
+
+- Le Data Collector utilise désormais une base **IndexedDB dédiée** (`agent_crypto_local_memory`) comme stockage canonique de ses traces.
+- L’ancien `localStorage` Collector est lu une dernière fois, fusionné et dédupliqué, écrit puis relu dans IndexedDB ; il n’est supprimé qu’après vérification de la copie.
+- Les archives pédagogiques des Modules 01 et 02 restent canoniques dans leur IndexedDB pédagogique ; leurs copies dérivées sont resynchronisées automatiquement vers la mémoire Collector.
+- Tous les panneaux utilisent désormais le même cache Collector vérifié.
+- Les **sessions pédagogiques** et les **observations marché** sont distinguées : une session d’apprentissage ne compte plus artificiellement comme un snapshot marché comparable.
+- Le Plan de collecte considère **2 observations marché distinctes** comme seuil de comparaison ; une troisième observation enrichit la lecture mais n’est plus une obligation.
+- L’Explorateur se remplit automatiquement et ne demande plus de cliquer « Lire mémoire » pour donner du sens au panneau.
+- L’Assistant de reprise abandonne les anciens textes figés (« 3e snapshot », « V1.2-local-plan ») et se construit depuis l’état réel du parcours et de la mémoire.
+- Les snapshots marché manuels, comparaisons ciblées et exports restent disponibles sous des outils facultatifs.
+- Le message `quota has been exceeded` du Collector LocalStorage ne doit plus bloquer la mémoire pédagogique automatique.
+- Modules 01 et 02 pédagogiques, Binance, CoinGecko, simulation et workflow marché : inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.42.
 
 
 ## Build 28.3.41 — Automatic Learning Memory Pipeline Lock — Modules 01 + 02

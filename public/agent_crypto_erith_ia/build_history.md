@@ -1,3 +1,16 @@
+## Build 28.3.42 — Unified IndexedDB Memory + Panel Coherence Lock
+
+- Base : 28.3.41.
+- Data Collector migré de LocalStorage vers une IndexedDB dédiée, avec copie relue avant suppression de l’ancien stockage.
+- Une seule lecture Collector alimente Data Collector, Explorateur, Plan de collecte et Assistant de reprise.
+- Séparation explicite entre sessions pédagogiques et observations marché comparables.
+- Deux observations marché distinctes suffisent pour comparer ; la troisième devient facultative.
+- Explorateur et Assistant de reprise rendus automatiques et fondés sur l’état réel.
+- Suppression des vieux objectifs figés « créer un 3e snapshot » / « V1.2-local-plan ».
+- Modules pédagogiques, marché, simulation et Version Control Protected Core inchangés hors identité 28.3.42.
+
+---
+
 ## Build 28.3.41 — Automatic Learning Memory Pipeline Lock — Modules 01 + 02
 
 - Base : 28.3.40.

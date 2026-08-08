@@ -3425,8 +3425,8 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
 
         <div class="collector-grid">
           <article>
-            <b>Snapshots</b>
-            <span id="collectorCount">0 snapshot</span>
+            <b>Mémoire</b>
+            <span id="collectorCount">0 trace</span>
           </article>
           <article>
             <b>Dernier enregistrement</b>
@@ -3438,7 +3438,7 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
           </article>
           <article>
             <b>Sécurité</b>
-            <span>LocalStorage navigateur · aucune clé · aucun wallet · aucun ordre réel</span>
+            <span>IndexedDB navigateur · aucune clé · aucun wallet · aucun ordre réel</span>
           </article>
         </div>
 
@@ -3461,26 +3461,20 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
           <div>
             <p class="eyebrow">◌ EXPLORATEUR DE MÉMOIRE</p>
             <h3>Lire ce que la mémoire commence à montrer</h3>
-            <p>Compare les snapshots enregistrés, repère les variations BTC / ETH / SOL et résume les refus de sécurité.</p>
+            <p>Lit automatiquement la mémoire et distingue les sessions pédagogiques des observations marché réellement comparables.</p>
           </div>
           <span class="pill ok">Explorer</span>
         </div>
 
-        <div class="memory-explorer-actions">
-          <button class="btn small primary" id="btnExploreMemory" type="button">Lire mémoire</button>
-          <button class="btn small" id="btnCompareMemory" type="button">Comparer premier / dernier</button>
-          <button class="btn small" id="btnSummarizeRefusals" type="button">Résumer refus</button>
-          <button class="btn small" id="btnDownloadMemoryReport" type="button">Télécharger rapport .md</button>
-        </div>
 
         <div class="memory-explorer-grid">
           <article>
             <b>Lecture</b>
-            <span>Nombre de snapshots, dernier état, tags dominants.</span>
+            <span>Sessions pédagogiques, observations marché et dernière trace.</span>
           </article>
           <article>
             <b>Comparaison</b>
-            <span>Premier / dernier prix BTC, ETH, SOL si disponibles.</span>
+            <span>Premier / dernier prix BTC, ETH, SOL sur observations marché distinctes.</span>
           </article>
           <article>
             <b>Refus</b>
@@ -3492,55 +3486,69 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
           </article>
         </div>
 
-        <pre class="memory-explorer-output" id="memoryExplorerOutput">Explorateur prêt. Enregistre au moins un snapshot dans le Data Collector, puis clique “Lire mémoire”.</pre>
+                <pre class="memory-explorer-output" id="memoryExplorerOutput">Chargement de la mémoire unifiée…</pre>
+
+        <details class="learning-optional-tools">
+          <summary>Comparaisons, refus et exports — facultatif</summary>
+          <div class="memory-explorer-actions">
+            <button class="btn small primary" id="btnExploreMemory" type="button">Relire mémoire</button>
+            <button class="btn small" id="btnCompareMemory" type="button">Comparer marché</button>
+            <button class="btn small" id="btnSummarizeRefusals" type="button">Résumer refus</button>
+            <button class="btn small" id="btnDownloadMemoryReport" type="button">Télécharger rapport .md</button>
+          </div>
+        </details>
       </div>
 
       <div class="collection-plan-panel" id="collectionPlanPanel">
         <div class="collection-plan-head">
           <div>
             <p class="eyebrow">⌁ PLAN DE COLLECTE GUIDÉ</p>
-            <h3>Construire une mémoire comparable</h3>
-            <p>Une comparaison utile demande plusieurs snapshots. Ce bloc guide la collecte sans backend, en attendant la future base Ryzen 7.</p>
+            <h3>Mémoire marché comparable</h3>
+            <p>Ce bloc indique automatiquement si des observations marché réellement distinctes permettent une comparaison. La collecte supplémentaire reste facultative.</p>
           </div>
-          <span class="pill ok">3 snapshots</span>
+          <span class="pill ok" id="collectionPlanBadge">0 marché</span>
         </div>
 
         <div class="collection-progress">
           <div class="collection-progress-top">
-            <b id="collectionProgressTitle">Objectif : 3 snapshots exploitables</b>
-            <span id="collectionProgressText">0/3</span>
+            <b id="collectionProgressTitle">Lecture de la mémoire marché</b>
+            <span id="collectionProgressText">0 observation marché</span>
           </div>
           <div class="collection-bar"><i id="collectionProgressBar"></i></div>
         </div>
 
-        <div class="collection-plan-actions">
-          <button class="btn small primary" id="btnSaveReferenceSnapshot" type="button">1 · Snapshot de référence</button>
-          <button class="btn small" id="btnSaveAfterTestSnapshot" type="button">2 · Snapshot après test</button>
-          <button class="btn small" id="btnSaveLaterSnapshot" type="button">3 · Snapshot plus tard</button>
-          <button class="btn small" id="btnCollectionChecklist" type="button">Voir routine de collecte</button>
-          <button class="btn small" id="btnDownloadCollectionPlan" type="button">Télécharger plan .md</button>
-        </div>
 
         <div class="collection-plan-grid">
           <article>
-            <b>Référence</b>
-            <span>État de départ : marché + simulation actuelle.</span>
+            <b>Pédagogie</b>
+            <span>Les modules archivés alimentent automatiquement leur mémoire.</span>
           </article>
           <article>
-            <b>Après test</b>
-            <span>État après refus ou opération prudente.</span>
+            <b>Marché</b>
+            <span>Seules les observations datées avec prix servent à la comparaison temporelle.</span>
           </article>
           <article>
-            <b>Plus tard</b>
-            <span>Nouvel état marché pour vraie comparaison.</span>
+            <b>Comparaison</b>
+            <span>2 observations marché distinctes suffisent pour comparer.</span>
           </article>
           <article>
-            <b>Règle</b>
-            <span>2 snapshots minimum ; 3 snapshots conseillé.</span>
+            <b>Enrichissement</b>
+            <span>Une 3e observation ou davantage reste facultative.</span>
           </article>
         </div>
 
-        <pre class="collection-plan-output" id="collectionPlanOutput">Plan prêt. Commence par “Snapshot de référence”, puis ajoute un snapshot après test. La vraie comparaison devient utile avec au moins 2 snapshots.</pre>
+                <pre class="collection-plan-output" id="collectionPlanOutput">Chargement de l’état réel des observations marché…</pre>
+
+        <details class="learning-optional-tools">
+          <summary>Observations marché supplémentaires — facultatif</summary>
+          <div class="collection-plan-actions">
+            <button class="btn small primary" id="btnSaveReferenceSnapshot" type="button">Snapshot de référence</button>
+            <button class="btn small" id="btnSaveAfterTestSnapshot" type="button">Snapshot après test</button>
+            <button class="btn small" id="btnSaveLaterSnapshot" type="button">Snapshot plus tard</button>
+            <button class="btn small" id="btnCollectionChecklist" type="button">Voir état de collecte</button>
+            <button class="btn small" id="btnDownloadCollectionPlan" type="button">Télécharger état .md</button>
+          </div>
+        </details>
       </div>
 
       <div class="agents-preview-panel" id="agentsPreviewPanel">
@@ -3557,7 +3565,7 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
           <div>
             <p class="eyebrow">☉ ASSISTANT DE REPRISE</p>
             <h3>Reprendre proprement après la pause</h3>
-            <p>Ce bloc prépare la suite : ce qui est validé, ce qui reste à faire, et la première action au réveil. Hotfix 7.1 : note lisible avec vrais retours ligne.</p>
+            <p>Ce bloc lit l’état réel du parcours et de la mémoire : ce qui est archivé, la session actuelle et la prochaine action utile.</p>
           </div>
           <span class="pill ok">Reprise</span>
         </div>
@@ -3569,12 +3577,12 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
         </div>
 
         <div class="resume-assistant-grid">
-          <article><b>Validé</b><span>Mode école, mémoire, explorateur, plan de collecte.</span></article>
-          <article><b>À faire</b><span>Créer un 3e snapshot plus tard, puis comparer.</span></article>
-          <article><b>Suite</b><span>Préparer V1.2-local-plan après repos.</span></article>
+          <article><b>Validé</b><span id="resumeValidatedText">Chargement…</span></article>
+          <article><b>À faire</b><span id="resumeTodoText">Chargement…</span></article>
+          <article><b>Suite</b><span id="resumeNextText">Chargement…</span></article>
         </div>
 
-        <pre class="resume-assistant-output" id="resumeAssistantOutput">Prêt pour pause. Clique “Afficher reprise au réveil” pour générer la note de reprise.</pre>
+        <pre class="resume-assistant-output" id="resumeAssistantOutput">Chargement de l’état réel du parcours…</pre>
       </div>
 
       <div class="sim-manual-title">Mode manuel avancé — utile plus tard, pas obligatoire pour apprendre</div>
