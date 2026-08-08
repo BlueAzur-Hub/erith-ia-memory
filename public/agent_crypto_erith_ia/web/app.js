@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.31 — rappel actif Ask / Bid du Module 02.
+  Build 28.3.32 — rappel actif Marché / Limite du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -18719,6 +18719,47 @@ function foundationSpotRecallFeedbackMarkup(recall, explanation) {
   return `<div class="foundation-recall-feedback ${firstWasCorrect ? "is-correct" : "is-review"}"><b>${title}</b><p>${escapeHtml(explanation)}</p>${correction}</div>`;
 }
 
+function foundationSpotOrderTypeRecallState(cockpit, scenario) {
+  const evidence = cockpit?.practice_evidence || {};
+  const isLimit = scenario === "limit";
+  const prefix = isLimit ? "spot_limit" : "spot_market";
+  const correctChoice = isLimit ? "limit" : "market";
+  const done = isLimit ? evidence.spot_limit_choice === true : evidence.spot_market_choice === true;
+  const firstChoice = String(evidence[`${prefix}_first_choice`] || "").trim();
+  const attempts = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0));
+  const attempted = attempts > 0 || Boolean(firstChoice) || done;
+  const firstCorrect = firstChoice ? firstChoice === correctChoice : done;
+  return { scenario, prefix, done, firstChoice, attempts, attempted, firstCorrect };
+}
+
+function foundationSpotRecordOrderTypeAttempt(cockpit, scenario, choice, correct) {
+  if (!cockpit || !["market", "limit"].includes(scenario)) return false;
+  if (!cockpit.practice_evidence || typeof cockpit.practice_evidence !== "object") cockpit.practice_evidence = {};
+  const evidence = cockpit.practice_evidence;
+  const prefix = scenario === "limit" ? "spot_limit" : "spot_market";
+  const choiceText = String(choice || "").trim();
+  evidence[`${prefix}_attempts`] = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0)) + 1;
+  if (!evidence[`${prefix}_first_choice`]) {
+    evidence[`${prefix}_first_choice`] = choiceText;
+    evidence[`${prefix}_first_choice_correct`] = correct === true;
+    evidence[`${prefix}_first_choice_at`] = new Date().toISOString();
+  }
+  evidence[`${prefix}_last_choice`] = choiceText;
+  evidence[`${prefix}_last_choice_correct`] = correct === true;
+  evidence[`${prefix}_last_choice_at`] = new Date().toISOString();
+  if (correct === true) {
+    if (scenario === "market") evidence.spot_market_choice = true;
+    else evidence.spot_limit_choice = true;
+  }
+  return true;
+}
+
+function foundationSpotOrderTypeStatusLabel(recall) {
+  if (recall?.done) return "validée";
+  if (recall?.attempted) return "à corriger";
+  return "à répondre";
+}
+
 function foundationSpotLab(cockpit) {
   const e = cockpit.practice_evidence || {};
   const summary = foundationSpotGuidedSummary(cockpit);
@@ -18728,8 +18769,12 @@ function foundationSpotLab(cockpit) {
   const step5Ready = step4Done && summary.ready;
   const askRecall = foundationSpotRecallState(cockpit, "ask");
   const bidRecall = foundationSpotRecallState(cockpit, "bid");
+  const marketRecall = foundationSpotOrderTypeRecallState(cockpit, "market");
+  const limitRecall = foundationSpotOrderTypeRecallState(cockpit, "limit");
   const askExplanation = "Ask = prix demandé par un vendeur. Si tu achètes maintenant au meilleur prix disponible, tu privilégies le vendeur qui demande le moins : 60 010 € est meilleur que 60 020 €.";
   const bidExplanation = "Bid = prix proposé par un acheteur. Si tu vends maintenant au meilleur prix disponible, tu privilégies l’acheteur qui propose le plus : 59 990 € est meilleur que 59 980 €.";
+  const marketExplanation = "Ordre au marché = instruction d’acheter ou vendre maintenant aux meilleurs prix disponibles. Tu privilégies l’exécution immédiate ; le prix exact peut donc varier légèrement pendant l’exécution.";
+  const limitExplanation = "Ordre limite = instruction avec un prix choisi à ne pas dépasser pour un achat. Ici, 59 500 € est ton maximum : si aucun vendeur n’accepte ce prix ou moins, l’ordre attend et peut ne jamais être exécuté.";
   return `
     <div class="foundation-lab-grid foundation-orderbook-lab">
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
@@ -18754,13 +18799,15 @@ function foundationSpotLab(cockpit) {
         <p><b>Spread pédagogique :</b> ${e.spot_best_ask && e.spot_best_bid ? "60 010 € − 59 990 € = 20 €. C’est l’écart entre le meilleur Ask et le meilleur Bid de cet exemple." : "réponds d’abord aux deux questions ; le calcul apparaîtra après validation des deux côtés."}</p>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 3 · TYPE D’ORDRE</span>
-        <h5>Marché ou limite ?</h5>
-        <p><b>Situation A :</b> acheter immédiatement, même si le prix exact varie légèrement.</p>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_market_correct" ${!step2Done || step3Done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_market_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Ordre limite</button></div>
-        <p><b>Situation B :</b> tu veux acheter, mais jamais au-dessus de 59 500 €. Quel ordre fixe ce prix maximum ?</p>
-        <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_wrong" ${!step2Done || step3Done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_limit_correct" ${!step2Done || step3Done ? "disabled" : ""}>Ordre limite à 59 500 €</button></div>
-        <small>État : Marché ${e.spot_market_choice ? "✓" : "—"} · Limite ${e.spot_limit_choice ? "✓" : "—"}</small>
+        <span class="foundation-stage-kicker">ÉTAPE 3 · TYPE D’ORDRE · RAPPEL ACTIF</span>
+        <h5>Choisir avant de relire la règle Marché / Limite ${foundationHelpBubble("Un ordre est simplement une instruction d’achat ou de vente donnée à la plateforme. Réponds d’abord ; l’explication complète apparaît après ta première tentative.", "Que signifie ordre ?")}</h5>
+        <p><b>Situation A :</b> tu veux acheter maintenant, même si le prix exact varie légèrement. Quel type d’ordre choisis-tu ? ${foundationHelpBubble("Indice facultatif : « au marché » signifie aux meilleurs prix disponibles maintenant. L’objectif ici est de reconnaître la priorité donnée à l’exécution.", "Indice Situation A")}</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_market_correct" ${!step2Done || marketRecall.done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_market_wrong" ${!step2Done || marketRecall.done ? "disabled" : ""}>Ordre limite</button></div>
+        ${marketRecall.attempted ? foundationSpotRecallFeedbackMarkup(marketRecall, marketExplanation) : "<small>Choisis d’abord. L’explication de l’ordre au marché apparaîtra ensuite.</small>"}
+        <p><b>Situation B :</b> tu veux acheter, mais jamais au-dessus de 59 500 €. Quel type d’ordre fixe ce prix maximum ? ${foundationHelpBubble("Indice facultatif : une limite est un seuil que tu refuses de dépasser. L’ordre peut donc attendre si le marché ne vient pas jusqu’à ton prix.", "Indice Situation B")}</p>
+        <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_wrong" ${!step2Done || limitRecall.done ? "disabled" : ""}>Ordre au marché</button><button type="button" data-foundation-action="spot_limit_correct" ${!step2Done || limitRecall.done ? "disabled" : ""}>Ordre limite à 59 500 €</button></div>
+        ${limitRecall.attempted ? foundationSpotRecallFeedbackMarkup(limitRecall, limitExplanation) : "<small>Choisis d’abord. L’explication de l’ordre limite apparaîtra ensuite.</small>"}
+        <small>État : Situation A ${foundationSpotOrderTypeStatusLabel(marketRecall)} · Situation B ${foundationSpotOrderTypeStatusLabel(limitRecall)}</small>
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · EXÉCUTION FICTIVE</span>
@@ -19620,11 +19667,14 @@ function handleFoundationAction(action) {
       spotFoundationFeedback(true, `${concept} · réponse correcte`, feedbackText);
       return;
     }
-    const good = { spot_market_correct:["spot_market_choice","Ordre au marché : exécution immédiate privilégiée"], spot_limit_correct:["spot_limit_choice","Ordre limite : prix maximal choisi"] };
-    const wrong = { spot_market_wrong:"Pour acheter immédiatement, l’ordre au marché est la réponse attendue.", spot_limit_wrong:"Pour refuser de dépasser 59 500 €, il faut un ordre limite." };
-    if (wrong[action]) return spotFoundationFeedback(false, "Réponse à revoir", wrong[action]);
-    if (good[action]) {
-      cockpit.practice_evidence[good[action][0]] = true;
+    const orderTypeRecallAction = {
+      spot_market_correct:{ scenario:"market", choice:"market", correct:true },
+      spot_market_wrong:{ scenario:"market", choice:"limit", correct:false },
+      spot_limit_wrong:{ scenario:"limit", choice:"market", correct:false },
+      spot_limit_correct:{ scenario:"limit", choice:"limit", correct:true }
+    }[action];
+    if (orderTypeRecallAction) {
+      foundationSpotRecordOrderTypeAttempt(cockpit, orderTypeRecallAction.scenario, orderTypeRecallAction.choice, orderTypeRecallAction.correct);
       const e = cockpit.practice_evidence;
       const step3Complete = Boolean(e.spot_market_choice && e.spot_limit_choice);
       if (step3Complete) {
@@ -19632,12 +19682,19 @@ function handleFoundationAction(action) {
         cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
       }
       cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
+      cockpit.last_action = orderTypeRecallAction.correct ? `spot_${orderTypeRecallAction.scenario}_order_recall_validated` : `spot_${orderTypeRecallAction.scenario}_order_recall_attempt`;
       saveLearningCockpitState(cockpit);
       renderLearningJourneyCockpit();
       scrollToFoundationStage(step3Complete ? 4 : 3);
+      if (!orderTypeRecallAction.correct) {
+        const label = orderTypeRecallAction.scenario === "market" ? "Situation A · ordre au marché" : "Situation B · ordre limite";
+        spotFoundationFeedback(false, `${label} · réponse à revoir`, "Première tentative enregistrée. Lis maintenant l’explication affichée sous cette situation, puis corrige ton choix.");
+        return;
+      }
+      const label = orderTypeRecallAction.scenario === "market" ? "Ordre au marché validé" : "Ordre limite validé";
       const feedbackText = step3Complete
-        ? `${good[action][1]}. Les deux situations sont correctes. Étape 4 ouverte.`
-        : `${good[action][1]}. Complète l’autre choix de cette même étape.`;
+        ? `${label}. Les deux situations sont maintenant correctes. Étape 4 ouverte.`
+        : `${label}. Lis l’explication affichée, puis réponds à l’autre situation.`;
       spotFoundationFeedback(true, "Réponse correcte", feedbackText);
       return;
     }
@@ -34346,11 +34403,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.31";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.32";
 
-const ATLAS_BUILD = "28.3.31";
+const ATLAS_BUILD = "28.3.32";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.31";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.32";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

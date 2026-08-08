@@ -1,9 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.31  
-**Build :** 28.3.31  
-**Mission :** Module 02 Ask / Bid Active Recall Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.32  
+**Build :** 28.3.32  
+**Mission :** Module 02 Market / Limit Active Recall Lock
 
+
+
+## Build 28.3.32 — Module 02 Market / Limit Active Recall Lock
+
+Cette Build part exactement de la 28.3.31.
+
+### Mission unique
+
+Transformer l’étape 3 du Module 02 en rappel actif compréhensible : répondre d’abord, puis lire l’explication du type d’ordre.
+
+- Situation A : l’utilisateur choisit d’abord entre `Ordre au marché` et `Ordre limite` pour un achat immédiat.
+- Situation B : même logique pour un prix maximum d’achat fixé à 59 500 €.
+- La première tentative de chaque situation est conservée séparément.
+- Une erreur révèle l’explication correspondante, ne valide pas la situation et permet une correction.
+- Une bonne réponse désactive uniquement la situation déjà validée ; l’autre reste active.
+- Après la première tentative, le cockpit explique en langage humain : `ordre = instruction`, `marché = priorité à l’exécution`, `limite = priorité au prix choisi`.
+- Des bulles `ⓘ` fournissent des indices facultatifs sans imposer leur lecture.
+- L’étape 3 ne devient complète qu’après les deux réponses correctes ; le moteur de cadrage existant cible alors l’étape 4.
+- Modification fonctionnelle : `web/app.js`, bloc 09 uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.32.
 
 
 ## Build 28.3.31 — Module 02 Ask / Bid Active Recall Lock

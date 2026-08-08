@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.32 — Module 02 Market / Limit Active Recall Lock
+
+- Base : Build 28.3.31.
+- Étape 3 du Module 02 convertie en rappel actif Marché / Limite.
+- Chaque situation conserve sa première tentative avant d’afficher l’explication.
+- Une erreur ne valide pas la situation ; elle révèle la règle puis autorise la correction.
+- Explication humaine après tentative : un ordre est une instruction ; marché privilégie l’exécution immédiate ; limite protège un prix choisi mais peut attendre.
+- Bulles d’aide `ⓘ` ajoutées comme indices facultatifs sur le sens d’`ordre`, de `marché` et de `limite`.
+- Situation A et Situation B sont validées indépendamment ; l’étape 4 ne s’ouvre qu’après les deux bonnes réponses.
+- Moteur de viewport pédagogique existant conservé : étape 3 pendant l’exercice, puis étape 4 après validation complète.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.32.
+
+---
+
 ## Build 28.3.31 — Module 02 Ask / Bid Active Recall Lock
 
 - Base : Build 28.3.30.
