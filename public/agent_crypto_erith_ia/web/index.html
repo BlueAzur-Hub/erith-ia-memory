@@ -3378,74 +3378,82 @@ Un bloc valide ne doit pas etre modifie par une mission exterieure.
         <div class="learning-head">
           <div>
             <p class="eyebrow">✧ JOURNAL PÉDAGOGIQUE + DATA</p>
-            <h3>Transformer les tests en mémoire exploitable</h3>
-            <p>L’app résume ce que tu as testé, ce qu’elle a refusé, ce que ça apprend, puis prépare un export propre pour la future base locale.</p>
+            <h3>Transformer automatiquement les modules en mémoire exploitable</h3>
+            <p>Quand un Module 01 ou 02 est archivé et relu dans IndexedDB, l’app reconstruit automatiquement ce que tu as observé, appris et corrigé. Aucun résumé manuel n’est requis.</p>
           </div>
-          <span class="pill ok">Mémoire</span>
+          <span class="pill ok">Automatique</span>
         </div>
 
-        <div class="learning-actions">
-          <button class="btn small primary" id="btnBuildSimSummary" type="button">Résumer ma session</button>
-          <button class="btn small" id="btnDownloadLearningJournal" type="button">Télécharger journal .md</button>
-          <button class="btn small" id="btnDownloadSimJSON" type="button">Télécharger data JSON</button>
-        </div>
+        <div class="learning-auto-banner">Aucune action supplémentaire : les archives pédagogiques vérifiées alimentent ce panneau automatiquement, y compris les Modules 01 et 02 déjà archivés.</div>
 
         <div class="learning-grid">
           <article>
-            <b>Ce que j’ai appris</b>
-            <span>Lecture humaine : prudence, refus, plafond, réserve.</span>
+            <b>Journal automatique</b>
+            <span>Ce que tu as observé, compris, corrigé et validé.</span>
           </article>
           <article>
-            <b>Snapshot public</b>
-            <span>Données non sensibles : prix, variations, positions simulées.</span>
+            <b>Preuves conservées</b>
+            <span>Réponses, provenance, source/heure et simulation fictive quand elle existe.</span>
           </article>
           <article>
-            <b>Future base locale</b>
-            <span>Ton PC Ryzen 7 pourra stocker l’historique plus tard.</span>
+            <b>Exports facultatifs</b>
+            <span>Markdown et JSON restent disponibles, mais ne font plus partie du parcours normal.</span>
           </article>
         </div>
 
-        <pre class="learning-output" id="simLearningOutput">Clique “Résumer ma session”. L’app générera une note lisible et un format de données public non sensible.</pre>
+        <pre class="learning-output" id="simLearningOutput">Chargement de la mémoire pédagogique automatique…</pre>
+
+        <details class="learning-optional-tools">
+          <summary>Exports et actions manuelles — facultatif</summary>
+          <div class="learning-actions">
+            <button class="btn small" id="btnBuildSimSummary" type="button">Régénérer l’aperçu</button>
+            <button class="btn small" id="btnDownloadLearningJournal" type="button">Télécharger journal .md</button>
+            <button class="btn small" id="btnDownloadSimJSON" type="button">Télécharger data JSON</button>
+          </div>
+        </details>
       </div>
 
       <div class="collector-panel" id="collectorPanel">
         <div class="collector-head">
           <div>
             <p class="eyebrow">◇ DATA COLLECTOR LOCAL</p>
-            <h3>Commencer une mémoire qui grossit</h3>
-            <p>Enregistre des snapshots publics non sensibles dans ce navigateur. C’est une base d’entraînement locale, pas encore un backend Ryzen 7.</p>
+            <h3>Une mémoire qui grossit sans travail supplémentaire</h3>
+            <p>Les Modules 01 et 02 archivés créent automatiquement une trace locale dédupliquée. Les snapshots manuels restent disponibles uniquement pour des observations supplémentaires.</p>
           </div>
-          <span class="pill ok">Local</span>
-        </div>
-
-        <div class="collector-actions">
-          <button class="btn small primary" id="btnSaveCollectorSnapshot" type="button">Enregistrer snapshot maintenant</button>
-          <button class="btn small" id="btnShowCollectorMemory" type="button">Voir mémoire locale</button>
-          <button class="btn small" id="btnDownloadCollectorJSON" type="button">Exporter mémoire JSON</button>
-          <button class="btn small" id="btnDownloadCollectorJSONL" type="button">Exporter mémoire JSONL</button>
-          <button class="btn small danger" id="btnClearCollectorMemory" type="button">Effacer mémoire locale</button>
+          <span class="pill ok">Auto + Local</span>
         </div>
 
         <div class="collector-grid">
           <article>
             <b>Snapshots</b>
-            <span id="collectorCount">0 enregistré</span>
+            <span id="collectorCount">0 snapshot</span>
           </article>
           <article>
             <b>Dernier enregistrement</b>
             <span id="collectorLast">Aucun</span>
           </article>
           <article>
-            <b>Contenu</b>
-            <span>BTC / ETH / SOL + simulation + refus + profil</span>
+            <b>Contenu automatique</b>
+            <span>Module, preuves, apprentissage, provenance et simulation fictive si présente.</span>
           </article>
           <article>
             <b>Sécurité</b>
-            <span>LocalStorage navigateur · aucune clé · aucun wallet</span>
+            <span>LocalStorage navigateur · aucune clé · aucun wallet · aucun ordre réel</span>
           </article>
         </div>
 
-        <pre class="collector-output" id="collectorOutput">Mémoire locale prête. Clique “Enregistrer snapshot maintenant” après un Livecheck et quelques tests guidés.</pre>
+        <pre class="collector-output" id="collectorOutput">Chargement de la mémoire locale automatique…</pre>
+
+        <details class="learning-optional-tools">
+          <summary>Snapshots manuels et exports — facultatif</summary>
+          <div class="collector-actions">
+            <button class="btn small" id="btnSaveCollectorSnapshot" type="button">Enregistrer un snapshot manuel</button>
+            <button class="btn small" id="btnShowCollectorMemory" type="button">Voir mémoire locale</button>
+            <button class="btn small" id="btnDownloadCollectorJSON" type="button">Exporter mémoire JSON</button>
+            <button class="btn small" id="btnDownloadCollectorJSONL" type="button">Exporter mémoire JSONL</button>
+            <button class="btn small danger" id="btnClearCollectorMemory" type="button">Effacer mémoire locale</button>
+          </div>
+        </details>
       </div>
 
       <div class="memory-explorer-panel" id="memoryExplorerPanel">

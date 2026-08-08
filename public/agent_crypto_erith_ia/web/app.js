@@ -18103,6 +18103,7 @@ async function initializeLearningNotebookStorage() {
   renderExpertRoadmap();
   renderLearningJourneyCockpit();
   renderLegacyLearningMigration(true);
+  syncArchivedLearningMemoryToCollector({ source:"startup_backfill" });
   return result;
 }
 
@@ -21220,7 +21221,8 @@ async function completeLearningSession() {
     saveLearningCockpitState(cockpit);
     renderLearningJourneyCockpit();
     scrollToLearningTarget("learningCompletionPanel");
-    setActionFeedback("ok", "Session déjà archivée", "Aucun doublon n’a été créé. Le bouton distinct du panneau vert conduit au module suivant.");
+    syncArchivedLearningMemoryToCollector({ source:"already_archived", preferred_session_id:cockpit.session_id });
+    setActionFeedback("ok", "Session déjà archivée", "Aucun doublon n’a été créé. Le journal et la mémoire locale sont resynchronisés automatiquement ; le bouton distinct du panneau vert conduit au module suivant.");
     return { ok:true, already_archived:true, session_id:cockpit.session_id };
   }
   const missing = ATLAS_LEARNING_SESSION_STEPS.filter(key => !cockpit.steps[key]);
@@ -21311,13 +21313,19 @@ async function completeLearningSession() {
   }
 
   atlasLearningReviewOpen = false;
+  const memorySync = syncArchivedLearningMemoryToCollector({ source:"archive_verified", preferred_session_id:cockpit.session_id });
   renderExpertRoadmap();
   renderLearningJourneyCockpit();
   renderLegacyLearningMigration();
   scrollToLearningTarget("learningCompletionPanel");
   const completedModule = learningModuleByKey(moduleKey);
-  setActionFeedback("ok", "Session archivée et relue", `${persistedHistory.length} session${persistedHistory.length > 1 ? "s" : ""} conservée${persistedHistory.length > 1 ? "s" : ""} dans IndexedDB. ${completedModule.title} reste visible à 5/5 et le passage au module suivant est séparé.`);
-  return { ok:true, verified:true, session_id:cockpit.session_id, history_count:persistedHistory.length };
+  const memoryMessage = ATLAS_AUTOMATIC_LEARNING_MEMORY_MODULES.includes(moduleKey)
+    ? memorySync.ok
+      ? ` Journal pédagogique et Data Collector synchronisés automatiquement${memorySync.added ? ` · ${memorySync.added} nouvelle trace` : " · aucune duplication"}.`
+      : " Journal pédagogique conservé ; la copie Data Collector est différée sans invalider l’archive."
+    : "";
+  setActionFeedback("ok", "Session archivée et relue", `${persistedHistory.length} session${persistedHistory.length > 1 ? "s" : ""} conservée${persistedHistory.length > 1 ? "s" : ""} dans IndexedDB. ${completedModule.title} reste visible à 5/5.${memoryMessage} Le passage au module suivant est séparé.`);
+  return { ok:true, verified:true, session_id:cockpit.session_id, history_count:persistedHistory.length, memory_sync:memorySync };
 }
 
 function startNextLearningModule() {
@@ -21814,10 +21822,10 @@ function learningFactsFromLogs() { if (!state.sim) loadSimulation(); const logs 
 function buildLearningJournalMarkdown() { if (!state.sim) loadSimulation(); const totals = getSimulationTotals(); const profile = getSimulationProfileStatus(); const facts = learningFactsFromLogs(); const lines = [ "# JOURNAL PÉDAGOGIQUE — Agent-Crypto @erith.IA", "", `Version : ${ATLAS_RELEASE}`, `Date locale : ${new Date().toISOString()}`, "", "## Statut sécurité", "", "- Simulation locale uniquement.", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Validation humaine.", "", "## Profil actif", "", `- Profil : ${profile.profile}`, `- Capital virtuel initial : ${fmtEUR.format(profile.start_cash_eur)}`, `- Ticket conseillé : ${fmtEUR.format(profile.default_amount_eur)}`, `- Maximum par opération : ${fmtEUR.format(profile.max_per_operation_eur)}`, `- Exposition maximale : ${fmtEUR.format(profile.max_exposure_eur)}`, `- Réserve minimale : ${fmtEUR.format(profile.min_reserve_eur)}`, `- Cryptos autorisées : ${profile.allowed_symbols.join(" / ")}`, "", "## Résumé de session", "", `- Capital virtuel restant : ${fmtEUR.format(state.sim.cash)}`, `- Valeur positions simulées : ${fmtEUR.format(totals.positionsValue)}`, `- Total simulé : ${fmtEUR.format(totals.total)}`, `- P/L virtuel : ${totals.pnl >= 0 ? "+" : ""}${fmtEUR.format(totals.pnl)}`, "", "## Positions simulées", "", ...positionLinesForMarkdown(), "", "## Ce que j’ai appris", "", ...facts.map(f => `- ${f}`), "", "## Snapshot marché public", "", ...marketLinesForMarkdown(), "", "## Conclusion pédagogique", "", "Le simulateur sert à apprendre les règles de prudence avant toute connexion réelle. Les refus sont normaux : ils prouvent que le profil protège le capital virtuel.", "", "## Prochaine étape possible", "", "Construire une mémoire locale sur PC Ryzen 7 avec historique de snapshots, journaux de simulation et scoring pédagogique, sans clé réelle au départ." ]; return lines.join("\n");
 }
 
-function renderLearningSummary() { const text = buildLearningJournalMarkdown(); if (els.simLearningOutput) els.simLearningOutput.textContent = text; return text;
+function renderLearningSummary() { const text = buildAutomaticLearningJournalMarkdown(); if (els.simLearningOutput) els.simLearningOutput.textContent = text; return text;
 }
 
-function downloadLearningJournal() { const stamp = new Date().toISOString().slice(0, 10); downloadTextFile(`agent_crypto_journal_pedagogique_${stamp}.md`, "text/markdown", buildLearningJournalMarkdown()); renderLearningSummary();
+function downloadLearningJournal() { const stamp = new Date().toISOString().slice(0, 10); downloadTextFile(`agent_crypto_journal_pedagogique_${stamp}.md`, "text/markdown", buildAutomaticLearningJournalMarkdown()); renderLearningSummary();
 }
 
 function countLearningTags(records) { const counts = {}; records.forEach(record => { (record.learning_tags || []).forEach(tag => { counts[tag] = (counts[tag] || 0) + 1; }); }); return counts;
@@ -28267,7 +28275,7 @@ function atlasDistinctMarketMemory(records = []) {
 function memoryDominantTags(records) { const counts = countLearningTags(records); const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]); if (!entries.length) return "aucun tag dominant"; return entries.map(([tag, count]) => `${tag} (${count})`).join(", ");
 }
 
-function memoryExplorerEmptyText() { return [ "MÉMOIRE VIDE", "", "Aucun snapshot à explorer.", "", "Procédure :", "1. Lance Livecheck.", "2. Lance un ou deux tests guidés.", "3. Clique “Enregistrer snapshot maintenant”.", "4. Reviens ici et clique “Lire mémoire”." ].join("\n");
+function memoryExplorerEmptyText() { return [ "MÉMOIRE VIDE", "", "Aucun snapshot à explorer pour l’instant.", "", "Aucune action supplémentaire n’est requise pour les Modules 01 et 02 : leur prochain archivage créera automatiquement une trace locale.", "Les snapshots manuels restent facultatifs pour les comparaisons de marché espacées dans le temps." ].join("\n");
 }
 
 function exploreMemoryText(records = readCollectorMemory()) { if (!records.length) return memoryExplorerEmptyText(); const first = records[0]; const last = records[records.length - 1]; const lastTotals = last?.snapshot?.totals || {}; const lastProfile = last?.snapshot?.profile || {}; const refusalCounts = countRefusalTypes(records); const lines = [ "EXPLORATEUR DE MÉMOIRE LOCALE", "", `Snapshots enregistrés : ${records.length}`, `Premier snapshot : ${new Date(first.saved_at).toLocaleString("fr-FR")}`, `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`, `Tags dominants : ${memoryDominantTags(records)}`, "", "Dernier état simulé :", `- Capital virtuel : ${fmtEUR.format(Number(lastTotals.cash_eur ?? lastProfile.cash_eur ?? 0))}`, `- Positions simulées : ${fmtEUR.format(Number(lastTotals.positions_value_eur ?? 0))}`, `- Total simulé : ${fmtEUR.format(Number(lastTotals.total_value_eur ?? 0))}`, `- P/L virtuel : ${fmtEUR.format(Number(lastTotals.pnl_eur ?? 0))}`, "", "Refus observés :", `- Montant trop gros : ${refusalCounts.montant_trop_gros}`, `- Crypto non autorisée : ${refusalCounts.crypto_non_autorisee}`, `- Plafond / réserve : ${refusalCounts.plafond_ou_reserve}`, `- Livecheck requis : ${refusalCounts.livecheck_requis}`, `- Autres refus : ${refusalCounts.autres_refus}`, "", "Lecture pédagogique :", memoryLearningConclusion(records) ]; return lines.join("\n");
@@ -32542,6 +32550,276 @@ function atlasMarketOpenSources(coin){if(!coin?.id)return;atlasSelectMarketCoin(
 function renderSourceGrid() { atlasRenderDiagnostics(); if (!els.sourceGrid) { renderSourceDiagnostic(); return; } if (!state.sourceStatus.length) { els.sourceGrid.innerHTML = liveSources.map(s => `<div class="source-item"><strong>${s.name}</strong><span>${s.kind}</span><span>En attente</span></div>` ).join(""); renderSourceDiagnostic(); return; } els.sourceGrid.innerHTML = state.sourceStatus.map(s => `<div class="source-item ${s.status === "OK" ? "ok" : ["BACKEND", "SECOURS"].includes(s.status) ? "warn" : "fail"}"> <strong>${s.name}</strong> <span>${s.kind}</span> <span>${s.status}${s.ms ? ` · ${s.ms} ms` : ""}</span> <span>${escapeHtml(s.detail || "")}</span> </div>` ).join(""); renderSourceDiagnostic();
 }
 
+
+const ATLAS_AUTOMATIC_LEARNING_MEMORY_SCHEMA = "agent_crypto_learning_memory_auto_v1";
+const ATLAS_AUTOMATIC_LEARNING_MEMORY_MODULES = Object.freeze(["market", "spot"]);
+
+function atlasLearningMemoryEligibleArchive(entry) {
+  return Boolean(
+    entry
+    && entry.completed_at
+    && entry.session_id
+    && ATLAS_AUTOMATIC_LEARNING_MEMORY_MODULES.includes(String(entry.module_key || ""))
+  );
+}
+
+function atlasLearningMemoryArchives() {
+  return loadLearningHistory()
+    .filter(atlasLearningMemoryEligibleArchive)
+    .sort((a, b) => Date.parse(a.completed_at || a.archived_at || 0) - Date.parse(b.completed_at || b.archived_at || 0));
+}
+
+function atlasLearningMemoryAnswerTrace(evidence, prefix, correctValue) {
+  const first = String(evidence?.[`${prefix}_first_choice`] ?? evidence?.[`${prefix}_first_answer`] ?? "").trim();
+  const attempts = Math.max(0, Number(evidence?.[`${prefix}_attempts`] || 0));
+  if (!first && !attempts) return "aucune première tentative distincte enregistrée";
+  const normalizedCorrect = String(correctValue ?? "").trim().toLowerCase();
+  const firstCorrect = String(first).trim().toLowerCase() === normalizedCorrect;
+  return `${first || "—"} · ${firstCorrect ? "correcte" : "corrigée ensuite"}${attempts > 1 ? ` · ${attempts} tentatives` : ""}`;
+}
+
+function atlasLearningMemoryArchiveSummary(entry) {
+  const evidence = entry?.practice_evidence || {};
+  const completed = entry?.completed_at || entry?.archived_at || null;
+  const when = completed ? new Date(completed).toLocaleString("fr-FR") : "heure non disponible";
+  if (entry?.module_key === "market") {
+    const prefill = evidence.market_archive_prefill || {};
+    const observation = prefill.observation || evidence.market_btc_read || {};
+    const provenance = prefill.provenance || evidence.market_source_time || {};
+    const price = Number(observation.price_eur);
+    const change24 = Number(observation.change_24h_pct);
+    const change7 = Number(observation.change_7d_pct);
+    const firstAnswer = String(evidence.market_prediction_first_answer || "").trim().toLowerCase();
+    const firstTrace = firstAnswer
+      ? `${firstAnswer === "non" ? "Non · correcte" : "Oui · corrigée ensuite"}${Number(evidence.market_prediction_attempts || 0) > 1 ? ` · ${Number(evidence.market_prediction_attempts)} tentatives` : ""}`
+      : "aucune première tentative distincte enregistrée";
+    return [
+      "MODULE 01 · MARCHÉ ET DONNÉES",
+      `Archivé : ${when}`,
+      "",
+      "Ce que j’ai observé :",
+      `- Bitcoin : ${Number.isFinite(price) ? fmtEUR.format(price) : "valeur non disponible"}.`,
+      `- Variation 24 h : ${Number.isFinite(change24) ? atlasSignedPct(change24) : "non disponible"}.`,
+      `- Variation 7 j : ${Number.isFinite(change7) ? atlasSignedPct(change7) : "non disponible"}.`,
+      `- Source : ${String(provenance.source || "non disponible")}.`,
+      `- Heure des données : ${String(provenance.displayed_time || provenance.time || "non disponible")}.`,
+      "",
+      "Rappel actif :",
+      `- Première réponse à « peut-on prédire avec certitude ? » : ${firstTrace}.`,
+      "- Réponse finale validée : Non.",
+      "",
+      "À retenir : une observation datée décrit le marché ; elle ne prédit pas avec certitude son prochain mouvement."
+    ].join("\n");
+  }
+  if (entry?.module_key === "spot") {
+    const prefill = evidence.spot_archive_prefill || {};
+    const orderbook = prefill.orderbook || {};
+    const sim = prefill.simulation || evidence.spot_position_details || {};
+    const ask = Number(orderbook.best_ask_eur || (evidence.spot_best_ask ? 60010 : NaN));
+    const bid = Number(orderbook.best_bid_eur || (evidence.spot_best_bid ? 59990 : NaN));
+    const spread = Number(orderbook.spread_eur || (Number.isFinite(ask) && Number.isFinite(bid) ? ask - bid : NaN));
+    const amount = Number(sim.amount_eur ?? evidence.spot_position_details?.amount_eur);
+    const entryPrice = Number(sim.entry_price_eur ?? evidence.spot_position_details?.entry_price_eur);
+    const quantity = Number(sim.quantity_btc ?? evidence.spot_position_details?.quantity);
+    const cash = Number(sim.cash_remaining_eur ?? evidence.spot_position_details?.cash_remaining_eur);
+    return [
+      "MODULE 02 · SPOT ET CARNET D’ORDRES",
+      `Archivé : ${when}`,
+      "",
+      "Ce que j’ai appris :",
+      `- Meilleur Ask : ${Number.isFinite(ask) ? fmtEUR.format(ask) : "non disponible"}.`,
+      `- Meilleur Bid : ${Number.isFinite(bid) ? fmtEUR.format(bid) : "non disponible"}.`,
+      `- Spread pédagogique : ${Number.isFinite(spread) ? fmtEUR.format(spread) : "non disponible"}.`,
+      "- Ordre au marché : priorité à l’exécution.",
+      "- Ordre limite : priorité au prix choisi ; exécution non garantie.",
+      "",
+      "Simulation fictive :",
+      `- Montant placé : ${Number.isFinite(amount) ? fmtEUR.format(amount) : "non disponible"}.`,
+      `- Prix d’entrée : ${Number.isFinite(entryPrice) ? fmtEUR.format(entryPrice) : "non disponible"}.`,
+      `- Quantité BTC : ${Number.isFinite(quantity) ? quantity.toFixed(8) : "non disponible"}.`,
+      `- Argent disponible après simulation : ${Number.isFinite(cash) ? fmtEUR.format(cash) : "non disponible"}.`,
+      `- Source : ${String(sim.quote_source || evidence.spot_position_details?.quote_source || "non disponible")}.`,
+      `- Heure de cotation : ${String(sim.quote_timestamp || evidence.spot_position_details?.quote_timestamp || "non disponible")}.`,
+      "",
+      "Traces de rappel actif :",
+      `- Ask : ${atlasLearningMemoryAnswerTrace(evidence, "spot_ask", "60010")}.`,
+      `- Bid : ${atlasLearningMemoryAnswerTrace(evidence, "spot_bid", "59990")}.`,
+      `- Marché : ${atlasLearningMemoryAnswerTrace(evidence, "spot_market", "market")}.`,
+      `- Limite : ${atlasLearningMemoryAnswerTrace(evidence, "spot_limit", "limit")}.`,
+      "",
+      "À retenir : une partie du capital virtuel devient une position BTC fictive ; l’argent disponible baisse du même montant au moment de l’achat simulé."
+    ].join("\n");
+  }
+  return "Archive pédagogique non prise en charge par la mémoire automatique actuelle.";
+}
+
+function buildAutomaticLearningJournalMarkdown() {
+  const archives = atlasLearningMemoryArchives();
+  if (!archives.length) {
+    return [
+      "# JOURNAL PÉDAGOGIQUE AUTOMATIQUE — Agent-Crypto @erith.IA",
+      "",
+      `Version : ${ATLAS_RELEASE}`,
+      `Date : ${new Date().toISOString()}`,
+      "",
+      "Aucun Module 01 ou 02 archivé n’est encore disponible dans le carnet IndexedDB.",
+      "Aucune action supplémentaire n’est requise : le prochain archivage compatible remplira ce journal automatiquement.",
+      "",
+      "Sécurité : aucune clé API, aucun wallet, aucun ordre réel."
+    ].join("\n");
+  }
+  const recent = archives.slice(-2).reverse();
+  return [
+    "# JOURNAL PÉDAGOGIQUE AUTOMATIQUE — Agent-Crypto @erith.IA",
+    "",
+    `Version : ${ATLAS_RELEASE}`,
+    `Généré : ${new Date().toISOString()}`,
+    `Modules pédagogiques mémorisés ici : ${archives.length}`,
+    "",
+    "Le journal ci-dessous est reconstruit automatiquement depuis les archives pédagogiques vérifiées. Aucun clic de résumé n’est nécessaire.",
+    "",
+    ...recent.flatMap((entry, index) => [
+      index ? "---" : "",
+      atlasLearningMemoryArchiveSummary(entry),
+      ""
+    ]),
+    "Sécurité : mémoire locale dérivée des preuves pédagogiques ; aucune clé API, aucun wallet, aucun ordre réel."
+  ].filter(Boolean).join("\n");
+}
+
+function atlasLearningMemoryRecordFromArchive(entry) {
+  if (!atlasLearningMemoryEligibleArchive(entry)) return null;
+  const evidence = entry.practice_evidence || {};
+  const moduleKey = String(entry.module_key || "");
+  const savedAt = entry.completed_at || entry.archived_at || new Date().toISOString();
+  const sessionId = String(entry.session_id);
+  const startCash = Number(SIM_PROFILE.startCash || 0);
+  let source = "archive pédagogique IndexedDB";
+  let symbols = ["BTC"];
+  let cash = startCash;
+  let exposure = 0;
+  let total = startCash;
+  let learningTags = [moduleKey === "market" ? "module_01" : "module_02", "archive_pedagogique", "memoire_automatique"];
+  let evidencePayload = {};
+
+  if (moduleKey === "market") {
+    const prefill = evidence.market_archive_prefill || {};
+    source = String(prefill?.provenance?.source || evidence.market_source_time?.source || source);
+    learningTags.push("market_observation", "source_verified", "active_recall");
+    evidencePayload = prefill;
+  } else if (moduleKey === "spot") {
+    const prefill = evidence.spot_archive_prefill || {};
+    const sim = prefill.simulation || evidence.spot_position_details || {};
+    source = String(sim.quote_source || source);
+    cash = Number.isFinite(Number(sim.cash_remaining_eur)) ? Number(sim.cash_remaining_eur) : startCash;
+    exposure = Number.isFinite(Number(sim.amount_eur)) ? Number(sim.amount_eur) : 0;
+    total = cash + exposure;
+    learningTags.push("ask_bid", "market_limit", "achat_simule", "active_recall");
+    evidencePayload = prefill;
+  }
+
+  return {
+    id:`learning_${sessionId}`,
+    snapshot_id:`learning_${sessionId}`,
+    saved_at:savedAt,
+    version:ATLAS_RELEASE,
+    public_only:true,
+    auto_generated:true,
+    collection_kind:"learning_archive_auto",
+    collector_type:"learning_archive",
+    source,
+    live_ok:false,
+    symbols,
+    learning_tags:[...new Set(learningTags)],
+    learning_session_id:sessionId,
+    learning_module_key:moduleKey,
+    learning_module_title:String(entry.module_title || learningModuleByKey(moduleKey).title || moduleKey),
+    learning_summary:atlasLearningMemoryArchiveSummary(entry),
+    learning_payload:{
+      schema:ATLAS_AUTOMATIC_LEARNING_MEMORY_SCHEMA,
+      module_key:moduleKey,
+      session_id:sessionId,
+      completed_at:entry.completed_at || null,
+      archived_at:entry.archived_at || null,
+      evidence:evidencePayload,
+      safety:{ real_order:false, api_key:false, wallet:false }
+    },
+    snapshot:{
+      generated_at:savedAt,
+      version:ATLAS_RELEASE,
+      public_only:true,
+      profile:{
+        profile:String(entry.profile_label || SIM_PROFILE.label),
+        start_cash_eur:startCash,
+        cash_eur:cash,
+        current_exposure_eur:exposure
+      },
+      simulation:{ logs:[] },
+      totals:{ cash_eur:cash, positions_value_eur:exposure, total_value_eur:total, pnl_eur:0 },
+      market_snapshot:{ live_ok:false, source, assets:[] }
+    }
+  };
+}
+
+function syncArchivedLearningMemoryToCollector(options = {}) {
+  const archives = atlasLearningMemoryArchives();
+  if (!archives.length) {
+    renderAutomaticLearningMemoryPanels();
+    return { ok:true, added:0, total:readCollectorMemory().length, eligible:0 };
+  }
+  const records = readCollectorMemory();
+  const knownSessions = new Set(records.map(record => String(record?.learning_session_id || "")).filter(Boolean));
+  let added = 0;
+  for (const archive of archives) {
+    const sessionId = String(archive.session_id || "");
+    if (!sessionId || knownSessions.has(sessionId)) continue;
+    const record = atlasLearningMemoryRecordFromArchive(archive);
+    if (!record) continue;
+    records.push(record);
+    knownSessions.add(sessionId);
+    added += 1;
+  }
+  try {
+    if (added) writeCollectorMemory(records);
+    else renderCollectorStatus();
+    renderAutomaticLearningMemoryPanels();
+    return { ok:true, added, total:readCollectorMemory().length, eligible:archives.length };
+  } catch (error) {
+    renderAutomaticLearningMemoryPanels();
+    if (els.collectorOutput) {
+      els.collectorOutput.textContent = [
+        "MÉMOIRE PÉDAGOGIQUE CONSERVÉE · COPIE DATA COLLECTOR DIFFÉRÉE",
+        "",
+        "L’archive IndexedDB reste valide. La copie locale du Data Collector n’a pas pu être écrite.",
+        `Détail : ${cleanError(error)}`,
+        "",
+        "Aucune séance pédagogique n’est invalidée et aucune donnée n’est inventée."
+      ].join("\n");
+    }
+    return { ok:false, added:0, total:readCollectorMemory().length, eligible:archives.length, error:cleanError(error) };
+  }
+}
+
+function renderAutomaticLearningMemoryPanels() {
+  if (els.simLearningOutput) els.simLearningOutput.textContent = buildAutomaticLearningJournalMarkdown();
+  const records = readCollectorMemory();
+  renderCollectorStatus();
+  if (els.collectorOutput) els.collectorOutput.textContent = collectorPreview(records);
+  if (els.memoryExplorerOutput && records.length) {
+    const automaticCount = records.filter(record => record?.auto_generated === true && record?.learning_session_id).length;
+    if (automaticCount) {
+      els.memoryExplorerOutput.textContent = [
+        "MÉMOIRE DISPONIBLE AUTOMATIQUEMENT",
+        "",
+        `${records.length} snapshot${records.length > 1 ? "s" : ""} local${records.length > 1 ? "aux" : ""}, dont ${automaticCount} issu${automaticCount > 1 ? "s" : ""} d’archives pédagogiques automatiques.`,
+        "",
+        "Aucune action n’est requise pour conserver les Modules 01 et 02 : leurs archives vérifiées alimentent cette mémoire automatiquement.",
+        "Les outils de comparaison et d’export restent facultatifs."
+      ].join("\n");
+    }
+  }
+}
+
 const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_13";
 
 const COLLECTOR_MAX_RECORDS = 500;
@@ -32558,10 +32836,10 @@ function collectorRecordReasonFromLogs(logs) { const messages = (logs || []).map
 function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
 }
 
-function renderCollectorStatus() { const records = readCollectorMemory(); if (els.collectorCount) { els.collectorCount.textContent = records.length === 1 ? "1 snapshot enregistré" : `${records.length} snapshots enregistrés`; } const last = records[records.length - 1]; if (els.collectorLast) { els.collectorLast.textContent = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun"; }
+function renderCollectorStatus() { const records = readCollectorMemory(); const autoCount = records.filter(record => record?.auto_generated === true && record?.learning_session_id).length; if (els.collectorCount) { const countText = records.length === 1 ? "1 snapshot" : `${records.length} snapshots`; els.collectorCount.textContent = autoCount ? `${countText} · ${autoCount} auto` : `${countText} enregistré${records.length > 1 ? "s" : ""}`; } const last = records[records.length - 1]; if (els.collectorLast) { const when = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun"; const moduleLabel = last?.learning_module_title ? ` · ${last.learning_module_title}` : ""; els.collectorLast.textContent = `${when}${moduleLabel}`; }
 }
 
-function collectorPreview(records) { if (!records.length) { return [ "Mémoire locale vide.", "", "Conseil :", "1. Lance Livecheck.", "2. Lance quelques tests guidés.", "3. Clique “Enregistrer snapshot maintenant”." ].join("\n"); } const last = records[records.length - 1]; const lines = [ "MÉMOIRE LOCALE — DATA COLLECTOR", "", `Snapshots enregistrés : ${records.length}`, `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`, `Symboles : ${(last.symbols || []).join(" / ") || "—"}`, `Tags apprentissage : ${(last.learning_tags || []).join(", ")}`, "", "Derniers enregistrements :" ]; records.slice(-8).reverse().forEach((record, index) => { const totals = record?.snapshot?.totals || {}; const exposure = totals.positions_value_eur ?? record?.snapshot?.profile?.current_exposure_eur ?? 0; lines.push( `${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · exposé ${fmtEUR.format(Number(exposure) || 0)} · ${(record.learning_tags || []).join(", ")}` ); }); lines.push(""); lines.push("Sécurité : mémoire locale navigateur uniquement. Aucune clé, aucun wallet, aucun compte réel."); return lines.join("\n");
+function collectorPreview(records) { if (!records.length) { return [ "MÉMOIRE LOCALE PRÊTE", "", "Aucune action supplémentaire n’est requise.", "À l’archivage d’un Module 01 ou 02, l’application créera automatiquement un snapshot pédagogique local dédupliqué.", "", "Les boutons d’export et de snapshot manuel restent disponibles dans les actions facultatives." ].join("\n"); } const last = records[records.length - 1]; const autoCount = records.filter(record => record?.auto_generated === true && record?.learning_session_id).length; const lines = [ "MÉMOIRE LOCALE — DATA COLLECTOR", "", `Snapshots enregistrés : ${records.length}`, `Snapshots pédagogiques automatiques : ${autoCount}`, `Dernier snapshot : ${new Date(last.saved_at).toLocaleString("fr-FR")}`, `Dernière origine : ${last.learning_module_title || last.collection_note || "snapshot manuel"}`, `Symboles : ${(last.symbols || []).join(" / ") || "—"}`, `Tags apprentissage : ${(last.learning_tags || []).join(", ")}`, "", "Derniers enregistrements :" ]; records.slice(-8).reverse().forEach((record, index) => { const totals = record?.snapshot?.totals || {}; const exposure = totals.positions_value_eur ?? record?.snapshot?.profile?.current_exposure_eur ?? 0; const origin = record?.learning_module_title || record?.collection_note || "snapshot manuel"; const mode = record?.auto_generated ? "auto" : "manuel"; lines.push( `${index + 1}. ${new Date(record.saved_at).toLocaleString("fr-FR")} · ${origin} · ${mode} · exposé ${fmtEUR.format(Number(exposure) || 0)}` ); }); lines.push(""); lines.push("Sécurité : mémoire locale navigateur uniquement. Aucune clé, aucun wallet, aucun compte réel."); return lines.join("\n");
 }
 
 function showCollectorMemory() { const records = readCollectorMemory(); renderCollectorStatus(); if (els.collectorOutput) els.collectorOutput.textContent = collectorPreview(records);
@@ -32576,7 +32854,7 @@ function downloadCollectorJSON() { const records = readCollectorMemory(); const 
 function downloadCollectorJSONL() { const records = readCollectorMemory(); const header = { exported_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, type: "agent_crypto_collector_memory_jsonl_header" }; const lines = [JSON.stringify(header), ...records.map(r => JSON.stringify(r))]; downloadTextFile( `agent_crypto_collector_memory_${new Date().toISOString().slice(0, 10)}.jsonl`, "application/x-ndjson", lines.join("\n") ); showCollectorMemory();
 }
 
-function clearCollectorMemory() { localStorage.removeItem(COLLECTOR_STORAGE_KEY); renderCollectorStatus(); renderCollectionProgress(); if (els.collectorOutput) { els.collectorOutput.textContent = [ "MÉMOIRE LOCALE EFFACÉE", "", "Le Data Collector local est revenu à zéro.", "Cela ne touche pas GitHub.", "Cela ne touche aucun compte réel." ].join("\n"); }
+function clearCollectorMemory() { localStorage.removeItem(COLLECTOR_STORAGE_KEY); renderCollectorStatus(); renderCollectionProgress(); if (els.collectorOutput) { els.collectorOutput.textContent = [ "MÉMOIRE LOCALE EFFACÉE", "", "Le Data Collector local est revenu à zéro.", "Les archives pédagogiques IndexedDB restent intactes ; les Modules 01 et 02 pourront être resynchronisés automatiquement au prochain chargement.", "Cela ne touche pas GitHub ni aucun compte réel." ].join("\n"); }
 }
 
 function buildWakePlanText() { const records = readCollectorMemory(); const count = records.length; const last = records[count - 1]; const lastLine = last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun snapshot"; return [ "# NOTE DE REPRISE — Agent-Crypto @erith.IA", "", `Version : ${ATLAS_RELEASE}`, `Date : ${new Date().toISOString()}`, "", "## État validé avant pause", "", `- Simulateur actif : ${SIM_PROFILE.label}.`, "- Mode École guidé.", "- Refus visibles.", "- Journal pédagogique.", "- Data Collector local.", "- Explorateur de mémoire.", "- Plan de collecte guidé.", "- Feedback visuel ajouté.", "", "## Mémoire locale", "", `- Snapshots enregistrés : ${count}`, `- Dernier snapshot : ${lastLine}`, "- Objectif conseillé : 3 snapshots", "", "## Reprise au réveil", "", "1. Ouvrir la page publique.", "2. Faire Ctrl + F5.", `3. Vérifier : ${ATLAS_RELEASE}.`, "4. Lancer Livecheck.", "5. Aller dans Simulation.", "6. Si la mémoire affiche 2/3, cliquer “3 · Snapshot plus tard”.", "7. Cliquer “Comparer premier / dernier”.", "8. Lire la conclusion de l’Explorateur.", "9. Exporter le rapport mémoire .md si besoin.", "", "## Suite produit après repos", "", "Préparer V1.2-local-plan : architecture backend local Ryzen 7.", "", "## Sécurité", "", "- Aucun argent réel.", "- Aucune clé API.", "- Aucun wallet.", "- Aucun compte exchange.", "- Validation humaine.", "- Aucun trading automatique." ].join("\n");
@@ -34787,11 +35065,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.40";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.41";
 
-const ATLAS_BUILD = "28.3.40";
+const ATLAS_BUILD = "28.3.41";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.40";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.41";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

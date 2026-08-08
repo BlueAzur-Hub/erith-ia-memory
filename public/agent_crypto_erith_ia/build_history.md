@@ -1,3 +1,18 @@
+## Build 28.3.41 — Automatic Learning Memory Pipeline Lock — Modules 01 + 02
+
+- Base : 28.3.40.
+- Backfill automatique des archives Module 01 et Module 02 déjà présentes dans IndexedDB.
+- Synchronisation automatique après archivage vérifié.
+- Déduplication stricte par `learning_session_id`.
+- Journal pédagogique automatique reconstruit depuis les preuves archivées.
+- Data Collector local alimenté sans clic supplémentaire.
+- Actions manuelles et exports conservés mais repliés comme outils facultatifs.
+- Aucune donnée manquante inventée.
+- Modules 03 à 11, Binance, CoinGecko, simulation et workflow marché inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.41.
+
+---
+
 ## Build 28.3.40 — Module 02 Visual Recap Focus Lock
 
 Base : 28.3.39 réparée.

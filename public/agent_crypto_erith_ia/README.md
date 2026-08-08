@@ -1,9 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.40  
-**Build :** 28.3.40  
-**Mission :** Module 02 Visual Recap Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.41  
+**Build :** 28.3.41  
+**Mission :** Automatic Learning Memory Pipeline Lock — Modules 01 + 02
 
+
+
+## Build 28.3.41 — Automatic Learning Memory Pipeline Lock — Modules 01 + 02
+
+Cette Build part exactement de la 28.3.40.
+
+### Mission unique
+
+Supprimer les actions supplémentaires après l’apprentissage : les archives vérifiées des Modules 01 et 02 alimentent désormais automatiquement le Journal pédagogique et le Data Collector local.
+
+- Au démarrage, les archives Module 01 / Module 02 déjà présentes dans IndexedDB sont relues et rétro-synchronisées automatiquement.
+- À chaque archivage futur d’un Module 01 ou 02, une trace locale structurée est créée automatiquement après confirmation de l’archive IndexedDB.
+- Déduplication par `session_id` : rechargement, réouverture ou nouvelle synchronisation ne crée pas plusieurs copies de la même séance.
+- Le Journal pédagogique affiche automatiquement les apprentissages, provenance, réponses/corrections et simulation fictive du dernier Module 01 / 02.
+- Le Data Collector affiche automatiquement le nombre de traces, la dernière origine, les tags pédagogiques et l’exposition fictive lorsqu’elle existe.
+- Les boutons manuels sont conservés sous « actions facultatives » pour les exports et les snapshots supplémentaires ; ils ne font plus partie du parcours normal.
+- Aucun prix ou fait manquant n’est inventé : une donnée absente reste explicitement indisponible.
+- L’archive IndexedDB reste la preuve canonique ; le Data Collector reçoit une copie locale dérivée.
+- Modules 03 à 11 inchangés dans cette Build.
+- `web/runtime_config.json` et le workflow marché sont inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.41.
 
 
 ## Build 28.3.40 — Module 02 Visual Recap Focus Lock
