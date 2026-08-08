@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.31 — Module 02 Ask / Bid Active Recall Lock
+
+- Base : Build 28.3.30.
+- Étape 2 du Module 02 convertie en rappel actif : choix avant explication.
+- Les réponses Ask et Bid sont traitées séparément ; la première tentative de chaque côté est conservée.
+- Une réponse erronée révèle ensuite l’explication et permet la correction sans valider prématurément l’étape.
+- Les règles « Ask = demande vendeur » et « Bid = proposition acheteur » sont disponibles en bulles d’aide `ⓘ` comme indices facultatifs.
+- Le meilleur Ask et le meilleur Bid ne sont expliqués dans le corps de l’exercice qu’après la première tentative correspondante.
+- Le Spread de 20 € n’apparaît qu’après les deux validations correctes.
+- Après validation Ask + Bid, le moteur de cadrage pédagogique existant cible l’étape 3.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.31.
+
+---
+
 ## Build 28.3.30 — Livecheck Direct Market Focus Lock
 
 - Base : Build 28.3.29.

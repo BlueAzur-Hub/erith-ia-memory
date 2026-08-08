@@ -1,9 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.30  
-**Build :** 28.3.30  
-**Mission :** Livecheck Direct Market Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.31  
+**Build :** 28.3.31  
+**Mission :** Module 02 Ask / Bid Active Recall Lock
 
+
+
+## Build 28.3.31 — Module 02 Ask / Bid Active Recall Lock
+
+Cette Build part exactement de la 28.3.30.
+
+### Mission unique
+
+Transformer l’étape 2 du Module 02 en véritable rappel actif, sans toucher au carnet d’ordres réel, au Market, à la simulation ou au Version Control.
+
+- La règle « meilleur Ask / meilleur Bid » n’est plus donnée avant le premier choix.
+- Ask : l’utilisateur choisit d’abord entre les deux vendeurs ; la première tentative est mémorisée, puis l’explication apparaît.
+- Bid : même logique côté acheteurs.
+- Une première erreur ne valide pas l’étape ; elle est conservée comme trace d’apprentissage et l’utilisateur peut corriger.
+- Une réponse correcte désactive uniquement le côté déjà validé afin de guider vers l’autre colonne.
+- Le Spread pédagogique n’est révélé qu’une fois Ask et Bid correctement identifiés.
+- Des bulles `ⓘ` donnent un indice sémantique sur Ask et Bid sans révéler le prix correct avant la tentative.
+- Quand les deux côtés sont validés, le viewport reste dans le moteur pédagogique existant et cible directement l’étape 3.
+- Modification fonctionnelle : `web/app.js`, bloc 09 uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.31.
 
 
 ## Build 28.3.30 — Livecheck Direct Market Focus Lock

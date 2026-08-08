@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.30 — Livecheck direct vers le Market sans détour de viewport.
+  Build 28.3.31 — rappel actif Ask / Bid du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -16904,7 +16904,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
     route:["LEÇON INTÉGRÉE", "CARNET D’ORDRES PÉDAGOGIQUE", "MARCHÉ OU LIMITE", "MODE ÉCOLE · BTC 50 €", "PORTEFEUILLE + JOURNAL"],
     steps:{
       read:{ title:"1. Comprendre ordre, exécution et position", where:"LEÇON INTÉGRÉE AU COCKPIT — 02 · Spot et carnet d’ordres", action:"Lire les définitions affichées, puis utiliser le bouton visible « Valider l’étape 1 après lecture » placé sous la leçon.", why:"Ordre, exécution et position sont trois moments différents.", result:"L’étape 1 devient verte et le carnet pédagogique est présenté.", remember:"Ordre = demande ; exécution = réalisation ; position = quantité conservée." },
-      open:{ title:"2. Comprendre qui achète et qui vend", where:"Carnet d’ordres pédagogique du parcours débutant", action:"Identifier le meilleur Ask puis le meilleur Bid dans les deux colonnes.", why:"Le meilleur vendeur et le meilleur acheteur encadrent le prix immédiatement disponible.", result:"Le cockpit calcule et explique le Spread de 20 € dans l’exemple.", remember:"Ask = prix vendeur ; Bid = prix acheteur ; Spread = différence entre les deux." },
+      open:{ title:"2. Comprendre qui achète et qui vend", where:"Carnet d’ordres pédagogique du parcours débutant", action:"Répondre d’abord dans les deux colonnes : choisir un vendeur pour un achat immédiat, puis un acheteur pour une vente immédiate. La règle n’est expliquée qu’après la première tentative.", why:"Le rappel actif oblige à distinguer réellement le côté vendeur du côté acheteur avant de relire la règle.", result:"Après chaque première réponse, le cockpit valide ou demande une correction, puis explique Ask ou Bid. Deux réponses correctes calculent le Spread et ouvrent l’étape 3.", remember:"La règle Ask / Bid et le calcul du Spread apparaissent après tes réponses, pas avant." },
       practice:{ title:"3. Choisir entre ordre au marché et ordre limite", where:"Mini-exercice « Marché ou limite ? »", action:"Choisir l’ordre au marché pour acheter immédiatement et l’ordre limite pour refuser de dépasser un prix.", why:"L’un privilégie l’exécution ; l’autre privilégie le prix choisi.", result:"Les deux réponses correctes valident l’étape 3.", remember:"Un ordre limite peut attendre ou être exécuté partiellement." },
       verify:{ title:"4. Simuler un achat au marché de 50 € de BTC", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"50 € est le montant engagé ; la quantité reçue est une fraction de BTC calculée au prix d’entrée." },
       note:{ title:"5. Comprendre l’exécution et la position", where:"Carte « Synthèse guidée du Module 02 »", action:"Lire la synthèse construite avec la position fictive, puis répondre à la question « Un ordre limite garantit-il une exécution immédiate ? ».", why:"Le cockpit doit relier demande, exécution, quantité reçue et capital restant avant de vérifier la compréhension.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un ordre limite protège un prix maximal, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté." }
@@ -18673,6 +18673,52 @@ function foundationSpotGuidedSummary(cockpit) {
   return { ready, quantity, entryPrice, invested, cashRemaining, quantityText, entryText, investedText, cashText, text };
 }
 
+function foundationSpotRecallState(cockpit, side) {
+  const evidence = cockpit?.practice_evidence || {};
+  const isBid = side === "bid";
+  const prefix = isBid ? "spot_bid" : "spot_ask";
+  const correctChoice = isBid ? "59990" : "60010";
+  const done = isBid ? evidence.spot_best_bid === true : evidence.spot_best_ask === true;
+  const firstChoice = String(evidence[`${prefix}_first_choice`] || "").trim();
+  const attempts = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0));
+  const attempted = attempts > 0 || Boolean(firstChoice) || done;
+  const firstCorrect = firstChoice ? firstChoice === correctChoice : done;
+  return { side, prefix, done, firstChoice, attempts, attempted, firstCorrect };
+}
+
+function foundationSpotRecordRecallAttempt(cockpit, side, choice, correct) {
+  if (!cockpit || !["ask", "bid"].includes(side)) return false;
+  if (!cockpit.practice_evidence || typeof cockpit.practice_evidence !== "object") cockpit.practice_evidence = {};
+  const evidence = cockpit.practice_evidence;
+  const prefix = side === "bid" ? "spot_bid" : "spot_ask";
+  const choiceText = String(choice || "").trim();
+  evidence[`${prefix}_attempts`] = Math.max(0, Number(evidence[`${prefix}_attempts`] || 0)) + 1;
+  if (!evidence[`${prefix}_first_choice`]) {
+    evidence[`${prefix}_first_choice`] = choiceText;
+    evidence[`${prefix}_first_choice_correct`] = correct === true;
+    evidence[`${prefix}_first_choice_at`] = new Date().toISOString();
+  }
+  evidence[`${prefix}_last_choice`] = choiceText;
+  evidence[`${prefix}_last_choice_correct`] = correct === true;
+  evidence[`${prefix}_last_choice_at`] = new Date().toISOString();
+  if (correct === true) {
+    if (side === "ask") evidence.spot_best_ask = true;
+    else evidence.spot_best_bid = true;
+  }
+  return true;
+}
+
+function foundationSpotRecallFeedbackMarkup(recall, explanation) {
+  if (!recall?.attempted) return "";
+  const firstWasCorrect = recall.firstCorrect === true;
+  const corrected = recall.done === true && !firstWasCorrect;
+  const title = firstWasCorrect ? "Première réponse correcte" : "Première réponse à revoir";
+  const correction = corrected
+    ? "<em>La correction est maintenant enregistrée ; la première tentative reste conservée comme trace d’apprentissage.</em>"
+    : "";
+  return `<div class="foundation-recall-feedback ${firstWasCorrect ? "is-correct" : "is-review"}"><b>${title}</b><p>${escapeHtml(explanation)}</p>${correction}</div>`;
+}
+
 function foundationSpotLab(cockpit) {
   const e = cockpit.practice_evidence || {};
   const summary = foundationSpotGuidedSummary(cockpit);
@@ -18680,16 +18726,32 @@ function foundationSpotLab(cockpit) {
   const step3Done = cockpit.steps.practice === true;
   const step4Done = cockpit.steps.verify === true;
   const step5Ready = step4Done && summary.ready;
+  const askRecall = foundationSpotRecallState(cockpit, "ask");
+  const bidRecall = foundationSpotRecallState(cockpit, "bid");
+  const askExplanation = "Ask = prix demandé par un vendeur. Si tu achètes maintenant au meilleur prix disponible, tu privilégies le vendeur qui demande le moins : 60 010 € est meilleur que 60 020 €.";
+  const bidExplanation = "Bid = prix proposé par un acheteur. Si tu vends maintenant au meilleur prix disponible, tu privilégies l’acheteur qui propose le plus : 59 990 € est meilleur que 59 980 €.";
   return `
     <div class="foundation-lab-grid foundation-orderbook-lab">
       <article data-foundation-stage="2" class="foundation-lab-wide ${step2Done ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 2 · CARNET D’ORDRES</span>
-        <h5>Identifier le meilleur Ask et le meilleur Bid</h5>
+        <span class="foundation-stage-kicker">ÉTAPE 2 · CARNET D’ORDRES · RAPPEL ACTIF</span>
+        <h5>Choisir avant de relire la règle Ask / Bid ${foundationHelpBubble("Réponds d’abord de mémoire. Après ton premier choix, le cockpit te dira si ton raisonnement est correct et affichera l’explication. Une erreur reste une trace d’apprentissage, pas un échec du module.", "Aide sur le rappel actif Ask / Bid")}</h5>
         <div class="foundation-orderbook-columns">
-          <section><b>Vendeurs — Ask · prix qu’ils demandent</b><button type="button" data-foundation-action="spot_ask_60020" ${step2Done ? "disabled" : ""}>60 020 € · 0,002 BTC</button><button type="button" data-foundation-action="spot_ask_60010" ${step2Done ? "disabled" : ""}>60 010 € · 0,003 BTC</button><small>Meilleur Ask = vendeur le moins cher : si tu achètes maintenant, tu cherches le prix vendeur le plus bas.</small></section>
-          <section><b>Acheteurs — Bid · prix qu’ils proposent</b><button type="button" data-foundation-action="spot_bid_59990" ${step2Done ? "disabled" : ""}>59 990 € · 0,004 BTC</button><button type="button" data-foundation-action="spot_bid_59980" ${step2Done ? "disabled" : ""}>59 980 € · 0,006 BTC</button><small>Meilleur Bid = acheteur qui paie le plus : si tu vends maintenant, tu cherches la proposition la plus haute.</small></section>
+          <section>
+            <b>Vendeurs — Ask · prix qu’ils demandent ${foundationHelpBubble("Ask vient de « to ask » : demander. Ici, ce sont les prix demandés par les vendeurs. Utilise cet indice pour raisonner avant de choisir.", "Indice Ask")}</b>
+            <small><b>Question :</b> tu veux acheter maintenant. Parmi ces deux vendeurs, lequel choisirais-tu ?</small>
+            <button type="button" data-foundation-action="spot_ask_60020" ${askRecall.done ? "disabled" : ""}>60 020 € · 0,002 BTC</button>
+            <button type="button" data-foundation-action="spot_ask_60010" ${askRecall.done ? "disabled" : ""}>60 010 € · 0,003 BTC</button>
+            ${askRecall.attempted ? foundationSpotRecallFeedbackMarkup(askRecall, askExplanation) : "<small>Choisis d’abord. La règle du meilleur Ask apparaîtra ensuite.</small>"}
+          </section>
+          <section>
+            <b>Acheteurs — Bid · prix qu’ils proposent ${foundationHelpBubble("Bid = offre ou proposition d’un acheteur. Ici, ce sont les prix proposés par les acheteurs. Utilise cet indice pour raisonner avant de choisir.", "Indice Bid")}</b>
+            <small><b>Question :</b> tu veux vendre maintenant. Parmi ces deux acheteurs, lequel choisirais-tu ?</small>
+            <button type="button" data-foundation-action="spot_bid_59990" ${bidRecall.done ? "disabled" : ""}>59 990 € · 0,004 BTC</button>
+            <button type="button" data-foundation-action="spot_bid_59980" ${bidRecall.done ? "disabled" : ""}>59 980 € · 0,006 BTC</button>
+            ${bidRecall.attempted ? foundationSpotRecallFeedbackMarkup(bidRecall, bidExplanation) : "<small>Choisis d’abord. La règle du meilleur Bid apparaîtra ensuite.</small>"}
+          </section>
         </div>
-        <p><b>Spread pédagogique :</b> ${e.spot_best_ask && e.spot_best_bid ? "60 010 € − 59 990 € = 20 €." : "identifie les deux meilleurs prix pour le calculer."}</p>
+        <p><b>Spread pédagogique :</b> ${e.spot_best_ask && e.spot_best_bid ? "60 010 € − 59 990 € = 20 €. C’est l’écart entre le meilleur Ask et le meilleur Bid de cet exemple." : "réponds d’abord aux deux questions ; le calcul apparaîtra après validation des deux côtés."}</p>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${step3Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 3 · TYPE D’ORDRE</span>
@@ -19528,15 +19590,43 @@ function handleFoundationAction(action) {
     }
   }
   if (module.key === "spot") {
-    const good = { spot_ask_60010:["spot_best_ask","Meilleur Ask identifié : 60 010 €"], spot_bid_59990:["spot_best_bid","Meilleur Bid identifié : 59 990 €"], spot_market_correct:["spot_market_choice","Ordre au marché : exécution immédiate privilégiée"], spot_limit_correct:["spot_limit_choice","Ordre limite : prix maximal choisi"] };
-    const wrong = { spot_ask_60020:"60 020 € n’est pas le vendeur le moins cher.", spot_bid_59980:"59 980 € n’est pas l’acheteur offrant le prix le plus élevé.", spot_market_wrong:"Pour acheter immédiatement, l’ordre au marché est la réponse attendue.", spot_limit_wrong:"Pour refuser de dépasser 59 500 €, il faut un ordre limite." };
+    const recallActions = {
+      spot_ask_60020:{ side:"ask", choice:60020, correct:false },
+      spot_ask_60010:{ side:"ask", choice:60010, correct:true },
+      spot_bid_59990:{ side:"bid", choice:59990, correct:true },
+      spot_bid_59980:{ side:"bid", choice:59980, correct:false }
+    };
+    const recallAction = recallActions[action];
+    if (recallAction) {
+      foundationSpotRecordRecallAttempt(cockpit, recallAction.side, recallAction.choice, recallAction.correct);
+      const e = cockpit.practice_evidence;
+      const step2Complete = Boolean(e.spot_best_ask && e.spot_best_bid);
+      if (step2Complete) cockpit.steps.open = true;
+      cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
+      cockpit.last_action = recallAction.correct ? `spot_${recallAction.side}_recall_validated` : `spot_${recallAction.side}_recall_attempt`;
+      saveLearningCockpitState(cockpit);
+      renderLearningJourneyCockpit();
+      scrollToFoundationStage(step2Complete ? 3 : 2);
+      if (!recallAction.correct) {
+        const concept = recallAction.side === "ask" ? "Ask" : "Bid";
+        spotFoundationFeedback(false, `${concept} · réponse à revoir`, "Première tentative enregistrée. Lis maintenant l’explication affichée sous cette colonne, puis corrige ton choix.");
+        return;
+      }
+      const concept = recallAction.side === "ask" ? "Ask" : "Bid";
+      const value = recallAction.side === "ask" ? "60 010 €" : "59 990 €";
+      const feedbackText = step2Complete
+        ? `${concept} validé à ${value}. Ask et Bid sont maintenant corrects : Spread pédagogique 60 010 € − 59 990 € = 20 €. Étape 3 ouverte.`
+        : `${concept} validé à ${value}. Lis l’explication affichée, puis réponds à l’autre côté du carnet.`;
+      spotFoundationFeedback(true, `${concept} · réponse correcte`, feedbackText);
+      return;
+    }
+    const good = { spot_market_correct:["spot_market_choice","Ordre au marché : exécution immédiate privilégiée"], spot_limit_correct:["spot_limit_choice","Ordre limite : prix maximal choisi"] };
+    const wrong = { spot_market_wrong:"Pour acheter immédiatement, l’ordre au marché est la réponse attendue.", spot_limit_wrong:"Pour refuser de dépasser 59 500 €, il faut un ordre limite." };
     if (wrong[action]) return spotFoundationFeedback(false, "Réponse à revoir", wrong[action]);
     if (good[action]) {
       cockpit.practice_evidence[good[action][0]] = true;
       const e = cockpit.practice_evidence;
-      const step2Complete = Boolean(e.spot_best_ask && e.spot_best_bid);
       const step3Complete = Boolean(e.spot_market_choice && e.spot_limit_choice);
-      if (step2Complete) cockpit.steps.open = true;
       if (step3Complete) {
         cockpit.steps.practice = true;
         cockpit.practice_completed_at = cockpit.practice_completed_at || new Date().toISOString();
@@ -19544,13 +19634,10 @@ function handleFoundationAction(action) {
       cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
       saveLearningCockpitState(cockpit);
       renderLearningJourneyCockpit();
-      const nextStage = step3Complete ? 4 : step2Complete ? 3 : action.startsWith("spot_ask_") || action.startsWith("spot_bid_") ? 2 : 3;
-      scrollToFoundationStage(nextStage);
-      const feedbackText = step2Complete && !step3Complete
-        ? `${good[action][1]}. Spread pédagogique : 60 010 € − 59 990 € = 20 €. Étape 3 ouverte.`
-        : step3Complete
-          ? `${good[action][1]}. Les deux situations sont correctes. Étape 4 ouverte.`
-          : `${good[action][1]}. Complète l’autre choix de cette même étape.`;
+      scrollToFoundationStage(step3Complete ? 4 : 3);
+      const feedbackText = step3Complete
+        ? `${good[action][1]}. Les deux situations sont correctes. Étape 4 ouverte.`
+        : `${good[action][1]}. Complète l’autre choix de cette même étape.`;
       spotFoundationFeedback(true, "Réponse correcte", feedbackText);
       return;
     }
@@ -20785,7 +20872,7 @@ function handleFoundationPrimaryAction(cockpit, action) {
   if (module.key === "spot" && ["open","practice","note"].includes(action.key)) {
     const stage = action.key === "open" ? 2 : action.key === "practice" ? 3 : 5;
     const messages = {
-      open:["Étape 2 · Bid / Ask","Ask = prix demandé par les vendeurs ; Bid = prix proposé par les acheteurs. Identifie le vendeur le moins cher puis l’acheteur qui paie le plus."],
+      open:["Étape 2 · Bid / Ask · rappel actif","Réponds d’abord dans les deux colonnes. Les règles du meilleur Ask, du meilleur Bid et le Spread seront expliqués après tes premières réponses."],
       practice:["Étape 3 · Marché / Limite","Situation A : achat immédiat = ordre au marché. Situation B : prix maximum 59 500 € = ordre limite."],
       note:["Étape 5 · exécution guidée","Lis la position créée puis réponds à la question sur l’ordre limite."]
     };
@@ -34259,11 +34346,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.30";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.31";
 
-const ATLAS_BUILD = "28.3.30";
+const ATLAS_BUILD = "28.3.31";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.30";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.31";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
