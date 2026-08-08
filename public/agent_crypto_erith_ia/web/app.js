@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.42 — Unified IndexedDB Memory + Panel Coherence Lock.
+  Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -11106,7 +11106,34 @@ function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.inner
 function atlasMarketTone() { if (!state.liveOk || !state.coins.length) return { label: "En attente", mode: "wait" }; const btc = state.coins.find(c => c.id === "bitcoin" || c.symbol === "BTC"); const eth = state.coins.find(c => c.id === "ethereum" || c.symbol === "ETH"); const avgTop = state.coins.slice(0, 10).reduce((s, c) => s + (Number(c.change24h) || 0), 0) / Math.max(1, Math.min(10, state.coins.length)); const btcMove = Number(btc?.change24h) || 0; const ethMove = Number(eth?.change24h) || 0; const momentum = (avgTop + btcMove + ethMove) / 3; if (momentum >= 4) return { label: "Marché très positif, risque FOMO élevé", mode: "hot" }; if (momentum >= 1) return { label: "Marché positif, observation active", mode: "ok" }; if (momentum <= -3) return { label: "Marché sous pression, prudence renforcée", mode: "cold" }; return { label: "Marché neutre à surveiller", mode: "calm" };
 }
 
-function publicMarketSnapshot() { const wanted = SIM_PROFILE.allowedSymbols; const coins = state.coins .filter(c => wanted.includes(String(c.symbol || "").toUpperCase())) .map(c => ({ id: c.id, symbol: String(c.symbol || "").toUpperCase(), name: c.name, price_eur: c.price, change_24h_pct: c.change24h, change_7d_pct: c.change7d, market_cap_eur: c.marketCap, volume_24h_eur: c.volume, source: state.mainSource?.name || "source live" })); return { generated_at: new Date().toISOString(), source: state.mainSource?.name || null, source_time: state.timestamp || null, live_ok: !!state.liveOk, public_only: true, assets: coins };
+function publicMarketSnapshot() {
+  const wanted = SIM_PROFILE.allowedSymbols;
+  const source = String(state.mainSource || "").trim() || null;
+  const sourceTime = state.timestamp || state.sourceLock?.timestamp || null;
+  const snapshotId = state.sourceLock?.snapshotId || state.dataBroker?.marketFrame?.id || null;
+  const coins = state.coins
+    .filter(c => wanted.includes(String(c.symbol || "").toUpperCase()))
+    .map(c => ({
+      id:c.id,
+      symbol:String(c.symbol || "").toUpperCase(),
+      name:c.name,
+      price_eur:c.price,
+      change_24h_pct:c.change24h,
+      change_7d_pct:c.change7d,
+      market_cap_eur:c.marketCap,
+      volume_24h_eur:c.volume24h,
+      source:c.source || source
+    }));
+  return {
+    generated_at:new Date().toISOString(),
+    snapshot_id:snapshotId,
+    source,
+    source_mode:state.sourceLock?.mode || null,
+    source_time:sourceTime,
+    live_ok:!!state.liveOk,
+    public_only:true,
+    assets:coins
+  };
 }
 
 function marketLinesForMarkdown() { const snap = publicMarketSnapshot(); if (!snap.live_ok || !snap.assets.length) { return ["Livecheck non disponible dans le résumé courant."]; } return snap.assets.map(asset => { const price = Number.isFinite(asset.price_eur) ? fmtEUR.format(asset.price_eur) : "prix manquant"; const ch24 = typeof asset.change_24h_pct === "number" ? `${asset.change_24h_pct >= 0 ? "+" : ""}${asset.change_24h_pct.toFixed(2)} %` : "variation manquante"; return `- ${asset.symbol} : ${price}, variation 24h ${ch24}.`; });
@@ -28277,14 +28304,27 @@ function agentCryptoClearLocalStorage(keys) {
 }
 
 function atlasMemoryCanonicalSnapshotId(record) {
-  const direct = String(record?.market_snapshot_id || record?.source_snapshot_id || "").trim();
+  const nested = record?.snapshot?.market_snapshot || {};
+  const direct = String(
+    record?.market_snapshot_id
+    || record?.source_snapshot_id
+    || nested?.snapshot_id
+    || nested?.snapshotId
+    || ""
+  ).trim();
   if (direct) return direct;
-  const sourceTime = String(record?.market_generated_at || record?.source_time || "").trim();
+  const sourceTime = String(
+    record?.market_generated_at
+    || record?.source_time
+    || nested?.source_time
+    || ""
+  ).trim();
   return sourceTime ? `legacy-source-time:${sourceTime}` : "";
 }
 
 function atlasMemoryRecordTime(record) {
-  return record?.market_generated_at || record?.source_time || record?.saved_at || null;
+  const nested = record?.snapshot?.market_snapshot || {};
+  return record?.market_generated_at || record?.source_time || nested?.source_time || record?.saved_at || null;
 }
 
 function atlasDistinctMarketMemory(records = []) {
@@ -28315,6 +28355,13 @@ function memoryExplorerEmptyText() {
   ].join("\n");
 }
 
+function atlasCollectorSourceDisplay(record) {
+  const source = String(record?.source || record?.snapshot?.market_snapshot?.source || "").trim();
+  if (!source) return "non indiquée";
+  if (source.toLowerCase() === "source live") return "source historique non qualifiée · ancien format";
+  return source;
+}
+
 function exploreMemoryText(records = readCollectorMemory()) {
   if (!records.length) return memoryExplorerEmptyText();
   const stats = atlasCollectorMemoryStats(records);
@@ -28333,7 +28380,7 @@ function exploreMemoryText(records = readCollectorMemory()) {
     lines.push("Dernier apprentissage mémorisé :", `- ${stats.lastLearning.learning_module_title || stats.lastLearning.learning_module_key}`, `- Archivé : ${new Date(stats.lastLearning.saved_at).toLocaleString("fr-FR")}`, `- Tags : ${(stats.lastLearning.learning_tags || []).join(", ") || "apprentissage"}`, "");
   }
   if (stats.lastMarket) {
-    lines.push("Dernière observation marché :", `- ${new Date(stats.lastMarket.saved_at).toLocaleString("fr-FR")}`, `- Source : ${stats.lastMarket.source || stats.lastMarket.snapshot?.market_snapshot?.source || "non indiquée"}`, "");
+    lines.push("Dernière observation marché :", `- ${new Date(stats.lastMarket.saved_at).toLocaleString("fr-FR")}`, `- Source : ${atlasCollectorSourceDisplay(stats.lastMarket)}`, "");
   }
   lines.push("Refus de sécurité mémorisés :", `- Total : ${refusalTotal}`, "", "Lecture :");
   if (stats.learningCount) lines.push("- La mémoire pédagogique se remplit automatiquement depuis les archives vérifiées.");
@@ -32881,7 +32928,7 @@ function atlasLearningMemoryRecordFromArchive(entry) {
   if (moduleKey === "market") {
     const prefill = evidence.market_archive_prefill || {};
     source = String(prefill?.provenance?.source || evidence.market_source_time?.source || source);
-    learningTags.push("market_observation", "source_verified", "active_recall");
+    learningTags.push("market_learning", "source_verified", "active_recall");
     evidencePayload = prefill;
   } else if (moduleKey === "spot") {
     const prefill = evidence.spot_archive_prefill || {};
@@ -32945,25 +32992,33 @@ async function syncArchivedLearningMemoryToCollector(options = {}) {
     return { ok:true, added:0, total:readCollectorMemory().length, eligible:0, backend:atlasCollectorStorageMode };
   }
   const records = readCollectorMemory();
-  const knownSessions = new Set(records.map(record => String(record?.learning_session_id || "")).filter(Boolean));
   let added = 0;
+  let updated = 0;
   for (const archive of archives) {
     const sessionId = String(archive.session_id || "");
-    if (!sessionId || knownSessions.has(sessionId)) continue;
+    if (!sessionId) continue;
     const record = atlasLearningMemoryRecordFromArchive(archive);
     if (!record) continue;
-    records.push(record);
-    knownSessions.add(sessionId);
-    added += 1;
+    const existingIndex = records.findIndex(item => String(item?.learning_session_id || "") === sessionId);
+    if (existingIndex < 0) {
+      records.push(record);
+      added += 1;
+      continue;
+    }
+    const existing = records[existingIndex];
+    if (JSON.stringify(existing) !== JSON.stringify(record)) {
+      records[existingIndex] = record;
+      updated += 1;
+    }
   }
   try {
-    if (added) {
-      writeCollectorMemory(records, "learning_archive_sync");
-      const persisted = await atlasCollectorPersistNow("learning_archive_sync_verified");
+    if (added || updated) {
+      writeCollectorMemory(records, "learning_archive_reconcile");
+      const persisted = await atlasCollectorPersistNow("learning_archive_reconcile_verified");
       if (!persisted.ok) throw new Error(persisted.error_message || persisted.error_name || "écriture IndexedDB non vérifiée");
     }
     renderAutomaticLearningMemoryPanels();
-    return { ok:true, added, total:readCollectorMemory().length, eligible:archives.length, backend:atlasCollectorStorageMode };
+    return { ok:true, added, updated, total:readCollectorMemory().length, eligible:archives.length, backend:atlasCollectorStorageMode };
   } catch (error) {
     renderAutomaticLearningMemoryPanels();
     if (els.collectorOutput) {
@@ -32976,7 +33031,7 @@ async function syncArchivedLearningMemoryToCollector(options = {}) {
         "Aucune séance pédagogique n’est invalidée et aucune donnée n’est inventée."
       ].join("\n");
     }
-    return { ok:false, added:0, total:readCollectorMemory().length, eligible:archives.length, backend:atlasCollectorStorageMode, error:cleanError(error) };
+    return { ok:false, added:0, updated:0, total:readCollectorMemory().length, eligible:archives.length, backend:atlasCollectorStorageMode, error:cleanError(error) };
   }
 }
 
@@ -33154,12 +33209,14 @@ async function atlasCollectorInitializeStorage() {
     const legacy = atlasCollectorLegacyLocalStorageRecords();
     try {
       const stored = await atlasCollectorDbReadRecord();
-      const existing = atlasCollectorNormalizeRecords(stored?.records || []);
+      const storedRaw = Array.isArray(stored?.records) ? stored.records : [];
+      const existing = atlasCollectorNormalizeRecords(storedRaw);
       const merged = atlasCollectorNormalizeRecords([...legacy, ...existing]);
       atlasCollectorMemoryCache = merged;
       atlasCollectorStorageReady = true;
       atlasCollectorStorageMode = "indexeddb";
-      const needsWrite = !stored || atlasCollectorDigest(existing) !== atlasCollectorDigest(merged);
+      const storedNeedsCanonicalRewrite = storedRaw.length !== existing.length;
+      const needsWrite = !stored || storedNeedsCanonicalRewrite || atlasCollectorDigest(existing) !== atlasCollectorDigest(merged);
       if (needsWrite) {
         const migrated = await atlasCollectorPersistNow(legacy.length ? "legacy_localstorage_migration" : "collector_indexeddb_init");
         if (!migrated.ok) throw new Error(migrated.error_message || "migration Collector non vérifiée");
@@ -33203,7 +33260,27 @@ function writeCollectorMemory(records, reason = "collector_update") {
 function collectorRecordReasonFromLogs(logs) { const messages = (logs || []).map(l => String(l.message || "")).join(" | "); const reasons = []; if (messages.includes("maximum par opération")) reasons.push("montant_trop_gros"); if (messages.includes("refusé. Autorisés")) reasons.push("crypto_non_autorisee"); if (messages.includes("réserve minimale")) reasons.push("plafond_ou_reserve"); if ((logs || []).some(l => l.type === "SIM_BUY")) reasons.push("achat_simule"); if ((logs || []).some(l => l.type === "SIM_SELL")) reasons.push("vente_simulee"); return reasons.length ? reasons : ["observation"];
 }
 
-function makeCollectorRecord() { const snapshot = simulationDataSnapshot(); const logs = snapshot?.simulation?.logs || []; const marketAssets = snapshot?.market_snapshot?.assets || []; return { id: `snapshot_${Date.now()}`, saved_at: new Date().toISOString(), version: ATLAS_RELEASE, public_only: true, source: snapshot?.market_snapshot?.source || "source live", live_ok: !!snapshot?.market_snapshot?.live_ok, symbols: marketAssets.map(a => a.symbol), learning_tags: collectorRecordReasonFromLogs(logs), snapshot };
+function makeCollectorRecord() {
+  const snapshot = simulationDataSnapshot();
+  const logs = snapshot?.simulation?.logs || [];
+  const marketSnapshot = snapshot?.market_snapshot || {};
+  const marketAssets = marketSnapshot?.assets || [];
+  const marketSource = String(marketSnapshot?.source || state.mainSource || "").trim() || "source non qualifiée";
+  const marketSnapshotId = marketSnapshot?.snapshot_id || state.sourceLock?.snapshotId || null;
+  const marketGeneratedAt = marketSnapshot?.source_time || state.timestamp || null;
+  return {
+    id:`snapshot_${Date.now()}`,
+    saved_at:new Date().toISOString(),
+    version:ATLAS_RELEASE,
+    public_only:true,
+    source:marketSource,
+    live_ok:!!marketSnapshot?.live_ok,
+    market_snapshot_id:marketSnapshotId,
+    market_generated_at:marketGeneratedAt,
+    symbols:marketAssets.map(a => a.symbol),
+    learning_tags:collectorRecordReasonFromLogs(logs),
+    snapshot
+  };
 }
 
 function atlasCollectorLearningRecords(records = readCollectorMemory()) {
@@ -35690,11 +35767,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.42";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.43";
 
-const ATLAS_BUILD = "28.3.42";
+const ATLAS_BUILD = "28.3.43";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.42";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.43";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

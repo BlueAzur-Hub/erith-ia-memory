@@ -1,9 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.42  
-**Build :** 28.3.42  
-**Mission :** Unified IndexedDB Memory + Panel Coherence Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.43  
+**Build :** 28.3.43  
+**Mission :** Memory Provenance + Distinct Snapshot Audit Lock
 
+
+
+## Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock
+
+Cette Build part exactement de la 28.3.42 et clôt un audit ciblé des Builds 28.3.33 à 28.3.42 ainsi que des décisions du fil Crypto.
+
+### Corrections
+
+- `publicMarketSnapshot()` utilisait `state.mainSource?.name` alors que `state.mainSource` est une chaîne : la provenance des snapshots manuels pouvait donc devenir `source live` ou `null`.
+- Le même snapshot exportait `volume_24h_eur` depuis `c.volume` alors que la donnée normalisée est `c.volume24h`.
+- Les observations manuelles ne portaient pas systématiquement l'identité canonique du snapshot marché ; plusieurs clics sur le même état pouvaient être comptés comme plusieurs observations distinctes.
+- La déduplication lit maintenant aussi `snapshot.market_snapshot.snapshot_id` et `snapshot.market_snapshot.source_time`.
+- Les doublons déjà présents en IndexedDB sont réécrits sous forme canonique si la normalisation réduit le nombre de traces.
+- Le Module 01 pédagogique n'emploie plus le tag ambigu `market_observation` mais `market_learning`, afin de ne pas le confondre avec une observation marché comparable.
+- Les mémoires pédagogiques dérivées sont désormais réconciliées / mises à jour depuis l'archive canonique, sans créer de nouvelle trace.
+- Les anciens enregistrements affichant littéralement `source live` sont présentés comme `source historique non qualifiée · ancien format` : aucune provenance n'est inventée.
+- Aucun changement du Module 01/02 pédagogique, Binance, graphique, simulation, CSS, HTML ou workflow.
+- Version Control Protected Core : logique inchangée ; identité passée à 28.3.43.
 
 
 ## Build 28.3.42 — Unified IndexedDB Memory + Panel Coherence Lock

@@ -1,3 +1,20 @@
+## Build 28.3.43 — Memory Provenance + Distinct Snapshot Audit Lock
+
+- Base : 28.3.42.
+- Audit ciblé des Builds 28.3.33 → 28.3.42 et des décisions du fil Crypto.
+- Correction de la provenance des snapshots : `state.mainSource` est traité comme une chaîne, plus comme un objet.
+- Correction du volume 24 h : `c.volume24h` remplace `c.volume` dans le snapshot public de simulation/mémoire.
+- Ajout de l'identité canonique marché (`snapshot_id` + `source_time`) dans les snapshots manuels.
+- Déduplication renforcée : l'identité est lue aussi dans `snapshot.market_snapshot`, ce qui évite de compter plusieurs clics sur le même état comme plusieurs observations temporelles.
+- Réécriture canonique des doublons IndexedDB détectés au démarrage.
+- Tag Module 01 `market_observation` remplacé par `market_learning` pour séparer pédagogie et observation marché comparable.
+- Réconciliation automatique des traces pédagogiques dérivées avec leur archive IndexedDB canonique.
+- Ancien libellé `source live` affiché comme provenance historique non qualifiée, sans invention.
+- `index.html`, `style.css`, `runtime_config.json`, workflow et pédagogie validée inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.43.
+
+---
+
 ## Build 28.3.42 — Unified IndexedDB Memory + Panel Coherence Lock
 
 - Base : 28.3.41.
