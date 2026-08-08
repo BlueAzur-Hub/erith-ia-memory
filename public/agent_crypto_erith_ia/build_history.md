@@ -1,5 +1,19 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.35 — Module 02 Spot Position Single Final Focus Lock
+
+- Base : Build 28.3.34.
+- Retour Firefox réel : la « valse » reste visible après la création de la position fictive.
+- Cause de conception restante : la 28.3.34 demandait encore un cadrage immédiat puis plusieurs contrôles de position (80/180/420 ms), donc plusieurs commandes de scroll pendant une seule action.
+- Le bouton pédagogique est maintenant défocalisé avant reconstruction du DOM.
+- La réussite Spot déclenche un seul cadrage final vers l’étape 5, après deux frames de stabilisation, sans boucle de recadrage.
+- Un échec Spot ne renvoie plus vers le haut de `learningFoundationLab` ; la zone courante est conservée.
+- Simulation, règles de sécurité, IndexedDB, Ask/Bid, Marché/Limite et Module 03 inchangés.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.35.
+
+---
+
 ## Build 28.3.34 — Module 02 Spot Position Single Render Viewport Lock
 
 - Base : Build 28.3.33.

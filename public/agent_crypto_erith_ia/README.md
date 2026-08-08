@@ -1,10 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.34  
-**Build :** 28.3.34  
-**Mission :** Module 02 Spot Position Single Render Viewport Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.35  
+**Build :** 28.3.35  
+**Mission :** Module 02 Spot Position Single Final Focus Lock
 
 
+
+
+
+## Build 28.3.35 — Module 02 Spot Position Single Final Focus Lock
+
+Cette Build part exactement de la 28.3.34.
+
+### Mission unique
+
+Supprimer la « valse » encore constatée dans Firefox après `Créer la position BTC fictive de 50 €` sans toucher à la simulation ni à la pédagogie.
+
+- Le clic pédagogique retire maintenant explicitement le focus du bouton avant que le laboratoire soit reconstruit.
+- Après la création de position, aucun pré-cadrage ni série de recadrages n’est exécuté : **un seul positionnement final** vise l’étape 5 après stabilisation du DOM.
+- Les contrôles de stabilisation 80/180/420 ms de la 28.3.34 sont supprimés pour ce parcours : ils pouvaient eux-mêmes rendre plusieurs déplacements visibles.
+- Si la position n’est réellement pas créée, l’interface reste sur la zone courante au lieu de remonter au début du laboratoire.
+- La transaction de rendu unique et la neutralisation temporaire de `overflow-anchor` introduites en 28.3.34 sont conservées.
+- Simulation, preuves, IndexedDB, Ask/Bid, Marché/Limite, bulles et Module 03 inchangés.
+- Modification fonctionnelle : `web/app.js` uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.35.
 
 
 ## Build 28.3.34 — Module 02 Spot Position Single Render Viewport Lock

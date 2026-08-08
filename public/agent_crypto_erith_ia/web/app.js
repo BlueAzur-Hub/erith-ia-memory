@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.34 — transaction de rendu unique pour la création de position du Module 02.
+  Build 28.3.35 — cadrage final unique après création de position du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19971,25 +19971,39 @@ async function runFoundationSchoolPosition(moduleKey) {
   const current = loadLearningCockpitState();
   const ok = moduleKey === "spot" ? current.steps.verify === true : current.steps.practice === true;
   if (moduleKey === "spot" && ok) {
-    atlasLearningPrimeFoundationStageFocus(5);
-    scrollToFoundationStage(5, { smooth:false, settleDelays:[80, 180, 420] });
-    window.setTimeout(() => {
+    // Un seul cadrage final. Les versions précédentes demandaient plusieurs
+    // repositionnements successifs ; même sans animation, Firefox pouvait les
+    // rendre visibles comme une « valse ». Ici le DOM est d’abord stabilisé,
+    // puis l’étape 5 est positionnée une seule fois au frame suivant.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const lab = document.getElementById("learningFoundationLab");
+      const target = lab?.querySelector?.('[data-foundation-stage="5"]') || null;
+      if (target) {
+        atlasLearningPositionTarget(target, {
+          smooth:false,
+          flash:true,
+          topGap:ATLAS_LEARNING_STAGE_TOP_GAP,
+          tolerance:0
+        });
+      }
       if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
       if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
-    }, 520);
+    }));
     spotFoundationFeedback(true, "Position fictive créée", "La preuve du portefeuille virtuel et du journal local a été enregistrée. Étape 5 ouverte.");
   } else if (moduleKey === "risk" && ok) {
     scrollToFoundationStage(4);
     riskFoundationFeedback(true, "Étape 3 validée", "Position BTC fictive de 50 € enregistrée. Étape 4 ouverte : compare −3 % puis +5 %.");
   } else if (moduleKey === "risk") {
     riskFoundationFeedback(false, "Position non créée", "Le simulateur n’a pas confirmé la position BTC fictive de 50 €.");
+  } else if (moduleKey === "spot") {
+    // En cas d’échec réel, rester sur la zone courante : ne jamais renvoyer
+    // l’utilisateur en haut du laboratoire pédagogique.
+    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
+    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
+    spotFoundationFeedback(false, "Position non créée", "Le simulateur n’a pas confirmé la position BTC fictive de 50 €. Reste sur cette étape et relance seulement lorsque les données sont disponibles.");
   } else {
     scrollToLearningTarget("learningFoundationLab");
     foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
-  }
-  if (freezeViewport && !ok) {
-    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
-    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
   }
   return ok;
 }
@@ -34470,11 +34484,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.34";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.35";
 
-const ATLAS_BUILD = "28.3.34";
+const ATLAS_BUILD = "28.3.35";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.34";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.35";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
@@ -36028,7 +36042,14 @@ els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.lear
 
 els.learningFoundationPanel?.addEventListener("click", event => {
   const button = event.target.closest?.("[data-foundation-action]");
-  if (button) handleFoundationAction(button.dataset.foundationAction);
+  if (!button) return;
+  // Le bouton va souvent être remplacé par le rerendu du laboratoire.
+  // Retirer son focus avant ce rerendu évite que Firefox tente de conserver
+  // visuellement l’ancien contrôle et déplace la page de sa propre initiative.
+  event.preventDefault();
+  event.stopPropagation();
+  button.blur?.();
+  handleFoundationAction(button.dataset.foundationAction);
 });
 
 els.btnMarkLessonRead?.addEventListener("click", markIntegratedLessonRead);
