@@ -3,7 +3,7 @@ name: Atlas Public Crypto Market
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 */2 * * *"
+    - cron: "17,47 * * * *"
   push:
     branches:
       - main
@@ -145,12 +145,13 @@ jobs:
           status = json.loads((root / "status.json").read_text(encoding="utf-8"))
           latest_path = root / "latest.json"
           latest = json.loads(latest_path.read_text(encoding="utf-8")) if latest_path.is_file() else {}
-          print("## Atlas Public Crypto Market · Build 28.2.75")
+          print("## Atlas Public Crypto Market · Build 28.3.38")
           print(f"- Collector state: **{status.get('status')}**")
           print(f"- Assets published: **{latest.get('assets_count', 0)}/250**")
           print(f"- Market source: **CoinGecko USD**")
           print(f"- Conversion: **ECB USD/EUR · {latest.get('fx', {}).get('source_date', '—')}**")
-          print(f"- Browser direct market request required: **No**")
+          print(f"- Role: **broad market snapshot/cache — never execution quote**")
+          print(f"- Browser direct CoinGecko market request required: **No**")
           if status.get("last_error"):
               print(f"- Collector warning: `{status['last_error'][:1000]}`")
           PY
@@ -162,13 +163,38 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/agent_crypto_erith_ia/data/crypto
-          if git diff --cached --quiet; then
-            echo "No crypto data change to commit."
-            exit 0
-          fi
-          git commit -m "archive public crypto market snapshot"
-          git push
+
+          snapshot_dir="public/agent_crypto_erith_ia/data/crypto"
+          snapshot_tmp="$(mktemp -d)"
+          trap 'rm -rf "$snapshot_tmp"' EXIT
+          cp -a "$snapshot_dir" "$snapshot_tmp/crypto"
+
+          for attempt in 1 2 3; do
+            echo "Publication snapshot · tentative $attempt/3"
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf "$snapshot_dir"
+            mkdir -p "$(dirname "$snapshot_dir")"
+            cp -a "$snapshot_tmp/crypto" "$snapshot_dir"
+            git add "$snapshot_dir"
+
+            if git diff --cached --quiet; then
+              echo "No crypto data change to commit."
+              exit 0
+            fi
+
+            git commit -m "archive public crypto market snapshot"
+            if git push origin HEAD:main; then
+              echo "Public crypto snapshot published."
+              exit 0
+            fi
+
+            echo "Remote main changed during publication; resynchronizing without force push."
+            sleep $((attempt * 2))
+          done
+
+          echo "Unable to publish public crypto snapshot after 3 non-destructive attempts."
+          exit 1
 
       - name: Require a usable public snapshot
         if: always()
