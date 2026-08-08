@@ -1,11 +1,33 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.35  
-**Build :** 28.3.35  
-**Mission :** Module 02 Spot Position Single Final Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.36  
+**Build :** 28.3.36  
+**Mission :** Module 02 Spot Livecheck Handoff + Local Result Focus Lock
 
 
 
+
+
+
+## Build 28.3.36 — Module 02 Spot Livecheck Handoff + Local Result Focus Lock
+
+Cette Build part exactement de la 28.3.35.
+
+### Mission unique
+
+Rendre l’étape 4 du Module 02 cohérente pour un débutant : le Livecheck reste un mécanisme technique en arrière-plan, l’achat de 50 € reste dans le cockpit pédagogique, et l’action ne doit plus envoyer l’utilisateur dans le haut du simulateur.
+
+- Le verrou de viewport commence **avant** la vérification Livecheck.
+- Si le Livecheck automatique de démarrage est déjà en cours, le clic pédagogique **rejoint cette lecture** au lieu de la considérer comme une panne.
+- Si aucune donnée exploitable n’est disponible après l’attente, une seule lecture explicite est tentée ; en cas d’échec réel, le cockpit revient sur l’étape 4.
+- Après succès, le simulateur reste un moteur technique secondaire : un seul cadrage final ouvre l’étape 5.
+- « Position » est maintenant définie directement dans l’étape 4 comme la quantité de BTC détenue virtuellement après l’achat.
+- Le bouton devient « Simuler l’achat fictif de 50 € de BTC ».
+- Le résultat local affiche quantité détenue, prix d’entrée et argent virtuel disponible.
+- Ask/Bid, Marché/Limite, IndexedDB, sécurité, Module 03 et moteur de simulation restent inchangés.
+- Modification fonctionnelle : `web/app.js` uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique inchangée ; seules les constantes d’identité passent à 28.3.36.
 
 
 ## Build 28.3.35 — Module 02 Spot Position Single Final Focus Lock

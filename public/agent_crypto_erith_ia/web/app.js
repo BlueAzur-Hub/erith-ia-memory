@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.35 — cadrage final unique après création de position du Module 02.
+  Build 28.3.36 — Livecheck pédagogique joint, résultat local et cadrage déterministe du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -18668,8 +18668,8 @@ function foundationSpotGuidedSummary(cockpit) {
   const investedText = ready ? fmtEUR.format(invested) : "—";
   const cashText = ready ? fmtEUR.format(cashRemaining) : "—";
   const text = ready
-    ? `Le simulateur a exécuté une demande d’achat entièrement fictive de ${investedText} de BTC au prix moyen de ${entryText} par BTC. Cette exécution a créé une position de ${quantityText} BTC et laisse ${cashText} disponibles. Un ordre au marché privilégie l’exécution ; un ordre limite protège un prix choisi, mais ne garantit pas une exécution immédiate.`
-    : "La synthèse sera construite après la création vérifiée de la position BTC fictive de 50 €.";
+    ? `Le simulateur a exécuté un achat entièrement fictif de ${investedText} de BTC au prix moyen de ${entryText} par BTC. Il reste ${cashText} disponibles et le portefeuille virtuel détient maintenant ${quantityText} BTC. Cette quantité détenue virtuellement est ce que l’on appelle ici une « position ». Un ordre au marché privilégie l’exécution ; un ordre limite protège un prix choisi, mais ne garantit pas une exécution immédiate.`
+    : "La synthèse sera construite après la simulation vérifiée de l’achat fictif de 50 € de BTC.";
   return { ready, quantity, entryPrice, invested, cashRemaining, quantityText, entryText, investedText, cashText, text };
 }
 
@@ -18810,11 +18810,11 @@ function foundationSpotLab(cockpit) {
         <small>État : Situation A ${foundationSpotOrderTypeStatusLabel(marketRecall)} · Situation B ${foundationSpotOrderTypeStatusLabel(limitRecall)}</small>
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 4 · EXÉCUTION FICTIVE</span>
-        <h5>Créer une position BTC de 50 €</h5>
-        <p>Le bouton charge les données si nécessaire, puis utilise le Mode École guidé. Aucun ordre réel, aucune clé API et aucun wallet.</p>
-        ${foundationButton(step4Done ? "Position BTC 50 € créée" : "Créer la position BTC fictive de 50 €", "spot_run_safe_btc", !step3Done || step4Done)}
-        <small>${summary.ready ? `Position : ${escapeHtml(summary.quantityText)} BTC · entrée ${escapeHtml(summary.entryText)} · disponible ${escapeHtml(summary.cashText)}.` : "La preuve sera reprise depuis le portefeuille virtuel et le journal local."}</small>
+        <span class="foundation-stage-kicker">ÉTAPE 4 · ACHAT FICTIF</span>
+        <h5>Simuler l’achat de 50 € de BTC</h5>
+        <p>Le cockpit vérifie les données de marché en arrière-plan puis simule l’achat. Une « position » désigne simplement la quantité de BTC détenue dans le portefeuille virtuel après cet achat. Aucun ordre réel, aucune clé API et aucun wallet.</p>
+        ${foundationButton(step4Done ? "Achat fictif de 50 € de BTC simulé" : "Simuler l’achat fictif de 50 € de BTC", "spot_run_safe_btc", !step3Done || step4Done)}
+        <small>${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · prix d’entrée ${escapeHtml(summary.entryText)} · argent disponible ${escapeHtml(summary.cashText)}.` : "Le résultat apparaîtra ici ; le simulateur complet reste un outil technique secondaire."}</small>
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
@@ -19931,9 +19931,129 @@ function atlasLearningPrimeFoundationStageFocus(stage) {
   });
 }
 
+async function atlasLearningEnsureFoundationMarketReady(reason) {
+  if (atlasAnalysisLiveReady() && state.coins?.length) return true;
+
+  // Au chargement de la page, un Livecheck automatique peut déjà être en cours.
+  // Un second clic pédagogique ne doit jamais interpréter cet état "occupé"
+  // comme une panne : il rejoint d'abord la lecture existante.
+  if (state.auto?.livecheckBusy) {
+    const startupPromise = !atlasStartup.completed ? atlasStartup.promise : null;
+    if (startupPromise) {
+      try { await startupPromise; } catch {}
+    }
+
+    const deadline = Date.now() + 35_000;
+    while (state.auto?.livecheckBusy && Date.now() < deadline) {
+      await atlasDelay(80);
+    }
+
+    if (atlasAnalysisLiveReady() && state.coins?.length) return true;
+  }
+
+  // Si aucune lecture exploitable n'est disponible après l'attente, le bouton
+  // pédagogique déclenche une seule lecture explicite puis réévalue l'état réel.
+  const succeeded = await runLivecheck({ reason });
+  return Boolean(succeeded && atlasAnalysisLiveReady() && state.coins?.length);
+}
+
+function atlasLearningFinishSpotViewport(stage, viewport, options = {}) {
+  const stageNumber = String(stage || "").trim();
+  const flash = options.flash !== false;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const lab = document.getElementById("learningFoundationLab");
+    const target = stageNumber ? lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) : null;
+    if (target) {
+      atlasLearningPositionTarget(target, {
+        smooth:false,
+        flash,
+        topGap:ATLAS_LEARNING_STAGE_TOP_GAP,
+        tolerance:0
+      });
+    }
+    if (viewport?.root?.style) viewport.root.style.overflowAnchor = viewport.previousRootOverflowAnchor;
+    if (viewport?.body?.style) viewport.body.style.overflowAnchor = viewport.previousBodyOverflowAnchor;
+  }));
+}
+
+async function runSpotFoundationSchoolPosition(cockpit) {
+  const root = document.documentElement;
+  const body = document.body;
+  const viewport = {
+    root,
+    body,
+    previousRootOverflowAnchor:root?.style?.overflowAnchor ?? "",
+    previousBodyOverflowAnchor:body?.style?.overflowAnchor ?? ""
+  };
+
+  // Le verrou de viewport commence AVANT le Livecheck. Dans la 28.3.35 il ne
+  // couvrait que le rerendu du simulateur ; une lecture automatique ou relancée
+  // pouvait donc encore déplacer l'écran avant même la création fictive.
+  atlasLearningSetManualScrollRestoration();
+  if (root?.style) root.style.overflowAnchor = "none";
+  if (body?.style) body.style.overflowAnchor = "none";
+
+  if (!atlasAnalysisLiveReady() || !state.coins?.length) {
+    setActionFeedback(
+      "info",
+      state.auto?.livecheckBusy ? "Lecture du marché déjà en cours" : "Vérification des données de marché",
+      state.auto?.livecheckBusy
+        ? "Le cockpit attend le Livecheck automatique déjà lancé ; aucun second contrôle concurrent n’est créé."
+        : "Le cockpit vérifie automatiquement les données nécessaires avant la simulation fictive.",
+      els.learningFoundationPanel
+    );
+  }
+
+  const marketReady = await atlasLearningEnsureFoundationMarketReady("foundation_spot_school_position");
+  if (!marketReady) {
+    atlasLearningFinishSpotViewport(4, viewport, { flash:true });
+    spotFoundationFeedback(
+      false,
+      "Données de marché indisponibles",
+      "Aucune simulation n’a été créée. Le cockpit reste sur l’étape 4 ; réessaie ce même bouton lorsque la lecture publique est revenue."
+    );
+    return false;
+  }
+
+  // La simulation et le cockpit sont reconstruits comme une seule transaction
+  // pédagogique. Le simulateur complet peut rerendre ses propres cartes, mais
+  // il ne devient jamais la destination de navigation de cette action.
+  atlasLearningHoldCockpitRender();
+  try {
+    runSchoolTest("safe_btc_5");
+  } finally {
+    atlasLearningReleaseCockpitRender();
+  }
+
+  const current = loadLearningCockpitState();
+  const ok = current.module_key === "spot" && current.steps.verify === true;
+  if (ok) {
+    atlasLearningFinishSpotViewport(5, viewport, { flash:true });
+    spotFoundationFeedback(
+      true,
+      "Achat fictif simulé",
+      "Le résultat est conservé dans le portefeuille virtuel et le journal local. Étape 5 ouverte juste après l’explication du résultat."
+    );
+  } else {
+    atlasLearningFinishSpotViewport(4, viewport, { flash:true });
+    spotFoundationFeedback(
+      false,
+      "Simulation non confirmée",
+      "Aucune preuve de position virtuelle n’a été enregistrée. Le cockpit reste sur l’étape 4."
+    );
+  }
+  return ok;
+}
+
 async function runFoundationSchoolPosition(moduleKey) {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at || cockpit.module_key !== moduleKey) return false;
+
+  // Module 02 possède désormais son propre trajet : Livecheck joint en arrière-
+  // plan, simulation locale, résultat pédagogique, puis un seul cadrage final.
+  if (moduleKey === "spot") return runSpotFoundationSchoolPosition(cockpit);
+
+  // Les autres modules conservent leur comportement historique.
   if (!atlasAnalysisLiveReady() || !state.coins?.length) {
     setActionFeedback("info", "Chargement des données", "Livecheck est relancé automatiquement avant la simulation fictive.", els.learningFoundationPanel);
     const succeeded = await runLivecheck({ reason:`foundation_${moduleKey}_school_position` });
@@ -19942,65 +20062,15 @@ async function runFoundationSchoolPosition(moduleKey) {
       return false;
     }
   }
-  // Module 02 : la création d’une position fait normalement rerendre plusieurs
-  // fois la simulation puis le cockpit pédagogique. Sur Firefox, ces rerendus
-  // successifs peuvent déplacer l’ancre visuelle. On regroupe donc le cockpit
-  // en une seule reconstruction, sans modifier la simulation elle-même.
-  const freezeViewport = moduleKey === "spot";
-  const root = freezeViewport ? document.documentElement : null;
-  const body = freezeViewport ? document.body : null;
-  const previousRootOverflowAnchor = root?.style?.overflowAnchor ?? "";
-  const previousBodyOverflowAnchor = body?.style?.overflowAnchor ?? "";
-  if (freezeViewport) {
-    atlasLearningSetManualScrollRestoration();
-    if (root?.style) root.style.overflowAnchor = "none";
-    if (body?.style) body.style.overflowAnchor = "none";
-    atlasLearningHoldCockpitRender();
-  }
-  try {
-    runSchoolTest("safe_btc_5");
-  } catch (error) {
-    if (freezeViewport) {
-      atlasLearningReleaseCockpitRender();
-      if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
-      if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
-    }
-    throw error;
-  }
-  if (freezeViewport) atlasLearningReleaseCockpitRender();
+
+  runSchoolTest("safe_btc_5");
   const current = loadLearningCockpitState();
-  const ok = moduleKey === "spot" ? current.steps.verify === true : current.steps.practice === true;
-  if (moduleKey === "spot" && ok) {
-    // Un seul cadrage final. Les versions précédentes demandaient plusieurs
-    // repositionnements successifs ; même sans animation, Firefox pouvait les
-    // rendre visibles comme une « valse ». Ici le DOM est d’abord stabilisé,
-    // puis l’étape 5 est positionnée une seule fois au frame suivant.
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const lab = document.getElementById("learningFoundationLab");
-      const target = lab?.querySelector?.('[data-foundation-stage="5"]') || null;
-      if (target) {
-        atlasLearningPositionTarget(target, {
-          smooth:false,
-          flash:true,
-          topGap:ATLAS_LEARNING_STAGE_TOP_GAP,
-          tolerance:0
-        });
-      }
-      if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
-      if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
-    }));
-    spotFoundationFeedback(true, "Position fictive créée", "La preuve du portefeuille virtuel et du journal local a été enregistrée. Étape 5 ouverte.");
-  } else if (moduleKey === "risk" && ok) {
+  const ok = current.steps.practice === true;
+  if (moduleKey === "risk" && ok) {
     scrollToFoundationStage(4);
     riskFoundationFeedback(true, "Étape 3 validée", "Position BTC fictive de 50 € enregistrée. Étape 4 ouverte : compare −3 % puis +5 %.");
   } else if (moduleKey === "risk") {
     riskFoundationFeedback(false, "Position non créée", "Le simulateur n’a pas confirmé la position BTC fictive de 50 €.");
-  } else if (moduleKey === "spot") {
-    // En cas d’échec réel, rester sur la zone courante : ne jamais renvoyer
-    // l’utilisateur en haut du laboratoire pédagogique.
-    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
-    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
-    spotFoundationFeedback(false, "Position non créée", "Le simulateur n’a pas confirmé la position BTC fictive de 50 €. Reste sur cette étape et relance seulement lorsque les données sont disponibles.");
   } else {
     scrollToLearningTarget("learningFoundationLab");
     foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
@@ -34484,11 +34554,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.35";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.36";
 
-const ATLAS_BUILD = "28.3.35";
+const ATLAS_BUILD = "28.3.36";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.35";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.36";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

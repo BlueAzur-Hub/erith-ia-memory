@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.36 — Module 02 Spot Livecheck Handoff + Local Result Focus Lock
+
+- Base : Build 28.3.35.
+- Retour Firefox réel : le clic « Créer la position… » pouvait encore finir dans le haut du simulateur avec « Livecheck indisponible », notamment quand la lecture automatique de démarrage était déjà en cours.
+- Cause précise : `runLivecheck()` renvoie immédiatement `false` lorsqu’un Livecheck est déjà occupé ; le parcours pédagogique interprétait cet état concurrent comme un échec. Le verrou de viewport commençait en plus après cette phase réseau.
+- Le Module 02 rejoint maintenant le Livecheck déjà en cours, puis ne relance qu’une seule lecture si nécessaire.
+- Le verrou visuel couvre toute la transaction, Livecheck compris.
+- Échec réel : retour déterministe à l’étape 4 ; succès : cadrage unique sur l’étape 5.
+- Le libellé débutant devient « Simuler l’achat fictif de 50 € de BTC » et définit le terme « position ».
+- Aucun changement du moteur de simulation, d’IndexedDB, des règles de sécurité ou du Module 03.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.36.
+
+---
+
 ## Build 28.3.35 — Module 02 Spot Position Single Final Focus Lock
 
 - Base : Build 28.3.34.
