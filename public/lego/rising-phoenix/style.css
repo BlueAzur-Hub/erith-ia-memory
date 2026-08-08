@@ -996,3 +996,56 @@ h3 {
     width: 100%;
   }
 }
+
+
+/* V2 — truth-first placeholder for the Base Model image
+   The final Base Model photograph/render is intentionally not guessed.
+   Replace this block with the confirmed image once selected. */
+.configuration-placeholder {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  min-height: 0;
+  padding: 28px;
+  text-align: center;
+  background:
+    linear-gradient(rgba(8, 10, 8, 0.76), rgba(8, 10, 8, 0.9)),
+    repeating-linear-gradient(
+      135deg,
+      rgba(237, 198, 110, 0.055) 0,
+      rgba(237, 198, 110, 0.055) 1px,
+      transparent 1px,
+      transparent 18px
+    ),
+    #0e100e;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.configuration-placeholder::before {
+  content: "◆";
+  display: block;
+  margin: 0 auto 5px;
+  color: var(--gold-light);
+  font-size: 1.15rem;
+}
+
+.configuration-placeholder .configuration-level {
+  color: var(--gold-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.configuration-placeholder strong {
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  letter-spacing: -0.025em;
+}
+
+.configuration-placeholder small {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
