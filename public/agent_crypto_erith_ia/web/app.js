@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.33 — cadrage direct après création de la position fictive du Module 02.
+  Build 28.3.34 — transaction de rendu unique pour la création de position du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19942,15 +19942,41 @@ async function runFoundationSchoolPosition(moduleKey) {
       return false;
     }
   }
-  // Module 02 : cadrer la destination finale avant que la simulation
-  // reconstruise plusieurs zones de l’interface. Le navigateur garde ainsi
-  // l’étape 5 comme ancre visuelle au lieu de revenir brièvement ailleurs.
-  if (moduleKey === "spot") atlasLearningPrimeFoundationStageFocus(5);
-  runSchoolTest("safe_btc_5");
+  // Module 02 : la création d’une position fait normalement rerendre plusieurs
+  // fois la simulation puis le cockpit pédagogique. Sur Firefox, ces rerendus
+  // successifs peuvent déplacer l’ancre visuelle. On regroupe donc le cockpit
+  // en une seule reconstruction, sans modifier la simulation elle-même.
+  const freezeViewport = moduleKey === "spot";
+  const root = freezeViewport ? document.documentElement : null;
+  const body = freezeViewport ? document.body : null;
+  const previousRootOverflowAnchor = root?.style?.overflowAnchor ?? "";
+  const previousBodyOverflowAnchor = body?.style?.overflowAnchor ?? "";
+  if (freezeViewport) {
+    atlasLearningSetManualScrollRestoration();
+    if (root?.style) root.style.overflowAnchor = "none";
+    if (body?.style) body.style.overflowAnchor = "none";
+    atlasLearningHoldCockpitRender();
+  }
+  try {
+    runSchoolTest("safe_btc_5");
+  } catch (error) {
+    if (freezeViewport) {
+      atlasLearningReleaseCockpitRender();
+      if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
+      if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
+    }
+    throw error;
+  }
+  if (freezeViewport) atlasLearningReleaseCockpitRender();
   const current = loadLearningCockpitState();
   const ok = moduleKey === "spot" ? current.steps.verify === true : current.steps.practice === true;
   if (moduleKey === "spot" && ok) {
-    scrollToFoundationStage(5);
+    atlasLearningPrimeFoundationStageFocus(5);
+    scrollToFoundationStage(5, { smooth:false, settleDelays:[80, 180, 420] });
+    window.setTimeout(() => {
+      if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
+      if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
+    }, 520);
     spotFoundationFeedback(true, "Position fictive créée", "La preuve du portefeuille virtuel et du journal local a été enregistrée. Étape 5 ouverte.");
   } else if (moduleKey === "risk" && ok) {
     scrollToFoundationStage(4);
@@ -19960,6 +19986,10 @@ async function runFoundationSchoolPosition(moduleKey) {
   } else {
     scrollToLearningTarget("learningFoundationLab");
     foundationFeedback(ok, ok ? "Position fictive créée" : "Position non créée", ok ? "La preuve du portefeuille virtuel et du journal local a été enregistrée." : "Le simulateur n’a pas confirmé la position BTC de 50 €.");
+  }
+  if (freezeViewport && !ok) {
+    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
+    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
   }
   return ok;
 }
@@ -20379,7 +20409,26 @@ function renderLearningNotebookSeparation(cockpit, foundation) {
     : "Lecture seule · aucune conclusion n’est générée avant les preuves requises.";
 }
 
+let atlasLearningCockpitRenderHoldDepth = 0;
+let atlasLearningCockpitRenderPending = false;
+
+function atlasLearningHoldCockpitRender() {
+  atlasLearningCockpitRenderHoldDepth += 1;
+}
+
+function atlasLearningReleaseCockpitRender() {
+  atlasLearningCockpitRenderHoldDepth = Math.max(0, atlasLearningCockpitRenderHoldDepth - 1);
+  if (atlasLearningCockpitRenderHoldDepth !== 0 || atlasLearningCockpitRenderPending !== true) return false;
+  atlasLearningCockpitRenderPending = false;
+  renderLearningJourneyCockpit();
+  return true;
+}
+
 function renderLearningJourneyCockpit() {
+  if (atlasLearningCockpitRenderHoldDepth > 0) {
+    atlasLearningCockpitRenderPending = true;
+    return;
+  }
   if (!els.learningCockpitStatus) return;
   if (!state.sim) loadSimulation();
   let cockpit = loadLearningCockpitState();
@@ -34421,11 +34470,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.33";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.34";
 
-const ATLAS_BUILD = "28.3.33";
+const ATLAS_BUILD = "28.3.34";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.33";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.34";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

@@ -1,11 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.33  
-**Build :** 28.3.33  
-**Mission :** Module 02 Spot Position Direct Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.34  
+**Build :** 28.3.34  
+**Mission :** Module 02 Spot Position Single Render Viewport Lock
 
 
 
+
+## Build 28.3.34 — Module 02 Spot Position Single Render Viewport Lock
+
+Cette Build part exactement de la 28.3.33.
+
+### Mission unique
+
+Supprimer la « valse » encore visible après `Créer la position BTC fictive de 50 €` en traitant la cause réelle : plusieurs reconstructions successives du cockpit pendant une seule action.
+
+- `resetSimulation()` et `simulateOrder()` continuent de mettre à jour la simulation exactement comme avant.
+- Pendant cette action du Module 02 uniquement, les rerendus du cockpit pédagogique sont regroupés : trois reconstructions successives deviennent une seule reconstruction finale.
+- Le scroll préparatoire de la 28.3.33 est retiré : aucun déplacement vers l’étape 5 n’est demandé avant la fin de la simulation.
+- L’ancrage automatique du navigateur est neutralisé uniquement pendant cette transaction afin que Firefox ne compense pas les changements de hauteur.
+- Après la reconstruction finale, l’étape 5 est positionnée directement puis contrôlée trois fois sur une courte fenêtre de stabilisation.
+- Le verrou d’ancrage est ensuite restauré.
+- Aucune modification de la logique de simulation, des preuves, d’IndexedDB, des bulles d’aide, d’Ask/Bid ou de Marché/Limite.
+- Modification fonctionnelle : `web/app.js` uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.34.
 
 ## Build 28.3.33 — Module 02 Spot Position Direct Focus Lock
 

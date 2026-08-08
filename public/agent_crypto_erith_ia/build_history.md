@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.34 — Module 02 Spot Position Single Render Viewport Lock
+
+- Base : Build 28.3.33.
+- Cause isolée : le bouton de création de position déclenche plusieurs `renderLearningJourneyCockpit()` pendant `resetSimulation()`, `simulateOrder()` puis l’enregistrement de preuve.
+- Ces reconstructions successives peuvent laisser Firefox recalculer son ancre visuelle et produire la « valse ».
+- Le Module 02 regroupe maintenant ces rerendus en une seule reconstruction pédagogique finale.
+- Le pré-cadrage introduit en 28.3.33 est retiré ; la destination n’est cadrée qu’une fois la simulation terminée.
+- L’ancrage automatique du navigateur est neutralisé uniquement pendant cette transaction, puis restauré.
+- Étape 5 ciblée directement après la reconstruction finale, avec contrôles courts de stabilisation.
+- Simulation, preuves, IndexedDB, Ask/Bid, Marché/Limite, bulles et Module 03 inchangés.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.34.
+
+---
+
 ## Build 28.3.33 — Module 02 Spot Position Direct Focus Lock
 
 - Base : Build 28.3.32.
