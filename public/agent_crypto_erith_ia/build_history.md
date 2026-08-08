@@ -1,3 +1,18 @@
+## Build 28.3.48 — Sticky Dock Persistence Polish Lock
+
+- Base : 28.3.47.
+- Fiche Crypto latérale : sticky renforcé pendant le scroll long.
+- Hauteur dynamique du viewport + scroll interne stable.
+- Préférence Flottante / Latérale toujours mémorisée.
+- Conservation temporaire de l'actif inspecté lors des transitions de largeur / Math Core.
+- Retour automatique possible au dock quand la place redevient suffisante.
+- `Échap` ferme et oublie explicitement la sélection temporaire.
+- Aucun changement du score ATLAS, de la géométrie Market ou des données.
+- `index.html` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.48.
+
+---
+
 ## Build 28.3.47 — Adaptive Crypto Card Dock Lock
 
 - Base : 28.3.46.

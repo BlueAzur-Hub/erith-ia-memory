@@ -1,8 +1,34 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.47  
-**Build :** 28.3.47  
-**Mission :** Adaptive Crypto Card Dock Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.48  
+**Build :** 28.3.48  
+**Mission :** Sticky Dock Persistence Polish Lock
+
+
+## Build 28.3.48 — Sticky Dock Persistence Polish Lock
+
+Cette Build part de la 28.3.47 validée visuellement et applique uniquement les deux finitions prévues après validation du mode Latéral.
+
+### Finitions
+
+- La Fiche Crypto latérale est explicitement verrouillée en **sticky** pendant le défilement du tableau.
+- Sa hauteur suit le viewport dynamique (`100dvh`) avec scroll interne si nécessaire.
+- Le scroll de la fiche ne propage plus involontairement le défilement au tableau (`overscroll-behavior: contain`).
+- Le choix **Flottante / Latérale** reste mémorisé comme en 28.3.47.
+- L'actif actuellement inspecté est maintenant conservé pendant un changement temporaire de largeur ou de position Math Core :
+  - si Latérale devient momentanément indisponible, la préférence n'est pas perdue ;
+  - quand la place redevient suffisante avec Math Core Réduit ou Dessus, la fiche peut reprendre automatiquement l'actif précédemment inspecté ;
+  - `Échap` ferme explicitement la fiche et oublie cette sélection temporaire.
+
+### Verrous
+
+- Score ATLAS inchangé (`37`, `50`, etc.), jamais `/100`.
+- Géométrie et colonnes Market inchangées.
+- Math Core reste toujours actif.
+- Aucun changement des données, calculs, Modules 01–11, simulation, mémoire, Binance/CoinGecko, Graphique, Target Top 5 ou Market Flow.
+- `web/index.html` et `web/runtime_config.json` inchangés.
+- CSS 28.3.47 conservé intégralement ; ajout uniquement du verrou sticky.
+- Version Control Protected Core inchangé hors identité 28.3.48.
 
 
 ## Build 28.3.47 — Adaptive Crypto Card Dock Lock

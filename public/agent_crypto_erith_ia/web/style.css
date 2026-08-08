@@ -23661,3 +23661,27 @@ html[data-atlas-mode="advanced"]
 
 /* FIN Build 28.3.47 — ADAPTIVE CRYPTO CARD DOCK LOCK */
 
+/* ============================================================
+   Build 28.3.48 — STICKY DOCK PERSISTENCE POLISH LOCK
+   Finition non destructive : géométrie Market inchangée.
+   ============================================================ */
+
+#atlasMarketCardDockHost.atlas-market-card-dock-host:not([hidden]) {
+  position:sticky !important;
+  top:8px !important;
+  align-self:start !important;
+  max-height:calc(100dvh - 16px) !important;
+  overflow:auto !important;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  z-index:6;
+}
+
+@supports not (height:100dvh) {
+  #atlasMarketCardDockHost.atlas-market-card-dock-host:not([hidden]) {
+    max-height:calc(100vh - 16px) !important;
+  }
+}
+
+/* FIN Build 28.3.48 — STICKY DOCK PERSISTENCE POLISH LOCK */
+

@@ -1839,6 +1839,7 @@ const ATLAS_HELP_DEFINITIONS = Object.freeze({
 const ATLAS_MARKET_CARD_MODE_KEY = "agent_crypto_erith_ia_market_card_mode_v1";
 const ATLAS_MARKET_CARD_DOCK_MIN_MARKET_WIDTH = 980;
 const ATLAS_MARKET_CARD_DOCK_PANEL_MIN_WIDTH = 320;
+let atlasMarketCardSelectedCoinId = "";
 
 function atlasMarketCardPreferredMode() {
   try { return localStorage.getItem(ATLAS_MARKET_CARD_MODE_KEY) === "dock" ? "dock" : "floating"; }
@@ -1898,6 +1899,21 @@ function atlasMarketCardToolbarMarkup() {
   </div>`;
 }
 
+function atlasMarketCardRememberSelection(target, definition = null) {
+  const coinId = String(definition?.marketCoinId || target?.dataset?.marketHelpId || "").trim();
+  if (coinId) atlasMarketCardSelectedCoinId = coinId;
+  return coinId;
+}
+
+function atlasMarketCardRememberedTarget() {
+  if (!atlasMarketCardSelectedCoinId) return null;
+  try {
+    return document.querySelector(`[data-market-help-id="${CSS.escape(atlasMarketCardSelectedCoinId)}"]`);
+  } catch {
+    return null;
+  }
+}
+
 function atlasMarketCardDockHost() {
   const grid = document.getElementById("marketWorkspaceGrid");
   if (!grid) return null;
@@ -1916,7 +1932,7 @@ function atlasMarketCardDockHost() {
   return host;
 }
 
-function atlasHideMarketCardDock() {
+function atlasHideMarketCardDock(options = {}) {
   const host = document.getElementById("atlasMarketCardDockHost");
   const grid = document.getElementById("marketWorkspaceGrid");
   if (host) {
@@ -1925,6 +1941,7 @@ function atlasHideMarketCardDock() {
     delete host.dataset.marketHelpCoinId;
   }
   grid?.classList.remove("market-card-dock-active");
+  if (options.clearSelection === true) atlasMarketCardSelectedCoinId = "";
 }
 
 function atlasRenderMarketCardDock(target, definition) {
@@ -1932,6 +1949,7 @@ function atlasRenderMarketCardDock(target, definition) {
   const host = atlasMarketCardDockHost();
   const grid = document.getElementById("marketWorkspaceGrid");
   if (!host || !grid) return false;
+  atlasMarketCardRememberSelection(target, definition);
   host.innerHTML = atlasHelpMarkup(definition);
   host.dataset.marketHelpCoinId = definition.marketCoinId;
   host.hidden = false;
@@ -1944,7 +1962,8 @@ function atlasRenderMarketCardDock(target, definition) {
 }
 
 function atlasRefreshMarketCardSurface() {
-  const target = atlasHelpActiveTarget?.matches?.("[data-market-help-id]") ? atlasHelpActiveTarget : null;
+  const activeTarget = atlasHelpActiveTarget?.matches?.("[data-market-help-id]") ? atlasHelpActiveTarget : null;
+  const target = activeTarget || atlasMarketCardRememberedTarget();
   if (!target) {
     if (!atlasMarketCardDockAvailable()) atlasHideMarketCardDock();
     return;
@@ -1970,7 +1989,7 @@ function atlasSetMarketCardMode(mode) {
   const dockCoinId = document.getElementById("atlasMarketCardDockHost")?.dataset?.marketHelpCoinId || "";
   const activeMarketTarget = atlasHelpActiveTarget?.matches?.("[data-market-help-id]") ? atlasHelpActiveTarget : null;
   const pinnedTarget = dockCoinId ? document.querySelector(`[data-market-help-id="${CSS.escape(dockCoinId)}"]`) : null;
-  const target = activeMarketTarget || pinnedTarget;
+  const target = activeMarketTarget || pinnedTarget || atlasMarketCardRememberedTarget();
   atlasHideMarketCardDock();
   const layer = document.getElementById("atlasHelpLayer");
   if (layer) {
@@ -2018,6 +2037,7 @@ function atlasShowHelpLayer(target, pointer = null) {
   if (!layer || !target) return;
   const definition = target.matches?.("[data-market-help-id]") ? atlasMarketHelpDefinition(target) : atlasHelpDefinitionFor(target);
   if (!definition) return;
+  if (definition.marketCoinId) atlasMarketCardRememberSelection(target, definition);
   if (atlasHelpActiveTarget && atlasHelpActiveTarget !== target) atlasRestoreHelpDescription(atlasHelpActiveTarget);
   atlasHelpActiveTarget = target;
   if (!("atlasHelpOriginalDescribedby" in target.dataset)) target.dataset.atlasHelpOriginalDescribedby = target.getAttribute("aria-describedby") || "";
@@ -2107,7 +2127,7 @@ function initAtlasHelpLayerV1() {
   });
   document.addEventListener("keydown", event => {
     if (event.key !== "Escape") return;
-    atlasHideMarketCardDock();
+    atlasHideMarketCardDock({ clearSelection:true });
     atlasHideHelpLayer(true);
   });
   window.addEventListener("scroll", () => {
@@ -36186,11 +36206,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.47";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.48";
 
-const ATLAS_BUILD = "28.3.47";
+const ATLAS_BUILD = "28.3.48";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.47";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.48";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
