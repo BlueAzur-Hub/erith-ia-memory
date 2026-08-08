@@ -1,3 +1,17 @@
+## Build 28.3.45 — Market Truth Labels + Visual Stability Lock
+
+- Base : 28.3.44.
+- Score ATLAS conservé sous sa forme compacte actuelle, sans `/100`.
+- Aucun changement CSS ou géométrique du Market Snapshot, du Math Core ou de la fiche Crypto.
+- Capitalisation >= 10^12 EUR affichée en milliards explicites.
+- Tooltip du point terminal : prix live séparé de la variation de période.
+- Math Core : contexte spot live séparé de la série historique.
+- Décision : justification dans la fiche Crypto et au survol, sans allonger le tableau.
+- Provenance 24 h / 7 j / capitalisation / volume ajoutée au survol.
+- Modules 01–11, simulation, données, `index.html`, `style.css`, `runtime_config.json`, workflow et Version Control Protected Core inchangés hors identité.
+
+---
+
 ## Build 28.3.44 — 11 Modules Active Recall + Automatic Memory Parity Lock
 
 - Base : 28.3.43.

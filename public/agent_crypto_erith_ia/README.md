@@ -1,9 +1,35 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.44  
-**Build :** 28.3.44  
-**Mission :** 11 Modules Active Recall + Automatic Memory Parity Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.45  
+**Build :** 28.3.45  
+**Mission :** Market Truth Labels + Visual Stability Lock
 
+
+
+## Build 28.3.45 — Market Truth Labels + Visual Stability Lock
+
+Cette Build part exactement de la 28.3.44 et corrige uniquement les ambiguïtés de lecture relevées sur les captures Market / Math Core.
+
+### Rendu strictement protégé
+
+- Le score ATLAS reste un entier compact (`50`, `59`, etc.) : aucun `/100`.
+- Aucun changement de `style.css`, aucune largeur de colonne modifiée, aucun badge visible ajouté au tableau.
+- Math Core Réduit / Latéral / Dessus, fiche Crypto, Market Snapshot et graphique gardent leur géométrie.
+
+### Corrections
+
+- Capitalisation >= 10^12 EUR : affichage en milliards explicites (`1 130 Md €`) au lieu de `1,13 Bn €`.
+- Tooltip terminal du graphique : `PRIX LIVE BINANCE · VARIATION <période>` afin de distinguer le prix spot live de la performance de la période graphique.
+- Contexte Math Core : distinction explicite `Spot LIVE Binance` / `série historique 30j · 721 pts`.
+- Décision : libellé compact inchangé ; sa justification est visible dans la fiche Crypto et au survol de la cellule.
+- 24 h, 7 j, capitalisation et volume : provenance exposée au survol sans ajouter de texte permanent dans le tableau.
+
+### Préservation
+
+- Modules 01–11 inchangés.
+- Simulation, données, graphiques, Métaux, Bridge, mémoire et workflow inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.45.
 
 
 ## Build 28.3.44 — 11 Modules Active Recall + Automatic Memory Parity Lock

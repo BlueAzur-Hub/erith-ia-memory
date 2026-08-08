@@ -501,6 +501,16 @@ const fmtUSD = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "US
 
 const fmtCompactUSD = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 2 });
 
+function atlasFormatMarketCapEUR(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "—";
+  if (Math.abs(n) >= 1e12) {
+    const billions = n / 1e9;
+    return `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: billions >= 1000 ? 0 : 2 }).format(billions)} Md €`;
+  }
+  return fmtCompactEUR.format(n);
+}
+
 function atlasFormatEUR(value) { return atlasFormatCurrency(value, "EUR"); }
 
 const fmtPct = (n) => typeof n === "number" ? `${n >= 0 ? "+" : ""}${n.toFixed(2)} %` : "Donnée manquante";
@@ -4250,10 +4260,11 @@ function atlasExternalChartTooltip(context) {
     ? rows.map(row => String(row.liveKind || "unavailable"))
     : [];
   const allKinds = kind => kinds.length > 0 && kinds.every(value => value === kind);
+  const tooltipPeriodLabel = atlasChartPeriodLabel(Number(chart.$atlasPeriod || state.chartPeriodDays || 1));
   const tooltipTitle = !everyRowIsCurrent
-    ? "PRIX HISTORIQUE"
+    ? `PRIX HISTORIQUE · VARIATION ${tooltipPeriodLabel}`
     : allKinds("live-binance")
-      ? "PRIX LIVE BINANCE"
+      ? `PRIX LIVE BINANCE · VARIATION ${tooltipPeriodLabel}`
       : allKinds("collected")
         ? "OBSERVATIONS COLLECTÉES"
         : allKinds("conserved")
@@ -10690,6 +10701,16 @@ function atlasActionForCoin(c) {
   return "Observer";
 }
 
+function atlasActionReasonForCoin(c) {
+  if (!c) return "Aucun actif exploitable.";
+  if (!atlasAnalysisLiveReady()) return "Données marché trop anciennes ou insuffisamment qualifiées pour l’analyse active : consultation seulement.";
+  const type = classifyAsset(c);
+  if (type === "Stablecoin") return "Stablecoin : surveiller surtout la stabilité et l’écart à l’ancrage.";
+  if (type === "Repère marché") return "Repère de marché : observer et comparer les mesures factuelles, sans transformer le score en signal d’achat.";
+  if (type === "Actif spéculatif") return "Actif spéculatif : volatilité élevée, lecture prudente renforcée.";
+  return "Lecture factuelle : observer les données avant toute interprétation.";
+}
+
 function renderBeginnerSummary() { if (!els.beginnerSummary) return; if (!state.liveOk || !state.coins.length) { els.beginnerSummary.textContent = "Le marché n’est pas lisible pour l’instant. Aucune source marché principale n’a fourni un tableau fiable. Donc : pas de prix, pas de conclusion, pas de tableau fictif."; if (els.advancedGrid) { els.advancedGrid.innerHTML = ` <div><b>État</b><span>Livecheck absent ou échec</span></div> <div><b>Tableau</b><span>Bloqué</span></div> <div><b>Données</b><span>Non récupérées</span></div> <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>`; } return; } const btc = state.coins.find(c => c.id === "bitcoin"); const eth = state.coins.find(c => c.id === "ethereum"); const first = state.coins[0]; els.beginnerSummary.textContent = `Marché lisible depuis ${state.mainSource}. ` + `Le tableau montre des données de marché réelles : prix, variation, volume et capitalisation. ` + `Bitcoin et Ethereum servent de repères. ` + `Les stablecoins ne sont pas des opportunités de hausse : ils servent surtout à lire stabilité et liquidité. ` + `Ce cockpit aide à observer, pas à acheter.`; if (els.advancedGrid) { const ratio = first?.volume24h && first?.marketCap ? ((first.volume24h / first.marketCap) * 100).toFixed(2) + " %" : "Donnée manquante"; els.advancedGrid.innerHTML = ` <div><b>Source</b><span>${escapeHtml(state.mainSource || "—")}</span></div> <div><b>Actifs chargés</b><span>${state.coins.length}</span></div> <div><b>BTC 24h</b><span>${btc ? atlasFmtMarketPct(btc.change24h) : "Donnée manquante"}</span></div> <div><b>ETH 24h</b><span>${eth ? atlasFmtMarketPct(eth.change24h) : "Donnée manquante"}</span></div> <div><b>Premier actif</b><span>${first ? escapeHtml(first.name) : "—"}</span></div> <div><b>Type</b><span>${escapeHtml(classifyAsset(first))}</span></div> <div><b>Vol/Market cap</b><span>${ratio}</span></div> <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>`; }
 }
 
@@ -11068,7 +11089,7 @@ function renderMarketTable() {
       ? `${clsPct(snapshot.change24h)} ${atlasMoveStrengthClass(snapshot.change24h)}`
       : "";
     const compactName = atlasMarketCompactName(c);
-    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</span></td><td class="${clsPct(snapshot.change7d)}">${fmtPct(snapshot.change7d)}</td><td class="market-col-advanced">${num(c.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="market-col-advanced">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><span class="market-comparison-meta"><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${atlasComparisonSeriesReadinessMarkup(c, selection)}</span>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
+    return `<tr class="asset-row ${primary ? 'is-selected' : ''} ${compared ? 'is-compared' : ''}" data-id="${escapeHtml(c.id)}" data-market-help-id="${escapeHtml(c.id)}" data-crypto-id="${escapeHtml(c.id)}" style="${atlasRibbonStyle(c, Math.max(0, Number(c.rank || 1) - 1))}" tabindex="0" role="button" aria-selected="${primary ? 'true' : 'false'}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${escapeHtml(`${c.name}. ${compared ? 'Retirer du' : 'Ajouter au'} graphique.`)}"><td>${c.rank ?? '—'}</td><td><div class="coin-cell"><i class="market-identity-rail"></i>${c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : ''}<div><strong class="market-coin-name" title="${escapeHtml(c.name)}">${escapeHtml(compactName)}</strong><span class="market-active-badge" ${primary ? '' : 'hidden'}>ACTIF</span><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">${escapeHtml(classifyAsset(c))}</span></div></div></td><td>${atlasCurrentQuoteMarkup(c)}</td><td class="market-move-cell" title="${escapeHtml(`24 h direct · ${snapshot.truthLabel} · ${snapshot.freshnessLabel}`)}"><span class="market-move-pill ${moveClass}">${escapeHtml(atlasMarketSnapshotChange24Text(snapshot))}</span></td><td class="${clsPct(snapshot.change7d)}" title="${escapeHtml(`7 j marché · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`)}">${fmtPct(snapshot.change7d)}</td><td class="market-col-advanced" title="${escapeHtml(`Capitalisation · snapshot marché · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`)}">${escapeHtml(atlasFormatMarketCapEUR(c.marketCap))}</td><td class="market-col-advanced" title="${escapeHtml(`Volume 24 h · snapshot marché · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`)}">${num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR))}</td><td class="spark-cell"><div class="spark-control"><button class="graph-row-toggle ${compared ? 'is-on' : ''}" type="button" data-market-action="compare" data-coin-id="${escapeHtml(c.id)}" aria-pressed="${compared ? 'true' : 'false'}" aria-label="${compareLabel} ${escapeHtml(c.symbol)} ${compared ? 'de' : 'à'} la comparaison">${compareLabel}</button><span class="market-comparison-meta"><small class="market-basket-status">${escapeHtml(atlasMarketBasketStatus(c, selection))}</small>${atlasComparisonSeriesReadinessMarkup(c, selection)}</span>${sparkSvg(c)}</div></td><td class="market-col-advanced">${s.score ?? '—'}</td><td class="market-col-advanced" title="${escapeHtml(atlasActionReasonForCoin(c))}">${beginnerDecision(c)}</td><td><div class="market-row-actions"><button type="button" data-market-action="open" data-coin-id="${escapeHtml(c.id)}">Solo</button><button type="button" data-market-action="watch" data-coin-id="${escapeHtml(c.id)}" class="${watched ? 'is-on' : ''}">${watched ? 'Suivi' : 'Suivre'}</button><button type="button" data-market-action="alert" data-coin-id="${escapeHtml(c.id)}">Alerte</button><button type="button" data-market-action="sources" data-coin-id="${escapeHtml(c.id)}">Sources</button></div>${profiles[c.id]?.note ? `<small class="market-watch-note">${escapeHtml(profiles[c.id].note)}</small>` : ''}</td></tr>`;
   }).join("");
 
   const updated = state.timestamp ? new Date(state.timestamp).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) : "—";
@@ -12292,7 +12313,7 @@ function renderAtlasMathCore() {
       ? atlasMarketQuoteTruthLabel(currentQuote)
       : "prix indisponible";
     contextLine.textContent = coin
-      ? `${coin.symbol} · ${coin.name} · ${periodLabel} · ${pointCount || 0} pts · ${quoteTruth}`
+      ? `${coin.symbol} · ${coin.name} · Spot ${quoteTruth} · série historique ${periodLabel} · ${pointCount || 0} pts`
       : "Contexte Market : en attente";
   }
 
@@ -22092,7 +22113,7 @@ function atlasMarketHelpDefinition(row) {
         <span><small>7 j marché</small><strong data-help-live="change7d" class="${clsPct(snapshot.change7d)}">${escapeHtml(fmtPct(snapshot.change7d))}</strong></span>
         <span><small>30 j marché</small><strong data-help-live="change30d" class="${clsPct(snapshot.change30d)}">${escapeHtml(fmtPct(snapshot.change30d))}</strong></span>
         <span><small>Vol./cap.</small><strong>${Number.isFinite(ratio) ? `${ratio.toFixed(2)} %` : "—"}</strong></span>
-        <span><small>Capitalisation</small><strong>${escapeHtml(num(coin.marketCap, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
+        <span><small>Capitalisation</small><strong>${escapeHtml(atlasFormatMarketCapEUR(coin.marketCap))}</strong></span>
         <span><small>Volume 24 h</small><strong>${escapeHtml(num(coin.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
         <span><small>Score Atlas</small><strong>${escapeHtml(score.score ?? "—")}</strong></span>
         <span><small>Décision</small><strong>${escapeHtml(beginnerDecision(coin))}</strong></span>
@@ -22100,6 +22121,7 @@ function atlasMarketHelpDefinition(row) {
       <div class="atlas-help-market-sources">
         <span><b>Cotation et 24 h observés</b><em data-help-live="observed-source">${escapeHtml(snapshot.truthLabel)} · ${escapeHtml(snapshot.freshnessLabel)}</em></span>
         <span><b>Référence marché 24 h</b><em data-help-live="market-reference">${escapeHtml(Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—")} · ${escapeHtml(snapshot.marketSourceLabel)} · ${escapeHtml(snapshot.marketFrameLabel)}</em></span>
+        <span><b>Pourquoi cette décision</b><em>${escapeHtml(atlasActionReasonForCoin(coin))}</em></span>
       </div>
       <div class="atlas-help-market-action ${compared ? "is-remove" : "is-add"}">${compared ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique ou appuie sur Entrée pour retirer` : `Non sélectionné · clique ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`}</div>`
   };
@@ -36001,11 +36023,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.44";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.45";
 
-const ATLAS_BUILD = "28.3.44";
+const ATLAS_BUILD = "28.3.45";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.44";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.45";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
