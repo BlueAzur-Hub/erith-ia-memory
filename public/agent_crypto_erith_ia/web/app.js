@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.38 — cotation Binance fraîche pour exécution fictive et snapshot CoinGecko explicitement secondaire.
+  Build 28.3.39 — Module 02 Visual Recap + Pedagogical Isolation Lock.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -34784,11 +34784,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.38";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.39";
 
-const ATLAS_BUILD = "28.3.38";
+const ATLAS_BUILD = "28.3.39";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.38";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.39";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
