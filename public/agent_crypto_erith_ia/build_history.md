@@ -1,5 +1,20 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.37 — Module 02 Spot Single Click + Silent Simulation Focus Lock
+
+- Base : Build 28.3.36.
+- Retour Firefox réel : après « Simuler l’achat fictif de 50 € de BTC », la page pouvait encore se déplacer et l’étape rester à 3/5 sans résultat visible.
+- Cause résiduelle isolée : le moteur pédagogique appelait encore le test générique du simulateur. Celui-ci exécute `resetSimulation()` puis `simulateOrder()`, et chacun rerend le grand panneau Simulation situé au-dessus du cockpit. Même avec le cockpit regroupé en un seul rendu, ces changements de hauteur déplaçaient visuellement la zone d’apprentissage.
+- Le Module 02 exécute maintenant exactement le même moteur avec rendu du panneau Simulation désactivé pour cette transaction seulement. L’état local, le portefeuille fictif, le journal et la preuve pédagogique sont conservés.
+- Verrou de clic : aucune seconde simulation concurrente tant que la première n’est pas terminée.
+- Retour immédiat dans la carte : « Simulation en cours… », puis résultat ou message de réessai.
+- Succès : une seule reconstruction du cockpit et un seul cadrage final vers l’étape 5.
+- Échec réel : l’étape 4 reste la destination et aucune progression n’est créée.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.37.
+
+---
+
 ## Build 28.3.36 — Module 02 Spot Livecheck Handoff + Local Result Focus Lock
 
 - Base : Build 28.3.35.

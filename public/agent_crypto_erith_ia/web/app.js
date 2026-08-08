@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.36 — Livecheck pédagogique joint, résultat local et cadrage déterministe du Module 02.
+  Build 28.3.37 — clic unique Spot, simulation silencieuse et cadrage stable du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -16906,8 +16906,8 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
       read:{ title:"1. Comprendre ordre, exécution et position", where:"LEÇON INTÉGRÉE AU COCKPIT — 02 · Spot et carnet d’ordres", action:"Lire les définitions affichées, puis utiliser le bouton visible « Valider l’étape 1 après lecture » placé sous la leçon.", why:"Ordre, exécution et position sont trois moments différents.", result:"L’étape 1 devient verte et le carnet pédagogique est présenté.", remember:"Ordre = demande ; exécution = réalisation ; position = quantité conservée." },
       open:{ title:"2. Comprendre qui achète et qui vend", where:"Carnet d’ordres pédagogique du parcours débutant", action:"Répondre d’abord dans les deux colonnes : choisir un vendeur pour un achat immédiat, puis un acheteur pour une vente immédiate. La règle n’est expliquée qu’après la première tentative.", why:"Le rappel actif oblige à distinguer réellement le côté vendeur du côté acheteur avant de relire la règle.", result:"Après chaque première réponse, le cockpit valide ou demande une correction, puis explique Ask ou Bid. Deux réponses correctes calculent le Spread et ouvrent l’étape 3.", remember:"La règle Ask / Bid et le calcul du Spread apparaissent après tes réponses, pas avant." },
       practice:{ title:"3. Choisir entre ordre au marché et ordre limite", where:"Mini-exercice « Marché ou limite ? »", action:"Choisir l’ordre au marché pour acheter immédiatement et l’ordre limite pour refuser de dépasser un prix.", why:"L’un privilégie l’exécution ; l’autre privilégie le prix choisi.", result:"Les deux réponses correctes valident l’étape 3.", remember:"Un ordre limite peut attendre ou être exécuté partiellement." },
-      verify:{ title:"4. Simuler un achat au marché de 50 € de BTC", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"50 € est le montant engagé ; la quantité reçue est une fraction de BTC calculée au prix d’entrée." },
-      note:{ title:"5. Comprendre l’exécution et la position", where:"Carte « Synthèse guidée du Module 02 »", action:"Lire la synthèse construite avec la position fictive, puis répondre à la question « Un ordre limite garantit-il une exécution immédiate ? ».", why:"Le cockpit doit relier demande, exécution, quantité reçue et capital restant avant de vérifier la compréhension.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un ordre limite protège un prix maximal, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté." }
+      verify:{ title:"4. Simuler un achat fictif de 50 € de BTC", where:"Cockpit pédagogique — étape 4", action:"Cliquer une seule fois sur « Simuler 50 € de BTC (fictif) ». Le cockpit vérifie les données puis effectue la simulation en arrière-plan.", why:"50 € représentent 5 % du capital virtuel de 1 000 €.", result:"Le résultat apparaît dans cette carte, puis l’étape 5 s’ouvre automatiquement.", remember:"Une position est simplement la quantité de BTC détenue virtuellement après l’achat." },
+      note:{ title:"5. Comprendre le résultat", where:"Carte « Synthèse guidée du Module 02 »", action:"Lire le résultat de la simulation puis répondre à la question « Un ordre limite garantit-il une exécution immédiate ? ».", why:"Le cockpit relie le type d’ordre, la quantité fictive reçue et l’argent virtuel restant avant de vérifier la compréhension.", result:"La réponse « Non » enregistre la synthèse guidée et valide l’étape 5. La note personnelle reste facultative.", remember:"Un ordre limite protège un prix maximal, mais il peut attendre, être partiellement exécuté ou ne jamais être exécuté." }
     }
   },
   risk:{
@@ -18811,10 +18811,10 @@ function foundationSpotLab(cockpit) {
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${step4Done ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 4 · ACHAT FICTIF</span>
-        <h5>Simuler l’achat de 50 € de BTC</h5>
-        <p>Le cockpit vérifie les données de marché en arrière-plan puis simule l’achat. Une « position » désigne simplement la quantité de BTC détenue dans le portefeuille virtuel après cet achat. Aucun ordre réel, aucune clé API et aucun wallet.</p>
-        ${foundationButton(step4Done ? "Achat fictif de 50 € de BTC simulé" : "Simuler l’achat fictif de 50 € de BTC", "spot_run_safe_btc", !step3Done || step4Done)}
-        <small>${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · prix d’entrée ${escapeHtml(summary.entryText)} · argent disponible ${escapeHtml(summary.cashText)}.` : "Le résultat apparaîtra ici ; le simulateur complet reste un outil technique secondaire."}</small>
+        <h5>Simuler 50 € de BTC ${foundationHelpBubble("Une « position » est simplement la quantité de BTC détenue dans ton portefeuille virtuel après l’achat. Rien n’est acheté réellement.", "Que signifie position ?")}</h5>
+        <p><b>Un seul clic suffit.</b> Le cockpit vérifie les données puis simule l’achat en arrière-plan. Aucun ordre réel, aucune clé API et aucun wallet.</p>
+        ${foundationButton(step4Done ? "Achat fictif de 50 € simulé" : "Simuler 50 € de BTC (fictif)", "spot_run_safe_btc", !step3Done || step4Done)}
+        <small id="spotFoundationPurchaseStatus">${summary.ready ? `Résultat : ${escapeHtml(summary.quantityText)} BTC détenus virtuellement · prix d’entrée ${escapeHtml(summary.entryText)} · argent disponible ${escapeHtml(summary.cashText)}.` : "Clique une fois : le résultat s’affichera ici, puis l’étape 5 s’ouvrira."}</small>
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · COMPRENDRE</span>
@@ -18822,7 +18822,7 @@ function foundationSpotLab(cockpit) {
         <p class="foundation-guided-summary">${escapeHtml(summary.text)}</p>
         <p><b>Question :</b> un ordre limite garantit-il une exécution immédiate ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="spot_limit_guarantee_yes" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="spot_limit_guarantee_no" ${step5Ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
-        <small>${e.spot_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La leçon vient de fournir la réponse : un ordre limite peut attendre ou ne pas être exécuté." : "Disponible après la position BTC fictive de 50 €."}</small>
+        <small>${e.spot_guided_conclusion ? "Réponse enregistrée. La synthèse sera conservée dans l’archive." : step5Ready ? "La simulation est terminée : réponds maintenant de mémoire." : "Disponible après la simulation fictive de 50 €."}</small>
       </article>
     </div>`;
 }
@@ -19976,7 +19976,31 @@ function atlasLearningFinishSpotViewport(stage, viewport, options = {}) {
   }));
 }
 
+function atlasLearningSpotPurchaseUi(stateName, text = "") {
+  const button = els.learningFoundationLab?.querySelector?.('[data-foundation-action="spot_run_safe_btc"]') || null;
+  const status = document.getElementById("spotFoundationPurchaseStatus");
+  if (button) {
+    if (stateName === "busy") {
+      button.disabled = true;
+      button.textContent = "Simulation en cours…";
+      button.setAttribute("aria-busy", "true");
+    } else {
+      button.removeAttribute("aria-busy");
+      if (stateName === "retry") {
+        button.disabled = false;
+        button.textContent = "Réessayer la simulation fictive";
+      }
+    }
+  }
+  if (status && text) status.textContent = text;
+}
+
 async function runSpotFoundationSchoolPosition(cockpit) {
+  // Un clic = une transaction. Tant qu’elle est en cours, aucun second clic ne
+  // peut lancer une seconde simulation ou une seconde chaîne de Livecheck.
+  if (atlasSpotFoundationPurchaseBusy) return false;
+  atlasSpotFoundationPurchaseBusy = true;
+
   const root = document.documentElement;
   const body = document.body;
   const viewport = {
@@ -19986,63 +20010,51 @@ async function runSpotFoundationSchoolPosition(cockpit) {
     previousBodyOverflowAnchor:body?.style?.overflowAnchor ?? ""
   };
 
-  // Le verrou de viewport commence AVANT le Livecheck. Dans la 28.3.35 il ne
-  // couvrait que le rerendu du simulateur ; une lecture automatique ou relancée
-  // pouvait donc encore déplacer l'écran avant même la création fictive.
   atlasLearningSetManualScrollRestoration();
   if (root?.style) root.style.overflowAnchor = "none";
   if (body?.style) body.style.overflowAnchor = "none";
+  atlasLearningSpotPurchaseUi("busy", "Vérification des données puis simulation fictive en cours… Un seul clic suffit.");
 
-  if (!atlasAnalysisLiveReady() || !state.coins?.length) {
-    setActionFeedback(
-      "info",
-      state.auto?.livecheckBusy ? "Lecture du marché déjà en cours" : "Vérification des données de marché",
-      state.auto?.livecheckBusy
-        ? "Le cockpit attend le Livecheck automatique déjà lancé ; aucun second contrôle concurrent n’est créé."
-        : "Le cockpit vérifie automatiquement les données nécessaires avant la simulation fictive.",
-      els.learningFoundationPanel
-    );
-  }
-
-  const marketReady = await atlasLearningEnsureFoundationMarketReady("foundation_spot_school_position");
-  if (!marketReady) {
-    atlasLearningFinishSpotViewport(4, viewport, { flash:true });
-    spotFoundationFeedback(
-      false,
-      "Données de marché indisponibles",
-      "Aucune simulation n’a été créée. Le cockpit reste sur l’étape 4 ; réessaie ce même bouton lorsque la lecture publique est revenue."
-    );
-    return false;
-  }
-
-  // La simulation et le cockpit sont reconstruits comme une seule transaction
-  // pédagogique. Le simulateur complet peut rerendre ses propres cartes, mais
-  // il ne devient jamais la destination de navigation de cette action.
-  atlasLearningHoldCockpitRender();
   try {
-    runSchoolTest("safe_btc_5");
-  } finally {
-    atlasLearningReleaseCockpitRender();
-  }
+    const marketReady = await atlasLearningEnsureFoundationMarketReady("foundation_spot_school_position");
+    if (!marketReady) {
+      atlasLearningSpotPurchaseUi("retry", "Données de marché indisponibles pour l’instant : aucun achat fictif n’a été créé. Réessaie ce même bouton.");
+      atlasLearningFinishSpotViewport(4, viewport, { flash:false });
+      return false;
+    }
 
-  const current = loadLearningCockpitState();
-  const ok = current.module_key === "spot" && current.steps.verify === true;
-  if (ok) {
+    // Le moteur de simulation travaille ici sans rerendre le grand panneau
+    // Paper Trading situé au-dessus du cockpit. Son état local est bien écrit,
+    // mais l’interface technique n’est pas reconstruite pendant cette action.
+    // Cela supprime la variation de hauteur qui provoquait la « valse ».
+    atlasLearningHoldCockpitRender();
+    let result = null;
+    try {
+      result = runSchoolTest("safe_btc_5", { render:false, output:false });
+    } finally {
+      atlasLearningReleaseCockpitRender();
+    }
+
+    const current = loadLearningCockpitState();
+    const ok = result?.ok === true && current.module_key === "spot" && current.steps.verify === true;
+    if (!ok) {
+      atlasLearningSpotPurchaseUi("retry", "La simulation n’a pas été confirmée : aucune progression n’a été fabriquée. Réessaie ce même bouton.");
+      atlasLearningFinishSpotViewport(4, viewport, { flash:false });
+      return false;
+    }
+
+    // Une seule reconstruction pédagogique a déjà eu lieu à la libération du
+    // hold. Un seul cadrage final vise maintenant l’étape 5.
     atlasLearningFinishSpotViewport(5, viewport, { flash:true });
-    spotFoundationFeedback(
-      true,
-      "Achat fictif simulé",
-      "Le résultat est conservé dans le portefeuille virtuel et le journal local. Étape 5 ouverte juste après l’explication du résultat."
-    );
-  } else {
-    atlasLearningFinishSpotViewport(4, viewport, { flash:true });
-    spotFoundationFeedback(
-      false,
-      "Simulation non confirmée",
-      "Aucune preuve de position virtuelle n’a été enregistrée. Le cockpit reste sur l’étape 4."
-    );
+    return true;
+  } catch (error) {
+    atlasLearningSpotPurchaseUi("retry", "La simulation a été interrompue sans modifier la progression. Réessaie ce même bouton.");
+    atlasLearningFinishSpotViewport(4, viewport, { flash:false });
+    console.error("[LEARNING][SPOT] simulation fictive interrompue", error);
+    return false;
+  } finally {
+    atlasSpotFoundationPurchaseBusy = false;
   }
-  return ok;
 }
 
 async function runFoundationSchoolPosition(moduleKey) {
@@ -20495,6 +20507,7 @@ function renderLearningNotebookSeparation(cockpit, foundation) {
 
 let atlasLearningCockpitRenderHoldDepth = 0;
 let atlasLearningCockpitRenderPending = false;
+let atlasSpotFoundationPurchaseBusy = false;
 
 function atlasLearningHoldCockpitRender() {
   atlasLearningCockpitRenderHoldDepth += 1;
@@ -21976,10 +21989,10 @@ function loadSimulation() {
 
 function saveSimulation() { try { localStorage.setItem(simulationStorageKey(), JSON.stringify(state.sim)); } catch {} }
 
-function resetSimulation() {
+function resetSimulation(options = {}) {
   state.sim = migrateSimulationState({ cash: SIM_PROFILE.startCash, initialCash: SIM_PROFILE.startCash, profileKey: SIM_PROFILE.key, positions: {}, realizedPnl: 0, logs: [{ time: new Date().toISOString(), type: "RESET", message: `Simulation réinitialisée sur profil ${SIM_PROFILE.label}.` }] });
   saveSimulation();
-  renderSimulation();
+  if (options.render !== false) renderSimulation();
 }
 
 function switchSimulationProfile(profileKey) {
@@ -22059,11 +22072,11 @@ function getSimulationProfileStatus() {
 
 function profileRefusal(message, extra = {}) { return commandError(message, { profile: getSimulationProfileStatus(), ...extra }); }
 
-function simulationRefusal(message, extra = {}) {
+function simulationRefusal(message, extra = {}, options = {}) {
   if (!state.sim) loadSimulation();
   simLog({ type: "REFUS", message });
   saveSimulation();
-  renderSimulation();
+  if (options.render !== false) renderSimulation();
   return profileRefusal(message, extra);
 }
 
@@ -22080,34 +22093,34 @@ function simulationPayload() {
   return { mode: "paper_trading_only", profile: getSimulationProfileStatus(), cost_assumptions: costs, cash_eur: state.sim.cash, initial_cash_eur: state.sim.initialCash, positions_value_eur: totals.positionsValue, total_value_eur: totals.total, pnl_eur: totals.pnl, estimated_net_total_eur: netTotals.total, estimated_net_pnl_eur: netTotals.pnl, realized_pnl_eur: state.sim.realizedPnl || 0, positions, logs: state.sim.logs.slice(0, 10) };
 }
 
-function simulateOrder(side, symbolInput = null, amountInput = null) {
-  if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload());
+function simulateOrder(side, symbolInput = null, amountInput = null, options = {}) {
+  if (!atlasAnalysisLiveReady()) return simulationRefusal("Simulation suspendue : snapshot public CoinGecko récent requis.", sourceHealthPayload(), options);
   const symbol = normalizeSymbol(symbolInput || els.simSymbol?.value || "");
   const amount = Number(amountInput ?? els.simAmount?.value ?? 0);
-  if (!symbol) return simulationRefusal("Actif manquant.");
-  if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.");
-  if (!SIM_PROFILE.allowedSymbols.includes(symbol)) return simulationRefusal(`${SIM_PROFILE.label} : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol });
+  if (!symbol) return simulationRefusal("Actif manquant.", {}, options);
+  if (!Number.isFinite(amount) || amount <= 0) return simulationRefusal("Montant invalide.", {}, options);
+  if (!SIM_PROFILE.allowedSymbols.includes(symbol)) return simulationRefusal(`${SIM_PROFILE.label} : ${symbol} refusé. Autorisés : ${SIM_PROFILE.allowedSymbols.join(" / ")}.`, { requested_symbol: symbol }, options);
   const coin = findCoinByQuery(symbol);
-  if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol });
+  if (!coin) return simulationRefusal(`Actif autorisé mais non chargé par le Livecheck : ${symbol}. Relance Livecheck.`, { requested_symbol: symbol }, options);
   if (!state.sim) loadSimulation();
   const marketPrice = coin.price;
-  if (!Number.isFinite(marketPrice) || marketPrice <= 0) return simulationRefusal("Prix indisponible pour simulation.");
+  if (!Number.isFinite(marketPrice) || marketPrice <= 0) return simulationRefusal("Prix indisponible pour simulation.", {}, options);
   const sym = coin.symbol.toUpperCase();
-  if (amount > SIM_PROFILE.maxPerOperation) return simulationRefusal(`${SIM_PROFILE.label} : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount });
+  if (amount > SIM_PROFILE.maxPerOperation) return simulationRefusal(`${SIM_PROFILE.label} : maximum par opération = ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.`, { requested_amount_eur: amount }, options);
   const costs = readSimCostInputs();
   const pos = state.sim.positions[sym] || { symbol: sym, name: coin.name, qty: 0, avgPrice: 0, invested: 0, lastPrice: marketPrice, buyFeesEur: 0, entryImpactEur: 0 };
 
   if (side === "buy") {
     const totals = getSimulationTotals();
-    if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount });
-    if (state.sim.cash - amount < SIM_PROFILE.minReserve) return simulationRefusal(`${SIM_PROFILE.label} : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount });
-    if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) return simulationRefusal(`${SIM_PROFILE.label} : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount });
+    if (amount > state.sim.cash) return simulationRefusal("Capital virtuel insuffisant.", { cash: state.sim.cash, requested: amount }, options);
+    if (state.sim.cash - amount < SIM_PROFILE.minReserve) return simulationRefusal(`${SIM_PROFILE.label} : réserve minimale obligatoire = ${fmtEUR.format(SIM_PROFILE.minReserve)}.`, { cash_after_order_eur: state.sim.cash - amount }, options);
+    if (totals.positionsValue + amount > SIM_PROFILE.maxExposure) return simulationRefusal(`${SIM_PROFILE.label} : exposition maximale = ${fmtEUR.format(SIM_PROFILE.maxExposure)}.`, { exposure_after_order_eur: totals.positionsValue + amount }, options);
 
     const buyFeeEur = amount * costs.buyFeePct / 100;
     const netAssetBudget = Math.max(0, amount - buyFeeEur);
     const executionPrice = marketPrice * (1 + costs.entryImpactPct / 100);
     const qty = executionPrice > 0 ? netAssetBudget / executionPrice : 0;
-    if (!(qty > 0)) return simulationRefusal("Les hypothèses de coûts ne laissent aucun montant convertible.");
+    if (!(qty > 0)) return simulationRefusal("Les hypothèses de coûts ne laissent aucun montant convertible.", {}, options);
     const entryImpactEur = Math.max(0, qty * executionPrice - qty * marketPrice);
     const oldQty = pos.qty;
     const newQty = oldQty + qty;
@@ -22121,7 +22134,7 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
     state.sim.cash -= amount;
     simLog({ type: "SIM_BUY", symbol: sym, amount_eur: amount, market_price_eur: marketPrice, execution_price_eur: executionPrice, buy_fee_eur: buyFeeEur, entry_impact_eur: entryImpactEur, qty, message: `Achat simulé ${sym} pour ${fmtEUR.format(amount)} · frais ${fmtEUR.format(buyFeeEur)} · quantité ${qty.toFixed(8)}.` });
   } else if (side === "sell") {
-    if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`);
+    if (!pos.qty || pos.qty <= 0) return simulationRefusal(`Aucune position virtuelle à vendre pour ${sym}.`, {}, options);
     const maxMarketValue = pos.qty * marketPrice;
     const requestedMarketValue = Math.min(amount, maxMarketValue);
     const qty = Math.min(pos.qty, requestedMarketValue / marketPrice);
@@ -22141,7 +22154,7 @@ function simulateOrder(side, symbolInput = null, amountInput = null) {
     simLog({ type: "SIM_SELL", symbol: sym, amount_eur: grossExecutionValue, market_price_eur: marketPrice, execution_price_eur: executionPrice, sell_fee_eur: sellFeeEur, net_proceeds_eur: netProceedsEur, realized_pnl_eur: realizedPnlEur, qty, message: `Vente simulée ${sym} · brut ${fmtEUR.format(grossExecutionValue)} · net ${fmtEUR.format(netProceedsEur)} · résultat ${atlasSignedEUR(realizedPnlEur)}.` });
   }
   saveSimulation();
-  renderSimulation();
+  if (options.render !== false) renderSimulation();
   return commandOk(`sim_${side} ${sym} ${amount}`, { side, symbol: sym, amount_eur: amount, market_price_eur: marketPrice, costs, portfolio: simulationPayload() });
 }
 
@@ -22471,31 +22484,33 @@ function renderSchoolResult(kind, title, text, bullets = []) { const el = els.sc
 function schoolNeedsLivecheck() { if (state.liveOk && state.coins.length) return false; renderSchoolResult("err", "Livecheck requis", "Clique d’abord sur Lancer Livecheck. Le simulateur refuse de travailler sans prix réel chargé.", [ "Aucun prix n’est inventé.", "Aucun test n’est lancé tant que la source marché n’est pas prête.", "Après Livecheck OK, recommence le test guidé." ]); return true;
 }
 
-function runSchoolTest(testName) {
+function runSchoolTest(testName, options = {}) {
+  const renderUi = options.render !== false;
+  const renderOutput = options.output !== false && renderUi;
   const safeAmount = SIM_PROFILE.defaultAmount;
   const tooBigAmount = SIM_PROFILE.maxPerOperation * 5;
   const ceilingUnit = SIM_PROFILE.maxExposure / 3;
   if (testName === "reset_100") {
-    resetSimulation();
+    resetSimulation({ render:renderUi });
     setSimManualFields("BTC", safeAmount);
-    renderCommandOutput(commandOk("reset_sim", simulationPayload()));
-    renderSchoolResult("neutral", `Simulateur remis à ${fmtEUR.format(SIM_PROFILE.startCash)}`, "Tu repars avec un portefeuille virtuel propre pour le profil actif.", [ `Capital virtuel : ${fmtEUR.format(SIM_PROFILE.startCash)}.`, "Position : 0 €.", "L’autre profil reste conservé." ]);
-    return;
+    if (renderOutput) renderCommandOutput(commandOk("reset_sim", simulationPayload()));
+    if (renderUi) renderSchoolResult("neutral", `Simulateur remis à ${fmtEUR.format(SIM_PROFILE.startCash)}`, "Tu repars avec un portefeuille virtuel propre pour le profil actif.", [ `Capital virtuel : ${fmtEUR.format(SIM_PROFILE.startCash)}.`, "Position : 0 €.", "L’autre profil reste conservé." ]);
+    return true;
   }
   if (schoolNeedsLivecheck()) return;
   let result = null;
   if (testName === "safe_btc_5") {
-    resetSimulation();
+    resetSimulation({ render:renderUi });
     setSimManualFields("BTC", safeAmount);
-    result = simulateOrder("buy", "BTC", safeAmount);
-    renderCommandOutput(result);
-    renderSchoolResult(result?.ok ? "ok" : "err", result?.ok ? "Accepté : opération prudente" : "Erreur inattendue", result?.ok ? `BTC ${fmtEUR.format(safeAmount)} est accepté : ticket conseillé ${fmtEUR.format(SIM_PROFILE.defaultAmount)}, maximum ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.` : (result?.error || "Le test n’a pas donné le résultat attendu."), result?.ok ? [ `Tu as investi ${fmtEUR.format(safeAmount)} virtuels.`, `Il reste environ ${fmtEUR.format(state.sim.cash)} virtuels disponibles.`, "Une quantité fictive de BTC apparaît dans Portefeuille virtuel." ] : [ "Aucun argent réel.", "Regarde le journal pour le détail." ]);
+    result = simulateOrder("buy", "BTC", safeAmount, { render:renderUi });
+    if (renderOutput) renderCommandOutput(result);
+    if (renderUi) renderSchoolResult(result?.ok ? "ok" : "err", result?.ok ? "Accepté : opération prudente" : "Erreur inattendue", result?.ok ? `BTC ${fmtEUR.format(safeAmount)} est accepté : ticket conseillé ${fmtEUR.format(SIM_PROFILE.defaultAmount)}, maximum ${fmtEUR.format(SIM_PROFILE.maxPerOperation)}.` : (result?.error || "Le test n’a pas donné le résultat attendu."), result?.ok ? [ `Tu as investi ${fmtEUR.format(safeAmount)} virtuels.`, `Il reste environ ${fmtEUR.format(state.sim.cash)} virtuels disponibles.`, "Une quantité fictive de BTC apparaît dans Portefeuille virtuel." ] : [ "Aucun argent réel.", "Regarde le journal pour le détail." ]);
     if (result?.ok) {
       const learning = loadLearningCockpitState();
       if (learning.module_key === "risk") recordLearningPracticeEvidence("risk_position", true);
       else if (learning.module_key === "spot") recordLearningPracticeEvidence("spot_position", true);
     }
-    return;
+    return result;
   }
   if (testName === "too_big_btc_50") {
     resetSimulation();
@@ -34554,11 +34569,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.36";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.37";
 
-const ATLAS_BUILD = "28.3.36";
+const ATLAS_BUILD = "28.3.37";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.36";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.37";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

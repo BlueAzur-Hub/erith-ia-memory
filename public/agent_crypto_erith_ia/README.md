@@ -1,13 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.36  
-**Build :** 28.3.36  
-**Mission :** Module 02 Spot Livecheck Handoff + Local Result Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.37  
+**Build :** 28.3.37  
+**Mission :** Module 02 Spot Single Click + Silent Simulation Focus Lock
 
 
 
+## Build 28.3.37 — Module 02 Spot Single Click + Silent Simulation Focus Lock
 
+Cette Build part exactement de la 28.3.36.
 
+### Mission unique
+
+Supprimer la « valse » encore visible après le clic de l’étape 4 du Module 02 en séparant enfin le **moteur de simulation** de son **grand panneau d’affichage** pendant cette action pédagogique.
+
+- **Un clic suffit** sur « Simuler 50 € de BTC (fictif) ». Un verrou empêche tout second déclenchement pendant l’opération.
+- Le bouton affiche immédiatement « Simulation en cours… » et la carte indique ce que fait le cockpit ; il n’est plus nécessaire de recliquer pour savoir si l’action travaille.
+- La simulation de 50 € utilise le moteur existant, mais avec `render:false` : l’état du portefeuille virtuel et le journal sont bien écrits sans reconstruire le grand panneau Paper Trading placé plus haut dans la page.
+- Cette séparation élimine les changements de hauteur successifs provoqués auparavant par `resetSimulation()` puis `simulateOrder()` ; c’était la source résiduelle de la « valse » même quand les rerendus du cockpit étaient regroupés.
+- Après réussite, une seule reconstruction pédagogique est effectuée et un seul cadrage final vise l’étape 5.
+- En cas d’indisponibilité réelle des données, l’étape 4 reste visible et le même bouton devient « Réessayer la simulation fictive » ; aucune progression n’est fabriquée.
+- Le texte de l’étape 4 est raccourci : la définition de « position » passe dans une bulle d’aide et la consigne insiste sur le clic unique.
+- Le moteur de simulation reste rétrocompatible : son rendu reste actif partout ailleurs par défaut.
+- Modification fonctionnelle : `web/app.js` uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.37.
 
 ## Build 28.3.36 — Module 02 Spot Livecheck Handoff + Local Result Focus Lock
 
