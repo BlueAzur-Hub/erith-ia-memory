@@ -1,10 +1,30 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.32  
-**Build :** 28.3.32  
-**Mission :** Module 02 Market / Limit Active Recall Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.33  
+**Build :** 28.3.33  
+**Mission :** Module 02 Spot Position Direct Focus Lock
 
 
+
+
+## Build 28.3.33 — Module 02 Spot Position Direct Focus Lock
+
+Cette Build part exactement de la 28.3.32.
+
+### Mission unique
+
+Supprimer le détour visuel observé après le clic `Créer la position BTC fictive de 50 €`.
+
+- Le bouton conserve exactement la même simulation fictive, les mêmes preuves et la même validation de l’étape 4.
+- Avant que la simulation ne reconstruise ses panneaux, le cockpit cadre directement la destination pédagogique attendue : l’étape 5.
+- Le moteur de cadrage existant est réutilisé : aucun second système de scroll n’est créé.
+- Le cadrage préparatoire est immédiat, sans animation ni flash, afin d’éviter l’effet de « valse ».
+- Après la simulation, le ciblage existant de l’étape 5 reste en place comme vérification finale.
+- La correction est limitée au chemin Module 02 `spot` ; le Module 03 n’est pas modifié.
+- Les bulles d’aide, le rappel actif Ask/Bid et Marché/Limite restent inchangés.
+- Modification fonctionnelle : `web/app.js`, bloc pédagogique / navigation uniquement.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` restent strictement inchangés.
+- Version Control Protected Core : logique strictement inchangée ; seules les constantes d’identité passent à 28.3.33.
 
 ## Build 28.3.32 — Module 02 Market / Limit Active Recall Lock
 

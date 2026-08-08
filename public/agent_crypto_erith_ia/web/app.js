@@ -1,6 +1,6 @@
 /*
   AGENT-CRYPTO — HUMAN JAVASCRIPT ARCHITECTURE
-  Build 28.3.32 — rappel actif Marché / Limite du Module 02.
+  Build 28.3.33 — cadrage direct après création de la position fictive du Module 02.
 
   NAVIGATION HUMAINE
   00 — GLOBAL / CONFIGURATION / OUTILS PARTAGES
@@ -19917,6 +19917,20 @@ function handleFoundationAction(action) {
 
 }
 
+function atlasLearningPrimeFoundationStageFocus(stage) {
+  const stageNumber = String(stage || "").trim();
+  if (!stageNumber) return false;
+  const lab = els.learningFoundationLab || document.getElementById("learningFoundationLab");
+  const target = lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
+  if (!target) return false;
+  return atlasLearningPositionTarget(target, {
+    smooth:false,
+    flash:false,
+    topGap:ATLAS_LEARNING_STAGE_TOP_GAP,
+    tolerance:0
+  });
+}
+
 async function runFoundationSchoolPosition(moduleKey) {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at || cockpit.module_key !== moduleKey) return false;
@@ -19928,6 +19942,10 @@ async function runFoundationSchoolPosition(moduleKey) {
       return false;
     }
   }
+  // Module 02 : cadrer la destination finale avant que la simulation
+  // reconstruise plusieurs zones de l’interface. Le navigateur garde ainsi
+  // l’étape 5 comme ancre visuelle au lieu de revenir brièvement ailleurs.
+  if (moduleKey === "spot") atlasLearningPrimeFoundationStageFocus(5);
   runSchoolTest("safe_btc_5");
   const current = loadLearningCockpitState();
   const ok = moduleKey === "spot" ? current.steps.verify === true : current.steps.practice === true;
@@ -34403,11 +34421,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.32";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.33";
 
-const ATLAS_BUILD = "28.3.32";
+const ATLAS_BUILD = "28.3.33";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.32";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.33";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

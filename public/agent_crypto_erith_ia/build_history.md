@@ -1,5 +1,19 @@
 # Agent-Crypto — historique des builds
 
+## Build 28.3.33 — Module 02 Spot Position Direct Focus Lock
+
+- Base : Build 28.3.32.
+- Correction ciblée du clic `Créer la position BTC fictive de 50 €`.
+- Le viewport est cadré directement sur l’étape 5 juste avant les rerendus de simulation.
+- Réutilisation du moteur `atlasLearningPositionTarget` existant ; aucun nouveau moteur de scroll.
+- Cadrage préparatoire sans animation ni flash pour éviter le détour visuel.
+- Validation, simulation fictive, preuves, IndexedDB et pédagogie Ask/Bid + Marché/Limite inchangées.
+- Correction limitée au Module 02 ; Module 03 inchangé.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé ; identité passée à 28.3.33.
+
+---
+
 ## Build 28.3.32 — Module 02 Market / Limit Active Recall Lock
 
 - Base : Build 28.3.31.
