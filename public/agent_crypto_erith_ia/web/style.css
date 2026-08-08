@@ -23569,3 +23569,72 @@ html[data-atlas-mode="advanced"]
 /* ============================================================
    FIN 99 — ETATS PARTAGES / PRIORITE FINALE
    ============================================================ */
+
+/* ============================================================
+   Build 28.3.46 — CRYPTO CARD DOCK / FLOATING VISUAL STABILITY LOCK
+   Additif uniquement : aucune largeur de colonne Market existante modifiée.
+   ============================================================ */
+
+.atlas-help-layer[data-market-help-coin-id] {pointer-events:auto;}
+
+.atlas-help-market-toolbar {display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;}
+
+.atlas-help-market-toolbar .atlas-help-kicker {margin:0;
+  min-width:0;}
+
+.atlas-help-market-mode {display:flex;
+  flex:0 0 auto;
+  gap:4px;}
+
+.atlas-help-market-mode button {min-height:24px;
+  padding:4px 7px;
+  border:1px solid rgba(112,244,255,.18);
+  border-radius:7px;
+  background:rgba(4,15,28,.66);
+  color:rgba(195,216,233,.72);
+  font:850 7.5px/1 system-ui,sans-serif;
+  cursor:pointer;}
+
+.atlas-help-market-mode button:hover:not(:disabled),
+.atlas-help-market-mode button:focus-visible {border-color:rgba(112,244,255,.52);
+  color:#eaffff;
+  outline:none;}
+
+.atlas-help-market-mode button.is-active {border-color:rgba(255,216,122,.44);
+  background:rgba(255,216,122,.09);
+  color:#fff0c0;}
+
+.atlas-help-market-mode button:disabled {opacity:.38;
+  cursor:not-allowed;}
+
+.atlas-market-card-dock-host {min-width:0;
+  max-height:calc(100vh - 20px);
+  overflow:auto;
+  align-self:start;
+  position:sticky;
+  top:10px;
+  padding:14px 15px;
+  border:1px solid rgba(112,244,255,.34);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(112,244,255,.10),transparent 36%),
+    linear-gradient(145deg,rgba(4,14,27,.985),rgba(9,20,35,.965));
+  color:#eaf8ff;
+  box-shadow:0 16px 44px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,216,122,.055);}
+
+.atlas-market-card-dock-host[hidden] {display:none !important;}
+
+@media (min-width:1540px) {
+  #marketWorkspaceGrid.math-dock-rail.market-card-dock-active {grid-template-columns:minmax(930px,1fr) minmax(320px,360px) var(--atlas-canonical-side-rail-width,68px) !important;}
+  #marketWorkspaceGrid.math-dock-top.market-card-dock-active {grid-template-columns:minmax(930px,1fr) minmax(320px,360px) !important;}
+}
+
+@media (max-width:1539px) {
+  #atlasMarketCardDockHost {display:none !important;}
+}
+
+/* FIN Build 28.3.46 — CRYPTO CARD DOCK / FLOATING VISUAL STABILITY LOCK */

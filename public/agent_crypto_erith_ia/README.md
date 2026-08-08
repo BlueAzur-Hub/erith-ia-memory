@@ -1,9 +1,38 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.45  
-**Build :** 28.3.45  
-**Mission :** Market Truth Labels + Visual Stability Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.46  
+**Build :** 28.3.46  
+**Mission :** Crypto Card Dock / Floating Visual Stability Lock
 
+
+
+## Build 28.3.46 — Crypto Card Dock / Floating Visual Stability Lock
+
+Cette Build part exactement de la 28.3.45. Sa mission est volontairement unique : permettre de juger la fiche Crypto **flottante ou latérale**, sans rouvrir la géométrie validée du Market Snapshot.
+
+### Nouveau comportement
+
+- La fiche `FICHE CRYPTO · MARKET SNAPSHOT` propose deux modes discrets : **Flottante** et **Latérale**.
+- **Flottante** reste le comportement par défaut et conserve la fiche actuelle.
+- **Latérale** ancre la fiche dans une colonne dédiée à droite afin qu'elle ne recouvre plus les lignes du tableau.
+- Le choix est mémorisé localement dans Firefox.
+- La fiche latérale reste visible pendant le défilement et continue de recevoir les mises à jour live de la crypto affichée.
+
+### Compact UI Lock
+
+- L'ancrage latéral n'est proposé qu'à partir de **1540 px** de largeur et lorsque Math Core est en mode **Réduit** ou **Dessus**.
+- Sur Transformer Book / écran compact, le comportement reste automatiquement **Flottant** : aucune colonne supplémentaire n'est imposée.
+- Si Math Core passe en mode **Latéral**, la fiche Crypto revient au comportement flottant pour ne pas créer trois colonnes concurrentes.
+- Aucune largeur de colonne Market existante n'est modifiée.
+
+### Rendu protégé
+
+- Score ATLAS inchangé : entier compact (`37`, `50`, etc.), aucun `/100`.
+- Math Core Réduit / Latéral / Dessus inchangé.
+- Market Snapshot, Graphique, Target Top 5 et Market Flow inchangés hors emplacement facultatif de la fiche.
+- Modules 01–11, simulation, mémoire, Binance/CoinGecko, Métaux et Bridge inchangés.
+- `web/index.html` et `web/runtime_config.json` restent inchangés.
+- Version Control Protected Core strictement inchangé hors identité 28.3.46.
 
 
 ## Build 28.3.45 — Market Truth Labels + Visual Stability Lock

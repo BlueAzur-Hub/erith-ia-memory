@@ -1836,6 +1836,122 @@ const ATLAS_HELP_DEFINITIONS = Object.freeze({
   btnSourceDockRefresh: { title: "Actualiser les sources", body: "Relit les métadonnées CoinGecko de l’actif sélectionné sans modifier le marché." }
 });
 
+const ATLAS_MARKET_CARD_MODE_KEY = "agent_crypto_erith_ia_market_card_mode_v1";
+const ATLAS_MARKET_CARD_DOCK_MIN_WIDTH = 1540;
+
+function atlasMarketCardPreferredMode() {
+  try { return localStorage.getItem(ATLAS_MARKET_CARD_MODE_KEY) === "dock" ? "dock" : "floating"; }
+  catch { return "floating"; }
+}
+
+function atlasMarketCardDockAvailable() {
+  const grid = document.getElementById("marketWorkspaceGrid");
+  if (!grid || window.innerWidth < ATLAS_MARKET_CARD_DOCK_MIN_WIDTH) return false;
+  return !grid.classList.contains("math-dock-side");
+}
+
+function atlasMarketCardEffectiveMode() {
+  return atlasMarketCardPreferredMode() === "dock" && atlasMarketCardDockAvailable() ? "dock" : "floating";
+}
+
+function atlasMarketCardToolbarMarkup() {
+  const effective = atlasMarketCardEffectiveMode();
+  const dockAvailable = atlasMarketCardDockAvailable();
+  const dockTitle = dockAvailable
+    ? "Ancrer la fiche à droite sans recouvrir le tableau"
+    : "Ancrage disponible sur grand écran lorsque le Math Core est Réduit ou Dessus";
+  return `<div class="atlas-help-market-toolbar">
+    <div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
+    <div class="atlas-help-market-mode" role="group" aria-label="Position de la fiche Crypto">
+      <button type="button" data-market-card-mode="floating" class="${effective === "floating" ? "is-active" : ""}" aria-pressed="${effective === "floating"}">Flottante</button>
+      <button type="button" data-market-card-mode="dock" class="${effective === "dock" ? "is-active" : ""}" aria-pressed="${effective === "dock"}"${dockAvailable ? "" : " disabled"} title="${escapeHtml(dockTitle)}">Latérale</button>
+    </div>
+  </div>`;
+}
+
+function atlasMarketCardDockHost() {
+  const grid = document.getElementById("marketWorkspaceGrid");
+  if (!grid) return null;
+  let host = document.getElementById("atlasMarketCardDockHost");
+  if (!host) {
+    host = document.createElement("aside");
+    host.id = "atlasMarketCardDockHost";
+    host.className = "atlas-market-card-dock-host";
+    host.setAttribute("aria-label", "Fiche Crypto latérale");
+    host.setAttribute("aria-live", "polite");
+    host.hidden = true;
+  }
+  const math = document.getElementById("math");
+  if (math?.parentElement === grid) grid.insertBefore(host, math);
+  else if (host.parentElement !== grid) grid.appendChild(host);
+  return host;
+}
+
+function atlasHideMarketCardDock() {
+  const host = document.getElementById("atlasMarketCardDockHost");
+  const grid = document.getElementById("marketWorkspaceGrid");
+  if (host) {
+    host.hidden = true;
+    host.innerHTML = "";
+    delete host.dataset.marketHelpCoinId;
+  }
+  grid?.classList.remove("market-card-dock-active");
+}
+
+function atlasRenderMarketCardDock(target, definition) {
+  if (!target || !definition?.marketCoinId || !atlasMarketCardDockAvailable()) return false;
+  const host = atlasMarketCardDockHost();
+  const grid = document.getElementById("marketWorkspaceGrid");
+  if (!host || !grid) return false;
+  host.innerHTML = atlasHelpMarkup(definition);
+  host.dataset.marketHelpCoinId = definition.marketCoinId;
+  host.hidden = false;
+  grid.classList.add("market-card-dock-active");
+  const describedBy = new Set((target.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+  describedBy.delete("atlasHelpLayer");
+  describedBy.add("atlasMarketCardDockHost");
+  target.setAttribute("aria-describedby", [...describedBy].join(" "));
+  return true;
+}
+
+function atlasRefreshMarketCardSurface() {
+  const target = atlasHelpActiveTarget?.matches?.("[data-market-help-id]") ? atlasHelpActiveTarget : null;
+  if (!target) {
+    if (!atlasMarketCardDockAvailable()) atlasHideMarketCardDock();
+    return;
+  }
+  const definition = atlasMarketHelpDefinition(target);
+  if (!definition) return;
+  if (atlasMarketCardEffectiveMode() === "dock") {
+    const layer = document.getElementById("atlasHelpLayer");
+    if (layer) {
+      layer.hidden = true;
+      layer.setAttribute("aria-hidden", "true");
+      delete layer.dataset.marketHelpCoinId;
+    }
+    atlasRenderMarketCardDock(target, definition);
+  } else {
+    atlasHideMarketCardDock();
+  }
+}
+
+function atlasSetMarketCardMode(mode) {
+  const next = mode === "dock" ? "dock" : "floating";
+  try { localStorage.setItem(ATLAS_MARKET_CARD_MODE_KEY, next); } catch {}
+  const dockCoinId = document.getElementById("atlasMarketCardDockHost")?.dataset?.marketHelpCoinId || "";
+  const activeMarketTarget = atlasHelpActiveTarget?.matches?.("[data-market-help-id]") ? atlasHelpActiveTarget : null;
+  const pinnedTarget = dockCoinId ? document.querySelector(`[data-market-help-id="${CSS.escape(dockCoinId)}"]`) : null;
+  const target = activeMarketTarget || pinnedTarget;
+  atlasHideMarketCardDock();
+  const layer = document.getElementById("atlasHelpLayer");
+  if (layer) {
+    layer.hidden = true;
+    layer.setAttribute("aria-hidden", "true");
+    delete layer.dataset.marketHelpCoinId;
+  }
+  if (target) atlasShowHelpLayer(target);
+}
+
 let atlasHelpHideTimer = null;
 
 function atlasHelpMarkup(definition) {
@@ -1875,17 +1991,26 @@ function atlasShowHelpLayer(target, pointer = null) {
   if (!definition) return;
   if (atlasHelpActiveTarget && atlasHelpActiveTarget !== target) atlasRestoreHelpDescription(atlasHelpActiveTarget);
   atlasHelpActiveTarget = target;
+  if (!("atlasHelpOriginalDescribedby" in target.dataset)) target.dataset.atlasHelpOriginalDescribedby = target.getAttribute("aria-describedby") || "";
+  if (live) live.textContent = definition.liveText || `${definition.title}. ${definition.body}${definition.example ? ` ${definition.example}` : ""}`;
+
+  if (definition.marketCoinId && atlasMarketCardEffectiveMode() === "dock") {
+    layer.hidden = true;
+    layer.setAttribute("aria-hidden", "true");
+    delete layer.dataset.marketHelpCoinId;
+    atlasRenderMarketCardDock(target, definition);
+    return;
+  }
+
+  if (definition.marketCoinId) atlasHideMarketCardDock();
   layer.innerHTML = atlasHelpMarkup(definition);
   if (definition.marketCoinId) layer.dataset.marketHelpCoinId = definition.marketCoinId;
   else delete layer.dataset.marketHelpCoinId;
   layer.setAttribute("aria-hidden", "false");
-  if (!("atlasHelpOriginalDescribedby" in target.dataset)) {
-    target.dataset.atlasHelpOriginalDescribedby = target.getAttribute("aria-describedby") || "";
-  }
   const describedBy = new Set((target.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+  describedBy.delete("atlasMarketCardDockHost");
   describedBy.add("atlasHelpLayer");
   target.setAttribute("aria-describedby", [...describedBy].join(" "));
-  if (live) live.textContent = definition.liveText || `${definition.title}. ${definition.body}${definition.example ? ` ${definition.example}` : ""}`;
   atlasPositionHelpLayer(layer, target, pointer);
 }
 
@@ -1905,6 +2030,9 @@ function atlasHideHelpLayer(immediate = false) {
       layer.setAttribute("aria-hidden", "true");
       delete layer.dataset.marketHelpCoinId;
     }
+    if (atlasMarketCardEffectiveMode() === "dock"
+      && !document.getElementById("atlasMarketCardDockHost")?.hidden
+      && atlasHelpActiveTarget?.matches?.("[data-market-help-id]")) return;
     atlasRestoreHelpDescription(atlasHelpActiveTarget);
     atlasHelpActiveTarget = null;
   };
@@ -1914,15 +2042,20 @@ function atlasHideHelpLayer(immediate = false) {
 }
 
 function initAtlasHelpLayerV1() {
+  const layer = document.getElementById("atlasHelpLayer");
+  layer?.addEventListener("pointerenter", () => window.clearTimeout(atlasHelpHideTimer));
+  layer?.addEventListener("pointerleave", () => atlasHideHelpLayer());
+
   document.addEventListener("pointerover", event => {
     const target = atlasHelpTargetFromNode(event.target);
     if (!target) return;
-    if (atlasHelpActiveTarget === target) return;
+    if (atlasHelpActiveTarget === target && !(target.matches?.("[data-market-help-id]") && atlasMarketCardEffectiveMode() === "dock")) return;
     atlasShowHelpLayer(target, event);
   });
   document.addEventListener("pointerout", event => {
     const target = atlasHelpTargetFromNode(event.target);
     if (!target || target !== atlasHelpActiveTarget) return;
+    if (target.matches?.("[data-market-help-id]") && atlasMarketCardEffectiveMode() === "dock") return;
     if (event.relatedTarget instanceof Node && target.contains(event.relatedTarget)) return;
     atlasHideHelpLayer();
   });
@@ -1933,13 +2066,28 @@ function initAtlasHelpLayerV1() {
   document.addEventListener("focusout", event => {
     const target = atlasHelpTargetFromNode(event.target);
     if (!target || target !== atlasHelpActiveTarget) return;
+    if (target.matches?.("[data-market-help-id]") && atlasMarketCardEffectiveMode() === "dock") return;
     atlasHideHelpLayer();
   });
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape") atlasHideHelpLayer(true);
+  document.addEventListener("click", event => {
+    const button = event.target.closest?.("[data-market-card-mode]");
+    if (!button || button.disabled) return;
+    event.preventDefault();
+    event.stopPropagation();
+    atlasSetMarketCardMode(button.dataset.marketCardMode);
   });
-  window.addEventListener("scroll", () => atlasHideHelpLayer(true), { passive: true });
-  window.addEventListener("resize", () => atlasHideHelpLayer(true), { passive: true });
+  document.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    atlasHideMarketCardDock();
+    atlasHideHelpLayer(true);
+  });
+  window.addEventListener("scroll", () => {
+    if (atlasMarketCardEffectiveMode() !== "dock") atlasHideHelpLayer(true);
+  }, { passive: true });
+  window.addEventListener("resize", () => {
+    atlasHideHelpLayer(true);
+    atlasRefreshMarketCardSurface();
+  }, { passive: true });
 }
 
 const ATLAS_ADMIN_CENTER_KEY = "atlas.admin.command.center.open.v1";
@@ -11328,64 +11476,49 @@ function atlasSelectedCoin() {
 }
 
 function atlasPatchOpenMarketHelp(coinOrId) {
-  const coin = typeof coinOrId === "string"
-    ? state.coins.find(item => item.id === coinOrId)
-    : coinOrId;
+  const coin = typeof coinOrId === "string" ? state.coins.find(item => item.id === coinOrId) : coinOrId;
   if (!coin?.id) return false;
 
   const layer = document.getElementById("atlasHelpLayer");
-  if (!layer || layer.hidden || layer.getAttribute("aria-hidden") === "true") return false;
-
-  const activeCoinId = atlasHelpActiveTarget?.dataset?.marketHelpId || "";
-  const layerCoinId = layer.dataset.marketHelpCoinId || "";
-  if (coin.id !== activeCoinId && coin.id !== layerCoinId) return false;
+  const dock = document.getElementById("atlasMarketCardDockHost");
+  const dockOpen = !!dock && !dock.hidden && dock.dataset.marketHelpCoinId === coin.id;
+  const layerOpen = !!layer && !layer.hidden && layer.getAttribute("aria-hidden") !== "true" && layer.dataset.marketHelpCoinId === coin.id;
+  const surface = dockOpen ? dock : (layerOpen ? layer : null);
+  if (!surface) return false;
 
   const snapshot = atlasMarketSnapshotSurface(coin);
-  const priceNode = layer.querySelector('[data-help-live="price-eur"]');
-  const change24Node = layer.querySelector('[data-help-live="change24h"]');
-  const change7Node = layer.querySelector('[data-help-live="change7d"]');
-  const change30Node = layer.querySelector('[data-help-live="change30d"]');
-  const observedSourceNode = layer.querySelector('[data-help-live="observed-source"]');
-  const marketReferenceNode = layer.querySelector('[data-help-live="market-reference"]');
+  const priceNode = surface.querySelector('[data-help-live="price-eur"]');
+  const change24Node = surface.querySelector('[data-help-live="change24h"]');
+  const change7Node = surface.querySelector('[data-help-live="change7d"]');
+  const change30Node = surface.querySelector('[data-help-live="change30d"]');
+  const observedSourceNode = surface.querySelector('[data-help-live="observed-source"]');
+  const marketReferenceNode = surface.querySelector('[data-help-live="market-reference"]');
 
-  if (priceNode) {
-    priceNode.textContent = snapshot.quoteUsable
-      ? atlasCurrentQuotePriceText(snapshot.quote)
-      : atlasFormatEUR(snapshot.priceEur);
-  }
-
+  if (priceNode) priceNode.textContent = snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur);
   if (change24Node) {
     change24Node.textContent = atlasMarketSnapshotChange24Text(snapshot);
     change24Node.classList.remove("pos", "neg", "neutral");
     change24Node.classList.add(clsPct(snapshot.change24h));
   }
-
   if (change7Node) {
     change7Node.textContent = fmtPct(snapshot.change7d);
     change7Node.classList.remove("pos", "neg", "neutral");
     change7Node.classList.add(clsPct(snapshot.change7d));
   }
-
   if (change30Node) {
     change30Node.textContent = fmtPct(snapshot.change30d);
     change30Node.classList.remove("pos", "neg", "neutral");
     change30Node.classList.add(clsPct(snapshot.change30d));
   }
-
   if (observedSourceNode) {
     observedSourceNode.textContent = `${snapshot.truthLabel} · ${snapshot.freshnessLabel}`;
     observedSourceNode.title = atlasCurrentQuoteTitle(snapshot.quote);
   }
-
   if (marketReferenceNode) {
-    const marketChange = Number.isFinite(snapshot.marketChange24h)
-      ? fmtPct(snapshot.marketChange24h)
-      : "—";
-    marketReferenceNode.textContent =
-      `${marketChange} · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`;
+    const marketChange = Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—";
+    marketReferenceNode.textContent = `${marketChange} · ${snapshot.marketSourceLabel} · ${snapshot.marketFrameLabel}`;
   }
-
-  layer.dataset.marketHelpCoinId = coin.id;
+  surface.dataset.marketHelpCoinId = coin.id;
   return true;
 }
 
@@ -11764,6 +11897,7 @@ function atlasV2ApplyMathDock(position, options = {}) {
   });
 
   atlasV2SyncMathRail();
+  if (typeof atlasRefreshMarketCardSurface === "function") atlasRefreshMarketCardSurface();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MATH_DOCK_KEY, next);
 
@@ -22104,7 +22238,7 @@ function atlasMarketHelpDefinition(row) {
     rich: true,
     marketCoinId: coin.id,
     liveText: `${coin.name} ${coin.symbol}. ${compared ? "Présent dans la comparaison. Clique la ligne pour le retirer." : "Clique la ligne pour l’ajouter à la comparaison."}`,
-    html: `<div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
+    html: `${atlasMarketCardToolbarMarkup()}
       <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
         <span><small>Prix direct EUR</small><strong data-help-live="price-eur">${escapeHtml(snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur))}</strong></span>
@@ -36023,11 +36157,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.45";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.46";
 
-const ATLAS_BUILD = "28.3.45";
+const ATLAS_BUILD = "28.3.46";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.45";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.46";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

@@ -1,3 +1,19 @@
+## Build 28.3.46 — Crypto Card Dock / Floating Visual Stability Lock
+
+- Base : 28.3.45.
+- Fiche Crypto : ajout du choix `Flottante` / `Latérale`.
+- Préférence mémorisée localement.
+- Mode latéral réservé aux écrans >= 1540 px avec Math Core Réduit ou Dessus.
+- Transformer Book / écran compact : fallback flottant automatique, aucune compression forcée du tableau.
+- Math Core Latéral : fiche Crypto flottante afin d'éviter trois colonnes concurrentes.
+- Fiche latérale mise à jour par le même flux live que la fiche flottante.
+- Aucune largeur de colonne Market existante modifiée.
+- Score ATLAS compact inchangé ; aucun `/100`.
+- `index.html`, `runtime_config.json`, données, modules, simulation, mémoire et workflow inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.46.
+
+---
+
 ## Build 28.3.45 — Market Truth Labels + Visual Stability Lock
 
 - Base : 28.3.44.
