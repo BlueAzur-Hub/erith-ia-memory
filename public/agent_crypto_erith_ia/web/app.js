@@ -1837,17 +1837,47 @@ const ATLAS_HELP_DEFINITIONS = Object.freeze({
 });
 
 const ATLAS_MARKET_CARD_MODE_KEY = "agent_crypto_erith_ia_market_card_mode_v1";
-const ATLAS_MARKET_CARD_DOCK_MIN_WIDTH = 1540;
+const ATLAS_MARKET_CARD_DOCK_MIN_MARKET_WIDTH = 980;
+const ATLAS_MARKET_CARD_DOCK_PANEL_MIN_WIDTH = 320;
 
 function atlasMarketCardPreferredMode() {
   try { return localStorage.getItem(ATLAS_MARKET_CARD_MODE_KEY) === "dock" ? "dock" : "floating"; }
   catch { return "floating"; }
 }
 
-function atlasMarketCardDockAvailable() {
+function atlasMarketCardDockAvailability() {
   const grid = document.getElementById("marketWorkspaceGrid");
-  if (!grid || window.innerWidth < ATLAS_MARKET_CARD_DOCK_MIN_WIDTH) return false;
-  return !grid.classList.contains("math-dock-side");
+  if (!grid) return { available:false, reason:"Zone Marché indisponible" };
+  if (grid.classList.contains("math-dock-side")) {
+    return { available:false, reason:"Passe le Math Core sur Réduit ou Dessus pour libérer la colonne latérale." };
+  }
+
+  const gridRect = grid.getBoundingClientRect();
+  const gridStyle = window.getComputedStyle(grid);
+  const columnGap = Math.max(0, Number.parseFloat(gridStyle.columnGap) || 0);
+  const math = document.getElementById("math");
+  const railWidth = grid.classList.contains("math-dock-rail")
+    ? Math.max(0, math?.getBoundingClientRect?.().width || 0)
+    : 0;
+  const columnCount = grid.classList.contains("math-dock-rail") ? 3 : 2;
+  const requiredWidth = ATLAS_MARKET_CARD_DOCK_MIN_MARKET_WIDTH
+    + ATLAS_MARKET_CARD_DOCK_PANEL_MIN_WIDTH
+    + railWidth
+    + columnGap * Math.max(1, columnCount - 1);
+  const available = gridRect.width >= requiredWidth;
+
+  return {
+    available,
+    gridWidth: gridRect.width,
+    requiredWidth,
+    reason: available
+      ? "Ancrer la fiche à droite sans recouvrir le tableau"
+      : "La fiche reste flottante tant que la zone Marché n’a pas assez de place pour conserver le tableau lisible."
+  };
+}
+
+function atlasMarketCardDockAvailable() {
+  return atlasMarketCardDockAvailability().available;
 }
 
 function atlasMarketCardEffectiveMode() {
@@ -1856,10 +1886,9 @@ function atlasMarketCardEffectiveMode() {
 
 function atlasMarketCardToolbarMarkup() {
   const effective = atlasMarketCardEffectiveMode();
-  const dockAvailable = atlasMarketCardDockAvailable();
-  const dockTitle = dockAvailable
-    ? "Ancrer la fiche à droite sans recouvrir le tableau"
-    : "Ancrage disponible sur grand écran lorsque le Math Core est Réduit ou Dessus";
+  const dockState = atlasMarketCardDockAvailability();
+  const dockAvailable = dockState.available;
+  const dockTitle = dockState.reason;
   return `<div class="atlas-help-market-toolbar">
     <div class="atlas-help-kicker">FICHE CRYPTO · MARKET SNAPSHOT</div>
     <div class="atlas-help-market-mode" role="group" aria-label="Position de la fiche Crypto">
@@ -36157,11 +36186,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.46";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.47";
 
-const ATLAS_BUILD = "28.3.46";
+const ATLAS_BUILD = "28.3.47";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.46";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.47";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

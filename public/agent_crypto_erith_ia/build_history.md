@@ -1,3 +1,19 @@
+## Build 28.3.47 — Adaptive Crypto Card Dock Lock
+
+- Base : 28.3.46.
+- Correction ciblée du bouton `Latérale` de la Fiche Crypto.
+- Suppression du seuil arbitraire `window.innerWidth >= 1540`.
+- Disponibilité calculée sur la largeur réelle de `Market Workspace`.
+- Réserve minimale de 980 px pour le tableau + 320 px pour la fiche + rail/gaps réels.
+- Math Core Latéral : fiche flottante conservée.
+- Math Core Réduit ou Dessus : ancrage autorisé dès que la place réelle est suffisante.
+- Aucun `/100` ajouté au score ATLAS.
+- Aucune logique de données, pédagogie, simulation ou mémoire modifiée.
+- `index.html` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.47.
+
+---
+
 ## Build 28.3.46 — Crypto Card Dock / Floating Visual Stability Lock
 
 - Base : 28.3.45.

@@ -1,9 +1,34 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.46  
-**Build :** 28.3.46  
-**Mission :** Crypto Card Dock / Floating Visual Stability Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.47  
+**Build :** 28.3.47  
+**Mission :** Adaptive Crypto Card Dock Lock
 
+
+## Build 28.3.47 — Adaptive Crypto Card Dock Lock
+
+Cette Build part exactement de la 28.3.46 et corrige uniquement la règle qui rendait le bouton **Latérale** indisponible malgré un Math Core déjà Réduit ou Dessus.
+
+### Correction
+
+- Suppression du verrou arbitraire `window.innerWidth >= 1540`.
+- La disponibilité de la fiche latérale est maintenant calculée à partir de la **largeur réelle de Market Workspace**.
+- Le tableau Market conserve une réserve minimale de **980 px** avant que l'ancrage soit autorisé.
+- La fiche latérale conserve une largeur de **320–360 px**.
+- En Math Core **Latéral**, la fiche Crypto reste flottante pour éviter trois colonnes concurrentes.
+- En Math Core **Réduit** ou **Dessus**, le bouton Latérale devient disponible dès que la zone Market dispose réellement de la place nécessaire.
+- Le message d'aide ne parle plus de « grand écran » ou de plein écran.
+- La préférence Flottante / Latérale reste mémorisée.
+
+### Rendu protégé
+
+- Score ATLAS compact inchangé (`37`, `50`, etc.), jamais `/100`.
+- Aucune colonne Market existante n'est élargie.
+- Math Core reste toujours actif.
+- Graphique, Target Top 5, Market Flow, Modules 01–11, simulation, mémoire, Binance/CoinGecko et Métaux inchangés.
+- `web/index.html` et `web/runtime_config.json` inchangés.
+- Le CSS 28.3.46 est conservé ; la 28.3.47 ajoute seulement l'extension responsive nécessaire entre 1280 et 1539 px.
+- Version Control Protected Core inchangé hors identité 28.3.47.
 
 
 ## Build 28.3.46 — Crypto Card Dock / Floating Visual Stability Lock

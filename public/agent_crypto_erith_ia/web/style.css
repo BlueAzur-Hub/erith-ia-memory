@@ -23638,3 +23638,26 @@ html[data-atlas-mode="advanced"]
 }
 
 /* FIN Build 28.3.46 — CRYPTO CARD DOCK / FLOATING VISUAL STABILITY LOCK */
+
+/* ============================================================
+   Build 28.3.47 — ADAPTIVE CRYPTO CARD DOCK LOCK
+   Extension ciblée : le seuil n'est plus fondé sur window.innerWidth.
+   La JS mesure la place réellement disponible dans Market Workspace.
+   ============================================================ */
+
+@media (min-width:1280px) and (max-width:1539px) {
+  #marketWorkspaceGrid.math-dock-rail.market-card-dock-active {
+    grid-template-columns:minmax(930px,1fr) minmax(320px,360px) var(--atlas-canonical-side-rail-width,68px) !important;
+  }
+
+  #marketWorkspaceGrid.math-dock-top.market-card-dock-active {
+    grid-template-columns:minmax(930px,1fr) minmax(320px,360px) !important;
+  }
+
+  #marketWorkspaceGrid.market-card-dock-active #atlasMarketCardDockHost {
+    display:block !important;
+  }
+}
+
+/* FIN Build 28.3.47 — ADAPTIVE CRYPTO CARD DOCK LOCK */
+
