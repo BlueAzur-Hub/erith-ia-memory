@@ -8,6 +8,7 @@
 
   <title>Rising Phoenix — Mechanical Golden Dragon MOC</title>
 
+  <link rel="preload" as="image" href="images/hero-rising-phoenix-garden-wide.png" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
@@ -46,7 +47,7 @@
   <main id="main-content">
     <section class="hero" id="top" aria-labelledby="hero-title">
       <div class="hero-media" aria-hidden="true">
-        <img src="images/hero-rising-phoenix-garden-wide.png" alt="">
+        <img src="images/hero-rising-phoenix-garden-wide.png" alt="" loading="eager" fetchpriority="high" decoding="async">
         <div class="hero-vignette"></div>
       </div>
 
@@ -87,81 +88,81 @@
       </div>
     </section>
 
-    <section class="section state-map-section v7-state-map" id="states" aria-labelledby="states-title">
+    <section class="section state-map-section v7-state-map v73-state-map" id="states" aria-labelledby="states-title">
       <div class="shell">
         <div class="section-heading state-map-heading" data-reveal>
-          <p class="eyebrow">Visual map · four distinct states</p>
-          <h2 id="states-title">One project. Four clearly separated configurations.</h2>
-          <p>This visual map uses the original source photographs from the project archive. It separates the three published build levels from the later creator-only dual-reactor evolution.</p>
+          <p class="eyebrow">Visual map · published levels + personal evolution</p>
+          <h2 id="states-title">Three official levels. One later two-reactor detail.</h2>
+          <p>The three published configurations are kept separate from the later personal experiment. Model 04 is no longer represented by a full-body photograph unless two reactors are actually visible.</p>
         </div>
 
         <div class="state-map-grid">
           <article class="state-card published" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-01/dragon-speeder-compact-outdoor.jpg" data-lightbox-alt="Official Level 01 Dragon Speeder compact configuration, outdoor view">
-              <img src="images/source/physical/level-01/dragon-speeder-compact-outdoor.jpg" alt="Official Level 01 Dragon Speeder compact configuration, outdoor view">
-              <span class="image-hint">Level 01 · compact outdoor</span>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-01/dragon-speeder-compact-outdoor.jpg" data-lightbox-alt="Official Level 01 Dragon Speeder compact configuration">
+              <img src="images/source/physical/level-01/dragon-speeder-compact-outdoor.jpg" alt="Official Level 01 Dragon Speeder compact configuration" loading="lazy" decoding="async">
+              <span class="image-hint">Level 01 · compact physical build</span>
             </button>
-            <div class="state-card-copy"><span class="state-index">01</span><div><span class="state-status">Published</span><h3>Dragon Speeder</h3><p>True compact base: no Temple and no Advanced Rear Propulsion.</p></div></div>
+            <div class="state-card-copy"><span class="state-index">01</span><div><span class="state-status">Published</span><h3>Dragon Speeder</h3><p>Compact base: no Temple and no Advanced Rear Propulsion.</p></div></div>
           </article>
 
           <article class="state-card published" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/temple-wu-lloyd-display.jpg" data-lightbox-alt="Master Wu Temple with Wu and Lloyd, Level 02 visual identity">
-              <img src="images/source/physical/level-02/temple-wu-lloyd-display.jpg" alt="Master Wu Temple with Wu and Lloyd, Level 02 visual identity">
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/temple-wu-lloyd-display.jpg" data-lightbox-alt="Master Wu Temple with Wu and Lloyd">
+              <img src="images/source/physical/level-02/temple-wu-lloyd-display.jpg" alt="Master Wu Temple with Wu and Lloyd" loading="lazy" decoding="async">
               <span class="image-hint">Level 02 · Temple / Wu / Lloyd</span>
             </button>
-            <div class="state-card-copy"><span class="state-index">02</span><div><span class="state-status">Published</span><h3>Temple added</h3><p>Master Wu's display module adds his hat, weapons, blossoms and story.</p></div></div>
+            <div class="state-card-copy"><span class="state-index">02</span><div><span class="state-status">Published</span><h3>Temple added</h3><p>Master Wu's display module adds the Temple, hat, weapons and blossoms.</p></div></div>
           </article>
 
           <article class="state-card published state-card-featured" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/official-full-build-overhead.jpg" data-lightbox-alt="Official complete Level 03 Rising Phoenix overhead photograph">
-              <img src="images/source/physical/level-03/official-full-build-overhead.jpg" alt="Official complete Level 03 Rising Phoenix overhead photograph">
-              <span class="image-hint">Level 03 · official overhead</span>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" data-lightbox-alt="Later complete physical display confirmed as Model 03">
+              <img src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" alt="Later complete physical display confirmed as Model 03" loading="lazy" decoding="async">
+              <span class="image-hint">Level 03 · later complete physical display</span>
             </button>
-            <div class="state-card-copy"><span class="state-index">03</span><div><span class="state-status">Published · final official build</span><h3>Rising Phoenix</h3><p>Temple plus Advanced Rear Propulsion: the complete published configuration.</p></div></div>
+            <div class="state-card-copy"><span class="state-index">03</span><div><span class="state-status">Published · final official level</span><h3>Rising Phoenix</h3><p>Temple plus the single Advanced Rear Propulsion system.</p></div></div>
           </article>
 
-          <article class="state-card creator-state" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/evolved-display-later-build.jpg" data-lightbox-alt="Later creator-only evolved display model beyond the published instructions">
-              <img src="images/source/physical/model-04/evolved-display-later-build.jpg" alt="Later creator-only evolved display model beyond the published instructions">
-              <span class="image-hint">Model 04 · evolved display</span>
+          <article class="state-card creator-state model04-detail-card" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/dual-reactor-closeup.jpg" data-lightbox-alt="Close physical detail showing the two reactors of Model 04">
+              <img src="images/source/physical/model-04/dual-reactor-closeup.jpg" alt="Close physical detail showing the two reactors of Model 04" loading="lazy" decoding="async">
+              <span class="image-hint">Model 04 · two reactors visible</span>
             </button>
-            <div class="state-card-copy"><span class="state-index">04</span><div><span class="state-status">Creator evolution · outside instructions</span><h3>Dual Reactor</h3><p>The personal model continues beyond Level 03 with a second reactor.</p></div></div>
+            <div class="state-card-copy"><span class="state-index">04</span><div><span class="state-status">Personal evolution · detail only</span><h3>Dual Reactor</h3><p>Only the source where both reactors are visibly identifiable is used as Model 04.</p></div></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section-dark" id="configurations" aria-labelledby="config-title">
+    <section class="section section-dark v73-configurations" id="configurations" aria-labelledby="config-title">
       <div class="shell">
         <div class="section-heading centered" data-reveal>
           <p class="eyebrow">One dragon · three official build levels</p>
-          <h2 id="config-title">Three levels, three different source photographs.</h2>
-          <p>The cards now use separate original project photos instead of recycling the same final image. Each visual has one job: Base, Temple transition, complete Level 03.</p>
+          <h2 id="config-title">Three official configurations.</h2>
+          <p>Each card now favors a view that respects the actual width of the model. Narrow portrait framing is avoided for the long mechanical dragon.</p>
         </div>
 
-        <div class="configuration-grid v7-config-grid">
+        <div class="configuration-grid v7-config-grid v73-config-grid">
           <article class="configuration-card" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-01/dragon-speeder-front-overhead.jpg" data-lightbox-alt="Official Level 01 Dragon Speeder front-overhead source photograph">
-              <img src="images/source/physical/level-01/dragon-speeder-front-overhead.jpg" alt="Official Level 01 Dragon Speeder front-overhead source photograph">
-              <span class="image-hint">Level 01 · front / overhead</span>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/low-side-silhouette.jpg" data-lightbox-alt="Wide low-side physical view of the compact Level 01 architecture">
+              <img src="images/source/physical/level-03/low-side-silhouette.jpg" alt="Wide low-side physical view of the compact Level 01 architecture" loading="lazy" decoding="async">
+              <span class="image-hint">Level 01 · wide physical profile</span>
             </button>
             <div class="card-body"><span class="card-index">01 · Foundation</span><h3>Dragon Speeder</h3><p>The true Base Model: no Japanese Temple and no Advanced Rear Propulsion Engine. The rear structure folds back into a compact, self-contained mechanical dragon configuration.</p><p class="cost-chip">Indicative parts budget · ≈ €50–60</p></div>
           </article>
 
           <article class="configuration-card" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/dragon-with-temple-module.jpg" data-lightbox-alt="Dragon with Master Wu Temple module presented beside it">
-              <img src="images/source/physical/level-02/dragon-with-temple-module.jpg" alt="Dragon with Master Wu Temple module presented beside it">
-              <span class="image-hint">Level 02 · Temple transition</span>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/dragon-with-temple-module.jpg" data-lightbox-alt="Dragon with Master Wu Temple module">
+              <img src="images/source/physical/level-02/dragon-with-temple-module.jpg" alt="Dragon with Master Wu Temple module" loading="lazy" decoding="async">
+              <span class="image-hint">Level 02 · Temple configuration</span>
             </button>
             <div class="card-body"><span class="card-index">02 · Temple added</span><h3>Master Wu's Temple</h3><p>The Dragon Speeder receives Master Wu's small Japanese Temple display. The module adds decorative identity without replacing the mechanical dragon as the core build.</p><p class="cost-chip">Indicative parts budget · ≈ €80</p></div>
           </article>
 
           <article class="configuration-card featured" data-reveal>
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/official-full-build-outdoor.jpg" data-lightbox-alt="Official full Level 03 Rising Phoenix photographed outdoors">
-              <img src="images/source/physical/level-03/official-full-build-outdoor.jpg" alt="Official full Level 03 Rising Phoenix photographed outdoors with Temple and rear architecture visible">
-              <span class="image-hint">Level 03 · official complete build</span>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-01.jpg" data-lightbox-alt="Later long-body physical Model 03 view">
+              <img src="images/source/physical/model-04/creator-desk-view-01.jpg" alt="Later long-body physical Model 03 view" loading="lazy" decoding="async">
+              <span class="image-hint">Level 03 · later long-body physical build</span>
             </button>
-            <div class="card-body"><span class="card-index">03 · Propulsion added</span><h3>Rising Phoenix <span class="final-build-tag">Final official build</span></h3><p>The Temple configuration receives Lloyd's Advanced Rear Propulsion Engine, completing the most developed official version included in the published instructions.</p><p class="cost-chip">Indicative parts budget · ≈ €90–100</p></div>
+            <div class="card-body"><span class="card-index">03 · Propulsion added</span><h3>Rising Phoenix <span class="final-build-tag">Final official level</span></h3><p>The Temple configuration receives Lloyd's single Advanced Rear Propulsion system, completing the most developed official version included in the published instructions.</p><p class="cost-chip">Indicative parts budget · ≈ €90–100</p></div>
           </article>
         </div>
       </div>
@@ -222,7 +223,7 @@
         <div class="feature-grid v7-engineering-grid">
           <article class="feature feature-large" data-reveal>
             <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/advanced-propulsion-energy-blade.jpg" data-lightbox-alt="Physical close-up of the official advanced rear propulsion system">
-              <img src="images/source/physical/level-03/advanced-propulsion-energy-blade.jpg" alt="Physical close-up of the official advanced rear propulsion system with translucent green blade">
+              <img src="images/source/physical/level-03/advanced-propulsion-energy-blade.jpg" alt="Physical close-up of the official advanced rear propulsion system with translucent green blade" loading="lazy" decoding="async">
               <span class="image-hint">Physical · advanced propulsion</span>
             </button>
             <div class="feature-copy"><p class="eyebrow">Real hardware</p><h3>Advanced rear propulsion</h3><p>The close physical angle makes the propulsion module readable as a constructed mechanism, not simply as decoration.</p></div>
@@ -230,7 +231,7 @@
 
           <article class="feature" data-reveal>
             <button class="image-button studio-white" type="button" data-lightbox-src="images/source/studio/details/cockpit-closeup.png" data-lightbox-alt="BrickLink Studio close render of the cockpit">
-              <img src="images/source/studio/details/cockpit-closeup.png" alt="BrickLink Studio close render of the cockpit and central frame">
+              <img src="images/source/studio/details/cockpit-closeup.png" alt="BrickLink Studio close render of the cockpit and central frame" loading="lazy" decoding="async">
               <span class="image-hint">Studio · cockpit</span>
             </button>
             <div class="feature-copy"><p class="eyebrow">Control center</p><h3>Cockpit and central frame</h3><p>A dedicated Studio close-up removes background noise and exposes the green structural ring around the pilot.</p></div>
@@ -238,7 +239,7 @@
 
           <article class="feature" data-reveal>
             <button class="image-button studio-white" type="button" data-lightbox-src="images/source/studio/renders/top-long-axis.png" data-lightbox-alt="Top long-axis Studio render of the complete model">
-              <img src="images/source/studio/renders/top-long-axis.png" alt="Top long-axis Studio render of the complete model">
+              <img src="images/source/studio/renders/top-long-axis.png" alt="Top long-axis Studio render of the complete model" loading="lazy" decoding="async">
               <span class="image-hint">Studio · top axis</span>
             </button>
             <div class="feature-copy"><p class="eyebrow">Long-axis design</p><h3>Silhouette first</h3><p>From above, the entire mechanical line from head to rear propulsion can be inspected without perspective distortion.</p></div>
@@ -248,8 +249,8 @@
         <div class="engineering-proof" data-reveal>
           <div class="engineering-proof-copy"><p class="eyebrow">Physical mechanism ↔ digital geometry</p><h3>Two images, one precise comparison.</h3><p>The physical source photo shows the real propulsion hardware. The isolated Studio render shows the connector geometry. Neither image is repeated elsewhere in the primary story.</p></div>
           <div class="engineering-proof-images">
-            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/propulsion-connector-closeup.jpg" data-lightbox-alt="Physical close-up of the propulsion connector and energy blade"><img src="images/source/physical/level-03/propulsion-connector-closeup.jpg" alt="Physical close-up of the propulsion connector and energy blade"><span class="image-hint">Physical · propulsion connector</span></button>
-            <button class="image-button studio-white" type="button" data-lightbox-src="images/source/studio/details/propulsion-connector.png" data-lightbox-alt="Isolated BrickLink Studio render of the propulsion connector"><img src="images/source/studio/details/propulsion-connector.png" alt="Isolated BrickLink Studio render of the propulsion connector"><span class="image-hint">Studio · connector</span></button>
+            <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/propulsion-connector-closeup.jpg" data-lightbox-alt="Physical close-up of the propulsion connector and energy blade"><img src="images/source/physical/level-03/propulsion-connector-closeup.jpg" alt="Physical close-up of the propulsion connector and energy blade" loading="lazy" decoding="async"><span class="image-hint">Physical · propulsion connector</span></button>
+            <button class="image-button studio-white" type="button" data-lightbox-src="images/source/studio/details/propulsion-connector.png" data-lightbox-alt="Isolated BrickLink Studio render of the propulsion connector"><img src="images/source/studio/details/propulsion-connector.png" alt="Isolated BrickLink Studio render of the propulsion connector" loading="lazy" decoding="async"><span class="image-hint">Studio · connector</span></button>
           </div>
         </div>
 
@@ -257,52 +258,50 @@
       </div>
     </section>
 
-    <section class="section section-dark compact-section" aria-labelledby="speeder-title">
-      <div class="shell detail-split">
-        <button class="image-button detail-image studio-ui-frame" type="button" data-lightbox-src="images/source/studio/workspace/level-01-speeder-review.png" data-lightbox-alt="BrickLink Studio workspace showing the compact Dragon Speeder architecture">
-          <img src="images/source/studio/workspace/level-01-speeder-review.png" alt="BrickLink Studio workspace showing the compact Dragon Speeder architecture">
-          <span class="image-hint">Studio workspace · Speeder</span>
-        </button>
-        <div class="detail-copy" data-reveal><p class="eyebrow">Level 01 · Dragon Speeder</p><h2 id="speeder-title">Compact by design.</h2><p>The Base Model is not an unfinished version of Rising Phoenix. Its rear architecture folds back into the body and gives the dragon a complete compact silhouette of its own.</p><p>The Studio workspace is used here because the two confirmed physical Level 01 photographs already serve the state map and configuration card. This avoids showing the same photo for a third time.</p></div>
-      </div>
-    </section>
-
-    <section class="section studio-process v7-studio-process" id="studio" aria-labelledby="studio-title">
+<section class="section studio-process v7-studio-process" id="studio" aria-labelledby="studio-title">
       <div class="shell">
         <div class="section-heading" data-reveal><p class="eyebrow">Design / Engineering Process</p><h2 id="studio-title">The BrickLink Studio archive is part of the story.</h2><p>The original workspace captures document how the physical MOC was rebuilt digitally. Clean renders are then used by function: front symmetry, top axis, cockpit, Temple, rear profile and complete silhouette.</p></div>
 
         <div class="studio-workbench-grid">
-          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/complete-model-reconstruction.png" data-lightbox-alt="Original BrickLink Studio workspace with the complete model"><img src="images/source/studio/workspace/complete-model-reconstruction.png" alt="Original BrickLink Studio workspace with the complete model"><span class="image-hint">Workspace · complete model</span></button><div class="studio-card-copy"><span class="card-index">01 · Reconstruction</span><h3>Editable digital model</h3><p>The physical build is reconstructed piece by piece inside Studio.</p></div></article>
+          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/complete-model-reconstruction.png" data-lightbox-alt="Original BrickLink Studio workspace with the complete model"><img src="images/source/studio/workspace/complete-model-reconstruction.png" alt="Original BrickLink Studio workspace with the complete model" loading="lazy" decoding="async"><span class="image-hint">Workspace · complete model</span></button><div class="studio-card-copy"><span class="card-index">01 · Reconstruction</span><h3>Editable digital model</h3><p>The physical build is reconstructed piece by piece inside Studio.</p></div></article>
 
-          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/profile-review.png" data-lightbox-alt="BrickLink Studio side workspace view"><img src="images/source/studio/workspace/profile-review.png" alt="BrickLink Studio side workspace view"><span class="image-hint">Workspace · side</span></button><div class="studio-card-copy"><span class="card-index">02 · Side review</span><h3>Architecture in profile</h3><p>The side workspace makes articulation and rear geometry easier to inspect.</p></div></article>
+          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/profile-review.png" data-lightbox-alt="BrickLink Studio side workspace view"><img src="images/source/studio/workspace/profile-review.png" alt="BrickLink Studio side workspace view" loading="lazy" decoding="async"><span class="image-hint">Workspace · side</span></button><div class="studio-card-copy"><span class="card-index">02 · Side review</span><h3>Architecture in profile</h3><p>The side workspace makes articulation and rear geometry easier to inspect.</p></div></article>
 
-          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/axis-structure-review.png" data-lightbox-alt="BrickLink Studio top or bottom technical workspace view"><img src="images/source/studio/workspace/axis-structure-review.png" alt="BrickLink Studio technical workspace view of the model axis"><span class="image-hint">Workspace · axis</span></button><div class="studio-card-copy"><span class="card-index">03 · Structural check</span><h3>Top / bottom reading</h3><p>The digital workspace exposes the underlying long-axis construction.</p></div></article>
+          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/axis-structure-review.png" data-lightbox-alt="BrickLink Studio top or bottom technical workspace view"><img src="images/source/studio/workspace/axis-structure-review.png" alt="BrickLink Studio technical workspace view of the model axis" loading="lazy" decoding="async"><span class="image-hint">Workspace · axis</span></button><div class="studio-card-copy"><span class="card-index">03 · Structural check</span><h3>Top / bottom reading</h3><p>The digital workspace exposes the underlying long-axis construction.</p></div></article>
 
-          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/rear-propulsion-review.png" data-lightbox-alt="BrickLink Studio rear workspace view"><img src="images/source/studio/workspace/rear-propulsion-review.png" alt="BrickLink Studio rear workspace view"><span class="image-hint">Workspace · rear</span></button><div class="studio-card-copy"><span class="card-index">04 · Rear review</span><h3>Propulsion in context</h3><p>The rear view documents geometry that is hard to photograph cleanly in the physical model.</p></div></article>
+          <article class="studio-workbench-card" data-reveal><button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/source/studio/workspace/rear-propulsion-review.png" data-lightbox-alt="BrickLink Studio rear workspace view"><img src="images/source/studio/workspace/rear-propulsion-review.png" alt="BrickLink Studio rear workspace view" loading="lazy" decoding="async"><span class="image-hint">Workspace · rear</span></button><div class="studio-card-copy"><span class="card-index">04 · Rear review</span><h3>Propulsion in context</h3><p>The rear view documents geometry that is hard to photograph cleanly in the physical model.</p></div></article>
         </div>
 
-        <figure class="studio-premium-feature" data-reveal><button class="image-button" type="button" data-lightbox-src="images/editorial-collector-view.jpg" data-lightbox-alt="Collector visualization of Rising Phoenix"><img src="images/editorial-collector-view.jpg" alt="Collector visualization of the complete Rising Phoenix build"><span class="image-hint">Collector view</span></button><figcaption><strong>Collector view</strong><span>The approved editorial image remains a single presentation accent. The documentary material around it comes directly from the physical and Studio archives.</span></figcaption></figure>
+        <figure class="studio-premium-feature" data-reveal><button class="image-button" type="button" data-lightbox-src="images/editorial-collector-view.jpg" data-lightbox-alt="Collector visualization of Rising Phoenix"><img src="images/editorial-collector-view.jpg" alt="Collector visualization of the complete Rising Phoenix build" loading="lazy" decoding="async"><span class="image-hint">Collector view</span></button><figcaption><strong>Collector view</strong><span>The approved editorial image remains a single presentation accent. The documentary material around it comes directly from the physical and Studio archives.</span></figcaption></figure>
 
         <div class="studio-flow" data-reveal aria-label="Rising Phoenix documentation workflow"><div><strong>Physical MOC</strong><span>Real-world architecture</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span><div><strong>BrickLink Studio</strong><span>Digital reconstruction</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span><div><strong>354 build steps</strong><span>Construction sequence</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span><div><strong>150-page PDF</strong><span>Published instructions</span></div></div>
 
         <div class="studio-render-heading" data-reveal><p class="eyebrow">Clean technical renders · each angle has a purpose</p><h3>Seven views, seven different readings.</h3><p>No row of near-identical three-quarter renders: each image below answers a different visual question.</p></div>
 
         <div class="studio-render-grid studio-render-grid-v7">
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/front-symmetry.png" data-lightbox-alt="Front symmetry Studio render"><img src="images/source/studio/renders/front-symmetry.png" alt="Front symmetry Studio render"><span class="studio-render-label">Front symmetry</span></button>
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/assembly-layout-top.png" data-lightbox-alt="Top assembly layout Studio render"><img src="images/source/studio/renders/assembly-layout-top.png" alt="Top assembly layout Studio render"><span class="studio-render-label">Assembly layout</span></button>
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/rear-front-symmetry.png" data-lightbox-alt="Rear and front symmetry Studio render"><img src="images/source/studio/renders/rear-front-symmetry.png" alt="Rear and front symmetry Studio render"><span class="studio-render-label">Rear symmetry</span></button>
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/details/temple-isolated.png" data-lightbox-alt="Isolated Temple module Studio render"><img src="images/source/studio/details/temple-isolated.png" alt="Isolated Temple module Studio render"><span class="studio-render-label">Temple module</span></button>
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/side-rear-profile.png" data-lightbox-alt="Side and rear profile Studio render"><img src="images/source/studio/renders/side-rear-profile.png" alt="Side and rear profile Studio render"><span class="studio-render-label">Side / rear profile</span></button>
-          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/full-silhouette-three-quarter.png" data-lightbox-alt="Wide complete Studio render"><img src="images/source/studio/renders/full-silhouette-three-quarter.png" alt="Wide complete Studio render"><span class="studio-render-label">Full silhouette</span></button>
-          <button class="image-button studio-render-card studio-render-wide" type="button" data-lightbox-src="images/source/studio/renders/modularity-temple-figures.png" data-lightbox-alt="Complete build with separate Temple and figures Studio render"><img src="images/source/studio/renders/modularity-temple-figures.png" alt="Complete build with separate Temple and figures Studio render"><span class="studio-render-label">Modularity / figures</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/front-symmetry.png" data-lightbox-alt="Front symmetry Studio render"><img src="images/source/studio/renders/front-symmetry.png" alt="Front symmetry Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Front symmetry</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/assembly-layout-top.png" data-lightbox-alt="Top assembly layout Studio render"><img src="images/source/studio/renders/assembly-layout-top.png" alt="Top assembly layout Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Assembly layout</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/rear-front-symmetry.png" data-lightbox-alt="Rear and front symmetry Studio render"><img src="images/source/studio/renders/rear-front-symmetry.png" alt="Rear and front symmetry Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Rear symmetry</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/details/temple-isolated.png" data-lightbox-alt="Isolated Temple module Studio render"><img src="images/source/studio/details/temple-isolated.png" alt="Isolated Temple module Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Temple module</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/side-rear-profile.png" data-lightbox-alt="Side and rear profile Studio render"><img src="images/source/studio/renders/side-rear-profile.png" alt="Side and rear profile Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Side / rear profile</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/source/studio/renders/full-silhouette-three-quarter.png" data-lightbox-alt="Wide complete Studio render"><img src="images/source/studio/renders/full-silhouette-three-quarter.png" alt="Wide complete Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Full silhouette</span></button>
+          <button class="image-button studio-render-card studio-render-wide" type="button" data-lightbox-src="images/source/studio/renders/modularity-temple-figures.png" data-lightbox-alt="Complete build with separate Temple and figures Studio render"><img src="images/source/studio/renders/modularity-temple-figures.png" alt="Complete build with separate Temple and figures Studio render" loading="lazy" decoding="async"><span class="studio-render-label">Modularity / figures</span></button>
         </div>
       </div>
     </section>
 
-    <section class="section real-build-section v7-real-build" aria-labelledby="real-title">
+    <section class="section real-build-section v7-real-build v73-real-build" aria-labelledby="real-title">
       <div class="shell real-build-layout">
-        <div class="real-build-copy" data-reveal><p class="eyebrow">Engineered to be real</p><h2 id="real-title">Not only a Studio model.</h2><p>This low physical angle comes from the original photo archive and is deliberately different from the Level 03 card and chronology climax. It shows real weight, articulation, table contact and the long body close to eye level.</p><p class="source-note">Source archive: late/final physical-build family · low side silhouette.</p></div>
-        <button class="image-button real-build-image" type="button" data-lightbox-src="images/source/physical/level-03/low-side-silhouette.jpg" data-lightbox-alt="Low side physical photograph of the late or final mechanical dragon architecture"><img src="images/source/physical/level-03/low-side-silhouette.jpg" alt="Low side physical photograph of the late or final mechanical dragon architecture"><span class="image-hint">Physical · low side silhouette</span></button>
+        <div class="real-build-copy" data-reveal>
+          <p class="eyebrow">Engineered to be real</p>
+          <h2 id="real-title">Not only a Studio model.</h2>
+          <p>This later physical view is kept here because it shows the real long-body construction at full scale. It belongs to Model 03, not Model 04, and it is no longer confused with the compact Level 01 presentation.</p>
+          <p class="source-note">Physical archive · later Model 03 · full-body context.</p>
+        </div>
+        <button class="image-button real-build-image" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" data-lightbox-alt="Wide physical context photograph confirmed as Model 03">
+          <img src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" alt="Wide physical context photograph confirmed as Model 03" loading="lazy" decoding="async">
+          <span class="image-hint">Physical · Model 03 · wide context</span>
+        </button>
       </div>
     </section>
 
@@ -310,8 +309,8 @@
       <div class="shell temple-story-v6">
         <div class="section-heading temple-story-heading" data-reveal><p class="eyebrow">Master Wu · Lloyd · the Dragon</p><h2 id="temple-title">Two real photographs, two complementary roles.</h2><p>The first image is narrative; the second is documentary. Both come from the original physical archive and neither is reused as a Level card.</p></div>
         <div class="temple-story-visuals" data-reveal>
-          <figure class="temple-v6-card"><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/wu-lloyd-handover.jpg" data-lightbox-alt="Wu and Lloyd handover scene beside the Temple"><img src="images/source/physical/level-02/wu-lloyd-handover.jpg" alt="Wu and Lloyd handover scene beside the Temple"><span class="image-hint">Wu / Lloyd · handover</span></button><figcaption><span class="card-index">Story</span><h3>Wu and Lloyd</h3><p>Lloyd is presented as the engineer; Wu is the master and intended rider. The mechanical dragon remains the hero.</p></figcaption></figure>
-          <figure class="temple-v6-card"><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/temple-hat-weapons-detail.jpg" data-lightbox-alt="Close physical photograph of Master Wu Temple accessories"><img src="images/source/physical/level-02/temple-hat-weapons-detail.jpg" alt="Close physical photograph of Master Wu Temple accessories, golden hat and figure"><span class="image-hint">Temple · accessories detail</span></button><figcaption><span class="card-index">Display module</span><h3>Hat, weapons and blossoms</h3><p>The Temple is a decorative module around the dragon, not the product replacing it.</p></figcaption></figure>
+          <figure class="temple-v6-card"><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/wu-lloyd-handover.jpg" data-lightbox-alt="Wu and Lloyd handover scene beside the Temple"><img src="images/source/physical/level-02/wu-lloyd-handover.jpg" alt="Wu and Lloyd handover scene beside the Temple" loading="lazy" decoding="async"><span class="image-hint">Wu / Lloyd · handover</span></button><figcaption><span class="card-index">Story</span><h3>Wu and Lloyd</h3><p>Lloyd is presented as the engineer; Wu is the master and intended rider. The mechanical dragon remains the hero.</p></figcaption></figure>
+          <figure class="temple-v6-card"><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-02/temple-hat-weapons-detail.jpg" data-lightbox-alt="Close physical photograph of Master Wu Temple accessories"><img src="images/source/physical/level-02/temple-hat-weapons-detail.jpg" alt="Close physical photograph of Master Wu Temple accessories, golden hat and figure" loading="lazy" decoding="async"><span class="image-hint">Temple · accessories detail</span></button><figcaption><span class="card-index">Display module</span><h3>Hat, weapons and blossoms</h3><p>The Temple is a decorative module around the dragon, not the product replacing it.</p></figcaption></figure>
         </div>
         <p class="temple-choice-note" data-reveal>Builders remain free to choose any minifigures they prefer. The published construction is the mechanical dragon and its modular architecture.</p>
       </div>
@@ -322,57 +321,78 @@
         <div class="section-heading evolution-heading" data-reveal><p class="eyebrow">Four months of iteration</p><h2 id="evolution-title">Old images belong here — as evidence of evolution.</h2><p>Early and intermediate models are not presented as the final product. Their value is chronological: they show how the architecture was dismantled, lengthened, rebuilt and refined.</p></div>
 
         <div class="evolution-milestones v7-evolution-milestones">
-          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/01-early-prototype.jpg" data-lightbox-alt="Early compact prototype"><img src="images/source/physical/evolution/01-early-prototype.jpg" alt="Early compact prototype"><span class="image-hint">Early prototype</span></button><figcaption><strong>01 · First experiment</strong><span>Compact early architecture. Historical source only.</span></figcaption></figure>
-          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/03-rebuild-stripped-architecture.jpg" data-lightbox-alt="Stripped rebuild architecture"><img src="images/source/physical/evolution/03-rebuild-stripped-architecture.jpg" alt="Stripped rebuild architecture"><span class="image-hint">Rebuild stage</span></button><figcaption><strong>02 · Rebuild</strong><span>The structure is reconsidered piece by piece.</span></figcaption></figure>
-          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/06-dismantle-parts-search.jpg" data-lightbox-alt="Parts and dismantling stage"><img src="images/source/physical/evolution/06-dismantle-parts-search.jpg" alt="Parts and dismantling stage"><span class="image-hint">Parts search</span></button><figcaption><strong>03 · Parts search</strong><span>Dismantling and targeted parts feed the new architecture.</span></figcaption></figure>
-          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/07-late-long-wing-architecture.jpg" data-lightbox-alt="Late experimental long-wing architecture"><img src="images/source/physical/evolution/07-late-long-wing-architecture.jpg" alt="Late experimental long-wing architecture"><span class="image-hint">Late architecture</span></button><figcaption><strong>04 · Late architecture</strong><span>The length, wings and rear mechanics approach their mature language.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/01-early-prototype.jpg" data-lightbox-alt="Early compact prototype"><img src="images/source/physical/evolution/01-early-prototype.jpg" alt="Early compact prototype" loading="lazy" decoding="async"><span class="image-hint">Early prototype</span></button><figcaption><strong>01 · First experiment</strong><span>Compact early architecture. Historical source only.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/03-rebuild-stripped-architecture.jpg" data-lightbox-alt="Stripped rebuild architecture"><img src="images/source/physical/evolution/03-rebuild-stripped-architecture.jpg" alt="Stripped rebuild architecture" loading="lazy" decoding="async"><span class="image-hint">Rebuild stage</span></button><figcaption><strong>02 · Rebuild</strong><span>The structure is reconsidered piece by piece.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/06-dismantle-parts-search.jpg" data-lightbox-alt="Parts and dismantling stage"><img src="images/source/physical/evolution/06-dismantle-parts-search.jpg" alt="Parts and dismantling stage" loading="lazy" decoding="async"><span class="image-hint">Parts search</span></button><figcaption><strong>03 · Parts search</strong><span>Dismantling and targeted parts feed the new architecture.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/07-late-long-wing-architecture.jpg" data-lightbox-alt="Late experimental long-wing architecture"><img src="images/source/physical/evolution/07-late-long-wing-architecture.jpg" alt="Late experimental long-wing architecture" loading="lazy" decoding="async"><span class="image-hint">Late architecture</span></button><figcaption><strong>04 · Late architecture</strong><span>The length, wings and rear mechanics approach their mature language.</span></figcaption></figure>
         </div>
-
-        <figure class="evolution-final-feature" data-reveal>
-          <button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/final-family-overhead.jpg" data-lightbox-alt="Final-family overhead physical photograph"><img src="images/source/physical/level-03/final-family-overhead.jpg" alt="Final-family overhead physical photograph of the complete dragon"><span class="image-hint">Final family · overhead</span></button>
-          <figcaption><div><span class="card-index">Final-family physical build</span><h3>The destination is now visually distinct.</h3></div><p>The chronology ends on a later full-body source image that is not used in the configuration cards, state map or physical-proof section.</p></figcaption>
-        </figure>
-      </div>
+        <div class="evolution-end-note" data-reveal>
+          <span class="card-index">Published destination</span>
+          <h3>The chronology stops before the product presentation.</h3>
+          <p>The evolution archive remains historical evidence only. The published Level 03 is presented in the official configuration section rather than by an incomplete or transitional physical photograph.</p>
+        </div>
+</div>
     </section>
 
     <section class="section creator-archive v7-source-library" id="source-library" aria-labelledby="archive-title">
       <div class="shell">
-        <div class="archive-heading" data-reveal><div><p class="eyebrow">Visual source library · decision base</p><h2 id="archive-title">A much wider sample of the archive.</h2></div><p>This section exists so the next design decisions can be made from the real breadth of the material: evolution, physical angles, workshop/story views and the creator-only Model 4. These images are deliberately secondary and are not pretending to be interchangeable hero shots.</p></div>
+        <div class="archive-heading" data-reveal><div><p class="eyebrow">Visual source library · decision base</p><h2 id="archive-title">The archive, separated by what each image actually shows.</h2></div><p>Evolution, published configurations, workshop context and the personal two-reactor experiment are kept visually separate so each photograph has a clear documentary role.</p></div>
 
         <div class="source-group" data-reveal><div class="source-group-heading"><span>Archive A</span><h3>Evolution / construction</h3><p>Older images are useful when their historical role is explicit.</p></div><div class="source-gallery source-gallery-four">
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/02-early-prototype-alt.jpg" data-lightbox-alt="Early prototype alternate angle"><img src="images/source/physical/evolution/02-early-prototype-alt.jpg" alt="Early prototype alternate angle"></button><figcaption>Early prototype · alternate angle</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/04-lengthening-top-view.jpg" data-lightbox-alt="Longer architecture emerging"><img src="images/source/physical/evolution/04-lengthening-top-view.jpg" alt="Longer architecture emerging"></button><figcaption>Evolution · lengthening</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/05-build-and-parts.jpg" data-lightbox-alt="Build plus acquired parts"><img src="images/source/physical/evolution/05-build-and-parts.jpg" alt="Build plus acquired parts"></button><figcaption>Evolution · build + parts</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/08-late-low-head-angle.jpg" data-lightbox-alt="Strong low head-forward late evolution photograph"><img src="images/source/physical/evolution/08-late-low-head-angle.jpg" alt="Strong low head-forward late evolution photograph"></button><figcaption>Late evolution · low angle</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/02-early-prototype-alt.jpg" data-lightbox-alt="Early prototype alternate angle"><img src="images/source/physical/evolution/02-early-prototype-alt.jpg" alt="Early prototype alternate angle" loading="lazy" decoding="async"></button><figcaption>Early prototype · alternate angle</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/04-lengthening-top-view.jpg" data-lightbox-alt="Longer architecture emerging"><img src="images/source/physical/evolution/04-lengthening-top-view.jpg" alt="Longer architecture emerging" loading="lazy" decoding="async"></button><figcaption>Evolution · lengthening</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/05-build-and-parts.jpg" data-lightbox-alt="Build plus acquired parts"><img src="images/source/physical/evolution/05-build-and-parts.jpg" alt="Build plus acquired parts" loading="lazy" decoding="async"></button><figcaption>Evolution · build + parts</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/evolution/08-late-low-head-angle.jpg" data-lightbox-alt="Strong low head-forward late evolution photograph"><img src="images/source/physical/evolution/08-late-low-head-angle.jpg" alt="Strong low head-forward late evolution photograph" loading="lazy" decoding="async"></button><figcaption>Late evolution · low angle</figcaption></figure>
         </div></div>
 
-        <div class="source-group" data-reveal><div class="source-group-heading"><span>Archive B</span><h3>Official / late physical angles</h3><p>Different orientations reveal different engineering qualities without repeating one favorite photograph.</p></div><div class="source-gallery source-gallery-four">
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/outdoor-top-oblique.jpg" data-lightbox-alt="Late or final outdoor top-oblique angle"><img src="images/source/physical/level-03/outdoor-top-oblique.jpg" alt="Late or final outdoor top-oblique angle"></button><figcaption>Level 03 · top oblique</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/overhead-long-axis.jpg" data-lightbox-alt="Late or final overhead long-axis angle"><img src="images/source/physical/level-03/overhead-long-axis.jpg" alt="Late or final overhead long-axis angle"></button><figcaption>Level 03 · long axis</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/front-symmetry.jpg" data-lightbox-alt="Official full build front symmetry angle"><img src="images/source/physical/level-03/front-symmetry.jpg" alt="Official full build front symmetry angle"></button><figcaption>Level 03 · front symmetry</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/head-to-temple-perspective.jpg" data-lightbox-alt="Head to Temple perspective"><img src="images/source/physical/level-03/head-to-temple-perspective.jpg" alt="Head to Temple perspective"></button><figcaption>Level 03 · head → Temple</figcaption></figure>
-        </div></div>
+        <div class="source-group" data-reveal>
+          <div class="source-group-heading"><span>Archive B</span><h3>Later Model 03 · full-body context</h3><p>These later desk and display photographs belong to Model 03. They are no longer classified as the two-reactor Model 04.</p></div>
+          <div class="source-gallery source-gallery-four">
+            <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/evolved-display-later-build.jpg" data-lightbox-alt="Later Model 03 display view"><img src="images/source/physical/model-04/evolved-display-later-build.jpg" alt="Later Model 03 display view" loading="lazy" decoding="async"></button><figcaption>Model 03 · later display</figcaption></figure>
+            <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" data-lightbox-alt="Complete indoor Model 03 display"><img src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" alt="Complete indoor Model 03 display" loading="lazy" decoding="async"></button><figcaption>Model 03 · complete indoor display</figcaption></figure>
+            <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-01.jpg" data-lightbox-alt="Model 03 creator desk view"><img src="images/source/physical/model-04/creator-desk-view-01.jpg" alt="Model 03 creator desk view" loading="lazy" decoding="async"></button><figcaption>Model 03 · creator desk</figcaption></figure>
+            <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" data-lightbox-alt="Wide Model 03 creator context"><img src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" alt="Wide Model 03 creator context" loading="lazy" decoding="async"></button><figcaption>Model 03 · wide creator context</figcaption></figure>
+          </div>
+        </div>
 
         <div class="source-group" data-reveal><div class="source-group-heading"><span>Archive C</span><h3>Workshop / story / engineering</h3><p>The archive also contains context images that should support the story rather than masquerade as product views.</p></div><div class="source-gallery source-gallery-four">
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/process/planning-figures-blueprint.jpg" data-lightbox-alt="Figures and blueprint planning scene"><img src="images/source/physical/process/planning-figures-blueprint.jpg" alt="Figures and blueprint planning scene"></button><figcaption>Planning · figures + blueprint</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/process/parts-acquisition-bags.jpg" data-lightbox-alt="Parts acquisition bags"><img src="images/source/physical/process/parts-acquisition-bags.jpg" alt="Parts acquisition bags"></button><figcaption>Process · parts acquisition</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/rear-mechanics-closeup.jpg" data-lightbox-alt="Rear mechanical close-up"><img src="images/source/physical/level-03/rear-mechanics-closeup.jpg" alt="Rear mechanical close-up"></button><figcaption>Engineering · rear mechanics</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/indoor-top-view.jpg" data-lightbox-alt="Late or final indoor top view"><img src="images/source/physical/level-03/indoor-top-view.jpg" alt="Late or final indoor top view"></button><figcaption>Level 03 · indoor top view</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/process/planning-figures-blueprint.jpg" data-lightbox-alt="Figures and blueprint planning scene"><img src="images/source/physical/process/planning-figures-blueprint.jpg" alt="Figures and blueprint planning scene" loading="lazy" decoding="async"></button><figcaption>Planning · figures + blueprint</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/process/parts-acquisition-bags.jpg" data-lightbox-alt="Parts acquisition bags"><img src="images/source/physical/process/parts-acquisition-bags.jpg" alt="Parts acquisition bags" loading="lazy" decoding="async"></button><figcaption>Process · parts acquisition</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/level-03/rear-mechanics-closeup.jpg" data-lightbox-alt="Rear mechanical close-up"><img src="images/source/physical/level-03/rear-mechanics-closeup.jpg" alt="Rear mechanical close-up" loading="lazy" decoding="async"></button><figcaption>Engineering · rear mechanics</figcaption></figure>
+          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/late-personal-build-context.jpg" data-lightbox-alt="Late Model 03 workshop context"><img src="images/source/physical/model-04/late-personal-build-context.jpg" alt="Late Model 03 workshop context" loading="lazy" decoding="async"></button><figcaption>Model 03 · late workshop context</figcaption></figure>
         </div></div>
 
-        <div class="source-group creator-source-group" data-reveal><div class="source-group-heading"><span>Archive D</span><h3>Model 4 · creator-only evolution</h3><p>These sources stay outside the three published levels. They document what happened after the official instructions stopped.</p></div><div class="source-gallery source-gallery-four">
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/dual-reactor-closeup.jpg" data-lightbox-alt="Confirmed dual-reactor close-up"><img src="images/source/physical/model-04/dual-reactor-closeup.jpg" alt="Confirmed dual-reactor close-up"></button><figcaption>Model 04 · dual-reactor detail</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-01.jpg" data-lightbox-alt="Creator desk later personal configuration"><img src="images/source/physical/model-04/creator-desk-view-01.jpg" alt="Creator desk later personal configuration"></button><figcaption>Model 04 · creator desk</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" data-lightbox-alt="Wide creator desk context"><img src="images/source/physical/model-04/creator-desk-view-02-wide.jpg" alt="Wide creator desk context"></button><figcaption>Model 04 · wider creator context</figcaption></figure>
-          <figure><button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/late-personal-build-context.jpg" data-lightbox-alt="Late personal build context"><img src="images/source/physical/model-04/late-personal-build-context.jpg" alt="Late personal build context"></button><figcaption>Model 04 · late personal context</figcaption></figure>
-        </div></div>
+        <div class="source-group creator-source-group" data-reveal>
+          <div class="source-group-heading">
+            <span>Archive D</span>
+            <h3>Model 4 · two-reactor evidence</h3>
+            <p>Only the close-up in which both reactors are visibly distinguishable is classified here as Model 04.</p>
+          </div>
+          <div class="source-gallery source-gallery-one">
+            <figure>
+              <button class="image-button" type="button" data-lightbox-src="images/source/physical/model-04/dual-reactor-closeup.jpg" data-lightbox-alt="Close physical detail showing both reactors of Model 04">
+                <img src="images/source/physical/model-04/dual-reactor-closeup.jpg" alt="Close physical detail showing both reactors of Model 04" loading="lazy" decoding="async">
+              </button>
+              <figcaption>Model 04 · two reactors visible · personal evolution outside the published instructions</figcaption>
+            </figure>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section creator-evolution v7-beyond" id="beyond" aria-labelledby="beyond-title">
+    <section class="section creator-evolution v7-beyond v73-beyond" id="beyond" aria-labelledby="beyond-title">
       <div class="shell beyond-layout">
-        <div class="beyond-copy" data-reveal><p class="eyebrow">State 04 · beyond the published build</p><h2 id="beyond-title">Model 4: the creator-only dual-reactor evolution.</h2><p>The Rebrickable release intentionally ends with the three official levels. The personal display model continued afterward, including the confirmed dual-reactor evolution documented elsewhere in the source archive.</p><p>This later complete display photograph is kept here — and nowhere in the Level 03 presentation — so the published and personal states remain visually separate.</p><div class="beyond-badge">Creator's personal evolution · not included in the instructions</div></div>
-        <button class="image-button beyond-image" type="button" data-lightbox-src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" data-lightbox-alt="Complete later creator-only evolved display model"><img src="images/source/physical/model-04/evolved-display-complete-indoor.jpg" alt="Complete later creator-only evolved display model"><span class="image-hint">Model 04 · complete evolved display</span></button>
+        <div class="beyond-copy" data-reveal>
+          <p class="eyebrow">Beyond the published instructions</p>
+          <h2 id="beyond-title">Model 4 is identified by two reactors — not by date or filename.</h2>
+          <p>The published project ends at Level 03 with one Advanced Rear Propulsion system. The later personal experiment adds a second reactor.</p>
+          <p>For this page, Model 04 is deliberately shown only through the physical close-up where both reactors can actually be counted. The other later desk photographs remain Model 03.</p>
+          <div class="beyond-badge">Personal evolution · two reactors · outside instructions</div>
+        </div>
+        <button class="image-button beyond-image model04-reactor-proof" type="button" data-lightbox-src="images/source/physical/model-04/dual-reactor-closeup.jpg" data-lightbox-alt="Close physical proof of the two reactors on Model 04">
+          <img src="images/source/physical/model-04/dual-reactor-closeup.jpg" alt="Close physical proof of the two reactors on Model 04" loading="lazy" decoding="async">
+          <span class="image-hint">Model 04 · reactor 1 + reactor 2 visible</span>
+        </button>
       </div>
     </section>
 
@@ -395,7 +415,7 @@
 
         <div class="instructions-gallery instructions-gallery-single" data-reveal>
           <button class="image-button" type="button" data-lightbox-src="images/source/studio/renders/instruction-build-version.png" data-lightbox-alt="Clean BrickLink Studio build-version render used during instruction preparation">
-            <img src="images/source/studio/renders/instruction-build-version.png" alt="Clean BrickLink Studio build-version render of the complete Rising Phoenix used during instruction preparation">
+            <img src="images/source/studio/renders/instruction-build-version.png" alt="Clean BrickLink Studio build-version render of the complete Rising Phoenix used during instruction preparation" loading="lazy" decoding="async">
             <span class="image-hint">View image</span>
           </button>
         </div>
@@ -424,7 +444,7 @@
 
   <dialog class="lightbox" data-lightbox aria-label="Image preview">
     <button class="lightbox-close" type="button" aria-label="Close image preview" data-lightbox-close>×</button>
-    <img src="" alt="" data-lightbox-image>
+    <img src="" alt="" data-lightbox-image loading="lazy" decoding="async">
     <p data-lightbox-caption></p>
   </dialog>
 </body>

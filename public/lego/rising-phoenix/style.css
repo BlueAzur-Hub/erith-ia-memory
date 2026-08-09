@@ -3842,3 +3842,139 @@ section[id] {
   .source-group-heading { grid-template-columns: 1fr; gap: 8px; }
   .source-group-heading p { grid-column: auto; }
 }
+
+/* ==========================================================================
+   V7.3 — VISUAL CORRECTION
+   User review: respect the dragon's real width and identify Model 04 only
+   when two reactors are visibly verifiable. CODE ONLY: no image files changed.
+   ========================================================================== */
+
+/* Fixed header: anchor headings must land fully below it. */
+html {
+  scroll-padding-top: calc(var(--header-height) + 132px) !important;
+}
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + 132px) !important;
+}
+
+/* Product/configuration views: preserve the entire long horizontal silhouette. */
+.v73-state-map .state-card .image-button,
+.v73-config-grid .configuration-card .image-button {
+  display: grid;
+  place-items: center;
+  background: #111411;
+  overflow: hidden;
+}
+
+.v73-state-map .state-card .image-button img,
+.v73-config-grid .configuration-card .image-button img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #111411 !important;
+}
+
+/* Temple detail may remain more vertical; do not force a crop. */
+.v73-state-map .state-card:nth-child(2) .image-button img {
+  object-fit: contain !important;
+}
+
+/* The Model04 state is explicitly a mechanical detail, not a full-body product shot. */
+.model04-detail-card {
+  border-color: rgba(92, 255, 127, 0.34);
+}
+.model04-detail-card .image-button img {
+  object-fit: cover !important;
+  object-position: center 52% !important;
+}
+
+/* Three configuration cards remain equal in layout, but their images are never
+   stretched or cropped just to fill a decorative frame. */
+.v73-config-grid .configuration-card .image-button {
+  aspect-ratio: 4 / 3;
+}
+.v73-config-grid .configuration-card .image-button img {
+  aspect-ratio: auto !important;
+}
+
+/* Physical proof now uses a later Model03 context photograph. */
+.v73-real-build .real-build-image img {
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #111411 !important;
+}
+
+/* Evolution section ends with an editorial note, not a misleading "final" photo. */
+.evolution-end-note {
+  margin-top: 30px;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-small);
+  background:
+    linear-gradient(145deg, rgba(201,154,70,.05), transparent 52%),
+    #111411;
+}
+.evolution-end-note h3 {
+  margin: 8px 0 12px;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+}
+.evolution-end-note p {
+  max-width: 860px;
+  margin: 0;
+  color: var(--text-soft);
+}
+
+/* Model04 archive = one verified detail, not a row of Model03 photographs. */
+.source-gallery-one {
+  display: grid;
+  grid-template-columns: minmax(280px, 620px);
+}
+.source-gallery-one figure {
+  width: 100%;
+}
+.source-gallery-one .image-button img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain !important;
+  background: #111411 !important;
+}
+
+/* The personal evolution section is now technical proof. */
+.v73-beyond .beyond-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+}
+.v73-beyond .model04-reactor-proof {
+  background: #111411;
+}
+.v73-beyond .model04-reactor-proof img {
+  width: 100%;
+  max-height: 520px;
+  aspect-ratio: 4 / 3;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #111411 !important;
+}
+
+@media (max-width: 980px) {
+  html {
+    scroll-padding-top: calc(var(--header-height) + 92px) !important;
+  }
+  section[id] {
+    scroll-margin-top: calc(var(--header-height) + 92px) !important;
+  }
+  .v73-beyond .beyond-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  html {
+    scroll-padding-top: calc(var(--header-height) + 58px) !important;
+  }
+  section[id] {
+    scroll-margin-top: calc(var(--header-height) + 58px) !important;
+  }
+}
