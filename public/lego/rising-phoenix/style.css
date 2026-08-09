@@ -3743,3 +3743,102 @@ section[id] {
     grid-template-columns: 46px 1fr;
   }
 }
+
+
+/* ==========================================================================\n   V7 — SOURCE LIBRARY EDITION · 2026-08-09\n   Uses existing user-supplied physical photos and BrickLink Studio sources.\n   No image generation in this pass.\n   ========================================================================== */
+
+/* Hero: the approved existing hero has intentional dark negative space on the\n   left. Keep copy narrow enough that the dragon head never sits under CTAs. */
+.hero-content { padding-bottom: 148px; }
+.hero-subtitle { max-width: 520px; }
+.hero-actions { max-width: 520px; }
+.hero-media img { object-fit: cover; object-position: center 52%; }
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(7,8,7,.90) 0%, rgba(7,8,7,.78) 18%, rgba(7,8,7,.52) 32%, rgba(7,8,7,.16) 48%, rgba(7,8,7,.04) 72%),
+    linear-gradient(0deg, rgba(8,9,8,.62) 0%, rgba(8,9,8,.13) 25%, transparent 42%);
+}
+
+/* Source photographs should be allowed to breathe. */
+.v7-state-map .state-card .image-button img,
+.v7-config-grid .configuration-card .image-button img,
+.v7-real-build .real-build-image img,
+.v7-evolution .image-button img,
+.v7-beyond .beyond-image img,
+.v7-source-library .source-gallery img {
+  background: #121512;
+}
+
+.v7-state-map .state-card .image-button img { aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+.v7-state-map .state-card:nth-child(2) .image-button img { object-position: 50% 48%; }
+.v7-state-map .state-card:nth-child(4) .image-button img { object-position: center; }
+
+.v7-config-grid .configuration-card .image-button img { aspect-ratio: 4 / 3 !important; object-fit: cover !important; object-position: center !important; }
+.v7-config-grid .configuration-card:nth-child(1) .image-button img { object-fit: contain !important; background: #121512 !important; }
+.v7-config-grid .configuration-card:nth-child(2) .image-button img { object-position: 50% 49% !important; }
+.v7-config-grid .configuration-card:nth-child(3) .image-button img { object-position: 50% 50% !important; }
+
+/* Engineering: physical photos can crop modestly; Studio sources stay complete. */
+.v7-engineering-grid .feature .image-button img { aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+.v7-engineering-grid .feature .studio-white img,
+.studio-white img { object-fit: contain !important; background: #e9e9e9 !important; }
+.engineering-proof-images .image-button:first-child img { object-fit: contain !important; object-position: center !important; background: #111411 !important; }
+.engineering-proof-images .image-button:last-child img { object-fit: contain !important; background: #e9e9e9 !important; }
+
+.studio-ui-frame img,
+.v7-studio-process .studio-ui-shot img { object-fit: contain !important; background: #151815 !important; }
+
+/* Studio render gallery: no more fake homogeneity through cropping. */
+.studio-render-grid-v7 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.studio-render-grid-v7 .studio-render-card { min-height: 0; }
+.studio-render-grid-v7 .studio-render-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; object-position: center; background: #e8e8e8; }
+.studio-render-grid-v7 .studio-render-wide { grid-column: span 2; }
+
+/* Real build — strong low physical angle without forcing a crop. */
+.v7-real-build .real-build-image { background: #111411; }
+.v7-real-build .real-build-image img { aspect-ratio: 4 / 3; object-fit: contain !important; }
+.source-note { margin-top: 20px; color: var(--gold-light); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Evolution: four different historic moments + a distinct final-family view. */
+.v7-evolution-milestones .image-button img { aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+.v7-evolution .evolution-final-feature .image-button img { object-fit: contain; background: #101310; }
+
+/* Visual source library — grouped by meaning, not just by filename. */
+.v7-source-library { background: #0d100d; border-block: 1px solid var(--line-soft); }
+.v7-source-library .archive-heading { margin-bottom: 42px; }
+.source-group { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line-soft); }
+.source-group:first-of-type { margin-top: 0; }
+.source-group-heading { display: grid; grid-template-columns: 110px minmax(220px, .72fr) minmax(280px, 1.28fr); gap: 22px; align-items: baseline; margin-bottom: 18px; }
+.source-group-heading > span { color: var(--gold-light); font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.source-group-heading h3 { margin: 0; font-family: var(--display); font-size: clamp(1.55rem, 2.3vw, 2.35rem); }
+.source-group-heading p { margin: 0; color: var(--text-soft); }
+.source-gallery { display: grid; gap: 14px; }
+.source-gallery-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.source-gallery figure { margin: 0; overflow: hidden; border: 1px solid var(--line-soft); border-radius: var(--radius-small); background: #121512; }
+.source-gallery .image-button { width: 100%; background: #121512; }
+.source-gallery .image-button img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; object-position: center; }
+.source-gallery figcaption { padding: 12px 14px 14px; color: var(--text-soft); font-size: .75rem; letter-spacing: .03em; }
+.creator-source-group { border-top-color: rgba(92,255,127,.22); }
+.creator-source-group .source-group-heading > span { color: #aef7be; }
+
+/* State 04 / creator-only section stays visually separate. */
+.v7-beyond { background: linear-gradient(145deg, rgba(92,255,127,.035), transparent 35%), #101310; }
+.v7-beyond .beyond-image img { aspect-ratio: 4 / 3; object-fit: contain; object-position: center; background: #101310; }
+
+/* Small source labels remain legible over photographs. */
+.image-hint { max-width: calc(100% - 24px); white-space: normal; text-align: left; }
+
+@media (max-width: 1100px) {
+  .studio-render-grid-v7, .source-gallery-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-render-grid-v7 .studio-render-wide { grid-column: span 2; }
+  .source-group-heading { grid-template-columns: 90px 1fr; }
+  .source-group-heading p { grid-column: 2; }
+}
+
+@media (max-width: 760px) {
+  .hero-content { padding-bottom: 54px; }
+  .hero-subtitle, .hero-actions { max-width: 100%; }
+  .studio-render-grid-v7, .source-gallery-four { grid-template-columns: 1fr; }
+  .studio-render-grid-v7 .studio-render-wide { grid-column: auto; }
+  .source-group-heading { grid-template-columns: 1fr; gap: 8px; }
+  .source-group-heading p { grid-column: auto; }
+}
