@@ -248,7 +248,7 @@ h3 {
 }
 
 .section {
-  padding: clamp(84px, 10vw, 150px) 0;
+  padding: clamp(78px, 8.5vw, 132px) 0;
 }
 
 .section-dark {
@@ -553,9 +553,14 @@ h3 {
   grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
 }
 
+.feature-large .image-button {
+  background: #e8e8e8;
+}
+
 .feature-large .image-button img {
   height: 100%;
   aspect-ratio: auto;
+  object-fit: contain;
 }
 
 .feature-copy {
@@ -1181,5 +1186,231 @@ h3 {
 
   .beyond-badge {
     border-radius: 12px;
+  }
+}
+
+
+/* V4 — robust anchor offset for the fixed header */
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + 28px);
+}
+
+
+/* ==========================================================================
+   V4 — BrickLink Studio / Design & Engineering Process
+   ========================================================================== */
+
+.primary-nav {
+  gap: 20px;
+}
+
+.engineering-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 28px;
+  padding: 14px 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.018);
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.engineering-note span:nth-child(2),
+.engineering-note span:nth-child(4) {
+  color: var(--gold-light);
+}
+
+/* Main Studio process section */
+.studio-process {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(201, 154, 70, 0.08), transparent 30rem),
+    radial-gradient(circle at 88% 76%, rgba(92, 255, 127, 0.055), transparent 32rem),
+    #0c0e0c;
+  border-block: 1px solid var(--line-soft);
+}
+
+.studio-workbench-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.studio-workbench-card {
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #171a17, #111311);
+  box-shadow: var(--shadow);
+}
+
+.studio-ui-shot {
+  background: #242724;
+}
+
+.studio-ui-shot img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+.studio-card-copy {
+  padding: 24px 24px 26px;
+}
+
+.studio-card-copy h3 {
+  margin-top: 0;
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+}
+
+.studio-card-copy p {
+  margin-bottom: 0;
+  color: var(--text-soft);
+  font-size: 0.93rem;
+}
+
+.studio-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(201, 154, 70, 0.065), transparent 42%),
+    var(--panel);
+}
+
+.studio-flow > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.studio-flow strong {
+  color: var(--gold-light);
+  font-size: 0.92rem;
+}
+
+.studio-flow span:not(.studio-flow-arrow) {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+}
+
+.studio-flow-arrow {
+  color: var(--gold-light);
+  opacity: 0.72;
+}
+
+.studio-render-heading {
+  max-width: 760px;
+  margin-top: clamp(62px, 7vw, 92px);
+  margin-bottom: 28px;
+}
+
+.studio-render-heading h3 {
+  margin-top: 0;
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  letter-spacing: -0.04em;
+}
+
+.studio-render-heading > p:last-child {
+  max-width: 680px;
+  color: var(--text-soft);
+}
+
+.studio-render-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+.studio-render-card {
+  min-height: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-small);
+  background: #e9e9e9;
+}
+
+.studio-render-card:nth-child(1),
+.studio-render-card:nth-child(2) {
+  grid-column: span 3;
+}
+
+.studio-render-card:nth-child(3),
+.studio-render-card:nth-child(4),
+.studio-render-card:nth-child(5) {
+  grid-column: span 2;
+}
+
+.studio-render-card img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #e9e9e9;
+}
+
+.studio-render-label {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(8, 9, 8, 0.82);
+  color: #ece9df;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+/* Keep technical imagery readable rather than aggressively cropped. */
+.feature .image-button img,
+.detail-image img {
+  object-position: center;
+}
+
+@media (max-width: 1040px) {
+  .primary-nav {
+    gap: 16px;
+  }
+
+  .studio-workbench-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-ui-shot img {
+    aspect-ratio: 16 / 8.5;
+  }
+
+  .studio-flow {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .studio-flow-arrow {
+    transform: rotate(90deg);
+    justify-self: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .studio-render-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-render-card:nth-child(n) {
+    grid-column: auto;
+  }
+
+  .engineering-note {
+    border-radius: var(--radius-small);
   }
 }
