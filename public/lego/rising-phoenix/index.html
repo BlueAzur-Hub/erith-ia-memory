@@ -1,180 +1,253 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#070706">
-  <title>ERROR 404 — Mechanical Golden Dragon</title>
+  <meta name="theme-color" content="#090a09">
+  <meta name="description" content="Rising Phoenix — Mechanical Golden Dragon MOC by Christophe78. Physical evolution, three official build levels, BrickLink Studio reconstruction and building instructions.">
+  <title>Rising Phoenix — Mechanical Golden Dragon</title>
   <style>
-    :root{
-      --bg:#070706;
-      --panel:#0d0d0b;
-      --panel2:#12120f;
-      --line:rgba(238,196,93,.18);
+    :root {
+      --bg:#090a09;
+      --bg2:#0f100e;
+      --panel:#12130f;
+      --panel2:#171811;
       --gold:#efc45d;
-      --gold2:#dba83e;
-      --text:#f5f1e8;
-      --muted:#aaa79e;
-      --max:1320px;
+      --gold2:#d8a83f;
+      --text:#f5f1e7;
+      --muted:#aaa69c;
+      --line:rgba(239,196,93,.22);
+      --line-soft:rgba(255,255,255,.08);
+      --max:1400px;
+      --radius:26px;
     }
+
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
       color:var(--text);
       background:
-        radial-gradient(circle at 80% 0%, rgba(239,196,93,.06), transparent 28%),
-        var(--bg);
+        radial-gradient(circle at 82% 4%, rgba(239,196,93,.07), transparent 28rem),
+        linear-gradient(180deg,#090a09,#0b0c0a 48%,#090a09);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
+    img{max-width:100%}
     a{color:inherit;text-decoration:none}
-    .wrap{width:min(var(--max),calc(100% - 40px));margin:auto}
+    button{font:inherit}
+    .shell{width:min(var(--max),calc(100% - 44px));margin:auto}
 
-    header{
-      position:sticky;top:0;z-index:20;
-      background:rgba(7,7,6,.88);
-      backdrop-filter:blur(14px);
-      border-bottom:1px solid rgba(255,255,255,.07);
+    .site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(9,10,9,.88);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line-soft);
     }
-    .nav{
-      min-height:76px;display:flex;align-items:center;gap:28px;justify-content:space-between;
+    .header-inner{
+      min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;
     }
-    .brand{display:flex;align-items:center;gap:13px;font-weight:850;letter-spacing:.14em;font-size:.86rem}
-    .diamond{width:10px;height:10px;background:var(--gold);transform:rotate(45deg);display:inline-block}
-    nav{display:flex;gap:24px;color:#c3bfb5;font-size:.92rem}
+    .brand{display:flex;align-items:center;gap:13px;font-weight:900;letter-spacing:.11em}
+    .brand-mark{width:11px;height:11px;background:var(--gold);transform:rotate(45deg);display:inline-block}
+    .brand small{display:block;color:#7f7c73;font-size:.64rem;letter-spacing:.12em;margin-top:2px}
+    nav{display:flex;gap:23px;color:#c5c0b6;font-size:.9rem}
     nav a:hover{color:var(--gold)}
 
-    .hero{padding:38px 0 56px}
-    .eyebrow{color:var(--gold);font-weight:800;letter-spacing:.16em;font-size:.78rem;margin-bottom:15px}
+    .hero{padding:36px 0 64px}
+    .hero-stage{
+      position:relative;overflow:hidden;border-radius:32px;border:1px solid var(--line-soft);
+      background:#090a09;box-shadow:0 36px 100px rgba(0,0,0,.48);
+    }
+    .hero-stage img{
+      display:block;width:100%;height:auto;min-height:520px;object-fit:contain;background:#090a09;
+    }
+    .hero-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(90deg,rgba(5,6,5,.94) 0%,rgba(5,6,5,.76) 27%,rgba(5,6,5,.16) 58%,rgba(5,6,5,.05) 100%);
+      pointer-events:none;
+    }
+    .hero-copy{
+      position:absolute;left:clamp(28px,5vw,76px);top:50%;transform:translateY(-50%);
+      width:min(610px,48%);z-index:2;
+    }
+    .eyebrow{
+      margin:0 0 14px;color:var(--gold);font-weight:850;letter-spacing:.17em;
+      text-transform:uppercase;font-size:.76rem;
+    }
     h1{
-      margin:0 0 12px;
-      font-size:clamp(5.5rem,15vw,14rem);
-      line-height:.78;
-      letter-spacing:-.065em;
-      font-weight:950;
+      margin:0;font-size:clamp(4rem,8.5vw,8.7rem);line-height:.82;letter-spacing:-.07em;font-weight:950;
     }
     h1 span{display:block;color:var(--gold)}
-    .lead{
-      max-width:860px;margin:22px 0 28px;color:#d2cec4;
-      font-size:clamp(1rem,1.55vw,1.28rem);line-height:1.65;
+    .hero-copy .lead{
+      max-width:560px;margin:22px 0 26px;color:#ded9ce;line-height:1.65;
+      font-size:clamp(1rem,1.45vw,1.24rem);
     }
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-height:50px;padding:0 22px;border-radius:999px;
-      border:1px solid var(--line);font-weight:800;
+      display:inline-flex;min-height:50px;align-items:center;justify-content:center;
+      padding:0 21px;border-radius:999px;border:1px solid var(--line);
+      font-weight:850;font-size:.93rem;background:#0b0c0a;
     }
-    .btn.primary{background:var(--gold);color:#16130d;border-color:var(--gold)}
-    .btn.secondary{background:#0b0b09}
-    .hero-frame{
-      position:relative;overflow:hidden;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:24px;
-      background:#0a0a09;
-      box-shadow:0 30px 80px rgba(0,0,0,.38);
-    }
-    .hero-frame img{
-      display:block;width:100%;height:auto;
-      background:#fff;
-    }
-    .caption{
-      display:flex;justify-content:space-between;gap:20px;align-items:center;
-      padding:14px 18px;color:#aaa79e;font-size:.82rem;
-      border-top:1px solid rgba(255,255,255,.07)
-    }
-    .caption strong{color:#e3ddd0}
+    .btn.primary{background:var(--gold);border-color:var(--gold);color:#16130d}
+    .btn:hover{transform:translateY(-1px)}
 
     .stats{
-      margin-top:20px;
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:10px;
+      margin-top:18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
     }
     .stat{
-      min-height:112px;padding:18px;border-radius:18px;
-      background:linear-gradient(180deg,#11110e,#0b0b09);
-      border:1px solid rgba(255,255,255,.07);
+      padding:18px 20px;border-radius:18px;border:1px solid var(--line-soft);
+      background:linear-gradient(180deg,#12130f,#0d0e0c);
     }
-    .stat b{display:block;color:var(--gold);font-size:1.75rem;margin-top:9px}
-    .stat small{color:#8f8c84;text-transform:uppercase;letter-spacing:.12em}
+    .stat small{display:block;color:#817e75;text-transform:uppercase;letter-spacing:.12em;font-size:.67rem}
+    .stat b{display:block;color:var(--gold);font-size:1.6rem;margin-top:8px}
 
-    section{padding:72px 0;border-top:1px solid rgba(255,255,255,.06)}
-    .section-kicker{color:var(--gold);font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-    h2{font-size:clamp(2rem,4vw,4.1rem);line-height:1.02;letter-spacing:-.04em;margin:12px 0 18px}
-    .section-copy{max-width:820px;color:#b7b3aa;line-height:1.75;font-size:1.03rem}
-
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
-    .card{
-      padding:24px;border-radius:20px;
-      background:linear-gradient(180deg,#11110e,#0b0b09);
-      border:1px solid rgba(255,255,255,.07);
+    section.content{padding:82px 0;border-top:1px solid rgba(255,255,255,.055)}
+    .section-head{max-width:920px;margin-bottom:34px}
+    .section-head.center{text-align:center;margin-left:auto;margin-right:auto}
+    h2{
+      margin:10px 0 14px;font-size:clamp(2.2rem,4.4vw,4.7rem);line-height:.98;
+      letter-spacing:-.05em;
     }
-    .card .n{color:var(--gold);font-size:.78rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
-    .card h3{font-size:1.35rem;margin:10px 0}
-    .card p{margin:0;color:#a9a69e;line-height:1.65}
-
-    .timeline{margin-top:30px;display:grid;gap:12px}
-    .step{
-      display:grid;grid-template-columns:72px 1fr;gap:18px;
-      padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06)
+    .section-head p:not(.eyebrow), .section-copy{
+      color:#b5b1a8;line-height:1.75;font-size:1.02rem;
     }
-    .step .num{color:var(--gold);font-weight:900;font-size:1.2rem}
-    .step h3{margin:0 0 5px;font-size:1.06rem}
-    .step p{margin:0;color:#9f9c94;line-height:1.6}
 
-    .final{
-      padding:78px 0 92px;
-      background:linear-gradient(180deg,transparent,rgba(239,196,93,.04));
-      border-top:1px solid rgba(255,255,255,.06);
+    .collector{
+      border:1px solid var(--line-soft);border-radius:30px;background:#0d0e0c;overflow:hidden;
     }
-    .final-box{
-      border:1px solid var(--line);
-      background:#0d0d0b;border-radius:28px;
-      padding:clamp(26px,5vw,58px);
+    .collector img{display:block;width:100%;height:auto;object-fit:contain;background:#0b0c0a}
+    .below-copy{
+      padding:24px 26px 27px;border-top:1px solid var(--line-soft);
+      display:flex;justify-content:space-between;gap:28px;align-items:flex-start;
     }
-    footer{padding:28px 0 42px;color:#77746d;font-size:.85rem}
+    .below-copy h3{margin:0;font-size:1.5rem}
+    .below-copy p{margin:6px 0 0;color:var(--muted);line-height:1.6;max-width:760px}
 
-    @media(max-width:900px){
+    .config-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .config-card{
+      border:1px solid var(--line-soft);border-radius:24px;background:linear-gradient(180deg,#14150f,#0d0e0c);overflow:hidden;
+    }
+    .config-card.featured{border-color:var(--line);box-shadow:0 0 0 1px rgba(239,196,93,.05) inset}
+    .media-button{display:block;width:100%;border:0;padding:0;background:#111;cursor:zoom-in}
+    .media-button img{
+      display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0c0d0b;
+    }
+    .card-copy{padding:22px}
+    .index{color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+    .card-copy h3{font-size:1.35rem;margin:8px 0 9px}
+    .card-copy p{margin:0;color:#aaa69d;line-height:1.6}
+    .cost{margin-top:15px!important;color:#d9c58e!important;font-weight:750}
+
+    .evolution-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    figure{margin:0}
+    .evolution-grid figure{
+      overflow:hidden;border-radius:20px;border:1px solid var(--line-soft);background:#11120f;
+    }
+    .evolution-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0b0c0a}
+    figcaption{padding:15px 16px 18px;color:#aaa69d;line-height:1.45}
+    figcaption strong{display:block;color:#eee8dc;margin-bottom:5px}
+
+    .temple-hero{
+      border-radius:28px;border:1px solid var(--line-soft);overflow:hidden;background:#0d0e0c;
+    }
+    .temple-hero img{display:block;width:100%;height:auto;object-fit:contain;background:#0b0c0a}
+    .temple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .temple-grid figure{border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;background:#11120f}
+    .temple-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0b0c0a}
+
+    .compare-block{margin-top:22px;border:1px solid var(--line-soft);border-radius:26px;background:#0e0f0d;overflow:hidden}
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft)}
+    .compare-cell{background:#0d0e0c}
+    .compare-cell img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f3f3f0}
+    .compare-cell .label{padding:12px 16px;color:#d4cfc3;font-size:.8rem;border-top:1px solid var(--line-soft)}
+    .compare-copy{padding:22px 24px 25px}
+    .compare-copy h3{margin:0 0 8px;font-size:1.45rem}
+    .compare-copy p{margin:0;color:var(--muted);line-height:1.65}
+
+    .studio-subhead{margin:42px 0 16px}
+    .studio-subhead h3{margin:0;font-size:1.55rem}
+    .studio-subhead p{margin:5px 0 0;color:var(--muted)}
+    .studio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .studio-grid.workbench{grid-template-columns:repeat(4,1fr)}
+    .studio-card{border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:#11120f}
+    .studio-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f4f4f1}
+    .studio-grid.workbench .studio-card img{background:#202125}
+    .studio-card span{display:block;padding:11px 13px;color:#aaa69d;font-size:.78rem;border-top:1px solid var(--line-soft)}
+
+    .instruction-box{
+      border:1px solid var(--line);border-radius:30px;
+      background:linear-gradient(135deg,rgba(239,196,93,.075),#11120f 45%,#0b0c0a);
+      padding:clamp(28px,5vw,58px);display:grid;grid-template-columns:1.25fr .75fr;gap:46px;align-items:center;
+    }
+    .instruction-box h2{margin-top:8px}
+    .instruction-box p{color:#b7b2a7;line-height:1.72}
+    .instruction-specs{display:grid;gap:10px}
+    .spec{
+      display:flex;justify-content:space-between;gap:20px;padding:15px 0;
+      border-bottom:1px solid var(--line-soft);
+    }
+    .spec span{color:#8f8b81}
+    .spec b{color:var(--gold)}
+
+    .budget-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+    .budget{
+      padding:22px;border-radius:20px;border:1px solid var(--line-soft);background:#11120f;
+    }
+    .budget span{color:#8e8a81;font-size:.75rem;text-transform:uppercase;letter-spacing:.12em}
+    .budget h3{margin:8px 0 4px}
+    .budget b{color:var(--gold);font-size:1.35rem}
+    .note{margin-top:15px;color:#88857d;font-size:.86rem;line-height:1.55}
+
+    footer{padding:32px 0 48px;color:#706e68;font-size:.84rem;border-top:1px solid var(--line-soft)}
+
+    .lightbox{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      padding:32px;background:rgba(0,0,0,.92);z-index:100;
+    }
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:95vw;max-height:92vh;object-fit:contain}
+    .lightbox button{
+      position:absolute;top:18px;right:22px;width:46px;height:46px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.2);background:#111;color:white;font-size:1.6rem;cursor:pointer;
+    }
+
+    @media(max-width:1050px){
       nav{display:none}
-      .stats,.grid3{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:600px){
-      .wrap{width:min(var(--max),calc(100% - 24px))}
-      .hero{padding-top:24px}
-      .stats,.grid3{grid-template-columns:1fr}
-      .caption{display:block}
-      .caption span{display:block;margin-top:4px}
-      .step{grid-template-columns:48px 1fr}
-    }
-  
-    .error404-title{
-      max-width:none;
-      letter-spacing:-.085em;
-      white-space:nowrap;
-    }
-    .error404-title span{
-      display:inline;
-      color:var(--gold);
+      .stats{grid-template-columns:repeat(3,1fr)}
+      .config-grid,.studio-grid{grid-template-columns:1fr 1fr}
+      .studio-grid.workbench{grid-template-columns:1fr 1fr}
+      .evolution-grid{grid-template-columns:1fr 1fr}
+      .instruction-box{grid-template-columns:1fr}
     }
     @media(max-width:760px){
-      .error404-title{
-        white-space:normal;
-        font-size:clamp(4.5rem,22vw,8rem);
+      .shell{width:min(var(--max),calc(100% - 24px))}
+      .hero-stage img{min-height:0}
+      .hero-overlay{display:none}
+      .hero-copy{
+        position:relative;left:auto;top:auto;transform:none;width:auto;padding:28px 24px 30px;
+        border-top:1px solid var(--line-soft);
       }
-      .error404-title span{
-        display:block;
-      }
+      h1{font-size:clamp(3.8rem,18vw,6.5rem)}
+      .stats{grid-template-columns:1fr 1fr}
+      .config-grid,.evolution-grid,.temple-grid,.studio-grid,.studio-grid.workbench,.budget-grid{grid-template-columns:1fr}
+      .compare-grid{grid-template-columns:1fr}
+      .below-copy{display:block}
+      section.content{padding:62px 0}
     }
-
   </style>
 </head>
 <body>
-<header>
-  <div class="wrap nav">
-    <a class="brand" href="#top"><span class="diamond"></span>RISING PHOENIX</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark"></span>
+      <span>RISING PHOENIX<small>MECHANICAL GOLDEN DRAGON</small></span>
+    </a>
     <nav>
-      <a href="#project">Projet</a>
-      <a href="#levels">3 niveaux</a>
+      <a href="#collector">Collector</a>
+      <a href="#configurations">3 Levels</a>
+      <a href="#evolution">Evolution</a>
       <a href="#engineering">Engineering</a>
+      <a href="#studio">Studio</a>
       <a href="#instructions">Instructions</a>
     </nav>
   </div>
@@ -182,109 +255,353 @@
 
 <main id="top">
   <section class="hero">
-    <div class="wrap">
-      <div class="eyebrow">CHRISTOPHE78 · MOC-235335</div>
-      <h1 class="error404-title">ERROR <span>404</span></h1>
-      <p class="lead">
-        Master Wu’s Mechanical Golden Dragon transformé en création personnelle complète :
-        évolution physique, Temple, propulsion arrière avancée, reconstruction Studio
-        et notice de montage de 150 pages.
-      </p>
-      <div class="actions">
-        <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details">Voir les instructions sur Rebrickable</a>
-        <a class="btn secondary" href="#project">Découvrir le projet</a>
+    <div class="shell">
+      <div class="hero-stage">
+        <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/hero-rising-phoenix-complete-user-approved.png" alt="Complete Rising Phoenix mechanical Golden Dragon">
+        <div class="hero-overlay"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Christophe78 · MOC-235335</p>
+          <h1>RISING <span>PHOENIX</span></h1>
+          <p class="lead">
+            A four-month mechanical Golden Dragon project built in real bricks, refined through repeated rebuilds,
+            reconstructed in BrickLink Studio, and published as a 150-page building guide.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View instructions on Rebrickable</a>
+            <a class="btn" href="#evolution">See the evolution</a>
+          </div>
+        </div>
       </div>
 
-      <figure class="hero-frame">
-        <img src="assets/rising-phoenix-hero-404.png" alt="Présentation Rising Phoenix — image 404 validée">
-        <figcaption class="caption">
-          <strong>Rising Phoenix — présentation principale</strong>
-          <span>Visuel 404 fourni et validé pour cette version</span>
+      <div class="stats">
+        <div class="stat"><small>Parts</small><b>595</b></div>
+        <div class="stat"><small>Official levels</small><b>3</b></div>
+        <div class="stat"><small>Instruction pages</small><b>150</b></div>
+        <div class="stat"><small>Build steps</small><b>354</b></div>
+        <div class="stat"><small>Development</small><b>4 months</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="collector">
+    <div class="shell">
+      <header class="section-head">
+        <p class="eyebrow">Collector View · Physical build</p>
+        <h2>The dragon is the presentation.</h2>
+        <p>
+          Rising Phoenix is shown first as a complete physical object. The Temple and rear propulsion enrich the machine,
+          but the long mechanical dragon remains the visual center.
+        </p>
+      </header>
+      <figure class="collector">
+        <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-official-overhead.jpg" aria-label="Open Collector View">
+          <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-official-overhead.jpg" alt="Complete physical Rising Phoenix viewed from above">
+        </button>
+        <figcaption class="below-copy">
+          <div>
+            <h3>Level 03 · Full official physical configuration</h3>
+            <p>Temple plus the single Advanced Rear Propulsion system. This is the fullest physical configuration included in the published build.</p>
+          </div>
+          <div class="index">Physical first · Studio later</div>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="content" id="configurations">
+    <div class="shell">
+      <header class="section-head center">
+        <p class="eyebrow">Three official build levels</p>
+        <h2>One machine, three ways to build it.</h2>
+        <p>
+          The levels are construction options inside the same project. They are not competing products,
+          and Level 01 is not the identity of Rising Phoenix.
+        </p>
+      </header>
+
+      <div class="config-grid">
+        <article class="config-card">
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-01-dragon-speeder-outdoor.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-01-dragon-speeder-outdoor.jpg" alt="Level 01 Dragon Speeder physical build outdoors">
+          </button>
+          <div class="card-copy">
+            <span class="index">Level 01 · Foundation</span>
+            <h3>Dragon Speeder</h3>
+            <p>Compact base configuration. No Temple and no Advanced Rear Propulsion.</p>
+            <p class="cost">Indicative parts budget · ≈ €50–60</p>
+          </div>
+        </article>
+
+        <article class="config-card">
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-02-dragon-with-temple-module.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-02-dragon-with-temple-module.jpg" alt="Level 02 dragon with Master Wu Temple module">
+          </button>
+          <div class="card-copy">
+            <span class="index">Level 02 · Temple added</span>
+            <h3>Master Wu's Temple</h3>
+            <p>The Dragon Speeder receives the Temple display module, with Wu's accessories, weapons and blossoms.</p>
+            <p class="cost">Indicative parts budget · ≈ €80</p>
+          </div>
+        </article>
+
+        <article class="config-card featured">
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-rising-phoenix-overhead.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-rising-phoenix-overhead.jpg" alt="Level 03 Rising Phoenix physical build">
+          </button>
+          <div class="card-copy">
+            <span class="index">Level 03 · Full physical configuration</span>
+            <h3>Rising Phoenix</h3>
+            <p>The Temple configuration receives Lloyd's Advanced Rear Propulsion system.</p>
+            <p class="cost">Indicative parts budget · ≈ €90–100</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="evolution">
+    <div class="shell">
+      <header class="section-head">
+        <p class="eyebrow">Four months · Physical evolution</p>
+        <h2>The final dragon was earned, rebuild after rebuild.</h2>
+        <p>
+          The HOME keeps the evolution selective: enough real photographs to feel the progression,
+          without turning the presentation into an exhaustive archive.
+        </p>
+      </header>
+
+      <div class="evolution-grid">
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-overhead-outdoor.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-overhead-outdoor.jpg" alt="Intermediate physical rebuild viewed outdoors">
+          </button>
+          <figcaption><strong>01 · Structure</strong>The body plan is still being tested in real bricks.</figcaption>
+        </figure>
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-front-axis-outdoor.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-front-axis-outdoor.jpg" alt="Intermediate front-axis physical rebuild">
+          </button>
+          <figcaption><strong>02 · Balance</strong>Width, stance and mechanical symmetry are refined.</figcaption>
+        </figure>
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-three-quarter-outdoor.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-three-quarter-outdoor.jpg" alt="Late physical rebuild outdoors">
+          </button>
+          <figcaption><strong>03 · Identity</strong>The long mechanical silhouette becomes unmistakable.</figcaption>
+        </figure>
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-wide-outdoor.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-wide-outdoor.jpg" alt="Late wide physical build outdoors">
+          </button>
+          <figcaption><strong>04 · Rising Phoenix</strong>The mature physical presentation emerges.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="temple">
+    <div class="shell">
+      <header class="section-head">
+        <p class="eyebrow">Master Wu · Lloyd · Temple</p>
+        <h2>A story module carried by the machine.</h2>
+        <p>
+          The Temple adds narrative detail without replacing the dragon as the core subject.
+          Master Wu's golden Japanese hat, weapons and blossoms belong to this module.
+        </p>
+      </header>
+
+      <figure class="temple-hero">
+        <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-user-approved.png">
+          <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-user-approved.png" alt="Master Wu and Lloyd with the Temple module">
+        </button>
+        <figcaption class="below-copy">
+          <div><h3>Temple / Wu / Lloyd</h3><p>The narrative layer sits on top of a real mechanical build rather than replacing it.</p></div>
+          <div class="index">Story detail</div>
         </figcaption>
       </figure>
 
-      <div class="stats">
-        <div class="stat"><small>Pièces</small><b>595</b></div>
-        <div class="stat"><small>Étapes</small><b>354</b></div>
-        <div class="stat"><small>Notice PDF</small><b>150 pages</b></div>
-        <div class="stat"><small>Développement</small><b>4 mois</b></div>
+      <div class="temple-grid">
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-display.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-display.jpg" alt="Temple display with Master Wu and Lloyd">
+          </button>
+          <figcaption><strong>Display</strong>Temple integrated with the physical model.</figcaption>
+        </figure>
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-handover.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-handover.jpg" alt="Master Wu and Lloyd handover scene">
+          </button>
+          <figcaption><strong>Handover</strong>Wu and Lloyd inside the project's story.</figcaption>
+        </figure>
+        <figure>
+          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-hat-weapons-detail.jpg">
+            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-hat-weapons-detail.jpg" alt="Master Wu golden hat and weapons detail">
+          </button>
+          <figcaption><strong>Accessories</strong>Golden hat, weapons and decorative details.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <section id="project">
-    <div class="wrap">
-      <div class="section-kicker">Le projet</div>
-      <h2>Un MOC construit, démonté, repensé et documenté.</h2>
-      <p class="section-copy">
-        Rising Phoenix raconte une évolution réelle en briques : essais, transformations,
-        recherche de pièces, reconstruction, mise au point des modules, puis reproduction
-        technique dans BrickLink Studio afin de produire une notice complète et publiable.
-      </p>
-
-      <div class="timeline">
-        <div class="step"><div class="num">01</div><div><h3>Évolution physique</h3><p>Le dragon change de proportions, de structure et de fonction au fil des reconstructions.</p></div></div>
-        <div class="step"><div class="num">02</div><div><h3>Temple et accessoires</h3><p>Le Temple de Master Wu devient un module narratif et fonctionnel intégré à la construction.</p></div></div>
-        <div class="step"><div class="num">03</div><div><h3>Propulsion arrière avancée</h3><p>L’architecture arrière complète le profil mécanique de Rising Phoenix.</p></div></div>
-        <div class="step"><div class="num">04</div><div><h3>Reconstruction Studio</h3><p>Le modèle physique est reconstruit numériquement pour vérifier sa logique de montage.</p></div></div>
-        <div class="step"><div class="num">05</div><div><h3>Publication</h3><p>595 pièces, 354 étapes et une notice PDF de 150 pages destinée aux constructeurs.</p></div></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="levels">
-    <div class="wrap">
-      <div class="section-kicker">Configurations officielles</div>
-      <h2>Trois niveaux de construction.</h2>
-      <div class="grid3">
-        <article class="card">
-          <div class="n">Level 01</div>
-          <h3>Dragon Speeder</h3>
-          <p>Configuration compacte de base, sans Temple ni propulsion arrière avancée.</p>
-        </article>
-        <article class="card">
-          <div class="n">Level 02</div>
-          <h3>Master Wu’s Temple</h3>
-          <p>Le dragon reçoit le Temple et ses éléments de présentation et de rangement.</p>
-        </article>
-        <article class="card">
-          <div class="n">Level 03</div>
-          <h3>Rising Phoenix</h3>
-          <p>Configuration physique officielle la plus complète : Temple et propulsion arrière avancée réunis.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="engineering">
-    <div class="wrap">
-      <div class="section-kicker">Engineering</div>
-      <h2>Du modèle réel à la reconstruction numérique.</h2>
-      <p class="section-copy">
-        La partie Studio ne remplace pas le MOC physique : elle le documente. Le travail numérique sert à
-        transformer une construction réelle en séquence de montage reproductible, contrôlée étape par étape.
-      </p>
-    </div>
-  </section>
-
-  <section class="final" id="instructions">
-    <div class="wrap">
-      <div class="final-box">
-        <div class="section-kicker">Instructions</div>
-        <h2>Construire Rising Phoenix.</h2>
-        <p class="section-copy">
-          La notice finale rassemble 595 pièces, 354 étapes et 150 pages de montage.
+  <section class="content" id="engineering">
+    <div class="shell">
+      <header class="section-head">
+        <p class="eyebrow">Engineering · Physical ↔ Digital</p>
+        <h2>The same machine, two ways of reading it.</h2>
+        <p>
+          Real photographs prove the construction. Studio isolates the geometry.
+          The two sources are paired deliberately instead of repeating the same image.
         </p>
-        <div class="actions" style="margin-top:28px;margin-bottom:0">
-          <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details">Rebrickable · MOC-235335</a>
+      </header>
+
+      <div class="compare-block">
+        <div class="compare-grid">
+          <div class="compare-cell">
+            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-advanced-rear-propulsion-detail-01.jpg">
+              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-advanced-rear-propulsion-detail-01.jpg" alt="Physical Advanced Rear Propulsion detail">
+            </button>
+            <div class="label">Physical build · Advanced Rear Propulsion</div>
+          </div>
+          <div class="compare-cell">
+            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-propulsion-connector.png">
+              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-propulsion-connector.png" alt="Studio propulsion connector geometry">
+            </button>
+            <div class="label">BrickLink Studio · Connector geometry</div>
+          </div>
+        </div>
+        <div class="compare-copy">
+          <h3>Propulsion: mechanism first, explanation second.</h3>
+          <p>The physical photograph shows what was actually built; the Studio render removes visual noise so the connector can be understood.</p>
         </div>
       </div>
+
+      <div class="compare-block">
+        <div class="compare-grid">
+          <div class="compare-cell">
+            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-front-symmetry.jpg">
+              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-front-symmetry.jpg" alt="Physical front symmetry of Rising Phoenix">
+            </button>
+            <div class="label">Physical build · Front symmetry</div>
+          </div>
+          <div class="compare-cell">
+            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-front-symmetry.png">
+              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-front-symmetry.png" alt="Studio front symmetry render">
+            </button>
+            <div class="label">BrickLink Studio · Front symmetry</div>
+          </div>
+        </div>
+        <div class="compare-copy">
+          <h3>Symmetry: real weight versus clean geometry.</h3>
+          <p>The same structural idea can be inspected under real-world constraints and then read cleanly in the digital reconstruction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="studio">
+    <div class="shell">
+      <header class="section-head">
+        <p class="eyebrow">BrickLink Studio · Reconstruction</p>
+        <h2>Built twice: first in bricks, then in Studio.</h2>
+        <p>
+          Studio is not a replacement for the physical MOC. It is the engineering layer that turns the real build
+          into a reproducible instruction sequence.
+        </p>
+      </header>
+
+      <div class="studio-subhead">
+        <h3>Clean reconstruction views</h3>
+        <p>Homogeneous Studio renders for shape, modularity and instruction logic.</p>
+      </div>
+      <div class="studio-grid">
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-complete-three-quarter.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-complete-three-quarter.png" alt="Complete Studio three-quarter render"></button><span>Complete three-quarter</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-top-long-axis.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-top-long-axis.png" alt="Studio top long-axis render"></button><span>Top long-axis</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-cockpit-closeup.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-cockpit-closeup.png" alt="Studio cockpit close-up"></button><span>Cockpit / central frame</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-temple-isolated.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-temple-isolated.png" alt="Studio isolated Temple module"></button><span>Temple isolated</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-assembly-layout-top.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-assembly-layout-top.png" alt="Studio assembly layout"></button><span>Assembly layout</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-instruction-build-version.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-instruction-build-version.png" alt="Studio instruction build version"></button><span>Instruction build version</span></div>
+      </div>
+
+      <div class="studio-subhead">
+        <h3>Digital workbench</h3>
+        <p>The workspace remains visible here because the reconstruction process is part of the project.</p>
+      </div>
+      <div class="studio-grid workbench">
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-side-review.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-side-review.png" alt="Studio workspace side review"></button><span>Side review</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-rear-propulsion.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-rear-propulsion.png" alt="Studio workspace rear propulsion"></button><span>Rear propulsion workbench</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-top-review.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-top-review.png" alt="Studio workspace top review"></button><span>Top review</span></div>
+        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-underside-structure.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-underside-structure.png" alt="Studio workspace underside structure"></button><span>Underside structure</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="instructions">
+    <div class="shell">
+      <div class="instruction-box">
+        <div>
+          <p class="eyebrow">Published building guide</p>
+          <h2>Build Rising Phoenix.</h2>
+          <p>
+            The project continues beyond the physical Level 03 configuration through Studio reconstruction,
+            instruction design and publication. The result is a complete PDF building guide for the MOC.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">Rebrickable · MOC-235335</a>
+          </div>
+        </div>
+        <div class="instruction-specs">
+          <div class="spec"><span>Listed parts</span><b>595</b></div>
+          <div class="spec"><span>Build steps</span><b>354</b></div>
+          <div class="spec"><span>PDF manual</span><b>150 pages</b></div>
+          <div class="spec"><span>Official build levels</span><b>3</b></div>
+        </div>
+      </div>
+
+      <div class="budget-grid">
+        <div class="budget"><span>Level 01</span><h3>Dragon Speeder</h3><b>≈ €50–60</b></div>
+        <div class="budget"><span>Level 02</span><h3>+ Temple</h3><b>≈ €80</b></div>
+        <div class="budget"><span>Level 03</span><h3>+ Advanced Rear Propulsion</h3><b>≈ €90–100</b></div>
+      </div>
+      <p class="note">Indicative parts budgets only. Actual cost varies with seller availability, country, condition, shipping and parts already owned.</p>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap">Rising Phoenix · Mechanical Golden Dragon · Christophe78</div>
+  <div class="shell">Rising Phoenix · Mechanical Golden Dragon · Christophe78 · MOC-235335</div>
 </footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" aria-label="Close image">×</button>
+  <img alt="">
+</div>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = lightbox.querySelector('img');
+  const closeButton = lightbox.querySelector('button');
+
+  document.querySelectorAll('[data-lightbox]').forEach(button => {
+    button.addEventListener('click', () => {
+      lightboxImage.src = button.dataset.lightbox;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden','true');
+    lightboxImage.src = '';
+  }
+
+  closeButton.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeLightbox();
+  });
+</script>
 </body>
 </html>
