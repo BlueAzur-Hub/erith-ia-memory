@@ -2352,3 +2352,552 @@ section[id] {
     width: min(100%, 520px);
   }
 }
+
+
+/* ==========================================================================
+   V5 — Creator Portfolio Final
+   Real construction first; generated imagery is editorial only.
+   ========================================================================== */
+
+:root {
+  --display: Georgia, "Times New Roman", serif;
+  --shell: 1240px;
+}
+
+/* More editorial hierarchy, without oversized typography. */
+h2 {
+  font-family: var(--display);
+  font-size: clamp(2.15rem, 4.2vw, 4.2rem);
+  letter-spacing: -0.035em;
+}
+
+.section {
+  padding: clamp(70px, 7.5vw, 112px) 0;
+}
+
+.section-heading {
+  margin-bottom: 42px;
+}
+
+/* Hero: one strong final image, fully readable, no cropped head. */
+.hero {
+  min-height: clamp(670px, 82vh, 820px);
+  padding-top: calc(var(--header-height) + 38px);
+  padding-bottom: 28px;
+  align-content: end;
+}
+
+.hero::before {
+  background:
+    linear-gradient(90deg, rgba(7, 8, 7, 0.98) 0%, rgba(7, 8, 7, 0.92) 27%, rgba(7, 8, 7, 0.54) 48%, rgba(7, 8, 7, 0.06) 73%, rgba(7, 8, 7, 0.12) 100%),
+    linear-gradient(0deg, rgba(8, 9, 8, 0.90) 0%, transparent 34%);
+}
+
+.hero-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.96) contrast(1.02);
+}
+
+.hero-content {
+  padding-bottom: 42px;
+}
+
+.hero-content .eyebrow {
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  max-width: 600px;
+  margin-bottom: 18px;
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 7vw, 6.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: none;
+}
+
+.hero h1 span {
+  margin-top: 10px;
+  color: var(--gold-light);
+}
+
+.hero-subtitle {
+  max-width: 610px;
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+}
+
+.fact-strip div {
+  padding-top: 18px;
+}
+
+/* Configuration cards: documentary images get consistent frames. */
+.configuration-card .image-button {
+  background: #e7e7e7;
+}
+
+.configuration-card .image-button img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: center;
+}
+
+.configuration-card .configuration-render {
+  object-fit: contain !important;
+  background: #e7e7e7;
+  padding: 10px;
+}
+
+.configuration-card.featured {
+  border-color: rgba(237, 198, 110, 0.52);
+  box-shadow: 0 24px 70px rgba(201, 154, 70, 0.10);
+}
+
+.final-build-tag {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 4px 7px;
+  vertical-align: middle;
+  border: 1px solid rgba(237, 198, 110, 0.45);
+  border-radius: 999px;
+  color: var(--gold-light);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Real-vs-digital engineering proof. */
+.engineering-proof {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  margin-top: 34px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(201,154,70,0.06), transparent 46%), var(--panel);
+}
+
+.engineering-proof-copy p:not(.eyebrow) {
+  margin-bottom: 0;
+  color: var(--text-soft);
+}
+
+.engineering-proof-copy h3 {
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+}
+
+.engineering-proof-images {
+  display: grid;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 12px;
+}
+
+.engineering-proof-images .image-button {
+  border-radius: var(--radius-small);
+  background: #e8e8e8;
+}
+
+.engineering-proof-images img {
+  width: 100%;
+  height: 360px;
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
+  background: #e8e8e8;
+}
+
+/* Studio: four genuine workspace views in one row on wide screens. */
+.studio-workbench-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.studio-card-copy {
+  padding: 20px 20px 22px;
+}
+
+.studio-card-copy h3 {
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+}
+
+.studio-card-copy p {
+  font-size: 0.86rem;
+}
+
+.studio-premium-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(220px, 0.45fr);
+  gap: 0;
+  margin: 0 0 28px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #101210;
+  box-shadow: var(--shadow);
+}
+
+.studio-premium-feature .image-button img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.studio-premium-feature figcaption {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 26px;
+}
+
+.studio-premium-feature figcaption strong {
+  color: var(--gold-light);
+  font-family: var(--display);
+  font-size: 1.5rem;
+}
+
+.studio-premium-feature figcaption span {
+  color: var(--text-soft);
+  font-size: 0.86rem;
+}
+
+.studio-render-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.studio-render-card:last-child {
+  grid-column: auto;
+}
+
+/* Temple: real handover photograph first, detail photograph on hover. */
+.temple-story-section {
+  background:
+    radial-gradient(circle at 18% 30%, rgba(201,154,70,0.08), transparent 27rem),
+    #0b0d0b;
+  border-block: 1px solid var(--line-soft);
+}
+
+.temple-story-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: clamp(40px, 6vw, 76px);
+  align-items: center;
+}
+
+.temple-story-main {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: #121412;
+}
+
+.temple-image-stack {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: #121412;
+}
+
+.temple-image-stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
+  transition: opacity 320ms ease, transform 420ms ease;
+}
+
+.temple-image-hover {
+  opacity: 0;
+  background: #121412;
+}
+
+.temple-story-main:hover .temple-image-primary,
+.temple-story-main:focus-visible .temple-image-primary {
+  opacity: 0;
+}
+
+.temple-story-main:hover .temple-image-hover,
+.temple-story-main:focus-visible .temple-image-hover {
+  opacity: 1;
+}
+
+.temple-hover-note {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  background: rgba(7,8,7,0.76);
+  color: #ede8db;
+  font-size: 0.68rem;
+}
+
+.temple-story-copy h2 {
+  margin-bottom: 20px;
+}
+
+.temple-story-copy > p:not(.eyebrow) {
+  color: var(--text-soft);
+}
+
+.temple-editorial-card {
+  margin-top: 26px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-small);
+}
+
+.temple-editorial-card img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.story-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(7,8,7,0.78);
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Evolution: four authentic milestones, then a dominant final build. */
+.evolution-heading {
+  max-width: 820px;
+}
+
+.evolution-milestones {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.evolution-milestones figure,
+.evolution-final-feature {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-small);
+  background: #101210;
+}
+
+.evolution-milestones .image-button img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+
+.evolution-milestones figcaption {
+  display: grid;
+  gap: 7px;
+  padding: 17px;
+}
+
+.evolution-milestones figcaption strong {
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.evolution-milestones figcaption span {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+
+.evolution-final-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(280px, 0.58fr);
+  margin-top: 20px;
+  border-color: rgba(237,198,110,0.36);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.evolution-final-feature .image-button img {
+  height: 100%;
+  min-height: 430px;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+.evolution-final-feature figcaption {
+  display: grid;
+  align-content: center;
+  gap: 20px;
+  padding: clamp(26px, 4vw, 44px);
+  background: linear-gradient(135deg, rgba(201,154,70,0.08), transparent 58%), #131613;
+}
+
+.evolution-final-feature h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.evolution-final-feature p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+/* Creator archive: more of the actual source material, without making the page endless. */
+.creator-archive {
+  background: #0d0f0d;
+}
+
+.archive-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(320px, 1.15fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: end;
+  margin-bottom: 34px;
+}
+
+.archive-heading h2 {
+  margin-bottom: 0;
+}
+
+.archive-heading > p {
+  margin-bottom: 4px;
+  color: var(--text-soft);
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 220px;
+  gap: 12px;
+}
+
+.archive-tile {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-small);
+}
+
+.archive-tile.archive-wide {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.archive-tile img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+.archive-tile span {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(7,8,7,0.78);
+  color: #f0ece3;
+  font-size: 0.68rem;
+}
+
+/* Real physical proof stays bright enough to read. */
+.real-build-section {
+  background: #101310;
+}
+
+.real-build-image img {
+  object-fit: cover;
+  background: #101310;
+}
+
+@media (max-width: 1100px) {
+  .studio-workbench-grid,
+  .evolution-milestones {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-render-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: 760px;
+    align-content: end;
+  }
+
+  .hero-media img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    object-fit: cover;
+    object-position: 62% center;
+  }
+
+  .hero::before {
+    background:
+      linear-gradient(0deg, rgba(8,9,8,0.98) 0%, rgba(8,9,8,0.86) 43%, rgba(8,9,8,0.22) 72%, rgba(8,9,8,0.08) 100%);
+  }
+
+  .engineering-proof,
+  .temple-story-layout,
+  .evolution-final-feature,
+  .archive-heading,
+  .studio-premium-feature {
+    grid-template-columns: 1fr;
+  }
+
+  .engineering-proof-images {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .evolution-final-feature .image-button img {
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero h1 {
+    font-size: clamp(3rem, 17vw, 5.3rem);
+  }
+
+  .engineering-proof-images,
+  .studio-workbench-grid,
+  .studio-render-grid,
+  .evolution-milestones,
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-tile.archive-wide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .archive-grid {
+    grid-auto-rows: 260px;
+  }
+
+  .temple-hover-note {
+    display: none;
+  }
+}
