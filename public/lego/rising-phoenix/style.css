@@ -2092,7 +2092,65 @@ section[id] {
 }
 
 
-/* V4.3 — Hero correction: physical photo, centered without redesign */
+/* ==========================================================================
+   HERO FINAL — cadrage complet du Rising Phoenix
+   Vue retenue : studio-render-three-quarter.png
+   Objectif : aucune coupe de la tête ni des extrémités du modèle.
+   ========================================================================== */
+
+.hero-media {
+  background: #e8e8e8;
+}
+
 .hero-media img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 76%;
+  height: 100%;
+  object-fit: contain;
   object-position: center center;
+  filter: saturate(1) contrast(1.02) brightness(1.02);
+}
+
+/* Le texte reste à gauche ; le modèle complet reste lisible à droite. */
+.hero::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 8, 7, 0.98) 0%,
+      rgba(7, 8, 7, 0.94) 24%,
+      rgba(7, 8, 7, 0.78) 38%,
+      rgba(7, 8, 7, 0.42) 49%,
+      rgba(7, 8, 7, 0.12) 60%,
+      rgba(7, 8, 7, 0.02) 72%,
+      rgba(7, 8, 7, 0) 100%
+    ),
+    linear-gradient(0deg, rgba(11, 12, 11, 0.54) 0%, transparent 27%);
+}
+
+.hero-vignette {
+  box-shadow: inset 0 0 95px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 900px) {
+  .hero-media img {
+    width: 100%;
+    height: 54%;
+    top: var(--header-height);
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .hero::before {
+    background:
+      linear-gradient(
+        0deg,
+        rgba(11, 12, 11, 0.98) 0%,
+        rgba(11, 12, 11, 0.90) 44%,
+        rgba(11, 12, 11, 0.20) 70%,
+        rgba(11, 12, 11, 0.02) 100%
+      );
+  }
 }
