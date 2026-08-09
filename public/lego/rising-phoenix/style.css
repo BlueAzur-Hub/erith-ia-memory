@@ -1414,3 +1414,265 @@ section[id] {
     border-radius: var(--radius-small);
   }
 }
+
+/* ==========================================================================
+   V4.1 — Proportion & gallery polish
+   ========================================================================== */
+
+/* Global title scale: premium, but no longer oversized on large desktops. */
+h2 {
+  margin-bottom: 18px;
+  font-size: clamp(2rem, 3.35vw, 3.45rem);
+  letter-spacing: -0.035em;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 1.75vw, 1.75rem);
+}
+
+/* More controlled vertical rhythm across the long one-page presentation. */
+.section {
+  padding: clamp(62px, 6vw, 94px) 0;
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 38px;
+}
+
+.section-heading > p:last-child {
+  font-size: 1rem;
+}
+
+.section-heading.centered {
+  max-width: 860px;
+}
+
+/* Hero: keep impact without letting the title occupy most of the viewport. */
+.hero {
+  min-height: min(88svh, 860px);
+  padding-top: calc(var(--header-height) + 54px);
+  padding-bottom: 34px;
+}
+
+.hero-content {
+  padding-bottom: 46px;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin-bottom: 16px;
+  font-size: clamp(3.6rem, 7vw, 6.8rem);
+  letter-spacing: -0.06em;
+}
+
+.hero-subtitle {
+  max-width: 700px;
+  font-size: clamp(1rem, 1.45vw, 1.2rem);
+}
+
+.fact-strip div {
+  padding-top: 18px;
+}
+
+.fact-strip strong {
+  font-size: clamp(1.45rem, 2.2vw, 2.1rem);
+}
+
+/* Editorial text and cards. */
+.split-layout {
+  gap: clamp(38px, 5.5vw, 76px);
+}
+
+.prose {
+  font-size: 1rem;
+}
+
+.configuration-grid {
+  gap: 16px;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.card-index {
+  margin-bottom: 16px;
+}
+
+/* All three official build-level cards now use exterior photography.
+   Keep framing identical so the row reads as one coherent visual family. */
+.configuration-card .image-button img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.96) contrast(1.02) brightness(0.98);
+}
+
+.configuration-card .image-button:hover img {
+  filter: saturate(1) contrast(1.03) brightness(1.04);
+}
+
+/* Budget section. */
+.budget-layout {
+  grid-template-columns: minmax(0, 0.9fr) minmax(460px, 1.1fr);
+  gap: clamp(38px, 5vw, 70px);
+}
+
+.budget-layout h2 {
+  max-width: 520px;
+  font-size: clamp(2.15rem, 3.5vw, 3.6rem);
+}
+
+.budget-row {
+  padding: 21px 25px;
+}
+
+.budget-price {
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+}
+
+.budget-note {
+  padding: 22px 25px 25px;
+}
+
+/* Engineering / Studio. */
+.feature-copy {
+  padding: 26px;
+}
+
+.engineering-note {
+  margin-top: 22px;
+}
+
+.studio-render-heading {
+  margin-top: clamp(48px, 5vw, 72px);
+  margin-bottom: 24px;
+}
+
+.studio-render-heading h3 {
+  font-size: clamp(1.75rem, 2.8vw, 2.8rem);
+}
+
+.studio-card-copy {
+  padding: 21px 22px 23px;
+}
+
+.studio-flow {
+  margin-top: 22px;
+  padding: 18px;
+}
+
+/* Compact base model, physical build, temple and creator evolution. */
+.compact-section {
+  padding-block: clamp(58px, 5.5vw, 84px);
+}
+
+.detail-split,
+.beyond-layout,
+.instructions-layout {
+  gap: clamp(36px, 5vw, 68px);
+}
+
+.detail-copy h2,
+.beyond-copy h2,
+.instructions-copy h2,
+.photo-content h2 {
+  font-size: clamp(2.15rem, 3.35vw, 3.45rem);
+}
+
+.section-photo {
+  min-height: min(68vh, 720px);
+}
+
+.photo-content {
+  padding-bottom: clamp(54px, 6vw, 82px);
+}
+
+.evolution-grid {
+  gap: 12px;
+}
+
+.evolution-grid figcaption {
+  padding: 15px 16px 17px;
+}
+
+/* Instructions / final CTA. */
+.instructions-gallery .image-button img {
+  min-height: 430px;
+}
+
+.final-cta {
+  padding: clamp(68px, 7vw, 104px) 0;
+}
+
+.final-cta-inner {
+  max-width: 820px;
+}
+
+.final-cta-inner h2 {
+  font-size: clamp(2.3rem, 4vw, 4rem);
+}
+
+/* Large desktop tuning — the review target around 1600 px wide. */
+@media (min-width: 1180px) {
+  .section-heading.centered h2 {
+    max-width: 820px;
+    margin-inline: auto;
+  }
+
+  .configuration-card h3 {
+    font-size: 1.62rem;
+  }
+
+  .budget-layout .section-heading {
+    padding-top: 6px;
+  }
+}
+
+/* Preserve the existing tablet/mobile structure while keeping the new scale. */
+@media (max-width: 980px) {
+  .hero {
+    min-height: 780px;
+  }
+
+  .budget-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  h2,
+  .budget-layout h2,
+  .detail-copy h2,
+  .beyond-copy h2,
+  .instructions-copy h2,
+  .photo-content h2 {
+    font-size: clamp(1.9rem, 10vw, 2.65rem);
+  }
+
+  .section {
+    padding-block: 54px;
+  }
+
+  .hero {
+    min-height: 820px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.2rem, 16vw, 5rem);
+  }
+
+  .final-cta-inner h2 {
+    font-size: clamp(2.05rem, 11vw, 3rem);
+  }
+
+  .instructions-gallery .image-button img {
+    min-height: 330px;
+  }
+}
+
