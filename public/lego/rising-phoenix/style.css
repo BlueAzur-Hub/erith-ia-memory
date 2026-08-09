@@ -2154,3 +2154,164 @@ section[id] {
       );
   }
 }
+
+
+/* ==========================================================================
+   V4.4 — cadrages, images uniques et navigation
+   ========================================================================== */
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 34px);
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + 34px) !important;
+}
+
+.configuration-card:nth-child(3) .image-button img {
+  object-fit: contain;
+  object-position: center;
+  background: #171a17;
+}
+
+.real-build-section {
+  background:
+    radial-gradient(circle at 82% 28%, rgba(201, 154, 70, 0.05), transparent 28rem),
+    #101210;
+  border-block: 1px solid var(--line-soft);
+}
+
+.real-build-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(36px, 6vw, 82px);
+  align-items: center;
+}
+
+.real-build-copy {
+  max-width: 520px;
+}
+
+.real-build-copy p:not(.eyebrow) {
+  color: var(--text-soft);
+}
+
+.real-build-image {
+  border-radius: var(--radius);
+  background: #161816;
+  box-shadow: var(--shadow);
+}
+
+.real-build-image img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #161816;
+}
+
+/* Chronologie : aucune photo n'est forcée dans un carré. */
+.evolution-grid .image-button {
+  background: #151815;
+}
+
+.evolution-grid .image-button img {
+  aspect-ratio: 4 / 3 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #151815;
+}
+
+/* Temple : module complet, sans coupe. */
+#temple .detail-image {
+  background: #e8e8e8;
+}
+
+#temple .detail-image img {
+  object-fit: contain;
+  object-position: center;
+  background: #e8e8e8;
+}
+
+/* 4 captures Studio : grille 2 x 2. */
+.studio-workbench-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studio-ui-shot img {
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* 7 rendus propres distincts. */
+.studio-render-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.studio-render-card:nth-child(n) {
+  grid-column: auto;
+}
+
+.studio-render-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #e9e9e9;
+}
+
+.studio-render-card:last-child {
+  grid-column: span 2;
+}
+
+/* Instructions : une image numérique dédiée et entière. */
+.instructions-gallery-single {
+  grid-template-columns: 1fr;
+}
+
+.instructions-gallery-single .image-button {
+  background: #e8e8e8;
+  border-radius: var(--radius);
+}
+
+.instructions-gallery-single .image-button img {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #e8e8e8;
+}
+
+@media (max-width: 1040px) {
+  .studio-render-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-render-card:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 980px) {
+  .real-build-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .real-build-copy {
+    max-width: 680px;
+  }
+
+  .studio-workbench-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .studio-render-grid {
+    grid-template-columns: 1fr;
+  }
+}

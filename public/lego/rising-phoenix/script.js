@@ -33,6 +33,47 @@ function toggleNavigation() {
   navToggle.setAttribute('aria-expanded', String(isOpen));
 }
 
+
+function scrollToSection(target, behavior = 'smooth') {
+  if (!target) return;
+
+  const headerHeight = header ? header.offsetHeight : 0;
+  const breathingRoom = 26;
+  const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - breathingRoom;
+
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior
+  });
+}
+
+function setupInternalLinks() {
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const selector = link.getAttribute('href');
+      if (!selector || selector === '#') return;
+
+      const target = document.querySelector(selector);
+      if (!target) return;
+
+      event.preventDefault();
+      closeNavigation();
+      scrollToSection(target);
+
+      if (window.location.hash !== selector) {
+        history.pushState(null, '', selector);
+      }
+    });
+  });
+
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      requestAnimationFrame(() => scrollToSection(target, 'auto'));
+    }
+  }
+}
+
 function setupRevealAnimation() {
   if (!revealItems.length) return;
 
@@ -77,6 +118,7 @@ function closeLightbox() {
 
 updateHeaderState();
 setupRevealAnimation();
+setupInternalLinks();
 
 window.addEventListener('scroll', updateHeaderState, { passive: true });
 
