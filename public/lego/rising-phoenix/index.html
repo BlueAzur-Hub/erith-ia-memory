@@ -1,607 +1,558 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090a09">
-  <meta name="description" content="Rising Phoenix — Mechanical Golden Dragon MOC by Christophe78. Physical evolution, three official build levels, BrickLink Studio reconstruction and building instructions.">
-  <title>Rising Phoenix — Mechanical Golden Dragon</title>
-  <style>
-    :root {
-      --bg:#090a09;
-      --bg2:#0f100e;
-      --panel:#12130f;
-      --panel2:#171811;
-      --gold:#efc45d;
-      --gold2:#d8a83f;
-      --text:#f5f1e7;
-      --muted:#aaa69c;
-      --line:rgba(239,196,93,.22);
-      --line-soft:rgba(255,255,255,.08);
-      --max:1400px;
-      --radius:26px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 82% 4%, rgba(239,196,93,.07), transparent 28rem),
-        linear-gradient(180deg,#090a09,#0b0c0a 48%,#090a09);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-    img{max-width:100%}
-    a{color:inherit;text-decoration:none}
-    button{font:inherit}
-    .shell{width:min(var(--max),calc(100% - 44px));margin:auto}
-
-    .site-header{
-      position:sticky;top:0;z-index:50;
-      background:rgba(9,10,9,.88);
-      backdrop-filter:blur(18px);
-      border-bottom:1px solid var(--line-soft);
-    }
-    .header-inner{
-      min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;
-    }
-    .brand{display:flex;align-items:center;gap:13px;font-weight:900;letter-spacing:.11em}
-    .brand-mark{width:11px;height:11px;background:var(--gold);transform:rotate(45deg);display:inline-block}
-    .brand small{display:block;color:#7f7c73;font-size:.64rem;letter-spacing:.12em;margin-top:2px}
-    nav{display:flex;gap:23px;color:#c5c0b6;font-size:.9rem}
-    nav a:hover{color:var(--gold)}
-
-    .hero{padding:36px 0 64px}
-    .hero-stage{
-      position:relative;overflow:hidden;border-radius:32px;border:1px solid var(--line-soft);
-      background:#090a09;box-shadow:0 36px 100px rgba(0,0,0,.48);
-    }
-    .hero-stage img{
-      display:block;width:100%;height:auto;min-height:520px;object-fit:contain;background:#090a09;
-    }
-    .hero-overlay{
-      position:absolute;inset:0;
-      background:linear-gradient(90deg,rgba(5,6,5,.94) 0%,rgba(5,6,5,.76) 27%,rgba(5,6,5,.16) 58%,rgba(5,6,5,.05) 100%);
-      pointer-events:none;
-    }
-    .hero-copy{
-      position:absolute;left:clamp(28px,5vw,76px);top:50%;transform:translateY(-50%);
-      width:min(610px,48%);z-index:2;
-    }
-    .eyebrow{
-      margin:0 0 14px;color:var(--gold);font-weight:850;letter-spacing:.17em;
-      text-transform:uppercase;font-size:.76rem;
-    }
-    h1{
-      margin:0;font-size:clamp(4rem,8.5vw,8.7rem);line-height:.82;letter-spacing:-.07em;font-weight:950;
-    }
-    h1 span{display:block;color:var(--gold)}
-    .hero-copy .lead{
-      max-width:560px;margin:22px 0 26px;color:#ded9ce;line-height:1.65;
-      font-size:clamp(1rem,1.45vw,1.24rem);
-    }
-    .actions{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{
-      display:inline-flex;min-height:50px;align-items:center;justify-content:center;
-      padding:0 21px;border-radius:999px;border:1px solid var(--line);
-      font-weight:850;font-size:.93rem;background:#0b0c0a;
-    }
-    .btn.primary{background:var(--gold);border-color:var(--gold);color:#16130d}
-    .btn:hover{transform:translateY(-1px)}
-
-    .stats{
-      margin-top:18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
-    }
-    .stat{
-      padding:18px 20px;border-radius:18px;border:1px solid var(--line-soft);
-      background:linear-gradient(180deg,#12130f,#0d0e0c);
-    }
-    .stat small{display:block;color:#817e75;text-transform:uppercase;letter-spacing:.12em;font-size:.67rem}
-    .stat b{display:block;color:var(--gold);font-size:1.6rem;margin-top:8px}
-
-    section.content{padding:82px 0;border-top:1px solid rgba(255,255,255,.055)}
-    .section-head{max-width:920px;margin-bottom:34px}
-    .section-head.center{text-align:center;margin-left:auto;margin-right:auto}
-    h2{
-      margin:10px 0 14px;font-size:clamp(2.2rem,4.4vw,4.7rem);line-height:.98;
-      letter-spacing:-.05em;
-    }
-    .section-head p:not(.eyebrow), .section-copy{
-      color:#b5b1a8;line-height:1.75;font-size:1.02rem;
-    }
-
-    .collector{
-      border:1px solid var(--line-soft);border-radius:30px;background:#0d0e0c;overflow:hidden;
-    }
-    .collector img{display:block;width:100%;height:auto;object-fit:contain;background:#0b0c0a}
-    .below-copy{
-      padding:24px 26px 27px;border-top:1px solid var(--line-soft);
-      display:flex;justify-content:space-between;gap:28px;align-items:flex-start;
-    }
-    .below-copy h3{margin:0;font-size:1.5rem}
-    .below-copy p{margin:6px 0 0;color:var(--muted);line-height:1.6;max-width:760px}
-
-    .config-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .config-card{
-      border:1px solid var(--line-soft);border-radius:24px;background:linear-gradient(180deg,#14150f,#0d0e0c);overflow:hidden;
-    }
-    .config-card.featured{border-color:var(--line);box-shadow:0 0 0 1px rgba(239,196,93,.05) inset}
-    .media-button{display:block;width:100%;border:0;padding:0;background:#111;cursor:zoom-in}
-    .media-button img{
-      display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0c0d0b;
-    }
-    .card-copy{padding:22px}
-    .index{color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
-    .card-copy h3{font-size:1.35rem;margin:8px 0 9px}
-    .card-copy p{margin:0;color:#aaa69d;line-height:1.6}
-    .cost{margin-top:15px!important;color:#d9c58e!important;font-weight:750}
-
-    .evolution-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    figure{margin:0}
-    .evolution-grid figure{
-      overflow:hidden;border-radius:20px;border:1px solid var(--line-soft);background:#11120f;
-    }
-    .evolution-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0b0c0a}
-    figcaption{padding:15px 16px 18px;color:#aaa69d;line-height:1.45}
-    figcaption strong{display:block;color:#eee8dc;margin-bottom:5px}
-
-    .temple-hero{
-      border-radius:28px;border:1px solid var(--line-soft);overflow:hidden;background:#0d0e0c;
-    }
-    .temple-hero img{display:block;width:100%;height:auto;object-fit:contain;background:#0b0c0a}
-    .temple-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-    .temple-grid figure{border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;background:#11120f}
-    .temple-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#0b0c0a}
-
-    .compare-block{margin-top:22px;border:1px solid var(--line-soft);border-radius:26px;background:#0e0f0d;overflow:hidden}
-    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft)}
-    .compare-cell{background:#0d0e0c}
-    .compare-cell img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f3f3f0}
-    .compare-cell .label{padding:12px 16px;color:#d4cfc3;font-size:.8rem;border-top:1px solid var(--line-soft)}
-    .compare-copy{padding:22px 24px 25px}
-    .compare-copy h3{margin:0 0 8px;font-size:1.45rem}
-    .compare-copy p{margin:0;color:var(--muted);line-height:1.65}
-
-    .studio-subhead{margin:42px 0 16px}
-    .studio-subhead h3{margin:0;font-size:1.55rem}
-    .studio-subhead p{margin:5px 0 0;color:var(--muted)}
-    .studio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .studio-grid.workbench{grid-template-columns:repeat(4,1fr)}
-    .studio-card{border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:#11120f}
-    .studio-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f4f4f1}
-    .studio-grid.workbench .studio-card img{background:#202125}
-    .studio-card span{display:block;padding:11px 13px;color:#aaa69d;font-size:.78rem;border-top:1px solid var(--line-soft)}
-
-    .instruction-box{
-      border:1px solid var(--line);border-radius:30px;
-      background:linear-gradient(135deg,rgba(239,196,93,.075),#11120f 45%,#0b0c0a);
-      padding:clamp(28px,5vw,58px);display:grid;grid-template-columns:1.25fr .75fr;gap:46px;align-items:center;
-    }
-    .instruction-box h2{margin-top:8px}
-    .instruction-box p{color:#b7b2a7;line-height:1.72}
-    .instruction-specs{display:grid;gap:10px}
-    .spec{
-      display:flex;justify-content:space-between;gap:20px;padding:15px 0;
-      border-bottom:1px solid var(--line-soft);
-    }
-    .spec span{color:#8f8b81}
-    .spec b{color:var(--gold)}
-
-    .budget-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
-    .budget{
-      padding:22px;border-radius:20px;border:1px solid var(--line-soft);background:#11120f;
-    }
-    .budget span{color:#8e8a81;font-size:.75rem;text-transform:uppercase;letter-spacing:.12em}
-    .budget h3{margin:8px 0 4px}
-    .budget b{color:var(--gold);font-size:1.35rem}
-    .note{margin-top:15px;color:#88857d;font-size:.86rem;line-height:1.55}
-
-    footer{padding:32px 0 48px;color:#706e68;font-size:.84rem;border-top:1px solid var(--line-soft)}
-
-    .lightbox{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      padding:32px;background:rgba(0,0,0,.92);z-index:100;
-    }
-    .lightbox.open{display:flex}
-    .lightbox img{max-width:95vw;max-height:92vh;object-fit:contain}
-    .lightbox button{
-      position:absolute;top:18px;right:22px;width:46px;height:46px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.2);background:#111;color:white;font-size:1.6rem;cursor:pointer;
-    }
-
-    @media(max-width:1050px){
-      nav{display:none}
-      .stats{grid-template-columns:repeat(3,1fr)}
-      .config-grid,.studio-grid{grid-template-columns:1fr 1fr}
-      .studio-grid.workbench{grid-template-columns:1fr 1fr}
-      .evolution-grid{grid-template-columns:1fr 1fr}
-      .instruction-box{grid-template-columns:1fr}
-    }
-    @media(max-width:760px){
-      .shell{width:min(var(--max),calc(100% - 24px))}
-      .hero-stage img{min-height:0}
-      .hero-overlay{display:none}
-      .hero-copy{
-        position:relative;left:auto;top:auto;transform:none;width:auto;padding:28px 24px 30px;
-        border-top:1px solid var(--line-soft);
-      }
-      h1{font-size:clamp(3.8rem,18vw,6.5rem)}
-      .stats{grid-template-columns:1fr 1fr}
-      .config-grid,.evolution-grid,.temple-grid,.studio-grid,.studio-grid.workbench,.budget-grid{grid-template-columns:1fr}
-      .compare-grid{grid-template-columns:1fr}
-      .below-copy{display:block}
-      section.content{padding:62px 0}
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Rising Phoenix — Christophe78's fan-made Mechanical Golden Dragon MOC: four months of physical evolution, three official build configurations, engineering, BrickLink Studio reconstruction and a 150-page building guide." name="description"/>
+<meta content="#0b0c0b" name="theme-color"/>
+<title>Rising Phoenix — Mechanical Golden Dragon MOC</title>
+<link href="style.css" rel="stylesheet"/>
+<script defer="" src="script.js"></script>
 </head>
 <body>
-<header class="site-header">
-  <div class="shell header-inner">
-    <a class="brand" href="#top">
-      <span class="brand-mark"></span>
-      <span>RISING PHOENIX<small>MECHANICAL GOLDEN DRAGON</small></span>
-    </a>
-    <nav>
-      <a href="#collector">Collector</a>
-      <a href="#configurations">3 Levels</a>
-      <a href="#evolution">Evolution</a>
-      <a href="#engineering">Engineering</a>
-      <a href="#studio">Studio</a>
-      <a href="#instructions">Instructions</a>
-    </nav>
-  </div>
-</header>
-
-<main id="top">
-  <section class="hero">
-    <div class="shell">
-      <div class="hero-stage">
-        <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/hero-rising-phoenix-complete-user-approved.png" alt="Complete Rising Phoenix mechanical Golden Dragon">
-        <div class="hero-overlay"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">Christophe78 · MOC-235335</p>
-          <h1>RISING <span>PHOENIX</span></h1>
-          <p class="lead">
-            A four-month mechanical Golden Dragon project built in real bricks, refined through repeated rebuilds,
-            reconstructed in BrickLink Studio, and published as a 150-page building guide.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View instructions on Rebrickable</a>
-            <a class="btn" href="#evolution">See the evolution</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><small>Parts</small><b>595</b></div>
-        <div class="stat"><small>Official levels</small><b>3</b></div>
-        <div class="stat"><small>Instruction pages</small><b>150</b></div>
-        <div class="stat"><small>Build steps</small><b>354</b></div>
-        <div class="stat"><small>Development</small><b>4 months</b></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="collector">
-    <div class="shell">
-      <header class="section-head">
-        <p class="eyebrow">Collector View · Physical build</p>
-        <h2>The dragon is the presentation.</h2>
-        <p>
-          Rising Phoenix is shown first as a complete physical object. The Temple and rear propulsion enrich the machine,
-          but the long mechanical dragon remains the visual center.
-        </p>
-      </header>
-      <figure class="collector">
-        <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-official-overhead.jpg" aria-label="Open Collector View">
-          <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-official-overhead.jpg" alt="Complete physical Rising Phoenix viewed from above">
-        </button>
-        <figcaption class="below-copy">
-          <div>
-            <h3>Level 03 · Full official physical configuration</h3>
-            <p>Temple plus the single Advanced Rear Propulsion system. This is the fullest physical configuration included in the published build.</p>
-          </div>
-          <div class="index">Physical first · Studio later</div>
-        </figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="content" id="configurations">
-    <div class="shell">
-      <header class="section-head center">
-        <p class="eyebrow">Three official build levels</p>
-        <h2>One machine, three ways to build it.</h2>
-        <p>
-          The levels are construction options inside the same project. They are not competing products,
-          and Level 01 is not the identity of Rising Phoenix.
-        </p>
-      </header>
-
-      <div class="config-grid">
-        <article class="config-card">
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-01-dragon-speeder-outdoor.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-01-dragon-speeder-outdoor.jpg" alt="Level 01 Dragon Speeder physical build outdoors">
-          </button>
-          <div class="card-copy">
-            <span class="index">Level 01 · Foundation</span>
-            <h3>Dragon Speeder</h3>
-            <p>Compact base configuration. No Temple and no Advanced Rear Propulsion.</p>
-            <p class="cost">Indicative parts budget · ≈ €50–60</p>
-          </div>
-        </article>
-
-        <article class="config-card">
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-02-dragon-with-temple-module.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-02-dragon-with-temple-module.jpg" alt="Level 02 dragon with Master Wu Temple module">
-          </button>
-          <div class="card-copy">
-            <span class="index">Level 02 · Temple added</span>
-            <h3>Master Wu's Temple</h3>
-            <p>The Dragon Speeder receives the Temple display module, with Wu's accessories, weapons and blossoms.</p>
-            <p class="cost">Indicative parts budget · ≈ €80</p>
-          </div>
-        </article>
-
-        <article class="config-card featured">
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-rising-phoenix-overhead.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-rising-phoenix-overhead.jpg" alt="Level 03 Rising Phoenix physical build">
-          </button>
-          <div class="card-copy">
-            <span class="index">Level 03 · Full physical configuration</span>
-            <h3>Rising Phoenix</h3>
-            <p>The Temple configuration receives Lloyd's Advanced Rear Propulsion system.</p>
-            <p class="cost">Indicative parts budget · ≈ €90–100</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="evolution">
-    <div class="shell">
-      <header class="section-head">
-        <p class="eyebrow">Four months · Physical evolution</p>
-        <h2>The final dragon was earned, rebuild after rebuild.</h2>
-        <p>
-          The HOME keeps the evolution selective: enough real photographs to feel the progression,
-          without turning the presentation into an exhaustive archive.
-        </p>
-      </header>
-
-      <div class="evolution-grid">
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-overhead-outdoor.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-overhead-outdoor.jpg" alt="Intermediate physical rebuild viewed outdoors">
-          </button>
-          <figcaption><strong>01 · Structure</strong>The body plan is still being tested in real bricks.</figcaption>
-        </figure>
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-front-axis-outdoor.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-intermediate-front-axis-outdoor.jpg" alt="Intermediate front-axis physical rebuild">
-          </button>
-          <figcaption><strong>02 · Balance</strong>Width, stance and mechanical symmetry are refined.</figcaption>
-        </figure>
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-three-quarter-outdoor.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-three-quarter-outdoor.jpg" alt="Late physical rebuild outdoors">
-          </button>
-          <figcaption><strong>03 · Identity</strong>The long mechanical silhouette becomes unmistakable.</figcaption>
-        </figure>
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-wide-outdoor.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/evolution-late-wide-outdoor.jpg" alt="Late wide physical build outdoors">
-          </button>
-          <figcaption><strong>04 · Rising Phoenix</strong>The mature physical presentation emerges.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="temple">
-    <div class="shell">
-      <header class="section-head">
-        <p class="eyebrow">Master Wu · Lloyd · Temple</p>
-        <h2>A story module carried by the machine.</h2>
-        <p>
-          The Temple adds narrative detail without replacing the dragon as the core subject.
-          Master Wu's golden Japanese hat, weapons and blossoms belong to this module.
-        </p>
-      </header>
-
-      <figure class="temple-hero">
-        <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-user-approved.png">
-          <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-user-approved.png" alt="Master Wu and Lloyd with the Temple module">
-        </button>
-        <figcaption class="below-copy">
-          <div><h3>Temple / Wu / Lloyd</h3><p>The narrative layer sits on top of a real mechanical build rather than replacing it.</p></div>
-          <div class="index">Story detail</div>
-        </figcaption>
-      </figure>
-
-      <div class="temple-grid">
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-display.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-display.jpg" alt="Temple display with Master Wu and Lloyd">
-          </button>
-          <figcaption><strong>Display</strong>Temple integrated with the physical model.</figcaption>
-        </figure>
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-handover.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-wu-lloyd-handover.jpg" alt="Master Wu and Lloyd handover scene">
-          </button>
-          <figcaption><strong>Handover</strong>Wu and Lloyd inside the project's story.</figcaption>
-        </figure>
-        <figure>
-          <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-hat-weapons-detail.jpg">
-            <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/temple-hat-weapons-detail.jpg" alt="Master Wu golden hat and weapons detail">
-          </button>
-          <figcaption><strong>Accessories</strong>Golden hat, weapons and decorative details.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="engineering">
-    <div class="shell">
-      <header class="section-head">
-        <p class="eyebrow">Engineering · Physical ↔ Digital</p>
-        <h2>The same machine, two ways of reading it.</h2>
-        <p>
-          Real photographs prove the construction. Studio isolates the geometry.
-          The two sources are paired deliberately instead of repeating the same image.
-        </p>
-      </header>
-
-      <div class="compare-block">
-        <div class="compare-grid">
-          <div class="compare-cell">
-            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-advanced-rear-propulsion-detail-01.jpg">
-              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/level-03-advanced-rear-propulsion-detail-01.jpg" alt="Physical Advanced Rear Propulsion detail">
-            </button>
-            <div class="label">Physical build · Advanced Rear Propulsion</div>
-          </div>
-          <div class="compare-cell">
-            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-propulsion-connector.png">
-              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-propulsion-connector.png" alt="Studio propulsion connector geometry">
-            </button>
-            <div class="label">BrickLink Studio · Connector geometry</div>
-          </div>
-        </div>
-        <div class="compare-copy">
-          <h3>Propulsion: mechanism first, explanation second.</h3>
-          <p>The physical photograph shows what was actually built; the Studio render removes visual noise so the connector can be understood.</p>
-        </div>
-      </div>
-
-      <div class="compare-block">
-        <div class="compare-grid">
-          <div class="compare-cell">
-            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-front-symmetry.jpg">
-              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/physical-level-03-front-symmetry.jpg" alt="Physical front symmetry of Rising Phoenix">
-            </button>
-            <div class="label">Physical build · Front symmetry</div>
-          </div>
-          <div class="compare-cell">
-            <button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-front-symmetry.png">
-              <img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-front-symmetry.png" alt="Studio front symmetry render">
-            </button>
-            <div class="label">BrickLink Studio · Front symmetry</div>
-          </div>
-        </div>
-        <div class="compare-copy">
-          <h3>Symmetry: real weight versus clean geometry.</h3>
-          <p>The same structural idea can be inspected under real-world constraints and then read cleanly in the digital reconstruction.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="studio">
-    <div class="shell">
-      <header class="section-head">
-        <p class="eyebrow">BrickLink Studio · Reconstruction</p>
-        <h2>Built twice: first in bricks, then in Studio.</h2>
-        <p>
-          Studio is not a replacement for the physical MOC. It is the engineering layer that turns the real build
-          into a reproducible instruction sequence.
-        </p>
-      </header>
-
-      <div class="studio-subhead">
-        <h3>Clean reconstruction views</h3>
-        <p>Homogeneous Studio renders for shape, modularity and instruction logic.</p>
-      </div>
-      <div class="studio-grid">
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-complete-three-quarter.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-complete-three-quarter.png" alt="Complete Studio three-quarter render"></button><span>Complete three-quarter</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-top-long-axis.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-top-long-axis.png" alt="Studio top long-axis render"></button><span>Top long-axis</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-cockpit-closeup.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-cockpit-closeup.png" alt="Studio cockpit close-up"></button><span>Cockpit / central frame</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-temple-isolated.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-detail-temple-isolated.png" alt="Studio isolated Temple module"></button><span>Temple isolated</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-assembly-layout-top.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-assembly-layout-top.png" alt="Studio assembly layout"></button><span>Assembly layout</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-instruction-build-version.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-render-instruction-build-version.png" alt="Studio instruction build version"></button><span>Instruction build version</span></div>
-      </div>
-
-      <div class="studio-subhead">
-        <h3>Digital workbench</h3>
-        <p>The workspace remains visible here because the reconstruction process is part of the project.</p>
-      </div>
-      <div class="studio-grid workbench">
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-side-review.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-side-review.png" alt="Studio workspace side review"></button><span>Side review</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-rear-propulsion.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-rear-propulsion.png" alt="Studio workspace rear propulsion"></button><span>Rear propulsion workbench</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-top-review.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-top-review.png" alt="Studio workspace top review"></button><span>Top review</span></div>
-        <div class="studio-card"><button class="media-button" data-lightbox="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-underside-structure.png"><img src="https://blueazur-hub.github.io/erith-ia-memory/public/lego/rising-phoenix/images/studio-workspace-underside-structure.png" alt="Studio workspace underside structure"></button><span>Underside structure</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="instructions">
-    <div class="shell">
-      <div class="instruction-box">
-        <div>
-          <p class="eyebrow">Published building guide</p>
-          <h2>Build Rising Phoenix.</h2>
-          <p>
-            The project continues beyond the physical Level 03 configuration through Studio reconstruction,
-            instruction design and publication. The result is a complete PDF building guide for the MOC.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">Rebrickable · MOC-235335</a>
-          </div>
-        </div>
-        <div class="instruction-specs">
-          <div class="spec"><span>Listed parts</span><b>595</b></div>
-          <div class="spec"><span>Build steps</span><b>354</b></div>
-          <div class="spec"><span>PDF manual</span><b>150 pages</b></div>
-          <div class="spec"><span>Official build levels</span><b>3</b></div>
-        </div>
-      </div>
-
-      <div class="budget-grid">
-        <div class="budget"><span>Level 01</span><h3>Dragon Speeder</h3><b>≈ €50–60</b></div>
-        <div class="budget"><span>Level 02</span><h3>+ Temple</h3><b>≈ €80</b></div>
-        <div class="budget"><span>Level 03</span><h3>+ Advanced Rear Propulsion</h3><b>≈ €90–100</b></div>
-      </div>
-      <p class="note">Indicative parts budgets only. Actual cost varies with seller availability, country, condition, shipping and parts already owned.</p>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="shell">Rising Phoenix · Mechanical Golden Dragon · Christophe78 · MOC-235335</div>
-</footer>
-
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <button type="button" aria-label="Close image">×</button>
-  <img alt="">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header" data-header="">
+<div class="shell header-inner">
+<a aria-label="Rising Phoenix home" class="brand" href="#top">
+<span aria-hidden="true" class="brand-mark">◆</span>
+<span class="brand-copy">
+<strong>Rising Phoenix</strong>
+<small>Mechanical Golden Dragon</small>
+</span>
+</a>
+<button aria-controls="primary-nav" aria-expanded="false" class="nav-toggle" data-nav-toggle="" type="button">
+<span></span><span></span><span></span>
+<span class="sr-only">Open navigation</span>
+</button>
+<nav aria-label="Primary navigation" class="primary-nav" data-nav="" id="primary-nav">
+<a href="#project">Project</a>
+<a href="#evolution">Evolution</a>
+<a href="#configurations">Configurations</a>
+<a href="#engineering">Engineering</a>
+<a href="#temple">Temple</a>
+<a href="#studio">Studio</a>
+<a href="#instructions">Instructions</a>
+<a href="archive.html">Visual archive</a>
+</nav>
 </div>
-
-<script>
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImage = lightbox.querySelector('img');
-  const closeButton = lightbox.querySelector('button');
-
-  document.querySelectorAll('[data-lightbox]').forEach(button => {
-    button.addEventListener('click', () => {
-      lightboxImage.src = button.dataset.lightbox;
-      lightbox.classList.add('open');
-      lightbox.setAttribute('aria-hidden','false');
-    });
-  });
-
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    lightbox.setAttribute('aria-hidden','true');
-    lightboxImage.src = '';
-  }
-
-  closeButton.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', event => {
-    if (event.target === lightbox) closeLightbox();
-  });
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeLightbox();
-  });
-</script>
+</header>
+<main id="main-content">
+<section aria-labelledby="hero-title" class="hero" id="top">
+<div aria-hidden="true" class="hero-media">
+<img alt="" src="images/hero-rising-phoenix-level-03-outdoor.jpg"/>
+<div class="hero-vignette"></div>
+</div>
+<div class="shell hero-content">
+<p class="eyebrow">Christophe78 · Fan-made NINJAGO MOC</p>
+<h1 id="hero-title">Rising <span>Phoenix</span></h1>
+<p class="hero-subtitle">
+          Master Wu's Mechanical Golden Dragon transformed into a complete fan-made project:
+          built in real bricks, refined over four months, reconstructed in BrickLink Studio,
+          and published as a 150-page building guide.
+        </p>
+<div class="hero-actions">
+<a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" rel="noreferrer" target="_blank">Get the instructions on Rebrickable</a>
+<a class="button button-ghost" href="#evolution">See how it was created</a>
+</div>
+</div>
+<div aria-label="Project facts" class="shell fact-strip">
+<div><strong>595</strong><span>listed parts</span></div>
+<div><strong>3</strong><span>official configurations</span></div>
+<div><strong>150</strong><span>manual pages</span></div>
+<div><strong>354</strong><span>build steps</span></div>
+<div><strong>4</strong><span>months of design</span></div>
+</div>
+</section>
+<section class="section section-intro" id="project">
+<div class="shell split-layout">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">Origin · LEGO NINJAGO 70666</p>
+<h2>From one set to a complete creation.</h2>
+</div>
+<div class="prose" data-reveal="">
+<p>
+            Rising Phoenix began from the idea and parts language of LEGO NINJAGO set 70666,
+            Master Wu's Golden Dragon. The goal was not to catalogue versions: it was to build
+            a stronger, longer, more mechanical dragon and to preserve the whole path that led to it.
+          </p>
+<p>
+            The physical MOC came first. It was dismantled, rebuilt, extended, tested and refined
+            with real bricks. New parts were acquired when the architecture demanded them.
+            The final machine was then reconstructed digitally so the real build could become
+            a reproducible instruction guide.
+          </p>
+<p>
+            This page tells that story image by image: origin, dismantling, parts, rebuilding,
+            three official configurations, engineering, Temple story, Studio reconstruction,
+            instructions and the final project economics.
+          </p>
+<p class="signature">Designed, built and documented by Christophe78.</p>
+</div>
+</div>
+</section><section aria-labelledby="collector-title" class="section collector-view-section" id="collector">
+<div class="shell">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">Collector View · Physical build</p>
+<h2 id="collector-title">The dragon is the presentation.</h2>
+<p>Rising Phoenix is a long mechanical creature. This wide physical view lets the complete machine breathe before the page explains how it was built.</p>
+</div>
+<figure class="collector-view" data-reveal="">
+<button class="image-button collector-view-media" data-lightbox-alt="Complete official Level 03 Rising Phoenix physical build viewed from above" data-lightbox-src="images/physical-level-03-official-overhead.jpg" type="button">
+<img alt="Complete official Level 03 Rising Phoenix physical build viewed from above" src="images/physical-level-03-official-overhead.jpg"/>
+<span class="image-hint">Collector View</span>
+</button>
+<figcaption class="collector-view-copy">
+<div>
+<span class="card-index">Level 03 · Full official physical configuration</span>
+<h3>Temple and Advanced Rear Propulsion, together.</h3>
+</div>
+<p>This is the most complete physical configuration included in the published build. It is the physical climax of the project — before Studio, the 354-step sequence and the 150-page guide.</p>
+</figcaption>
+</figure>
+</div>
+</section>
+<section aria-labelledby="evolution-title" class="section section-dark evolution-v5" id="evolution">
+<div class="shell">
+<div class="section-heading evolution-heading" data-reveal="">
+<p class="eyebrow">Four months of creation · physical story</p>
+<h2 id="evolution-title">The final dragon was earned, rebuild after rebuild.</h2>
+<p>Four workshop views preserve the transformation: the first experiment, a stripped rebuild, the longer architecture, and the late machine that finally reveals Rising Phoenix.</p>
+</div>
+<div class="evolution-milestones">
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="First surviving physical experiment" data-lightbox-src="images/evolution-01-early-prototype.jpg" type="button">
+<img alt="First surviving physical experiment" src="images/evolution-01-early-prototype.jpg"/>
+<span class="image-hint">View image</span>
+</button>
+<figcaption>
+<strong>01 · First experiment</strong>
+<span>The project begins as a compact mechanical dragon whose proportions are still being tested.</span>
+</figcaption>
+</figure>
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Rising Phoenix stripped back during a major physical rebuild" data-lightbox-src="images/evolution-04-rebuild-stripped-architecture.jpg" type="button">
+<img alt="Rising Phoenix stripped back during a major physical rebuild" src="images/evolution-04-rebuild-stripped-architecture.jpg"/>
+<span class="image-hint">View image</span>
+</button>
+<figcaption>
+<strong>02 · Rebuild bench</strong>
+<span>Weak solutions are removed so the architecture can be rebuilt rather than decorated.</span>
+</figcaption>
+</figure>
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Longer mechanical architecture emerging during the physical rebuild" data-lightbox-src="images/evolution-05-longer-architecture-emerging.jpg" type="button">
+<img alt="Longer mechanical architecture emerging during the physical rebuild" src="images/evolution-05-longer-architecture-emerging.jpg"/>
+<span class="image-hint">View image</span>
+</button>
+<figcaption>
+<strong>03 · Longer architecture</strong>
+<span>The body lengthens and the machine moves decisively toward its own identity.</span>
+</figcaption>
+</figure>
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Late physical Rising Phoenix architecture during the four-month evolution" data-lightbox-src="images/evolution-10-late-experimental-architecture.jpg" type="button">
+<img alt="Late physical Rising Phoenix architecture during the four-month evolution" src="images/evolution-10-late-experimental-architecture.jpg"/>
+<span class="image-hint">View image</span>
+</button>
+<figcaption>
+<strong>04 · Late architecture</strong>
+<span>The mature silhouette appears: longer, broader and unmistakably mechanical.</span>
+</figcaption>
+</figure>
+</div>
+<figure class="evolution-final-feature" data-reveal="">
+<button class="image-button" data-lightbox-alt="Mature Rising Phoenix physical build connecting the dragon head, Temple and figures" data-lightbox-src="images/physical-level-03-head-temple-perspective.jpg" type="button">
+<img alt="Mature Rising Phoenix physical build connecting the dragon head, Temple and figures" src="images/physical-level-03-head-temple-perspective.jpg"/>
+<span class="image-hint">View complete build</span>
+</button>
+<figcaption>
+<div>
+<span class="card-index">Physical culmination</span>
+<h3>The machine acquires its complete identity.</h3>
+</div>
+<p>By the end of the physical development, the dragon, Temple and advanced rear mechanics read as one creation. The next phase is no longer another physical level: it is the Studio reconstruction that makes the build reproducible.</p>
+</figcaption>
+</figure>
+</div>
+</section><section aria-labelledby="process-title" class="section process-section" id="process">
+<div class="shell">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">Real build process</p>
+<h2 id="process-title">Dismantle. Find the parts. Rebuild.</h2>
+<p>The project was not a clean digital exercise. Real parts had to be removed, sorted, acquired and tested before the next mechanical solution could exist.</p>
+</div>
+<div class="process-grid">
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Rising Phoenix parts sorted during a dismantling and search phase" data-lightbox-src="images/evolution-07-dismantle-parts-search.jpg" type="button">
+<img alt="Rising Phoenix parts sorted during a dismantling and search phase" src="images/evolution-07-dismantle-parts-search.jpg"/>
+<span class="image-hint">Dismantle</span>
+</button>
+<figcaption><strong>01 · Dismantle</strong><span>Solutions that no longer work return to the parts pool.</span></figcaption>
+</figure>
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Bags of LEGO parts acquired for the next Rising Phoenix rebuild" data-lightbox-src="images/evolution-06-parts-acquisition-bags.jpg" type="button">
+<img alt="Bags of LEGO parts acquired for the next Rising Phoenix rebuild" src="images/evolution-06-parts-acquisition-bags.jpg"/>
+<span class="image-hint">Parts</span>
+</button>
+<figcaption><strong>02 · Parts</strong><span>New elements are acquired when the next architecture demands them.</span></figcaption>
+</figure>
+<figure data-reveal="">
+<button class="image-button" data-lightbox-alt="Rising Phoenix intermediate rebuild surrounded by parts" data-lightbox-src="images/evolution-intermediate-build-parts-context.jpg" type="button">
+<img alt="Rising Phoenix intermediate rebuild surrounded by parts" src="images/evolution-intermediate-build-parts-context.jpg"/>
+<span class="image-hint">Rebuild</span>
+</button>
+<figcaption><strong>03 · Rebuild</strong><span>The new parts are tested against the real machine, not an abstract specification.</span></figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section aria-labelledby="config-title" class="section" id="configurations">
+<div class="shell">
+<div class="section-heading centered" data-reveal="">
+<p class="eyebrow">One dragon · three official build configurations</p>
+<h2 id="config-title">Build only as far as you want.</h2>
+<p>
+            The construction guide is modular: begin with the compact Dragon Speeder,
+            add Master Wu's Temple, then complete Rising Phoenix with Lloyd's Advanced Rear Propulsion.
+          </p>
+</div>
+<div class="configuration-grid">
+<article class="configuration-card" data-reveal="">
+<button class="image-button" data-lightbox-alt="Level 01 Dragon Speeder physical configuration" data-lightbox-src="images/level-01-dragon-speeder-outdoor.jpg" type="button">
+<img alt="Level 01 Dragon Speeder physical configuration outdoors" src="images/level-01-dragon-speeder-outdoor.jpg"/>
+<span class="image-hint">View Level 01</span>
+</button>
+<div class="card-body">
+<span class="card-index">01 · Foundation</span>
+<h3>Dragon Speeder</h3>
+<p>
+                The compact mechanical dragon: no Temple and no Advanced Rear Propulsion.
+                Its folded rear architecture gives it a complete silhouette of its own.
+              </p>
+<p class="cost-chip">Indicative parts budget · ≈ €50–60</p>
+</div>
+</article>
+<article class="configuration-card" data-reveal="">
+<button class="image-button" data-lightbox-alt="Level 02 physical dragon with Master Wu's Temple" data-lightbox-src="images/level-02-dragon-with-temple-module.jpg" type="button">
+<img alt="Level 02 physical dragon with Master Wu's Temple" src="images/level-02-dragon-with-temple-module.jpg"/>
+<span class="image-hint">View Level 02</span>
+</button>
+<div class="card-body">
+<span class="card-index">02 · Temple added</span>
+<h3>Master Wu's Temple</h3>
+<p>
+                The Temple is added to the mechanical dragon, bringing Wu's display module,
+                blossoms, weapons and golden Japanese hat into the composition.
+              </p>
+<p class="cost-chip">Indicative parts budget · ≈ €80</p>
+</div>
+</article>
+<article class="configuration-card featured" data-reveal="">
+<button class="image-button" data-lightbox-alt="Level 03 complete official Rising Phoenix configuration" data-lightbox-src="images/level-03-rising-phoenix-overhead.jpg" type="button">
+<img alt="Level 03 complete official Rising Phoenix configuration with Temple and advanced rear propulsion" src="images/level-03-rising-phoenix-overhead.jpg"/>
+<span class="image-hint">View Level 03</span>
+</button>
+<div class="card-body">
+<span class="card-index">03 · Propulsion added</span>
+<h3>Rising Phoenix</h3>
+<p>
+                Master Wu's Temple plus Lloyd's Advanced Rear Propulsion complete the official
+                Rising Phoenix configuration included in the published instructions.
+              </p>
+<p class="cost-chip">Indicative parts budget · ≈ €90–100</p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section aria-labelledby="engineering-title" class="section section-dark" id="engineering">
+<div class="shell">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">Mechanical architecture</p>
+<h2 id="engineering-title">Built to look engineered.</h2>
+<p>
+            Level 03 adds a distinct rear propulsion system to the dragon. Physical close-ups show the mechanism,
+            connection points and translucent-green energy details; Studio then isolates the same geometry for documentation.
+          </p>
+</div>
+<div class="feature-grid">
+<article class="feature feature-large" data-reveal="">
+<button class="image-button" data-lightbox-alt="Physical close-up of the Level 03 advanced rear propulsion" data-lightbox-src="images/level-03-advanced-rear-propulsion-detail-01.jpg" type="button">
+<img alt="Physical close-up of the Level 03 advanced rear propulsion" src="images/level-03-advanced-rear-propulsion-detail-01.jpg"/>
+<span class="image-hint">Physical mechanism</span>
+</button>
+<div class="feature-copy">
+<p class="eyebrow">Advanced rear propulsion</p>
+<h3>Advanced rear propulsion</h3>
+<p>
+                The Level 03 system changes the rear architecture of the dragon.
+                Connection geometry, mechanical arms and translucent green energy elements are visible as real construction.
+              </p>
+</div>
+</article>
+<article class="feature" data-reveal="">
+<button class="image-button" data-lightbox-alt="Second physical detail of the Level 03 rear propulsion" data-lightbox-src="images/level-03-advanced-rear-propulsion-detail-02.jpg" type="button">
+<img alt="Second physical detail of the Level 03 rear propulsion" src="images/level-03-advanced-rear-propulsion-detail-02.jpg"/>
+<span class="image-hint">View detail</span>
+</button>
+<div class="feature-copy">
+<p class="eyebrow">Real bricks</p>
+<h3>Energy and structure</h3>
+<p>The translucent-green language reads as energy while the darker structure keeps the module visibly mechanical.</p>
+</div>
+</article>
+<article class="feature" data-reveal="">
+<button class="image-button" data-lightbox-alt="Studio reconstruction of the propulsion connector" data-lightbox-src="images/studio-detail-propulsion-connector.png" type="button">
+<img alt="Studio reconstruction of the propulsion connector" src="images/studio-detail-propulsion-connector.png"/>
+<span class="image-hint">Studio geometry</span>
+</button>
+<div class="feature-copy">
+<p class="eyebrow">Digital twin</p>
+<h3>Connector geometry</h3>
+<p>Studio isolates the same physical solution so its attachment and parts logic can be inspected without visual noise.</p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section aria-labelledby="temple-title" class="section temple-story-section" id="temple">
+<div class="shell temple-story-v2">
+<div class="section-heading temple-story-heading" data-reveal="">
+<p class="eyebrow">Master Wu · Lloyd · the Dragon</p>
+<h2 id="temple-title">A story around the machine.</h2>
+<p>The Temple gives Rising Phoenix a ceremonial and narrative layer while the mechanical dragon remains the visual center.</p>
+</div>
+<div class="temple-story-visuals" data-reveal="">
+<button class="image-button temple-story-main" data-lightbox-alt="Master Wu and Lloyd staged beside the Temple" data-lightbox-src="images/temple-wu-lloyd-handover.jpg" type="button">
+<span class="temple-image-stack">
+<img alt="Master Wu and Lloyd staged beside the Temple" class="temple-image-primary" src="images/temple-wu-lloyd-handover.jpg"/>
+<img alt="Master Wu's golden Japanese hat, weapons and Temple details" class="temple-image-hover" src="images/temple-hat-weapons-detail.jpg"/>
+</span>
+<span class="temple-hover-note">Hover to inspect the Temple details</span>
+</button>
+<button class="image-button temple-editorial-card" data-lightbox-alt="Physical Temple display with Master Wu and Lloyd" data-lightbox-src="images/temple-wu-lloyd-display.jpg" type="button">
+<img alt="Physical Temple display with Master Wu and Lloyd" src="images/temple-wu-lloyd-display.jpg"/>
+<span class="story-badge">Physical story view</span>
+</button>
+</div>
+<div class="temple-story-copy-grid" data-reveal="">
+<article>
+<h3>Master Wu's Temple</h3>
+<p>
+              A decorative module for Wu's golden Japanese hat, weapons, blossoms and hanging details.
+              It adds narrative identity without taking the visual center away from the mechanical dragon.
+            </p>
+</article>
+<article>
+<h3>Wu, Lloyd and the builder</h3>
+<p>
+              The guide stages Wu and Lloyd around the machine, while builders remain free to choose the minifigures
+              they want for their own version of the story.
+            </p>
+</article>
+</div>
+</div>
+</section>
+<section aria-labelledby="studio-title" class="section section-dark studio-process" id="studio">
+<div class="shell">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">BrickLink Studio · digital reconstruction</p>
+<h2 id="studio-title">The physical MOC becomes a documented build.</h2>
+<p>
+            Studio comes after the real bricks. It reconstructs and verifies the physical machine so the build can be
+            inspected, sequenced and transformed into instructions.
+          </p>
+</div>
+<div class="studio-workbench-grid">
+<article class="studio-workbench-card" data-reveal="">
+<button class="image-button studio-ui-shot" data-lightbox-alt="BrickLink Studio top workspace review" data-lightbox-src="images/studio-workspace-top-review.png" type="button">
+<img alt="BrickLink Studio top workspace review of Rising Phoenix" src="images/studio-workspace-top-review.png"/>
+<span class="image-hint">Workspace</span>
+</button>
+<div class="studio-card-copy">
+<span class="card-index">01 · Reconstruction</span>
+<h3>Editable geometry</h3>
+<p>The real MOC is rebuilt piece by piece as a controllable digital model.</p>
+</div>
+</article>
+<article class="studio-workbench-card" data-reveal="">
+<button class="image-button studio-ui-shot" data-lightbox-alt="BrickLink Studio side workspace review" data-lightbox-src="images/studio-workspace-side-review.png" type="button">
+<img alt="BrickLink Studio side workspace review of Rising Phoenix" src="images/studio-workspace-side-review.png"/>
+<span class="image-hint">Workspace</span>
+</button>
+<div class="studio-card-copy">
+<span class="card-index">02 · Structural review</span>
+<h3>Angles the camera cannot isolate</h3>
+<p>Precise side and technical views make articulation and long-axis structure easier to verify.</p>
+</div>
+</article>
+<article class="studio-workbench-card" data-reveal="">
+<button class="image-button studio-ui-shot" data-lightbox-alt="BrickLink Studio rear propulsion workspace review" data-lightbox-src="images/studio-workspace-rear-propulsion.png" type="button">
+<img alt="BrickLink Studio rear propulsion workspace review" src="images/studio-workspace-rear-propulsion.png"/>
+<span class="image-hint">Workspace</span>
+</button>
+<div class="studio-card-copy">
+<span class="card-index">03 · Propulsion review</span>
+<h3>Rear mechanics under inspection</h3>
+<p>The propulsion area can be checked independently before it is translated into a build sequence.</p>
+</div>
+</article>
+<article class="studio-workbench-card" data-reveal="">
+<button class="image-button studio-ui-shot" data-lightbox-alt="BrickLink Studio underside structure review" data-lightbox-src="images/studio-workspace-underside-structure.png" type="button">
+<img alt="BrickLink Studio underside structure review" src="images/studio-workspace-underside-structure.png"/>
+<span class="image-hint">Workspace</span>
+</button>
+<div class="studio-card-copy">
+<span class="card-index">04 · Build preparation</span>
+<h3>From geometry to instructions</h3>
+<p>The digital model becomes the technical source for organizing the 354 construction steps.</p>
+</div>
+</article>
+</div>
+<div aria-label="Rising Phoenix production path" class="studio-flow" data-reveal="">
+<div><strong>Physical MOC</strong><span>Real build and real constraints</span></div>
+<span aria-hidden="true" class="studio-flow-arrow">→</span>
+<div><strong>BrickLink Studio</strong><span>Digital reconstruction</span></div>
+<span aria-hidden="true" class="studio-flow-arrow">→</span>
+<div><strong>354 steps</strong><span>Construction sequence</span></div>
+<span aria-hidden="true" class="studio-flow-arrow">→</span>
+<div><strong>150-page PDF</strong><span>Published instructions</span></div>
+</div>
+<div class="studio-render-heading" data-reveal="">
+<p class="eyebrow">Clean technical renders</p>
+<h3>The same machine, without workshop noise.</h3>
+</div>
+<div class="studio-render-grid">
+<button class="image-button studio-render-card" data-lightbox-alt="Front symmetry Studio render" data-lightbox-src="images/studio-render-front-symmetry.png" type="button">
+<img alt="Front symmetry Studio render of Rising Phoenix" src="images/studio-render-front-symmetry.png"/>
+<span class="studio-render-label">Front symmetry</span>
+</button>
+<button class="image-button studio-render-card" data-lightbox-alt="Top long-axis Studio render" data-lightbox-src="images/studio-render-top-long-axis.png" type="button">
+<img alt="Top long-axis Studio render of Rising Phoenix" src="images/studio-render-top-long-axis.png"/>
+<span class="studio-render-label">Top / long axis</span>
+</button>
+<button class="image-button studio-render-card" data-lightbox-alt="Complete three-quarter Studio render" data-lightbox-src="images/studio-render-complete-three-quarter.png" type="button">
+<img alt="Complete three-quarter Studio render of Rising Phoenix" src="images/studio-render-complete-three-quarter.png"/>
+<span class="studio-render-label">Complete three-quarter</span>
+</button>
+<button class="image-button studio-render-card" data-lightbox-alt="Studio modularity render with Temple and figures" data-lightbox-src="images/studio-render-modularity-temple-figures.png" type="button">
+<img alt="Studio modularity render with Temple and figures" src="images/studio-render-modularity-temple-figures.png"/>
+<span class="studio-render-label">Modularity</span>
+</button>
+<button class="image-button studio-render-card" data-lightbox-alt="Studio cockpit close-up" data-lightbox-src="images/studio-detail-cockpit-closeup.png" type="button">
+<img alt="Studio cockpit close-up" src="images/studio-detail-cockpit-closeup.png"/>
+<span class="studio-render-label">Cockpit detail</span>
+</button>
+<button class="image-button studio-render-card" data-lightbox-alt="Isolated Studio render of Master Wu's Temple" data-lightbox-src="images/studio-detail-temple-isolated.png" type="button">
+<img alt="Isolated Studio render of Master Wu's Temple" src="images/studio-detail-temple-isolated.png"/>
+<span class="studio-render-label">Temple module</span>
+</button>
+</div>
+</div>
+</section>
+<section aria-labelledby="instructions-title" class="section" id="instructions">
+<div class="shell instructions-layout">
+<div class="instructions-copy" data-reveal="">
+<p class="eyebrow">Building instructions</p>
+<h2 id="instructions-title">Rising Phoenix becomes reproducible.</h2>
+<p>
+            The physical project and its Studio reconstruction converge in a complete instruction set:
+            150 pages, 354 construction steps and 595 listed parts.
+            The guide preserves the three official configurations and makes the project reproducible by another builder.
+          </p>
+<dl class="spec-list">
+<div><dt>Manual</dt><dd>150 pages</dd></div>
+<div><dt>Sequence</dt><dd>354 build steps</dd></div>
+<div><dt>Inventory</dt><dd>595 listed parts</dd></div>
+<div><dt>Format</dt><dd>PDF building instructions</dd></div>
+</dl>
+<a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" rel="noreferrer" target="_blank">View / buy the instructions on Rebrickable</a>
+</div>
+<div class="instructions-gallery instructions-gallery-single" data-reveal="">
+<button class="image-button" data-lightbox-alt="Studio build-version render used during instruction preparation" data-lightbox-src="images/studio-render-instruction-build-version.png" type="button">
+<img alt="Studio build-version render used during instruction preparation" src="images/studio-render-instruction-build-version.png"/>
+<span class="image-hint">View build version</span>
+</button>
+</div>
+</div>
+</section>
+<section aria-labelledby="economics-title" class="section section-dark" id="economics">
+<div class="shell budget-layout">
+<div class="section-heading" data-reveal="">
+<p class="eyebrow">Parts budget</p>
+<h2 id="economics-title">Build progressively, according to your budget.</h2>
+<p>
+            The figures below are indicative real-world parts ranges for the three official configurations.
+            Actual cost varies with seller availability, country, condition, shipping and the pieces already in your collection.
+          </p>
+</div>
+<div class="budget-panel" data-reveal="">
+<div class="budget-row">
+<div>
+<span class="budget-level">Level 01</span>
+<strong>Dragon Speeder</strong>
+<small>Base mechanical dragon</small>
+</div>
+<span class="budget-price">≈ €50–60</span>
+</div>
+<div class="budget-row">
+<div>
+<span class="budget-level">Level 02</span>
+<strong>+ Master Wu's Temple</strong>
+<small>Temple configuration</small>
+</div>
+<span class="budget-price">≈ €80</span>
+</div>
+<div class="budget-row">
+<div>
+<span class="budget-level">Level 03</span>
+<strong>+ Advanced Rear Propulsion</strong>
+<small>Most complete official dragon configuration</small>
+</div>
+<span class="budget-price">≈ €90–100</span>
+</div>
+<div class="budget-note">
+<p>
+<strong>Parts prices move.</strong> Seller availability, country, condition, shipping and pieces already owned
+              can change the real cost. Use Rebrickable for the current inventory estimate and current instruction price.
+            </p>
+<a class="text-link" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" rel="noreferrer" target="_blank">Open the current Rebrickable listing →</a>
+</div>
+</div>
+</div>
+</section>
+<section aria-labelledby="final-title" class="final-cta">
+<div class="shell final-cta-inner" data-reveal="">
+<p class="eyebrow">Project Rising Phoenix</p>
+<h2 id="final-title">Built. Rebuilt. Documented. Ready to build again.</h2>
+<p>
+          A four-month physical MOC became a digital reconstruction, a 354-step sequence,
+          a 150-page guide and a published project that another builder can now reproduce.
+        </p>
+<div class="hero-actions">
+<a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" rel="noreferrer" target="_blank">Get Rising Phoenix on Rebrickable</a>
+<a class="button button-ghost" href="archive.html">Open the visual archive</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="shell footer-inner">
+<div>
+<strong>Rising Phoenix</strong>
+<p>Fan-made MOC by Christophe78.</p>
+</div>
+<p class="legal">
+        LEGO® and NINJAGO® are trademarks of the LEGO Group.
+        This independent fan project is not sponsored, authorized or endorsed by the LEGO Group.
+      </p>
+</div>
+</footer>
+<dialog aria-label="Image preview" class="lightbox" data-lightbox="">
+<button aria-label="Close image preview" class="lightbox-close" data-lightbox-close="" type="button">×</button>
+<img alt="" data-lightbox-image="" src=""/>
+<p data-lightbox-caption=""></p>
+</dialog>
 </body>
 </html>
