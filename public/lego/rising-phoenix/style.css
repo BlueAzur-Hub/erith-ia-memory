@@ -2090,3 +2090,128 @@ section[id] {
     aspect-ratio: 4 / 3;
   }
 }
+
+
+/* ==========================================================================
+   V4.3 — Hero first-screen correction
+   ========================================================================== */
+
+/* Keep the navigation readable even while the hero image is bright. */
+.site-header {
+  background: rgba(11, 12, 11, 0.90);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.site-header.is-scrolled {
+  background: rgba(11, 12, 11, 0.96);
+}
+
+/* The previous full-bleed 4:3 image was being enlarged with object-fit: cover.
+   Restrict it to the right side instead, so the dragon reads at a sane scale. */
+.hero {
+  min-height: 690px;
+  padding: calc(var(--header-height) + 34px) 0 20px;
+  background: #0d0f0d;
+}
+
+.hero-media {
+  left: 34%;
+  background: #dddddd;
+}
+
+.hero-media img {
+  object-fit: contain;
+  object-position: 56% center;
+  filter: saturate(1) contrast(1.02) brightness(1.02);
+}
+
+/* Dark only where the copy needs contrast; leave most of the dragon visible. */
+.hero::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 9, 8, 0.98) 0%,
+      rgba(8, 9, 8, 0.92) 23%,
+      rgba(8, 9, 8, 0.72) 38%,
+      rgba(8, 9, 8, 0.28) 54%,
+      rgba(8, 9, 8, 0.06) 72%,
+      rgba(8, 9, 8, 0.02) 100%
+    ),
+    linear-gradient(0deg, rgba(11, 12, 11, 0.58) 0%, transparent 28%);
+}
+
+.hero-vignette {
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.22);
+}
+
+.hero-content {
+  padding-bottom: 24px;
+}
+
+.hero h1 {
+  max-width: 610px;
+  font-size: clamp(3.2rem, 5.3vw, 5.15rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.hero-subtitle {
+  max-width: 660px;
+  font-size: clamp(0.98rem, 1.35vw, 1.12rem);
+  line-height: 1.55;
+}
+
+.hero-actions {
+  margin-top: 22px;
+}
+
+.fact-strip div {
+  padding-top: 15px;
+}
+
+.fact-strip strong {
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+}
+
+/* Large desktop: keep the model comfortably inside the right panel. */
+@media (min-width: 1280px) {
+  .hero-media {
+    left: 38%;
+  }
+
+  .hero-media img {
+    object-position: 58% center;
+  }
+}
+
+/* Tablet / mobile return to a full image treatment, but without the huge zoom. */
+@media (max-width: 900px) {
+  .hero {
+    min-height: 760px;
+  }
+
+  .hero-media {
+    left: 0;
+    top: var(--header-height);
+    bottom: auto;
+    height: 52%;
+    background: #dddddd;
+  }
+
+  .hero-media img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .hero::before {
+    background:
+      linear-gradient(
+        0deg,
+        rgba(11, 12, 11, 0.98) 0%,
+        rgba(11, 12, 11, 0.88) 38%,
+        rgba(11, 12, 11, 0.24) 67%,
+        rgba(11, 12, 11, 0.04) 100%
+      );
+  }
+}
