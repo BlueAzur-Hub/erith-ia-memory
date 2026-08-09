@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#070706">
-  <title>Rising Phoenix — Mechanical Golden Dragon</title>
+  <title>ERROR 404 — Mechanical Golden Dragon</title>
   <style>
     :root{
       --bg:#070706;
@@ -48,8 +48,8 @@
     .eyebrow{color:var(--gold);font-weight:800;letter-spacing:.16em;font-size:.78rem;margin-bottom:15px}
     h1{
       margin:0 0 12px;
-      font-size:clamp(3.2rem,8vw,7.8rem);
-      line-height:.86;
+      font-size:clamp(5.5rem,15vw,14rem);
+      line-height:.78;
       letter-spacing:-.065em;
       font-weight:950;
     }
@@ -145,6 +145,26 @@
       .caption span{display:block;margin-top:4px}
       .step{grid-template-columns:48px 1fr}
     }
+  
+    .error404-title{
+      max-width:none;
+      letter-spacing:-.085em;
+      white-space:nowrap;
+    }
+    .error404-title span{
+      display:inline;
+      color:var(--gold);
+    }
+    @media(max-width:760px){
+      .error404-title{
+        white-space:normal;
+        font-size:clamp(4.5rem,22vw,8rem);
+      }
+      .error404-title span{
+        display:block;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -164,7 +184,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="eyebrow">CHRISTOPHE78 · MOC-235335</div>
-      <h1>RISING <span>PHOENIX</span></h1>
+      <h1 class="error404-title">ERROR <span>404</span></h1>
       <p class="lead">
         Master Wu’s Mechanical Golden Dragon transformé en création personnelle complète :
         évolution physique, Temple, propulsion arrière avancée, reconstruction Studio
