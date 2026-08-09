@@ -3351,3 +3351,395 @@ section[id] {
     aspect-ratio: 4 / 3;
   }
 }
+
+/* ==========================================================================
+   V6 — VISUAL ATLAS / SOURCE TAXONOMY
+   No generated image work in this pass.
+   The site now distinguishes: evolution, Level 01, Level 02, official Level 03,
+   and the creator-only dual-reactor evolution.
+   ========================================================================== */
+
+/* Slightly wider desktop canvas for image-led storytelling. */
+:root {
+  --shell: 1280px;
+}
+
+/* Hero image V6 is already composed with left negative space.
+   Avoid over-cropping it: contain the critical subject within a full-width
+   background and let a dark background absorb any safety margin. */
+.hero-media {
+  background: #0b0d0b;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 56% center;
+}
+
+.hero::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 8, 7, 0.88) 0%,
+      rgba(7, 8, 7, 0.72) 20%,
+      rgba(7, 8, 7, 0.40) 36%,
+      rgba(7, 8, 7, 0.10) 56%,
+      rgba(7, 8, 7, 0.04) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(8, 9, 8, 0.68) 0%,
+      rgba(8, 9, 8, 0.15) 23%,
+      transparent 40%
+    );
+}
+
+/* --------------------------------------------------------------------------
+   Visual state map
+   -------------------------------------------------------------------------- */
+.state-map-section {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(201, 154, 70, 0.07), transparent 28rem),
+    radial-gradient(circle at 88% 84%, rgba(92, 255, 127, 0.045), transparent 30rem),
+    #0f120f;
+  border-block: 1px solid var(--line-soft);
+}
+
+.state-map-heading {
+  max-width: 900px;
+}
+
+.state-map-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.state-card {
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #171a17, #111311);
+  box-shadow: var(--shadow);
+}
+
+.state-card-featured {
+  border-color: rgba(237, 198, 110, 0.42);
+}
+
+.state-card.creator-state {
+  border-color: rgba(92, 255, 127, 0.24);
+  background:
+    linear-gradient(145deg, rgba(92, 255, 127, 0.055), transparent 44%),
+    #111511;
+}
+
+.state-card .image-button {
+  background: #171917;
+}
+
+.state-card .image-button img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #171917;
+}
+
+.state-card:nth-child(2) .image-button,
+.state-card:nth-child(3) .image-button {
+  background: #e8e8e8;
+}
+
+.state-card:nth-child(2) .image-button img,
+.state-card:nth-child(3) .image-button img {
+  background: #e8e8e8;
+}
+
+.state-card-copy {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  padding: 20px 21px 22px;
+}
+
+.state-index {
+  color: var(--gold-light);
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.creator-state .state-index {
+  color: #aef7be;
+}
+
+.state-status {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--gold-light);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.creator-state .state-status {
+  color: #aef7be;
+}
+
+.state-card h3 {
+  margin-bottom: 9px;
+  font-family: var(--display);
+  font-size: 1.45rem;
+}
+
+.state-card p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+}
+
+/* --------------------------------------------------------------------------
+   Official build levels — physical photography remains the proof layer.
+   -------------------------------------------------------------------------- */
+.configuration-card .image-button img {
+  aspect-ratio: 4 / 3 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #151815 !important;
+}
+
+.configuration-card:nth-child(2) .image-button img {
+  object-fit: cover !important;
+  object-position: 50% 47% !important;
+}
+
+.configuration-card:nth-child(3) .image-button img {
+  object-fit: contain !important;
+}
+
+/* --------------------------------------------------------------------------
+   Physical proof — this section intentionally uses a real detail photograph,
+   not the same final hero image repeated again.
+   -------------------------------------------------------------------------- */
+.real-build-layout {
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+}
+
+.real-build-image img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* --------------------------------------------------------------------------
+   Temple story — only real photographs; no editorial generated card.
+   -------------------------------------------------------------------------- */
+.temple-story-v6 {
+  display: grid;
+  gap: 28px;
+}
+
+.temple-story-heading {
+  max-width: 900px;
+  margin-bottom: 0;
+}
+
+.temple-story-visuals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.temple-v6-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: #121412;
+  box-shadow: var(--shadow);
+}
+
+.temple-v6-card .image-button {
+  background: #121412;
+}
+
+.temple-v6-card .image-button img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #121412;
+}
+
+.temple-v6-card figcaption {
+  padding: 22px 24px 24px;
+}
+
+.temple-v6-card figcaption h3 {
+  margin: 0 0 10px;
+  font-family: var(--display);
+}
+
+.temple-v6-card figcaption p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.temple-choice-note {
+  max-width: 860px;
+  margin: 0;
+  padding: 18px 20px;
+  border-left: 2px solid var(--gold);
+  background: rgba(201, 154, 70, 0.045);
+  color: var(--text-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Studio gallery — one visual function per card.
+   -------------------------------------------------------------------------- */
+.studio-render-grid-v6 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.studio-render-grid-v6 .studio-render-card:nth-child(n) {
+  grid-column: auto;
+}
+
+.studio-render-grid-v6 .studio-render-wide {
+  grid-column: span 2;
+}
+
+.studio-render-grid-v6 .studio-render-card img {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #e9e9e9;
+}
+
+/* --------------------------------------------------------------------------
+   Wider source library — secondary assets get their own role instead of
+   repeatedly recycling the same final photograph.
+   -------------------------------------------------------------------------- */
+.source-library-v6 {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.012), transparent 18%),
+    #0d100d;
+  border-block: 1px solid var(--line-soft);
+}
+
+.source-library-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.source-library-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-small);
+  background: #111311;
+}
+
+.source-library-wide {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.source-library-card .image-button {
+  height: 100%;
+  min-height: 220px;
+  background: #151815;
+}
+
+.source-library-card .image-button img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  object-position: center;
+  background: #151815;
+}
+
+.source-library-wide .image-button img {
+  min-height: 470px;
+}
+
+.source-library-card figcaption {
+  display: grid;
+  gap: 5px;
+  padding: 15px 17px 17px;
+}
+
+.source-library-card figcaption strong {
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.source-library-card figcaption span {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+
+/* The creator-only state remains visually distinct from the three published levels. */
+.creator-evolution {
+  border-top: 1px solid rgba(92, 255, 127, 0.14);
+}
+
+@media (max-width: 1120px) {
+  .state-map-grid,
+  .source-library-grid,
+  .studio-render-grid-v6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .source-library-wide {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+
+  .studio-render-grid-v6 .studio-render-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 820px) {
+  .temple-story-visuals,
+  .real-build-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-media img {
+    object-position: 61% center;
+  }
+}
+
+@media (max-width: 700px) {
+  .state-map-grid,
+  .source-library-grid,
+  .studio-render-grid-v6 {
+    grid-template-columns: 1fr;
+  }
+
+  .source-library-wide,
+  .studio-render-grid-v6 .studio-render-wide {
+    grid-column: auto;
+  }
+
+  .source-library-wide .image-button img {
+    min-height: 0;
+  }
+
+  .state-card-copy {
+    grid-template-columns: 46px 1fr;
+  }
+}
