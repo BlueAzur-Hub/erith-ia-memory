@@ -2315,3 +2315,40 @@ section[id] {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   V4.5 — Master Wu accessory close-up
+   The dragon remains the primary product; this portrait image documents the
+   decorative Temple details without forcing it into a horizontal crop.
+   ========================================================================== */
+
+#temple .detail-split {
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  align-items: center;
+}
+
+#temple .temple-accessories-photo {
+  width: min(100%, 460px);
+  justify-self: center;
+  background: #151815;
+}
+
+#temple .temple-accessories-photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  object-position: center;
+  background: #151815;
+}
+
+@media (max-width: 900px) {
+  #temple .detail-split {
+    grid-template-columns: 1fr;
+  }
+
+  #temple .temple-accessories-photo {
+    width: min(100%, 520px);
+  }
+}
