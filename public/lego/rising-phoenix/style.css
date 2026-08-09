@@ -998,54 +998,188 @@ h3 {
 }
 
 
-/* V2 — truth-first placeholder for the Base Model image
-   The final Base Model photograph/render is intentionally not guessed.
-   Replace this block with the confirmed image once selected. */
-.configuration-placeholder {
-  aspect-ratio: 4 / 3;
+
+
+/* ==========================================================================
+   V3 — Build levels, budget guidance, and creator-only evolution
+   ========================================================================== */
+
+/* Small price cue inside each official build-level card */
+.cost-chip {
+  display: inline-flex;
+  margin-top: 18px !important;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(201, 154, 70, 0.07);
+  color: var(--gold-light) !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Budget section */
+.budget-layout {
   display: grid;
-  place-content: center;
-  gap: 8px;
-  min-height: 0;
-  padding: 28px;
-  text-align: center;
+  grid-template-columns: minmax(0, 0.8fr) minmax(480px, 1.2fr);
+  gap: clamp(42px, 7vw, 90px);
+  align-items: start;
+}
+
+.budget-layout .section-heading {
+  margin-bottom: 0;
+}
+
+.budget-panel {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background:
-    linear-gradient(rgba(8, 10, 8, 0.76), rgba(8, 10, 8, 0.9)),
-    repeating-linear-gradient(
-      135deg,
-      rgba(237, 198, 110, 0.055) 0,
-      rgba(237, 198, 110, 0.055) 1px,
-      transparent 1px,
-      transparent 18px
-    ),
-    #0e100e;
+    linear-gradient(145deg, rgba(201, 154, 70, 0.08), transparent 34%),
+    var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.budget-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 24px 28px;
   border-bottom: 1px solid var(--line-soft);
 }
 
-.configuration-placeholder::before {
-  content: "◆";
-  display: block;
-  margin: 0 auto 5px;
-  color: var(--gold-light);
-  font-size: 1.15rem;
+.budget-row > div {
+  display: grid;
+  gap: 4px;
 }
 
-.configuration-placeholder .configuration-level {
+.budget-level {
   color: var(--gold-light);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
-.configuration-placeholder strong {
-  font-size: clamp(1.35rem, 2vw, 2rem);
-  letter-spacing: -0.025em;
+.budget-row strong {
+  font-size: 1.08rem;
 }
 
-.configuration-placeholder small {
+.budget-row small {
   color: var(--text-soft);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+}
+
+.budget-price {
+  flex: 0 0 auto;
+  color: var(--gold-light);
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.budget-note {
+  padding: 24px 28px 28px;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+.budget-note p {
+  margin-bottom: 14px;
+}
+
+.budget-note strong {
+  color: var(--text);
+}
+
+.text-link {
+  color: var(--gold-light);
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* Compact supporting section for the true Dragon Speeder Base Model */
+.compact-section {
+  padding-block: clamp(68px, 8vw, 105px);
+}
+
+/* Creator-only evolution beyond the published Rebrickable scope */
+.creator-evolution {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(92, 255, 127, 0.075), transparent 28rem),
+    radial-gradient(circle at 90% 80%, rgba(201, 154, 70, 0.09), transparent 32rem),
+    #0d100e;
+  border-block: 1px solid var(--line-soft);
+}
+
+.beyond-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(40px, 7vw, 88px);
+  align-items: center;
+}
+
+.beyond-copy p:not(.eyebrow) {
+  max-width: 650px;
+  color: var(--text-soft);
+}
+
+.beyond-copy strong {
+  color: var(--text);
+}
+
+.beyond-badge {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px solid rgba(92, 255, 127, 0.22);
+  border-radius: 999px;
+  background: rgba(92, 255, 127, 0.06);
+  color: #b8ffc7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.beyond-image {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.beyond-image img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+@media (max-width: 980px) {
+  .budget-layout,
+  .beyond-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-layout .section-heading {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 700px) {
+  .budget-row {
+    align-items: flex-start;
+    padding: 21px 20px;
+  }
+
+  .budget-price {
+    font-size: 1.25rem;
+  }
+
+  .budget-note {
+    padding: 22px 20px 24px;
+  }
+
+  .beyond-badge {
+    border-radius: 12px;
+  }
 }
