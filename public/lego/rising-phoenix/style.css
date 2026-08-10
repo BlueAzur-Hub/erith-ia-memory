@@ -37,3 +37,43 @@
 .hero-media{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#090a09}
 .hero-media img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center}
 @media(min-width:721px){.hero{min-height:min(86svh,820px)}}
+
+/* AUREUS TEMPLE BALANCE — bounded correction only.
+   Temple supports the story; it must never dominate the dragon. */
+.temple-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:auto;
+  gap:14px;
+  align-items:start;
+}
+.temple-grid .image-button,
+.temple-grid .temple-main{
+  min-height:0;
+  height:auto;
+  grid-row:auto;
+  aspect-ratio:4/3;
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius-small);
+  background:#151815;
+}
+.temple-grid .image-button img,
+.temple-grid .temple-main img{
+  width:100%;
+  height:100%;
+  max-height:none;
+  aspect-ratio:4/3;
+  object-fit:cover !important;
+  object-position:center center;
+}
+.temple-grid .temple-main img{object-position:center 58%;}
+.temple-grid .image-button:nth-child(2) img{object-position:center 52%;}
+.temple-grid .image-button:nth-child(3) img{object-position:center 48%;}
+@media(max-width:900px){
+  .temple-grid{grid-template-columns:1fr 1fr;}
+  .temple-grid .temple-main{grid-column:1/-1;}
+}
+@media(max-width:620px){
+  .temple-grid{grid-template-columns:1fr;}
+  .temple-grid .temple-main{grid-column:auto;}
+}
