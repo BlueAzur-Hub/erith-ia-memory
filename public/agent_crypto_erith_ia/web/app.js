@@ -20028,6 +20028,9 @@ function restartLearningModuleFromStepOne(options = {}) {
 }
 
 function handleFoundationAction(action) {
+  // 28.3.55 : Firefox ne doit pas conserver le bouton cliqué comme ancre
+  // pendant le rerender du parcours.
+  atlasLearningBlurActiveElement();
   const cockpit = loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
   if (!foundationIsActive(module.key) || cockpit.completed_at) return;
@@ -21289,7 +21292,13 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
 const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
 const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
-const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
+// 28.3.55 : navigation pédagogique sans rebond. Les anciens correctifs
+// 90/240 ms sont supprimés ; la cible est cadrée une seule fois après
+// stabilisation géométrique.
+const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [];
+const ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS = 70;
+const ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES = 2;
+const ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS = 900;
 // Reset in-place : attendre la stabilité du rerender sans déplacer le viewport.
 // Puis effectuer un seul cadrage final sur le panneau Module 01.
 // Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
@@ -21434,21 +21443,69 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
   const resolveTarget = typeof targetResolver === "function"
     ? targetResolver
     : () => targetResolver;
-  const settleDelays = Array.isArray(options.settleDelays)
-    ? options.settleDelays
-    : ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS;
-  const position = flash => {
+  const sampleMs = Math.max(40, Number(options.layoutSampleMs || ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS));
+  const stableNeeded = Math.max(1, Number(options.layoutStableSamples || ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES));
+  const maxWaitMs = Math.max(200, Number(options.layoutMaxWaitMs || ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS));
+  const tolerance = Math.max(0.5, Number(options.layoutTolerance ?? 1));
+  const startedAt = performance.now();
+  let previousTop = null;
+  let stableCount = 0;
+  let preparedTarget = null;
+  let finished = false;
+
+  const resolvePreparedTarget = () => {
     const target = resolveTarget();
-    if (!target) return false;
-    return atlasLearningPositionTarget(target, { ...options, flash });
+    if (!target) return null;
+    if (target !== preparedTarget) {
+      learningOpenParentDetails(target);
+      preparedTarget = target;
+      previousTop = null;
+      stableCount = 0;
+    }
+    return target;
   };
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    position(true);
-    settleDelays.forEach(delay => {
-      const ms = Math.max(0, Number(delay) || 0);
-      window.setTimeout(() => position(false), ms);
+
+  const finish = target => {
+    if (finished || !target) return false;
+    finished = true;
+    atlasLearningBlurActiveElement();
+    // Un seul cadrage final : aucune correction différée 90/240 ms.
+    return atlasLearningPositionTarget(target, {
+      ...options,
+      smooth:false,
+      flash:options.flash !== false
     });
-  }));
+  };
+
+  const sample = () => {
+    if (finished) return false;
+    const target = resolvePreparedTarget();
+    const elapsed = performance.now() - startedAt;
+
+    if (!target) {
+      if (elapsed >= maxWaitMs) return false;
+      window.setTimeout(sample, sampleMs);
+      return true;
+    }
+
+    const top = atlasLearningResetTargetDocumentTop(target);
+    if (Number.isFinite(top) && Number.isFinite(previousTop) && Math.abs(top - previousTop) <= tolerance) {
+      stableCount += 1;
+    } else {
+      stableCount = 0;
+    }
+    previousTop = top;
+
+    if (stableCount >= stableNeeded || elapsed >= maxWaitMs) {
+      requestAnimationFrame(() => requestAnimationFrame(() => finish(target)));
+      return true;
+    }
+
+    window.setTimeout(sample, sampleMs);
+    return true;
+  };
+
+  requestAnimationFrame(() => requestAnimationFrame(sample));
   return true;
 }
 
@@ -21720,6 +21777,8 @@ function handleFoundationPrimaryAction(cockpit, action) {
 }
 
 function handleLearningPrimaryAction() {
+  // Même verrou pour les actions principales du cockpit guidé.
+  atlasLearningBlurActiveElement();
   const cockpit = loadLearningCockpitState();
   const action = learningActionState(cockpit);
   if (["open","practice","verify","note"].includes(action.key) && handleFoundationPrimaryAction(cockpit, action)) return;
@@ -36429,11 +36488,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.54";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.55";
 
-const ATLAS_BUILD = "28.3.54";
+const ATLAS_BUILD = "28.3.55";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.54";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.55";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

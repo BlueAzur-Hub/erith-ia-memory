@@ -1,3 +1,18 @@
+## Build 28.3.55 — Guided Learning Single Recenter Lock
+
+- Base : 28.3.54.
+- Cause identifiée dans le parcours guidé : `atlasLearningScheduleTarget()` effectuait un cadrage puis des corrections à 90 ms et 240 ms.
+- Suppression de ces recadrages différés.
+- Attente courte de stabilité géométrique de la cible, puis un seul positionnement final non lissé.
+- `blur()` du contrôle actif avant les rerenders de fondation et les actions principales du cockpit.
+- Reset 28.3.54 inchangé : son recentrage utilise une routine séparée.
+- Aucun changement pédagogique ou mathématique du Module 03.
+- Aucun changement Market, données live, simulation, IndexedDB, Métaux, News Sentinel, Decision Board ou assets.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.55.
+
+---
+
 ## Build 28.3.54 — Learning Reset In-Place Single Recenter Lock
 
 - Base : 28.3.53.

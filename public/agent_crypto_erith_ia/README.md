@@ -1,8 +1,42 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.54  
-**Build :** 28.3.54  
-**Mission :** Learning Reset In-Place Single Recenter Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.55  
+**Build :** 28.3.55  
+**Mission :** Guided Learning Single Recenter Lock
+
+
+## Build 28.3.55 — Guided Learning Single Recenter Lock
+
+Cette Build part exactement de la 28.3.54. Le test réel du Module 03 a montré une seconde « valse » distincte du reset : la navigation pédagogique utilisait encore un cadrage initial puis deux corrections différées à 90 ms et 240 ms après les rerenders du cockpit.
+
+### Contrat fonctionnel
+
+**Une action pédagogique → rerender → stabilité géométrique → UN seul cadrage vers l’étape suivante.**
+
+### Correction
+
+- Suppression des corrections de navigation différées à **90 ms** et **240 ms**.
+- `atlasLearningScheduleTarget()` n’effectue plus de cadrage immédiat suivi de reprises.
+- La cible est observée brièvement jusqu’à stabilité géométrique, puis cadrée **une seule fois** en mode non lissé.
+- Le bouton actif est `blur()` avant les rerenders des actions de fondation afin que Firefox ne l’utilise pas comme ancre implicite.
+- Le même verrou est appliqué aux actions principales du cockpit guidé.
+- Le recentrage du reset 28.3.54 reste séparé et inchangé.
+
+### Verrous
+
+- Aucun changement des calculs du Module 03, des frais pédagogiques, des scénarios −3 % / +5 %, de la simulation ou des preuves IndexedDB.
+- Aucun changement Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel ou Decision Board.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+- Score ATLAS compact inchangé, jamais `/100`.
+
+### Test Firefox attendu
+
+1. Continuer le Module 03 depuis une étape active.
+2. Cliquer une action qui ouvre l’étape suivante.
+3. Vérifier qu'il n'y a plus de recadrage en plusieurs temps.
+4. Un seul déplacement automatique vers la prochaine étape est acceptable.
+5. La page doit ensuite rester immobile jusqu'à l'action suivante.
+
 
 
 ## Build 28.3.54 — Learning Reset In-Place Single Recenter Lock
