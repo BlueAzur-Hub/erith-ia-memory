@@ -1,3 +1,21 @@
+## Build 28.3.56 — Firefox Guided Viewport Transaction Lock
+
+- Base : 28.3.55 publiée.
+- Test Firefox réel 28.3.55 : premier cadrage correct, puis déplacement tardif du viewport.
+- `overflow-anchor:none` temporaire appliqué avant les rerenders pédagogiques guidés.
+- Guard commun `html` + `body`, focus neutralisé et restitution exacte de la valeur précédente.
+- Attente du timer de sauvegarde + chaîne IndexedDB avant l'échantillonnage géométrique final.
+- Cible observée sur 4 échantillons stables ; un seul positionnement final non lissé.
+- Une navigation devenue obsolète est annulée si une cible plus récente a pris la main.
+- Expiration de sécurité du guard après 6 s si aucune navigation ne termine la transaction.
+- Compatibilité conservée avec le verrou de viewport propre au Module 02.
+- Reset 28.3.54 inchangé.
+- Aucun changement des calculs du Module 03, des données live, du Market ou des assets.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.56.
+
+---
+
 ## Build 28.3.55 — Guided Learning Single Recenter Lock
 
 - Base : 28.3.54.

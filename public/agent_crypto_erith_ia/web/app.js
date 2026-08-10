@@ -21292,13 +21292,19 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
 const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
 const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
-// 28.3.55 : navigation pédagogique sans rebond. Les anciens correctifs
+// 28.3.56 : navigation pédagogique + verrou Firefox. Les anciens correctifs
 // 90/240 ms sont supprimés ; la cible est cadrée une seule fois après
 // stabilisation géométrique.
 const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [];
-const ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS = 70;
-const ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES = 2;
-const ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS = 900;
+// 28.3.56 : une transition pédagogique est traitée comme une transaction de viewport.
+// Firefox ne doit pas ré-ancrer la page pendant le rerender ni pendant la preuve IndexedDB.
+const ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS = 90;
+const ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES = 4;
+const ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS = 2600;
+const ATLAS_LEARNING_NAV_GUARD_MAX_MS = 6000;
+const ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS = 1800;
+let atlasLearningNavigationGuardState = null;
+let atlasLearningNavigationGuardSeq = 0;
 // Reset in-place : attendre la stabilité du rerender sans déplacer le viewport.
 // Puis effectuer un seul cadrage final sur le panneau Module 01.
 // Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
@@ -21313,6 +21319,72 @@ function atlasLearningBlurActiveElement() {
     const active = document.activeElement;
     if (active && active !== document.body && typeof active.blur === "function") active.blur();
   } catch {}
+}
+
+function atlasLearningRestoreNavigationGuard(token = null) {
+  const guard = atlasLearningNavigationGuardState;
+  if (!guard) return false;
+  if (token !== null && guard.token !== token) return false;
+  clearTimeout(guard.timer);
+  if (guard.root?.style) guard.root.style.overflowAnchor = guard.previousRootOverflowAnchor;
+  if (guard.body?.style) guard.body.style.overflowAnchor = guard.previousBodyOverflowAnchor;
+  atlasLearningNavigationGuardState = null;
+  return true;
+}
+
+function atlasLearningBeginNavigationGuard() {
+  atlasLearningSetManualScrollRestoration();
+  atlasLearningBlurActiveElement();
+
+  const existing = atlasLearningNavigationGuardState;
+  if (existing) {
+    clearTimeout(existing.timer);
+    existing.token = ++atlasLearningNavigationGuardSeq;
+    existing.timer = window.setTimeout(() => atlasLearningRestoreNavigationGuard(existing.token), ATLAS_LEARNING_NAV_GUARD_MAX_MS);
+    return existing.token;
+  }
+
+  const root = document.documentElement;
+  const body = document.body;
+  const token = ++atlasLearningNavigationGuardSeq;
+  const guard = {
+    token,
+    root,
+    body,
+    previousRootOverflowAnchor:root?.style?.overflowAnchor ?? "",
+    previousBodyOverflowAnchor:body?.style?.overflowAnchor ?? "",
+    timer:0
+  };
+  if (root?.style) root.style.overflowAnchor = "none";
+  if (body?.style) body.style.overflowAnchor = "none";
+  guard.timer = window.setTimeout(() => atlasLearningRestoreNavigationGuard(token), ATLAS_LEARNING_NAV_GUARD_MAX_MS);
+  atlasLearningNavigationGuardState = guard;
+  return token;
+}
+
+async function atlasLearningWaitForPersistenceQuiescent(maxWaitMs = ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS) {
+  const startedAt = performance.now();
+  const deadline = startedAt + Math.max(300, Number(maxWaitMs) || ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS);
+
+  // Une sauvegarde de cockpit est volontairement différée de 180 ms. Tant que
+  // ce timer existe, le message de preuve IndexedDB peut encore modifier la
+  // hauteur d'un bloc situé au-dessus de la cible.
+  while ((atlasLearningStorageDirty || atlasLearningStoragePersistTimer) && performance.now() < deadline) {
+    await atlasDelay(40);
+  }
+
+  const remaining = Math.max(0, deadline - performance.now());
+  if (remaining > 0 && atlasLearningStorageWriteChain?.then) {
+    await Promise.race([
+      atlasLearningStorageWriteChain.catch(() => null),
+      atlasDelay(remaining)
+    ]);
+  }
+
+  // Deux frames supplémentaires laissent le texte de preuve et les dimensions
+  // du cockpit se poser avant l'observation géométrique finale.
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  return true;
 }
 
 function atlasLearningBeginResetBrowserGuard() {
@@ -21443,10 +21515,11 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
   const resolveTarget = typeof targetResolver === "function"
     ? targetResolver
     : () => targetResolver;
-  const sampleMs = Math.max(40, Number(options.layoutSampleMs || ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS));
-  const stableNeeded = Math.max(1, Number(options.layoutStableSamples || ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES));
-  const maxWaitMs = Math.max(200, Number(options.layoutMaxWaitMs || ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS));
+  const sampleMs = Math.max(50, Number(options.layoutSampleMs || ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS));
+  const stableNeeded = Math.max(2, Number(options.layoutStableSamples || ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES));
+  const maxWaitMs = Math.max(500, Number(options.layoutMaxWaitMs || ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS));
   const tolerance = Math.max(0.5, Number(options.layoutTolerance ?? 1));
+  const guardToken = atlasLearningBeginNavigationGuard();
   const startedAt = performance.now();
   let previousTop = null;
   let stableCount = 0;
@@ -21467,14 +21540,23 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
 
   const finish = target => {
     if (finished || !target) return false;
+    // Si une navigation plus récente a pris la main, cette ancienne cible ne
+    // doit surtout pas provoquer un second déplacement tardif.
+    if (atlasLearningNavigationGuardState?.token !== guardToken) {
+      finished = true;
+      return false;
+    }
     finished = true;
     atlasLearningBlurActiveElement();
-    // Un seul cadrage final : aucune correction différée 90/240 ms.
-    return atlasLearningPositionTarget(target, {
+    // Un seul cadrage final. Le guard Firefox reste actif pendant les deux
+    // frames suivantes puis restitue exactement la valeur overflow-anchor précédente.
+    const positioned = atlasLearningPositionTarget(target, {
       ...options,
       smooth:false,
       flash:options.flash !== false
     });
+    requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
+    return positioned;
   };
 
   const sample = () => {
@@ -21483,7 +21565,10 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
     const elapsed = performance.now() - startedAt;
 
     if (!target) {
-      if (elapsed >= maxWaitMs) return false;
+      if (elapsed >= maxWaitMs) {
+        atlasLearningRestoreNavigationGuard(guardToken);
+        return false;
+      }
       window.setTimeout(sample, sampleMs);
       return true;
     }
@@ -21505,7 +21590,10 @@ function atlasLearningScheduleTarget(targetResolver, options = {}) {
     return true;
   };
 
-  requestAnimationFrame(() => requestAnimationFrame(sample));
+  void (async () => {
+    await atlasLearningWaitForPersistenceQuiescent(options.persistenceMaxWaitMs || ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS);
+    requestAnimationFrame(() => requestAnimationFrame(sample));
+  })();
   return true;
 }
 
@@ -36488,11 +36576,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.55";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.56";
 
-const ATLAS_BUILD = "28.3.55";
+const ATLAS_BUILD = "28.3.56";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.55";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.56";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
@@ -38050,18 +38138,24 @@ els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.lear
 els.learningFoundationPanel?.addEventListener("click", event => {
   const button = event.target.closest?.("[data-foundation-action]");
   if (!button) return;
-  // Le bouton va souvent être remplacé par le rerendu du laboratoire.
-  // Retirer son focus avant ce rerendu évite que Firefox tente de conserver
-  // visuellement l’ancien contrôle et déplace la page de sa propre initiative.
+  // 28.3.56 : le guard doit commencer AVANT le rerender. Sinon Firefox peut
+  // choisir le bouton supprimé comme ancre puis corriger le viewport après coup.
   event.preventDefault();
   event.stopPropagation();
+  atlasLearningBeginNavigationGuard();
   button.blur?.();
   handleFoundationAction(button.dataset.foundationAction);
 });
 
-els.btnMarkLessonRead?.addEventListener("click", markIntegratedLessonRead);
+els.btnMarkLessonRead?.addEventListener("click", () => {
+  atlasLearningBeginNavigationGuard();
+  markIntegratedLessonRead();
+});
 
-els.btnLearningPrimaryAction?.addEventListener("click", handleLearningPrimaryAction);
+els.btnLearningPrimaryAction?.addEventListener("click", () => {
+  atlasLearningBeginNavigationGuard();
+  handleLearningPrimaryAction();
+});
 
 els.btnLearningNextModule?.addEventListener("click", startNextLearningModule);
 

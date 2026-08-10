@@ -1,8 +1,45 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.55  
-**Build :** 28.3.55  
-**Mission :** Guided Learning Single Recenter Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.56  
+**Build :** 28.3.56  
+**Mission :** Firefox Guided Viewport Transaction Lock
+
+
+## Build 28.3.56 — Firefox Guided Viewport Transaction Lock
+
+Cette Build part exactement de la 28.3.55 publiée. Le test Firefox réel a montré que la cible était d'abord correctement cadrée, puis que le navigateur déplaçait encore le viewport quelques instants plus tard. La 28.3.55 avait supprimé nos recadrages explicites multiples ; le défaut restant venait donc d'une transition de layout encore active autour du rerender et de la preuve IndexedDB.
+
+### Contrat fonctionnel
+
+**Une action pédagogique → verrou temporaire de l'ancrage Firefox → rerender → écriture/relecture IndexedDB → stabilité géométrique → UN seul cadrage final → restitution de l'ancrage navigateur.**
+
+### Correction
+
+- `overflow-anchor:none` est posé temporairement sur `html` et `body` **avant** le rerender d'une action pédagogique guidée.
+- Le focus du contrôle cliqué est neutralisé pendant la même transaction de viewport.
+- La navigation attend maintenant la fin du timer de sauvegarde pédagogique et de la chaîne d'écriture IndexedDB avant de décider que la cible est stable.
+- Après la preuve IndexedDB, la cible est observée sur plusieurs échantillons géométriques.
+- Un seul `window.scrollTo(..., behavior:"auto")` est ensuite autorisé vers l'étape suivante.
+- Si une navigation plus récente a déjà pris la main, l'ancienne cible est annulée et ne peut plus déclencher un déplacement tardif.
+- Le `overflow-anchor` précédent est restauré exactement après le cadrage final.
+- Un garde-fou de 6 secondes libère automatiquement le verrou si une action ne produit aucune navigation.
+- Le verrou spécifique du Module 02 reste compatible : s'il s'imbrique dans la transaction globale, il restaure `none` jusqu'à la fin de la transaction globale.
+
+### Verrous
+
+- Aucun changement des calculs, preuves ou textes pédagogiques du Module 03.
+- Aucun changement des coûts école 0,60 %, de la position BTC fictive 50 €, ni des scénarios −3 % / +5 %.
+- Reset 28.3.54 conservé séparément.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, Bridge et données live inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+
+### Test Firefox attendu
+
+1. Reprendre le parcours guidé et déclencher une étape qui rerend le cockpit.
+2. La page peut effectuer **un seul** déplacement automatique lorsque la preuve et la géométrie sont stabilisées.
+3. Après ce cadrage, aucun rebond ni second déplacement ne doit apparaître quelques secondes plus tard.
+4. Tester en priorité le Module 03 : charger l'exemple école, créer la position BTC fictive, puis lancer les scénarios −3 % et +5 %.
+
 
 
 ## Build 28.3.55 — Guided Learning Single Recenter Lock
