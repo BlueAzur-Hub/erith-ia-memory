@@ -1,8 +1,40 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.57  
-**Build :** 28.3.57  
-**Mission :** All Modules Guided Viewport Consolidation Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.58  
+**Build :** 28.3.58  
+**Mission :** Module 01 Livecheck Market Single Focus Lock
+
+
+## Build 28.3.58 — Module 01 Livecheck Market Single Focus Lock
+
+Cette Build part exactement de la 28.3.57 publiée. Le test Firefox réel a révélé une régression du Module 01 : le Livecheck ne cadrait plus le Market au clic et pouvait encore déclencher une navigation automatique tardive vers Bitcoin.
+
+### Contrat corrigé du Module 01
+
+**Clic Livecheck → cadrage immédiat du Market UNE fois → Livecheck + preuve IndexedDB → aucun autre déplacement automatique.**
+
+La ligne Bitcoin devient une destination uniquement lorsque l’utilisateur clique explicitement sur **« Voir la ligne Bitcoin »**.
+
+### Corrections ciblées
+
+- Restauration de `atlasLearningPrimeLivecheckMarketFocus()` au début du Livecheck pédagogique.
+- Le guard Firefox est posé avant ce cadrage et reste actif pendant les mutations asynchrones.
+- Suppression de la cible finale automatique `Bitcoin row || Market` après validation du Livecheck.
+- Après la preuve IndexedDB et le rerender du cockpit, le guard est restitué sans nouveau scroll.
+- Le message de l’action principale décrit désormais le comportement réel : Market immédiat, puis aucune navigation automatique.
+- Le bouton **« Voir la ligne Bitcoin »** conserve son routage explicite et reste la seule action autorisée à déplacer le viewport vers Bitcoin.
+
+### Périmètre protégé
+
+- Aucun calcul, aucune donnée live, aucun scénario pédagogique et aucune preuve métier modifiés.
+- Modules 02–11 inchangés par cette Build.
+- Reset in-place 28.3.54 inchangé.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, Bridge et simulation métier inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+
+### Test Firefox attendu
+
+Sur Module 01 étape 2 : cliquer **Livecheck**. Le Market doit se cadrer immédiatement une seule fois et rester en place pendant/après le chargement. Aucun saut vers Bitcoin ne doit survenir quelques secondes plus tard. Bitcoin ne doit être cadré qu’après un clic explicite sur **« Voir la ligne Bitcoin »**.
 
 
 ## Build 28.3.57 — All Modules Guided Viewport Consolidation Lock

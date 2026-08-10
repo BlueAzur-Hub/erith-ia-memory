@@ -1,3 +1,17 @@
+## Build 28.3.58 — Module 01 Livecheck Market Single Focus Lock
+
+- Base : 28.3.57 publiée.
+- Régression Firefox 28.3.57 confirmée : Market non cadré au clic Livecheck, cible Bitcoin automatique encore programmée après validation.
+- Restauration du cadrage immédiat unique vers `#market-workspace`.
+- Guard Firefox posé avant le cadrage et conservé pendant Livecheck + preuve IndexedDB.
+- Suppression de toute navigation automatique de fin de Livecheck.
+- Bitcoin devient une cible uniquement via le clic explicite « Voir la ligne Bitcoin ».
+- Modules 02–11, calculs, données live, simulation, reset, assets et CSS inchangés.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.58.
+
+---
+
 ## Build 28.3.57 — All Modules Guided Viewport Consolidation Lock
 
 - Base : 28.3.56 préparée.

@@ -20615,10 +20615,13 @@ async function runFoundationLivecheck() {
   const before = loadLearningCockpitState();
   const shouldValidateStep2 = before.module_key === "market" && !before.completed_at && before.steps.read === true && before.steps.open !== true;
 
-  // Build 28.3.57 : le Livecheck ne possède plus de pré-cadrage. Il verrouille
-  // l'ancrage avant les mutations asynchrones, puis le routeur effectue UN seul
-  // cadrage final lorsque les preuves et la géométrie sont stabilisées.
-  if (shouldValidateStep2) atlasLearningBeginNavigationGuard();
+  // Build 28.3.58 : le clic Livecheck possède une seule destination immédiate :
+  // le Market. Le guard est posé AVANT le cadrage et reste actif pendant les
+  // mutations asynchrones. Aucune cible automatique ne sera programmée à la fin.
+  if (shouldValidateStep2) {
+    atlasLearningBeginNavigationGuard();
+    atlasLearningPrimeLivecheckMarketFocus();
+  }
 
   const succeeded = await runLivecheck({ reason: "manual-livecheck" });
 
@@ -20690,8 +20693,11 @@ async function runFoundationLivecheck() {
   }
 
   renderLearningJourneyCockpit();
-  atlasLearningScheduleTarget(() => els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || document.getElementById("market-workspace"), { flash:true });
-  marketFoundationFeedback(true, "Livecheck validé — étape 2/5", "Lis Prix, 24 h et 7 j sur la ligne Bitcoin. Reviens ensuite au Cockpit et utilise la carte « Les trois valeurs Bitcoin » pour enregistrer l’étape 3.");
+  // Le Market a déjà été cadré au clic. Après validation et relecture IndexedDB,
+  // aucune navigation automatique supplémentaire n'est autorisée. La ligne
+  // Bitcoin ne devient une destination qu'après le clic explicite « Voir la ligne Bitcoin ».
+  requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard()));
+  marketFoundationFeedback(true, "Livecheck validé — étape 2/5", "Le Market reste en place. Utilise « Voir la ligne Bitcoin » uniquement lorsque tu veux relever Prix, 24 h et 7 j, puis reviens au Cockpit pour enregistrer l’étape 3.");
   return true;
 }
 
@@ -21820,7 +21826,7 @@ function handleFoundationPrimaryAction(cockpit, action) {
   const module = learningModuleByKey(cockpit.module_key);
   if (module.key === "market") {
     if (action.key === "open") {
-      const button = document.getElementById("btnLivecheck"); button?.click(); setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. Le parcours effectuera un seul cadrage final lorsque les preuves auront été écrites et relues dans IndexedDB."); return true;
+      const button = document.getElementById("btnLivecheck"); button?.click(); setActionFeedback("info", "Livecheck lancé", "Le Market est cadré immédiatement. Attends l’affichage de la source et de l’heure : aucune autre navigation automatique ne doit suivre. La ligne Bitcoin ne sera ouverte que sur ton clic explicite."); return true;
     }
   }
   if (module.key === "market" && ["practice","verify","note"].includes(action.key)) {
@@ -36591,11 +36597,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.57";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.58";
 
-const ATLAS_BUILD = "28.3.57";
+const ATLAS_BUILD = "28.3.58";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.57";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.58";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
