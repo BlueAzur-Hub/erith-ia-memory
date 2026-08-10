@@ -2,144 +2,349 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b0c0b">
-  <meta name="description" content="Rising Phoenix — Master Wu's Mechanical Golden Dragon 70666 MOC by Christophe78. A four-month physical rebuild, three published configurations, BrickLink Studio reconstruction and a 150-page building guide.">
-  <meta name="rising-phoenix-edition" content="AUREUS">
-  <!-- Hero source: user-supplied 2026-08-10 close complete view, byte-for-byte renamed only. -->
-  <title>Rising Phoenix — Aureus</title>
-  <link rel="stylesheet" href="style.css?v=aureus-temple-balance">
-  <script src="script.js?v=aureus-temple-balance" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rising Phoenix — a premium fan-made mechanical Golden Dragon MOC by Christophe78, built from the spirit of LEGO NINJAGO set 70666.">
+  <meta name="theme-color" content="#0c0d0c">
+
+  <title>Rising Phoenix — Mechanical Golden Dragon MOC</title>
+
+  <!-- RISING PHOENIX — FORGE | material base: historical V4.2 -->
+  <link rel="stylesheet" href="style.css?v=forge-v42">
+  <script src="script.js?v=forge-v42" defer></script>
 </head>
-<body id="top">
+<body>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   <header class="site-header" data-header>
     <div class="shell header-inner">
       <a class="brand" href="#top" aria-label="Rising Phoenix home">
         <span class="brand-mark" aria-hidden="true">◆</span>
-        <span class="brand-copy"><strong>Rising Phoenix</strong><small>Aureus · Mechanical Golden Dragon</small></span>
+        <span class="brand-copy">
+          <strong>Rising Phoenix</strong>
+          <small>Mechanical Golden Dragon</small>
+        </span>
       </a>
+
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle>
-        <span></span><span></span><span></span><span class="sr-only">Open navigation</span>
+        <span></span><span></span><span></span>
+        <span class="sr-only">Open navigation</span>
       </button>
+
       <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation" data-nav>
-        <a href="#configurations">3 Levels</a><a href="#evolution">Evolution</a><a href="#engineering">Engineering</a><a href="#temple">Temple</a><a href="#studio">Studio</a><a href="#instructions">Instructions</a>
+        <a href="#project">Project</a>
+        <a href="#configurations">Build levels</a>
+        <a href="#budget">Budget</a>
+        <a href="#engineering">Engineering</a>
+        <a href="#studio">Studio</a>
+        <a href="#temple">Temple</a>
+        <a href="#evolution">Evolution</a>
+        <a href="#instructions">Instructions</a>
       </nav>
     </div>
   </header>
 
   <main id="main-content">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-media" aria-hidden="true"><img src="images/rising-phoenix-hero-complete-close.png" alt=""><div class="hero-vignette"></div></div>
-      <div class="shell hero-content">
-        <p class="eyebrow">Christophe78 · LEGO 70666 MOC · MOC-235335</p>
-        <h1 id="hero-title">Rising <span>Phoenix</span></h1>
-        <p class="hero-subtitle">A four-month physical rebuild of Master Wu's Mechanical Golden Dragon, reconstructed in BrickLink Studio and published as three modular build levels.</p>
-        <div class="hero-actions"><a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View on Rebrickable</a><a class="button button-ghost" href="#collector">See the complete dragon</a></div>
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-media" aria-hidden="true">
+        <img src="images/hero-rising-phoenix-complete-user-approved.png" alt="">
+        <div class="hero-vignette"></div>
       </div>
-      <div class="shell fact-strip" aria-label="Project facts"><div><strong>595</strong><span>listed parts</span></div><div><strong>3</strong><span>published levels</span></div><div><strong>150</strong><span>manual pages</span></div><div><strong>354</strong><span>build steps</span></div><div><strong>4</strong><span>months of design</span></div></div>
+
+      <div class="shell hero-content">
+        <p class="eyebrow">Christophe78 · Fan-made NINJAGO MOC</p>
+        <h1 id="hero-title">Rising <span>Phoenix</span></h1>
+        <p class="hero-subtitle">Master Wu's Mechanical Golden Dragon — a four-month modular rebuild you can stop at three official levels: Dragon Speeder, Master Wu's Temple, or the full Advanced Rear Propulsion configuration.</p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View on Rebrickable</a>
+          <a class="button button-ghost" href="#configurations">Explore the build</a>
+        </div>
+      </div>
+
+      <div class="shell fact-strip" aria-label="Project facts">
+        <div><strong>595</strong><span>parts</span></div>
+        <div><strong>3</strong><span>official build levels</span></div>
+        <div><strong>150</strong><span>manual pages</span></div>
+        <div><strong>354</strong><span>build steps</span></div>
+        <div><strong>4</strong><span>months of design</span></div>
+      </div>
     </section>
 
     <section class="section section-intro" id="project">
-      <div class="shell intro-grid">
-        <div class="section-heading" data-reveal><p class="eyebrow">The project</p><h2>The dragon first.</h2></div>
-        <div class="prose" data-reveal><p>Rising Phoenix began with LEGO NINJAGO set 70666 and became a long, articulated mechanical dragon through repeated physical rebuilding, parts searches and structural refinement.</p><p>The real MOC came first. BrickLink Studio came later to reconstruct the finished architecture, check its geometry and turn it into a reproducible building guide.</p><p>The published project stops at three official configurations. Each level is a valid destination; the later personal experiments are not part of this presentation.</p></div>
-      </div>
-    </section>
+      <div class="shell split-layout">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">From 70666 to a new machine</p>
+          <h2>More than a modification.</h2>
+        </div>
 
-    <section class="section collector-section" id="collector" aria-labelledby="collector-title">
-      <div class="shell collector-layout">
-        <div class="collector-copy" data-reveal><p class="eyebrow">Collector View</p><h2 id="collector-title">Let the complete machine breathe.</h2><p>Rising Phoenix is a long mechanical creature. This view keeps its full axis readable instead of forcing the model into a narrow crop.</p><div class="collector-line" aria-hidden="true"></div></div>
-        <button class="image-button collector-image media-contain" type="button" data-lightbox-src="images/level-03-rising-phoenix-overhead.jpg" data-lightbox-alt="Complete physical Rising Phoenix Level 03 viewed from above"><img src="images/level-03-rising-phoenix-overhead.jpg" alt="Complete physical Rising Phoenix Level 03 viewed from above"><span class="image-hint">Open image</span></button>
+        <div class="prose" data-reveal>
+          <p>Rising Phoenix began with the idea behind LEGO NINJAGO set 70666, <em>The Golden Dragon</em>. The original silhouette immediately suggested something larger: a mechanical creature with a stronger frame, a visible energy system and enough space to carry a small structure on its back.</p>
+          <p>Over four months, the physical model evolved through repeated rebuilding, targeted part purchases and mechanical refinement. The result is a long, articulated display dragon that keeps the gold, dark green, black, dark gray and translucent green language of the source while developing its own architecture.</p>
+          <p>The published project deliberately stops at three official levels. That keeps the build modular and gives each builder a choice: begin with the more accessible Dragon Speeder, add Master Wu’s Temple, or continue to the full rear propulsion configuration.</p>
+          <p>The finished physical model was then rebuilt digitally in BrickLink Studio so its structure, modular logic and construction sequence could be documented as a complete instruction guide.</p>
+          <p class="signature">Designed, built and documented by Christophe78.</p>
+        </div>
       </div>
     </section>
 
     <section class="section section-dark" id="configurations" aria-labelledby="config-title">
       <div class="shell">
-        <div class="section-heading centered" data-reveal><p class="eyebrow">One dragon · three official configurations</p><h2 id="config-title">Build only as far as you want.</h2><p>One modular project, three complete physical configurations inside the published guide.</p></div>
+        <div class="section-heading centered" data-reveal>
+          <p class="eyebrow">One dragon · three official build levels</p>
+          <h2 id="config-title">Build only as far as you want.</h2>
+          <p>The published guide is intentionally modular: start with the compact Dragon Speeder, add Master Wu’s Temple, then complete the official Rising Phoenix configuration with Lloyd’s Advanced Rear Propulsion Engine.</p>
+        </div>
+
         <div class="configuration-grid">
-          <article class="configuration-card" data-reveal><button class="image-button level-photo" type="button" data-lightbox-src="images/level-01-dragon-speeder-outdoor.jpg" data-lightbox-alt="Level 01 Dragon Speeder physical configuration"><img src="images/level-01-dragon-speeder-outdoor.jpg" alt="Level 01 Dragon Speeder physical configuration"><span class="image-hint">Open image</span></button><div class="card-body"><span class="card-index">01 · Foundation</span><h3>Dragon Speeder</h3><p>The base mechanical dragon: no Temple and no Advanced Rear Propulsion. Its rear architecture folds back into a compact, self-contained configuration.</p><p class="cost-chip">Indicative parts budget · ≈ €50–60</p></div></article>
-          <article class="configuration-card" data-reveal><button class="image-button level-photo" type="button" data-lightbox-src="images/level-02-dragon-with-temple-module.jpg" data-lightbox-alt="Level 02 physical dragon with Master Wu's Temple"><img src="images/level-02-dragon-with-temple-module.jpg" alt="Level 02 physical dragon with Master Wu's Temple"><span class="image-hint">Open image</span></button><div class="card-body"><span class="card-index">02 · Temple added</span><h3>Master Wu's Temple</h3><p>The removable Temple adds display, accessories and story while the mechanical dragon remains the main subject.</p><p class="cost-chip">Indicative parts budget · ≈ €80</p></div></article>
-          <article class="configuration-card featured" data-reveal><button class="image-button level-photo media-contain" type="button" data-lightbox-src="images/level-03-rising-phoenix-overhead.jpg" data-lightbox-alt="Level 03 Rising Phoenix complete published configuration"><img src="images/level-03-rising-phoenix-overhead.jpg" alt="Level 03 Rising Phoenix complete published configuration"><span class="image-hint">Open image</span></button><div class="card-body"><span class="card-index">03 · Final published level</span><h3>Rising Phoenix</h3><p>Master Wu's Temple plus Lloyd's Advanced Rear Propulsion — the most developed configuration included in the instructions.</p><p class="cost-chip">Indicative parts budget · ≈ €90–100</p></div></article>
+          <article class="configuration-card" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/level-01-dragon-speeder-outdoor.jpg" data-lightbox-alt="Dragon Speeder base configuration with folded rear structure">
+              <img src="images/level-01-dragon-speeder-outdoor.jpg" alt="Dragon Speeder base configuration without temple or advanced rear propulsion engine">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="card-body">
+              <span class="card-index">01 · Foundation</span>
+              <h3>Dragon Speeder</h3>
+              <p>The true Base Model: no Temple and no Advanced Rear Propulsion Engine. The rear structure folds back into a compact, self-contained mechanical dragon configuration.</p>
+              <p class="cost-chip">Indicative parts budget · ≈ €50–60</p>
+            </div>
+          </article>
+
+          <article class="configuration-card" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/level-02-dragon-with-temple-module.jpg" data-lightbox-alt="Dragon with Master Wu's Temple module">
+              <img src="images/level-02-dragon-with-temple-module.jpg" alt="Level 02 dragon with Master Wu's Temple module">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="card-body">
+              <span class="card-index">02 · Temple added</span>
+              <h3>Master Wu's Temple</h3>
+              <p>The Dragon Speeder receives Master Wu’s Temple: a vertical display structure carrying his golden hat, weapons and small pink blossoms.</p>
+              <p class="cost-chip">Indicative parts budget · ≈ €80</p>
+            </div>
+          </article>
+
+          <article class="configuration-card featured" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/level-03-rising-phoenix-overhead.jpg" data-lightbox-alt="Official complete Rising Phoenix with Temple and Advanced Rear Propulsion Engine">
+              <img src="images/level-03-rising-phoenix-overhead.jpg" alt="Official complete Rising Phoenix with Temple and Advanced Rear Propulsion Engine">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="card-body">
+              <span class="card-index">03 · Propulsion added</span>
+              <h3>Rising Phoenix</h3>
+              <p>The Temple configuration receives Lloyd’s Advanced Rear Propulsion Engine, completing the most developed configuration included in the published instructions.</p>
+              <p class="cost-chip">Indicative parts budget · ≈ €90–100</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="evolution" aria-labelledby="evolution-title">
-      <div class="shell">
-        <div class="section-heading" data-reveal><p class="eyebrow">Four months of physical evolution</p><h2 id="evolution-title">The final dragon was earned, rebuild after rebuild.</h2><p>A short physical sequence, not an archive. Each image marks a real change on the road to Rising Phoenix.</p></div>
-        <div class="evolution-grid">
-          <figure data-reveal><button class="image-button evolution-photo" type="button" data-lightbox-src="images/evolution-01-early-prototype.jpg" data-lightbox-alt="Early physical prototype of the Golden Dragon rebuild"><img src="images/evolution-01-early-prototype.jpg" alt="Early physical prototype of the Golden Dragon rebuild"><span class="image-hint">Open image</span></button><figcaption><strong>01 · First rebuild</strong><span>The project is still compact and experimental.</span></figcaption></figure>
-          <figure data-reveal><button class="image-button evolution-photo" type="button" data-lightbox-src="images/evolution-04-rebuild-stripped-architecture.jpg" data-lightbox-alt="Physical rebuild stripped back to its architecture"><img src="images/evolution-04-rebuild-stripped-architecture.jpg" alt="Physical rebuild stripped back to its architecture"><span class="image-hint">Open image</span></button><figcaption><strong>02 · Strip it back</strong><span>Dismantling becomes part of the design process.</span></figcaption></figure>
-          <figure data-reveal><button class="image-button evolution-photo" type="button" data-lightbox-src="images/evolution-08-intermediate-long-wing-architecture.jpg" data-lightbox-alt="Intermediate long-body physical architecture"><img src="images/evolution-08-intermediate-long-wing-architecture.jpg" alt="Intermediate long-body physical architecture"><span class="image-hint">Open image</span></button><figcaption><strong>03 · The silhouette stretches</strong><span>The long mechanical axis begins to define the model.</span></figcaption></figure>
-          <figure class="featured" data-reveal><button class="image-button evolution-photo media-contain" type="button" data-lightbox-src="images/physical-level-03-head-temple-perspective.jpg" data-lightbox-alt="Complete physical Level 03 Rising Phoenix"><img src="images/physical-level-03-head-temple-perspective.jpg" alt="Complete physical Level 03 Rising Phoenix"><span class="image-hint">Open image</span></button><figcaption><strong>04 · Rising Phoenix</strong><span>The final published physical configuration takes its place.</span></figcaption></figure>
+    <section class="section" id="budget" aria-labelledby="budget-title">
+      <div class="shell budget-layout">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">Choose your entry point</p>
+          <h2 id="budget-title">The build grows with your budget.</h2>
+          <p>Rising Phoenix was published as three levels on purpose. You do not need to buy every part at once, and the Base Model already works as a complete display build.</p>
         </div>
-      </div>
-    </section>
 
-    <section class="section section-dark" id="real-build" aria-labelledby="real-title">
-      <div class="shell real-build-grid">
-        <div class="real-build-copy" data-reveal><p class="eyebrow">Built in real bricks</p><h2 id="real-title">Not only a Studio model.</h2><p>The physical build drove every later decision. Parts were sourced, assemblies were rebuilt and the complete machine was tested long before the instruction file existed.</p><p>Studio documents the MOC; it does not replace its physical history.</p></div>
-        <div class="real-build-media"><button class="image-button media-contain" type="button" data-lightbox-src="images/process-build-with-new-parts.jpg" data-lightbox-alt="Physical Rising Phoenix build process with newly sourced parts"><img src="images/process-build-with-new-parts.jpg" alt="Physical Rising Phoenix build process with newly sourced parts"><span class="image-hint">Build process</span></button><button class="image-button media-contain" type="button" data-lightbox-src="images/physical-level-03-front-symmetry.jpg" data-lightbox-alt="Physical Rising Phoenix Level 03 front symmetry view"><img src="images/physical-level-03-front-symmetry.jpg" alt="Physical Rising Phoenix Level 03 front symmetry view"><span class="image-hint">Physical proof</span></button></div>
+        <div class="budget-panel" data-reveal>
+          <div class="budget-row"><div><span class="budget-level">Level 01</span><strong>Dragon Speeder</strong><small>Base mechanical dragon</small></div><span class="budget-price">≈ €50–60</span></div>
+          <div class="budget-row"><div><span class="budget-level">Level 02</span><strong>+ Master Wu's Temple</strong><small>Add the display module</small></div><span class="budget-price">≈ €80</span></div>
+          <div class="budget-row"><div><span class="budget-level">Level 03</span><strong>+ Advanced Rear Propulsion</strong><small>Complete the official published configuration</small></div><span class="budget-price">≈ €90–100</span></div>
+          <div class="budget-note">
+            <p><strong>These are indicative real-world parts budgets, not fixed prices.</strong> LEGO part values change with seller availability, marketplace, country, condition, shipping costs and the pieces you already own. Rebrickable also recalculates its own inventory estimate over time.</p>
+            <a class="text-link" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#parts_scroll" target="_blank" rel="noreferrer">Check the current parts estimate on Rebrickable →</a>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section" id="engineering" aria-labelledby="engineering-title">
       <div class="shell">
-        <div class="section-heading" data-reveal><p class="eyebrow">Mechanical architecture</p><h2 id="engineering-title">Prove it in bricks. Explain it in Studio.</h2><p>When the page talks about propulsion, the propulsion is visible. Physical evidence comes first; the digital counterpart follows.</p></div>
-        <div class="engineering-grid">
-          <article class="engineering-card engineering-wide" data-reveal><button class="image-button media-contain" type="button" data-lightbox-src="images/engineering-rear-mechanics-closeup.jpg" data-lightbox-alt="Physical rear mechanical close-up"><img src="images/engineering-rear-mechanics-closeup.jpg" alt="Physical rear mechanical close-up"><span class="image-hint">Real bricks</span></button><div class="engineering-copy"><span class="card-index">Physical mechanism</span><h3>Rear mechanics</h3><p>The actual hardware is shown directly rather than inferred from a generic full-body photograph.</p></div></article>
-          <article class="engineering-card" data-reveal><button class="image-button media-contain" type="button" data-lightbox-src="images/level-03-advanced-rear-propulsion-detail-01.jpg" data-lightbox-alt="Physical Level 03 Advanced Rear Propulsion detail"><img src="images/level-03-advanced-rear-propulsion-detail-01.jpg" alt="Physical Level 03 Advanced Rear Propulsion detail"><span class="image-hint">Physical detail</span></button><div class="engineering-copy"><span class="card-index">Level 03</span><h3>Advanced propulsion</h3><p>The published rear propulsion architecture in the real build.</p></div></article>
-          <article class="engineering-card digital-card" data-reveal><button class="image-button media-contain" type="button" data-lightbox-src="images/studio-detail-propulsion-connector.png" data-lightbox-alt="BrickLink Studio isolated propulsion connector"><img src="images/studio-detail-propulsion-connector.png" alt="BrickLink Studio isolated propulsion connector"><span class="image-hint">Studio detail</span></button><div class="engineering-copy"><span class="card-index">Digital counterpart</span><h3>Connector geometry</h3><p>The Studio reconstruction isolates the connection only after the physical mechanism has been established.</p></div></article>
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">Mechanical anatomy</p>
+          <h2 id="engineering-title">Built to look engineered.</h2>
+          <p>The design uses the decorative gold shell to frame a denser mechanical language underneath: gray structure, black pivots, dark-green bodywork and translucent green energy details.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature feature-large" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/level-03-advanced-rear-propulsion-detail-02.jpg" data-lightbox-alt="Physical close-up of the Advanced Rear Propulsion system">
+              <img src="images/level-03-advanced-rear-propulsion-detail-02.jpg" alt="Physical close-up showing the Advanced Rear Propulsion system">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="feature-copy">
+              <p class="eyebrow">Physical proof first</p>
+              <h3>Advanced rear propulsion</h3>
+              <p>Level 03 adds a distinct rear mechanical system rather than simple decoration. The real build shows the propulsion assembly before Studio is used to isolate and explain its geometry.</p>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/studio-detail-propulsion-connector.png" data-lightbox-alt="Studio reconstruction of the propulsion connector">
+              <img src="images/studio-detail-propulsion-connector.png" alt="Studio reconstruction showing the propulsion connector">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="feature-copy">
+              <p class="eyebrow">Digital isolation</p>
+              <h3>Connector geometry</h3>
+              <p>Studio isolates the connector and energy-ring geometry so the same mechanism can be inspected without the visual noise of the complete physical build.</p>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <button class="image-button" type="button" data-lightbox-src="images/studio-render-top-long-axis.png" data-lightbox-alt="Top Studio render of Rising Phoenix">
+              <img src="images/studio-render-top-long-axis.png" alt="Top Studio render showing the long central axis and symmetry of Rising Phoenix">
+              <span class="image-hint">View image</span>
+            </button>
+            <div class="feature-copy">
+              <p class="eyebrow">Long-axis design</p>
+              <h3>Silhouette first</h3>
+              <p>From above, the dragon reads as one long mechanical line from head to propulsion, with the arms and rear structures creating a broad, balanced span around it.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="engineering-note" data-reveal>
+          <span>Physical engineering</span><span aria-hidden="true">→</span><span>Studio reconstruction</span><span aria-hidden="true">→</span><span>Instruction workflow</span>
         </div>
       </div>
     </section>
 
-    <section class="section section-dark" id="temple" aria-labelledby="temple-title">
-      <div class="shell">
-        <div class="section-heading" data-reveal><p class="eyebrow">Master Wu's Temple</p><h2 id="temple-title">The machine is the hero. The Temple gives it a story.</h2><p>The removable module carries Master Wu's golden Japanese hat, weapons, blossoms and the Wu/Lloyd handover narrative. Minifigures remain optional.</p></div>
-        <div class="temple-grid"><button class="image-button temple-main media-contain" type="button" data-lightbox-src="images/temple-wu-lloyd-display.jpg" data-lightbox-alt="Master Wu and Lloyd with the physical Temple module"><img src="images/temple-wu-lloyd-display.jpg" alt="Master Wu and Lloyd with the physical Temple module"><span class="image-hint">Temple scene</span></button><button class="image-button media-contain" type="button" data-lightbox-src="images/temple-wu-lloyd-handover.jpg" data-lightbox-alt="Wu and Lloyd handover scene"><img src="images/temple-wu-lloyd-handover.jpg" alt="Wu and Lloyd handover scene"><span class="image-hint">Handover</span></button><button class="image-button media-contain" type="button" data-lightbox-src="images/temple-hat-weapons-detail.jpg" data-lightbox-alt="Master Wu's golden Japanese hat, weapons and blossoms in the Temple"><img src="images/temple-hat-weapons-detail.jpg" alt="Master Wu's golden Japanese hat, weapons and blossoms in the Temple"><span class="image-hint">Accessories</span></button></div>
+    <section class="section section-dark compact-section" aria-labelledby="speeder-title">
+      <div class="shell detail-split">
+        <button class="image-button detail-image" type="button" data-lightbox-src="images/level-01-dragon-speeder-overhead.jpg" data-lightbox-alt="Dragon Speeder with rear structure folded into the base configuration">
+          <img src="images/level-01-dragon-speeder-overhead.jpg" alt="Dragon Speeder base configuration showing the folded rear architecture">
+          <span class="image-hint">View image</span>
+        </button>
+        <div class="detail-copy" data-reveal>
+          <p class="eyebrow">Level 01 · Dragon Speeder</p>
+          <h2 id="speeder-title">Compact by design.</h2>
+          <p>The Base Model is not an unfinished version of Rising Phoenix. Its rear architecture folds back into the body and gives the dragon a complete compact silhouette of its own.</p>
+          <p>That makes Level 01 a genuine destination for builders who want the core mechanical dragon without the extra cost and display footprint of the Temple and rear propulsion modules.</p>
+        </div>
       </div>
     </section>
 
-    <section class="section studio-section" id="studio" aria-labelledby="studio-title">
+    <section class="section studio-process" id="studio" aria-labelledby="studio-title">
       <div class="shell">
-        <div class="section-heading" data-reveal><p class="eyebrow">BrickLink Studio 2.0</p><h2 id="studio-title">The physical MOC becomes a technical twin.</h2><p>Studio arrives after the real build. It reconstructs, checks and documents the physical model so the project can become a reproducible instruction sequence.</p></div>
-        <div class="studio-flow" aria-label="Studio workflow" data-reveal><span>PHYSICAL MOC</span><b>→</b><span>STUDIO RECONSTRUCTION</span><b>→</b><span>354 BUILD STEPS</span><b>→</b><span>150-PAGE PDF</span></div>
-        <div class="studio-family"><div class="family-head"><span class="family-index">01</span><div><p class="eyebrow">Reconstruction workspace</p><h3>Working geometry, not presentation art.</h3></div></div><div class="studio-grid workspace-grid">
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-workspace-rear-propulsion.png" data-lightbox-alt="BrickLink Studio rear propulsion workspace"><img src="images/studio-workspace-rear-propulsion.png" alt="BrickLink Studio rear propulsion workspace"><span class="image-hint">Open</span></button><figcaption>Rear propulsion workspace</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-workspace-underside-structure.png" data-lightbox-alt="BrickLink Studio underside structure workspace"><img src="images/studio-workspace-underside-structure.png" alt="BrickLink Studio underside structure workspace"><span class="image-hint">Open</span></button><figcaption>Underside structure</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-workspace-top-review.png" data-lightbox-alt="BrickLink Studio top review workspace"><img src="images/studio-workspace-top-review.png" alt="BrickLink Studio top review workspace"><span class="image-hint">Open</span></button><figcaption>Top review</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-workspace-side-review.png" data-lightbox-alt="BrickLink Studio side review workspace"><img src="images/studio-workspace-side-review.png" alt="BrickLink Studio side review workspace"><span class="image-hint">Open</span></button><figcaption>Side review</figcaption></figure>
-        </div></div>
-        <div class="studio-family"><div class="family-head"><span class="family-index">02</span><div><p class="eyebrow">Inspection pass</p><h3>Views the physical camera cannot explain as cleanly.</h3></div></div><div class="studio-grid inspection-grid">
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-inspection-underbody-symmetry.png" data-lightbox-alt="Studio underbody symmetry inspection"><img src="images/studio-inspection-underbody-symmetry.png" alt="Studio underbody symmetry inspection"><span class="image-hint">Open</span></button><figcaption>Underbody symmetry</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-inspection-front-structure.png" data-lightbox-alt="Studio front structure inspection"><img src="images/studio-inspection-front-structure.png" alt="Studio front structure inspection"><span class="image-hint">Open</span></button><figcaption>Front structure</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-inspection-top-axis.png" data-lightbox-alt="Studio top long-axis inspection"><img src="images/studio-inspection-top-axis.png" alt="Studio top long-axis inspection"><span class="image-hint">Open</span></button><figcaption>Top / long axis</figcaption></figure>
-        </div></div>
-        <div class="studio-family"><div class="family-head"><span class="family-index">03</span><div><p class="eyebrow">Documentation renders</p><h3>Clean views for the finished digital reconstruction.</h3></div></div><div class="studio-grid render-grid">
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-render-three-quarter.png" data-lightbox-alt="Studio three-quarter documentation render"><img src="images/studio-render-three-quarter.png" alt="Studio three-quarter documentation render"><span class="image-hint">Open</span></button><figcaption>Three-quarter</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-render-front-symmetry.png" data-lightbox-alt="Studio front symmetry documentation render"><img src="images/studio-render-front-symmetry.png" alt="Studio front symmetry documentation render"><span class="image-hint">Open</span></button><figcaption>Front symmetry</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-render-top-long-axis.png" data-lightbox-alt="Studio top long-axis documentation render"><img src="images/studio-render-top-long-axis.png" alt="Studio top long-axis documentation render"><span class="image-hint">Open</span></button><figcaption>Top / long axis</figcaption></figure>
-          <figure data-reveal><button class="image-button studio-image" type="button" data-lightbox-src="images/studio-render-complete-three-quarter.png" data-lightbox-alt="Studio complete Rising Phoenix documentation render"><img src="images/studio-render-complete-three-quarter.png" alt="Studio complete Rising Phoenix documentation render"><span class="image-hint">Open</span></button><figcaption>Complete configuration</figcaption></figure>
-        </div></div>
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">Design / Engineering Process</p>
+          <h2 id="studio-title">Built twice: first in bricks, then in Studio.</h2>
+          <p>Once the physical build had reached its final architecture, the model was reconstructed in BrickLink Studio. The workspace views show the digital model behind the construction guide, not only polished presentation renders.</p>
+        </div>
+
+        <div class="studio-workbench-grid">
+          <article class="studio-workbench-card" data-reveal>
+            <button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/studio-workspace-side-review.png" data-lightbox-alt="BrickLink Studio side review of Rising Phoenix"><img src="images/studio-workspace-side-review.png" alt="BrickLink Studio side review of Rising Phoenix"><span class="image-hint">View workspace</span></button>
+            <div class="studio-card-copy"><span class="card-index">01 · Digital workbench</span><h3>Reconstruction in Studio</h3><p>The full model is rebuilt as editable LEGO geometry, allowing the physical construction to be checked piece by piece.</p></div>
+          </article>
+          <article class="studio-workbench-card" data-reveal>
+            <button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/studio-workspace-top-review.png" data-lightbox-alt="BrickLink Studio top review of Rising Phoenix"><img src="images/studio-workspace-top-review.png" alt="BrickLink Studio top review of Rising Phoenix"><span class="image-hint">View workspace</span></button>
+            <div class="studio-card-copy"><span class="card-index">02 · Structural review</span><h3>Angles that physical photos cannot show</h3><p>Studio makes it possible to inspect the long axis and geometry from precise viewpoints while keeping the complete parts structure editable.</p></div>
+          </article>
+          <article class="studio-workbench-card" data-reveal>
+            <button class="image-button studio-ui-shot" type="button" data-lightbox-src="images/studio-workspace-rear-propulsion.png" data-lightbox-alt="BrickLink Studio rear propulsion workspace"><img src="images/studio-workspace-rear-propulsion.png" alt="BrickLink Studio rear propulsion workspace"><span class="image-hint">View workspace</span></button>
+            <div class="studio-card-copy"><span class="card-index">03 · Instruction preparation</span><h3>From model to build sequence</h3><p>The digital reconstruction provides the controllable model needed to organize construction steps and prepare the final 150-page building guide.</p></div>
+          </article>
+        </div>
+
+        <div class="studio-flow" data-reveal aria-label="Rising Phoenix documentation workflow">
+          <div><strong>Physical MOC</strong><span>Final real-world architecture</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span>
+          <div><strong>BrickLink Studio</strong><span>Digital reconstruction and verification</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span>
+          <div><strong>354 build steps</strong><span>Structured construction sequence</span></div><span class="studio-flow-arrow" aria-hidden="true">→</span>
+          <div><strong>150-page PDF</strong><span>Shareable building instructions</span></div>
+        </div>
+
+        <div class="studio-render-heading" data-reveal><p class="eyebrow">Clean technical renders</p><h3>One model, inspected from every useful angle.</h3><p>The same Studio reconstruction produces neutral renders for explaining shape, symmetry and modular construction.</p></div>
+        <div class="studio-render-grid">
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/studio-render-front-symmetry.png" data-lightbox-alt="Front symmetrical Studio render"><img src="images/studio-render-front-symmetry.png" alt="Front symmetrical Studio render"><span class="studio-render-label">Front symmetry</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/studio-inspection-three-quarter-alt.png" data-lightbox-alt="Three-quarter Studio render"><img src="images/studio-inspection-three-quarter-alt.png" alt="Three-quarter Studio render"><span class="studio-render-label">Three-quarter architecture</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/studio-render-top-long-axis.png" data-lightbox-alt="Top Studio render"><img src="images/studio-render-top-long-axis.png" alt="Top Studio render"><span class="studio-render-label">Top / long axis</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/studio-detail-cockpit-closeup.png" data-lightbox-alt="Studio cockpit detail"><img src="images/studio-detail-cockpit-closeup.png" alt="Studio cockpit detail"><span class="studio-render-label">Cockpit detail</span></button>
+          <button class="image-button studio-render-card" type="button" data-lightbox-src="images/studio-detail-temple-isolated.png" data-lightbox-alt="Studio Temple module"><img src="images/studio-detail-temple-isolated.png" alt="Studio Temple module"><span class="studio-render-label">Temple module</span></button>
+        </div>
       </div>
     </section>
 
-    <section class="section section-dark" id="instructions" aria-labelledby="instructions-title">
+    <section class="section section-photo" aria-labelledby="real-title">
+      <div class="photo-backdrop" aria-hidden="true"><img src="images/physical-level-03-front-symmetry.jpg" alt=""></div>
+      <div class="shell photo-content" data-reveal>
+        <p class="eyebrow">Engineered to be real</p>
+        <h2 id="real-title">Not only a Studio model.</h2>
+        <p>Rising Phoenix exists as a complete physical build. The final shape was refined with real bricks, real weight, real articulation and real display constraints before the digital model and instructions were completed.</p>
+      </div>
+    </section>
+
+    <section class="section" id="temple" aria-labelledby="temple-title">
+      <div class="shell detail-split">
+        <button class="image-button detail-image temple-accessories-photo" type="button" data-lightbox-src="images/temple-hat-weapons-detail.jpg" data-lightbox-alt="Close physical view of Master Wu's Temple accessories, golden hat and weapons">
+          <img src="images/temple-hat-weapons-detail.jpg" alt="Close physical view of Master Wu's Temple with his golden hat, weapons and decorative accessories">
+          <span class="image-hint">View image</span>
+        </button>
+        <div class="detail-copy" data-reveal>
+          <p class="eyebrow">Decorative identity for Master Wu</p>
+          <h2 id="temple-title">Master Wu's Temple</h2>
+          <p>The mechanical dragon is the hero of Rising Phoenix. The small Temple is a display module built around Master Wu: his golden hat can be stored on the structure together with his weapons, while the blossoms and hanging details add a decorative Japanese-inspired signature.</p>
+          <p>Lloyd is presented as the engineer behind the mechanical dragons, while Wu is the intended rider of this one. The published presentation uses that pairing to tell the story, but builders are free to use any minifigures they prefer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="evolution" aria-labelledby="evolution-title">
+      <div class="shell">
+        <div class="section-heading centered" data-reveal>
+          <p class="eyebrow">Four months of creation</p>
+          <h2 id="evolution-title">The model was discovered by rebuilding it.</h2>
+          <p>The final design did not appear in a single session. It grew through physical experiments, dismantling, targeted parts and repeated changes of proportion.</p>
+        </div>
+        <div class="evolution-grid">
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/evolution-01-early-prototype.jpg" data-lightbox-alt="Early physical Golden Dragon build"><img src="images/evolution-01-early-prototype.jpg" alt="Early compact physical version of the Golden Dragon project"><span class="image-hint">View image</span></button><figcaption><strong>01 · Starting point</strong><span>A compact first physical interpretation.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/evolution-07-dismantle-parts-search.jpg" data-lightbox-alt="Loose LEGO parts during the rebuild"><img src="images/evolution-07-dismantle-parts-search.jpg" alt="Loose LEGO parts during the rebuild"><span class="image-hint">View image</span></button><figcaption><strong>02 · Dismantle and search</strong><span>Parts return to raw material.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/evolution-intermediate-outdoor-rebuild.jpg" data-lightbox-alt="Intermediate physical version"><img src="images/evolution-intermediate-outdoor-rebuild.jpg" alt="Intermediate physical version of Rising Phoenix"><span class="image-hint">View image</span></button><figcaption><strong>03 · New architecture</strong><span>The longer body and arm language take shape.</span></figcaption></figure>
+          <figure data-reveal><button class="image-button" type="button" data-lightbox-src="images/physical-level-03-official-overhead.jpg" data-lightbox-alt="Final physical Rising Phoenix"><img src="images/physical-level-03-official-overhead.jpg" alt="Final physical Rising Phoenix"><span class="image-hint">View image</span></button><figcaption><strong>04 · Rising Phoenix</strong><span>The final dragon was earned, rebuild after rebuild.</span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="instructions" aria-labelledby="instructions-title">
       <div class="shell instructions-layout">
-        <div class="instructions-copy" data-reveal><p class="eyebrow">Building instructions</p><h2 id="instructions-title">From physical MOC to a 150-page guide.</h2><p>The finished construction was rebuilt in Studio and organized into 354 build steps with 595 listed parts.</p><dl class="spec-list"><div><dt>Published configurations</dt><dd>3</dd></div><div><dt>Instruction pages</dt><dd>150</dd></div><div><dt>Construction steps</dt><dd>354</dd></div><div><dt>Listed parts</dt><dd>595</dd></div></dl><a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View MOC-235335 on Rebrickable</a></div>
-        <button class="image-button instruction-image media-contain" type="button" data-lightbox-src="images/studio-render-instruction-build-version.png" data-lightbox-alt="BrickLink Studio render of the instruction build version"><img src="images/studio-render-instruction-build-version.png" alt="BrickLink Studio render of the instruction build version"><span class="image-hint">Instruction build</span></button>
+        <div class="instructions-copy" data-reveal>
+          <p class="eyebrow">Building guide</p>
+          <h2 id="instructions-title">Rebuilt digitally, step by step.</h2>
+          <p>After the physical model was finalized, the dragon was reconstructed in BrickLink Studio. That digital reconstruction became the working basis for organizing the 354 construction steps preserved in the 150-page PDF guide. The published guide covers the same three official levels used throughout this page: Dragon Speeder, Master Wu's Temple and Advanced Rear Propulsion.</p>
+          <dl class="spec-list">
+            <div><dt>Manual</dt><dd>150 pages</dd></div><div><dt>Sequence</dt><dd>354 build steps</dd></div><div><dt>Inventory</dt><dd>595 listed parts</dd></div><div><dt>Format</dt><dd>PDF building instructions</dd></div>
+          </dl>
+          <a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">Get the instructions on Rebrickable</a>
+        </div>
+        <div class="instructions-gallery" data-reveal>
+          <button class="image-button tall" type="button" data-lightbox-src="images/process-build-with-new-parts.jpg" data-lightbox-alt="Physical build process with new parts"><img src="images/process-build-with-new-parts.jpg" alt="Physical build process with new parts"><span class="image-hint">View image</span></button>
+          <button class="image-button tall" type="button" data-lightbox-src="images/process-minifigure-story-test.jpg" data-lightbox-alt="Physical build and minifigure story test"><img src="images/process-minifigure-story-test.jpg" alt="Physical build and minifigure story test"><span class="image-hint">View image</span></button>
+        </div>
       </div>
-      <div class="shell budget-strip" data-reveal aria-label="Indicative parts budgets"><div><span>Level 01</span><strong>€50–60</strong><small>Dragon Speeder</small></div><div><span>Level 02</span><strong>≈ €80</strong><small>+ Master Wu's Temple</small></div><div><span>Level 03</span><strong>€90–100</strong><small>+ Advanced Rear Propulsion</small></div><p>Indicative real-world parts budgets only. Seller availability, condition, shipping and parts already owned can change the total.</p></div>
     </section>
 
-    <section class="final-cta"><div class="shell final-cta-inner" data-reveal><p class="eyebrow">Rising Phoenix · Aureus</p><h2>Built in real bricks. Reconstructed in Studio. Published so another builder can build it again.</h2><a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">View Rising Phoenix</a></div></section>
+    <section class="final-cta" aria-labelledby="final-title">
+      <div class="shell final-cta-inner" data-reveal>
+        <p class="eyebrow">Project Rising Phoenix</p>
+        <h2 id="final-title">Start with the Dragon Speeder. Then decide how far it evolves.</h2>
+        <p>Three official build levels, one 150-page construction guide, and a complete physical dragon reconstructed in BrickLink Studio.</p>
+        <a class="button button-primary" href="https://rebrickable.com/mocs/MOC-235335/Christophe78/master-wus-mechanical-golden-dragon-70666-moc-project-rising-phoenix/#details" target="_blank" rel="noreferrer">Open Rebrickable</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="site-footer"><div class="shell footer-inner"><div><strong>RISING PHOENIX</strong><span>Mechanical Golden Dragon · fan-made MOC by Christophe78</span></div><a href="#top">Back to top ↑</a></div></footer>
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>Rising Phoenix</strong><p>Fan-made MOC by Christophe78.</p></div>
+      <p class="legal">LEGO® and NINJAGO® are trademarks of the LEGO Group. This independent fan project is not sponsored, authorized or endorsed by the LEGO Group.</p>
+    </div>
+  </footer>
 
-  <dialog class="lightbox" data-lightbox><button class="lightbox-close" type="button" aria-label="Close image" data-lightbox-close>×</button><img src="" alt="" data-lightbox-image><p data-lightbox-caption></p></dialog>
+  <dialog class="lightbox" data-lightbox aria-label="Image preview">
+    <button class="lightbox-close" type="button" aria-label="Close image preview" data-lightbox-close>×</button>
+    <img src="" alt="" data-lightbox-image>
+    <p data-lightbox-caption></p>
+  </dialog>
 </body>
 </html>
