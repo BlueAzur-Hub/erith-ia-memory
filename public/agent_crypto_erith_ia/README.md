@@ -5,6 +5,30 @@
 **Mission :** Module 01 Market Visual Recap Lock
 
 
+## Build 28.3.50 — Learning Reset Single Focus Lock
+
+Cette Build part exactement de la 28.3.49 validée sur GitHub et corrige uniquement la navigation après **« Repartir de zéro »**.
+
+### Correction
+
+- La réinitialisation complète conserve son comportement fonctionnel actuel : nettoyage pédagogique Agent-Crypto, retour au **Module 01 · 0/5**, puis reload contrôlé.
+- Après le reload, le cockpit effectue désormais **un seul cadrage** vers `learningSessionPlan`.
+- Suppression des trois recadrages différés spécifiques au reset (`120 ms`, `420 ms`, `1000 ms`) qui pouvaient déplacer plusieurs fois la page après un premier positionnement déjà correct.
+- Le double `requestAnimationFrame` existant est conservé pour attendre le rendu du panneau avant cet unique cadrage.
+- Aucun changement de contenu pédagogique, IndexedDB, simulation, Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, fiche Crypto ou Modules 01–11.
+- L’image pédagogique du Module 01 ajoutée en 28.3.49 reste inchangée.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et les assets sont inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.50.
+
+### Test Firefox attendu
+
+1. Cliquer **Repartir de zéro**.
+2. Confirmer.
+3. Après reload : **01 · Marché et données · session guidée — 0/5 étapes**.
+4. Le cadrage peut se faire une fois vers ce panneau.
+5. **Aucun second déplacement automatique** ne doit suivre.
+
+
 ## Build 28.3.49 — Module 01 Market Visual Recap Lock
 
 Cette Build part exactement de la 28.3.48 et ajoute une seule amélioration pédagogique substantielle au **Module 01 · Marché et données**.

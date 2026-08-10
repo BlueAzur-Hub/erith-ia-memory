@@ -1,3 +1,17 @@
+## Build 28.3.50 — Learning Reset Single Focus Lock
+
+- Base : 28.3.49.
+- Correction ciblée du bouton `Repartir de zéro`.
+- Reset fonctionnel inchangé : retour Module 01 · 0/5 après reload.
+- Suppression des recadrages différés spécifiques au reset à 120 / 420 / 1000 ms.
+- Un seul cadrage est conservé après stabilisation du rendu par double `requestAnimationFrame`.
+- But : empêcher la « valse » du viewport après un premier positionnement déjà correct.
+- Aucun changement des Modules 01–11, de l’image Module 01, de la simulation, mémoire, Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board ou fiche Crypto.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.50.
+
+---
+
 ## Build 28.3.49 — Module 01 Market Visual Recap Lock
 
 - Base : 28.3.48.

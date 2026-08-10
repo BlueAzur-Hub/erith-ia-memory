@@ -21290,7 +21290,10 @@ const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
 const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
 const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
-const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [120, 420, 1000];
+// Reset propre : après le reload, le panneau Module 01 est déjà rendu.
+// Un seul cadrage après le double requestAnimationFrame suffit.
+// Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
+const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [];
 
 function atlasLearningSetManualScrollRestoration() {
   try {
@@ -36233,11 +36236,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.49";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.50";
 
-const ATLAS_BUILD = "28.3.49";
+const ATLAS_BUILD = "28.3.50";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.49";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.50";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
