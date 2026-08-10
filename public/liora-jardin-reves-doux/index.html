@@ -10,9 +10,41 @@
   <meta property="og:description" content="8 chapitres, 7 notes perdues et un jardin où la tendresse veille sur les rêves.">
   <meta property="og:image" content="assets/images/og-liora.jpg">
   <meta property="og:locale" content="fr_FR">
-  <link rel="canonical" href="https://blueazur-hub.github.io/erith-ia-memory/public/liora-jardin-reves-doux/">
+  <link rel="canonical" href="https://blueazur-hub.github.io/liora-jardin-reves-doux/">
   <title>La Princesse Liora et le Jardin des Rêves Doux — Éditions @erith.IA</title>
   <link rel="stylesheet" href="styles.css">
+
+  <style id="hero-v4-inline">
+/* V4 — Hero immersif. Aucun nouvel asset image : réutilise opening.webp + cover.webp. */
+.hero.hero-immersive{position:relative;min-height:720px;padding:0;overflow:hidden;isolation:isolate;background:#07132c;border-bottom:1px solid var(--line)}
+.hero-backdrop{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 48%;filter:saturate(.96) contrast(1.02)}
+.hero-veil{position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(4,13,34,.92) 0%,rgba(4,13,34,.80) 34%,rgba(4,13,34,.24) 63%,rgba(4,13,34,.08) 100%),linear-gradient(0deg,rgba(4,13,34,.56) 0%,transparent 34%,rgba(4,13,34,.12) 100%)}
+.hero-stage{min-height:720px;display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:50px;align-items:center;position:relative;padding-top:34px;padding-bottom:34px}
+.hero-glass{width:min(650px,100%);padding:34px 36px 32px;border:1px solid rgba(232,200,123,.24);border-radius:26px;background:linear-gradient(135deg,rgba(7,19,44,.80),rgba(7,19,44,.58));box-shadow:0 24px 70px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+.hero.hero-immersive h1{font-family:var(--serif);font-weight:500;font-size:clamp(44px,4.15vw,66px);line-height:1.02;letter-spacing:-.03em;margin:0 0 20px;max-width:620px;text-wrap:balance}
+.hero.hero-immersive h1 span,.hero.hero-immersive h1 em{display:block}.hero.hero-immersive h1 em{font-style:normal;color:var(--gold);font-size:.70em;line-height:1.10;margin-top:8px}
+.hero.hero-immersive .lead{font-size:clamp(17px,1.4vw,21px);line-height:1.46;max-width:600px;color:#eef1f7;text-shadow:0 1px 18px rgba(0,0,0,.55)}
+.hero.hero-immersive .hero-meta{margin-top:22px}.hero.hero-immersive .hero-meta span{background:rgba(4,13,34,.54);border-color:rgba(232,200,123,.28)}
+.glass-btn{background:rgba(5,15,37,.58);color:#fff;border-color:rgba(232,200,123,.30);backdrop-filter:blur(8px)}
+.hero-book{justify-self:end;width:238px;margin:0;padding:10px;border:1px solid rgba(255,255,255,.38);border-radius:20px;background:rgba(4,12,30,.60);box-shadow:0 28px 70px rgba(0,0,0,.38);backdrop-filter:blur(10px);transform:rotate(1deg)}
+.hero-book img{display:block;width:100%;height:auto;border-radius:11px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.hero-book-caption{padding:10px 5px 3px}.hero-book-caption strong,.hero-book-caption span{display:block}.hero-book-caption strong{font-family:var(--serif);font-size:14px;color:#fff}.hero-book-caption span{font-size:10px;color:#d9e1f0;margin-top:2px}
+.hero-notes{position:absolute;right:4px;bottom:22px;display:flex;gap:7px}.hero-notes span{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(232,200,123,.30);background:rgba(5,15,37,.54);color:var(--gold);font:600 11px var(--serif);backdrop-filter:blur(6px)}
+.hero.hero-immersive .disclosure{display:none}
+@media(max-width:1180px){
+  .hero.hero-immersive{min-height:650px}.hero-stage{min-height:650px;grid-template-columns:minmax(0,1fr) 210px;gap:28px}.hero-book{width:205px}.hero-glass{max-width:610px;padding:28px 30px}.hero.hero-immersive h1{font-size:clamp(42px,5.0vw,58px)}
+}
+@media(max-width:980px){
+  .hero.hero-immersive{min-height:620px}.hero-stage{min-height:620px;display:block;padding-top:54px;padding-bottom:54px}.hero-backdrop{object-position:64% 50%}.hero-veil{background:linear-gradient(90deg,rgba(4,13,34,.91) 0%,rgba(4,13,34,.78) 52%,rgba(4,13,34,.22) 100%),linear-gradient(0deg,rgba(4,13,34,.45),transparent 45%)}.hero-glass{width:min(650px,78%);padding:26px 28px}.hero.hero-immersive h1{font-size:clamp(40px,6vw,56px)}.hero-book{position:absolute;right:20px;bottom:32px;width:142px;padding:7px;border-radius:15px;transform:none}.hero-book-caption{display:none}.hero-notes{display:none}
+}
+@media(max-width:720px){
+  .hero.hero-immersive{min-height:600px}.hero-stage{min-height:600px;padding-top:42px;padding-bottom:42px}.hero-backdrop{object-position:62% 50%}.hero-veil{background:linear-gradient(90deg,rgba(4,13,34,.93),rgba(4,13,34,.64) 75%,rgba(4,13,34,.28)),linear-gradient(0deg,rgba(4,13,34,.62),transparent 50%)}.hero-glass{width:100%;padding:24px;border-radius:22px;background:rgba(7,19,44,.72)}.hero.hero-immersive h1{font-size:clamp(36px,10vw,48px)}.hero.hero-immersive h1 em{font-size:.72em}.hero.hero-immersive .lead{font-size:17px}.hero-meta{gap:6px}.hero-meta span{font-size:16px;padding:6px 9px}.hero-book{display:none}.hero.hero-immersive .actions{margin-top:20px}
+}
+@media(max-width:480px){
+  .hero.hero-immersive{min-height:570px}.hero-stage{min-height:570px}.hero-glass{padding:21px 18px}.hero.hero-immersive h1{font-size:36px}.hero.hero-immersive .lead{font-size:16px}.hero-meta span:nth-child(3){display:none}.hero.hero-immersive .btn{padding:12px 16px}
+}
+
+  </style>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -35,25 +67,19 @@
 </header>
 
 <main id="main">
-<section class="hero section">
+<section class="hero section" aria-labelledby="hero-title">
   <div class="shell hero-shell">
     <div class="hero-copy reveal">
       <p class="eyebrow" data-i18n="heroEyebrow">Un conte du soir · 6–9 ans</p>
-      <h1><span data-i18n="heroLine1">La Princesse Liora</span><em data-i18n="heroLine2">et le Jardin des Rêves Doux</em></h1>
+      <h1 id="hero-title"><span data-i18n="heroLine1">La Princesse Liora</span><em data-i18n="heroLine2">et le Jardin des Rêves Doux</em></h1>
       <p class="lead" data-i18n="heroLead">Quand la Berceuse des Rêves Doux perd ses sept notes, Liora et Nacrelin traversent le royaume pour les retrouver avec patience, imagination et tendresse.</p>
-      <div class="hero-meta"><span>8 <small data-i18n="chaptersSmall">chapitres</small></span><span>7 <small data-i18n="notesSmall">notes</small></span><span>64 <small data-i18n="pagesSmall">pages intérieures V3</small></span><span>2026</span></div>
-      <div class="actions"><a class="btn primary" href="#chapitres" data-i18n="discover">Entrer dans le jardin</a><a class="btn ghost" href="#editions" data-i18n="seeEditions">Voir les éditions</a></div>
-      <p class="disclosure" data-i18n="aiDisclosure">Création assistée par intelligence artificielle, sous direction, sélection et validation éditoriales humaines.</p>
+      <div class="hero-meta" aria-label="Informations sur le livre"><span>8 <small data-i18n="chaptersSmall">chapitres</small></span><span>7 <small data-i18n="notesSmall">notes</small></span><span>64 <small data-i18n="pagesSmall">pages intérieures V3</small></span><span>2026</span></div>
+      <div class="actions"><a class="btn primary" href="#livre" data-i18n="discover">Entrer dans le jardin</a><a class="btn ghost" href="#editions" data-i18n="seeEditions">Voir les éditions</a></div>
     </div>
-    <div class="hero-art reveal" aria-label="Liora et Nacrelin au seuil du Jardin des Rêves Doux">
-      <img class="hero-opening" src="assets/images/opening.webp" alt="Liora et Nacrelin au seuil du Jardin des Rêves Doux">
-      <div class="hero-art-shade" aria-hidden="true"></div>
-      <figure class="hero-cover">
-        <img src="assets/images/cover.webp" alt="Couverture de La Princesse Liora et le Jardin des Rêves Doux" width="1200" height="1500">
-        <figcaption>Christophe / @erith.IA · Éditions @erith.IA</figcaption>
-      </figure>
-      <div class="hero-note"><strong>Do · Ré · Mi · Fa · Sol · La · Si</strong><span>Sept notes pour retrouver la berceuse.</span></div>
-    </div>
+    <figure class="hero-visual reveal">
+      <img src="assets/images/opening.webp" alt="Liora et Nacrelin au seuil du Jardin des Rêves Doux">
+      <figcaption><strong>Le Jardin des Rêves Doux</strong><span>Une porte, une note, un rêve à la fois.</span></figcaption>
+    </figure>
   </div>
 </section>
 
@@ -145,7 +171,7 @@
 </section>
 </main>
 
-<footer><div class="shell footer-grid"><div><a class="brand footer-brand" href="#top"><span class="brand-mark">✦</span><span><strong>Liora</strong><small>Jardin des Rêves Doux</small></span></a><p>Christophe / @erith.IA · Éditions @erith.IA · 2026</p></div><div><strong data-i18n="officialSite">Site officiel prévu</strong><code>blueazur-hub.github.io/erith-ia-memory/public/liora-jardin-reves-doux/</code><p data-i18n="privacy">Aucun tracker, aucun cookie publicitaire, aucune collecte d’adresse e-mail.</p></div></div><div class="shell footer-bottom"><span>Site V3 · 10 août 2026</span><span data-i18n="legalPending">ISBN · dépôt légal · imprimeur : à compléter avant publication.</span></div></footer>
+<footer><div class="shell footer-grid"><div><a class="brand footer-brand" href="#top"><span class="brand-mark">✦</span><span><strong>Liora</strong><small>Jardin des Rêves Doux</small></span></a><p>Christophe / @erith.IA · Éditions @erith.IA · 2026</p></div><div><strong data-i18n="officialSite">Site officiel prévu</strong><code>blueazur-hub.github.io/liora-jardin-reves-doux/</code><p data-i18n="privacy">Aucun tracker, aucun cookie publicitaire, aucune collecte d’adresse e-mail.</p></div></div><div class="shell footer-bottom"><span>Site V2 · 10 août 2026</span><span data-i18n="legalPending">ISBN · dépôt légal · imprimeur : à compléter avant publication.</span></div></footer>
 
 <dialog id="lightbox"><button class="dialog-close" aria-label="Fermer">×</button><img alt="Aperçu agrandi"></dialog>
 <dialog id="product-dialog"><button class="dialog-close" aria-label="Fermer">×</button><p class="eyebrow" data-i18n="shopEyebrow">Boutique</p><h2 id="product-title">Édition en préparation</h2><p id="product-copy" data-i18n="shopCopy">Le site est prêt. Le lien de vente sera activé après finalisation des fichiers commerciaux et de la distribution.</p><div class="status-line"><span>●</span><span data-i18n="notActive">Aucun paiement n’est actif dans cette V2.</span></div></dialog>
