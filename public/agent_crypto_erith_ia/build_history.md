@@ -1,3 +1,18 @@
+## Build 28.3.51 — Learning Reset Firefox Focus Lock
+
+- Base : 28.3.50.
+- Correction de la seconde cause de « valse » observée dans Firefox après `Repartir de zéro`.
+- `blur()` du contrôle actif avant `confirm()` puis juste avant `reload()`.
+- Garde post-reset temporaire contre la restauration de focus de `btnResetLearningJourney`.
+- `history.scrollRestoration = manual` maintenu pendant le redémarrage du reset.
+- `overflow-anchor` neutralisé temporairement sur `html` et `body`, puis restauré automatiquement.
+- Aucun scroll différé ajouté ; le reset conserve un seul cadrage vers `learningSessionPlan`.
+- Aucun changement des Modules 01–11, de l'image Module 01, de la simulation, mémoire, Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board ou fiche Crypto.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.51.
+
+---
+
 ## Build 28.3.50 — Learning Reset Single Focus Lock
 
 - Base : 28.3.49.

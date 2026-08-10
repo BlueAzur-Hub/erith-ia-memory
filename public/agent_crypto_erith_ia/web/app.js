@@ -21294,6 +21294,47 @@ const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
 // Un seul cadrage après le double requestAnimationFrame suffit.
 // Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
 const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [];
+const ATLAS_LEARNING_RESET_BROWSER_GUARD_MS = 1400;
+
+function atlasLearningBlurActiveElement() {
+  try {
+    const active = document.activeElement;
+    if (active && active !== document.body && typeof active.blur === "function") active.blur();
+  } catch {}
+}
+
+function atlasLearningBeginResetBrowserGuard() {
+  atlasLearningSetManualScrollRestoration();
+  atlasLearningBlurActiveElement();
+
+  const root = document.documentElement;
+  const body = document.body;
+  const previousRootOverflowAnchor = root?.style?.overflowAnchor ?? "";
+  const previousBodyOverflowAnchor = body?.style?.overflowAnchor ?? "";
+
+  if (root?.style) root.style.overflowAnchor = "none";
+  if (body?.style) body.style.overflowAnchor = "none";
+
+  const focusGuard = event => {
+    const target = event?.target;
+    if (target?.id === "btnResetLearningJourney") {
+      try { target.blur?.(); } catch {}
+    }
+  };
+  document.addEventListener("focusin", focusGuard, true);
+
+  window.setTimeout(() => {
+    document.removeEventListener("focusin", focusGuard, true);
+    const active = document.activeElement;
+    if (active?.id === "btnResetLearningJourney") {
+      try { active.blur?.(); } catch {}
+    }
+    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
+    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
+  }, ATLAS_LEARNING_RESET_BROWSER_GUARD_MS);
+
+  return true;
+}
 
 function atlasLearningSetManualScrollRestoration() {
   try {
@@ -21934,7 +21975,7 @@ function agentCryptoShowResetSuccessOnBoot() {
     sessionStorage.removeItem(AGENT_CRYPTO_RESET_SUCCESS_KEY);
   } catch {}
   if (!marker || marker.build !== ATLAS_BUILD) return false;
-  atlasLearningSetManualScrollRestoration();
+  atlasLearningBeginResetBrowserGuard();
   setActionFeedback(
     "ok",
     "Réinitialisation terminée",
@@ -21963,6 +22004,12 @@ function atlasLearningEndResetBarrier() {
 }
 
 async function resetEntireLearningJourney() {
+  const button = els.btnResetLearningJourney;
+  // Firefox peut conserver le focus du bouton cliqué à travers confirm() puis reload().
+  // On neutralise ce focus avant même d'ouvrir la boîte de confirmation.
+  atlasLearningSetManualScrollRestoration();
+  atlasLearningBlurActiveElement();
+
   const message = [
     "Repartir de zéro dans Agent-Crypto ?",
     "",
@@ -21983,7 +22030,7 @@ async function resetEntireLearningJourney() {
     return { ok:false, cancelled:true };
   }
 
-  const button = els.btnResetLearningJourney;
+  atlasLearningBlurActiveElement();
   if (button) { button.disabled = true; button.textContent = "Réinitialisation…"; }
   let previousNotebook = null;
   let storageSnapshot = null;
@@ -22022,6 +22069,7 @@ async function resetEntireLearningJourney() {
       }));
     } catch {}
     atlasLearningSetManualScrollRestoration();
+    atlasLearningBlurActiveElement();
     atlasLearningEndResetBarrier();
     window.location.reload();
     return { ok:true, build:ATLAS_BUILD, reset_at:resetAt };
@@ -36236,11 +36284,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.50";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.51";
 
-const ATLAS_BUILD = "28.3.50";
+const ATLAS_BUILD = "28.3.51";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.50";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.51";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

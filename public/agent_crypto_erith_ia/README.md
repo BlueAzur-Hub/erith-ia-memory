@@ -1,8 +1,36 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.49  
-**Build :** 28.3.49  
-**Mission :** Module 01 Market Visual Recap Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.51  
+**Build :** 28.3.51  
+**Mission :** Learning Reset Firefox Focus Lock
+
+
+## Build 28.3.51 — Learning Reset Firefox Focus Lock
+
+Cette Build part exactement de la 28.3.50 et corrige la seconde cause observée de la « valse » après **Repartir de zéro** dans Firefox.
+
+### Correction
+
+- Le bouton `Repartir de zéro` perd explicitement son focus **avant** l'ouverture de `confirm()`.
+- Le focus actif est neutralisé une seconde fois juste avant `window.location.reload()`.
+- Au redémarrage validé du reset, un garde Firefox temporaire :
+  - maintient `history.scrollRestoration = "manual"` ;
+  - neutralise un éventuel focus restauré sur `btnResetLearningJourney` ;
+  - désactive temporairement `overflow-anchor` sur `html` et `body` afin qu'un changement de hauteur tardif ne ré-ancre pas le viewport sur l'ancien bouton.
+- Le garde est retiré automatiquement après 1,4 seconde ; il **ne déclenche aucun scroll supplémentaire**.
+- Le cadrage du reset reste celui de la 28.3.50 : **un seul positionnement** vers `learningSessionPlan`, sans recadrages 120 / 420 / 1000 ms.
+- Aucun changement des données, de la pédagogie, de la simulation, de la mémoire ou des autres panneaux.
+- L'image pédagogique du Module 01 et les Modules 01–11 restent inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et les assets restent inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.51.
+
+### Test Firefox attendu
+
+1. Cliquer **Repartir de zéro**.
+2. Confirmer.
+3. Reload.
+4. Arrivée sur **01 · Marché et données · session guidée — 0/5 étapes**.
+5. Le viewport reste à cet endroit : aucune reprise de focus sur le bouton et aucune « valse » secondaire.
 
 
 ## Build 28.3.50 — Learning Reset Single Focus Lock
