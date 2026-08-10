@@ -1,20 +1,20 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-08-10T15:19:22.449465+00:00",
+  "generated_at": "2026-08-10T17:12:27.061606+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 9,
-    "critical_24h": 9,
+    "events_24h": 11,
+    "critical_24h": 11,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
     "sources_failed": 0,
-    "lead_event_id": "feed_46c72cd0cf9079b7",
+    "lead_event_id": "feed_3c7d6a1bb896c87f",
     "decision": "Surveillance renforcée"
   },
   "source_status": [
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 5,
-      "latency_ms": 749,
+      "latency_ms": 281,
       "error": null
     },
     {
@@ -35,9 +35,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 22,
+      "fetched_count": 23,
       "qualified_count": 0,
-      "latency_ms": 499,
+      "latency_ms": 264,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 97,
+      "latency_ms": 144,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 141,
+      "latency_ms": 245,
       "error": null
     },
     {
@@ -69,8 +69,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 23,
-      "latency_ms": 288,
+      "qualified_count": 24,
+      "latency_ms": 302,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 28,
-      "latency_ms": 128,
+      "latency_ms": 313,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 150,
+      "latency_ms": 99,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 13,
-      "latency_ms": 818,
+      "latency_ms": 727,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 82,
+      "latency_ms": 69,
       "error": null
     },
     {
@@ -124,8 +124,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 0,
-      "latency_ms": 547,
+      "qualified_count": 1,
+      "latency_ms": 137,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 73,
+      "latency_ms": 133,
       "error": null
     }
   ],
@@ -766,6 +766,76 @@
       "observation_only": true
     },
     {
+      "id": "feed_3c7d6a1bb896c87f",
+      "event_id": "feed_3c7d6a1bb896c87f",
+      "fingerprint": "3c7d6a1bb896c87f",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Hackers Drain $8 Million From Crypto Exchange Across Two Blockchains",
+      "body": "The attacker moved funds across Tron and Ethereum before routing millions through crypto exchanges, while later wallet activity offers clues about how the breach occurred.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/375213/hackers-drain-8-million-from-crypto-platform-coinsbuy",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/375213/hackers-drain-8-million-from-crypto-platform-coinsbuy"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-08-10T15:56:30+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.073794+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.073794+00:00",
+      "freshness": {
+        "iso": "2026-08-10T15:56:30+00:00",
+        "hours": 1.27,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 99,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "ETH"
+      ],
+      "sectors": [
+        "Exchanges",
+        "Layer 1",
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_63cd901bbbf03bb0",
       "event_id": "feed_63cd901bbbf03bb0",
       "fingerprint": "63cd901bbbf03bb0",
@@ -997,12 +1067,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T03:34:53+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.482089+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.482089+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.326404+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.326404+00:00",
       "freshness": {
         "iso": "2026-08-10T03:34:53+00:00",
-        "hours": 11.74,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.63,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1410,11 +1480,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T09:04:00+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.501633+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.501633+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.081405+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.081405+00:00",
       "freshness": {
         "iso": "2026-08-10T09:04:00+00:00",
-        "hours": 6.26,
+        "hours": 8.14,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1544,11 +1614,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-08T04:11:53+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.489337+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.489337+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.339224+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.339224+00:00",
       "freshness": {
         "iso": "2026-08-08T04:11:53+00:00",
-        "hours": 59.12,
+        "hours": 61.01,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2007,11 +2077,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-09T05:46:07+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.484944+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.484944+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.331730+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.331730+00:00",
       "freshness": {
         "iso": "2026-08-09T05:46:07+00:00",
-        "hours": 33.55,
+        "hours": 35.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2274,11 +2344,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-10T06:30:00+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.479956+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.479956+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.322865+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.322865+00:00",
       "freshness": {
         "iso": "2026-08-10T06:30:00+00:00",
-        "hours": 8.82,
+        "hours": 10.71,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2415,11 +2485,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-05T18:30:00+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.549362+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.549362+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.205249+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.205249+00:00",
       "freshness": {
         "iso": "2026-08-05T18:30:00+00:00",
-        "hours": 116.82,
+        "hours": 118.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2481,11 +2551,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-06T12:34:42+00:00",
-      "first_seen_at": "2026-08-10T15:19:22.105976+00:00",
-      "last_seen_at": "2026-08-10T15:19:22.105976+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.273877+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.273877+00:00",
       "freshness": {
         "iso": "2026-08-06T12:34:42+00:00",
-        "hours": 98.74,
+        "hours": 100.63,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2878,11 +2948,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-08-07T21:39:36+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.490019+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.490019+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.340332+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.340332+00:00",
       "freshness": {
         "iso": "2026-08-07T21:39:36+00:00",
-        "hours": 65.66,
+        "hours": 67.55,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3374,12 +3444,12 @@
       "observation_only": true
     },
     {
-      "id": "feed_4bc3a0749c6a3904",
-      "event_id": "feed_4bc3a0749c6a3904",
-      "fingerprint": "4bc3a0749c6a3904",
+      "id": "feed_5aef1ed72529c70f",
+      "event_id": "feed_5aef1ed72529c70f",
+      "fingerprint": "5aef1ed72529c70f",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Live updates: WTI crude oil up 5% and back to $80, as bitcoin drops below $65,000",
+      "headline": "Live updates: WTI crude oil up 5% and back to $80, as bitcoin drops below $64,000",
       "body": "The market rose even as the Senate left the crypto bill unpassed before its recess, with steady ETF inflows and a softer dollar doing more for prices than Washington.",
       "source_name": "CoinDesk",
       "source_url": "https://www.coindesk.com/markets/2026/08/10/live-updates-btc-above-usd65-000-even-as-the-senate-punts-the-clarity-act-to-the-fall",
@@ -3397,11 +3467,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T06:56:50+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.644399+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.644399+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.300028+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.300028+00:00",
       "freshness": {
         "iso": "2026-08-10T06:56:50+00:00",
-        "hours": 8.38,
+        "hours": 10.26,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3468,12 +3538,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T04:39:37+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.645773+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.645773+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.302455+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.302455+00:00",
       "freshness": {
         "iso": "2026-08-10T04:39:37+00:00",
-        "hours": 10.66,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.55,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3539,11 +3609,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-09T14:19:35+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.648259+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.648259+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.306748+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.306748+00:00",
       "freshness": {
         "iso": "2026-08-09T14:19:35+00:00",
-        "hours": 25.0,
+        "hours": 26.88,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3814,11 +3884,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T12:14:57+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.500334+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.500334+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.079159+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.079159+00:00",
       "freshness": {
         "iso": "2026-08-10T12:14:57+00:00",
-        "hours": 3.07,
+        "hours": 4.96,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4065,6 +4135,145 @@
       "observation_only": true
     },
     {
+      "id": "feed_33749f3a1d2ca0f1",
+      "event_id": "feed_33749f3a1d2ca0f1",
+      "fingerprint": "33749f3a1d2ca0f1",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin price slip wipes weekend gains as oil surge hits 5% on Hormuz disappointment",
+      "body": "Bitcoin wobbled with US stocks as Iran deflated hopes on the reopening of the Strait of Hormuz oil route, while analysis praised “exceptionally strong” institutional BTC inflows.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/bitcoin-wipes-weekend-gains-as-oil-nears-5-surge-on-hormuz-disappointment",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/markets/bitcoin-wipes-weekend-gains-as-oil-nears-5-surge-on-hormuz-disappointment"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-08-10T16:14:58+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.312914+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.312914+00:00",
+      "freshness": {
+        "iso": "2026-08-10T16:14:58+00:00",
+        "hours": 0.96,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 89,
+        "level": "Critique"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 20,
+      "matched_topics": [
+        "crypto",
+        "geopolitics",
+        "energy",
+        "institutional"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_5f5747d79174c047",
+      "event_id": "feed_5f5747d79174c047",
+      "fingerprint": "5f5747d79174c047",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "BlackRock launches two Canada ETFs, with one allocating 3% to Bitcoin",
+      "body": "BlackRock Canada’s new IBQT fund combines global equity exposure with a 3% Bitcoin allocation through the firm’s Canadian iShares Bitcoin ETF.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/blackrock-launches-two-canada-etfs-with-one-allocating-3-to-bitcoin",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/blackrock-launches-two-canada-etfs-with-one-allocating-3-to-bitcoin"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-08-10T15:59:06+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.313986+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.313986+00:00",
+      "freshness": {
+        "iso": "2026-08-10T15:59:06+00:00",
+        "hours": 1.22,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 89,
+        "level": "Critique"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "institutional"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_4c7ba800f7c27934",
       "event_id": "feed_4c7ba800f7c27934",
       "fingerprint": "4c7ba800f7c27934",
@@ -4088,12 +4297,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-08T16:20:17+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.486427+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.486427+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.334147+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.334147+00:00",
       "freshness": {
         "iso": "2026-08-08T16:20:17+00:00",
-        "hours": 46.98,
-        "label": "Récente · moins de 48 h",
+        "hours": 48.87,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -4157,11 +4366,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-07T13:30:00+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.494349+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.494349+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.347742+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.347742+00:00",
       "freshness": {
         "iso": "2026-08-07T13:30:00+00:00",
-        "hours": 73.82,
+        "hours": 75.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4339,75 +4548,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_45fec6aaa7b05cac",
-      "event_id": "feed_45fec6aaa7b05cac",
-      "fingerprint": "45fec6aaa7b05cac",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Hashdex to shut smallest Bitcoin ETF after more than two years",
-      "body": "The spot price Bitcoin exchange-traded fund, which was never able to attract more than $18 million in net assets, will pay out investors and sell its 225 BTC in the coming weeks.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/hashdex-to-shut-smallest-bitcoin-etf-after-more-than-two-years",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/hashdex-to-shut-smallest-bitcoin-etf-after-more-than-two-years"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf",
-      "event_label": "ETF / institutionnels",
-      "event_time": "2026-08-03T15:24:43+00:00",
-      "first_seen_at": "2026-08-05T03:38:13.162862+00:00",
-      "last_seen_at": "2026-08-05T03:38:13.162862+00:00",
-      "freshness": {
-        "iso": "2026-08-03T15:24:43+00:00",
-        "hours": 36.23,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 89,
-        "level": "Critique"
-      },
-      "direction": "catalyseur potentiel, sens à confirmer",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Exchanges",
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "institutional"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_5acdb794dc9cd601",
       "event_id": "feed_5acdb794dc9cd601",
       "fingerprint": "5acdb794dc9cd601",
@@ -4432,11 +4572,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-06T05:53:58+00:00",
-      "first_seen_at": "2026-08-10T15:19:22.106910+00:00",
-      "last_seen_at": "2026-08-10T15:19:22.106910+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.275518+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.275518+00:00",
       "freshness": {
         "iso": "2026-08-06T05:53:58+00:00",
-        "hours": 105.42,
+        "hours": 107.31,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5214,11 +5354,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T11:13:40+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.477959+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.477959+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.319379+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.319379+00:00",
       "freshness": {
         "iso": "2026-08-10T11:13:40+00:00",
-        "hours": 4.09,
+        "hours": 5.98,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5283,11 +5423,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-07T15:23:15+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.492903+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.492903+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.345310+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.345310+00:00",
       "freshness": {
         "iso": "2026-08-07T15:23:15+00:00",
-        "hours": 71.94,
+        "hours": 73.82,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5352,11 +5492,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T08:57:04+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.642283+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.642283+00:00",
+      "first_seen_at": "2026-08-10T17:12:26.296152+00:00",
+      "last_seen_at": "2026-08-10T17:12:26.296152+00:00",
       "freshness": {
         "iso": "2026-08-10T08:57:04+00:00",
-        "hours": 6.37,
+        "hours": 8.26,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5391,141 +5531,6 @@
       "matched_topics": [
         "crypto",
         "macro"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_fc0e7b31431bda7c",
-      "event_id": "feed_fc0e7b31431bda7c",
-      "fingerprint": "fc0e7b31431bda7c",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Brazil's central bank orders exchanges to delay large crypto transfers abroad",
-      "body": "The rule applies to transfers above $10,000 and smaller transactions flagged as risky by exchanges.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/08/08/brazil-s-central-bank-orders-exchanges-to-delay-large-crypto-transfers-abroad",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/08/08/brazil-s-central-bank-orders-exchanges-to-delay-large-crypto-transfers-abroad"
-      ],
-      "declared_status": "reported",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-08-08T15:25:38+00:00",
-      "first_seen_at": "2026-08-10T13:48:46.703219+00:00",
-      "last_seen_at": "2026-08-10T13:48:46.703219+00:00",
-      "freshness": {
-        "iso": "2026-08-08T15:25:38+00:00",
-        "hours": 46.39,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 86,
-        "level": "Critique"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "macro"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_ecf4dfcded3752cd",
-      "event_id": "feed_ecf4dfcded3752cd",
-      "fingerprint": "ecf4dfcded3752cd",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin steadies above $65,000 as Iran-Oman deal talk eases Hormuz concerns, lifts risk assets",
-      "body": "BTC rose to $65,209 and Nasdaq 100 index futures gained 0.45% on reports that Iran may strike a deal with Oman to reopen the Strait of Hormuz.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/08/10/bitcoin-steadies-above-usd65-000-as-iran-oman-deal-talk-eases-hormuz-concerns-lifts-risk-assets",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/08/10/bitcoin-steadies-above-usd65-000-as-iran-oman-deal-talk-eases-hormuz-concerns-lifts-risk-assets"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-08-10T10:45:43+00:00",
-      "first_seen_at": "2026-08-10T15:19:21.640218+00:00",
-      "last_seen_at": "2026-08-10T15:19:21.640218+00:00",
-      "freshness": {
-        "iso": "2026-08-10T10:45:43+00:00",
-        "hours": 4.56,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 85,
-        "level": "Critique"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "geopolitics"
       ],
       "observation_only": true
     }
