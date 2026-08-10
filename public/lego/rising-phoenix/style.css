@@ -1,4 +1,4 @@
-/* RISING PHOENIX — GOLDEN AXIS
+/* RISING PHOENIX — AUREUS
    Clean one-page portfolio derived from the V4.2 discipline:
    controlled type scale, selective photography, explicit image framing,
    physical build before Studio, no fourth-state branch. */
@@ -24,3 +24,11 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 @media(max-width:1020px){.primary-nav{position:fixed;top:var(--header-height);right:20px;left:20px;display:none;padding:18px;background:rgba(15,17,15,.98);border:1px solid var(--line-soft);border-radius:var(--radius-small);box-shadow:var(--shadow)}.primary-nav.is-open{display:grid}.primary-nav a{padding:9px 4px}.primary-nav a::after{display:none}.nav-toggle{display:block}.fact-strip{grid-template-columns:repeat(3,1fr)}.intro-grid,.collector-layout,.real-build-grid,.instructions-layout{grid-template-columns:1fr}.configuration-grid{grid-template-columns:1fr}.configuration-card{display:grid;grid-template-columns:1.05fr .95fr}.evolution-grid{grid-template-columns:repeat(2,1fr)}.engineering-wide{grid-template-columns:1fr}.workspace-grid,.render-grid{grid-template-columns:repeat(2,1fr)}.collector-image{min-height:330px}}
 @media(max-width:720px){.shell{width:min(calc(100% - 28px),var(--shell))}h2{font-size:clamp(1.9rem,10vw,2.65rem)}.section{padding-block:54px}.hero{min-height:820px}.hero::before{background:linear-gradient(0deg,var(--bg) 0%,rgba(7,8,7,.76) 48%,rgba(7,8,7,.22) 100%),linear-gradient(90deg,rgba(7,8,7,.5),rgba(7,8,7,.15))}.hero-media img{object-position:center}.hero h1{font-size:clamp(3.2rem,16vw,5rem)}.hero-content{padding-bottom:34px}.hero-actions{flex-direction:column;align-items:stretch}.button{width:100%}.fact-strip{grid-template-columns:repeat(2,1fr)}.fact-strip div,.fact-strip div:first-child{padding-left:0;border-right:0}.configuration-card{display:block}.evolution-grid,.engineering-grid,.real-build-media,.temple-grid,.workspace-grid,.inspection-grid,.render-grid{grid-template-columns:1fr}.engineering-wide{grid-column:auto}.temple-grid{grid-template-rows:auto}.temple-main{grid-row:auto}.studio-flow{border-radius:var(--radius-small);justify-content:flex-start}.budget-strip{grid-template-columns:1fr}.budget-strip div{border-right:0;border-bottom:1px solid var(--line-soft)}.budget-strip div:nth-child(3){border-bottom:0}.collector-image,.instruction-image{min-height:280px}.footer-inner{align-items:flex-start;flex-direction:column}}
+
+/* AUREUS — verified supplied final-complete hero only. No generated/edited image. */
+.hero-media img,
+.hero-visual img,
+.hero > img {
+  object-fit: cover;
+  object-position: center center;
+}
