@@ -32,3 +32,8 @@
   object-fit: cover;
   object-position: center center;
 }
+
+/* AUREUS HERO SCALE — supplied close complete view; pixels untouched. */
+.hero-media{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#090a09}
+.hero-media img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center}
+@media(min-width:721px){.hero{min-height:min(86svh,820px)}}
