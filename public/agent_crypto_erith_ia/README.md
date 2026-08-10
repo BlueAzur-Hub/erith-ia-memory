@@ -1,8 +1,45 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.53  
-**Build :** 28.3.53  
-**Mission :** Learning Reset In-Place Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.54  
+**Build :** 28.3.54  
+**Mission :** Learning Reset In-Place Single Recenter Lock
+
+
+## Build 28.3.54 — Learning Reset In-Place Single Recenter Lock
+
+Cette Build part exactement de la 28.3.53 et corrige le défaut restant de **Repartir de zéro** sans réintroduire le reload.
+
+### Contrat fonctionnel verrouillé
+
+**Repartir de zéro → reset vérifié → rester dans la page → recentrer UNE fois sur `01 · Marché et données · session guidée` → rester immobile.**
+
+### Correction
+
+- Le reset **in-place** de la 28.3.53 est conservé : aucun `window.location.reload()`.
+- Suppression de la rustine 28.3.53 qui conservait artificiellement l'ancienne position du viewport avec `window.scrollBy()`.
+- Après reconstruction locale du Cockpit, la page **n'est pas déplacée immédiatement**.
+- La position de `learningSessionPlan` est d'abord observée sans scroll jusqu'à stabilisation géométrique.
+- Une fois stable, **un seul recentrage final** est exécuté par `atlasLearningPositionTarget()`.
+- Aucun recadrage différé 120 / 420 / 1000 ms n'est réintroduit.
+- Aucun reload, aucun passage volontaire en haut de page, aucune séquence de corrections successives.
+- Le focus du bouton reste neutralisé avant et après la confirmation.
+
+### Verrous
+
+- Reset IndexedDB vérifié et rollback 28.3.53 conservés.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board et données live inchangés.
+- Modules 01–11, simulation pédagogique, image Module 01 et mémoire existante inchangés hors remise à zéro demandée.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+- Score ATLAS compact inchangé, jamais `/100`.
+
+### Test Firefox attendu
+
+1. Se placer plus bas ou plus haut que le début de la session guidée.
+2. Cliquer **Repartir de zéro** puis confirmer.
+3. Vérifier le retour à **01 · Marché et données · session guidée — 0/5 étapes**.
+4. Observer **un seul recentrage** sur ce panneau.
+5. Vérifier qu'aucun passage en haut et aucun second mouvement automatique ne suivent.
+
 
 
 ## Build 28.3.53 — Learning Reset In-Place Lock

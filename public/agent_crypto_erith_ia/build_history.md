@@ -1,3 +1,19 @@
+## Build 28.3.54 — Learning Reset In-Place Single Recenter Lock
+
+- Base : 28.3.53.
+- Contrat : reset vérifié → rester dans la page → recentrer UNE fois sur `learningSessionPlan` → immobilité.
+- Aucun `window.location.reload()` réintroduit.
+- Suppression du maintien artificiel de l'ancien viewport par `window.scrollBy()` ajouté en 28.3.53.
+- Rerender local conservé.
+- Attente de stabilité géométrique sans mouvement, puis un seul positionnement final non lissé.
+- Aucun recadrage différé 120 / 420 / 1000 ms.
+- Focus du bouton neutralisé.
+- Aucun changement Market, données live, Modules 01–11, Math Core, Métaux, News Sentinel, Decision Board ou assets.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.54.
+
+---
+
 ## Build 28.3.53 — Learning Reset In-Place Lock
 
 - Base : 28.3.52.

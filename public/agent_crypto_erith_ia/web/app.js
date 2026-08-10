@@ -21290,8 +21290,8 @@ const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
 const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
 const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
-// Reset propre : après le reload, le panneau Module 01 est déjà rendu.
-// Un seul cadrage après le double requestAnimationFrame suffit.
+// Reset in-place : attendre la stabilité du rerender sans déplacer le viewport.
+// Puis effectuer un seul cadrage final sur le panneau Module 01.
 // Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
 const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [];
 const ATLAS_LEARNING_RESET_BROWSER_GUARD_MS = 5000;
@@ -22061,7 +22061,7 @@ function atlasLearningEndResetBarrier() {
   atlasLearningStorageResetting = false;
 }
 
-function agentCryptoResetInPlaceUi(anchorViewportTop = null) {
+function agentCryptoResetInPlaceUi() {
   atlasLearningReviewOpen = false;
   atlasSpotFoundationPurchaseBusy = false;
   atlasSimulationScenarioPct = 0;
@@ -22120,25 +22120,25 @@ function agentCryptoResetInPlaceUi(anchorViewportTop = null) {
     `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
   );
 
-  // Le bouton cliqué est remplacé/actualisé par le rendu. On conserve exactement
-  // sa zone visuelle, sans aller en haut de page et sans lancer une séquence de scroll.
-  if (Number.isFinite(anchorViewportTop)) {
-    const target = document.getElementById("learningSessionPlan");
-    if (target) {
-      const delta = target.getBoundingClientRect().top - anchorViewportTop;
-      if (Math.abs(delta) > 0.5) window.scrollBy({ top:delta, left:0, behavior:"auto" });
-    }
-  }
-
+  // 28.3.54 : le reset in-place ne fige plus l'ancien viewport.
+  // Le recentrage est déclenché séparément, une seule fois, après stabilisation du rerender.
   atlasLearningBlurActiveElement();
   return true;
 }
 
+function agentCryptoResetRecenterOnce() {
+  atlasLearningBlurActiveElement();
+  return atlasLearningWaitForResetLayoutStable("learningSessionPlan", {
+    sampleMs:90,
+    stableSamples:4,
+    maxWaitMs:1400,
+    tolerance:1
+  });
+}
+
 async function resetEntireLearningJourney() {
   const button = els.btnResetLearningJourney;
-  const resetAnchor = document.getElementById("learningSessionPlan");
-  const resetAnchorViewportTop = resetAnchor?.getBoundingClientRect?.().top ?? null;
-  // Firefox peut conserver le focus du bouton cliqué à travers confirm() puis reload().
+  // Firefox peut conserver le focus du bouton cliqué à travers confirm().
   // On neutralise ce focus avant même d'ouvrir la boîte de confirmation.
   atlasLearningSetManualScrollRestoration();
   atlasLearningBlurActiveElement();
@@ -22194,14 +22194,15 @@ async function resetEntireLearningJourney() {
     SIM_PROFILE = SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY];
     atlasSimulationScenarioPct = 0;
 
-    // 28.3.53 : aucun reload. Le reset est déjà vérifié dans IndexedDB ;
+    // 28.3.54 : aucun reload. Le reset est déjà vérifié dans IndexedDB ;
     // on reconstruit donc seulement les zones pédagogiques concernées.
     try { sessionStorage.removeItem(AGENT_CRYPTO_RESET_SUCCESS_KEY); } catch {}
     atlasLearningSetManualScrollRestoration();
     atlasLearningBlurActiveElement();
     atlasLearningEndResetBarrier();
 
-    agentCryptoResetInPlaceUi(resetAnchorViewportTop);
+    agentCryptoResetInPlaceUi();
+    agentCryptoResetRecenterOnce();
 
     if (button) {
       button.disabled = false;
@@ -36428,11 +36429,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.53";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.54";
 
-const ATLAS_BUILD = "28.3.53";
+const ATLAS_BUILD = "28.3.54";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.53";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.54";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
