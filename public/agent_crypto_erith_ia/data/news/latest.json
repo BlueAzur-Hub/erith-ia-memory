@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-08-10T19:28:43.955051+00:00",
+  "generated_at": "2026-08-10T21:04:52.205835+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 12,
-    "critical_24h": 12,
+    "events_24h": 13,
+    "critical_24h": 13,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 5,
-      "latency_ms": 289,
+      "latency_ms": 169,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "ok",
       "fetched_count": 19,
       "qualified_count": 0,
-      "latency_ms": 256,
+      "latency_ms": 112,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 98,
+      "latency_ms": 103,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 303,
+      "latency_ms": 189,
       "error": null
     },
     {
@@ -69,8 +69,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 24,
-      "latency_ms": 349,
+      "qualified_count": 23,
+      "latency_ms": 321,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 28,
-      "latency_ms": 237,
+      "latency_ms": 152,
       "error": null
     },
     {
@@ -91,8 +91,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 25,
-      "latency_ms": 93,
+      "qualified_count": 24,
+      "latency_ms": 124,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 13,
-      "latency_ms": 583,
+      "latency_ms": 854,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 148,
+      "latency_ms": 113,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 1,
-      "latency_ms": 163,
+      "latency_ms": 250,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 92,
+      "latency_ms": 173,
       "error": null
     }
   ],
@@ -789,11 +789,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T15:56:30+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.131964+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.131964+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.215246+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.215246+00:00",
       "freshness": {
         "iso": "2026-08-10T15:56:30+00:00",
-        "hours": 3.54,
+        "hours": 5.14,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -975,75 +975,6 @@
       "observation_only": true
     },
     {
-      "id": "feed_0c54997124aea452",
-      "event_id": "feed_0c54997124aea452",
-      "fingerprint": "0c54997124aea452",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "What Is an Air-Gapped Bitcoin Wallet? Why the Coldcard Exploit Changes the Conversation About Offline Security",
-      "body": "Air-gapped wallets keep private keys completely offline, reducing exposure to hackers—but they're not immune from threats.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/374868/what-is-air-gapped-bitcoin-wallet-coldcard-exploit-security",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/374868/what-is-air-gapped-bitcoin-wallet-coldcard-exploit-security"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-08-03T20:39:33+00:00",
-      "first_seen_at": "2026-08-05T19:58:26.300309+00:00",
-      "last_seen_at": "2026-08-05T19:58:26.300309+00:00",
-      "freshness": {
-        "iso": "2026-08-03T20:39:33+00:00",
-        "hours": 47.31,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 99,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
       "id": "feed_46c72cd0cf9079b7",
       "event_id": "feed_46c72cd0cf9079b7",
       "fingerprint": "46c72cd0cf9079b7",
@@ -1067,11 +998,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T03:34:53+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.285795+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.285795+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.254361+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.254361+00:00",
       "freshness": {
         "iso": "2026-08-10T03:34:53+00:00",
-        "hours": 15.9,
+        "hours": 17.5,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1480,12 +1411,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T09:04:00+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.139754+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.139754+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.221353+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.221353+00:00",
       "freshness": {
         "iso": "2026-08-10T09:04:00+00:00",
-        "hours": 10.41,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.01,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1614,11 +1545,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-08T04:11:53+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.300235+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.300235+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.264166+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.264166+00:00",
       "freshness": {
         "iso": "2026-08-08T04:11:53+00:00",
-        "hours": 63.28,
+        "hours": 64.88,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2077,12 +2008,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-10T18:43:26+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.269570+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.269570+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.240028+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.240028+00:00",
       "freshness": {
         "iso": "2026-08-10T18:43:26+00:00",
-        "hours": 0.75,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.36,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2142,11 +2073,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-09T05:46:07+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.292502+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.292502+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.258157+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.258157+00:00",
       "freshness": {
         "iso": "2026-08-09T05:46:07+00:00",
-        "hours": 37.71,
+        "hours": 39.31,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2409,11 +2340,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-10T06:30:00+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.282208+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.282208+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.249693+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.249693+00:00",
       "freshness": {
         "iso": "2026-08-10T06:30:00+00:00",
-        "hours": 12.98,
+        "hours": 14.58,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2455,6 +2386,72 @@
       "observation_only": true
     },
     {
+      "id": "feed_a1ebbf69b6635b31",
+      "event_id": "feed_a1ebbf69b6635b31",
+      "fingerprint": "a1ebbf69b6635b31",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "SEC Charges Private Fund Adviser Adit Ventures Management, Its CEO and Affiliated General Partners in Alleged Fraud",
+      "body": "The Securities and Exchange Commission today charged New York-based investment adviser Adit Ventures Management LLC, its CEO Eric Munson, and three affiliated general partners, Adit Ventures LLC; Adit Ventures II LLC; and Adit Ventures III LLC (the…",
+      "source_name": "U.S. SEC",
+      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-73-sec-charges-private-fund-adviser-adit-ventures-management-its-ceo-affiliated-general-partners",
+      "source_host": "sec.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. SEC"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/newsroom/press-releases/2026-73-sec-charges-private-fund-adviser-adit-ventures-management-its-ceo-affiliated-general-partners"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-08-10T18:00:00+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.370131+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.370131+00:00",
+      "freshness": {
+        "iso": "2026-08-10T18:00:00+00:00",
+        "hours": 3.08,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "Exchanges"
+      ],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_4be76b5cf20abc67",
       "event_id": "feed_4be76b5cf20abc67",
       "fingerprint": "4be76b5cf20abc67",
@@ -2478,11 +2475,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-05T18:30:00+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.220091+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.220091+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.371012+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.371012+00:00",
       "freshness": {
         "iso": "2026-08-05T18:30:00+00:00",
-        "hours": 120.98,
+        "hours": 122.58,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2544,11 +2541,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-06T12:34:42+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.338789+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.338789+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.280617+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.280617+00:00",
       "freshness": {
         "iso": "2026-08-06T12:34:42+00:00",
-        "hours": 102.9,
+        "hours": 104.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2941,11 +2938,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-08-07T21:39:36+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.301350+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.301350+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.265019+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.265019+00:00",
       "freshness": {
         "iso": "2026-08-07T21:39:36+00:00",
-        "hours": 69.82,
+        "hours": 71.42,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3460,11 +3457,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T06:56:50+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.402519+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.402519+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.419843+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.419843+00:00",
       "freshness": {
         "iso": "2026-08-10T06:56:50+00:00",
-        "hours": 12.53,
+        "hours": 14.13,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3531,11 +3528,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T04:39:37+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.405255+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.405255+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.421704+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.421704+00:00",
       "freshness": {
         "iso": "2026-08-10T04:39:37+00:00",
-        "hours": 14.82,
+        "hours": 16.42,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3602,11 +3599,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-09T14:19:35+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.410519+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.410519+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.425062+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.425062+00:00",
       "freshness": {
         "iso": "2026-08-09T14:19:35+00:00",
-        "hours": 29.15,
+        "hours": 30.75,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3877,11 +3874,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T12:14:57+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.137432+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.137432+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.219368+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.219368+00:00",
       "freshness": {
         "iso": "2026-08-10T12:14:57+00:00",
-        "hours": 7.23,
+        "hours": 8.83,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4151,11 +4148,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T16:14:58+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.272097+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.272097+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.241951+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.241951+00:00",
       "freshness": {
         "iso": "2026-08-10T16:14:58+00:00",
-        "hours": 3.23,
+        "hours": 4.83,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4222,11 +4219,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-10T15:59:06+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.273173+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.273173+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.242768+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.242768+00:00",
       "freshness": {
         "iso": "2026-08-10T15:59:06+00:00",
-        "hours": 3.49,
+        "hours": 5.1,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4290,11 +4287,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-08T16:20:17+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.295013+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.295013+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.259980+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.259980+00:00",
       "freshness": {
         "iso": "2026-08-08T16:20:17+00:00",
-        "hours": 51.14,
+        "hours": 52.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4565,11 +4562,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-06T05:53:58+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.340483+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.340483+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.281851+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.281851+00:00",
       "freshness": {
         "iso": "2026-08-06T05:53:58+00:00",
-        "hours": 109.58,
+        "hours": 111.18,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5347,11 +5344,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T11:13:40+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.278417+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.278417+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.247036+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.247036+00:00",
       "freshness": {
         "iso": "2026-08-10T11:13:40+00:00",
-        "hours": 8.25,
+        "hours": 9.85,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5485,12 +5482,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-10T08:57:04+00:00",
-      "first_seen_at": "2026-08-10T19:28:43.398554+00:00",
-      "last_seen_at": "2026-08-10T19:28:43.398554+00:00",
+      "first_seen_at": "2026-08-10T21:04:51.416993+00:00",
+      "last_seen_at": "2026-08-10T21:04:51.416993+00:00",
       "freshness": {
         "iso": "2026-08-10T08:57:04+00:00",
-        "hours": 10.53,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.13,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
