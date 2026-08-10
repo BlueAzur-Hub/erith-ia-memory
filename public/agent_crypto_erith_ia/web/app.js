@@ -21294,7 +21294,10 @@ const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [90, 240];
 // Un seul cadrage après le double requestAnimationFrame suffit.
 // Ne jamais relancer des scrolls différés 120/420/1000 ms : ils provoquent la "valse".
 const ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS = [];
-const ATLAS_LEARNING_RESET_BROWSER_GUARD_MS = 1400;
+const ATLAS_LEARNING_RESET_BROWSER_GUARD_MS = 5000;
+const ATLAS_LEARNING_RESET_LAYOUT_SAMPLE_MS = 120;
+const ATLAS_LEARNING_RESET_LAYOUT_STABLE_SAMPLES = 5;
+const ATLAS_LEARNING_RESET_LAYOUT_MAX_WAIT_MS = 5000;
 
 function atlasLearningBlurActiveElement() {
   try {
@@ -21307,14 +21310,8 @@ function atlasLearningBeginResetBrowserGuard() {
   atlasLearningSetManualScrollRestoration();
   atlasLearningBlurActiveElement();
 
-  const root = document.documentElement;
-  const body = document.body;
-  const previousRootOverflowAnchor = root?.style?.overflowAnchor ?? "";
-  const previousBodyOverflowAnchor = body?.style?.overflowAnchor ?? "";
-
-  if (root?.style) root.style.overflowAnchor = "none";
-  if (body?.style) body.style.overflowAnchor = "none";
-
+  // Laisser l'ancrage navigateur fonctionner : les blocs situés au-dessus
+  // du Cockpit changent encore de hauteur pendant le démarrage.
   const focusGuard = event => {
     const target = event?.target;
     if (target?.id === "btnResetLearningJourney") {
@@ -21329,10 +21326,74 @@ function atlasLearningBeginResetBrowserGuard() {
     if (active?.id === "btnResetLearningJourney") {
       try { active.blur?.(); } catch {}
     }
-    if (root?.style) root.style.overflowAnchor = previousRootOverflowAnchor;
-    if (body?.style) body.style.overflowAnchor = previousBodyOverflowAnchor;
   }, ATLAS_LEARNING_RESET_BROWSER_GUARD_MS);
 
+  return true;
+}
+
+function atlasLearningResetTargetDocumentTop(target) {
+  if (!target) return null;
+  const rect = target.getBoundingClientRect();
+  return window.scrollY + rect.top;
+}
+
+function atlasLearningWaitForResetLayoutStable(targetId, options = {}) {
+  const id = String(targetId || "learningSessionPlan").trim() || "learningSessionPlan";
+  const sampleMs = Math.max(60, Number(options.sampleMs || ATLAS_LEARNING_RESET_LAYOUT_SAMPLE_MS));
+  const stableNeeded = Math.max(2, Number(options.stableSamples || ATLAS_LEARNING_RESET_LAYOUT_STABLE_SAMPLES));
+  const maxWaitMs = Math.max(1000, Number(options.maxWaitMs || ATLAS_LEARNING_RESET_LAYOUT_MAX_WAIT_MS));
+  const tolerance = Math.max(0.5, Number(options.tolerance || 1.5));
+  const startedAt = performance.now();
+  let previousTop = null;
+  let stableCount = 0;
+
+  const finish = target => {
+    if (!target) return false;
+    // Un seul cadrage final. Aucun repositionnement différé ensuite.
+    return atlasLearningPositionTarget(target, {
+      smooth:false,
+      flash:true,
+      topGap:ATLAS_LEARNING_STAGE_TOP_GAP,
+      tolerance:0
+    });
+  };
+
+  const sample = () => {
+    const target = document.getElementById(id);
+    const elapsed = performance.now() - startedAt;
+
+    if (!target) {
+      if (elapsed >= maxWaitMs) return false;
+      window.setTimeout(sample, sampleMs);
+      return true;
+    }
+
+    const top = atlasLearningResetTargetDocumentTop(target);
+    if (Number.isFinite(top) && Number.isFinite(previousTop) && Math.abs(top - previousTop) <= tolerance) {
+      stableCount += 1;
+    } else {
+      stableCount = 0;
+    }
+    previousTop = top;
+
+    const startupSettled = atlasStartup?.completed === true;
+    const geometryStable = stableCount >= stableNeeded;
+
+    if (geometryStable && (startupSettled || elapsed >= 2200)) {
+      requestAnimationFrame(() => requestAnimationFrame(() => finish(target)));
+      return true;
+    }
+
+    if (elapsed >= maxWaitMs) {
+      requestAnimationFrame(() => requestAnimationFrame(() => finish(target)));
+      return true;
+    }
+
+    window.setTimeout(sample, sampleMs);
+    return true;
+  };
+
+  window.setTimeout(sample, sampleMs);
   return true;
 }
 
@@ -21981,10 +22042,7 @@ function agentCryptoShowResetSuccessOnBoot() {
     "Réinitialisation terminée",
     `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
   );
-  scrollToLearningTarget(marker.target || "learningSessionPlan", {
-    settleDelays:ATLAS_LEARNING_RESET_SETTLE_DELAYS_MS,
-    topGap:ATLAS_LEARNING_STAGE_TOP_GAP
-  });
+  atlasLearningWaitForResetLayoutStable(marker.target || "learningSessionPlan");
   return true;
 }
 
@@ -36284,11 +36342,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.51";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.52";
 
-const ATLAS_BUILD = "28.3.51";
+const ATLAS_BUILD = "28.3.52";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.51";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.52";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

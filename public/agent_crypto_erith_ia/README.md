@@ -1,8 +1,34 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.51  
-**Build :** 28.3.51  
-**Mission :** Learning Reset Firefox Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.52  
+**Build :** 28.3.52  
+**Mission :** Learning Reset Stable Landing Lock
+
+
+## Build 28.3.52 — Learning Reset Stable Landing Lock
+
+Cette Build part exactement de la 28.3.51. Le retour Firefox montre que le cadrage du reset intervient encore pendant que les zones Market / Graphique situées au-dessus du cockpit finissent leur démarrage et changent de hauteur.
+
+### Correction
+
+- Le reset ne cadre plus immédiatement `learningSessionPlan` après le reload.
+- La position documentaire de `learningSessionPlan` est observée jusqu'à être stable sur plusieurs mesures consécutives.
+- Si le Livecheck de démarrage termine rapidement, le cadrage attend aussi sa fin.
+- Un délai maximal de 5 secondes évite tout blocage sur réseau lent.
+- Une fois la géométrie stable : **un seul cadrage**, sans correction différée.
+- Le garde Firefox `blur()` de la 28.3.51 est conservé.
+- Le `overflow-anchor:none` temporaire de la 28.3.51 est retiré : l'ancrage natif reste disponible pendant les changements de hauteur du démarrage.
+- Aucun changement des données, Modules 01–11, simulation, mémoire, Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board ou fiche Crypto.
+- L'image du Module 01 reste inchangée.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et les assets restent inchangés.
+
+### Test Firefox attendu
+
+1. Cliquer `Repartir de zéro`.
+2. Confirmer.
+3. Attendre brièvement la stabilisation du démarrage.
+4. Un seul déplacement vers `01 · Marché et données · session guidée — 0/5 étapes`.
+5. Aucun déplacement secondaire.
 
 
 ## Build 28.3.51 — Learning Reset Firefox Focus Lock

@@ -1,3 +1,19 @@
+## Build 28.3.52 — Learning Reset Stable Landing Lock
+
+- Base : 28.3.51.
+- Cause restante : le cadrage post-reset arrivait avant stabilisation géométrique des blocs situés au-dessus du Cockpit.
+- Attente de stabilité de `learningSessionPlan` avant le seul cadrage final.
+- Prise en compte de la fin du Livecheck de démarrage lorsqu'elle intervient dans la fenêtre d'attente.
+- Délai maximal 5 s en cas de réseau lent.
+- Aucun recadrage différé ajouté.
+- Conservation du verrou Firefox `blur()`.
+- Suppression du `overflow-anchor:none` temporaire du reset.
+- Aucun changement fonctionnel hors navigation post-reset.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.52.
+
+---
+
 ## Build 28.3.51 — Learning Reset Firefox Focus Lock
 
 - Base : 28.3.50.
