@@ -1,8 +1,45 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.52  
-**Build :** 28.3.52  
-**Mission :** Learning Reset Stable Landing Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.53  
+**Build :** 28.3.53  
+**Mission :** Learning Reset In-Place Lock
+
+
+## Build 28.3.53 — Learning Reset In-Place Lock
+
+Cette Build part exactement de la 28.3.52. Le test Firefox a confirmé le dernier mouvement résiduel : après un reset valide, `window.location.reload()` renvoyait nécessairement la page en haut avant le cadrage pédagogique.
+
+### Correction
+
+- **Suppression du reload dans `Repartir de zéro`.**
+- Le reset conserve toutes ses vérifications existantes :
+  - écriture du carnet vierge IndexedDB ;
+  - relecture et validation du Module 01 vide ;
+  - nettoyage ciblé du LocalStorage pédagogique / simulation ;
+  - restauration automatique de l'ancien état si la vérification échoue.
+- Après validation, l'interface est reconstruite **sur place** :
+  - Module 01 · 0/5 ;
+  - feuille de route remise à zéro ;
+  - simulation fictive neuve ;
+  - profil pédagogique par défaut ;
+  - coûts pédagogiques remis à zéro ;
+  - scénario temporaire remis à 0 ;
+  - aides pédagogiques et tiroir remis dans leur état par défaut ;
+  - signaux Scam Sentinel et cases de retrait fictif remis à zéro.
+- Le Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board et les données live restent en place.
+- La zone `learningSessionPlan` conserve sa position visuelle : un ajustement unique compense seulement une différence de géométrie du rerender, sans navigation vers le haut et sans séquence de recadrages.
+- Aucun `window.location.reload()` n'est exécuté par le reset.
+- L'image du Module 01 et les Modules 01–11 restent inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et les assets restent inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.53.
+
+### Test Firefox attendu
+
+1. Cliquer **Repartir de zéro**.
+2. Confirmer.
+3. Le bouton passe brièvement en réinitialisation.
+4. Le même écran devient **01 · Marché et données · session guidée — 0/5 étapes**.
+5. **Aucun passage en haut de page. Aucun reload. Aucune valse.**
 
 
 ## Build 28.3.52 — Learning Reset Stable Landing Lock

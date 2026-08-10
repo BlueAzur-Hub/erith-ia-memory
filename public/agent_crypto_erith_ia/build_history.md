@@ -1,3 +1,19 @@
+## Build 28.3.53 — Learning Reset In-Place Lock
+
+- Base : 28.3.52.
+- Suppression de `window.location.reload()` après `Repartir de zéro`.
+- Écriture + relecture IndexedDB + vérification du carnet vierge conservées.
+- Nettoyage LocalStorage pédagogique/simulation conservé.
+- Reconstruction locale du cockpit, de la simulation, de la feuille de route et des états pédagogiques transitoires.
+- Market et données live non redémarrés.
+- Position visuelle de `learningSessionPlan` conservée avec un seul ajustement géométrique synchrone si nécessaire.
+- Aucun passage par le haut de page, aucun reload et aucun recadrage différé.
+- Rollback existant inchangé en cas d'échec de reset.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.53.
+
+---
+
 ## Build 28.3.52 — Learning Reset Stable Landing Lock
 
 - Base : 28.3.51.

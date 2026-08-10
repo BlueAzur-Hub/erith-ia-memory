@@ -22061,8 +22061,83 @@ function atlasLearningEndResetBarrier() {
   atlasLearningStorageResetting = false;
 }
 
+function agentCryptoResetInPlaceUi(anchorViewportTop = null) {
+  atlasLearningReviewOpen = false;
+  atlasSpotFoundationPurchaseBusy = false;
+  atlasSimulationScenarioPct = 0;
+
+  // Les clés de coûts/profil viennent d'être effacées : réhydrate les valeurs
+  // par défaut dans le DOM au lieu de compter sur un rechargement de page.
+  hydrateSimCostInputs();
+  setSimManualFields("BTC", SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].defaultAmount);
+
+  // Simulation neuve en mémoire, sans toucher au Market déjà chargé.
+  state.sim = null;
+  loadSimulation();
+
+  // Réinitialiser les états visuels pédagogiques qui étaient auparavant
+  // nettoyés implicitement par window.location.reload().
+  closeAtlasPedagogy();
+  renderLearningHelpMode();
+  applyAtlasPedagogyView();
+
+  document.querySelectorAll("[data-sim-scenario]").forEach(button => {
+    button.classList.toggle("active", atlasFiniteNumber(button.dataset.simScenario, 0) === 0);
+  });
+
+  els.scamSentinelChecks?.querySelectorAll("input").forEach(input => { input.checked = false; });
+  if (els.scamSentinelStatus) {
+    els.scamSentinelStatus.textContent = "ORANGE · aucune analyse";
+    els.scamSentinelStatus.className = "pill warn";
+  }
+  if (els.scamSentinelOutput) {
+    els.scamSentinelOutput.textContent = "Aucune sollicitation analysée. En cas de doute : ne rien envoyer, ne rien signer et revenir par le canal officiel.";
+  }
+
+  if (els.withdrawDestinationVerified) els.withdrawDestinationVerified.checked = false;
+  if (els.withdrawSmallTest) els.withdrawSmallTest.checked = false;
+  if (els.withdrawNoThirdParty) els.withdrawNoThirdParty.checked = false;
+
+  renderExpertRoadmap();
+  renderSimulation();
+  renderWithdrawalSafety();
+  renderLegacyLearningMigration(true);
+
+  renderSchoolResult(
+    "neutral",
+    `Simulateur prêt · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)}`,
+    "Le parcours pédagogique est revenu au Module 01. Aucune position fictive n'est ouverte.",
+    [
+      `Capital virtuel : ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)}.`,
+      "Position : 0 €.",
+      "Progression pédagogique : 0/5."
+    ]
+  );
+
+  setActionFeedback(
+    "ok",
+    "Réinitialisation terminée",
+    `Module 01 · 0/5 étapes · aucune archive pédagogique · ${fmtEUR.format(SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY].startCash)} virtuels · aucune position.`
+  );
+
+  // Le bouton cliqué est remplacé/actualisé par le rendu. On conserve exactement
+  // sa zone visuelle, sans aller en haut de page et sans lancer une séquence de scroll.
+  if (Number.isFinite(anchorViewportTop)) {
+    const target = document.getElementById("learningSessionPlan");
+    if (target) {
+      const delta = target.getBoundingClientRect().top - anchorViewportTop;
+      if (Math.abs(delta) > 0.5) window.scrollBy({ top:delta, left:0, behavior:"auto" });
+    }
+  }
+
+  atlasLearningBlurActiveElement();
+  return true;
+}
+
 async function resetEntireLearningJourney() {
   const button = els.btnResetLearningJourney;
+  const resetAnchor = document.getElementById("learningSessionPlan");
+  const resetAnchorViewportTop = resetAnchor?.getBoundingClientRect?.().top ?? null;
   // Firefox peut conserver le focus du bouton cliqué à travers confirm() puis reload().
   // On neutralise ce focus avant même d'ouvrir la boîte de confirmation.
   atlasLearningSetManualScrollRestoration();
@@ -22119,18 +22194,29 @@ async function resetEntireLearningJourney() {
     SIM_PROFILE = SIM_PROFILES[SIM_DEFAULT_PROFILE_KEY];
     atlasSimulationScenarioPct = 0;
 
-    try {
-      sessionStorage.setItem(AGENT_CRYPTO_RESET_SUCCESS_KEY, JSON.stringify({
-        build:ATLAS_BUILD,
-        reset_at:resetAt,
-        target:"learningSessionPlan"
-      }));
-    } catch {}
+    // 28.3.53 : aucun reload. Le reset est déjà vérifié dans IndexedDB ;
+    // on reconstruit donc seulement les zones pédagogiques concernées.
+    try { sessionStorage.removeItem(AGENT_CRYPTO_RESET_SUCCESS_KEY); } catch {}
     atlasLearningSetManualScrollRestoration();
     atlasLearningBlurActiveElement();
     atlasLearningEndResetBarrier();
-    window.location.reload();
-    return { ok:true, build:ATLAS_BUILD, reset_at:resetAt };
+
+    agentCryptoResetInPlaceUi(resetAnchorViewportTop);
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Repartir de zéro";
+    }
+
+    const result = {
+      ok:true,
+      build:ATLAS_BUILD,
+      reset_at:resetAt,
+      navigation:"in_place",
+      reload:false
+    };
+    window.__atlasLearningFullResetLastResult = result;
+    return result;
   } catch (error) {
     const localRestore = storageSnapshot ? agentCryptoRestoreLocalStorage(storageSnapshot) : { ok:true, failures:[] };
     let notebookRestore = { ok:true };
@@ -36342,11 +36428,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.52";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.53";
 
-const ATLAS_BUILD = "28.3.52";
+const ATLAS_BUILD = "28.3.53";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.52";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.53";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
