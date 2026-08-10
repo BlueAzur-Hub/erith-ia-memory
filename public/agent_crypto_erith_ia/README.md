@@ -1,8 +1,37 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.48  
-**Build :** 28.3.48  
-**Mission :** Sticky Dock Persistence Polish Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.49  
+**Build :** 28.3.49  
+**Mission :** Module 01 Market Visual Recap Lock
+
+
+## Build 28.3.49 — Module 01 Market Visual Recap Lock
+
+Cette Build part exactement de la 28.3.48 et ajoute une seule amélioration pédagogique substantielle au **Module 01 · Marché et données**.
+
+### Ajout
+
+- Nouvel asset pédagogique : `web/assets/learning/module_01_market_visual_recap.png`.
+- La vue annotée montre où retrouver les cinq preuves du Module 01 :
+  - prix Bitcoin ;
+  - variation 24 h ;
+  - variation 7 j ;
+  - source ;
+  - heure / fraîcheur.
+- La vue apparaît uniquement après validation de l’étape 4 **Source + heure**, donc après que l’élève a déjà relevé lui-même les données.
+- Le cockpit recopie à côté de l’image les valeurs réellement figées pour la session courante ; les chiffres visibles dans la capture restent explicitement qualifiés comme exemple visuel.
+- Après validation de l’étape 4, le viewport conduit vers `marketFoundationVisualRecap`, puis l’élève répond à l’étape 5.
+- L’image ne donne pas la réponse à la question finale ; elle sert uniquement à retrouver visuellement les cinq preuves.
+
+### Verrous
+
+- Build 28.3.48 conservée comme base fonctionnelle.
+- Fiche Crypto Flottante / Latérale, sticky et persistance inchangées.
+- Score ATLAS compact inchangé, jamais `/100`.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, simulation et Modules 02–11 inchangés.
+- `web/index.html`, `web/style.css` et `web/runtime_config.json` inchangés.
+- Les classes visuelles déjà validées pour le récapitulatif du Module 02 sont réutilisées ; aucune nouvelle couche CSS n’est ajoutée.
+- Version Control Protected Core inchangé hors identité 28.3.49.
 
 
 ## Build 28.3.48 — Sticky Dock Persistence Polish Lock

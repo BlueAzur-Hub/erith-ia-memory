@@ -1,3 +1,18 @@
+## Build 28.3.49 — Module 01 Market Visual Recap Lock
+
+- Base : 28.3.48.
+- Ajout de `web/assets/learning/module_01_market_visual_recap.png`.
+- Module 01 : vue pédagogique annotée Prix / 24 h / 7 j / Source / Heure.
+- La vue n’apparaît qu’après validation de l’étape 4 afin de préserver la recherche active des preuves.
+- Les valeurs réelles de la session restent affichées dynamiquement à côté de l’image ; la capture est qualifiée comme exemple visuel.
+- Après validation Source + Heure, cadrage vers `marketFoundationVisualRecap`, puis rappel actif de l’étape 5.
+- Aucun changement du Module 02 ni des Modules 03–11.
+- Aucun changement Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, simulation, mémoire ou fiche Crypto.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.49.
+
+---
+
 ## Build 28.3.48 — Sticky Dock Persistence Polish Lock
 
 - Base : 28.3.47.

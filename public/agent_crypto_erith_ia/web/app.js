@@ -18695,6 +18695,32 @@ function foundationMarketGuidedSummary(cockpitInput = null) {
   return { ready, btc, source, time, price, change24, change7, observationText, explanationText, text, valuesFrozen, provenanceFrozen };
 }
 
+function foundationMarketVisualRecapMarkup(summary) {
+  if (!summary?.ready) return "";
+  return `
+      <div id="marketFoundationVisualRecap" class="foundation-visual-recap" aria-live="polite">
+        <div class="foundation-visual-recap-media">
+          <img src="assets/learning/module_01_market_visual_recap.png" alt="Vue pédagogique annotée du Market Snapshot montrant les cinq repères du Module 01 : prix Bitcoin, variation 24 heures, variation 7 jours, source et heure des données." loading="lazy" decoding="async">
+          <small>L’image est un repère visuel construit à partir d’une capture d’exemple. Les chiffres de ta session peuvent évoluer : utilise toujours les preuves figées affichées par le cockpit.</small>
+        </div>
+        <div class="foundation-visual-recap-copy">
+          <span class="foundation-stage-kicker">VUE EXPLIQUÉE · APRÈS LA PROVENANCE</span>
+          <h5>Les cinq preuves que tu viens de relever</h5>
+          <ul class="foundation-visual-points">
+            <li><b>Prix :</b> ${escapeHtml(summary.price)}.</li>
+            <li><b>24 h :</b> ${escapeHtml(summary.change24)}.</li>
+            <li><b>7 j :</b> ${escapeHtml(summary.change7)}.</li>
+            <li><b>Source :</b> ${escapeHtml(summary.source)}.</li>
+            <li><b>Heure :</b> ${escapeHtml(summary.time)}.</li>
+          </ul>
+          <div class="foundation-visual-callout">
+            <b>Avant la question finale :</b> relis seulement ces cinq preuves. Le but de cette vue est de t’aider à retrouver où elles se lisent dans le Market Snapshot, pas de répondre à ta place.
+          </div>
+        </div>
+      </div>`;
+}
+
+
 function marketModule01AutoBlockText(cockpit, summary) {
   const evidence = cockpit?.practice_evidence || {};
   const values = evidence.market_btc_read || {};
@@ -18802,6 +18828,7 @@ function foundationMarketLab(cockpit) {
         <small>${summary.provenanceFrozen ? "Source et heure figées lors de la validation de l’étape 4." : "Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable."}</small>
         ${foundationButton(cockpit.steps.verify ? "Source et heure validées" : "Valider la source et l’heure", "market_verify_source_time", !step4Ready || cockpit.steps.verify)}
       </article>
+      ${cockpit.steps.verify && summary.ready ? `<div class="foundation-lab-wide">${foundationMarketVisualRecapMarkup(summary)}</div>` : ""}
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · RAPPEL ACTIF</span>
         <h5>Répondre avant de lire l’explication ${foundationHelpBubble("Lis seulement les preuves, réponds de mémoire, puis compare ton raisonnement avec l’explication. Une première erreur n’efface rien : elle devient une information d’apprentissage.", "Aide sur le rappel actif")}</h5>
@@ -20057,7 +20084,7 @@ function handleFoundationAction(action) {
       if (!summary.ready) return foundationFeedback(false, "Source ou heure manquante", "Livecheck doit afficher une source active et une heure avant la vérification.");
       cockpit.practice_evidence.market_source_time = { source:summary.source, time:summary.time, validated_at:new Date().toISOString(), build:ATLAS_FOUNDATION_VALIDATION_BUILD, evidence_mode:"frozen_at_validation" };
       cockpit.steps.verify = true; cockpit.verify_completed_at = new Date().toISOString(); cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key); cockpit.last_action = "market_source_time_verified";
-      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToFoundationStage(5); marketFoundationFeedback(true, "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. Lis maintenant la synthèse guidée de l’étape 5.`); return;
+      saveLearningCockpitState(cockpit); renderLearningJourneyCockpit(); scrollToLearningTarget("marketFoundationVisualRecap"); marketFoundationFeedback(true, "Étape 4 validée", `Source « ${summary.source} » et heure ${summary.time} enregistrées. La vue expliquée du Market Snapshot est ouverte : relis les cinq preuves, puis réponds à l’étape 5.`); return;
     }
     if (action === "market_prediction_yes") {
       if (!cockpit.steps.verify || !summary.ready) return foundationFeedback(false, "Étape 4 requise", "Valide d’abord la source et l’heure.");
@@ -36206,11 +36233,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.48";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.49";
 
-const ATLAS_BUILD = "28.3.48";
+const ATLAS_BUILD = "28.3.49";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.48";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.49";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
