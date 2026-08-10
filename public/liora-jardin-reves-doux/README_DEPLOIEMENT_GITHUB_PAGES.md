@@ -1,7 +1,7 @@
 # La Princesse Liora et le Jardin des Rêves Doux
 
 ## URL cible
-https://blueazur-hub.github.io/liora-jardin-reves-doux/
+https://blueazur-hub.github.io/erith-ia-memory/public/liora-jardin-reves-doux/
 
 ## Déploiement
 1. Créer ou utiliser le dépôt public `liora-jardin-reves-doux`.
