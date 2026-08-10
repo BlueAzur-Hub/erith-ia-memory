@@ -132,3 +132,59 @@
   .hero .lead{font-size:16.5px}
   .hero .hero-meta span:nth-child(3){display:none}
 }
+
+
+/* =========================================================
+   HERO TEXT ONLY — FINAL USER LOCK
+   BLACK OUT IMAGE: no image in the presentation screen.
+   ========================================================= */
+.hero.section{
+  padding:82px 0 92px!important;
+  min-height:calc(100vh - 76px)!important;
+  display:flex!important;
+  align-items:center!important;
+  background:linear-gradient(180deg,#0a1837 0%,#07132c 100%)!important;
+  border-bottom:1px solid var(--line)!important;
+  overflow:hidden!important;
+}
+.hero .hero-shell{
+  display:block!important;
+  width:min(1180px,calc(100% - 48px))!important;
+  margin-inline:auto!important;
+}
+.hero .hero-copy{
+  max-width:900px!important;
+  padding:0!important;
+  margin:0!important;
+}
+.hero h1{
+  max-width:940px!important;
+  font-size:clamp(64px,7.1vw,108px)!important;
+  line-height:.94!important;
+  letter-spacing:-.045em!important;
+  margin:0 0 34px!important;
+}
+.hero h1 em{
+  font-size:.61em!important;
+  line-height:1.05!important;
+  margin-top:12px!important;
+}
+.hero .lead{
+  max-width:780px!important;
+  font-size:clamp(21px,1.65vw,27px)!important;
+  line-height:1.5!important;
+}
+.hero .hero-meta{margin-top:30px!important}
+.hero .actions{margin-top:28px!important}
+.hero-visual,.hero .hero-art,.hero .hero-backdrop,.hero .hero-veil,.hero .hero-book,.hero .hero-notes,.hero .hero-cover,.hero .hero-note{display:none!important}
+@media(max-width:760px){
+  .hero.section{padding:56px 0 64px!important;min-height:auto!important}
+  .hero .hero-shell{width:calc(100% - 32px)!important}
+  .hero h1{font-size:clamp(48px,12vw,72px)!important}
+  .hero .lead{font-size:18px!important}
+}
+@media(max-width:480px){
+  .hero h1{font-size:44px!important}
+  .hero h1 em{font-size:.68em!important}
+  .hero .hero-meta span:nth-child(3){display:none!important}
+}
