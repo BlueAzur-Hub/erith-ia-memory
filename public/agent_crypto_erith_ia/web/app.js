@@ -951,7 +951,28 @@ function renderCommandOutput(result) { renderHumanCommand(result); if (els.comma
 function runCommandFromInput(commandText = null) { const text = commandText ?? els.commandInput?.value ?? ""; if (els.commandInput && commandText !== null) { const label = document.querySelector(`.cmd-preset[data-command="${CSS.escape(commandText)}"]`)?.textContent?.trim(); els.commandInput.value = label || commandText; } const result = parseCommandLine(text); if (els.commandOutput) els.commandOutput.dataset.userRan = "1"; renderCommandOutput(result);
 }
 
-function setActionFeedback(kind, title, text, target = null) { const el = els.actionFeedback || document.getElementById("actionFeedback"); if (!el) return; el.classList.remove("ok", "warn", "info", "neutral", "feedback-flash"); el.classList.add(kind || "neutral"); el.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(text)}</span>`; void el.offsetWidth; el.classList.add("feedback-flash"); if (target?.scrollIntoView) { target.scrollIntoView({ behavior: "smooth", block: "center" }); }
+function atlasFeedbackTargetBelongsToLearningViewport(target) {
+  if (!target) return false;
+  const id = String(target.id || "");
+  if (id.startsWith("learning") || id.startsWith("marketFoundation") || id.startsWith("spotFoundation") || id.startsWith("riskFoundation")) return true;
+  try {
+    return Boolean(target.closest?.("#learningJourneyCockpit, #learningFoundationPanel, #learningFoundationLab, #learningLessonPanel, #learningCompletionPanel, #learningCompletionAction, #expertLearningRoadmap"));
+  } catch { return false; }
+}
+
+function setActionFeedback(kind, title, text, target = null) {
+  const el = els.actionFeedback || document.getElementById("actionFeedback");
+  if (!el) return;
+  el.classList.remove("ok", "warn", "info", "neutral", "feedback-flash");
+  el.classList.add(kind || "neutral");
+  el.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(text)}</span>`;
+  void el.offsetWidth;
+  el.classList.add("feedback-flash");
+  // Build 28.3.57: dans le parcours pédagogique, le feedback explique mais ne déplace jamais la page.
+  // Toute navigation Learning appartient exclusivement au routeur atlasLearningScheduleTarget().
+  if (target?.scrollIntoView && !atlasFeedbackTargetBelongsToLearningViewport(target)) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
 
 function flashPanel(panel) { if (!panel) return; panel.classList.remove("feedback-flash"); void panel.offsetWidth; panel.classList.add("feedback-flash");
@@ -19913,7 +19934,7 @@ function markFoundationStep(step, evidenceKey = null, evidenceValue = true) {
   return cockpit;
 }
 
-function foundationFeedback(ok, title, text) { setActionFeedback(ok ? "ok" : "warn", title, text, els.learningFoundationPanel); }
+function foundationFeedback(ok, title, text) { setActionFeedback(ok ? "ok" : "warn", title, text); }
 
 function marketFoundationFeedback(ok, title, text) {
   // Module 01 owns its viewport navigation explicitly; feedback must not launch a second scroll.
@@ -20028,8 +20049,10 @@ function restartLearningModuleFromStepOne(options = {}) {
 }
 
 function handleFoundationAction(action) {
-  // 28.3.55 : Firefox ne doit pas conserver le bouton cliqué comme ancre
-  // pendant le rerender du parcours.
+  // 28.3.57 : le verrou commence ici aussi, pas seulement dans l'event listener.
+  // Les appels programmatiques (action principale, simulation, reprise) sont donc couverts
+  // AVANT toute sauvegarde ou reconstruction du DOM.
+  atlasLearningBeginNavigationGuard();
   atlasLearningBlurActiveElement();
   const cockpit = loadLearningCockpitState();
   const module = learningModuleByKey(cockpit.module_key);
@@ -20069,10 +20092,7 @@ function handleFoundationAction(action) {
     if (action === "market_answer_prediction") action = "market_prediction_yes";
     if (action === "market_show_btc_row") {
       if (!cockpit.steps.open || !summary.ready) return foundationFeedback(false, "Livecheck requis", "Valide d’abord l’étape 2 afin d’afficher une ligne Bitcoin réelle.");
-      const bitcoinRow = els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || document.getElementById("market-workspace");
-      if (bitcoinRow?.scrollIntoView) {
-        learningOpenParentDetails(bitcoinRow); bitcoinRow.scrollIntoView({ behavior:"smooth", block:"center" }); bitcoinRow.classList.add("learning-target-flash"); setTimeout(() => bitcoinRow.classList.remove("learning-target-flash"), 1800);
-      }
+      atlasLearningScheduleTarget(() => els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || document.getElementById("market-workspace"), { flash:true });
       marketFoundationFeedback(true, "Ligne Bitcoin affichée", "Lis uniquement Prix, 24 h et 7 j. Reviens ensuite au Cockpit et clique sur « J’ai relevé Prix / 24 h / 7 j »."); return;
     }
     if (action === "market_read_btc") {
@@ -20595,10 +20615,10 @@ async function runFoundationLivecheck() {
   const before = loadLearningCockpitState();
   const shouldValidateStep2 = before.module_key === "market" && !before.completed_at && before.steps.read === true && before.steps.open !== true;
 
-  // Cadrer d’abord le Market avant que le Livecheck ne reconstruise la table.
-  // La continuité d’interface mémorise alors la bonne destination et n’a plus
-  // besoin de restaurer brièvement l’ancienne position du cockpit.
-  if (shouldValidateStep2) atlasLearningPrimeLivecheckMarketFocus();
+  // Build 28.3.57 : le Livecheck ne possède plus de pré-cadrage. Il verrouille
+  // l'ancrage avant les mutations asynchrones, puis le routeur effectue UN seul
+  // cadrage final lorsque les preuves et la géométrie sont stabilisées.
+  if (shouldValidateStep2) atlasLearningBeginNavigationGuard();
 
   const succeeded = await runLivecheck({ reason: "manual-livecheck" });
 
@@ -20670,15 +20690,7 @@ async function runFoundationLivecheck() {
   }
 
   renderLearningJourneyCockpit();
-  const marketTarget = document.getElementById("market-workspace");
-  const bitcoinRow = els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || null;
-  const nextTarget = bitcoinRow || marketTarget;
-  if (nextTarget?.scrollIntoView) {
-    learningOpenParentDetails(nextTarget);
-    nextTarget.scrollIntoView({ behavior:"smooth", block: bitcoinRow ? "center" : "start" });
-    nextTarget.classList.add("learning-target-flash");
-    setTimeout(() => nextTarget.classList.remove("learning-target-flash"), 1800);
-  }
+  atlasLearningScheduleTarget(() => els.marketRows?.querySelector?.('tr[data-id="bitcoin"]') || document.getElementById("market-workspace"), { flash:true });
   marketFoundationFeedback(true, "Livecheck validé — étape 2/5", "Lis Prix, 24 h et 7 j sur la ligne Bitcoin. Reviens ensuite au Cockpit et utilise la carte « Les trois valeurs Bitcoin » pour enregistrer l’étape 3.");
   return true;
 }
@@ -21231,6 +21243,7 @@ function saveLearningStep(step, checked) {
 
 function markIntegratedLessonRead() {
   const cockpit = loadLearningCockpitState();
+  if (foundationIsActive(cockpit.module_key)) atlasLearningBeginNavigationGuard();
   if (cockpit.completed_at) {
     setActionFeedback("info", "Session déjà archivée", "La leçon peut être relue, mais la preuve archivée n’est pas modifiée.");
     return;
@@ -21292,16 +21305,16 @@ function learningTargetForModule(moduleKey, practiceOnly = false) {
 const ATLAS_LEARNING_STAGE_TOP_GAP = 18;
 const ATLAS_LEARNING_FOCUS_FLASH_MS = 1400;
 const ATLAS_LEARNING_FOCUS_TOLERANCE_PX = 4;
-// 28.3.56 : navigation pédagogique + verrou Firefox. Les anciens correctifs
+// 28.3.57 : navigation pédagogique consolidée sur les 11 modules. Les anciens correctifs
 // 90/240 ms sont supprimés ; la cible est cadrée une seule fois après
 // stabilisation géométrique.
 const ATLAS_LEARNING_FOCUS_SETTLE_DELAYS_MS = [];
-// 28.3.56 : une transition pédagogique est traitée comme une transaction de viewport.
+// 28.3.57 : une transition pédagogique est traitée comme une transaction de viewport unique.
 // Firefox ne doit pas ré-ancrer la page pendant le rerender ni pendant la preuve IndexedDB.
 const ATLAS_LEARNING_FOCUS_LAYOUT_SAMPLE_MS = 90;
 const ATLAS_LEARNING_FOCUS_LAYOUT_STABLE_SAMPLES = 4;
 const ATLAS_LEARNING_FOCUS_LAYOUT_MAX_WAIT_MS = 2600;
-const ATLAS_LEARNING_NAV_GUARD_MAX_MS = 6000;
+const ATLAS_LEARNING_NAV_GUARD_MAX_MS = 15000;
 const ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS = 1800;
 let atlasLearningNavigationGuardState = null;
 let atlasLearningNavigationGuardSeq = 0;
@@ -21807,7 +21820,7 @@ function handleFoundationPrimaryAction(cockpit, action) {
   const module = learningModuleByKey(cockpit.module_key);
   if (module.key === "market") {
     if (action.key === "open") {
-      const button = document.getElementById("btnLivecheck"); button?.click(); scrollToLearningTarget("livecheck"); setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. L’étape 2 sera validée après écriture et relecture IndexedDB."); return true;
+      const button = document.getElementById("btnLivecheck"); button?.click(); setActionFeedback("info", "Livecheck lancé", "Attends l’affichage de la source et de l’heure. Le parcours effectuera un seul cadrage final lorsque les preuves auront été écrites et relues dans IndexedDB."); return true;
     }
   }
   if (module.key === "market" && ["practice","verify","note"].includes(action.key)) {
@@ -21902,6 +21915,7 @@ function learningSessionSnapshot(cockpit) {
 }
 
 async function completeLearningSession() {
+  atlasLearningBeginNavigationGuard();
   let cockpit = loadLearningCockpitState();
   const repaired = restoreReopenedArchivedLearningSession(cockpit);
   cockpit = repaired.cockpit;
@@ -22017,6 +22031,7 @@ async function completeLearningSession() {
 }
 
 function startNextLearningModule() {
+  atlasLearningBeginNavigationGuard();
   let previous = loadLearningCockpitState();
   const repaired = restoreReopenedArchivedLearningSession(previous);
   previous = repaired.cockpit;
@@ -36576,11 +36591,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.56";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.57";
 
-const ATLAS_BUILD = "28.3.56";
+const ATLAS_BUILD = "28.3.57";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.56";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.57";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

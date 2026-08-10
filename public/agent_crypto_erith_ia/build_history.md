@@ -1,3 +1,20 @@
+## Build 28.3.57 — All Modules Guided Viewport Consolidation Lock
+
+- Base : 28.3.56 préparée.
+- Audit transversal Modules 01–11 appliqué.
+- Le feedback Learning ne peut plus déclencher son propre `scrollIntoView()`.
+- `foundationFeedback()` devient informatif uniquement.
+- Guard commun démarré dans `handleFoundationAction()` pour couvrir aussi les appels programmatiques avant save/rerender.
+- Validation de leçon, archivage et passage au module suivant couverts par la même transaction de viewport.
+- Module 01 : suppression du pré-cadrage Livecheck et du `scrollIntoView()` direct vers Bitcoin ; une seule cible finale via le scheduler commun.
+- Garde-fou transactionnel porté à 15 s pour Livecheck / IndexedDB longs, avec restitution immédiate après navigation terminée.
+- Modules 02–11 : feedbacks et cartes de fin ne possèdent plus le viewport.
+- Aucun calcul pédagogique, donnée live, simulation métier ou asset modifié.
+- `index.html`, `style.css` et `runtime_config.json` inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.57.
+
+---
+
 ## Build 28.3.56 — Firefox Guided Viewport Transaction Lock
 
 - Base : 28.3.55 publiée.

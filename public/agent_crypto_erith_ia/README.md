@@ -1,8 +1,41 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.56  
-**Build :** 28.3.56  
-**Mission :** Firefox Guided Viewport Transaction Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.57  
+**Build :** 28.3.57  
+**Mission :** All Modules Guided Viewport Consolidation Lock
+
+
+## Build 28.3.57 — All Modules Guided Viewport Consolidation Lock
+
+Cette Build part de la 28.3.56 préparée et applique l’audit transversal des Modules 01 à 11. La règle devient globale : **le feedback explique, le routeur Learning déplace**. Aucun feedback pédagogique n’a le droit de déclencher un second scroll.
+
+### Contrat commun Modules 01–11
+
+**Une action → verrou avant mutation → blur → sauvegarde/rerender → attente IndexedDB + stabilité → UN seul cadrage final → restitution du navigateur.**
+
+### Corrections
+
+- Les cibles appartenant au parcours Learning ne sont plus scrollées par `setActionFeedback()`.
+- `foundationFeedback()` devient strictement informatif et ne possède plus le viewport.
+- `handleFoundationAction()` ouvre lui-même la transaction de viewport, y compris lorsqu’il est appelé programmatiquement.
+- La validation de leçon, l’archivage et le passage au module suivant utilisent aussi le verrou commun avant reconstruction du DOM.
+- Le garde-fou Firefox passe de 6 s à 15 s afin de couvrir Livecheck et écritures IndexedDB longues ; il est toujours relâché immédiatement après le cadrage final lorsqu’une navigation aboutit.
+- Module 01 : suppression du pré-cadrage Livecheck ; plus de trajet « Livecheck → Market → Bitcoin ». Une seule cible finale est résolue après validation des preuves.
+- Module 01 : le bouton « Voir la ligne Bitcoin » utilise désormais le même scheduler que tous les autres parcours, sans `scrollIntoView()` direct.
+- Modules 02–11 : les feedbacks, validations et cartes de fin ne peuvent plus lancer de second déplacement après le routeur commun.
+
+### Verrous
+
+- Aucun calcul pédagogique, scénario, réponse attendue ou preuve métier modifié.
+- Module 03 inchangé : position BTC fictive 50 €, coûts école 0,60 %, scénarios −3 % / +5 %.
+- Reset in-place 28.3.54 conservé séparément.
+- Données live, Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, Bridge et simulation métier inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+
+### Test Firefox attendu
+
+Tester le parcours normalement. Après chaque action pédagogique, la page peut se déplacer **une seule fois** vers la cible suivante. Aucun feedback, preuve IndexedDB ou mise à jour tardive ne doit provoquer un second scroll quelques secondes après.
+
 
 
 ## Build 28.3.56 — Firefox Guided Viewport Transaction Lock
