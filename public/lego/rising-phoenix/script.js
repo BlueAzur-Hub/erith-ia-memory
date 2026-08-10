@@ -1,9 +1,8 @@
 /*
-  Rising Phoenix — small progressive-enhancement script.
-  The page remains readable and navigable without JavaScript.
+  Rising Phoenix — Golden Axis
+  Progressive enhancement only. The page remains readable without JavaScript.
 */
 
-// Enable CSS effects only after JavaScript is known to be available.
 document.documentElement.classList.add('js');
 
 const header = document.querySelector('[data-header]');
@@ -28,50 +27,8 @@ function closeNavigation() {
 
 function toggleNavigation() {
   if (!nav || !navToggle) return;
-
   const isOpen = nav.classList.toggle('is-open');
   navToggle.setAttribute('aria-expanded', String(isOpen));
-}
-
-
-function scrollToSection(target, behavior = 'smooth') {
-  if (!target) return;
-
-  const headerHeight = header ? header.offsetHeight : 0;
-  const breathingRoom = 26;
-  const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - breathingRoom;
-
-  window.scrollTo({
-    top: Math.max(0, top),
-    behavior
-  });
-}
-
-function setupInternalLinks() {
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      const selector = link.getAttribute('href');
-      if (!selector || selector === '#') return;
-
-      const target = document.querySelector(selector);
-      if (!target) return;
-
-      event.preventDefault();
-      closeNavigation();
-      scrollToSection(target);
-
-      if (window.location.hash !== selector) {
-        history.pushState(null, '', selector);
-      }
-    });
-  });
-
-  if (window.location.hash) {
-    const target = document.querySelector(window.location.hash);
-    if (target) {
-      requestAnimationFrame(() => scrollToSection(target, 'auto'));
-    }
-  }
 }
 
 function setupRevealAnimation() {
@@ -82,16 +39,13 @@ function setupRevealAnimation() {
     return;
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.12 }
-  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12 });
 
   revealItems.forEach((item) => observer.observe(item));
 }
@@ -102,7 +56,6 @@ function openLightbox(button) {
 
   const source = button.dataset.lightboxSrc;
   const alt = button.dataset.lightboxAlt || '';
-
   if (!source) return;
 
   lightboxImage.src = source;
@@ -118,41 +71,24 @@ function closeLightbox() {
 
 updateHeaderState();
 setupRevealAnimation();
-setupInternalLinks();
-
 window.addEventListener('scroll', updateHeaderState, { passive: true });
 
-if (navToggle) {
-  navToggle.addEventListener('click', toggleNavigation);
-}
-
-if (nav) {
-  nav.addEventListener('click', (event) => {
-    if (event.target instanceof HTMLAnchorElement) {
-      closeNavigation();
-    }
-  });
-}
+navToggle?.addEventListener('click', toggleNavigation);
+nav?.addEventListener('click', (event) => {
+  if (event.target instanceof HTMLAnchorElement) closeNavigation();
+});
 
 document.querySelectorAll('[data-lightbox-src]').forEach((button) => {
   button.addEventListener('click', () => openLightbox(button));
 });
 
-if (lightboxClose) {
-  lightboxClose.addEventListener('click', closeLightbox);
-}
-
-if (lightbox) {
-  lightbox.addEventListener('click', (event) => {
-    if (event.target === lightbox) {
-      closeLightbox();
-    }
-  });
-}
+lightboxClose?.addEventListener('click', closeLightbox);
+lightbox?.addEventListener('click', (event) => {
+  if (event.target === lightbox) closeLightbox();
+});
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') {
-    closeNavigation();
-    closeLightbox();
-  }
+  if (event.key !== 'Escape') return;
+  closeNavigation();
+  closeLightbox();
 });
