@@ -17129,7 +17129,7 @@ const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "a
 const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
   market:"28.3.07",
   spot:"28.3.44",
-  risk:"28.3.60",
+  risk:"28.3.61",
   account:"28.3.44",
   wallet:"28.3.44",
   tokenomics:"28.3.44",
@@ -20089,12 +20089,10 @@ function handleFoundationAction(action) {
   if (finalRecallMeta && cockpit.steps.verify === true) {
     foundationRecordRecallAttempt(cockpit, finalRecallMeta.prefix, finalRecallMeta.answer, finalRecallMeta.correct);
     if (!finalRecallMeta.correct) {
-      const riskViewportGuard = module.key === "risk" ? atlasLearningBeginNavigationGuard() : null;
       cockpit.last_action = `${finalRecallMeta.prefix}_recall_attempt`;
       saveLearningCockpitState(cockpit);
       renderLearningJourneyCockpit();
-      if (module.key === "risk") void atlasRiskFoundationFinishStageViewport(5, riskViewportGuard, { flash:false });
-      else scrollToFoundationStage(5);
+      scrollToFoundationStage(5);
     }
   }
 
@@ -20229,30 +20227,28 @@ function handleFoundationAction(action) {
   }
   if (module.key === "risk") {
     if (action === "risk_load_costs") {
-      // Build 28.3.60 : le guard est posé AVANT le rerender. Si l’étape 3
-      // est déjà lisible dans le viewport, aucun déplacement n’est ajouté.
-      const viewportGuard = atlasLearningBeginNavigationGuard();
+      // Build 28.3.61 : le routeur pédagogique générique est l’unique
+      // propriétaire du viewport. L’action peut rerendre plusieurs fois, mais
+      // une seule transition de navigation est programmée après le rendu final.
       els.btnSimCostSchoolPreset?.click();
       const current = loadLearningCockpitState();
       if (current.steps.open === true) {
-        void atlasRiskFoundationFinishStageViewport(3, viewportGuard, { flash:false });
+        scrollToFoundationStage(3, { flash:false });
         riskFoundationFeedback(true, "Étape 2 validée", "Exemple école chargé : 0,60 % aller-retour dans le modèle pédagogique. Étape 3 ouverte.");
       } else {
-        atlasLearningRestoreNavigationGuard(viewportGuard);
         riskFoundationFeedback(false, "Exemple non chargé", "Le cockpit n’a pas confirmé l’exemple de coûts pédagogiques.");
       }
       return;
     }
     if (action === "risk_run_safe_btc") { runFoundationSchoolPosition("risk"); return; }
     if (action === "risk_scenario_minus3" || action === "risk_scenario_plus5") {
-      const viewportGuard = atlasLearningBeginNavigationGuard();
       const pct = action === "risk_scenario_minus3" ? -3 : 5;
       atlasSimulationScenarioPct = pct;
       renderSimulationScenario();
       recordLearningPracticeEvidence("scenario", pct);
       const current = loadLearningCockpitState();
       const complete = current.steps.verify === true;
-      void atlasRiskFoundationFinishStageViewport(complete ? 5 : 4, viewportGuard, { flash:false });
+      scrollToFoundationStage(complete ? 5 : 4, { flash:false });
       riskFoundationFeedback(true, `Scénario ${atlasSignedPct(pct)} enregistré`, complete ? "Les deux scénarios sont figés. Étape 5 ouverte." : "Lis le résultat brut et net, puis teste l’autre scénario.");
       return;
     }
@@ -20260,12 +20256,11 @@ function handleFoundationAction(action) {
     if (action === "risk_costs_reduce_yes") {
       const summary = foundationRiskGuidedSummary(cockpit);
       if (!summary.ready) return riskFoundationFeedback(false, "Scénarios requis", "Teste d’abord −3 % puis +5 %.");
-      const viewportGuard = atlasLearningBeginNavigationGuard();
       cockpit.practice_evidence.risk_guided_conclusion = true; cockpit.practice_evidence.risk_guided_summary = summary.text; cockpit.practice_evidence.risk_guided_answer = "oui"; cockpit.practice_evidence.risk_guided_validated_at = new Date().toISOString();
       cockpit.takeaway = summary.text; cockpit.steps.note = true; cockpit.last_action = "risk_guided_conclusion_validated"; cockpit.foundation_path_build = foundationPathBuildForModule(cockpit.module_key);
       ensureRiskModule03AutoPrefill(cockpit);
       saveLearningCockpitState(cockpit); renderLearningJourneyCockpit();
-      void atlasRiskFoundationFinishViewport(() => document.getElementById("learningCompletionAction"), viewportGuard, { flash:false });
+      scrollToLearningTarget("learningCompletionAction", { flash:false });
       riskFoundationFeedback(true, "Module 03 · 5/5", "Auto-synthèse, journal pédagogique et archive sont préremplis à partir des preuves figées. Les frais réels restent non vérifiés. Utilise maintenant « Terminer et archiver le module »."); return;
     }
   }
@@ -20596,7 +20591,8 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
     riskFoundationFeedback(false, "Étape 2 requise", "Charge d’abord l’exemple de coûts pédagogiques.");
     return false;
   }
-  const viewportGuard = atlasLearningBeginNavigationGuard();
+  // Build 28.3.61 : la navigation viewport est confiée au routeur pédagogique
+  // générique après le rerender. Aucune garde locale concurrente n’est créée ici.
 
   // Build 28.3.59 : le Module 03 étudie une variation en pourcentage appliquée
   // à un montant engagé. Il ne doit pas dépendre d’une cotation Binance fraîche.
@@ -20605,10 +20601,7 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
   const amount = Number(SIM_PROFILE.defaultAmount);
   const startCash = Number(SIM_PROFILE.startCash);
   const next = loadLearningCockpitState();
-  if (next.completed_at || next.module_key !== "risk") {
-    atlasLearningRestoreNavigationGuard(viewportGuard);
-    return false;
-  }
+  if (next.completed_at || next.module_key !== "risk") return false;
   next.practice_evidence = next.practice_evidence && typeof next.practice_evidence === "object" ? next.practice_evidence : {};
   next.practice_evidence.risk_position = true;
   next.practice_evidence.risk_position_details = {
@@ -20621,7 +20614,7 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
     api_key_used:false,
     wallet_connected:false,
     captured_at:new Date().toISOString(),
-    build:"28.3.60",
+    build:"28.3.61",
     evidence_mode:"frozen_at_validation"
   };
   next.steps.practice = true;
@@ -20631,7 +20624,7 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
   next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
   saveLearningCockpitState(next);
   renderLearningJourneyCockpit();
-  void atlasRiskFoundationFinishStageViewport(4, viewportGuard, { flash:false });
+  scrollToFoundationStage(4, { flash:false });
   riskFoundationFeedback(true, "Étape 3 validée", `Montant engagé fictif : ${fmtEUR.format(amount)} sur ${fmtEUR.format(startCash)} · exposition ${(startCash > 0 ? amount / startCash * 100 : 0).toFixed(0)} %. Étape 4 ouverte : compare −3 % puis +5 %.`);
   return true;
 }
@@ -21697,79 +21690,11 @@ function scrollToFoundationStage(stage, options = {}) {
   }, options);
 }
 
-// Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
-// Le parcours Risk comporte de grandes cartes souvent visibles simultanément.
-// Une action ne doit donc pas recadrer la page si l’en-tête et les contrôles de
-// l’étape suivante sont déjà utilisables dans le viewport. Le guard est posé
-// avant le rerender par l’appelant, puis un seul verdict est pris après la
-// persistance et deux frames stables : rester immobile ou cadrer une fois.
-function atlasRiskFoundationStageTarget(stage) {
-  const stageNumber = String(stage || "").trim();
-  if (!stageNumber) return null;
-  const lab = els.learningFoundationLab || document.getElementById("learningFoundationLab");
-  return lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
-}
-
-function atlasRiskFoundationTargetAlreadyUsable(target, options = {}) {
-  if (!target) return false;
-  const rect = target.getBoundingClientRect();
-  const viewportHeight = Math.max(0, window.innerHeight || document.documentElement?.clientHeight || 0);
-  if (!viewportHeight) return false;
-  const safeTop = Math.max(0, Number(options.safeTop ?? 72));
-  const controlsRoom = Math.max(96, Number(options.controlsRoom ?? 150));
-  // On exige seulement que le début utile de la carte soit visible : une grande
-  // carte peut naturellement dépasser le bas sans justifier un recadrage.
-  return rect.bottom > safeTop + 64
-    && rect.top >= safeTop
-    && rect.top <= viewportHeight - controlsRoom;
-}
-
-async function atlasRiskFoundationFinishViewport(targetResolver, guardToken, options = {}) {
-  await atlasLearningWaitForPersistenceQuiescent(options.persistenceMaxWaitMs || ATLAS_LEARNING_NAV_PERSIST_MAX_WAIT_MS);
-  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-  if (atlasLearningNavigationGuardState?.token !== guardToken) return false;
-  const target = typeof targetResolver === "function" ? targetResolver() : targetResolver;
-  if (!target) {
-    atlasLearningRestoreNavigationGuard(guardToken);
-    return false;
-  }
-  learningOpenParentDetails(target);
-
-  if (atlasRiskFoundationTargetAlreadyUsable(target, options)) {
-    if (options.flash === true) {
-      target.classList.add("learning-target-flash");
-      window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
-    }
-    requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
-    return true;
-  }
-
-  const positioned = atlasLearningPositionTarget(target, {
-    smooth:false,
-    flash:options.flash === true,
-    topGap:options.topGap ?? ATLAS_LEARNING_STAGE_TOP_GAP,
-    tolerance:0
-  });
-  requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
-  return positioned;
-}
-
-function atlasRiskFoundationFinishStageViewport(stage, guardToken, options = {}) {
-  return atlasRiskFoundationFinishViewport(() => atlasRiskFoundationStageTarget(stage), guardToken, options);
-}
-
-function atlasRiskFoundationNavigateStageIfNeeded(stage, options = {}) {
-  const target = atlasRiskFoundationStageTarget(stage);
-  if (atlasRiskFoundationTargetAlreadyUsable(target, options)) {
-    if (options.flash === true && target) {
-      target.classList.add("learning-target-flash");
-      window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
-    }
-    return true;
-  }
-  return scrollToFoundationStage(stage, { ...options, flash:options.flash === true });
-}
+// Build 28.3.61 — Module 03 viewport ownership consolidation
+// Module 03 no longer owns a second viewport router. Its transitions use the
+// same atlasLearningScheduleTarget() path as the other guided modules. This
+// prevents a local visibility test from disagreeing with the global focus
+// engine and eliminates competing delayed scroll decisions.
 
 function scrollToLearningTarget(targetId, options = {}) {
   const id = String(targetId || "").trim();
@@ -21995,7 +21920,7 @@ function handleFoundationPrimaryAction(cockpit, action) {
     const msg = action.key === "verify"
       ? ["Étape 4 · scénarios", "Teste −3 %, puis +5 %. Compare résultat brut et résultat net."]
       : ["Étape 5 · résultat net", "Lis la synthèse figée, puis réponds à la question sur l’effet des coûts."];
-    atlasRiskFoundationNavigateStageIfNeeded(stage, { flash:false });
+    scrollToFoundationStage(stage, { flash:false });
     riskFoundationFeedback(true, msg[0], msg[1]);
     return true;
   }
@@ -36743,11 +36668,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.60";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.61";
 
-const ATLAS_BUILD = "28.3.60";
+const ATLAS_BUILD = "28.3.61";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.60";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.61";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
