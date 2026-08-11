@@ -1,3 +1,19 @@
+## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
+
+- Base : 28.3.59 publiée.
+- Test Firefox réel : les cartes Étapes 2/3/4 pouvaient déjà être visibles, mais chaque clic Module 03 relançait un recentrage programmé après rerender/persistance.
+- Cause : `scrollToFoundationStage()` était appelé systématiquement après les mutations du Module 03, même lorsque la prochaine étape était déjà utilisable à l’écran.
+- Guard Firefox posé avant les rerenders Risk.
+- Nouveau verrou visible-step : après persistance + deux frames, aucune navigation si le début utile de la prochaine carte est déjà visible.
+- Un seul cadrage non lissé si la prochaine étape est réellement hors zone utile.
+- Couverture : coûts, montant engagé, scénarios −3 % / +5 %, mauvaise réponse finale et conclusion 5/5.
+- Actions principales Risk `verify` / `note` : même politique visible = immobile.
+- Module 01, Module 02, Modules 04–11, données live, calculs, preuves métier et pédagogie 28.3.59 inchangés.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.60.
+
+---
+
 ## Build 28.3.59 — Module 03 Beginner Pedagogy + Risk Position Unlock
 
 - Base : 28.3.58 publiée.

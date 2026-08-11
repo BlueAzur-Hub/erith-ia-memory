@@ -1,8 +1,38 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.59  
-**Build :** 28.3.59  
-**Mission :** Module 03 Beginner Pedagogy + Risk Position Unlock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.60  
+**Build :** 28.3.60  
+**Mission :** Module 03 Visible-Step No-Valse Lock
+
+
+## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
+
+Cette Build part exactement de la 28.3.59 publiée et ne change ni les calculs ni la pédagogie ajoutée dans cette version. Elle corrige uniquement le comportement du viewport du Module 03 observé sous Firefox.
+
+### Contrat de viewport du Module 03
+
+**Une action utilisateur = aucun déplacement si l’étape suivante est déjà lisible ; sinon un seul cadrage après stabilisation.**
+
+- Le guard Firefox `overflow-anchor:none` est posé avant chaque rerender du Module 03.
+- Après sauvegarde/persistance et deux frames stables, la prochaine carte est inspectée.
+- Si son début utile et ses contrôles sont déjà visibles, la page reste exactement où elle est.
+- Si la carte n’est pas réellement utilisable dans le viewport, un seul cadrage non lissé est autorisé.
+- Aucun second recentrage différé n’est programmé.
+- Les actions concernées sont : chargement des coûts, montant engagé fictif, scénario −3 %, scénario +5 % et conclusion finale.
+- Les actions principales « scénarios » et « résultat net » utilisent la même règle visible = immobile.
+
+### Périmètre protégé
+
+- Pédagogie débutant et déverrouillage local du Module 03 de la 28.3.59 conservés.
+- Module 01 viewport 28.3.58 inchangé.
+- Module 02 inchangé.
+- Modules 04–11 inchangés.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, Bridge, données live et simulation métier inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+
+### Test Firefox attendu
+
+Dans le Module 03, lorsque les cartes Étape 2, Étape 3 et Étape 4 sont déjà visibles comme sur la capture de validation, cliquer **« Charger l’exemple école »**, puis **« Engager fictivement 50 € »**, puis **−3 %** ne doit provoquer aucun saut. Lorsque l’étape suivante est hors écran, un seul cadrage est autorisé.
 
 
 ## Build 28.3.59 — Module 03 Beginner Pedagogy + Risk Position Unlock
