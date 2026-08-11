@@ -1,3 +1,18 @@
+## Build 28.3.61 — Module 03 Deterministic Single-Step Framing Lock
+
+- Base : 28.3.60 testée sous Firefox.
+- Correction ciblée du recadrage Module 03 : le guard « déjà visible » de 28.3.60 est supprimé comme critère de navigation.
+- Après chaque action de progression Risk, le DOM est laissé se stabiliser puis la prochaine étape est cadrée **une seule fois** à une position déterministe.
+- `smooth:false`, aucun second scheduler de viewport et aucun recentrage conditionnel.
+- Marge haute Module 03 fixée à 96 px pour garder l’étape sous l’en-tête et lisible immédiatement.
+- Actions couvertes : chargement des coûts, engagement fictif 50 €, scénarios −3 % / +5 %, conclusion guidée et navigation `verify` / `note`.
+- Pédagogie, calculs, seuil de rentabilité 0,60 %, preuves métier et Module 01/02 inchangés.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- `node --check` : OK.
+- SHA-256 `app.js` : `0a78c2b1ff98226c2207c8d20744ddaf93d525ae9b0c7d0a3e89049b1635c7d0`.
+
+---
+
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
 
 - Base : 28.3.59 publiée.
