@@ -1,3 +1,19 @@
+## Build 28.3.59 — Module 03 Beginner Pedagogy + Risk Position Unlock
+
+- Base : 28.3.58 publiée.
+- Bug Firefox/UI confirmé : le Module 03 pouvait conserver 50 € dans le simulateur sans valider `risk_position`, laissant −3 % / +5 % verrouillés.
+- Cause : l’étape 3 dépendait de `runSchoolTest("safe_btc_5")`, lui-même soumis à une cotation Binance fraîche.
+- Découplage ciblé : le Module 03 enregistre désormais une preuve pédagogique locale `percentage_only_simplified` de 50 € engagés sur 1 000 € ; aucun prix d’exécution live n’est requis.
+- Les scénarios −3 % / +5 % calculent directement gain/perte brut puis net sur le montant engagé.
+- Pédagogie réécrite : français simple d’abord, jargon ensuite — taille de position, exposition, P/L brut/net, spread, slippage, seuil de rentabilité, perte maximale, règle d’arrêt, drawdown et récupération.
+- Exemple école conservé : 0,60 % de coûts aller-retour ≈ 0,30 € sur 50 €, explicitement non réel.
+- Archive Module 03 passe au schéma `agent_crypto_risk_module_03_archive_prefill_v2` : aucun faux prix d’entrée ou quantité BTC n’est fabriqué pour l’exercice percentage-only.
+- Module 01 viewport 28.3.58, Module 02, Modules 04–11 et moteurs métier inchangés.
+- `index.html`, `style.css`, `runtime_config.json` et assets inchangés.
+- Version Control Protected Core inchangé hors identité 28.3.59.
+
+---
+
 ## Build 28.3.58 — Module 01 Livecheck Market Single Focus Lock
 
 - Base : 28.3.57 publiée.

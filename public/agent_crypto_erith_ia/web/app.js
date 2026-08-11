@@ -17111,7 +17111,7 @@ const ATLAS_LEARNING_SESSION_STEPS = Object.freeze(["read", "open", "practice", 
 const ATLAS_LEARNING_PRACTICE_MAP = Object.freeze({
   market:{ target:"livecheck", practice:"Dans MARKET SNAPSHOT, lire la ligne Bitcoin : Prix, 24 h et 7 j.", verify:"Vérifier la source, l’heure des données et distinguer observation de prédiction." },
   spot:{ target:"learningFoundationPanel", practice:"Dans le carnet d’ordres pédagogique, identifier Bid, Ask et Spread puis choisir marché ou limite.", verify:"Dans Mode École guidé, cliquer sur « 1 · Tester une opération prudente — BTC 50 € », puis lire quantité et prix d’entrée." },
-  risk:{ target:"simCostPanel", practice:"Dans Mode École guidé, créer la position BTC fictive de 50 € avec « 1 · Tester une opération prudente ».", verify:"Dans Scénarios instantanés, tester −3 % puis +5 % et lire gain/perte avant frais, coûts et résultat après frais." },
+  risk:{ target:"simCostPanel", practice:"Dans le parcours Module 03, définir directement un montant engagé fictif de 50 € (taille de position), sans dépendre d’une cotation d’exécution live.", verify:"Tester −3 % puis +5 % et lire gain/perte avant coûts, coûts pédagogiques et résultat net." },
   account:{ target:"simSecurityGate", practice:"Examiner chaque verrou vert, orange ou rouge.", verify:"Identifier ce qui bloque et pourquoi aucune action réelle n’est autorisée." },
   wallet:{ target:"withdrawalSafetyLab", practice:"Construire un retrait test entièrement fictif.", verify:"Contrôler actif, réseau, frais, destination et petit test." },
   tokenomics:{ target:"expertLearningRoadmap", practice:"Relire stablecoins, offre, FDV, inflation et déblocages.", verify:"Écrire une note sur la différence entre prix unitaire et valorisation." },
@@ -17129,7 +17129,7 @@ const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "a
 const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
   market:"28.3.07",
   spot:"28.3.44",
-  risk:"28.3.44",
+  risk:"28.3.59",
   account:"28.3.44",
   wallet:"28.3.44",
   tokenomics:"28.3.44",
@@ -17171,14 +17171,14 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   },
   risk:{
     title:"03 · Frais et gestion du risque",
-    promise:"Comprendre comment montant engagé, variation du prix et coûts produisent le gain ou la perte finale.",
-    route:["LEÇON INTÉGRÉE", "COÛTS PÉDAGOGIQUES", "MODE ÉCOLE · BTC 50 €", "SCÉNARIOS −3 % / +5 %", "RÉSULTAT APRÈS FRAIS"],
+    promise:"Comprendre avec des mots simples combien est engagé, combien peut être perdu et comment les coûts transforment un résultat brut en résultat net.",
+    route:["LEÇON · MOTS SIMPLES D’ABORD", "COÛTS + SPREAD / SLIPPAGE", "MONTANT ENGAGÉ · 50 €", "SCÉNARIOS −3 % / +5 %", "RÉSULTAT NET + RISQUE"],
     steps:{
-      read:{ title:"1. Comprendre capital, position et exposition", where:"LEÇON INTÉGRÉE AU COCKPIT — 03 · Frais et gestion du risque", action:"Lire les définitions affichées, puis utiliser le bouton visible « Valider l’étape 1 après lecture » placé sous la leçon.", why:"Le capital total de 1 000 € n’est pas entièrement exposé lorsque seulement 50 € sont engagés.", result:"L’étape 1 devient verte et le cockpit conduit vers Coûts pédagogiques.", remember:"50 € engagés sur 1 000 € représentent 5 % d’exposition ; environ 950 € restent disponibles." },
-      open:{ title:"2. Charger les frais dans Coûts pédagogiques", where:"COÛTS PÉDAGOGIQUES — Frais, écarts d’exécution et seuil de rentabilité", action:"Cliquer sur « Charger un exemple école ».", why:"L’aller-retour achat + vente possède des coûts estimés.", result:"0,25 % achat + 0,25 % vente + 0,05 % entrée + 0,05 % sortie = 0,60 %.", remember:"Sur 50 €, 0,60 % représente environ 0,30 € de coûts pédagogiques." },
-      practice:{ title:"3. Créer une position BTC fictive de 50 €", where:"MODE ÉCOLE GUIDÉ — Tests guidés du simulateur", action:"Après Livecheck, cliquer sur « 1 · Tester une opération prudente — BTC 50 € · doit être accepté ».", why:"Les scénarios ne peuvent rien calculer sans position ouverte.", result:"« Accepté : opération prudente », environ 950 € disponibles et une ligne BTC dans Portefeuille virtuel.", remember:"Les 50 € sont convertis en une quantité fictive de BTC ; aucun achat réel n’est envoyé." },
-      verify:{ title:"4. Comparer une baisse de 3 % et une hausse de 5 %", where:"SCÉNARIOS INSTANTANÉS — Observer sans attendre le marché", action:"Cliquer d’abord sur « −3 % », lire le résultat, puis sur « +5 % » et comparer.", why:"La variation agit sur la position de 50 € ; les coûts rendent toujours le résultat net moins favorable que le résultat brut.", result:"−3 % ≈ −1,50 € avant coûts ; +5 % ≈ +2,50 € avant coûts ; le résultat après frais retire environ 0,30 € dans le modèle simplifié.", remember:"P/L signifie Profit / Loss, soit gain / perte. Brut = avant frais ; net = après frais." },
-      note:{ title:"5. Répondre avant de lire l’explication", where:"Carte « Question finale · Module 03 »", action:"Relire les résultats brut/net des scénarios, répondre de mémoire, puis lire l’explication affichée après la première tentative.", why:"Comparer les chiffres avant de relire la règle vérifie la compréhension du résultat net.", result:"La première réponse est conservée. La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Les frais réduisent un gain et aggravent une perte ; une petite hausse ne garantit pas un bénéfice net." }
+      read:{ title:"1. Comprendre capital, montant engagé et exposition", where:"LEÇON INTÉGRÉE AU COCKPIT — 03 · Frais et gestion du risque", action:"Lire les mots simples d’abord ; le jargon professionnel apparaît ensuite entre parenthèses. Puis utiliser « Valider l’étape 1 après lecture ».", why:"Le capital total de 1 000 € n’est pas entièrement exposé lorsque seulement 50 € sont engagés.", result:"L’étape 1 devient verte et le cockpit conduit vers les coûts pédagogiques.", remember:"Montant engagé = somme réellement mise sur l’opération (taille de position). 50 € sur 1 000 € = 5 % d’exposition ; 950 € ne sont pas engagés." },
+      open:{ title:"2. Comprendre les coûts et le seuil de rentabilité", where:"COÛTS PÉDAGOGIQUES — frais + écarts d’exécution", action:"Cliquer sur « Charger l’exemple école », puis lire la différence entre frais, spread et slippage.", why:"Une hausse du prix ne suffit pas : le gain brut doit d’abord couvrir tous les coûts.", result:"Exemple école : 0,25 % achat + 0,25 % vente + 0,05 % écart entrée + 0,05 % écart sortie = 0,60 %.", remember:"Sur 50 €, 0,60 % représente environ 0,30 €. Dans ce modèle simplifié, +0,60 % correspond approximativement au seuil où le résultat net revient à 0 €." },
+      practice:{ title:"3. Définir un montant engagé fictif de 50 €", where:"PARCOURS MODULE 03 — étape 3", action:"Cliquer sur « Engager fictivement 50 € ». Cette preuve est locale et pédagogique : aucune cotation Binance fraîche n’est nécessaire.", why:"Le Module 03 apprend le risque en pourcentage et en euros ; il n’a pas besoin d’un prix d’exécution réel pour comparer −3 % et +5 %.", result:"Montant engagé 50 € · capital non engagé 950 € · exposition 5 %. L’étape 4 s’ouvre immédiatement.", remember:"Montant engagé (taille de position) ≠ perte maximale. La perte dépend ensuite du mouvement défavorable étudié." },
+      verify:{ title:"4. Comparer une baisse de 3 % et une hausse de 5 %", where:"PARCOURS MODULE 03 — étape 4", action:"Cliquer d’abord sur « −3 % », lire brut/net, puis sur « +5 % » et comparer.", why:"La variation agit sur les 50 € engagés ; les coûts rendent le résultat net moins favorable que le résultat brut.", result:"−3 % = −1,50 € brut ; +5 % = +2,50 € brut ; l’exemple école retire environ 0,30 € de coûts.", remember:"Gain/perte avant coûts = P/L brut. Gain/perte après coûts = P/L net. Plus le montant engagé est grand, plus une même variation produit un gain ou une perte en euros important." },
+      note:{ title:"5. Relier résultat net, limite de perte et drawdown", where:"Carte « Question finale · Module 03 »", action:"Répondre d’abord à la question sur les coûts, puis relire les repères de risque : perte maximale, règle d’arrêt, drawdown et récupération.", why:"Le but n’est pas seulement de calculer un gain : il faut savoir combien on accepte de perdre et quand s’arrêter.", result:"La réponse correcte valide l’étape 5 et révèle la synthèse complète.", remember:"Perte maximale = limite décidée avant l’opération. Drawdown = baisse du portefeuille depuis son dernier sommet. Récupération = hausse nécessaire pour revenir à ce sommet, coûts compris." }
     }
   },
   account:{
@@ -17279,7 +17279,7 @@ const ATLAS_FOUNDATION_LEARNING_PATHS = Object.freeze({
   }
 });
 
-const ATLAS_GUIDED_LESSONS = Object.freeze({"market":{"intro":"Un prix isolé ne décrit pas le marché. Il faut toujours le replacer dans une période, identifier sa source, vérifier l’âge des données et regarder l’activité autour de l’actif.","concepts":["Prix actuel : dernière valeur observée sur une source donnée, pas une vérité universelle.","Variation 24 h et 7 j : mouvement relatif sur deux horizons différents.","Volume : activité d’échange sur une période ; il aide à juger la force d’un mouvement.","Capitalisation : prix multiplié par l’offre en circulation ; ce n’est pas une caisse disponible.","Liquidité : facilité d’acheter ou vendre sans déplacer fortement le prix.","Source et fraîcheur : nom du fournisseur, heure de collecte et âge de la donnée."],"example":"BTC peut progresser de +0,7 % sur 24 h tout en restant faible sur 7 jours. La conclusion correcte est seulement : petite hausse récente sur la source observée. Ce n’est pas une preuve de tendance durable.","safety":"Ne jamais acheter parce qu’un seul chiffre est vert. Une décision réelle exigerait plusieurs données cohérentes, des frais connus et une validation humaine."},"spot":{"intro":"Le marché Spot correspond à l’achat ou à la vente directe d’un actif, sans emprunt ni levier. Une simulation Spot doit montrer le montant engagé, le prix d’entrée, la quantité reçue et les coûts.","concepts":["Ordre au marché : exécution immédiate aux meilleurs prix disponibles, avec risque de slippage.","Ordre limite : prix choisi à l’avance, mais exécution non garantie.","Bid : meilleur prix proposé par un acheteur.","Ask : meilleur prix demandé par un vendeur.","Spread : écart entre le meilleur bid et le meilleur ask.","Slippage : différence entre le prix attendu et le prix exécuté.","Exécution partielle : seule une partie de l’ordre trouve une contrepartie."],"example":"Avec 50 € fictifs, le simulateur convertit le montant en une quantité de BTC au prix d’entrée affiché. Si le prix bouge immédiatement ou si des frais sont appliqués, le portefeuille peut afficher légèrement moins de 1 000 €.","safety":"Le profil débutant reste Spot uniquement. Levier, marge, futures, short et emprunt demeurent bloqués."},"risk":{"intro":"Le résultat utile est le résultat net après frais, spread et slippage. La taille de position doit rester compatible avec la réserve et l’exposition maximale du profil.","concepts":["Frais d’achat et de vente : commissions payées à l’entrée et à la sortie.","Seuil de rentabilité : prix nécessaire pour récupérer tous les coûts.","P/L brut : gain ou perte avant certains coûts de sortie.","P/L net : estimation après tous les coûts renseignés.","Exposition : montant soumis aux variations du marché.","Drawdown : baisse depuis un sommet antérieur.","Espérance : combinaison des gains, pertes et probabilités sur une série."],"example":"Une hausse de +1 % ne produit pas forcément un gain net si l’aller-retour coûte 1,2 %. Le seuil de rentabilité se situe alors au-dessus du prix d’entrée.","safety":"Les taux affichés restent des hypothèses pédagogiques tant qu’ils ne sont pas vérifiés sur un aperçu officiel de la plateforme."},"account":{"intro":"La sécurité du compte précède tout dépôt. Une plateforme correctement utilisée reste vulnérable si l’email, le mot de passe ou la récupération du compte sont compromis.","concepts":["Mot de passe unique et long.","2FA ou passkey indépendante du mot de passe.","Email sécurisé et sessions inconnues révoquées.","Verrou des paramètres et des retraits lorsque disponible.","Domaine officiel ouvert depuis un favori.","Aucun code transmis à un prétendu support."],"example":"Un appel urgent affirmant que le compte est piraté ne justifie jamais de donner un code 2FA ni d’installer un accès distant.","safety":"Raccrocher, ouvrir soi-même le site officiel et vérifier l’état du compte depuis un canal indépendant."},"wallet":{"intro":"Un retrait combine un actif, un réseau, une adresse, des frais et des confirmations. Une seule incohérence peut envoyer les fonds au mauvais endroit.","concepts":["Adresse : destination technique, à contrôler après collage.","Réseau : doit être accepté à la fois au départ et à l’arrivée.","Memo ou tag : identifiant supplémentaire parfois obligatoire.","Frais et minimum : déterminent le montant net reçu.","TXID : identifiant public de la transaction.","Petit test : transfert réduit avant un montant plus important.","Phrase de récupération : secret absolu du wallet."],"example":"Envoyer un token sur un réseau non pris en charge peut rendre les fonds invisibles ou difficiles à récupérer, même si l’adresse ressemble à la bonne.","safety":"Aucune phrase de récupération, aucune adresse réelle et aucun transfert réel ne sont demandés dans ce laboratoire."},"tokenomics":{"intro":"Le prix unitaire ne suffit pas à juger un jeton. Il faut étudier l’offre, la valorisation, l’inflation, les déblocages et la concentration des détenteurs.","concepts":["Offre en circulation et offre maximale.","Capitalisation et valorisation totalement diluée — FDV.","Inflation, émissions et burn.","Vesting et unlocks des équipes ou investisseurs.","Concentration des détenteurs.","Stablecoin : objectif de stabilité, mais risques d’émetteur, réserve et depeg."],"example":"Un jeton à 0,01 € peut être plus valorisé qu’un jeton à 100 € si des milliards d’unités existent. Le prix d’une unité ne mesure pas la taille du projet.","safety":"Un prix faible n’est jamais une preuve que l’actif est bon marché."},"defi":{"intro":"La DeFi repose sur des smart contracts. Une signature peut autoriser un contrat à déplacer des actifs, même sans révéler la phrase de récupération.","concepts":["Smart contract : programme déployé sur une blockchain.","Gas : coût d’exécution sur le réseau.","Approval : autorisation donnée à un contrat.","Approval illimité : permission potentiellement beaucoup plus large que l’opération.","DEX : échange décentralisé via contrats.","Bridge : transfert ou représentation entre réseaux.","Oracle et dépendances : sources externes utilisées par le protocole."],"example":"Un faux airdrop peut demander une signature présentée comme une simple vérification alors qu’elle accorde une autorisation de dépense.","safety":"Ne rien signer si la fonction, le contrat, le réseau, le montant autorisé ou le gas ne sont pas compris."},"yield":{"intro":"Un rendement ne se juge pas seulement par son pourcentage. Il faut identifier sa source, l’inflation du jeton, la durée de blocage et le risque de contrepartie.","concepts":["Staking natif et staking par prestataire.","Récompense nominale contre rendement réel.","Inflation du jeton récompensé.","Blocage et délai de retrait.","Slashing sur certains réseaux.","Risque de protocole ou de contrepartie.","Rendement net après coûts et variation du prix."],"example":"Recevoir +8 % de jetons ne crée pas un gain en euros si le prix du jeton baisse de 30 % pendant la même période.","safety":"Un rendement très élevé doit être traité comme un signal de risque supplémentaire, jamais comme une garantie."},"derivatives":{"intro":"Les dérivés donnent une exposition au prix sans nécessairement posséder l’actif. Le levier multiplie les gains et les pertes et rapproche la liquidation.","concepts":["Marge : garantie immobilisée pour une position.","Levier : exposition supérieure au capital engagé.","Long et short.","Futures et contrats perpétuels.","Funding périodique.","Mark price et prix de liquidation.","Marge isolée et marge croisée."],"example":"100 € avec un levier ×5 créent 500 € d’exposition. Un mouvement défavorable de 5 % représente environ 25 € de perte brute, avant frais.","safety":"Ces produits sont étudiés uniquement pour les reconnaître. Ils restent désactivés dans le profil débutant."},"scams":{"intro":"La blockchain exécute une transaction valide techniquement ; elle ne vérifie pas que le destinataire est honnête. La sécurité doit donc détecter la pression et les demandes anormales.","concepts":["Faux support et phishing.","Rendement garanti ou urgence artificielle.","Paiement demandé pour débloquer un retrait.","Accès distant et malware de presse-papiers.","Address poisoning.","Wallet drainer et approval illimité.","Pump-and-dump, rug pull et honeypot.","Fausse récupération de fonds."],"example":"Un support demandant de déplacer les cryptos vers une adresse de sécurité est lui-même un signal critique : un support légitime ne dicte pas une adresse de retrait.","safety":"En cas de doute : ne rien envoyer, ne rien signer, ne donner aucun code et revenir au canal officiel ouvert manuellement."},"records":{"intro":"Une expertise durable exige des preuves et un journal. Chaque opération doit pouvoir être reconstruite sans dépendre de la mémoire.","concepts":["Date, heure, actif, paire et type d’ordre.","Montant, quantité, prix moyen et frais.","TXID et justificatifs pour les transferts.","P/L brut et net.","Exports CSV, JSON ou Markdown.","Sources officielles et date de consultation.","Traçabilité fiscale à vérifier selon les règles en vigueur."],"example":"Deux opérations au même montant peuvent produire des résultats différents si les prix d’entrée, frais et quantités ne sont pas identiques. Le journal permet de l’expliquer.","safety":"Ne jamais inventer une valeur manquante. Une preuve incomplète doit rester explicitement incomplète."}});
+const ATLAS_GUIDED_LESSONS = Object.freeze({"market":{"intro":"Un prix isolé ne décrit pas le marché. Il faut toujours le replacer dans une période, identifier sa source, vérifier l’âge des données et regarder l’activité autour de l’actif.","concepts":["Prix actuel : dernière valeur observée sur une source donnée, pas une vérité universelle.","Variation 24 h et 7 j : mouvement relatif sur deux horizons différents.","Volume : activité d’échange sur une période ; il aide à juger la force d’un mouvement.","Capitalisation : prix multiplié par l’offre en circulation ; ce n’est pas une caisse disponible.","Liquidité : facilité d’acheter ou vendre sans déplacer fortement le prix.","Source et fraîcheur : nom du fournisseur, heure de collecte et âge de la donnée."],"example":"BTC peut progresser de +0,7 % sur 24 h tout en restant faible sur 7 jours. La conclusion correcte est seulement : petite hausse récente sur la source observée. Ce n’est pas une preuve de tendance durable.","safety":"Ne jamais acheter parce qu’un seul chiffre est vert. Une décision réelle exigerait plusieurs données cohérentes, des frais connus et une validation humaine."},"spot":{"intro":"Le marché Spot correspond à l’achat ou à la vente directe d’un actif, sans emprunt ni levier. Une simulation Spot doit montrer le montant engagé, le prix d’entrée, la quantité reçue et les coûts.","concepts":["Ordre au marché : exécution immédiate aux meilleurs prix disponibles, avec risque de slippage.","Ordre limite : prix choisi à l’avance, mais exécution non garantie.","Bid : meilleur prix proposé par un acheteur.","Ask : meilleur prix demandé par un vendeur.","Spread : écart entre le meilleur bid et le meilleur ask.","Slippage : différence entre le prix attendu et le prix exécuté.","Exécution partielle : seule une partie de l’ordre trouve une contrepartie."],"example":"Avec 50 € fictifs, le simulateur convertit le montant en une quantité de BTC au prix d’entrée affiché. Si le prix bouge immédiatement ou si des frais sont appliqués, le portefeuille peut afficher légèrement moins de 1 000 €.","safety":"Le profil débutant reste Spot uniquement. Levier, marge, futures, short et emprunt demeurent bloqués."},"risk":{"intro":"On commence par les mots simples. Le montant engagé est la somme réellement mise sur une opération ; en trading, on appelle aussi cela la taille de position. L’exposition indique quelle part du capital est soumise aux variations. Le résultat utile est ensuite le résultat net après les coûts.","concepts":["Montant engagé (taille de position) : somme réellement engagée sur l’opération.","Part du capital engagée (exposition) : 50 € sur 1 000 € = 5 % ; les 950 € restants ne sont pas engagés.","Gain ou perte avant coûts (P/L brut) : effet de la variation du prix avant les coûts.","Gain ou perte après coûts (P/L net) : résultat après les coûts pédagogiques renseignés.","Frais de transaction : commissions d’achat et de vente.","Écart achat / vente (spread) : différence déjà présente entre le prix auquel on peut acheter et celui auquel on peut vendre au même instant.","Écart d’exécution (slippage) : différence entre le prix attendu et le prix réellement obtenu au moment de l’exécution ; il peut être favorable ou défavorable.","Seuil de rentabilité : niveau où le gain brut couvre exactement les coûts ; résultat net ≈ 0.","Perte maximale acceptable : limite en euros décidée avant l’opération ; lorsqu’elle est atteinte, la règle d’arrêt s’applique.","Baisse depuis le dernier sommet (drawdown) : recul du portefeuille depuis son niveau le plus haut précédent.","Récupération : hausse nécessaire pour revenir au dernier sommet ; après une baisse, le pourcentage nécessaire peut être supérieur au pourcentage perdu.","Espérance : combinaison des gains, pertes et probabilités sur une série ; elle ne prédit pas l’opération suivante."],"example":"Exemple école : capital 1 000 €, montant engagé 50 € (5 %). À −3 %, la perte brute est 1,50 €. À +5 %, le gain brut est 2,50 €. Avec 0,30 € de coûts pédagogiques, les résultats nets deviennent environ −1,80 € et +2,20 €. Dans ce modèle simplifié, +0,60 % sur 50 € produit 0,30 € brut : cela couvre environ 0,30 € de coûts et ramène le résultat net vers 0 €.","safety":"0,60 % et 0,30 € sont uniquement les valeurs de l’exemple école. Les frais, le spread et le slippage réels doivent être vérifiés sur une source officielle avant toute opération réelle. Le Module 03 reste une simulation locale et ne nécessite aucune cotation d’exécution live pour ses scénarios en pourcentage."},"account":{"intro":"La sécurité du compte précède tout dépôt. Une plateforme correctement utilisée reste vulnérable si l’email, le mot de passe ou la récupération du compte sont compromis.","concepts":["Mot de passe unique et long.","2FA ou passkey indépendante du mot de passe.","Email sécurisé et sessions inconnues révoquées.","Verrou des paramètres et des retraits lorsque disponible.","Domaine officiel ouvert depuis un favori.","Aucun code transmis à un prétendu support."],"example":"Un appel urgent affirmant que le compte est piraté ne justifie jamais de donner un code 2FA ni d’installer un accès distant.","safety":"Raccrocher, ouvrir soi-même le site officiel et vérifier l’état du compte depuis un canal indépendant."},"wallet":{"intro":"Un retrait combine un actif, un réseau, une adresse, des frais et des confirmations. Une seule incohérence peut envoyer les fonds au mauvais endroit.","concepts":["Adresse : destination technique, à contrôler après collage.","Réseau : doit être accepté à la fois au départ et à l’arrivée.","Memo ou tag : identifiant supplémentaire parfois obligatoire.","Frais et minimum : déterminent le montant net reçu.","TXID : identifiant public de la transaction.","Petit test : transfert réduit avant un montant plus important.","Phrase de récupération : secret absolu du wallet."],"example":"Envoyer un token sur un réseau non pris en charge peut rendre les fonds invisibles ou difficiles à récupérer, même si l’adresse ressemble à la bonne.","safety":"Aucune phrase de récupération, aucune adresse réelle et aucun transfert réel ne sont demandés dans ce laboratoire."},"tokenomics":{"intro":"Le prix unitaire ne suffit pas à juger un jeton. Il faut étudier l’offre, la valorisation, l’inflation, les déblocages et la concentration des détenteurs.","concepts":["Offre en circulation et offre maximale.","Capitalisation et valorisation totalement diluée — FDV.","Inflation, émissions et burn.","Vesting et unlocks des équipes ou investisseurs.","Concentration des détenteurs.","Stablecoin : objectif de stabilité, mais risques d’émetteur, réserve et depeg."],"example":"Un jeton à 0,01 € peut être plus valorisé qu’un jeton à 100 € si des milliards d’unités existent. Le prix d’une unité ne mesure pas la taille du projet.","safety":"Un prix faible n’est jamais une preuve que l’actif est bon marché."},"defi":{"intro":"La DeFi repose sur des smart contracts. Une signature peut autoriser un contrat à déplacer des actifs, même sans révéler la phrase de récupération.","concepts":["Smart contract : programme déployé sur une blockchain.","Gas : coût d’exécution sur le réseau.","Approval : autorisation donnée à un contrat.","Approval illimité : permission potentiellement beaucoup plus large que l’opération.","DEX : échange décentralisé via contrats.","Bridge : transfert ou représentation entre réseaux.","Oracle et dépendances : sources externes utilisées par le protocole."],"example":"Un faux airdrop peut demander une signature présentée comme une simple vérification alors qu’elle accorde une autorisation de dépense.","safety":"Ne rien signer si la fonction, le contrat, le réseau, le montant autorisé ou le gas ne sont pas compris."},"yield":{"intro":"Un rendement ne se juge pas seulement par son pourcentage. Il faut identifier sa source, l’inflation du jeton, la durée de blocage et le risque de contrepartie.","concepts":["Staking natif et staking par prestataire.","Récompense nominale contre rendement réel.","Inflation du jeton récompensé.","Blocage et délai de retrait.","Slashing sur certains réseaux.","Risque de protocole ou de contrepartie.","Rendement net après coûts et variation du prix."],"example":"Recevoir +8 % de jetons ne crée pas un gain en euros si le prix du jeton baisse de 30 % pendant la même période.","safety":"Un rendement très élevé doit être traité comme un signal de risque supplémentaire, jamais comme une garantie."},"derivatives":{"intro":"Les dérivés donnent une exposition au prix sans nécessairement posséder l’actif. Le levier multiplie les gains et les pertes et rapproche la liquidation.","concepts":["Marge : garantie immobilisée pour une position.","Levier : exposition supérieure au capital engagé.","Long et short.","Futures et contrats perpétuels.","Funding périodique.","Mark price et prix de liquidation.","Marge isolée et marge croisée."],"example":"100 € avec un levier ×5 créent 500 € d’exposition. Un mouvement défavorable de 5 % représente environ 25 € de perte brute, avant frais.","safety":"Ces produits sont étudiés uniquement pour les reconnaître. Ils restent désactivés dans le profil débutant."},"scams":{"intro":"La blockchain exécute une transaction valide techniquement ; elle ne vérifie pas que le destinataire est honnête. La sécurité doit donc détecter la pression et les demandes anormales.","concepts":["Faux support et phishing.","Rendement garanti ou urgence artificielle.","Paiement demandé pour débloquer un retrait.","Accès distant et malware de presse-papiers.","Address poisoning.","Wallet drainer et approval illimité.","Pump-and-dump, rug pull et honeypot.","Fausse récupération de fonds."],"example":"Un support demandant de déplacer les cryptos vers une adresse de sécurité est lui-même un signal critique : un support légitime ne dicte pas une adresse de retrait.","safety":"En cas de doute : ne rien envoyer, ne rien signer, ne donner aucun code et revenir au canal officiel ouvert manuellement."},"records":{"intro":"Une expertise durable exige des preuves et un journal. Chaque opération doit pouvoir être reconstruite sans dépendre de la mémoire.","concepts":["Date, heure, actif, paire et type d’ordre.","Montant, quantité, prix moyen et frais.","TXID et justificatifs pour les transferts.","P/L brut et net.","Exports CSV, JSON ou Markdown.","Sources officielles et date de consultation.","Traçabilité fiscale à vérifier selon les règles en vigueur."],"example":"Deux opérations au même montant peuvent produire des résultats différents si les prix d’entrée, frais et quantités ne sont pas identiques. Le journal permet de l’expliquer.","safety":"Ne jamais inventer une valeur manquante. Une preuve incomplète doit rester explicitement incomplète."}});
 
 const ATLAS_LEARNING_HISTORY_KEY = "agent_crypto_learning_journey_history_28_2_83";
 
@@ -19303,32 +19303,32 @@ function foundationRiskScenarioSnapshot(pct, cockpitInput = null) {
   const cockpit = cockpitInput || loadLearningCockpitState();
   const evidence = cockpit?.practice_evidence && typeof cockpit.practice_evidence === "object" ? cockpit.practice_evidence : {};
   const stored = evidence.risk_scenario_results?.[String(Number(pct))];
-  if (stored?.model === "entry_anchored_simplified" && Number.isFinite(Number(stored.gross_pnl_eur)) && Number.isFinite(Number(stored.net_pnl_eur))) {
+  if (["entry_anchored_simplified", "percentage_only_simplified"].includes(String(stored?.model || "")) && Number.isFinite(Number(stored.gross_pnl_eur)) && Number.isFinite(Number(stored.net_pnl_eur))) {
     return {
       ready:true,
       pct:Number(pct),
       grossPnl:Number(stored.gross_pnl_eur),
       netPnl:Number(stored.net_pnl_eur),
-      marketPrice:Number(stored.scenario_price_eur || 0),
+      marketPrice:Number.isFinite(Number(stored.scenario_price_eur)) ? Number(stored.scenario_price_eur) : null,
       invested:Number(stored.amount_eur || SIM_PROFILE.defaultAmount),
       roundTrip:Number(stored.round_trip_pct || 0),
-      model:"entry_anchored_simplified"
+      model:String(stored.model || "percentage_only_simplified")
     };
   }
   const details = evidence.risk_position_details || {};
   const pos = state.sim?.positions?.BTC || null;
   const invested = Number(details.amount_eur ?? pos?.invested ?? SIM_PROFILE.defaultAmount);
   const entryPrice = Number(details.entry_price_eur ?? pos?.avgPrice ?? 0);
-  const quantity = Number(details.quantity ?? pos?.qty ?? 0);
   const roundTrip = getSimRoundTripCostPct(readSimCostInputs());
   const rate = Number(pct);
-  const ready = Boolean(evidence.risk_position && Number.isFinite(invested) && invested > 0 && Number.isFinite(entryPrice) && entryPrice > 0 && Number.isFinite(quantity) && quantity > 0 && Number.isFinite(rate));
-  if (!ready) return { ready:false, pct:rate, grossPnl:0, netPnl:0, marketPrice:0, invested:0, roundTrip, model:"entry_anchored_simplified" };
+  const percentageOnly = String(details.model || "") === "percentage_only_simplified" || details.market_price_required === false;
+  const ready = Boolean(evidence.risk_position && Number.isFinite(invested) && invested > 0 && Number.isFinite(rate));
+  if (!ready) return { ready:false, pct:rate, grossPnl:0, netPnl:0, marketPrice:null, invested:0, roundTrip, model:percentageOnly ? "percentage_only_simplified" : "entry_anchored_simplified" };
   const grossPnl = invested * rate / 100;
   const estimatedRoundTripCost = invested * roundTrip / 100;
   const netPnl = grossPnl - estimatedRoundTripCost;
-  const marketPrice = entryPrice * (1 + rate / 100);
-  return { ready:true, pct:rate, grossPnl, netPnl, marketPrice, invested, roundTrip, estimatedRoundTripCost, model:"entry_anchored_simplified" };
+  const marketPrice = !percentageOnly && Number.isFinite(entryPrice) && entryPrice > 0 ? entryPrice * (1 + rate / 100) : null;
+  return { ready:true, pct:rate, grossPnl, netPnl, marketPrice, invested, roundTrip, estimatedRoundTripCost, model:percentageOnly ? "percentage_only_simplified" : "entry_anchored_simplified" };
 }
 
 function foundationRiskGuidedSummary(cockpit) {
@@ -19343,7 +19343,7 @@ function foundationRiskGuidedSummary(cockpit) {
   const roundTrip = Number.isFinite(frozenRoundTrip) ? frozenRoundTrip : currentRoundTrip;
   const ready = Boolean(cockpit?.steps?.verify && evidence.cost_example && evidence.risk_position && minusTested && plusTested && minus.ready && plus.ready);
   const text = ready
-    ? `La position fictive de ${fmtEUR.format(minus.invested)} est comparée à son prix d’entrée. Dans le scénario −3 %, le résultat est ${atlasSignedEUR(minus.grossPnl)} avant les coûts pédagogiques et ${atlasSignedEUR(minus.netPnl)} après leur estimation. Dans le scénario +5 %, il est ${atlasSignedEUR(plus.grossPnl)} avant coûts et ${atlasSignedEUR(plus.netPnl)} après coûts. Le modèle pédagogique applique ${roundTrip.toFixed(2)} % de coûts aller-retour et fige ces deux preuves au moment du test : une modification ultérieure du marché ou des champs de coûts ne réécrit pas la session. Le résultat net reste donc inférieur au résultat brut.`
+    ? `Le montant engagé fictif de ${fmtEUR.format(minus.invested)} reçoit directement les scénarios −3 % et +5 %. À −3 %, le résultat est ${atlasSignedEUR(minus.grossPnl)} avant les coûts pédagogiques et ${atlasSignedEUR(minus.netPnl)} après leur estimation. À +5 %, il est ${atlasSignedEUR(plus.grossPnl)} avant coûts et ${atlasSignedEUR(plus.netPnl)} après coûts. Le modèle pédagogique applique ${roundTrip.toFixed(2)} % de coûts aller-retour et fige ces preuves au moment du test. Aucun prix d’exécution live n’est requis pour ce calcul en pourcentage ; le résultat net reste inférieur au résultat brut.`
     : "La synthèse sera construite après le chargement des coûts, la position BTC fictive et les deux scénarios −3 % / +5 %.";
   return { ready, roundTrip, minus, plus, minusTested, plusTested, text };
 }
@@ -19390,7 +19390,7 @@ function ensureRiskModule03AutoPrefill(cockpit) {
   const autoBlock = riskModule03AutoBlockText(cockpit, summary);
   const nextNotes = riskModule03UpsertAutoBlock(cockpit.notes_free, autoBlock);
   const prefill = {
-    schema:"agent_crypto_risk_module_03_archive_prefill_v1",
+    schema:"agent_crypto_risk_module_03_archive_prefill_v2",
     generated_at:generatedAt,
     module_key:"risk",
     module_title:"03 · Frais et gestion du risque",
@@ -19410,14 +19410,17 @@ function ensureRiskModule03AutoPrefill(cockpit) {
     position:{
       asset:"BTC",
       amount_eur:Number(details.amount_eur || SIM_PROFILE.defaultAmount),
-      quantity:Number(details.quantity || 0),
-      entry_price_eur:Number(details.entry_price_eur || 0),
+      exposure_pct:Number(details.exposure_pct || 0),
       cash_remaining_eur:Number(details.cash_remaining_eur || 0),
+      model:String(details.model || "percentage_only_simplified"),
+      quantity:null,
+      entry_price_eur:null,
+      market_price_required:false,
       evidence_mode:"frozen_at_validation"
     },
     scenarios:{
-      minus_3_pct:{ gross_pnl_eur:Number(summary.minus.grossPnl), net_pnl_eur:Number(summary.minus.netPnl), scenario_price_eur:Number(summary.minus.marketPrice), round_trip_pct:Number(summary.minus.roundTrip), model:String(summary.minus.model || "entry_anchored_simplified") },
-      plus_5_pct:{ gross_pnl_eur:Number(summary.plus.grossPnl), net_pnl_eur:Number(summary.plus.netPnl), scenario_price_eur:Number(summary.plus.marketPrice), round_trip_pct:Number(summary.plus.roundTrip), model:String(summary.plus.model || "entry_anchored_simplified") }
+      minus_3_pct:{ gross_pnl_eur:Number(summary.minus.grossPnl), net_pnl_eur:Number(summary.minus.netPnl), scenario_price_eur:Number.isFinite(Number(summary.minus.marketPrice)) && summary.minus.marketPrice !== null ? Number(summary.minus.marketPrice) : null, round_trip_pct:Number(summary.minus.roundTrip), model:String(summary.minus.model || "entry_anchored_simplified") },
+      plus_5_pct:{ gross_pnl_eur:Number(summary.plus.grossPnl), net_pnl_eur:Number(summary.plus.netPnl), scenario_price_eur:Number.isFinite(Number(summary.plus.marketPrice)) && summary.plus.marketPrice !== null ? Number(summary.plus.marketPrice) : null, round_trip_pct:Number(summary.plus.roundTrip), model:String(summary.plus.model || "entry_anchored_simplified") }
     },
     conclusion:{ costs_reduce_available_result:true, gross_and_net_are_distinct:true, scenario_is_prediction:false },
     safety:{ recommendation_generated:false, real_order:false, api_key_used:false, wallet_connected:false }
@@ -19434,37 +19437,44 @@ function ensureRiskModule03AutoPrefill(cockpit) {
 function foundationRiskLab(cockpit) {
   const e = cockpit.practice_evidence || {};
   const scenarios = Array.isArray(e.scenarios) ? e.scenarios : [];
-  const totals = getSimulationTotals();
   const costs = readSimCostInputs();
   const roundTrip = getSimRoundTripCostPct(costs);
-  const simplifiedCost = 50 * roundTrip / 100;
+  const amount = Number(e.risk_position_details?.amount_eur || SIM_PROFILE.defaultAmount);
+  const startCash = Number(SIM_PROFILE.startCash);
+  const cashNotEngaged = Math.max(0, startCash - amount);
+  const exposurePct = startCash > 0 ? (amount / startCash) * 100 : 0;
+  const simplifiedCost = amount * roundTrip / 100;
   const summary = foundationRiskGuidedSummary(cockpit);
   return `
     <div class="foundation-lab-grid foundation-risk-guided-lab">
       <article data-foundation-stage="2" class="foundation-lab-wide ${cockpit.steps.open ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 2 · COÛTS</span><h5>Charger l’exemple école</h5>
-        <div class="foundation-risk-summary"><span><b>Achat</b> 0,25 %</span><span><b>Vente</b> 0,25 %</span><span><b>Entrée</b> 0,05 %</span><span><b>Sortie</b> 0,05 %</span></div>
+        <span class="foundation-stage-kicker">ÉTAPE 2 · COÛTS</span><h5>Comprendre ce que l’opération doit d’abord rembourser</h5>
+        <div class="foundation-risk-summary"><span><b>Frais achat</b> 0,25 %</span><span><b>Frais vente</b> 0,25 %</span><span><b>Écart entrée</b> 0,05 %</span><span><b>Écart sortie</b> 0,05 %</span></div>
         ${foundationButton(cockpit.steps.open ? "Exemple école chargé" : "Charger l’exemple école", "risk_load_costs", cockpit.steps.open)}
-        <small>Coût aller-retour : ${roundTrip.toFixed(2)} % · environ ${escapeHtml(fmtEUR.format(simplifiedCost))} sur 50 €. Il ne s’agit pas d’un tarif Kraken.</small>
+        <p><b>Mots simples d’abord :</b> le <b>spread</b> est l’écart achat / vente déjà présent ; le <b>slippage</b> est l’écart entre le prix attendu et le prix réellement exécuté. Les champs « écart entrée / sortie » servent ici d’hypothèse pédagogique d’impact d’exécution.</p>
+        <small>Coût aller-retour de l’exemple : ${roundTrip.toFixed(2)} % · environ ${escapeHtml(fmtEUR.format(simplifiedCost))} sur ${escapeHtml(fmtEUR.format(amount))}. Ce n’est pas un tarif Kraken et ce n’est pas une mesure réelle du spread ou du slippage.</small>
       </article>
       <article data-foundation-stage="3" class="foundation-lab-wide ${cockpit.steps.practice ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 3 · EXPOSITION</span><h5>Créer la position BTC fictive de 50 €</h5>
-        <p>Capital de départ ${escapeHtml(fmtEUR.format(SIM_PROFILE.startCash))} · position visée ${escapeHtml(fmtEUR.format(SIM_PROFILE.defaultAmount))} · exposition 5 %.</p>
-        ${foundationButton(cockpit.steps.practice ? "Position BTC 50 € créée" : "Créer la position BTC fictive de 50 €", "risk_run_safe_btc", !cockpit.steps.open || cockpit.steps.practice)}
-        <small>Capital disponible actuel : ${escapeHtml(fmtEUR.format(Math.max(0, state.sim.cash)))} · valeur des positions : ${escapeHtml(fmtEUR.format(totals.positionsValue))}.</small>
+        <span class="foundation-stage-kicker">ÉTAPE 3 · MONTANT ENGAGÉ</span><h5>Engager fictivement 50 € — « taille de position » en jargon trading</h5>
+        <p>Capital pédagogique : <b>${escapeHtml(fmtEUR.format(startCash))}</b> · montant engagé : <b>${escapeHtml(fmtEUR.format(amount))}</b> · capital non engagé : <b>${escapeHtml(fmtEUR.format(cashNotEngaged))}</b> · exposition : <b>${exposurePct.toFixed(0)} %</b>.</p>
+        <p><b>À retenir :</b> montant engagé ≠ perte maximale. Par exemple, si les ${escapeHtml(fmtEUR.format(amount))} baissent de 10 %, la perte brute étudiée serait ${escapeHtml(fmtEUR.format(amount * 0.10))}, pas ${escapeHtml(fmtEUR.format(amount))}.</p>
+        ${foundationButton(cockpit.steps.practice ? "Montant engagé fictif de 50 € enregistré" : "Engager fictivement 50 €", "risk_run_safe_btc", !cockpit.steps.open || cockpit.steps.practice)}
+        <small>Cette étape est une preuve pédagogique locale. Elle ne passe plus par une cotation Binance fraîche et n’envoie aucun ordre réel.</small>
       </article>
       <article data-foundation-stage="4" class="foundation-lab-wide ${cockpit.steps.verify ? "is-done" : ""}">
-        <span class="foundation-stage-kicker">ÉTAPE 4 · SCÉNARIOS</span><h5>Comparer −3 % et +5 %</h5>
+        <span class="foundation-stage-kicker">ÉTAPE 4 · SCÉNARIOS</span><h5>Comparer −3 % et +5 % sur le montant engagé</h5>
         <div class="foundation-choice-row">${foundationButton(scenarios.includes(-3) ? "−3 % testé" : "Tester −3 %", "risk_scenario_minus3", !cockpit.steps.practice || scenarios.includes(-3))}${foundationButton(scenarios.includes(5) ? "+5 % testé" : "Tester +5 %", "risk_scenario_plus5", !cockpit.steps.practice || scenarios.includes(5))}</div>
         <p><b>−3 % :</b> ${summary.minusTested && summary.minus.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "à tester"}<br><b>+5 % :</b> ${summary.plusTested && summary.plus.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "à tester"}</p>
-        <small>Les scénarios ne modifient pas la position. Ils comparent seulement des résultats fictifs.</small>
+        <p><b>Brut</b> = avant coûts. <b>Net</b> = après coûts. Avec ${roundTrip.toFixed(2)} % de coûts pédagogiques, le seuil de rentabilité simplifié est d’environ <b>+${roundTrip.toFixed(2)} %</b> : le gain brut couvre alors environ ${escapeHtml(fmtEUR.format(simplifiedCost))} de coûts et le résultat net revient près de 0 €.</p>
+        <small>Les scénarios ne modifient pas la position et ne prédisent pas le marché. Ils appliquent uniquement un pourcentage au montant engagé.</small>
       </article>
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · QUESTION FINALE</span><h5>À toi de répondre</h5>
         <p class="foundation-recall-evidence">Preuves figées : −3 % = ${summary.minus?.ready ? `${atlasSignedEUR(summary.minus.grossPnl)} brut · ${atlasSignedEUR(summary.minus.netPnl)} net` : "—"} ; +5 % = ${summary.plus?.ready ? `${atlasSignedEUR(summary.plus.grossPnl)} brut · ${atlasSignedEUR(summary.plus.netPnl)} net` : "—"}. Coûts pédagogiques aller-retour : ${Number(summary.roundTrip || 0).toFixed(2)} %.</p>
-        <p><b>Question :</b> les frais réduisent-ils le résultat disponible par rapport au résultat brut ?</p>
+        <p><b>Question :</b> les coûts réduisent-ils le résultat disponible par rapport au résultat brut ?</p>
         <div class="foundation-choice-row"><button type="button" data-foundation-action="risk_costs_reduce_yes" ${summary.ready && !cockpit.steps.note ? "" : "disabled"}>Oui</button><button type="button" data-foundation-action="risk_costs_reduce_no" ${summary.ready && !cockpit.steps.note ? "" : "disabled"}>Non</button></div>
         ${foundationFinalRecallFeedbackMarkup(cockpit, "risk", summary.text)}
+        <div class="foundation-recall-evidence"><b>Repères de risque à revoir :</b> perte maximale acceptable = limite décidée avant l’opération ; règle d’arrêt = on s’arrête lorsque cette limite est atteinte ; drawdown = baisse du portefeuille depuis son dernier sommet ; récupération = hausse nécessaire pour revenir à ce sommet, coûts compris.</div>
       </article>
     </div>`;
 }
@@ -20567,12 +20577,58 @@ async function runSpotFoundationSchoolPosition(cockpit) {
   }
 }
 
+async function runRiskFoundationSchoolPosition(cockpitInput = null) {
+  const cockpit = cockpitInput || loadLearningCockpitState();
+  if (!cockpit || cockpit.completed_at || cockpit.module_key !== "risk") return false;
+  if (!cockpit.steps.open || !cockpit.practice_evidence?.cost_example) {
+    riskFoundationFeedback(false, "Étape 2 requise", "Charge d’abord l’exemple de coûts pédagogiques.");
+    return false;
+  }
+
+  // Build 28.3.59 : le Module 03 étudie une variation en pourcentage appliquée
+  // à un montant engagé. Il ne doit pas dépendre d’une cotation Binance fraîche.
+  // Aucune exécution n’est simulée ici : on enregistre seulement la preuve locale
+  // « 50 € engagés sur 1 000 € », suffisante pour les scénarios −3 % / +5 %.
+  const amount = Number(SIM_PROFILE.defaultAmount);
+  const startCash = Number(SIM_PROFILE.startCash);
+  const next = loadLearningCockpitState();
+  if (next.completed_at || next.module_key !== "risk") return false;
+  next.practice_evidence = next.practice_evidence && typeof next.practice_evidence === "object" ? next.practice_evidence : {};
+  next.practice_evidence.risk_position = true;
+  next.practice_evidence.risk_position_details = {
+    amount_eur:amount,
+    cash_remaining_eur:Math.max(0, startCash - amount),
+    exposure_pct:startCash > 0 ? (amount / startCash) * 100 : 0,
+    model:"percentage_only_simplified",
+    market_price_required:false,
+    real_order:false,
+    api_key_used:false,
+    wallet_connected:false,
+    captured_at:new Date().toISOString(),
+    build:"28.3.59",
+    evidence_mode:"frozen_at_validation"
+  };
+  next.steps.practice = true;
+  next.practice_completed_at = next.practice_completed_at || new Date().toISOString();
+  next.foundation_path_build = foundationPathBuildForModule(next.module_key);
+  next.last_action = "risk_pedagogical_amount_recorded";
+  next.flow_build = ATLAS_LEARNING_FLOW_BUILD;
+  saveLearningCockpitState(next);
+  renderLearningJourneyCockpit();
+  scrollToFoundationStage(4);
+  riskFoundationFeedback(true, "Étape 3 validée", `Montant engagé fictif : ${fmtEUR.format(amount)} sur ${fmtEUR.format(startCash)} · exposition ${(startCash > 0 ? amount / startCash * 100 : 0).toFixed(0)} %. Étape 4 ouverte : compare −3 % puis +5 %.`);
+  return true;
+}
+
 async function runFoundationSchoolPosition(moduleKey) {
   const cockpit = loadLearningCockpitState();
   if (cockpit.completed_at || cockpit.module_key !== moduleKey) return false;
 
-  // Module 02 possède désormais son propre trajet : Livecheck joint en arrière-
-  // plan, simulation locale, résultat pédagogique, puis un seul cadrage final.
+  // Module 03 possède un exercice local en pourcentage : aucun flux d’exécution
+  // live ne peut bloquer l’apprentissage des frais et du risque.
+  if (moduleKey === "risk") return runRiskFoundationSchoolPosition(cockpit);
+
+  // Module 02 conserve son trajet avec cotation d’exécution fraîche.
   if (moduleKey === "spot") return runSpotFoundationSchoolPosition(cockpit);
 
   // Les autres modules conservent leur comportement historique.
@@ -36597,11 +36653,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.58";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.59";
 
-const ATLAS_BUILD = "28.3.58";
+const ATLAS_BUILD = "28.3.59";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.58";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.59";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

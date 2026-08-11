@@ -1,8 +1,50 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.58  
-**Build :** 28.3.58  
-**Mission :** Module 01 Livecheck Market Single Focus Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.59  
+**Build :** 28.3.59  
+**Mission :** Module 03 Beginner Pedagogy + Risk Position Unlock
+
+
+## Build 28.3.59 — Module 03 Beginner Pedagogy + Risk Position Unlock
+
+Cette Build part exactement de la 28.3.58 publiée. Les essais réels du parcours ont révélé un verrou du Module 03 ; cette version le corrige et améliore sa pédagogie débutant sans toucher au contrat de viewport stabilisé en 28.3.58.
+
+### Bug corrigé
+
+L’étape 3 du Module 03 utilisait encore `runSchoolTest("safe_btc_5")`, qui exige désormais une cotation Binance fraîche pour une simulation d’exécution. Le Module 03 pouvait donc afficher 50 € de position dans le simulateur tout en refusant d’enregistrer la preuve pédagogique `risk_position`; les boutons −3 % / +5 % restaient alors verrouillés.
+
+Le Module 03 possède maintenant son propre exercice local :
+
+**50 € engagés sur 1 000 € → exposition 5 % → scénarios −3 % / +5 % → brut / net.**
+
+Aucune cotation Binance fraîche n’est requise pour cette démonstration en pourcentage. Aucun ordre réel, aucune clé API et aucun wallet ne sont utilisés.
+
+### Pédagogie débutant V2
+
+Règle générale : **mot simple d’abord → jargon professionnel ensuite → exemple concret → vérification.**
+
+- `Montant engagé` puis `(taille de position)`.
+- `Part du capital engagée` puis `(exposition)`.
+- `Gain/perte avant coûts` puis `(P/L brut)`.
+- `Gain/perte après coûts` puis `(P/L net)`.
+- `Écart achat / vente` puis `(spread)`.
+- `Écart entre prix attendu et prix exécuté` puis `(slippage)`.
+- `Baisse depuis le dernier sommet` puis `(drawdown)`.
+- `Récupération` = hausse nécessaire pour revenir au dernier sommet.
+
+Le parcours rappelle aussi la perte maximale acceptable, la règle d’arrêt et le seuil de rentabilité. L’exemple école reste explicitement pédagogique : 0,60 % de coûts aller-retour, soit environ 0,30 € sur 50 € ; ce n’est pas un tarif réel de plateforme.
+
+### Périmètre protégé
+
+- Module 01 Livecheck / viewport 28.3.58 inchangé.
+- Module 02 et son exigence de cotation Binance fraîche pour l’achat fictif inchangés.
+- Modules 04–11 inchangés.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, Bridge et données live inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+
+### Test attendu
+
+Dans le Module 03, après avoir chargé l’exemple école, cliquer **« Engager fictivement 50 € »**. L’étape 3 doit devenir verte immédiatement et les boutons **−3 %** et **+5 %** doivent devenir utilisables, même sans cotation Binance fraîche. Le viewport ne doit effectuer qu’un seul cadrage vers l’étape 4.
 
 
 ## Build 28.3.58 — Module 01 Livecheck Market Single Focus Lock
