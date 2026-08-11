@@ -1,8 +1,8 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.62  
-**Build :** 28.3.62  
-**Mission :** Module 03 Deterministic Framing Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.63  
+**Build :** 28.3.63  
+**Mission :** Module 03 Deterministic Centered Framing Lock
 
 
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock

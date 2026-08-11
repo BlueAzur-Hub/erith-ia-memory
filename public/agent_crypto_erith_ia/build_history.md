@@ -1,3 +1,20 @@
+# Build 28.3.63 — Module 03 Deterministic Centered Framing Lock
+
+- Base : 28.3.62.
+- Lecture méticuleuse du chemin réel du Module 03 : `risk_load_costs`, `runRiskFoundationSchoolPosition`, `risk_scenario_minus3` / `risk_scenario_plus5` et le routeur viewport.
+- Cause corrigée : le cadrage 28.3.62 utilisait une bande verticale fixe `80–220 px`, indépendante de la hauteur réelle du viewport Firefox. Une étape pouvait donc être techniquement « cadrée » mais visuellement mal positionnée.
+- Correction minimale : zone de cadrage relative au viewport (~16 % de la hauteur), bornée à 72–140 px.
+- Une étape n’est considérée comme déjà cadrée que si son début est réellement dans cette zone et qu’au moins 180 px de contenu restent visibles.
+- Si nécessaire : un seul `window.scrollTo()` instantané, sans `smooth`, sans second scheduler.
+- Guard Firefox conservé pendant rerender + persistance + stabilisation.
+- Module 03 : calculs, coûts pédagogiques 0,60 %, 50 €, scénarios −3 % / +5 %, pédagogie et preuves inchangés.
+- Modules 01–02 et 04–11 inchangés.
+- Aucun fichier GitHub modifié par cette préparation.
+- `node --check web/app.js` : OK.
+- SHA-256 app.js : `6c87c1f61253b3df207ebc922c11cea54da8e7a02f1309422e068723cde839c3`.
+
+---
+
 # Build 28.3.62 — Module 03 Deterministic Framing Lock
 
 - Base : 28.3.60.

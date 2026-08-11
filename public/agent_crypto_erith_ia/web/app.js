@@ -20621,7 +20621,7 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
     api_key_used:false,
     wallet_connected:false,
     captured_at:new Date().toISOString(),
-    build:"28.3.62",
+    build:"28.3.63",
     evidence_mode:"frozen_at_validation"
   };
   next.steps.practice = true;
@@ -21697,15 +21697,16 @@ function scrollToFoundationStage(stage, options = {}) {
   }, options);
 }
 
-// Build 28.3.62 — Module 03 Deterministic Framing Lock
-// La 28.3.60 avait corrigé la "valse", mais son critère "déjà utilisable" était
-// trop large : une carte située vers le bas du viewport était considérée comme
-// utilisable et la page restait donc mal cadrée. Le screenshot de validation
-// montrait précisément ce cas avec l'étape 5.
+// Build 28.3.63 — Module 03 Deterministic Centered Framing Lock
+// La 28.3.62 avait encore un défaut de géométrie : la carte pouvait être déclarée
+// correctement cadrée avec un top arbitraire (80–220 px), sans tenir compte de la
+// hauteur réelle du viewport. Le résultat variait donc selon la fenêtre Firefox.
 //
 // Nouveau contrat :
-// - si la carte est déjà dans une bande de lecture haute et stable, on ne bouge pas ;
-// - sinon, un seul cadrage vers une position haute déterministe ;
+// - la cible est positionnée dans une zone relative au viewport (~16 % du haut) ;
+// - la zone est bornée pour rester stable sur petits et grands écrans ;
+// - si la cible est déjà dans cette zone avec une portion utile visible : aucun scroll ;
+// - sinon : un seul scroll instantané après stabilisation ;
 // - aucun second scroll différé n'est ajouté.
 function atlasRiskFoundationStageTarget(stage) {
   const stageNumber = String(stage || "").trim();
@@ -21714,19 +21715,52 @@ function atlasRiskFoundationStageTarget(stage) {
   return lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
 }
 
+function atlasRiskFoundationFrameTop(options = {}) {
+  const viewportHeight = Math.max(0, window.innerHeight || document.documentElement?.clientHeight || 0);
+  if (!viewportHeight) return 96;
+  const ratio = Number(options.frameTopRatio ?? 0.16);
+  const min = Math.max(64, Number(options.frameMinTop ?? 72));
+  const max = Math.max(min + 20, Number(options.frameMaxTop ?? 140));
+  return Math.min(max, Math.max(min, viewportHeight * ratio));
+}
+
 function atlasRiskFoundationTargetAlreadyFramed(target, options = {}) {
   if (!target) return false;
   const rect = target.getBoundingClientRect();
   const viewportHeight = Math.max(0, window.innerHeight || document.documentElement?.clientHeight || 0);
   if (!viewportHeight) return false;
-  const frameMinTop = Math.max(48, Number(options.frameMinTop ?? 80));
-  const frameMaxTop = Math.max(frameMinTop + 20, Number(options.frameMaxTop ?? 220));
-  const minVisible = Math.max(64, Number(options.minVisible ?? 96));
-  // Une grande carte peut dépasser le bas. Ce qui compte ici est que son début
-  // soit réellement cadré dans la zone haute de lecture, pas simplement visible.
-  return rect.top >= frameMinTop
-    && rect.top <= frameMaxTop
-    && rect.bottom > frameMinTop + minVisible;
+  const frameTop = atlasRiskFoundationFrameTop(options);
+  const tolerance = Math.max(8, Number(options.frameTolerance ?? 18));
+  const minVisible = Math.max(120, Number(options.minVisible ?? 180));
+  const targetVisibleTop = Math.max(rect.top, 0);
+  const targetVisibleBottom = Math.min(rect.bottom, viewportHeight);
+  const visibleHeight = targetVisibleBottom - targetVisibleTop;
+  // Une étape est « cadrée » uniquement si son début est dans la vraie zone
+  // de lecture et si une portion utile de la carte reste visible. Une simple
+  // présence en bas de l'écran ne suffit plus.
+  return Math.abs(rect.top - frameTop) <= tolerance
+    && visibleHeight >= minVisible;
+}
+
+function atlasRiskFoundationPositionTarget(target, options = {}) {
+  if (!target) return false;
+  learningOpenParentDetails(target);
+  const frameTop = atlasRiskFoundationFrameTop(options);
+  const tolerance = Math.max(0, Number(options.tolerance ?? 4));
+  const rect = target.getBoundingClientRect();
+  const drift = rect.top - frameTop;
+  if (Math.abs(drift) > tolerance) {
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo({ top: Math.max(0, window.scrollY + drift), behavior:"auto" });
+    requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
+  }
+  if (options.flash === true) {
+    target.classList.add("learning-target-flash");
+    window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+  }
+  return true;
 }
 
 async function atlasRiskFoundationFinishViewport(targetResolver, guardToken, options = {}) {
@@ -21750,11 +21784,14 @@ async function atlasRiskFoundationFinishViewport(targetResolver, guardToken, opt
     return true;
   }
 
-  const positioned = atlasLearningPositionTarget(target, {
-    smooth:false,
+  const positioned = atlasRiskFoundationPositionTarget(target, {
     flash:options.flash === true,
-    topGap:options.topGap ?? 96,
-    tolerance:0
+    frameTopRatio:options.frameTopRatio ?? 0.16,
+    frameMinTop:options.frameMinTop ?? 72,
+    frameMaxTop:options.frameMaxTop ?? 140,
+    frameTolerance:options.frameTolerance ?? 18,
+    minVisible:options.minVisible ?? 180,
+    tolerance:options.tolerance ?? 4
   });
   requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
   return positioned;
