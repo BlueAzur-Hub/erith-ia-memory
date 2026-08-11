@@ -1,11 +1,11 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.61  
-**Build :** 28.3.61  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.60  
+**Build :** 28.3.60  
 **Mission :** Module 03 Visible-Step No-Valse Lock
 
 
-## Build 28.3.61 — Module 03 Visible-Step No-Valse Lock
+## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
 
 Cette Build part exactement de la 28.3.59 publiée et ne change ni les calculs ni la pédagogie ajoutée dans cette version. Elle corrige uniquement le comportement du viewport du Module 03 observé sous Firefox.
 

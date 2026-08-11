@@ -1,14 +1,3 @@
-## Build 28.3.61 — Module 03 Viewport Ownership Consolidation
-
-- Base : Build 28.3.60 restaurée comme base sûre.
-- Module 03 uniquement : suppression du routeur viewport spécialisé concurrent.
-- Les transitions Risk passent désormais par le routeur pédagogique générique `atlasLearningScheduleTarget()`.
-- Un seul propriétaire du viewport pour les transitions du parcours guidé.
-- Suppression des chemins `atlasRiskFoundationFinishViewport()` / `atlasRiskFoundationFinishStageViewport()` / `atlasRiskFoundationNavigateStageIfNeeded()`.
-- Aucun changement de calcul, de pédagogie ou de contenu des Modules 01/02/04–11.
-- `index.html`, `style.css` et les assets restent inchangés et ne sont pas inclus dans l’upload-only ZIP.
-- Publication GitHub : aucune écriture effectuée par cette préparation.
-
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
 
 - Base : 28.3.59 publiée.
