@@ -1,8 +1,8 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.63  
-**Build :** 28.3.63  
-**Mission :** Module 03 Deterministic Centered Framing Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.60  
+**Build :** 28.3.60  
+**Mission :** Module 03 Visible-Step No-Valse Lock
 
 
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
@@ -1017,25 +1017,3 @@ Si une future Build ne modifie ni HTML, ni CSS, ni configuration runtime :
 - le versionnage peut évoluer uniquement avec `app.js` + `version.json`.
 
 `build_history.md` et `README.md` restent documentaires et peuvent être mis à jour sans être lus par le runtime.
-
-## Build 28.3.62 — Module 03 Deterministic Framing Lock
-
-Cette Build part exactement de la 28.3.60. Le correctif est ciblé sur le cadrage du viewport du Module 03.
-
-### Cause racine identifiée
-
-La 28.3.60 avait supprimé la « valse », mais `atlasRiskFoundationTargetAlreadyUsable()` considérait comme utilisable toute carte dont le début était simplement visible dans le viewport. Une étape située vers le bas de l’écran pouvait donc empêcher tout recadrage, même si elle était manifestement mal cadrée pédagogiquement.
-
-### Correction
-
-- remplacement du critère « visible » par un critère « correctement cadré » ;
-- une étape est considérée comme déjà cadrée seulement si son début se trouve dans une bande haute de lecture d’environ 80–220 px ;
-- sinon, un seul déplacement est effectué vers `topGap = 96 px` ;
-- aucun second scroll différé n’est ajouté ;
-- le guard Firefox reste actif pendant la stabilisation et la persistance ;
-- les actions du Module 03 concernées restent : coûts, montant engagé, −3 %, +5 % et conclusion finale ;
-- les calculs, la pédagogie, IndexedDB et les autres modules ne sont pas modifiés.
-
-### Cas de la capture de validation
-
-La carte « Étape 5 · Question finale » située vers le bas du viewport ne sera plus considérée comme « déjà utilisable ». Elle sera cadrée en haut de la zone de lecture, puis la page restera stable.
