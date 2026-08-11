@@ -17129,7 +17129,7 @@ const ATLAS_FOUNDATION_MODULE_KEYS = Object.freeze(["market", "spot", "risk", "a
 const ATLAS_FOUNDATION_MODULE_BUILDS = Object.freeze({
   market:"28.3.07",
   spot:"28.3.44",
-  risk:"28.3.61",
+  risk:"28.3.62",
   account:"28.3.44",
   wallet:"28.3.44",
   tokenomics:"28.3.44",
@@ -20229,7 +20229,7 @@ function handleFoundationAction(action) {
   }
   if (module.key === "risk") {
     if (action === "risk_load_costs") {
-      // Build 28.3.61 : cadrage déterministe unique après le rerender. Si l’étape 3
+      // Build 28.3.60 : le guard est posé AVANT le rerender. Si l’étape 3
       // est déjà lisible dans le viewport, aucun déplacement n’est ajouté.
       const viewportGuard = atlasLearningBeginNavigationGuard();
       els.btnSimCostSchoolPreset?.click();
@@ -20621,7 +20621,7 @@ async function runRiskFoundationSchoolPosition(cockpitInput = null) {
     api_key_used:false,
     wallet_connected:false,
     captured_at:new Date().toISOString(),
-    build:"28.3.61",
+    build:"28.3.62",
     evidence_mode:"frozen_at_validation"
   };
   next.steps.practice = true;
@@ -21697,12 +21697,16 @@ function scrollToFoundationStage(stage, options = {}) {
   }, options);
 }
 
-// Build 28.3.61 — Module 03 Deterministic Single-Step Framing Lock
-// Le parcours Risk comporte de grandes cartes souvent visibles simultanément.
-// Une action ne doit donc pas recadrer la page si l’en-tête et les contrôles de
-// l’étape suivante sont déjà utilisables dans le viewport. Le guard est posé
-// avant le rerender par l’appelant, puis un seul verdict est pris après la
-// persistance et deux frames stables : rester immobile ou cadrer une fois.
+// Build 28.3.62 — Module 03 Deterministic Framing Lock
+// La 28.3.60 avait corrigé la "valse", mais son critère "déjà utilisable" était
+// trop large : une carte située vers le bas du viewport était considérée comme
+// utilisable et la page restait donc mal cadrée. Le screenshot de validation
+// montrait précisément ce cas avec l'étape 5.
+//
+// Nouveau contrat :
+// - si la carte est déjà dans une bande de lecture haute et stable, on ne bouge pas ;
+// - sinon, un seul cadrage vers une position haute déterministe ;
+// - aucun second scroll différé n'est ajouté.
 function atlasRiskFoundationStageTarget(stage) {
   const stageNumber = String(stage || "").trim();
   if (!stageNumber) return null;
@@ -21710,11 +21714,19 @@ function atlasRiskFoundationStageTarget(stage) {
   return lab?.querySelector?.(`[data-foundation-stage="${stageNumber}"]`) || null;
 }
 
-function atlasRiskFoundationTargetAlreadyUsable(target, options = {}) {
-  // Kept only as a compatibility helper for older callers. Build 28.3.61 does
-  // not use viewport visibility as a reason to skip framing: the next Risk stage
-  // is always placed once, deterministically, after the DOM has settled.
-  return !!target;
+function atlasRiskFoundationTargetAlreadyFramed(target, options = {}) {
+  if (!target) return false;
+  const rect = target.getBoundingClientRect();
+  const viewportHeight = Math.max(0, window.innerHeight || document.documentElement?.clientHeight || 0);
+  if (!viewportHeight) return false;
+  const frameMinTop = Math.max(48, Number(options.frameMinTop ?? 80));
+  const frameMaxTop = Math.max(frameMinTop + 20, Number(options.frameMaxTop ?? 220));
+  const minVisible = Math.max(64, Number(options.minVisible ?? 96));
+  // Une grande carte peut dépasser le bas. Ce qui compte ici est que son début
+  // soit réellement cadré dans la zone haute de lecture, pas simplement visible.
+  return rect.top >= frameMinTop
+    && rect.top <= frameMaxTop
+    && rect.bottom > frameMinTop + minVisible;
 }
 
 async function atlasRiskFoundationFinishViewport(targetResolver, guardToken, options = {}) {
@@ -21727,17 +21739,24 @@ async function atlasRiskFoundationFinishViewport(targetResolver, guardToken, opt
     atlasLearningRestoreNavigationGuard(guardToken);
     return false;
   }
-
-  // Build 28.3.61 : un clic de progression = un seul cadrage déterministe.
-  // Pas de test « déjà visible », pas de smooth scroll, pas de second scheduler.
   learningOpenParentDetails(target);
+
+  if (atlasRiskFoundationTargetAlreadyFramed(target, options)) {
+    if (options.flash === true) {
+      target.classList.add("learning-target-flash");
+      window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
+    return true;
+  }
+
   const positioned = atlasLearningPositionTarget(target, {
     smooth:false,
     flash:options.flash === true,
     topGap:options.topGap ?? 96,
     tolerance:0
   });
-  requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken));
+  requestAnimationFrame(() => requestAnimationFrame(() => atlasLearningRestoreNavigationGuard(guardToken)));
   return positioned;
 }
 
@@ -21746,12 +21765,15 @@ function atlasRiskFoundationFinishStageViewport(stage, guardToken, options = {})
 }
 
 function atlasRiskFoundationNavigateStageIfNeeded(stage, options = {}) {
-  const guardToken = atlasLearningBeginNavigationGuard();
-  return atlasRiskFoundationFinishStageViewport(stage, guardToken, {
-    ...options,
-    topGap:options.topGap ?? 96,
-    flash:options.flash === true
-  });
+  const target = atlasRiskFoundationStageTarget(stage);
+  if (atlasRiskFoundationTargetAlreadyFramed(target, options)) {
+    if (options.flash === true && target) {
+      target.classList.add("learning-target-flash");
+      window.setTimeout(() => target.classList.remove("learning-target-flash"), ATLAS_LEARNING_FOCUS_FLASH_MS);
+    }
+    return true;
+  }
+  return scrollToFoundationStage(stage, { ...options, topGap:options.topGap ?? 96, flash:options.flash === true });
 }
 
 function scrollToLearningTarget(targetId, options = {}) {
@@ -36726,11 +36748,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.61";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.62";
 
-const ATLAS_BUILD = "28.3.61";
+const ATLAS_BUILD = "28.3.62";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.61";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.62";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
