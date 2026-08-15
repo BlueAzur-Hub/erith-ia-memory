@@ -1,10 +1,27 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.05  
-**Build :** 29.3.05  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.06  
+**Build :** 29.3.06  
 **Mission :** Atlas 5/5 Direct Start Gate Lock
 
 
+
+## Build 29.3.06 — Version Control Hardening Lock
+
+Stabilisation du contrôleur de publication GitHub Pages sans modifier la chaîne analytique.
+
+- identité applicative synchronisée sur 29.3.06 ;
+- carte de pile synchronisée sur Control Center V2.3.1R1 / Bridge V1.9.1 ;
+- tolérance explicite au décalage temporaire entre `version.json` et les assets pendant la propagation GitHub Pages ;
+- jusqu’à 6 revérifications automatiques avant de classer une publication comme non cohérente ;
+- manifeste temporairement en retard sur l’app chargée traité comme propagation normale, sans alerte rouge/orange inutile ;
+- conflit de token de même Build revérifié avant signalement ;
+- préchargement HTTP des assets retenté avant navigation ;
+- libellé utilisateur `Publication ... en cours · Revérification auto` pendant la propagation ;
+- comparaison de version fondée sur le numéro de Build, jamais sur `published_at` ;
+- aucun changement Atlas / NØX / Aerith / Binance 5/5 / Math Core / Bridge.
+
+---
 ## Build 29.3.05 — Version Identity Repair Lock
 
 Correction ciblée du contrôle de publication après la 29.3.04.

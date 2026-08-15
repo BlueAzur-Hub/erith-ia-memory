@@ -1,3 +1,17 @@
+# Build 29.3.06 — Version Control Hardening Lock
+
+- Base : 29.3.05.
+- Durcit le contrôleur de publication GitHub Pages contre les décalages temporaires manifeste/assets.
+- Ajoute une fenêtre de revérification automatique avant tout état `publication en cours`.
+- Un manifeste temporairement plus ancien que l’app chargée ne déclenche plus de faux diagnostic.
+- Les conflits de token de même Build sont revérifiés avant signalement.
+- Le préchargement HTTP des assets est retenté avant navigation.
+- Synchronise la pile affichée sur Control Center V2.3.1R1 / Bridge V1.9.1.
+- Conserve strictement Binance 5/5 direct → Atlas 4/4 → NØX No-FOMO → Aerith → IndexedDB.
+- Aucun changement Market / Graphique / Math Core / Learning / Métaux.
+
+---
+
 # Build 29.3.05 — Version Identity Repair Lock
 
 - Base : 29.3.04.

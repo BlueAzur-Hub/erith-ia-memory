@@ -11418,8 +11418,8 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.05",
-  controlCenter: "V2.3.0R1",
+  interface: "Build 29.3.06",
+  controlCenter: "V2.3.1R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
   model: "gpt-oss:20b-32k"
@@ -36932,11 +36932,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.05";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.06";
 
-const ATLAS_BUILD = "29.3.05";
+const ATLAS_BUILD = "29.3.06";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.05";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.06";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
@@ -36951,6 +36951,11 @@ const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
 
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
 
+// GitHub Pages can expose version.json and static assets a few seconds apart.
+// Never classify that normal propagation window as a broken publication on first sight.
+const ATLAS_VERSION_PROPAGATION_RETRY_MS = 1_500;
+const ATLAS_VERSION_PROPAGATION_ATTEMPTS = 6;
+
 const atlasVersionAwarenessState = {
   initialized: false,
   checking: false,
@@ -36961,7 +36966,8 @@ const atlasVersionAwarenessState = {
   remoteToken: null,
   remotePublication: null,
   lastCheckedAt: 0,
-  lastError: null
+  lastError: null,
+  propagationRetryCount: 0
 };
 
 function atlasVersionParts(value) {
@@ -37044,8 +37050,8 @@ function atlasVersionControlTooltip(
 
   if (mode === "publishing") {
     return (
-      `Publication du Build ${build} encore incomplète`
-      + ` · Cliquer pour revérifier · ${freshness}`
+      `Synchronisation du Build ${build} en cours`
+      + ` · Revérification automatique · ${freshness}`
     );
   }
 
@@ -37150,12 +37156,12 @@ function atlasVersionControlState(mode, options = {}) {
   } else if (stateMode === "publishing") {
     control.classList.add("warn");
     text.textContent =
-      `Publication Build ${build} incomplète · Revérifier`;
+      `Publication Build ${build} en cours · Revérification auto`;
     control.setAttribute(
       "aria-label",
       (
-        `Publication du Build ${build} encore incomplète.`
-        + " Cliquer pour revérifier."
+        `Synchronisation du Build ${build} en cours.`
+        + " Revérification automatique active."
       )
     );
   } else if (stateMode === "repair") {
@@ -37546,6 +37552,61 @@ function atlasVersionExtractAppIdentity(text) {
   };
 }
 
+function atlasVersionDelay(ms) {
+  return new Promise(resolve =>
+    window.setTimeout(resolve, Math.max(0, Number(ms) || 0))
+  );
+}
+
+async function atlasVerifyRemotePublicationStable(
+  initialRemote,
+  options = {}
+) {
+  const maxAttempts = Math.max(
+    1,
+    Number(options.attempts || ATLAS_VERSION_PROPAGATION_ATTEMPTS)
+  );
+  const retryMs = Math.max(
+    250,
+    Number(options.retryMs || ATLAS_VERSION_PROPAGATION_RETRY_MS)
+  );
+
+  let remote = initialRemote;
+  let publication = null;
+  let lastError = null;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    if (attempt > 0) {
+      await atlasVersionDelay(retryMs);
+      try {
+        remote = await atlasFetchVersionManifest(Date.now() + attempt);
+      } catch (error) {
+        lastError = error;
+        continue;
+      }
+    }
+
+    try {
+      publication = await atlasVerifyRemotePublication(remote);
+      if (publication.ok) {
+        atlasVersionAwarenessState.propagationRetryCount = 0;
+        return { ok: true, remote, publication, attempts: attempt + 1 };
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  atlasVersionAwarenessState.propagationRetryCount += 1;
+  return {
+    ok: false,
+    remote,
+    publication,
+    attempts: maxAttempts,
+    error: lastError ? String(lastError?.message || lastError) : null
+  };
+}
+
 async function atlasVerifyRemotePublication(remote) {
   const stamp = Date.now();
   const integrity =
@@ -37622,51 +37683,52 @@ async function atlasPrimePublishedAssets(remote) {
   const integrity =
     atlasVersionManifestIntegrity(remote?.manifest);
 
-  const entries = await Promise.all(
-    Object.entries(ATLAS_VERSION_ASSET_URLS).map(
-      async ([name, path]) => {
-        const asset = await atlasFetchVersionAsset(
-          path,
-          {
-            cacheMode: "reload",
-            cacheBust: false
-          }
-        );
+  let assets = null;
 
-        return [name, asset];
-      }
-    )
-  );
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (attempt > 0) {
+      await atlasVersionDelay(ATLAS_VERSION_PROPAGATION_RETRY_MS);
+    }
 
-  const assets = Object.fromEntries(entries);
-
-  const ok = Object.keys(
-    ATLAS_VERSION_ASSET_URLS
-  ).every(
-    name =>
-      assets[name]?.hash === integrity.files[name]
-  );
-
-  if (!ok) {
-    throw new Error(
-      "Préchargement HTTP de la publication incohérent"
+    const entries = await Promise.all(
+      Object.entries(ATLAS_VERSION_ASSET_URLS).map(
+        async ([name, path]) => {
+          // cache:"reload" on the canonical URL refreshes the browser HTTP cache
+          // that the next document load will actually reuse.
+          const asset = await atlasFetchVersionAsset(
+            path,
+            {
+              stamp: Date.now() + attempt,
+              cacheMode: "reload",
+              cacheBust: false
+            }
+          );
+          return [name, asset];
+        }
+      )
     );
+
+    assets = Object.fromEntries(entries);
+    const ok = Object.keys(ATLAS_VERSION_ASSET_URLS).every(
+      name => assets[name]?.hash === integrity.files[name]
+    );
+
+    if (ok) {
+      return {
+        ok: true,
+        files: Object.fromEntries(
+          Object.entries(assets).map(([name, asset]) => [
+            name,
+            { hash: asset.hash, bytes: asset.bytes }
+          ])
+        )
+      };
+    }
   }
 
-  return {
-    ok: true,
-    files: Object.fromEntries(
-      Object.entries(assets).map(
-        ([name, asset]) => [
-          name,
-          {
-            hash: asset.hash,
-            bytes: asset.bytes
-          }
-        ]
-      )
-    )
-  };
+  throw new Error(
+    "Préchargement HTTP encore en propagation"
+  );
 }
 
 function atlasVersionExpectedUpdateRead() {
@@ -37773,35 +37835,36 @@ async function atlasVersionCheck(options = {}) {
       Date.now();
 
     if (comparison > 0) {
-      const publication =
-        await atlasVerifyRemotePublication(remote);
+      const stable =
+        await atlasVerifyRemotePublicationStable(remote);
 
-      if (!publication.ok) {
+      if (!stable.ok) {
         atlasVersionShowPublishing(
-          remote.build,
-          remote.token,
-          publication
+          stable.remote?.build || remote.build,
+          stable.remote?.token || remote.token,
+          stable.publication
+        );
+        atlasVersionAwarenessSchedule(
+          ATLAS_VERSION_PROPAGATION_RETRY_MS
         );
         return false;
       }
 
       atlasVersionShowUpdate(
-        remote.build,
-        remote.token,
-        publication
+        stable.remote.build,
+        stable.remote.token,
+        stable.publication
       );
       return true;
     }
 
     if (comparison < 0) {
-      atlasVersionShowPublishing(
-        ATLAS_BUILD,
-        ATLAS_ASSET_TOKEN,
-        {
-          ok: false,
-          reason: "manifest_behind_loaded_app",
-          remote
-        }
+      // Loaded application is newer than the manifest currently visible at
+      // this CDN edge. This is a normal GitHub Pages propagation race.
+      // Keep the working application marked current and retry quietly.
+      atlasVersionHideUpdate();
+      atlasVersionAwarenessSchedule(
+        ATLAS_VERSION_PROPAGATION_RETRY_MS
       );
       return false;
     }
@@ -37812,15 +37875,31 @@ async function atlasVersionCheck(options = {}) {
     // Une vérification SHA complète reste obligatoire pour toute Build supérieure
     // avant installation (branche comparison > 0 ci-dessus).
     if (remote.token !== ATLAS_ASSET_TOKEN) {
+      const stable = await atlasVerifyRemotePublicationStable(
+        remote,
+        { attempts: 3 }
+      );
+      if (
+        stable.ok
+        && stable.remote.build === ATLAS_BUILD
+        && stable.remote.token === ATLAS_ASSET_TOKEN
+      ) {
+        atlasVersionHideUpdate();
+        return false;
+      }
+
       atlasVersionShowPublishing(
-        remote.build,
-        remote.token,
-        {
+        stable.remote?.build || remote.build,
+        stable.remote?.token || remote.token,
+        stable.publication || {
           ok: false,
           reason: "same_build_token_conflict",
           loadedBuild: ATLAS_BUILD,
           loadedToken: ATLAS_ASSET_TOKEN
         }
+      );
+      atlasVersionAwarenessSchedule(
+        ATLAS_VERSION_PROPAGATION_RETRY_MS
       );
       return false;
     }
@@ -37938,15 +38017,20 @@ async function atlasApplyVersionUpdate(options = {}) {
   });
 
   try {
-    const remote = await atlasFetchVersionManifest();
-    const publication =
-      await atlasVerifyRemotePublication(remote);
+    const initialRemote = await atlasFetchVersionManifest();
+    const stable =
+      await atlasVerifyRemotePublicationStable(initialRemote);
+    const remote = stable.remote || initialRemote;
+    const publication = stable.publication;
 
-    if (!publication.ok) {
+    if (!stable.ok || !publication?.ok) {
       atlasVersionShowPublishing(
         remote.build,
         remote.token,
         publication
+      );
+      atlasVersionAwarenessSchedule(
+        ATLAS_VERSION_PROPAGATION_RETRY_MS
       );
       return false;
     }
