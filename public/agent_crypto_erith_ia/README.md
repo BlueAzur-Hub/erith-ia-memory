@@ -1,27 +1,52 @@
+# Build 29.3.06 — Version Control Deterministic Human-Readable Lock
+
+Cette Build part exactement de la 29.3.05 et remplace uniquement le cœur du contrôleur de version dans `web/app.js`, plus l’identité distante dans `web/version.json`.
+
+## Correction racine
+
+- Une seule valeur de version est désormais saisie manuellement : `ATLAS_BUILD`.
+- `ATLAS_RELEASE` et `ATLAS_ASSET_TOKEN` sont dérivés automatiquement du Build.
+- Suppression du faux contrôle `atlasVersionRuntimeIdentity()` qui comparait les constantes avec elles-mêmes.
+- Suppression des anciens états persistants `agent_crypto_expected_build`, `agent_crypto_expected_token` et `agent_crypto_update_started_at` comme source de décision ; ils sont seulement nettoyés au démarrage pour migration.
+- Suppression des états `publishing` et `repair`. Une propagation GitHub temporaire devient `Synchronisation GitHub`, sans présenter une anomalie transitoire comme une corruption locale.
+- Une Build distante supérieure n’est proposée qu’après vérification de l’identité de son `app.js` et, si présent dans le manifeste, de son SHA-256.
+- Une Build locale supérieure au manifeste distant est traitée comme une synchronisation GitHub temporaire, pas comme une panne.
+- Après rechargement, la confirmation repose uniquement sur les paramètres URL demandés et l’identité réellement chargée ; aucun ancien `sessionStorage` ne peut bloquer la page.
+
+## Architecture humaine
+
+Le flux devient :
+
+`app.js local -> version.json GitHub -> comparaison numérique -> vérification app.js distant si Build supérieure -> charger -> confirmer`.
+
+Le contrôleur n’essaie plus de gérer huit états ni de faire passer un délai de propagation GitHub pour une incohérence permanente.
+
+## Périmètre protégé
+
+- Bridge inchangé.
+- Atlas / Aerith / NØX inchangés.
+- Math Core inchangé.
+- Market, Graphique, Target Top 5, Market Flow, Métaux, News Sentinel, Decision Board, simulation, mémoire et parcours pédagogique inchangés.
+- `web/index.html`, `web/style.css`, `web/runtime_config.json` et assets inchangés.
+- Aucun ordre réel, aucune clé API, aucun wallet.
+
+## Test attendu
+
+1. Publier les quatre fichiers du ZIP.
+2. Ouvrir l’interface et attendre la propagation GitHub Pages.
+3. Le badge doit afficher `Market Core V2.0-Alpha · Build 29.3.06`.
+4. Un clic sur le badge doit soit confirmer la version courante, soit afficher temporairement `Synchronisation GitHub · Build 29.3.06` pendant la propagation.
+5. L’ancien message `Publication Build ... incomplète · Revérifier` ne fait plus partie du contrôleur 29.3.06.
+
+---
+
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.06  
-**Build :** 29.3.06  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.05  
+**Build :** 29.3.05  
 **Mission :** Atlas 5/5 Direct Start Gate Lock
 
 
-
-## Build 29.3.06 — Version Control Hardening Lock
-
-Stabilisation du contrôleur de publication GitHub Pages sans modifier la chaîne analytique.
-
-- identité applicative synchronisée sur 29.3.06 ;
-- carte de pile synchronisée sur Control Center V2.3.1R1 / Bridge V1.9.1 ;
-- tolérance explicite au décalage temporaire entre `version.json` et les assets pendant la propagation GitHub Pages ;
-- jusqu’à 6 revérifications automatiques avant de classer une publication comme non cohérente ;
-- manifeste temporairement en retard sur l’app chargée traité comme propagation normale, sans alerte rouge/orange inutile ;
-- conflit de token de même Build revérifié avant signalement ;
-- préchargement HTTP des assets retenté avant navigation ;
-- libellé utilisateur `Publication ... en cours · Revérification auto` pendant la propagation ;
-- comparaison de version fondée sur le numéro de Build, jamais sur `published_at` ;
-- aucun changement Atlas / NØX / Aerith / Binance 5/5 / Math Core / Bridge.
-
----
 ## Build 29.3.05 — Version Identity Repair Lock
 
 Correction ciblée du contrôle de publication après la 29.3.04.

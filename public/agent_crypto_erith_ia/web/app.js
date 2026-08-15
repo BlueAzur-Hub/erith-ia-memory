@@ -11418,8 +11418,8 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.06",
-  controlCenter: "V2.3.1R1",
+  interface: "Build 29.3.05",
+  controlCenter: "V2.3.0R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
   model: "gpt-oss:20b-32k"
@@ -36930,31 +36930,20 @@ function atlasSourceTruthBuild(contract) {
 
 /* ============================================================
    14 — VERSION CONTROL — PROTECTED CORE
+   Build 29.3.06 : deterministic human-readable controller
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.06";
-
+// Single manually edited version value.
 const ATLAS_BUILD = "29.3.06";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.06";
+// Derived identity: these values can no longer drift independently.
+const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;
+const ATLAS_ASSET_TOKEN = `market-core-v2.0-alpha-build-${ATLAS_BUILD}`;
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
-
-const ATLAS_VERSION_ASSET_URLS = Object.freeze({
-  "app.js": "./app.js",
-  "index.html": "./index.html",
-  "style.css": "./style.css",
-  "runtime_config.json": "./runtime_config.json"
-});
-
+const ATLAS_VERSION_APP_URL = "./app.js";
 const ATLAS_VERSION_CHECK_INTERVAL_MS = 180_000;
-
 const ATLAS_VERSION_CONFIRMATION_MS = 6_000;
-
-// GitHub Pages can expose version.json and static assets a few seconds apart.
-// Never classify that normal propagation window as a broken publication on first sight.
-const ATLAS_VERSION_PROPAGATION_RETRY_MS = 1_500;
-const ATLAS_VERSION_PROPAGATION_ATTEMPTS = 6;
 
 const atlasVersionAwarenessState = {
   initialized: false,
@@ -36966,8 +36955,7 @@ const atlasVersionAwarenessState = {
   remoteToken: null,
   remotePublication: null,
   lastCheckedAt: 0,
-  lastError: null,
-  propagationRetryCount: 0
+  lastError: null
 };
 
 function atlasVersionParts(value) {
@@ -36989,6 +36977,13 @@ function atlasCompareBuildNumbers(left, right) {
   return 0;
 }
 
+function atlasVersionExpectedToken(build) {
+  const value = String(build || "").trim();
+  return value
+    ? `market-core-v2.0-alpha-build-${value}`
+    : "";
+}
+
 function atlasVersionRequestUrl(path, stamp = Date.now()) {
   const url = new URL(
     path,
@@ -36996,13 +36991,6 @@ function atlasVersionRequestUrl(path, stamp = Date.now()) {
   );
   url.searchParams.set("_version_check", String(stamp));
   return url.toString();
-}
-
-function atlasVersionManifestRequestUrl(stamp = Date.now()) {
-  return atlasVersionRequestUrl(
-    ATLAS_VERSION_MANIFEST_URL,
-    stamp
-  );
 }
 
 function atlasVersionControlElements() {
@@ -37015,7 +37003,7 @@ function atlasVersionControlElements() {
 function atlasVersionCheckedAtLabel(timestamp = 0) {
   const value = Number(timestamp || 0);
   if (!Number.isFinite(value) || value <= 0) {
-    return "Dernière vérification de version : en attente";
+    return "Dernière vérification : en attente";
   }
 
   try {
@@ -37023,70 +37011,35 @@ function atlasVersionCheckedAtLabel(timestamp = 0) {
       dateStyle: "short",
       timeStyle: "medium"
     }).format(new Date(value));
-
-    return `Dernière vérification de version : ${formatted}`;
+    return `Dernière vérification : ${formatted}`;
   } catch {
-    return "Dernière vérification de version : effectuée";
+    return "Dernière vérification : effectuée";
   }
 }
 
-function atlasVersionControlTooltip(
-  mode,
-  build,
-  checkedAt = 0
-) {
+function atlasVersionControlTooltip(mode, build, checkedAt = 0) {
   const freshness = atlasVersionCheckedAtLabel(checkedAt);
 
   if (mode === "checking") {
-    return `Vérification forcée de la publication · ${freshness}`;
+    return `Vérification GitHub en cours · ${freshness}`;
   }
-
   if (mode === "available") {
-    return (
-      `Nouvelle version cohérente disponible · Build ${build}`
-      + ` · ${freshness}`
-    );
+    return `Nouvelle version disponible · Build ${build} · ${freshness}`;
   }
-
-  if (mode === "publishing") {
-    return (
-      `Synchronisation du Build ${build} en cours`
-      + ` · Revérification automatique · ${freshness}`
-    );
+  if (mode === "syncing") {
+    return `GitHub synchronise encore le Build ${build} · Cliquer pour revérifier · ${freshness}`;
   }
-
-  if (mode === "repair") {
-    return (
-      `Fichiers chargés incohérents · Build ${build}`
-      + ` · Cliquer pour recharger la publication cohérente`
-    );
-  }
-
   if (mode === "applying") {
-    return (
-      `Mise à jour vers le Build ${build} en cours`
-      + ` · ${freshness}`
-    );
+    return `Chargement du Build ${build} en cours · ${freshness}`;
   }
-
   if (mode === "failed") {
-    return (
-      `Vérification ou actualisation impossible`
-      + ` · Cliquer pour réessayer · ${freshness}`
-    );
+    return `Vérification impossible · Cliquer pour réessayer · ${freshness}`;
   }
-
   if (mode === "installed") {
-    return (
-      `Mise à jour installée · Build ${build}`
-      + ` · Cliquer pour vérifier de nouveau`
-    );
+    return `Build ${build} chargé · Cliquer pour vérifier de nouveau`;
   }
 
-  return (
-    `Version installée · Build ${ATLAS_BUILD}`
-    + ` · Cliquer pour vérifier · ${freshness}`
-  );
+  return `Version locale ${ATLAS_BUILD} · Cliquer pour vérifier GitHub · ${freshness}`;
 }
 
 function atlasVersionControlState(mode, options = {}) {
@@ -37097,8 +37050,7 @@ function atlasVersionControlState(mode, options = {}) {
     "current",
     "checking",
     "available",
-    "publishing",
-    "repair",
+    "syncing",
     "applying",
     "failed",
     "installed"
@@ -37106,9 +37058,7 @@ function atlasVersionControlState(mode, options = {}) {
     ? mode
     : "current";
 
-  const build =
-    String(options.build || ATLAS_BUILD).trim()
-    || ATLAS_BUILD;
+  const build = String(options.build || ATLAS_BUILD).trim() || ATLAS_BUILD;
   const token = String(options.token || "").trim();
   const checkedAt = Number(
     options.checkedAt
@@ -37122,13 +37072,7 @@ function atlasVersionControlState(mode, options = {}) {
   control.removeAttribute("data-remote-token");
   control.removeAttribute("aria-busy");
 
-  if ([
-    "available",
-    "publishing",
-    "repair",
-    "failed",
-    "applying"
-  ].includes(stateMode)) {
+  if (["available", "syncing", "applying"].includes(stateMode)) {
     control.dataset.remoteBuild = build;
     if (token) control.dataset.remoteToken = token;
   }
@@ -37138,78 +37082,49 @@ function atlasVersionControlState(mode, options = {}) {
   if (stateMode === "checking") {
     control.classList.add("ok");
     text.textContent = "Vérification de version…";
-    control.setAttribute(
-      "aria-label",
-      "Vérification forcée de la publication en cours"
-    );
+    control.setAttribute("aria-label", "Vérification GitHub en cours");
   } else if (stateMode === "available") {
     control.classList.add("warn");
-    text.textContent =
-      `Nouvelle version disponible · Build ${build}`;
+    text.textContent = `Nouvelle version disponible · Build ${build}`;
     control.setAttribute(
       "aria-label",
-      (
-        `Nouvelle version cohérente disponible, Build ${build}.`
-        + " Cliquer pour installer."
-      )
+      `Nouvelle version disponible, Build ${build}. Cliquer pour charger.`
     );
-  } else if (stateMode === "publishing") {
+  } else if (stateMode === "syncing") {
     control.classList.add("warn");
-    text.textContent =
-      `Publication Build ${build} en cours · Revérification auto`;
+    text.textContent = `Synchronisation GitHub · Build ${build}`;
     control.setAttribute(
       "aria-label",
-      (
-        `Synchronisation du Build ${build} en cours.`
-        + " Revérification automatique active."
-      )
-    );
-  } else if (stateMode === "repair") {
-    control.classList.add("warn");
-    text.textContent =
-      `Fichiers incohérents · Recharger le Build ${build}`;
-    control.setAttribute(
-      "aria-label",
-      (
-        `Les fichiers chargés ne portent pas tous le Build ${build}.`
-        + " Cliquer pour recharger."
-      )
+      `GitHub synchronise encore le Build ${build}. Cliquer pour revérifier.`
     );
   } else if (stateMode === "applying") {
     control.classList.add("warn");
     control.setAttribute("aria-busy", "true");
-    text.textContent = "Mise à jour en cours…";
+    text.textContent = `Chargement du Build ${build}…`;
     control.setAttribute(
       "aria-label",
-      `Mise à jour vers le Build ${build} en cours`
+      `Chargement du Build ${build} en cours`
     );
   } else if (stateMode === "failed") {
     control.classList.add("fail");
     text.textContent = "Vérification impossible · Réessayer";
     control.setAttribute(
       "aria-label",
-      "Vérification ou actualisation impossible. Cliquer pour réessayer."
+      "Vérification de version impossible. Cliquer pour réessayer."
     );
   } else if (stateMode === "installed") {
     control.classList.add("ok");
-    text.textContent =
-      `Mise à jour installée · Build ${build}`;
+    text.textContent = `Mise à jour installée · Build ${build}`;
     control.setAttribute(
       "aria-label",
-      (
-        `Mise à jour installée, Build ${build}.`
-        + " Cliquer pour vérifier de nouveau."
-      )
+      `Build ${build} chargé. Cliquer pour vérifier de nouveau.`
     );
   } else {
     control.classList.add("ok");
     text.textContent = ATLAS_RELEASE;
     control.setAttribute(
       "aria-label",
-      (
-        `Version installée : Market Core V2.0-Alpha,`
-        + ` Build ${ATLAS_BUILD}. Cliquer pour vérifier.`
-      )
+      `Version installée : Build ${ATLAS_BUILD}. Cliquer pour vérifier GitHub.`
     );
   }
 
@@ -37222,9 +37137,7 @@ function atlasVersionControlState(mode, options = {}) {
 }
 
 function atlasVersionConfirmationClear() {
-  window.clearTimeout(
-    atlasVersionAwarenessState.confirmationTimer
-  );
+  window.clearTimeout(atlasVersionAwarenessState.confirmationTimer);
   atlasVersionAwarenessState.confirmationTimer = 0;
 }
 
@@ -37233,14 +37146,7 @@ function atlasVersionShowInstalled(
   duration = ATLAS_VERSION_CONFIRMATION_MS
 ) {
   atlasVersionConfirmationClear();
-
-  const installedBuild =
-    String(build || ATLAS_BUILD).trim()
-    || ATLAS_BUILD;
-
-  atlasVersionControlState("installed", {
-    build: installedBuild
-  });
+  atlasVersionControlState("installed", { build });
 
   atlasVersionAwarenessState.confirmationTimer =
     window.setTimeout(() => {
@@ -37251,567 +37157,221 @@ function atlasVersionShowInstalled(
   return true;
 }
 
-function atlasVersionHideUpdate() {
+function atlasVersionShowCurrent() {
   atlasVersionConfirmationClear();
-  atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = null;
   atlasVersionAwarenessState.remoteToken = null;
   atlasVersionAwarenessState.remotePublication = null;
   return atlasVersionControlState("current");
 }
 
-function atlasVersionShowUpdate(
-  remoteBuild,
-  remoteToken = "",
-  publication = null
-) {
+function atlasVersionShowUpdate(remoteBuild, remoteToken, publication = null) {
   const build = String(remoteBuild || "").trim();
-  const token = String(remoteToken || "").trim();
   if (!build) return false;
 
   atlasVersionConfirmationClear();
-  atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = build;
-  atlasVersionAwarenessState.remoteToken = token || null;
+  atlasVersionAwarenessState.remoteToken = String(remoteToken || "").trim() || null;
   atlasVersionAwarenessState.remotePublication = publication;
 
   return atlasVersionControlState("available", {
     build,
-    token
+    token: remoteToken
   });
 }
 
-function atlasVersionShowPublishing(
-  remoteBuild,
-  remoteToken = "",
-  publication = null
-) {
-  const build =
-    String(remoteBuild || ATLAS_BUILD).trim()
-    || ATLAS_BUILD;
-  const token = String(remoteToken || "").trim();
+function atlasVersionShowSyncing(remoteBuild, remoteToken = "", publication = null) {
+  const build = String(remoteBuild || ATLAS_BUILD).trim() || ATLAS_BUILD;
 
   atlasVersionConfirmationClear();
-  atlasVersionAwarenessState.applying = false;
   atlasVersionAwarenessState.remoteBuild = build;
-  atlasVersionAwarenessState.remoteToken = token || null;
+  atlasVersionAwarenessState.remoteToken = String(remoteToken || "").trim() || null;
   atlasVersionAwarenessState.remotePublication = publication;
 
-  return atlasVersionControlState("publishing", {
+  return atlasVersionControlState("syncing", {
     build,
-    token
+    token: remoteToken
   });
 }
 
-function atlasVersionShowRepair(
-  build = ATLAS_BUILD,
-  token = ATLAS_ASSET_TOKEN
-) {
-  const targetBuild =
-    String(build || ATLAS_BUILD).trim()
-    || ATLAS_BUILD;
-  const targetToken = String(token || "").trim();
-
+function atlasVersionShowFailure(build = ATLAS_BUILD, token = ATLAS_ASSET_TOKEN) {
   atlasVersionConfirmationClear();
-  atlasVersionAwarenessState.applying = false;
-  atlasVersionAwarenessState.remoteBuild = targetBuild;
-  atlasVersionAwarenessState.remoteToken =
-    targetToken || null;
-
-  return atlasVersionControlState("repair", {
-    build: targetBuild,
-    token: targetToken
-  });
+  return atlasVersionControlState("failed", { build, token });
 }
 
-function atlasVersionShowFailure(
-  remoteBuild = ATLAS_BUILD,
-  remoteToken = ""
-) {
-  const build =
-    String(remoteBuild || ATLAS_BUILD).trim()
-    || ATLAS_BUILD;
-  const token = String(remoteToken || "").trim();
-
-  atlasVersionConfirmationClear();
-  atlasVersionAwarenessState.applying = false;
-  atlasVersionAwarenessState.remoteBuild = build;
-  atlasVersionAwarenessState.remoteToken = token || null;
-
-  return atlasVersionControlState("failed", {
-    build,
-    token
-  });
+function atlasVersionLegacyStateClear() {
+  // Migration from Builds <= 29.3.05. Old expected-update values must never
+  // keep a future page in a permanent repair/incomplete state.
+  try {
+    [
+      "agent_crypto_expected_build",
+      "agent_crypto_expected_token",
+      "agent_crypto_update_started_at"
+    ].forEach(key => sessionStorage.removeItem(key));
+  } catch {}
 }
 
-function atlasVersionManifestBuild(manifest) {
-  return String(
-    manifest?.build
-    || manifest?.version
-    || manifest?.release_build
-    || ""
-  ).trim();
-}
-
-function atlasVersionManifestToken(manifest) {
-  return String(
-    manifest?.asset_token
-    || manifest?.assetToken
-    || manifest?.token
-    || ""
-  ).trim();
-}
-
-function atlasVersionManifestIntegrity(manifest) {
-  const algorithm = String(
-    manifest?.integrity?.algorithm || ""
-  ).trim().toUpperCase();
-
-  if (algorithm !== "SHA-256") {
-    throw new Error(
-      "Algorithme d’intégrité de publication invalide"
-    );
-  }
-
-  const files = manifest?.integrity?.files;
-  if (!files || typeof files !== "object") {
-    throw new Error(
-      "Empreintes de publication absentes"
-    );
-  }
-
-  const required = Object.keys(
-    ATLAS_VERSION_ASSET_URLS
-  );
-  const normalized = {};
-
-  for (const name of required) {
-    const value = String(files?.[name] || "")
-      .trim()
-      .toLowerCase();
-
-    if (!/^[a-f0-9]{64}$/.test(value)) {
-      throw new Error(
-        `Empreinte SHA-256 invalide : ${name}`
-      );
-    }
-
-    normalized[name] = value;
-  }
-
+function atlasVersionRefreshRequest() {
+  const url = new URL(window.location.href);
   return {
-    algorithm,
-    files: normalized
+    build: String(url.searchParams.get("build") || "").trim(),
+    token: String(url.searchParams.get("asset_token") || "").trim()
   };
 }
 
-async function atlasVersionSha256(buffer) {
-  if (!globalThis.crypto?.subtle) {
-    throw new Error("SHA-256 navigateur indisponible");
-  }
+function atlasVersionRefreshUrlCleanup() {
+  const url = new URL(window.location.href);
+  const managed = ["_refresh", "build", "asset_token"];
+  const hadManagedParameter = managed.some(name => url.searchParams.has(name));
+  if (!hadManagedParameter) return false;
 
-  const digest = await globalThis.crypto.subtle.digest(
-    "SHA-256",
-    buffer
+  managed.forEach(name => url.searchParams.delete(name));
+  window.history.replaceState(
+    {},
+    "",
+    `${url.pathname}${url.search}${url.hash}`
   );
-
-  return Array.from(
-    new Uint8Array(digest),
-    byte => byte.toString(16).padStart(2, "0")
-  ).join("");
+  return true;
 }
 
-async function atlasFetchVersionAsset(
-  path,
-  options = {}
-) {
-  const stamp = Number(options.stamp || Date.now());
-  const cacheMode = String(
-    options.cacheMode || "no-store"
-  );
-
-  const url = options.cacheBust === false
-    ? new URL(
-        path,
-        document.baseURI || window.location.href
-      ).toString()
-    : atlasVersionRequestUrl(path, stamp);
-
-  const response = await fetch(url, {
-    cache: cacheMode,
-    credentials: "same-origin",
-    headers: {
-      accept: "text/plain, text/html, text/css, application/javascript, application/json"
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Publication ${path} HTTP ${response.status}`
-    );
+function atlasVersionResolveRefreshRequest() {
+  const requested = atlasVersionRefreshRequest();
+  if (!requested.build) {
+    atlasVersionRefreshUrlCleanup();
+    atlasVersionControlState("current");
+    return "none";
   }
 
-  const buffer = await response.arrayBuffer();
-  const hash = await atlasVersionSha256(buffer);
-  const text = new TextDecoder("utf-8").decode(buffer);
+  const comparison = atlasCompareBuildNumbers(ATLAS_BUILD, requested.build);
+  const tokenOk =
+    !requested.token
+    || requested.token === ATLAS_ASSET_TOKEN;
 
-  return {
-    path,
-    url,
-    text,
-    hash,
-    bytes: buffer.byteLength
-  };
+  atlasVersionRefreshUrlCleanup();
+
+  if (comparison >= 0 && tokenOk) {
+    atlasVersionShowInstalled(ATLAS_BUILD);
+    return "confirmed";
+  }
+
+  atlasVersionShowSyncing(
+    requested.build,
+    requested.token,
+    { reason: "requested_build_not_loaded_yet" }
+  );
+  return "syncing";
 }
 
 async function atlasFetchVersionManifest(stamp = Date.now()) {
   const response = await fetch(
-    atlasVersionManifestRequestUrl(stamp),
+    atlasVersionRequestUrl(ATLAS_VERSION_MANIFEST_URL, stamp),
     {
       cache: "no-store",
-      credentials: "same-origin",
-      headers: {
-        accept: "application/json"
-      }
+      headers: { Accept: "application/json" }
     }
   );
 
   if (!response.ok) {
-    throw new Error(
-      `Version manifest HTTP ${response.status}`
-    );
+    throw new Error(`version_manifest_http_${response.status}`);
   }
 
   const manifest = await response.json();
-  const build = atlasVersionManifestBuild(manifest);
-  const token = atlasVersionManifestToken(manifest);
+  const build = String(manifest?.build || "").trim();
+  const token = String(manifest?.asset_token || "").trim();
 
-  if (!build || !atlasVersionParts(build).length) {
-    throw new Error("Version manifest invalide");
+  if (!build) throw new Error("version_manifest_build_missing");
+
+  const expectedToken = atlasVersionExpectedToken(build);
+  if (!token || token !== expectedToken) {
+    throw new Error("version_manifest_token_invalid");
   }
 
-  if (!token) {
-    throw new Error("Token de publication absent");
-  }
+  return { manifest, build, token };
+}
+
+function atlasVersionExtractAppBuild(source) {
+  const text = String(source || "");
+  const pattern = /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']\s*;/g;
+  const matches = [...text.matchAll(pattern)];
 
   return {
-    manifest,
-    build,
-    token
+    build: String(matches[0]?.[1] || "").trim(),
+    markerCount: matches.length
   };
 }
 
-function atlasVersionRuntimeIdentity() {
-  const identity = {
-    appBuild: ATLAS_BUILD,
-    appToken: ATLAS_ASSET_TOKEN
-  };
-
-  identity.ok =
-    identity.appBuild === ATLAS_BUILD
-    && identity.appToken === ATLAS_ASSET_TOKEN;
-
-  return identity;
-}
-
-function atlasVersionIdentityMarker(source, expression) {
-  const input = String(source || "");
-  const flags = expression.flags.includes("g")
-    ? expression.flags
-    : `${expression.flags}g`;
-  const matcher = new RegExp(expression.source, flags);
-  const values = Array.from(
-    input.matchAll(matcher),
-    match => String(match?.[1] || "").trim()
-  ).filter(Boolean);
-
-  return {
-    value: values.length === 1 ? values[0] : "",
-    count: values.length,
-    values
-  };
-}
-
-function atlasVersionExtractAppIdentity(text) {
-  const source = String(text || "");
-
-  const buildMarker = atlasVersionIdentityMarker(
-    source,
-    /const\s+ATLAS_BUILD\s*=\s*["']([^"']+)["']/
-  );
-  const tokenMarker = atlasVersionIdentityMarker(
-    source,
-    /const\s+ATLAS_ASSET_TOKEN\s*=\s*["']([^"']+)["']/
-  );
-
-  return {
-    build: buildMarker.value,
-    token: tokenMarker.value,
-    buildMarkerCount: buildMarker.count,
-    tokenMarkerCount: tokenMarker.count
-  };
-}
-
-function atlasVersionDelay(ms) {
-  return new Promise(resolve =>
-    window.setTimeout(resolve, Math.max(0, Number(ms) || 0))
-  );
-}
-
-async function atlasVerifyRemotePublicationStable(
-  initialRemote,
-  options = {}
-) {
-  const maxAttempts = Math.max(
-    1,
-    Number(options.attempts || ATLAS_VERSION_PROPAGATION_ATTEMPTS)
-  );
-  const retryMs = Math.max(
-    250,
-    Number(options.retryMs || ATLAS_VERSION_PROPAGATION_RETRY_MS)
-  );
-
-  let remote = initialRemote;
-  let publication = null;
-  let lastError = null;
-
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    if (attempt > 0) {
-      await atlasVersionDelay(retryMs);
-      try {
-        remote = await atlasFetchVersionManifest(Date.now() + attempt);
-      } catch (error) {
-        lastError = error;
-        continue;
-      }
-    }
-
-    try {
-      publication = await atlasVerifyRemotePublication(remote);
-      if (publication.ok) {
-        atlasVersionAwarenessState.propagationRetryCount = 0;
-        return { ok: true, remote, publication, attempts: attempt + 1 };
-      }
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  atlasVersionAwarenessState.propagationRetryCount += 1;
-  return {
-    ok: false,
-    remote,
-    publication,
-    attempts: maxAttempts,
-    error: lastError ? String(lastError?.message || lastError) : null
-  };
+async function atlasVersionSha256Hex(bytes) {
+  if (!globalThis.crypto?.subtle) return "";
+  const buffer = bytes instanceof ArrayBuffer
+    ? bytes
+    : new TextEncoder().encode(String(bytes || "")).buffer;
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", buffer);
+  return [...new Uint8Array(digest)]
+    .map(value => value.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 async function atlasVerifyRemotePublication(remote) {
-  const stamp = Date.now();
-  const integrity =
-    atlasVersionManifestIntegrity(remote?.manifest);
-
-  const entries = await Promise.all(
-    Object.entries(ATLAS_VERSION_ASSET_URLS).map(
-      async ([name, path]) => {
-        const asset = await atlasFetchVersionAsset(
-          path,
-          {
-            stamp,
-            cacheMode: "no-store",
-            cacheBust: true
-          }
-        );
-
-        return [name, asset];
-      }
-    )
+  const response = await fetch(
+    atlasVersionRequestUrl(ATLAS_VERSION_APP_URL),
+    { cache: "no-store" }
   );
 
-  const assets = Object.fromEntries(entries);
-  const hashes = Object.fromEntries(
-    Object.entries(assets).map(
-      ([name, asset]) => [name, asset.hash]
-    )
-  );
+  if (!response.ok) {
+    return {
+      ok: false,
+      reason: `app_http_${response.status}`
+    };
+  }
 
-  const hashOk = Object.keys(
-    ATLAS_VERSION_ASSET_URLS
-  ).every(
-    name => hashes[name] === integrity.files[name]
-  );
+  const bytes = await response.arrayBuffer();
+  const text = new TextDecoder("utf-8").decode(bytes);
+  const identity = atlasVersionExtractAppBuild(text);
 
-  const appIdentity = atlasVersionExtractAppIdentity(
-    assets["app.js"]?.text
-  );
+  if (
+    identity.markerCount !== 1
+    || identity.build !== remote.build
+  ) {
+    return {
+      ok: false,
+      reason: "app_manifest_build_mismatch",
+      appBuild: identity.build,
+      manifestBuild: remote.build,
+      markerCount: identity.markerCount
+    };
+  }
 
-  const expectedBuild = String(remote?.build || "");
-  const expectedToken = String(remote?.token || "");
+  const expectedHash = String(
+    remote?.manifest?.integrity?.files?.["app.js"] || ""
+  ).trim().toLowerCase();
 
-  const appIdentityOk =
-    appIdentity.build === expectedBuild
-    && appIdentity.token === expectedToken
-    && appIdentity.buildMarkerCount === 1
-    && appIdentity.tokenMarkerCount === 1;
-
-  return {
-    ok: hashOk && appIdentityOk,
-    build: expectedBuild,
-    token: expectedToken,
-    integrity,
-    hashes,
-    assets: Object.fromEntries(
-      Object.entries(assets).map(
-        ([name, asset]) => [
-          name,
-          {
-            hash: asset.hash,
-            bytes: asset.bytes
-          }
-        ]
-      )
-    ),
-    appIdentity,
-    hashOk,
-    appIdentityOk,
-    checkedAt: Date.now()
-  };
-}
-
-async function atlasPrimePublishedAssets(remote) {
-  const integrity =
-    atlasVersionManifestIntegrity(remote?.manifest);
-
-  let assets = null;
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    if (attempt > 0) {
-      await atlasVersionDelay(ATLAS_VERSION_PROPAGATION_RETRY_MS);
-    }
-
-    const entries = await Promise.all(
-      Object.entries(ATLAS_VERSION_ASSET_URLS).map(
-        async ([name, path]) => {
-          // cache:"reload" on the canonical URL refreshes the browser HTTP cache
-          // that the next document load will actually reuse.
-          const asset = await atlasFetchVersionAsset(
-            path,
-            {
-              stamp: Date.now() + attempt,
-              cacheMode: "reload",
-              cacheBust: false
-            }
-          );
-          return [name, asset];
-        }
-      )
-    );
-
-    assets = Object.fromEntries(entries);
-    const ok = Object.keys(ATLAS_VERSION_ASSET_URLS).every(
-      name => assets[name]?.hash === integrity.files[name]
-    );
-
-    if (ok) {
+  if (expectedHash) {
+    const actualHash = await atlasVersionSha256Hex(bytes);
+    if (!actualHash || actualHash !== expectedHash) {
       return {
-        ok: true,
-        files: Object.fromEntries(
-          Object.entries(assets).map(([name, asset]) => [
-            name,
-            { hash: asset.hash, bytes: asset.bytes }
-          ])
-        )
+        ok: false,
+        reason: "app_sha256_mismatch",
+        expectedHash,
+        actualHash
       };
     }
   }
 
-  throw new Error(
-    "Préchargement HTTP encore en propagation"
-  );
-}
-
-function atlasVersionExpectedUpdateRead() {
-  try {
-    return {
-      build: String(
-        sessionStorage.getItem(
-          "agent_crypto_expected_build"
-        )
-        || ""
-      ).trim(),
-      token: String(
-        sessionStorage.getItem(
-          "agent_crypto_expected_token"
-        )
-        || ""
-      ).trim()
-    };
-  } catch {
-    return {
-      build: "",
-      token: ""
-    };
-  }
-}
-
-function atlasVersionExpectedUpdateWrite(build, token = "") {
-  try {
-    sessionStorage.setItem(
-      "agent_crypto_expected_build",
-      String(build || "")
-    );
-    sessionStorage.setItem(
-      "agent_crypto_expected_token",
-      String(token || "")
-    );
-    sessionStorage.setItem(
-      "agent_crypto_update_started_at",
-      new Date().toISOString()
-    );
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function atlasVersionExpectedUpdateClear() {
-  try {
-    sessionStorage.removeItem(
-      "agent_crypto_expected_build"
-    );
-    sessionStorage.removeItem(
-      "agent_crypto_expected_token"
-    );
-    sessionStorage.removeItem(
-      "agent_crypto_update_started_at"
-    );
-  } catch {}
+  return {
+    ok: true,
+    build: remote.build,
+    token: remote.token
+  };
 }
 
 async function atlasVersionCheck(options = {}) {
   const force = options?.force === true;
-  const userInitiated =
-    options?.userInitiated === true;
+  const userInitiated = options?.userInitiated === true;
 
-  if (atlasVersionAwarenessState.checking) {
-    return false;
-  }
-  if (
-    !force
-    && atlasVersionAwarenessState.confirmationTimer
-  ) {
-    return false;
-  }
-  if (
-    !force
-    && document.visibilityState === "hidden"
-  ) {
-    return false;
-  }
-  if (!force && navigator.onLine === false) {
-    return false;
-  }
+  if (atlasVersionAwarenessState.checking) return false;
+  if (!force && atlasVersionAwarenessState.confirmationTimer) return false;
+  if (!force && document.visibilityState === "hidden") return false;
+  if (!force && navigator.onLine === false) return false;
 
   atlasVersionAwarenessState.checking = true;
   atlasVersionAwarenessState.lastError = null;
@@ -37821,119 +37381,53 @@ async function atlasVersionCheck(options = {}) {
   }
 
   try {
-    const stamp = Date.now();
-    const remote = await atlasFetchVersionManifest(stamp);
-    const comparison = atlasCompareBuildNumbers(
-      remote.build,
-      ATLAS_BUILD
-    );
+    const remote = await atlasFetchVersionManifest();
+    const comparison = atlasCompareBuildNumbers(remote.build, ATLAS_BUILD);
 
     atlasVersionAwarenessState.remoteBuild = remote.build;
-    atlasVersionAwarenessState.remoteToken =
-      remote.token || null;
-    atlasVersionAwarenessState.lastCheckedAt =
-      Date.now();
+    atlasVersionAwarenessState.remoteToken = remote.token;
+    atlasVersionAwarenessState.lastCheckedAt = Date.now();
 
     if (comparison > 0) {
-      const stable =
-        await atlasVerifyRemotePublicationStable(remote);
-
-      if (!stable.ok) {
-        atlasVersionShowPublishing(
-          stable.remote?.build || remote.build,
-          stable.remote?.token || remote.token,
-          stable.publication
-        );
-        atlasVersionAwarenessSchedule(
-          ATLAS_VERSION_PROPAGATION_RETRY_MS
-        );
+      const publication = await atlasVerifyRemotePublication(remote);
+      if (!publication.ok) {
+        atlasVersionShowSyncing(remote.build, remote.token, publication);
         return false;
       }
 
-      atlasVersionShowUpdate(
-        stable.remote.build,
-        stable.remote.token,
-        stable.publication
-      );
+      atlasVersionShowUpdate(remote.build, remote.token, publication);
       return true;
     }
 
     if (comparison < 0) {
-      // Loaded application is newer than the manifest currently visible at
-      // this CDN edge. This is a normal GitHub Pages propagation race.
-      // Keep the working application marked current and retry quietly.
-      atlasVersionHideUpdate();
-      atlasVersionAwarenessSchedule(
-        ATLAS_VERSION_PROPAGATION_RETRY_MS
+      // The loaded app is newer than the manifest currently served by GitHub.
+      // This is a transient publication/cache condition, not an application error.
+      atlasVersionShowSyncing(
+        ATLAS_BUILD,
+        ATLAS_ASSET_TOKEN,
+        { reason: "manifest_behind_loaded_app", remote }
       );
       return false;
     }
 
-    // Build courant : la revérification doit rester centrée sur
-    // l'identité de version réellement active : app.js + version.json.
-    // Les autres ressources ne portent plus l'identité de Build depuis 28.3.21.
-    // Une vérification SHA complète reste obligatoire pour toute Build supérieure
-    // avant installation (branche comparison > 0 ci-dessus).
     if (remote.token !== ATLAS_ASSET_TOKEN) {
-      const stable = await atlasVerifyRemotePublicationStable(
-        remote,
-        { attempts: 3 }
-      );
-      if (
-        stable.ok
-        && stable.remote.build === ATLAS_BUILD
-        && stable.remote.token === ATLAS_ASSET_TOKEN
-      ) {
-        atlasVersionHideUpdate();
-        return false;
-      }
-
-      atlasVersionShowPublishing(
-        stable.remote?.build || remote.build,
-        stable.remote?.token || remote.token,
-        stable.publication || {
-          ok: false,
-          reason: "same_build_token_conflict",
-          loadedBuild: ATLAS_BUILD,
-          loadedToken: ATLAS_ASSET_TOKEN
-        }
-      );
-      atlasVersionAwarenessSchedule(
-        ATLAS_VERSION_PROPAGATION_RETRY_MS
-      );
-      return false;
-    }
-
-    const runtime = atlasVersionRuntimeIdentity();
-    if (!runtime.ok) {
-      atlasVersionShowRepair(
+      atlasVersionShowSyncing(
         remote.build,
-        remote.token
+        remote.token,
+        { reason: "same_build_token_conflict" }
       );
       return false;
     }
 
-    atlasVersionHideUpdate();
+    atlasVersionShowCurrent();
     return false;
   } catch (error) {
-    atlasVersionAwarenessState.lastError = String(
-      error?.message || error
-    );
-
-    const expected = atlasVersionExpectedUpdateRead();
+    atlasVersionAwarenessState.lastError = String(error?.message || error);
     atlasVersionShowFailure(
-      expected.build
-      || atlasVersionAwarenessState.remoteBuild
-      || ATLAS_BUILD,
-      expected.token
-      || atlasVersionAwarenessState.remoteToken
-      || ATLAS_ASSET_TOKEN
+      atlasVersionAwarenessState.remoteBuild || ATLAS_BUILD,
+      atlasVersionAwarenessState.remoteToken || ATLAS_ASSET_TOKEN
     );
-
-    console.warn(
-      "Vérification de version différée :",
-      error
-    );
+    console.warn("Vérification de version différée :", error);
     return false;
   } finally {
     atlasVersionAwarenessState.checking = false;
@@ -37941,35 +37435,21 @@ async function atlasVersionCheck(options = {}) {
 }
 
 function atlasBuildVersionRefreshUrl(
-  remoteBuild =
-    atlasVersionAwarenessState.remoteBuild
-    || ATLAS_BUILD,
-  remoteToken =
-    atlasVersionAwarenessState.remoteToken
-    || ATLAS_ASSET_TOKEN,
-  currentHref =
-    document.baseURI || window.location.href,
+  remoteBuild = atlasVersionAwarenessState.remoteBuild || ATLAS_BUILD,
+  remoteToken = atlasVersionAwarenessState.remoteToken || ATLAS_ASSET_TOKEN,
+  currentHref = document.baseURI || window.location.href,
   stamp = Date.now()
 ) {
   const url = new URL(currentHref);
-  url.searchParams.set(
-    "build",
-    String(remoteBuild || ATLAS_BUILD)
-  );
-  url.searchParams.set(
-    "asset_token",
-    String(remoteToken || ATLAS_ASSET_TOKEN)
-  );
+  url.searchParams.set("build", String(remoteBuild || ATLAS_BUILD));
+  url.searchParams.set("asset_token", String(remoteToken || ATLAS_ASSET_TOKEN));
   url.searchParams.set("_refresh", String(stamp));
   url.hash = "";
   return url.toString();
 }
 
 async function atlasClearSameOriginCacheStorage() {
-  if (
-    !("caches" in window)
-    || typeof window.caches?.keys !== "function"
-  ) {
+  if (!("caches" in window) || typeof window.caches?.keys !== "function") {
     return 0;
   }
 
@@ -37984,28 +37464,30 @@ async function atlasClearSameOriginCacheStorage() {
   }
 }
 
-function atlasVersionNavigateToUpdate(target) {
-  window.location.replace(target);
-  return true;
-}
-
-async function atlasApplyVersionUpdate(options = {}) {
-  if (atlasVersionAwarenessState.applying) {
+async function atlasPrimePublishedApp() {
+  try {
+    const response = await fetch(
+      atlasVersionRequestUrl(ATLAS_VERSION_APP_URL),
+      { cache: "reload" }
+    );
+    return response.ok;
+  } catch {
     return false;
   }
+}
+
+async function atlasApplyVersionUpdate() {
+  if (atlasVersionAwarenessState.applying) return false;
 
   atlasVersionConfirmationClear();
-
   const { control } = atlasVersionControlElements();
   const requestedBuild = String(
-    options.build
-    || control?.dataset?.remoteBuild
+    control?.dataset?.remoteBuild
     || atlasVersionAwarenessState.remoteBuild
     || ATLAS_BUILD
   ).trim();
   const requestedToken = String(
-    options.token
-    || control?.dataset?.remoteToken
+    control?.dataset?.remoteToken
     || atlasVersionAwarenessState.remoteToken
     || ATLAS_ASSET_TOKEN
   ).trim();
@@ -38017,98 +37499,36 @@ async function atlasApplyVersionUpdate(options = {}) {
   });
 
   try {
-    const initialRemote = await atlasFetchVersionManifest();
-    const stable =
-      await atlasVerifyRemotePublicationStable(initialRemote);
-    const remote = stable.remote || initialRemote;
-    const publication = stable.publication;
+    const remote = await atlasFetchVersionManifest();
+    const comparison = atlasCompareBuildNumbers(remote.build, ATLAS_BUILD);
 
-    if (!stable.ok || !publication?.ok) {
-      atlasVersionShowPublishing(
-        remote.build,
-        remote.token,
-        publication
-      );
-      atlasVersionAwarenessSchedule(
-        ATLAS_VERSION_PROPAGATION_RETRY_MS
-      );
+    if (comparison <= 0) {
+      atlasVersionShowCurrent();
+      atlasVersionRefreshUrlCleanup();
       return false;
     }
 
-    const comparison = atlasCompareBuildNumbers(
-      remote.build,
-      ATLAS_BUILD
-    );
-    const repairCurrent =
-      comparison === 0
-      && (
-        options.allowSameBuild === true
-        || control?.dataset?.state === "repair"
-      );
-
-    if (comparison < 0) {
-      atlasVersionShowPublishing(
-        ATLAS_BUILD,
-        ATLAS_ASSET_TOKEN,
-        {
-          ok: false,
-          reason: "manifest_behind_loaded_app",
-          remote
-        }
-      );
+    const publication = await atlasVerifyRemotePublication(remote);
+    if (!publication.ok) {
+      atlasVersionShowSyncing(remote.build, remote.token, publication);
       return false;
     }
 
-    if (comparison === 0 && !repairCurrent) {
-      const runtime = atlasVersionRuntimeIdentity();
-      if (!runtime.ok) {
-        atlasVersionShowRepair(
-          remote.build,
-          remote.token
-        );
-      } else {
-        atlasVersionExpectedUpdateClear();
-        atlasVersionHideUpdate();
-        atlasVersionRefreshUrlCleanup();
-      }
-      return false;
-    }
+    atlasVersionAwarenessState.remoteBuild = remote.build;
+    atlasVersionAwarenessState.remoteToken = remote.token;
+    atlasVersionAwarenessState.remotePublication = publication;
 
-    atlasVersionAwarenessState.remoteBuild =
-      remote.build;
-    atlasVersionAwarenessState.remoteToken =
-      remote.token || null;
-    atlasVersionAwarenessState.remotePublication =
-      publication;
-
-    atlasVersionExpectedUpdateWrite(
-      remote.build,
-      remote.token
-    );
-
-    await atlasPrimePublishedAssets(remote);
+    await atlasPrimePublishedApp();
     await atlasClearSameOriginCacheStorage();
 
-    const target = atlasBuildVersionRefreshUrl(
-      remote.build,
-      remote.token
+    window.location.replace(
+      atlasBuildVersionRefreshUrl(remote.build, remote.token)
     );
-
-    return atlasVersionNavigateToUpdate(target);
+    return true;
   } catch (error) {
-    atlasVersionAwarenessState.lastError = String(
-      error?.message || error
-    );
-
-    atlasVersionShowFailure(
-      requestedBuild,
-      requestedToken
-    );
-
-    console.warn(
-      "Actualisation de version impossible :",
-      error
-    );
+    atlasVersionAwarenessState.lastError = String(error?.message || error);
+    atlasVersionShowFailure(requestedBuild, requestedToken);
+    console.warn("Actualisation de version impossible :", error);
     return false;
   } finally {
     atlasVersionAwarenessState.applying = false;
@@ -38117,21 +37537,10 @@ async function atlasApplyVersionUpdate(options = {}) {
 
 async function atlasVersionControlAction() {
   const { control } = atlasVersionControlElements();
-  const mode = String(
-    control?.dataset?.state || "current"
-  );
+  const mode = String(control?.dataset?.state || "current");
 
   if (mode === "applying") return false;
-
-  if (mode === "available") {
-    return atlasApplyVersionUpdate();
-  }
-
-  if (mode === "repair") {
-    return atlasApplyVersionUpdate({
-      allowSameBuild: true
-    });
-  }
+  if (mode === "available") return atlasApplyVersionUpdate();
 
   return atlasVersionCheck({
     force: true,
@@ -38139,102 +37548,21 @@ async function atlasVersionControlAction() {
   });
 }
 
-function atlasVersionRefreshUrlCleanup() {
-  const url = new URL(window.location.href);
-  const managed = [
-    "_refresh",
-    "build",
-    "asset_token"
-  ];
-  const hadManagedParameter = managed.some(
-    name => url.searchParams.has(name)
-  );
-
-  if (!hadManagedParameter) return false;
-
-  managed.forEach(
-    name => url.searchParams.delete(name)
-  );
-  window.history.replaceState(
-    {},
-    "",
-    `${url.pathname}${url.search}${url.hash}`
-  );
-  return true;
-}
-
-function atlasVersionResolveExpectedUpdate() {
-  const expected = atlasVersionExpectedUpdateRead();
-  const runtime = atlasVersionRuntimeIdentity();
-
-  if (!expected.build) {
-    atlasVersionRefreshUrlCleanup();
-
-    if (!runtime.ok) {
-      atlasVersionShowRepair(
-        ATLAS_BUILD,
-        ATLAS_ASSET_TOKEN
-      );
-      return "repair";
-    }
-
-    atlasVersionControlState("current");
-    return "none";
-  }
-
-  const buildReached =
-    atlasCompareBuildNumbers(
-      ATLAS_BUILD,
-      expected.build
-    ) >= 0;
-  const tokenReached =
-    !expected.token
-    || ATLAS_ASSET_TOKEN === expected.token;
-
-  if (buildReached && tokenReached && runtime.ok) {
-    atlasVersionExpectedUpdateClear();
-    atlasVersionRefreshUrlCleanup();
-    atlasVersionShowInstalled(ATLAS_BUILD);
-    return "confirmed";
-  }
-
-  atlasVersionRefreshUrlCleanup();
-
-  if (buildReached) {
-    atlasVersionShowRepair(
-      expected.build || ATLAS_BUILD,
-      expected.token || ATLAS_ASSET_TOKEN
-    );
-    return "repair";
-  }
-
-  atlasVersionShowFailure(
-    expected.build,
-    expected.token
-  );
-  return "incomplete";
-}
-
 function atlasVersionAwarenessSchedule(delay = 2500) {
-  window.clearTimeout(
-    atlasVersionAwarenessState.timer
+  window.clearTimeout(atlasVersionAwarenessState.timer);
+  atlasVersionAwarenessState.timer = window.setTimeout(
+    () => void atlasVersionCheck(),
+    Math.max(0, Number(delay) || 0)
   );
-  atlasVersionAwarenessState.timer =
-    window.setTimeout(
-      () => void atlasVersionCheck(),
-      Math.max(0, Number(delay) || 0)
-    );
 }
 
 function atlasVersionAwarenessInit() {
-  if (atlasVersionAwarenessState.initialized) {
-    return true;
-  }
+  if (atlasVersionAwarenessState.initialized) return true;
   atlasVersionAwarenessState.initialized = true;
 
-  const control =
-    document.getElementById("atlasVersionControl");
+  atlasVersionLegacyStateClear();
 
+  const control = document.getElementById("atlasVersionControl");
   if (control) {
     control.disabled = false;
     control.addEventListener(
@@ -38243,8 +37571,7 @@ function atlasVersionAwarenessInit() {
     );
   }
 
-  const expectedStatus =
-    atlasVersionResolveExpectedUpdate();
+  const refreshStatus = atlasVersionResolveRefreshRequest();
 
   window.addEventListener(
     "online",
@@ -38266,16 +37593,16 @@ function atlasVersionAwarenessInit() {
   );
 
   atlasVersionAwarenessSchedule(
-    expectedStatus === "confirmed"
+    refreshStatus === "confirmed"
       ? ATLAS_VERSION_CONFIRMATION_MS + 800
-      : expectedStatus === "incomplete"
-        || expectedStatus === "repair"
-        ? 900
+      : refreshStatus === "syncing"
+        ? 1200
         : 2800
   );
 
   return true;
 }
+
 
 const ATLAS_LEARNING_DB_VERSION = 1;
 
