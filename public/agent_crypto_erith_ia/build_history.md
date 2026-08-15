@@ -1,3 +1,13 @@
+# Build 29.3.06R1 — Stable Stack Metadata Correction
+
+Correction ciblée sans changement fonctionnel :
+- `ATLAS_STABLE_STACK.interface` corrigé vers `Build 29.3.06`.
+- `ATLAS_STABLE_STACK.controlCenter` corrigé vers `V2.3.1R1`.
+- Bridge `V1.9.1` et modèle `gpt-oss:20b-32k` inchangés.
+- Contrôleur déterministe 29.3.06 inchangé.
+
+---
+
 # Build 29.3.06 — Version Control Deterministic Human-Readable Lock
 
 Cette Build part exactement de la 29.3.05 et remplace uniquement le cœur du contrôleur de version dans `web/app.js`, plus l’identité distante dans `web/version.json`.

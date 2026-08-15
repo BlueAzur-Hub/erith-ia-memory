@@ -11418,8 +11418,8 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.05",
-  controlCenter: "V2.3.0R1",
+  interface: "Build 29.3.06",
+  controlCenter: "V2.3.1R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
   model: "gpt-oss:20b-32k"
