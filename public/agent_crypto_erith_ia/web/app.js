@@ -11418,10 +11418,10 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.07",
-  controlCenter: "V2.3.1R1",
-  bridge: "V1.9.1",
-  bridgeNumeric: "1.9.1",
+  interface: "Build 29.3.08",
+  controlCenter: "V2.3.2R1",
+  bridge: "V1.9.2",
+  bridgeNumeric: "1.9.2",
   model: "gpt-oss:20b-32k"
 });
 
@@ -11568,103 +11568,6 @@ function atlasPedagogyBuildContract(snapshot) {
   };
 }
 
-function atlasPedagogyEscape(value) {
-  return String(value ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-
-function atlasPedagogyCurrentSummary() {
-  const snapshot = atlasLocalReportsState?.lastCompletedSnapshot || atlasLocalDialogueState?.lastSnapshot || atlasBuildCryptoPageSnapshot();
-  const raw = snapshot?.raw_context || {};
-  const feed = raw?.binance_top5 || {};
-  const assets = Array.isArray(feed.assets) ? feed.assets : [];
-  const direct = assets.filter(a => String(a?.quote_status || "").toLowerCase().includes("direct") || String(a?.quote_source || "").toLowerCase().includes("binance")).length;
-  const source = raw?.source_status || {};
-  const currentFp = String(snapshot?.fingerprint || atlasAnalyticalTruthState?.currentFingerprint || "—");
-  const conclusion = atlasLocalDialogueState?.conclusionResponse || null;
-  const sameFingerprint = !!conclusion?.fingerprint && conclusion.fingerprint === currentFp;
-  return { snapshot, assets, direct, source, currentFp, conclusion, sameFingerprint };
-}
-
-function atlasPedagogyRender(mode = "simple") {
-  const host = document.getElementById("atlasPedagogyBody");
-  if (!host) return;
-  const ctx = atlasPedagogyCurrentSummary();
-  const generated = ctx.snapshot?.generated_at ? new Date(ctx.snapshot.generated_at).toLocaleString("fr-FR") : "INFORMATION MANQUANTE";
-  const sourceLabel = ctx.source?.main_source || "INFORMATION MANQUANTE";
-  const assetText = ctx.assets.length
-    ? ctx.assets.map(a => `${String(a.symbol || a.name || "?").toUpperCase()} ${Number.isFinite(Number(a.price_eur)) ? Number(a.price_eur).toLocaleString("fr-FR", {maximumFractionDigits: 4}) + " €" : "prix manquant"}`).join(" · ")
-    : "INFORMATION MANQUANTE";
-  const conclusionState = !ctx.conclusion?.answer
-    ? "Aucune conclusion Aerith courante disponible."
-    : ctx.sameFingerprint
-      ? "La conclusion Aerith correspond au snapshot courant."
-      : "Attention : la conclusion Aerith conservée ne correspond pas au fingerprint courant ; elle ne doit pas être présentée comme conclusion actuelle.";
-
-  if (mode === "simple") {
-    host.innerHTML = `
-      <section><h4>Ce que regarde la page</h4><p>Agent-Crypto rassemble des prix, des variations, des graphiques, des statistiques et des actualités. Atlas décrit les faits ; NØX cherche ce qui pourrait être exagéré ; Aerith traduit l'ensemble en langage courant.</p></section>
-      <section><h4>État actuel des données</h4><p><b>Snapshot :</b> ${atlasPedagogyEscape(generated)}.<br><b>Source principale :</b> ${atlasPedagogyEscape(sourceLabel)}.<br><b>Top 5 observé :</b> ${atlasPedagogyEscape(assetText)}.</p></section>
-      <section><h4>Comment lire les chiffres</h4><p>Un chiffre décrit une observation ou un calcul, pas une promesse. Une hausse de prix ne prouve pas qu'elle va continuer. Une actualité importante ne prouve pas qu'elle cause le mouvement du marché.</p></section>
-      <section><h4>Cohérence Aerith</h4><p>${atlasPedagogyEscape(conclusionState)}</p></section>
-      <section><h4>Règle No-FOMO</h4><p>Ne pas confondre urgence ressentie et niveau de preuve. L'analyse peut être automatique ; toute décision financière réelle reste humaine.</p></section>`;
-    return;
-  }
-
-  if (mode === "detailed") {
-    const terms = ["volume","liquidité","capitalisation","volatilité","ewma","drawdown","var","expected shortfall","corrélation","bêta","bootstrap","market breadth","fomo","snapshot"];
-    host.innerHTML = `
-      <section><h4>Lecture détaillée du snapshot</h4><p><b>Date :</b> ${atlasPedagogyEscape(generated)} · <b>Source :</b> ${atlasPedagogyEscape(sourceLabel)} · <b>Actifs Top 5 disponibles :</b> ${ctx.assets.length}/5.</p><p>${atlasPedagogyEscape(assetText)}</p></section>
-      <section><h4>Ce qu'Aerith doit vérifier avant de conclure</h4><ol><li>Les données appartiennent-elles au même snapshot ?</li><li>Les 4 rapports Atlas sont-ils complets ?</li><li>NØX a-t-il identifié une causalité non démontrée ou une pression FOMO ?</li><li>Les News sont-elles confirmées et datées ?</li><li>Le Math Core dispose-t-il d'assez d'historique ?</li></ol><p><b>État conclusion :</b> ${atlasPedagogyEscape(conclusionState)}</p></section>
-      <section><h4>Mini-dictionnaire de cette lecture</h4>${terms.map(term => `<p><b>${atlasPedagogyEscape(term)}</b> — ${atlasPedagogyEscape(ATLAS_PEDAGOGY_GLOSSARY[term])}</p>`).join("")}</section>`;
-    return;
-  }
-
-  const glossary = Object.entries(ATLAS_PEDAGOGY_GLOSSARY)
-    .sort((a,b) => a[0].localeCompare(b[0], "fr"))
-    .map(([term, def]) => `<details><summary>${atlasPedagogyEscape(term)}</summary><p>${atlasPedagogyEscape(def)}</p></details>`).join("");
-  host.innerHTML = `
-    <section><h4>État technique</h4><p><b>Fingerprint :</b> ${atlasPedagogyEscape(ctx.currentFp)}<br><b>Snapshot :</b> ${atlasPedagogyEscape(generated)}<br><b>Source :</b> ${atlasPedagogyEscape(sourceLabel)}<br><b>Conclusion liée au fingerprint :</b> ${ctx.sameFingerprint ? "oui" : "non"}</p></section>
-    <section><h4>Dictionnaire crypto · banque · trading · statistiques</h4><div class="atlas-pedagogy-glossary">${glossary}</div></section>`;
-}
-
-function atlasPedagogyInit() {
-  if (document.getElementById("atlasPedagogyPanel")) return;
-  const style = document.createElement("style");
-  style.textContent = `
-    #atlasPedagogyLauncher{position:fixed;right:18px;bottom:18px;z-index:9997;border:1px solid rgba(80,220,255,.5);border-radius:999px;padding:10px 15px;background:#07141f;color:#dff9ff;box-shadow:0 8px 30px rgba(0,0,0,.35);cursor:pointer;font-weight:700}
-    #atlasPedagogyPanel{position:fixed;inset:5vh 3vw 5vh auto;width:min(680px,94vw);z-index:9998;background:#07121d;color:#e8f6ff;border:1px solid rgba(91,217,255,.45);border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.6);display:none;overflow:hidden}
-    #atlasPedagogyPanel.is-open{display:flex;flex-direction:column}
-    .atlas-pedagogy-head{display:flex;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
-    .atlas-pedagogy-head strong{flex:1}.atlas-pedagogy-head button,.atlas-pedagogy-tabs button{border:1px solid rgba(255,255,255,.15);background:#0c2233;color:#dff9ff;border-radius:10px;padding:8px 10px;cursor:pointer}
-    .atlas-pedagogy-tabs{display:flex;gap:8px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
-    .atlas-pedagogy-tabs button.is-active{background:#16445d;border-color:#5bd9ff}
-    #atlasPedagogyBody{padding:8px 20px 24px;overflow:auto;line-height:1.55}
-    #atlasPedagogyBody section{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)}
-    #atlasPedagogyBody h4{margin:4px 0 8px;color:#8eeaff}#atlasPedagogyBody p{margin:6px 0}
-    .atlas-pedagogy-glossary details{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-    .atlas-pedagogy-glossary summary{cursor:pointer;font-weight:700;color:#b9efff}
-  `;
-  document.head.appendChild(style);
-  const launcher = document.createElement("button");
-  launcher.id = "atlasPedagogyLauncher";
-  launcher.type = "button";
-  launcher.textContent = "Comprendre la page";
-  const panel = document.createElement("aside");
-  panel.id = "atlasPedagogyPanel";
-  panel.setAttribute("aria-label", "Guide Aerith pour comprendre la page");
-  panel.innerHTML = `<div class="atlas-pedagogy-head"><strong>Aerith · Comprendre toute la page</strong><button type="button" data-pedagogy-close>Fermer</button></div><div class="atlas-pedagogy-tabs"><button type="button" data-pedagogy-mode="simple" class="is-active">Simple</button><button type="button" data-pedagogy-mode="detailed">Détaillé</button><button type="button" data-pedagogy-mode="expert">Expert + dictionnaire</button></div><div id="atlasPedagogyBody"></div>`;
-  document.body.append(launcher, panel);
-  let mode = "simple";
-  const open = () => { panel.classList.add("is-open"); atlasPedagogyRender(mode); };
-  launcher.addEventListener("click", open);
-  panel.querySelector("[data-pedagogy-close]")?.addEventListener("click", () => panel.classList.remove("is-open"));
-  panel.querySelectorAll("[data-pedagogy-mode]").forEach(btn => btn.addEventListener("click", () => {
-    mode = btn.dataset.pedagogyMode || "simple";
-    panel.querySelectorAll("[data-pedagogy-mode]").forEach(b => b.classList.toggle("is-active", b === btn));
-    atlasPedagogyRender(mode);
-  }));
-  window.addEventListener("atlas:v2mode", () => { if (panel.classList.contains("is-open")) atlasPedagogyRender(mode); });
-}
 
 function atlasBuildCryptoPageSnapshotCore() {
   const period = Number(state.chartPeriodDays || 1);
@@ -16389,7 +16292,7 @@ function atlasLocalReportsExport(mode) {
     "",
     "## Limite",
     "",
-    "Analyse descriptive locale. Validation humaine requise. Aucun ordre financier, wallet ou accès GitHub."
+    "Analyse descriptive locale. La chaîne Atlas → NØX → Aerith est automatique ; validation humaine uniquement avant toute décision ou action financière réelle. Aucun ordre financier, wallet ou accès GitHub."
   ];
   const filename = `agent_crypto_atlas_${mode}_${new Date().toISOString().replace(/[:.]/g, "-")}.md`;
   downloadTextFile(filename, "text/markdown;charset=utf-8", lines.join("\n"));
@@ -17274,7 +17177,7 @@ function atlasBuildNoxNoFomoAudit(contract) {
       'Une actualité ne devient jamais un signal d’achat ou de vente.',
       'Une corrélation temporelle ne prouve pas la causalité.',
       'Une donnée absente reste INFORMATION MANQUANTE.',
-      'Validation humaine obligatoire.'
+      'Validation humaine obligatoire uniquement avant toute décision ou action financière réelle ; la chaîne analytique reste automatique.'
     ]
   };
 }
@@ -17332,8 +17235,10 @@ function atlasLocalConclusionMeaningful(result) {
     ["limites et stop point", "limites", "stop point"]
   ];
   const matched = families.filter(group => group.some(marker => lower.includes(marker))).length;
+  const hasCore = matched >= 5 || (lower.includes("situation générale") && lower.includes("nøx") && lower.includes("limites"));
+  const safetyExplicit = lower.includes("validation humaine") || lower.includes("décision financière réelle") || lower.includes("aucun ordre");
   const forbidden = /(acheter maintenant|vendre maintenant|ordre automatique|garanti|gain certain)/i.test(answer);
-  return matched >= 5 && lower.includes("validation humaine") && !forbidden;
+  return hasCore && safetyExplicit && !forbidden;
 }
 
 function atlasLocalReportStore(mode, result, snapshot, options = {}) {
@@ -17437,7 +17342,19 @@ function atlasPedagogyContent(key) {
     withdraw_asset: ["Actif retiré", "Crypto-actif que la plateforme doit envoyer. Il doit être accepté par la destination.", `Actif choisi : ${String(els.withdrawAsset?.value || "BTC").toUpperCase()}.`],
     withdraw_network: ["Réseau de retrait", "Voie technique utilisée pour transporter l’actif. Le réseau de départ et celui accepté par la destination doivent correspondre.", `Réseau choisi : ${String(els.withdrawNetwork?.value || "—")}.`],
     withdraw_amount: ["Montant du retrait", "Quantité brute envoyée avant déduction éventuelle des frais.", `Montant fictif : ${els.withdrawAmount?.value || "0"}.`],
-    withdraw_fee: ["Frais de retrait", "Quantité prélevée pour le retrait ou le réseau. Elle est distincte des frais d’achat et de vente.", `Frais fictifs : ${els.withdrawFee?.value || "0"}.`]
+    withdraw_fee: ["Frais de retrait", "Quantité prélevée pour le retrait ou le réseau. Elle est distincte des frais d’achat et de vente.", `Frais fictifs : ${els.withdrawFee?.value || "0"}.`],
+    whole_page: ["Comprendre toute la page", "Atlas conserve les faits et calculs ; NØX cherche les exagérations et causalités non démontrées ; Aerith traduit le snapshot courant en français simple sans inventer de donnée.", "Ouvre les rapports Atlas, le panneau NØX, les News, le Math Core et la conclusion Aerith du même snapshot. Si les empreintes ou dates diffèrent, l’ancienne conclusion doit être signalée comme historique."],
+    volume: ["Volume", ATLAS_PEDAGOGY_GLOSSARY["volume"], "Le volume doit être lu avec le prix, la liquidité et la période ; une variation isolée ne prouve pas une cause."],
+    liquidity: ["Liquidité", ATLAS_PEDAGOGY_GLOSSARY["liquidité"], "Plus la liquidité est faible, plus un ordre peut déplacer le prix. INFORMATION MANQUANTE si la profondeur réelle du carnet n’est pas fournie."],
+    volatility: ["Volatilité", ATLAS_PEDAGOGY_GLOSSARY["volatilité"], "Décrit l’amplitude des mouvements observés ; ne prédit pas la direction future."],
+    ewma: ["EWMA", ATLAS_PEDAGOGY_GLOSSARY["ewma"], "Donne davantage de poids aux observations récentes ; ce calcul reste descriptif."],
+    drawdown: ["Drawdown", ATLAS_PEDAGOGY_GLOSSARY["drawdown"], "Mesure une baisse passée entre sommet et creux ; ce n’est pas une prévision de perte future."],
+    var: ["VaR — Value at Risk", ATLAS_PEDAGOGY_GLOSSARY["var"], "Un seuil statistique historique n’est ni une garantie ni une perte maximale."],
+    expected_shortfall: ["Expected Shortfall", ATLAS_PEDAGOGY_GLOSSARY["expected shortfall"], "Regarde les pertes historiques situées au-delà du seuil VaR ; dépend entièrement de l’échantillon disponible."],
+    correlation: ["Corrélation", ATLAS_PEDAGOGY_GLOSSARY["corrélation"], "Deux séries peuvent évoluer ensemble sans que l’une cause l’autre."],
+    beta: ["Bêta", ATLAS_PEDAGOGY_GLOSSARY["bêta"], "Mesure une sensibilité dans le modèle choisi ; sa qualité dépend de l’historique et de la référence."],
+    fomo: ["FOMO / No-FOMO", ATLAS_PEDAGOGY_GLOSSARY["fomo"], "NØX doit refroidir l’urgence émotionnelle quand le niveau de preuve est insuffisant."],
+    snapshot: ["Snapshot", ATLAS_PEDAGOGY_GLOSSARY["snapshot"], "Rapports Atlas, NØX et conclusion Aerith doivent être reliés au même fingerprint avant d’être présentés comme analyse actuelle."]
   };
   return entries[key] || ["Explication", "Cette notion n’a pas encore de fiche dédiée.", "Aucune donnée supplémentaire."];
 }
@@ -30370,7 +30287,9 @@ function atlasSharedSynthesisNormalizePackageCore(input) {
       atlas_reports: "4/4",
       aerith_conclusion: true,
       observation_only: true,
-      human_validation_required: true
+      human_validation_required: true,
+      human_validation_scope: "financial_action_only",
+      analytical_chain_automatic: true
     },
     summary_markdown: String(input?.summary_markdown || "").replace(/\r\n?/g, "\n").trim(),
     snapshot: {
@@ -30732,7 +30651,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
       provider: conclusion.provider || atlasLocalDialogueState.provider || "local",
       model: conclusion.model || atlasLocalDialogueState.model || "modèle local"
     },
-    status: { atlas_reports: "4/4", aerith_conclusion: true, observation_only: true, human_validation_required: true },
+    status: { atlas_reports: "4/4", aerith_conclusion: true, observation_only: true, human_validation_required: true, human_validation_scope: "financial_action_only", analytical_chain_automatic: true },
     summary_markdown: atlasSharedSynthesisBuildSummary(snapshot),
     snapshot,
     reports,
@@ -37145,7 +37064,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.3.07";
+const ATLAS_BUILD = "29.3.08";
 
 // Derived identity: these values can no longer drift independently.
 const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;
@@ -38078,6 +37997,19 @@ els.btnClosePedagogy?.addEventListener("click", closeAtlasPedagogy);
 els.btnMinimizePedagogy?.addEventListener("click", toggleAtlasPedagogyMinimized);
 
 document.addEventListener("keydown", event => { if (event.key === "Escape" && !els.atlasPedagogyDrawer?.hidden) closeAtlasPedagogy(); });
+window.setTimeout(() => {
+  if (document.getElementById("btnAtlasUnderstandWholePage")) return;
+  const anchor = document.getElementById("atlasLocalDialoguePanel") || document.getElementById("atlasMathCorePanel") || document.querySelector("main");
+  if (!anchor) return;
+  const btn = document.createElement("button");
+  btn.id = "btnAtlasUnderstandWholePage";
+  btn.type = "button";
+  btn.className = "btn secondary";
+  btn.textContent = "Comprendre toute la page";
+  btn.addEventListener("click", () => openAtlasPedagogy("whole_page"));
+  anchor.insertAdjacentElement("afterbegin", btn);
+}, 0);
+
 
 els.expertRoadmapGrid?.addEventListener("change", event => { const card = event.target.closest?.("[data-roadmap-key]"); if (card) updateExpertRoadmapFromCard(card); });
 
@@ -38643,7 +38575,6 @@ atlasAnalyticalTruthInit();
 
 atlasVersionAwarenessInit();
 
-window.setTimeout(atlasPedagogyInit, 0);
 
 (() => {
   const FRAME_TOP_GAP = 6;

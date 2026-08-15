@@ -2772,3 +2772,15 @@ Extraction : 64 sections historiques déplacées depuis `version.json` 28.3.17.
 ## 29.3.07 — Aerith Whole-Page Pedagogy Layer
 
 Couche de vulgarisation complète au-dessus d'Atlas/NØX : lecture Simple, Détaillée et Expert, dictionnaire contextuel, contrôle de cohérence snapshot/fingerprint et contrat pédagogique transmis à Aerith. Aucun changement du Bridge V1.9.1.
+
+
+## Build 29.3.08 FINAL — Consolidated Atlas / NØX / Aerith Lock
+
+- Supprime le second panneau pédagogique concurrent introduit en 29.3.07 et réutilise le tiroir pédagogique historique de l’interface.
+- Ajoute « Comprendre toute la page » sans dupliquer l’UI.
+- Verrouille Atlas → NØX → Aerith comme chaîne analytique automatique.
+- Réserve la validation humaine aux décisions/actions financières réelles.
+- Rend le validateur de conclusion compatible avec la synthèse Aerith enrichie.
+- Conserve le contrôle fingerprint/snapshot et l’ancienne conclusion uniquement comme historique si une nouvelle conclusion échoue.
+- Corrige le SHA-256 app.js dans la vraie structure integrity.files de version.json.
+- Stack finale : Interface 29.3.08 · Control Center V2.3.2R1 · Bridge V1.9.2 · gpt-oss:20b-32k.
