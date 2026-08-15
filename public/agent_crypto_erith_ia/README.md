@@ -1244,3 +1244,195 @@ Consolidation de l'orchestration automatique. Corrige trois défauts critiques d
 - No Control Center change.
 - No Market Flow change.
 - No CSS change.
+
+
+## Build 29.3.13 — Gate Watchdog + Response UI Restore Lock
+
+- Keeps the 29.3.12 stable 5/5 direct-source gate.
+- Adds an independent 10-second watchdog so Atlas can arm even if no extra WebSocket render occurs at the exact threshold.
+- Requires exactly 5 direct Binance pairs and 0 derived pairs.
+- Any 4/5 or derived fallback cancels and resets the watchdog.
+- Keeps the accepted snapshot frozen for Atlas → NØX → Aerith.
+- Removes the injected historical marker block that disturbed the response-panel layout.
+- Historical/current state now uses the existing title/meta elements, preserving the original CSS structure.
+- Prevents duplicate `Historique — Historique —` title prefixes.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No style.css change.
+- No index.html change.
+
+
+## Build 29.3.14 — Atomic Chain + Background Retry Lock
+
+- Keeps the exact 5/5 direct-source stable gate from 29.3.13.
+- Automatic analysis no longer pauses merely because the browser tab is hidden.
+- Atlas 4/4 → NØX → Aerith now runs as one awaited transaction on the same frozen snapshot/fingerprint.
+- Removes the hand-off gap between Atlas completion and Aerith start.
+- If Atlas 4/4 is already valid but Aerith failed or is missing, the scheduler retries Aerith directly.
+- A failed Aerith conclusion preserves Atlas 4/4 and schedules a bounded automatic retry.
+- Avoids rerunning expensive Atlas reports when only Aerith needs recovery.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.15 — IndexedDB Current Restore + Stale Demotion Lock
+
+- Hardens CURRENT/HISTORICAL restoration after reload.
+- A persisted CURRENT package whose fingerprint differs from the current snapshot is demoted immediately.
+- Historical IndexedDB packages remain readable but cannot seed the current conclusion or current Atlas fingerprint.
+- Restored historical reports are labeled explicitly as historical and do not block fresh automatic analysis.
+- Current-state banner is rebuilt from the actual current fingerprint after snapshot creation.
+- Keeps the 29.3.14 atomic Atlas → NØX → Aerith transaction and Aerith-only retry.
+- Keeps the 29.3.13 exact 5/5 direct + 0 derived stable gate and watchdog.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.16 — Restore Reconciliation + Historical Isolation Lock
+
+- Fixes an incomplete IndexedDB restore hardening from 29.3.15.
+- Restored historical Atlas reports may be displayed but cannot seed `lastCompletedFingerprint`.
+- Historical packages cannot seed the current Aerith conclusion or block a fresh automatic run.
+- Reconciliation runs again as soon as the real current fingerprint exists.
+- A package restored before the current snapshot is known is reclassified once the snapshot arrives.
+- Persisted automatic-attempt state tied to an old fingerprint is cleared on demotion.
+- Uses a safe `typeof structuredClone === "function"` compatibility test.
+- CURRENT/HISTORICAL is derived from the actual current fingerprint, not merely from restore order.
+- Keeps exact 5/5 direct stable gate, watchdog, snapshot freeze and atomic Atlas → NØX → Aerith chain.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.17 — Transaction Supersession + Partial Retry Lock
+
+- Prevents Atlas from starting while an Aerith conclusion is already in flight.
+- Adds a conclusion transaction token and active fingerprint.
+- A superseded conclusion can never promote itself to CURRENT.
+- CURRENT promotion now rechecks 4/4 report fingerprints immediately before commit.
+- Automatic partial Atlas runs retry automatically instead of stopping at 1/4, 2/4 or 3/4.
+- Partial retries reuse already valid reports from the same fingerprint and request only missing reports.
+- Previous reports from another fingerprint are explicitly labelled HISTORICAL.
+- A superseded transaction schedules the newer current analysis instead of restoring stale state.
+- Keeps 29.3.16 IndexedDB reconciliation and historical isolation.
+- Keeps exact 5/5 direct stable gate, watchdog, snapshot freeze and atomic Atlas → NØX → Aerith chain.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.18 — Bridge Recovery Watchdog + Unattended Mode Lock
+
+- Fixes a contradiction in Bridge supervision: comments said it belonged to the authorized session, but code still restricted automatic supervision to Advanced view.
+- Bridge supervision now remains active in Basic, Intermediate or Advanced view.
+- Hidden browser tabs no longer deliberately disable Bridge health supervision.
+- POST requests classify timeout/offline failures and automatically arm Bridge health recovery.
+- A successful local request is treated as a positive Bridge health signal.
+- Atlas stops the current report batch on Bridge timeout/offline instead of hammering remaining endpoints.
+- Already completed same-fingerprint reports remain preserved for partial retry.
+- After Bridge recovery, the automatic chain wakes immediately.
+- Aerith timeout/offline keeps Atlas 4/4 and uses the existing Aerith-only retry path.
+- Keeps transaction supersession, partial-report reuse, IndexedDB reconciliation, stable exact 5/5 gate, watchdog and snapshot freeze.
+- No Bridge binary change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.19 — Fast Fail Local Bridge + Retry Storm Lock
+
+- Local Bridge supervision no longer depends on `navigator.onLine`; localhost health remains testable independently of Internet status.
+- Summary requests fast-fail after timeout/offline instead of repeating the same long request while the Bridge watchdog is already recovering.
+- Only one Bridge health probe may be in flight at a time.
+- Automatic retry escalation is bounded and still uses a single replaceable timer.
+- Removes duplicate Bridge recovery starts from report/conclusion catches.
+- Successful Bridge recovery clears accumulated analytical retry escalation.
+- Timeout/offline is presented as a recoverable local pause, not as loss of already valid reports.
+- Keeps transaction supersession, partial same-fingerprint retry, IndexedDB reconciliation, exact stable 5/5 direct gate, watchdog and snapshot freeze.
+- No Bridge binary change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.20 — Unattended Supervision + Timer Cleanup Lock
+
+- Fixes a remaining contradiction: a later visibility handler still stopped Bridge supervision when the tab became hidden.
+- Hidden tabs no longer deliberately stop local Bridge supervision anywhere in the active auto-controller.
+- pagehide performs explicit cleanup; pageshow re-arms Bridge + analytical scheduling.
+- Centralizes analytical timer cleanup.
+- Prevents automatic scheduler stacking during an active Atlas/Aerith transaction.
+- CURRENT promotion clears stale pending/retry state immediately.
+- Partial retries, Bridge recovery and superseded transactions replace stale timers instead of accumulating them.
+- Keeps fast-fail Bridge recovery, one health probe at a time, transaction supersession, partial report reuse, IndexedDB reconciliation, exact stable 5/5 direct gate and snapshot freeze.
+- No Bridge binary change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.3.21 — Deferred Retry + Transaction Flush Lock
+
+- Fixes a critical retry deadlock introduced by the active-transaction scheduler guard.
+- Retry requests raised during Atlas/Aerith execution are no longer silently discarded.
+- Active-transaction retries are queued as one deferred retry.
+- RunAll flushes the deferred retry only after clearing `transactionFingerprint`.
+- Standalone Aerith runs flush the deferred retry only after clearing `atlasLocalConclusionState.running`.
+- Superseded transactions no longer create an orphan `setTimeout`; they use the same deferred-retry queue.
+- Preserves one analytical retry timer at a time.
+- Preserves fast-fail Bridge recovery, partial report reuse, transaction supersession, IndexedDB reconciliation, exact stable 5/5 gate and snapshot freeze.
+- No Bridge binary change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+
+## Build 29.4.00 — PRODUCT ADVANCE · Watchlist Intelligence + News Reaction + Math V4
+
+This is a product feature release, not another retry/timer patch.
+
+### Atlas Watchlist Intelligence V4
+- Turns the saved watchlist into an autonomous descriptive reader.
+- Separates leaders, assets under pressure, market-foundation assets and speculative/fragile profiles.
+- Uses current market data and Atlas score only.
+- Does not emit buy/sell recommendations.
+
+### News Sentinel Event Reaction V1
+- Links the lead qualified News Sentinel event with affected assets found in the current market snapshot.
+- Compares observed 24 h/7 d movement with the event direction.
+- Explicitly distinguishes coherence, divergence and insufficient data.
+- Never converts correlation/temporal proximity into causal proof.
+
+### Atlas Math Core V4
+- Preserves all Math Core V3 historical-risk metrics.
+- Adds the current News ↔ market reaction context.
+- Keeps the anti-causality rule explicit.
+
+### Atlas Auto Reader V3
+- Adds leaders / laggards / foundation / speculative summaries.
+- Adds News Sentinel ↔ market interpretation.
+- Moves the product closer to: open the page → Atlas reads → compares → explains.
+
+### Preserved infrastructure
+- Exact stable 5/5 direct-source gate.
+- Snapshot freeze.
+- Atlas → NØX → Aerith automatic chain.
+- IndexedDB CURRENT/HISTORICAL separation.
+- Bridge recovery and transaction protections.
+- Control Center V2.3.2R2 / Bridge V1.9.2 unchanged.
+- Market Flow / CSS / index.html unchanged.
