@@ -1265,7 +1265,7 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   29.4.00 — PRODUCT ADVANCE · WATCHLIST INTELLIGENCE + NEWS REACTION + MATH V4
+   29.5.00 — AERITH PEDAGOGY V2 + WHOLE PAGE READER
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
@@ -11650,7 +11650,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.4.00",
+  interface: "Build 29.5.00",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -11760,6 +11760,106 @@ const ATLAS_PEDAGOGY_GLOSSARY = Object.freeze({
   "slippage": "Écart entre le prix attendu d'une opération et son prix d'exécution réel, souvent lié à la liquidité et à la taille de l'ordre."
 });
 
+
+function atlasPedagogyV2TermsFromText(textValue = "") {
+  const source = String(textValue || "").toLowerCase();
+  return Object.keys(ATLAS_PEDAGOGY_GLOSSARY)
+    .filter(term => source.includes(term.toLowerCase()))
+    .slice(0, 24);
+}
+
+function atlasPedagogyV2CurrentTerms(snapshot = null) {
+  const pageText = [
+    ...(snapshot?.pedagogy?.page_inventory?.headings || []),
+    ...(snapshot?.pedagogy?.page_inventory?.visible_statuses || []),
+    JSON.stringify(snapshot?.raw_context || {}),
+    JSON.stringify(snapshot?.strict_contract || {}),
+    JSON.stringify(snapshot?.math || state.math || {}),
+    JSON.stringify(state.watchlistIntelligence || {}),
+    JSON.stringify(state.newsEventReaction || {})
+  ].join(" ");
+  return atlasPedagogyV2TermsFromText(pageText);
+}
+
+function atlasPedagogyV2GlossaryLines(terms = []) {
+  return terms
+    .map(term => {
+      const definition = ATLAS_PEDAGOGY_GLOSSARY[term];
+      return definition ? `${term.toUpperCase()} — ${definition}` : null;
+    })
+    .filter(Boolean);
+}
+
+function atlasPedagogyV2PageBrief(snapshot) {
+  const watch = state.watchlistIntelligence || (typeof atlasProductWatchlistIntelligence === "function"
+    ? atlasProductWatchlistIntelligence()
+    : null);
+  const reaction = state.newsEventReaction || (typeof atlasProductNewsReaction === "function"
+    ? atlasProductNewsReaction()
+    : null);
+  const terms = atlasPedagogyV2CurrentTerms(snapshot);
+  const glossary = atlasPedagogyV2GlossaryLines(terms).slice(0, 12);
+
+  const direct = Number(snapshot?.strict_contract?.sources?.binance?.direct_pairs || 0);
+  const derived = Number(snapshot?.strict_contract?.sources?.binance?.derived_pairs || 0);
+  const market = snapshot?.strict_contract?.sources?.market || {};
+  const math = state.math || {};
+
+  return {
+    schema: "aerith_crypto_whole_page_pedagogy_v2",
+    generated_at: new Date().toISOString(),
+    simple: [
+      `Sources prix : ${direct}/5 Binance directes · ${derived} dérivée(s).`,
+      `Marché large : ${market.status || "INFORMATION MANQUANTE"}.`,
+      `Watchlist : ${watch?.observed ?? 0} actif(s) suivi(s) qualifié(s).`,
+      `News : ${reaction?.reaction || "aucun événement qualifié"}.`,
+      `Math Core : ${math.schema || "INFORMATION MANQUANTE"}.`
+    ],
+    detailed: {
+      leaders: watch?.leaders || [],
+      laggards: watch?.laggards || [],
+      foundations: watch?.foundations || [],
+      speculative: watch?.speculative || [],
+      news_reaction: reaction || null,
+      math_event_reaction: math?.eventReaction || null
+    },
+    glossary,
+    rules: [
+      "Fait ≠ hypothèse ≠ interprétation.",
+      "Corrélation ≠ causalité.",
+      "Une news importante ≠ signal automatique d'achat ou de vente.",
+      "Une valeur absente doit rester INFORMATION MANQUANTE.",
+      "Une conclusion historique ne doit jamais être présentée comme CURRENT."
+    ]
+  };
+}
+
+function atlasPedagogyV2QuestionContract(question, snapshot) {
+  return {
+    schema: "aerith_crypto_question_pedagogy_v2",
+    language: "fr",
+    user_question: String(question || ""),
+    audience: "débutant accepté ; expliquer tout jargon crypto, trading, banque et statistique",
+    page_scope: "whole_page_current_snapshot",
+    requested_structure: [
+      "Réponse courte en français simple",
+      "Faits observables",
+      "Ce que cela signifie",
+      "Risques / contradictions / incertitudes",
+      "Mots techniques expliqués",
+      "Informations manquantes",
+      "Ce qu'on ne peut pas conclure"
+    ],
+    whole_page_brief: atlasPedagogyV2PageBrief(snapshot),
+    glossary: ATLAS_PEDAGOGY_GLOSSARY,
+    safety: {
+      no_buy_sell_instruction: true,
+      no_causal_invention: true,
+      no_missing_data_invention: true
+    }
+  };
+}
+
 function atlasPedagogyPageInventory() {
   const headings = [...document.querySelectorAll("h1,h2,h3,h4")]
     .map(node => String(node.textContent || "").replace(/\s+/g, " ").trim())
@@ -11774,7 +11874,7 @@ function atlasPedagogyPageInventory() {
 
 function atlasPedagogyBuildContract(snapshot) {
   return {
-    schema: "aerith_crypto_whole_page_pedagogy_v1",
+    schema: "aerith_crypto_whole_page_pedagogy_v2",
     language: "fr",
     audience: "utilisateur non spécialiste de la crypto, de la banque et du trading",
     page_scope: "whole_page",
@@ -11796,7 +11896,8 @@ function atlasPedagogyBuildContract(snapshot) {
     ],
     glossary: ATLAS_PEDAGOGY_GLOSSARY,
     page_inventory: atlasPedagogyPageInventory(),
-    snapshot_generated_at: snapshot?.generated_at || null
+    snapshot_generated_at: snapshot?.generated_at || null,
+    whole_page_brief: atlasPedagogyV2PageBrief(snapshot)
   };
 }
 
@@ -11871,7 +11972,14 @@ function atlasBuildCryptoPageSnapshotCore() {
         source: state.dataBroker?.exchangeFeed?.source || "Binance WebSocket",
         last_message_at: state.dataBroker?.exchangeFeed?.lastMessageAt || null,
         assets: top5
-      }
+      },
+      watchlist_intelligence_v4: typeof atlasProductWatchlistIntelligence === "function"
+        ? atlasProductWatchlistIntelligence()
+        : null,
+      news_event_reaction_v1: typeof atlasProductNewsReaction === "function"
+        ? atlasProductNewsReaction()
+        : null,
+      math_core_v4: state.math || null
     }
   };
 
@@ -17351,12 +17459,37 @@ async function atlasLocalDialogueAsk() {
   atlasLocalDialogueSetBusy(true, `Question transmise à ${atlasLocalDialogueState.profile === "aerith" ? "Aerith-10" : "Atlas-10"}…`);
   try {
     const snapshot = atlasBuildCryptoPageSnapshot();
+    const questionContract = atlasPedagogyV2QuestionContract(question, snapshot);
+    const currentReports = Object.fromEntries(
+      ATLAS_LOCAL_REPORT_MODES.map(mode => [
+        mode,
+        atlasLocalReportsState.reports?.[mode]?.fingerprint === snapshot.fingerprint
+          ? atlasLocalReportsState.reports[mode]
+          : null
+      ])
+    );
+
     const result = await atlasLocalBridgeRequest("/chat", {
       profile: atlasLocalDialogueState.profile,
       question,
-      snapshot
+      snapshot,
+      pedagogy_contract: questionContract,
+      current_reports: currentReports,
+      current_conclusion:
+        atlasLocalDialogueState.conclusionResponse?.fingerprint === snapshot.fingerprint
+          ? atlasLocalDialogueState.conclusionResponse
+          : null,
+      requested_reading: "whole_page_simple_detailed_expert",
+      pedagogy_v2: atlasPedagogyV2QuestionContract(
+        "Produire la synthèse Aerith-10 Crypto de toute la page.",
+        snapshot
+      )
     });
     atlasLocalDialogueRender(result, "Réponse à la question libre");
+    setText(
+      document.getElementById("atlasLocalDialogueStatus"),
+      `${atlasLocalDialogueState.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · question libre · snapshot courant + Watchlist + News + Math Core transmis.`
+    );
   } catch (error) {
     atlasLocalDialogueState.connected = false;
     atlasLocalDialogueSetConnection(false, error?.name === "AbortError"
@@ -36052,6 +36185,15 @@ function renderAutoReader(snapshot = null, previous = null) {
       atlasProductNewsReactionLine(reaction),
       "Règle : une concordance avec une news ne prouve jamais une causalité.",
       "",
+      "AERITH — EXPLICATION SIMPLE :",
+      "Leader = actif qui monte davantage que les autres sur la période observée ; cela ne garantit pas qu’il continuera.",
+      "Sous pression = actif en baisse ou fragilisé dans le snapshot ; ce n’est pas une prédiction de chute future.",
+      "Socle de marché = actif majeur mieux établi dans ce classement descriptif ; cela ne signifie pas 'sans risque'.",
+      "Spéculatif / fragile = mouvement, liquidité ou rang qui rendent la lecture plus incertaine et nerveuse.",
+      "Volatilité = amplitude des variations. Plus elle est forte, plus les mouvements peuvent être rapides dans les deux sens.",
+      "Drawdown = baisse maximale observée depuis un sommet sur la fenêtre étudiée.",
+      "VaR = estimation statistique de perte potentielle sous certaines hypothèses ; ce n’est pas une perte maximale garantie.",
+      "",
       "Vérité collecteur : un nom présent dans la mémoire prouve seulement qu’il a déjà écrit des snapshots. Cela ne prouve pas que sa machine tourne encore maintenant."
     ].join("\n");
   }
@@ -38085,7 +38227,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.4.00";
+const ATLAS_BUILD = "29.5.00";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
