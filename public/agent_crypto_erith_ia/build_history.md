@@ -1,3 +1,16 @@
+## Build 29.3.00 — Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
+
+- Base : 28.3.60 validée.
+- Nouvelle pile locale canonique : Control Center V2.3.0R1 + Bridge V1.9.0 + `gpt-oss:20b-32k`.
+- Alignement de l’Interface sur le Fact Contract V3 Truth/Evidence réellement produit par Atlas.
+- Conservation de la compatibilité V2 pour reprise historique.
+- Question libre, quatre rapports Atlas et conclusion Aerith raccordés à la pile 29.3.
+- Source Truth, Evidence, Math Quality Gates, Contradictions et empreinte analytique restent déterministes et prioritaires sur le LLM.
+- Aucun changement Market, Graphique, Target Top 5, Market Flow, Modules 01–11, simulation, Métaux ou géométrie Firefox.
+- Lecture seule : aucune action exchange, wallet, GitHub ou UI.
+
+---
+
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
 
 - Base : 28.3.59 publiée.

@@ -1,9 +1,34 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 28.3.60  
-**Build :** 28.3.60  
-**Mission :** Module 03 Visible-Step No-Valse Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.00  
+**Build :** 29.3.00  
+**Mission :** Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
 
+## Build 29.3.00 — Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
+
+Cette Build ouvre la branche 29.3 depuis la 28.3.60 validée. Elle ne reconstruit ni le Market, ni le Graphique, ni les Modules 01–11. Elle réaligne uniquement la pile locale Atlas/Aerith sur le nouveau Bridge V1.9.0 et le moteur Ollama `gpt-oss:20b-32k`.
+
+### Pile canonique
+
+- Control Center V2.3.0R1.
+- Bridge Atlas V1.9.0, localhost 127.0.0.1:8787, lecture seule.
+- GPT-OSS 20B-32K comme moteur local.
+- Fact Contract V3 `atlas_crypto_fact_contract_v3_truth_evidence` reconnu nativement ; V2 conservé pour reprise.
+- Source Truth V2, Evidence V2, Math Quality Gates V2, Contradictions V2 et empreinte analytique conservés.
+- Quatre rapports Atlas → conclusion Aerith conservés dans IndexedDB.
+
+### Correction fonctionnelle
+
+La Question libre et les analyses locales ne doivent plus être refusées parce que l’Interface envoie un contrat V3 alors que l’ancien Bridge attendait V2. Le Bridge V1.9.0 accepte et valide les deux schémas sans affaiblir les règles de vérité.
+
+### Non-régression
+
+- Build 28.3.60 conservée comme base visuelle et pédagogique.
+- Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, simulation et Modules 01–11 inchangés.
+- Aucune action exchange, wallet, GitHub ou UI.
+- Aucun ordre financier réel.
+
+---
 
 ## Build 28.3.60 — Module 03 Visible-Step No-Valse Lock
 

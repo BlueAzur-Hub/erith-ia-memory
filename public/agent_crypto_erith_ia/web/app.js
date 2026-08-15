@@ -11418,11 +11418,11 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 28.3.08",
-  controlCenter: "V2.1.0R1",
-  bridge: "V1.7.6",
-  bridgeNumeric: "1.7.6",
-  model: "llama3.2:latest"
+  interface: "Build 29.3.00",
+  controlCenter: "V2.3.0R1",
+  bridge: "V1.9.0",
+  bridgeNumeric: "1.9.0",
+  model: "gpt-oss:20b-32k"
 });
 
 function atlasStrictCoinBySymbol(symbol) {
@@ -15304,7 +15304,7 @@ async function atlasLocalBridgeProbe(options = {}) {
 
       if (payload.ready === false || payload.model_ready === false) {
         atlasLocalDialogueState.connected = false;
-        const required = payload.required_model || "llama3.2";
+        const required = payload.required_model || "gpt-oss:20b-32k";
         const announce = atlasLocalBridgeHealthTransition(
           `model-missing:${required}`,
           silent
@@ -15317,7 +15317,7 @@ async function atlasLocalBridgeProbe(options = {}) {
         if (detail) {
           detail.textContent =
             `Bridge connecté · modèle ${required} absent. `
-            + `Lance INSTALL_LLAMA32.bat ou : ollama pull ${required}`;
+            + `Lance CREATE_GPT_OSS_20B_32K.bat ou vérifie le modèle : ${required}`;
         }
 
         atlasLocalDialogueSetConnection(
@@ -15331,7 +15331,7 @@ async function atlasLocalBridgeProbe(options = {}) {
 
       atlasLocalDialogueState.connected = true;
       const provider = payload.provider || "ollama";
-      const model = payload.model || "llama3.2";
+      const model = payload.model || "gpt-oss:20b-32k";
       const announce = atlasLocalBridgeHealthTransition(
         `ready:${provider}:${model}`,
         silent
@@ -15348,7 +15348,7 @@ async function atlasLocalBridgeProbe(options = {}) {
       atlasLocalDialogueSetConnection(
         true,
         announce
-          ? "Dialogue local prêt avec le moteur neutre llama3.2."
+          ? `Dialogue local prêt avec ${model}.`
           : ""
       );
       if (announce) atlasLocalReportsScheduleAutomatic("bridge-ready");
@@ -29784,7 +29784,7 @@ const atlasStableStackState = {
   bridgeVersion: "",
   provider: "",
   model: "",
-  requiredModel: "llama3.2",
+  requiredModel: "gpt-oss:20b-32k",
   lastError: "",
   checkedAt: 0
 };
@@ -29824,8 +29824,8 @@ function atlasStableStackRenderCore() {
     station = "Ryzen · production locale";
     stationDetail = "Les quatre rapports et la conclusion peuvent être produits sur ce poste.";
     status = versionMatches
-      ? "Bridge V1.7.6 et Ollama prêts · production locale en lecture seule."
-      : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : V1.7.6.`;
+      ? "Bridge V1.9.0 et GPT-OSS 20B-32K prêts · production locale en lecture seule."
+      : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : V1.9.0.`;
   } else if (bridgeReachable) {
     runtime = "warning";
     badgeText = "Modèle requis";
@@ -30340,7 +30340,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     origin: {
       machine: atlasSharedSynthesisOriginMachine(),
       interface: ATLAS_RELEASE,
-      bridge: "V1.7.6",
+      bridge: ATLAS_STABLE_STACK.bridge,
       provider: conclusion.provider || atlasLocalDialogueState.provider || "local",
       model: conclusion.model || atlasLocalDialogueState.model || "modèle local"
     },
@@ -35657,7 +35657,7 @@ function atlasStableStackUpdateBridge(payload, error = null) {
     atlasStableStackState.bridgeVersion = String(payload.version || payload.bridge_version || "").trim();
     atlasStableStackState.provider = String(payload.provider || "").trim();
     atlasStableStackState.model = atlasStableStackNormalizeModel(payload.model || "");
-    atlasStableStackState.requiredModel = atlasStableStackNormalizeModel(payload.required_model || "llama3.2");
+    atlasStableStackState.requiredModel = atlasStableStackNormalizeModel(payload.required_model || "gpt-oss:20b-32k");
     atlasStableStackState.lastError = String(payload.readiness_error || "").trim();
   } else {
     atlasStableStackState.bridgeReachable = false;
@@ -36129,7 +36129,7 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
     if (!integrity.ok) throw new Error(`Bridge historique refusé · ${integrity.reason}`);
 
     atlasHistoryBridgeMarkSuccess();
-    const bridgeVersion = String(payload?.bridge_version || "1.7.6");
+    const bridgeVersion = String(payload?.bridge_version || "1.9.0");
     return {
       series,
       volumeSeries,
@@ -36743,11 +36743,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 28.3.60";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.00";
 
-const ATLAS_BUILD = "28.3.60";
+const ATLAS_BUILD = "29.3.00";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-28.3.60";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.00";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 
