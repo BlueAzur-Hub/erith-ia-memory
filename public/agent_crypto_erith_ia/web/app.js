@@ -1265,7 +1265,7 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   29.3.10 — AUTO CHAIN + CURRENT SNAPSHOT PROMOTION LOCK
+   29.3.11 — CLEAN DIRECT SOURCE + CURRENT LOCK
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
@@ -1306,12 +1306,17 @@ function atlasCurrentQualification(snapshot) {
   const fp = atlasCurrentFingerprint(snapshot);
   const binance = snapshot?.strict_contract?.sources?.binance || {};
   const directCount = Number(binance.direct_pairs || 0);
+  const derivedCount = Number(binance.derived_pairs || 0);
+  const expectedCount = 5;
   const feedReady = String(binance.feed_status || "").toLowerCase() === "ready";
 
   return {
     fingerprint: fp,
+    expected_count: expectedCount,
+    price_count: Math.min(expectedCount, Math.max(0, directCount + derivedCount)),
     direct_count: directCount,
-    qualified: !!fp && feedReady && directCount >= 5
+    derived_count: derivedCount,
+    qualified: !!fp && feedReady && directCount >= expectedCount
   };
 }
 
@@ -1326,7 +1331,10 @@ function atlasCurrentStage(snapshot, status, reason = "", extra = {}) {
       previous.status === "CURRENT" ? previous.fingerprint : (previous.previous_current_fingerprint || null),
     generated_at: snapshot?.generated_at || previous.generated_at || new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    price_count: q.price_count,
     direct_count: q.direct_count,
+    derived_count: q.derived_count,
+    expected_count: q.expected_count,
     reason,
     ...extra
   };
@@ -1345,7 +1353,10 @@ function atlasCurrentMarkPending(snapshot, reason = "snapshot_changed") {
     previous_current_fingerprint: prev?.status === "CURRENT" ? prev.fingerprint : (prev?.previous_current_fingerprint || null),
     generated_at: snapshot?.generated_at || new Date().toISOString(),
     reason,
-    direct_count: q.direct_count
+    price_count: q.price_count,
+    direct_count: q.direct_count,
+    derived_count: q.derived_count,
+    expected_count: q.expected_count
   };
   atlasCurrentStateWrite(state);
   atlasCurrentRenderBanner(state);
@@ -1378,7 +1389,10 @@ function atlasCurrentPromoteIfComplete(snapshot, reports, conclusion) {
     fingerprint: q.fingerprint,
     generated_at: snapshot?.generated_at || new Date().toISOString(),
     promoted_at: new Date().toISOString(),
+    price_count: q.price_count,
     direct_count: q.direct_count,
+    derived_count: q.derived_count,
+    expected_count: q.expected_count,
     atlas_reports: 4,
     aerith_conclusion: true,
     model: "gpt-oss:20b-32k"
@@ -1417,10 +1431,10 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
     banner.innerHTML = `<b>Analyse courante non remplacée</b> · ${atlasLocalEscapeHtml(state.reason || "erreur locale")} · ancien résultat conservé comme historique.`;
     banner.style.borderColor = "rgba(255,110,110,.65)";
   } else if (status === "PENDING_ANALYSIS") {
-    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · ancien résultat conservé comme historique · ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · prix ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · ancien résultat conservé uniquement comme historique · ${String(state.fingerprint || "").slice(0,18)}…`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
   } else {
-    banner.innerHTML = `<b>Analyse en attente</b> · démarrage automatique lorsque Binance atteint 5/5 directes.`;
+    banner.innerHTML = `<b>Analyse en attente</b> · prix disponibles ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · Atlas démarre automatiquement à 5/5 directes.`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
   }
 }
@@ -11624,7 +11638,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.10",
+  interface: "Build 29.3.11",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -16122,6 +16136,7 @@ function atlasLocalReportsReadiness(snapshot) {
   const marketReady = state.liveOk === true && marketCount >= 200 && !!market.timestamp;
   const bridgeReady = atlasLocalDialogueState.connected === true;
   const binanceReady = binance.feed_status === "ready" && directPairs >= 5 && binanceFresh;
+  const derivedPairs = Number(binance.derived_pairs || 0);
   return {
     ready: bridgeReady && marketReady && binanceReady && graphReady,
     bridgeReady,
@@ -16129,16 +16144,17 @@ function atlasLocalReportsReadiness(snapshot) {
     binanceReady,
     graphReady,
     marketCount,
-    directPairs
+    directPairs,
+    derivedPairs
   };
 }
 
 function atlasLocalReportsReadinessLabel(readiness) {
   if (!readiness.bridgeReady) return "Atlas en attente · Bridge local non prêt.";
   if (!readiness.marketReady) return "Atlas en attente · snapshot CoinGecko exploitable requis.";
-  if (!readiness.binanceReady) return `Atlas en attente · Binance ${readiness.directPairs}/5 directes · démarrage automatique à 5/5.`;
+  if (!readiness.binanceReady) return `Atlas en attente · prix disponibles ${Math.min(5, Number(readiness.directPairs || 0) + Number(readiness.derivedPairs || 0))}/5 · Binance ${readiness.directPairs}/5 directes · ${Number(readiness.derivedPairs || 0)} dérivées · démarrage automatique à 5/5 directes.`;
   if (!readiness.graphReady) return "Atlas en attente · graphique exploitable requis.";
-  return "5/5 directes · sources prêtes · démarrage Atlas autorisé.";
+  return "5/5 prix · 5/5 Binance directes · 0 dérivée · sources prêtes · démarrage Atlas autorisé.";
 }
 
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
@@ -37301,7 +37317,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.3.10";
+const ATLAS_BUILD = "29.3.11";
 
 // Derived identity: these values can no longer drift independently.
 const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;

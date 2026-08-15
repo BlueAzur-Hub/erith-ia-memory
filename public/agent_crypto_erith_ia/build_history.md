@@ -2799,3 +2799,18 @@ Couche de vulgarisation complète au-dessus d'Atlas/NØX : lecture Simple, Déta
 ## Build 29.3.10 — Auto Chain + Current Snapshot Lock
 
 Consolidation de l'orchestration automatique. Corrige trois défauts critiques découverts lors de l'audit 29.3.09 : fingerprint évalué trop tôt, objet `reports` traité comme tableau, et `lastAutoFingerprint` fixé avant le succès d'Aerith. Les synthèses restaurées restent historiques jusqu'à promotion transactionnelle du snapshot courant.
+
+
+## Build 29.3.11 — Clean Direct Source + Current Lock
+
+- Interface-only correction.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- Distinguishes 5/5 prices from 5/5 Binance direct sources.
+- Displays direct and derived source counts in the automatic-analysis status.
+- Atlas remains blocked until 5/5 Binance sources are direct.
+- Preserves automatic Atlas → NØX → Aerith → CURRENT orchestration.
+- Preserves stale conclusions as HISTORICAL only when fingerprint differs.
+- Canonical local stack remains Control Center V2.3.2R2 / Bridge V1.9.2 / gpt-oss:20b-32k.
+- Browser cache remains handled operationally with Ctrl+F5 after GitHub publication.
