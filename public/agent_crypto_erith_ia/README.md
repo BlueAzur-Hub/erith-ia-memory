@@ -1,38 +1,40 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.01  
-**Build :** 29.3.01  
-**Mission :** Atlas Automatic Production Recovery Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.03  
+**Build :** 29.3.03  
+**Mission :** Aerith News Intelligence + NØX No-FOMO Recovery Lock
 
-## Build 29.3.01 — Atlas Automatic Production Recovery Lock
+## Build 29.3.03 — Aerith News Intelligence + NØX No-FOMO Recovery Lock
 
-Cette Build consolide le cycle automatique déjà présent : nouveau snapshot → quatre rapports Atlas-10 → conclusion Aerith-10 → synthèse persistée dans IndexedDB.
+Cette Build part de la 29.3.02 et conserve son orchestrateur automatique. Elle reconnecte le rôle historique de NØX Risk Auditor au bloc No-FOMO existant et enrichit la conclusion Aerith avec les informations News Sentinel déjà présentes dans le Fact Contract.
 
-### Correction P0 — une cotation Binance ne doit plus bloquer toute la production Atlas
+### Chaîne analytique
 
-- Le mode complet reste prioritaire : Binance 5/5 frais.
-- Atlas attend 15 secondes le 5/5 lors du cycle automatique.
-- Si le flux reste à 4/5 mais que Bridge, CoinGecko et Graphique sont valides, Atlas bascule en **mode dégradé contrôlé**.
-- La paire directe absente est explicitement classée `INFORMATION MANQUANTE` et n'est jamais reconstruite, remplacée par zéro ou inventée.
-- Le contrat ajoute une contradiction `binance_target_top5_partiel` pour rendre la perte de couverture visible dans le rapport Contradictions.
-- Les quatre rapports peuvent alors être produits automatiquement ; la conclusion Aerith reste conditionnée à un 4/4 valide.
+`Snapshot → Atlas 4/4 → Risk/Truth/Evidence → NØX No-FOMO → Aerith-10 Crypto → IndexedDB`.
 
-### Automatisme conservé
+- NØX ne calcule aucun prix et ne remplace ni Atlas ni Risk Sentinel.
+- NØX classe le contexte en `CALME`, `PRUDENCE` ou `STOP` à partir des stop gates, de la qualité Math Core, des sources, de la couverture et du rapport preuve/impact des news.
+- Une actualité à fort impact mais à preuve faible augmente le refroidissement ; aucune causalité marché n'est inventée.
+- Aerith reçoit désormais le dossier News Sentinel et l'audit NØX dans sa conclusion, en plus des quatre rapports Atlas.
+- L'actualité directrice, sa source/preuve, son impact potentiel et les actifs/secteurs déclarés peuvent être rappelés dans la synthèse Aerith sans devenir un signal d'exécution.
+- Les règles `information manquante`, `corrélation ≠ causalité`, No-FOMO et validation humaine sont conservées.
 
-- Startup / Livecheck / Market refresh / Bridge ready peuvent planifier l'analyse.
-- Les anciens rapports et la conclusion restent conservés tant que le nouveau cycle n'est pas validé.
-- Après 4/4, Aerith-10 est appelée automatiquement et la synthèse est écrite puis relue dans IndexedDB.
+### Bridge associé
 
-### Pile locale inchangée
-
-- Control Center V2.3.0R1.
-- Bridge V1.9.0.
-- Ollama `gpt-oss:20b-32k`.
-- Contexte 32768.
+Bridge V1.9.1 : prise en charge de `agent_crypto_nox_no_fomo_v1`, enrichissement News/NØX du contexte GPT-OSS et de la conclusion déterministe Aerith. Compatibilité V2/V3 conservée.
 
 ### Non-régression
 
-Aucun changement sur Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, simulation, Learning Modules 01–11 ou verrouillage Firefox.
+- Orchestrateur 29.3.02 conservé.
+- GPT-OSS `gpt-oss:20b-32k` et contexte 32768 conservés.
+- Market, Graphique, Target Top 5, Market Flow, Math Core V3, Métaux, News Sentinel, Watchlist, Decision Board, simulation, Modules 01–11, CSS/HTML/assets et verrous Firefox inchangés.
+- Aucun ordre réel, wallet, clé privée, écriture GitHub ou action exchange.
+
+---
+
+## Build 29.3.02 — Atlas Automatic Orchestrator Recovery Lock
+
+La 29.3.02 reste la base de l'orchestrateur automatique : déclenchement fingerprint, retry Bridge/readiness, 4 rapports Atlas puis conclusion.
 
 ---
 

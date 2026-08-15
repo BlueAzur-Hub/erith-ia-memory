@@ -11418,10 +11418,10 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.01",
+  interface: "Build 29.3.03",
   controlCenter: "V2.3.0R1",
-  bridge: "V1.9.0",
-  bridgeNumeric: "1.9.0",
+  bridge: "V1.9.1",
+  bridgeNumeric: "1.9.1",
   model: "gpt-oss:20b-32k"
 });
 
@@ -12647,8 +12647,17 @@ function renderAtlasMathCore() {
 
   const noFomoPanel = document.getElementById("atlasNoFomoMathPanel");
   if (noFomoPanel) {
-    const noFomo = market.fomoPenalty ? "ralentir et vérifier" : "continuer en observation";
-    noFomoPanel.innerHTML = `<b>Atlas No-FOMO</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`;
+    try {
+      const snapshot = atlasBuildCryptoPageSnapshot();
+      const audit = snapshot?.strict_contract?.nox_no_fomo_v1;
+      if (!atlasNoxNoFomoRender(audit)) {
+        const noFomo = market.fomoPenalty ? "ralentir et vérifier" : "continuer en observation";
+        noFomoPanel.innerHTML = `<b>NØX No-FOMO</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`;
+      }
+    } catch {
+      const noFomo = market.fomoPenalty ? "ralentir et vérifier" : "continuer en observation";
+      noFomoPanel.innerHTML = `<b>NØX No-FOMO</b><span>${escapeHtml(noFomo)} · ${escapeHtml(market.reason)}</span>`;
+    }
   }
 
   const simPanel = document.getElementById("atlasSimulationMathPanel");
@@ -15351,7 +15360,12 @@ async function atlasLocalBridgeProbe(options = {}) {
           ? `Dialogue local prêt avec ${model}.`
           : ""
       );
-      if (announce) atlasLocalReportsScheduleAutomatic("bridge-ready");
+      if (
+        announce
+        || ["administration-open", "initial", "visibility-return", "window-focus", "network-online"].includes(String(options?.reason || ""))
+      ) {
+        atlasLocalReportsScheduleAutomatic("bridge-ready");
+      }
 
       return payload;
     } catch (error) {
@@ -15470,15 +15484,6 @@ function atlasLocalCompactCoin(coin, options = {}) {
 
 function atlasStrictContradictions(contract) {
   const issues = [];
-
-  const directPairs = Number(contract?.sources?.binance?.direct_pairs || 0);
-  if (directPairs > 0 && directPairs < 5) {
-    issues.push({
-      level: "à vérifier",
-      code: "binance_target_top5_partiel",
-      text: `Cotations Binance directes partielles : ${directPairs}/5. La donnée directe manquante reste INFORMATION MANQUANTE et ne doit jamais être reconstruite.`
-    });
-  }
 
   if (!contract.canonical_top5.complete) {
     issues.push({
@@ -15780,7 +15785,7 @@ function atlasLocalReportAnswerIsMeaningful(mode, result) {
   return markers.filter(marker => answer.toLocaleLowerCase("fr-FR").includes(marker.toLocaleLowerCase("fr-FR"))).length >= 2;
 }
 
-function atlasLocalReportsReadiness(snapshot, options = {}) {
+function atlasLocalReportsReadiness(snapshot) {
   const contract = snapshot?.strict_contract || {};
   const market = contract.market || {};
   const binance = contract.sources?.binance || {};
@@ -15793,37 +15798,24 @@ function atlasLocalReportsReadiness(snapshot, options = {}) {
   const graphReady = graph.status === "ready" && graphRows.length > 0;
   const marketReady = state.liveOk === true && marketCount >= 200 && !!market.timestamp;
   const bridgeReady = atlasLocalDialogueState.connected === true;
-  const binanceFeedReady = binance.feed_status === "ready" && binanceFresh;
-  const binanceComplete = binanceFeedReady && directPairs >= 5;
-  const binanceDegraded = binanceFeedReady && directPairs >= 4 && directPairs < 5;
-  const allowDegraded = options.allowDegraded === true;
-  const degraded = bridgeReady && marketReady && graphReady && allowDegraded && binanceDegraded;
-  const full = bridgeReady && marketReady && graphReady && binanceComplete;
+  const binanceReady = binance.feed_status === "ready" && directPairs >= 5 && binanceFresh;
   return {
-    ready: full || degraded,
-    full,
-    degraded,
-    mode: full ? "full" : degraded ? "degraded" : "waiting",
+    ready: bridgeReady && marketReady && binanceReady && graphReady,
     bridgeReady,
     marketReady,
-    binanceReady: binanceComplete,
-    binanceComplete,
-    binanceDegraded,
-    binanceFeedReady,
+    binanceReady,
     graphReady,
     marketCount,
-    directPairs,
-    allowDegraded
+    directPairs
   };
 }
 
 function atlasLocalReportsReadinessLabel(readiness) {
   if (!readiness.bridgeReady) return "Bridge local en attente.";
   if (!readiness.marketReady) return "Snapshot CoinGecko complet en attente.";
+  if (!readiness.binanceReady) return `Prix Binance en attente · ${readiness.directPairs}/5.`;
   if (!readiness.graphReady) return "Graphique exploitable en attente.";
-  if (readiness.degraded) return `Sources prêtes · mode dégradé Binance ${readiness.directPairs}/5 · donnée directe absente = INFORMATION MANQUANTE.`;
-  if (!readiness.binanceComplete) return `Prix Binance en attente · ${readiness.directPairs}/5.`;
-  return "Sources prêtes · mode complet Binance 5/5.";
+  return "Sources prêtes.";
 }
 
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
@@ -15905,8 +15897,8 @@ function atlasLocalReportsSetBusy(busy) {
   });
 }
 
-function atlasLocalReportsValidSnapshot(snapshot, options = {}) {
-  return atlasLocalReportsReadiness(snapshot, options).ready;
+function atlasLocalReportsValidSnapshot(snapshot) {
+  return atlasLocalReportsReadiness(snapshot).ready;
 }
 
 function atlasLocalReportsWait(ms) {
@@ -15947,29 +15939,18 @@ async function atlasLocalReportsRunAll(options = {}) {
   }
 
   const snapshot = options.snapshot || atlasBuildCryptoPageSnapshot();
-  const readiness = atlasLocalReportsReadiness(snapshot, { allowDegraded: options.allowDegraded === true });
+  const readiness = atlasLocalReportsReadiness(snapshot);
   if (!readiness.ready) {
     atlasLocalReportsSetSuiteStatus(atlasLocalReportsReadinessLabel(readiness), "wait");
     return false;
   }
-  snapshot.runtime_analysis_readiness = {
-    mode: readiness.mode,
-    binance_direct_pairs: readiness.directPairs,
-    binance_expected_pairs: 5,
-    information_missing_policy: readiness.degraded ? "INFORMATION MANQUANTE — aucune reconstruction" : "none"
-  };
 
   const fingerprint = options.fingerprint || atlasLocalReportSnapshotFingerprint(snapshot);
   const token = ++atlasLocalReportsState.runToken;
   atlasLocalReportsState.lastAutoAttemptFingerprint = options.automatic === true ? fingerprint : atlasLocalReportsState.lastAutoAttemptFingerprint;
   atlasLocalReportsState.lastAutoAttemptAt = Date.now();
   atlasLocalReportsSetBusy(true);
-  atlasLocalReportsSetSuiteStatus(
-    readiness.degraded
-      ? `Analyse Atlas-10 · mode dégradé Binance ${readiness.directPairs}/5 · 0/4`
-      : "Analyse Atlas-10 · mode complet · 0/4",
-    "loading"
-  );
+  atlasLocalReportsSetSuiteStatus("Analyse Atlas-10 · 0/4", "loading");
   setText(
     document.getElementById("atlasLocalReportsMeta"),
     `Snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · quatre tâches séquentielles · lecture seule`
@@ -16019,7 +16000,7 @@ async function atlasLocalReportsRunAll(options = {}) {
       atlasLocalReportsState.lastCompletedFingerprint = fingerprint;
       atlasLocalReportsOpenAll();
       document.getElementById("btnAtlasLocalConclusion")?.removeAttribute("disabled");
-      atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. Conclusion Aerith-10 Crypto en préparation.");
+      atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. NØX No-FOMO validé. Conclusion Aerith-10 Crypto en préparation.");
       window.setTimeout(() => {
         atlasLocalConclusionRun({
           automatic: true,
@@ -16043,12 +16024,30 @@ async function atlasLocalReportsRunAll(options = {}) {
 
 function atlasLocalReportsAutoReasonAllowed(reason) {
   return new Set([
+    "snapshot",
     "startup",
+    "livecheck",
     "manual-livecheck",
     "manual-market-refresh",
     "manual-auto-reader",
+    "binance-ready",
     "bridge-ready"
   ]).has(String(reason || ""));
+}
+
+function atlasLocalReportsAutoRetry(reason, message = "") {
+  const now = Date.now();
+  atlasLocalReportsState.autoRetryCount += 1;
+  if (message) atlasLocalReportsSetSuiteStatus(message, "wait");
+  if (
+    atlasLocalReportsState.autoRetryCount <= 12
+    && atlasLocalReportsState.pendingSince
+    && (now - atlasLocalReportsState.pendingSince) < 90000
+  ) {
+    atlasLocalReportsScheduleAutomatic(reason || atlasLocalReportsState.pendingReason || "snapshot");
+    return true;
+  }
+  return false;
 }
 
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
@@ -16067,26 +16066,39 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
   atlasLocalReportsState.autoTimer = window.setTimeout(async () => {
     atlasLocalReportsState.autoTimer = 0;
     if (!atlasLocalBridgeAdministratorActive()) return;
-    if (!atlasLocalDialogueState.connected || atlasLocalDialogueState.busy || atlasLocalReportsState.running) return;
+
+    if (!atlasLocalDialogueState.connected) {
+      atlasLocalReportsAutoRetry(nextReason, "Bridge local en attente.");
+      return;
+    }
+    if (atlasLocalDialogueState.busy || atlasLocalReportsState.running || atlasLocalConclusionState.running) {
+      atlasLocalReportsAutoRetry(nextReason, "Atlas/Aerith termine l’opération locale en cours.");
+      return;
+    }
 
     const snapshot = atlasBuildCryptoPageSnapshot();
-    const elapsed = Date.now() - atlasLocalReportsState.pendingSince;
-    const allowDegraded = elapsed >= 15000;
-    const readiness = atlasLocalReportsReadiness(snapshot, { allowDegraded });
+    const readiness = atlasLocalReportsReadiness(snapshot);
     if (!readiness.ready) {
-      atlasLocalReportsSetSuiteStatus(
-        atlasLocalReportsReadinessLabel(readiness) + (readiness.binanceDegraded && !allowDegraded ? " · Atlas attend brièvement le 5/5 avant de basculer en mode dégradé." : ""),
-        "wait"
-      );
-      atlasLocalReportsState.autoRetryCount += 1;
-      if (atlasLocalReportsState.autoRetryCount <= 12 && elapsed < 90000) {
-        atlasLocalReportsScheduleAutomatic(atlasLocalReportsState.pendingReason);
-      }
+      atlasLocalReportsAutoRetry(nextReason, atlasLocalReportsReadinessLabel(readiness));
       return;
     }
 
     const fingerprint = atlasLocalReportSnapshotFingerprint(snapshot);
-    if (!fingerprint || fingerprint === atlasLocalReportsState.lastAutoFingerprint) return;
+    if (!fingerprint) return;
+
+    const completedCurrentFingerprint =
+      fingerprint === atlasLocalReportsState.lastCompletedFingerprint
+      && atlasLocalReportsReadyForFingerprint(fingerprint)
+      && atlasLocalDialogueState.conclusionResponse?.fingerprint === fingerprint;
+
+    if (completedCurrentFingerprint) {
+      atlasLocalReportsState.lastAutoFingerprint = fingerprint;
+      atlasLocalReportsState.autoRetryCount = 0;
+      atlasLocalReportsSetSuiteStatus("4/4 rapports et conclusion déjà valides pour ce snapshot.", "ready");
+      return;
+    }
+
+    if (fingerprint === atlasLocalReportsState.lastAutoFingerprint) return;
     if (
       fingerprint === atlasLocalReportsState.lastAutoAttemptFingerprint
       && (Date.now() - atlasLocalReportsState.lastAutoAttemptAt) < 90000
@@ -16098,8 +16110,7 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
       snapshot,
       fingerprint,
       openFirst: false,
-      reason: atlasLocalReportsState.pendingReason,
-      allowDegraded: readiness.degraded
+      reason: nextReason
     });
   }, delay);
   return true;
@@ -16176,7 +16187,7 @@ function atlasLocalResponsePlaceholder(view) {
     eyebrow: "CONCLUSION AERITH-10 CRYPTO",
     title: atlasLocalConclusionState.running ? "Conclusion locale en cours…" : "En attente des quatre rapports Atlas-10",
     body: atlasLocalConclusionState.running
-      ? "Aerith-10 Crypto lit les quatre rapports Atlas-10 validés."
+      ? "Aerith-10 Crypto relit les quatre rapports Atlas-10, News Sentinel et le filtre NØX No-FOMO."
       : "La conclusion Aerith-10 Crypto apparaîtra automatiquement ici lorsque les quatre rapports Atlas-10 seront prêts.",
     meta: "Lecture seule · conclusion après validation des quatre rapports · aucune exécution réelle"
   };
@@ -16254,7 +16265,8 @@ async function atlasLocalConclusionRun(options = {}) {
       profile: "aerith",
       snapshot,
       report_fingerprint: fingerprint,
-      report_modes: ATLAS_LOCAL_REPORT_MODES.slice()
+      report_modes: ATLAS_LOCAL_REPORT_MODES.slice(),
+      nox_audit: snapshot?.strict_contract?.nox_no_fomo_v1 || null
     });
     if (!atlasLocalConclusionMeaningful(result)) throw new Error("Conclusion locale vide ou incomplète");
     const answer = String(result.answer || "").trim();
@@ -16942,6 +16954,100 @@ function atlasAnalyticalTruthRender(envelope = null) {
   return true;
 }
 
+function atlasNoxNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function atlasBuildNoxNoFomoAudit(contract) {
+  const market = contract?.market || {};
+  const news = contract?.news || {};
+  const lead = news?.lead_event || null;
+  const quality = contract?.math_quality_gates_v2 || {};
+  const contradictions = contract?.contradictions_v2 || {};
+  const sourceTruth = contract?.source_truth_v2 || {};
+  const issues = Array.isArray(contradictions?.items) ? contradictions.items : [];
+  const gates = Array.isArray(quality?.gates) ? quality.gates : [];
+  const stopGates = issues.filter(item => item?.stop_gate === true);
+  const blockedMath = gates.filter(item => String(item?.status || '').toUpperCase() === 'BLOCKED');
+  const degradedMath = gates.filter(item => String(item?.status || '').toUpperCase() === 'DEGRADED');
+  const sourceFailures = atlasNoxNumber(sourceTruth?.public_source_failures) || 0;
+  const coverage = atlasNoxNumber(market?.assets_loaded);
+  const target = atlasNoxNumber(market?.target_assets);
+
+  let pressure = 0;
+  const flags = [];
+  if (stopGates.length) {
+    pressure += 4;
+    flags.push(`${stopGates.length} stop gate(s) analytique(s)`);
+  }
+  if (blockedMath.length) {
+    pressure += 3;
+    flags.push(`${blockedMath.length} mesure(s) Math Core bloquée(s)`);
+  }
+  if (degradedMath.length) {
+    pressure += 1;
+    flags.push(`${degradedMath.length} mesure(s) Math Core dégradée(s)`);
+  }
+  if (sourceFailures > 0) {
+    pressure += 2;
+    flags.push(`${sourceFailures} source(s) publique(s) indisponible(s)`);
+  }
+  if (coverage !== null && target && coverage < target) {
+    pressure += 1;
+    flags.push(`univers partiel ${coverage}/${target}`);
+  }
+  if (lead) {
+    const proofText = `${lead?.evidence?.label || lead?.evidence || ''} ${lead?.evidence?.score || ''}`.toLowerCase();
+    const impactText = `${lead?.impact?.label || lead?.impact || ''} ${lead?.impact?.score || ''}`.toLowerCase();
+    const proofScore = atlasNoxNumber(lead?.evidence?.score ?? lead?.evidence_score);
+    const impactScore = atlasNoxNumber(lead?.impact?.score ?? lead?.impact_score);
+    const lowProof = (proofScore !== null && proofScore < 60) || /faible|rumeur|incertain/.test(proofText);
+    const highImpact = (impactScore !== null && impactScore >= 80) || /critique|élevé|fort/.test(impactText);
+    if (lowProof && highImpact) {
+      pressure += 3;
+      flags.push('actualité à fort impact potentiel mais preuve insuffisante');
+    } else if (highImpact) {
+      pressure += 1;
+      flags.push('actualité à fort impact potentiel : causalité marché à confirmer');
+    }
+  }
+
+  const status = pressure >= 6 ? 'STOP' : pressure >= 2 ? 'PRUDENCE' : 'CALME';
+  const decision = status === 'STOP'
+    ? 'REFUSER DE CONCLURE tant que les stop gates ou preuves insuffisantes ne sont pas levés.'
+    : status === 'PRUDENCE'
+      ? 'CONTINUER À OBSERVER et demander confirmation avant toute interprétation causale.'
+      : 'CONTINUER EN OBSERVATION sans transformer le contexte en signal d’exécution.';
+
+  return {
+    schema: 'agent_crypto_nox_no_fomo_v1',
+    generated_at: new Date().toISOString(),
+    status,
+    pressure_score: pressure,
+    fomo: status === 'CALME' ? 'faible' : status === 'PRUDENCE' ? 'à refroidir' : 'élevé / conclusion suspendue',
+    causal_inference: lead ? 'NON ÉTABLIE — mesurer séparément la réaction du marché.' : 'AUCUNE ACTUALITÉ DIRECTRICE — ne pas fabriquer de causalité.',
+    flags,
+    decision,
+    rules: [
+      'Une actualité ne devient jamais un signal d’achat ou de vente.',
+      'Une corrélation temporelle ne prouve pas la causalité.',
+      'Une donnée absente reste INFORMATION MANQUANTE.',
+      'Validation humaine obligatoire.'
+    ]
+  };
+}
+
+function atlasNoxNoFomoRender(audit) {
+  const panel = document.getElementById('atlasNoFomoMathPanel');
+  if (!panel || !audit) return false;
+  const flags = Array.isArray(audit.flags) && audit.flags.length
+    ? audit.flags.slice(0, 2).join(' · ')
+    : 'aucun verrou critique détecté';
+  panel.innerHTML = `<b>NØX No-FOMO · ${escapeHtml(audit.status || '—')}</b><span>${escapeHtml(audit.decision || '')} · ${escapeHtml(flags)}</span>`;
+  return true;
+}
+
 function atlasBuildStrictFactContract(period, chart, chartResult, comparisonIds, chartTruth) {
   const contract = atlasBuildStrictFactContractScannerLayer(period, chart, chartResult, comparisonIds, chartTruth);
   const sourceTruth = atlasSourceTruthBuild(contract);
@@ -16952,6 +17058,7 @@ function atlasBuildStrictFactContract(period, chart, chartResult, comparisonIds,
   contract.evidence_v2 = evidence;
   contract.math_quality_gates_v2 = quality;
   contract.contradictions_v2 = atlasContradictionsV2Build(contract, sourceTruth, quality, evidence);
+  contract.nox_no_fomo_v1 = atlasBuildNoxNoFomoAudit(contract);
   contract.schema = "atlas_crypto_fact_contract_v3_truth_evidence";
   contract.rules = {
     ...(contract.rules || {}),
@@ -30174,6 +30281,7 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
     });
     atlasLocalReportsState.lastCompletedSnapshot = atlasSharedSynthesisClone(pkg.snapshot);
     atlasLocalReportsState.lastCompletedFingerprint = pkg.fingerprint;
+    atlasLocalReportsState.lastAutoFingerprint = pkg.fingerprint;
     atlasLocalReportsSetSuiteStatus(source === "local" ? "4/4 rapports prêts." : "4/4 rapports restaurés en lecture seule.", "ready");
     setText(document.getElementById("atlasLocalReportsMeta"), `Snapshot ${pkg.snapshot_label} · quatre rapports ${source === "local" ? "produits" : "conservés"} · lecture seule`);
     atlasLocalDialogueState.conclusionResponse = atlasSharedSynthesisClone(pkg.conclusion);
@@ -32152,7 +32260,13 @@ function atlasExchangeRecount() {
 
 function atlasRenderExchangeFeedStatus() {
   const feed = state.dataBroker.exchangeFeed || {};
+  const wasAtlasReady = feed.atlasReportsReady === true;
   const counts = atlasExchangeRecount();
+  const atlasReady = feed.status === "ready" && counts.directCount >= 5;
+  feed.atlasReportsReady = atlasReady;
+  if (atlasReady && !wasAtlasReady) {
+    atlasLocalReportsScheduleAutomatic("binance-ready");
+  }
 
   if (counts.total > 0) {
     const marketTruth = atlasMarketTruth();
@@ -36782,11 +36896,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.01";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.03";
 
-const ATLAS_BUILD = "29.3.01";
+const ATLAS_BUILD = "29.3.03";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.01";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.03";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

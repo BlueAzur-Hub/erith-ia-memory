@@ -1,15 +1,27 @@
-## Build 29.3.01 — Atlas Automatic Production Recovery Lock
+## Build 29.3.03 — Aerith News Intelligence + NØX No-FOMO Recovery Lock
 
-- Base : 29.3.00.
-- Cycle automatique Atlas/Aerith conservé et renforcé.
-- Priorité au mode complet Binance 5/5.
-- Après 15 s de grâce, autorisation d'un mode dégradé contrôlé à 4/5 si Bridge + CoinGecko + Graphique sont prêts.
-- Toute cotation Binance directe absente devient explicitement `INFORMATION MANQUANTE`; aucune reconstruction ni valeur zéro.
-- Nouvelle contradiction factuelle `binance_target_top5_partiel`.
-- Quatre rapports Atlas restent séquentiels ; conclusion Aerith automatique uniquement après 4/4 valide.
-- Persistance IndexedDB transactionnelle conservée.
+- Base : 29.3.02.
+- Bridge cible : V1.9.1.
+- Ajout contrat `agent_crypto_nox_no_fomo_v1`.
+- NØX No-FOMO : CALME / PRUDENCE / STOP, causalité non établie par défaut, stop gates, qualité Math Core, sources et preuve/impact News.
+- Aerith : conclusion enrichie par News Sentinel + NØX ; aucune news convertie en signal d'exécution.
+- Orchestrateur 4/4 → conclusion conservé.
+- Aucun changement Market/Graph/Math Core métier/Simulation/Learning/Metals.
+
+## Build 29.3.02 — Atlas Automatic Orchestrator Recovery Lock
+
+- Base canonique : 29.3.00 publiée ; 29.3.01 abandonnée comme expérimentation non canonique.
+- Cause : le scheduler Atlas pouvait perdre un événement si le Bridge/readiness n'étaient pas prêts au premier timer ; son motif par défaut `snapshot` était en outre absent de l'allowlist.
+- Réparation transactionnelle de l'orchestrateur automatique, sans fallback 4/5 et sans changement des calculs.
+- Retry conservateur lors des états transitoires Bridge / Atlas / Aerith dans la fenêtre anti-boucle de 90 s.
+- Déclenchement explicite lors du passage Binance à 5 cotations EUR directes.
+- Revalidation au retour Administration/focus/réseau même si le Bridge était déjà `ready`.
+- Fingerprint : aucun recalcul d'un paquet courant déjà 4/4 + conclusion ; un nouveau fingerprint reste éligible.
+- IndexedDB : le fingerprint restauré devient aussi la référence automatique pour éviter le doublon après F5.
+- Chaîne : snapshot → Atlas 4 rapports → 4/4 → Aerith `/conclusion` → synthèse partagée → IndexedDB.
+- NØX non simulé : aucune route/agent NØX canonique n'est câblé dans la 29.3.00 ; No-FOMO et contradictions existants seulement.
 - Control Center V2.3.0R1, Bridge V1.9.0 et `gpt-oss:20b-32k` inchangés.
-- Aucun changement des autres modules ou de la géométrie de l'interface.
+- `index.html`, `style.css`, `runtime_config.json`, assets, Market, Graphique, Math Core, Métaux et Modules 01–11 inchangés.
 
 ---
 
