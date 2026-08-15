@@ -2814,3 +2814,18 @@ Consolidation de l'orchestration automatique. Corrige trois défauts critiques d
 - Preserves stale conclusions as HISTORICAL only when fingerprint differs.
 - Canonical local stack remains Control Center V2.3.2R2 / Bridge V1.9.2 / gpt-oss:20b-32k.
 - Browser cache remains handled operationally with Ctrl+F5 after GitHub publication.
+
+
+## Build 29.3.12 — Stable 5/5 Direct Gate + Snapshot Freeze Lock
+
+- Fixes the 5/5 ↔ 4/5 source flapping race.
+- A transient 5/5 no longer launches Atlas immediately.
+- Requires 5/5 Binance direct sources continuously for 10 seconds and at least 3 checks.
+- Any drop to 4/5 resets the stability counter to zero.
+- Scheduler re-validates the stable gate before starting Atlas.
+- Once Atlas starts, the accepted snapshot/fingerprint is frozen for the complete Atlas → NØX → Aerith transaction.
+- Later live-source fluctuations do not mutate the in-flight snapshot.
+- No Bridge change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
