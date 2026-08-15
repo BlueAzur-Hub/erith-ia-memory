@@ -1472,3 +1472,37 @@ This is cumulative and includes the complete 29.4.00 product advance plus all pr
 - Bridge recovery / transaction protections.
 - Control Center V2.3.2R2 / Bridge V1.9.2 unchanged.
 - Market Flow / CSS / index.html unchanged.
+
+
+## Build 29.6.00 — Historical Memory V2 + Snapshot Compare
+
+Cumulative release. Includes the entire 29.5.00 product/pedagogy stack and all inherited stability locks.
+
+### Historical Memory V2
+- Stores up to 30 compact CURRENT snapshots locally.
+- Stores only after a successful Atlas → NØX → Aerith → CURRENT promotion.
+- Historical entries never become CURRENT merely because they exist in storage.
+
+### Snapshot Compare V2
+- Compares the current snapshot with the previous CURRENT snapshot.
+- Measures Top-5 price evolution between snapshots.
+- Identifies the largest observed change.
+- Detects whether the lead News event changed.
+- Preserves watchlist-category evolution for pedagogy and analysis.
+- Missing values remain missing; no synthetic values are invented.
+
+### Aerith / Atlas integration
+- Whole-page pedagogy receives historical comparison.
+- Question Libre receives the current snapshot + up to 10 recent historical compact snapshots + current comparison.
+- Auto Reader adds an “ÉVOLUTION DEPUIS LE SNAPSHOT PRÉCÉDENT” section.
+
+### Preserved cumulative stack
+- 29.5.00 Aerith Pedagogy V2 / Whole Page Reader.
+- 29.4.00 Watchlist Intelligence / News Reaction / Math Core V4.
+- Stable 5/5 direct-source gate.
+- Snapshot freeze.
+- Atlas → NØX → Aerith automatic chain.
+- IndexedDB CURRENT/HISTORICAL reconciliation.
+- Bridge recovery / transaction protection / retry controls.
+- Control Center V2.3.2R2 / Bridge V1.9.2 unchanged.
+- Market Flow / CSS / index.html unchanged.

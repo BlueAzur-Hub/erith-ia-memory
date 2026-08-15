@@ -1265,12 +1265,192 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   29.5.00 — AERITH PEDAGOGY V2 + WHOLE PAGE READER
+   29.6.00 — HISTORICAL MEMORY V2 + SNAPSHOT COMPARE
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
    - automatically promote only a complete snapshot/fingerprint chain
    ============================================================ */
+
+/* ============================================================
+   29.6.00 — HISTORICAL MEMORY V2
+   Compact CURRENT snapshots are preserved locally for comparison.
+   This layer never turns historical data into CURRENT state.
+   ============================================================ */
+const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
+const ATLAS_HISTORY_V2_MAX = 30;
+
+function atlasHistoryV2Read() {
+  try {
+    const raw = localStorage.getItem(ATLAS_HISTORY_V2_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function atlasHistoryV2Write(entries) {
+  const clean = Array.isArray(entries) ? entries.slice(-ATLAS_HISTORY_V2_MAX) : [];
+  try {
+    localStorage.setItem(ATLAS_HISTORY_V2_KEY, JSON.stringify(clean));
+  } catch (_) {}
+  return clean;
+}
+
+function atlasHistoryV2CompactSnapshot(snapshot) {
+  if (!snapshot?.fingerprint) return null;
+
+  const raw = snapshot.raw_context || {};
+  const strict = snapshot.strict_contract || {};
+  const market = strict.sources?.market || {};
+  const binance = strict.sources?.binance || {};
+  const top5 = Array.isArray(raw.binance_top5?.assets)
+    ? raw.binance_top5.assets.map(asset => ({
+        id: asset.id || null,
+        symbol: String(asset.symbol || "").toUpperCase(),
+        price: Number.isFinite(Number(asset.price)) ? Number(asset.price) : null,
+        change24h: Number.isFinite(Number(asset.change24h)) ? Number(asset.change24h) : null
+      }))
+    : [];
+
+  const watch = raw.watchlist_intelligence_v4 || state.watchlistIntelligence || null;
+  const news = raw.news_event_reaction_v1 || state.newsEventReaction || null;
+  const math = raw.math_core_v4 || state.math || null;
+
+  return {
+    schema: "atlas_history_snapshot_v2",
+    fingerprint: snapshot.fingerprint,
+    generated_at: snapshot.generated_at || new Date().toISOString(),
+    market_status: market.status || null,
+    market_count: Number.isFinite(Number(market.count)) ? Number(market.count) : null,
+    binance_direct: Number(binance.direct_pairs || 0),
+    binance_derived: Number(binance.derived_pairs || 0),
+    top5,
+    watchlist: watch ? {
+      leaders: (watch.leaders || []).map(item => item.symbol).slice(0, 5),
+      laggards: (watch.laggards || []).map(item => item.symbol).slice(0, 5),
+      foundations: (watch.foundations || []).map(item => item.symbol).slice(0, 6),
+      speculative: (watch.speculative || []).map(item => item.symbol).slice(0, 6)
+    } : null,
+    news: news ? {
+      status: news.status || null,
+      headline: news.headline || null,
+      reaction: news.reaction || null,
+      direction: news.direction || null
+    } : null,
+    math: math ? {
+      schema: math.schema || null,
+      volatility: Number.isFinite(Number(math.realizedWindowPct)) ? Number(math.realizedWindowPct) : null,
+      drawdown: Number.isFinite(Number(math.drawdown?.pct)) ? Number(math.drawdown.pct) : null,
+      var95: Number.isFinite(Number(math.var95StepPct)) ? Number(math.var95StepPct) : null
+    } : null
+  };
+}
+
+function atlasHistoryV2RememberCurrent(snapshot) {
+  const compact = atlasHistoryV2CompactSnapshot(snapshot);
+  if (!compact) return null;
+
+  const history = atlasHistoryV2Read()
+    .filter(entry => entry?.fingerprint && entry.fingerprint !== compact.fingerprint);
+
+  history.push(compact);
+  atlasHistoryV2Write(history);
+  return compact;
+}
+
+function atlasHistoryV2Previous(currentFingerprint = "") {
+  const history = atlasHistoryV2Read();
+  if (!history.length) return null;
+  const filtered = currentFingerprint
+    ? history.filter(entry => entry?.fingerprint !== currentFingerprint)
+    : history;
+  return filtered.length ? filtered[filtered.length - 1] : null;
+}
+
+function atlasHistoryV2Compare(currentSnapshot) {
+  const current = atlasHistoryV2CompactSnapshot(currentSnapshot);
+  if (!current) {
+    return {
+      schema: "atlas_snapshot_compare_v2",
+      status: "missing-current",
+      summary: "INFORMATION MANQUANTE"
+    };
+  }
+
+  const previous = atlasHistoryV2Previous(current.fingerprint);
+  if (!previous) {
+    return {
+      schema: "atlas_snapshot_compare_v2",
+      status: "no-previous",
+      current_fingerprint: current.fingerprint,
+      previous_fingerprint: null,
+      summary: "Premier snapshot historique disponible : aucune comparaison antérieure."
+    };
+  }
+
+  const prevBySymbol = Object.fromEntries(
+    (previous.top5 || []).map(item => [String(item.symbol || "").toUpperCase(), item])
+  );
+
+  const assetMoves = (current.top5 || []).map(item => {
+    const prev = prevBySymbol[item.symbol];
+    const priceDeltaPct =
+      prev?.price > 0 && item.price !== null
+        ? ((item.price - prev.price) / prev.price) * 100
+        : null;
+    return {
+      symbol: item.symbol,
+      previous_price: prev?.price ?? null,
+      current_price: item.price,
+      price_delta_pct: Number.isFinite(priceDeltaPct) ? priceDeltaPct : null,
+      current_change_24h: item.change24h
+    };
+  });
+
+  const notable = assetMoves
+    .filter(item => item.price_delta_pct !== null)
+    .sort((a, b) => Math.abs(b.price_delta_pct) - Math.abs(a.price_delta_pct));
+
+  return {
+    schema: "atlas_snapshot_compare_v2",
+    status: "compared",
+    current_fingerprint: current.fingerprint,
+    previous_fingerprint: previous.fingerprint,
+    current_generated_at: current.generated_at,
+    previous_generated_at: previous.generated_at,
+    market_count_delta:
+      current.market_count !== null && previous.market_count !== null
+        ? current.market_count - previous.market_count
+        : null,
+    asset_moves: assetMoves,
+    biggest_change: notable[0] || null,
+    news_changed:
+      String(current.news?.headline || "") !== String(previous.news?.headline || ""),
+    current_news: current.news,
+    previous_news: previous.news,
+    current_watchlist: current.watchlist,
+    previous_watchlist: previous.watchlist,
+    summary: notable.length
+      ? `Plus grand changement entre snapshots : ${notable[0].symbol} ${notable[0].price_delta_pct >= 0 ? "+" : ""}${notable[0].price_delta_pct.toFixed(2)} %.`
+      : "Comparaison disponible, variations de prix insuffisantes pour un classement."
+  };
+}
+
+function atlasHistoryV2CompareLine(compare) {
+  if (!compare || compare.status === "missing-current") return "Historique : INFORMATION MANQUANTE.";
+  if (compare.status === "no-previous") return `Historique : ${compare.summary}`;
+  const moves = (compare.asset_moves || [])
+    .filter(item => item.price_delta_pct !== null)
+    .slice()
+    .sort((a, b) => Math.abs(b.price_delta_pct) - Math.abs(a.price_delta_pct))
+    .slice(0, 5)
+    .map(item => `${item.symbol} ${item.price_delta_pct >= 0 ? "+" : ""}${item.price_delta_pct.toFixed(2)} %`)
+    .join(" · ");
+  return `Depuis le snapshot précédent : ${moves || "variations insuffisantes"} · ${compare.news_changed ? "News principale différente" : "News principale inchangée"}.`;
+}
+
 const ATLAS_CURRENT_STATE_SCHEMA = "atlas_crypto_current_state_v1";
 const ATLAS_CURRENT_STATE_KEY = "agent_crypto_current_state_v1";
 
@@ -11650,7 +11830,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.5.00",
+  interface: "Build 29.6.00",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -11804,6 +11984,7 @@ function atlasPedagogyV2PageBrief(snapshot) {
   const derived = Number(snapshot?.strict_contract?.sources?.binance?.derived_pairs || 0);
   const market = snapshot?.strict_contract?.sources?.market || {};
   const math = state.math || {};
+  const historical = snapshot?.raw_context?.historical_compare_v2 || atlasHistoryV2Compare(snapshot);
 
   return {
     schema: "aerith_crypto_whole_page_pedagogy_v2",
@@ -11813,7 +11994,8 @@ function atlasPedagogyV2PageBrief(snapshot) {
       `Marché large : ${market.status || "INFORMATION MANQUANTE"}.`,
       `Watchlist : ${watch?.observed ?? 0} actif(s) suivi(s) qualifié(s).`,
       `News : ${reaction?.reaction || "aucun événement qualifié"}.`,
-      `Math Core : ${math.schema || "INFORMATION MANQUANTE"}.`
+      `Math Core : ${math.schema || "INFORMATION MANQUANTE"}.`,
+      atlasHistoryV2CompareLine(historical)
     ],
     detailed: {
       leaders: watch?.leaders || [],
@@ -11821,7 +12003,8 @@ function atlasPedagogyV2PageBrief(snapshot) {
       foundations: watch?.foundations || [],
       speculative: watch?.speculative || [],
       news_reaction: reaction || null,
-      math_event_reaction: math?.eventReaction || null
+      math_event_reaction: math?.eventReaction || null,
+      historical_compare: historical
     },
     glossary,
     rules: [
@@ -11979,9 +12162,12 @@ function atlasBuildCryptoPageSnapshotCore() {
       news_event_reaction_v1: typeof atlasProductNewsReaction === "function"
         ? atlasProductNewsReaction()
         : null,
-      math_core_v4: state.math || null
+      math_core_v4: state.math || null,
+      historical_compare_v2: null
     }
   };
+
+  snapshot.raw_context.historical_compare_v2 = atlasHistoryV2Compare(snapshot);
 
   snapshot.pedagogy = atlasPedagogyBuildContract(snapshot);
   atlasLocalDialogueState.lastSnapshot = snapshot;
@@ -17293,6 +17479,7 @@ async function atlasLocalConclusionRun(options = {}) {
     if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
     atlasLocalReportsResetAutomaticState({ keepLastSuccess: true });
     atlasLocalReportsState.lastAutoFingerprint = fingerprint;
+    atlasHistoryV2RememberCurrent(snapshot);
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
@@ -17479,6 +17666,10 @@ async function atlasLocalDialogueAsk() {
         atlasLocalDialogueState.conclusionResponse?.fingerprint === snapshot.fingerprint
           ? atlasLocalDialogueState.conclusionResponse
           : null,
+      historical_memory_v2: {
+        recent: atlasHistoryV2Read().slice(-10),
+        compare: atlasHistoryV2Compare(snapshot)
+      },
       requested_reading: "whole_page_simple_detailed_expert",
       pedagogy_v2: atlasPedagogyV2QuestionContract(
         "Produire la synthèse Aerith-10 Crypto de toute la page.",
@@ -17488,7 +17679,7 @@ async function atlasLocalDialogueAsk() {
     atlasLocalDialogueRender(result, "Réponse à la question libre");
     setText(
       document.getElementById("atlasLocalDialogueStatus"),
-      `${atlasLocalDialogueState.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · question libre · snapshot courant + Watchlist + News + Math Core transmis.`
+      `${atlasLocalDialogueState.profile === "aerith" ? "Aerith-10" : "Atlas-10"} · question libre · snapshot courant + historique + Watchlist + News + Math Core transmis.`
     );
   } catch (error) {
     atlasLocalDialogueState.connected = false;
@@ -36155,6 +36346,7 @@ function renderAutoReader(snapshot = null, previous = null) {
 
     const intelligence = atlasProductWatchlistIntelligence();
     const reaction = atlasProductNewsReaction();
+    const historyCompare = atlasHistoryV2Compare(atlasBuildCryptoPageSnapshot());
 
     els.autoReaderOutput.textContent = [
       `ATLAS AUTO READER V3 — ${ATLAS_RELEASE}`,
@@ -36184,6 +36376,9 @@ function renderAutoReader(snapshot = null, previous = null) {
       "News Sentinel ↔ marché :",
       atlasProductNewsReactionLine(reaction),
       "Règle : une concordance avec une news ne prouve jamais une causalité.",
+      "",
+      "ÉVOLUTION DEPUIS LE SNAPSHOT PRÉCÉDENT :",
+      atlasHistoryV2CompareLine(historyCompare),
       "",
       "AERITH — EXPLICATION SIMPLE :",
       "Leader = actif qui monte davantage que les autres sur la période observée ; cela ne garantit pas qu’il continuera.",
@@ -38227,7 +38422,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.5.00";
+const ATLAS_BUILD = "29.6.00";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
