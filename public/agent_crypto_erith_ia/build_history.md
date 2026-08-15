@@ -3091,3 +3091,45 @@ Cumulative release. Includes the entire 29.5.00 product/pedagogy stack and all i
 - Bridge recovery / transaction protection / retry controls.
 - Control Center V2.3.2R2 / Bridge V1.9.2 unchanged.
 - Market Flow / CSS / index.html unchanged.
+
+
+## Build 30.0.00 — Public Stable Release Candidate · Cumulative Freeze
+
+This release is cumulative. It includes the complete 29.6.00 / 29.5.00 / 29.4.00 feature stack and inherited stability locks.
+
+### Release Candidate contract
+- Interface: Build 30.0.00
+- Control Center: V2.3.2R2
+- Bridge: V1.9.2
+- Model: gpt-oss:20b-32k
+- No Bridge binary change.
+- No Control Center change.
+- No Market Flow change.
+- No CSS change.
+- No index.html change.
+
+### Frozen product features
+- Atlas Watchlist Intelligence V4.
+- News Event Reaction V1.
+- Atlas Math Core V4.
+- Atlas Auto Reader V4.
+- Aerith Pedagogy V2 / Whole Page Reader.
+- Question Libre with current snapshot, same-fingerprint reports, historical memory and current conclusion.
+- Historical Memory V2 / Snapshot Compare.
+
+### Frozen analytical invariants
+- Atlas automatic start only after exact 5/5 Binance direct sources, 0 derived, stable gate.
+- Snapshot/fingerprint frozen through Atlas → NØX → Aerith.
+- CURRENT promotion only after 4/4 Atlas + Aerith share the same fingerprint.
+- Historical IndexedDB/local history never becomes CURRENT by restore order.
+- Bridge timeout/offline preserves valid partial work and retries.
+- Superseded transactions cannot promote stale CURRENT.
+- No automatic real financial execution.
+
+### RC self-audit
+The page now exposes:
+- static release-contract audit;
+- runtime fingerprint/4-of-4/Aerith/CURRENT audit;
+- RC metadata inside Atlas/Aerith whole-page contracts.
+
+30.0.00 should now be treated as the stabilization candidate. Future 30.0.x builds should be bug-fix-only unless a new product branch is explicitly opened.

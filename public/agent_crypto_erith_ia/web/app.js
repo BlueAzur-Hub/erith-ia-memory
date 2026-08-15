@@ -1265,7 +1265,7 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   29.6.00 — HISTORICAL MEMORY V2 + SNAPSHOT COMPARE
+   30.0.00 — PUBLIC STABLE RELEASE CANDIDATE · CUMULATIVE FREEZE
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
@@ -1277,6 +1277,82 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
    Compact CURRENT snapshots are preserved locally for comparison.
    This layer never turns historical data into CURRENT state.
    ============================================================ */
+
+const ATLAS_RC_CONTRACT = Object.freeze({
+  schema: "agent_crypto_public_stable_rc_v1",
+  build: "30.0.00",
+  control_center: "V2.3.2R2",
+  bridge: "V1.9.2",
+  model: "gpt-oss:20b-32k",
+  invariants: Object.freeze([
+    "5/5 Binance directes stables avant Atlas",
+    "0 source dérivée au déclenchement Atlas",
+    "snapshot figé pendant Atlas → NØX → Aerith",
+    "CURRENT seulement si fingerprint cohérent",
+    "HISTORIQUE jamais présenté comme CURRENT",
+    "aucune exécution financière réelle automatique",
+    "Market Flow non modifié",
+    "Bridge/Control Center gelés hors bug démontré"
+  ])
+});
+
+function atlasRcStaticAudit() {
+  const checks = {
+    build: ATLAS_BUILD === "30.0.00",
+    stable_stack:
+      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
+      && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
+      && ATLAS_STABLE_STACK?.model === "gpt-oss:20b-32k",
+    direct_gate_constants:
+      ATLAS_DIRECT_5_5_STABLE_MS >= 10000
+      && ATLAS_DIRECT_5_5_MIN_CHECKS >= 3,
+    history_v2: typeof atlasHistoryV2Compare === "function",
+    pedagogy_v2: typeof atlasPedagogyV2QuestionContract === "function",
+    product_watchlist: typeof atlasProductWatchlistIntelligence === "function",
+    product_news: typeof atlasProductNewsReaction === "function",
+    deferred_retry: typeof atlasLocalReportsQueueDeferredRetry === "function",
+    timer_cleanup: typeof atlasLocalReportsClearAutoTimer === "function"
+  };
+
+  return {
+    schema: "agent_crypto_rc_static_audit_v1",
+    generated_at: new Date().toISOString(),
+    pass: Object.values(checks).every(Boolean),
+    checks
+  };
+}
+
+function atlasRcRuntimeAudit(snapshot = null) {
+  const snap = snapshot || atlasLocalDialogueState.lastSnapshot || atlasLocalReportsState.lastCompletedSnapshot || null;
+  const qualification = snap ? atlasCurrentQualification(snap) : null;
+  const reportsReady = snap?.fingerprint ? atlasLocalReportsReadyForFingerprint(snap.fingerprint) : false;
+  const conclusionReady =
+    snap?.fingerprint
+    && atlasLocalDialogueState.conclusionResponse?.fingerprint === snap.fingerprint
+    && !!atlasLocalDialogueState.conclusionResponse?.answer;
+
+  return {
+    schema: "agent_crypto_rc_runtime_audit_v1",
+    generated_at: new Date().toISOString(),
+    snapshot_fingerprint: snap?.fingerprint || null,
+    direct_gate: qualification ? {
+      direct_count: qualification.direct_count,
+      derived_count: qualification.derived_count,
+      stable_ready: qualification.stable_ready,
+      qualified: qualification.qualified
+    } : null,
+    reports_4_4_same_fingerprint: !!reportsReady,
+    aerith_same_fingerprint: !!conclusionReady,
+    current_state: atlasCurrentStateRead()?.status || null,
+    bridge_connected: atlasLocalDialogueState.connected === true
+  };
+}
+
+function atlasRcSummaryLine() {
+  const audit = atlasRcStaticAudit();
+  return `RC 30.0.00 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+}
+
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
 const ATLAS_HISTORY_V2_MAX = 30;
 
@@ -11830,7 +11906,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.6.00",
+  interface: "Build 30.0.00",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -11995,7 +12071,8 @@ function atlasPedagogyV2PageBrief(snapshot) {
       `Watchlist : ${watch?.observed ?? 0} actif(s) suivi(s) qualifié(s).`,
       `News : ${reaction?.reaction || "aucun événement qualifié"}.`,
       `Math Core : ${math.schema || "INFORMATION MANQUANTE"}.`,
-      atlasHistoryV2CompareLine(historical)
+      atlasHistoryV2CompareLine(historical),
+      atlasRcSummaryLine()
     ],
     detailed: {
       leaders: watch?.leaders || [],
@@ -12004,7 +12081,12 @@ function atlasPedagogyV2PageBrief(snapshot) {
       speculative: watch?.speculative || [],
       news_reaction: reaction || null,
       math_event_reaction: math?.eventReaction || null,
-      historical_compare: historical
+      historical_compare: historical,
+      release_candidate: {
+        contract: ATLAS_RC_CONTRACT,
+        static_audit: atlasRcStaticAudit(),
+        runtime_audit: atlasRcRuntimeAudit(snapshot)
+      }
     },
     glossary,
     rules: [
@@ -12163,7 +12245,11 @@ function atlasBuildCryptoPageSnapshotCore() {
         ? atlasProductNewsReaction()
         : null,
       math_core_v4: state.math || null,
-      historical_compare_v2: null
+      historical_compare_v2: null,
+      release_candidate_v1: {
+        contract: ATLAS_RC_CONTRACT,
+        static_audit: atlasRcStaticAudit()
+      }
     }
   };
 
@@ -17670,11 +17756,21 @@ async function atlasLocalDialogueAsk() {
         recent: atlasHistoryV2Read().slice(-10),
         compare: atlasHistoryV2Compare(snapshot)
       },
+      release_candidate_v1: {
+        contract: ATLAS_RC_CONTRACT,
+        static_audit: atlasRcStaticAudit(),
+        runtime_audit: atlasRcRuntimeAudit(snapshot)
+      },
       requested_reading: "whole_page_simple_detailed_expert",
       pedagogy_v2: atlasPedagogyV2QuestionContract(
         "Produire la synthèse Aerith-10 Crypto de toute la page.",
         snapshot
-      )
+      ),
+      release_candidate_v1: {
+        contract: ATLAS_RC_CONTRACT,
+        static_audit: atlasRcStaticAudit(),
+        runtime_audit: atlasRcRuntimeAudit(snapshot)
+      }
     });
     atlasLocalDialogueRender(result, "Réponse à la question libre");
     setText(
@@ -36346,10 +36442,14 @@ function renderAutoReader(snapshot = null, previous = null) {
 
     const intelligence = atlasProductWatchlistIntelligence();
     const reaction = atlasProductNewsReaction();
-    const historyCompare = atlasHistoryV2Compare(atlasBuildCryptoPageSnapshot());
+    const autoSnapshot = atlasBuildCryptoPageSnapshot();
+    const historyCompare = atlasHistoryV2Compare(autoSnapshot);
+    const rcRuntime = atlasRcRuntimeAudit(autoSnapshot);
 
     els.autoReaderOutput.textContent = [
-      `ATLAS AUTO READER V3 — ${ATLAS_RELEASE}`,
+      `ATLAS AUTO READER V4 — ${ATLAS_RELEASE}`,
+      atlasRcSummaryLine(),
+      `RC runtime : 4/4=${rcRuntime.reports_4_4_same_fingerprint ? "oui" : "non"} · Aerith=${rcRuntime.aerith_same_fingerprint ? "oui" : "non"} · CURRENT=${rcRuntime.current_state || "—"}`,
       "",
       `État réel : ${runtime}.`,
       atlasPulseVisible()
@@ -38422,7 +38522,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.6.00";
+const ATLAS_BUILD = "30.0.00";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
