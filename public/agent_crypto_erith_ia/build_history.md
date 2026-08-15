@@ -2794,3 +2794,8 @@ Couche de vulgarisation complète au-dessus d'Atlas/NØX : lecture Simple, Déta
 - Le statut CURRENT n'est accordé qu'après cohérence snapshot + 4 rapports Atlas + conclusion Aerith sur le même fingerprint.
 - L'UI signale explicitement Analyse courante / Nouvelle analyse en cours / Analyse en attente.
 - Aucun changement Bridge, Ollama, Math Core ou News Intelligence.
+
+
+## Build 29.3.10 — Auto Chain + Current Snapshot Lock
+
+Consolidation de l'orchestration automatique. Corrige trois défauts critiques découverts lors de l'audit 29.3.09 : fingerprint évalué trop tôt, objet `reports` traité comme tableau, et `lastAutoFingerprint` fixé avant le succès d'Aerith. Les synthèses restaurées restent historiques jusqu'à promotion transactionnelle du snapshot courant.

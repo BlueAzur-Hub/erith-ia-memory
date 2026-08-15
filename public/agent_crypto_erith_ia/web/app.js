@@ -1265,7 +1265,7 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   29.3.09 — CURRENT SNAPSHOT PROMOTION LOCK
+   29.3.10 — AUTO CHAIN + CURRENT SNAPSHOT PROMOTION LOCK
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
@@ -1304,20 +1304,35 @@ function atlasCurrentConclusionFingerprint(conclusion) {
 
 function atlasCurrentQualification(snapshot) {
   const fp = atlasCurrentFingerprint(snapshot);
-  const raw = snapshot?.raw_context || {};
-  const binance = raw?.binance_top5 || {};
-  const assets = Array.isArray(binance.assets) ? binance.assets : [];
-  const directCount = assets.filter(a => {
-    const status = String(a?.quote_status || "").toLowerCase();
-    const source = String(a?.quote_source || "").toLowerCase();
-    return status.includes("direct") && source.includes("binance");
-  }).length;
+  const binance = snapshot?.strict_contract?.sources?.binance || {};
+  const directCount = Number(binance.direct_pairs || 0);
+  const feedReady = String(binance.feed_status || "").toLowerCase() === "ready";
 
   return {
     fingerprint: fp,
     direct_count: directCount,
-    qualified: !!fp && directCount >= 5
+    qualified: !!fp && feedReady && directCount >= 5
   };
+}
+
+function atlasCurrentStage(snapshot, status, reason = "", extra = {}) {
+  const q = atlasCurrentQualification(snapshot);
+  const previous = atlasCurrentStateRead() || {};
+  const state = {
+    schema: ATLAS_CURRENT_STATE_SCHEMA,
+    status,
+    fingerprint: q.fingerprint || previous.fingerprint || null,
+    previous_current_fingerprint:
+      previous.status === "CURRENT" ? previous.fingerprint : (previous.previous_current_fingerprint || null),
+    generated_at: snapshot?.generated_at || previous.generated_at || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    direct_count: q.direct_count,
+    reason,
+    ...extra
+  };
+  atlasCurrentStateWrite(state);
+  atlasCurrentRenderBanner(state);
+  return state;
 }
 
 function atlasCurrentMarkPending(snapshot, reason = "snapshot_changed") {
@@ -1341,10 +1356,14 @@ function atlasCurrentPromoteIfComplete(snapshot, reports, conclusion) {
   const q = atlasCurrentQualification(snapshot);
   if (!q.qualified) return atlasCurrentMarkPending(snapshot, "waiting_5_5_direct");
 
-  const list = Array.isArray(reports) ? reports : [];
+  const list = ATLAS_LOCAL_REPORT_MODES
+    .map(mode => reports?.[mode])
+    .filter(Boolean);
   const reportFps = list.map(atlasCurrentReportFingerprint).filter(Boolean);
-  const fourReports = list.length >= 4;
-  const reportsMatch = fourReports && reportFps.length >= 4 && reportFps.slice(0,4).every(fp => fp === q.fingerprint);
+  const fourReports = list.length === ATLAS_LOCAL_REPORT_MODES.length;
+  const reportsMatch = fourReports
+    && reportFps.length === ATLAS_LOCAL_REPORT_MODES.length
+    && reportFps.every(fp => fp === q.fingerprint);
 
   const conclusionFp = atlasCurrentConclusionFingerprint(conclusion);
   const conclusionOk = !!conclusion?.answer && conclusionFp === q.fingerprint;
@@ -1383,10 +1402,22 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
 
   const status = String(state.status || "");
   if (status === "CURRENT") {
-    banner.innerHTML = `<b>Analyse courante</b> · snapshot et conclusion cohérents · ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.innerHTML = `<b>Analyse courante</b> · Atlas 4/4 + NØX + Aerith cohérents · ${String(state.fingerprint || "").slice(0,18)}…`;
     banner.style.borderColor = "rgba(76,220,160,.55)";
+  } else if (status === "ATLAS_RUNNING") {
+    banner.innerHTML = `<b>Analyse automatique</b> · Atlas ${Number(state.completed || 0)}/4 · snapshot ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.style.borderColor = "rgba(82,190,255,.55)";
+  } else if (status === "ATLAS_4_4_READY" || status === "NOX_READY") {
+    banner.innerHTML = `<b>Atlas 4/4 prêt</b> · NØX vérifié · Aerith prépare la synthèse courante.`;
+    banner.style.borderColor = "rgba(172,116,255,.55)";
+  } else if (status === "AERITH_RUNNING") {
+    banner.innerHTML = `<b>Aerith analyse toute la page</b> · ancienne conclusion conservée uniquement comme historique.`;
+    banner.style.borderColor = "rgba(222,116,255,.55)";
+  } else if (status === "ERROR") {
+    banner.innerHTML = `<b>Analyse courante non remplacée</b> · ${atlasLocalEscapeHtml(state.reason || "erreur locale")} · ancien résultat conservé comme historique.`;
+    banner.style.borderColor = "rgba(255,110,110,.65)";
   } else if (status === "PENDING_ANALYSIS") {
-    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · ancien résultat conservé comme historique · fingerprint ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · ancien résultat conservé comme historique · ${String(state.fingerprint || "").slice(0,18)}…`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
   } else {
     banner.innerHTML = `<b>Analyse en attente</b> · démarrage automatique lorsque Binance atteint 5/5 directes.`;
@@ -1401,7 +1432,8 @@ function atlasCurrentConclusionIsStale(conclusion, snapshot) {
 }
 
 function atlasCurrentDecorateConclusion(snapshot, conclusion) {
-  const panel = document.getElementById("atlasLocalConclusionPanel") || document.querySelector("[data-atlas-conclusion]") || null;
+  const panel = document.querySelector(".atlas-local-response-panel[data-atlas-response-view=\"conclusion\"]")
+    || document.querySelector(".atlas-local-response-panel");
   if (!panel) return;
   const stale = atlasCurrentConclusionIsStale(conclusion, snapshot);
   panel.dataset.currentState = stale ? "historical" : "current";
@@ -11592,7 +11624,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.09",
+  interface: "Build 29.3.10",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -11819,7 +11851,6 @@ function atlasBuildCryptoPageSnapshotCore() {
 
   snapshot.pedagogy = atlasPedagogyBuildContract(snapshot);
   atlasLocalDialogueState.lastSnapshot = snapshot;
-  atlasCurrentOnSnapshot(snapshot);
   return snapshot;
 }
 
@@ -12094,6 +12125,7 @@ function atlasBuildCryptoPageSnapshot() {
   atlasAnalyticalTruthState.currentEnvelope = envelope;
   atlasAnalyticalTruthState.currentFingerprint = snapshot.fingerprint;
   atlasAnalyticalTruthRender(envelope);
+  atlasCurrentOnSnapshot(snapshot);
   return snapshot;
 }
 
@@ -16039,7 +16071,7 @@ function atlasLocalSetReport(node, markdown) {
 function atlasLocalCommentFilterStatus(warnings) {
   const items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
   if (!items.length) {
-    return "Rapport factuel terminé. Commentaire local accepté et validation humaine requise.";
+    return "Rapport factuel terminé. Commentaire local accepté. La chaîne analytique continue automatiquement ; validation humaine uniquement avant une décision financière réelle.";
   }
   return "Rapport factuel terminé. Le commentaire local n’a pas passé le filtre et a été remplacé par le repli sûr.";
 }
@@ -16103,7 +16135,7 @@ function atlasLocalReportsReadiness(snapshot) {
 
 function atlasLocalReportsReadinessLabel(readiness) {
   if (!readiness.bridgeReady) return "Atlas en attente · Bridge local non prêt.";
-  if (!readiness.marketReady) return "Atlas en attente · snapshot CoinGecko complet requis.";
+  if (!readiness.marketReady) return "Atlas en attente · snapshot CoinGecko exploitable requis.";
   if (!readiness.binanceReady) return `Atlas en attente · Binance ${readiness.directPairs}/5 directes · démarrage automatique à 5/5.`;
   if (!readiness.graphReady) return "Atlas en attente · graphique exploitable requis.";
   return "5/5 directes · sources prêtes · démarrage Atlas autorisé.";
@@ -16241,6 +16273,7 @@ async function atlasLocalReportsRunAll(options = {}) {
   atlasLocalReportsState.lastAutoAttemptFingerprint = options.automatic === true ? fingerprint : atlasLocalReportsState.lastAutoAttemptFingerprint;
   atlasLocalReportsState.lastAutoAttemptAt = Date.now();
   atlasLocalReportsSetBusy(true);
+  atlasCurrentStage(snapshot, "ATLAS_RUNNING", options.reason || "atlas_start", { completed: 0 });
   atlasLocalReportsSetSuiteStatus("Analyse Atlas-10 · 0/4", "loading");
   setText(
     document.getElementById("atlasLocalReportsMeta"),
@@ -16263,8 +16296,10 @@ async function atlasLocalReportsRunAll(options = {}) {
         atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
         atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
         const stored = atlasLocalReportStore(mode, result, snapshot, { open: true });
-        if (stored) completed += 1;
-        else throw new Error("Rapport local vide ou non affichable");
+        if (stored) {
+          completed += 1;
+          atlasCurrentStage(snapshot, "ATLAS_RUNNING", `atlas_${mode}_ready`, { completed });
+        } else throw new Error("Rapport local vide ou non affichable");
       } catch (error) {
         const previous = atlasLocalReportResult(mode);
         const ids = ATLAS_LOCAL_REPORT_IDS[mode];
@@ -16285,10 +16320,13 @@ async function atlasLocalReportsRunAll(options = {}) {
     }
 
     if (completed === ATLAS_LOCAL_REPORT_MODES.length) {
-      if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
       atlasLocalReportsSetSuiteStatus("4/4 rapports prêts.", "ready");
       atlasLocalReportsState.lastCompletedSnapshot = snapshot;
       atlasLocalReportsState.lastCompletedFingerprint = fingerprint;
+      atlasCurrentStage(snapshot, "ATLAS_4_4_READY", "atlas_4_4_ready", { completed: 4 });
+      if (snapshot?.strict_contract?.nox_no_fomo_v1) {
+        atlasCurrentStage(snapshot, "NOX_READY", "nox_no_fomo_ready", { completed: 4 });
+      }
       atlasLocalReportsOpenAll();
       document.getElementById("btnAtlasLocalConclusion")?.removeAttribute("disabled");
       atlasLocalDialogueSetConnection(true, "Rapports Atlas-10 terminés. NØX No-FOMO validé. Conclusion Aerith-10 Crypto en préparation.");
@@ -16409,7 +16447,6 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
       return;
     }
 
-    if (fingerprint === atlasLocalReportsState.lastAutoFingerprint) return;
     if (
       fingerprint === atlasLocalReportsState.lastAutoAttemptFingerprint
       && (Date.now() - atlasLocalReportsState.lastAutoAttemptAt) < 90000
@@ -16497,7 +16534,7 @@ function atlasLocalResponsePlaceholder(view) {
       eyebrow: "RÉPONSE À LA QUESTION LIBRE",
       title: "Aucune réponse libre générée",
       body: "Interroge Atlas-10 ou Aerith-10 depuis la zone de gauche.",
-      meta: "Lecture seule · validation humaine · aucune exécution réelle"
+      meta: "Lecture seule · analyse automatique · aucune exécution financière réelle"
     };
   }
   return {
@@ -16506,7 +16543,7 @@ function atlasLocalResponsePlaceholder(view) {
     body: atlasLocalConclusionState.running
       ? "Aerith-10 Crypto relit les quatre rapports Atlas-10, News Sentinel et le filtre NØX No-FOMO."
       : "La conclusion Aerith-10 Crypto apparaîtra automatiquement ici lorsque les quatre rapports Atlas-10 seront prêts.",
-    meta: "Lecture seule · conclusion après validation des quatre rapports · aucune exécution réelle"
+    meta: "Lecture seule · conclusion automatique après Atlas 4/4 · aucune exécution financière réelle"
   };
 }
 
@@ -16516,9 +16553,19 @@ function atlasLocalResponseRenderStored(view) {
   const panel = document.querySelector(".atlas-local-response-panel");
   if (panel) panel.dataset.atlasResponseView = view;
   setText(document.getElementById("atlasLocalResponseEyebrow"), response?.eyebrow || placeholder.eyebrow);
-  setText(document.getElementById("atlasLocalResponseTitle"), response?.label || placeholder.title);
+  const latestSnapshot = atlasLocalDialogueState.lastSnapshot || atlasLocalReportsState.lastCompletedSnapshot;
+  const staleConclusion = view === "conclusion" && response?.answer && atlasCurrentConclusionIsStale(response, latestSnapshot);
+  setText(
+    document.getElementById("atlasLocalResponseTitle"),
+    staleConclusion ? `Historique — ${response?.label || placeholder.title}` : (response?.label || placeholder.title)
+  );
   atlasLocalSetReport(document.getElementById("atlasLocalResponse"), response?.answer || placeholder.body);
-  setText(document.getElementById("atlasLocalResponseMeta"), response?.meta || placeholder.meta);
+  setText(
+    document.getElementById("atlasLocalResponseMeta"),
+    staleConclusion
+      ? `${response?.meta || placeholder.meta} · HISTORIQUE : ne correspond pas au snapshot courant`
+      : (response?.meta || placeholder.meta)
+  );
   atlasLocalDialogueState.lastResponse = response || null;
   const hasAnswer = !!String(response?.answer || "").trim();
   document.getElementById("btnAtlasLocalCopy")?.toggleAttribute("disabled", !hasAnswer);
@@ -16572,6 +16619,7 @@ async function atlasLocalConclusionRun(options = {}) {
 
   atlasLocalConclusionState.lastAttemptFingerprint = fingerprint;
   atlasLocalConclusionState.lastAttemptAt = Date.now();
+  atlasCurrentStage(snapshot, "AERITH_RUNNING", "aerith_conclusion_start", { completed: 4 });
   atlasLocalResponseSelectView("conclusion");
   const previousConclusion = atlasLocalDialogueState.conclusionResponse && atlasLocalDialogueState.conclusionResponse.answer
     ? atlasSharedSynthesisClone(atlasLocalDialogueState.conclusionResponse)
@@ -16603,7 +16651,8 @@ async function atlasLocalConclusionRun(options = {}) {
       meta: `Aerith-10 · ${result?.provider || atlasLocalDialogueState.provider || "local"} · ${result?.model || atlasLocalDialogueState.model || "modèle local"} · snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · 4 rapports Atlas-10`
     };
     atlasLocalDialogueState.conclusionResponse = response;
-  atlasCurrentPromoteIfComplete(atlasLocalDialogueState.lastSnapshot, atlasLocalReportsState?.reports || [], atlasLocalDialogueState.conclusionResponse);
+    atlasCurrentPromoteIfComplete(snapshot, atlasLocalReportsState.reports, response);
+    if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
@@ -16620,13 +16669,15 @@ async function atlasLocalConclusionRun(options = {}) {
         document.getElementById("atlasLocalResponseMeta"),
         `${previousConclusion.meta || "Dernière conclusion validée"} · nouvelle tentative échouée, état précédent conservé`
       );
-      atlasLocalDialogueSetConnection(true, `Nouvelle conclusion non validée : ${error?.message || "Bridge indisponible"}. La conclusion précédente reste intacte.`);
+      atlasCurrentStage(snapshot, "ERROR", `Aerith : ${error?.message || "Bridge indisponible"}`, { completed: 4 });
+      atlasLocalDialogueSetConnection(true, `Nouvelle conclusion non validée : ${error?.message || "Bridge indisponible"}. La conclusion précédente reste disponible uniquement comme historique.`);
     } else {
       atlasLocalDialogueState.conclusionResponse = null;
       atlasLocalResponseSelectView("conclusion");
       setText(document.getElementById("atlasLocalResponseTitle"), "Conclusion à relancer");
       atlasLocalSetReport(document.getElementById("atlasLocalResponse"), "La conclusion locale n’a pas été générée. Les quatre rapports Atlas-10 restent disponibles et inchangés.");
       setText(document.getElementById("atlasLocalResponseMeta"), "Lecture seule · rapports Atlas-10 conservés · relance manuelle disponible");
+      atlasCurrentStage(snapshot, "ERROR", `Aerith : ${error?.message || "Bridge indisponible"}`, { completed: 4 });
       atlasLocalDialogueSetConnection(true, `Conclusion locale non générée : ${error?.message || "Bridge indisponible"}`);
     }
     atlasAnalyticalTruthRender();
@@ -16802,7 +16853,7 @@ function atlasLocalDialogueExport() {
     "",
     "## Limite",
     "",
-    "Analyse locale descriptive. Validation humaine requise. Aucun ordre financier, wallet ou accès GitHub."
+    "Analyse locale descriptive. Atlas → NØX → Aerith reste automatique. Validation humaine uniquement avant toute décision ou action financière réelle. Aucun ordre financier, wallet ou accès GitHub."
   ];
   const filename = `agent_crypto_${response.profile || "atlas"}_resume_${new Date().toISOString().replace(/[:.]/g, "-")}.md`;
   if (typeof downloadTextFile === "function") {
@@ -30304,8 +30355,8 @@ function atlasStableStackRenderCore() {
     station = "Ryzen · production locale";
     stationDetail = "Les quatre rapports et la conclusion peuvent être produits sur ce poste.";
     status = versionMatches
-      ? "Bridge V1.9.0 et GPT-OSS 20B-32K prêts · production locale en lecture seule."
-      : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : V1.9.0.`;
+      ? `Bridge ${ATLAS_STABLE_STACK.bridge} et GPT-OSS 20B-32K prêts · production locale en lecture seule.`
+      : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : ${ATLAS_STABLE_STACK.bridge}.`;
   } else if (bridgeReachable) {
     runtime = "warning";
     badgeText = "Modèle requis";
@@ -30344,6 +30395,12 @@ function atlasStableStackRenderCore() {
     : bridgeReachable
       ? "Installe ou sélectionne le modèle requis dans Ollama."
       : "Requis uniquement pour produire de nouveaux rapports.";
+
+  const stableArticles = panel.querySelectorAll(".atlas-stable-stack-grid article");
+  const interfaceValue = stableArticles?.[0]?.querySelector("b");
+  const controlValue = stableArticles?.[1]?.querySelector("b");
+  if (interfaceValue) interfaceValue.textContent = ATLAS_STABLE_STACK.interface;
+  if (controlValue) controlValue.textContent = ATLAS_STABLE_STACK.controlCenter;
 
   atlasStableStackSetText("atlasStableStackBridge", bridgeLabel);
   atlasStableStackSetText("atlasStableStackBridgeDetail", bridgeDetail);
@@ -30595,11 +30652,16 @@ function atlasSharedSynthesisRenderCore() {
   setText(document.getElementById("atlasSharedSynthesisSnapshot"), pkg.snapshot_label || "—");
   setText(document.getElementById("atlasSharedSynthesisOrigin"), pkg.origin?.machine || "poste producteur");
   setText(document.getElementById("atlasSharedSynthesisReports"), "4/4");
-  setText(document.getElementById("atlasSharedSynthesisConclusion"), "Disponible");
+  const currentFingerprint = String(atlasAnalyticalTruthState?.currentFingerprint || "");
+  const synthesisHistorical = !!currentFingerprint && !!pkg.fingerprint && currentFingerprint !== pkg.fingerprint;
+  setText(document.getElementById("atlasSharedSynthesisConclusion"), synthesisHistorical ? "Historique" : "Disponible");
   setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedConclusionContent"), pkg.conclusion.answer);
-  setText(document.getElementById("atlasSharedSynthesisNote"), `${atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée"} · lecture seule · ${pkg.origin?.provider || "local"} · ${pkg.origin?.model || "modèle"}`);
+  setText(
+    document.getElementById("atlasSharedSynthesisNote"),
+    `${synthesisHistorical ? "Historique conservé" : (atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée")} · lecture seule · ${pkg.origin?.provider || "local"} · ${pkg.origin?.model || "modèle"}`
+  );
   return true;
 }
 
@@ -30617,7 +30679,6 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
     });
     atlasLocalReportsState.lastCompletedSnapshot = atlasSharedSynthesisClone(pkg.snapshot);
     atlasLocalReportsState.lastCompletedFingerprint = pkg.fingerprint;
-    atlasLocalReportsState.lastAutoFingerprint = pkg.fingerprint;
     atlasLocalReportsSetSuiteStatus(source === "local" ? "4/4 rapports prêts." : "4/4 rapports restaurés en lecture seule.", "ready");
     setText(document.getElementById("atlasLocalReportsMeta"), `Snapshot ${pkg.snapshot_label} · quatre rapports ${source === "local" ? "produits" : "conservés"} · lecture seule`);
     atlasLocalDialogueState.conclusionResponse = atlasSharedSynthesisClone(pkg.conclusion);
@@ -37240,7 +37301,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.3.09";
+const ATLAS_BUILD = "29.3.10";
 
 // Derived identity: these values can no longer drift independently.
 const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;
