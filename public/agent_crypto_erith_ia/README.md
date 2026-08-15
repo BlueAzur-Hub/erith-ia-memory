@@ -1199,3 +1199,13 @@ Si une future Build ne modifie ni HTML, ni CSS, ni configuration runtime :
 - Conserve le contrôle fingerprint/snapshot et l’ancienne conclusion uniquement comme historique si une nouvelle conclusion échoue.
 - Corrige le SHA-256 app.js dans la vraie structure integrity.files de version.json.
 - Stack finale : Interface 29.3.08 · Control Center V2.3.2R1 · Bridge V1.9.2 · gpt-oss:20b-32k.
+
+
+## Build 29.3.09 — Current Snapshot Promotion Lock
+
+- Un nouveau fingerprint qualifié retire immédiatement le statut CURRENT à l'ancienne conclusion.
+- L'ancien paquet IndexedDB reste conservé comme historique.
+- La chaîne automatique attend Binance 5/5 directes.
+- Le statut CURRENT n'est accordé qu'après cohérence snapshot + 4 rapports Atlas + conclusion Aerith sur le même fingerprint.
+- L'UI signale explicitement Analyse courante / Nouvelle analyse en cours / Analyse en attente.
+- Aucun changement Bridge, Ollama, Math Core ou News Intelligence.

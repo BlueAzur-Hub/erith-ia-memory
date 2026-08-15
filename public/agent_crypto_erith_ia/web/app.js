@@ -1264,6 +1264,180 @@ function atlasInitLocalAccess() {
 
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
+/* ============================================================
+   29.3.09 — CURRENT SNAPSHOT PROMOTION LOCK
+   Goal:
+   - never present a stale Aerith conclusion as current
+   - keep historical IndexedDB data intact
+   - automatically promote only a complete snapshot/fingerprint chain
+   ============================================================ */
+const ATLAS_CURRENT_STATE_SCHEMA = "atlas_crypto_current_state_v1";
+const ATLAS_CURRENT_STATE_KEY = "agent_crypto_current_state_v1";
+
+function atlasCurrentStateRead() {
+  try {
+    const raw = localStorage.getItem(ATLAS_CURRENT_STATE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function atlasCurrentStateWrite(state) {
+  try {
+    localStorage.setItem(ATLAS_CURRENT_STATE_KEY, JSON.stringify(state));
+  } catch (_) {}
+  return state;
+}
+
+function atlasCurrentFingerprint(snapshot) {
+  return String(snapshot?.fingerprint || atlasAnalyticalTruthState?.currentFingerprint || "").trim();
+}
+
+function atlasCurrentReportFingerprint(report) {
+  return String(report?.fingerprint || report?.snapshot_fingerprint || report?.meta?.fingerprint || "").trim();
+}
+
+function atlasCurrentConclusionFingerprint(conclusion) {
+  return String(conclusion?.fingerprint || conclusion?.snapshot_fingerprint || conclusion?.meta?.fingerprint || "").trim();
+}
+
+function atlasCurrentQualification(snapshot) {
+  const fp = atlasCurrentFingerprint(snapshot);
+  const raw = snapshot?.raw_context || {};
+  const binance = raw?.binance_top5 || {};
+  const assets = Array.isArray(binance.assets) ? binance.assets : [];
+  const directCount = assets.filter(a => {
+    const status = String(a?.quote_status || "").toLowerCase();
+    const source = String(a?.quote_source || "").toLowerCase();
+    return status.includes("direct") && source.includes("binance");
+  }).length;
+
+  return {
+    fingerprint: fp,
+    direct_count: directCount,
+    qualified: !!fp && directCount >= 5
+  };
+}
+
+function atlasCurrentMarkPending(snapshot, reason = "snapshot_changed") {
+  const q = atlasCurrentQualification(snapshot);
+  const prev = atlasCurrentStateRead();
+  const state = {
+    schema: ATLAS_CURRENT_STATE_SCHEMA,
+    status: q.qualified ? "PENDING_ANALYSIS" : "WAITING_5_5_DIRECT",
+    fingerprint: q.fingerprint || null,
+    previous_current_fingerprint: prev?.status === "CURRENT" ? prev.fingerprint : (prev?.previous_current_fingerprint || null),
+    generated_at: snapshot?.generated_at || new Date().toISOString(),
+    reason,
+    direct_count: q.direct_count
+  };
+  atlasCurrentStateWrite(state);
+  atlasCurrentRenderBanner(state);
+  return state;
+}
+
+function atlasCurrentPromoteIfComplete(snapshot, reports, conclusion) {
+  const q = atlasCurrentQualification(snapshot);
+  if (!q.qualified) return atlasCurrentMarkPending(snapshot, "waiting_5_5_direct");
+
+  const list = Array.isArray(reports) ? reports : [];
+  const reportFps = list.map(atlasCurrentReportFingerprint).filter(Boolean);
+  const fourReports = list.length >= 4;
+  const reportsMatch = fourReports && reportFps.length >= 4 && reportFps.slice(0,4).every(fp => fp === q.fingerprint);
+
+  const conclusionFp = atlasCurrentConclusionFingerprint(conclusion);
+  const conclusionOk = !!conclusion?.answer && conclusionFp === q.fingerprint;
+
+  if (!reportsMatch || !conclusionOk) {
+    return atlasCurrentMarkPending(snapshot, !reportsMatch ? "atlas_reports_not_current" : "aerith_conclusion_not_current");
+  }
+
+  const state = {
+    schema: ATLAS_CURRENT_STATE_SCHEMA,
+    status: "CURRENT",
+    fingerprint: q.fingerprint,
+    generated_at: snapshot?.generated_at || new Date().toISOString(),
+    promoted_at: new Date().toISOString(),
+    direct_count: q.direct_count,
+    atlas_reports: 4,
+    aerith_conclusion: true,
+    model: "gpt-oss:20b-32k"
+  };
+  atlasCurrentStateWrite(state);
+  atlasCurrentRenderBanner(state);
+  return state;
+}
+
+function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
+  if (!state) return;
+  const host = document.getElementById("atlasLocalDialoguePanel") || document.querySelector("main");
+  if (!host) return;
+  let banner = document.getElementById("atlasCurrentAnalysisBanner");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "atlasCurrentAnalysisBanner";
+    banner.style.cssText = "margin:10px 0;padding:10px 14px;border:1px solid rgba(120,220,255,.32);border-radius:12px;background:rgba(4,20,31,.88);font-size:.92rem;line-height:1.35";
+    host.insertAdjacentElement("afterbegin", banner);
+  }
+
+  const status = String(state.status || "");
+  if (status === "CURRENT") {
+    banner.innerHTML = `<b>Analyse courante</b> · snapshot et conclusion cohérents · ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.style.borderColor = "rgba(76,220,160,.55)";
+  } else if (status === "PENDING_ANALYSIS") {
+    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · ancien résultat conservé comme historique · fingerprint ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.style.borderColor = "rgba(255,198,84,.55)";
+  } else {
+    banner.innerHTML = `<b>Analyse en attente</b> · démarrage automatique lorsque Binance atteint 5/5 directes.`;
+    banner.style.borderColor = "rgba(255,198,84,.55)";
+  }
+}
+
+function atlasCurrentConclusionIsStale(conclusion, snapshot) {
+  const currentFp = atlasCurrentFingerprint(snapshot);
+  const conclusionFp = atlasCurrentConclusionFingerprint(conclusion);
+  return !!currentFp && !!conclusionFp && currentFp !== conclusionFp;
+}
+
+function atlasCurrentDecorateConclusion(snapshot, conclusion) {
+  const panel = document.getElementById("atlasLocalConclusionPanel") || document.querySelector("[data-atlas-conclusion]") || null;
+  if (!panel) return;
+  const stale = atlasCurrentConclusionIsStale(conclusion, snapshot);
+  panel.dataset.currentState = stale ? "historical" : "current";
+  panel.style.opacity = stale ? "0.78" : "";
+  let marker = panel.querySelector(".atlas-current-marker");
+  if (!marker) {
+    marker = document.createElement("div");
+    marker.className = "atlas-current-marker";
+    marker.style.cssText = "padding:8px 12px;margin:0 0 10px;border-radius:10px;font-weight:700";
+    panel.insertAdjacentElement("afterbegin", marker);
+  }
+  if (stale) {
+    marker.textContent = "Historique — cette conclusion ne correspond pas au snapshot actuellement affiché.";
+    marker.style.background = "rgba(255,187,80,.12)";
+    marker.style.color = "#ffd993";
+  } else {
+    marker.textContent = "Conclusion courante — snapshot et fingerprint cohérents.";
+    marker.style.background = "rgba(76,220,160,.10)";
+    marker.style.color = "#a7ffd8";
+  }
+}
+
+function atlasCurrentOnSnapshot(snapshot) {
+  const q = atlasCurrentQualification(snapshot);
+  const state = atlasCurrentStateRead();
+  if (!q.fingerprint) return;
+
+  if (!state || state.fingerprint !== q.fingerprint || state.status !== "CURRENT") {
+    atlasCurrentMarkPending(snapshot, "new_qualified_snapshot");
+  }
+
+  atlasCurrentDecorateConclusion(snapshot, atlasLocalDialogueState?.conclusionResponse || null);
+}
+
+
+
 const ATLAS_V2_MODE_KEY = "agent_crypto_erith_ia_v2_interface_mode";
 
 const ATLAS_V2_ALLOWED_MODES = new Set(["essential", "intermediate", "advanced"]);
@@ -11418,8 +11592,8 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.08",
-  controlCenter: "V2.3.2R1",
+  interface: "Build 29.3.09",
+  controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
   model: "gpt-oss:20b-32k"
@@ -11645,6 +11819,7 @@ function atlasBuildCryptoPageSnapshotCore() {
 
   snapshot.pedagogy = atlasPedagogyBuildContract(snapshot);
   atlasLocalDialogueState.lastSnapshot = snapshot;
+  atlasCurrentOnSnapshot(snapshot);
   return snapshot;
 }
 
@@ -16428,6 +16603,7 @@ async function atlasLocalConclusionRun(options = {}) {
       meta: `Aerith-10 · ${result?.provider || atlasLocalDialogueState.provider || "local"} · ${result?.model || atlasLocalDialogueState.model || "modèle local"} · snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · 4 rapports Atlas-10`
     };
     atlasLocalDialogueState.conclusionResponse = response;
+  atlasCurrentPromoteIfComplete(atlasLocalDialogueState.lastSnapshot, atlasLocalReportsState?.reports || [], atlasLocalDialogueState.conclusionResponse);
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
@@ -37064,7 +37240,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.3.08";
+const ATLAS_BUILD = "29.3.09";
 
 // Derived identity: these values can no longer drift independently.
 const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;
@@ -38574,6 +38750,7 @@ atlasParallelMarketInit();
 atlasAnalyticalTruthInit();
 
 atlasVersionAwarenessInit();
+window.setTimeout(() => atlasCurrentRenderBanner(), 0);
 
 
 (() => {
