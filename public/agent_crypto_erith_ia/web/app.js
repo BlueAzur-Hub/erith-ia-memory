@@ -11418,7 +11418,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.04",
+  interface: "Build 29.3.05",
   controlCenter: "V2.3.0R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
@@ -36932,11 +36932,11 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.04";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.05";
 
-const ATLAS_BUILD = "29.3.03";
+const ATLAS_BUILD = "29.3.05";
 
-const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.03";
+const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-29.3.05";
 
 const ATLAS_VERSION_MANIFEST_URL = "./version.json";
 

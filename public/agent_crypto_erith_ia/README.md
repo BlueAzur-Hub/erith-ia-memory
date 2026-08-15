@@ -1,9 +1,32 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.04  
-**Build :** 29.3.04  
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.05  
+**Build :** 29.3.05  
 **Mission :** Atlas 5/5 Direct Start Gate Lock
 
+
+## Build 29.3.05 — Version Identity Repair Lock
+
+Correction ciblée du contrôle de publication après la 29.3.04.
+
+### Cause exacte réparée
+
+Le fichier `app.js` 29.3.04 affichait bien `ATLAS_RELEASE = Build 29.3.04`, mais conservait par erreur :
+
+- `ATLAS_BUILD = 29.3.03` ;
+- `ATLAS_ASSET_TOKEN = market-core-v2.0-alpha-build-29.3.03`.
+
+Le manifeste `version.json` déclarait correctement 29.3.04. Le contrôleur de version comparait donc une application qui se présentait encore comme 29.3.03 à un manifeste 29.3.04 et classait la publication comme incomplète.
+
+### 29.3.05
+
+- identité de Build synchronisée dans `ATLAS_RELEASE`, `ATLAS_BUILD` et `ATLAS_ASSET_TOKEN` ;
+- carte de pile `Interface` synchronisée sur Build 29.3.05 ;
+- manifeste `version.json` synchronisé ;
+- empreinte SHA-256 de `app.js` recalculée après correction ;
+- aucun changement du verrou Binance 5/5, d'Atlas, de NØX, d'Aerith, du Bridge ou du Math Core.
+
+---
 
 ## Build 29.3.04 — Atlas 5/5 Direct Start Gate Lock
 

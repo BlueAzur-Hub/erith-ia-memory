@@ -1,3 +1,15 @@
+# Build 29.3.05 — Version Identity Repair Lock
+
+- Base : 29.3.04.
+- Répare l'identité interne incohérente de la 29.3.04 (`ATLAS_RELEASE=29.3.04` mais `ATLAS_BUILD` / `ATLAS_ASSET_TOKEN` restés en 29.3.03).
+- Synchronise `ATLAS_RELEASE`, `ATLAS_BUILD`, `ATLAS_ASSET_TOKEN`, carte Interface et manifeste sur 29.3.05.
+- Recalcule l'empreinte SHA-256 de `app.js`.
+- Conserve intégralement le verrou automatique Binance 5/5 direct.
+- Conserve Bridge V1.9.1, Control Center V2.3.1R1, GPT-OSS 20B-32K, Atlas 4/4, NØX No-FOMO, Aerith News Intelligence et IndexedDB.
+- Aucun changement Market / Graphique / Math Core / Learning / Métaux.
+
+---
+
 # Build 29.3.04 — Atlas 5/5 Direct Start Gate Lock
 
 - Base : 29.3.03.
