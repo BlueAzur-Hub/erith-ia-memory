@@ -1565,3 +1565,16 @@ Bug-fix-only RC build.
 - Autostart wake delay after confirmed stable 5/5 reduced from 600 ms to 250 ms.
 - Does NOT loosen the exact 5/5 direct + 0 derived + stable gate.
 - No Bridge / Control Center / Market Flow / CSS / index.html changes.
+
+
+## Build 30.0.02 — Aerith Conclusion Recovery + State Coherence Fix
+
+Bug-fix-only RC build based on observed production state.
+
+- Fixes the contradiction “En attente des quatre rapports Atlas-10” while Atlas is already 4/4.
+- Preserves same-fingerprint CURRENT / ERROR / ATLAS_4_4_READY / NOX_READY / AERITH_RUNNING states against live-gate banner downgrades.
+- Makes conclusion validation tolerant to valid local-model wording while preserving anti-invention and financial-safety requirements.
+- If an automatic Aerith conclusion is structurally incomplete, Atlas 4/4 is preserved and Aerith alone is retried automatically.
+- No Atlas recalculation for an Aerith-only validation retry.
+- No version-control rewrite.
+- No Bridge / Control Center / Market Flow / CSS / index.html change.
