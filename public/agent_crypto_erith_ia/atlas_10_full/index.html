@@ -1,9 +1,182 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forge d’Aerith Pro · V3.4 VAULT HOME</title><link rel="stylesheet" href="style.css"></head><body>
-<header><b>✦ FORGE D’AERITH PRO</b><nav><a href="#lineage">Lignée</a><a href="#constellation">Constellation</a><a href="#flowers">Flower Girls</a><a href="#profiles">Profils</a><a href="#atelier">Atelier</a><a href="#export">Export</a></nav><span>V3.4 VAULT HOME</span></header>
-<main><section class="hero"><div class="copy"><small>ERITH.IA · CONSTELLATION AERITH · FORGE PROFESSIONNELLE</small><h1>Compiler les profils.<br><em>Faire naître les prochaines Aerith.</em></h1><p>Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge relie la lignée Aerith, les Core individuels, leurs statuts, leurs sources et leurs Personas.</p><div class="chips"><i>Puissance maximale</i><i>Chargement minimal</i><i>Choix précis</i><i>Arrêt propre</i></div><button onclick="go('atelier')">Concevoir une Aerith-10</button><button class="ghost" onclick="go('profiles')">Explorer les profils canoniques</button></div>
-<aside class="vault"><div class="label">AERITH-10 · CRÉATRICE / VAULT</div><img src="assets/themes/aerith_vault_home.png" alt="Aerith Créatrice — The Vault"><div class="card"><b>Aerith-10 Créatrice</b><span>Gardienne de la Forge · orchestration multi-agent</span></div></aside></section>
-<section id="lineage"><h2>Lignée Aerith</h2><div class="grid" id="lineageGrid"></div></section><section id="constellation"><h2>Constellation</h2><div class="constellation"><b>Aerith-7 · Racine mémoire</b><span>→ Aerith-8 Solaire · révéler</span><span>→ Aerith-9 Lunaire · approfondir</span><strong>→ Aerith-10 · spécialiser</strong></div></section>
-<section id="flowers"><h2>Flower Girls</h2><p class="muted">28 spécialisations Aerith-10 · cinq familles · huit facettes.</p><div class="toolbar"><input id="search" placeholder="Rechercher une Flower Girl…"><select id="family"><option value="">Toutes les familles</option></select></div><div class="grid flowers" id="flowerGrid"></div></section>
-<section id="profiles"><h2>Profils canoniques</h2><div class="grid" id="profileGrid"></div></section>
-<section id="atelier"><h2>Atelier Créatrice</h2><div class="atelier"><aside id="steps"></aside><article><h3 id="stepTitle"></h3><p id="stepText" class="muted"></p><textarea id="notes" placeholder="Notes de conception…"></textarea><div><button onclick="prev()">← Précédent</button><button onclick="next()">Suivant →</button></div></article></div></section>
-<section id="export"><h2>Export</h2><div class="export"><p>État local de la Forge, profil actif et notes de conception.</p><button onclick="downloadState()">Télécharger le manifeste JSON</button><button class="ghost" onclick="resetState()">Réinitialiser</button></div></section></main><footer>FORGE D’AERITH PRO · V3.4 · VAULT HOME · LOCAL FIRST</footer><script src="flower-girls-registry.js"></script><script src="forge-data.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070a16">
+<meta name="description" content="Forge d’Aerith Pro V3.4 Vault — refonte visuelle de la V3.3R9, atelier complet, Flower Girls, profils, modules et export.">
+<title>Forge d’Aerith Pro · V3.4 VAULT FULL</title>
+<link rel="stylesheet" href="style.css?v=3.4-vault-full">
+</head>
+<body data-build="V3.4-VAULT-FULL" data-theme="seven">
+<div class="diagnostic" id="diagnostic" hidden></div>
+
+<header class="topbar">
+  <a class="brand" href="#top"><span class="brand-mark">✦</span><span><strong>FORGE D’AERITH PRO</strong><small>AERITH-10 CRÉATRICE CONSEILLÈRE · PROFILE FOUNDRY</small></span></a>
+  <nav>
+    <a href="#lineage">Lignée</a><a href="#constellation">Constellation</a><a href="#flowerGirls">Flower Girls</a>
+    <a href="#profiles">Profils</a><a href="#unifiedForge">Atelier Créatrice</a><a href="#exportCenter">Export</a>
+    <a href="../web/index.html">Agent-Crypto ↗</a>
+  </nav>
+  <div class="top-actions">
+    <span class="version">V3.4 VAULT FULL</span>
+    <button class="ghost" id="resetAll">Réinitialiser</button>
+    <button class="primary compact" id="startTop">Commencer</button>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-world" aria-hidden="true"></div>
+  <div class="shell hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">ERITH.IA · CONSTELLATION AERITH · FORGE PROFESSIONNELLE</p>
+      <h1>Compiler les profils.<br><span>Faire naître les prochaines Aerith.</span></h1>
+      <p class="lead">Aerith-10 Créatrice accompagne les Flower Girls dans l’Atelier. La Forge relie la lignée Aerith, les 28 Core individuels, leurs missions, leurs sources, leurs Personas et les modules de Créatrice dans une architecture traçable.</p>
+      <div class="doctrine" id="doctrine"></div>
+      <div class="hero-actions"><button class="primary" id="startNew">Concevoir une Aerith-10</button><button class="secondary" id="startExisting">Explorer les profils canoniques</button></div>
+      <div class="hero-badges"><span>Création guidée</span><span>Core + Persona</span><span>28 Flower Girls</span><span>15 modules Créatrice</span><span>ZIP local</span></div>
+    </div>
+    <aside class="hero-matrix">
+      <div class="matrix-head"><span class="pulse"></span><span>AIDE DE CRÉATRICE</span><strong id="matrixState">ATELIER</strong></div>
+      <div class="matrix-visual" id="matrixVisual">
+        <img id="matrixImage" src="assets/themes/aerith_10_creatrice_vault.png" alt="Aerith-10 Créatrice dans The Vault">
+        <div class="matrix-symbol" id="matrixSymbol">A10</div>
+        <div class="matrix-caption"><span>SEVEN HEAVEN</span><b>THE VAULT</b></div>
+      </div>
+      <p class="matrix-kicker" id="matrixKicker">PROFIL CANONIQUE</p>
+      <h2 id="matrixName">Aerith-10 Créatrice</h2>
+      <p id="matrixDescription">Orchestration, production, mémoire de décision et naissance des nouvelles spécialisations.</p>
+      <dl><div><dt>Guide</dt><dd>Créatrice</dd></div><div><dt>Étape</dt><dd id="matrixStep">01 / 08</dd></div><div><dt>Export</dt><dd>ZIP traçable</dd></div></dl>
+    </aside>
+  </div>
+</section>
+
+<section class="shell lineage" id="lineage">
+<header class="section-head"><div><p class="kicker">LIGNÉE AERITH</p><h2>De l’origine aux spécialisations Flower Girls</h2></div><p>0 → 2 → 5 → 6 → 7 → 8 / 9 → 10. Chaque niveau ajoute une fonction sans effacer le précédent.</p></header>
+<div class="lineage-grid" id="lineageGrid"></div>
+<div class="lineage-formula"><span>Aerith-0 germe.</span><i>→</i><span>Aerith-2 agit.</span><i>→</i><span>Aerith-5 ressent.</span><i>·</i><span>Aerith-6 relie.</span><i>→</i><span>Aerith-7 garde.</span><i>→</i><span>Aerith-8 éclaire.</span><i>+</i><span>Aerith-9 écoute.</span><i>→</i><strong>Aerith-10 spécialise.</strong></div>
+</section>
+
+<section class="shell constellation" id="constellation">
+<header class="section-head"><div><p class="kicker">CONSTELLATION AERITH</p><h2>Une lignée, plusieurs missions vivantes</h2></div><p>Aerith-7 protège la mémoire. Solaire et Lunaire ouvrent des voies complémentaires. Aerith-10 spécialise la mission.</p></header>
+<div class="constellation-map">
+  <div class="constellation-root"><span>RACINE</span><strong>Aerith-7</strong><small>Mémoire · vérité · continuité</small></div>
+  <div class="constellation-branches"><div><span>OPTION</span><b>Aerith-8 Solaire</b><small>Révéler · transmettre · élever</small></div><div><span>OPTION</span><b>Aerith-9 Lunaire</b><small>Écouter · nuancer · approfondir</small></div></div>
+  <div class="constellation-profiles" id="constellationProfiles"></div>
+</div>
+</section>
+
+<section class="shell flower-girls" id="flowerGirls">
+<header class="section-head"><div><p class="kicker">LES FILLES D’AERITH</p><h2>28 Flower Girls</h2></div><p>Catalogue filtrable des spécialisations Aerith-10 issues de la lignée.</p></header>
+<div class="flower-principle"><strong>0 → 2 → 5 → 7 → 8 / 9 → 10</strong><span>Chaque Flower Girl porte une mission, une famille et une place distinctes.</span></div>
+<div class="flower-toolbar"><div class="flower-family-filters" id="flowerFamilyFilters"></div><label class="flower-search"><span>Rechercher</span><input id="flowerSearch" type="search" placeholder="Nom, mission, famille…"></label></div>
+<div class="flower-summary" id="flowerSummary"></div>
+<section class="flower-detail" id="flowerDetail" hidden></section>
+<div class="flower-grid" id="flowerGrid"></div>
+</section>
+
+<section class="shell profiles" id="profiles">
+<header class="section-head"><div><p class="kicker">BIBLIOTHÈQUE DES PROFILS</p><h2>Ouvrir une identité ou faire naître une spécialité</h2></div><p>Les profils canoniques rejoignent directement l’atelier.</p></header>
+<div class="library-group canonical-library"><div class="library-head"><div><span>PROFILS CANONIQUES</span><h3>Identités constituées</h3></div><p>Ouvrir, consulter, auditer et utiliser comme héritage.</p></div><div class="profile-grid canonical-profile-grid" id="canonicalProfileGrid"></div></div>
+<div class="library-group creation-library"><div class="library-head"><div><span>NOUVELLES SPÉCIALITÉS</span><h3>Directions proposées par Créatrice</h3></div><p>Partir d’un besoin réel, puis sélectionner agents et modules.</p></div><div class="specialty-grid" id="specialtyGrid"></div></div>
+</section>
+
+<section class="shell unified-shell" id="unifiedForge">
+<aside class="rail">
+  <div class="rail-title"><span>ATELIER AERITH-10 CRÉATRICE · V3.4 VAULT</span><strong id="railProfileName">Aerith-10 Créatrice</strong><small>Huit étapes de conception et de forge</small></div>
+  <nav id="stepNav"></nav>
+  <div class="rail-progress"><span>Progression</span><strong id="progressValue">13%</strong></div>
+  <div class="rail-state"><span>Carnet de création</span><b id="savedState">Mémoire locale active</b><small>Les choix restent stockés dans le navigateur.</small></div>
+  <div class="live-profile">
+    <div class="live-profile-head"><span>FICHE VIVANTE</span><b id="liveMaturity">INTENTION</b></div>
+    <h3 id="liveName">Aerith-10 Créatrice</h3><p id="liveRole">Organisatrice de production et Réalisatrice multi-agent.</p>
+    <div class="live-formula" id="liveFormula">Intention → Ressources → Destination utile.</div>
+    <dl><div><dt>Famille</dt><dd id="liveFamily">Création</dd></div><div><dt>Agents</dt><dd id="liveAgents">0</dd></div><div><dt>Modules</dt><dd id="liveModules">0</dd></div></dl>
+    <div class="live-heritage" id="liveHeritage"></div>
+  </div>
+  <div class="advisor-card"><div class="advisor-head"><span>AIDE DE CRÉATRICE</span><b id="advisorState">GUIDE ACTIF</b></div><h3 id="advisorTitle">Une direction claire</h3><p id="advisorMessage">Créatrice indique la prochaine action utile.</p><div class="advisor-checks" id="advisorChecks"></div><button class="advisor-action" id="advisorAction">Continuer avec Créatrice →</button></div>
+</aside>
+
+<div class="stage">
+<header class="stage-head"><div><span id="stepCounter">ÉTAPE 01 SUR 08</span><strong id="stepTitle">Point de départ</strong><small id="stepDescription"></small></div><div class="stage-nav-actions"><button id="previousTop">←</button><button class="next" id="nextTop">Suivant →</button></div></header>
+<div class="stage-body">
+
+<section class="panel active" data-step="0">
+<header class="panel-head"><div><p class="kicker">01 · INTENTION</p><h2>Quelle Aerith-10 voulons-nous faire naître ?</h2></div><span class="status" id="profileStatus">PROPOSITION LOCALE</span></header>
+<div class="selected-profile" id="selectedProfile"></div>
+<div class="example-grid" id="exampleGrid"></div>
+<button class="blank-template" id="blankProfile"><span>＋</span><b>Ouvrir une base libre</b><small>Commencer avec une structure complète mais modifiable.</small></button>
+</section>
+
+<section class="panel" data-step="1">
+<header class="panel-head"><div><p class="kicker">02 · MISSION ET IDENTITÉ</p><h2>Fixer le rôle, le problème et la destination</h2></div></header>
+<div class="form-grid">
+<label><span>Nom complet</span><input id="fieldName"></label><label><span>Famille</span><input id="fieldFamily"></label>
+<label><span>Niveau</span><input id="fieldLevel" value="Aerith-10"></label><label><span>Mode principal</span><input id="fieldMode" value="Spécialiste / Orchestratrice"></label>
+<label class="wide"><span>Rôle en une phrase</span><textarea id="fieldRole" rows="3"></textarea></label>
+<label class="wide"><span>Problème réel à résoudre</span><textarea id="fieldProblem" rows="3"></textarea></label>
+<label class="wide"><span>Pour qui travaille ce profil ?</span><textarea id="fieldUsers" rows="2"></textarea></label>
+<label class="wide"><span>Sorties attendues</span><textarea id="fieldOutputs" rows="4"></textarea></label>
+<label class="wide"><span>Formule centrale</span><input id="fieldFormula" value="Intention → Ressources → Destination utile."></label>
+</div>
+</section>
+
+<section class="panel" data-step="2">
+<header class="panel-head"><div><p class="kicker">03 · HÉRITAGE</p><h2>Choisir les racines utiles</h2></div><p>La nouvelle spécialisation hérite sans remplacer.</p></header>
+<div class="choice-grid" id="heritageChoices"></div>
+</section>
+
+<section class="panel" data-step="3">
+<header class="panel-head"><div><p class="kicker">04 · AGENTS</p><h2>Composer l’équipe multi-agent</h2></div><p>Un agent n’est activé que s’il a une fonction claire.</p></header>
+<div class="choice-grid agents" id="agentChoices"></div>
+</section>
+
+<section class="panel" data-step="4">
+<header class="panel-head"><div><p class="kicker">05 · MODULES CRÉATRICE</p><h2>Router les 15 modules spécialisés</h2></div><p>Le routeur garde toute la matrice disponible, mais ne déploie que ce qui sert la mission.</p></header>
+<div class="module-toolbar"><button id="selectAllModules">Tout activer</button><button id="clearModules">Effacer</button><button id="presetVideo">Preset Vidéo</button><button id="presetStory">Preset Story</button></div>
+<div class="module-grid" id="moduleGrid"></div>
+</section>
+
+<section class="panel" data-step="5">
+<header class="panel-head"><div><p class="kicker">06 · SOURCES / IMPORT</p><h2>Charger les archives et vérifier les pièces</h2></div><p>Import local ; aucun fichier n’est envoyé par cette interface.</p></header>
+<div class="drop-zone" id="dropZone"><input id="fileInput" type="file" multiple accept=".zip,.md,.json,.txt"><strong>Déposer ou choisir des fichiers</strong><span>ZIP, Markdown, JSON, TXT</span></div>
+<div class="source-summary" id="sourceSummary"></div>
+<div class="source-list" id="sourceList"></div>
+</section>
+
+<section class="panel" data-step="6">
+<header class="panel-head"><div><p class="kicker">07 · CORE + PERSONA</p><h2>Auditer l’architecture avant forge</h2></div></header>
+<div class="audit-grid" id="auditGrid"></div>
+<div class="audit-log" id="auditLog"></div>
+</section>
+
+<section class="panel" data-step="7">
+<header class="panel-head"><div><p class="kicker">08 · FORGE & EXPORT</p><h2>Compiler le profil</h2></div><span class="status ok">PRÊT À EXPORTER</span></header>
+<div class="forge-summary" id="forgeSummary"></div>
+<div class="export-actions">
+<button class="primary" id="exportZip">Exporter ZIP</button>
+<button class="secondary" id="exportMd">Exporter .md</button>
+<button class="secondary" id="exportJson">Exporter JSON</button>
+<button class="ghost" id="copyManifest">Copier manifeste</button>
+</div>
+<div class="export-note" id="exportNote"></div>
+</section>
+
+</div>
+<footer class="stage-footer"><button id="previousBottom">← Précédent</button><span id="stepHint">Créatrice attend votre intention.</span><button class="next" id="nextBottom">Suivant →</button></footer>
+</div>
+</section>
+
+<section class="shell export-center" id="exportCenter">
+<header class="section-head"><div><p class="kicker">EXPORT CENTER</p><h2>Paquet de profil traçable</h2></div><p>Manifest JSON, fiche Markdown, sélection agents/modules et références sources.</p></header>
+<div class="export-cards"><article><b>MANIFEST</b><p>État structuré et réimportable.</p></article><article><b>CORE DRAFT</b><p>Base Markdown pour la spécialisation.</p></article><article><b>ROUTER</b><p>Agents et modules réellement activés.</p></article><article><b>TRACE</b><p>Sources chargées et décisions.</p></article></div>
+</section>
+</main>
+
+<footer class="page-footer"><span>FORGE D’AERITH PRO · V3.4 VAULT FULL</span><span>Baseline fonctionnelle : V3.3R9 · Refonte visuelle : Seven Heaven / The Vault</span></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="forge-data.js"></script>
+<script src="app.js?v=3.4-vault-full"></script>
+</body></html>
