@@ -3163,3 +3163,35 @@ Bug-fix-only RC build based on observed production state.
 - No Atlas recalculation for an Aerith-only validation retry.
 - No version-control rewrite.
 - No Bridge / Control Center / Market Flow / CSS / index.html change.
+
+
+## Build 30.0.03 — Historical Source Qualification Fix
+
+Bug-fix-only RC build based on the observed:
+`Historiques directs · 4 directs · 1 non qualifié`
+
+### Root cause
+`atlasChartSourceMode()` recognized:
+- `binance-direct-klines`
+- `binance-derived-klines`
+
+but did not recognize the scanner equivalents:
+- `binance-scanner-direct-klines`
+- `binance-scanner-derived-klines`
+
+A valid Binance historical series produced by the scanner could therefore be counted as `unknown`, even though its data source was valid and network-fetched.
+
+### Fix
+- Both scanner Binance kline modes are now qualified as historical `direct` provenance.
+- No live-price qualification rule is changed.
+- No 5/5 Binance spot gate is loosened.
+- If a future unknown historical mode remains, the UI now names the affected symbol(s) instead of only displaying `1 non qualifié`.
+
+### Preserved
+- Atlas 4 reports.
+- Atlas consolidated conclusion.
+- Aerith-10 Crypto synthesis.
+- 5/5 Binance direct live quote gate.
+- NØX / Math Core / Watchlist / News / historical memory.
+- Version Control logic unchanged except the build number.
+- Bridge / Control Center / Market Flow / CSS / index.html unchanged.

@@ -1280,7 +1280,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.02",
+  build: "30.0.03",
   control_center: "V2.3.2R2",
   bridge: "V1.9.2",
   model: "gpt-oss:20b-32k",
@@ -1298,7 +1298,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.02",
+    build: ATLAS_BUILD === "30.0.03",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
@@ -1350,7 +1350,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.02 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.0.03 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -2976,6 +2976,9 @@ function atlasComparisonHistoryComposition(
   const delayedCount = count(row => row.freshness === "delayed");
   const archiveCount = count(row => row.freshness === "archive");
   const providers = [...new Set(rows.map(row => row.provider).filter(Boolean))];
+  const unknownSymbols = rows
+    .filter(row => row.mode !== "direct" && row.mode !== "cache")
+    .map(row => String(row.symbol || row.coinId || "?").toUpperCase());
   const timestamps = rows
     .map(row => row.timestamp)
     .filter(value => Number.isFinite(value) && value > 0);
@@ -2997,6 +3000,7 @@ function atlasComparisonHistoryComposition(
     delayedCount,
     archiveCount,
     providers,
+    unknownSymbols,
     oldestTimestamp,
     newestTimestamp,
     worstFreshness
@@ -3024,7 +3028,15 @@ function atlasComparisonHistoryLabel(composition, options = {}) {
   const parts = [];
   if (direct) parts.push(`${direct} direct${direct > 1 ? "s" : ""}`);
   if (cache) parts.push(`${cache} cache${cache > 1 ? "s" : ""}`);
-  if (unknown) parts.push(`${unknown} non qualifié${unknown > 1 ? "s" : ""}`);
+  if (unknown) {
+    const unknownSymbols = Array.isArray(composition?.unknownSymbols)
+      ? composition.unknownSymbols.filter(Boolean)
+      : [];
+    parts.push(
+      `${unknown} non qualifié${unknown > 1 ? "s" : ""}`
+      + (unknownSymbols.length ? ` (${unknownSymbols.join("/")})` : "")
+    );
+  }
 
   if (compact) {
     return `HISTORIQUES · ${parts.join(" · ").toUpperCase()} · ${freshness.toUpperCase()}`;
@@ -11963,7 +11975,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.02",
+  interface: "Build 30.0.03",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -33580,7 +33592,13 @@ function atlasChartSourceMode(result = null) {
     || "none"
   ).toLowerCase();
 
-  if (["coingecko-direct", "binance-direct-klines", "binance-derived-klines"].includes(mode)) return "direct";
+  if ([
+    "coingecko-direct",
+    "binance-direct-klines",
+    "binance-derived-klines",
+    "binance-scanner-direct-klines",
+    "binance-scanner-derived-klines"
+  ].includes(mode)) return "direct";
   if (mode.startsWith("bridge-")) {
     const cache = result?.bridgeHistory?.cache;
     return cache === true || cache?.hit === true || cache?.status === "hit" ? "cache" : "direct";
@@ -38636,7 +38654,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.02";
+const ATLAS_BUILD = "30.0.03";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
