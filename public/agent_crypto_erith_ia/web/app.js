@@ -1265,7 +1265,7 @@ function atlasInitLocalAccess() {
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
 /* ============================================================
-   30.0.00 — PUBLIC STABLE RELEASE CANDIDATE · CUMULATIVE FREEZE
+   30.0.01 — GATE TRUTH + AUTOSTART SYNC FIX
    Goal:
    - never present a stale Aerith conclusion as current
    - keep historical IndexedDB data intact
@@ -1280,7 +1280,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.00",
+  build: "30.0.01",
   control_center: "V2.3.2R2",
   bridge: "V1.9.2",
   model: "gpt-oss:20b-32k",
@@ -1298,7 +1298,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.00",
+    build: ATLAS_BUILD === "30.0.01",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
@@ -1350,7 +1350,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.00 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.0.01 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1664,6 +1664,37 @@ function atlasCurrentPromoteIfComplete(snapshot, reports, conclusion) {
   return state;
 }
 
+
+function atlasCurrentSyncFromLiveGate(reason = "live-gate") {
+  try {
+    const snapshot = atlasBuildCryptoPageSnapshot();
+    if (!snapshot?.fingerprint) return null;
+
+    const q = atlasCurrentQualification(snapshot);
+    const readiness = atlasLocalReportsReadiness(snapshot);
+    const previous = atlasCurrentStateRead();
+
+    let status = previous?.status || "WAITING_5_5_DIRECT";
+    if (atlasLocalReportsState.running) status = "ATLAS_RUNNING";
+    else if (atlasLocalConclusionState.running) status = "AERITH_RUNNING";
+    else if (q.qualified && readiness.ready) status = "PENDING_ANALYSIS";
+    else if (q.direct_count === 5 && q.derived_count === 0 && !q.stable_ready) status = "WAITING_STABLE_5_5";
+    else if (q.direct_count === 5 && q.derived_count === 0) status = "WAITING_PREREQUISITES";
+    else status = "WAITING_5_5_DIRECT";
+
+    return atlasCurrentStage(snapshot, status, reason, {
+      readiness_label: atlasLocalReportsReadinessLabel(readiness),
+      bridge_ready: readiness.bridgeReady,
+      market_ready: readiness.marketReady,
+      graph_ready: readiness.graphReady,
+      binance_ready: readiness.binanceReady,
+      stable_age_ms: readiness.stableAgeMs
+    });
+  } catch (_) {
+    return null;
+  }
+}
+
 function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
   if (!state) return;
   const host = document.getElementById("atlasLocalDialoguePanel") || document.querySelector("main");
@@ -1695,8 +1726,18 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
   } else if (status === "PENDING_ANALYSIS") {
     banner.innerHTML = `<b>Nouvelle analyse en cours</b> · prix ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · ancien résultat conservé uniquement comme historique · ${String(state.fingerprint || "").slice(0,18)}…`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
+  } else if (status === "WAITING_STABLE_5_5") {
+    const age = Math.min(
+      ATLAS_DIRECT_5_5_STABLE_MS / 1000,
+      Math.floor(Number(state.stable_age_ms || 0) / 1000)
+    );
+    banner.innerHTML = `<b>5/5 Binance directes détectées</b> · dérivées 0 · confirmation de stabilité ${age}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s avant Atlas.`;
+    banner.style.borderColor = "rgba(255,198,84,.55)";
+  } else if (status === "WAITING_PREREQUISITES") {
+    banner.innerHTML = `<b>5/5 Binance directes validées</b> · Atlas attend encore un prérequis · ${atlasLocalEscapeHtml(state.readiness_label || "vérification en cours")}`;
+    banner.style.borderColor = "rgba(255,198,84,.55)";
   } else {
-    banner.innerHTML = `<b>Analyse en attente</b> · prix disponibles ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · Atlas démarre automatiquement à 5/5 directes.`;
+    banner.innerHTML = `<b>Analyse en attente</b> · prix disponibles ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)}.`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
   }
 }
@@ -11906,7 +11947,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.00",
+  interface: "Build 30.0.01",
   controlCenter: "V2.3.2R2",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
@@ -17269,9 +17310,18 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
     const snapshot = atlasBuildCryptoPageSnapshot();
     const readiness = atlasLocalReportsReadiness(snapshot);
     if (!readiness.ready) {
+      atlasCurrentSyncFromLiveGate("scheduler-prerequisite-wait");
       atlasLocalReportsAutoRetry(nextReason, atlasLocalReportsReadinessLabel(readiness));
       return;
     }
+
+    atlasCurrentStage(snapshot, "PENDING_ANALYSIS", "all-prerequisites-ready", {
+      readiness_label: atlasLocalReportsReadinessLabel(readiness),
+      bridge_ready: readiness.bridgeReady,
+      market_ready: readiness.marketReady,
+      graph_ready: readiness.graphReady,
+      binance_ready: readiness.binanceReady
+    });
 
     const fingerprint = atlasLocalReportSnapshotFingerprint(snapshot);
     if (!fingerprint) {
@@ -33831,13 +33881,15 @@ function atlasRenderExchangeFeedStatus() {
         `Binance 5/5 directes stables depuis ${Math.floor(stableForMs / 1000)}s · Atlas-10 va démarrer automatiquement.`,
         "ready"
       );
-      atlasLocalReportsScheduleAutomatic("binance-ready", { delayMs: 600 });
+      atlasCurrentSyncFromLiveGate("binance-stable-ready");
+      atlasLocalReportsScheduleAutomatic("binance-ready", { delayMs: 250 });
     } else if (!stableNow && !atlasLocalReportsState.running) {
       feed.atlasReportsReady = false;
       atlasLocalReportsSetSuiteStatus(
         `Atlas armé · Binance 5/5 directes détectées · stabilité ${Math.min(ATLAS_DIRECT_5_5_STABLE_MS / 1000, Math.floor(stableForMs / 1000))}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`,
         "wait"
       );
+      atlasCurrentSyncFromLiveGate("binance-stability-wait");
     }
   } else {
     atlasExchangeStableGateCancelTimer();
@@ -33852,6 +33904,7 @@ function atlasRenderExchangeFeedStatus() {
         `Atlas en attente · Binance ${counts.directCount}/5 directes · ${counts.derivedCount} dérivées · le compteur de stabilité 5/5 est remis à zéro.`,
         "wait"
       );
+      atlasCurrentSyncFromLiveGate("binance-gate-reset");
     }
   }
 
@@ -38522,7 +38575,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.00";
+const ATLAS_BUILD = "30.0.01";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

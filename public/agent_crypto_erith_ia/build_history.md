@@ -3133,3 +3133,20 @@ The page now exposes:
 - RC metadata inside Atlas/Aerith whole-page contracts.
 
 30.0.00 should now be treated as the stabilization candidate. Future 30.0.x builds should be bug-fix-only unless a new product branch is explicitly opened.
+
+
+## Build 30.0.01 — Gate Truth + Autostart Sync Fix
+
+Bug-fix-only RC build.
+
+- Fixes misleading top banner that said “Atlas starts automatically at 5/5” while the 10-second stability gate or another prerequisite could still be pending.
+- Top banner now distinguishes:
+  - waiting for 5/5 direct;
+  - 5/5 detected, stability countdown;
+  - 5/5 stable but Bridge/Market/Graph prerequisite still pending;
+  - all prerequisites ready / analysis pending.
+- Stable-gate transition now synchronizes the current-state banner before scheduling Atlas.
+- Scheduler synchronizes the banner with the exact blocking prerequisite.
+- Autostart wake delay after confirmed stable 5/5 reduced from 600 ms to 250 ms.
+- Does NOT loosen the exact 5/5 direct + 0 derived + stable gate.
+- No Bridge / Control Center / Market Flow / CSS / index.html changes.
