@@ -2767,3 +2767,8 @@ Les sections suivantes sont conservées sans perte de données. Chaque objet JSO
 ---
 
 Extraction : 64 sections historiques déplacées depuis `version.json` 28.3.17.
+
+
+## 29.3.07 — Aerith Whole-Page Pedagogy Layer
+
+Couche de vulgarisation complète au-dessus d'Atlas/NØX : lecture Simple, Détaillée et Expert, dictionnaire contextuel, contrôle de cohérence snapshot/fingerprint et contrat pédagogique transmis à Aerith. Aucun changement du Bridge V1.9.1.

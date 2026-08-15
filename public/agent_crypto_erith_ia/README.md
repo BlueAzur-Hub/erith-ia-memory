@@ -1,14 +1,14 @@
-# Build 29.3.06R1 — Stable Stack Metadata Correction
+# Build 29.3.07 — Stable Stack Metadata Correction
 
 Correction ciblée sans changement fonctionnel :
-- `ATLAS_STABLE_STACK.interface` corrigé vers `Build 29.3.06`.
+- `ATLAS_STABLE_STACK.interface` corrigé vers `Build 29.3.07`.
 - `ATLAS_STABLE_STACK.controlCenter` corrigé vers `V2.3.1R1`.
 - Bridge `V1.9.1` et modèle `gpt-oss:20b-32k` inchangés.
 - Contrôleur déterministe 29.3.06 inchangé.
 
 ---
 
-# Build 29.3.06 — Version Control Deterministic Human-Readable Lock
+# Build 29.3.07 — Version Control Deterministic Human-Readable Lock
 
 Cette Build part exactement de la 29.3.05 et remplace uniquement le cœur du contrôleur de version dans `web/app.js`, plus l’identité distante dans `web/version.json`.
 
@@ -44,8 +44,8 @@ Le contrôleur n’essaie plus de gérer huit états ni de faire passer un déla
 
 1. Publier les quatre fichiers du ZIP.
 2. Ouvrir l’interface et attendre la propagation GitHub Pages.
-3. Le badge doit afficher `Market Core V2.0-Alpha · Build 29.3.06`.
-4. Un clic sur le badge doit soit confirmer la version courante, soit afficher temporairement `Synchronisation GitHub · Build 29.3.06` pendant la propagation.
+3. Le badge doit afficher `Market Core V2.0-Alpha · Build 29.3.07`.
+4. Un clic sur le badge doit soit confirmer la version courante, soit afficher temporairement `Synchronisation GitHub · Build 29.3.07` pendant la propagation.
 5. L’ancien message `Publication Build ... incomplète · Revérifier` ne fait plus partie du contrôleur 29.3.06.
 
 ---
@@ -1176,3 +1176,14 @@ Si une future Build ne modifie ni HTML, ni CSS, ni configuration runtime :
 - le versionnage peut évoluer uniquement avec `app.js` + `version.json`.
 
 `build_history.md` et `README.md` restent documentaires et peuvent être mis à jour sans être lus par le runtime.
+
+
+## Build 29.3.07 — Aerith Whole-Page Pedagogy Layer
+
+- Ajoute « Comprendre la page » avec trois niveaux : Simple, Détaillé, Expert + dictionnaire.
+- Ajoute un dictionnaire contextuel crypto, banque, trading, statistiques et technique.
+- Ajoute le contrat `aerith_crypto_whole_page_pedagogy_v1` au snapshot transmis au Bridge.
+- Aerith doit relire le snapshot entier, signaler les incohérences temporelles et expliquer chaque indicateur sans inventer de donnée.
+- La chaîne Atlas → NØX → Aerith reste automatique.
+- La validation humaine est réservée aux décisions/actions financières réelles.
+- Aucun changement Bridge, exchange, wallet ou exécution financière.

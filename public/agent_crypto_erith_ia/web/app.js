@@ -11418,7 +11418,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.06",
+  interface: "Build 29.3.07",
   controlCenter: "V2.3.1R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
@@ -11459,6 +11459,211 @@ function atlasStrictMarketBreadth() {
     classification,
     rule: "positive si équilibre >= +0,15 ; négative si <= -0,15 ; sinon mixte ; minimum 20 actifs"
   };
+}
+
+
+/* ============================================================
+   29.3.07 — AERITH WHOLE-PAGE PEDAGOGY LAYER
+   Objectif : ne jamais obliger l'opérateur à connaître le jargon
+   crypto / banque / trading pour comprendre la page.
+   Atlas garde les données techniques ; NØX garde le contradictoire ;
+   Aerith ajoute la traduction humaine sans inventer de donnée.
+   ============================================================ */
+const ATLAS_PEDAGOGY_GLOSSARY = Object.freeze({
+  "blockchain": "Registre numérique partagé entre plusieurs ordinateurs. Les nouvelles données sont regroupées et liées de façon cryptographique.",
+  "bitcoin": "Premier grand actif crypto décentralisé. Dans l'interface, BTC sert souvent de repère général du marché.",
+  "ethereum": "Réseau blockchain programmable et actif crypto associé, ETH. Il sert notamment à exécuter des contrats intelligents.",
+  "paire": "Deux actifs comparés sur une place de marché. BTC/EUR signifie par exemple : prix d'un bitcoin exprimé en euros.",
+  "volume": "Quantité ou valeur échangée pendant une période. Un prix peut bouger fortement même avec peu de volume si le marché manque de profondeur.",
+  "liquidité": "Facilité avec laquelle on peut acheter ou vendre sans provoquer un grand déplacement du prix.",
+  "capitalisation": "Valeur théorique totale d'un actif : prix courant multiplié par le nombre d'unités en circulation.",
+  "market cap": "Terme anglais pour capitalisation de marché.",
+  "spread": "Écart entre le meilleur prix proposé à l'achat et le meilleur prix proposé à la vente.",
+  "volatilité": "Amplitude des variations de prix. Plus elle est élevée, plus le prix a beaucoup bougé pendant la période mesurée.",
+  "volatilité annualisée": "Projection statistique d'une volatilité observée vers une échelle annuelle. Ce n'est pas une prévision du prix dans un an.",
+  "ewma": "Moyenne mobile qui donne davantage de poids aux observations récentes. Elle sert ici à suivre l'évolution récente du risque.",
+  "lambda": "Paramètre de l'EWMA qui règle la vitesse à laquelle les anciennes observations perdent du poids.",
+  "downside deviation": "Mesure qui se concentre sur les variations défavorables plutôt que sur tous les mouvements.",
+  "drawdown": "Baisse entre un point haut et le point bas qui suit sur la période étudiée.",
+  "var": "Value at Risk : estimation statistique d'un seuil de perte défavorable à partir des observations utilisées. Ce n'est pas une perte maximale garantie.",
+  "value at risk": "Nom développé de VaR : estimation statistique d'un seuil de perte défavorable.",
+  "expected shortfall": "Moyenne des pertes observées au-delà du seuil VaR dans l'échantillon étudié. Elle regarde donc la queue défavorable.",
+  "corrélation": "Mesure de la tendance de deux séries à évoluer ensemble. Corrélation ne signifie pas causalité.",
+  "bêta": "Mesure de sensibilité d'un actif aux mouvements d'un actif ou marché de référence dans le modèle utilisé.",
+  "iqr": "Écart interquartile : largeur de la moitié centrale des observations. Il aide à décrire leur dispersion sans trop dépendre des extrêmes.",
+  "bootstrap": "Méthode statistique qui rééchantillonne les observations pour estimer l'incertitude d'une mesure.",
+  "stablecoin": "Crypto conçue pour rester proche d'une valeur de référence, souvent une monnaie comme le dollar. La stabilité n'est jamais une garantie absolue.",
+  "dérivé": "Produit financier dont la valeur dépend d'un autre actif, par exemple certains futures ou options.",
+  "futures": "Contrats dérivés portant sur un prix futur. Ils ne sont pas la même chose que détenir directement la crypto.",
+  "option": "Contrat donnant un droit, et non toujours une obligation, d'acheter ou vendre selon des conditions définies.",
+  "etf": "Fonds coté en bourse qui suit un panier ou un actif selon sa méthode propre. Acheter un ETF crypto n'est pas détenir directement la crypto sous-jacente.",
+  "on-chain": "Données directement observables sur une blockchain : transactions, adresses, flux ou activité du réseau selon les métriques utilisées.",
+  "off-chain": "Information ou activité située hors de la blockchain elle-même, par exemple certaines opérations d'une plateforme centralisée.",
+  "exchange": "Plateforme d'échange. Binance ou Kraken sont des exemples de plateformes centralisées.",
+  "wallet": "Portefeuille logiciel ou matériel permettant de gérer des clés donnant accès à des actifs blockchain.",
+  "seed phrase": "Suite de mots permettant généralement de restaurer un portefeuille. Elle doit rester secrète et ne doit jamais être saisie dans cette interface.",
+  "websocket": "Connexion réseau persistante permettant de recevoir des mises à jour sans refaire une requête complète à chaque fois.",
+  "snapshot": "Photographie logique des données disponibles à un instant donné. Une conclusion doit être rattachée au même snapshot que les rapports qu'elle résume.",
+  "fingerprint": "Empreinte calculée à partir des données pour reconnaître précisément un état ou snapshot.",
+  "sha-256": "Fonction de hachage produisant une empreinte numérique. Elle sert ici à contrôler l'identité ou l'intégrité de données/fichiers.",
+  "fomo": "Fear Of Missing Out : peur de rater une hausse ou une occasion, pouvant pousser à agir trop vite.",
+  "no-fomo": "Règle NØX : ralentir l'interprétation quand l'urgence émotionnelle dépasse le niveau de preuve disponible.",
+  "causalité": "Lien où un facteur produit réellement un effet. Une simple évolution simultanée ne suffit pas à la démontrer.",
+  "preuve": "Niveau d'éléments vérifiables disponibles pour soutenir une affirmation dans le système.",
+  "impact": "Importance potentielle attribuée à un événement. Un impact élevé ne prouve pas que cet événement a causé un mouvement de prix.",
+  "source primaire": "Source la plus proche de l'événement ou de la donnée d'origine, avant reprises et commentaires secondaires.",
+  "bid": "Meilleur prix qu'un acheteur est prêt à payer dans un carnet d'ordres.",
+  "ask": "Meilleur prix auquel un vendeur accepte de vendre dans un carnet d'ordres.",
+  "order book": "Carnet d'ordres : liste structurée des intentions d'achat et de vente disponibles sur une plateforme.",
+  "market breadth": "Largeur du marché : mesure de combien d'actifs participent réellement à une hausse ou une baisse générale.",
+  "dominance": "Part de la capitalisation totale du marché attribuée à un actif, souvent Bitcoin lorsqu'on parle de BTC dominance.",
+  "apy": "Rendement annualisé théorique tenant compte de la capitalisation selon le produit. Il ne constitue pas une garantie de rendement.",
+  "apr": "Taux annualisé généralement présenté sans le même mécanisme de capitalisation qu'un APY. Les conventions varient selon les produits.",
+  "staking": "Immobilisation ou délégation d'actifs dans certains réseaux afin de participer à leur fonctionnement et éventuellement recevoir des récompenses.",
+  "gas": "Frais payés pour exécuter certaines opérations sur une blockchain, notamment sur Ethereum et réseaux similaires.",
+  "layer 1": "Blockchain de base qui assure directement son propre consensus et son règlement.",
+  "layer 2": "Système construit au-dessus d'une blockchain de base pour traiter certaines opérations plus efficacement avant règlement final.",
+  "defi": "Finance décentralisée : services financiers exécutés principalement par des protocoles et contrats intelligents sur blockchain.",
+  "rwa": "Real World Assets : représentation ou utilisation d'actifs du monde réel dans des systèmes blockchain.",
+  "slippage": "Écart entre le prix attendu d'une opération et son prix d'exécution réel, souvent lié à la liquidité et à la taille de l'ordre."
+});
+
+function atlasPedagogyPageInventory() {
+  const headings = [...document.querySelectorAll("h1,h2,h3,h4")]
+    .map(node => String(node.textContent || "").replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .slice(0, 120);
+  const statuses = [...document.querySelectorAll(".pill, .badge, [data-status], .status")]
+    .map(node => String(node.textContent || "").replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .slice(0, 80);
+  return { headings, visible_statuses: statuses };
+}
+
+function atlasPedagogyBuildContract(snapshot) {
+  return {
+    schema: "aerith_crypto_whole_page_pedagogy_v1",
+    language: "fr",
+    audience: "utilisateur non spécialiste de la crypto, de la banque et du trading",
+    page_scope: "whole_page",
+    reading_levels: ["simple", "detailed", "expert"],
+    roles: {
+      atlas: "conserver l'analyse factuelle, les chiffres, les sources, les preuves, les contradictions et les incertitudes",
+      nox: "chercher les exagérations, causalités non démontrées, données insuffisantes et pression FOMO",
+      aerith: "relire l'ensemble du snapshot courant et traduire les résultats en français compréhensible sans supprimer la couche experte"
+    },
+    mandatory_rules: [
+      "Expliquer tout jargon crypto, banque, trading, statistique et technique lorsqu'il est utilisé.",
+      "Pour chaque indicateur : définition simple, valeur actuelle si disponible, signification ici, limite de l'indicateur.",
+      "Séparer fait observé, hypothèse, interprétation, risque, information manquante et conclusion impossible.",
+      "Ne jamais transformer corrélation en causalité.",
+      "Ne jamais transformer une news importante en signal d'achat ou de vente.",
+      "Détecter les dates/snapshots incompatibles avant synthèse et signaler toute conclusion ancienne.",
+      "Ne jamais inventer une valeur absente : écrire INFORMATION MANQUANTE.",
+      "La chaîne analytique Atlas → NØX → Aerith est automatique ; validation humaine uniquement avant décision ou action financière réelle."
+    ],
+    glossary: ATLAS_PEDAGOGY_GLOSSARY,
+    page_inventory: atlasPedagogyPageInventory(),
+    snapshot_generated_at: snapshot?.generated_at || null
+  };
+}
+
+function atlasPedagogyEscape(value) {
+  return String(value ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function atlasPedagogyCurrentSummary() {
+  const snapshot = atlasLocalReportsState?.lastCompletedSnapshot || atlasLocalDialogueState?.lastSnapshot || atlasBuildCryptoPageSnapshot();
+  const raw = snapshot?.raw_context || {};
+  const feed = raw?.binance_top5 || {};
+  const assets = Array.isArray(feed.assets) ? feed.assets : [];
+  const direct = assets.filter(a => String(a?.quote_status || "").toLowerCase().includes("direct") || String(a?.quote_source || "").toLowerCase().includes("binance")).length;
+  const source = raw?.source_status || {};
+  const currentFp = String(snapshot?.fingerprint || atlasAnalyticalTruthState?.currentFingerprint || "—");
+  const conclusion = atlasLocalDialogueState?.conclusionResponse || null;
+  const sameFingerprint = !!conclusion?.fingerprint && conclusion.fingerprint === currentFp;
+  return { snapshot, assets, direct, source, currentFp, conclusion, sameFingerprint };
+}
+
+function atlasPedagogyRender(mode = "simple") {
+  const host = document.getElementById("atlasPedagogyBody");
+  if (!host) return;
+  const ctx = atlasPedagogyCurrentSummary();
+  const generated = ctx.snapshot?.generated_at ? new Date(ctx.snapshot.generated_at).toLocaleString("fr-FR") : "INFORMATION MANQUANTE";
+  const sourceLabel = ctx.source?.main_source || "INFORMATION MANQUANTE";
+  const assetText = ctx.assets.length
+    ? ctx.assets.map(a => `${String(a.symbol || a.name || "?").toUpperCase()} ${Number.isFinite(Number(a.price_eur)) ? Number(a.price_eur).toLocaleString("fr-FR", {maximumFractionDigits: 4}) + " €" : "prix manquant"}`).join(" · ")
+    : "INFORMATION MANQUANTE";
+  const conclusionState = !ctx.conclusion?.answer
+    ? "Aucune conclusion Aerith courante disponible."
+    : ctx.sameFingerprint
+      ? "La conclusion Aerith correspond au snapshot courant."
+      : "Attention : la conclusion Aerith conservée ne correspond pas au fingerprint courant ; elle ne doit pas être présentée comme conclusion actuelle.";
+
+  if (mode === "simple") {
+    host.innerHTML = `
+      <section><h4>Ce que regarde la page</h4><p>Agent-Crypto rassemble des prix, des variations, des graphiques, des statistiques et des actualités. Atlas décrit les faits ; NØX cherche ce qui pourrait être exagéré ; Aerith traduit l'ensemble en langage courant.</p></section>
+      <section><h4>État actuel des données</h4><p><b>Snapshot :</b> ${atlasPedagogyEscape(generated)}.<br><b>Source principale :</b> ${atlasPedagogyEscape(sourceLabel)}.<br><b>Top 5 observé :</b> ${atlasPedagogyEscape(assetText)}.</p></section>
+      <section><h4>Comment lire les chiffres</h4><p>Un chiffre décrit une observation ou un calcul, pas une promesse. Une hausse de prix ne prouve pas qu'elle va continuer. Une actualité importante ne prouve pas qu'elle cause le mouvement du marché.</p></section>
+      <section><h4>Cohérence Aerith</h4><p>${atlasPedagogyEscape(conclusionState)}</p></section>
+      <section><h4>Règle No-FOMO</h4><p>Ne pas confondre urgence ressentie et niveau de preuve. L'analyse peut être automatique ; toute décision financière réelle reste humaine.</p></section>`;
+    return;
+  }
+
+  if (mode === "detailed") {
+    const terms = ["volume","liquidité","capitalisation","volatilité","ewma","drawdown","var","expected shortfall","corrélation","bêta","bootstrap","market breadth","fomo","snapshot"];
+    host.innerHTML = `
+      <section><h4>Lecture détaillée du snapshot</h4><p><b>Date :</b> ${atlasPedagogyEscape(generated)} · <b>Source :</b> ${atlasPedagogyEscape(sourceLabel)} · <b>Actifs Top 5 disponibles :</b> ${ctx.assets.length}/5.</p><p>${atlasPedagogyEscape(assetText)}</p></section>
+      <section><h4>Ce qu'Aerith doit vérifier avant de conclure</h4><ol><li>Les données appartiennent-elles au même snapshot ?</li><li>Les 4 rapports Atlas sont-ils complets ?</li><li>NØX a-t-il identifié une causalité non démontrée ou une pression FOMO ?</li><li>Les News sont-elles confirmées et datées ?</li><li>Le Math Core dispose-t-il d'assez d'historique ?</li></ol><p><b>État conclusion :</b> ${atlasPedagogyEscape(conclusionState)}</p></section>
+      <section><h4>Mini-dictionnaire de cette lecture</h4>${terms.map(term => `<p><b>${atlasPedagogyEscape(term)}</b> — ${atlasPedagogyEscape(ATLAS_PEDAGOGY_GLOSSARY[term])}</p>`).join("")}</section>`;
+    return;
+  }
+
+  const glossary = Object.entries(ATLAS_PEDAGOGY_GLOSSARY)
+    .sort((a,b) => a[0].localeCompare(b[0], "fr"))
+    .map(([term, def]) => `<details><summary>${atlasPedagogyEscape(term)}</summary><p>${atlasPedagogyEscape(def)}</p></details>`).join("");
+  host.innerHTML = `
+    <section><h4>État technique</h4><p><b>Fingerprint :</b> ${atlasPedagogyEscape(ctx.currentFp)}<br><b>Snapshot :</b> ${atlasPedagogyEscape(generated)}<br><b>Source :</b> ${atlasPedagogyEscape(sourceLabel)}<br><b>Conclusion liée au fingerprint :</b> ${ctx.sameFingerprint ? "oui" : "non"}</p></section>
+    <section><h4>Dictionnaire crypto · banque · trading · statistiques</h4><div class="atlas-pedagogy-glossary">${glossary}</div></section>`;
+}
+
+function atlasPedagogyInit() {
+  if (document.getElementById("atlasPedagogyPanel")) return;
+  const style = document.createElement("style");
+  style.textContent = `
+    #atlasPedagogyLauncher{position:fixed;right:18px;bottom:18px;z-index:9997;border:1px solid rgba(80,220,255,.5);border-radius:999px;padding:10px 15px;background:#07141f;color:#dff9ff;box-shadow:0 8px 30px rgba(0,0,0,.35);cursor:pointer;font-weight:700}
+    #atlasPedagogyPanel{position:fixed;inset:5vh 3vw 5vh auto;width:min(680px,94vw);z-index:9998;background:#07121d;color:#e8f6ff;border:1px solid rgba(91,217,255,.45);border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.6);display:none;overflow:hidden}
+    #atlasPedagogyPanel.is-open{display:flex;flex-direction:column}
+    .atlas-pedagogy-head{display:flex;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .atlas-pedagogy-head strong{flex:1}.atlas-pedagogy-head button,.atlas-pedagogy-tabs button{border:1px solid rgba(255,255,255,.15);background:#0c2233;color:#dff9ff;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .atlas-pedagogy-tabs{display:flex;gap:8px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .atlas-pedagogy-tabs button.is-active{background:#16445d;border-color:#5bd9ff}
+    #atlasPedagogyBody{padding:8px 20px 24px;overflow:auto;line-height:1.55}
+    #atlasPedagogyBody section{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+    #atlasPedagogyBody h4{margin:4px 0 8px;color:#8eeaff}#atlasPedagogyBody p{margin:6px 0}
+    .atlas-pedagogy-glossary details{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .atlas-pedagogy-glossary summary{cursor:pointer;font-weight:700;color:#b9efff}
+  `;
+  document.head.appendChild(style);
+  const launcher = document.createElement("button");
+  launcher.id = "atlasPedagogyLauncher";
+  launcher.type = "button";
+  launcher.textContent = "Comprendre la page";
+  const panel = document.createElement("aside");
+  panel.id = "atlasPedagogyPanel";
+  panel.setAttribute("aria-label", "Guide Aerith pour comprendre la page");
+  panel.innerHTML = `<div class="atlas-pedagogy-head"><strong>Aerith · Comprendre toute la page</strong><button type="button" data-pedagogy-close>Fermer</button></div><div class="atlas-pedagogy-tabs"><button type="button" data-pedagogy-mode="simple" class="is-active">Simple</button><button type="button" data-pedagogy-mode="detailed">Détaillé</button><button type="button" data-pedagogy-mode="expert">Expert + dictionnaire</button></div><div id="atlasPedagogyBody"></div>`;
+  document.body.append(launcher, panel);
+  let mode = "simple";
+  const open = () => { panel.classList.add("is-open"); atlasPedagogyRender(mode); };
+  launcher.addEventListener("click", open);
+  panel.querySelector("[data-pedagogy-close]")?.addEventListener("click", () => panel.classList.remove("is-open"));
+  panel.querySelectorAll("[data-pedagogy-mode]").forEach(btn => btn.addEventListener("click", () => {
+    mode = btn.dataset.pedagogyMode || "simple";
+    panel.querySelectorAll("[data-pedagogy-mode]").forEach(b => b.classList.toggle("is-active", b === btn));
+    atlasPedagogyRender(mode);
+  }));
+  window.addEventListener("atlas:v2mode", () => { if (panel.classList.contains("is-open")) atlasPedagogyRender(mode); });
 }
 
 function atlasBuildCryptoPageSnapshotCore() {
@@ -11513,7 +11718,10 @@ function atlasBuildCryptoPageSnapshotCore() {
       wallet_actions: false,
       github_writes: false,
       automatic_orders: false,
-      human_validation_required: true
+      human_validation_required: true,
+      analysis_human_validation_required: false,
+      financial_action_human_validation_required: true,
+      human_validation_scope: "Décision ou action financière réelle uniquement ; Atlas → NØX → Aerith reste automatique."
     },
     strict_contract: strictContract,
     raw_context: {
@@ -11532,6 +11740,7 @@ function atlasBuildCryptoPageSnapshotCore() {
     }
   };
 
+  snapshot.pedagogy = atlasPedagogyBuildContract(snapshot);
   atlasLocalDialogueState.lastSnapshot = snapshot;
   return snapshot;
 }
@@ -16296,7 +16505,9 @@ async function atlasLocalConclusionRun(options = {}) {
       snapshot,
       report_fingerprint: fingerprint,
       report_modes: ATLAS_LOCAL_REPORT_MODES.slice(),
-      nox_audit: snapshot?.strict_contract?.nox_no_fomo_v1 || null
+      nox_audit: snapshot?.strict_contract?.nox_no_fomo_v1 || null,
+      pedagogy_contract: snapshot?.pedagogy || null,
+      requested_reading: "whole_page_simple_detailed_expert"
     });
     if (!atlasLocalConclusionMeaningful(result)) throw new Error("Conclusion locale vide ou incomplète");
     const answer = String(result.answer || "").trim();
@@ -16317,7 +16528,7 @@ async function atlasLocalConclusionRun(options = {}) {
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
-    atlasLocalDialogueSetConnection(true, "Conclusion Aerith-10 Crypto terminée. Validation humaine requise.");
+    atlasLocalDialogueSetConnection(true, "Conclusion Aerith-10 Crypto terminée automatiquement. Validation humaine requise uniquement avant toute décision financière réelle.");
     return true;
   } catch (error) {
     if (previousConclusion?.answer) {
@@ -36934,7 +37145,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "29.3.06";
+const ATLAS_BUILD = "29.3.07";
 
 // Derived identity: these values can no longer drift independently.
 const ATLAS_RELEASE = `Market Core V2.0-Alpha · Build ${ATLAS_BUILD}`;
@@ -38431,6 +38642,8 @@ atlasParallelMarketInit();
 atlasAnalyticalTruthInit();
 
 atlasVersionAwarenessInit();
+
+window.setTimeout(atlasPedagogyInit, 0);
 
 (() => {
   const FRAME_TOP_GAP = 6;
