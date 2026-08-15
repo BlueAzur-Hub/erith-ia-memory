@@ -11418,7 +11418,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 29.3.03",
+  interface: "Build 29.3.04",
   controlCenter: "V2.3.0R1",
   bridge: "V1.9.1",
   bridgeNumeric: "1.9.1",
@@ -15206,7 +15206,11 @@ function atlasLocalBridgeAdministratorActive() {
 }
 
 function atlasLocalBridgeAutoEligible() {
-  return atlasLocalBridgeAdministratorActive()
+  // 29.3.04: the local Bridge belongs to the authorized operator session,
+  // not to the currently displayed Basic/Intermediate/Advanced view.
+  // This lets the readiness chain arm itself as soon as the page is loaded
+  // and the operator is authorized, while remaining fully local/read-only.
+  return atlasAccessIsAuthorized()
     && !document.hidden
     && navigator.onLine !== false
     && !atlasLocalDialogueState.busy;
@@ -15811,11 +15815,11 @@ function atlasLocalReportsReadiness(snapshot) {
 }
 
 function atlasLocalReportsReadinessLabel(readiness) {
-  if (!readiness.bridgeReady) return "Bridge local en attente.";
-  if (!readiness.marketReady) return "Snapshot CoinGecko complet en attente.";
-  if (!readiness.binanceReady) return `Prix Binance en attente · ${readiness.directPairs}/5.`;
-  if (!readiness.graphReady) return "Graphique exploitable en attente.";
-  return "Sources prêtes.";
+  if (!readiness.bridgeReady) return "Atlas en attente · Bridge local non prêt.";
+  if (!readiness.marketReady) return "Atlas en attente · snapshot CoinGecko complet requis.";
+  if (!readiness.binanceReady) return `Atlas en attente · Binance ${readiness.directPairs}/5 directes · démarrage automatique à 5/5.`;
+  if (!readiness.graphReady) return "Atlas en attente · graphique exploitable requis.";
+  return "5/5 directes · sources prêtes · démarrage Atlas autorisé.";
 }
 
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
@@ -16035,44 +16039,59 @@ function atlasLocalReportsAutoReasonAllowed(reason) {
   ]).has(String(reason || ""));
 }
 
-function atlasLocalReportsAutoRetry(reason, message = "") {
-  const now = Date.now();
+function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
   atlasLocalReportsState.autoRetryCount += 1;
   if (message) atlasLocalReportsSetSuiteStatus(message, "wait");
-  if (
-    atlasLocalReportsState.autoRetryCount <= 12
-    && atlasLocalReportsState.pendingSince
-    && (now - atlasLocalReportsState.pendingSince) < 90000
-  ) {
-    atlasLocalReportsScheduleAutomatic(reason || atlasLocalReportsState.pendingReason || "snapshot");
-    return true;
-  }
-  return false;
+
+  // 29.3.04 — persistent readiness wait.
+  // Atlas must NOT fall out of the automatic chain after an arbitrary 90 s.
+  // It stays armed until the canonical prerequisites become true, notably
+  // Binance 5/5 DIRECT quotes. Event transitions can wake it immediately.
+  const retryDelay = Number.isFinite(Number(options.delayMs))
+    ? Math.max(500, Number(options.delayMs))
+    : Math.min(15000, 3000 + atlasLocalReportsState.autoRetryCount * 1000);
+  atlasLocalReportsScheduleAutomatic(
+    reason || atlasLocalReportsState.pendingReason || "snapshot",
+    { delayMs: retryDelay }
+  );
+  return true;
 }
 
-function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
+function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
   const nextReason = String(reason || "snapshot");
   if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
 
   const now = Date.now();
-  if (!atlasLocalReportsState.pendingSince || atlasLocalReportsState.pendingReason !== nextReason) {
+  if (!atlasLocalReportsState.pendingSince) {
     atlasLocalReportsState.pendingSince = now;
     atlasLocalReportsState.autoRetryCount = 0;
   }
   atlasLocalReportsState.pendingReason = nextReason;
   if (atlasLocalReportsState.autoTimer) window.clearTimeout(atlasLocalReportsState.autoTimer);
 
-  const delay = atlasLocalReportsState.autoRetryCount ? 5000 : 3000;
+  const explicitDelay = Number(options.delayMs);
+  const eventDelay = nextReason === "binance-ready" ? 200
+    : nextReason === "bridge-ready" ? 500
+    : atlasLocalReportsState.autoRetryCount ? 5000 : 3000;
+  const delay = Number.isFinite(explicitDelay) ? Math.max(0, explicitDelay) : eventDelay;
+
   atlasLocalReportsState.autoTimer = window.setTimeout(async () => {
     atlasLocalReportsState.autoTimer = 0;
-    if (!atlasLocalBridgeAdministratorActive()) return;
+
+    // The analysis is authorized by the operator session, not by which UI view
+    // is currently open. This preserves automatic production after page load.
+    if (!atlasAccessIsAuthorized()) return;
+    if (document.hidden) {
+      atlasLocalReportsAutoRetry(nextReason, "Atlas armé · onglet en arrière-plan, reprise au retour.", { delayMs: 5000 });
+      return;
+    }
 
     if (!atlasLocalDialogueState.connected) {
-      atlasLocalReportsAutoRetry(nextReason, "Bridge local en attente.");
+      atlasLocalReportsAutoRetry(nextReason, "Atlas armé · Bridge local en attente.");
       return;
     }
     if (atlasLocalDialogueState.busy || atlasLocalReportsState.running || atlasLocalConclusionState.running) {
-      atlasLocalReportsAutoRetry(nextReason, "Atlas/Aerith termine l’opération locale en cours.");
+      atlasLocalReportsAutoRetry(nextReason, "Atlas/Aerith termine l’opération locale en cours.", { delayMs: 2500 });
       return;
     }
 
@@ -16084,7 +16103,10 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
     }
 
     const fingerprint = atlasLocalReportSnapshotFingerprint(snapshot);
-    if (!fingerprint) return;
+    if (!fingerprint) {
+      atlasLocalReportsAutoRetry(nextReason, "Atlas armé · empreinte analytique en attente.", { delayMs: 3000 });
+      return;
+    }
 
     const completedCurrentFingerprint =
       fingerprint === atlasLocalReportsState.lastCompletedFingerprint
@@ -16094,6 +16116,8 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
     if (completedCurrentFingerprint) {
       atlasLocalReportsState.lastAutoFingerprint = fingerprint;
       atlasLocalReportsState.autoRetryCount = 0;
+      atlasLocalReportsState.pendingSince = 0;
+      atlasLocalReportsState.pendingReason = "";
       atlasLocalReportsSetSuiteStatus("4/4 rapports et conclusion déjà valides pour ce snapshot.", "ready");
       return;
     }
@@ -16102,9 +16126,15 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot") {
     if (
       fingerprint === atlasLocalReportsState.lastAutoAttemptFingerprint
       && (Date.now() - atlasLocalReportsState.lastAutoAttemptAt) < 90000
-    ) return;
+    ) {
+      atlasLocalReportsAutoRetry(nextReason, "Atlas armé · tentative récente, nouvelle vérification programmée.", { delayMs: 5000 });
+      return;
+    }
 
     atlasLocalReportsState.autoRetryCount = 0;
+    atlasLocalReportsState.pendingSince = 0;
+    atlasLocalReportsState.pendingReason = "";
+    atlasLocalReportsSetSuiteStatus("Binance 5/5 directes · lancement automatique Atlas-10.", "loading");
     await atlasLocalReportsRunAll({
       automatic: true,
       snapshot,
@@ -32265,7 +32295,13 @@ function atlasRenderExchangeFeedStatus() {
   const atlasReady = feed.status === "ready" && counts.directCount >= 5;
   feed.atlasReportsReady = atlasReady;
   if (atlasReady && !wasAtlasReady) {
-    atlasLocalReportsScheduleAutomatic("binance-ready");
+    atlasLocalReportsSetSuiteStatus("Binance 5/5 directes · Atlas-10 va démarrer automatiquement.", "ready");
+    atlasLocalReportsScheduleAutomatic("binance-ready", { delayMs: 200 });
+  } else if (!atlasReady && counts.directCount < 5 && !atlasLocalReportsState.running) {
+    atlasLocalReportsSetSuiteStatus(
+      `Atlas en attente · Binance ${counts.directCount}/5 directes · aucun rapport canonique avant 5/5.`,
+      "wait"
+    );
   }
 
   if (counts.total > 0) {
@@ -36896,7 +36932,7 @@ function atlasSourceTruthBuild(contract) {
    14 — VERSION CONTROL — PROTECTED CORE
    ============================================================ */
 
-const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.03";
+const ATLAS_RELEASE = "Market Core V2.0-Alpha · Build 29.3.04";
 
 const ATLAS_BUILD = "29.3.03";
 

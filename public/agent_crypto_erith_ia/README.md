@@ -1,8 +1,33 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.03  
-**Build :** 29.3.03  
-**Mission :** Aerith News Intelligence + NØX No-FOMO Recovery Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.04  
+**Build :** 29.3.04  
+**Mission :** Atlas 5/5 Direct Start Gate Lock
+
+
+## Build 29.3.04 — Atlas 5/5 Direct Start Gate Lock
+
+Cette Build conserve intégralement la chaîne 29.3.03 (Atlas → News/Risk → NØX No-FOMO → Aerith) et corrige le démarrage automatique canonique.
+
+### Verrou de départ
+
+- Atlas reste **armé** tant que les cinq cotations Binance EUR directes ne sont pas présentes et fraîches.
+- À `4/5`, aucun paquet Atlas canonique n'est produit et le dernier paquet IndexedDB valide reste affiché.
+- L'attente n'expire plus arbitrairement après 90 secondes : le scheduler continue à surveiller l'état de readiness.
+- La transition réelle `4/5 → 5/5 directes` réveille immédiatement l'orchestrateur.
+- Dès `5/5 directes`, si Bridge, CoinGecko, graphique et empreinte sont prêts, Atlas lance automatiquement les quatre rapports.
+- Après validation `4/4`, la chaîne 29.3.03 continue : NØX No-FOMO puis conclusion Aerith et persistance IndexedDB.
+- Une paire dérivée peut rester exploitable pour une **question libre**, mais elle ne satisfait pas le verrou de production canonique automatique.
+
+### Démarrage de page
+
+Le polling Bridge et l'orchestrateur dépendent désormais de la session opérateur autorisée, pas de la vue Basic/Intermédiaire/Administration actuellement affichée. L'analyse automatique peut donc rester armée dès le chargement de la page.
+
+### Non-régression
+
+Bridge V1.9.1, Control Center V2.3.1R1, GPT-OSS 20B-32K, NØX, News Sentinel, Risk Sentinel, Math Core V3, Market, Graphique, Target Top 5, Métaux, simulation, Modules 01–11, IndexedDB et sécurité lecture seule restent inchangés.
+
+---
 
 ## Build 29.3.03 — Aerith News Intelligence + NØX No-FOMO Recovery Lock
 

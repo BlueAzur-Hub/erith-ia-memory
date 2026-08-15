@@ -1,3 +1,18 @@
+# Build 29.3.04 — Atlas 5/5 Direct Start Gate Lock
+
+- Base : 29.3.03.
+- Production automatique canonique strictement verrouillée sur Binance `5/5` cotations directes et fraîches.
+- À `4/5`, Atlas reste armé et attend ; aucun paquet incomplet n'est persisté.
+- Suppression de l'expiration arbitraire de 90 s du scheduler de readiness.
+- Réveil événementiel immédiat sur transition `binance-ready` 5/5.
+- Auto-probe Bridge et orchestrateur liés à la session opérateur autorisée, pas à la vue UI active.
+- Ancien paquet valide conservé jusqu'à finalisation du nouveau fingerprint.
+- Chaîne 29.3.03 conservée : Atlas 4/4 → NØX No-FOMO → Aerith → IndexedDB.
+- Bridge V1.9.1 et Control Center V2.3.1R1 inchangés.
+- Aucun mode 4/5 dégradé pour la production canonique.
+
+---
+
 ## Build 29.3.03 — Aerith News Intelligence + NØX No-FOMO Recovery Lock
 
 - Base : 29.3.02.
