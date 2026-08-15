@@ -1610,3 +1610,54 @@ A valid Binance historical series produced by the scanner could therefore be cou
 - NØX / Math Core / Watchlist / News / historical memory.
 - Version Control logic unchanged except the build number.
 - Bridge / Control Center / Market Flow / CSS / index.html unchanged.
+
+
+## Build 30.0.04 — Aerith Pipeline Contract + State Separation Fix
+
+Bug-fix-only RC build based on observed production screenshots.
+
+### Fixed: normal Atlas waiting was displayed as an Aerith failure
+The conclusion panel now distinguishes:
+- Atlas 0/4 → 3/4: normal waiting, no Aerith error;
+- Atlas 4/4: automatic Aerith launch;
+- Aerith running;
+- genuine Aerith contract failure;
+- CURRENT conclusion.
+
+A stale previous message such as `Conclusion locale non générée` is replaced by the current Atlas progress while a new Atlas transaction is running.
+
+### Fixed: fragile browser-side lexical gate
+Bridge V1.9.2 already returns a structured conclusion response:
+- `ok = true`
+- `profile = aerith`
+- `source_reports = 4`
+- `report_fingerprint`
+- `read_only = true`
+- `model`
+- `answer`
+
+Build 30.0.04 now validates this structured Bridge contract as the primary acceptance gate.
+The old text/keyword validator remains diagnostic only and cannot reject an otherwise valid structured Bridge conclusion.
+
+### Model lock
+A CURRENT Aerith conclusion is accepted only when the Bridge response model matches the stable stack model:
+`gpt-oss:20b-32k`.
+
+An old IndexedDB historical synthesis tagged `llama3.2:latest` remains historical and can never satisfy the CURRENT conclusion contract.
+
+### Automatic chain
+No manual validation is required between Atlas and Aerith:
+5/5 direct stable → Atlas 4/4 → NØX → Aerith automatically → CURRENT.
+
+Human validation remains required only before any real financial decision/action.
+
+### Preserved
+- 30.0.03 historical 5-direct qualification fix.
+- 5/5 Binance direct gate.
+- Atlas four-report architecture.
+- Atlas consolidated analytical layer.
+- NØX No-FOMO.
+- Historical memory / IndexedDB separation.
+- Version Control behavior.
+- Bridge V1.9.2 / Control Center V2.3.2R2.
+- Market Flow / CSS / index.html unchanged.
