@@ -1,3 +1,18 @@
+## Build 29.3.01 — Atlas Automatic Production Recovery Lock
+
+- Base : 29.3.00.
+- Cycle automatique Atlas/Aerith conservé et renforcé.
+- Priorité au mode complet Binance 5/5.
+- Après 15 s de grâce, autorisation d'un mode dégradé contrôlé à 4/5 si Bridge + CoinGecko + Graphique sont prêts.
+- Toute cotation Binance directe absente devient explicitement `INFORMATION MANQUANTE`; aucune reconstruction ni valeur zéro.
+- Nouvelle contradiction factuelle `binance_target_top5_partiel`.
+- Quatre rapports Atlas restent séquentiels ; conclusion Aerith automatique uniquement après 4/4 valide.
+- Persistance IndexedDB transactionnelle conservée.
+- Control Center V2.3.0R1, Bridge V1.9.0 et `gpt-oss:20b-32k` inchangés.
+- Aucun changement des autres modules ou de la géométrie de l'interface.
+
+---
+
 ## Build 29.3.00 — Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
 
 - Base : 28.3.60 validée.

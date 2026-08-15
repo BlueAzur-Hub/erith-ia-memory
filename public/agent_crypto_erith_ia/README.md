@@ -1,8 +1,40 @@
 # Agent-Crypto @erith.IA — Market Core V2.0-Alpha
 
-**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.00  
-**Build :** 29.3.00  
-**Mission :** Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
+**Version publique préparée :** Market Core V2.0-Alpha · Build 29.3.01  
+**Build :** 29.3.01  
+**Mission :** Atlas Automatic Production Recovery Lock
+
+## Build 29.3.01 — Atlas Automatic Production Recovery Lock
+
+Cette Build consolide le cycle automatique déjà présent : nouveau snapshot → quatre rapports Atlas-10 → conclusion Aerith-10 → synthèse persistée dans IndexedDB.
+
+### Correction P0 — une cotation Binance ne doit plus bloquer toute la production Atlas
+
+- Le mode complet reste prioritaire : Binance 5/5 frais.
+- Atlas attend 15 secondes le 5/5 lors du cycle automatique.
+- Si le flux reste à 4/5 mais que Bridge, CoinGecko et Graphique sont valides, Atlas bascule en **mode dégradé contrôlé**.
+- La paire directe absente est explicitement classée `INFORMATION MANQUANTE` et n'est jamais reconstruite, remplacée par zéro ou inventée.
+- Le contrat ajoute une contradiction `binance_target_top5_partiel` pour rendre la perte de couverture visible dans le rapport Contradictions.
+- Les quatre rapports peuvent alors être produits automatiquement ; la conclusion Aerith reste conditionnée à un 4/4 valide.
+
+### Automatisme conservé
+
+- Startup / Livecheck / Market refresh / Bridge ready peuvent planifier l'analyse.
+- Les anciens rapports et la conclusion restent conservés tant que le nouveau cycle n'est pas validé.
+- Après 4/4, Aerith-10 est appelée automatiquement et la synthèse est écrite puis relue dans IndexedDB.
+
+### Pile locale inchangée
+
+- Control Center V2.3.0R1.
+- Bridge V1.9.0.
+- Ollama `gpt-oss:20b-32k`.
+- Contexte 32768.
+
+### Non-régression
+
+Aucun changement sur Market, Graphique, Target Top 5, Market Flow, Math Core, Métaux, News Sentinel, Decision Board, simulation, Learning Modules 01–11 ou verrouillage Firefox.
+
+---
 
 ## Build 29.3.00 — Atlas-10 / Aerith-10 GPT-OSS Local Stack Recovery Lock
 
