@@ -23956,8 +23956,8 @@ html[data-atlas-market-domain="metals"]
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "33.0";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-33.0";
+  --atlas-asset-build: "33.1";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-33.1";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25464,4 +25464,18 @@ html[data-atlas-market-domain="metals"]
 @media (max-width:720px){
   .atlas-current-truth-33-head,.atlas-current-journal-33-head{flex-direction:column}
   .atlas-current-truth-33-grid,.atlas-current-journal-33-list{grid-template-columns:1fr}
+}
+
+
+/* ============================================================
+   BUILD 33.1 — BOOK READ-ONLY SYNTHESIS RESTORE
+   Imported Ryzen Aerith synthesis remains visible on the Book without
+   promoting HISTORIQUE content to CURRENT or calling the local Bridge.
+   ============================================================ */
+.atlas-book-readonly[data-state="ready"] #btnAtlasBookReadSynthesis:not([disabled]){
+  font-weight:800;
+  box-shadow:0 0 0 1px rgba(98,230,198,.16) inset;
+}
+.atlas-local-response-panel[data-atlas-response-view="conclusion"] #atlasLocalResponseMeta{
+  overflow-wrap:anywhere;
 }
