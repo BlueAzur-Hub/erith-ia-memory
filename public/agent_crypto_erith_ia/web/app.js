@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.8",
+  build: "38.9",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1377,7 +1377,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.8 CANONICAL CURRENT PERSISTENCE LOCK · MEMORY JOURNAL 38.7 CONSERVÉ · BRIDGE HEALTH 38.6 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.9 RESTORE UI TRUTH LOCK · CANONICAL CURRENT 38.8 CONSERVÉ · MEMORY JOURNAL 38.7 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12120,7 +12120,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.8",
+  interface: "Build 38.9",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40206,7 +40206,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.8";
+const ATLAS_BUILD = "38.9";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -45521,6 +45521,526 @@ atlasRcStaticAudit = function atlasRcStaticAudit388() {
       typeof atlasCanonicalCurrentRestore388 === "function"
       && typeof atlasCanonicalCurrentProof388 === "function"
       && typeof atlasCanonicalCurrentJournalEnsure388 === "function"
+  };
+  report.pass = Object.values(report.checks).every(Boolean);
+  return report;
+};
+
+
+/* ============================================================
+   38.9 — RESTORE UI TRUTH LOCK
+   Live evidence on 38.8:
+   - the canonical no-restart lock works: the same CoinGecko snapshot no longer
+     re-launches Atlas merely because Binance LIVE moves;
+   - the persisted synthesis still proves 4 Atlas reports + NØX + Aerith;
+   - but several UI readers disagree after reload: progress header can say
+     HISTORIQUE 0 %, CURRENT Truth can say WAITING/0-4, Journal can stay 0,
+     while the stable stack and CURRENT banner already show 4/4 CURRENT.
+
+   Root causes fixed here:
+   1) compact IndexedDB synthesis normalization keeps only the market timestamp
+      and drops the canonical market snapshot id; 38.8 therefore had no durable
+      id witness for older compact packages after reload;
+   2) historical/current classification compares pkg.fingerprint (analytical
+      truth fingerprint) with the Atlas/Aerith transaction fingerprint even
+      though these are intentionally different identities;
+   3) some late render paths can write WAITING after CURRENT restoration and
+      repaint stale historical labels without changing the canonical cadence.
+
+   Recovery rule:
+   - last consumed canonical market id remains the cadence authority;
+   - a complete local package may bind to that id either by preserved canonical
+     id, or for legacy compact packages by exact canonical market timestamp;
+   - transaction fingerprint (4 Atlas reports + Aerith) is the CURRENT identity;
+   - same-canonical non-manual writes cannot demote a closed CURRENT;
+   - one restored truth is then rendered consistently in progress, conclusion,
+     CURRENT Truth, Journal, Memory Intelligence and Decision Board;
+   - a genuinely new canonical market id or an explicit manual cycle remains free
+     to open the next CURRENT.
+
+   Protected unchanged: Binance gate / Direct REST 38.5 · Bridge Health 38.6 ·
+   Atlas/NØX/Aerith · Automation 34.1 · Control Center V2.3.2R5 · Bridge V1.9.5 ·
+   Transformer Book read-only contract.
+   ============================================================ */
+
+function atlasCanonicalCurrentTimestamp389(value) {
+  const t = Date.parse(String(value || ""));
+  return Number.isFinite(t) ? Math.floor(t / 1000) * 1000 : 0;
+}
+
+function atlasCanonicalCurrentPackageMarketId389(pkg) {
+  return String(
+    pkg?.canonical_market_snapshot_id
+    || pkg?.status?.canonical_market_snapshot_id
+    || pkg?.snapshot?.strict_contract?.market?.snapshot_id
+    || pkg?.snapshot?.strict_contract?.sources?.market?.snapshot_id
+    || pkg?.snapshot?.raw_context?.source_status?.market_snapshot_id
+    || pkg?.analytical_state?.market?.snapshot_id
+    || pkg?.market_snapshot_id
+    || ""
+  ).trim();
+}
+
+function atlasCanonicalCurrentPackageMarketTime389(pkg) {
+  return atlasCanonicalCurrentTimestamp389(
+    pkg?.canonical_market_timestamp
+    || pkg?.status?.canonical_market_timestamp
+    || pkg?.snapshot_at
+    || pkg?.snapshot?.strict_contract?.market?.timestamp
+    || pkg?.snapshot?.strict_contract?.sources?.market?.timestamp
+    || pkg?.snapshot?.raw_context?.source_status?.market_timestamp
+    || pkg?.analytical_state?.market?.timestamp
+    || pkg?.snapshot?.generated_at
+    || ""
+  );
+}
+
+function atlasCanonicalCurrentLiveMarketTime389(snapshot = null) {
+  return atlasCanonicalCurrentTimestamp389(
+    snapshot?.strict_contract?.market?.timestamp
+    || snapshot?.strict_contract?.sources?.market?.timestamp
+    || snapshot?.raw_context?.source_status?.market_timestamp
+    || state?.dataBroker?.market?.timestamp
+    || state?.sourceLock?.timestamp
+    || state?.dataBroker?.marketFrame?.timestamp
+    || ""
+  );
+}
+
+function atlasCanonicalCurrentProof389(snapshot = null) {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  const marketId = typeof atlasAutomation341SnapshotId === "function"
+    ? atlasAutomation341SnapshotId(snapshot)
+    : "";
+  const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function"
+    ? atlasAutomation341ReadLastCurrentMarketId()
+    : "";
+  if (!marketId || !lastDone || marketId !== lastDone) return null;
+
+  const pkg = atlasSharedSynthesisState?.package || null;
+  if (!pkg || pkg?.handoff?.source === "ryzen_import") return null;
+  const witness = typeof atlasCanonicalCurrentWitness388 === "function"
+    ? atlasCanonicalCurrentWitness388(pkg)
+    : null;
+  if (!witness?.fingerprint) return null;
+
+  const packageMarketId = atlasCanonicalCurrentPackageMarketId389(pkg);
+  if (packageMarketId && packageMarketId === lastDone) {
+    return { marketId, lastDone, packageMarketId, pkg, binding:"canonical-id", ...witness };
+  }
+
+  // Legacy compact IndexedDB packages (created before 38.9) lost snapshot_id but
+  // retained snapshot_at. The 34.1 last-consumed id + exact market timestamp +
+  // complete 4/4/Aerith transaction witnesses are sufficient to restore the
+  // already-finished local CURRENT without reading any newer LIVE quote.
+  const packageTime = atlasCanonicalCurrentPackageMarketTime389(pkg);
+  const liveMarketTime = atlasCanonicalCurrentLiveMarketTime389(snapshot);
+  if (packageTime && liveMarketTime && packageTime === liveMarketTime) {
+    return {
+      marketId, lastDone, packageMarketId:"", pkg,
+      packageMarketTime:packageTime,
+      liveMarketTime,
+      binding:"legacy-canonical-timestamp",
+      ...witness
+    };
+  }
+  return null;
+}
+
+// Upgrade 38.8 proof in place so every existing 38.8 guard benefits from the
+// preserved-id / legacy-timestamp binding without duplicating scheduler logic.
+const atlasCanonicalCurrentProof388Base389 = atlasCanonicalCurrentProof388;
+atlasCanonicalCurrentProof388 = function atlasCanonicalCurrentProof388_389(snapshot = null) {
+  return atlasCanonicalCurrentProof388Base389(snapshot) || atlasCanonicalCurrentProof389(snapshot);
+};
+
+// Future synthesis packages keep the canonical cadence identity and a compact
+// frozen Top-5 memory payload. This wrapper runs inside the original persist path,
+// before IndexedDB serialization, so the fields survive a full browser reload.
+const atlasSharedSynthesisNormalizePackage387Base389 = atlasSharedSynthesisNormalizePackage;
+atlasSharedSynthesisNormalizePackage = function atlasSharedSynthesisNormalizePackage389(input) {
+  const canonicalId = atlasCanonicalCurrentPackageMarketId389(input)
+    || String(
+      input?.snapshot?.strict_contract?.market?.snapshot_id
+      || input?.snapshot?.strict_contract?.sources?.market?.snapshot_id
+      || input?.snapshot?.raw_context?.source_status?.market_snapshot_id
+      || ""
+    ).trim();
+  const canonicalTimeRaw = input?.canonical_market_timestamp
+    || input?.snapshot_at
+    || input?.snapshot?.strict_contract?.market?.timestamp
+    || input?.snapshot?.strict_contract?.sources?.market?.timestamp
+    || input?.snapshot?.raw_context?.source_status?.market_timestamp
+    || null;
+  const frozenAssets = Array.isArray(input?.current_memory_assets)
+    ? input.current_memory_assets
+    : Array.isArray(input?.snapshot?.strict_contract?.canonical_top5?.assets)
+      ? input.snapshot.strict_contract.canonical_top5.assets
+      : [];
+
+  const normalized = atlasSharedSynthesisNormalizePackage387Base389(input);
+  if (canonicalId) {
+    normalized.canonical_market_snapshot_id = canonicalId;
+    normalized.status = { ...(normalized.status || {}), canonical_market_snapshot_id: canonicalId };
+  }
+  if (canonicalTimeRaw) {
+    normalized.canonical_market_timestamp = canonicalTimeRaw;
+    normalized.status = { ...(normalized.status || {}), canonical_market_timestamp: canonicalTimeRaw };
+  }
+  if (frozenAssets.length) {
+    normalized.current_memory_assets = frozenAssets.map(row => ({
+      id: row?.id || row?.coin_id || null,
+      symbol: String(row?.symbol || "").toUpperCase(),
+      name: row?.name || null,
+      price_eur: Number.isFinite(Number(row?.price_eur)) ? Number(row.price_eur) : null,
+      change_24h_pct: Number.isFinite(Number(row?.change_24h_pct)) ? Number(row.change_24h_pct) : null,
+      source: row?.source || null,
+      available: row?.available !== false
+    })).filter(row => row.symbol);
+  }
+  return normalized;
+};
+
+// 38.7 memory builder can now use the compact frozen Top-5 stored by 38.9.
+const atlasCurrentMemoryTargetAssets387Base389 = atlasCurrentMemoryTargetAssets387;
+atlasCurrentMemoryTargetAssets387 = function atlasCurrentMemoryTargetAssets387_389(pkg, journalFp) {
+  const frozen = Array.isArray(pkg?.current_memory_assets) ? pkg.current_memory_assets.filter(row => row?.symbol) : [];
+  if (frozen.length) return frozen;
+  return atlasCurrentMemoryTargetAssets387Base389(pkg, journalFp);
+};
+
+function atlasCanonicalCurrentStateFromProof389(proof, previous = null, reason = "restore-ui-truth-389") {
+  if (!proof?.fingerprint || !proof?.pkg) return previous || null;
+  const pkg = proof.pkg;
+  const binance = pkg?.snapshot?.strict_contract?.sources?.binance || {};
+  return {
+    ...(previous && typeof previous === "object" ? previous : {}),
+    schema: typeof ATLAS_CURRENT_STATE_SCHEMA !== "undefined" ? ATLAS_CURRENT_STATE_SCHEMA : "atlas_crypto_current_state_v1",
+    status: "CURRENT",
+    fingerprint: proof.fingerprint,
+    generated_at: pkg?.snapshot_at || pkg?.snapshot?.generated_at || previous?.generated_at || new Date().toISOString(),
+    promoted_at: previous?.promoted_at || pkg?.generated_at || pkg?.conclusion?.time || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    price_count: 5,
+    direct_count: Number(binance.direct_pairs ?? previous?.direct_count ?? 5),
+    derived_count: Number(binance.derived_pairs ?? previous?.derived_count ?? 0),
+    expected_count: 5,
+    atlas_reports: 4,
+    aerith_conclusion: true,
+    model: String(pkg?.origin?.model || pkg?.conclusion?.model || previous?.model || "gpt-oss:20b-32k"),
+    canonical_market_snapshot_id: proof.marketId,
+    canonical_binding_389: proof.binding || "canonical-id",
+    recovered_from_persisted_current_389: true,
+    reason
+  };
+}
+
+// Read overlay: if a late legacy renderer left WAITING in localStorage for the
+// same already-consumed canonical market, every reader still sees the verified
+// CURRENT. This function is pure: it does not start Atlas or write storage.
+const atlasCurrentStateRead388Base389 = atlasCurrentStateRead;
+atlasCurrentStateRead = function atlasCurrentStateRead389() {
+  const previous = atlasCurrentStateRead388Base389();
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (proof && String(previous?.status || "") !== "CURRENT") {
+      return atlasCanonicalCurrentStateFromProof389(proof, previous, "read-overlay-389");
+    }
+  } catch (_) {}
+  return previous;
+};
+
+// Write firewall: after STOP-ONCE restoration, non-manual same-canonical writes
+// cannot demote CURRENT back to WAITING/PENDING. A manually opened cycle has
+// automaticCycleClosed=false and therefore remains fully functional.
+const atlasCurrentStateWrite388Base389 = atlasCurrentStateWrite;
+atlasCurrentStateWrite = function atlasCurrentStateWrite389(next) {
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    const automaticClosed = atlasLocalReportsState?.automaticCycleClosed === true;
+    const nextStatus = String(next?.status || "");
+    if (proof && automaticClosed && nextStatus && nextStatus !== "CURRENT") {
+      const previous = atlasCurrentStateRead388Base389();
+      const preserved = atlasCanonicalCurrentStateFromProof389(
+        proof,
+        previous,
+        `write-firewall-389:${String(next?.reason || nextStatus)}`
+      );
+      return atlasCurrentStateWrite388Base389(preserved);
+    }
+  } catch (_) {}
+  return atlasCurrentStateWrite388Base389(next);
+};
+
+// Transaction fingerprint, not analytical package fingerprint, decides whether
+// a restored package is historical relative to the closed CURRENT.
+const atlasSharedSynthesisIsHistorical388Base389 = atlasSharedSynthesisIsHistorical;
+atlasSharedSynthesisIsHistorical = function atlasSharedSynthesisIsHistorical389(pkg) {
+  try {
+    const currentFp = String(
+      atlasCurrentClosedAnalysisFingerprint()
+      || atlasCurrentStateRead()?.fingerprint
+      || ""
+    ).trim();
+    const transactionFp = typeof atlasCurrentMemoryPackageTransactionFingerprint387 === "function"
+      ? atlasCurrentMemoryPackageTransactionFingerprint387(pkg)
+      : "";
+    if (currentFp && transactionFp) {
+      const a = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function" ? atlasCurrentMemoryNormalizeFingerprint387(currentFp) : currentFp;
+      const b = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function" ? atlasCurrentMemoryNormalizeFingerprint387(transactionFp) : transactionFp;
+      return a !== b;
+    }
+  } catch (_) {}
+  return atlasSharedSynthesisIsHistorical388Base389(pkg);
+};
+
+// Same correction for the conclusion title/meta. A complete matching transaction
+// must never be painted "Historique" merely because pkg.fingerprint is a
+// different analytical-truth hash.
+const atlasCurrentConclusionIsStale388Base389 = atlasCurrentConclusionIsStale;
+atlasCurrentConclusionIsStale = function atlasCurrentConclusionIsStale389(conclusion, snapshot) {
+  try {
+    const proof = atlasCanonicalCurrentProof389(snapshot || null);
+    const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(atlasCurrentConclusionFingerprint(conclusion))
+      : String(atlasCurrentConclusionFingerprint(conclusion) || "");
+    const currentFp = proof?.fingerprint
+      ? (typeof atlasCurrentMemoryNormalizeFingerprint387 === "function" ? atlasCurrentMemoryNormalizeFingerprint387(proof.fingerprint) : proof.fingerprint)
+      : "";
+    if (currentFp && fp && fp === currentFp) return false;
+  } catch (_) {}
+  return atlasCurrentConclusionIsStale388Base389(conclusion, snapshot);
+};
+
+function atlasCanonicalCurrentJournalEnsure389(proof) {
+  if (!proof?.fingerprint || !proof?.pkg) return [];
+  try { atlasCanonicalCurrentJournalEnsure388(proof); } catch (_) {}
+  let records = typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : [];
+  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(proof.fingerprint)
+    : String(proof.fingerprint || "");
+  const has = records.some(row => {
+    const rowFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(row?.fingerprint)
+      : String(row?.fingerprint || "");
+    return rowFp === fp && Number(row?.atlas_reports || 0) >= 4 && row?.nox === true && row?.aerith === true;
+  });
+  if (has) return records;
+
+  const pkg = proof.pkg;
+  const binance = pkg?.snapshot?.strict_contract?.sources?.binance || {};
+  const collector = typeof getCollectorId === "function" ? getCollectorId() : "local";
+  records = [...records, {
+    schema: typeof ATLAS_CURRENT_JOURNAL_33_SCHEMA !== "undefined" ? ATLAS_CURRENT_JOURNAL_33_SCHEMA : "atlas_current_journal_v33",
+    fingerprint: proof.fingerprint,
+    completed_at: pkg?.generated_at || pkg?.conclusion?.time || new Date().toISOString(),
+    snapshot_at: pkg?.snapshot_at || pkg?.canonical_market_timestamp || null,
+    collector_id: collector,
+    direct_count: Number(binance.direct_pairs ?? 5),
+    derived_count: Number(binance.derived_pairs ?? 0),
+    atlas_reports: 4,
+    nox: true,
+    aerith: true,
+    model: String(pkg?.origin?.model || pkg?.conclusion?.model || "gpt-oss:20b-32k"),
+    indexeddb_verified: atlasSharedSynthesisState?.persistence?.ok === true,
+    snapshot_label: String(pkg?.snapshot_label || ""),
+    origin: String(pkg?.origin?.machine || collector),
+    canonical_market_snapshot_id: proof.marketId,
+    canonical_binding_389: proof.binding || "canonical-id",
+    recovered_from_persisted_current_389: true,
+    updated_at: new Date().toISOString()
+  }].sort((a,b) => Date.parse(a?.completed_at || 0) - Date.parse(b?.completed_at || 0))
+    .slice(-(typeof ATLAS_CURRENT_JOURNAL_33_MAX !== "undefined" ? ATLAS_CURRENT_JOURNAL_33_MAX : 30));
+  try { records = atlasCurrentJournalWrite33(records); } catch (_) {}
+  return records;
+}
+
+function atlasCanonicalCurrentMemoryEnsure389(proof, journal = null) {
+  if (!proof?.fingerprint || !proof?.pkg) return null;
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  try {
+    const stored = typeof atlasCurrentMemoryStoredForFingerprint387 === "function"
+      ? atlasCurrentMemoryStoredForFingerprint387(proof.fingerprint)
+      : null;
+    if (stored) return stored;
+    const rows = Array.isArray(journal) ? journal : atlasCanonicalCurrentJournalEnsure389(proof);
+    const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(proof.fingerprint)
+      : String(proof.fingerprint || "");
+    const row = [...rows].reverse().find(item => {
+      const rowFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+        ? atlasCurrentMemoryNormalizeFingerprint387(item?.fingerprint)
+        : String(item?.fingerprint || "");
+      return rowFp === fp && Number(item?.atlas_reports || 0) >= 4 && item?.nox === true && item?.aerith === true;
+    });
+    if (!row || typeof atlasCurrentMemoryRecordFromJournal387 !== "function") return null;
+    const record = atlasCurrentMemoryRecordFromJournal387(row, proof.pkg);
+    if (!record) return null;
+    const result = typeof atlasCurrentMemoryUpsert34 === "function" ? atlasCurrentMemoryUpsert34(record) : null;
+    return result?.record || (typeof atlasCurrentMemoryStoredForFingerprint387 === "function" ? atlasCurrentMemoryStoredForFingerprint387(proof.fingerprint) : null);
+  } catch (_) { return null; }
+}
+
+function atlasCanonicalCurrentUiTruth389(reason = "ui-truth-389") {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  const proof = atlasCanonicalCurrentProof389(null);
+  if (!proof) return null;
+
+  // Clear an earlier display-only historical demotion once the transaction is
+  // proven to be the same closed CURRENT.
+  try {
+    if (atlasSharedSynthesisState?.package?.state?.historical === true) {
+      atlasSharedSynthesisState.package.state = {
+        ...(atlasSharedSynthesisState.package.state || {}),
+        historical:false,
+        current:true,
+        restored_current_389:true,
+        restored_at:new Date().toISOString()
+      };
+    }
+  } catch (_) {}
+
+  const restored = atlasCanonicalCurrentStateFromProof389(
+    proof,
+    atlasCurrentStateRead388Base389(),
+    reason
+  );
+  atlasCurrentStateWrite388Base389(restored);
+
+  if (typeof atlasLocalReportsState === "object" && atlasLocalReportsState) {
+    atlasLocalReportsState.automaticCycleClosed = true;
+    atlasLocalReportsState.automaticCycleClosedAt = Date.now();
+    atlasLocalReportsState.automaticCycleFingerprint = proof.fingerprint;
+    atlasLocalReportsState.automaticCycleCloseReason = "current-complete-restored-389";
+    atlasLocalReportsState.lastCompletedFingerprint = proof.fingerprint;
+    atlasLocalReportsState.lastCompletedSnapshot = proof.pkg?.snapshot || atlasLocalReportsState.lastCompletedSnapshot || null;
+    atlasLocalReportsState.lastAutoFingerprint = proof.fingerprint;
+    atlasLocalReportsState.transactionFingerprint = "";
+  }
+  if (typeof atlasLocalConclusionState === "object" && atlasLocalConclusionState) {
+    atlasLocalConclusionState.lastFingerprint = proof.fingerprint;
+  }
+  if (proof.pkg?.conclusion?.answer && typeof atlasLocalDialogueState === "object" && atlasLocalDialogueState) {
+    atlasLocalDialogueState.conclusionResponse = proof.pkg.conclusion;
+  }
+
+  const journal = atlasCanonicalCurrentJournalEnsure389(proof);
+  atlasCanonicalCurrentMemoryEnsure389(proof, journal);
+
+  try { atlasCurrentRenderBanner(restored); } catch (_) {}
+  try { atlasAutomation341SetRestStatus(proof.marketId); } catch (_) {}
+  try { atlasAnalysisProgressRender389Base(4, "done", "CURRENT restauré · Atlas 4/4 · NØX validé · Aerith validée · snapshot canonique déjà analysé · moteur au repos."); } catch (_) {}
+  try {
+    ATLAS_LOCAL_REPORT_MODES.forEach(mode => {
+      const report = atlasLocalReportsState?.reports?.[mode] || proof.pkg?.reports?.[mode];
+      if (!report?.answer) return;
+      atlasLocalReportSetCardState(mode, "CURRENT", "ready");
+      const ids = ATLAS_LOCAL_REPORT_IDS?.[mode];
+      if (ids?.meta) setText(document.getElementById(ids.meta), `${report.snapshotLabel || proof.pkg?.snapshot_label || "Snapshot"} · CURRENT · ${report.model || proof.pkg?.origin?.model || "gpt-oss:20b-32k"}`);
+    });
+  } catch (_) {}
+  try { atlasLocalResponseRenderStored("conclusion"); } catch (_) {}
+  try { atlasCurrentTruthRender33Base389(restored); } catch (_) {}
+  try { atlasCurrentJournalRender33(); } catch (_) {}
+  try { atlasMemoryLedgerRender34(); } catch (_) {}
+  try { atlasMemoryLedgerRender35(); } catch (_) {}
+  try { atlasMemoryIntelligenceRender(); } catch (_) {}
+  try { renderDecisionBoard(); } catch (_) {}
+  try { atlasSharedSynthesisRenderCore(); } catch (_) {}
+  return { proof, restored, journal };
+}
+
+// Progress repaint guard. A late IndexedDB hydration may still call the legacy
+// "history" renderer; once STOP-ONCE is restored, display the closed CURRENT.
+const atlasAnalysisProgressRender388Base389 = atlasAnalysisProgressRender;
+function atlasAnalysisProgressRender389Base(completed, phase, message) {
+  return atlasAnalysisProgressRender388Base389(completed, phase, message);
+}
+atlasAnalysisProgressRender = function atlasAnalysisProgressRender389(completed = 0, phase = "idle", message = "") {
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (proof && atlasLocalReportsState?.automaticCycleClosed === true && !atlasLocalReportsState?.running && !atlasLocalConclusionState?.running) {
+      return atlasAnalysisProgressRender388Base389(4, "done", "CURRENT restauré · Atlas 4/4 · NØX validé · Aerith validée · attente du prochain snapshot canonique.");
+    }
+  } catch (_) {}
+  return atlasAnalysisProgressRender388Base389(completed, phase, message);
+};
+
+// CURRENT Truth always consumes the same restored source of truth. No storage
+// mutation here, avoiding render loops.
+const atlasCurrentTruthRender33Base389 = atlasCurrentTruthRender33;
+atlasCurrentTruthRender33 = function atlasCurrentTruthRender389(current = atlasCurrentStateRead()) {
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (proof) current = atlasCanonicalCurrentStateFromProof389(proof, current, "current-truth-render-389");
+  } catch (_) {}
+  return atlasCurrentTruthRender33Base389(current);
+};
+
+// Journal render heals exactly the verified same-canonical entry before painting.
+const atlasCurrentJournalRender33Base389 = atlasCurrentJournalRender33;
+atlasCurrentJournalRender33 = function atlasCurrentJournalRender389() {
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (proof) atlasCanonicalCurrentJournalEnsure389(proof);
+  } catch (_) {}
+  return atlasCurrentJournalRender33Base389();
+};
+
+// Shared synthesis reconcile must use transaction identity. If it is the same
+// closed CURRENT, do not run the old package-fingerprint demotion path.
+const atlasSharedSynthesisReconcileCurrent388Base389 = atlasSharedSynthesisReconcileCurrent;
+atlasSharedSynthesisReconcileCurrent = function atlasSharedSynthesisReconcileCurrent389() {
+  try {
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (proof && atlasSharedSynthesisState?.package) {
+      atlasSharedSynthesisState.package.state = {
+        ...(atlasSharedSynthesisState.package.state || {}),
+        current:true,
+        historical:false,
+        restored_current_389:true
+      };
+      atlasLocalReportsState.lastCompletedFingerprint = proof.fingerprint;
+      atlasLocalReportsState.lastCompletedSnapshot = proof.pkg?.snapshot || atlasLocalReportsState.lastCompletedSnapshot || null;
+      atlasSharedSynthesisRenderCore();
+      if (atlasLocalDialogueState.activeResponseView === "conclusion") atlasLocalResponseRenderStored("conclusion");
+      return { historical:false, matched:true, transaction_fingerprint:proof.fingerprint, canonical_binding:proof.binding };
+    }
+  } catch (_) {}
+  return atlasSharedSynthesisReconcileCurrent388Base389();
+};
+
+// Boot is asynchronous: IndexedDB activation can finish after the late 38.9 layer.
+// Retry only local restoration/rendering; no Bridge/Ollama call and no interval.
+const ATLAS_RESTORE_UI_TRUTH_389_BOOT_DELAYS = Object.freeze([180, 650, 1400, 3000, 6000]);
+ATLAS_RESTORE_UI_TRUTH_389_BOOT_DELAYS.forEach(delay => window.setTimeout(() => {
+  try { atlasCanonicalCurrentUiTruth389(`boot-ui-truth-389:${delay}`); } catch (_) {}
+}, delay));
+
+// Any later same-canonical restore gets a deterministic UI convergence pass.
+const atlasCanonicalCurrentRestore388Base389 = atlasCanonicalCurrentRestore388;
+atlasCanonicalCurrentRestore388 = function atlasCanonicalCurrentRestore389(snapshot = null, reason = "same-canonical-current") {
+  const restored = atlasCanonicalCurrentRestore388Base389(snapshot, reason);
+  if (restored) {
+    queueMicrotask(() => {
+      try { atlasCanonicalCurrentUiTruth389(`post-restore-389:${String(reason || "")}`); } catch (_) {}
+    });
+  }
+  return restored;
+};
+
+// Extend RC audit, keeping all inherited checks.
+const atlasRcStaticAudit388Base389 = atlasRcStaticAudit;
+atlasRcStaticAudit = function atlasRcStaticAudit389() {
+  const report = atlasRcStaticAudit388Base389();
+  report.checks = {
+    ...(report.checks || {}),
+    restore_ui_truth_389:
+      typeof atlasCanonicalCurrentUiTruth389 === "function"
+      && typeof atlasCanonicalCurrentProof389 === "function"
+      && typeof atlasCanonicalCurrentJournalEnsure389 === "function"
+      && typeof atlasCanonicalCurrentMemoryEnsure389 === "function"
+      && typeof atlasCurrentStateWrite389 === "function"
   };
   report.pass = Object.values(report.checks).every(Boolean);
   return report;
