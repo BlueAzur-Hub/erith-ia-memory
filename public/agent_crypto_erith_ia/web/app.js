@@ -39823,7 +39823,7 @@ function atlasVersionControlTooltip(mode, build, checkedAt = 0) {
     return `Nouvelle version disponible · Build ${build} · ${freshness}`;
   }
   if (mode === "syncing") {
-    return `GitHub synchronise encore le Build ${build} · Cliquer pour revérifier · ${freshness}`;
+    return `Build ${ATLAS_BUILD} actif · publication GitHub en propagation · Cliquer pour revérifier · ${freshness}`;
   }
   if (mode === "applying") {
     return `Chargement du Build ${build} en cours · ${freshness}`;
@@ -39888,10 +39888,10 @@ function atlasVersionControlState(mode, options = {}) {
     );
   } else if (stateMode === "syncing") {
     control.classList.add("warn");
-    text.textContent = `Synchronisation GitHub · Build ${build}`;
+    text.textContent = `Build ${ATLAS_BUILD} actif · GitHub en propagation`;
     control.setAttribute(
       "aria-label",
-      `GitHub synchronise encore le Build ${build}. Cliquer pour revérifier.`
+      `Build ${ATLAS_BUILD} actif. La publication GitHub n’est pas encore cohérente sur tous les fichiers. Cliquer pour revérifier.`
     );
   } else if (stateMode === "applying") {
     control.classList.add("warn");
