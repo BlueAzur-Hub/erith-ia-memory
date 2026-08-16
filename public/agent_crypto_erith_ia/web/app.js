@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.14",
+  build: "38.15",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1381,7 +1381,8 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.14 JOURNAL MEMORY SELF-CONTAINED BIND · RUNTIME TRUTH 38.13 CONSERVÉ · CURRENT PERSISTENCE 38.8 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
+  return `RC 38.15 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12124,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.14",
+  interface: "Build 38.15",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40210,7 +40211,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.14";
+const ATLAS_BUILD = "38.15";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46928,8 +46929,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.14",
-  asset_token: "market-core-v2.0-alpha-build-38.14"
+  build: "38.15",
+  asset_token: "market-core-v2.0-alpha-build-38.15"
 });
 
 function atlasRuntimeTruth3813() {
@@ -47292,3 +47293,234 @@ atlasRcStaticAudit = function atlasRcStaticAudit3814() {
   report.pass = Object.values(report.checks).every(Boolean);
   return report;
 };
+
+
+/* ============================================================
+   38.15 — CANONICAL CURRENT MEMORY COMMIT + RESTORE TRUTH LOCK
+   Scope chirurgical après preuve live 38.14 :
+   - le Journal contient un CURRENT réel mais Memory Intelligence reste à 0 ;
+   - le CURRENT restauré peut perdre le compteur Binance snapshot (0/5 affiché)
+     alors que le paquet analytique atteste 5 directes ;
+   - commit Memory depuis la preuve canonique déjà validée par 38.9, sans
+     Bridge/Ollama, sans nouveau snapshot, sans nouveau timer ;
+   - rendu Memory/Decision Board convergent immédiatement dès qu'une preuve
+     CURRENT persistée devient disponible ;
+   - l'audit statique expose désormais le nom exact de tout invariant en échec.
+
+   Protégé inchangé : Gate 5/5 · Binance LIVE · Atlas 4/4 · NØX · Aerith ·
+   STOP-ONCE · REPOS · Question libre · Auto Reader · Book Role · Bridge V1.9.5 ·
+   gpt-oss:20b-32k · polling marché existant · style.css.
+   ============================================================ */
+
+function atlasCurrentCanonicalBinanceCounts3815(pkg, row = null, previous = null) {
+  const candidates = [
+    pkg?.snapshot?.strict_contract?.sources?.binance,
+    pkg?.analytical_state?.source_truth?.binance,
+    pkg?.snapshot?.analytical_state?.source_truth?.binance,
+    pkg?.source_truth?.binance
+  ].filter(Boolean);
+  for (const source of candidates) {
+    const direct = Number(source?.direct_pairs ?? source?.direct_count);
+    const derived = Number(source?.derived_pairs ?? source?.derived_count ?? 0);
+    if (Number.isFinite(direct) && direct > 0 && direct <= 5 && Number.isFinite(derived) && derived >= 0) {
+      return { direct, derived, evidence:"package-source-truth" };
+    }
+  }
+  const rowDirect = Number(row?.direct_count);
+  const rowDerived = Number(row?.derived_count ?? 0);
+  if (Number.isFinite(rowDirect) && rowDirect > 0 && rowDirect <= 5) {
+    return { direct:rowDirect, derived:Number.isFinite(rowDerived) ? rowDerived : 0, evidence:"journal" };
+  }
+  const previousDirect = Number(previous?.direct_count);
+  const previousDerived = Number(previous?.derived_count ?? 0);
+  if (Number.isFinite(previousDirect) && previousDirect > 0 && previousDirect <= 5) {
+    return { direct:previousDirect, derived:Number.isFinite(previousDerived) ? previousDerived : 0, evidence:"previous-current" };
+  }
+  return { direct:0, derived:0, evidence:"missing" };
+}
+
+function atlasCurrentCanonicalAssets3815(proof) {
+  const pkg = proof?.pkg || null;
+  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(proof?.fingerprint)
+    : String(proof?.fingerprint || "").trim();
+  let assets = Array.isArray(pkg?.current_memory_assets) ? pkg.current_memory_assets.filter(row => row?.symbol) : [];
+  if (assets.length < 5 && typeof atlasCurrentMemoryTargetAssets387 === "function") {
+    try { assets = atlasCurrentMemoryTargetAssets387(pkg, fp) || []; } catch (_) { assets = []; }
+  }
+  if (assets.length < 5 && typeof atlasCurrentMemoryTargetAssets34 === "function") {
+    try { assets = atlasCurrentMemoryTargetAssets34(pkg) || []; } catch (_) { assets = []; }
+  }
+  if (!Array.isArray(assets) || assets.length < 5) return [];
+  const clone = typeof atlasCurrentMemoryClone34 === "function"
+    ? atlasCurrentMemoryClone34(assets.slice(0,5))
+    : JSON.parse(JSON.stringify(assets.slice(0,5)));
+  return clone.filter(row => row && row.symbol).slice(0,5);
+}
+
+let atlasCurrentCanonicalCommitRunning3815 = false;
+function atlasCurrentCanonicalCommit3815(reason = "canonical-commit") {
+  if (atlasCurrentCanonicalCommitRunning3815) return { changed:false, skipped:"running", reason };
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return { changed:false, skipped:"book-readonly", reason };
+  atlasCurrentCanonicalCommitRunning3815 = true;
+  try {
+    const proof = typeof atlasCanonicalCurrentProof389 === "function" ? atlasCanonicalCurrentProof389(null) : null;
+    if (!proof?.fingerprint || !proof?.pkg) return { changed:false, skipped:"no-canonical-proof", reason };
+    const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(proof.fingerprint)
+      : String(proof.fingerprint || "").trim();
+    let journal = typeof atlasCanonicalCurrentJournalEnsure389 === "function"
+      ? atlasCanonicalCurrentJournalEnsure389(proof)
+      : (typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : []);
+    let row = [...(Array.isArray(journal) ? journal : [])].reverse().find(item => {
+      const rowFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+        ? atlasCurrentMemoryNormalizeFingerprint387(item?.fingerprint)
+        : String(item?.fingerprint || "").trim();
+      return rowFp === fp && Number(item?.atlas_reports || 0) >= 4 && item?.nox === true && item?.aerith === true;
+    }) || null;
+    if (!row) return { changed:false, skipped:"no-journal-row", reason, fingerprint:fp };
+
+    const assets = atlasCurrentCanonicalAssets3815(proof);
+    if (assets.length < 5) return { changed:false, skipped:"no-frozen-assets", reason, fingerprint:fp };
+    const previous = typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null;
+    const counts = atlasCurrentCanonicalBinanceCounts3815(proof.pkg, row, previous);
+    const marketTime = proof.pkg?.canonical_market_timestamp
+      || proof.pkg?.snapshot_at
+      || proof.pkg?.snapshot?.strict_contract?.market?.timestamp
+      || proof.pkg?.snapshot?.strict_contract?.sources?.market?.timestamp
+      || row?.snapshot_at
+      || null;
+    const enriched = {
+      ...row,
+      fingerprint:fp,
+      canonical_market_snapshot_id: proof.marketId || row?.canonical_market_snapshot_id || null,
+      snapshot_at: marketTime,
+      direct_count: counts.direct,
+      derived_count: counts.derived,
+      canonical_target_assets_3814: assets,
+      canonical_target_assets_3815: assets,
+      canonical_commit_evidence_3815: counts.evidence,
+      canonical_commit_reason_3815: reason,
+      canonical_commit_at_3815: new Date().toISOString()
+    };
+    const nextJournal = (Array.isArray(journal) ? journal : []).map(item => {
+      const rowFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+        ? atlasCurrentMemoryNormalizeFingerprint387(item?.fingerprint)
+        : String(item?.fingerprint || "").trim();
+      return rowFp === fp ? enriched : item;
+    });
+    try {
+      if (typeof atlasCurrentJournalWrite33Base3814 === "function") journal = atlasCurrentJournalWrite33Base3814(nextJournal);
+      else if (typeof atlasCurrentJournalWrite33 === "function") journal = atlasCurrentJournalWrite33(nextJournal);
+    } catch (_) {}
+
+    const already = typeof atlasCurrentMemoryStoredForFingerprint387 === "function"
+      ? atlasCurrentMemoryStoredForFingerprint387(fp)
+      : null;
+    if (already) return { changed:false, updated:false, existing:true, record:already, fingerprint:fp, reason };
+
+    let record = null;
+    try {
+      record = typeof atlasCurrentMemoryRecordFromJournalSelfContained3814 === "function"
+        ? atlasCurrentMemoryRecordFromJournalSelfContained3814(enriched, proof.pkg)
+        : null;
+    } catch (_) { record = null; }
+    if (!record) return { changed:false, skipped:"record-build-failed", reason, fingerprint:fp };
+    const result = typeof atlasCurrentMemoryUpsert34 === "function"
+      ? atlasCurrentMemoryUpsert34(record)
+      : { changed:false, record:null };
+    try { globalThis.__AGENT_CRYPTO_CURRENT_MEMORY_COMMIT_3815__ = { ...result, fingerprint:fp, reason, at:new Date().toISOString() }; } catch (_) {}
+    return { ...result, fingerprint:fp, reason };
+  } finally {
+    atlasCurrentCanonicalCommitRunning3815 = false;
+  }
+}
+
+// The 38.9 proof already owns the finite boot convergence schedule. Reuse it;
+// do not add another timeout/interval merely for Memory.
+const atlasCanonicalCurrentUiTruth389Base3815 = atlasCanonicalCurrentUiTruth389;
+atlasCanonicalCurrentUiTruth389 = function atlasCanonicalCurrentUiTruth3815(reason = "ui-truth-3815") {
+  const result = atlasCanonicalCurrentUiTruth389Base3815(reason);
+  queueMicrotask(() => {
+    try {
+      const commit = atlasCurrentCanonicalCommit3815(`ui-truth:${String(reason || "")}`);
+      if (commit?.record) {
+        try { atlasMemoryLedgerRender34(); } catch (_) {}
+        try { atlasMemoryLedgerRender35(); } catch (_) {}
+        try { atlasMemoryIntelligenceRender3815Base(); } catch (_) {}
+        try { renderDecisionBoard(); } catch (_) {}
+        try { atlasDecisionWorkspaceRender33(); } catch (_) {}
+      }
+    } catch (_) {}
+  });
+  return result;
+};
+
+// Correct restored snapshot counters only from frozen package/journal evidence;
+// never borrow current LIVE Binance state.
+const atlasCanonicalCurrentStateFromProof389Base3815 = atlasCanonicalCurrentStateFromProof389;
+atlasCanonicalCurrentStateFromProof389 = function atlasCanonicalCurrentStateFromProof3815(proof, previous = null, reason = "restore-ui-truth-3815") {
+  const restored = atlasCanonicalCurrentStateFromProof389Base3815(proof, previous, reason);
+  if (!restored || !proof?.pkg) return restored;
+  const journal = typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : [];
+  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(proof?.fingerprint)
+    : String(proof?.fingerprint || "").trim();
+  const row = [...journal].reverse().find(item => {
+    const rowFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(item?.fingerprint)
+      : String(item?.fingerprint || "").trim();
+    return rowFp === fp;
+  }) || null;
+  const counts = atlasCurrentCanonicalBinanceCounts3815(proof.pkg, row, previous);
+  if (counts.evidence !== "missing") {
+    restored.direct_count = counts.direct;
+    restored.derived_count = counts.derived;
+    restored.price_count = 5;
+    restored.restore_source_truth_3815 = counts.evidence;
+  }
+  return restored;
+};
+
+const atlasMemoryIntelligenceRender3815Base = atlasMemoryIntelligenceRender;
+atlasMemoryIntelligenceRender = function atlasMemoryIntelligenceRender3815() {
+  try { atlasCurrentCanonicalCommit3815("memory-render"); } catch (_) {}
+  return atlasMemoryIntelligenceRender3815Base();
+};
+
+const atlasCurrentJournalRender33Base3815 = atlasCurrentJournalRender33;
+atlasCurrentJournalRender33 = function atlasCurrentJournalRender3815() {
+  const result = atlasCurrentJournalRender33Base3815();
+  queueMicrotask(() => { try { atlasCurrentCanonicalCommit3815("journal-render"); } catch (_) {} });
+  return result;
+};
+
+const atlasRcStaticAudit3814Base3815 = atlasRcStaticAudit;
+atlasRcStaticAudit = function atlasRcStaticAudit3815() {
+  const report = atlasRcStaticAudit3814Base3815();
+  report.checks = {
+    ...(report.checks || {}),
+    canonical_current_memory_commit_3815:
+      typeof atlasCurrentCanonicalCommit3815 === "function"
+      && typeof atlasCurrentCanonicalAssets3815 === "function"
+      && typeof atlasCurrentCanonicalBinanceCounts3815 === "function",
+    no_new_market_timer_3815: ATLAS_MARKET_REFRESH_MS === 5 * 60 * 1000,
+    runtime_truth_3813_conserved_3815: typeof atlasRuntimeTruth3813 === "function" && typeof atlasRuntimeTruthApply3813 === "function"
+  };
+  report.failed = Object.entries(report.checks).filter(([,ok]) => !ok).map(([key]) => key);
+  report.pass = report.failed.length === 0;
+  return report;
+};
+
+// Immediate finite attempt after the complete script has installed every wrapper.
+queueMicrotask(() => {
+  try {
+    const commit = atlasCurrentCanonicalCommit3815("boot-final");
+    if (commit?.record) {
+      try { atlasMemoryLedgerRender34(); } catch (_) {}
+      try { atlasMemoryLedgerRender35(); } catch (_) {}
+      try { atlasMemoryIntelligenceRender3815Base(); } catch (_) {}
+      try { renderDecisionBoard(); } catch (_) {}
+    }
+  } catch (_) {}
+});
