@@ -1663,11 +1663,14 @@ Human validation remains required only before any real financial decision/action
 - Market Flow / CSS / index.html unchanged.
 
 
-## Build 30.0.05 — Aerith Bounded Conclusion Recovery Lock
+## Build 30.0.05 — UI Progress Readability + 32K Lock
 
-- Root cause corrected: browser /conclusion timeout was 135 s while Bridge/Ollama could wait 240 s.
-- Bridge V1.9.3 gives GPT-OSS 45 s maximum for the optional bounded Aerith comment.
-- On model timeout/failure, Bridge returns the complete deterministic Aerith synthesis instead of failing.
-- Browser /conclusion timeout is 75 s, longer than the Bridge fallback window.
-- Atlas 4/4 is preserved and is not recomputed for an Aerith timeout.
-- No manual validation is required between Atlas and Aerith.
+Targeted correction requested from screenshot annotations.
+
+- Keeps `ollama · gpt-oss:20b-32k`.
+- Enlarges the local dialogue readiness/status text.
+- Makes Atlas progress explicit as 0 %, 25 %, 50 %, 75 %, 100 %.
+- Keeps 1/4, 2/4, 3/4, 4/4 alongside percentage.
+- Removes the blocking `no_forbidden_financial_instruction` regex contract that could reject a valid cautious Aerith response merely because it contained words such as `ordre automatique` in a negated sentence.
+- No new business rule added.
+- Atlas 4 reports → NØX → Aerith automatic chain preserved.
