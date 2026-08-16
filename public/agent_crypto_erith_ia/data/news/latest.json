@@ -1,20 +1,20 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-08-16T15:40:25.995444+00:00",
+  "generated_at": "2026-08-16T16:44:30.847923+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 4,
-    "critical_24h": 4,
+    "events_24h": 2,
+    "critical_24h": 2,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
     "sources_failed": 0,
-    "lead_event_id": "feed_6afd9cbaf9167a0e",
+    "lead_event_id": "feed_470c0bed0a57cfa2",
     "decision": "Surveillance renforcée"
   },
   "source_status": [
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 4,
-      "latency_ms": 335,
+      "latency_ms": 342,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 162,
+      "latency_ms": 134,
       "error": null
     },
     {
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 126,
+      "latency_ms": 128,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 184,
+      "latency_ms": 191,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 24,
-      "latency_ms": 363,
+      "latency_ms": 264,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 187,
+      "latency_ms": 176,
       "error": null
     },
     {
@@ -91,8 +91,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 26,
-      "latency_ms": 120,
+      "qualified_count": 25,
+      "latency_ms": 91,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 13,
-      "latency_ms": 860,
+      "latency_ms": 455,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 86,
+      "latency_ms": 72,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "world",
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
-      "fetched_count": 23,
+      "fetched_count": 24,
       "qualified_count": 1,
-      "latency_ms": 273,
+      "latency_ms": 235,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 153,
+      "latency_ms": 185,
       "error": null
     }
   ],
@@ -584,11 +584,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-14T15:29:13+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.971598+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.971598+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.245426+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.245426+00:00",
       "freshness": {
         "iso": "2026-08-14T15:29:13+00:00",
-        "hours": 48.19,
+        "hours": 49.25,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -859,12 +859,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-16T14:02:32+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.124620+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.124620+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.323399+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.323399+00:00",
       "freshness": {
         "iso": "2026-08-16T14:02:32+00:00",
-        "hours": 1.63,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.7,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -925,11 +925,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-13T18:26:04+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.913459+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.913459+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.149684+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.149684+00:00",
       "freshness": {
         "iso": "2026-08-13T18:26:04+00:00",
-        "hours": 69.24,
+        "hours": 70.31,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1270,11 +1270,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-14T18:31:03+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.893628+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.893628+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.131049+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.131049+00:00",
       "freshness": {
         "iso": "2026-08-14T18:31:03+00:00",
-        "hours": 45.16,
+        "hours": 46.22,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1929,11 +1929,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T07:14:37+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.151057+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.151057+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.349416+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.349416+00:00",
       "freshness": {
         "iso": "2026-08-14T07:14:37+00:00",
-        "hours": 56.43,
+        "hours": 57.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1999,11 +1999,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T17:14:02+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.896797+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.896797+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.133689+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.133689+00:00",
       "freshness": {
         "iso": "2026-08-14T17:14:02+00:00",
-        "hours": 46.44,
+        "hours": 47.51,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2138,11 +2138,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-15T14:40:24+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.955392+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.955392+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.214803+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.214803+00:00",
       "freshness": {
         "iso": "2026-08-15T14:40:24+00:00",
-        "hours": 25.0,
+        "hours": 26.07,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2207,11 +2207,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-14T18:57:04+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.964573+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.964573+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.233155+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.233155+00:00",
       "freshness": {
         "iso": "2026-08-14T18:57:04+00:00",
-        "hours": 44.72,
+        "hours": 45.79,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2346,11 +2346,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T20:16:34+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.040102+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.040102+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.353286+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.353286+00:00",
       "freshness": {
         "iso": "2026-08-14T20:16:34+00:00",
-        "hours": 43.4,
+        "hours": 44.47,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2412,11 +2412,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-13T20:32:19+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.041627+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.041627+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.354507+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.354507+00:00",
       "freshness": {
         "iso": "2026-08-13T20:32:19+00:00",
-        "hours": 67.14,
+        "hours": 68.2,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2478,11 +2478,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-13T15:00:00+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.012958+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.012958+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.273574+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.273574+00:00",
       "freshness": {
         "iso": "2026-08-13T15:00:00+00:00",
-        "hours": 72.67,
+        "hours": 73.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2542,11 +2542,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-10T18:00:00+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.042966+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.042966+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.355768+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.355768+00:00",
       "freshness": {
         "iso": "2026-08-10T18:00:00+00:00",
-        "hours": 141.67,
+        "hours": 142.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2608,12 +2608,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-16T14:00:00+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.125728+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.125728+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.324511+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.324511+00:00",
       "freshness": {
         "iso": "2026-08-16T14:00:00+00:00",
-        "hours": 1.67,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.74,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2672,11 +2672,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T17:48:04+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.141542+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.141542+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.339579+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.339579+00:00",
       "freshness": {
         "iso": "2026-08-14T17:48:04+00:00",
-        "hours": 45.87,
+        "hours": 46.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3005,11 +3005,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T10:39:39+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.904344+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.904344+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.140253+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.140253+00:00",
       "freshness": {
         "iso": "2026-08-14T10:39:39+00:00",
-        "hours": 53.01,
+        "hours": 54.08,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3069,11 +3069,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T09:50:40+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.905409+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.905409+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.141292+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.141292+00:00",
       "freshness": {
         "iso": "2026-08-14T09:50:40+00:00",
-        "hours": 53.83,
+        "hours": 54.9,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3263,11 +3263,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T08:02:18+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.989544+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.989544+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.270012+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.270012+00:00",
       "freshness": {
         "iso": "2026-08-14T08:02:18+00:00",
-        "hours": 55.64,
+        "hours": 56.7,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3848,11 +3848,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-15T15:56:05+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.130414+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.130414+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.329411+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.329411+00:00",
       "freshness": {
         "iso": "2026-08-15T15:56:05+00:00",
-        "hours": 23.74,
+        "hours": 24.81,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3916,11 +3916,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-15T15:12:29+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.133152+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.133152+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.331927+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.331927+00:00",
       "freshness": {
         "iso": "2026-08-15T15:12:29+00:00",
-        "hours": 24.47,
+        "hours": 25.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4675,11 +4675,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-14T14:22:57+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.975862+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.975862+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.249957+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.249957+00:00",
       "freshness": {
         "iso": "2026-08-14T14:22:57+00:00",
-        "hours": 49.29,
+        "hours": 50.36,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4743,11 +4743,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-14T14:14:06+00:00",
-      "first_seen_at": "2026-08-16T15:40:24.977658+00:00",
-      "last_seen_at": "2026-08-16T15:40:24.977658+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.252006+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.252006+00:00",
       "freshness": {
         "iso": "2026-08-14T14:14:06+00:00",
-        "hours": 49.44,
+        "hours": 50.51,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5147,11 +5147,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-15T14:00:00+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.134350+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.134350+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.333214+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.333214+00:00",
       "freshness": {
         "iso": "2026-08-15T14:00:00+00:00",
-        "hours": 25.67,
+        "hours": 26.74,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5484,11 +5484,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-14T11:06:12+00:00",
-      "first_seen_at": "2026-08-16T15:40:25.147724+00:00",
-      "last_seen_at": "2026-08-16T15:40:25.147724+00:00",
+      "first_seen_at": "2026-08-16T16:44:30.345935+00:00",
+      "last_seen_at": "2026-08-16T16:44:30.345935+00:00",
       "freshness": {
         "iso": "2026-08-14T11:06:12+00:00",
-        "hours": 52.57,
+        "hours": 53.64,
         "label": "Cette semaine",
         "inferred": false
       },
