@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.9",
+  build: "38.10",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1377,7 +1377,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.9 RESTORE UI TRUTH LOCK · CANONICAL CURRENT 38.8 CONSERVÉ · MEMORY JOURNAL 38.7 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.10 CURRENT MEMORY COMMIT LOCK · RESTORE UI TRUTH 38.9 CONSERVÉ · CANONICAL CURRENT 38.8 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12120,7 +12120,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.9",
+  interface: "Build 38.10",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40206,7 +40206,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.9";
+const ATLAS_BUILD = "38.10";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46041,6 +46041,261 @@ atlasRcStaticAudit = function atlasRcStaticAudit389() {
       && typeof atlasCanonicalCurrentJournalEnsure389 === "function"
       && typeof atlasCanonicalCurrentMemoryEnsure389 === "function"
       && typeof atlasCurrentStateWrite389 === "function"
+  };
+  report.pass = Object.values(report.checks).every(Boolean);
+  return report;
+};
+
+
+/* ============================================================
+   38.10 — CURRENT MEMORY COMMIT LOCK
+   Live evidence on 38.9:
+   - CURRENT truth is now coherent and stable: 100 % · Atlas 4/4 · NØX · Aerith · REPOS.
+   - Journal CURRENT correctly persists CURRENT #1.
+   - Memory Intelligence can still show 0 CURRENT even while the journal contains
+     a fully closed, same-fingerprint CURRENT.
+
+   Narrow fix only:
+   - Journal + persisted synthesis are the witnesses.
+   - If the strict 38.7 builder cannot materialize a CURRENT memory row, rebuild it
+     from the same closed transaction and the exact canonical market observation.
+   - No Binance/gate/Bridge/scheduler/Atlas/NØX/Aerith/CURRENT state mutation.
+   - No interval. Book remains read-only and can never create a local CURRENT.
+   ============================================================ */
+
+function atlasCurrentMemorySameSecond3810(left, right) {
+  const a = Date.parse(String(left || ""));
+  const b = Date.parse(String(right || ""));
+  return Number.isFinite(a) && Number.isFinite(b) && Math.floor(a / 1000) === Math.floor(b / 1000);
+}
+
+function atlasCurrentMemoryCanonicalObservation3810(pkg, collector) {
+  if (typeof readAutoMemory !== "function") return null;
+  const rows = readAutoMemory().filter(row => {
+    if (!row || typeof row !== "object") return false;
+    if (typeof atlasCurrentMemoryFingerprint34 === "function" && atlasCurrentMemoryFingerprint34(row)) return false;
+    return String(row?.collector_id || "local-legacy") === String(collector || "local-legacy")
+      && Array.isArray(row?.assets)
+      && row.assets.length > 0;
+  });
+  if (!rows.length) return null;
+
+  const marketId = typeof atlasCanonicalCurrentPackageMarketId389 === "function"
+    ? atlasCanonicalCurrentPackageMarketId389(pkg)
+    : String(pkg?.canonical_market_snapshot_id || "").trim();
+  if (marketId) {
+    const exact = [...rows].reverse().find(row => {
+      const rowId = String(
+        row?.market_snapshot_id
+        || row?.source_market_snapshot_id
+        || row?.source_snapshot_id
+        || ""
+      ).trim();
+      return rowId && rowId === marketId;
+    });
+    if (exact) return exact;
+  }
+
+  const marketTime = pkg?.canonical_market_timestamp
+    || pkg?.snapshot_at
+    || pkg?.snapshot?.strict_contract?.market?.timestamp
+    || pkg?.analytical_state?.market?.timestamp
+    || null;
+  if (marketTime) {
+    const exactTime = [...rows].reverse().find(row => atlasCurrentMemorySameSecond3810(
+      row?.source_market_generated_at || row?.market_generated_at || row?.source_time || row?.saved_at,
+      marketTime
+    ));
+    if (exactTime) return exactTime;
+  }
+  return null;
+}
+
+function atlasCurrentMemoryFallbackRecord3810(row, pkg = atlasSharedSynthesisState?.package) {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  if (!row || !pkg) return null;
+  if (typeof atlasCurrentMemoryJournalRowValid387 === "function" && !atlasCurrentMemoryJournalRowValid387(row)) return null;
+  if (typeof atlasCurrentMemoryPackageBindsJournal387 === "function" && !atlasCurrentMemoryPackageBindsJournal387(pkg, row)) return null;
+
+  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(row?.fingerprint)
+    : String(row?.fingerprint || "").trim();
+  if (!fp) return null;
+
+  const collector = typeof getCollectorId === "function" ? getCollectorId() : "local";
+  const marketObservation = atlasCurrentMemoryCanonicalObservation3810(pkg, collector);
+  const frozen = Array.isArray(pkg?.current_memory_assets)
+    ? pkg.current_memory_assets.filter(asset => asset?.symbol)
+    : [];
+  let target = frozen;
+  if (!target.length && typeof atlasCurrentMemoryTargetAssets34 === "function") {
+    try { target = atlasCurrentMemoryTargetAssets34(pkg) || []; } catch (_) { target = []; }
+  }
+
+  let assets = Array.isArray(marketObservation?.assets)
+    ? (typeof atlasCurrentMemoryClone34 === "function" ? atlasCurrentMemoryClone34(marketObservation.assets) : JSON.parse(JSON.stringify(marketObservation.assets)))
+    : [];
+  if (target.length && typeof atlasCurrentMemoryOverlayAssets34 === "function") {
+    assets = atlasCurrentMemoryOverlayAssets34(assets, target);
+  }
+
+  // A CURRENT memory record must carry actual observed assets. Never manufacture
+  // an analytical unit from the journal alone if its canonical market payload is absent.
+  if (!Array.isArray(assets) || !assets.length) return null;
+
+  const cleanFp = fp.replace(/^sha256:/, "");
+  const completedAt = row?.completed_at || pkg?.generated_at || new Date().toISOString();
+  const marketId = typeof atlasCanonicalCurrentPackageMarketId389 === "function"
+    ? atlasCanonicalCurrentPackageMarketId389(pkg)
+    : String(pkg?.canonical_market_snapshot_id || marketObservation?.market_snapshot_id || "").trim();
+  const marketTime = pkg?.canonical_market_timestamp
+    || pkg?.snapshot_at
+    || pkg?.snapshot?.strict_contract?.market?.timestamp
+    || pkg?.analytical_state?.market?.timestamp
+    || marketObservation?.market_generated_at
+    || marketObservation?.source_time
+    || null;
+  const analyticalFp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(pkg?.fingerprint)
+    : String(pkg?.fingerprint || "").trim();
+  const direct = Number(row?.direct_count ?? pkg?.analytical_state?.source_truth?.binance?.direct_pairs ?? 5);
+  const derived = Number(row?.derived_count ?? pkg?.analytical_state?.source_truth?.binance?.derived_pairs ?? 0);
+
+  return {
+    ...(marketObservation && typeof atlasCurrentMemoryClone34 === "function" ? atlasCurrentMemoryClone34(marketObservation) : {}),
+    schema: typeof ATLAS_CURRENT_MEMORY_34_SCHEMA !== "undefined" ? ATLAS_CURRENT_MEMORY_34_SCHEMA : "atlas_current_memory_record_v34",
+    id: `${collector}_current_${cleanFp.slice(0,40)}`,
+    snapshot_id: `${collector}_current_${cleanFp.slice(0,40)}`,
+    collector_id: collector,
+    collector_type: marketObservation?.collector_type || "local_browser",
+    record_kind: "CURRENT",
+    analytical_current: true,
+    analysis_fingerprint: fp,
+    current_fingerprint: fp,
+    transaction_fingerprint: fp,
+    analytical_truth_fingerprint: analyticalFp || null,
+    saved_at: completedAt,
+    last_seen_at: new Date().toISOString(),
+    observation_count: 1,
+    version: typeof ATLAS_RELEASE !== "undefined" ? ATLAS_RELEASE : "Build 38.10",
+    source: "CURRENT analytique Atlas → NØX → Aerith",
+    source_time: completedAt,
+    market_generated_at: completedAt,
+    source_market_generated_at: marketTime,
+    source_market_snapshot_id: marketId || null,
+    market_snapshot_id: marketId || marketObservation?.market_snapshot_id || null,
+    market_source_mode: pkg?.analytical_state?.market?.mode || marketObservation?.market_source_mode || null,
+    assets,
+    current_truth: {
+      fingerprint: fp,
+      transaction_fingerprint: fp,
+      analytical_truth_fingerprint: analyticalFp || null,
+      direct_count: Number.isFinite(direct) ? direct : 0,
+      derived_count: Number.isFinite(derived) ? derived : 0,
+      atlas_reports: 4,
+      nox: true,
+      aerith: true,
+      indexeddb_verified: row?.indexeddb_verified === true || atlasSharedSynthesisState?.persistence?.ok === true,
+      observation_only: true,
+      journal_verified: true,
+      canonical_memory_commit_3810: true
+    }
+  };
+}
+
+// Keep the strict 38.7 path first. The 38.10 fallback is reached only when that
+// path returns null despite a fully verified journal/package transaction pair.
+const atlasCurrentMemoryRecordFromJournal387Base3810 = atlasCurrentMemoryRecordFromJournal387;
+atlasCurrentMemoryRecordFromJournal387 = function atlasCurrentMemoryRecordFromJournal3810(row, pkg = atlasSharedSynthesisState?.package) {
+  let record = null;
+  try { record = atlasCurrentMemoryRecordFromJournal387Base3810(row, pkg); } catch (_) { record = null; }
+  return record || atlasCurrentMemoryFallbackRecord3810(row, pkg);
+};
+
+function atlasCurrentMemoryCommitLatest3810(reason = "memory-commit-3810") {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) {
+    return { changed:false, skipped:"book-readonly", record:null, reason };
+  }
+  const journal = typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : [];
+  const row = [...journal].reverse().find(item => typeof atlasCurrentMemoryJournalRowValid387 === "function"
+    ? atlasCurrentMemoryJournalRowValid387(item)
+    : (item && Number(item?.atlas_reports || 0) >= 4 && item?.nox === true && item?.aerith === true && item?.fingerprint)
+  ) || null;
+  if (!row) return { changed:false, skipped:"journal-empty", record:null, reason };
+
+  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+    ? atlasCurrentMemoryNormalizeFingerprint387(row.fingerprint)
+    : String(row.fingerprint || "").trim();
+  const stored = typeof atlasCurrentMemoryStoredForFingerprint387 === "function"
+    ? atlasCurrentMemoryStoredForFingerprint387(fp)
+    : null;
+  if (stored) return { changed:false, updated:false, verified:true, record:stored, reason };
+
+  const pkg = atlasSharedSynthesisState?.package || null;
+  const record = atlasCurrentMemoryRecordFromJournal387(row, pkg);
+  if (!record) return { changed:false, skipped:"payload-not-ready", record:null, reason };
+
+  let result = null;
+  try { result = typeof atlasCurrentMemoryUpsert34 === "function" ? atlasCurrentMemoryUpsert34(record) : null; } catch (_) { result = null; }
+  const verified = typeof atlasCurrentMemoryStoredForFingerprint387 === "function"
+    ? atlasCurrentMemoryStoredForFingerprint387(fp)
+    : null;
+  return verified
+    ? { ...(result || {}), record:verified, verified:true, reason }
+    : { changed:false, skipped:"write-not-verified", record:null, reason };
+}
+
+// Every Memory Intelligence split gets one synchronous, idempotent journal commit
+// before counting. This is local storage only; it does not call Bridge/Ollama and
+// cannot restart the analytical pipeline.
+const atlasMemorySplit35Base3810 = atlasMemorySplit35;
+atlasMemorySplit35 = function atlasMemorySplit3810() {
+  try { atlasCurrentMemoryCommitLatest3810("memory-split"); } catch (_) {}
+  return atlasMemorySplit35Base3810();
+};
+
+// Journal rendering is the exact point at which CURRENT #N is visibly committed.
+// Commit memory immediately after that write, then repaint only memory/decision UI.
+const atlasCurrentJournalRender33Base3810 = atlasCurrentJournalRender33;
+atlasCurrentJournalRender33 = function atlasCurrentJournalRender3810() {
+  const records = atlasCurrentJournalRender33Base3810();
+  let commit = null;
+  try { commit = atlasCurrentMemoryCommitLatest3810("journal-render"); } catch (_) {}
+  if (commit?.record) {
+    queueMicrotask(() => {
+      try { atlasMemoryLedgerRender34(); } catch (_) {}
+      try { atlasMemoryLedgerRender35(); } catch (_) {}
+      try { atlasMemoryIntelligenceRender(); } catch (_) {}
+      try { renderDecisionBoard(); } catch (_) {}
+    });
+  }
+  return records;
+};
+
+// IndexedDB persistence finishes asynchronously after the synthesis is already
+// visible. Bounded one-shot retries cover that timing gap without a watchdog.
+const ATLAS_MEMORY_COMMIT_3810_DELAYS = Object.freeze([120, 500, 1400, 3200, 6500]);
+ATLAS_MEMORY_COMMIT_3810_DELAYS.forEach(delay => window.setTimeout(() => {
+  try {
+    const result = atlasCurrentMemoryCommitLatest3810(`boot:${delay}`);
+    if (result?.record) {
+      try { atlasMemoryLedgerRender34(); } catch (_) {}
+      try { atlasMemoryLedgerRender35(); } catch (_) {}
+      try { atlasMemoryIntelligenceRender(); } catch (_) {}
+      try { renderDecisionBoard(); } catch (_) {}
+    }
+  } catch (_) {}
+}, delay));
+
+const atlasRcStaticAudit389Base3810 = atlasRcStaticAudit;
+atlasRcStaticAudit = function atlasRcStaticAudit3810() {
+  const report = atlasRcStaticAudit389Base3810();
+  report.checks = {
+    ...(report.checks || {}),
+    current_memory_commit_3810:
+      typeof atlasCurrentMemoryCommitLatest3810 === "function"
+      && typeof atlasCurrentMemoryFallbackRecord3810 === "function"
+      && typeof atlasCurrentMemoryCanonicalObservation3810 === "function"
   };
   report.pass = Object.values(report.checks).every(Boolean);
   return report;
