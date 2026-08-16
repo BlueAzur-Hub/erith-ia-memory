@@ -3356,3 +3356,20 @@ incohérence de fichiers de même page et elle peut empêcher l'interface de dé
 - fonctionnalités 30.0.08 conservées : progression graphique, pédagogie, STOP AFTER CURRENT.
 
 Aucune nouvelle règle métier n'est ajoutée.
+
+
+## Build 30.0.11 — MARKET BOOT RESTORE · 32K
+
+Correction de récupération, sans nouveau module.
+
+- Base: 30.0.10 réellement présente sur main.
+- Pile unique: Control Center V2.3.2R4 / Bridge V1.9.4 / gpt-oss:20b-32k.
+- Suppression des identités statiques obsolètes V2.1.0R1 / V1.7.6 / R2.
+- Correction du contrat RC R2 -> R4.
+- Le loader du snapshot public essaie d'abord le chemin canonique relatif,
+  puis le même fichier via un chemin same-origin GitHub Pages calculé depuis l'URL.
+- Aucun appel CoinGecko direct depuis Firefox n'est ajouté.
+- Si le JSON public échoue encore, l'erreur exacte est affichée dans l'interface
+  au lieu de rester seulement sur 0/5.
+- Les fonctions Atlas/Aerith de la base sont conservées, mais aucun nouveau
+  développement n'est ajouté dans ce build de récupération.

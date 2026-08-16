@@ -1280,8 +1280,8 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.10",
-  control_center: "V2.3.2R2",
+  build: "30.0.11",
+  control_center: "V2.3.2R4",
   bridge: "V1.9.4",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
@@ -1298,7 +1298,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.10",
+    build: ATLAS_BUILD === "30.0.11",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R4"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.4"
@@ -1350,7 +1350,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.10 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.0.11 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -11975,7 +11975,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.10",
+  interface: "Build 30.0.11",
   controlCenter: "V2.3.2R4",
   bridge: "V1.9.4",
   bridgeNumeric: "1.9.4",
@@ -34521,21 +34521,64 @@ function atlasInitExchangeFeed() {
 const SourceAdapter = {
   async publicCryptoMarket(options = {}) {
     const cacheBust = `atlas=${Date.now()}`;
-    const [payload, status] = await Promise.all([
-      fetchJsonWithRetry(
-        `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.latest}?${cacheBust}`,
-        { signal: options.signal, networkKind: "market" },
-        12000,
-        1
-      ),
-      fetchJsonWithRetry(
-        `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.status}?${cacheBust}`,
-        { signal: options.signal, networkKind: "source" },
-        8000,
-        1
-      ).catch(() => null)
-    ]);
-    return atlasNormalizePublicCryptoSnapshot(payload, status);
+
+    const sameOriginBase = (() => {
+      try {
+        const path = String(window.location.pathname || "");
+        const marker = "/public/agent_crypto_erith_ia/web/";
+        const index = path.indexOf(marker);
+        if (index >= 0) {
+          return `${path.slice(0, index)}/public/agent_crypto_erith_ia/data/crypto`;
+        }
+      } catch {}
+      return "../data/crypto";
+    })();
+
+    const candidates = [
+      {
+        latest: `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.latest}?${cacheBust}`,
+        status: `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.status}?${cacheBust}`,
+        label: "relative"
+      },
+      {
+        latest: `${sameOriginBase}/latest.json?${cacheBust}`,
+        status: `${sameOriginBase}/status.json?${cacheBust}`,
+        label: "same-origin"
+      }
+    ];
+
+    let lastError = null;
+
+    for (const candidate of candidates) {
+      try {
+        const payload = await fetchJsonWithRetry(
+          candidate.latest,
+          { signal: options.signal, networkKind: "market" },
+          15000,
+          1
+        );
+
+        const status = await fetchJsonWithRetry(
+          candidate.status,
+          { signal: options.signal, networkKind: "source" },
+          8000,
+          1
+        ).catch(() => null);
+
+        const normalized = atlasNormalizePublicCryptoSnapshot(payload, status);
+        return {
+          ...normalized,
+          transportPath: candidate.label
+        };
+      } catch (error) {
+        if (error?.name === "AbortError") throw error;
+        lastError = error;
+      }
+    }
+
+    throw new Error(
+      `Snapshot public Crypto inaccessible sur les chemins relatifs et same-origin : ${cleanError(lastError)}`
+    );
   },
 
   async coingeckoTop50Eur(options = {}) {
@@ -34981,9 +35024,11 @@ async function runLivecheck(options = {}) {
       atlasPatchMarketSnapshotDom();
     } else if (!applyMarketCache("Snapshot public Crypto indisponible : dernière lecture conservée en cache navigateur.")) {
       atlasSetSourceLock("none", null, "Aucun snapshot public Crypto exploitable", false);
+      const publicError = cleanError(error);
       setLiveStatus("fail", "Marché public indisponible");
-      clearMarketDisplay("Aucun snapshot public Crypto exploitable");
-      setTableDecision("Marché public indisponible", "fail");
+      clearMarketDisplay(`Snapshot public non chargé : ${publicError}`);
+      setTableDecision(`Marché public indisponible · ${publicError}`, "fail");
+      setText(els.sourceTime, "Erreur de lecture JSON public");
     }
 
     renderSourceGrid();
@@ -39003,7 +39048,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.10";
+const ATLAS_BUILD = "30.0.11";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
