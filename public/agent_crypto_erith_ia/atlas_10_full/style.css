@@ -419,3 +419,129 @@ button.primary,.primary{
 .profile-card.active,.example-card.active{
   border-color:rgba(239,155,200,.55);
 }
+
+/* ========================================================================== 
+   V5 · AETHER CONSTELLATION — DESIGN ADD-ON ONLY
+   Baseline V4 / engine V3.3R9 preserved. No workflow/state logic changed.
+   ========================================================================== */
+:root{
+  --aether:#a89bff;
+  --aether-cyan:#8ceaff;
+  --aether-pearl:#f8f6ff;
+  --aether-gold:#dcc28b;
+  --aether-line:rgba(176,163,255,.30);
+  --aether-glow:rgba(148,132,255,.18);
+}
+
+/* Home — preserve historic background, turn the right column into Vault + Aether */
+.hero{display:block;min-height:860px;padding-bottom:28px}
+.hero-grid{grid-template-columns:minmax(0,1.12fr) minmax(430px,.72fr);gap:62px;padding:74px 0 30px}
+.hero-copy{align-self:center;padding:18px 0}
+.hero-copy:before{content:"THE LIVING CONSTELLATION";display:inline-flex;margin-bottom:18px;padding:7px 10px;border:1px solid rgba(216,184,120,.22);border-radius:999px;background:rgba(8,12,28,.46);color:var(--vault-champagne);font:800 9px/1 "Cascadia Code",monospace;letter-spacing:.18em}
+.hero-side-stack{display:grid;gap:14px;align-self:center}
+.hero-side-stack .hero-matrix{width:100%}
+
+.aether-key-card{position:relative;display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:16px;align-items:center;min-height:116px;padding:12px 14px;border:1px solid var(--aether-line);border-radius:22px;background:linear-gradient(120deg,rgba(25,24,62,.92),rgba(9,18,39,.94) 55%,rgba(14,38,53,.90));box-shadow:0 18px 55px rgba(0,0,0,.30),inset 0 0 32px rgba(140,234,255,.035);overflow:hidden;transition:.2s ease}
+.aether-key-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 16% 50%,rgba(168,155,255,.18),transparent 36%),linear-gradient(90deg,transparent,rgba(140,234,255,.025));pointer-events:none}
+.aether-key-card:hover{transform:translateY(-2px);border-color:rgba(168,155,255,.58);box-shadow:0 24px 70px rgba(0,0,0,.38),0 0 36px rgba(148,132,255,.08)}
+.aether-key-media{position:relative;z-index:1;width:82px;height:92px;overflow:hidden;border:1px solid rgba(248,246,255,.16);border-radius:16px;background:#080c18}
+.aether-key-media img{width:100%;height:100%;object-fit:cover;object-position:50% 46%;filter:saturate(.88) contrast(1.03) brightness(.94)}
+.aether-key-copy{position:relative;z-index:1;display:grid;gap:3px}
+.aether-key-copy small{color:var(--aether-cyan);font:800 9px/1.2 "Cascadia Code",monospace;letter-spacing:.15em}
+.aether-key-copy strong{font-size:19px;color:var(--aether-pearl)}
+.aether-key-copy>span{color:#c7c8df;font-size:11px}
+.aether-key-copy em{margin-top:4px;color:var(--aether-gold);font-size:10px;font-style:normal}
+.aether-key-card>b{position:relative;z-index:1;color:var(--aether-cyan);font-size:10px;white-space:nowrap}
+
+.hero-constellation-strip{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:0;border:1px solid rgba(145,201,255,.14);border-radius:18px;overflow:hidden;background:rgba(4,8,18,.72);backdrop-filter:blur(14px)}
+.hero-constellation-strip>div{position:relative;padding:15px 18px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.008))}
+.hero-constellation-strip>div+div{border-left:1px solid rgba(145,201,255,.12)}
+.hero-constellation-strip span,.hero-constellation-strip b{display:block}
+.hero-constellation-strip span{color:var(--vault-rose);font:800 9px/1.2 "Cascadia Code",monospace;letter-spacing:.14em}
+.hero-constellation-strip b{margin-top:4px;color:#d9e4f3;font-size:11px}
+.hero-constellation-strip .is-aether{background:radial-gradient(circle at 50% 100%,rgba(168,155,255,.10),transparent 68%)}
+.hero-constellation-strip .is-aether span{color:var(--aether-cyan)}
+
+/* Lineage — Aether is a portable mode of the root, not a new lineage branch */
+.aether-lineage-note{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:16px;align-items:center;margin:20px 0 0;padding:14px 18px;border:1px solid var(--aether-line);border-radius:18px;background:linear-gradient(100deg,rgba(73,59,127,.14),rgba(100,220,255,.035),rgba(255,255,255,.018));transition:.18s ease}
+.aether-lineage-note:hover{transform:translateY(-1px);border-color:rgba(168,155,255,.52)}
+.aether-orbit-sigil{display:grid;place-items:center;width:54px;height:54px;border:1px solid rgba(168,155,255,.45);border-radius:50%;background:radial-gradient(circle,rgba(140,234,255,.10),rgba(168,155,255,.04) 55%,transparent 56%);color:var(--aether-pearl);font:900 14px "Cascadia Code",monospace;box-shadow:0 0 24px rgba(148,132,255,.08)}
+.aether-lineage-note>span:nth-child(2){display:grid;gap:2px}
+.aether-lineage-note small{color:var(--aether-cyan);font:800 8px "Cascadia Code",monospace;letter-spacing:.14em}
+.aether-lineage-note strong{font-size:16px}
+.aether-lineage-note em{color:var(--muted);font-size:10px;font-style:normal}
+.aether-lineage-note>b{color:var(--aether-cyan);font-size:10px;white-space:nowrap}
+
+/* Constellation — orbit node visually attached to Aerith-7 */
+.aether-orbit-node{position:relative;z-index:2;display:grid;gap:3px;width:min(430px,92%);margin:12px auto 22px;padding:12px 18px;text-align:center;border:1px solid var(--aether-line);border-radius:999px;background:linear-gradient(90deg,rgba(35,31,81,.88),rgba(9,26,47,.9));box-shadow:0 0 34px rgba(148,132,255,.07);transition:.18s ease}
+.aether-orbit-node:before{content:"";position:absolute;left:50%;top:-13px;width:1px;height:13px;background:linear-gradient(var(--aether),transparent)}
+.aether-orbit-node:hover{border-color:rgba(168,155,255,.60);transform:translateY(-1px)}
+.aether-orbit-node span{color:var(--aether-cyan);font:800 8px/1.2 "Cascadia Code",monospace;letter-spacing:.16em}
+.aether-orbit-node b{color:var(--aether-pearl);font-size:13px}
+.aether-orbit-node small{color:#aeb8ce;font-size:9px}
+
+/* Canonical library — special Aether ribbon is additive and non-interfering */
+.aether-canonical-ribbon{position:relative;display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:20px;align-items:center;margin-top:18px;padding:14px 18px;border:1px solid var(--aether-line);border-radius:20px;background:linear-gradient(112deg,rgba(40,34,86,.26),rgba(9,18,38,.94) 45%,rgba(18,46,57,.82));overflow:hidden;transition:.18s ease}
+.aether-canonical-ribbon:hover{transform:translateY(-2px);border-color:rgba(168,155,255,.58);box-shadow:0 20px 60px rgba(0,0,0,.26)}
+.aether-ribbon-media{width:104px;height:124px;border:1px solid rgba(248,246,255,.16);border-radius:15px;overflow:hidden;background:#070b16}
+.aether-ribbon-media img{width:100%;height:100%;object-fit:cover;object-position:50% 45%;filter:saturate(.88) brightness(.95)}
+.aether-ribbon-copy{display:block}
+.aether-ribbon-copy small{display:block;color:var(--aether-cyan);font:800 8px "Cascadia Code",monospace;letter-spacing:.14em}
+.aether-ribbon-copy strong{display:block;margin:5px 0 4px;color:var(--aether-pearl);font-size:21px}
+.aether-ribbon-copy p{max-width:820px;margin:0;color:#bac5d8;font-size:11px}
+.aether-ribbon-copy em{display:block;margin-top:8px;color:var(--aether-gold);font:700 8px "Cascadia Code",monospace;letter-spacing:.08em;font-style:normal}
+.aether-canonical-ribbon>b{color:var(--aether-cyan);font-size:10px;white-space:nowrap}
+
+/* Full Aether profile — editorial/read-only profile card, no workflow changes */
+.aether-profile-detail{position:relative;display:grid;grid-template-columns:minmax(330px,.72fr) minmax(0,1.28fr);gap:34px;margin:34px 0 44px;padding:28px;border:1px solid var(--aether-line);border-radius:30px;background:radial-gradient(circle at 20% 20%,rgba(168,155,255,.11),transparent 30%),radial-gradient(circle at 95% 80%,rgba(140,234,255,.06),transparent 30%),linear-gradient(145deg,rgba(14,17,42,.96),rgba(5,9,21,.99));box-shadow:0 32px 90px rgba(0,0,0,.34);overflow:hidden}
+.aether-profile-detail:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.32) 0 1px,transparent 1.2px);background-size:76px 76px;opacity:.06;pointer-events:none}
+.aether-profile-media{position:relative;z-index:1;min-height:570px;border:1px solid rgba(248,246,255,.14);border-radius:22px;overflow:hidden;background:#060a14}
+.aether-profile-media img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:50% 44%;filter:saturate(.90) contrast(1.02) brightness(.90)}
+.aether-profile-media:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(5,8,20,.72),transparent 38%),radial-gradient(circle at 50% 50%,transparent 40%,rgba(4,7,15,.15));pointer-events:none}
+.aether-profile-mark{position:absolute;z-index:2;right:18px;bottom:14px;color:rgba(248,246,255,.93);font:900 34px "Cascadia Code",monospace;letter-spacing:.08em;text-shadow:0 4px 20px #000}
+.aether-profile-copy{position:relative;z-index:1;align-self:center}
+.aether-profile-copy h2{margin:0;font-size:clamp(38px,4vw,60px);letter-spacing:-.04em}
+.aether-profile-lead{max-width:780px;margin:16px 0 18px;color:#c2ccdd;font-size:16px;line-height:1.6}
+.aether-badges{display:flex;flex-wrap:wrap;gap:7px}
+.aether-badges span{padding:7px 9px;border:1px solid rgba(168,155,255,.22);border-radius:999px;background:rgba(168,155,255,.04);color:var(--aether-cyan);font:700 8px "Cascadia Code",monospace;letter-spacing:.09em}
+.aether-profile-copy blockquote{margin:22px 0;padding:16px 18px;border-left:2px solid var(--aether-gold);border-radius:0 14px 14px 0;background:linear-gradient(90deg,rgba(220,194,139,.08),transparent);color:var(--aether-pearl);font-size:18px;font-weight:800}
+.aether-state-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.aether-state-grid article{padding:15px;border:1px solid rgba(145,201,255,.14);border-radius:16px;background:rgba(255,255,255,.022)}
+.aether-state-grid small,.aether-state-grid strong,.aether-state-grid p{display:block}
+.aether-state-grid small{color:var(--aether-cyan);font:800 8px "Cascadia Code",monospace;letter-spacing:.13em}
+.aether-state-grid strong{margin:5px 0;color:#f4f6ff;font-size:15px}
+.aether-state-grid p{margin:0;color:var(--muted);font-size:10px}
+.aether-skill-card{display:grid;grid-template-columns:48px 1fr;gap:13px;align-items:center;margin-top:12px;padding:14px;border:1px solid rgba(168,155,255,.18);border-radius:16px;background:linear-gradient(90deg,rgba(168,155,255,.06),rgba(100,220,255,.025))}
+.aether-skill-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(168,155,255,.40);border-radius:50%;color:var(--aether-cyan);font-size:22px}
+.aether-skill-card small,.aether-skill-card strong,.aether-skill-card p{display:block}
+.aether-skill-card small{color:var(--aether-cyan);font:800 8px "Cascadia Code",monospace;letter-spacing:.12em}
+.aether-skill-card strong{margin:3px 0;color:#edf1ff;font-size:13px}
+.aether-skill-card p{margin:0;color:var(--muted);font-size:10px}
+.aether-profile-note{margin:14px 0 0;color:#9ca9bd;font-size:10px}
+
+@media(max-width:1250px){
+  .hero-grid{grid-template-columns:minmax(0,1fr) 430px}
+  .aether-profile-detail{grid-template-columns:360px 1fr}
+}
+@media(max-width:980px){
+  .hero{min-height:auto}
+  .hero-grid{grid-template-columns:1fr;padding-bottom:24px}
+  .hero-side-stack{width:min(660px,100%)}
+  .hero-constellation-strip{grid-template-columns:1fr 1fr}
+  .hero-constellation-strip>div:nth-child(3){border-left:0;border-top:1px solid rgba(145,201,255,.12)}
+  .hero-constellation-strip>div:nth-child(4){border-top:1px solid rgba(145,201,255,.12)}
+  .aether-profile-detail{grid-template-columns:1fr}
+  .aether-profile-media{min-height:520px}
+}
+@media(max-width:680px){
+  .aether-key-card{grid-template-columns:72px 1fr}.aether-key-card>b{grid-column:2}
+  .aether-key-media{width:66px;height:82px}
+  .hero-constellation-strip{grid-template-columns:1fr}
+  .hero-constellation-strip>div+div{border-left:0;border-top:1px solid rgba(145,201,255,.12)}
+  .aether-lineage-note,.aether-canonical-ribbon{grid-template-columns:58px 1fr}
+  .aether-lineage-note>b,.aether-canonical-ribbon>b{grid-column:2}
+  .aether-ribbon-media{width:54px;height:72px}
+  .aether-profile-detail{padding:16px;border-radius:22px}
+  .aether-profile-media{min-height:420px}
+  .aether-state-grid{grid-template-columns:1fr}
+}
