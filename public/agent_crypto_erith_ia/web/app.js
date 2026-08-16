@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.0",
+  build: "38.1",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1375,7 +1375,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 37.0 DIALOGUE + SCANNER TRUTH · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.1 RECOVERY LOCK · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12118,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.0",
+  interface: "Build 38.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -17874,7 +17874,7 @@ function atlasLocalReportsSetBusy(busy) {
   atlasLocalDialogueState.busy = !!busy;
   const computeBlocked = !atlasDeviceComputeAllowed();
   document.querySelectorAll(
-    "#btnAtlasLocalAsk, [data-atlas-local-summary], #btnLocalBridgeProbe"
+    "#btnAtlasLocalAsk, #btnAtlasQuestionAtlas37, #btnAtlasQuestionAerith37, #btnAtlasQuestionChain37, [data-atlas-local-summary], #btnLocalBridgeProbe"
   ).forEach(button => { button.disabled = !!busy || computeBlocked; });
   document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.disabled = !!busy; });
   const button = document.getElementById("btnAtlasLocalRunAll");
@@ -40142,7 +40142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.0";
+const ATLAS_BUILD = "38.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -42108,8 +42108,12 @@ function atlasDecisionBoardV2RenderMemoryExtras() {
   const persistent = (memory.persistence || []).filter(row => row?.state === "persistant");
   const comparison = atlasDecisionBoardV2Comparison(stats);
 
+  const analyticalBasis = stats?.analyticalBasis === "CURRENT";
+  const basisUnit = analyticalBasis ? "CURRENT analytique(s)" : "relevé(s) marché";
+  const compareHeading = document.querySelector("#decisionMemoryCompare .decision-memory-compare-head b");
+  if (compareHeading) compareHeading.textContent = analyticalBasis ? "Comparer les deux derniers CURRENT" : "Comparer les deux derniers relevés marché";
   setText(document.getElementById("decisionMemoryHorizons"), atlasDecisionBoardV2Horizons(memory));
-  setText(document.getElementById("decisionMemoryHorizonsDetail"), `${memory.records || 0} snapshot(s) distinct(s) · horizons 3/5/10 descriptifs.`);
+  setText(document.getElementById("decisionMemoryHorizonsDetail"), `${memory.records || 0} ${basisUnit} distinct(s) · horizons 3/5/10 descriptifs.`);
   setText(document.getElementById("decisionMemoryPersistence"), persistent.length ? persistent.map(row=>row.symbol).join(" / ") : "Pas de persistance forte");
   setText(document.getElementById("decisionMemoryPersistenceDetail"), (memory.persistence || []).length ? memory.persistence.map(row=>`${row.symbol} ${row.state} · cohérence ${(Number(row.consistency || 0)*100).toFixed(0)} %`).join(" · ") : "Trois observations minimum par repère.");
   setText(document.getElementById("decisionMemoryCollectors"), memory.collectors?.label || `${memory.collectors_count || 0} collecteur(s)`);
@@ -42136,7 +42140,9 @@ function atlasDecisionBoardV2RenderMemoryExtras() {
       const b = document.createElement("b");
       const span = document.createElement("span");
       const small = document.createElement("small");
-      b.textContent = index === 0 ? "Dernier CURRENT" : `CURRENT -${index}`;
+      b.textContent = analyticalBasis
+        ? (index === 0 ? "Dernier CURRENT" : `CURRENT -${index}`)
+        : (index === 0 ? "Dernier relevé marché" : `Relevé marché -${index}`);
       span.textContent = row.time ? new Date(row.time).toLocaleString("fr-FR") : "date inconnue";
       small.textContent = `${row.collector} · ${row.id.slice(0, 18)}${row.id.length > 18 ? "…" : ""}`;
       article.append(b, span, small);
@@ -42425,7 +42431,10 @@ function atlasDecisionComparisonTable33(stats) {
   const table = document.createElement("table");
   table.className = "atlas-current-compare-table-33";
   const thead = document.createElement("thead");
-  thead.innerHTML = "<tr><th>Actif</th><th>CURRENT -1</th><th>CURRENT</th><th>Écart</th></tr>";
+  const analyticalBasis = stats?.analyticalBasis === "CURRENT";
+  thead.innerHTML = analyticalBasis
+    ? "<tr><th>Actif</th><th>CURRENT -1</th><th>CURRENT</th><th>Écart</th></tr>"
+    : "<tr><th>Actif</th><th>RELEVÉ -1</th><th>RELEVÉ</th><th>Écart</th></tr>";
   const tbody = document.createElement("tbody");
   symbols.forEach(symbol => {
     const a = atlasMemoryIntelligenceAsset(previous, symbol);
@@ -42602,8 +42611,45 @@ function atlasCurrentMemoryOverlayAssets34(baseAssets, targetAssets) {
   return assets;
 }
 
+function atlasCurrentMemoryResolveClosed381(current = atlasCurrentStateRead(), pkg = atlasSharedSynthesisState?.package) {
+  const packageFp = atlasCurrentMemoryPackageFingerprint34(pkg);
+  if (!pkg || !packageFp) return null;
+
+  if (current && String(current.status || "") === "CURRENT" && String(current.fingerprint || "").trim() === packageFp) {
+    return current;
+  }
+
+  // A new market frame can legitimately move the transactional state to PENDING while the
+  // previous closed CURRENT remains the last completed analysis. Recover only a REAL journal
+  // entry with Atlas 4/4 + NØX + Aerith and the same package fingerprint. Never fabricate one.
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  const journal = typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : [];
+  const row = [...journal].reverse().find(item =>
+    String(item?.fingerprint || "").trim() === packageFp
+    && Number(item?.atlas_reports || 0) >= 4
+    && item?.nox === true
+    && item?.aerith === true
+  );
+  if (!row) return null;
+  return {
+    schema: ATLAS_CURRENT_STATE_SCHEMA,
+    status: "CURRENT",
+    fingerprint: packageFp,
+    generated_at: row.snapshot_at || pkg?.snapshot_at || pkg?.generated_at || null,
+    promoted_at: row.completed_at || pkg?.generated_at || new Date().toISOString(),
+    direct_count: Number(row.direct_count || 0),
+    derived_count: Number(row.derived_count || 0),
+    expected_count: 5,
+    atlas_reports: 4,
+    aerith_conclusion: true,
+    model: row.model || "gpt-oss:20b-32k",
+    recovered_from_closed_journal: true
+  };
+}
+
 function atlasCurrentMemoryRecordFromCurrent34(current = atlasCurrentStateRead(), pkg = atlasSharedSynthesisState?.package) {
-  if (!current || String(current.status || "") !== "CURRENT") return null;
+  current = atlasCurrentMemoryResolveClosed381(current, pkg);
+  if (!current) return null;
   const fp = String(current.fingerprint || "").trim();
   if (!fp) return null;
   const packageFp = atlasCurrentMemoryPackageFingerprint34(pkg);
@@ -43296,7 +43342,7 @@ window.setTimeout(() => {
 
 
 /* ============================================================
-   35.0 — AUTONOMOUS OPERATOR + CURRENT MEMORY + JOURNAL
+   35.0 UI/MEMORY LAYER — 38.1 RECOVERY: SECOND WATCHDOG DISABLED
    Cumulative layer over 34.3.
    Ryzen builds automatically. Transformer Book remains consultation only.
    Protected: Bridge V1.9.5 · Control Center V2.3.2R5 · gpt-oss:20b-32k.
@@ -43436,9 +43482,19 @@ function atlasOperatorSummaryRender35() {
   const current = typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null;
   const memory = atlasMemoryIntelligenceCompute();
   const split = atlasMemorySplit35();
-  let snapshot = null;
+  // 38.1 RECOVERY LOCK — PURE RENDER ONLY.
+  // IMPORTANT: atlasBuildCryptoPageSnapshot() is transactional: it renders truth and calls
+  // atlasCurrentOnSnapshot(). Calling it from a renderer created a render → CURRENT → render
+  // feedback loop in 38.0. UI summaries must read already-existing state only.
+  const snapshot = atlasLocalDialogueState?.lastSnapshot || null;
+  const feed = state?.dataBroker?.exchangeFeed || {};
   let qualification = null;
-  try { snapshot = atlasBuildCryptoPageSnapshot(); qualification = atlasCurrentQualification(snapshot); } catch (_) {}
+  try { qualification = snapshot ? atlasCurrentQualification(snapshot) : null; } catch (_) {}
+  if (!qualification) qualification = {
+    direct_count: Math.max(0, Number(feed.directCount || 0)),
+    derived_count: Math.max(0, Number(feed.derivedCount || 0)),
+    stable_ready: feed.atlasStableReady === true
+  };
   const status = String(current?.status || "WAITING");
   const currentOk = status === "CURRENT" && !!current?.fingerprint;
   const direct = Number(qualification?.direct_count || 0);
@@ -43526,10 +43582,12 @@ function atlasAutonomousOperatorTick35(reason = "watchdog") {
 
 let atlasAutonomousOperatorTimer35 = 0;
 function atlasAutonomousOperatorStart35() {
-  if (atlasAutonomousOperatorTimer35) return atlasAutonomousOperatorTimer35;
-  atlasAutonomousOperatorTimer35 = window.setInterval(() => atlasAutonomousOperatorTick35("watchdog"), 4000);
-  window.setTimeout(() => atlasAutonomousOperatorTick35("startup"), 800);
-  return atlasAutonomousOperatorTimer35;
+  // 38.1: disabled by design. Automation is owned by the proven 34.1 scheduler
+  // (atlasAfterLivecheck341 + atlasLocalReportsScheduleAutomatic341).
+  // No second watchdog is allowed to build snapshots or reopen transactions.
+  if (atlasAutonomousOperatorTimer35) window.clearInterval(atlasAutonomousOperatorTimer35);
+  atlasAutonomousOperatorTimer35 = 0;
+  return 0;
 }
 
 function atlasCurrentArchiveOpen35() {
@@ -43971,8 +44029,26 @@ window.setTimeout(()=>{
    Scanner audit separates ranking source from observed quote source.
    ============================================================ */
 
+function atlasQuestionSnapshotRead381() {
+  // Build the same factual payload WITHOUT atlasCurrentOnSnapshot(), truth rendering or
+  // transaction mutation. Restore lastSnapshot because the core builder only uses it as cache.
+  const previousLast = atlasLocalDialogueState?.lastSnapshot || null;
+  try {
+    const snapshot = atlasBuildCryptoPageSnapshotCore();
+    if (atlasLocalDialogueState) atlasLocalDialogueState.lastSnapshot = previousLast;
+    const envelope = atlasAnalyticalBuildEnvelope(snapshot);
+    snapshot.schema = "atlas_crypto_page_snapshot_v3_truth_evidence";
+    snapshot.analytical_state = envelope;
+    snapshot.fingerprint = `sha256:${envelope.fingerprint.value}`;
+    return snapshot;
+  } catch (error) {
+    if (atlasLocalDialogueState) atlasLocalDialogueState.lastSnapshot = previousLast;
+    return previousLast ? atlasSharedSynthesisClone(previousLast) : null;
+  }
+}
+
 function atlasQuestionFreeContext37(profile, question) {
-  const snapshot=atlasBuildCryptoPageSnapshot();
+  const snapshot=atlasQuestionSnapshotRead381() || atlasLocalDialogueState?.lastSnapshot || { fingerprint:"", strict_contract:{}, generated_at:new Date().toISOString() };
   const currentReports=Object.fromEntries(
     ATLAS_LOCAL_REPORT_MODES.map(mode=>[
       mode,
