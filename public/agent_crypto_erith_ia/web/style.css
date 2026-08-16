@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 31.2 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
+   BUILD 32.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 31.2
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-31.2
+   ATLAS_ASSET_BUILD: 32.0
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-32.0
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "31.2";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-31.2";
+  --atlas-asset-build: "32.0";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-32.0";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25071,7 +25071,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 31.2 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   BUILD 32.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
    Scoped to the local analysis chamber. No global dashboard geometry change.
    ========================================================================== */
 .atlas-analysis-progress{
@@ -25105,7 +25105,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.2 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   BUILD 32.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Localized control only. No dashboard geometry rewrite.
    ============================================================ */
 .atlas-device-compute-control{
@@ -25137,7 +25137,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* =========================================================
-   BUILD 31.2 — ATLAS CURRENT STATUS RELOCATION
+   BUILD 32.0 — ATLAS CURRENT STATUS RELOCATION
    The CURRENT/live qualification banner belongs to the local
    Atlas section, below the pipeline/device-role card.
    ========================================================= */
@@ -25146,7 +25146,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.2 — COHERENCE & OPERATOR POLISH
+   BUILD 32.0 — COHERENCE & OPERATOR POLISH
    Snapshot/LIVE truth, deterministic Top 5, diagnostics.
    ============================================================ */
 .atlas-frame-truth{
@@ -25170,7 +25170,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.2 — MEMORY INTELLIGENCE
+   BUILD 32.0 — MEMORY INTELLIGENCE
    3/5/10 snapshots · persistence · multi-collector confirmation.
    ============================================================ */
 .atlas-memory-intelligence{margin-top:14px;padding:15px;border:1px solid rgba(150,122,255,.28);border-radius:16px;background:linear-gradient(135deg,rgba(16,17,42,.82),rgba(5,31,39,.72))}
@@ -25190,7 +25190,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.2 — TRUTH POLISH + VISUAL STATE
+   BUILD 32.0 — TRUTH POLISH + VISUAL STATE
    Visual-only feedback for a qualified/active CURRENT pipeline.
    No dashboard geometry or engine behavior is changed here.
    ============================================================ */
@@ -25215,7 +25215,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.2 — SHARED READ-ONLY KNOWLEDGE
+   BUILD 32.0 — SHARED READ-ONLY KNOWLEDGE
    Permanent dictionary + explicit Ryzen -> Book handoff.
    No change to Atlas/NØX/Aerith pipeline geometry.
    ============================================================ */
@@ -25313,3 +25313,49 @@ html[data-atlas-market-domain="metals"]
   .atlas-knowledge-library-controls{grid-template-columns:1fr}
   .atlas-book-readonly-grid{grid-template-columns:1fr}
 }
+
+
+/* ============================================================
+   BUILD 32.0 — DECISION BOARD V2 + SHARED MEMORY HANDOFF
+   Memory Intelligence is descriptive only. No trading action.
+   ============================================================ */
+.decision-memory-v2{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.decision-memory-v2 article{
+  min-width:0;
+  padding:12px 13px;
+  border-radius:13px;
+  border:1px solid rgba(100,220,205,.20);
+  background:rgba(4,21,33,.72);
+}
+.decision-memory-v2 article span{display:block;color:#93a8bb;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}
+.decision-memory-v2 article b{display:block;margin:5px 0;color:#dffaf3;font-size:1rem}
+.decision-memory-v2 article small{display:block;color:#9eb1c3;line-height:1.35}
+.decision-memory-v2-action[data-state="ready"]{border-color:rgba(83,231,174,.48);box-shadow:0 0 0 1px rgba(83,231,174,.08) inset}
+.decision-memory-v2-action[data-state="warn"]{border-color:rgba(255,205,93,.40)}
+.decision-memory-compare{
+  margin-top:12px;
+  border:1px solid rgba(112,191,229,.20);
+  border-radius:14px;
+  background:rgba(3,17,29,.62);
+  padding:12px 13px;
+}
+.decision-memory-compare-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.decision-memory-compare-head b{display:block;color:#f9e4aa}
+.decision-memory-compare-head span{display:block;color:#9fb1c4;margin-top:3px;font-size:.86rem}
+.decision-memory-compare-actions{display:flex;flex-wrap:wrap;gap:8px}
+.decision-memory-compare-actions button{
+  border:1px solid rgba(104,215,208,.30);border-radius:10px;background:rgba(9,42,57,.72);color:inherit;padding:8px 10px;font-weight:800
+}
+.decision-memory-timeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:11px}
+.decision-memory-timeline article{padding:9px 10px;border-radius:10px;border:1px solid rgba(125,210,226,.14);background:rgba(5,23,35,.72)}
+.decision-memory-timeline article b{display:block;color:#9ff0dd;font-size:.86rem}
+.decision-memory-timeline article span,.decision-memory-timeline article small{display:block;color:#99aabd;font-size:.76rem;margin-top:2px}
+.decision-memory-deltas{margin-top:10px;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,.12);color:#d6e4ec;line-height:1.5}
+#decision-board[data-v2-mode="memory-only"]{border-color:rgba(92,207,225,.34)}
+@media (max-width:1100px){.decision-memory-v2{grid-template-columns:repeat(2,minmax(0,1fr))}.decision-memory-timeline{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){.decision-memory-v2{grid-template-columns:1fr}.decision-memory-compare-head{flex-direction:column}.decision-memory-timeline{grid-template-columns:1fr}}

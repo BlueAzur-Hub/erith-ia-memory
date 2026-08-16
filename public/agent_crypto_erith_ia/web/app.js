@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "31.2",
+  build: "32.0",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1302,7 +1302,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "31.2",
+    build: ATLAS_BUILD === "32.0",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1365,7 +1365,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 31.2 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 32.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12108,7 +12108,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 31.2",
+  interface: "Build 32.0",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12221,7 +12221,7 @@ const ATLAS_PEDAGOGY_GLOSSARY = Object.freeze({
 
 
 /* ============================================================
-   31.2 — SHARED READ-ONLY KNOWLEDGE
+   32.0 — SHARED READ-ONLY KNOWLEDGE
    Permanent dictionary + explicit Ryzen → Book transfer.
    No Bridge call is introduced here. Observer/STOP mode remains passive.
    ============================================================ */
@@ -16785,7 +16785,7 @@ function basketStatus(coins) { if (!coins.length) return { label: "À charger", 
 }
 
 /* ============================================================
-   31.2 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   32.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Per-browser role. Market data remain live in observer mode, while
    Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
    ============================================================ */
@@ -39981,7 +39981,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "31.2";
+const ATLAS_BUILD = "32.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -41258,7 +41258,7 @@ atlasSafeBoot("memory truth render", renderMemoryTruth);
 
 atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
 
-atlasSafeBoot("Memory Intelligence 31.2", atlasMemoryIntelligenceInit);
+atlasSafeBoot("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
 
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
@@ -41584,3 +41584,279 @@ setTimeout(() => {
 /* ============================================================
    FIN 15 — INITIALISATION / WIRING
    ============================================================ */
+
+
+/* ============================================================
+   32.0 — DECISION BOARD V2 + SHARED MEMORY HANDOFF
+   Cumulative over 31.2. No Bridge / Control Center / pipeline change.
+   ============================================================ */
+const ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2 = "atlas_book_shared_market_memory_v2";
+const ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS = 60;
+
+function atlasBookSharedMemoryPayloadV2() {
+  const raw = typeof readAutoMemory === "function" ? readAutoMemory() : [];
+  const normalized = typeof normalizeSharedRecords === "function"
+    ? normalizeSharedRecords(raw, typeof getCollectorId === "function" ? getCollectorId() : null)
+    : Array.isArray(raw) ? raw : [];
+  const records = normalized.slice(-ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS).map(record => atlasSharedSynthesisClone(record));
+  const collectors = typeof collectorStats === "function" ? collectorStats(records).collectors : [...new Set(records.map(row => row?.collector_id).filter(Boolean))];
+  return {
+    schema: ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2,
+    exported_at: new Date().toISOString(),
+    record_count: records.length,
+    collectors,
+    records
+  };
+}
+
+function atlasBookMergeSharedMemoryV2(sharedMemory) {
+  const incoming = Array.isArray(sharedMemory?.records) ? sharedMemory.records.slice(-ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS) : [];
+  if (!incoming.length || typeof readAutoMemory !== "function" || typeof writeAutoMemory !== "function" || typeof normalizeSharedRecords !== "function") {
+    return { read: incoming.length, added: 0, total: typeof readAutoMemory === "function" ? readAutoMemory().length : 0 };
+  }
+  const before = readAutoMemory();
+  const beforeIds = new Set(before.map(row => row?.snapshot_id || row?.id || atlasMemoryCanonicalSnapshotId?.(row)).filter(Boolean));
+  const merged = normalizeSharedRecords([...before, ...incoming], typeof getCollectorId === "function" ? getCollectorId() : null);
+  const saved = writeAutoMemory(merged);
+  const added = saved.filter(row => {
+    const id = row?.snapshot_id || row?.id || (typeof atlasMemoryCanonicalSnapshotId === "function" ? atlasMemoryCanonicalSnapshotId(row) : null);
+    return id && !beforeIds.has(id);
+  }).length;
+  try { renderSharedMemory?.(); } catch {}
+  try { renderAutoReader?.(); } catch {}
+  try { atlasMemoryIntelligenceRender?.(); } catch {}
+  try { renderDecisionBoard?.(); } catch {}
+  try { atlasBookReadOnlyKnowledgeRefresh?.(); } catch {}
+  return { read: incoming.length, added, total: saved.length };
+}
+
+function atlasSharedSynthesisExportJson() {
+  const pkg = atlasSharedSynthesisState.package;
+  if (!pkg) return false;
+  try {
+    const clean = atlasSharedSynthesisNormalizePackage(pkg);
+    const payload = { ...clean, shared_memory: atlasBookSharedMemoryPayloadV2() };
+    const raw = JSON.stringify(payload);
+    const stamp = new Date(clean.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
+    downloadTextFile(`agent_crypto_book_synthesis_${stamp}.json`, "application/json;charset=utf-8", raw);
+    const memCount = payload.shared_memory?.record_count || 0;
+    atlasSharedSynthesisSetStatus("ready", `JSON Book exporté · ${Math.max(1, Math.round(atlasSharedSynthesisUtf8Bytes(raw) / 1024))} Ko · ${memCount} snapshot(s) mémoire inclus.`, "Disponible");
+    return true;
+  } catch (error) {
+    atlasSharedSynthesisSetStatus("error", `Export JSON refusé : ${error?.message || "erreur inconnue"}.`, "Erreur");
+    return false;
+  }
+}
+
+async function atlasSharedSynthesisImportFile(event) {
+  const input = event?.currentTarget;
+  const file = input?.files?.[0];
+  if (!file) {
+    atlasSharedSynthesisSetStatus("idle", "Import prêt · aucun fichier sélectionné.", "Prêt");
+    return false;
+  }
+  const operation = ++atlasSharedSynthesisState.operation;
+  atlasSharedSynthesisSetStatus("working", `Fichier sélectionné · ${file.name || "synthèse Ryzen"} · lecture en cours…`, "Lecture");
+  try {
+    if (file.size > ATLAS_SHARED_SYNTHESIS_IMPORT_LIMIT_BYTES) throw new Error("fichier supérieur à 5 Mo");
+    const raw = await file.text();
+    const parsed = JSON.parse(raw);
+    if (operation !== atlasSharedSynthesisState.operation) return false;
+    const memoryResult = atlasBookMergeSharedMemoryV2(parsed?.shared_memory || null);
+    const clean = atlasSharedSynthesisActivate(parsed, "import");
+    atlasSharedSynthesisSetStatus("working", "Synthèse affichée · écriture et relecture IndexedDB…", "Enregistrement");
+    const saved = await atlasSharedSynthesisPersist(clean);
+    if (operation !== atlasSharedSynthesisState.operation) return false;
+    atlasSharedSynthesisState.persistence = saved;
+    atlasSharedSynthesisRender();
+    atlasMemoryIntelligenceRender?.();
+    renderDecisionBoard?.();
+    atlasBookReadOnlyKnowledgeRefresh?.();
+    const memoryText = memoryResult.read ? ` · mémoire ${memoryResult.added} nouveau(x) / ${memoryResult.total} total` : " · aucune mémoire jointe";
+    if (saved.ok) {
+      atlasSharedSynthesisSetStatus("ready", `Import terminé · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko)${memoryText}.`, "Importée");
+    } else {
+      atlasSharedSynthesisSetStatus("warning", `Import affiché · IndexedDB impossible : ${saved.error}${memoryText}.`, "Importée sans mémoire");
+    }
+    return true;
+  } catch (error) {
+    if (operation === atlasSharedSynthesisState.operation) {
+      atlasSharedSynthesisSetStatus("error", `Import refusé : ${error?.message || "fichier JSON invalide"}.`, "Erreur");
+    }
+    return false;
+  } finally {
+    if (input) input.value = "";
+  }
+}
+
+function atlasDecisionBoardV2MemoryState() {
+  const memory = typeof atlasMemoryIntelligenceCompute === "function" ? atlasMemoryIntelligenceCompute() : null;
+  const stats = typeof atlasDecisionMemoryStats === "function" ? atlasDecisionMemoryStats() : { records:[], rawRecords:[], collectors:[], last:null, previous:null };
+  return { memory, stats };
+}
+
+function atlasDecisionBoardV2Action(memory, liveReady) {
+  const records = Number(memory?.records || 0);
+  const collectors = Number(memory?.collectors_count || 0);
+  const persistent = Array.isArray(memory?.persistence) ? memory.persistence.filter(row => row?.state === "persistant") : [];
+  if (!liveReady && records) return { label:"LECTURE MÉMOIRE", detail:"Poste en lecture seule ou live absent : consulter la continuité déjà mémorisée.", state:"ready" };
+  if (!liveReady) return { label:"ATTENDRE LE LIVE", detail:"Aucun snapshot live qualifié et mémoire insuffisante.", state:"warn" };
+  if (records < 3) return { label:"COLLECTER", detail:`${records}/3 snapshots distincts : construire d’abord une continuité minimale.`, state:"warn" };
+  if (collectors < 2) return { label:"COMPARER", detail:"Un seul collecteur comparable : chercher une seconde observation indépendante avant de renforcer la lecture.", state:"warn" };
+  if (persistent.length) return { label:"SURVEILLER CONTINUITÉ", detail:`Persistance observée sur ${persistent.map(row=>row.symbol).join(" / ")} · observation uniquement.`, state:"ready" };
+  return { label:"OBSERVER", detail:"Mémoire suffisante mais pas de persistance forte : conserver une lecture neutre.", state:"ready" };
+}
+
+function atlasDecisionBoardV2Horizons(memory) {
+  const bits = [3,5,10].map(size => {
+    const h = memory?.horizons?.[size];
+    return h?.ready ? `${size}: ${h.label}` : `${size}: ${h?.records || 0}/${size}`;
+  });
+  return bits.join(" · ");
+}
+
+function atlasDecisionBoardV2Comparison(stats) {
+  const last = stats?.last || null;
+  const previous = stats?.previous || null;
+  if (!last || !previous) return { ready:false, lines:[], meta:"Deux snapshots CURRENT distincts du même collecteur sont nécessaires." };
+  const symbols = ["BTC","ETH","BNB","XRP","SOL"];
+  const lines = symbols.map(symbol => {
+    const a = atlasMemoryIntelligenceAsset(previous, symbol);
+    const b = atlasMemoryIntelligenceAsset(last, symbol);
+    const delta = atlasMemoryIntelligencePctDelta(a, b);
+    return Number.isFinite(delta) ? `${symbol} ${delta >= 0 ? "+" : ""}${delta.toFixed(2)} %` : `${symbol} —`;
+  });
+  const aTime = atlasMemoryRecordTime(previous);
+  const bTime = atlasMemoryRecordTime(last);
+  return {
+    ready:true,
+    lines,
+    meta:`${aTime ? new Date(aTime).toLocaleString("fr-FR") : "ancien"} → ${bTime ? new Date(bTime).toLocaleString("fr-FR") : "récent"} · ${stats.lastCollector || "collecteur"}`
+  };
+}
+
+function atlasDecisionBoardV2Timeline(stats) {
+  return (stats?.records || []).slice(-5).reverse().map(record => {
+    const time = atlasMemoryRecordTime(record);
+    const collector = record?.collector_id || "local-legacy";
+    const id = String(atlasMemoryCanonicalSnapshotId(record) || record?.snapshot_id || record?.id || "snapshot");
+    return { time, collector, id };
+  });
+}
+
+function atlasDecisionBoardV2RenderMemoryExtras() {
+  const { memory, stats } = atlasDecisionBoardV2MemoryState();
+  if (!memory) return null;
+  const liveReady = !!(state.liveOk && Array.isArray(state.coins) && state.coins.length);
+  const action = atlasDecisionBoardV2Action(memory, liveReady);
+  const persistent = (memory.persistence || []).filter(row => row?.state === "persistant");
+  const comparison = atlasDecisionBoardV2Comparison(stats);
+
+  setText(document.getElementById("decisionMemoryHorizons"), atlasDecisionBoardV2Horizons(memory));
+  setText(document.getElementById("decisionMemoryHorizonsDetail"), `${memory.records || 0} snapshot(s) distinct(s) · horizons 3/5/10 descriptifs.`);
+  setText(document.getElementById("decisionMemoryPersistence"), persistent.length ? persistent.map(row=>row.symbol).join(" / ") : "Pas de persistance forte");
+  setText(document.getElementById("decisionMemoryPersistenceDetail"), (memory.persistence || []).length ? memory.persistence.map(row=>`${row.symbol} ${row.state} · cohérence ${(Number(row.consistency || 0)*100).toFixed(0)} %`).join(" · ") : "Trois observations minimum par repère.");
+  setText(document.getElementById("decisionMemoryCollectors"), memory.collectors?.label || `${memory.collectors_count || 0} collecteur(s)`);
+  setText(document.getElementById("decisionMemoryCollectorsDetail"), memory.collectors?.detail || "Deux collecteurs récents sont nécessaires pour confirmer une observation.");
+  setText(document.getElementById("decisionMemoryDivergence"), memory.local_github?.label || "Comparaison indisponible");
+  setText(document.getElementById("decisionMemoryDivergenceDetail"), memory.local_github?.detail || "Mémoire locale et GitHub nécessaires.");
+  setText(document.getElementById("decisionMemoryConfidence"), `${memory.confidence?.label || "faible"} · ${memory.confidence?.score ?? 0}/100`);
+  setText(document.getElementById("decisionMemoryConfidenceDetail"), "Score de continuité/concordance des données, jamais probabilité de gain.");
+  setText(document.getElementById("decisionMemoryAction"), action.label);
+  setText(document.getElementById("decisionMemoryActionDetail"), action.detail);
+  const actionCard = document.querySelector(".decision-memory-v2-action");
+  if (actionCard) actionCard.dataset.state = action.state;
+  setText(document.getElementById("decisionMemoryCompareMeta"), comparison.meta);
+  const deltas = document.getElementById("decisionMemoryDeltas");
+  if (deltas) deltas.textContent = comparison.ready ? comparison.lines.join(" · ") : "Aucune comparaison disponible.";
+
+  const timeline = document.getElementById("decisionMemoryTimeline");
+  if (timeline) {
+    const rows = atlasDecisionBoardV2Timeline(stats);
+    timeline.replaceChildren();
+    if (!rows.length) timeline.textContent = "Mémoire en collecte.";
+    else rows.forEach((row, index) => {
+      const article = document.createElement("article");
+      const b = document.createElement("b");
+      const span = document.createElement("span");
+      const small = document.createElement("small");
+      b.textContent = index === 0 ? "Dernier CURRENT" : `CURRENT -${index}`;
+      span.textContent = row.time ? new Date(row.time).toLocaleString("fr-FR") : "date inconnue";
+      small.textContent = `${row.collector} · ${row.id.slice(0, 18)}${row.id.length > 18 ? "…" : ""}`;
+      article.append(b, span, small);
+      timeline.appendChild(article);
+    });
+  }
+  const board = document.getElementById("decision-board");
+  if (board) board.dataset.v2Mode = !liveReady && memory.records ? "memory-only" : "live";
+  return { memory, stats, action, comparison };
+}
+
+function atlasDecisionBoardV2Markdown() {
+  const extra = atlasDecisionBoardV2RenderMemoryExtras();
+  const memory = extra?.memory;
+  if (!memory) return "# Agent-Crypto — Decision Board V2\n\nMemory Intelligence indisponible.";
+  const persistent = (memory.persistence || []).filter(row => row?.state === "persistant");
+  return [
+    "# Agent-Crypto — Decision Board V2", "",
+    `- Build : ${ATLAS_BUILD}`,
+    `- Généré : ${new Date().toISOString()}`,
+    `- État de travail : ${extra.action.label}`,
+    `- Confiance de continuité : ${memory.confidence?.label || "faible"} · ${memory.confidence?.score ?? 0}/100`,
+    `- Snapshots distincts : ${memory.records || 0}`,
+    `- Collecteurs : ${memory.collectors_count || 0}`, "",
+    "## Horizons 3 / 5 / 10", "", atlasDecisionBoardV2Horizons(memory), "",
+    "## Persistance", "", persistent.length ? persistent.map(row=>`- ${row.symbol} · cohérence ${(Number(row.consistency||0)*100).toFixed(0)} %`).join("\n") : "- Pas de persistance forte.", "",
+    "## Confirmation collecteurs", "", `- ${memory.collectors?.label || "Indisponible"}`, `- ${memory.collectors?.detail || ""}`, "",
+    "## Local ↔ GitHub", "", `- ${memory.local_github?.label || "Indisponible"}`, `- ${memory.local_github?.detail || ""}`, "",
+    "## Comparaison deux derniers CURRENT", "", extra.comparison.ready ? `- ${extra.comparison.lines.join(" · ")}` : `- ${extra.comparison.meta}`, "",
+    "## Stop point", "", "- Decision Board V2 reste descriptif. Aucun ordre, achat, vente ou rendement futur n’est produit.", "- Validation humaine uniquement avant toute décision ou action financière réelle."
+  ].join("\n");
+}
+
+function atlasDecisionBoardV2Export() {
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  downloadTextFile(`agent_crypto_decision_board_v2_${stamp}.md`, "text/markdown;charset=utf-8", atlasDecisionBoardV2Markdown());
+  return true;
+}
+
+const atlasDecisionBoardV1Render32 = renderDecisionBoard;
+renderDecisionBoard = function renderDecisionBoardV2() {
+  const memoryExtra = atlasDecisionBoardV2MemoryState();
+  const hasMemory = Number(memoryExtra.memory?.records || 0) > 0;
+  const hasLive = !!(state.liveOk && Array.isArray(state.coins) && state.coins.length);
+  const observer = typeof atlasDeviceComputeRoleRead === "function" && atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES?.OBSERVER;
+  if (hasLive) {
+    atlasDecisionBoardV1Render32();
+  } else if (hasMemory) {
+    const status = document.getElementById("decisionBoardStatus");
+    const grid = document.getElementById("decisionBoardGrid");
+    const verdict = document.getElementById("decisionBoardVerdict");
+    if (status) { status.textContent = `Mémoire ${memoryExtra.memory.records} snapshot(s) · lecture seule`; status.className = "pill ok"; }
+    if (grid) grid.innerHTML = `
+      <article class="decision-card"><b>Mouvement mémoire</b><span>${escapeHtml(memoryExtra.memory.persistence?.length ? memoryExtra.memory.persistence.map(row=>`${row.symbol} ${row.state}`).join(" · ") : "Collecte insuffisante")}</span></article>
+      <article class="decision-card"><b>Horizons 3/5/10</b><span>${escapeHtml(atlasDecisionBoardV2Horizons(memoryExtra.memory))}</span></article>
+      <article class="decision-card"><b>Collecteurs</b><span>${escapeHtml(memoryExtra.memory.collectors?.label || `${memoryExtra.memory.collectors_count || 0} collecteur(s)`)}</span></article>
+      <article class="decision-card"><b>Secteurs persistants</b><span>${escapeHtml(memoryExtra.memory.sectors?.length ? memoryExtra.memory.sectors.map(row=>row.category).join(" · ") : "Aucun secteur persistant")}</span></article>
+      <article class="decision-card"><b>Anomalies mémoire</b><span>${escapeHtml(memoryExtra.memory.pumps?.length ? memoryExtra.memory.pumps.map(row=>row.symbol).join(" · ") : memoryExtra.memory.anomaly?.symbol || "Aucune anomalie forte")}</span></article>
+      <article class="decision-card decision-card-wide"><b>Lecture Book / mémoire</b><span>${observer ? "STOP confirmé · aucun appel Bridge/GPT-OSS." : "Live absent · lecture des snapshots mémorisés uniquement."}</span></article>`;
+    if (verdict) verdict.innerHTML = `<div class="decision-verdict-title">Decision Board V2 : lecture mémoire uniquement</div><div class="decision-verdict-body"><div><b>Confiance continuité</b><span>${escapeHtml(`${memoryExtra.memory.confidence?.label || "faible"} · ${memoryExtra.memory.confidence?.score ?? 0}/100`)}</span></div><div><b>Règle</b><span>Aucune décision financière n’est dérivée de cette mémoire.</span></div></div>`;
+  } else {
+    atlasDecisionBoardV1Render32();
+  }
+  atlasDecisionBoardV2RenderMemoryExtras();
+};
+
+setTimeout(() => {
+  const refresh = document.getElementById("btnDecisionBoardRefresh");
+  if (refresh && refresh.dataset.atlasV2Bound !== "1") {
+    refresh.dataset.atlasV2Bound = "1";
+    refresh.addEventListener("click", () => renderDecisionBoard());
+  }
+  const exportButton = document.getElementById("btnDecisionBoardExport");
+  if (exportButton && exportButton.dataset.atlasV2Bound !== "1") {
+    exportButton.dataset.atlasV2Bound = "1";
+    exportButton.addEventListener("click", atlasDecisionBoardV2Export);
+  }
+  try { renderDecisionBoard(); } catch (error) { console.error("Decision Board V2", error); }
+}, 0);
