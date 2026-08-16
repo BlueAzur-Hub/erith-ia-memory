@@ -1280,9 +1280,9 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.04",
-  control_center: "V2.3.2R2",
-  bridge: "V1.9.2",
+  build: "30.0.05",
+  control_center: "V2.3.2R3",
+  bridge: "V1.9.3",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
     "5/5 Binance directes stables avant Atlas",
@@ -1298,7 +1298,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.04",
+    build: ATLAS_BUILD === "30.0.05",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
@@ -1350,7 +1350,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.04 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.0.05 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -11975,8 +11975,8 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.04",
-  controlCenter: "V2.3.2R2",
+  interface: "Build 30.0.05",
+  controlCenter: "V2.3.2R3",
   bridge: "V1.9.2",
   bridgeNumeric: "1.9.2",
   model: "gpt-oss:20b-32k"
@@ -17730,6 +17730,11 @@ async function atlasLocalConclusionRun(options = {}) {
     : null;
   atlasLocalConclusionSetBusy(true);
   try {
+    setText(
+      document.getElementById("atlasLocalDialogueStatus"),
+      "Aerith-10 en cours · GPT-OSS dispose de 45 s maximum ; si nécessaire le Bridge V1.9.3 termine avec la synthèse déterministe complète."
+    );
+
     const result = await atlasLocalBridgeRequest("/conclusion", {
       profile: "aerith",
       snapshot,
@@ -17738,7 +17743,7 @@ async function atlasLocalConclusionRun(options = {}) {
       nox_audit: snapshot?.strict_contract?.nox_no_fomo_v1 || null,
       pedagogy_contract: snapshot?.pedagogy || null,
       requested_reading: "whole_page_simple_detailed_expert"
-    });
+    }, 75000);
 
     const conclusionSuperseded =
       conclusionToken !== atlasLocalConclusionState.runToken
@@ -17781,10 +17786,11 @@ async function atlasLocalConclusionRun(options = {}) {
       eyebrow: "CONCLUSION AERITH-10 CRYPTO",
       quality: result?.quality || "strict_contract_v2",
       modelCommentUsed: result?.model_comment_used === true,
+      deterministicFallbackUsed: result?.deterministic_fallback_used === true,
       fingerprint,
       bridgeContract,
       lexicalDiagnostic,
-      meta: `Aerith-10 · ${result?.provider || atlasLocalDialogueState.provider || "local"} · ${result?.model || atlasLocalDialogueState.model || "modèle local"} · snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · 4 rapports Atlas-10 · contrat Bridge validé`
+      meta: `Aerith-10 · ${result?.provider || atlasLocalDialogueState.provider || "local"} · ${result?.model || atlasLocalDialogueState.model || "modèle local"} · snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · 4 rapports Atlas-10 · contrat Bridge validé · ${result?.deterministic_fallback_used === true ? "repli déterministe complet" : "commentaire GPT-OSS intégré"}`
     };
     const transactionStillCurrent =
       conclusionToken === atlasLocalConclusionState.runToken
@@ -17809,7 +17815,7 @@ async function atlasLocalConclusionRun(options = {}) {
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
     atlasLocalDialogueSetConnection(
       true,
-      `Chaîne automatique terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée. Validation humaine uniquement avant toute décision financière réelle.`
+      `Chaîne automatique terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · ${response.deterministicFallbackUsed ? "synthèse déterministe complète" : "commentaire GPT-OSS intégré"} · CURRENT validé. Validation humaine uniquement avant toute décision financière réelle.`
     );
     return true;
   } catch (error) {
@@ -38814,7 +38820,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.04";
+const ATLAS_BUILD = "30.0.05";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

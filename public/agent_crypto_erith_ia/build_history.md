@@ -3246,3 +3246,13 @@ Human validation remains required only before any real financial decision/action
 - Version Control behavior.
 - Bridge V1.9.2 / Control Center V2.3.2R2.
 - Market Flow / CSS / index.html unchanged.
+
+
+## Build 30.0.05 — Aerith Bounded Conclusion Recovery Lock
+
+- Root cause corrected: browser /conclusion timeout was 135 s while Bridge/Ollama could wait 240 s.
+- Bridge V1.9.3 gives GPT-OSS 45 s maximum for the optional bounded Aerith comment.
+- On model timeout/failure, Bridge returns the complete deterministic Aerith synthesis instead of failing.
+- Browser /conclusion timeout is 75 s, longer than the Bridge fallback window.
+- Atlas 4/4 is preserved and is not recomputed for an Aerith timeout.
+- No manual validation is required between Atlas and Aerith.
