@@ -1280,9 +1280,9 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.08",
+  build: "30.0.10",
   control_center: "V2.3.2R2",
-  bridge: "V1.9.2",
+  bridge: "V1.9.4",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
     "5/5 Binance directes stables avant Atlas",
@@ -1298,10 +1298,10 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.08",
+    build: ATLAS_BUILD === "30.0.10",
     stable_stack:
-      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
-      && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
+      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R4"
+      && ATLAS_STABLE_STACK?.bridge === "V1.9.4"
       && ATLAS_STABLE_STACK?.model === "gpt-oss:20b-32k",
     direct_gate_constants:
       ATLAS_DIRECT_5_5_STABLE_MS >= 10000
@@ -1350,7 +1350,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.08 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.0.10 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -11975,10 +11975,10 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.08",
-  controlCenter: "V2.3.2R2",
-  bridge: "V1.9.2",
-  bridgeNumeric: "1.9.2",
+  interface: "Build 30.0.10",
+  controlCenter: "V2.3.2R4",
+  bridge: "V1.9.4",
+  bridgeNumeric: "1.9.4",
   model: "gpt-oss:20b-32k"
 });
 
@@ -39003,7 +39003,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.08";
+const ATLAS_BUILD = "30.0.10";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

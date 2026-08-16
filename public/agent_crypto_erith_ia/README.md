@@ -1744,3 +1744,30 @@ Aucune nouvelle règle de contenu ou de finance n'est ajoutée.
 - Conserve STOP AFTER CURRENT de 30.0.07.
 - Conserve `gpt-oss:20b-32k`.
 - Aucun nouveau gate financier ou règle métier bloquante.
+
+
+## Build 30.0.10 — EMERGENCY LOAD RESTORE · 32K
+
+Correction prioritaire du chargement de l'interface sur Ryzen et Transformer Book.
+
+### Cause trouvée
+`index.html` provenait encore du shell 28.2.72 et chargeait explicitement :
+- `style.css?v=market-core-v2.0-alpha-build-28.2.72`
+- `app.js?v=market-core-v2.0-alpha-build-28.2.72`
+
+Après les modifications 30.x du DOM et du JavaScript, Firefox pouvait donc recevoir
+un `index.html` nouveau avec un `app.js`/`style.css` ancien en cache. C'est une
+incohérence de fichiers de même page et elle peut empêcher l'interface de démarrer.
+
+### Correction
+- index.html, app.js, style.css et version.json utilisent tous le même token `market-core-v2.0-alpha-build-30.0.10`;
+- le cache-busting force le téléchargement des bons fichiers sur les deux machines;
+- pile alignée sur l'installation réellement visible :
+  - Control Center V2.3.2R4
+  - Bridge V1.9.4
+  - Ollama gpt-oss:20b-32k
+- `bridgeNumeric` est aligné sur 1.9.4;
+- aucune référence active 16K;
+- fonctionnalités 30.0.08 conservées : progression graphique, pédagogie, STOP AFTER CURRENT.
+
+Aucune nouvelle règle métier n'est ajoutée.
