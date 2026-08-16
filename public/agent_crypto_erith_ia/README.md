@@ -1674,3 +1674,61 @@ Targeted correction requested from screenshot annotations.
 - Removes the blocking `no_forbidden_financial_instruction` regex contract that could reject a valid cautious Aerith response merely because it contained words such as `ordre automatique` in a negated sentence.
 - No new business rule added.
 - Atlas 4 reports → NØX → Aerith automatic chain preserved.
+
+
+## Build 30.0.06 — CURRENT / HISTORY Separation 32K
+
+Correction ciblée du bug visible sur l'interface :
+quatre rapports HISTORIQUE `llama3.2:latest` pouvaient être comptés comme
+`4/4 rapports prêts` pour le snapshot CURRENT.
+
+### Cause
+Un fingerprint vide était traité comme un joker dans les fonctions de progression.
+Cela permettait aux quatre cartes historiques restaurées depuis IndexedDB
+d'être comptées comme quatre rapports actuels.
+
+### Correction
+- un fingerprint vide ne valide plus aucun rapport ;
+- le compteur 0/4 → 4/4 utilise uniquement le fingerprint du snapshot CURRENT ;
+- `lastCompletedFingerprint` n'est accepté que s'il est identique au CURRENT ;
+- les cartes HISTORIQUE restent visibles et consultables ;
+- elles ne déclenchent jamais Aerith ;
+- Aerith démarre uniquement après 4/4 rapports CURRENT du même fingerprint ;
+- moteur CURRENT inchangé : `gpt-oss:20b-32k`.
+
+Aucune nouvelle règle métier. Aucun changement du modèle.
+
+
+## Build 30.0.07 — STOP AFTER CURRENT · 32K
+
+Correction du redémarrage automatique observé après une synthèse déjà terminée.
+
+### Cause
+Plusieurs événements pouvaient reprogrammer l'analyse locale :
+- retour de page (`pageshow`) ;
+- Bridge redevenu prêt ;
+- Binance 5/5 ;
+- rafraîchissements du lecteur marché ;
+- files de retry différées.
+
+Comme le fingerprint marché évolue avec les nouvelles données, le système
+pouvait considérer une petite évolution du marché comme une nouvelle transaction
+et repartir pour 4 rapports GPT-OSS.
+
+### Correction
+- après une synthèse CURRENT réussie, un verrou de session ferme le cycle ;
+- tous les timers et retries Atlas/Aerith différés sont vidés ;
+- `pageshow`, focus et visibilité ne relancent plus Atlas ;
+- la supervision du Bridge et les prix live continuent normalement ;
+- GPT-OSS reste au repos après CURRENT ;
+- une nouvelle analyse complète est autorisée uniquement après une action
+  opérateur explicite (`Rafraîchir marché`, livecheck manuel ou lecteur manuel).
+
+### Pile inchangée
+- Ollama : gpt-oss:20b-32k
+- Atlas : 4 rapports
+- NØX
+- Aerith : synthèse automatique
+- historique séparé de CURRENT
+
+Aucune nouvelle règle de contenu ou de finance n'est ajoutée.
