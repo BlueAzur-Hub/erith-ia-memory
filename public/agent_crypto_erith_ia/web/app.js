@@ -1281,8 +1281,8 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
   build: "30.0.05",
-  control_center: "V2.3.2R2",
-  bridge: "V1.9.2",
+  control_center: "V2.3.2R4",
+  bridge: "V1.9.4",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
     "5/5 Binance directes stables avant Atlas",
@@ -1300,8 +1300,8 @@ function atlasRcStaticAudit() {
   const checks = {
     build: ATLAS_BUILD === "30.0.05",
     stable_stack:
-      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R2"
-      && ATLAS_STABLE_STACK?.bridge === "V1.9.2"
+      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R4"
+      && ATLAS_STABLE_STACK?.bridge === "V1.9.4"
       && ATLAS_STABLE_STACK?.model === "gpt-oss:20b-32k",
     direct_gate_constants:
       ATLAS_DIRECT_5_5_STABLE_MS >= 10000
@@ -11976,9 +11976,9 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 
 const ATLAS_STABLE_STACK = Object.freeze({
   interface: "Build 30.0.05",
-  controlCenter: "V2.3.2R2",
-  bridge: "V1.9.2",
-  bridgeNumeric: "1.9.2",
+  controlCenter: "V2.3.2R4",
+  bridge: "V1.9.4",
+  bridgeNumeric: "1.9.4",
   model: "gpt-oss:20b-32k"
 });
 
@@ -16462,7 +16462,8 @@ const atlasLocalConclusionState = {
   activeFingerprint: "",
   lastFingerprint: "",
   lastAttemptFingerprint: "",
-  lastAttemptAt: 0
+  lastAttemptAt: 0,
+  automaticValidationRetryCount: 0
 };
 
 const atlasLocalReportsState = {
@@ -16482,7 +16483,11 @@ const atlasLocalReportsState = {
   transactionStartedAt: 0,
   deferredRetryReason: "",
   deferredRetryDelayMs: 0,
-  deferredRetryRequestedAt: 0
+  deferredRetryRequestedAt: 0,
+  automaticCycleClosed: false,
+  automaticCycleClosedAt: 0,
+  automaticCycleFingerprint: "",
+  automaticCycleCloseReason: ""
 };
 
 function atlasLocalFinite(value) {
@@ -17249,6 +17254,13 @@ function atlasLocalReportsQueueDeferredRetry(reason = "snapshot", options = {}) 
 }
 
 function atlasLocalReportsFlushDeferredRetry() {
+  if (atlasLocalReportsState.automaticCycleClosed) {
+    atlasLocalReportsState.deferredRetryReason = "";
+    atlasLocalReportsState.deferredRetryDelayMs = 0;
+    atlasLocalReportsState.deferredRetryRequestedAt = 0;
+    return false;
+  }
+
   if (
     atlasLocalReportsState.running
     || atlasLocalConclusionState.running
@@ -17283,6 +17295,33 @@ function atlasLocalReportsResetAutomaticState(options = {}) {
   }
 }
 
+function atlasLocalReportsManualCycleReason(reason = "") {
+  return new Set([
+    "manual-livecheck",
+    "manual-market-refresh",
+    "manual-auto-reader"
+  ]).has(String(reason || ""));
+}
+
+function atlasLocalReportsOpenAutomaticCycle(reason = "") {
+  atlasLocalReportsState.automaticCycleClosed = false;
+  atlasLocalReportsState.automaticCycleClosedAt = 0;
+  atlasLocalReportsState.automaticCycleFingerprint = "";
+  atlasLocalReportsState.automaticCycleCloseReason = String(reason || "manual");
+  atlasLocalConclusionState.automaticValidationRetryCount = 0;
+}
+
+function atlasLocalReportsCloseAutomaticCycle(fingerprint = "", reason = "current-complete") {
+  atlasLocalReportsState.automaticCycleClosed = true;
+  atlasLocalReportsState.automaticCycleClosedAt = Date.now();
+  atlasLocalReportsState.automaticCycleFingerprint = String(fingerprint || "");
+  atlasLocalReportsState.automaticCycleCloseReason = String(reason || "current-complete");
+  atlasLocalReportsState.deferredRetryReason = "";
+  atlasLocalReportsState.deferredRetryDelayMs = 0;
+  atlasLocalReportsState.deferredRetryRequestedAt = 0;
+  atlasLocalReportsClearAutoTimer();
+}
+
 function atlasLocalReportsAutoReasonAllowed(reason) {
   return new Set([
     "snapshot",
@@ -17298,6 +17337,8 @@ function atlasLocalReportsAutoReasonAllowed(reason) {
 }
 
 function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
+  if (atlasLocalReportsState.automaticCycleClosed) return false;
+
   atlasLocalReportsState.autoRetryCount = Math.min(
     30,
     Number(atlasLocalReportsState.autoRetryCount || 0) + 1
@@ -17320,6 +17361,20 @@ function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
   const nextReason = String(reason || "snapshot");
   if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
+
+  if (atlasLocalReportsManualCycleReason(nextReason)) {
+    atlasLocalReportsOpenAutomaticCycle(nextReason);
+  } else if (atlasLocalReportsState.automaticCycleClosed) {
+    atlasLocalReportsClearAutoTimer();
+    atlasLocalReportsState.deferredRetryReason = "";
+    atlasLocalReportsState.deferredRetryDelayMs = 0;
+    atlasLocalReportsState.deferredRetryRequestedAt = 0;
+    atlasLocalReportsSetSuiteStatus(
+      "Cycle terminé · Atlas/Aerith au repos · les prix live continuent · relance uniquement sur action opérateur.",
+      "ready"
+    );
+    return false;
+  }
 
   if (
     atlasLocalReportsState.running
@@ -17813,13 +17868,15 @@ async function atlasLocalConclusionRun(options = {}) {
     if (options.automatic === true) atlasLocalReportsState.lastAutoFingerprint = fingerprint;
     atlasLocalReportsResetAutomaticState({ keepLastSuccess: true });
     atlasLocalReportsState.lastAutoFingerprint = fingerprint;
+    atlasLocalConclusionState.automaticValidationRetryCount = 0;
+    atlasLocalReportsCloseAutomaticCycle(fingerprint, "current-complete");
     atlasHistoryV2RememberCurrent(snapshot);
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
     atlasLocalDialogueSetConnection(
       true,
-      `Chaîne automatique terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée. Validation humaine uniquement avant toute décision financière réelle.`
+      `Chaîne terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée · MOTEUR LOCAL AU REPOS. Les prix live continuent sans nouveau cycle automatique.`
     );
     return true;
   } catch (error) {
@@ -17847,10 +17904,22 @@ async function atlasLocalConclusionRun(options = {}) {
       // Keep only the analytical retry timer here.
       atlasLocalReportsScheduleAutomatic("request-failure", { delayMs: 5000 });
     } else if (validationFailure && options.automatic === true) {
-      // Keep Atlas 4/4. Retry Aerith only through the normal automatic chain.
-      atlasLocalConclusionState.lastAttemptFingerprint = "";
-      atlasLocalConclusionState.lastAttemptAt = 0;
-      atlasLocalReportsQueueDeferredRetry("snapshot", { delayMs: 6500 });
+      atlasLocalConclusionState.automaticValidationRetryCount =
+        Number(atlasLocalConclusionState.automaticValidationRetryCount || 0) + 1;
+
+      if (atlasLocalConclusionState.automaticValidationRetryCount <= 1) {
+        // Keep Atlas 4/4 and retry Aerith once only.
+        atlasLocalConclusionState.lastAttemptFingerprint = "";
+        atlasLocalConclusionState.lastAttemptAt = 0;
+        atlasLocalReportsQueueDeferredRetry("snapshot", { delayMs: 6500 });
+      } else {
+        // Persistent contract/model mismatch must never heat the Ryzen forever.
+        atlasLocalReportsCloseAutomaticCycle(fingerprint, "aerith-validation-stop");
+        atlasLocalReportsSetSuiteStatus(
+          "Aerith non validée après la reprise automatique · moteur arrêté · corriger le Bridge/modèle puis relancer manuellement.",
+          "wait"
+        );
+      }
     }
 
     if (previousConclusion?.answer) {
