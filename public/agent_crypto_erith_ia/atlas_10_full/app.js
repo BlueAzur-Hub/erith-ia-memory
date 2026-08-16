@@ -964,15 +964,15 @@
   function renderMatrix() {
     const p = profile();
     document.body.dataset.theme = p.theme || "seven";
-    $("#matrixName").textContent = state.identity.name;
-    $("#matrixDescription").textContent = state.identity.role || p.description;
-    $("#matrixSymbol").textContent = p.sigil;
-    $("#matrixKicker").textContent = isNew() ? "CRÉATION ACCOMPAGNÉE" : "PROFIL CANONIQUE";
+    $("#matrixName").textContent = "The Vault — Forge d’Aerith";
+    $("#matrixDescription").textContent = "Le Coffre vivant où la lignée Aerith est préservée, préparée et reliée avant activation.";
+    $("#matrixSymbol").textContent = "VAULT";
+    $("#matrixKicker").textContent = "SEVEN HEAVEN · VAULT";
     $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
-    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
+    $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "FORGE" : "SOURCES");
     const image = $("#matrixImage");
-    image.src = state.profileId === "creator" && !state.visualUrl ? "assets/themes/aerith_10_creatrice_home_vault.webp" : currentVisual();
-    image.hidden = !currentVisual();
+    image.src = "assets/themes/aerith_10_home_vault_forge.webp";
+    image.hidden = false;
     $("#railProfileName").textContent = state.identity.name;
   }
 

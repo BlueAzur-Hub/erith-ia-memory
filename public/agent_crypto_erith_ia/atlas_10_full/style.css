@@ -346,3 +346,76 @@ body[data-view="atelier"] .unified-shell{margin-bottom:0!important}body[data-vie
   .canonical-profile-grid .profile-card[data-profile="aerithcrypto"],
   .canonical-profile-grid .profile-card[data-profile="atlas"]{min-height:520px}
 }
+
+
+/* ==========================================================
+   V4 THE VAULT FORGE — THEME PATCH
+   V3.3R9 layout and functionality preserved.
+   ========================================================== */
+
+:root{
+  --vault-ivory:#f5f1eb;
+  --vault-champagne:#d8b878;
+  --vault-rose:#ef9bc8;
+  --vault-cyan:#7edcf5;
+  --vault-violet:#9c83e8;
+}
+
+.hero-world{
+  filter:saturate(.86) brightness(.70) contrast(1.05);
+}
+
+.topbar{
+  background:rgba(5,8,18,.94);
+  border-bottom-color:rgba(126,220,245,.18);
+  box-shadow:0 12px 36px rgba(0,0,0,.26);
+}
+
+.version{
+  color:#ffc1e4;
+  border-color:rgba(239,155,200,.32);
+  background:rgba(239,155,200,.045);
+}
+
+.hero-matrix{
+  background:linear-gradient(155deg,rgba(14,21,40,.96),rgba(8,12,26,.94));
+  border-color:rgba(126,220,245,.30);
+  box-shadow:0 28px 80px rgba(0,0,0,.40),0 0 36px rgba(156,131,232,.08);
+}
+
+.matrix-visual{
+  background:#050914;
+  border-color:rgba(216,184,120,.30);
+}
+
+.matrix-visual img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  background:#050914;
+}
+
+.matrix-kicker,.eyebrow,.kicker{
+  color:var(--vault-rose);
+}
+
+.matrix-symbol{
+  color:var(--vault-ivory);
+  text-shadow:0 4px 20px #000,0 0 18px rgba(216,184,120,.28);
+}
+
+.hero h1 span{
+  background:linear-gradient(90deg,#fff,var(--vault-cyan) 34%,#b7a5ff 67%,var(--vault-rose));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+button.primary,.primary{
+  background:linear-gradient(135deg,#4ebef2 0%,#8c82ed 55%,#d779c2 100%);
+}
+
+.profile-card.active,.example-card.active{
+  border-color:rgba(239,155,200,.55);
+}
