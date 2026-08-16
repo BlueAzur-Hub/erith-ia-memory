@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.4",
+  build: "38.5",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1375,7 +1375,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.4 CURRENT MEMORY RECONCILE · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.5 DIRECT REST CONTINUITY · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12118,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.4",
+  interface: "Build 38.5",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40142,7 +40142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.4";
+const ATLAS_BUILD = "38.5";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -44831,3 +44831,102 @@ document.addEventListener("visibilitychange", () => {
 
 // Boot self-heal: fixes an already-closed 38.3 CURRENT journal entry without a click.
 window.setTimeout(() => atlasCurrentMemorySchedule384("boot-384"), 700);
+
+
+
+/* ============================================================
+   38.5 — DIRECT REST CONTINUITY LOCK
+   Proven live issue:
+   - 38.3/38.4 can hold 5/5 direct EUR with REST top-up,
+   - but REST confirmations were refreshed only AFTER their 30 s cache expired,
+   - therefore one fallback briefly became derived again,
+   - the 10 s stability gate reset to 0,
+   - with several REST-backed pairs expiring at different times this can loop forever.
+
+   Recovery rule:
+   - WebSocket direct EUR remains first choice.
+   - A REST-backed direct EUR quote is refreshed proactively before expiry.
+   - The previous valid direct REST quote stays in place while refresh is in flight.
+   - No USDT-derived quote may satisfy the analytical direct gate.
+   - Gate, Atlas/NØX/Aerith, CURRENT, STOP-ONCE and 38.4 memory reconciliation remain unchanged.
+   ============================================================ */
+
+const ATLAS_DIRECT_REST_385_REFRESH_AGE_MS = 10_000;
+const ATLAS_DIRECT_REST_385_MIN_REFRESH_GAP_MS = 5_000;
+
+function atlasExchangeDirectRestRefreshTargets385(now = Date.now()) {
+  const store = atlasExchangeDirectRestStore383();
+  return Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP).filter(coinId => {
+    const base = atlasExchangeQuoteForCoin383Base(coinId, now);
+    if (base?.kind === "exchange-direct-eur") return false;
+
+    const row = store?.[coinId] || null;
+    if (!row) return true;
+
+    const timestamp = Number(row.timestamp || 0);
+    const price = atlasExchangeFinitePositive(row.price);
+    if (!price || !Number.isFinite(timestamp) || timestamp <= 0) return true;
+
+    return (now - timestamp) >= ATLAS_DIRECT_REST_385_REFRESH_AGE_MS;
+  });
+}
+
+async function atlasExchangeRefreshDirectRest385(options = {}) {
+  const feed = state.dataBroker?.exchangeFeed || {};
+  if (feed.directRest383Busy) return false;
+
+  const now = Date.now();
+  const lastGlobalMessage = Number(feed.lastMessageAt || 0);
+  const globalFeedFresh = Number.isFinite(lastGlobalMessage)
+    && lastGlobalMessage > 0
+    && now - lastGlobalMessage <= ATLAS_DIRECT_REST_383_GLOBAL_FEED_MAX_AGE_MS;
+  if (!globalFeedFresh || !["ready", "open"].includes(String(feed.status || ""))) return false;
+
+  const lastRefresh = Number(feed.directRest385LastRefreshAt || 0);
+  if (!options.force && lastRefresh && now - lastRefresh < ATLAS_DIRECT_REST_385_MIN_REFRESH_GAP_MS) return false;
+
+  const targets = atlasExchangeDirectRestRefreshTargets385(now);
+  if (!targets.length) return false;
+
+  feed.directRest383Busy = true;
+  feed.directRest385LastRefreshAt = now;
+  const store = atlasExchangeDirectRestStore383();
+
+  try {
+    const settled = await Promise.allSettled(targets.map(async coinId => {
+      const config = ATLAS_EXCHANGE_PRODUCT_MAP[coinId];
+      const direct = await atlasFetchBinanceRestTicker(config.direct, options);
+      const price = atlasExchangeFinitePositive(direct?.price);
+      if (!price) throw new Error(`Cotation directe ${config.direct} invalide`);
+
+      const quote = {
+        status: "direct",
+        kind: "exchange-direct-eur",
+        coinId,
+        price,
+        change24h: Number.isFinite(Number(direct.change24h)) ? Number(direct.change24h) : null,
+        bid: atlasExchangeFinitePositive(direct.bid),
+        ask: atlasExchangeFinitePositive(direct.ask),
+        timestamp: Number(direct.timestamp || Date.now()),
+        source: `Binance ${config.direct} REST direct`
+      };
+      store[coinId] = quote;
+      return quote;
+    }));
+
+    feed.directRest383LastSuccessAt = Date.now();
+    feed.directRest383SuccessCount = settled.filter(row => row.status === "fulfilled").length;
+    feed.directRest383FailureCount = settled.filter(row => row.status === "rejected").length;
+    return feed.directRest383SuccessCount > 0;
+  } finally {
+    feed.directRest383Busy = false;
+    try { atlasRenderExchangeFeedStatus383Base(); } catch (_) {}
+  }
+}
+
+atlasExchangeRefreshDirectRest383 = atlasExchangeRefreshDirectRest385;
+
+window.setTimeout(() => {
+  try { void atlasExchangeRefreshDirectRest385({ force:true }); } catch (_) {}
+}, 1400);
+
