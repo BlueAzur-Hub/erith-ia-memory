@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.5",
+  build: "38.6",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1299,7 +1299,8 @@ const ATLAS_RC_CONTRACT = Object.freeze({
     "rôle de calcul local persistant par poste : production ou lecture seule",
     "Ryzen construit avec Ollama/Bridge ; Transformer Book consulte sans moteur local",
     "Question libre isolée : aucun redémarrage CURRENT et aucune réécriture Memory Intelligence",
-    "Book Mirror en lecture seule : aucune clé ni écriture GitHub depuis la page publique"
+    "Book Mirror en lecture seule : aucune clé ni écriture GitHub depuis la page publique",
+    "Bridge health stable : timeout client supérieur au pire cas /health V1.9.5 + anti-flap sur contrôles silencieux"
   ])
 });
 
@@ -1322,6 +1323,7 @@ function atlasRcStaticAudit() {
     stop_once: typeof atlasLocalReportsCloseAutomaticCycle === "function",
     current_truth_freeze: typeof atlasCurrentPreserveClosedAnalysis === "function",
     current_memory_ledger: typeof atlasMemorySplit35 === "function",
+    bridge_health_stability_386: typeof atlasLocalBridgeMarkReady386 === "function" && ATLAS_LOCAL_BRIDGE_HEALTH_TIMEOUT_386_MS >= 8000,
     book_readonly_truth: typeof atlasBook343ForceReadOnly === "function",
     book_mirror_readonly: typeof atlasBookMirrorFetch36 === "function",
     question_router_isolated: typeof atlasQuestionFreeContext37 === "function",
@@ -1375,7 +1377,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.5 DIRECT REST CONTINUITY · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.6 BRIDGE HEALTH STABILITY · DIRECT REST 38.5 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12120,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.5",
+  interface: "Build 38.6",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -17003,6 +17005,32 @@ let atlasLocalBridgeLastAutoProbeAt = 0;
 
 let atlasLocalBridgeLastHealthSignature = "";
 
+// 38.6 — Bridge Health Stability Lock.
+// Bridge V1.9.5 /health can legitimately take ~4 s because it probes Ollama
+// twice (provider inventory, then provider selection). A 3.5 s browser abort
+// therefore created false disconnects. Keep a wider client deadline and ignore
+// at most two transient silent-probe failures after a recent proven success.
+const ATLAS_LOCAL_BRIDGE_HEALTH_TIMEOUT_386_MS = 8_000;
+const ATLAS_LOCAL_BRIDGE_HEALTH_GRACE_386_MS = 120_000;
+const ATLAS_LOCAL_BRIDGE_HEALTH_FAILURE_LIMIT_386 = 3;
+const ATLAS_LOCAL_BRIDGE_REQUEST_TIMEOUT_386_MS = 255_000;
+let atlasLocalBridgeLastReadyAt386 = 0;
+let atlasLocalBridgeConsecutiveHealthFailures386 = 0;
+
+function atlasLocalBridgeMarkReady386() {
+  atlasLocalBridgeLastReadyAt386 = Date.now();
+  atlasLocalBridgeConsecutiveHealthFailures386 = 0;
+  return atlasLocalBridgeLastReadyAt386;
+}
+
+function atlasLocalBridgeTransientHealthAllowed386(silent, wasConnected) {
+  if (!silent || !wasConnected || !atlasLocalBridgeLastReadyAt386) return false;
+  const age = Date.now() - atlasLocalBridgeLastReadyAt386;
+  return age >= 0
+    && age <= ATLAS_LOCAL_BRIDGE_HEALTH_GRACE_386_MS
+    && atlasLocalBridgeConsecutiveHealthFailures386 < ATLAS_LOCAL_BRIDGE_HEALTH_FAILURE_LIMIT_386;
+}
+
 function atlasLocalBridgeAdministratorActive() {
   // Local Bridge supervision belongs to the authorized operator session.
   // It must continue regardless of Basic / Intermediate / Advanced display mode.
@@ -17098,6 +17126,7 @@ async function atlasLocalBridgeProbe(options = {}) {
   }
 
   const run = async () => {
+    const wasConnectedAtStart386 = atlasLocalDialogueState.connected === true;
     const badge = document.getElementById("localBridgeStatus");
     const detail = document.getElementById("localBridgeDetail");
     const button = document.getElementById("btnLocalBridgeProbe");
@@ -17112,7 +17141,7 @@ async function atlasLocalBridgeProbe(options = {}) {
     }
 
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 3500);
+    const timer = window.setTimeout(() => controller.abort(), ATLAS_LOCAL_BRIDGE_HEALTH_TIMEOUT_386_MS);
 
     try {
       const response = await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}/health`, {
@@ -17133,6 +17162,7 @@ async function atlasLocalBridgeProbe(options = {}) {
         payload.model || payload.required_model || null;
 
       if (payload.ready === false || payload.model_ready === false) {
+        atlasLocalBridgeConsecutiveHealthFailures386 = ATLAS_LOCAL_BRIDGE_HEALTH_FAILURE_LIMIT_386;
         atlasLocalDialogueState.connected = false;
         const required = payload.required_model || "gpt-oss:20b-32k";
         const announce = atlasLocalBridgeHealthTransition(
@@ -17159,6 +17189,7 @@ async function atlasLocalBridgeProbe(options = {}) {
         return payload;
       }
 
+      atlasLocalBridgeMarkReady386();
       atlasLocalDialogueState.connected = true;
       const provider = payload.provider || "ollama";
       const model = payload.model || "gpt-oss:20b-32k";
@@ -17190,7 +17221,7 @@ async function atlasLocalBridgeProbe(options = {}) {
           "window-focus",
           "network-online",
           "request-failure",
-          "interval"
+          "health-retry-386"
         ].includes(String(options?.reason || ""))
       ) {
         atlasLocalReportsState.autoRetryCount = 0;
@@ -17200,6 +17231,38 @@ async function atlasLocalBridgeProbe(options = {}) {
 
       return payload;
     } catch (error) {
+      atlasLocalBridgeConsecutiveHealthFailures386 += 1;
+      const transient386 = atlasLocalBridgeTransientHealthAllowed386(
+        silent,
+        wasConnectedAtStart386
+      );
+
+      if (transient386) {
+        // A single slow /health response must not revoke a connection that was
+        // just proven by /health or by a successful model request. The scheduler
+        // may continue; a real /summary failure remains definitive.
+        atlasLocalDialogueState.connected = true;
+        if (badge) {
+          badge.textContent = "Bridge Ryzen · contrôle retardé";
+          badge.className = "pill warn";
+        }
+        if (detail) {
+          detail.textContent = `Dernier état prêt conservé · contrôle silencieux ${atlasLocalBridgeConsecutiveHealthFailures386}/${ATLAS_LOCAL_BRIDGE_HEALTH_FAILURE_LIMIT_386} · nouvelle vérification automatique.`;
+        }
+        atlasLocalDialogueSetConnection(
+          true,
+          `Bridge Ryzen déjà validé · contrôle /health retardé (${atlasLocalBridgeConsecutiveHealthFailures386}/${ATLAS_LOCAL_BRIDGE_HEALTH_FAILURE_LIMIT_386}) · aucune remise à zéro du gate.`
+        );
+        window.setTimeout(() => atlasLocalBridgeAutoTick("health-retry-386"), 3000);
+        return {
+          ok: true,
+          ready: true,
+          model_ready: true,
+          transient_health_warning: true,
+          retained_from_recent_success: true
+        };
+      }
+
       atlasStableStackUpdateBridge(null, error);
       atlasLocalDialogueState.connected = false;
       atlasLocalDialogueState.provider = null;
@@ -17221,7 +17284,7 @@ async function atlasLocalBridgeProbe(options = {}) {
         false,
         announce
           ? (error?.name === "AbortError"
-              ? "Bridge local sans réponse."
+              ? `Bridge local sans réponse après ${Math.round(ATLAS_LOCAL_BRIDGE_HEALTH_TIMEOUT_386_MS / 1000)} s.`
               : "Bridge local non connecté.")
           : ""
       );
@@ -17528,7 +17591,7 @@ function atlasLocalBridgeRequestFailure(error, path = "") {
   return kind;
 }
 
-async function atlasLocalBridgeRequest(path, payload, timeoutMs = 135000) {
+async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BRIDGE_REQUEST_TIMEOUT_386_MS) {
   if (!atlasDeviceComputeAllowed()) {
     const error = new Error(atlasDeviceComputeBlockedMessage());
     error.name = "AtlasDeviceObserverError";
@@ -17558,7 +17621,8 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = 135000) {
       throw new Error(result?.error || `Bridge HTTP ${response.status}`);
     }
 
-    // A successful request is also a health signal.
+    // A successful model request is stronger evidence than a periodic probe.
+    atlasLocalBridgeMarkReady386();
     atlasLocalDialogueState.connected = true;
     return result;
   } catch (error) {
@@ -40142,7 +40206,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.5";
+const ATLAS_BUILD = "38.6";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
