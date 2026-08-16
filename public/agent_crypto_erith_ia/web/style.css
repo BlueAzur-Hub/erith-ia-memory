@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 30.2.1 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
+   BUILD 31.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 30.2.1
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-30.2.1
+   ATLAS_ASSET_BUILD: 31.0
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-31.0
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "30.2.1";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-30.2.1";
+  --atlas-asset-build: "31.0";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-31.0";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25071,7 +25071,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 30.2.1 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   BUILD 31.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
    Scoped to the local analysis chamber. No global dashboard geometry change.
    ========================================================================== */
 .atlas-analysis-progress{
@@ -25105,7 +25105,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 30.2.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   BUILD 31.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Localized control only. No dashboard geometry rewrite.
    ============================================================ */
 .atlas-device-compute-control{
@@ -25137,9 +25137,53 @@ html[data-atlas-market-domain="metals"]
 
 
 /* =========================================================
-   BUILD 30.2.1 — ATLAS CURRENT STATUS RELOCATION
+   BUILD 31.0 — ATLAS CURRENT STATUS RELOCATION
    The CURRENT/live qualification banner belongs to the local
    Atlas section, below the pipeline/device-role card.
    ========================================================= */
 .atlas-current-analysis-banner-mount:empty{display:none}
 .atlas-current-analysis-banner-mount:not(:empty){display:block}
+
+
+/* ============================================================
+   BUILD 31.0 — COHERENCE & OPERATOR POLISH
+   Snapshot/LIVE truth, deterministic Top 5, diagnostics.
+   ============================================================ */
+.atlas-frame-truth{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(96,210,226,.26);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(4,25,34,.78),rgba(12,22,42,.72));
+}
+.atlas-frame-truth-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+.atlas-frame-truth-head h5{margin:2px 0 0;font-size:1rem}
+.atlas-frame-truth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.atlas-frame-truth-grid article{padding:12px;border:1px solid rgba(116,190,215,.18);border-radius:12px;background:rgba(2,13,23,.48)}
+.atlas-frame-truth-grid span,.atlas-frame-truth-grid small{display:block;color:var(--muted,#9db2c6)}
+.atlas-frame-truth-grid b{display:block;margin:4px 0 5px;color:#dffdf6}
+.atlas-frame-truth[data-state="advanced"]{border-color:rgba(255,204,98,.42)}
+.atlas-frame-truth[data-state="current"]{border-color:rgba(76,220,160,.42)}
+#atlasFrameTruthStatus{margin:10px 0 0;color:#9ec8cf;font-size:.86rem}
+#btnAtlasDiagnosticBundle{border-color:rgba(94,220,190,.35)}
+@media (max-width:760px){.atlas-frame-truth-grid{grid-template-columns:1fr}.atlas-frame-truth-head{flex-direction:column}}
+
+
+/* ============================================================
+   BUILD 31.0 — MEMORY INTELLIGENCE
+   3/5/10 snapshots · persistence · multi-collector confirmation.
+   ============================================================ */
+.atlas-memory-intelligence{margin-top:14px;padding:15px;border:1px solid rgba(150,122,255,.28);border-radius:16px;background:linear-gradient(135deg,rgba(16,17,42,.82),rgba(5,31,39,.72))}
+.atlas-memory-intelligence[data-state="ready"]{border-color:rgba(88,220,181,.42)}
+.atlas-memory-intelligence-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:13px}
+.atlas-memory-intelligence-head h5{margin:2px 0 4px;font-size:1rem}.atlas-memory-intelligence-head p{margin:0;color:#9fb7c8;font-size:.86rem}
+.atlas-memory-horizon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:9px}
+.atlas-memory-intelligence-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.atlas-memory-horizon-grid article,.atlas-memory-intelligence-grid article{padding:11px;border:1px solid rgba(128,164,216,.18);border-radius:12px;background:rgba(3,13,25,.48);min-width:0}
+.atlas-memory-horizon-grid span,.atlas-memory-intelligence-grid span,.atlas-memory-horizon-grid small,.atlas-memory-intelligence-grid small{display:block;color:#9eb1c4}
+.atlas-memory-horizon-grid b,.atlas-memory-intelligence-grid b{display:block;margin:4px 0 5px;color:#e4fff7;overflow-wrap:anywhere}
+.atlas-memory-confidence{grid-column:span 3}
+.atlas-memory-intelligence-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+#atlasMemoryIntelligenceStatus{margin:10px 0 0;color:#9ec8cf;font-size:.86rem}
+@media(max-width:980px){.atlas-memory-intelligence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-memory-confidence{grid-column:span 2}}
+@media(max-width:720px){.atlas-memory-horizon-grid,.atlas-memory-intelligence-grid{grid-template-columns:1fr}.atlas-memory-confidence{grid-column:auto}.atlas-memory-intelligence-head{flex-direction:column}}

@@ -1281,7 +1281,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.2.1",
+  build: "31.0",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1300,7 +1300,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.2.1",
+    build: ATLAS_BUILD === "31.0",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1319,7 +1319,12 @@ function atlasRcStaticAudit() {
     graphic_progress: typeof atlasAnalysisProgressRender === "function",
     strict_current_reports: typeof atlasLocalReportsProgressForFingerprint === "function",
     aerith_report_reread_contract: typeof atlasLocalConclusionBridgeContract === "function",
-    per_device_compute_gate: typeof atlasDeviceComputeAllowed === "function"
+    per_device_compute_gate: typeof atlasDeviceComputeAllowed === "function",
+    snapshot_live_truth: typeof atlasRenderSnapshotLiveTruth === "function",
+    diagnostic_bundle: typeof atlasDiagnosticBundlePayload === "function",
+    top5_direction_truth: typeof atlasTop5DirectionCounts === "function",
+    memory_intelligence: typeof atlasMemoryIntelligenceCompute === "function"
+      && typeof atlasMemoryIntelligenceRender === "function"
   };
 
   return {
@@ -1358,7 +1363,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.2.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 31.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1797,6 +1802,48 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
     banner.innerHTML = `<b>Analyse en attente</b> · prix disponibles ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)}.`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
   }
+  atlasRenderSnapshotLiveTruth(state);
+}
+
+
+function atlasRenderSnapshotLiveTruth(current = atlasCurrentStateRead()) {
+  const root = document.getElementById("atlasFrameTruth");
+  if (!root) return null;
+  const snapshotNode = document.getElementById("atlasFrameTruthSnapshot");
+  const snapshotDetail = document.getElementById("atlasFrameTruthSnapshotDetail");
+  const liveNode = document.getElementById("atlasFrameTruthLive");
+  const liveDetail = document.getElementById("atlasFrameTruthLiveDetail");
+  const badge = document.getElementById("atlasFrameTruthBadge");
+  const status = document.getElementById("atlasFrameTruthStatus");
+
+  const feed = state.dataBroker?.exchangeFeed || {};
+  const liveDirect = Math.max(0, Number(feed.directCount || 0));
+  const liveDerived = Math.max(0, Number(feed.derivedCount || 0));
+  const liveTime = atlasStrictTimestamp(feed.lastMessageAt || state.timestamp);
+  const isCurrent = String(current?.status || "") === "CURRENT" && !!current?.fingerprint;
+
+  if (snapshotNode) snapshotNode.textContent = isCurrent
+    ? `CURRENT · Binance ${Number(current.direct_count || 0)}/5 directes · ${Number(current.derived_count || 0)} dérivée(s)`
+    : "Aucun CURRENT validé";
+  if (snapshotDetail) snapshotDetail.textContent = isCurrent
+    ? `${String(current.fingerprint || "").slice(0, 22)}… · ${current.generated_at ? new Date(current.generated_at).toLocaleString("fr-FR") : "heure inconnue"}`
+    : "Atlas figera ici les cinq cotations directes utilisées pour la prochaine analyse.";
+
+  if (liveNode) liveNode.textContent = `LIVE · Binance ${liveDirect}/5 directes · ${liveDerived} secours`;
+  if (liveDetail) liveDetail.textContent = `${liveTime ? new Date(liveTime).toLocaleString("fr-FR") : "heure inconnue"} · prix live indépendants du CURRENT analytique`;
+
+  const changed = isCurrent && (current.live_changed_since_current === true || (current.live_fingerprint && current.live_fingerprint !== current.fingerprint));
+  root.dataset.state = isCurrent ? (changed ? "advanced" : "current") : "waiting";
+  if (badge) {
+    badge.textContent = isCurrent ? (changed ? "LIVE plus récent" : "Même fenêtre") : "En attente";
+    badge.className = `pill ${isCurrent ? "ok" : "warn"}`;
+  }
+  if (status) status.textContent = isCurrent
+    ? (changed
+      ? "Le marché live a avancé. Le CURRENT reste volontairement attaché à son snapshot jusqu’à une nouvelle relance opérateur."
+      : "Snapshot analysé et marché live encore alignés. Le CURRENT reste figé après la fin du cycle.")
+    : "Aucun CURRENT à comparer. Les prix live peuvent être affichés sans déclencher une conclusion.";
+  return { isCurrent, liveDirect, liveDerived, changed };
 }
 
 function atlasCurrentConclusionIsStale(conclusion, snapshot) {
@@ -8743,6 +8790,26 @@ function atlasStrictCanonicalTop5() {
   };
 }
 
+
+function atlasTop5DirectionCounts(rows, threshold = 0.05) {
+  const list = Array.isArray(rows) ? rows.filter(row => row && row.available !== false) : [];
+  let positive = 0;
+  let negative = 0;
+  let stable = 0;
+  let unavailable = 0;
+  for (const row of list) {
+    const raw = row?.change_24h_pct;
+    if (raw === null || raw === undefined || raw === "") { unavailable += 1; continue; }
+    const value = Number(raw);
+    if (!Number.isFinite(value)) { unavailable += 1; continue; }
+    if (value > threshold) positive += 1;
+    else if (value < -threshold) negative += 1;
+    else stable += 1;
+  }
+  unavailable += Math.max(0, (Array.isArray(rows) ? rows.length : 0) - list.length);
+  return { positive, negative, stable, unavailable, measured: positive + negative + stable, threshold };
+}
+
 function atlasV2ManifestTarget(entry) {
   if (!entry) return null;
   const element = document.getElementById(entry.id);
@@ -12024,7 +12091,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.2.1",
+  interface: "Build 31.0",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -14829,9 +14896,9 @@ function renderNewsSentinel(event = null) {
 
   setText($("newsSentinelLast"), current.headline);
   setText($("newsSentinelFreshness"), current?.freshness?.label || newsFeedAgeLabel(current.event_time));
-  setText($("newsSentinelEvidence"), `${current.evidence.level} · ${current.evidence.score}/100`);
+  setText($("newsSentinelEvidence"), `${current.evidence.level} · score secondaire ${current.evidence.score}/100`);
   setText($("newsSentinelSourceClass"), `${current.source_class} · ${current.source_host}`);
-  setText($("newsSentinelImpact"), `${current.impact.level} · ${current.impact.score}/100`);
+  setText($("newsSentinelImpact"), `${current.impact.level} · score secondaire ${current.impact.score}/100`);
   setText($("newsSentinelDirection"), current.direction);
   setText($("newsSentinelAssets"), current.assets.length ? current.assets.join(" · ") : "Marché global");
   setText($("newsSentinelSectors"), current.sectors.length ? current.sectors.join(" · ") : "Secteur à qualifier");
@@ -15114,6 +15181,286 @@ function atlasDecisionMemoryStats() {
     duplicateObservations: Math.max(0, rawRecords.length - records.length),
     comparable: !!(last && previous)
   };
+}
+
+
+const ATLAS_MEMORY_INTELLIGENCE_HORIZONS = Object.freeze([3, 5, 10]);
+const ATLAS_MEMORY_INTELLIGENCE_ANCHORS = Object.freeze(["BTC", "ETH", "SOL"]);
+
+function atlasMemoryIntelligenceAsset(record, symbol) {
+  const target = String(symbol || "").toUpperCase();
+  return Array.isArray(record?.assets)
+    ? record.assets.find(asset => String(asset?.symbol || "").toUpperCase() === target) || null
+    : null;
+}
+
+function atlasMemoryIntelligencePctDelta(first, last) {
+  const a = Number(first?.price_eur);
+  const b = Number(last?.price_eur);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0) return null;
+  return ((b - a) / a) * 100;
+}
+
+function atlasMemoryIntelligencePrimaryTimeline(records) {
+  const distinct = atlasDistinctMarketMemory(records || []);
+  if (!distinct.length) return { collector: null, records: [] };
+  const groups = new Map();
+  for (const record of distinct) {
+    const collector = record?.collector_id || "local-legacy";
+    if (!groups.has(collector)) groups.set(collector, []);
+    groups.get(collector).push(record);
+  }
+  const ranked = [...groups.entries()].map(([collector, rows]) => ({
+    collector,
+    rows: rows.sort((a,b)=>Date.parse(atlasMemoryRecordTime(a)||0)-Date.parse(atlasMemoryRecordTime(b)||0)),
+    count: rows.length,
+    latest: Math.max(...rows.map(row=>Date.parse(atlasMemoryRecordTime(row)||0)||0))
+  })).sort((a,b)=>b.count-a.count || b.latest-a.latest);
+  const chosen = ranked[0];
+  return { collector: chosen?.collector || null, records: chosen?.rows || distinct };
+}
+
+function atlasMemoryIntelligenceDirection(value, threshold = 0.15) {
+  if (!Number.isFinite(Number(value))) return "indisponible";
+  if (Number(value) > threshold) return "hausse";
+  if (Number(value) < -threshold) return "baisse";
+  return "stable";
+}
+
+function atlasMemoryIntelligenceHorizon(timeline, size) {
+  const records = Array.isArray(timeline) ? timeline.slice(-size) : [];
+  if (records.length < size) return { size, ready: false, records: records.length, label: `Collecte ${records.length}/${size}` };
+  const first = records[0];
+  const last = records[records.length - 1];
+  const anchors = ATLAS_MEMORY_INTELLIGENCE_ANCHORS.map(symbol => {
+    const start = atlasMemoryIntelligenceAsset(first, symbol);
+    const end = atlasMemoryIntelligenceAsset(last, symbol);
+    return { symbol, delta: atlasMemoryIntelligencePctDelta(start, end) };
+  }).filter(item => Number.isFinite(item.delta));
+  const mean = anchors.length ? anchors.reduce((sum, item) => sum + item.delta, 0) / anchors.length : null;
+  const label = Number.isFinite(mean)
+    ? `${atlasMemoryIntelligenceDirection(mean)} · ${mean >= 0 ? "+" : ""}${mean.toFixed(2)} % moyen BTC/ETH/SOL`
+    : "Repères incomplets";
+  return { size, ready: anchors.length >= 2, records: records.length, first, last, anchors, mean, label };
+}
+
+function atlasMemoryIntelligencePersistence(timeline) {
+  const records = Array.isArray(timeline) ? timeline.slice(-10) : [];
+  const results = [];
+  for (const symbol of ATLAS_MEMORY_INTELLIGENCE_ANCHORS) {
+    const values = records.map(record => atlasMemoryIntelligenceAsset(record, symbol)).filter(Boolean);
+    if (values.length < 3) continue;
+    const total = atlasMemoryIntelligencePctDelta(values[0], values[values.length - 1]);
+    const steps = [];
+    for (let i = 1; i < values.length; i += 1) {
+      const delta = atlasMemoryIntelligencePctDelta(values[i - 1], values[i]);
+      if (Number.isFinite(delta) && Math.abs(delta) >= 0.03) steps.push(Math.sign(delta));
+    }
+    const direction = Number.isFinite(total) ? Math.sign(total) : 0;
+    const same = direction && steps.length ? steps.filter(sign => sign === direction).length / steps.length : 0;
+    let stateLabel = "stable";
+    if (Number.isFinite(total) && Math.abs(total) >= 0.2) stateLabel = same >= 0.67 ? "persistant" : "mixte / isolé";
+    results.push({ symbol, total, consistency: same, state: stateLabel, samples: values.length });
+  }
+  return results;
+}
+
+function atlasMemoryIntelligenceCollectorConfirmation(records) {
+  const distinct = atlasDistinctMarketMemory(records || []);
+  const latestByCollector = new Map();
+  for (const record of distinct) latestByCollector.set(record?.collector_id || "local-legacy", record);
+  const latest = [...latestByCollector.entries()].map(([collector, record]) => ({ collector, record, time: Date.parse(atlasMemoryRecordTime(record) || 0) || 0 }));
+  const newest = latest.reduce((max, row) => Math.max(max, row.time), 0);
+  const comparable = latest.filter(row => newest > 0 && (newest - row.time) <= 20 * 60 * 1000);
+  const btcPrices = comparable.map(row => ({ collector: row.collector, price: Number(atlasMemoryIntelligenceAsset(row.record, "BTC")?.price_eur) })).filter(row => Number.isFinite(row.price) && row.price > 0);
+  if (btcPrices.length < 2) return { ready: false, collectors: comparable.length, label: `${comparable.length} collecteur(s) comparable(s)` };
+  const prices = btcPrices.map(row => row.price);
+  const mean = prices.reduce((a,b)=>a+b,0) / prices.length;
+  const spread = mean ? ((Math.max(...prices)-Math.min(...prices))/mean)*100 : null;
+  return {
+    ready: true,
+    collectors: btcPrices.length,
+    spread,
+    label: Number.isFinite(spread) && spread <= 0.5 ? `confirmé · ${btcPrices.length} collecteurs` : `divergence · ${btcPrices.length} collecteurs`,
+    detail: Number.isFinite(spread) ? `écart BTC inter-collecteurs ${spread.toFixed(3)} %` : "écart indisponible"
+  };
+}
+
+function atlasMemoryIntelligenceLocalGithub(records) {
+  const distinct = atlasDistinctMarketMemory(records || []);
+  const local = [...distinct].reverse().find(record => !record?.imported_from_github && !String(record?.collector_type || "").includes("github")) || null;
+  const github = [...distinct].reverse().find(record => record?.imported_from_github || String(record?.collector_type || "").includes("github")) || null;
+  if (!local || !github) return { ready:false, label:"Comparaison indisponible", detail:"Une mémoire locale et une mémoire GitHub sont nécessaires." };
+  const deltas = ATLAS_MEMORY_INTELLIGENCE_ANCHORS.map(symbol => {
+    const a = Number(atlasMemoryIntelligenceAsset(local, symbol)?.price_eur);
+    const b = Number(atlasMemoryIntelligenceAsset(github, symbol)?.price_eur);
+    if (!Number.isFinite(a) || !Number.isFinite(b) || b <= 0) return null;
+    return Math.abs(((a-b)/b)*100);
+  }).filter(Number.isFinite);
+  const mean = deltas.length ? deltas.reduce((a,b)=>a+b,0)/deltas.length : null;
+  return {
+    ready: Number.isFinite(mean),
+    mean,
+    label: Number.isFinite(mean) ? `${mean.toFixed(3)} % moyen` : "Comparaison indisponible",
+    detail: Number.isFinite(mean) ? (mean <= 0.5 ? "Local et GitHub cohérents sur les repères disponibles." : "Écart notable : vérifier heures et sources avant interprétation.") : "Repères communs insuffisants."
+  };
+}
+
+function atlasMemoryIntelligencePersistentSectors(timeline) {
+  const records = Array.isArray(timeline) ? timeline.slice(-5) : [];
+  if (records.length < 3) return [];
+  const categoryRows = new Map();
+  records.forEach(record => {
+    const byCategory = new Map();
+    (record?.assets || []).forEach(asset => {
+      const category = String(asset?.category || "Non classé");
+      const value = Number(asset?.change_24h_pct);
+      if (!Number.isFinite(value)) return;
+      if (!byCategory.has(category)) byCategory.set(category, []);
+      byCategory.get(category).push(value);
+    });
+    byCategory.forEach((values, category) => {
+      if (!categoryRows.has(category)) categoryRows.set(category, []);
+      categoryRows.get(category).push(values.reduce((a,b)=>a+b,0)/values.length);
+    });
+  });
+  return [...categoryRows.entries()].map(([category, values]) => {
+    const pos = values.filter(v => v > 0.5).length;
+    const neg = values.filter(v => v < -0.5).length;
+    const dominant = pos >= neg ? 1 : -1;
+    const dominantCount = Math.max(pos, neg);
+    const avg = values.reduce((a,b)=>a+b,0)/values.length;
+    return { category, values: values.length, dominant, dominantCount, ratio: dominantCount/values.length, avg };
+  }).filter(row => row.values >= 3 && row.ratio >= 0.67 && Math.abs(row.avg) >= 0.5)
+    .sort((a,b)=>Math.abs(b.avg)-Math.abs(a.avg)).slice(0,3);
+}
+
+function atlasMemoryIntelligenceAnomaly(latest) {
+  const rows = (latest?.assets || []).map(asset => {
+    const volume = Number(asset?.volume_24h_eur);
+    const cap = Number(asset?.market_cap_eur);
+    const ratio = Number.isFinite(volume) && Number.isFinite(cap) && cap > 0 ? volume/cap : null;
+    return { symbol:String(asset?.symbol || "?").toUpperCase(), ratio };
+  }).filter(row => Number.isFinite(row.ratio)).sort((a,b)=>b.ratio-a.ratio);
+  const top = rows[0] || null;
+  return top ? { ...top, flagged: top.ratio >= 0.08 } : null;
+}
+
+function atlasMemoryIntelligencePumps(timeline) {
+  const records = Array.isArray(timeline) ? timeline.slice(-5) : [];
+  const latest = records[records.length-1];
+  if (!latest) return [];
+  return (latest.assets || []).map(asset => {
+    const day = Number(asset?.change_24h_pct);
+    if (!Number.isFinite(day) || day < 7) return null;
+    const symbol = String(asset?.symbol || "").toUpperCase();
+    const series = records.map(record => atlasMemoryIntelligenceAsset(record, symbol)).filter(Boolean);
+    const total = series.length >= 2 ? atlasMemoryIntelligencePctDelta(series[0], series[series.length-1]) : null;
+    return { symbol, day, total, isolated: !Number.isFinite(total) || Math.abs(total) < 2 };
+  }).filter(row => row?.isolated).sort((a,b)=>b.day-a.day).slice(0,3);
+}
+
+function atlasMemoryIntelligenceCompute() {
+  const raw = typeof readAutoMemory === "function" ? readAutoMemory() : [];
+  const distinct = atlasDistinctMarketMemory(raw);
+  const primary = atlasMemoryIntelligencePrimaryTimeline(distinct);
+  const horizons = Object.fromEntries(ATLAS_MEMORY_INTELLIGENCE_HORIZONS.map(size => [size, atlasMemoryIntelligenceHorizon(primary.records, size)]));
+  const persistence = atlasMemoryIntelligencePersistence(primary.records);
+  const collectors = atlasMemoryIntelligenceCollectorConfirmation(distinct);
+  const localGithub = atlasMemoryIntelligenceLocalGithub(distinct);
+  const sectors = atlasMemoryIntelligencePersistentSectors(primary.records);
+  const latest = primary.records[primary.records.length - 1] || distinct[distinct.length - 1] || null;
+  const anomaly = atlasMemoryIntelligenceAnomaly(latest);
+  const pumps = atlasMemoryIntelligencePumps(primary.records);
+  const latestTime = Date.parse(atlasMemoryRecordTime(latest) || 0);
+  const ageMin = latestTime ? Math.max(0,(Date.now()-latestTime)/60000) : null;
+  let confidenceScore = 15;
+  confidenceScore += Math.min(40, primary.records.length * 4);
+  confidenceScore += Math.min(20, Math.max(0, new Set(distinct.map(r=>r?.collector_id||"local-legacy")).size - 1) * 10);
+  if (Number.isFinite(ageMin) && ageMin <= 30) confidenceScore += 10;
+  if (collectors.ready && Number(collectors.spread) <= 0.5) confidenceScore += 15;
+  confidenceScore = Math.max(0, Math.min(100, Math.round(confidenceScore)));
+  const confidenceLabel = confidenceScore >= 75 ? "renforcée" : confidenceScore >= 50 ? "moyenne" : "faible";
+  return {
+    schema:"atlas_memory_intelligence_v1",
+    generated_at:new Date().toISOString(),
+    records:distinct.length,
+    primary_collector:primary.collector,
+    primary_records:primary.records.length,
+    collectors_count:new Set(distinct.map(r=>r?.collector_id||"local-legacy")).size,
+    horizons,persistence,collectors,local_github:localGithub,sectors,anomaly,pumps,
+    confidence:{score:confidenceScore,label:confidenceLabel,meaning:"continuité des données, pas probabilité de marché"},
+    latest_at:atlasMemoryRecordTime(latest)
+  };
+}
+
+function atlasMemoryIntelligenceRender() {
+  const root = document.getElementById("atlasMemoryIntelligence");
+  if (!root) return null;
+  const data = atlasMemoryIntelligenceCompute();
+  const set = (id,text) => { const node=document.getElementById(id); if(node) node.textContent=text; };
+  ATLAS_MEMORY_INTELLIGENCE_HORIZONS.forEach(size => {
+    const h=data.horizons[size];
+    set(`atlasMemoryTrend${size}`, h.ready ? h.label : `Collecte ${h.records}/${size}`);
+    set(`atlasMemoryTrend${size}Detail`, h.ready
+      ? `${h.anchors.map(a=>`${a.symbol} ${a.delta>=0?"+":""}${a.delta.toFixed(2)} %`).join(" · ")} · collecteur ${data.primary_collector || "—"}`
+      : `Il faut ${size} snapshots distincts du même fil principal.`);
+  });
+  const persistent=data.persistence.filter(row=>row.state==="persistant");
+  const mixed=data.persistence.filter(row=>row.state==="mixte / isolé");
+  set("atlasMemoryPersistence", persistent.length ? `${persistent.map(r=>r.symbol).join(" / ")} persistants` : mixed.length ? "Mouvements mixtes" : "Pas de persistance forte");
+  set("atlasMemoryPersistenceDetail", data.persistence.length ? data.persistence.map(r=>`${r.symbol} ${r.state} · ${Number.isFinite(r.total)?`${r.total>=0?"+":""}${r.total.toFixed(2)} %`:"—"} · cohérence ${(r.consistency*100).toFixed(0)} %`).join(" · ") : "Au moins trois observations par repère sont nécessaires.");
+  set("atlasMemoryCollectors", data.collectors.label);
+  set("atlasMemoryCollectorsDetail", data.collectors.detail || "Deux collecteurs récents sont nécessaires pour confirmer une observation.");
+  set("atlasMemoryDivergence", data.local_github.label);
+  set("atlasMemoryDivergenceDetail", data.local_github.detail);
+  set("atlasMemorySectors", data.sectors.length ? data.sectors.map(s=>s.category).join(" · ") : "Aucun secteur persistant");
+  set("atlasMemorySectorsDetail", data.sectors.length ? data.sectors.map(s=>`${s.category} ${s.avg>=0?"+":""}${s.avg.toFixed(2)} % moyen · ${(s.ratio*100).toFixed(0)} % des relevés`).join(" · ") : "Aucune catégorie n’est répétée avec assez de constance sur les cinq derniers relevés.");
+  set("atlasMemoryAnomaly", data.anomaly ? `${data.anomaly.symbol} · ${(data.anomaly.ratio*100).toFixed(2)} %` : "Indisponible");
+  set("atlasMemoryAnomalyDetail", data.anomaly ? (data.anomaly.flagged ? "Ratio volume/capitalisation élevé : vérifier liquidité, actualité et qualité de la source." : "Ratio le plus élevé du snapshot, sans seuil d’anomalie franchi.") : "Volume ou capitalisation manquants.");
+  set("atlasMemoryPump", data.pumps.length ? data.pumps.map(p=>p.symbol).join(" · ") : "Aucun pump isolé détecté");
+  set("atlasMemoryPumpDetail", data.pumps.length ? data.pumps.map(p=>`${p.symbol} 24 h +${p.day.toFixed(2)} % · continuité mémoire insuffisante`).join(" · ") : "Aucun mouvement ≥ +7 % sans continuité mémoire suffisante dans la fenêtre observée.");
+  set("atlasMemoryConfidence", `${data.confidence.label} · ${data.confidence.score}/100`);
+  set("atlasMemoryConfidenceDetail", `${data.records} snapshots distincts · ${data.collectors_count} collecteur(s) · fil principal ${data.primary_records} relevés · ce score mesure la continuité des données, jamais la probabilité d’un gain.`);
+  const badge=document.getElementById("atlasMemoryIntelligenceBadge");
+  if(badge){badge.textContent=`${data.records} snapshots · confiance ${data.confidence.label}`;badge.className=`pill ${data.records>=3?"ok":"warn"}`;}
+  set("atlasMemoryIntelligenceStatus", data.records>=3
+    ? `Memory Intelligence active · dernier relevé ${data.latest_at?new Date(data.latest_at).toLocaleString("fr-FR"):"—"} · observation uniquement.`
+    : `Memory Intelligence en collecte · ${data.records}/3 snapshots distincts minimum pour une première lecture.`);
+  root.dataset.state=data.records>=3?"ready":"waiting";
+  return data;
+}
+
+function atlasMemoryIntelligenceMarkdown(data = atlasMemoryIntelligenceCompute()) {
+  const lines=[
+    "# Agent-Crypto — Memory Intelligence", "",
+    `- Version : ${ATLAS_RELEASE}`,
+    `- Généré : ${data.generated_at}`,
+    `- Snapshots distincts : ${data.records}`,
+    `- Collecteurs : ${data.collectors_count}`,
+    `- Fil principal : ${data.primary_collector || "—"} · ${data.primary_records} relevés`, "",
+    "## Tendances 3 / 5 / 10 relevés", ""
+  ];
+  ATLAS_MEMORY_INTELLIGENCE_HORIZONS.forEach(size=>{const h=data.horizons[size];lines.push(`- ${size} relevés : ${h.label || "indisponible"}`);});
+  lines.push("", "## Persistance", "", ...(data.persistence.length?data.persistence.map(r=>`- ${r.symbol} : ${r.state} · ${Number.isFinite(r.total)?`${r.total>=0?"+":""}${r.total.toFixed(2)} %`:"indisponible"} · cohérence ${(r.consistency*100).toFixed(0)} %`):["- Données insuffisantes."]), "",
+    "## Multi-collecteurs", "", `- ${data.collectors.label}${data.collectors.detail?` · ${data.collectors.detail}`:""}`, `- Local ↔ GitHub : ${data.local_github.label} · ${data.local_github.detail}`, "",
+    "## Secteurs / anomalies", "", `- Secteurs persistants : ${data.sectors.length?data.sectors.map(s=>s.category).join(" / "):"aucun"}`, `- Volume / capitalisation : ${data.anomaly?`${data.anomaly.symbol} ${(data.anomaly.ratio*100).toFixed(2)} %`:"indisponible"}`, `- Pump isolé : ${data.pumps.length?data.pumps.map(p=>p.symbol).join(" / "):"aucun"}`, "",
+    "## Confiance de continuité", "", `- ${data.confidence.label} · ${data.confidence.score}/100`, "- Ce score décrit la continuité et la concordance des données. Il ne prédit ni hausse, ni baisse, ni gain.", "", "## Stop point", "", "- Memory Intelligence reste descriptive. Aucun ordre, achat, vente ou signal garanti n’est généré."
+  );
+  return lines.join("\n");
+}
+
+function atlasMemoryIntelligenceExport() {
+  const data=atlasMemoryIntelligenceCompute();
+  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  downloadTextFile(`agent_crypto_memory_intelligence_${stamp}.md`,"text/markdown;charset=utf-8",atlasMemoryIntelligenceMarkdown(data));
+  return true;
+}
+
+function atlasMemoryIntelligenceInit() {
+  document.getElementById("btnAtlasMemoryRefresh")?.addEventListener("click", atlasMemoryIntelligenceRender);
+  document.getElementById("btnAtlasMemoryExport")?.addEventListener("click", atlasMemoryIntelligenceExport);
+  return atlasMemoryIntelligenceRender();
 }
 
 function atlasDecisionSectorRows(coins) {
@@ -16288,7 +16635,7 @@ function basketStatus(coins) { if (!coins.length) return { label: "À charger", 
 }
 
 /* ============================================================
-   30.2.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   31.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Per-browser role. Market data remain live in observer mode, while
    Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
    ============================================================ */
@@ -18434,7 +18781,9 @@ async function atlasLocalDialogueRunSummary(mode = "market") {
     const result = await atlasLocalBridgeRequest("/summary", {
       profile: atlasLocalDialogueState.profile,
       mode,
-      snapshot
+      snapshot,
+      response_language: "fr-FR",
+      language_lock: "french_only_except_standard_crypto_acronyms"
     });
     atlasLocalDialogueRender(result, label);
     if (atlasLocalDialogueState.profile === "atlas") {
@@ -18503,6 +18852,8 @@ async function atlasLocalDialogueAsk() {
         runtime_audit: atlasRcRuntimeAudit(snapshot)
       },
       request_scope: "question_only_no_pipeline_restart",
+      response_language: "fr-FR",
+      language_lock: "french_only_except_standard_crypto_acronyms",
       requested_reading: "whole_page_simple_detailed_expert",
       pedagogy_v2: atlasPedagogyV2QuestionContract(question, snapshot)
     });
@@ -18696,10 +19047,13 @@ function atlasCanonicalStringify(value) {
 }
 
 function atlasEvidenceNormalizeLevel(value, fallback = "INCONNU") {
-  const text = String(value || "").toLocaleLowerCase("fr-FR");
+  const raw = value && typeof value === "object"
+    ? (value.level ?? value.label ?? value.quality ?? "")
+    : value;
+  const text = String(raw || "").toLocaleLowerCase("fr-FR");
   if (/primaire|primary/.test(text)) return "PRIMAIRE";
-  if (/fort|strong|high|confirm/.test(text)) return "FORTE";
-  if (/moyen|medium|moderate|corrobor/.test(text)) return "MOYENNE";
+  if (/critique|fort|élev|strong|high|confirm/.test(text)) return "FORTE";
+  if (/moyen|modér|medium|moderate|corrobor/.test(text)) return "MOYENNE";
   if (/faible|weak|low|rumor|rumeur/.test(text)) return "FAIBLE";
   return fallback;
 }
@@ -32282,9 +32636,10 @@ function atlasSharedSynthesisBuildSummaryCore(snapshot) {
   const breadth = market.breadth_24h || {};
   const top5 = contract.canonical_top5 || {};
   const assets = Array.isArray(top5.assets) ? top5.assets : [];
-  const positives = assets.filter(row => Number(row?.change_24h_pct) > 0.05).length;
-  const negatives = assets.filter(row => Number(row?.change_24h_pct) < -0.05).length;
-  const stable = Math.max(0, assets.length - positives - negatives);
+  const top5Directions = atlasTop5DirectionCounts(assets, 0.05);
+  const positives = top5Directions.positive;
+  const negatives = top5Directions.negative;
+  const stable = top5Directions.stable;
   const graph = contract.graph || {};
   const math = contract.math || {};
   const windowData = math.active_window || {};
@@ -32832,6 +33187,73 @@ function atlasSharedSynthesisExportMarkdown() {
   return true;
 }
 
+
+function atlasDiagnosticBundlePayload() {
+  let snapshot = null;
+  try { snapshot = atlasBuildCryptoPageSnapshot(); } catch (_) {}
+  const current = atlasCurrentStateRead();
+  const reports = Object.fromEntries(ATLAS_LOCAL_REPORT_MODES.map(mode => {
+    const report = atlasLocalReportsState.reports?.[mode] || null;
+    return [mode, report ? {
+      fingerprint: report.fingerprint || null,
+      time: report.time || null,
+      model: report.model || null,
+      provider: report.provider || null,
+      answer: String(report.answer || "").slice(0, 24000)
+    } : null];
+  }));
+  const conclusion = atlasLocalDialogueState.conclusionResponse || null;
+  const feed = state.dataBroker?.exchangeFeed || {};
+  return {
+    schema: "agent_crypto_diagnostic_bundle_v1",
+    generated_at: new Date().toISOString(),
+    privacy: "public_market_and_local_runtime_diagnostics_only_no_secret",
+    release: ATLAS_RELEASE,
+    asset_token: ATLAS_ASSET_TOKEN,
+    stack: {
+      control_center: ATLAS_STABLE_STACK.controlCenter,
+      bridge_expected: ATLAS_STABLE_STACK.bridge,
+      bridge_connected: atlasLocalDialogueState.connected === true,
+      provider: atlasLocalDialogueState.provider || null,
+      model: atlasLocalDialogueState.model || ATLAS_STABLE_STACK.model,
+      device_role: atlasDeviceComputeRoleRead()
+    },
+    market_live: {
+      source: feed.source || null,
+      status: feed.status || null,
+      direct_count: Number(feed.directCount || 0),
+      derived_count: Number(feed.derivedCount || 0),
+      last_message_at: feed.lastMessageAt || null
+    },
+    current_state: current,
+    snapshot: snapshot ? {
+      fingerprint: snapshot.fingerprint || null,
+      generated_at: snapshot.generated_at || null,
+      strict_contract: snapshot.strict_contract || null
+    } : null,
+    atlas_reports: reports,
+    aerith_conclusion: conclusion ? {
+      fingerprint: conclusion.fingerprint || null,
+      time: conclusion.time || null,
+      model: conclusion.model || null,
+      provider: conclusion.provider || null,
+      answer: String(conclusion.answer || "").slice(0, 32000)
+    } : null,
+    audits: {
+      static: atlasRcStaticAudit(),
+      runtime: atlasRcRuntimeAudit(snapshot)
+    }
+  };
+}
+
+function atlasExportDiagnosticBundle() {
+  const payload = atlasDiagnosticBundlePayload();
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  downloadTextFile(`agent_crypto_diagnostic_${ATLAS_BUILD}_${stamp}.json`, "application/json;charset=utf-8", JSON.stringify(payload, null, 2));
+  atlasSharedSynthesisSetStatus("ready", "Diagnostic public/local exporté · aucun secret ni clé privée inclus.", "Diagnostic");
+  return true;
+}
+
 function atlasSharedSynthesisReadReports() {
   if (!atlasSharedSynthesisState.package) return false;
   atlasLocalReportsOpenAll();
@@ -32858,6 +33280,7 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasSharedReadConclusion")?.addEventListener("click", atlasSharedSynthesisReadConclusion);
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
+  document.getElementById("btnAtlasDiagnosticBundle")?.addEventListener("click", atlasExportDiagnosticBundle);
   void atlasSharedSynthesisRestore();
   return true;
 }
@@ -37154,6 +37577,7 @@ function saveAutoSnapshot() {
       records[existingIndex] = updated;
       writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
       queueMicrotask(renderMemoryTruth);
+      queueMicrotask(atlasMemoryIntelligenceRender);
       return updated;
     }
   }
@@ -37161,6 +37585,7 @@ function saveAutoSnapshot() {
   const saved = writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
   const finalSnapshot = saved.find(record => record.snapshot_id === snapshot.snapshot_id) || snapshot;
   queueMicrotask(renderMemoryTruth);
+  queueMicrotask(atlasMemoryIntelligenceRender);
   return finalSnapshot;
 }
 
@@ -37502,6 +37927,7 @@ function setSharedOutputStatus(kind = "") { if (!els.sharedMemoryOutput) return;
 function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConfigured()) { migrateLocalCollectorRecords(id, true); } const records = readAutoMemory(); const stats = collectorStats(records); const configured = isCollectorConfigured(); const migrationNote = localStorage.getItem(COLLECTOR_MIGRATION_NOTE_KEY) || "Aucune migration encore nécessaire."; const lastImport = localStorage.getItem(AUTO_LAST_IMPORT_KEY) || "Aucun import effectué"; const last = records[records.length - 1]; if (els.collectorIdInput && !els.collectorIdInput.value) els.collectorIdInput.value = id; if (els.collectorIdentityBadge) els.collectorIdentityBadge.textContent = configured ? `Configuré · ${id}` : "À configurer"; if (els.sharedCollectorId) els.sharedCollectorId.textContent = configured ? `${id} · sauvegardé dans Firefox` : `${id} · temporaire`; if (els.sharedLocalCount) els.sharedLocalCount.textContent = records.length === 1 ? "1 snapshot fusionné" : `${records.length} snapshots fusionnés`; if (els.sharedCollectorsCount) els.sharedCollectorsCount.textContent = `${stats.collectors.length} · ${formatCollectorCounts(stats)}`; if (els.sharedLastImport) els.sharedLastImport.textContent = lastImport; if (els.sharedMemoryOutput) { setSharedOutputStatus(configured ? "ok" : "warn"); els.sharedMemoryOutput.textContent = [ `ATLAS SHARED MARKET MEMORY — ${ATLAS_RELEASE}`, "", configured ? `✅ Machine configurée : ${id}` : `⚠️ Machine non finalisée : ${id}`, configured ? "Configuration : gardée automatiquement dans ce Firefox." : "Action : remplace l’ID temporaire par ryzen7-christophe / transformer-book-christophe / operator-machine puis clique Sauver ID une fois.", "", "ÉTAT MÉMOIRE", `Total disponible : ${records.length} snapshots fusionnés`, `Collecteurs fusionnés : ${formatCollectorCounts(stats)}`, last?.saved_at ? `Dernier snapshot disponible : ${new Date(last.saved_at).toLocaleString("fr-FR")}` : "Dernier snapshot disponible : aucun", `Dernière opération : ${lastImport}`, `Migration : ${migrationNote}`, "", "LECTURE SIMPLE", records.length ? "Les données visibles ici sont disponibles localement pour Atlas sur cette machine." : "Aucune donnée fusionnée pour l’instant.", stats.collectors.length > 1 ? "Plusieurs collecteurs sont présents dans la mémoire. Cela ne prouve pas que leurs machines fonctionnent encore actuellement." : "Un seul collecteur est présent dans la mémoire locale pour l’instant.", "", "RÈGLE", "Export/import fusionne les relevés sans écraser. La mémoire GitHub est lue automatiquement au démarrage ; cette page publique ne peut pas écrire dans GitHub." ].join("\n"); }
   renderMemoryTruth();
   atlasRenderMemoryCoverage();
+  atlasMemoryIntelligenceRender();
 }
 
 function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
@@ -39301,7 +39727,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.2.1";
+const ATLAS_BUILD = "31.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -40577,6 +41003,8 @@ atlasSafeBoot("shared memory render", renderSharedMemory);
 atlasSafeBoot("memory truth render", renderMemoryTruth);
 
 atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
+
+atlasSafeBoot("Memory Intelligence 31.0", atlasMemoryIntelligenceInit);
 
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
