@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.12",
+  build: "38.13",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1300,7 +1300,11 @@ const ATLAS_RC_CONTRACT = Object.freeze({
     "Ryzen construit avec Ollama/Bridge ; Transformer Book consulte sans moteur local",
     "Question libre isolée : aucun redémarrage CURRENT et aucune réécriture Memory Intelligence",
     "Book Mirror en lecture seule : aucune clé ni écriture GitHub depuis la page publique",
-    "Bridge health stable : timeout client supérieur au pire cas /health V1.9.5 + anti-flap sur contrôles silencieux"
+    "Bridge health stable : timeout client supérieur au pire cas /health V1.9.5 + anti-flap sur contrôles silencieux",
+    "runtime version truth : ATLAS_BUILD, meta atlas-build et asset token doivent être cohérents",
+    "identités séparées : snapshot canonique, fingerprint transactionnel CURRENT et fingerprint analytique ne sont jamais confondus",
+    "un snapshot canonique déclenche au maximum un cycle automatique ; les ticks Binance LIVE ne rouvrent pas le même CURRENT",
+    "Book lecture seule : la provenance Ryzen/Ollama ne confère jamais un droit de calcul local"
   ])
 });
 
@@ -1377,7 +1381,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.12 BOOK ROLE UI + JOURNAL MEMORY BIND · CURRENT MEMORY 38.11 CONSERVÉ · RESTORE UI TRUTH 38.9 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.13 RUNTIME TRUTH + INVARIANT LOCK · BOOK ROLE/MEMORY 38.12 CONSERVÉ · CURRENT PERSISTENCE 38.8 CONSERVÉ · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12120,7 +12124,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.12",
+  interface: "Build 38.13",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40206,7 +40210,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.12";
+const ATLAS_BUILD = "38.13";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46903,6 +46907,141 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
     book_role_ui_lock_3812: typeof atlasBookRoleUiLock3812 === "function" && typeof atlasBookReadOnly3812 === "function" && typeof atlasLocalBridgeProbe3812 === "function",
     journal_memory_exact_bind_3812: typeof atlasCurrentMemoryJournalObservation3812 === "function" && typeof atlasCurrentMemoryJournalRecord3812 === "function" && typeof atlasCurrentJournalWrite333812 === "function",
     market_poll_5m_conserved_3812: ATLAS_MARKET_REFRESH_MS === 5 * 60 * 1000
+  };
+  report.pass = Object.values(report.checks).every(Boolean);
+  return report;
+};
+
+/* ============================================================
+   38.13 — RUNTIME TRUTH + INVARIANT LOCK
+   Consolidation, pas nouvelle architecture :
+   - expose une vérité de version runtime (app / HTML meta / asset token / script) ;
+   - signale explicitement un mélange de cache avant tout diagnostic fonctionnel ;
+   - rejoue la réconciliation Journal CURRENT → Memory uniquement sur événements
+     de cycle de page (boot microtask, pageshow, retour visible), sans intervalle ;
+   - conserve intégralement le bind exact 38.12 et le Book Role UI Lock 38.12.
+
+   Protégé inchangé : Binance LIVE · Gate direct 5/5 · Direct REST 38.5 ·
+   Bridge Health 38.6 · Atlas 4/4 · NØX · Aerith · CURRENT · STOP-ONCE ·
+   REPOS · Question libre isolée · polling marché 5 min · Bridge V1.9.5.
+   ============================================================ */
+
+const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
+  schema: "agent_crypto_runtime_truth_v3813",
+  build: "38.13",
+  asset_token: "market-core-v2.0-alpha-build-38.13"
+});
+
+function atlasRuntimeTruth3813() {
+  const metaBuild = String(document.querySelector('meta[name="atlas-build"]')?.content || "").trim();
+  const metaToken = String(document.querySelector('meta[name="atlas-asset-token"]')?.content || "").trim();
+  const runtimeContract = String(document.querySelector('meta[name="atlas-runtime-contract"]')?.content || "").trim();
+  const appScript = [...document.scripts].find(node => /(?:^|\/)app\.js(?:\?|$)/.test(String(node?.src || ""))) || null;
+  let scriptToken = "";
+  try { scriptToken = appScript ? String(new URL(appScript.src, document.baseURI).searchParams.get("v") || "") : ""; } catch (_) {}
+  const appBuild = String(typeof ATLAS_BUILD !== "undefined" ? ATLAS_BUILD : "").trim();
+  const appToken = String(typeof ATLAS_ASSET_TOKEN !== "undefined" ? ATLAS_ASSET_TOKEN : "").trim();
+  const checks = {
+    authoritative_build: appBuild === ATLAS_RUNTIME_TRUTH_3813.build,
+    html_build_matches_app: !!metaBuild && metaBuild === appBuild,
+    html_token_matches_app: !!metaToken && metaToken === appToken,
+    script_token_matches_app: !!scriptToken && scriptToken === appToken,
+    runtime_contract_present: runtimeContract === "runtime-truth-v1"
+  };
+  let role = "unknown";
+  try {
+    const identity = typeof atlasDeviceIdentity382 === "function" ? atlasDeviceIdentity382() : null;
+    role = identity?.book === true ? "book-readonly" : (typeof atlasDeviceComputeAllowed === "function" && atlasDeviceComputeAllowed() ? "producer" : "unknown");
+  } catch (_) {}
+  return {
+    schema: ATLAS_RUNTIME_TRUTH_3813.schema,
+    checked_at: new Date().toISOString(),
+    pass: Object.values(checks).every(Boolean),
+    app_build: appBuild,
+    html_build: metaBuild,
+    app_token: appToken,
+    html_token: metaToken,
+    script_token: scriptToken,
+    role,
+    checks
+  };
+}
+
+function atlasRuntimeTruthApply3813(reason = "runtime") {
+  const truth = atlasRuntimeTruth3813();
+  try {
+    const root = document.documentElement;
+    if (root) {
+      root.dataset.atlasRuntimeBuild = truth.app_build || "unknown";
+      root.dataset.atlasRuntimeTruth = truth.pass ? "coherent" : "mismatch";
+      root.dataset.atlasRuntimeReason = String(reason || "runtime");
+    }
+    globalThis.__AGENT_CRYPTO_RUNTIME_TRUTH__ = truth;
+  } catch (_) {}
+  if (!truth.pass) {
+    const control = document.getElementById("atlasVersionControl");
+    const text = document.getElementById("atlasVersionControlText");
+    if (control) {
+      control.classList.remove("ok", "warn");
+      control.classList.add("fail");
+      control.dataset.state = "failed";
+      control.title = `Incohérence de cache/version · app ${truth.app_build || "?"} · page ${truth.html_build || "?"} · rechargement forcé requis.`;
+    }
+    if (text) text.textContent = `CACHE/VERSION INCOHÉRENTS · app ${truth.app_build || "?"} / page ${truth.html_build || "?"}`;
+  }
+  return truth;
+}
+
+let atlasCurrentMemoryEventReconcileQueued3813 = false;
+function atlasCurrentMemoryEventReconcile3813(reason = "event") {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) {
+    return { queued:false, skipped:"book-readonly", reason };
+  }
+  if (atlasCurrentMemoryEventReconcileQueued3813) return { queued:false, skipped:"already-queued", reason };
+  atlasCurrentMemoryEventReconcileQueued3813 = true;
+  queueMicrotask(() => {
+    atlasCurrentMemoryEventReconcileQueued3813 = false;
+    try {
+      const result = typeof atlasCurrentMemoryRepair3811 === "function"
+        ? atlasCurrentMemoryRepair3811(`3813:${reason}`)
+        : null;
+      if (result?.record) {
+        try { atlasMemoryLedgerRender34(); } catch (_) {}
+        try { atlasMemoryLedgerRender35(); } catch (_) {}
+        try { atlasMemoryIntelligenceRender(); } catch (_) {}
+        try { renderDecisionBoard(); } catch (_) {}
+        try { atlasDecisionWorkspaceRender33(); } catch (_) {}
+      }
+    } catch (_) {}
+  });
+  return { queued:true, reason };
+}
+
+// Initial truth/memory reconciliation is event-driven and finite: no timer, no poll.
+queueMicrotask(() => {
+  try { atlasRuntimeTruthApply3813("boot"); } catch (_) {}
+  try { atlasCurrentMemoryEventReconcile3813("boot"); } catch (_) {}
+});
+window.addEventListener("pageshow", () => {
+  try { atlasRuntimeTruthApply3813("pageshow"); } catch (_) {}
+  try { atlasCurrentMemoryEventReconcile3813("pageshow"); } catch (_) {}
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") return;
+  try { atlasRuntimeTruthApply3813("visibility"); } catch (_) {}
+  try { atlasCurrentMemoryEventReconcile3813("visibility"); } catch (_) {}
+});
+
+const atlasRcStaticAudit3812Base3813 = atlasRcStaticAudit;
+atlasRcStaticAudit = function atlasRcStaticAudit3813() {
+  const report = atlasRcStaticAudit3812Base3813();
+  report.checks = {
+    ...(report.checks || {}),
+    runtime_truth_3813: typeof atlasRuntimeTruth3813 === "function" && typeof atlasRuntimeTruthApply3813 === "function",
+    journal_memory_event_reconcile_3813: typeof atlasCurrentMemoryEventReconcile3813 === "function",
+    book_role_lock_3812_conserved_3813: typeof atlasBookRoleUiLock3812 === "function" && typeof atlasBookReadOnly3812 === "function",
+    exact_journal_bind_3812_conserved_3813: typeof atlasCurrentMemoryJournalRecord3812 === "function" && typeof atlasCurrentMemoryJournalObservation3812 === "function",
+    market_poll_5m_conserved_3813: ATLAS_MARKET_REFRESH_MS === 5 * 60 * 1000
   };
   report.pass = Object.values(report.checks).every(Boolean);
   return report;
