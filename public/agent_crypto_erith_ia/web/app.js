@@ -1281,7 +1281,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "31.0",
+  build: "31.1",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1300,7 +1300,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "31.0",
+    build: ATLAS_BUILD === "31.1",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1363,7 +1363,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 31.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 31.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1786,8 +1786,8 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
     banner.innerHTML = `<b>Analyse courante non remplacée</b> · ${atlasLocalEscapeHtml(state.reason || "erreur locale")} · ancien résultat conservé comme historique.`;
     banner.style.borderColor = "rgba(255,110,110,.65)";
   } else if (status === "PENDING_ANALYSIS") {
-    banner.innerHTML = `<b>Nouvelle analyse en cours</b> · prix ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · ancien résultat conservé uniquement comme historique · ${String(state.fingerprint || "").slice(0,18)}…`;
-    banner.style.borderColor = "rgba(255,198,84,.55)";
+    banner.innerHTML = `<b>Snapshot qualifié · analyse autorisée</b> · prix ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)} · lancement Atlas automatique · ${String(state.fingerprint || "").slice(0,18)}…`;
+    banner.style.borderColor = "rgba(76,220,160,.72)";
   } else if (status === "WAITING_STABLE_5_5") {
     const age = Math.min(
       ATLAS_DIRECT_5_5_STABLE_MS / 1000,
@@ -1801,6 +1801,21 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
   } else {
     banner.innerHTML = `<b>Analyse en attente</b> · prix disponibles ${Number(state.price_count || 0)}/${Number(state.expected_count || 5)} · Binance directes ${Number(state.direct_count || 0)}/${Number(state.expected_count || 5)} · dérivées ${Number(state.derived_count || 0)}.`;
     banner.style.borderColor = "rgba(255,198,84,.55)";
+  }
+  const productiveStatus = new Set(["PENDING_ANALYSIS", "ATLAS_RUNNING", "ATLAS_4_4_READY", "NOX_READY", "AERITH_RUNNING", "CURRENT"]);
+  if (!localComputeOff && productiveStatus.has(status)) {
+    banner.dataset.tone = status === "CURRENT" ? "ready" : "active";
+    banner.style.borderColor = status === "CURRENT" ? "rgba(79,235,170,.82)" : "rgba(82,225,166,.72)";
+    banner.style.background = status === "CURRENT" ? "rgba(4,39,34,.92)" : "rgba(4,31,31,.92)";
+    banner.style.boxShadow = "0 0 0 1px rgba(80,235,175,.06) inset, 0 0 22px rgba(58,220,165,.07)";
+  } else if (status === "ERROR") {
+    banner.dataset.tone = "error";
+    banner.style.background = "rgba(42,15,21,.9)";
+    banner.style.boxShadow = "none";
+  } else {
+    banner.dataset.tone = localComputeOff ? "observer" : "waiting";
+    banner.style.background = "rgba(4,20,31,.88)";
+    banner.style.boxShadow = "none";
   }
   atlasRenderSnapshotLiveTruth(state);
 }
@@ -8791,7 +8806,7 @@ function atlasStrictCanonicalTop5() {
 }
 
 
-function atlasTop5DirectionCounts(rows, threshold = 0.05) {
+function atlasTop5DirectionCounts(rows, threshold = 0) {
   const list = Array.isArray(rows) ? rows.filter(row => row && row.available !== false) : [];
   let positive = 0;
   let negative = 0;
@@ -12091,7 +12106,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 31.0",
+  interface: "Build 31.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -16635,7 +16650,7 @@ function basketStatus(coins) { if (!coins.length) return { label: "À charger", 
 }
 
 /* ============================================================
-   31.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   31.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Per-browser role. Market data remain live in observer mode, while
    Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
    ============================================================ */
@@ -17656,6 +17671,101 @@ function atlasLocalReportsWait(ms) {
   return new Promise(resolve => window.setTimeout(resolve, Math.max(0, Number(ms) || 0)));
 }
 
+
+function atlasTextEnglishMarkerScore(text) {
+  const value = String(text || "").toLocaleLowerCase("en-US");
+  const markers = [
+    "snapshot shows", "sources are", "observations must", "the market", "data gaps",
+    "no causal", "reports are not", "are unavailable", "is unavailable", "must be treated",
+    "coverage is", "preclude definitive", "conclusions are therefore", "human validation is required"
+  ];
+  return markers.reduce((score, marker) => score + (value.includes(marker) ? 1 : 0), 0);
+}
+
+function atlasMarkdownReplaceNamedSection(text, headingLabel, replacement) {
+  const source = String(text || "").replace(/\r\n?/g, "\n");
+  const heading = new RegExp(`^####\\s+\\d+\\.\\s+${headingLabel}\\s*$`, "mi");
+  const match = heading.exec(source);
+  if (!match) return source;
+  const start = match.index;
+  const afterHeading = start + match[0].length;
+  const tail = source.slice(afterHeading);
+  const nextHeading = /\n####\s+\d+\./m.exec(tail);
+  const end = nextHeading ? afterHeading + nextHeading.index + 1 : source.length;
+  return `${source.slice(0, start)}${replacement.trim()}\n\n${source.slice(end)}`.trim();
+}
+
+function atlasLocalFrenchCommentFallback(mode, snapshot) {
+  const contract = snapshot?.strict_contract || {};
+  const market = contract.market || {};
+  const breadth = market.breadth_24h || {};
+  const math = contract.math || {};
+  const risk = math.historical_risk || {};
+  const contradictions = Array.isArray(contract.contradictions) ? contract.contradictions : [];
+  const top5 = contract.canonical_top5 || {};
+  const assets = Array.isArray(top5.assets) ? top5.assets : [];
+  const directions = atlasTop5DirectionCounts(assets, 0);
+  const lines = [];
+  if (mode === "math") {
+    lines.push(`- Lecture Atlas-10 : Math Core décrit ${math.asset || "l’actif courant"} sur ${math.active_window?.period_label || "la fenêtre active"} ; risque global ${math.risk_global || "non évalué"}.`);
+    lines.push(`- Prudence : volatilité, drawdown, VaR et Expected Shortfall décrivent l’historique observé ; ils ne prédisent pas la direction future.`);
+    lines.push(`- Limites : ${math.limitation || "les limites publiées par Math Core restent applicables"}.`);
+  } else if (mode === "contradictions") {
+    lines.push(`- Lecture Atlas-10 : ${contradictions.length} contradiction${contradictions.length > 1 ? "s" : ""} factuelle${contradictions.length > 1 ? "s" : ""} enregistrée${contradictions.length > 1 ? "s" : ""} ; aucune causalité n’est ajoutée.`);
+    lines.push(`- Prudence : une source manquante, une couverture partielle ou un historique en cache réduisent le niveau de certitude sans invalider automatiquement les autres faits.`);
+    lines.push(`- Limites : les contradictions restent classées selon leur état confirmé / à vérifier ; aucune action financière n’en est déduite.`);
+  } else if (mode === "top5") {
+    lines.push(`- Lecture Atlas-10 : Target Top 5 couvert ${assets.filter(row => row?.available).length}/${assets.length || 5} · ${directions.positive} positifs · ${directions.negative} négatifs · ${directions.stable} stables.`);
+    lines.push(`- Prudence : cette répartition décrit seulement le snapshot courant et ne constitue ni prévision ni classement d’investissement.`);
+    lines.push(`- Limites : la qualité de lecture dépend des cotations et historiques qualifiés pour chaque actif.`);
+  } else {
+    lines.push(`- Lecture Atlas-10 : largeur 24 h ${atlasSharedSynthesisNumber(breadth.positive, "—")} hausses · ${atlasSharedSynthesisNumber(breadth.negative, "—")} baisses · ${atlasSharedSynthesisNumber(breadth.stable, "—")} stables.`);
+    lines.push(`- Prudence : cette largeur décrit le Market Snapshot ; elle ne donne pas la direction future.`);
+    lines.push(`- Limites : couverture ${atlasSharedSynthesisNumber(market.assets_loaded, "—")}/${atlasSharedSynthesisNumber(market.target_assets, "250")} et limites de sources conservées telles quelles.`);
+  }
+  return `#### ${mode === "market" ? "8" : mode === "top5" ? "4" : mode === "math" ? "3" : "4"}. Commentaire local borné\n\n${lines.join("\n")}`;
+}
+
+function atlasLocalReportTruthPolish(mode, result, snapshot) {
+  if (!result || typeof result !== "object") return result;
+  const answer = String(result.answer || "").replace(/\r\n?/g, "\n");
+  const heading = /^####\s+\d+\.\s+Commentaire local borné\s*$/mi;
+  const match = heading.exec(answer);
+  if (!match) return result;
+  const tail = answer.slice(match.index + match[0].length);
+  const next = /\n####\s+\d+\./m.exec(tail);
+  const body = next ? tail.slice(0, next.index) : tail;
+  if (atlasTextEnglishMarkerScore(body) < 1) return result;
+  const polished = atlasMarkdownReplaceNamedSection(answer, "Commentaire local borné", atlasLocalFrenchCommentFallback(mode, snapshot));
+  return { ...result, answer: polished, language_normalized: true };
+}
+
+function atlasLocalConclusionEvidenceSection(snapshot) {
+  const contract = snapshot?.strict_contract || {};
+  const evidence = contract.evidence_v2?.events?.[0] || snapshot?.analytical_state?.evidence?.events?.[0] || null;
+  const lead = contract.news?.lead_event || null;
+  if (!evidence) return "";
+  const source = evidence.source_name || lead?.source_name || "source non précisée";
+  const scope = [...(Array.isArray(evidence.assets) ? evidence.assets : []), ...(Array.isArray(evidence.sectors) ? evidence.sectors : [])].filter(Boolean);
+  return [
+    "#### 5. News Sentinel — événement et preuve",
+    "",
+    `- Événement directeur : ${evidence.headline || lead?.headline || "événement non nommé"}.`,
+    `- Source : ${source} · preuve ${evidence.proof_quality || "INCONNUE"}.`,
+    `- Impact potentiel : ${evidence.impact_potential || "INCONNU"}${scope.length ? ` · actifs/secteurs : ${scope.join(", ")}` : " · portée à qualifier"}.`,
+    `- Confiance : ${evidence.confidence || "À_VÉRIFIER"} · ${Number(evidence.independent_sources || 0)} source(s) indépendante(s) sur ${Number(evidence.reported_sources || 0)} reprise(s).`,
+    "- Action : observation uniquement ; aucun ordre automatique.",
+    "- La proximité temporelle entre une actualité et un mouvement de prix ne démontre pas la causalité."
+  ].join("\n");
+}
+
+function atlasLocalConclusionTruthPolish(answer, snapshot) {
+  let text = String(answer || "").replace(/\r\n?/g, "\n").trim();
+  const evidenceSection = atlasLocalConclusionEvidenceSection(snapshot);
+  if (evidenceSection) text = atlasMarkdownReplaceNamedSection(text, "News Sentinel — événement et preuve", evidenceSection);
+  return text;
+}
+
 async function atlasLocalReportRequestReliable(mode, snapshot, token) {
   let lastError = null;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
@@ -17664,10 +17774,13 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
       const result = await atlasLocalBridgeRequest("/summary", {
         profile: "atlas",
         mode,
-        snapshot
+        snapshot,
+        response_language: "fr-FR",
+        language_lock: "french_only_except_standard_crypto_acronyms"
       });
       if (token !== atlasLocalReportsState.runToken) return null;
-      if (atlasLocalReportAnswerIsMeaningful(mode, result)) return result;
+      const polished = atlasLocalReportTruthPolish(mode, result, snapshot);
+      if (atlasLocalReportAnswerIsMeaningful(mode, polished)) return polished;
       lastError = new Error("Rapport local vide ou incomplet");
     } catch (error) {
       lastError = error;
@@ -18560,7 +18673,7 @@ async function atlasLocalConclusionRun(options = {}) {
 
     // Lexical validation is now informative, not a blocker:
     // Bridge V1.9.5 returns a deterministic conclusion contract and confirms actual rereading of the 4 Atlas CURRENT reports.
-    const bridgeAnswer = atlasNormalizeAnalyticalSafetyLanguage(result.answer || "").trim();
+    const bridgeAnswer = atlasLocalConclusionTruthPolish(atlasNormalizeAnalyticalSafetyLanguage(result.answer || "").trim(), snapshot);
     const pedagogyAppendix = atlasPedagogyV2FullGlossaryMarkdown(snapshot);
     const answer = pedagogyAppendix
       ? `${bridgeAnswer}\n${pedagogyAppendix}`.trim()
@@ -19280,12 +19393,13 @@ function atlasAnalyticalList(id, rows, empty = "Aucune donnée.") {
 
 function atlasAnalyticalSourceSummary(sourceTruth) {
   const counts = sourceTruth?.counts || {};
+  const descriptors = Array.isArray(sourceTruth?.descriptors) ? sourceTruth.descriptors.length : 0;
   const direct = Number(counts[ATLAS_SOURCE_TRUTH_MODES.DIRECT] || 0) + Number(counts[ATLAS_SOURCE_TRUTH_MODES.DERIVED_DIRECT] || 0);
   const conserved = Number(counts[ATLAS_SOURCE_TRUTH_MODES.DIRECT_CONSERVED] || 0);
   const cached = Number(counts[ATLAS_SOURCE_TRUTH_MODES.CACHE_RECENT] || 0) + Number(counts[ATLAS_SOURCE_TRUTH_MODES.CACHE_DATED] || 0);
   const archived = Number(counts[ATLAS_SOURCE_TRUTH_MODES.ARCHIVE] || 0);
   const unavailable = Number(counts[ATLAS_SOURCE_TRUTH_MODES.UNAVAILABLE] || 0);
-  const parts = [`${direct} direct${direct > 1 ? "es" : "e"}`];
+  const parts = [`${descriptors} descripteur${descriptors > 1 ? "s" : ""}`, `${direct} direct${direct > 1 ? "es" : "e"}`];
   if (conserved) parts.push(`${conserved} conservée${conserved > 1 ? "s" : ""}`);
   if (cached) parts.push(`${cached} cache${cached > 1 ? "s" : ""}`);
   if (archived) parts.push(`${archived} archive${archived > 1 ? "s" : ""}`);
@@ -19349,7 +19463,7 @@ function atlasAnalyticalTruthRender(envelope = null) {
   atlasAnalyticalSetText("atlasTruthFingerprintDetail", currentFingerprint ? "SHA-256 canonique · contexte analytique V2" : "SHA-256 canonique.");
   const sourceTruth = current?.source_truth || null;
   atlasAnalyticalSetText("atlasTruthSources", sourceTruth ? atlasAnalyticalSourceSummary(sourceTruth) : "—");
-  atlasAnalyticalSetText("atlasTruthSourcesDetail", sourceTruth ? "Taxonomie Source Truth V2 appliquée." : "Aucune source normalisée.");
+  atlasAnalyticalSetText("atlasTruthSourcesDetail", sourceTruth ? "Comptage des descripteurs de provenance (marché, Binance, séries, News), distinct du compteur 5/5 des paires Binance." : "Aucune source normalisée.");
   const evidenceEvent = current?.evidence?.events?.[0] || null;
   atlasAnalyticalSetText("atlasTruthNews", evidenceEvent ? `${evidenceEvent.confidence} · preuve ${evidenceEvent.proof_quality}` : "Aucun événement");
   atlasAnalyticalSetText("atlasTruthNewsDetail", evidenceEvent ? `Impact ${evidenceEvent.impact_potential} · ${evidenceEvent.independent_sources} source indépendante.` : "Impact séparé de la confiance.");
@@ -32433,7 +32547,7 @@ function atlasStableStackRenderCore() {
     station = "Ryzen · production locale";
     stationDetail = "Les quatre rapports et la conclusion peuvent être produits sur ce poste.";
     status = versionMatches
-      ? `Bridge ${ATLAS_STABLE_STACK.bridge} et GPT-OSS 20B-32K prêts · production locale en lecture seule.`
+      ? `Bridge ${ATLAS_STABLE_STACK.bridge} et GPT-OSS 20B-32K prêts · production locale active.`
       : `Bridge ${reportedVersion || "inconnu"} détecté · version canonique attendue : ${ATLAS_STABLE_STACK.bridge}.`;
   } else if (bridgeReachable) {
     runtime = "warning";
@@ -32636,7 +32750,7 @@ function atlasSharedSynthesisBuildSummaryCore(snapshot) {
   const breadth = market.breadth_24h || {};
   const top5 = contract.canonical_top5 || {};
   const assets = Array.isArray(top5.assets) ? top5.assets : [];
-  const top5Directions = atlasTop5DirectionCounts(assets, 0.05);
+  const top5Directions = atlasTop5DirectionCounts(assets, 0);
   const positives = top5Directions.positive;
   const negatives = top5Directions.negative;
   const stable = top5Directions.stable;
@@ -34376,7 +34490,7 @@ function atlasSharedSynthesisBuildSummary(snapshot) {
   const truth = [
     "**0. Vérité analytique**",
     `- Empreinte : sha256:${envelope.fingerprint.value}.`,
-    `- Sources : ${sourceSummary}.`,
+    `- Descripteurs Source Truth : ${sourceSummary}.`,
     `- News : ${event ? `${event.confidence} · preuve ${event.proof_quality} · impact ${event.impact_potential}` : "aucun événement directeur"}.`,
     `- Math Core : ${quality.PUBLISHED || 0} publiées · ${quality.DEGRADED || 0} dégradées · ${quality.BLOCKED || 0} bloquées.`,
     `- Contradictions : ${envelope.contradictions?.counts?.total || 0} · stop gates ${envelope.contradictions?.counts?.stop || 0}.`,
@@ -39727,7 +39841,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "31.0";
+const ATLAS_BUILD = "31.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -39891,7 +40005,7 @@ function atlasVersionControlState(mode, options = {}) {
     text.textContent = `Build ${ATLAS_BUILD} actif · GitHub en propagation`;
     control.setAttribute(
       "aria-label",
-      `Build ${ATLAS_BUILD} actif. La publication GitHub n’est pas encore cohérente sur tous les fichiers. Cliquer pour revérifier.`
+      `Build ${ATLAS_BUILD} actif. GitHub Pages propage encore les fichiers ; cliquer pour revérifier.`
     );
   } else if (stateMode === "applying") {
     control.classList.add("warn");
@@ -41004,7 +41118,7 @@ atlasSafeBoot("memory truth render", renderMemoryTruth);
 
 atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
 
-atlasSafeBoot("Memory Intelligence 31.0", atlasMemoryIntelligenceInit);
+atlasSafeBoot("Memory Intelligence 31.1", atlasMemoryIntelligenceInit);
 
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 

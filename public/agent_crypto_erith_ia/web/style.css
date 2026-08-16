@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 31.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
+   BUILD 31.1 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 31.0
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-31.0
+   ATLAS_ASSET_BUILD: 31.1
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-31.1
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "31.0";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-31.0";
+  --atlas-asset-build: "31.1";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-31.1";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25071,7 +25071,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 31.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   BUILD 31.1 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
    Scoped to the local analysis chamber. No global dashboard geometry change.
    ========================================================================== */
 .atlas-analysis-progress{
@@ -25105,7 +25105,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   BUILD 31.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Localized control only. No dashboard geometry rewrite.
    ============================================================ */
 .atlas-device-compute-control{
@@ -25137,7 +25137,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* =========================================================
-   BUILD 31.0 — ATLAS CURRENT STATUS RELOCATION
+   BUILD 31.1 — ATLAS CURRENT STATUS RELOCATION
    The CURRENT/live qualification banner belongs to the local
    Atlas section, below the pipeline/device-role card.
    ========================================================= */
@@ -25146,7 +25146,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.0 — COHERENCE & OPERATOR POLISH
+   BUILD 31.1 — COHERENCE & OPERATOR POLISH
    Snapshot/LIVE truth, deterministic Top 5, diagnostics.
    ============================================================ */
 .atlas-frame-truth{
@@ -25170,7 +25170,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ============================================================
-   BUILD 31.0 — MEMORY INTELLIGENCE
+   BUILD 31.1 — MEMORY INTELLIGENCE
    3/5/10 snapshots · persistence · multi-collector confirmation.
    ============================================================ */
 .atlas-memory-intelligence{margin-top:14px;padding:15px;border:1px solid rgba(150,122,255,.28);border-radius:16px;background:linear-gradient(135deg,rgba(16,17,42,.82),rgba(5,31,39,.72))}
@@ -25187,3 +25187,28 @@ html[data-atlas-market-domain="metals"]
 #atlasMemoryIntelligenceStatus{margin:10px 0 0;color:#9ec8cf;font-size:.86rem}
 @media(max-width:980px){.atlas-memory-intelligence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-memory-confidence{grid-column:span 2}}
 @media(max-width:720px){.atlas-memory-horizon-grid,.atlas-memory-intelligence-grid{grid-template-columns:1fr}.atlas-memory-confidence{grid-column:auto}.atlas-memory-intelligence-head{flex-direction:column}}
+
+
+/* ============================================================
+   BUILD 31.1 — TRUTH POLISH + VISUAL STATE
+   Visual-only feedback for a qualified/active CURRENT pipeline.
+   No dashboard geometry or engine behavior is changed here.
+   ============================================================ */
+#atlasCurrentAnalysisBanner[data-tone="active"],
+#atlasCurrentAnalysisBanner[data-tone="ready"]{
+  color:#e8fff6;
+}
+.atlas-analysis-progress[data-phase="atlas"],
+.atlas-analysis-progress[data-phase="nox"],
+.atlas-analysis-progress[data-phase="aerith"],
+.atlas-analysis-progress[data-phase="done"]{
+  border-color:rgba(91,225,174,.38);
+  box-shadow:0 0 0 1px rgba(91,225,174,.035) inset;
+}
+.atlas-analysis-progress[data-phase="atlas"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="nox"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="aerith"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="done"] .atlas-analysis-progress-readout span{
+  border-color:rgba(91,225,174,.34);
+  color:#a7f4d3;
+}
