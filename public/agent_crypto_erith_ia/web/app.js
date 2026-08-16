@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.2",
+  build: "38.3",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1375,7 +1375,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.2 DEVICE IDENTITY LOCK · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.3 DIRECT GATE RECOVERY · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12118,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.2",
+  interface: "Build 38.3",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40142,7 +40142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.2";
+const ATLAS_BUILD = "38.3";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -44495,3 +44495,158 @@ function atlasDeviceIdentityRecover382() {
 window.setTimeout(() => {
   try { atlasDeviceIdentityRecover382(); } catch (_) {}
 }, 0);
+
+
+/* ============================================================
+   38.3 — DIRECT GATE RECOVERY · BINANCE DIRECT REST TOP-UP
+   Problem proven on Ryzen:
+   - the live display may remain 5/5 because USDT/EUR derived fallbacks exist,
+   - while one or more direct EUR WebSocket rows age past 15 s,
+   - therefore the strict 5/5-direct gate resets forever even though the
+     direct EUR Binance market is still queryable.
+
+   Recovery rule:
+   - WebSocket direct EUR remains first choice.
+   - When a direct EUR WebSocket row is missing/stale, confirm ONLY that same
+     direct EUR pair through Binance public REST.
+   - Never use USDT conversion to satisfy the analytical 5/5-direct gate.
+   - REST confirmation is short-lived and must be refreshed; if it fails, the
+     original derived fallback remains visible and Atlas stays blocked.
+   - Bridge/Ollama/pipeline ownership are unchanged.
+   ============================================================ */
+
+const ATLAS_DIRECT_REST_383_CACHE_MS = 30_000;
+const ATLAS_DIRECT_REST_383_REFRESH_MS = 8_000;
+const ATLAS_DIRECT_REST_383_GLOBAL_FEED_MAX_AGE_MS = 30_000;
+
+function atlasExchangeDirectRestStore383() {
+  const feed = state.dataBroker?.exchangeFeed || (state.dataBroker.exchangeFeed = {});
+  if (!feed.directRest383 || typeof feed.directRest383 !== "object") {
+    feed.directRest383 = Object.create(null);
+  }
+  return feed.directRest383;
+}
+
+function atlasExchangeDirectRestQuote383(coinOrId, now = Date.now()) {
+  const coinId = typeof coinOrId === "string" ? coinOrId : coinOrId?.id;
+  if (!coinId || !ATLAS_EXCHANGE_PRODUCT_MAP[coinId]) return null;
+  const row = atlasExchangeDirectRestStore383()[coinId];
+  if (!row) return null;
+  const timestamp = Number(row.timestamp || 0);
+  const price = atlasExchangeFinitePositive(row.price);
+  if (!price || !Number.isFinite(timestamp) || now - timestamp < -5_000 || now - timestamp > ATLAS_DIRECT_REST_383_CACHE_MS) {
+    return null;
+  }
+  return row;
+}
+
+const atlasExchangeQuoteForCoin383Base = atlasExchangeQuoteForCoin;
+atlasExchangeQuoteForCoin = function atlasExchangeQuoteForCoin383(coinOrId, now = Date.now()) {
+  const base = atlasExchangeQuoteForCoin383Base(coinOrId, now);
+  if (base?.kind === "exchange-direct-eur") return base;
+  const restDirect = atlasExchangeDirectRestQuote383(coinOrId, now);
+  if (restDirect) return restDirect;
+  return base;
+};
+
+function atlasExchangeDirectRestMissing383(now = Date.now()) {
+  return Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP).filter(coinId => {
+    const base = atlasExchangeQuoteForCoin383Base(coinId, now);
+    if (base?.kind === "exchange-direct-eur") return false;
+    return !atlasExchangeDirectRestQuote383(coinId, now);
+  });
+}
+
+async function atlasExchangeRefreshDirectRest383(options = {}) {
+  const feed = state.dataBroker?.exchangeFeed || {};
+  if (feed.directRest383Busy) return false;
+  const now = Date.now();
+  const lastGlobalMessage = Number(feed.lastMessageAt || 0);
+  const globalFeedFresh = Number.isFinite(lastGlobalMessage)
+    && lastGlobalMessage > 0
+    && now - lastGlobalMessage <= ATLAS_DIRECT_REST_383_GLOBAL_FEED_MAX_AGE_MS;
+  if (!globalFeedFresh || !["ready", "open"].includes(String(feed.status || ""))) return false;
+
+  const lastRefresh = Number(feed.directRest383LastRefreshAt || 0);
+  if (!options.force && lastRefresh && now - lastRefresh < ATLAS_DIRECT_REST_383_REFRESH_MS) return false;
+
+  const missing = atlasExchangeDirectRestMissing383(now);
+  if (!missing.length) return false;
+
+  feed.directRest383Busy = true;
+  feed.directRest383LastRefreshAt = now;
+  const store = atlasExchangeDirectRestStore383();
+  try {
+    const settled = await Promise.allSettled(missing.map(async coinId => {
+      const config = ATLAS_EXCHANGE_PRODUCT_MAP[coinId];
+      // DIRECT EUR ONLY. No USDT conversion is accepted here.
+      const direct = await atlasFetchBinanceRestTicker(config.direct, options);
+      const price = atlasExchangeFinitePositive(direct?.price);
+      if (!price) throw new Error(`Cotation directe ${config.direct} invalide`);
+      const quote = {
+        status: "direct",
+        kind: "exchange-direct-eur",
+        coinId,
+        price,
+        change24h: Number.isFinite(Number(direct.change24h)) ? Number(direct.change24h) : null,
+        bid: atlasExchangeFinitePositive(direct.bid),
+        ask: atlasExchangeFinitePositive(direct.ask),
+        timestamp: Number(direct.timestamp || Date.now()),
+        source: `Binance ${config.direct} REST direct`
+      };
+      store[coinId] = quote;
+      return quote;
+    }));
+    feed.directRest383LastSuccessAt = Date.now();
+    feed.directRest383SuccessCount = settled.filter(row => row.status === "fulfilled").length;
+    feed.directRest383FailureCount = settled.filter(row => row.status === "rejected").length;
+    return feed.directRest383SuccessCount > 0;
+  } finally {
+    feed.directRest383Busy = false;
+    // Re-render after the direct confirmations are stored. The existing 10 s
+    // stability gate then works unchanged and remains the sole Atlas trigger.
+    try { atlasRenderExchangeFeedStatus383Base(); } catch (_) {}
+  }
+}
+
+function atlasExchangeDirectRestUsedCount383(now = Date.now()) {
+  let count = 0;
+  for (const coinId of Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP)) {
+    const base = atlasExchangeQuoteForCoin383Base(coinId, now);
+    if (base?.kind === "exchange-direct-eur") continue;
+    if (atlasExchangeDirectRestQuote383(coinId, now)) count += 1;
+  }
+  return count;
+}
+
+const atlasRenderExchangeFeedStatus383Base = atlasRenderExchangeFeedStatus;
+atlasRenderExchangeFeedStatus = function atlasRenderExchangeFeedStatus383() {
+  const result = atlasRenderExchangeFeedStatus383Base();
+  try {
+    const restUsed = atlasExchangeDirectRestUsedCount383();
+    const counts = atlasExchangeRecount();
+    if (restUsed > 0 && counts.directCount === 5 && counts.derivedCount === 0 && els.sourceName) {
+      els.sourceName.innerHTML =
+        `Binance direct EUR · ${5 - restUsed} WebSocket + ${restUsed} REST direct · 0 dérivé`
+        + ` · <a class="atlas-source-header-link" href="https://www.binance.com/fr/trade/BTC_EUR?type=spot"`
+        + ` target="_blank" rel="noopener noreferrer">Source Binance ↗</a>`;
+    }
+    void atlasExchangeRefreshDirectRest383();
+  } catch (_) {}
+  return result;
+};
+
+// The watchdog previously checked only the timestamp of ANY Binance message.
+// USDT streams could therefore keep the socket globally "fresh" while one
+// direct EUR pair had silently expired. Add a direct-route health check that
+// requests a direct REST confirmation before considering the gate lost.
+const atlasExchangeWatchdog383Base = atlasExchangeWatchdog;
+atlasExchangeWatchdog = function atlasExchangeWatchdog383() {
+  const result = atlasExchangeWatchdog383Base();
+  try { void atlasExchangeRefreshDirectRest383({ force: true }); } catch (_) {}
+  return result;
+};
+
+window.setTimeout(() => {
+  try { void atlasExchangeRefreshDirectRest383({ force: true }); } catch (_) {}
+}, 1200);
