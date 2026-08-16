@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 30.1.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
+   BUILD 30.2.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 30.1.0
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-30.1.0
+   ATLAS_ASSET_BUILD: 30.2.0
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-30.2.0
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "30.1.0";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-30.1.0";
+  --atlas-asset-build: "30.2.0";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-30.2.0";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25071,7 +25071,7 @@ html[data-atlas-market-domain="metals"]
 
 
 /* ==========================================================================
-   BUILD 30.1.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   BUILD 30.2.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
    Scoped to the local analysis chamber. No global dashboard geometry change.
    ========================================================================== */
 .atlas-analysis-progress{
@@ -25102,3 +25102,35 @@ html[data-atlas-market-domain="metals"]
 .atlas-analysis-progress p{margin:0;color:#9db3c7;font-size:10px;line-height:1.45}
 @media(max-width:1050px){.atlas-analysis-progress-nodes{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:680px){.atlas-analysis-progress-head{align-items:flex-start;flex-direction:column}.atlas-analysis-progress-nodes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* ============================================================
+   BUILD 30.2.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   Localized control only. No dashboard geometry rewrite.
+   ============================================================ */
+.atlas-device-compute-control{
+  margin-top:14px;
+  padding:12px 14px;
+  border:1px solid rgba(105,205,235,.28);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  background:rgba(3,20,31,.5);
+}
+.atlas-device-compute-copy{display:grid;gap:4px;min-width:0}
+.atlas-device-compute-copy b{color:#eaf8ff;font-size:.92rem}
+.atlas-device-compute-copy small{color:#8fa8b9;line-height:1.35}
+.atlas-device-compute-actions{display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}
+.atlas-device-compute-actions button{
+  min-height:34px;padding:7px 12px;border-radius:10px;
+  border:1px solid rgba(90,195,225,.35);background:rgba(8,34,48,.9);color:#cde9f4;font-weight:750;
+}
+.atlas-device-compute-actions button.is-active{border-color:rgba(85,220,170,.72);box-shadow:0 0 0 1px rgba(85,220,170,.15) inset;color:#e9fff6}
+.atlas-device-compute-control[data-compute-role="observer"]{border-color:rgba(255,185,72,.52);background:rgba(42,29,8,.35)}
+.atlas-device-compute-control[data-compute-role="observer"] .atlas-device-compute-actions button[data-atlas-compute-role="observer"].is-active{border-color:rgba(255,185,72,.85);color:#ffe4a5}
+#atlasDeviceComputeStatus[data-tone="stop"]{color:#ffd88b}
+#atlasDeviceComputeStatus[data-tone="ready"]{color:#99efd0}
+.atlas-analysis-progress[data-phase="observer"] .atlas-analysis-progress-track span{width:0!important}
+@media (max-width:900px){.atlas-device-compute-control{align-items:stretch;flex-direction:column}.atlas-device-compute-actions{justify-content:flex-start}}

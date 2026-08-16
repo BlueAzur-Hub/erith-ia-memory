@@ -1259,6 +1259,7 @@ function atlasInitLocalAccess() {
   atlasLocalDialogueSelectProfile("atlas");
   atlasLocalResponseSelectView("conclusion");
   atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
+  atlasDeviceComputeInit();
   atlasInitLocalBridgeAutoHealth();
 }
 
@@ -1280,7 +1281,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.1.0",
+  build: "30.2.0",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1292,13 +1293,14 @@ const ATLAS_RC_CONTRACT = Object.freeze({
     "HISTORIQUE jamais présenté comme CURRENT",
     "aucune exécution financière réelle automatique",
     "Market Flow non modifié",
-    "Bridge/Control Center gelés hors bug démontré"
+    "Bridge/Control Center gelés hors bug démontré",
+    "rôle de calcul local persistant par poste : production ou lecture seule"
   ])
 });
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.1.0",
+    build: ATLAS_BUILD === "30.2.0",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1316,7 +1318,8 @@ function atlasRcStaticAudit() {
     current_truth_freeze: typeof atlasCurrentPreserveClosedAnalysis === "function",
     graphic_progress: typeof atlasAnalysisProgressRender === "function",
     strict_current_reports: typeof atlasLocalReportsProgressForFingerprint === "function",
-    aerith_report_reread_contract: typeof atlasLocalConclusionBridgeContract === "function"
+    aerith_report_reread_contract: typeof atlasLocalConclusionBridgeContract === "function",
+    per_device_compute_gate: typeof atlasDeviceComputeAllowed === "function"
   };
 
   return {
@@ -1355,7 +1358,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.1.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.2.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1755,11 +1758,15 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
   }
 
   const status = String(state.status || "");
-  if (status === "CURRENT") {
+  const localComputeOff = !atlasDeviceComputeAllowed();
+  if (localComputeOff && status !== "CURRENT") {
+    banner.innerHTML = `<b>Lecture seule sur ce poste</b> · STOP calcul Atlas/Aerith/Ollama · marché live et historique restent disponibles.`;
+    banner.style.borderColor = "rgba(255,185,72,.62)";
+  } else if (status === "CURRENT") {
     const liveNote = state.live_changed_since_current
       ? " · marché live plus récent disponible, analyse CURRENT conservée jusqu’à une nouvelle relance opérateur"
       : " · snapshot analysé figé";
-    banner.innerHTML = `<b>Analyse CURRENT</b> · Atlas 4/4 + NØX + Aerith cohérents · ${String(state.fingerprint || "").slice(0,18)}…${liveNote}`;
+    banner.innerHTML = `<b>Analyse CURRENT</b> · Atlas 4/4 + NØX + Aerith cohérents · ${String(state.fingerprint || "").slice(0,18)}…${liveNote}${localComputeOff ? " · ce poste est en lecture seule" : ""}`;
     banner.style.borderColor = "rgba(76,220,160,.55)";
   } else if (status === "ATLAS_RUNNING") {
     banner.innerHTML = `<b>Analyse automatique</b> · Atlas ${Number(state.completed || 0)}/4 · snapshot figé ${String(state.fingerprint || "").slice(0,18)}… · supervision Bridge + chaîne active en arrière-plan`;
@@ -12017,7 +12024,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.1.0",
+  interface: "Build 30.2.0",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -16280,6 +16287,130 @@ function watchBasketCoins(basket) { return basket.ids.filter(id => (state.watchI
 function basketStatus(coins) { if (!coins.length) return { label: "À charger", mode: "wait", avg: null }; const avg = coins.reduce((s, c) => s + (Number(c.change24h) || 0), 0) / coins.length; const mode = avg > 3 ? "hot" : avg < -3 ? "cold" : "calm"; const label = mode === "hot" ? "En hausse" : mode === "cold" ? "Sous pression" : "Calme"; return { label, mode, avg };
 }
 
+/* ============================================================
+   30.2.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   Per-browser role. Market data remain live in observer mode, while
+   Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
+   ============================================================ */
+
+const ATLAS_DEVICE_COMPUTE_ROLE_KEY = "agent_crypto_device_compute_role_v1";
+const ATLAS_DEVICE_COMPUTE_ROLES = Object.freeze({
+  PRODUCTION: "production",
+  OBSERVER: "observer"
+});
+
+function atlasDeviceComputeSuggestedRole() {
+  try {
+    const collector = String(typeof getCollectorId === "function" ? getCollectorId() : "").toLocaleLowerCase("fr-FR");
+    if (/transformer[\s_-]*book/.test(collector)) return ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER;
+  } catch (_) {}
+  return ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+}
+
+function atlasDeviceComputeRoleRead() {
+  try {
+    const stored = String(localStorage.getItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY) || "").trim();
+    if (stored === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION || stored === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER) return stored;
+  } catch (_) {}
+  return atlasDeviceComputeSuggestedRole();
+}
+
+function atlasDeviceComputeAllowed() {
+  return atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+}
+
+function atlasDeviceComputeSetStatus(message, tone = "idle") {
+  const status = document.getElementById("atlasDeviceComputeStatus");
+  if (status) {
+    status.textContent = message;
+    status.dataset.tone = tone;
+  }
+}
+
+function atlasDeviceComputeApply(options = {}) {
+  const role = atlasDeviceComputeRoleRead();
+  const production = role === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+  const control = document.getElementById("atlasDeviceComputeControl");
+  if (control) control.dataset.computeRole = role;
+
+  document.querySelectorAll("[data-atlas-compute-role]").forEach(button => {
+    const active = button.dataset.atlasComputeRole === role;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+
+  const localActions = [
+    "btnAtlasLocalAsk",
+    "btnAtlasLocalConclusion",
+    "btnAtlasLocalRunAll",
+    "btnLocalBridgeProbe"
+  ];
+  localActions.forEach(id => {
+    const node = document.getElementById(id);
+    if (!node) return;
+    if (!production) {
+      node.dataset.computeRoleDisabled = "1";
+      node.disabled = true;
+    } else if (node.dataset.computeRoleDisabled === "1") {
+      delete node.dataset.computeRoleDisabled;
+      if (id === "btnLocalBridgeProbe" || id === "btnAtlasLocalAsk" || id === "btnAtlasLocalRunAll") node.disabled = false;
+    }
+  });
+  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => {
+    if (!production) {
+      button.dataset.computeRoleDisabled = "1";
+      button.disabled = true;
+    } else if (button.dataset.computeRoleDisabled === "1") {
+      delete button.dataset.computeRoleDisabled;
+      button.disabled = false;
+    }
+  });
+
+  if (production) {
+    atlasDeviceComputeSetStatus("PRODUCTION · Atlas/Aerith/Ollama autorisés sur ce poste.", "ready");
+    setText(document.getElementById("atlasLocalRuntime"), atlasLocalDialogueState.connected
+      ? "Lecture seule · ollama · gpt-oss:20b-32k"
+      : "Production locale autorisée · Bridge en attente");
+    if (options.restart === true) {
+      atlasLocalReportsOpenAutomaticCycle("device-production-enabled");
+      atlasLocalBridgeAutoSync("device-production-enabled");
+      atlasCurrentSyncFromLiveGate("device-production-enabled");
+      atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 900 });
+    }
+  } else {
+    atlasLocalReportsClearAutoTimer();
+    atlasLocalReportsState.deferredRetryReason = "";
+    atlasLocalReportsState.deferredRetryDelayMs = 0;
+    atlasLocalReportsState.deferredRetryRequestedAt = 0;
+    atlasLocalBridgeAutoStop();
+    atlasExchangeStableGateCancelTimer();
+    atlasDeviceComputeSetStatus("LECTURE SEULE · STOP calcul local sur ce poste · marché live conservé.", "stop");
+    setText(document.getElementById("atlasLocalRuntime"), "Lecture seule · STOP calcul local sur ce poste");
+    setText(document.getElementById("atlasLocalDialogueStatus"), "Ce poste est en lecture seule : aucun appel Atlas/Aerith/Ollama n’est envoyé au Bridge.");
+    atlasAnalysisProgressRender(0, "observer", "Marché live actif · aucun calcul Atlas/Aerith/Ollama depuis ce navigateur. Réactive Production seulement sur le poste producteur.");
+  }
+  return role;
+}
+
+function atlasDeviceComputeSetRole(role) {
+  const next = role === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER
+    ? ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER
+    : ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+  try { localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, next); } catch (_) {}
+  return atlasDeviceComputeApply({ restart: next === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION });
+}
+
+function atlasDeviceComputeInit() {
+  document.querySelectorAll("[data-atlas-compute-role]").forEach(button => {
+    button.addEventListener("click", () => atlasDeviceComputeSetRole(button.dataset.atlasComputeRole));
+  });
+  atlasDeviceComputeApply({ restart: false });
+}
+
+function atlasDeviceComputeBlockedMessage() {
+  return "Calcul local désactivé sur ce poste · mode lecture seule. Le marché live reste actif.";
+}
+
 let atlasLocalBridgeAutoTimer = 0;
 let atlasLocalBridgeProbeInFlight = false;
 
@@ -16292,7 +16423,7 @@ let atlasLocalBridgeLastHealthSignature = "";
 function atlasLocalBridgeAdministratorActive() {
   // Local Bridge supervision belongs to the authorized operator session.
   // It must continue regardless of Basic / Intermediate / Advanced display mode.
-  return atlasAccessIsAuthorized();
+  return atlasAccessIsAuthorized() && atlasDeviceComputeAllowed();
 }
 
 function atlasLocalBridgeAutoEligible() {
@@ -16301,6 +16432,7 @@ function atlasLocalBridgeAutoEligible() {
   // This lets the readiness chain arm itself as soon as the page is loaded
   // and the operator is authorized, while remaining fully local/read-only.
   return atlasAccessIsAuthorized()
+    && atlasDeviceComputeAllowed()
     && !atlasLocalDialogueState.busy;
 }
 
@@ -16370,6 +16502,13 @@ function atlasLocalBridgeAutoSync(reason = "sync") {
 
 async function atlasLocalBridgeProbe(options = {}) {
   const silent = options?.silent === true;
+  if (!atlasDeviceComputeAllowed()) {
+    if (!silent) {
+      atlasLocalDialogueSetConnection(false, atlasDeviceComputeBlockedMessage());
+      atlasDeviceComputeApply({ restart: false });
+    }
+    return false;
+  }
 
   if (atlasLocalBridgeProbePending) {
     return atlasLocalBridgeProbePending;
@@ -16762,9 +16901,11 @@ function atlasLocalDialogueSelectProfile(profile = "atlas") {
 
 function atlasLocalDialogueSetBusy(busy, message = "") {
   atlasLocalDialogueState.busy = !!busy;
+  const computeBlocked = !atlasDeviceComputeAllowed();
   document.querySelectorAll(
-    "#btnAtlasLocalAsk, [data-atlas-local-summary], [data-atlas-local-profile], #btnLocalBridgeProbe, #btnAtlasLocalRunAll"
-  ).forEach(button => { button.disabled = !!busy; });
+    "#btnAtlasLocalAsk, [data-atlas-local-summary], #btnLocalBridgeProbe, #btnAtlasLocalRunAll"
+  ).forEach(button => { button.disabled = !!busy || computeBlocked; });
+  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.disabled = !!busy; });
   const status = document.getElementById("atlasLocalDialogueStatus");
   if (status && message) status.textContent = message;
   const badge = document.getElementById("atlasLocalDialogueBadge");
@@ -16804,6 +16945,11 @@ function atlasLocalBridgeRequestFailure(error, path = "") {
 }
 
 async function atlasLocalBridgeRequest(path, payload, timeoutMs = 135000) {
+  if (!atlasDeviceComputeAllowed()) {
+    const error = new Error(atlasDeviceComputeBlockedMessage());
+    error.name = "AtlasDeviceObserverError";
+    throw error;
+  }
   const controller = new AbortController();
   let timedOut = false;
   const timer = window.setTimeout(() => {
@@ -17069,6 +17215,12 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
   const card = document.getElementById("atlasAnalysisProgressCard");
   if (!card) return false;
 
+  if (!atlasDeviceComputeAllowed() && phase !== "done") {
+    completed = 0;
+    phase = "observer";
+    message = "Marché live actif · aucun calcul Atlas/Aerith/Ollama depuis ce navigateur. Réactive Production seulement sur le poste producteur.";
+  }
+
   const safeCompleted = Math.max(0, Math.min(4, Number(completed) || 0));
   const percent = (phase === "nox" || phase === "aerith" || phase === "done")
     ? 100
@@ -17104,6 +17256,7 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
   const labels = {
     idle: "Atlas-10 prêt à analyser",
     history: "Historique disponible · CURRENT à produire",
+    observer: "Lecture seule · calcul local STOP sur ce poste",
     atlas: `Atlas-10 · ${safeCompleted}/4 rapports CURRENT`,
     nox: "NØX · contrôle No-FOMO et contradictions",
     aerith: "Aerith-10 · synthèse complète et vulgarisation",
@@ -17114,7 +17267,7 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
   if (detail) detail.textContent = message || (phase === "done"
     ? "Les prix live continuent ; Atlas/Aerith ne repartent pas sans nouvelle action opérateur."
     : "Un seul snapshot figé est utilisé pour les rapports et la conclusion.");
-  if (stateNode) stateNode.textContent = phase === "done" ? "REPOS" : phase === "history" ? "HISTORIQUE" : phase.toUpperCase();
+  if (stateNode) stateNode.textContent = phase === "done" ? "REPOS" : phase === "history" ? "HISTORIQUE" : phase === "observer" ? "STOP POSTE" : phase.toUpperCase();
   return true;
 }
 
@@ -17129,12 +17282,14 @@ function atlasLocalReportsSetSuiteStatus(message, tone = "idle") {
 function atlasLocalReportsSetBusy(busy) {
   atlasLocalReportsState.running = !!busy;
   atlasLocalDialogueState.busy = !!busy;
+  const computeBlocked = !atlasDeviceComputeAllowed();
   document.querySelectorAll(
-    "#btnAtlasLocalAsk, [data-atlas-local-summary], [data-atlas-local-profile], #btnLocalBridgeProbe"
-  ).forEach(button => { button.disabled = !!busy; });
+    "#btnAtlasLocalAsk, [data-atlas-local-summary], #btnLocalBridgeProbe"
+  ).forEach(button => { button.disabled = !!busy || computeBlocked; });
+  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.disabled = !!busy; });
   const button = document.getElementById("btnAtlasLocalRunAll");
   if (button) {
-    button.disabled = !!busy;
+    button.disabled = !!busy || computeBlocked;
     button.setAttribute("aria-busy", busy ? "true" : "false");
     button.textContent = busy ? "Analyse en cours…" : "Analyse complète";
   }
@@ -17182,6 +17337,10 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
 }
 
 async function atlasLocalReportsRunAll(options = {}) {
+  if (!atlasDeviceComputeAllowed()) {
+    atlasDeviceComputeApply({ restart: false });
+    return false;
+  }
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
     return false;
@@ -17394,6 +17553,7 @@ function atlasLocalReportsClearAutoTimer() {
 }
 
 function atlasLocalReportsQueueDeferredRetry(reason = "snapshot", options = {}) {
+  if (!atlasDeviceComputeAllowed()) return false;
   const delay = Number.isFinite(Number(options.delayMs))
     ? Math.max(0, Number(options.delayMs))
     : 3000;
@@ -17513,6 +17673,10 @@ function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
 }
 
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
+  if (!atlasDeviceComputeAllowed()) {
+    atlasLocalReportsClearAutoTimer();
+    return false;
+  }
   const nextReason = String(reason || "snapshot");
   if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
 
@@ -17926,7 +18090,7 @@ function atlasLocalConclusionSetBusy(busy) {
       || atlasLocalReportsState.transactionFingerprint
       || ""
     ).trim();
-    button.disabled = !!busy || !atlasLocalReportsReadyForFingerprint(currentFingerprint);
+    button.disabled = !!busy || !atlasDeviceComputeAllowed() || !atlasLocalReportsReadyForFingerprint(currentFingerprint);
     button.setAttribute("aria-busy", busy ? "true" : "false");
     button.textContent = busy ? "Conclusion…" : "Régénérer";
   }
@@ -17934,6 +18098,10 @@ function atlasLocalConclusionSetBusy(busy) {
 }
 
 async function atlasLocalConclusionRun(options = {}) {
+  if (!atlasDeviceComputeAllowed()) {
+    atlasDeviceComputeApply({ restart: false });
+    return false;
+  }
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
     return false;
@@ -18245,6 +18413,10 @@ function atlasLocalDialogueRender(result, label, options = {}) {
 }
 
 async function atlasLocalDialogueRunSummary(mode = "market") {
+  if (!atlasDeviceComputeAllowed()) {
+    atlasDeviceComputeApply({ restart: false });
+    return false;
+  }
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
     return;
@@ -18283,6 +18455,10 @@ async function atlasLocalDialogueRunSummary(mode = "market") {
 }
 
 async function atlasLocalDialogueAsk() {
+  if (!atlasDeviceComputeAllowed()) {
+    atlasDeviceComputeApply({ restart: false });
+    return false;
+  }
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
     return;
@@ -18921,7 +19097,7 @@ function atlasBuildNoxNoFomoAudit(contract) {
 
   const status = pressure >= 6 ? 'STOP' : pressure >= 2 ? 'PRUDENCE' : 'CALME';
   const decision = status === 'STOP'
-    ? 'REFUSER DE CONCLURE tant que les stop gates ou preuves insuffisantes ne sont pas levés.'
+    ? 'STOP DÉCISIONNEL — l’analyse descriptive et pédagogique reste autorisée ; aucune conclusion décisionnelle tant que les stop gates ou preuves insuffisantes ne sont pas levés.'
     : status === 'PRUDENCE'
       ? 'CONTINUER À OBSERVER et demander confirmation avant toute interprétation causale.'
       : 'CONTINUER EN OBSERVATION sans transformer le contexte en signal d’exécution.';
@@ -18931,7 +19107,7 @@ function atlasBuildNoxNoFomoAudit(contract) {
     generated_at: new Date().toISOString(),
     status,
     pressure_score: pressure,
-    fomo: status === 'CALME' ? 'faible' : status === 'PRUDENCE' ? 'à refroidir' : 'élevé / conclusion suspendue',
+    fomo: status === 'CALME' ? 'faible' : status === 'PRUDENCE' ? 'à refroidir' : 'élevé / décision suspendue',
     causal_inference: lead ? 'NON ÉTABLIE — mesurer séparément la réaction du marché.' : 'AUCUNE ACTUALITÉ DIRECTRICE — ne pas fabriquer de causalité.',
     flags,
     decision,
@@ -31997,11 +32173,13 @@ function atlasSharedSynthesisUtf8Bytes(text) {
 }
 
 function atlasSharedSynthesisPct(value, digits = 2) {
+  if (value === null || value === undefined || value === "") return "indisponible";
   const number = Number(value);
-  return Number.isFinite(number) ? `${number >= 0 ? "+" : ""}${number.toFixed(digits)} %` : "—";
+  return Number.isFinite(number) ? `${number >= 0 ? "+" : ""}${number.toFixed(digits)} %` : "indisponible";
 }
 
 function atlasSharedSynthesisNumber(value, fallback = "—") {
+  if (value === null || value === undefined || value === "") return fallback;
   const number = Number(value);
   return Number.isFinite(number) ? String(number) : fallback;
 }
@@ -39123,7 +39301,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.1.0";
+const ATLAS_BUILD = "30.2.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
