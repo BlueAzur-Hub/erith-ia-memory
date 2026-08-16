@@ -3317,3 +3317,15 @@ et repartir pour 4 rapports GPT-OSS.
 - historique séparé de CURRENT
 
 Aucune nouvelle règle de contenu ou de finance n'est ajoutée.
+
+
+## Build 30.0.08 — Graphic Progress + Full Pedagogy · 32K
+
+- Remplace le statut texte par un rail graphique Atlas 01/02/03/04 → Aerith.
+- Affiche 0 %, 25 %, 50 %, 75 %, 100 %, puis la phase Aerith et enfin « moteur au repos ».
+- Aerith relit explicitement le snapshot complet, les 4 rapports Atlas, NØX, News Sentinel, Watchlist, Math Core et contradictions.
+- Supprime la limite de 12 termes du glossaire.
+- Ajoute à la synthèse Aerith un dictionnaire français des termes réellement détectés sur la page : crypto, bourse, banque, trading, risque et statistiques.
+- Conserve STOP AFTER CURRENT de 30.0.07.
+- Conserve `gpt-oss:20b-32k`.
+- Aucun nouveau gate financier ou règle métier bloquante.

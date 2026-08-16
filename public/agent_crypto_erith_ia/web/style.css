@@ -25068,3 +25068,33 @@ html[data-atlas-market-domain="metals"]
   font-weight: 800;
   letter-spacing: 0.02em;
 }
+
+/* Build 30.0.08 — Atlas/Aerith graphical progress */
+.atlas-analysis-progress-card{
+  margin-top:14px;padding:14px 16px 15px;border:1px solid rgba(76,214,234,.26);
+  border-radius:16px;background:linear-gradient(180deg,rgba(8,29,43,.94),rgba(5,21,33,.96));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 10px 30px rgba(0,0,0,.12)
+}
+.atlas-analysis-progress-head,.atlas-analysis-progress-foot{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.atlas-analysis-progress-head strong{display:block;margin-top:2px;font-size:1rem;color:#f4e5b3}
+.atlas-analysis-progress-kicker{display:block;font-size:.68rem;font-weight:900;letter-spacing:.18em;color:#75e6f3}
+.atlas-analysis-progress-model{flex:0 0 auto;padding:6px 9px;border:1px solid rgba(76,214,234,.25);border-radius:999px;font-size:.72rem;font-weight:800;color:#9aeef7;background:rgba(0,0,0,.18)}
+.atlas-analysis-progress-nodes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:14px 0 10px}
+.atlas-analysis-progress-nodes span{min-width:0;padding:8px 6px;border:1px solid rgba(117,150,175,.18);border-radius:11px;text-align:center;background:rgba(255,255,255,.018);opacity:.52;transition:.2s}
+.atlas-analysis-progress-nodes b,.atlas-analysis-progress-nodes small{display:block}
+.atlas-analysis-progress-nodes b{color:#b9cddd;font-size:.78rem}
+.atlas-analysis-progress-nodes small{margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8ea8bb;font-size:.65rem}
+.atlas-analysis-progress-nodes span.is-done{opacity:1;border-color:rgba(62,220,175,.5);box-shadow:inset 0 0 18px rgba(62,220,175,.06)}
+.atlas-analysis-progress-nodes span.is-done b{color:#62e4b8}
+.atlas-analysis-progress-nodes span.is-active{opacity:1;transform:translateY(-1px);border-color:rgba(75,214,235,.75);box-shadow:0 0 18px rgba(75,214,235,.12)}
+.atlas-analysis-progress-nodes .aerith-node.is-active{border-color:rgba(229,119,225,.72);box-shadow:0 0 20px rgba(229,119,225,.13)}
+.atlas-analysis-progress-nodes .aerith-node.is-active b,.atlas-analysis-progress-nodes .aerith-node.is-done-aerith b{color:#f0a7ec}
+.atlas-analysis-progress-nodes .aerith-node.is-done-aerith{opacity:1;border-color:rgba(229,119,225,.6)}
+.atlas-analysis-progress-track{height:7px;overflow:hidden;border-radius:999px;background:rgba(125,157,179,.13)}
+.atlas-analysis-progress-track>span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#32c9e8,#55e0c5);box-shadow:0 0 15px rgba(50,201,232,.3);transition:width .35s ease}
+.atlas-analysis-progress-card[data-phase="aerith"] .atlas-analysis-progress-track>span,.atlas-analysis-progress-card[data-phase="done"] .atlas-analysis-progress-track>span{background:linear-gradient(90deg,#32c9e8,#d667d1)}
+.atlas-analysis-progress-foot{margin-top:10px;align-items:flex-start}
+.atlas-analysis-progress-status{flex:1 1 auto;font-size:.86rem!important;line-height:1.38!important;font-weight:700!important;color:#b7c9d9}
+#atlasAnalysisProgressPercent{flex:0 0 auto;min-width:52px;text-align:right;font-size:1.02rem;color:#74e8f5}
+.atlas-analysis-progress-card[data-phase="done"] #atlasAnalysisProgressPercent{color:#61e2b5}
+@media(max-width:760px){.atlas-analysis-progress-model{display:none}.atlas-analysis-progress-nodes small{display:none}.atlas-analysis-progress-nodes span{padding:7px 3px}}

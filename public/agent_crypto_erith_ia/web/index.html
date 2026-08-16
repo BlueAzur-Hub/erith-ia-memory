@@ -1924,7 +1924,27 @@
                   <button class="btn primary" id="btnAtlasLocalAsk" type="button">Interroger Atlas-10</button>
                   <button class="btn" id="btnAtlasLocalClear" type="button">Vider</button>
                 </div>
-                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Teste d’abord le Bridge, puis choisis une analyse.</p>
+                <div class="atlas-analysis-progress-card" id="atlasAnalysisProgressCard" data-phase="idle">
+                  <div class="atlas-analysis-progress-head">
+                    <div>
+                      <span class="atlas-analysis-progress-kicker">ANALYSE LOCALE</span>
+                      <strong id="atlasAnalysisProgressTitle">Atlas-10 au repos</strong>
+                    </div>
+                    <span class="atlas-analysis-progress-model">GPT-OSS 20B · 32K</span>
+                  </div>
+                  <div class="atlas-analysis-progress-nodes" aria-label="Progression Atlas/Aerith">
+                    <span data-atlas-progress-node="1"><b>01</b><small>Marché</small></span>
+                    <span data-atlas-progress-node="2"><b>02</b><small>Top 5</small></span>
+                    <span data-atlas-progress-node="3"><b>03</b><small>Math Core</small></span>
+                    <span data-atlas-progress-node="4"><b>04</b><small>Contradictions</small></span>
+                    <span data-atlas-progress-node="5" class="aerith-node"><b>A</b><small>Aerith</small></span>
+                  </div>
+                  <div class="atlas-analysis-progress-track"><span id="atlasAnalysisProgressBar"></span></div>
+                  <div class="atlas-analysis-progress-foot">
+                    <span class="atlas-analysis-progress-status" id="atlasLocalDialogueStatus">Dialogue local prêt.</span>
+                    <strong id="atlasAnalysisProgressPercent">0 %</strong>
+                  </div>
+                </div>
               </div>
 
               <article class="atlas-local-response-panel" aria-live="polite" data-atlas-response-view="conclusion">
