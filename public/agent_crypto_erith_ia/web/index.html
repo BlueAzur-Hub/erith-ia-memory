@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="34.3" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-34.3" />
+  <meta name="atlas-build" content="38.0" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-38.0" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 34.3</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 38.0</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-34.3" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-38.0" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -63,9 +63,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 34.3"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 38.0"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 34.3</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 38.0</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -80,7 +80,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 34.3</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 38.0</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1909,11 +1909,15 @@
                 <label for="atlasLocalQuestion">Question libre</label>
                 <textarea id="atlasLocalQuestion" rows="7" maxlength="4000"
                   placeholder="Écris ou adapte ta question locale.">Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.</textarea>
-                <div class="atlas-local-question-actions">
-                  <button class="btn primary" id="btnAtlasLocalAsk" type="button">Interroger Atlas-10</button>
+                <div class="atlas-local-question-actions atlas-question-router-37" role="group" aria-label="Router la question libre">
+                  <button class="btn primary" id="btnAtlasQuestionAtlas37" type="button">Interroger Atlas-10</button>
+                  <button class="btn" id="btnAtlasQuestionAerith37" type="button">Interroger Aerith-10</button>
+                  <button class="btn" id="btnAtlasQuestionChain37" type="button">Atlas → Aerith</button>
                   <button class="btn" id="btnAtlasLocalClear" type="button">Vider</button>
+                  <button class="btn" id="btnAtlasLocalAsk" type="button" hidden aria-hidden="true" tabindex="-1">Routeur historique</button>
                 </div>
-                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Teste d’abord le Bridge, puis choisis une analyse.</p>
+                <p class="atlas-question-scope-37">Question libre = bac séparé. Elle lit le snapshot, la mémoire et les rapports disponibles, mais ne redémarre pas CURRENT et n’écrase jamais la conclusion Aerith du pipeline.</p>
+                <p class="atlas-local-dialogue-status" id="atlasLocalDialogueStatus">Ryzen : choisis Atlas, Aerith ou Atlas → Aerith. Book : consultation uniquement, sans moteur local.</p>
               </div>
 
               <article class="atlas-local-response-panel" aria-live="polite" data-atlas-response-view="conclusion">
@@ -2031,7 +2035,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 34.3</b><small>Automation Lock · CURRENT Memory Ledger · Book One-Shot · Decision Workspace</small></article>
+                  <article><span>Interface</span><b>Build 38.0</b><small>FINAL CUMULATIVE · Autonomous Operator · Memory Ledger · Book Mirror · Dialogue Atlas/Aerith · Scanner Truth</small></article>
                   <article><span>Control Center</span><b>V2.3.2R5</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.9.5 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">gpt-oss:20b-32k · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2128,6 +2132,12 @@
                   </div>
                   <span class="pill warn" id="atlasMemoryIntelligenceBadge">Mémoire en attente</span>
                 </div>
+                <div class="atlas-memory-ledger-35" id="atlasMemoryLedger35" aria-label="Séparation mémoire marché et CURRENT">
+                  <article><span>Observations marché</span><b id="atlasMemoryMarketCount35">0</b><small>Relevés de marché distincts, sans les confondre avec un CURRENT analytique.</small></article>
+                  <article><span>CURRENT analytiques</span><b id="atlasMemoryCurrentCount35">0</b><small>Un cycle fermé Atlas 4/4 → NØX → Aerith = une unité analytique.</small></article>
+                  <article><span>Collecteurs</span><b id="atlasMemoryCollectorCount35">0</b><small>Origines mémoire connues ; une trace ne prouve jamais qu’une machine est en ligne.</small></article>
+                  <article><span>Base 3 / 5 / 10</span><b id="atlasMemoryBasis35">CURRENT</b><small id="atlasMemoryBasisDetail35">Les horizons analytiques privilégient les CURRENT réellement terminés.</small></article>
+                </div>
                 <div class="atlas-memory-horizon-grid" aria-label="Tendances mémoire multi-horizon">
                   <article><span>3 relevés</span><b id="atlasMemoryTrend3">—</b><small id="atlasMemoryTrend3Detail">Collecte insuffisante.</small></article>
                   <article><span>5 relevés</span><b id="atlasMemoryTrend5">—</b><small id="atlasMemoryTrend5Detail">Collecte insuffisante.</small></article>
@@ -2162,6 +2172,21 @@
       <p class="decision-board-rule">
         Atlas croise le snapshot courant, la mémoire 3/5/10, les collecteurs et les contradictions. Il produit un état de travail descriptif, jamais un ordre financier.
       </p>
+
+      <section class="atlas-operator-summary-35" id="atlasOperatorSummary35" data-state="waiting" aria-label="Résumé opérateur déterministe">
+        <div class="atlas-operator-summary-35-head">
+          <div><span class="eyebrow">LECTURE OPÉRATEUR · DÉTERMINISTE</span><b>Le haut résume ; les détails Atlas restent auditables dessous.</b></div>
+          <span class="pill warn" id="atlasOperatorSummaryBadge35">En attente</span>
+        </div>
+        <div class="atlas-operator-summary-35-grid">
+          <article><span>État</span><b id="atlasOperatorState35">En attente</b><small id="atlasOperatorStateDetail35">Le gate direct reste prioritaire.</small></article>
+          <article><span>Mémoire</span><b id="atlasOperatorMemory35">0 CURRENT</b><small id="atlasOperatorMemoryDetail35">3 / 5 / 10 en collecte.</small></article>
+          <article><span>Mouvements</span><b id="atlasOperatorMoves35">—</b><small id="atlasOperatorMovesDetail35">BTC / ETH / BNB / XRP / SOL.</small></article>
+          <article><span>Risques</span><b id="atlasOperatorRisk35">À vérifier</b><small id="atlasOperatorRiskDetail35">Anomalies et preuve restent séparées.</small></article>
+          <article><span>NØX</span><b id="atlasOperatorNox35">En attente</b><small id="atlasOperatorNoxDetail35">No-FOMO du CURRENT.</small></article>
+          <article><span>Aerith</span><b id="atlasOperatorAerith35">En attente</b><small id="atlasOperatorAerithDetail35">Conclusion du même fingerprint.</small></article>
+        </div>
+      </section>
 
 
 
@@ -2233,6 +2258,31 @@
       </div>
     </section>
 
+              <section class="atlas-scanner-truth-37" id="atlasScannerTruth37" data-state="waiting" aria-labelledby="atlasScannerTruthTitle37">
+                <div class="atlas-scanner-truth-37-head">
+                  <div>
+                    <p class="eyebrow">SCANNER TRUTH · HAUSSES / BAISSES / VOLUMES</p>
+                    <h5 id="atlasScannerTruthTitle37">Classement marché, cotation observée et qualité de source séparés</h5>
+                    <p>Le classement vient du snapshot marché. La cotation terminale peut venir de Binance directe, d’une collecte ou du snapshot CoinGecko. Aucun classement n’est un conseil.</p>
+                  </div>
+                  <span class="pill warn" id="atlasScannerTruthBadge37">En attente</span>
+                </div>
+                <div class="atlas-scanner-truth-37-meta">
+                  <article><span>Snapshot scanner</span><b id="atlasScannerTruthSnapshot37">—</b><small id="atlasScannerTruthSnapshotDetail37">Collecte automatique.</small></article>
+                  <article><span>Source classement</span><b id="atlasScannerTruthRanking37">CoinGecko Market Snapshot</b><small>Hausses/Baisses = variation marché ; Volumes = volume 24 h.</small></article>
+                  <article><span>Règle cotation</span><b id="atlasScannerTruthQuoteRule37">Binance si sûre → sinon marché</b><small>La provenance reste affichée pour chaque actif.</small></article>
+                  <article><span>Historique séries</span><b id="atlasScannerTruthHistory37">Bridge/Binance → Binance → CoinGecko</b><small>Cache/archive uniquement s’ils sont explicitement identifiés comme tels.</small></article>
+                </div>
+                <div class="atlas-scanner-truth-37-grid">
+                  <article data-scanner-truth="gainers"><span>HAUSSES 5</span><b id="atlasScannerGainersTitle37">En attente</b><div id="atlasScannerGainersRows37" class="atlas-scanner-truth-rows"></div></article>
+                  <article data-scanner-truth="losers"><span>BAISSES 5</span><b id="atlasScannerLosersTitle37">En attente</b><div id="atlasScannerLosersRows37" class="atlas-scanner-truth-rows"></div></article>
+                  <article data-scanner-truth="volume"><span>VOLUMES 5</span><b id="atlasScannerVolumeTitle37">En attente</b><div id="atlasScannerVolumeRows37" class="atlas-scanner-truth-rows"></div></article>
+                </div>
+                <div class="atlas-scanner-truth-37-actions">
+                  <button type="button" id="btnAtlasScannerTruthRefresh37">Diagnostic · relire le scanner</button>
+                </div>
+                <p id="atlasScannerTruthStatus37">Le panneau se remplit automatiquement avec le Market Snapshot et le collecteur scanner déjà existants.</p>
+              </section>
 
               <section class="atlas-current-journal-33" id="atlasCurrentJournal33" data-state="waiting" aria-labelledby="atlasCurrentJournal33Title">
                 <div class="atlas-current-journal-33-head">
@@ -2250,6 +2300,13 @@
                 <div class="atlas-current-journal-33-list" id="atlasCurrentJournal33List" aria-live="polite">
                   <p class="atlas-local-response-empty">Le premier CURRENT terminé sous cette version apparaîtra ici.</p>
                 </div>
+                <section class="atlas-current-journal-detail-35" id="atlasCurrentJournalDetail35" hidden aria-live="polite">
+                  <div class="atlas-current-journal-detail-35-head">
+                    <div><span class="eyebrow">ARCHIVE CURRENT · LECTURE SEULE</span><b id="atlasCurrentJournalDetailTitle35">CURRENT</b><small id="atlasCurrentJournalDetailMeta35">Sélectionne un CURRENT du journal.</small></div>
+                    <button type="button" id="btnAtlasCurrentJournalClose35">Fermer</button>
+                  </div>
+                  <div class="atlas-current-journal-detail-35-body" id="atlasCurrentJournalDetailBody35"></div>
+                </section>
                 <p class="atlas-current-journal-33-status" id="atlasCurrentJournal33Status">Journal local prêt · aucun ancien cycle n’est fabriqué.</p>
               </section>
 
@@ -2315,25 +2372,45 @@
                 <div class="atlas-book-readonly-head">
                   <div>
                     <p class="eyebrow">SHARED READ-ONLY KNOWLEDGE · RYZEN → BOOK</p>
-                    <h5 id="atlasBookReadOnlyTitle">Transfert guidé Ryzen → Transformer Book</h5>
-                    <p>Deux PC ne partagent pas leur IndexedDB. Le transfert reste volontaire et lisible : le Ryzen exporte un fichier JSON après un CURRENT, puis le Book l’importe en STOP / lecture seule. Aucune synchronisation cachée.</p>
+                    <h5 id="atlasBookReadOnlyTitle">Miroir automatique Ryzen → Transformer Book</h5>
+                    <p>Le Book reste sans Ollama ni Bridge. Il peut maintenant surveiller automatiquement un miroir public <code>book_mirror.json</code> en lecture seule ; si aucun miroir n’est publié, l’import JSON manuel reste le secours explicite.</p>
                   </div>
                   <span class="pill warn" id="atlasBookReadOnlyBadge">En attente</span>
                 </div>
-                <div class="atlas-book-transfer-guide-342" id="atlasBookTransferGuide342" aria-label="Étapes du transfert Ryzen vers Transformer Book">
+                <div class="atlas-book-transfer-guide-342" id="atlasBookTransferGuide342" aria-label="Lecture Ryzen vers Transformer Book">
                   <article data-step="1">
-                    <span>ÉTAPE 1 · RYZEN</span>
-                    <b>Après un CURRENT terminé</b>
-                    <small>Cliquer une fois sur « 1 · Exporter JSON vers le Book ». Le navigateur télécharge le paquet de lecture seule.</small>
+                    <span>MODE NORMAL · AUTOMATIQUE</span>
+                    <b>Ryzen construit · Book consulte</b>
+                    <small>Si <code>book_mirror.json</code> est publié par un canal de confiance, le Book le vérifie automatiquement et importe tout nouveau fingerprint. Aucun Ollama, aucun Bridge et aucun clic de lecture ne sont requis sur le Book.</small>
                   </article>
                   <div class="atlas-book-transfer-arrow-342" aria-hidden="true">→</div>
                   <article data-step="2">
-                    <span>ÉTAPE 2 · BOOK</span>
-                    <b>STOP / lecture seule</b>
-                    <small>Cliquer sur « 2 · Charger l’export Ryzen » et choisir le JSON : la synthèse Aerith s’affiche automatiquement. Le bouton 3 sert seulement à la relire.</small>
+                    <span>MODE SECOURS · MANUEL</span>
+                    <b>JSON uniquement si le miroir manque</b>
+                    <small>Depuis le Ryzen : « Secours · Exporter JSON ». Sur le Book : « Secours · Charger JSON Ryzen ». L’import force la lecture seule et affiche la synthèse sans moteur local.</small>
                   </article>
                 </div>
                 <p class="atlas-book-transfer-role-342" id="atlasBookTransferRoleGuide342">Détection du rôle de ce poste…</p>
+                <section class="atlas-book-mirror-36" id="atlasBookMirror36" data-state="waiting" aria-labelledby="atlasBookMirrorTitle36">
+                  <div class="atlas-book-mirror-36-head">
+                    <div>
+                      <span class="eyebrow">BOOK MIRROR · LECTURE AUTOMATIQUE</span>
+                      <b id="atlasBookMirrorTitle36">Le Book surveille un miroir public sans moteur local</b>
+                      <small>Chemin attendu : <code>./book_mirror.json</code>. Aucun token GitHub n’est placé dans la page publique.</small>
+                    </div>
+                    <span class="pill warn" id="atlasBookMirrorBadge36">Non vérifié</span>
+                  </div>
+                  <div class="atlas-book-mirror-36-grid">
+                    <article><span>État miroir</span><b id="atlasBookMirrorState36">En attente</b><small id="atlasBookMirrorStateDetail36">Le Book vérifie automatiquement si un fichier miroir public existe.</small></article>
+                    <article><span>Dernière vérification</span><b id="atlasBookMirrorCheck36">—</b><small id="atlasBookMirrorCheckDetail36">Lecture réseau uniquement.</small></article>
+                    <article><span>Dernier fingerprint importé</span><b id="atlasBookMirrorFingerprint36">—</b><small>Aucun CURRENT local n’est créé par le Book.</small></article>
+                  </div>
+                  <div class="atlas-book-mirror-36-actions">
+                    <button type="button" id="btnAtlasBookMirrorCheck36">Diagnostic · vérifier maintenant</button>
+                    <button type="button" id="btnAtlasBookMirrorExport36">Publication contrôlée · préparer book_mirror.json</button>
+                  </div>
+                  <p id="atlasBookMirrorStatus36">Lecture automatique inactive tant que ce poste n’est pas en rôle Book/STOP.</p>
+                </section>
                 <div class="atlas-book-readonly-grid">
                   <article><span>Rôle de ce poste</span><b id="atlasBookReadOnlyRole">—</b><small id="atlasBookReadOnlyRoleDetail">Production ou STOP/lecture seule.</small></article>
                   <article><span>Dictionnaire permanent</span><b id="atlasBookReadOnlyDictionary">Disponible</b><small>Ne dépend ni d’Aerith ni d’une conclusion locale.</small></article>
@@ -2343,11 +2420,11 @@
                 </div>
                 <div class="atlas-book-readonly-actions">
                   <button type="button" id="btnAtlasBookOpenDictionary">Ouvrir le dictionnaire</button>
-                  <button type="button" id="btnAtlasBookExport">1 · Exporter JSON vers le Book</button>
-                  <button type="button" id="btnAtlasBookImport">2 · Charger l’export Ryzen</button>
-                  <button type="button" id="btnAtlasBookReadSynthesis" disabled>3 · Relire la synthèse Aerith</button>
+                  <button type="button" id="btnAtlasBookExport">Secours · Exporter JSON</button>
+                  <button type="button" id="btnAtlasBookImport">Secours · Charger JSON Ryzen</button>
+                  <button type="button" id="btnAtlasBookReadSynthesis" disabled>Relire la synthèse Aerith</button>
                 </div>
-                <p id="atlasBookReadOnlyStatus">Lecture seule prête · aucune synchronisation cachée entre appareils.</p>
+                <p id="atlasBookReadOnlyStatus">Lecture seule prête · le Book ne calcule rien. Miroir public automatique si disponible ; JSON manuel uniquement en secours.</p>
               </section>
 
               <section class="atlas-knowledge-library" id="atlasKnowledgeLibrary" data-state="ready" aria-labelledby="atlasKnowledgeLibraryTitle">
@@ -2660,7 +2737,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 34.3 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 38.0 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3815,7 +3892,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 34.3</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 38.0</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3825,6 +3902,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-34.3"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-38.0"></script>
 </body>
 </html>
