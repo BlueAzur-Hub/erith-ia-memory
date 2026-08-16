@@ -23956,8 +23956,8 @@ html[data-atlas-market-domain="metals"]
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "38.10";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-38.10";
+  --atlas-asset-build: "38.12";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-38.12";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25756,4 +25756,53 @@ html[data-atlas-device-role="book-readonly"] #btnAtlasQuestionChain37{display:no
   margin-top: 8px;
   color: var(--muted, #9fb5c8);
   line-height: 1.45;
+}
+
+
+/* ============================================================
+   BUILD 38.12 — TRANSFORMER BOOK RESPONSIVE DECISION LOCK
+   Specificity intentionally exceeds the legacy #atlasSharedSynthesisCard
+   two-ID desktop rules so Book read-only can never be squeezed at 110% zoom.
+   Ryzen desktop layout is untouched.
+   ============================================================ */
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board {
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-template-areas:
+    "decision-head"
+    "decision-rule"
+    "operator-summary"
+    "decision-detail"
+    "decision-memory"
+    "decision-verdict"
+    "decision-compare" !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .atlas-decision-detail,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .atlas-operator-summary-35 {
+  min-width:0 !important;
+  width:100% !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2 {
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr)) !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail > summary {
+  width:100% !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-card,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-news-bridge > div,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-memory-v2 article {
+  min-width:0 !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+@media (max-width:760px) {
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid,
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge,
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2 {
+    grid-template-columns:minmax(0,1fr) !important;
+  }
 }
