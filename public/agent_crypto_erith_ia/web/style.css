@@ -25396,3 +25396,72 @@ html[data-atlas-market-domain="metals"]
 .atlas-multi-collector-list article[data-recency="aged"]{border-color:rgba(244,190,76,.34)}
 @media (max-width:1100px){.atlas-operator-local-grid{grid-template-columns:1fr 1fr}.atlas-multi-collector-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-multi-collector-assets{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-multi-collector-list{grid-template-columns:1fr}}
 @media (max-width:700px){.atlas-operator-local-grid,.atlas-multi-collector-kpis,.atlas-multi-collector-assets{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   33.0 FINAL — DECISION WORKSPACE + CURRENT TRUTH + CURRENT JOURNAL
+   Layout / read-only intelligence only. No Bridge or pipeline change.
+   ============================================================ */
+.atlas-current-truth-33,
+.atlas-current-journal-33{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(93,218,207,.28);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(7,28,42,.94),rgba(10,23,40,.90));
+}
+.atlas-current-truth-33[data-state="current"],
+.atlas-current-journal-33[data-state="ready"]{border-color:rgba(73,231,168,.50);box-shadow:inset 0 0 0 1px rgba(73,231,168,.07)}
+.atlas-current-truth-33[data-state="active"]{border-color:rgba(89,214,232,.46)}
+.atlas-current-truth-33-head,
+.atlas-current-journal-33-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.atlas-current-truth-33-head h5,
+.atlas-current-journal-33-head h5{margin:.2rem 0 .35rem;font-size:1.05rem;color:var(--cream,#fff0bf)}
+.atlas-current-truth-33-head p,
+.atlas-current-journal-33-head p{margin:.2rem 0;color:var(--muted,#9fb1c4);max-width:1020px}
+.atlas-current-truth-33-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.atlas-current-truth-33-grid article{min-width:0;padding:11px 12px;border:1px solid rgba(109,211,224,.17);border-radius:12px;background:rgba(3,17,29,.68)}
+.atlas-current-truth-33-grid span{display:block;color:#91a8ba;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-current-truth-33-grid b{display:block;margin:5px 0;color:#e8f8f5;overflow-wrap:anywhere}
+.atlas-current-truth-33-grid small{display:block;color:#9fb1c4;line-height:1.35}
+.atlas-current-truth-33-status,.atlas-current-journal-33-status{margin:11px 0 0;color:#8fdacb;font-size:.9rem}
+.atlas-current-journal-33-actions{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0 10px}
+.atlas-current-journal-33-actions button{border:1px solid rgba(104,215,208,.30);border-radius:10px;background:rgba(9,42,57,.72);color:inherit;padding:8px 10px;font-weight:800}
+.atlas-current-journal-33-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.atlas-current-journal-33-list article{min-width:0;padding:11px 12px;border:1px solid rgba(125,210,226,.16);border-radius:12px;background:rgba(3,17,29,.68)}
+.atlas-current-journal-33-list article[data-state="current"]{border-color:rgba(76,225,166,.38)}
+.atlas-current-journal-33-list b{display:block;color:#9ff0dd}
+.atlas-current-journal-33-list span,.atlas-current-journal-33-list small,.atlas-current-journal-33-list code{display:block;margin-top:4px;color:#9fb1c4;font-size:.8rem;overflow-wrap:anywhere}
+.atlas-current-journal-33-list code{color:#d7e5ed;background:rgba(0,0,0,.12);padding:4px 6px;border-radius:6px}
+
+/* Decision Board now belongs to the Atlas/Memory workspace, not to News Sentinel. */
+#atlasSharedSynthesisCard #decision-board{margin-top:18px}
+.atlas-decision-detail{margin:12px 0;border:1px solid rgba(104,194,225,.18);border-radius:13px;background:rgba(2,15,25,.32)}
+.atlas-decision-detail>summary{cursor:pointer;padding:10px 12px;font-weight:900;color:#f7dda1;list-style:none}
+.atlas-decision-detail>summary::-webkit-details-marker{display:none}
+.atlas-decision-detail>summary::before{content:"▸ ";color:#75e1d2}
+.atlas-decision-detail[open]>summary::before{content:"▾ "}
+.atlas-decision-detail-body{padding:0 10px 10px}
+
+.atlas-current-compare-table-33{width:100%;border-collapse:collapse;font-size:.85rem}
+.atlas-current-compare-table-33 th,.atlas-current-compare-table-33 td{padding:8px 9px;border-bottom:1px solid rgba(120,200,218,.12);text-align:right}
+.atlas-current-compare-table-33 th:first-child,.atlas-current-compare-table-33 td:first-child{text-align:left}
+.atlas-current-compare-table-33 thead th{color:#95abbd;font-size:.73rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-current-compare-table-33 tbody th{color:#dffaf3}
+.atlas-current-compare-table-33 td[data-delta="up"]{color:#78e4b2}
+.atlas-current-compare-table-33 td[data-delta="down"]{color:#ff9a9a}
+.atlas-current-compare-table-33 td[data-delta="flat"]{color:#d7e2e8}
+
+/* Integrated console: keep the moved multi-collector block visually subordinate to the decision workspace. */
+#atlasSharedSynthesisCard [data-collapse-key="multi-collector-operator"]{margin-top:18px;border-color:rgba(92,225,214,.28)}
+#atlasSharedSynthesisCard .atlas-book-readonly{margin-top:18px}
+#atlasSharedSynthesisCard .atlas-knowledge-library{margin-top:18px}
+
+@media (max-width:1100px){
+  .atlas-current-truth-33-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .atlas-current-journal-33-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .atlas-current-truth-33-head,.atlas-current-journal-33-head{flex-direction:column}
+  .atlas-current-truth-33-grid,.atlas-current-journal-33-list{grid-template-columns:1fr}
+}
