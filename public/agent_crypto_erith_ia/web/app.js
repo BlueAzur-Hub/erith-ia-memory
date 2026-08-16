@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.1",
+  build: "38.2",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1375,7 +1375,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.1 RECOVERY LOCK · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.2 DEVICE IDENTITY LOCK · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12118,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.1",
+  interface: "Build 38.2",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40142,7 +40142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.1";
+const ATLAS_BUILD = "38.2";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -43342,7 +43342,7 @@ window.setTimeout(() => {
 
 
 /* ============================================================
-   35.0 UI/MEMORY LAYER — 38.1 RECOVERY: SECOND WATCHDOG DISABLED
+   35.0 UI/MEMORY LAYER — 38.2 RECOVERY: SECOND WATCHDOG DISABLED
    Cumulative layer over 34.3.
    Ryzen builds automatically. Transformer Book remains consultation only.
    Protected: Bridge V1.9.5 · Control Center V2.3.2R5 · gpt-oss:20b-32k.
@@ -43482,7 +43482,7 @@ function atlasOperatorSummaryRender35() {
   const current = typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null;
   const memory = atlasMemoryIntelligenceCompute();
   const split = atlasMemorySplit35();
-  // 38.1 RECOVERY LOCK — PURE RENDER ONLY.
+  // 38.2 RECOVERY LOCK — PURE RENDER ONLY.
   // IMPORTANT: atlasBuildCryptoPageSnapshot() is transactional: it renders truth and calls
   // atlasCurrentOnSnapshot(). Calling it from a renderer created a render → CURRENT → render
   // feedback loop in 38.0. UI summaries must read already-existing state only.
@@ -43582,7 +43582,7 @@ function atlasAutonomousOperatorTick35(reason = "watchdog") {
 
 let atlasAutonomousOperatorTimer35 = 0;
 function atlasAutonomousOperatorStart35() {
-  // 38.1: disabled by design. Automation is owned by the proven 34.1 scheduler
+  // 38.2: disabled by design. Automation is owned by the proven 34.1 scheduler
   // (atlasAfterLivecheck341 + atlasLocalReportsScheduleAutomatic341).
   // No second watchdog is allowed to build snapshots or reopen transactions.
   if (atlasAutonomousOperatorTimer35) window.clearInterval(atlasAutonomousOperatorTimer35);
@@ -44320,3 +44320,178 @@ window.setTimeout(()=>{
   document.getElementById("btnAtlasScannerTruthRefresh37")?.addEventListener("click",atlasScannerTruthRender37);
 },0);
 
+
+
+/* ============================================================
+   38.2 — DEVICE IDENTITY LOCK · RYZEN ≠ BOOK
+   Canonical architecture:
+   - Ryzen collector builds: Bridge + Ollama + Atlas + NØX + Aerith.
+   - Transformer Book collector consults only.
+   CRITICAL: data provenance (a package produced on Ryzen) must NEVER
+   redefine the current browser/device as a Transformer Book.
+   ============================================================ */
+
+const ATLAS_DEVICE_IDENTITY_382_RECOVERY_KEY = "agent_crypto_382_device_identity_recovery_v1";
+
+function atlasDeviceIdentity382() {
+  let collector = "";
+  try { collector = String(typeof getCollectorId === "function" ? getCollectorId() : "").trim().toLowerCase(); } catch (_) {}
+  return {
+    collector,
+    ryzen: /(^|[\s_-])ryzen([\s_-]|$)|ryzen7/.test(collector),
+    book: /transformer[\s_-]*book/.test(collector)
+  };
+}
+
+// 38.2: machine identity is collector-based only. Operator profile "reader"
+// is an authorization/presentation role, not proof that the hardware is the Book.
+atlasAutomation341BookIdentity = function atlasAutomation341BookIdentity382() {
+  const identity = atlasDeviceIdentity382();
+  let profileRole = "";
+  try { profileRole = String(typeof atlasOperatorProfileRead === "function" ? atlasOperatorProfileRead()?.role || "" : "").toLowerCase(); } catch (_) {}
+  return {
+    collector: identity.collector,
+    profileRole,
+    book: identity.book,
+    ryzen: identity.ryzen
+  };
+};
+
+// 38.2: automatic Book forcing is legal only on a device explicitly identified
+// as Transformer Book. A Ryzen-produced package is merely provenance.
+atlasBook343ForceReadOnly = function atlasBook343ForceReadOnly382(reason = "book") {
+  const identity = atlasDeviceIdentity382();
+  if (!identity.book) return false;
+  try {
+    localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER);
+    localStorage.setItem(ATLAS_BOOK_343_ROLE_KEY, String(reason || "book"));
+  } catch (_) {}
+  try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
+  try { atlasLocalBridgeAutoStop(); } catch (_) {}
+  try { atlasExchangeStableGateCancelTimer(); } catch (_) {}
+  try { atlasDeviceComputeApply({ restart:false }); } catch (_) {}
+  return true;
+};
+
+// Book Mirror is a Book feature, not a generic STOP feature.
+atlasBookMirrorObserver36 = function atlasBookMirrorObserver382() {
+  const identity = atlasDeviceIdentity382();
+  try { return identity.book && atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER; }
+  catch (_) { return false; }
+};
+
+// Production button wins on the Ryzen and clears only stale AUTO-BOOK markers.
+const atlasDeviceComputeSetRole382Base = atlasDeviceComputeSetRole;
+atlasDeviceComputeSetRole = function atlasDeviceComputeSetRole382(role) {
+  const identity = atlasDeviceIdentity382();
+  const requested = role === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER
+    ? ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER
+    : ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+
+  if (requested === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION && identity.ryzen) {
+    try {
+      localStorage.removeItem(ATLAS_BOOK_343_ROLE_KEY);
+      localStorage.removeItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY);
+    } catch (_) {}
+  }
+
+  // A device explicitly named transformer-book remains consultation-only.
+  if (requested === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION && identity.book) {
+    try { localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER); } catch (_) {}
+    try { atlasDeviceComputeApply({ restart:false }); } catch (_) {}
+    try { atlasDeviceComputeSetStatus("TRANSFORMER BOOK · lecture seule canonique · renomme le collecteur si ce poste est réellement le Ryzen.", "stop"); } catch (_) {}
+    return ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER;
+  }
+
+  return atlasDeviceComputeSetRole382Base(requested);
+};
+
+// Correct wording: STOP on a Ryzen is just STOP, never "Transformer Book".
+const atlasBook343UiTruth382Base = atlasBook343UiTruth;
+atlasBook343UiTruth = function atlasBook343UiTruth382() {
+  const result = atlasBook343UiTruth382Base();
+  const identity = atlasDeviceIdentity382();
+  const observer = atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER;
+
+  if (observer && !identity.book) {
+    const status = document.getElementById("atlasDeviceComputeStatus");
+    const runtime = document.getElementById("atlasLocalRuntime");
+    const bridgeBadge = document.getElementById("localBridgeStatus");
+    const bridgeDetail = document.getElementById("localBridgeDetail");
+    if (status) status.textContent = identity.ryzen
+      ? "RYZEN · STOP temporaire · cliquer Production locale pour réactiver Atlas/Aerith/Ollama."
+      : "CE POSTE · LECTURE SEULE · calcul local STOP.";
+    if (runtime) runtime.textContent = identity.ryzen ? "RYZEN · calcul local temporairement STOP" : "Lecture seule · calcul local STOP";
+    if (bridgeBadge && identity.ryzen) bridgeBadge.textContent = "Ryzen · Bridge en pause";
+    if (bridgeDetail && identity.ryzen) bridgeDetail.textContent = "Le Bridge/Ollama du Ryzen est simplement suspendu par le rôle STOP ; ce poste n’est pas un Transformer Book.";
+  }
+
+  document.documentElement.dataset.atlasPhysicalRole = identity.book ? "transformer-book" : identity.ryzen ? "ryzen-producer" : "unclassified";
+  return { ...(result || {}), identity };
+};
+
+// Pure export: clone first. Never stamp ryzen_import onto the live Ryzen package.
+atlasBookExportMemoryPackage34 = function atlasBookExportMemoryPackage382() {
+  const pkg = atlasSharedSynthesisState?.package;
+  if (!pkg) {
+    try { atlasSharedSynthesisSetStatus("warning", "Aucune synthèse CURRENT/HISTORIQUE à exporter vers le Book.", "En attente"); } catch (_) {}
+    return false;
+  }
+  const payload = atlasCurrentMemoryClone34(pkg);
+  payload.memory_handoff = atlasBookMemoryHandoff34();
+  payload.status = { ...(payload.status || {}), current_state: payload?.state?.historical === true ? "HISTORICAL" : "CURRENT" };
+  payload.handoff = {
+    ...(payload.handoff || {}),
+    source: "ryzen_import",
+    exported_from: "ryzen",
+    destination_role: "transformer_book_readonly",
+    book_requires_ollama: false,
+    book_requires_bridge: false,
+    local_generation_on_book: false,
+    provenance_only_provider_model: true,
+    memory_schema: ATLAS_BOOK_MEMORY_HANDOFF_34_SCHEMA,
+    memory_records: payload.memory_handoff.record_count,
+    observation_only: true
+  };
+  const raw = JSON.stringify(payload, null, 2);
+  const stamp = new Date(payload.generated_at || Date.now()).toISOString().replace(/[:.]/g, "-");
+  downloadTextFile(`agent_crypto_book_synthesis_memory_${stamp}.json`, "application/json;charset=utf-8", raw);
+  try { atlasSharedSynthesisSetStatus("ready", `JSON Book exporté · synthèse + ${payload.memory_handoff.record_count} snapshots mémoire · le Ryzen reste producteur.`, "Disponible"); } catch (_) {}
+  return true;
+};
+
+// One-time migration for the exact 34.3/38.1 bug: if the real collector is Ryzen
+// but old AUTO-BOOK flags left it in OBSERVER, restore production once.
+function atlasDeviceIdentityRecover382() {
+  const identity = atlasDeviceIdentity382();
+  let done = false;
+  try { done = localStorage.getItem(ATLAS_DEVICE_IDENTITY_382_RECOVERY_KEY) === "1"; } catch (_) {}
+  if (done) return false;
+
+  let role = "";
+  let bookReason = "";
+  let bookInit = "";
+  try {
+    role = String(localStorage.getItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY) || "");
+    bookReason = String(localStorage.getItem(ATLAS_BOOK_343_ROLE_KEY) || "");
+    bookInit = String(localStorage.getItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY) || "");
+  } catch (_) {}
+
+  const autoBookContamination = !!bookReason || bookInit === "1";
+  if (identity.ryzen && role === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER && autoBookContamination) {
+    try {
+      localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION);
+      localStorage.removeItem(ATLAS_BOOK_343_ROLE_KEY);
+      localStorage.removeItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY);
+    } catch (_) {}
+    try { atlasDeviceComputeApply({ restart:true }); } catch (_) {}
+  }
+
+  try { localStorage.setItem(ATLAS_DEVICE_IDENTITY_382_RECOVERY_KEY, "1"); } catch (_) {}
+  try { atlasBook343UiTruth(); } catch (_) {}
+  return true;
+}
+
+window.setTimeout(() => {
+  try { atlasDeviceIdentityRecover382(); } catch (_) {}
+}, 0);
