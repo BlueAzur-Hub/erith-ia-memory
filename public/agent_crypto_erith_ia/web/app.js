@@ -1254,6 +1254,8 @@ function atlasInitLocalAccess() {
     button.addEventListener("click", () => atlasLocalReportsExport(button.dataset.atlasReportExport));
   });
   atlasSharedSynthesisInit();
+  atlasKnowledgeLibraryInit();
+  atlasBookReadOnlyKnowledgeRefresh();
   const question = document.getElementById("atlasLocalQuestion");
   if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
   atlasLocalDialogueSelectProfile("atlas");
@@ -1281,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "31.1",
+  build: "31.2",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1300,7 +1302,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "31.1",
+    build: ATLAS_BUILD === "31.2",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1363,7 +1365,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 31.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 31.2 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12106,7 +12108,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 31.1",
+  interface: "Build 31.2",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12216,6 +12218,138 @@ const ATLAS_PEDAGOGY_GLOSSARY = Object.freeze({
   "slippage": "Écart entre le prix attendu d'une opération et son prix d'exécution réel, souvent lié à la liquidité et à la taille de l'ordre."
 });
 
+
+
+/* ============================================================
+   31.2 — SHARED READ-ONLY KNOWLEDGE
+   Permanent dictionary + explicit Ryzen → Book transfer.
+   No Bridge call is introduced here. Observer/STOP mode remains passive.
+   ============================================================ */
+function atlasKnowledgeLibraryEntries() {
+  return Object.entries(ATLAS_PEDAGOGY_GLOSSARY)
+    .map(([term, definition]) => ({ term: String(term || "").trim(), definition: String(definition || "").trim() }))
+    .filter(row => row.term && row.definition)
+    .sort((a, b) => a.term.localeCompare(b.term, "fr", { sensitivity: "base" }));
+}
+
+function atlasKnowledgeLibraryRender(filterValue = null) {
+  const grid = document.getElementById("atlasKnowledgeLibraryGrid");
+  if (!grid) return 0;
+  const input = document.getElementById("atlasKnowledgeSearch");
+  const query = String(filterValue == null ? input?.value || "" : filterValue).trim().toLocaleLowerCase("fr-FR");
+  const rows = atlasKnowledgeLibraryEntries().filter(row => {
+    if (!query) return true;
+    return `${row.term} ${row.definition}`.toLocaleLowerCase("fr-FR").includes(query);
+  });
+  grid.replaceChildren();
+  const fragment = document.createDocumentFragment();
+  rows.forEach(row => {
+    const article = document.createElement("article");
+    const title = document.createElement("b");
+    const body = document.createElement("p");
+    title.textContent = row.term.toLocaleUpperCase("fr-FR");
+    body.textContent = row.definition;
+    article.append(title, body);
+    fragment.appendChild(article);
+  });
+  grid.appendChild(fragment);
+  const total = atlasKnowledgeLibraryEntries().length;
+  setText(document.getElementById("atlasKnowledgeCount"), `${rows.length}/${total} termes`);
+  setText(document.getElementById("atlasKnowledgeLibraryStatus"), query
+    ? `${rows.length} terme(s) correspondent à « ${String(filterValue == null ? input?.value || "" : filterValue).trim()} ». Aucun moteur local n’est utilisé.`
+    : `${total} définitions permanentes chargées · disponibles même en STOP / lecture seule.`);
+  return rows.length;
+}
+
+function atlasKnowledgeLibraryOpen() {
+  const details = document.getElementById("atlasKnowledgeLibraryDetails");
+  if (details) details.open = true;
+  atlasKnowledgeLibraryRender();
+  document.getElementById("atlasKnowledgeLibrary")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  return true;
+}
+
+function atlasKnowledgeLibraryInit() {
+  const input = document.getElementById("atlasKnowledgeSearch");
+  if (!input || input.dataset.atlasKnowledgeReady === "1") return atlasKnowledgeLibraryRender();
+  input.dataset.atlasKnowledgeReady = "1";
+  input.addEventListener("input", () => atlasKnowledgeLibraryRender());
+  document.getElementById("btnAtlasKnowledgeClear")?.addEventListener("click", () => {
+    input.value = "";
+    atlasKnowledgeLibraryRender("");
+    input.focus();
+  });
+  document.getElementById("btnAtlasBookOpenDictionary")?.addEventListener("click", atlasKnowledgeLibraryOpen);
+  return atlasKnowledgeLibraryRender();
+}
+
+function atlasBookReadOnlyKnowledgeRefresh() {
+  const root = document.getElementById("atlasBookReadOnlyKnowledge");
+  if (!root) return null;
+  const role = typeof atlasDeviceComputeRoleRead === "function" ? atlasDeviceComputeRoleRead() : "production";
+  const observer = role === ATLAS_DEVICE_COMPUTE_ROLES?.OBSERVER;
+  const pkg = atlasSharedSynthesisState?.package || null;
+  const source = atlasSharedSynthesisState?.source || "";
+  const memory = typeof atlasMemoryIntelligenceCompute === "function" ? atlasMemoryIntelligenceCompute() : null;
+
+  setText(document.getElementById("atlasBookReadOnlyRole"), observer ? "STOP · lecture seule" : "Production locale");
+  setText(document.getElementById("atlasBookReadOnlyRoleDetail"), observer
+    ? "Marché et contenus visibles · aucun appel Atlas/Aerith/Ollama depuis ce navigateur."
+    : "Ce poste peut produire Atlas/Aerith via le Bridge local.");
+  setText(document.getElementById("atlasBookReadOnlyDictionary"), `${atlasKnowledgeLibraryEntries().length} termes · toujours disponibles`);
+
+  if (pkg) {
+    const origin = pkg.origin?.machine || "poste producteur";
+    const label = pkg.snapshot_label || pkg.generated_at || "snapshot conservé";
+    setText(document.getElementById("atlasBookReadOnlySynthesis"), source === "local" ? "Produite sur ce poste" : source === "import" ? "Import Ryzen chargé" : "Restaurée localement");
+    setText(document.getElementById("atlasBookReadOnlySynthesisDetail"), `${origin} · ${label} · 4/4 Atlas + Aerith conservés.`);
+  } else {
+    setText(document.getElementById("atlasBookReadOnlySynthesis"), "Aucune synthèse Book");
+    setText(document.getElementById("atlasBookReadOnlySynthesisDetail"), observer
+      ? "Sur le Ryzen : Exporter vers le Book. Ici : Charger un export Ryzen."
+      : "Une synthèse sera créée après le prochain CURRENT complet.");
+  }
+
+  if (memory) {
+    setText(document.getElementById("atlasBookReadOnlyMemory"), `${memory.records} snapshot(s) · ${memory.confidence?.label || "—"}`);
+    setText(document.getElementById("atlasBookReadOnlyMemoryDetail"), `3/5/10 : ${memory.horizons?.[3]?.records || 0}/${memory.horizons?.[5]?.records || 0}/${memory.horizons?.[10]?.records || 0} · observation uniquement.`);
+  }
+
+  setText(document.getElementById("atlasBookReadOnlyCompute"), observer ? "STOP confirmé" : "Autorisé sur ce poste");
+  setText(document.getElementById("atlasBookReadOnlyComputeDetail"), observer
+    ? "Bridge polling, Atlas, Aerith et GPT-OSS restent désactivés sur ce navigateur."
+    : "Le calcul local suit le pipeline CURRENT protégé.");
+
+  const exportButton = document.getElementById("btnAtlasBookExport");
+  if (exportButton) exportButton.disabled = !pkg;
+  root.dataset.state = pkg ? "ready" : observer ? "observer" : "waiting";
+  const badge = document.getElementById("atlasBookReadOnlyBadge");
+  if (badge) {
+    badge.className = `pill ${pkg ? "ok" : observer ? "ok" : "warn"}`;
+    badge.textContent = pkg ? (observer ? "Book chargé" : "Partage prêt") : observer ? "Book STOP prêt" : "En attente d’un CURRENT";
+  }
+  setText(document.getElementById("atlasBookReadOnlyStatus"), pkg
+    ? `${observer ? "Lecture seule" : "Production"} · synthèse conservée dans l’IndexedDB de ce navigateur · aucune synchronisation cachée.`
+    : observer
+      ? "Book en STOP : dictionnaire permanent disponible ; charge un export Ryzen pour consulter sa dernière synthèse sans calcul local."
+      : "Ryzen en production : après CURRENT, utilise « Exporter vers le Book » pour transférer la synthèse au poste lecture seule.");
+  return { role, observer, package: !!pkg, memory };
+}
+
+function atlasBookExportToBook() {
+  if (!atlasSharedSynthesisState?.package) {
+    atlasSharedSynthesisSetStatus("warning", "Aucune synthèse CURRENT/HISTORIQUE à exporter vers le Book.", "En attente");
+    return false;
+  }
+  return atlasSharedSynthesisExportJson();
+}
+
+function atlasBookImportFromRyzen() {
+  const input = document.getElementById("atlasSharedSynthesisImport");
+  if (!input) return false;
+  input.click();
+  return true;
+}
 
 function atlasPedagogyV2TermsFromText(textValue = "") {
   const source = String(textValue || "").toLowerCase();
@@ -15442,6 +15576,7 @@ function atlasMemoryIntelligenceRender() {
   set("atlasMemoryIntelligenceStatus", data.records>=3
     ? `Memory Intelligence active · dernier relevé ${data.latest_at?new Date(data.latest_at).toLocaleString("fr-FR"):"—"} · observation uniquement.`
     : `Memory Intelligence en collecte · ${data.records}/3 snapshots distincts minimum pour une première lecture.`);
+  try { atlasBookReadOnlyKnowledgeRefresh(); } catch (_) {}
   root.dataset.state=data.records>=3?"ready":"waiting";
   return data;
 }
@@ -16650,7 +16785,7 @@ function basketStatus(coins) { if (!coins.length) return { label: "À charger", 
 }
 
 /* ============================================================
-   31.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   31.2 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Per-browser role. Market data remain live in observer mode, while
    Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
    ============================================================ */
@@ -16751,6 +16886,7 @@ function atlasDeviceComputeApply(options = {}) {
     setText(document.getElementById("atlasLocalDialogueStatus"), "Ce poste est en lecture seule : aucun appel Atlas/Aerith/Ollama n’est envoyé au Bridge.");
     atlasAnalysisProgressRender(0, "observer", "Marché live actif · aucun calcul Atlas/Aerith/Ollama depuis ce navigateur. Réactive Production seulement sur le poste producteur.");
   }
+  try { atlasBookReadOnlyKnowledgeRefresh(); } catch (_) {}
   return role;
 }
 
@@ -32944,6 +33080,7 @@ function atlasSharedSynthesisRenderCore() {
     if (content) content.innerHTML = '<p class="atlas-local-response-empty">Aucune synthèse chargée. Sur le Ryzen, elle sera créée automatiquement après les quatre rapports Atlas et la conclusion Aerith.</p>';
     const conclusion = document.getElementById("atlasSharedConclusionContent");
     if (conclusion) conclusion.innerHTML = '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
+    atlasBookReadOnlyKnowledgeRefresh();
     return false;
   }
   setText(document.getElementById("atlasSharedSynthesisSnapshot"), pkg.snapshot_label || "—");
@@ -32960,6 +33097,7 @@ function atlasSharedSynthesisRenderCore() {
     document.getElementById("atlasSharedSynthesisNote"),
     `${synthesisHistorical ? "Historique conservé — fingerprint différent du snapshot courant" : (atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée")} · lecture seule · ${(activePkg || pkg).origin?.provider || "local"} · ${(activePkg || pkg).origin?.model || "modèle"}`
   );
+  atlasBookReadOnlyKnowledgeRefresh();
   return true;
 }
 
@@ -33395,6 +33533,8 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasSharedExportJson")?.addEventListener("click", atlasSharedSynthesisExportJson);
   document.getElementById("btnAtlasSharedExportMd")?.addEventListener("click", atlasSharedSynthesisExportMarkdown);
   document.getElementById("btnAtlasDiagnosticBundle")?.addEventListener("click", atlasExportDiagnosticBundle);
+  document.getElementById("btnAtlasBookExport")?.addEventListener("click", atlasBookExportToBook);
+  document.getElementById("btnAtlasBookImport")?.addEventListener("click", atlasBookImportFromRyzen);
   void atlasSharedSynthesisRestore();
   return true;
 }
@@ -39841,7 +39981,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "31.1";
+const ATLAS_BUILD = "31.2";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -41118,7 +41258,7 @@ atlasSafeBoot("memory truth render", renderMemoryTruth);
 
 atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
 
-atlasSafeBoot("Memory Intelligence 31.1", atlasMemoryIntelligenceInit);
+atlasSafeBoot("Memory Intelligence 31.2", atlasMemoryIntelligenceInit);
 
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
