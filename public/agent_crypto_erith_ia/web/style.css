@@ -23956,8 +23956,8 @@ html[data-atlas-market-domain="metals"]
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "32.0";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-32.0";
+  --atlas-asset-build: "32.1";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-32.1";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25359,3 +25359,13 @@ html[data-atlas-market-domain="metals"]
 #decision-board[data-v2-mode="memory-only"]{border-color:rgba(92,207,225,.34)}
 @media (max-width:1100px){.decision-memory-v2{grid-template-columns:repeat(2,minmax(0,1fr))}.decision-memory-timeline{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:720px){.decision-memory-v2{grid-template-columns:1fr}.decision-memory-compare-head{flex-direction:column}.decision-memory-timeline{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   BUILD 32.1 — EVIDENCE & LANGUAGE CONSISTENCY
+   - no Bridge or pipeline change
+   - canonical News evidence vocabulary
+   - French-only bounded Atlas comments
+   - precise human-validation wording
+   - explicit LIVE vs frozen CURRENT readiness labels
+   ============================================================ */

@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "32.0",
+  build: "32.1",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1302,7 +1302,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "32.0",
+    build: ATLAS_BUILD === "32.1",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1365,7 +1365,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 32.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 32.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12108,7 +12108,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 32.0",
+  interface: "Build 32.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -15061,7 +15061,9 @@ function renderNewsSentinel(event = null) {
     `${current.decision.checks} · ${eventReaction.limitation || "Causalité non établie."}`
   );
   setText($("decisionNewsState"), `${current.event_label} · ${current.assets.join(" / ") || "marché global"}`);
-  setText($("decisionNewsImpact"), `${current.impact.level} · preuve ${current.evidence.level.toLowerCase()}`);
+  const canonicalImpact = atlasEvidenceNormalizeLevel(current.impact, "INCONNU");
+  const canonicalProof = atlasEvidenceNormalizeLevel(current.evidence, "INCONNUE");
+  setText($("decisionNewsImpact"), `Impact ${canonicalImpact} · preuve ${canonicalProof}`);
   setText($("decisionNewsAction"), current.decision.action);
   if (bridge) {
     bridge.dataset.tone = newsToneClass(current.decision.tone);
@@ -15785,7 +15787,7 @@ function renderDecisionBoard() {
     `Actif courant : ${selectedLine}`,
     `Action : ${escapeHtml(selected ? atlasActionForCoin(selected) : "Attendre")}`,
     `Données : ${escapeHtml(quality.label)} · ${okSources}/${totalSources || "?"} contrôles publics`,
-    "Règle : action descriptive déterminée par la catégorie de l’actif et l’état public récent / conservé, indépendamment de l’indice · validation humaine."
+    "Règle : action descriptive déterminée par la catégorie de l’actif et l’état public récent / conservé, indépendamment de l’indice. Validation humaine uniquement avant une décision ou action financière réelle."
   ].join("<br>");
 
   grid.innerHTML = `
@@ -15835,7 +15837,7 @@ function renderDecisionBoard() {
         </div>
         <div>
           <b>Action de travail</b>
-          <span>L’action descriptive dépend de la catégorie de l’actif et de l’état public récent / conservé, pas de l’indice. Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise.</span>
+          <span>L’action descriptive dépend de la catégorie de l’actif et de l’état public récent / conservé, pas de l’indice. Comparer au socle BTC / ETH / SOL, vérifier les mouvements rapides, attendre une confirmation mémoire. Validation humaine requise uniquement avant une décision ou action financière réelle.</span>
         </div>
       </div>
     `;
@@ -17559,7 +17561,13 @@ function atlasNormalizeAnalyticalSafetyLanguage(value = "") {
     .replace(/(^|\n)\s*[-*]\s*Validation humaine obligatoire\.?(?=\n|$)/gi,
       "$1- Chaîne analytique automatique : aucune validation humaine n’est requise entre Atlas, NØX et Aerith. Validation humaine uniquement avant une décision ou action financière réelle.")
     .replace(/(^|\n)\s*Validation humaine obligatoire\.?(?=\n|$)/gi,
-      "$1Validation humaine uniquement avant une décision ou action financière réelle ; jamais pour autoriser la synthèse Atlas → NØX → Aerith.");
+      "$1Validation humaine uniquement avant une décision ou action financière réelle ; jamais pour autoriser la synthèse Atlas → NØX → Aerith.")
+    .replace(/Toute interprétation causale doit être confirmée par validation humaine\.?/gi,
+      "Toute interprétation causale non démontrée reste classée à confirmer. Validation humaine uniquement avant une décision ou action financière réelle.")
+    .replace(/Human validation is required before any interpretation or action\.?/gi,
+      "La chaîne analytique reste automatique ; validation humaine uniquement avant une décision ou action financière réelle.")
+    .replace(/Validation humaine requise\.(?![^\n]*décision ou action financière réelle)/gi,
+      "Validation humaine requise uniquement avant une décision ou action financière réelle.");
 }
 
 function atlasLocalSetReport(node, markdown) {
@@ -17650,12 +17658,12 @@ function atlasLocalReportsReadiness(snapshot) {
 }
 
 function atlasLocalReportsReadinessLabel(readiness) {
-  if (!readiness.bridgeReady) return "Atlas en attente · Bridge local non prêt.";
-  if (!readiness.marketReady) return "Atlas en attente · snapshot CoinGecko exploitable requis.";
-  if (readiness.directPairs < 5) return `Atlas en attente · prix disponibles ${Math.min(5, Number(readiness.directPairs || 0) + Number(readiness.derivedPairs || 0))}/5 · Binance ${readiness.directPairs}/5 directes · ${Number(readiness.derivedPairs || 0)} dérivées · aucun départ avant 5/5 directes stables.`;
-  if (!readiness.stableReady) return `Atlas armé · Binance 5/5 directes détectées mais encore instables · confirmation continue ${Math.min(ATLAS_DIRECT_5_5_STABLE_MS / 1000, Math.floor(Number(readiness.stableAgeMs || 0) / 1000))}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`;
-  if (!readiness.graphReady) return "Atlas en attente · graphique exploitable requis.";
-  return "5/5 prix · 5/5 Binance directes stables · 0 dérivée · sources prêtes · démarrage Atlas autorisé.";
+  if (!readiness.bridgeReady) return "État LIVE de déclenchement · Atlas en attente · Bridge local non prêt.";
+  if (!readiness.marketReady) return "État LIVE de déclenchement · Atlas en attente · snapshot CoinGecko exploitable requis.";
+  if (readiness.directPairs < 5) return `État LIVE actuel, distinct du snapshot CURRENT conservé · Atlas en attente · prix disponibles ${Math.min(5, Number(readiness.directPairs || 0) + Number(readiness.derivedPairs || 0))}/5 · Binance ${readiness.directPairs}/5 directes · ${Number(readiness.derivedPairs || 0)} secours · aucun départ avant 5/5 directes stables.`;
+  if (!readiness.stableReady) return `État LIVE de déclenchement · Atlas armé · Binance 5/5 directes détectées mais encore instables · confirmation continue ${Math.min(ATLAS_DIRECT_5_5_STABLE_MS / 1000, Math.floor(Number(readiness.stableAgeMs || 0) / 1000))}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`;
+  if (!readiness.graphReady) return "État LIVE de déclenchement · Atlas en attente · graphique exploitable requis.";
+  return "État LIVE de déclenchement qualifié · 5/5 Binance directes stables · 0 secours · sources prêtes · démarrage Atlas autorisé.";
 }
 
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
@@ -17811,11 +17819,19 @@ function atlasLocalReportsWait(ms) {
 function atlasTextEnglishMarkerScore(text) {
   const value = String(text || "").toLocaleLowerCase("en-US");
   const markers = [
-    "snapshot shows", "sources are", "observations must", "the market", "data gaps",
-    "no causal", "reports are not", "are unavailable", "is unavailable", "must be treated",
-    "coverage is", "preclude definitive", "conclusions are therefore", "human validation is required"
+    "snapshot shows", "sources are", "sources binance and coingecko", "observations must", "the market", "market breadth",
+    "data gaps", "graph data", "evidence is limited", "no causal", "reports are not", "are unavailable",
+    "is unavailable", "must be treated", "coverage is", "preclude definitive", "conclusions are therefore",
+    "human validation is required", "warrants continued observation", "no causal link"
   ];
-  return markers.reduce((score, marker) => score + (value.includes(marker) ? 1 : 0), 0);
+  const phraseScore = markers.reduce((score, marker) => score + (value.includes(marker) ? 1 : 0), 0);
+  const englishTokens = [
+    " the ", " and ", " are ", " is ", " with ", " but ", " yet ", " before ", " required ",
+    " evidence ", " coverage ", " market ", " sources ", " data ", " human ", " confirmed "
+  ];
+  const padded = ` ${value.replace(/[^a-zà-ÿ0-9]+/g, " ")} `;
+  const tokenScore = englishTokens.reduce((score, token) => score + (padded.includes(token) ? 1 : 0), 0);
+  return phraseScore + (tokenScore >= 4 ? 1 : 0);
 }
 
 function atlasMarkdownReplaceNamedSection(text, headingLabel, replacement) {
@@ -17864,25 +17880,51 @@ function atlasLocalFrenchCommentFallback(mode, snapshot) {
 
 function atlasLocalReportTruthPolish(mode, result, snapshot) {
   if (!result || typeof result !== "object") return result;
-  const answer = String(result.answer || "").replace(/\r\n?/g, "\n");
+  let answer = atlasNormalizeAnalyticalSafetyLanguage(String(result.answer || "").replace(/\r\n?/g, "\n"));
   const heading = /^####\s+\d+\.\s+Commentaire local borné\s*$/mi;
   const match = heading.exec(answer);
-  if (!match) return result;
-  const tail = answer.slice(match.index + match[0].length);
-  const next = /\n####\s+\d+\./m.exec(tail);
-  const body = next ? tail.slice(0, next.index) : tail;
-  if (atlasTextEnglishMarkerScore(body) < 1) return result;
-  const polished = atlasMarkdownReplaceNamedSection(answer, "Commentaire local borné", atlasLocalFrenchCommentFallback(mode, snapshot));
-  return { ...result, answer: polished, language_normalized: true };
+  if (match) {
+    const tail = answer.slice(match.index + match[0].length);
+    const next = /\n####\s+\d+\./m.exec(tail);
+    const body = next ? tail.slice(0, next.index) : tail;
+    if (atlasTextEnglishMarkerScore(body) >= 1) {
+      answer = atlasMarkdownReplaceNamedSection(answer, "Commentaire local borné", atlasLocalFrenchCommentFallback(mode, snapshot));
+    }
+  }
+
+  // One evidence vocabulary everywhere. Raw scores remain secondary metadata only.
+  const contract = snapshot?.strict_contract || {};
+  const evidenceLayer = contract.evidence_v2 || snapshot?.analytical_state?.evidence || atlasEvidenceLayerBuild(contract);
+  const evidence = evidenceLayer?.events?.[0] || null;
+  const lead = contract.news?.lead_event || null;
+  if (evidence && lead?.headline) {
+    const proofScore = Number(lead?.evidence?.score ?? lead?.evidence_score);
+    const impactScore = Number(lead?.impact?.score ?? lead?.impact_score);
+    const scores = [];
+    if (Number.isFinite(proofScore)) scores.push(`preuve ${proofScore}/100`);
+    if (Number.isFinite(impactScore)) scores.push(`impact ${impactScore}/100`);
+    const secondary = scores.length ? ` · scores secondaires ${scores.join(" · ")}` : "";
+    const canonicalLine = `- Événement directeur : ${lead.headline} · preuve ${evidence.proof_quality} · impact ${evidence.impact_potential} · confiance ${evidence.confidence}${secondary}.`;
+    answer = answer.replace(/^[-*]\s+Événement directeur\s*:\s*.*$/mi, canonicalLine);
+  }
+
+  answer = atlasNormalizeAnalyticalSafetyLanguage(answer);
+  return { ...result, answer, language_normalized: true, evidence_normalized: !!evidence };
 }
 
 function atlasLocalConclusionEvidenceSection(snapshot) {
   const contract = snapshot?.strict_contract || {};
-  const evidence = contract.evidence_v2?.events?.[0] || snapshot?.analytical_state?.evidence?.events?.[0] || null;
+  const evidenceLayer = contract.evidence_v2 || snapshot?.analytical_state?.evidence || atlasEvidenceLayerBuild(contract);
+  const evidence = evidenceLayer?.events?.[0] || null;
   const lead = contract.news?.lead_event || null;
   if (!evidence) return "";
   const source = evidence.source_name || lead?.source_name || "source non précisée";
   const scope = [...(Array.isArray(evidence.assets) ? evidence.assets : []), ...(Array.isArray(evidence.sectors) ? evidence.sectors : [])].filter(Boolean);
+  const proofScore = Number(lead?.evidence?.score ?? lead?.evidence_score);
+  const impactScore = Number(lead?.impact?.score ?? lead?.impact_score);
+  const scoreParts = [];
+  if (Number.isFinite(proofScore)) scoreParts.push(`preuve ${proofScore}/100`);
+  if (Number.isFinite(impactScore)) scoreParts.push(`impact ${impactScore}/100`);
   return [
     "#### 5. News Sentinel — événement et preuve",
     "",
@@ -17890,6 +17932,7 @@ function atlasLocalConclusionEvidenceSection(snapshot) {
     `- Source : ${source} · preuve ${evidence.proof_quality || "INCONNUE"}.`,
     `- Impact potentiel : ${evidence.impact_potential || "INCONNU"}${scope.length ? ` · actifs/secteurs : ${scope.join(", ")}` : " · portée à qualifier"}.`,
     `- Confiance : ${evidence.confidence || "À_VÉRIFIER"} · ${Number(evidence.independent_sources || 0)} source(s) indépendante(s) sur ${Number(evidence.reported_sources || 0)} reprise(s).`,
+    scoreParts.length ? `- Scores source secondaires : ${scoreParts.join(" · ")} · ils ne remplacent pas la taxonomie preuve / impact / confiance.` : "- Aucun score source secondaire disponible.",
     "- Action : observation uniquement ; aucun ordre automatique.",
     "- La proximité temporelle entre une actualité et un mouvement de prix ne démontre pas la causalité."
   ].join("\n");
@@ -39981,7 +40024,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "32.0";
+const ATLAS_BUILD = "32.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
