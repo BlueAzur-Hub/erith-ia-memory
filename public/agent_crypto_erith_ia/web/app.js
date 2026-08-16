@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.3",
+  build: "38.4",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1375,7 +1375,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 38.3 DIRECT GATE RECOVERY · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.4 CURRENT MEMORY RECONCILE · PURE RENDER · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12118,7 +12118,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.3",
+  interface: "Build 38.4",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40142,7 +40142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.3";
+const ATLAS_BUILD = "38.4";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -43789,7 +43789,7 @@ window.setTimeout(() => {
 const ATLAS_BOOK_MIRROR_36_SCHEMA = "agent_crypto_book_mirror_v36";
 const ATLAS_BOOK_MIRROR_36_URL = "./book_mirror.json";
 const ATLAS_BOOK_MIRROR_36_LAST_FP_KEY = "agent_crypto_book_mirror_v36_last_fingerprint";
-const ATLAS_BOOK_MIRROR_36_INTERVAL_MS = 75_000;
+const ATLAS_BOOK_MIRROR_36_INTERVAL_MS = 20_000;
 
 const atlasBookMirrorState36 = {
   timer: 0,
@@ -43999,7 +43999,7 @@ function atlasBookMirrorStart36() {
     return false;
   }
   atlasBookMirrorRender36("waiting","Book en lecture seule · vérification automatique du miroir public.");
-  window.setTimeout(()=>void atlasBookMirrorFetch36({reason:"startup"}),1200);
+  window.setTimeout(()=>void atlasBookMirrorFetch36({reason:"startup"}),450);
   atlasBookMirrorState36.timer=window.setInterval(()=>void atlasBookMirrorFetch36({reason:"timer"}),ATLAS_BOOK_MIRROR_36_INTERVAL_MS);
   return true;
 }
@@ -44650,3 +44650,184 @@ atlasExchangeWatchdog = function atlasExchangeWatchdog383() {
 window.setTimeout(() => {
   try { void atlasExchangeRefreshDirectRest383({ force: true }); } catch (_) {}
 }, 1200);
+
+
+/* ============================================================
+   38.4 — CURRENT MEMORY RECONCILE LOCK + BOOK DATA PULSE
+   Proven live issue:
+   - CURRENT closes correctly and Journal CURRENT records #1,
+   - but Memory Intelligence can still render 0 CURRENT because its earlier
+     reconciliation runs before the journal/package pair is simultaneously ready.
+
+   Rules:
+   - Journal is truth: only a REAL journal row Atlas 4/4 + NØX + Aerith may heal memory.
+   - Never fabricate historical CURRENT records.
+   - Book/STOP never creates a local CURRENT analytical record.
+   - Reconciliation is idempotent by analytical fingerprint.
+   - Book remains read-only; mirror polling is faster and visibility/online resume
+     requests only public/read-only data. No Bridge/Ollama is added to Book.
+   - Binance report provenance distinguishes direct WebSocket from direct REST.
+   ============================================================ */
+
+const ATLAS_CURRENT_MEMORY_384_RETRY_DELAYS = Object.freeze([80, 350, 900, 2200, 5000]);
+let atlasCurrentMemory384RetryTimers = [];
+
+function atlasCurrentMemoryNormalizeFingerprint384(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  return raw.startsWith("sha256:") ? raw : `sha256:${raw}`;
+}
+
+function atlasCurrentMemoryJournalCandidate384() {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
+  const pkg = atlasSharedSynthesisState?.package || null;
+  const packageFpRaw = typeof atlasCurrentMemoryPackageFingerprint34 === "function"
+    ? atlasCurrentMemoryPackageFingerprint34(pkg)
+    : String(pkg?.fingerprint || "").trim();
+  const packageFp = atlasCurrentMemoryNormalizeFingerprint384(packageFpRaw);
+  if (!pkg || !packageFp) return null;
+
+  const journal = typeof atlasCurrentJournalRead33 === "function" ? atlasCurrentJournalRead33() : [];
+  const row = [...journal].reverse().find(item =>
+    atlasCurrentMemoryNormalizeFingerprint384(item?.fingerprint) === packageFp
+    && Number(item?.atlas_reports || 0) >= 4
+    && item?.nox === true
+    && item?.aerith === true
+  );
+  if (!row) return null;
+
+  return { pkg, row, packageFpRaw: packageFpRaw || packageFp, packageFp };
+}
+
+function atlasCurrentMemoryRecordFromJournal384() {
+  const candidate = atlasCurrentMemoryJournalCandidate384();
+  if (!candidate) return null;
+  const { pkg, row, packageFpRaw } = candidate;
+  const syntheticCurrent = {
+    schema: typeof ATLAS_CURRENT_STATE_SCHEMA !== "undefined" ? ATLAS_CURRENT_STATE_SCHEMA : "atlas_current_state",
+    status: "CURRENT",
+    fingerprint: packageFpRaw,
+    generated_at: row.snapshot_at || pkg?.snapshot_at || pkg?.generated_at || null,
+    promoted_at: row.completed_at || pkg?.generated_at || new Date().toISOString(),
+    direct_count: Number(row.direct_count || pkg?.snapshot?.strict_contract?.sources?.binance?.direct_pairs || 0),
+    derived_count: Number(row.derived_count || pkg?.snapshot?.strict_contract?.sources?.binance?.derived_pairs || 0),
+    expected_count: 5,
+    atlas_reports: 4,
+    aerith_conclusion: true,
+    model: row.model || "gpt-oss:20b-32k",
+    recovered_from_journal_384: true
+  };
+  try { return atlasCurrentMemoryRecordFromCurrent34(syntheticCurrent, pkg); }
+  catch (_) { return null; }
+}
+
+function atlasCurrentMemoryReconcile384(options = {}) {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) {
+    return { changed:false, skipped:"book-readonly", records:typeof readAutoMemory === "function" ? readAutoMemory() : [] };
+  }
+
+  let result = null;
+  try { result = atlasCurrentMemoryReconcile34({ silent:true, noRender:true }); } catch (_) {}
+
+  if (!result?.record) {
+    const record = atlasCurrentMemoryRecordFromJournal384();
+    if (record) {
+      try { result = atlasCurrentMemoryUpsert34(record); }
+      catch (_) { result = null; }
+    }
+  }
+
+  if (result?.record && options.render !== false) {
+    queueMicrotask(() => {
+      try { atlasMemoryLedgerRender34(); } catch (_) {}
+      try { atlasMemoryIntelligenceRender(); } catch (_) {}
+      try { renderSharedMemory(); } catch (_) {}
+      try { renderDecisionBoard(); } catch (_) {}
+      try { atlasDecisionWorkspaceRender33(); } catch (_) {}
+    });
+  }
+  return result || { changed:false, records:typeof readAutoMemory === "function" ? readAutoMemory() : [] };
+}
+
+function atlasCurrentMemorySchedule384(reason = "runtime") {
+  atlasCurrentMemory384RetryTimers.forEach(timer => window.clearTimeout(timer));
+  atlasCurrentMemory384RetryTimers = ATLAS_CURRENT_MEMORY_384_RETRY_DELAYS.map(delay => window.setTimeout(() => {
+    const result = atlasCurrentMemoryReconcile384({ render:true });
+    if (result?.record) {
+      atlasCurrentMemory384RetryTimers.forEach(timer => window.clearTimeout(timer));
+      atlasCurrentMemory384RetryTimers = [];
+    }
+  }, delay));
+  return reason;
+}
+
+// Journal-first healing: as soon as CURRENT #N is really written, reconcile its
+// analytical memory record. The upsert remains idempotent by fingerprint.
+const atlasCurrentJournalWrite384Base = atlasCurrentJournalWrite33;
+atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite384(records) {
+  const saved = atlasCurrentJournalWrite384Base(records);
+  if (saved?.length) atlasCurrentMemorySchedule384("journal-write");
+  return saved;
+};
+
+// Heal after local creation and after IndexedDB restore/import activation.
+const atlasSharedSynthesisBuildAndStore384Base = atlasSharedSynthesisBuildAndStore;
+atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore384(snapshot, fingerprint) {
+  const pkg = atlasSharedSynthesisBuildAndStore384Base(snapshot, fingerprint);
+  if (pkg) atlasCurrentMemorySchedule384("synthesis-build");
+  return pkg;
+};
+
+const atlasSharedSynthesisActivate384Base = atlasSharedSynthesisActivate;
+atlasSharedSynthesisActivate = function atlasSharedSynthesisActivate384(pkg, source) {
+  const clean = atlasSharedSynthesisActivate384Base(pkg, source);
+  if (clean) atlasCurrentMemorySchedule384(`synthesis-${String(source || "activate")}`);
+  return clean;
+};
+
+// Report truth: 5/5 direct can be a safe mix of direct WebSocket and direct REST.
+// This changes only provenance wording, never qualification counts.
+const atlasBuildStrictFactContractCore384Base = atlasBuildStrictFactContractCore;
+atlasBuildStrictFactContractCore = function atlasBuildStrictFactContractCore384(...args) {
+  const contract = atlasBuildStrictFactContractCore384Base(...args);
+  try {
+    const rows = Array.isArray(contract?.canonical_top5?.assets) ? contract.canonical_top5.assets : [];
+    const restUsed = rows.filter(row => /REST direct/i.test(String(row?.source || ""))).length;
+    const directCount = Number(contract?.sources?.binance?.direct_pairs || 0);
+    const derivedCount = Number(contract?.sources?.binance?.derived_pairs || 0);
+    if (directCount === 5 && derivedCount === 0 && restUsed > 0 && contract?.sources?.binance) {
+      contract.sources.binance.source = `Binance direct EUR · ${5 - restUsed} WebSocket + ${restUsed} REST direct`;
+      contract.sources.binance.transport_mix = {
+        websocket_direct: 5 - restUsed,
+        rest_direct: restUsed,
+        derived: 0
+      };
+    }
+  } catch (_) {}
+  return contract;
+};
+
+// Transformer Book: keep data reading responsive without adding local compute.
+// Mirror checks become 20 s (constant above), plus immediate read-only catch-up
+// when connectivity returns or the tab becomes visible.
+window.addEventListener("online", () => {
+  try {
+    if (typeof atlasBookMirrorObserver36 === "function" && atlasBookMirrorObserver36()) {
+      void atlasBookMirrorFetch36({ reason:"online-384" });
+      void atlasExchangeRefreshDirectRest383({ force:true });
+    }
+  } catch (_) {}
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  try {
+    if (typeof atlasBookMirrorObserver36 === "function" && atlasBookMirrorObserver36()) {
+      void atlasBookMirrorFetch36({ reason:"visibility-384" });
+      void atlasExchangeRefreshDirectRest383({ force:true });
+    }
+  } catch (_) {}
+});
+
+// Boot self-heal: fixes an already-closed 38.3 CURRENT journal entry without a click.
+window.setTimeout(() => atlasCurrentMemorySchedule384("boot-384"), 700);
