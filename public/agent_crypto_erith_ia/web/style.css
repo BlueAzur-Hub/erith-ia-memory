@@ -23956,8 +23956,8 @@ html[data-atlas-market-domain="metals"]
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "33.1";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-33.1";
+  --atlas-asset-build: "34.0";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-34.0";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25478,4 +25478,22 @@ html[data-atlas-market-domain="metals"]
 }
 .atlas-local-response-panel[data-atlas-response-view="conclusion"] #atlasLocalResponseMeta{
   overflow-wrap:anywhere;
+}
+
+
+/* ============================================================
+   BUILD 34.0 — CURRENT MEMORY LEDGER
+   ============================================================ */
+.atlas-memory-ledger-34 {
+  position: relative;
+  border-color: rgba(92, 236, 190, .34) !important;
+}
+.atlas-memory-ledger-34 > em.pill {
+  display: inline-flex;
+  width: max-content;
+  margin-top: .5rem;
+  font-style: normal;
+}
+.atlas-memory-intelligence[data-state="ready"] .atlas-memory-ledger-34 {
+  box-shadow: inset 0 0 0 1px rgba(92, 236, 190, .08);
 }
