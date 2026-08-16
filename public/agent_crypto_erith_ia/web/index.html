@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="34.0" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-34.1" />
+  <meta name="atlas-build" content="34.2" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-34.2" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 34.1</title>
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 34.2</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-34.1" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-34.2" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -63,9 +63,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 34.1"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 34.2"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 34.1</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 34.2</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -80,7 +80,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 34.1</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 34.2</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2031,7 +2031,7 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 34.1</b><small>Automation Lock · CURRENT Memory Ledger · Book One-Shot · Decision Workspace</small></article>
+                  <article><span>Interface</span><b>Build 34.2</b><small>Automation Lock · CURRENT Memory Ledger · Book One-Shot · Decision Workspace</small></article>
                   <article><span>Control Center</span><b>V2.3.2R5</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
                   <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.9.5 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">gpt-oss:20b-32k · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
@@ -2167,7 +2167,7 @@
 
 
 
-      <details class="atlas-decision-detail" id="atlasDecisionBoardDetails">
+      <details class="atlas-decision-detail" id="atlasDecisionBoardDetails" open>
         <summary>Détails Atlas · mouvements, anomalies, catégories et contexte News</summary>
         <div class="atlas-decision-detail-body">
       <div class="decision-board-grid" id="decisionBoardGrid">
@@ -2315,11 +2315,25 @@
                 <div class="atlas-book-readonly-head">
                   <div>
                     <p class="eyebrow">SHARED READ-ONLY KNOWLEDGE · RYZEN → BOOK</p>
-                    <h5 id="atlasBookReadOnlyTitle">Transférer la dernière analyse sans faire calculer le Transformer Book</h5>
-                    <p>Les IndexedDB de deux PC ne se synchronisent pas entre elles. Le transfert sûr reste un export JSON Book depuis le Ryzen, puis un import sur le Book ; l’import est ensuite conservé dans l’IndexedDB du Book.</p>
+                    <h5 id="atlasBookReadOnlyTitle">Transfert guidé Ryzen → Transformer Book</h5>
+                    <p>Deux PC ne partagent pas leur IndexedDB. Le transfert reste volontaire et lisible : le Ryzen exporte un fichier JSON après un CURRENT, puis le Book l’importe en STOP / lecture seule. Aucune synchronisation cachée.</p>
                   </div>
                   <span class="pill warn" id="atlasBookReadOnlyBadge">En attente</span>
                 </div>
+                <div class="atlas-book-transfer-guide-342" id="atlasBookTransferGuide342" aria-label="Étapes du transfert Ryzen vers Transformer Book">
+                  <article data-step="1">
+                    <span>ÉTAPE 1 · RYZEN</span>
+                    <b>Après un CURRENT terminé</b>
+                    <small>Cliquer une fois sur « 1 · Exporter JSON vers le Book ». Le navigateur télécharge le paquet de lecture seule.</small>
+                  </article>
+                  <div class="atlas-book-transfer-arrow-342" aria-hidden="true">→</div>
+                  <article data-step="2">
+                    <span>ÉTAPE 2 · BOOK</span>
+                    <b>STOP / lecture seule</b>
+                    <small>Cliquer sur « 2 · Charger l’export Ryzen », choisir le JSON, puis « 3 · Lire la synthèse Aerith ».</small>
+                  </article>
+                </div>
+                <p class="atlas-book-transfer-role-342" id="atlasBookTransferRoleGuide342">Détection du rôle de ce poste…</p>
                 <div class="atlas-book-readonly-grid">
                   <article><span>Rôle de ce poste</span><b id="atlasBookReadOnlyRole">—</b><small id="atlasBookReadOnlyRoleDetail">Production ou STOP/lecture seule.</small></article>
                   <article><span>Dictionnaire permanent</span><b id="atlasBookReadOnlyDictionary">Disponible</b><small>Ne dépend ni d’Aerith ni d’une conclusion locale.</small></article>
@@ -2329,9 +2343,9 @@
                 </div>
                 <div class="atlas-book-readonly-actions">
                   <button type="button" id="btnAtlasBookOpenDictionary">Ouvrir le dictionnaire</button>
-                  <button type="button" id="btnAtlasBookExport">Exporter vers le Book</button>
-                  <button type="button" id="btnAtlasBookImport">Charger un export Ryzen</button>
-                  <button type="button" id="btnAtlasBookReadSynthesis" disabled>Lire la synthèse Aerith importée</button>
+                  <button type="button" id="btnAtlasBookExport">1 · Exporter JSON vers le Book</button>
+                  <button type="button" id="btnAtlasBookImport">2 · Charger l’export Ryzen</button>
+                  <button type="button" id="btnAtlasBookReadSynthesis" disabled>3 · Lire la synthèse Aerith</button>
                 </div>
                 <p id="atlasBookReadOnlyStatus">Lecture seule prête · aucune synchronisation cachée entre appareils.</p>
               </section>
@@ -2646,7 +2660,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 34.1 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 34.2 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3801,7 +3815,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 34.1</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 34.2</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3811,6 +3825,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-34.1"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-34.2"></script>
 </body>
 </html>

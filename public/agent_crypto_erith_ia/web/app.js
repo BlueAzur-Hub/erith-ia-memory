@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "34.1",
+  build: "34.2",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1367,7 +1367,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 34.1 AUTOMATION LOCK · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 34.2 OPERATOR CLARITY · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12110,7 +12110,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 34.1",
+  interface: "Build 34.2",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12290,6 +12290,10 @@ function atlasBookReadOnlyKnowledgeRefresh() {
   if (!root) return null;
   const role = typeof atlasDeviceComputeRoleRead === "function" ? atlasDeviceComputeRoleRead() : "production";
   const observer = role === ATLAS_DEVICE_COMPUTE_ROLES?.OBSERVER;
+  root.dataset.transferRole = observer ? "book" : "ryzen";
+  setText(document.getElementById("atlasBookTransferRoleGuide342"), observer
+    ? "CE POSTE = TRANSFORMER BOOK · Étape normale : 2 · Charger l’export Ryzen, puis 3 · Lire la synthèse Aerith. Aucun calcul local."
+    : "CE POSTE = RYZEN · Après CURRENT : 1 · Exporter JSON vers le Book. Ensuite déplacer ce fichier sur le Transformer Book.");
   const pkg = atlasSharedSynthesisState?.package || null;
   const source = atlasSharedSynthesisState?.source || "";
   const memory = typeof atlasMemoryIntelligenceCompute === "function" ? atlasMemoryIntelligenceCompute() : null;
@@ -12309,7 +12313,7 @@ function atlasBookReadOnlyKnowledgeRefresh() {
   } else {
     setText(document.getElementById("atlasBookReadOnlySynthesis"), "Aucune synthèse Book");
     setText(document.getElementById("atlasBookReadOnlySynthesisDetail"), observer
-      ? "Sur le Ryzen : Exporter vers le Book. Ici : Charger un export Ryzen."
+      ? "Sur le Ryzen : 1 · Exporter JSON vers le Book. Ici : 2 · Charger l’export Ryzen."
       : "Une synthèse sera créée après le prochain CURRENT complet.");
   }
 
@@ -12329,8 +12333,8 @@ function atlasBookReadOnlyKnowledgeRefresh() {
   if (readButton) {
     readButton.disabled = !pkg?.conclusion?.answer;
     readButton.textContent = pkg?.conclusion?.answer
-      ? (atlasSharedSynthesisIsRyzenHandoff(pkg) ? "Lire la synthèse Aerith importée" : "Lire la synthèse Aerith conservée")
-      : "Lire la synthèse Aerith importée";
+      ? (atlasSharedSynthesisIsRyzenHandoff(pkg) ? "3 · Lire la synthèse Aerith importée" : "3 · Lire la synthèse Aerith conservée")
+      : "3 · Lire la synthèse Aerith";
   }
   root.dataset.state = pkg ? "ready" : observer ? "observer" : "waiting";
   const badge = document.getElementById("atlasBookReadOnlyBadge");
@@ -12342,7 +12346,7 @@ function atlasBookReadOnlyKnowledgeRefresh() {
     ? `${observer ? "Lecture seule" : "Production"} · synthèse conservée dans l’IndexedDB de ce navigateur · aucune synchronisation cachée.`
     : observer
       ? "Book en STOP : dictionnaire permanent disponible ; charge un export Ryzen pour consulter sa dernière synthèse sans calcul local."
-      : "Ryzen en production : après CURRENT, utilise « Exporter vers le Book » pour transférer la synthèse au poste lecture seule.");
+      : "Ryzen en production : après CURRENT, utilise « 1 · Exporter JSON vers le Book », puis importe ce fichier sur le Book avec « 2 · Charger l’export Ryzen ».");
   return { role, observer, package: !!pkg, memory };
 }
 
@@ -40114,7 +40118,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "34.1";
+const ATLAS_BUILD = "34.2";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -42850,7 +42854,7 @@ window.setTimeout(() => {
 
 
 /* ============================================================
-   34.1 — AUTOMATION LOCK · ZERO-CLICK CURRENT CADENCE · BOOK ONE-SHOT
+   34.2 — OPERATOR CLARITY · DECISION BOARD OPEN · GUIDED BOOK HANDOFF
    Goals:
    - no operator click required for normal Ryzen production
    - one CURRENT maximum per canonical public market snapshot
