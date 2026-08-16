@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "32.1",
+  build: "33.0",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1302,7 +1302,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "32.1",
+    build: ATLAS_BUILD === "33.0",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1326,7 +1326,9 @@ function atlasRcStaticAudit() {
     diagnostic_bundle: typeof atlasDiagnosticBundlePayload === "function",
     top5_direction_truth: typeof atlasTop5DirectionCounts === "function",
     memory_intelligence: typeof atlasMemoryIntelligenceCompute === "function"
-      && typeof atlasMemoryIntelligenceRender === "function"
+      && typeof atlasMemoryIntelligenceRender === "function",
+    multi_collector_operator_console: typeof atlasMultiCollectorOperatorCompute === "function"
+      && typeof atlasMultiCollectorOperatorRender === "function"
   };
 
   return {
@@ -1365,7 +1367,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 32.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 33.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12108,7 +12110,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 32.1",
+  interface: "Build 33.0",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -37875,6 +37877,7 @@ function saveAutoSnapshot() {
       writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
       queueMicrotask(renderMemoryTruth);
       queueMicrotask(atlasMemoryIntelligenceRender);
+      queueMicrotask(atlasMultiCollectorOperatorRender);
       return updated;
     }
   }
@@ -37883,6 +37886,7 @@ function saveAutoSnapshot() {
   const finalSnapshot = saved.find(record => record.snapshot_id === snapshot.snapshot_id) || snapshot;
   queueMicrotask(renderMemoryTruth);
   queueMicrotask(atlasMemoryIntelligenceRender);
+  queueMicrotask(atlasMultiCollectorOperatorRender);
   return finalSnapshot;
 }
 
@@ -38225,7 +38229,7 @@ function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConf
   renderMemoryTruth();
   atlasRenderMemoryCoverage();
   atlasMemoryIntelligenceRender();
-}
+ try { atlasMultiCollectorOperatorRender(); } catch (_) {} }
 
 function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
 }
@@ -40024,7 +40028,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "32.1";
+const ATLAS_BUILD = "33.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -41129,6 +41133,187 @@ els.btnAutoToggle?.addEventListener("click", toggleAutoReader);
 
 els.btnAutoNow?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" }); refreshMarketOnly({ reason: "manual-auto-reader" }); });
 
+
+/* ============================================================
+   33.0 — MULTI-COLLECTOR & OPERATOR CONSOLE
+   Additive layer: reads already stored memory and local role only.
+   It never claims that a collector is online and never changes the
+   Atlas → NØX → Aerith pipeline unless the operator explicitly uses
+   the existing device-role control through "Aligner le rôle du poste".
+   ============================================================ */
+const ATLAS_OPERATOR_PROFILE_KEY = "agent_crypto_operator_profile_v1";
+const ATLAS_OPERATOR_ROLES = Object.freeze({ OWNER:"owner", OPERATOR:"operator", READER:"reader" });
+const ATLAS_MULTI_COLLECTOR_WINDOW_MS = 20 * 60 * 1000;
+const ATLAS_MULTI_COLLECTOR_TOP5 = Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
+
+function atlasOperatorProfileSanitizeAlias(value) {
+  return String(value || "").replace(/[<>\\]/g, "").replace(/\s+/g, " ").trim().slice(0, 40) || "Opérateur local";
+}
+function atlasOperatorProfileRead() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(ATLAS_OPERATOR_PROFILE_KEY) || "null");
+    const role = Object.values(ATLAS_OPERATOR_ROLES).includes(parsed?.role) ? parsed.role : ATLAS_OPERATOR_ROLES.OWNER;
+    return { alias: atlasOperatorProfileSanitizeAlias(parsed?.alias), role, saved_at: parsed?.saved_at || null };
+  } catch (_) { return { alias:"Opérateur local", role:ATLAS_OPERATOR_ROLES.OWNER, saved_at:null }; }
+}
+function atlasOperatorRoleLabel(role) {
+  return role === ATLAS_OPERATOR_ROLES.OPERATOR ? "Opérateur autorisé" : role === ATLAS_OPERATOR_ROLES.READER ? "Lecture seule" : "Propriétaire local";
+}
+function atlasOperatorProfileWrite() {
+  const alias = atlasOperatorProfileSanitizeAlias(document.getElementById("atlasOperatorAlias")?.value);
+  const rawRole = String(document.getElementById("atlasOperatorRole")?.value || "owner");
+  const role = Object.values(ATLAS_OPERATOR_ROLES).includes(rawRole) ? rawRole : ATLAS_OPERATOR_ROLES.OWNER;
+  const profile = { alias, role, saved_at:new Date().toISOString(), local_only:true, authentication:false };
+  try { localStorage.setItem(ATLAS_OPERATOR_PROFILE_KEY, JSON.stringify(profile)); } catch (_) {}
+  atlasMultiCollectorOperatorRender();
+  return profile;
+}
+function atlasMultiCollectorRecordTime(record) {
+  const raw = typeof atlasMemoryRecordTime === "function" ? atlasMemoryRecordTime(record) : (record?.saved_at || record?.source_time || record?.created_at || null);
+  const time = raw ? Date.parse(raw) : NaN;
+  return Number.isFinite(time) ? time : 0;
+}
+function atlasMultiCollectorCompute() {
+  const raw = typeof readAutoMemory === "function" ? readAutoMemory() : [];
+  const records = typeof atlasDistinctMarketMemory === "function" ? atlasDistinctMarketMemory(raw) : raw;
+  const grouped = new Map();
+  for (const record of records || []) {
+    const id = String(record?.collector_id || "local-legacy");
+    if (!grouped.has(id)) grouped.set(id, []);
+    grouped.get(id).push(record);
+  }
+  const collectors = [...grouped.entries()].map(([id, rows]) => {
+    const ordered = [...rows].sort((a,b)=>atlasMultiCollectorRecordTime(a)-atlasMultiCollectorRecordTime(b));
+    const latest = ordered[ordered.length-1] || null;
+    const time = atlasMultiCollectorRecordTime(latest);
+    const github = !!(latest?.imported_from_github || String(latest?.collector_type || "").includes("github"));
+    return { id, count:ordered.length, latest, time, github, collector_type:String(latest?.collector_type || "local_browser") };
+  }).sort((a,b)=>b.time-a.time);
+  const newest = collectors.reduce((max,row)=>Math.max(max,row.time),0);
+  const comparable = collectors.filter(row=>newest && row.time && newest-row.time <= ATLAS_MULTI_COLLECTOR_WINDOW_MS);
+  const assets = ATLAS_MULTI_COLLECTOR_TOP5.map(symbol => {
+    const rows = comparable.map(row => {
+      const asset = typeof atlasMemoryIntelligenceAsset === "function" ? atlasMemoryIntelligenceAsset(row.latest, symbol) : null;
+      const price = Number(asset?.price_eur);
+      return Number.isFinite(price) && price > 0 ? { collector:row.id, price } : null;
+    }).filter(Boolean);
+    if (rows.length < 2) return { symbol, ready:false, count:rows.length, spread:null, state:"insufficient" };
+    const prices = rows.map(row=>row.price);
+    const mean = prices.reduce((a,b)=>a+b,0)/prices.length;
+    const spread = mean ? ((Math.max(...prices)-Math.min(...prices))/mean)*100 : null;
+    return { symbol, ready:Number.isFinite(spread), count:rows.length, spread, state:Number.isFinite(spread) && spread <= 0.5 ? "coherent" : "divergent" };
+  });
+  const readyAssets = assets.filter(row=>row.ready);
+  const maxSpread = readyAssets.length ? Math.max(...readyAssets.map(row=>row.spread)) : null;
+  const consensus = comparable.length < 2 || !readyAssets.length
+    ? { state:"insufficient", label:"Insuffisante", detail:"Deux collecteurs comparables minimum." }
+    : maxSpread <= 0.5
+      ? { state:"coherent", label:"Cohérente", detail:`${comparable.length} collecteurs · écart Top 5 max ${maxSpread.toFixed(3)} %` }
+      : { state:"divergent", label:"Divergence", detail:`${comparable.length} collecteurs · écart Top 5 max ${maxSpread.toFixed(3)} %` };
+  return { records, collectors, comparable, assets, newest, consensus };
+}
+function atlasMultiCollectorOperatorCompute() {
+  return { profile:atlasOperatorProfileRead(), memory:atlasMultiCollectorCompute(), deviceRole:typeof atlasDeviceComputeRoleRead === "function" ? atlasDeviceComputeRoleRead() : "unknown", localCollector:typeof getCollectorId === "function" ? getCollectorId() : "local" };
+}
+function atlasMultiCollectorAgeLabel(time, newest) {
+  if (!time) return "date inconnue";
+  const base = newest || Date.now();
+  const minutes = Math.max(0, Math.round((base-time)/60000));
+  if (minutes < 1) return "trace la plus récente";
+  if (minutes < 60) return `${minutes} min derrière la trace la plus récente`;
+  const hours = Math.round(minutes/60);
+  return `${hours} h derrière la trace la plus récente`;
+}
+function atlasMultiCollectorOperatorRender() {
+  const root = document.getElementById("atlasMultiCollectorOperator");
+  if (!root) return null;
+  const data = atlasMultiCollectorOperatorCompute();
+  const { profile, memory, deviceRole, localCollector } = data;
+  const aliasInput = document.getElementById("atlasOperatorAlias");
+  const roleInput = document.getElementById("atlasOperatorRole");
+  if (aliasInput && document.activeElement !== aliasInput) aliasInput.value = profile.alias;
+  if (roleInput && document.activeElement !== roleInput) roleInput.value = profile.role;
+  setText(document.getElementById("atlasOperatorProfileStatus"), `${profile.alias} · ${atlasOperatorRoleLabel(profile.role)}`);
+  setText(document.getElementById("atlasOperatorProfileDetail"), profile.saved_at ? `Profil local sauvegardé ${new Date(profile.saved_at).toLocaleString("fr-FR")} · aucune authentification distante.` : "Profil par défaut local · aucune authentification distante.");
+  setText(document.getElementById("atlasMultiCollectorLocalId"), localCollector || "—");
+  setText(document.getElementById("atlasMultiCollectorLocalDetail"), "Identifiant technique conservé dans ce Firefox.");
+  setText(document.getElementById("atlasMultiCollectorCount"), String(memory.collectors.length));
+  setText(document.getElementById("atlasMultiCollectorCountDetail"), `${memory.records.length} snapshot(s) distinct(s) au total.`);
+  setText(document.getElementById("atlasMultiCollectorComparable"), String(memory.comparable.length));
+  setText(document.getElementById("atlasMultiCollectorComparableDetail"), memory.comparable.length >= 2 ? "Traces situées dans la même fenêtre de 20 min." : "Une seconde trace collecteur proche dans le temps est nécessaire.");
+  setText(document.getElementById("atlasMultiCollectorConsensus"), memory.consensus.label);
+  setText(document.getElementById("atlasMultiCollectorConsensusDetail"), memory.consensus.detail);
+  const production = deviceRole === ATLAS_DEVICE_COMPUTE_ROLES?.PRODUCTION;
+  setText(document.getElementById("atlasMultiCollectorDeviceRole"), production ? "PRODUCTION" : "STOP · lecture seule");
+  setText(document.getElementById("atlasMultiCollectorDeviceRoleDetail"), profile.role === ATLAS_OPERATOR_ROLES.READER && production ? "Profil lecture seule mais poste encore en Production : utilise « Aligner le rôle du poste » si c’est volontaire." : profile.role !== ATLAS_OPERATOR_ROLES.READER && !production ? "Profil de travail producteur/opérateur mais poste en STOP : aucun calcul local ne partira." : "Profil de travail et rôle calcul cohérents.");
+  const badge = document.getElementById("atlasMultiCollectorBadge");
+  if (badge) { badge.textContent = memory.consensus.state === "coherent" ? "Concordance mémoire" : memory.consensus.state === "divergent" ? "Divergence à vérifier" : `${memory.collectors.length} collecteur(s) mémoire`; badge.className = `pill ${memory.consensus.state === "coherent" ? "ok" : "warn"}`; }
+  const assetsRoot = document.getElementById("atlasMultiCollectorAssets");
+  if (assetsRoot) {
+    assetsRoot.replaceChildren();
+    for (const row of memory.assets) {
+      const article=document.createElement("article"); article.dataset.state=row.state;
+      const b=document.createElement("b"); b.textContent=row.symbol;
+      const span=document.createElement("span"); span.textContent=row.ready ? `${row.spread.toFixed(3)} % d’écart` : `${row.count}/2 traces`;
+      const small=document.createElement("small"); small.textContent=row.ready ? `${row.count} collecteurs · ${row.state === "coherent" ? "cohérent" : "à vérifier"}` : "Comparaison insuffisante";
+      article.append(b,span,small); assetsRoot.appendChild(article);
+    }
+  }
+  const list=document.getElementById("atlasMultiCollectorList");
+  if (list) {
+    list.replaceChildren();
+    if (!memory.collectors.length) list.textContent="Aucune trace collecteur disponible.";
+    else memory.collectors.forEach(row=>{
+      const article=document.createElement("article");
+      const recent=memory.newest && row.time && memory.newest-row.time<=ATLAS_MULTI_COLLECTOR_WINDOW_MS; article.dataset.recency=recent?"recent":"aged";
+      const b=document.createElement("b"); b.textContent=row.id;
+      const span=document.createElement("span"); span.textContent=`${row.count} snapshot(s) · ${row.github ? "GitHub/import" : row.collector_type}`;
+      const small=document.createElement("small"); small.textContent=`Dernière trace ${row.time ? new Date(row.time).toLocaleString("fr-FR") : "inconnue"} · ${atlasMultiCollectorAgeLabel(row.time,memory.newest)} · aucune présence en ligne déduite.`;
+      article.append(b,span,small); list.appendChild(article);
+    });
+  }
+  const output=document.getElementById("atlasMultiCollectorOutput");
+  if (output) output.textContent=[
+    `ATLAS MULTI-COLLECTOR / OPERATOR — ${ATLAS_RELEASE}`,"",
+    `Profil local : ${profile.alias} · ${atlasOperatorRoleLabel(profile.role)}.`,
+    `Rôle calcul du poste : ${production ? "PRODUCTION" : "STOP / lecture seule"}.`,
+    `Collecteur local : ${localCollector}.`,"",
+    `Snapshots distincts : ${memory.records.length}.`,
+    `Collecteurs présents en mémoire : ${memory.collectors.length}.`,
+    `Collecteurs comparables (20 min) : ${memory.comparable.length}.`,
+    `Concordance Top 5 : ${memory.consensus.label} · ${memory.consensus.detail}`,"",
+    "RÈGLE DE VÉRITÉ",
+    "Une trace mémoire prouve seulement qu’un snapshot a été observé/importé. Elle ne prouve jamais que la machine correspondante est actuellement en ligne.",
+    "Aucun rôle local affiché ici ne remplace une authentification forte sur un futur backend privé."
+  ].join("\n");
+  root.dataset.state=memory.collectors.length ? "ready" : "waiting";
+  return data;
+}
+function atlasOperatorApplyDeviceRole() {
+  const profile=atlasOperatorProfileRead();
+  if (typeof atlasDeviceComputeSetRole !== "function") return false;
+  const target=profile.role === ATLAS_OPERATOR_ROLES.READER ? ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER : ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
+  atlasDeviceComputeSetRole(target);
+  atlasMultiCollectorOperatorRender();
+  return true;
+}
+function atlasOperatorHandoffMarkdown() {
+  const data=atlasMultiCollectorOperatorCompute();
+  const lines=["# Agent-Crypto — Handoff opérateur / multi-collecteurs","",`- Build : ${ATLAS_BUILD}`,`- Généré : ${new Date().toISOString()}`,`- Alias local : ${data.profile.alias}`,`- Profil de travail : ${atlasOperatorRoleLabel(data.profile.role)}`,`- Rôle calcul du poste : ${data.deviceRole}`,`- Collecteur local : ${data.localCollector}`,`- Snapshots distincts : ${data.memory.records.length}`,`- Collecteurs en mémoire : ${data.memory.collectors.length}`,`- Collecteurs comparables : ${data.memory.comparable.length}`,`- Concordance Top 5 : ${data.memory.consensus.label} · ${data.memory.consensus.detail}`,"","## Dernières traces","",...(data.memory.collectors.length?data.memory.collectors.map(row=>`- ${row.id} · ${row.count} snapshot(s) · ${row.time?new Date(row.time).toISOString():"date inconnue"} · ${row.github?"GitHub/import":row.collector_type}`):["- Aucune trace collecteur."]),"","## Règles","","- Ce fichier ne contient aucune clé API, aucun wallet, aucun mot de passe.","- Une trace mémoire ne prouve pas qu’une machine est actuellement en ligne.","- Le profil opérateur local n’est pas une authentification distante.","- Validation humaine uniquement avant toute décision ou action financière réelle."];
+  return lines.join("\n");
+}
+function atlasOperatorExportHandoff() {
+  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  downloadTextFile(`agent_crypto_operator_handoff_${stamp}.md`,"text/markdown;charset=utf-8",atlasOperatorHandoffMarkdown());
+}
+function atlasMultiCollectorOperatorInit() {
+  document.getElementById("btnAtlasOperatorSave")?.addEventListener("click", atlasOperatorProfileWrite);
+  document.getElementById("btnAtlasOperatorApplyDevice")?.addEventListener("click", atlasOperatorApplyDeviceRole);
+  document.getElementById("btnAtlasOperatorExport")?.addEventListener("click", atlasOperatorExportHandoff);
+  window.addEventListener("atlas:device-role", atlasMultiCollectorOperatorRender);
+  return atlasMultiCollectorOperatorRender();
+}
+
 els.btnSaveCollectorId?.addEventListener("click", () => { setCollectorId(els.collectorIdInput?.value); renderSharedMemory(); renderAutoReader();
 });
 
@@ -41302,6 +41487,8 @@ atlasSafeBoot("memory truth render", renderMemoryTruth);
 atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
 
 atlasSafeBoot("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
+
+atlasSafeBoot("Multi-Collector & Operator Console 33.0", atlasMultiCollectorOperatorInit);
 
 atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
