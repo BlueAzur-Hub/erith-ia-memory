@@ -971,7 +971,7 @@
     $("#matrixStep").textContent = `${String(state.step + 1).padStart(2, "0")} / 08`;
     $("#matrixState").textContent = finalAudit().ready ? "PRÊT" : (state.step < 6 ? "CRÉATION" : "SOURCES");
     const image = $("#matrixImage");
-    image.src = currentVisual();
+    image.src = state.profileId === "creator" && !state.visualUrl ? "assets/themes/aerith_10_creatrice_home_vault.webp" : currentVisual();
     image.hidden = !currentVisual();
     $("#railProfileName").textContent = state.identity.name;
   }
