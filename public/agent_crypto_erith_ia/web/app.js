@@ -1281,7 +1281,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.2.0",
+  build: "30.2.1",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1300,7 +1300,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.2.0",
+    build: ATLAS_BUILD === "30.2.1",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1358,7 +1358,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.2.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.2.1 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1747,14 +1747,14 @@ function atlasCurrentSyncFromLiveGate(reason = "live-gate") {
 
 function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
   if (!state) return;
-  const host = document.getElementById("atlasLocalDialoguePanel") || document.querySelector("main");
+  const host = document.getElementById("atlasCurrentAnalysisBannerMount");
   if (!host) return;
   let banner = document.getElementById("atlasCurrentAnalysisBanner");
   if (!banner) {
     banner = document.createElement("div");
     banner.id = "atlasCurrentAnalysisBanner";
     banner.style.cssText = "margin:10px 0;padding:10px 14px;border:1px solid rgba(120,220,255,.32);border-radius:12px;background:rgba(4,20,31,.88);font-size:.92rem;line-height:1.35";
-    host.insertAdjacentElement("afterbegin", banner);
+    host.appendChild(banner);
   }
 
   const status = String(state.status || "");
@@ -12024,7 +12024,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.2.0",
+  interface: "Build 30.2.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -16288,7 +16288,7 @@ function basketStatus(coins) { if (!coins.length) return { label: "À charger", 
 }
 
 /* ============================================================
-   30.2.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   30.2.1 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
    Per-browser role. Market data remain live in observer mode, while
    Atlas/Aerith/Ollama calls and Bridge health polling are disabled.
    ============================================================ */
@@ -39301,7 +39301,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.2.0";
+const ATLAS_BUILD = "30.2.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
