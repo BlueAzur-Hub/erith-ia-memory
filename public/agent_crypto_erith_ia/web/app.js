@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "33.1",
+  build: "34.1",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1302,7 +1302,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "33.1",
+    build: ATLAS_BUILD === ATLAS_RC_CONTRACT.build,
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1367,7 +1367,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 33.1 BOOK READ-ONLY SYNTHESIS · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 34.1 AUTOMATION LOCK · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12110,7 +12110,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 33.1",
+  interface: "Build 34.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12669,6 +12669,7 @@ function atlasBuildCryptoPageSnapshotCore() {
         live_ok: !!state.liveOk,
         main_source: state.mainSource || null,
         market_timestamp: state.timestamp || null,
+        market_snapshot_id: state.sourceLock?.snapshotId || state.dataBroker?.market?.snapshotId || state.dataBroker?.marketFrame?.id || null,
         diagnostics: sourceStatus
       },
       binance_top5: {
@@ -17370,6 +17371,7 @@ function atlasStrictContradictions(contract) {
 
 function atlasBuildStrictFactContractCore(period, chart, chartResult, comparisonIds, chartTruth) {
   const market = {
+    snapshot_id: state.sourceLock?.snapshotId || state.dataBroker?.market?.snapshotId || state.dataBroker?.marketFrame?.id || null,
     source: state.dataBroker?.market?.source || "CoinGecko",
     mode: state.dataBroker?.market?.mode || null,
     status: state.dataBroker?.market?.status || null,
@@ -17841,7 +17843,7 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
   };
   if (title) title.textContent = labels[phase] || labels.idle;
   if (detail) detail.textContent = message || (phase === "done"
-    ? "Les prix live continuent ; Atlas/Aerith ne repartent pas sans nouvelle action opérateur."
+    ? "Les prix live continuent ; Atlas/Aerith restent au repos jusqu’au prochain snapshot canonique qualifié ou à une relance opérateur explicite."
     : "Un seul snapshot figé est utilisé pour les rapports et la conclusion.");
   if (stateNode) stateNode.textContent = phase === "done" ? "REPOS" : phase === "history" ? "HISTORIQUE" : phase === "observer" ? "STOP POSTE" : phase.toUpperCase();
   return true;
@@ -18397,7 +18399,7 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
     atlasLocalReportsState.deferredRetryDelayMs = 0;
     atlasLocalReportsState.deferredRetryRequestedAt = 0;
     atlasLocalReportsSetSuiteStatus(
-      "Cycle terminé · Atlas/Aerith au repos · les prix live continuent · relance uniquement sur action opérateur.",
+      "Cycle terminé · Atlas/Aerith au repos · les prix live continuent · attente du prochain snapshot canonique qualifié.",
       "ready"
     );
     return false;
@@ -18966,10 +18968,10 @@ async function atlasLocalConclusionRun(options = {}) {
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
-    atlasAnalysisProgressRender(4, "done", "Synthèse CURRENT enregistrée · moteur GPT-OSS au repos · prix live toujours actifs · aucune seconde boucle automatique.");
+    atlasAnalysisProgressRender(4, "done", "Synthèse CURRENT enregistrée · moteur GPT-OSS au repos · prix live toujours actifs · prochain cycle uniquement sur nouveau snapshot canonique qualifié.");
     atlasLocalDialogueSetConnection(
       true,
-      `Chaîne terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée · MOTEUR LOCAL AU REPOS. Les prix live continuent sans nouveau cycle automatique.`
+      `Chaîne terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée · MOTEUR LOCAL AU REPOS. Les prix live continuent ; un nouveau CURRENT partira seulement sur un nouveau snapshot canonique qualifié.`
     );
     return true;
   } catch (error) {
@@ -40112,7 +40114,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "34.0";
+const ATLAS_BUILD = "34.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -42610,8 +42612,8 @@ function atlasCurrentMemoryRecordFromCurrent34(current = atlasCurrentStateRead()
     source_time: completedAt,
     market_generated_at: completedAt,
     source_market_generated_at: sourceTime,
-    source_market_snapshot_id: base?.market_snapshot_id || null,
-    market_snapshot_id: base?.market_snapshot_id || null,
+    source_market_snapshot_id: pkg?.snapshot?.strict_contract?.market?.snapshot_id || base?.market_snapshot_id || null,
+    market_snapshot_id: pkg?.snapshot?.strict_contract?.market?.snapshot_id || base?.market_snapshot_id || null,
     market_source_mode: pkg?.analytical_state?.market?.mode || base?.market_source_mode || null,
     assets,
     current_truth: {
@@ -42844,4 +42846,267 @@ window.setTimeout(() => {
   document.getElementById("btnAtlasMemoryReconcile34")?.addEventListener("click", atlasMemoryCurrentReconcileManual34);
   atlasCurrentMemoryScheduleReconcile34();
   try { atlasMemoryLedgerRender34(); } catch (_) {}
+}, 0);
+
+
+/* ============================================================
+   34.1 — AUTOMATION LOCK · ZERO-CLICK CURRENT CADENCE · BOOK ONE-SHOT
+   Goals:
+   - no operator click required for normal Ryzen production
+   - one CURRENT maximum per canonical public market snapshot
+   - a genuinely new canonical snapshot may open the next cycle automatically
+   - CURRENT memory reconciliation is silent and immediate after persistence
+   - Transformer Book can become persistent STOP/read-only once, then stay quiet
+   - manual buttons remain diagnostics/explicit overrides, never prerequisites
+   Protected stack: Control Center V2.3.2R5 · Bridge V1.9.5 · gpt-oss:20b-32k
+   ============================================================ */
+
+const ATLAS_AUTOMATION_341_LAST_CURRENT_MARKET_KEY = "agent_crypto_automation_341_last_current_market_snapshot";
+const ATLAS_AUTOMATION_341_PENDING_MARKET_KEY = "agent_crypto_automation_341_pending_market_snapshot";
+const ATLAS_AUTOMATION_341_BOOK_INIT_KEY = "agent_crypto_automation_341_book_one_shot_v1";
+
+function atlasAutomation341CleanId(value) {
+  return String(value || "").trim();
+}
+
+function atlasAutomation341SnapshotId(snapshot = null) {
+  return atlasAutomation341CleanId(
+    snapshot?.strict_contract?.market?.snapshot_id
+    || snapshot?.raw_context?.source_status?.market_snapshot_id
+    || state?.sourceLock?.snapshotId
+    || state?.dataBroker?.market?.snapshotId
+    || state?.dataBroker?.marketFrame?.id
+    || ""
+  );
+}
+
+function atlasAutomation341ReadLastCurrentMarketId() {
+  try { return atlasAutomation341CleanId(localStorage.getItem(ATLAS_AUTOMATION_341_LAST_CURRENT_MARKET_KEY)); }
+  catch (_) { return ""; }
+}
+
+function atlasAutomation341WriteLastCurrentMarketId(value) {
+  const id = atlasAutomation341CleanId(value);
+  if (!id) return false;
+  try {
+    localStorage.setItem(ATLAS_AUTOMATION_341_LAST_CURRENT_MARKET_KEY, id);
+    localStorage.removeItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY);
+    return true;
+  } catch (_) { return false; }
+}
+
+function atlasAutomation341RememberPendingMarket(value) {
+  const id = atlasAutomation341CleanId(value);
+  if (!id) return false;
+  try { localStorage.setItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY, id); return true; }
+  catch (_) { return false; }
+}
+
+function atlasAutomation341ReadPendingMarket() {
+  try { return atlasAutomation341CleanId(localStorage.getItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY)); }
+  catch (_) { return ""; }
+}
+
+function atlasAutomation341IsBusy() {
+  return !!(
+    atlasLocalReportsState?.running
+    || atlasLocalConclusionState?.running
+    || atlasLocalDialogueState?.busy
+    || atlasLocalReportsState?.transactionFingerprint
+  );
+}
+
+function atlasAutomation341ManualReason(reason = "") {
+  return typeof atlasLocalReportsManualCycleReason === "function"
+    && atlasLocalReportsManualCycleReason(reason);
+}
+
+function atlasAutomation341SetRestStatus(marketId = "") {
+  const shortId = atlasAutomation341CleanId(marketId).slice(0, 34);
+  atlasLocalReportsSetSuiteStatus(
+    shortId
+      ? `CURRENT fermé · moteur au repos · snapshot ${shortId} déjà analysé · attente automatique d’un nouveau snapshot canonique.`
+      : "CURRENT fermé · moteur au repos · attente automatique d’un nouveau snapshot canonique.",
+    "ready"
+  );
+}
+
+// Persist the canonical source snapshot consumed by a successfully closed CURRENT.
+const atlasLocalReportsCloseAutomaticCycle341Base = atlasLocalReportsCloseAutomaticCycle;
+atlasLocalReportsCloseAutomaticCycle = function atlasLocalReportsCloseAutomaticCycle341(fingerprint = "", reason = "current-complete") {
+  const completedSnapshot = atlasLocalReportsState?.lastCompletedSnapshot || atlasLocalDialogueState?.lastSnapshot || null;
+  const completedMarketId = atlasAutomation341SnapshotId(completedSnapshot);
+  const result = atlasLocalReportsCloseAutomaticCycle341Base(fingerprint, reason);
+
+  if (String(reason || "") === "current-complete" && completedMarketId) {
+    atlasAutomation341WriteLastCurrentMarketId(completedMarketId);
+  }
+
+  // If a newer canonical market snapshot arrived while Atlas/Aerith was still
+  // working, do not lose it when STOP-ONCE closes the old transaction.
+  if (String(reason || "") === "current-complete" && atlasDeviceComputeAllowed()) {
+    const liveId = atlasAutomation341SnapshotId();
+    const pendingId = atlasAutomation341ReadPendingMarket();
+    const candidate = pendingId || liveId;
+    if (candidate && candidate !== completedMarketId) {
+      atlasAutomation341RememberPendingMarket(candidate);
+      window.setTimeout(() => {
+        const newest = atlasAutomation341SnapshotId() || atlasAutomation341ReadPendingMarket();
+        const lastDone = atlasAutomation341ReadLastCurrentMarketId();
+        if (!newest || newest === lastDone || atlasAutomation341IsBusy() || !atlasDeviceComputeAllowed()) return;
+        atlasLocalReportsOpenAutomaticCycle("new-canonical-snapshot");
+        try { localStorage.removeItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY); } catch (_) {}
+        atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 1000 });
+      }, 2200);
+    }
+  }
+  return result;
+};
+
+// Gate all automatic scheduling by canonical market snapshot identity.
+// Manual operator reasons intentionally bypass this gate.
+const atlasLocalReportsScheduleAutomatic341Base = atlasLocalReportsScheduleAutomatic;
+atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic341(reason = "snapshot", options = {}) {
+  const nextReason = String(reason || "snapshot");
+  if (!atlasDeviceComputeAllowed()) {
+    atlasLocalReportsClearAutoTimer();
+    return false;
+  }
+  if (atlasAutomation341ManualReason(nextReason)) {
+    return atlasLocalReportsScheduleAutomatic341Base(nextReason, options);
+  }
+
+  const marketId = atlasAutomation341SnapshotId();
+  const lastDone = atlasAutomation341ReadLastCurrentMarketId();
+
+  if (marketId && lastDone && marketId === lastDone) {
+    atlasLocalReportsClearAutoTimer();
+    atlasLocalReportsState.deferredRetryReason = "";
+    atlasLocalReportsState.deferredRetryDelayMs = 0;
+    atlasLocalReportsState.deferredRetryRequestedAt = 0;
+    atlasAutomation341SetRestStatus(marketId);
+    return false;
+  }
+
+  if (marketId && lastDone && marketId !== lastDone) {
+    if (atlasAutomation341IsBusy()) {
+      atlasAutomation341RememberPendingMarket(marketId);
+      return false;
+    }
+    if (atlasLocalReportsState.automaticCycleClosed) {
+      atlasLocalReportsOpenAutomaticCycle("new-canonical-snapshot");
+    }
+  }
+
+  return atlasLocalReportsScheduleAutomatic341Base(nextReason, options);
+};
+
+// After every successful market refresh, decide silently whether the canonical
+// public snapshot is new enough to deserve a fresh CURRENT. Same-snapshot live
+// Binance ticks never reopen Atlas.
+const atlasAfterLivecheck341Base = atlasAfterLivecheck;
+atlasAfterLivecheck = function atlasAfterLivecheck341(options = {}) {
+  const result = atlasAfterLivecheck341Base(options);
+  try {
+    const marketId = atlasAutomation341SnapshotId();
+    const lastDone = atlasAutomation341ReadLastCurrentMarketId();
+    if (!atlasDeviceComputeAllowed() || !marketId) return result;
+
+    if (lastDone && marketId === lastDone) {
+      atlasLocalReportsClearAutoTimer();
+      atlasAutomation341SetRestStatus(marketId);
+      return result;
+    }
+
+    if (lastDone && marketId !== lastDone) {
+      if (atlasAutomation341IsBusy()) {
+        atlasAutomation341RememberPendingMarket(marketId);
+      } else {
+        atlasLocalReportsOpenAutomaticCycle("new-canonical-snapshot");
+        atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 900 });
+      }
+    }
+  } catch (_) {}
+  return result;
+};
+
+// Silent deterministic reconciliation. The manual button stays available as a
+// diagnostic only, but it is never required for normal operation.
+const atlasSharedSynthesisBuildAndStore341Base = atlasSharedSynthesisBuildAndStore;
+atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore341(snapshot, fingerprint) {
+  const result = atlasSharedSynthesisBuildAndStore341Base(snapshot, fingerprint);
+  try {
+    const reconciled = atlasCurrentMemoryReconcile34({ silent:true });
+    if (reconciled?.changed || reconciled?.record) {
+      atlasMemoryIntelligenceRender();
+      renderDecisionBoard();
+      atlasMemoryLedgerRender34();
+    }
+  } catch (_) {}
+  return result;
+};
+
+function atlasAutomation341BookIdentity() {
+  let collector = "";
+  let profileRole = "";
+  try { collector = String(typeof getCollectorId === "function" ? getCollectorId() : "").toLowerCase(); } catch (_) {}
+  try { profileRole = String(typeof atlasOperatorProfileRead === "function" ? atlasOperatorProfileRead()?.role || "" : "").toLowerCase(); } catch (_) {}
+  return {
+    collector,
+    profileRole,
+    book: /transformer[\s_-]*book/.test(collector) || profileRole === "reader"
+  };
+}
+
+function atlasAutomation341BookOneShot() {
+  const identity = atlasAutomation341BookIdentity();
+  if (!identity.book) return false;
+  let initialized = false;
+  try { initialized = localStorage.getItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY) === "1"; } catch (_) {}
+  if (!initialized) {
+    try {
+      localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER);
+      localStorage.setItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY, "1");
+    } catch (_) {}
+  }
+  // Respect later explicit operator changes once the one-shot has been applied.
+  if (!initialized || atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER) {
+    atlasDeviceComputeApply({ restart:false });
+  }
+  return true;
+}
+
+// If the collector is named Transformer Book after initial boot, apply STOP once.
+const setCollectorId341Base = setCollectorId;
+setCollectorId = function setCollectorId341(value) {
+  const id = setCollectorId341Base(value);
+  try {
+    if (/transformer[\s_-]*book/.test(String(id || "").toLowerCase())) {
+      localStorage.removeItem(ATLAS_AUTOMATION_341_BOOK_INIT_KEY);
+      atlasAutomation341BookOneShot();
+    }
+  } catch (_) {}
+  return id;
+};
+
+function atlasAutomation341UiPolish() {
+  const reconcile = document.getElementById("btnAtlasMemoryReconcile34");
+  if (reconcile) {
+    reconcile.textContent = "Diagnostic · Réconcilier CURRENT";
+    reconcile.title = "Non requis en fonctionnement normal : la réconciliation est automatique.";
+  }
+  const detail = document.getElementById("atlasCurrentTruthEngine33Detail");
+  if (detail && /STOP-ONCE/i.test(detail.textContent || "")) {
+    detail.textContent = "STOP-ONCE actif · nouveau cycle uniquement sur nouveau snapshot canonique qualifié.";
+  }
+  const status = document.getElementById("atlasDeviceComputeStatus");
+  if (status && atlasAutomation341BookIdentity().book && !atlasDeviceComputeAllowed()) {
+    status.textContent = "LECTURE SEULE · STOP persistant sur ce Transformer Book · aucun appel Atlas/Aerith/Ollama.";
+  }
+}
+
+window.setTimeout(() => {
+  try { atlasAutomation341BookOneShot(); } catch (_) {}
+  try { atlasAutomation341UiPolish(); } catch (_) {}
+  try { atlasCurrentMemoryReconcile34({ silent:true }); } catch (_) {}
 }, 0);
