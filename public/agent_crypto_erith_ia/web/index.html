@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="30.0.12" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-30.0.12" />
-  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 30.0.12</title>
+  <meta name="atlas-build" content="30.1.0" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-30.1.0" />
+  <title>Agent-Crypto @erith.IA — Market Core V2.0-Alpha · Build 30.1.0</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-30.0.12" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-30.1.0" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -62,9 +62,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version installée : Market Core V2.0-Alpha, Build 30.0.12"
+            aria-label="Version installée : Market Core V2.0-Alpha, Build 30.1.0"
           >
-            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 30.0.12</span>
+            <span id="atlasVersionControlText">Market Core V2.0-Alpha · Build 30.1.0</span>
           </button>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
           <span class="pill warn atlas-metals-live-status"
@@ -79,7 +79,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 30.0.12</span>
+          <span id="atlasV2ReleaseBadge">Market Core V2.0-Alpha · Build 30.1.0</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -1915,6 +1915,30 @@
               <button type="button" data-atlas-local-summary="contradictions">Contrôler les contradictions</button>
             </div>
 
+
+            <section class="atlas-analysis-progress" id="atlasAnalysisProgressCard" data-phase="idle" aria-labelledby="atlasAnalysisProgressTitle">
+              <div class="atlas-analysis-progress-head">
+                <div>
+                  <span class="eyebrow">PIPELINE LOCAL · UN SEUL CYCLE CURRENT</span>
+                  <b id="atlasAnalysisProgressTitle">Atlas-10 prêt à analyser</b>
+                </div>
+                <div class="atlas-analysis-progress-readout">
+                  <strong id="atlasAnalysisProgressPercent">0 %</strong>
+                  <span id="atlasAnalysisProgressState">IDLE</span>
+                </div>
+              </div>
+              <div class="atlas-analysis-progress-track" aria-hidden="true"><span id="atlasAnalysisProgressBar"></span></div>
+              <div class="atlas-analysis-progress-nodes" aria-label="Étapes de la chaîne Atlas, NØX et Aerith">
+                <span data-atlas-progress-node="1"><i>01</i><b>Marché</b></span>
+                <span data-atlas-progress-node="2"><i>02</i><b>Top 5</b></span>
+                <span data-atlas-progress-node="3"><i>03</i><b>Math Core</b></span>
+                <span data-atlas-progress-node="4"><i>04</i><b>Contradictions</b></span>
+                <span data-atlas-progress-node="nox"><i>NØX</i><b>No-FOMO</b></span>
+                <span data-atlas-progress-node="aerith"><i>A</i><b>Aerith</b></span>
+              </div>
+              <p id="atlasAnalysisProgressDetail">Un seul snapshot figé est utilisé pour les rapports et la conclusion.</p>
+            </section>
+
             <div class="atlas-local-dialogue-grid">
               <div class="atlas-local-question-panel">
                 <label for="atlasLocalQuestion">Question libre</label>
@@ -1944,7 +1968,7 @@
                   </div>
                 </div>
                 <div class="atlas-local-response-content" id="atlasLocalResponse"><p class="atlas-local-response-empty">La conclusion Aerith-10 Crypto apparaîtra automatiquement ici lorsque les quatre rapports Atlas-10 seront prêts.</p></div>
-                <small id="atlasLocalResponseMeta">Lecture seule · conclusion après validation des quatre rapports · aucune exécution réelle</small>
+                <small id="atlasLocalResponseMeta">Lecture seule · conclusion après 4/4 CURRENT du même fingerprint · aucune validation humaine requise</small>
               </article>
             </div>
 
@@ -2042,13 +2066,13 @@
                   <span class="pill warn" id="atlasStableStackBadge">En attente</span>
                 </div>
                 <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 30.0.12</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
-                  <article><span>Control Center</span><b>V2.3.2R4</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
-                  <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.9.4 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
+                  <article><span>Interface</span><b>Build 30.1.0</b><small>Deterministic Market Frame · Price Truth · Scanner Coherence</small></article>
+                  <article><span>Control Center</span><b>V2.3.2R5</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
+                  <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.9.5 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
                   <article><span>Ollama</span><b id="atlasStableStackOllama">gpt-oss:20b-32k · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
                   <article><span>Poste actuel</span><b id="atlasStableStackStation">Poste de lecture</b><small id="atlasStableStackStationDetail">La synthèse reste consultable sans Bridge.</small></article>
                   <article><span>Rapports Atlas</span><b id="atlasStableStackReports">0/4</b><small>Chaîne séquentielle protégée.</small></article>
-                  <article><span>Conclusion Aerith</span><b id="atlasStableStackConclusion">Absente</b><small>Disponible après validation 4/4.</small></article>
+                  <article><span>Conclusion Aerith</span><b id="atlasStableStackConclusion">Absente</b><small>Disponible automatiquement après 4/4 CURRENT.</small></article>
                   <article><span>Mémoire locale</span><b id="atlasStableStackMemory">IndexedDB · en attente</b><small>Persistance navigateur, sans publication GitHub.</small></article>
                 </div>
                 <p class="atlas-stable-stack-status" id="atlasStableStackStatus" role="status" aria-live="polite">Pile canonique reconnue · aucune publication GitHub · aucune action financière.</p>
@@ -2363,7 +2387,7 @@
             Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
           </p>
         </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 30.0.12 · Math Core V3</span>
+        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 30.1.0 · Math Core V3</span>
       </div>
 
       <div class="situation-grid">
@@ -3518,7 +3542,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 30.0.12</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 30.1.0</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3528,6 +3552,6 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-30.0.12"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-30.1.0"></script>
 </body>
 </html>

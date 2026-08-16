@@ -1280,9 +1280,9 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "30.0.12",
-  control_center: "V2.3.2R4",
-  bridge: "V1.9.4",
+  build: "30.1.0",
+  control_center: "V2.3.2R5",
+  bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
     "5/5 Binance directes stables avant Atlas",
@@ -1298,10 +1298,10 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === "30.0.12",
+    build: ATLAS_BUILD === "30.1.0",
     stable_stack:
-      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R4"
-      && ATLAS_STABLE_STACK?.bridge === "V1.9.4"
+      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
+      && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
       && ATLAS_STABLE_STACK?.model === "gpt-oss:20b-32k",
     direct_gate_constants:
       ATLAS_DIRECT_5_5_STABLE_MS >= 10000
@@ -1311,7 +1311,12 @@ function atlasRcStaticAudit() {
     product_watchlist: typeof atlasProductWatchlistIntelligence === "function",
     product_news: typeof atlasProductNewsReaction === "function",
     deferred_retry: typeof atlasLocalReportsQueueDeferredRetry === "function",
-    timer_cleanup: typeof atlasLocalReportsClearAutoTimer === "function"
+    timer_cleanup: typeof atlasLocalReportsClearAutoTimer === "function",
+    stop_once: typeof atlasLocalReportsCloseAutomaticCycle === "function",
+    current_truth_freeze: typeof atlasCurrentPreserveClosedAnalysis === "function",
+    graphic_progress: typeof atlasAnalysisProgressRender === "function",
+    strict_current_reports: typeof atlasLocalReportsProgressForFingerprint === "function",
+    aerith_report_reread_contract: typeof atlasLocalConclusionBridgeContract === "function"
   };
 
   return {
@@ -1350,7 +1355,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 30.0.12 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 30.1.0 · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -1665,6 +1670,30 @@ function atlasCurrentPromoteIfComplete(snapshot, reports, conclusion) {
 }
 
 
+function atlasCurrentClosedAnalysisFingerprint() {
+  if (!atlasLocalReportsState?.automaticCycleClosed) return "";
+  return String(atlasLocalReportsState.automaticCycleFingerprint || "").trim();
+}
+
+function atlasCurrentPreserveClosedAnalysis(snapshot, previous, reason = "live-market-advanced") {
+  const closedFp = atlasCurrentClosedAnalysisFingerprint();
+  if (!closedFp || !previous || previous.status !== "CURRENT" || previous.fingerprint !== closedFp) return null;
+  const q = atlasCurrentQualification(snapshot);
+  const preserved = {
+    ...previous,
+    status: "CURRENT",
+    fingerprint: closedFp,
+    updated_at: new Date().toISOString(),
+    live_fingerprint: q.fingerprint || null,
+    live_generated_at: snapshot?.generated_at || new Date().toISOString(),
+    live_changed_since_current: !!q.fingerprint && q.fingerprint !== closedFp,
+    reason
+  };
+  atlasCurrentStateWrite(preserved);
+  atlasCurrentRenderBanner(preserved);
+  return preserved;
+}
+
 function atlasCurrentSyncFromLiveGate(reason = "live-gate") {
   try {
     const snapshot = atlasBuildCryptoPageSnapshot();
@@ -1673,6 +1702,8 @@ function atlasCurrentSyncFromLiveGate(reason = "live-gate") {
     const q = atlasCurrentQualification(snapshot);
     const readiness = atlasLocalReportsReadiness(snapshot);
     const previous = atlasCurrentStateRead();
+    const preservedClosed = atlasCurrentPreserveClosedAnalysis(snapshot, previous, reason);
+    if (preservedClosed) return preservedClosed;
 
     let status = previous?.status || "WAITING_5_5_DIRECT";
     const sameFingerprint = !!(
@@ -1725,7 +1756,10 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
 
   const status = String(state.status || "");
   if (status === "CURRENT") {
-    banner.innerHTML = `<b>Analyse courante</b> · Atlas 4/4 + NØX + Aerith cohérents · ${String(state.fingerprint || "").slice(0,18)}…`;
+    const liveNote = state.live_changed_since_current
+      ? " · marché live plus récent disponible, analyse CURRENT conservée jusqu’à une nouvelle relance opérateur"
+      : " · snapshot analysé figé";
+    banner.innerHTML = `<b>Analyse CURRENT</b> · Atlas 4/4 + NØX + Aerith cohérents · ${String(state.fingerprint || "").slice(0,18)}…${liveNote}`;
     banner.style.borderColor = "rgba(76,220,160,.55)";
   } else if (status === "ATLAS_RUNNING") {
     banner.innerHTML = `<b>Analyse automatique</b> · Atlas ${Number(state.completed || 0)}/4 · snapshot figé ${String(state.fingerprint || "").slice(0,18)}… · supervision Bridge + chaîne active en arrière-plan`;
@@ -1759,7 +1793,8 @@ function atlasCurrentRenderBanner(state = atlasCurrentStateRead()) {
 }
 
 function atlasCurrentConclusionIsStale(conclusion, snapshot) {
-  const currentFp = atlasCurrentFingerprint(snapshot);
+  const frozenFp = atlasCurrentClosedAnalysisFingerprint();
+  const currentFp = frozenFp || atlasCurrentFingerprint(snapshot);
   const conclusionFp = atlasCurrentConclusionFingerprint(conclusion);
   return !!currentFp && !!conclusionFp && currentFp !== conclusionFp;
 }
@@ -1792,6 +1827,13 @@ function atlasCurrentOnSnapshot(snapshot) {
   const q = atlasCurrentQualification(snapshot);
   const state = atlasCurrentStateRead();
   if (!q.fingerprint) return;
+
+  const preservedClosed = atlasCurrentPreserveClosedAnalysis(snapshot, state, "live-market-advanced");
+  if (preservedClosed) {
+    atlasSharedSynthesisReconcileCurrent();
+    atlasCurrentDecorateConclusion(snapshot, atlasLocalDialogueState?.conclusionResponse || null);
+    return;
+  }
 
   atlasSharedSynthesisReconcileCurrent();
 
@@ -11975,10 +12017,10 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 30.0.12",
-  controlCenter: "V2.3.2R4",
-  bridge: "V1.9.4",
-  bridgeNumeric: "1.9.4",
+  interface: "Build 30.1.0",
+  controlCenter: "V2.3.2R5",
+  bridge: "V1.9.5",
+  bridgeNumeric: "1.9.5",
   model: "gpt-oss:20b-32k"
 });
 
@@ -12089,8 +12131,7 @@ const ATLAS_PEDAGOGY_GLOSSARY = Object.freeze({
 function atlasPedagogyV2TermsFromText(textValue = "") {
   const source = String(textValue || "").toLowerCase();
   return Object.keys(ATLAS_PEDAGOGY_GLOSSARY)
-    .filter(term => source.includes(term.toLowerCase()))
-    .slice(0, 24);
+    .filter(term => source.includes(term.toLowerCase()));
 }
 
 function atlasPedagogyV2CurrentTerms(snapshot = null) {
@@ -12115,6 +12156,42 @@ function atlasPedagogyV2GlossaryLines(terms = []) {
     .filter(Boolean);
 }
 
+function atlasPedagogyV2FullGlossaryMarkdown(snapshot = null) {
+  const terms = atlasPedagogyV2CurrentTerms(snapshot);
+  if (!terms.length) return "";
+
+  const lines = [
+    "",
+    "**12. Dictionnaire clair — termes réellement présents dans ce snapshot**",
+    "",
+    "Chaque définition ci-dessous explique le mot ; elle n’ajoute ni prix, ni prévision, ni causalité :"
+  ];
+  for (const term of terms) {
+    const definition = ATLAS_PEDAGOGY_GLOSSARY[term];
+    if (definition) lines.push(`- ${term.toUpperCase()} : ${definition}`);
+  }
+  lines.push(
+    "",
+    "**13. Comment lire l’analyse sans confondre les couches**",
+    "",
+    "- Binance LIVE : cotations directes du Target Top 5 au moment de la lecture ; ce ne sont pas des prévisions.",
+    "- CoinGecko Market Snapshot : vue large du marché ; ce n’est pas un portefeuille.",
+    "- Graphique : historique lié à sa période et à sa source ; sa forme visuelle ne prouve aucune causalité.",
+    "- Math Core : statistiques descriptives/historiques ; leurs limites et leur qualité doivent rester visibles.",
+    "- News Sentinel : contexte d’actualité avec preuve séparée de l’impact ; importance ne signifie pas causalité.",
+    "- Watchlist : actifs observés ; aucune détention n’est supposée.",
+    "- Atlas : structure les faits et contradictions. NØX : refroidit FOMO et causalités non prouvées. Aerith : synthétise et traduit.",
+    "- INFORMATION MANQUANTE reste INFORMATION MANQUANTE : aucune valeur absente n’est inventée.",
+    "",
+    "**14. Stop point analytique**",
+    "",
+    "- Arrêter l’interprétation lorsque les sources, preuves ou mesures ne soutiennent plus une conclusion.",
+    "- La chaîne Atlas → NØX → Aerith est automatique ; aucune validation humaine n’est requise pour produire la synthèse.",
+    "- Une validation humaine reste nécessaire uniquement avant une décision ou action financière réelle."
+  );
+  return lines.join("\n");
+}
+
 function atlasPedagogyV2PageBrief(snapshot) {
   const watch = state.watchlistIntelligence || (typeof atlasProductWatchlistIntelligence === "function"
     ? atlasProductWatchlistIntelligence()
@@ -12123,7 +12200,7 @@ function atlasPedagogyV2PageBrief(snapshot) {
     ? atlasProductNewsReaction()
     : null);
   const terms = atlasPedagogyV2CurrentTerms(snapshot);
-  const glossary = atlasPedagogyV2GlossaryLines(terms).slice(0, 12);
+  const glossary = atlasPedagogyV2GlossaryLines(terms);
 
   const direct = Number(snapshot?.strict_contract?.sources?.binance?.direct_pairs || 0);
   const derived = Number(snapshot?.strict_contract?.sources?.binance?.derived_pairs || 0);
@@ -16487,7 +16564,9 @@ const atlasLocalReportsState = {
   automaticCycleClosed: false,
   automaticCycleClosedAt: 0,
   automaticCycleFingerprint: "",
-  automaticCycleCloseReason: ""
+  automaticCycleCloseReason: "",
+  automaticModelRunAttempts: 0,
+  automaticModelRunMax: 2
 };
 
 function atlasLocalFinite(value) {
@@ -16831,9 +16910,17 @@ function atlasLocalReportHtml(markdown) {
   return html.join("");
 }
 
+function atlasNormalizeAnalyticalSafetyLanguage(value = "") {
+  return String(value || "")
+    .replace(/(^|\n)\s*[-*]\s*Validation humaine obligatoire\.?(?=\n|$)/gi,
+      "$1- Chaîne analytique automatique : aucune validation humaine n’est requise entre Atlas, NØX et Aerith. Validation humaine uniquement avant une décision ou action financière réelle.")
+    .replace(/(^|\n)\s*Validation humaine obligatoire\.?(?=\n|$)/gi,
+      "$1Validation humaine uniquement avant une décision ou action financière réelle ; jamais pour autoriser la synthèse Atlas → NØX → Aerith.");
+}
+
 function atlasLocalSetReport(node, markdown) {
   if (!node) return false;
-  const source = String(markdown || "").trim();
+  const source = atlasNormalizeAnalyticalSafetyLanguage(markdown).trim();
   if (!source) return false;
   node.innerHTML = atlasLocalReportHtml(source);
   if (!String(node.textContent || "").trim()) {
@@ -16978,6 +17065,59 @@ function atlasLocalReportStoreCore(mode, result, snapshot, options = {}) {
   return report;
 }
 
+function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = "") {
+  const card = document.getElementById("atlasAnalysisProgressCard");
+  if (!card) return false;
+
+  const safeCompleted = Math.max(0, Math.min(4, Number(completed) || 0));
+  const percent = (phase === "nox" || phase === "aerith" || phase === "done")
+    ? 100
+    : atlasLocalReportsProgressPercent(safeCompleted, 4);
+  card.dataset.phase = phase;
+
+  const bar = document.getElementById("atlasAnalysisProgressBar");
+  const pct = document.getElementById("atlasAnalysisProgressPercent");
+  const title = document.getElementById("atlasAnalysisProgressTitle");
+  const detail = document.getElementById("atlasAnalysisProgressDetail");
+  const stateNode = document.getElementById("atlasAnalysisProgressState");
+  if (bar) bar.style.width = `${percent}%`;
+  if (pct) pct.textContent = `${percent} %`;
+
+  document.querySelectorAll("[data-atlas-progress-node]").forEach(node => {
+    const key = String(node.dataset.atlasProgressNode || "");
+    const n = Number(key);
+    const isAtlas = Number.isFinite(n) && n >= 1 && n <= 4;
+    const isNox = key === "nox";
+    const isAerith = key === "aerith";
+    const done = isAtlas ? n <= safeCompleted
+      : isNox ? ["nox", "aerith", "done"].includes(phase)
+      : isAerith ? phase === "done"
+      : false;
+    const active = isAtlas ? phase === "atlas" && n === Math.min(4, safeCompleted + 1)
+      : isNox ? phase === "nox"
+      : isAerith ? phase === "aerith"
+      : false;
+    node.classList.toggle("is-done", done);
+    node.classList.toggle("is-active", active);
+  });
+
+  const labels = {
+    idle: "Atlas-10 prêt à analyser",
+    history: "Historique disponible · CURRENT à produire",
+    atlas: `Atlas-10 · ${safeCompleted}/4 rapports CURRENT`,
+    nox: "NØX · contrôle No-FOMO et contradictions",
+    aerith: "Aerith-10 · synthèse complète et vulgarisation",
+    done: "CURRENT validé · moteur local au repos",
+    error: "Cycle arrêté proprement · résultat incomplet"
+  };
+  if (title) title.textContent = labels[phase] || labels.idle;
+  if (detail) detail.textContent = message || (phase === "done"
+    ? "Les prix live continuent ; Atlas/Aerith ne repartent pas sans nouvelle action opérateur."
+    : "Un seul snapshot figé est utilisé pour les rapports et la conclusion.");
+  if (stateNode) stateNode.textContent = phase === "done" ? "REPOS" : phase === "history" ? "HISTORIQUE" : phase.toUpperCase();
+  return true;
+}
+
 function atlasLocalReportsSetSuiteStatus(message, tone = "idle") {
   const status = document.getElementById("atlasLocalReportsStatus");
   if (status) {
@@ -17064,6 +17204,15 @@ async function atlasLocalReportsRunAll(options = {}) {
   }
 
   const fingerprint = options.fingerprint || atlasLocalReportSnapshotFingerprint(snapshot);
+  if (options.automatic === true) {
+    atlasLocalReportsState.automaticModelRunAttempts = Number(atlasLocalReportsState.automaticModelRunAttempts || 0) + 1;
+    if (atlasLocalReportsState.automaticModelRunAttempts > Number(atlasLocalReportsState.automaticModelRunMax || 2)) {
+      atlasLocalReportsCloseAutomaticCycle(fingerprint, "atlas-run-attempt-limit");
+      atlasAnalysisProgressRender(0, "error", "Deux tentatives automatiques de génération ont déjà été effectuées · moteur arrêté pour éviter toute boucle.");
+      atlasLocalReportsSetSuiteStatus("Cycle automatique arrêté après deux tentatives de génération · relance opérateur requise.", "wait");
+      return false;
+    }
+  }
   const token = ++atlasLocalReportsState.runToken;
   atlasLocalReportsState.lastAutoAttemptFingerprint = options.automatic === true ? fingerprint : atlasLocalReportsState.lastAutoAttemptFingerprint;
   atlasLocalReportsState.lastAutoAttemptAt = Date.now();
@@ -17076,6 +17225,7 @@ async function atlasLocalReportsRunAll(options = {}) {
     transaction_fingerprint: fingerprint
   });
   atlasLocalReportsSetSuiteStatus(atlasLocalReportsProgressLabel(0, 4), "loading");
+  atlasAnalysisProgressRender(0, "atlas", "Résumé du marché en préparation · snapshot CURRENT figé.");
   setText(
     document.getElementById("atlasLocalDialogueStatus"),
     "Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 démarre automatiquement · progression 0 %."
@@ -17108,6 +17258,7 @@ async function atlasLocalReportsRunAll(options = {}) {
           `${atlasLocalReportsProgressLabel(completed, 4)} · ${label} déjà valide pour ce snapshot`,
           "loading"
         );
+        atlasAnalysisProgressRender(completed, "atlas", `${label} déjà CURRENT pour ce snapshot · poursuite sans recalcul.`);
         setText(
           document.getElementById("atlasLocalDialogueStatus"),
           `Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 ${atlasLocalReportsProgressPercent(completed, 4)} % · Aerith-10 attend automatiquement 4/4.`
@@ -17132,6 +17283,7 @@ async function atlasLocalReportsRunAll(options = {}) {
           completed += 1;
           atlasCurrentStage(snapshot, "ATLAS_RUNNING", `atlas_${mode}_ready`, { completed });
           atlasLocalReportsSetSuiteStatus(atlasLocalReportsProgressLabel(completed, 4), "loading");
+          atlasAnalysisProgressRender(completed, "atlas", `${label} terminé · ${completed}/4 rapports CURRENT.`);
           setText(
             document.getElementById("atlasLocalDialogueStatus"),
             `Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 ${atlasLocalReportsProgressPercent(completed, 4)} % · ${completed}/4 rapports prêts.`
@@ -17187,6 +17339,7 @@ async function atlasLocalReportsRunAll(options = {}) {
       }
       atlasLocalReportsOpenAll();
       document.getElementById("btnAtlasLocalConclusion")?.removeAttribute("disabled");
+      atlasAnalysisProgressRender(4, "nox", "Atlas 4/4 CURRENT · NØX contrôle FOMO, contradictions et causalités avant transmission à Aerith.");
       atlasLocalDialogueSetConnection(
         true,
         "Atlas 4/4 terminé · NØX No-FOMO validé · Aerith-10 démarre automatiquement maintenant."
@@ -17308,6 +17461,7 @@ function atlasLocalReportsOpenAutomaticCycle(reason = "") {
   atlasLocalReportsState.automaticCycleClosedAt = 0;
   atlasLocalReportsState.automaticCycleFingerprint = "";
   atlasLocalReportsState.automaticCycleCloseReason = String(reason || "manual");
+  atlasLocalReportsState.automaticModelRunAttempts = 0;
   atlasLocalConclusionState.automaticValidationRetryCount = 0;
 }
 
@@ -17542,9 +17696,11 @@ function atlasLocalReportsOpenAll() {
 }
 
 function atlasLocalReportsReadyForFingerprint(fingerprint = "") {
+  const fp = String(fingerprint || "").trim();
+  if (!fp) return false;
   return ATLAS_LOCAL_REPORT_MODES.every(mode => {
     const report = atlasLocalReportResult(mode);
-    return !!report?.answer && (!fingerprint || report.fingerprint === fingerprint);
+    return !!report?.answer && String(report.fingerprint || "") === fp;
   });
 }
 
@@ -17555,17 +17711,28 @@ function atlasLocalReportsProgressForFingerprint(fingerprint = "") {
     || atlasLocalReportsState.transactionFingerprint
     || atlasLocalReportsState.lastCompletedFingerprint
     || ""
-  );
-  const readyModes = ATLAS_LOCAL_REPORT_MODES.filter(mode => {
-    const report = atlasLocalReportResult(mode);
-    return !!report?.answer && (!fp || report.fingerprint === fp);
-  });
+  ).trim();
+  const readyModes = fp
+    ? ATLAS_LOCAL_REPORT_MODES.filter(mode => {
+        const report = atlasLocalReportResult(mode);
+        return !!report?.answer && report.fingerprint === fp;
+      })
+    : [];
   return {
     fingerprint: fp,
     completed: readyModes.length,
     total: ATLAS_LOCAL_REPORT_MODES.length,
     ready_modes: readyModes
   };
+}
+
+function atlasLocalReportsHistoricalCount(currentFingerprint = "") {
+  const currentFp = String(currentFingerprint || "").trim();
+  return ATLAS_LOCAL_REPORT_MODES.filter(mode => {
+    const report = atlasLocalReportResult(mode);
+    if (!report?.answer) return false;
+    return !currentFp || String(report.fingerprint || "") !== currentFp;
+  }).length;
 }
 
 function atlasLocalReportsProgressPercent(completed = 0, total = 4) {
@@ -17603,6 +17770,7 @@ function atlasLocalConclusionBridgeContract(result, fingerprint) {
     bridge_ok: result?.ok === true,
     profile_aerith: String(result?.profile || "").toLowerCase() === "aerith",
     source_reports_4: Number(result?.source_reports || 0) === 4,
+    reports_re_read: result?.reports_re_read === true,
     fingerprint_match: !!fingerprint && resultFingerprint === fingerprint,
     read_only: result?.read_only === true,
     model_match: actualModel === expectedModel,
@@ -17632,6 +17800,7 @@ function atlasLocalConclusionContractFailureLabel(contract) {
   }
   if (failed.includes("fingerprint_match")) return "fingerprint de conclusion différent du snapshot Atlas";
   if (failed.includes("source_reports_4")) return "la réponse ne confirme pas les quatre rapports Atlas";
+  if (failed.includes("reports_re_read")) return "le Bridge ne confirme pas la relecture réelle des quatre rapports Atlas CURRENT";
   if (failed.includes("answer_present")) return "réponse Aerith réellement vide ou trop courte";
   return `contrat Aerith incomplet : ${failed.join(", ")}`;
 }
@@ -17655,6 +17824,7 @@ function atlasLocalResponsePlaceholder(view) {
     || atlasLocalReportsState.lastCompletedFingerprint
     || "";
   const progress = atlasLocalReportsProgressForFingerprint(fingerprint);
+  const historicalCount = atlasLocalReportsHistoricalCount(fingerprint);
   const phase = atlasLocalConclusionPhase();
   const reportsReady =
     !!atlasLocalReportsState.lastCompletedFingerprint
@@ -17672,9 +17842,18 @@ function atlasLocalResponsePlaceholder(view) {
   if (phase === "ATLAS_PARTIAL") {
     return {
       eyebrow: "CONCLUSION AERITH-10 CRYPTO",
-      title: `Atlas partiel · ${progress.completed}/4 rapports prêts`,
-      body: "La synthèse Aerith reste en attente normale tant que les quatre rapports Atlas-10 du snapshot courant ne sont pas prêts.",
-      meta: "Lecture seule · reprise Atlas automatique · aucune validation manuelle requise"
+      title: `Atlas CURRENT partiel · ${progress.completed}/4 rapports prêts`,
+      body: "La synthèse Aerith reste en attente normale tant que les quatre rapports Atlas-10 du même snapshot CURRENT ne sont pas prêts.",
+      meta: historicalCount ? `Lecture seule · CURRENT ${progress.completed}/4 · ${historicalCount}/4 rapport(s) historique(s) exclus du compteur` : "Lecture seule · reprise Atlas automatique · aucune validation manuelle requise"
+    };
+  }
+
+  if (!fingerprint && historicalCount) {
+    return {
+      eyebrow: "CONCLUSION AERITH-10 CRYPTO",
+      title: `CURRENT 0/4 · historique ${historicalCount}/4 disponible`,
+      body: "Les rapports restaurés restent consultables, mais aucun rapport historique ne compte pour le snapshot CURRENT. Atlas produira quatre rapports neufs avant Aerith.",
+      meta: "Lecture seule · séparation stricte HISTORIQUE / CURRENT · aucune validation manuelle requise"
     };
   }
 
@@ -17742,7 +17921,12 @@ function atlasLocalConclusionSetBusy(busy) {
   atlasLocalConclusionState.running = !!busy;
   const button = document.getElementById("btnAtlasLocalConclusion");
   if (button) {
-    button.disabled = !!busy || !atlasLocalReportsReadyForFingerprint();
+    const currentFingerprint = String(
+      atlasLocalReportsState.lastCompletedFingerprint
+      || atlasLocalReportsState.transactionFingerprint
+      || ""
+    ).trim();
+    button.disabled = !!busy || !atlasLocalReportsReadyForFingerprint(currentFingerprint);
     button.setAttribute("aria-busy", busy ? "true" : "false");
     button.textContent = busy ? "Conclusion…" : "Régénérer";
   }
@@ -17784,6 +17968,7 @@ async function atlasLocalConclusionRun(options = {}) {
   atlasLocalConclusionState.activeFingerprint = fingerprint;
   atlasLocalConclusionState.lastAttemptFingerprint = fingerprint;
   atlasLocalConclusionState.lastAttemptAt = Date.now();
+  atlasAnalysisProgressRender(4, "aerith", "Aerith relit le snapshot CURRENT, les quatre rapports Atlas, NØX, News Sentinel, Watchlist, Math Core et contradictions.");
   atlasCurrentStage(snapshot, "AERITH_RUNNING", "aerith_conclusion_start", {
     completed: 4,
     conclusion_token: conclusionToken,
@@ -17800,9 +17985,34 @@ async function atlasLocalConclusionRun(options = {}) {
       snapshot,
       report_fingerprint: fingerprint,
       report_modes: ATLAS_LOCAL_REPORT_MODES.slice(),
+      reports: Object.fromEntries(ATLAS_LOCAL_REPORT_MODES.map(mode => {
+        const report = atlasLocalReportResult(mode);
+        return [mode, report ? {
+          mode,
+          label: report.label,
+          answer: report.answer,
+          fingerprint: report.fingerprint,
+          model: report.model,
+          time: report.time
+        } : null];
+      })),
       nox_audit: snapshot?.strict_contract?.nox_no_fomo_v1 || null,
       pedagogy_contract: snapshot?.pedagogy || null,
-      requested_reading: "whole_page_simple_detailed_expert"
+      requested_reading: "whole_page_simple_detailed_expert_full_glossary",
+      required_sections: [
+        "whole_page_reading",
+        "market_and_sources",
+        "top5",
+        "graph",
+        "math_core",
+        "news_and_watchlist",
+        "four_atlas_reports",
+        "contradictions",
+        "nox_no_fomo",
+        "plain_french_explanation",
+        "full_crypto_bank_trading_glossary",
+        "limits_and_stop_point"
+      ]
     });
 
     const conclusionSuperseded =
@@ -17834,8 +18044,12 @@ async function atlasLocalConclusionRun(options = {}) {
     }
 
     // Lexical validation is now informative, not a blocker:
-    // Bridge V1.9.2 already returns a deterministic structured conclusion contract.
-    const answer = String(result.answer || "").trim();
+    // Bridge V1.9.5 returns a deterministic conclusion contract and confirms actual rereading of the 4 Atlas CURRENT reports.
+    const bridgeAnswer = atlasNormalizeAnalyticalSafetyLanguage(result.answer || "").trim();
+    const pedagogyAppendix = atlasPedagogyV2FullGlossaryMarkdown(snapshot);
+    const answer = pedagogyAppendix
+      ? `${bridgeAnswer}\n${pedagogyAppendix}`.trim()
+      : bridgeAnswer;
     const response = {
       answer,
       profile: "aerith",
@@ -17874,6 +18088,7 @@ async function atlasLocalConclusionRun(options = {}) {
     atlasLocalConclusionState.lastFingerprint = fingerprint;
     atlasLocalResponseSelectView("conclusion");
     atlasSharedSynthesisBuildAndStore(snapshot, fingerprint);
+    atlasAnalysisProgressRender(4, "done", "Synthèse CURRENT enregistrée · moteur GPT-OSS au repos · prix live toujours actifs · aucune seconde boucle automatique.");
     atlasLocalDialogueSetConnection(
       true,
       `Chaîne terminée : Atlas 4/4 → NØX → Aerith · ${response.model} · synthèse CURRENT validée · MOTEUR LOCAL AU REPOS. Les prix live continuent sans nouveau cycle automatique.`
@@ -17915,6 +18130,7 @@ async function atlasLocalConclusionRun(options = {}) {
       } else {
         // Persistent contract/model mismatch must never heat the Ryzen forever.
         atlasLocalReportsCloseAutomaticCycle(fingerprint, "aerith-validation-stop");
+        atlasAnalysisProgressRender(4, "error", "Aerith n’a pas validé son contrat après la reprise bornée · moteur arrêté sans boucle.");
         atlasLocalReportsSetSuiteStatus(
           "Aerith non validée après la reprise automatique · moteur arrêté · corriger le Bridge/modèle puis relancer manuellement.",
           "wait"
@@ -17975,7 +18191,7 @@ async function atlasLocalConclusionRun(options = {}) {
 }
 
 function atlasLocalDialogueRender(result, label, options = {}) {
-  const answer = String(result?.answer || "").trim();
+  const answer = atlasNormalizeAnalyticalSafetyLanguage(result?.answer || "").trim();
   atlasLocalDialogueState.connected = true;
   atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
   atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
@@ -18110,16 +18326,9 @@ async function atlasLocalDialogueAsk() {
         static_audit: atlasRcStaticAudit(),
         runtime_audit: atlasRcRuntimeAudit(snapshot)
       },
+      request_scope: "question_only_no_pipeline_restart",
       requested_reading: "whole_page_simple_detailed_expert",
-      pedagogy_v2: atlasPedagogyV2QuestionContract(
-        "Produire la synthèse Aerith-10 Crypto de toute la page.",
-        snapshot
-      ),
-      release_candidate_v1: {
-        contract: ATLAS_RC_CONTRACT,
-        static_audit: atlasRcStaticAudit(),
-        runtime_audit: atlasRcRuntimeAudit(snapshot)
-      }
+      pedagogy_v2: atlasPedagogyV2QuestionContract(question, snapshot)
     });
     atlasLocalDialogueRender(result, "Réponse à la question libre");
     setText(
@@ -18730,7 +18939,7 @@ function atlasBuildNoxNoFomoAudit(contract) {
       'Une actualité ne devient jamais un signal d’achat ou de vente.',
       'Une corrélation temporelle ne prouve pas la causalité.',
       'Une donnée absente reste INFORMATION MANQUANTE.',
-      'Validation humaine obligatoire uniquement avant toute décision ou action financière réelle ; la chaîne analytique reste automatique.'
+      'Validation humaine uniquement avant toute décision ou action financière réelle ; la chaîne analytique reste automatique.'
     ]
   };
 }
@@ -30353,7 +30562,7 @@ function atlasMetalsReportBuildMarkdown(pkg) {
     "- Observation uniquement : aucune prévision, aucun ordre et aucun signal d’exécution.",
     "- Arrêter toute comparaison si les dates, devises, unités ou états de données ne sont plus cohérents.",
     "- Les données structurelles décrivent production, réserves et usages ; elles ne remplacent jamais une cotation de marché.",
-    "- Validation humaine obligatoire.",
+    "- Validation humaine uniquement avant une décision ou action financière réelle ; la lecture du rapport reste automatique.",
     "",
     "**9. Conclusion du rapport Métaux public**",
     `- ${conclusion}`
@@ -31747,8 +31956,19 @@ function atlasStableStackRenderCore() {
   atlasStableStackSetText("atlasStableStackOllamaDetail", modelDetail);
   atlasStableStackSetText("atlasStableStackStation", station);
   atlasStableStackSetText("atlasStableStackStationDetail", stationDetail);
-  atlasStableStackSetText("atlasStableStackReports", hasSynthesis ? "4/4" : "0/4");
-  atlasStableStackSetText("atlasStableStackConclusion", hasSynthesis ? "Disponible" : "Absente");
+  const currentFp = atlasSharedSynthesisCurrentFingerprint();
+  const currentProgress = atlasLocalReportsProgressForFingerprint(currentFp);
+  const historicalReports = atlasLocalReportsHistoricalCount(currentFp);
+  const synthesisHistorical = hasSynthesis && atlasSharedSynthesisIsHistorical(pkg);
+  atlasStableStackSetText(
+    "atlasStableStackReports",
+    currentProgress.completed === 4
+      ? "CURRENT 4/4"
+      : historicalReports
+        ? `CURRENT ${currentProgress.completed}/4 · H ${historicalReports}/4`
+        : `CURRENT ${currentProgress.completed}/4`
+  );
+  atlasStableStackSetText("atlasStableStackConclusion", hasSynthesis ? (synthesisHistorical ? "Historique" : "CURRENT") : "Absente");
   atlasStableStackSetText(
     "atlasStableStackMemory",
     persistenceReady
@@ -31921,7 +32141,7 @@ function atlasSharedSynthesisBuildSummaryCore(snapshot) {
     "", "**9. Limites et stop point**",
     `- ${math.limitation || "Les limites du Math Core restent applicables."}`,
     `- ${contract.stop_point?.meaning || "Arrêter l’analyse lorsque les données ne soutiennent plus une conclusion."}`,
-    "- Validation humaine obligatoire."
+    "- Chaîne Atlas → NØX → Aerith automatique ; validation humaine uniquement avant une décision ou action financière réelle."
   ].join("\n");
 }
 
@@ -31935,7 +32155,7 @@ function atlasSharedSynthesisPackageMarkdownCore(pkg) {
     `- Bridge : ${pkg?.origin?.bridge || "non déclaré"}`,
     `- Moteur : ${pkg?.origin?.provider || "local"} · ${pkg?.origin?.model || "modèle local"}`,
     `- Rapports Atlas : ${pkg?.status?.atlas_reports || "0/4"}`,
-    "- Mode : lecture seule · validation humaine", "", "## Synthèse consolidée", "",
+    "- Mode : lecture seule · chaîne analytique automatique · validation humaine uniquement avant action financière réelle", "", "## Synthèse consolidée", "",
     pkg?.summary_markdown || "Aucune synthèse.", "", "## Conclusion Aerith-10 Crypto complète", "",
     pkg?.conclusion?.answer || "Aucune conclusion conservée."
   ];
@@ -31960,8 +32180,10 @@ function atlasSharedSynthesisSetStatus(stateName, message, badgeText) {
 
 
 function atlasSharedSynthesisCurrentFingerprint() {
+  const frozenFp = atlasCurrentClosedAnalysisFingerprint();
   return String(
-    atlasAnalyticalTruthState?.currentFingerprint
+    frozenFp
+    || atlasAnalyticalTruthState?.currentFingerprint
     || atlasLocalDialogueState?.lastSnapshot?.fingerprint
     || ""
   ).trim();
@@ -32079,10 +32301,10 @@ function atlasSharedSynthesisRenderCore() {
   }
   setText(document.getElementById("atlasSharedSynthesisSnapshot"), pkg.snapshot_label || "—");
   setText(document.getElementById("atlasSharedSynthesisOrigin"), pkg.origin?.machine || "poste producteur");
-  setText(document.getElementById("atlasSharedSynthesisReports"), "4/4");
   const activePkg = atlasSharedSynthesisState.package || pkg;
   const currentFingerprint = atlasSharedSynthesisCurrentFingerprint();
   const synthesisHistorical = atlasSharedSynthesisIsHistorical(activePkg);
+  setText(document.getElementById("atlasSharedSynthesisReports"), synthesisHistorical ? "4/4 HIST." : "4/4 CURRENT");
   setText(document.getElementById("atlasSharedSynthesisConclusion"), synthesisHistorical ? "Historique" : "Disponible");
   setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
@@ -32136,7 +32358,7 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
 
     atlasLocalReportsSetSuiteStatus(
       restoredHistorical
-        ? "4/4 rapports historiques restaurés · non CURRENT pour le snapshot affiché."
+        ? "4/4 rapports historiques restaurés · CURRENT 0/4 · aucun historique ne compte dans le nouveau cycle."
         : (source === "local" ? "4/4 rapports prêts." : "4/4 rapports restaurés en lecture seule."),
       restoredHistorical ? "wait" : "ready"
     );
@@ -32144,6 +32366,14 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
     setText(
       document.getElementById("atlasLocalReportsMeta"),
       `Snapshot ${pkg.snapshot_label} · quatre rapports ${restoredHistorical ? "historiques" : (source === "local" ? "produits" : "conservés")} · lecture seule`
+    );
+
+    atlasAnalysisProgressRender(
+      restoredHistorical ? 0 : 4,
+      restoredHistorical ? "history" : "done",
+      restoredHistorical
+        ? "Quatre rapports historiques restent lisibles ; le compteur CURRENT repart de 0/4."
+        : "Quatre rapports CURRENT restaurés pour le même fingerprint."
     );
 
     if (!restoredHistorical && atlasLocalDialogueState.activeResponseView === "conclusion") {
@@ -38893,7 +39123,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "30.0.12";
+const ATLAS_BUILD = "30.1.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

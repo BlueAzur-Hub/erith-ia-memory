@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 30.0.12 — RECOVERY PUBLICATION IDENTITY + STOP-ONCE 32K
+   BUILD 30.1.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 30.0.12
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-30.0.12
+   ATLAS_ASSET_BUILD: 30.1.0
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-30.1.0
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "30.0.12";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-30.0.12";
+  --atlas-asset-build: "30.1.0";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-30.1.0";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25068,3 +25068,37 @@ html[data-atlas-market-domain="metals"]
   font-weight: 800;
   letter-spacing: 0.02em;
 }
+
+
+/* ==========================================================================
+   BUILD 30.1.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   Scoped to the local analysis chamber. No global dashboard geometry change.
+   ========================================================================== */
+.atlas-analysis-progress{
+  display:grid;gap:10px;margin:12px 0 14px;padding:14px 16px;
+  border:1px solid rgba(98,236,255,.22);border-radius:16px;
+  background:linear-gradient(135deg,rgba(7,28,43,.88),rgba(15,17,37,.84));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.atlas-analysis-progress-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.atlas-analysis-progress-head>div:first-child{display:grid;gap:4px}
+.atlas-analysis-progress-head b{color:#ffe7ad;font-size:15px}
+.atlas-analysis-progress-readout{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.atlas-analysis-progress-readout strong{color:#8ff3ff;font-size:16px}
+.atlas-analysis-progress-readout span{padding:4px 8px;border:1px solid rgba(143,243,255,.25);border-radius:999px;color:#9db4c8;font-size:9px;font-weight:900;letter-spacing:.1em}
+.atlas-analysis-progress-track{height:7px;overflow:hidden;border-radius:999px;background:rgba(95,128,156,.16);border:1px solid rgba(98,236,255,.10)}
+.atlas-analysis-progress-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#4dbbff,#61efdf,#ffe190);transition:width .32s ease}
+.atlas-analysis-progress-nodes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.atlas-analysis-progress-nodes>span{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px;min-width:0;padding:8px;border:1px solid rgba(98,236,255,.12);border-radius:11px;background:rgba(3,17,29,.58);color:#8198ad}
+.atlas-analysis-progress-nodes i{display:grid;place-items:center;min-width:27px;height:27px;padding:0 4px;border-radius:8px;border:1px solid rgba(255,216,135,.16);color:#d8c48e;font-style:normal;font-size:9px;font-weight:950}
+.atlas-analysis-progress-nodes b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+.atlas-analysis-progress-nodes>span.is-active{border-color:rgba(98,236,255,.52);background:rgba(31,119,145,.16);color:#dffaff;box-shadow:0 0 0 1px rgba(98,236,255,.06) inset}
+.atlas-analysis-progress-nodes>span.is-active i{border-color:rgba(98,236,255,.5);color:#8ff3ff}
+.atlas-analysis-progress-nodes>span.is-done{border-color:rgba(91,225,174,.28);color:#c5f8e4}
+.atlas-analysis-progress-nodes>span.is-done i{border-color:rgba(91,225,174,.38);color:#79edbd}
+.atlas-analysis-progress[data-phase="done"]{border-color:rgba(91,225,174,.34)}
+.atlas-analysis-progress[data-phase="error"]{border-color:rgba(255,153,117,.34)}
+.atlas-analysis-progress[data-phase="history"]{border-color:rgba(255,216,135,.24)}
+.atlas-analysis-progress p{margin:0;color:#9db3c7;font-size:10px;line-height:1.45}
+@media(max-width:1050px){.atlas-analysis-progress-nodes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.atlas-analysis-progress-head{align-items:flex-start;flex-direction:column}.atlas-analysis-progress-nodes{grid-template-columns:repeat(2,minmax(0,1fr))}}
