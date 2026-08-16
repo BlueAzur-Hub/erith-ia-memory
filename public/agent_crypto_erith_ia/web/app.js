@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "34.2",
+  build: "34.3",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1367,7 +1367,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
-  return `RC 34.2 OPERATOR CLARITY · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 34.3 BOOK READ-ONLY TRUTH · audit statique ${audit.pass ? "PASS" : "FAIL"} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12110,7 +12110,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 34.2",
+  interface: "Build 34.3",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12292,7 +12292,7 @@ function atlasBookReadOnlyKnowledgeRefresh() {
   const observer = role === ATLAS_DEVICE_COMPUTE_ROLES?.OBSERVER;
   root.dataset.transferRole = observer ? "book" : "ryzen";
   setText(document.getElementById("atlasBookTransferRoleGuide342"), observer
-    ? "CE POSTE = TRANSFORMER BOOK · Étape normale : 2 · Charger l’export Ryzen, puis 3 · Lire la synthèse Aerith. Aucun calcul local."
+    ? "CE POSTE = TRANSFORMER BOOK · Étape normale : 2 · Charger l’export Ryzen. La synthèse Aerith s’affiche automatiquement ; 3 sert seulement à la relire. Aucun calcul local."
     : "CE POSTE = RYZEN · Après CURRENT : 1 · Exporter JSON vers le Book. Ensuite déplacer ce fichier sur le Transformer Book.");
   const pkg = atlasSharedSynthesisState?.package || null;
   const source = atlasSharedSynthesisState?.source || "";
@@ -16943,7 +16943,7 @@ function atlasDeviceComputeApply(options = {}) {
   if (production) {
     atlasDeviceComputeSetStatus("PRODUCTION · Atlas/Aerith/Ollama autorisés sur ce poste.", "ready");
     setText(document.getElementById("atlasLocalRuntime"), atlasLocalDialogueState.connected
-      ? "Lecture seule · ollama · gpt-oss:20b-32k"
+      ? "RYZEN · ollama · gpt-oss:20b-32k · production locale"
       : "Production locale autorisée · Bridge en attente");
     if (options.restart === true) {
       atlasLocalReportsOpenAutomaticCycle("device-production-enabled");
@@ -32984,7 +32984,7 @@ function atlasSharedSynthesisNormalizePackageCore(input) {
       human_validation_required: true,
       human_validation_scope: "financial_action_only",
       analytical_chain_automatic: true,
-      current_state: input?.status?.current_state || (input?.state?.historical === true ? "HISTORICAL" : "UNRESOLVED")
+      current_state: input?.status?.current_state || (input?.state?.historical === true ? "HISTORICAL" : "CURRENT")
     },
     summary_markdown: String(input?.summary_markdown || "").replace(/\r\n?/g, "\n").trim(),
     snapshot: {
@@ -33463,6 +33463,9 @@ async function atlasSharedSynthesisImportFile(event) {
     const raw = await file.text();
     const parsed = JSON.parse(raw);
     if (operation !== atlasSharedSynthesisState.operation) return false;
+    // 34.3: a Ryzen→Book package is a READ-ONLY result. Importing it can never
+    // turn this browser into a producer or require a local Bridge/Ollama.
+    if (atlasBook343IsRyzenHandoff(parsed)) atlasBook343ForceReadOnly("ryzen-import");
     const clean = atlasSharedSynthesisActivate(parsed, "import");
     atlasSharedSynthesisSetStatus("working", "Synthèse affichée · écriture et relecture IndexedDB…", "Enregistrement");
     const saved = await atlasSharedSynthesisPersist(clean);
@@ -33470,7 +33473,12 @@ async function atlasSharedSynthesisImportFile(event) {
     atlasSharedSynthesisState.persistence = saved;
     atlasSharedSynthesisRender();
     if (saved.ok) {
-      atlasSharedSynthesisSetStatus("ready", `Import terminé · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko) · statut CURRENT/HISTORIQUE déterminé par le snapshot courant.`, "Importée");
+      atlasSharedSynthesisSetStatus("ready", `Import terminé · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko) · résultat Ryzen disponible en lecture seule.`, "Importée");
+      if (atlasBook343IsRyzenHandoff(clean)) {
+        // No third production step: after the operator selects the JSON, the
+        // imported Aerith synthesis is immediately made available/displayed.
+        try { atlasBookReadImportedSynthesis(); } catch (_) {}
+      }
     } else {
       atlasSharedSynthesisSetStatus("warning", `Import affiché · IndexedDB impossible : ${saved.error}.`, "Importée sans mémoire");
     }
@@ -39441,6 +39449,11 @@ function atlasHistoryBridgeMarkSuccess() {
 }
 
 async function atlasFetchBridgeHistory(c, days, options = {}) {
+  if (!atlasDeviceComputeAllowed()) {
+    const error = new Error("Transformer Book · aucun Bridge local : historique direct navigateur uniquement.");
+    error.name = "AtlasBookReadOnlyError";
+    throw error;
+  }
   if (!atlasHistoryBridgeCanTry()) {
     throw new Error(`Bridge historique en pause : ${atlasHistoryBridgeState.lastError || "échec récent"}`);
   }
@@ -39871,6 +39884,7 @@ function atlasScannerCollectorQuoteForCoin(coin, preset = "") {
 }
 
 async function atlasScannerCollectorFetchLatest(options = {}) {
+  if (!atlasDeviceComputeAllowed()) return false;
   if (atlasScannerCollectorRuntime.latestBusy) return false;
   atlasScannerCollectorRuntime.latestBusy = true;
   const controller = new AbortController();
@@ -39896,6 +39910,7 @@ async function atlasScannerCollectorFetchLatest(options = {}) {
 }
 
 async function atlasScannerCollectorPost(snapshot) {
+  if (!atlasDeviceComputeAllowed()) return false;
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), 14_000);
   try {
@@ -39917,6 +39932,7 @@ async function atlasScannerCollectorPost(snapshot) {
 }
 
 async function atlasScannerCollectorFlush() {
+  if (!atlasDeviceComputeAllowed()) return false;
   if (atlasScannerCollectorRuntime.busy) return false;
   if (Date.now() < Number(atlasScannerCollectorRuntime.bridgeBackoffUntil || 0)) return false;
   const pending = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_PENDING_KEY);
@@ -40118,7 +40134,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "34.2";
+const ATLAS_BUILD = "34.3";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -43113,4 +43129,159 @@ window.setTimeout(() => {
   try { atlasAutomation341BookOneShot(); } catch (_) {}
   try { atlasAutomation341UiPolish(); } catch (_) {}
   try { atlasCurrentMemoryReconcile34({ silent:true }); } catch (_) {}
+}, 0);
+
+
+/* ============================================================
+   34.3 — TRANSFORMER BOOK READ-ONLY TRUTH + HANDOFF STATE FIX
+   Ryzen remains the ONLY local AI producer.
+   Transformer Book = consultation/import only: no Bridge, no Ollama,
+   no Atlas/NØX/Aerith generation. Provider/model shown on imported data are
+   provenance of the Ryzen production, never Book runtime dependencies.
+   ============================================================ */
+
+const ATLAS_BOOK_343_ROLE_KEY = "agent_crypto_book_343_readonly_v1";
+
+function atlasBook343IsRyzenHandoff(pkg) {
+  const source = String(pkg?.handoff?.source || "").toLowerCase();
+  const exported = String(pkg?.handoff?.exported_from || "").toLowerCase();
+  const machine = String(pkg?.origin?.machine || "").toLowerCase();
+  return source === "ryzen_import" || exported === "ryzen" || /ryzen/.test(machine);
+}
+
+function atlasBook343ForceReadOnly(reason = "book") {
+  try {
+    localStorage.setItem(ATLAS_DEVICE_COMPUTE_ROLE_KEY, ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER);
+    localStorage.setItem(ATLAS_BOOK_343_ROLE_KEY, String(reason || "book"));
+  } catch (_) {}
+  try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
+  try { atlasLocalBridgeAutoStop(); } catch (_) {}
+  try { atlasExchangeStableGateCancelTimer(); } catch (_) {}
+  try { atlasDeviceComputeApply({ restart:false }); } catch (_) {}
+  return true;
+}
+
+function atlasBook343UiTruth() {
+  const observer = atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.OBSERVER;
+  const handoff = atlasBook343IsRyzenHandoff(atlasSharedSynthesisState?.package);
+  document.documentElement.dataset.atlasDeviceRole = observer ? "book-readonly" : "production";
+
+  const status = document.getElementById("atlasDeviceComputeStatus");
+  const runtime = document.getElementById("atlasLocalRuntime");
+  const bridgeBadge = document.getElementById("localBridgeStatus");
+  const bridgeDetail = document.getElementById("localBridgeDetail");
+  const localTitle = document.getElementById("local-ai-title");
+  const collapseSubtitle = document.querySelector(".atlas-local-ai-collapse .atlas-collapse-subtitle");
+  const runtimeCards = [...document.querySelectorAll("#local-ai-hub .atlas-local-runtime-grid article")];
+
+  if (observer) {
+    if (status) status.textContent = "TRANSFORMER BOOK · LECTURE SEULE · aucun Ollama · aucun Bridge · aucune génération locale.";
+    if (runtime) runtime.textContent = "BOOK · lecture seule · aucun Ollama local · résultat produit sur le Ryzen";
+    if (bridgeBadge) { bridgeBadge.textContent = "BOOK · aucun Bridge local"; bridgeBadge.className = "pill ok"; }
+    if (bridgeDetail) bridgeDetail.textContent = "Aucun Bridge ni Ollama sur ce Transformer Book. Les données marché restent lisibles ; Atlas/Aerith proviennent uniquement d’un export Ryzen.";
+    if (localTitle) localTitle.textContent = "Résultats Atlas/Aerith produits sur le Ryzen";
+    if (collapseSubtitle) collapseSubtitle.textContent = "Transformer Book · consultation/import uniquement · zéro moteur local";
+
+    const bookCards = [
+      ["Moteur local", "AUCUN", "Ollama n’est ni installé ni requis sur le Transformer Book."],
+      ["Bridge local", "AUCUN", "Le Book ne contacte pas 127.0.0.1 et ne pilote aucun modèle."],
+      ["Source IA", "RYZEN", "Atlas → NØX → Aerith sont produits sur le Ryzen puis importés ici."],
+      ["Mode du Book", "LECTURE SEULE", "Dictionnaire, mémoire et synthèse importée restent consultables sans calcul local."]
+    ];
+    runtimeCards.slice(0,4).forEach((card, index) => {
+      const row = bookCards[index];
+      if (!row) return;
+      const span=card.querySelector("span"), bold=card.querySelector("b"), small=card.querySelector("small");
+      if (span) span.textContent=row[0]; if (bold) bold.textContent=row[1]; if (small) small.textContent=row[2];
+    });
+  } else {
+    if (localTitle) localTitle.textContent = "Deux présences complémentaires";
+    if (collapseSubtitle) collapseSubtitle.textContent = "Profils locaux du Ryzen · Ollama / LM Studio / AnythingLLM";
+    const prodCards = [
+      ["Moteur principal", "Ollama · gpt-oss:20b-32k", "Modèle neutre requis uniquement sur le poste producteur Ryzen · 127.0.0.1:11434"],
+      ["Moteur alternatif", "LM Studio", "Optionnel · activation manuelle dans le Bridge du poste producteur"],
+      ["Bibliothèque optionnelle", "AnythingLLM", "RAG et documentation, non requis"],
+      ["Transformer Book", "Aucun Ollama · aucun Bridge", "Le Book importe et consulte le résultat Ryzen ; il ne produit jamais Atlas/Aerith localement."]
+    ];
+    runtimeCards.slice(0,4).forEach((card, index) => {
+      const row=prodCards[index]; if (!row) return;
+      const span=card.querySelector("span"), bold=card.querySelector("b"), small=card.querySelector("small");
+      if (span) span.textContent=row[0]; if (bold) bold.textContent=row[1]; if (small) small.textContent=row[2];
+    });
+  }
+
+  // Imported provider/model are provenance only. Never describe them as a local Book runtime.
+  if (observer && handoff) {
+    const pkg = atlasSharedSynthesisState?.package;
+    const provenance = `${pkg?.origin?.machine || "Ryzen"} · produit avec ${pkg?.origin?.model || "modèle local Ryzen"}`;
+    const note = document.getElementById("atlasSharedSynthesisNote");
+    if (note) note.textContent = `IMPORT RYZEN · lecture seule sur le Book · ${provenance} · aucun Ollama/Bridge local`;
+    const synthDetail = document.getElementById("atlasBookReadOnlySynthesisDetail");
+    if (synthDetail) synthDetail.textContent = `${provenance} · 4/4 Atlas + Aerith conservés · aucune génération sur ce Book.`;
+  }
+  return { observer, handoff };
+}
+
+// Current-state metadata: a package with complete same-fingerprint 4/4 + Aerith
+// is a completed CURRENT at its Ryzen origin. Book activation may classify it
+// historical locally, but the exported provenance must not say UNRESOLVED.
+const atlasSharedSynthesisNormalizePackage343Base = atlasSharedSynthesisNormalizePackage;
+atlasSharedSynthesisNormalizePackage = function atlasSharedSynthesisNormalizePackage343(input) {
+  const normalized = atlasSharedSynthesisNormalizePackage343Base(input);
+  const completeReports = ATLAS_LOCAL_REPORT_MODES.every(mode => !!String(normalized?.reports?.[mode]?.answer || "").trim());
+  const completeConclusion = !!String(normalized?.conclusion?.answer || "").trim();
+  const reportFingerprints = ATLAS_LOCAL_REPORT_MODES.map(mode => String(normalized?.reports?.[mode]?.fingerprint || "")).filter(Boolean);
+  const conclusionFp = String(normalized?.conclusion?.fingerprint || "");
+  const fp = String(normalized?.fingerprint || "");
+  const sameFingerprint = !!fp && reportFingerprints.length === 4 && reportFingerprints.every(value => value === fp) && conclusionFp === fp;
+  const explicitHistorical = input?.state?.historical === true || input?.status?.current_state === "HISTORICAL";
+  normalized.status = { ...(normalized.status || {}) };
+  if (explicitHistorical) normalized.status.current_state = "HISTORICAL";
+  else if (completeReports && completeConclusion && sameFingerprint) normalized.status.current_state = "CURRENT";
+  return normalized;
+};
+
+// Enrich the Ryzen→Book export with explicit execution semantics.
+const atlasBookExportMemoryPackage343Base = atlasBookExportMemoryPackage34;
+atlasBookExportMemoryPackage34 = function atlasBookExportMemoryPackage343() {
+  const pkg = atlasSharedSynthesisState?.package;
+  if (pkg) {
+    try {
+      pkg.status = { ...(pkg.status || {}), current_state: pkg?.state?.historical === true ? "HISTORICAL" : "CURRENT" };
+      pkg.handoff = {
+        ...(pkg.handoff || {}),
+        source: "ryzen_import",
+        exported_from: "ryzen",
+        destination_role: "transformer_book_readonly",
+        book_requires_ollama: false,
+        book_requires_bridge: false,
+        local_generation_on_book: false,
+        provenance_only_provider_model: true
+      };
+    } catch (_) {}
+  }
+  return atlasBookExportMemoryPackage343Base();
+};
+
+// Role changes and shared-synthesis renders keep the wording coherent.
+const atlasDeviceComputeApply343Base = atlasDeviceComputeApply;
+atlasDeviceComputeApply = function atlasDeviceComputeApply343(options = {}) {
+  const result = atlasDeviceComputeApply343Base(options);
+  try { atlasBook343UiTruth(); } catch (_) {}
+  return result;
+};
+
+const atlasSharedSynthesisRender343Base = atlasSharedSynthesisRender;
+atlasSharedSynthesisRender = function atlasSharedSynthesisRender343() {
+  const result = atlasSharedSynthesisRender343Base();
+  try { atlasBook343UiTruth(); } catch (_) {}
+  return result;
+};
+
+window.setTimeout(() => {
+  try {
+    const pkg = atlasSharedSynthesisState?.package;
+    if (atlasBook343IsRyzenHandoff(pkg)) atlasBook343ForceReadOnly("stored-ryzen-handoff");
+    atlasBook343UiTruth();
+  } catch (_) {}
 }, 0);

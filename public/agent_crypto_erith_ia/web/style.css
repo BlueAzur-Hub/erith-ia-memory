@@ -23956,8 +23956,8 @@ html[data-atlas-market-domain="metals"]
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "34.2";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-34.2";
+  --atlas-asset-build: "34.3";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-34.3";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25631,4 +25631,25 @@ html[data-atlas-market-domain="metals"]
   #atlasSharedSynthesisCard #decision-board > .decision-memory-v2{grid-template-columns:1fr !important}
   .atlas-book-transfer-guide-342{grid-template-columns:1fr}
   .atlas-book-transfer-arrow-342{transform:rotate(90deg);min-height:20px}
+}
+
+
+/* BUILD 34.3 — Transformer Book read-only truth */
+html[data-atlas-device-role="book-readonly"] #btnLocalBridgeProbe,
+html[data-atlas-device-role="book-readonly"] [data-atlas-local-summary],
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalAsk,
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalRunAll,
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalConclusion {
+  display: none !important;
+}
+html[data-atlas-device-role="book-readonly"] .atlas-local-runtime-grid article {
+  border-color: rgba(86, 214, 205, .30);
+  background: rgba(7, 31, 43, .72);
+}
+html[data-atlas-device-role="book-readonly"] #atlasDeviceComputeControl {
+  border-color: rgba(86, 214, 205, .38);
+  box-shadow: inset 0 0 0 1px rgba(86, 214, 205, .08);
+}
+html[data-atlas-device-role="book-readonly"] #atlasBookReadOnlyKnowledge {
+  border-color: rgba(86, 214, 205, .52);
 }
