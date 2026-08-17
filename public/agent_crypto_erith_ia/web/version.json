@@ -1,28 +1,28 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.5 · Classic Atlas Auto Manual Control",
-  "build": "38.15.5",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.5",
-  "published_at": "2026-08-17T05:40:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.6 · Classic Graph Engine Restore",
+  "build": "38.15.6",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.6",
+  "published_at": "2026-08-17T06:09:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "dd16dccacfdbc35857fe04a28988b6875c2ab131eb0f2126884a3c60761dce50"
+      "sha256": "357724cb4f157e7c0c46a78ffd35bb237c2253fa92266bfab47da319e986745e"
     },
     "index.html": {
-      "sha256": "d2f832c5ab06d882e9dbbe0d05e0779061df082e11c9b3bdfbad6e7d00219a06"
+      "sha256": "a6d76170a0218aee40868de5f2025a686caa705f3800cd2db0210d422fa00ad0"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Built directly from runtime-stable Build 38.15.2.",
-    "Adds persistent Atlas AUTO / MANUAL operator control.",
-    "Fresh profiles default to MANUAL to prevent Atlas from starting on every page load or canonical refresh.",
-    "MANUAL blocks automatic Atlas scheduling while Market, Binance LIVE, CoinGecko, chart and Math Core continue normally.",
-    "The existing Analyse complète button still starts one complete Atlas -> NØX -> Aerith cycle in MANUAL mode.",
-    "AUTO restores the existing canonical-snapshot automation.",
-    "Build 38.15.2 Firefox end-of-cycle stability fix is preserved.",
-    "Graph code is intentionally unchanged from 38.15.2; the visible graph discontinuity remains a known unresolved defect across graph views."
+    "Built from Build 38.15.5, itself based on runtime-stable Build 38.15.2.",
+    "Restores exactly four graph acquisition/resilience functions from canonical Build 38.15.",
+    "Restored functions: atlasChartPreferredSourceFamily, atlasComparisonPreferredSourceFamily, atlasFetchComparisonSeriesResilient, fetchChartSeries.",
+    "Restores the canonical Binance/CoinGecko/Bridge/cache fallback behavior of the Classic graph engine.",
+    "Preserves the Build 38.15.2 Firefox end-of-cycle stability fix unchanged.",
+    "Preserves the Build 38.15.5 Atlas AUTO/MANUAL operator control and its local preference key.",
+    "Workspace view memories, Chart.js renderer, Base100 alignment, sanitizer, validator, CURRENT, Journal, Memory and IndexedDB are not changed.",
+    "This is a functional graph-engine restoration, not a claim that the known 24h visual discontinuity is fixed."
   ]
 }

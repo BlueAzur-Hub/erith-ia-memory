@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.5",
+  build: "38.15.6",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1382,7 +1382,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.5 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.15.6 CLASSIC GRAPH ENGINE RESTORE · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12125,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.5",
+  interface: "Build 38.15.6",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -35118,10 +35118,7 @@ const ATLAS_CANONICAL_MARKET_SOURCE = "CoinGecko";
 const ATLAS_NETWORK_WAIT_TIMEOUT_MS = 45 * 1000;
 
 function atlasChartPreferredSourceFamily(coinOrId) {
-  /* 38.15.5 — Graph History Recovery + Classic Stability Freeze
-     Analyst historical charts return to one homogeneous source family:
-     CoinGecko market_chart EUR. Binance remains available for LIVE/scanners. */
-  return "coingecko";
+  return atlasBinanceChartSupported(coinOrId) ? "binance" : "coingecko";
 }
 
 function atlasChartResultSourceFamily(result = null) {
@@ -35138,8 +35135,10 @@ function atlasChartResultSourceFamily(result = null) {
 }
 
 function atlasComparisonPreferredSourceFamily() {
-  /* Comparison history follows the same homogeneous CoinGecko EUR contract. */
-  return "coingecko";
+  const coins = atlasComparisonCoins();
+  return coins.length && coins.every(coin => atlasBinanceChartSupported(coin))
+    ? "binance"
+    : "coingecko";
 }
 
 function atlasChartSourceMode(result = null) {
@@ -40193,7 +40192,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.5";
+const ATLAS_BUILD = "38.15.6";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46864,8 +46863,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.5",
-  asset_token: "market-core-v2.0-alpha-build-38.15.5"
+  build: "38.15.6",
+  asset_token: "market-core-v2.0-alpha-build-38.15.6"
 });
 
 function atlasRuntimeTruth3813() {
