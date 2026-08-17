@@ -972,3 +972,47 @@ body.atlas-administrator-mirror #detailPanel .source-portal{
   right:10px!important;
   bottom:8px!important;
 }
+
+
+/* ==========================================================================
+   39.4.6R7 — LEGACY OVERLAY PURGE + FULL-WIDTH DOCK LOCK
+
+   Root-cause correction only:
+   1) Classic still reserved a 300–330 px right padding between 901–1380 CSS px;
+      R5/R6 then added a real second grid column, double-reserving the detail width.
+   2) Classic detail pseudo-layers were still active: ::before opacity .96 and
+      ::after darkened progressively to .98 at the bottom. They obscured the
+      operator-selected Aerith image despite the R6 3–6% functional glass.
+   No data / Market / Memory / Atlas / Math / Window Manager behavior changes.
+   ========================================================================== */
+
+/* DOCK WIDTH — remove only the obsolete Classic reservation while Detail is
+   already a real second column in Administrator. */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
+    --atlas-open-detail-width:0px!important;
+    padding-right:0!important;
+    width:100%!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
+  }
+}
+
+/* TECHNICAL READING IMAGE — purge the legacy Classic artwork + near-opaque
+   lower gradient. The private/default Aerith <img> remains the single visual
+   background; functional cells from R6 stay at 3.5–5.5% alpha. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.clean-lens-detail-panel::before,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.clean-lens-detail-panel::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  background:none!important;
+  background-image:none!important;
+  filter:none!important;
+}
