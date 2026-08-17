@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.7";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · COMPACT CONTROL LOCK";
+  const ADMIN_BUILD = "39.2.8";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · POLISH LOCK";
   const ENGINE_BUILD = "38.15.11";
-  const STORAGE_PREFIX = "erith_admin_portal_39_2_7";
+  const STORAGE_PREFIX = "erith_admin_portal_39_2_8";
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
@@ -105,6 +105,14 @@
         title: "Atlas Math Core · Crypto",
         tone: "gold",
         directFixed: true,
+        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const rect = byId("math")?.getBoundingClientRect?.();
+          const width = Math.min(760, Math.max(520, Math.round(vw * 0.42)));
+          const height = Math.min(Math.max(360, Math.round(rect?.height || 460)), Math.max(360, vh - 96), 640);
+          return { x: Math.max(12, vw - width - 18), y: Math.max(72, Math.min(118, Math.round(vh * 0.11))), width, height };
+        },
         resolveEntries: () => [entry(byId("math"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0]
       },
@@ -196,7 +204,7 @@
       const identity = document.createElement("p");
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · COMPACT CONTROL LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · POLISH LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
       hero.appendChild(identity);
     }
 
@@ -215,7 +223,7 @@
   function installAdminBar(manager) {
     q(".admin-mirror-bar")?.remove();
     const bar = document.createElement("aside");
-    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-7";
+    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-8";
     bar.setAttribute("aria-label", "Administrator Portal Windows controls");
 
     const brand = document.createElement("span");

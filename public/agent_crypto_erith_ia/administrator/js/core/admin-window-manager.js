@@ -274,6 +274,7 @@
         nodes,
         anchor,
         directFixed: def.directFixed === true,
+        preferredFloatGeometry: typeof def.preferredFloatGeometry === "function" ? def.preferredFloatGeometry : null,
         resolvePortalHost: typeof def.resolvePortalHost === "function" ? def.resolvePortalHost : null,
         controlSets: [],
         placeholders: new Map(),
@@ -541,7 +542,11 @@
         return;
       }
 
-      const baseGeometry = clampGeometry(geometry || win.geometry || currentRect(win));
+      let preferredGeometry = null;
+      if (!geometry && !win.geometry && typeof win.preferredFloatGeometry === "function") {
+        try { preferredGeometry = win.preferredFloatGeometry({ domain: activeDomain, window: win }); } catch {}
+      }
+      const baseGeometry = clampGeometry(geometry || win.geometry || preferredGeometry || currentRect(win));
       win.geometry = { ...baseGeometry };
       if (win.directFixed) setDirectFloating(win, true, baseGeometry);
       else buildShell(win, baseGeometry);
