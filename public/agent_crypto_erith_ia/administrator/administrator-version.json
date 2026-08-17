@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v15",
-  "build": "39.2.15",
-  "release": "ADMINISTRATOR MIRROR · MATH CORE GRID BACKGROUND LOCK",
-  "published_at": "2026-08-17T13:27:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v17",
+  "build": "39.2.17",
+  "release": "ADMINISTRATOR MIRROR · MATH CORE HOST WIDTH FIT LOCK",
+  "published_at": "2026-08-17T13:53:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.15",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.15",
+    "primary_build": "39.2.17",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.17",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -29,85 +29,44 @@
       "Missions de vie",
       "Mesure d’audience",
       "Sources"
-    ],
-    "operator_compositions": [
-      "Graphique + Target Top + Market Flow",
-      "Target Top + Market Flow + Market + Math Core",
-      "Any subset can be reduced, hidden, detached or restored without stopping its business runtime."
     ]
   },
   "window_contract": {
-    "docked": "native Classic/Mirror layout; exactly one persistent window handle per operational unit",
-    "window_handle": "five direct compact controls: ⠿ move, — reduce, □ detach/dock, ⤢ maximize/restore, × hide; same hit targets and hover-reveal semantics as 39.2.9",
-    "minimize": "collapse the entire operational unit to one compact visible restore bar in its native location; + Restaurer then × at the far right; runtime continues",
-    "hide": "remove the entire operational unit from cockpit; recall through WINDOW DECK; runtime continues",
-    "detach": "move/use the original DOM presentation; never clone business content",
-    "floating_multi_node": "one floating shell + original nodes",
-    "suspend_runtime": "false",
     "storage_namespace": "erith_admin_portal_39_2_9",
-    "storage_note": "preserved intentionally from validated 39.2.11; 39.2.15 does not reset operator layout"
+    "manager": "unchanged from validated 39.2.11",
+    "detach": "original DOM; no clone",
+    "runtime": "minimize/hide remain visual only"
   },
   "math_core_contract": {
     "docked": "Classic Math Core behavior preserved exactly",
-    "detached": "exact validated 39.2.11 detached geometry; preferred width about 42% of viewport, clamped 520-760 px",
-    "native_modes": "Dessus / Latéral / Réduire remain native Math Core controls",
-    "maximize": "explicit Administrator action only",
-    "internal_split": "none",
-    "administrator_chrome": "validated 39.2.11 compact hover chrome pinned to the far-right lower edge",
-    "administrator_background": "CSS-only grid-attached visual plane on #math in native top/Dessus mode; no external backdrop node, observers or geometry changes"
-  },
-  "domain_contract": {
-    "crypto_and_metals": "same business cockpit, two domains",
-    "graph": "same #analyste surface carries active Crypto or Métaux reading",
-    "target": "portal host follows Crypto/Metals native ribbon container",
-    "flow": "portal host follows Crypto/Metals native ribbon container",
-    "market": "portal host follows Crypto/Metals native market grid",
-    "math": "same Math Core DOM and Classic placement logic preserved",
-    "business_clone": "false"
-  },
-  "hover_chrome_contract": {
-    "local_controls": "39.2.9 behavior preserved: faint at rest, reveal on parent hover, full on direct hover",
-    "global_dock_rest": "ghost mode, intentionally much fainter than local module chrome",
-    "global_dock_hover": "whole dock becomes clearly readable without moving or resizing",
-    "global_dock_direct_hover": "direct control reaches full contrast",
-    "layout_shift": "none",
-    "hit_targets": "unchanged",
-    "touch": "global dock and local controls remain explicit because hover is unavailable"
+    "detached": "existing Administrator inline geometry is honored; no 760px CSS ceiling; viewport remains the only max-width bound",
+    "native_modes": "Dessus / Latéral / Réduire unchanged",
+    "background": "native #math host background/border/atmospheric layer follows the same real width as the host; no added backdrop or pseudo-plane",
+    "geometry_engine": "unchanged from 39.2.11"
   },
   "supersedes": {
-    "39.2": "rejected: automatic DOM slicing",
-    "39.2.1": "rejected: semantic wrappers altered native docked layout",
-    "39.2.2": "superseded: window granularity/minimize incomplete",
-    "39.2.3": "superseded: dual-domain identity but operational split incomplete",
-    "39.2.4": "superseded: operational split validated, but docked mini-bars caused duplicate-looking Graphique/market chrome and clutter",
-    "39.2.5": "superseded: five tiny hover controls had unstable hit zones and minimize-to-deck semantics made panels appear to vanish",
-    "39.2.6": "superseded: persistent dropdown menu was functionally reachable but visually rejected",
-    "39.2.7": "functionally validated base; superseded only by 39.2.8 visual/control-size and Math Core detached-window polish",
-    "39.2.8": "functionally validated polish base; superseded only by 39.2.9 discreet hover-reveal chrome with no semantic or business changes",
-    "39.2.9": "validated hover-chrome base; superseded only by 39.2.10 ghost treatment of the global bottom dock",
-    "39.2.10": "validated ghost-dock base; superseded only by Math Core chrome anchor correction and workspace-freedom freeze candidate",
-    "39.2.11": "validated functional/UI base used directly for 39.2.15",
-    "39.2.12": "rejected: changed Math Core detached geometry instead of correcting only the background",
-    "39.2.13": "rejected: painted only the direct #math host box; did not solve the full native grid background",
-    "39.2.14": "rejected: external dynamic backdrop could escape Math Core and visually cover neighbouring cockpit surfaces"
+    "39.2.11": "validated functional/UI base used for 39.2.17",
+    "39.2.12": "rejected: forced special Math Core geometry",
+    "39.2.13": "rejected: painted only the capped host background",
+    "39.2.14": "rejected: external dynamic backdrop escaped the Math Core surface",
+    "39.2.15": "rejected: pseudo background still inherited the capped host box",
+    "39.2.16": "chart visual experiment kept separate and not merged into this Math Core recovery build"
   },
   "integrity": {
     "files": {
-      "app.js": "e4788eea63f2803ee203340adf89673f1e0419eff4cac25c10df4647d1f34156",
-      "index.html": "9f6ad8cbce0268e606bd8a360618aae56a47dab0142a096eebbcbe9d27d4880c",
+      "app.js": "137f2dd888231a81b8d224803379516217547744d3b659e047011f407d1d9cd8",
+      "index.html": "bc4b7787eba060dd0f47ffa08d2c06ae004413aad368e1f97718451188b259c5",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "487705e27e904518f8db4516762395e43b0c4d8336f9d68f7acd8e6d7aa806d5",
-      "js/app.js": "cbf292d73d981cd9643fae6929b526e72939495761818fb12d32528001428ef7",
-      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "version.json": "dbfd600c61035669eb22682864e61f67b6718cbb3ecc2b672aeffd267c5f6549"
-    }
+      "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
+      "js/app.js": "873c160de6376d90d2a1c59f4508bb043811c2e018627ac4af2547231e651e19",
+      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
+    },
+    "version.json": "6ebb0436d1d0c9dced0f98f6e518bc4b1c8fada4dd4e3661fc051c2482c9f202"
   },
   "workspace_principle": {
     "operator_model": "show only the operational surfaces needed for the task in progress",
-    "composition": "Graphique, Target, Flow, Market, Math Core and Administrator workspaces can be composed freely",
-    "minimize_hide_runtime": "visual state only; business runtime continues unless a future module exposes an explicit real suspend lifecycle",
     "business_clone": "never clone business DOM/data to create a window",
-    "freeze_intent": "validate 39.2.15 in Firefox; if the Math Core background is correct and no neighbouring surface is affected, freeze Windows/Metal/Chrome and move to 39.3 Market Memory"
+    "freeze_intent": "validate Math Core host-width/background in Firefox before any further UI work"
   }
 }
