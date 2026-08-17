@@ -1,122 +1,116 @@
-/* Agent-Crypto @erith.IA — Administrator 39.2.1 · Semantic Windows
-   UI-only layer. The Classic engine keeps running; reduce/hide never means suspend. */
+/* Agent-Crypto @erith.IA — Administrator 39.2.2 · Native Windows
+   UI-only layer. Docked layout remains the Classic/39.1 layout; no extra bars or wrappers are created in normal flow. */
 
 :root{
-  --semantic-edge:rgba(205,220,232,.25);
-  --semantic-bg:rgba(11,15,19,.985);
-  --semantic-cyan:#72d8ff;
-  --semantic-gold:#e8c66e;
-  --semantic-violet:#a675ff;
-  --semantic-orange:#ff9969;
-  --semantic-green:#74e7bd;
-  --semantic-silver:#c8d3dc;
+  --native-edge:rgba(205,220,232,.25);
+  --native-bg:rgba(11,15,19,.985);
+  --native-cyan:#72d8ff;
+  --native-gold:#e8c66e;
+  --native-violet:#a675ff;
+  --native-orange:#ff9969;
+  --native-green:#74e7bd;
+  --native-silver:#c8d3dc;
 }
 
-.admin-semantic-member{position:relative;}
-.admin-semantic-anchor{position:relative!important;}
-.admin-semantic-hidden-by-window{display:none!important;}
+.admin-native-hidden-by-window{display:none!important;}
+.admin-native-anchor{position:relative;}
 
-/* Controls exist only on nine coherent workspaces, never on every subsection. */
-.admin-semantic-controls{
+.admin-native-tone-cyan{--native-accent:var(--native-cyan);}
+.admin-native-tone-gold{--native-accent:var(--native-gold);}
+.admin-native-tone-violet{--native-accent:var(--native-violet);}
+.admin-native-tone-orange{--native-accent:var(--native-orange);}
+.admin-native-tone-green{--native-accent:var(--native-green);}
+.admin-native-tone-silver{--native-accent:var(--native-silver);}
+
+/* Native controls are added directly to existing panels. They never introduce a docked wrapper/header. */
+.admin-native-controls{
   position:absolute;
-  top:10px;
-  right:12px;
-  z-index:40;
+  top:8px;
+  right:10px;
+  z-index:80;
   display:flex;
-  gap:5px;
-  padding:4px;
-  border:1px solid rgba(214,226,235,.12);
-  border-radius:9px;
-  background:rgba(7,11,15,.68);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 8px 22px rgba(0,0,0,.24);
-  backdrop-filter:blur(10px);
-  opacity:.24;
-  transition:opacity .16s ease,border-color .16s ease;
+  gap:4px;
+  padding:3px;
+  border:1px solid rgba(214,226,235,.11);
+  border-radius:8px;
+  background:rgba(7,11,15,.64);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 7px 20px rgba(0,0,0,.20);
+  backdrop-filter:blur(9px);
+  opacity:.20;
+  transition:opacity .16s ease,border-color .16s ease,background .16s ease;
 }
-.admin-semantic-anchor:hover > .admin-semantic-controls,
-.admin-semantic-anchor:focus-within > .admin-semantic-controls,
-details.admin-semantic-anchor > summary:hover .admin-semantic-controls,
-.admin-semantic-floating-shell .admin-semantic-controls{opacity:1;}
+.admin-native-anchor:hover > .admin-native-controls,
+.admin-native-anchor:focus-within > .admin-native-controls,
+details.admin-native-anchor > summary:hover .admin-native-controls,
+.admin-native-floating-shell .admin-native-controls{opacity:1;}
 
-details.admin-semantic-anchor > summary{position:relative;}
-details.admin-semantic-anchor > summary .admin-semantic-controls{top:50%;transform:translateY(-50%);}
+details.admin-native-anchor > summary{position:relative;}
+details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;transform:translateY(-50%);}
 
-.admin-semantic-control{
-  width:27px;
-  height:25px;
+.admin-native-control{
+  width:26px;
+  height:24px;
   display:grid;
   place-items:center;
   border:1px solid rgba(215,226,234,.20)!important;
   border-radius:7px!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(0,0,0,.20))!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(0,0,0,.20))!important;
   color:#dce5eb!important;
   font:800 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace!important;
   cursor:pointer;
 }
-.admin-semantic-control:hover{
+.admin-native-control:hover{
   transform:translateY(-1px);
-  border-color:rgba(114,216,255,.48)!important;
-  color:#dff7ff!important;
-  box-shadow:0 0 15px rgba(114,216,255,.08)!important;
+  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 62%,rgba(215,226,234,.20))!important;
+  color:#f0fbff!important;
+  box-shadow:0 0 15px color-mix(in srgb,var(--native-accent,#72d8ff) 12%,transparent)!important;
 }
-.admin-semantic-drag{cursor:not-allowed!important;touch-action:none;}
-body.admin-semantic-free .admin-semantic-drag{cursor:grab!important;color:#bfefff!important;border-color:rgba(114,216,255,.42)!important;}
-body.admin-semantic-dragging .admin-semantic-drag{cursor:grabbing!important;}
+.admin-native-drag{cursor:not-allowed!important;touch-action:none;}
+body.admin-native-free .admin-native-drag{cursor:grab!important;color:#c8f2ff!important;border-color:rgba(114,216,255,.42)!important;}
+body.admin-native-dragging .admin-native-drag{cursor:grabbing!important;}
 
-/* Graphique / Marché receive a dedicated small chrome instead of controls stamped over their content. */
-.admin-semantic-external-chrome{
-  position:relative;
-  min-height:38px;
-  display:flex;
-  align-items:center;
-  padding:6px 140px 6px 14px;
-  margin:8px 0 6px;
-  border:1px solid rgba(205,220,232,.18);
-  border-radius:10px;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.010) 0,rgba(255,255,255,.010) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
-    linear-gradient(180deg,rgba(33,39,45,.88),rgba(12,16,20,.94));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-}
-.admin-semantic-window-label{display:flex;align-items:center;gap:10px;min-width:0;}
-.admin-semantic-window-label span{font:900 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.18em;color:#7f929f;}
-.admin-semantic-window-label b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:900 11px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.06em;color:#e2e8ec;}
-.admin-semantic-external-chrome .admin-semantic-controls{top:50%;transform:translateY(-50%);right:7px;}
+/* Keep controls away from the native Graphique/Market content as much as possible. */
+#analyste.admin-native-anchor > .admin-native-controls{top:7px;right:8px;}
+#marketWorkspaceGrid.admin-native-anchor > .admin-native-controls{top:7px;right:8px;}
+.atlas-layout-family.admin-native-anchor > .admin-native-controls{top:50%;right:16px;transform:translateY(-50%);}
+#missions-vie.admin-native-anchor > .admin-native-controls{top:14px;right:16px;}
 
-.admin-semantic-tone-cyan{--semantic-accent:var(--semantic-cyan);}
-.admin-semantic-tone-gold{--semantic-accent:var(--semantic-gold);}
-.admin-semantic-tone-violet{--semantic-accent:var(--semantic-violet);}
-.admin-semantic-tone-orange{--semantic-accent:var(--semantic-orange);}
-.admin-semantic-tone-green{--semantic-accent:var(--semantic-green);}
-.admin-semantic-tone-silver{--semantic-accent:var(--semantic-silver);}
-.admin-semantic-external-chrome{border-left:3px solid color-mix(in srgb,var(--semantic-accent,#72d8ff) 78%,transparent);}
-
-/* Minimize means mask only: no fetch/timer/WebSocket/Atlas state is changed. */
-.admin-semantic-anchor-minimized{
+/* Minimize = presentation only. It never pauses the Classic runtime. */
+.admin-native-compact-minimized{
   min-height:48px!important;
   height:48px!important;
   overflow:hidden!important;
-  padding-top:0!important;
-  padding-bottom:0!important;
+  padding:0 132px 0 15px!important;
   display:flex!important;
   align-items:center!important;
 }
-.admin-semantic-anchor-minimized > *:not(.admin-semantic-controls):not(.admin-semantic-window-label){display:none!important;}
-.admin-semantic-anchor-minimized::before{
-  content:attr(data-admin-semantic-title);
+.admin-native-compact-minimized > *:not(.admin-native-controls){display:none!important;}
+.admin-native-compact-minimized::before{
+  content:attr(data-admin-native-title);
   display:block;
-  padding-left:14px;
-  color:#e3e9ed;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#e4e9ed;
   font:900 12px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;
   letter-spacing:.045em;
 }
-.admin-semantic-external-chrome.admin-semantic-anchor-minimized::before{display:none;}
-.admin-semantic-external-chrome.admin-semantic-anchor-minimized .admin-semantic-window-label{display:flex!important;}
 
-details.admin-semantic-anchor-minimized > summary{width:100%;min-height:48px!important;}
-details.admin-semantic-anchor-minimized > summary > *:not(.admin-semantic-controls){opacity:.52;}
+/* Colored Administrator family headers remain native when minimized; only their children/subsections disappear. */
+.atlas-layout-family.admin-native-minimized{
+  min-height:unset!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+.atlas-layout-family.admin-native-minimized > *:not(.admin-native-controls){display:initial;}
 
-.admin-semantic-floating-shell{
+/* Native details keep their own summary while their body is masked. */
+details.admin-native-details-minimized > :not(summary){display:none!important;}
+details.admin-native-details-minimized > summary{display:flex!important;}
+
+/* Floating wrappers exist only while a window is detached. The original DOM nodes are moved, never cloned. */
+.admin-native-floating-shell{
   position:fixed!important;
   z-index:2147481800;
   min-width:min(420px,calc(100vw - 24px));
@@ -126,34 +120,34 @@ details.admin-semantic-anchor-minimized > summary > *:not(.admin-semantic-contro
   overflow:auto;
   resize:both;
   padding:8px;
-  border:1px solid color-mix(in srgb,var(--semantic-accent,#72d8ff) 42%,rgba(205,220,232,.18));
+  border:1px solid color-mix(in srgb,var(--native-accent,#72d8ff) 42%,rgba(205,220,232,.18));
   border-radius:15px;
   background:
     repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
-    linear-gradient(145deg,rgba(40,47,53,.99),var(--semantic-bg) 44%,rgba(20,25,30,.99));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 38px 130px rgba(0,0,0,.76),0 0 0 1px color-mix(in srgb,var(--semantic-accent,#72d8ff) 12%,transparent);
+    linear-gradient(145deg,rgba(40,47,53,.99),var(--native-bg) 44%,rgba(20,25,30,.99));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 38px 130px rgba(0,0,0,.76),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 12%,transparent);
   backdrop-filter:blur(18px) saturate(108%);
 }
-.admin-semantic-floating-shell > .admin-semantic-member{margin-left:0!important;margin-right:0!important;}
-.admin-semantic-floating-shell.admin-semantic-shell-minimized{
+.admin-native-floating-shell > [data-admin-native-window]{margin-left:0!important;margin-right:0!important;}
+.admin-native-floating-shell.admin-native-shell-minimized{
   height:58px!important;
   min-height:58px!important;
   max-height:58px!important;
   resize:none!important;
   overflow:hidden!important;
 }
-.admin-semantic-maximized{resize:none!important;max-width:none!important;max-height:none!important;}
-.admin-semantic-moving{opacity:.94;box-shadow:0 44px 145px rgba(0,0,0,.82),0 0 0 1px color-mix(in srgb,var(--semantic-accent,#72d8ff) 34%,transparent)!important;}
-.admin-semantic-placeholder{height:0!important;margin:0!important;padding:0!important;border:0!important;}
+.admin-native-maximized{resize:none!important;max-width:none!important;max-height:none!important;}
+.admin-native-moving{opacity:.94;box-shadow:0 44px 145px rgba(0,0,0,.82),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 34%,transparent)!important;}
+.admin-native-placeholder{height:0!important;margin:0!important;padding:0!important;border:0!important;}
 
-@keyframes admin-semantic-focus-pulse{
+@keyframes admin-native-focus-pulse{
   0%{box-shadow:0 0 0 1px rgba(114,216,255,.03),0 0 0 rgba(114,216,255,0)}
   35%{box-shadow:0 0 0 2px rgba(114,216,255,.42),0 0 38px rgba(114,216,255,.18)}
   100%{box-shadow:0 0 0 1px rgba(114,216,255,.03),0 0 0 rgba(114,216,255,0)}
 }
-.admin-semantic-focus-pulse{animation:admin-semantic-focus-pulse .72s ease-out;}
+.admin-native-focus-pulse{animation:admin-native-focus-pulse .72s ease-out;}
 
-/* Window Deck: only the nine semantic workspaces. */
+/* Window Deck: nine native workspaces only. */
 .admin-window-deck{
   position:fixed;
   right:14px;
@@ -177,14 +171,14 @@ details.admin-semantic-anchor-minimized > summary > *:not(.admin-semantic-contro
 .admin-window-deck-row:hover{border-color:rgba(114,216,255,.15);background:rgba(114,216,255,.035);}
 .admin-window-deck-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#dce4e9;font:750 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;}
 .admin-window-deck-state{color:#8fa4b3;font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-align:right;}
-.admin-window-deck .admin-semantic-control{width:27px!important;height:25px!important;}
+.admin-window-deck .admin-native-control{width:27px!important;height:25px!important;}
 
-.admin-mirror-bar-39-2-1{gap:5px;}
-.admin-mirror-bar-39-2-1 .admin-window-deck-toggle b{color:#bcefff;font-weight:950;}
+.admin-mirror-bar-39-2-2{gap:5px;}
+.admin-mirror-bar-39-2-2 .admin-window-deck-toggle b{color:#bcefff;font-weight:950;}
 
 @media (max-width:900px){
-  .admin-semantic-controls{opacity:1;}
-  .admin-semantic-floating-shell{min-width:calc(100vw - 24px);}
+  .admin-native-controls{opacity:1;}
+  .admin-native-floating-shell{min-width:calc(100vw - 24px);}
   .admin-window-deck{left:8px;right:8px;bottom:104px;width:auto;max-height:60vh;}
   .admin-window-deck-list{max-height:calc(60vh - 45px);}
   .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px;}
