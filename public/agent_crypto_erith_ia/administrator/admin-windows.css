@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — Administrator 39.2.2 · Native Windows
-   UI-only layer. Docked layout remains the Classic/39.1 layout; no extra bars or wrappers are created in normal flow. */
+/* Agent-Crypto @erith.IA — Build 39.2.4 · Administrator Operational Windows
+   UI-only window layer. Reduce = presentation only; no business runtime suspension. */
 
 :root{
   --native-edge:rgba(205,220,232,.25);
@@ -12,9 +12,10 @@
   --native-silver:#c8d3dc;
 }
 
-.admin-native-hidden-by-window{display:none!important;}
-.admin-native-anchor{position:relative;}
+.admin-native-window-suppressed,
+.admin-native-domain-inactive{display:none!important;}
 
+.admin-native-anchor{position:relative;}
 .admin-native-tone-cyan{--native-accent:var(--native-cyan);}
 .admin-native-tone-gold{--native-accent:var(--native-gold);}
 .admin-native-tone-violet{--native-accent:var(--native-violet);}
@@ -22,18 +23,28 @@
 .admin-native-tone-green{--native-accent:var(--native-green);}
 .admin-native-tone-silver{--native-accent:var(--native-silver);}
 
-/* Native controls are added directly to existing panels. They never introduce a docked wrapper/header. */
+/* Version hierarchy: global Agent-Crypto build is primary; Classic build is an engine component. */
+.admin-engine-badge{
+  border-color:rgba(200,211,220,.24)!important;
+  background:linear-gradient(180deg,rgba(214,224,232,.10),rgba(15,20,25,.58))!important;
+  color:#cdd7de!important;
+  font-size:10px!important;
+  letter-spacing:.035em;
+}
+.administrator-mirror-identity{margin-top:7px!important;}
+
+/* Controls attach to native panels only; no docked wrapper is generated. */
 .admin-native-controls{
   position:absolute;
   top:8px;
   right:10px;
-  z-index:80;
+  z-index:120;
   display:flex;
   gap:4px;
   padding:3px;
   border:1px solid rgba(214,226,235,.11);
   border-radius:8px;
-  background:rgba(7,11,15,.64);
+  background:rgba(7,11,15,.66);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 7px 20px rgba(0,0,0,.20);
   backdrop-filter:blur(9px);
   opacity:.20;
@@ -41,8 +52,12 @@
 }
 .admin-native-anchor:hover > .admin-native-controls,
 .admin-native-anchor:focus-within > .admin-native-controls,
+[data-admin-native-window]:hover > .admin-native-controls,
+[data-admin-native-window]:focus-within > .admin-native-controls,
 details.admin-native-anchor > summary:hover .admin-native-controls,
-.admin-native-floating-shell .admin-native-controls{opacity:1;}
+.admin-native-floating-shell .admin-native-controls,
+.admin-native-direct-floating > .admin-native-controls,
+.admin-native-mini-bar .admin-native-controls{opacity:1;}
 
 details.admin-native-anchor > summary{position:relative;}
 details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;transform:translateY(-50%);}
@@ -69,47 +84,53 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
 body.admin-native-free .admin-native-drag{cursor:grab!important;color:#c8f2ff!important;border-color:rgba(114,216,255,.42)!important;}
 body.admin-native-dragging .admin-native-drag{cursor:grabbing!important;}
 
-/* Keep controls away from the native Graphique/Market content as much as possible. */
+/* Native control placement tuned for the actual cockpit. */
 #analyste.admin-native-anchor > .admin-native-controls{top:7px;right:8px;}
-#marketWorkspaceGrid.admin-native-anchor > .admin-native-controls{top:7px;right:8px;}
+#math.admin-native-anchor > .admin-native-controls{top:8px;right:124px;}
+#marketSnapshotPanel > .admin-native-controls,
+#atlasMetalsMarketSnapshot > .admin-native-controls{top:8px;right:10px;}
+.top5-ribbon > .admin-native-controls,
+.atlas-metals-target-ribbon > .admin-native-controls,
+.market-flow-ribbon > .admin-native-controls,
+.atlas-metals-flow-ribbon > .admin-native-controls{top:7px;right:8px;}
 .atlas-layout-family.admin-native-anchor > .admin-native-controls{top:50%;right:16px;transform:translateY(-50%);}
 #missions-vie.admin-native-anchor > .admin-native-controls{top:14px;right:16px;}
 
-/* Minimize = presentation only. It never pauses the Classic runtime. */
-.admin-native-compact-minimized{
-  min-height:48px!important;
-  height:48px!important;
-  overflow:hidden!important;
-  padding:0 132px 0 15px!important;
-  display:flex!important;
-  align-items:center!important;
+/* Minimize is now explicit and robust: native business nodes are masked and a temporary mini-bar appears. */
+.admin-native-mini-bar{
+  position:relative;
+  min-height:48px;
+  width:100%;
+  margin:8px 0;
+  display:flex;
+  align-items:center;
+  padding:0 132px 0 16px;
+  border:1px solid color-mix(in srgb,var(--native-accent,#72d8ff) 34%,rgba(205,220,232,.16));
+  border-radius:11px;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
+    linear-gradient(145deg,rgba(36,43,49,.96),rgba(11,15,19,.98));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 9px 28px rgba(0,0,0,.24);
 }
-.admin-native-compact-minimized > *:not(.admin-native-controls){display:none!important;}
-.admin-native-compact-minimized::before{
-  content:attr(data-admin-native-title);
+.admin-native-mini-title{
   display:block;
   min-width:0;
   overflow:hidden;
-  text-overflow:ellipsis;
   white-space:nowrap;
-  color:#e4e9ed;
-  font:900 12px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;
+  text-overflow:ellipsis;
+  color:#e8edf0;
+  font:900 12px/1.15 Inter,ui-sans-serif,system-ui,sans-serif;
   letter-spacing:.045em;
 }
-
-/* Colored Administrator family headers remain native when minimized; only their children/subsections disappear. */
-.atlas-layout-family.admin-native-minimized{
-  min-height:unset!important;
-  height:auto!important;
-  overflow:visible!important;
+.admin-native-mini-controls{top:50%!important;right:8px!important;transform:translateY(-50%)!important;}
+.admin-native-mini-floating{
+  position:fixed!important;
+  z-index:2147482200;
+  margin:0!important;
+  max-width:calc(100vw - 24px);
 }
-.atlas-layout-family.admin-native-minimized > *:not(.admin-native-controls){display:initial;}
 
-/* Native details keep their own summary while their body is masked. */
-details.admin-native-details-minimized > :not(summary){display:none!important;}
-details.admin-native-details-minimized > summary{display:flex!important;}
-
-/* Floating wrappers exist only while a window is detached. The original DOM nodes are moved, never cloned. */
+/* Floating shell is created only when a multi-node window is detached. */
 .admin-native-floating-shell{
   position:fixed!important;
   z-index:2147481800;
@@ -130,15 +151,45 @@ details.admin-native-details-minimized > summary{display:flex!important;}
 }
 .admin-native-floating-shell > [data-admin-native-window]{margin-left:0!important;margin-right:0!important;}
 .admin-native-floating-shell.admin-native-shell-minimized{
-  height:58px!important;
-  min-height:58px!important;
-  max-height:58px!important;
+  height:64px!important;
+  min-height:64px!important;
+  max-height:64px!important;
   resize:none!important;
   overflow:hidden!important;
 }
-.admin-native-maximized{resize:none!important;max-width:none!important;max-height:none!important;}
+
+/* Single complex workspaces stay in their original DOM parent while floating.
+   This is critical for Graphique/Lecture and the domain-moving Math Core. */
+.admin-native-direct-floating{
+  position:fixed!important;
+  z-index:2147481800;
+  margin:0!important;
+  min-width:min(420px,calc(100vw - 24px))!important;
+  min-height:90px;
+  max-width:calc(100vw - 24px)!important;
+  max-height:calc(100vh - 24px)!important;
+  overflow:auto!important;
+  resize:both;
+  border:1px solid color-mix(in srgb,var(--native-accent,#72d8ff) 42%,rgba(205,220,232,.18))!important;
+  box-shadow:0 38px 130px rgba(0,0,0,.76),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 12%,transparent)!important;
+  backdrop-filter:blur(18px) saturate(108%);
+}
+
+.admin-native-maximized{
+  resize:none!important;
+  max-width:none!important;
+  max-height:none!important;
+  overflow:auto!important;
+}
 .admin-native-moving{opacity:.94;box-shadow:0 44px 145px rgba(0,0,0,.82),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 34%,transparent)!important;}
 .admin-native-placeholder{height:0!important;margin:0!important;padding:0!important;border:0!important;}
+
+/* When Math Core leaves the crypto grid, Market Snapshot uses the available width.
+   Same principle if the Market Snapshot is removed and Math Core stays docked. */
+#marketWorkspaceGrid:has(#math.admin-native-direct-floating),
+#marketWorkspaceGrid:has(#math.admin-native-window-suppressed){grid-template-columns:minmax(0,1fr)!important;}
+#marketWorkspaceGrid:has(#math.admin-native-direct-floating) #marketSnapshotPanel,
+#marketWorkspaceGrid:has(#math.admin-native-window-suppressed) #marketSnapshotPanel{grid-column:1/-1!important;}
 
 @keyframes admin-native-focus-pulse{
   0%{box-shadow:0 0 0 1px rgba(114,216,255,.03),0 0 0 rgba(114,216,255,0)}
@@ -147,13 +198,13 @@ details.admin-native-details-minimized > summary{display:flex!important;}
 }
 .admin-native-focus-pulse{animation:admin-native-focus-pulse .72s ease-out;}
 
-/* Window Deck: nine native workspaces only. */
+/* Window Deck: operational units only. */
 .admin-window-deck{
   position:fixed;
   right:14px;
   bottom:62px;
   z-index:2147483000;
-  width:min(520px,calc(100vw - 28px));
+  width:min(540px,calc(100vw - 28px));
   max-height:min(68vh,720px);
   overflow:hidden;
   border:1px solid rgba(215,225,235,.30);
@@ -173,12 +224,13 @@ details.admin-native-details-minimized > summary{display:flex!important;}
 .admin-window-deck-state{color:#8fa4b3;font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-align:right;}
 .admin-window-deck .admin-native-control{width:27px!important;height:25px!important;}
 
-.admin-mirror-bar-39-2-2{gap:5px;}
-.admin-mirror-bar-39-2-2 .admin-window-deck-toggle b{color:#bcefff;font-weight:950;}
+.admin-mirror-bar-39-2-4{gap:5px;}
+.admin-mirror-bar-39-2-4 .admin-window-deck-toggle b,
+.admin-mirror-bar-39-2-4 .admin-mirror-brand b{color:#bcefff;font-weight:950;}
 
 @media (max-width:900px){
   .admin-native-controls{opacity:1;}
-  .admin-native-floating-shell{min-width:calc(100vw - 24px);}
+  .admin-native-floating-shell,.admin-native-direct-floating{min-width:calc(100vw - 24px)!important;}
   .admin-window-deck{left:8px;right:8px;bottom:104px;width:auto;max-height:60vh;}
   .admin-window-deck-list{max-height:calc(60vh - 45px);}
   .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px;}

@@ -1,22 +1,27 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v5",
-  "build": "39.2.3",
-  "release": "ADMINISTRATOR MIRROR · NATIVE WINDOWS · DUAL DOMAIN LOCK",
-  "published_at": "2026-08-17T09:24:00+02:00",
-  "classic_engine": {
-    "build": "38.15.11",
-    "release": "CLASSIC FINAL · FROZEN REFERENCE",
-    "status": "runtime mirror preserved; app.js, style.css and version.json unchanged"
+  "schema": "agent_crypto_administrator_mirror_manifest_v6",
+  "build": "39.2.4",
+  "release": "ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS",
+  "published_at": "2026-08-17T09:44:00+02:00",
+  "global_versioning": {
+    "primary_build": "39.2.4",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.4",
+    "version_manifest": "./version.json",
+    "engine_reference": "Market Core 38.15.11",
+    "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "theme": {
-    "base": "Metal Base 39.1 preserved unchanged",
-    "status": "validated; no decorative pass in 39.2.3"
+    "base": "Metal Base 39.1",
+    "status": "validated and preserved"
   },
-  "native_windows": {
-    "count": 9,
+  "operational_windows": {
+    "count": 12,
     "windows": [
-      "Graphique · Crypto ↔ Métaux précieux",
-      "Marché · Crypto ↔ Métaux précieux",
+      "Graphique + Lecture technique / Lecture Métaux",
+      "Target Top 5 / Target Métaux",
+      "Market Flow / Metals Flow",
+      "Market Snapshot / Market Métaux",
+      "Atlas Math Core / Math Core Métaux",
       "Analyse & décision",
       "Intelligence, mémoire & création",
       "Préparation & opérations",
@@ -25,88 +30,57 @@
       "Mesure d’audience",
       "Sources"
     ],
-    "rules": [
-      "Graphique and Marché are dual-domain native workspaces; they follow the existing Crypto/Métaux domain switch instead of duplicating business DOM.",
-      "The precious-metals graph remains inside the original analyst deck and is preserved when the Graphique window is detached, minimized or maximized.",
-      "The precious-metals market area remains inside the original Market zone and is preserved when the Marché window is detached, minimized or maximized.",
-      "Window Deck titles follow the active domain: Crypto or Métaux précieux.",
-      "No generated docked window bars or semantic wrappers.",
-      "Minimize masks presentation only and never suspends Classic runtime logic.",
-      "A floating shell exists only while detached and moves original DOM nodes; no business content is cloned."
+    "operator_compositions": [
+      "Graphique + Target Top + Market Flow",
+      "Target Top + Market Flow + Market + Math Core",
+      "Any subset of the twelve windows can be minimized, detached or restored without stopping its business runtime."
     ]
   },
-  "dual_domain_contract": {
-    "domain_source": "document.documentElement.dataset.atlasMarketDomain written by the preserved Classic runtime",
-    "crypto": "Graphique · Crypto / Marché · Crypto",
-    "metals": "Graphique · Métaux précieux / Marché · Métaux précieux",
-    "business_runtime_change": "false",
-    "metals_graph_rewrite": "false",
-    "metals_data_change": "false"
+  "domain_contract": {
+    "crypto_and_metals": "same business cockpit, two domains",
+    "graph": "Graphique carries the active technical reading panel with it",
+    "target": "one operational window switches visual content between Target Top 5 and Target Métaux",
+    "flow": "one operational window switches visual content between Market Flow and Metals Flow",
+    "market": "one operational window switches visual content between crypto Market Snapshot and the metals market snapshot/registry",
+    "math": "the same Math Core DOM is preserved and follows the Classic domain placement logic",
+    "business_clone": "false"
+  },
+  "minimize_contract": {
+    "behavior": "hide presentation only",
+    "suspends_runtime": "false",
+    "implementation": "native nodes are masked and replaced temporarily by a compact Administrator mini-bar; restore reveals the same original nodes",
+    "graph_fix": "Graphique is now fully masked on minimize; Lecture technique/Lecture Métaux is included with it",
+    "missions_fix": "Missions de vie and all native child programs are hidden/restored as one coherent window"
   },
   "window_features": [
-    "drag when free mode is enabled",
+    "free/locked movement mode",
     "minimize/restore without suspend",
     "detach/dock",
     "maximize/restore",
     "floating resize",
     "z-order",
-    "localStorage state/geometry persistence",
-    "cascade detached windows",
-    "global reset to native Classic flow",
-    "dynamic dual-domain window titles",
-    "Escape restores maximized window or closes Window Deck"
+    "localStorage geometry/state persistence",
+    "Window Deck",
+    "cascade",
+    "global reset",
+    "domain-aware window labels"
   ],
-  "suspension_contract": {
-    "implemented": "false",
-    "reason": "Classic 38.15.11 business runtime remains monolithic; 39.2.3 does not fake suspension.",
-    "current_behavior": "Minimize/hide affects presentation only; existing Crypto, Métaux, WebSocket, timer and analytical runtime behavior is preserved.",
-    "future": "True suspend/resume can be introduced module by module only after lifecycle-safe runtime separation."
-  },
-  "contracts": {
-    "window_operations_trigger_market": "false",
-    "window_operations_trigger_atlas": "false",
-    "window_operations_trigger_bridge_or_ollama": "false",
-    "classic_web_path": "untouched",
-    "market_memory_refactor": "deferred",
-    "no_docked_generated_wrappers": "true",
-    "no_business_content_clone": "true",
-    "precious_metals_graph_preserved": "true"
-  },
   "supersedes": {
     "39.2": "rejected: automatic DOM slicing",
-    "39.2.1": "rejected: semantic wrappers/chrome altered docked Classic layout",
-    "39.2.2": "superseded: native windows base omitted explicit dual-domain identity for the Métaux précieux graph/market"
+    "39.2.1": "rejected: semantic wrappers altered the native docked layout",
+    "39.2.2": "superseded: window granularity and minimize behavior incomplete",
+    "39.2.3": "superseded before canonical validation: dual-domain identity added but operational window split/version truth still incomplete"
   },
-  "notes": [
-    "39.2.3 keeps the Native Windows architecture and explicitly locks the existing precious-metals graph into the Graphique domain window.",
-    "No second metals graph is created: the original Classic analyst deck remains the single source of visual truth and switches between Crypto and Métaux.",
-    "The Window Deck and control accessibility labels update when the existing domain switch changes Crypto ↔ Métaux précieux.",
-    "A new localStorage namespace prevents older rejected window states from contaminating 39.2.3.",
-    "Classic /web remains the stable public reference; /administrator remains the operator cockpit."
-  ],
   "integrity": {
     "files": {
-      "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "53b31a71562543a0421a886eec72e9ca354b68c3b4939d6fee89b488a683fd54",
-      "app.js": "576d267f2fed6548dde4dd0e0f619802008f19562f650bdf104e3fe1482ab07e",
-      "index.html": "b77e5bd3e1c00a561aaffd3b0f436bf00508cf64fe993035c094ddcbb37d5cb0",
-      "js/app.js": "d60cffbe0f78d90d4b7dc40fa6fa6ba82d92fffffbdbc88c14ff213befc730b0",
-      "js/core/admin-layout.js": "1783e2f64b2c759284cf91b202424fa6bc4fb156e33ed2a23059c7bb5f965435",
-      "js/core/admin-window-manager.js": "d58f524434e130efe9adfc1776d6d6eb4523b172a5c2836d8e488cdd3f9e1800",
-      "js/core/event-bus.js": "de2b920bf1f60c2421ead2ac3d02914ef8bce6584daf4406cfea3bf32f0b0a82",
-      "js/core/module-manager.js": "392a5c19e8ff6940443bd4251543e5223364104d27f19d94bb59aa9388a05e6d",
-      "js/modules/analysis.js": "2abd263032fb92e42a2e7eced5f1fc5762ebf4801d93fc73b7663f3460e5d31e",
-      "js/modules/analytical-memory.js": "e943526d599adbf84c6b4fb49885bc168cff2a8a6b6df9c3508bb53836f7b4fc",
-      "js/modules/decision-board.js": "59f3527e08b4a7dd60e593ff310c057ad2b150bad1fb6f54158b5f06d90ebead",
-      "js/modules/erith.js": "2992c51b806cf2f7ba001855eaf37c9f732c5b5ba9999d73c5e1fadb6c944360",
-      "js/modules/market-memory.js": "7a7593821384520fae175cc5030ce3a2cc64d91e847c60545c46ce5eac2bf247",
-      "js/modules/market.js": "56bcde61591022f6fd2e98142cbc42bfe88aa4baf3a45c1246a8683f2cf96dcc",
-      "js/modules/module-utils.js": "482dec2028faeecde33d042889e60375c8cdcef5eaa95014ad2dad07c43b6df9",
-      "js/modules/observability.js": "e1350fcd2c9a232f794669f75a04790dc1da1f5f19bf9e61547c3927c563ae8d",
-      "js/modules/simulation.js": "c67abfc18e638d646659daa2e6823c1f3c6a7ac48f95999f6c7e18709b25a5ff",
-      "js/modules/system.js": "1cfefac3e349a2039d6f55e8d3d4cb3691c9454f9a9f003829cb236cd1e33394",
+      "app.js": "874c4a764b47d08717cd8f25f712b2ae2e27da0903aa612fa5b20c71290cb195",
+      "index.html": "8d32f5d5e1ec45181f8fdd1bfce43f341014600e2e1dcc06c3e06469a8e7b602",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
-      "version.json": "86d415df7364848475474a41c75d4b9a5dc4ab146910f339fc3ec449aa46c88e"
+      "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
+      "admin-windows.css": "851bee641ae22f73d4995449b4f70e8b7bcf21e9931997490fd322ad753e0152",
+      "version.json": "26716d8071025ad798df8d855b1a3a7971477e4152f1b94d0a0a97b73282cced",
+      "js/app.js": "47b5f003a5836cf3a437eac23af5fe0513372bf7d94675aef6a4e57d20c9666f",
+      "js/core/admin-window-manager.js": "c97487bc2882496ea9447462ff7184c643a3a90098add3388b6b84bd72f8b8dc"
     }
   }
 }

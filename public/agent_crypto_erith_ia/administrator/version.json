@@ -1,26 +1,45 @@
 {
-  "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.11 · CLASSIC FINAL · FROZEN REFERENCE",
-  "build": "38.15.11",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.11",
-  "published_at": "2026-08-17T07:26:00+02:00",
+  "schema": "agent_crypto_version_manifest_v3",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.4 · ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS",
+  "build": "39.2.4",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.4",
+  "published_at": "2026-08-17T09:44:00+02:00",
+  "mode": "Administrator",
+  "engine": {
+    "name": "Market Core V2.0-Alpha",
+    "reference_build": "38.15.11",
+    "status": "business behavior preserved; global application version is 39.2.4"
+  },
   "files": {
     "app.js": {
-      "sha256": "576d267f2fed6548dde4dd0e0f619802008f19562f650bdf104e3fe1482ab07e"
+      "sha256": "874c4a764b47d08717cd8f25f712b2ae2e27da0903aa612fa5b20c71290cb195"
     },
     "index.html": {
-      "sha256": "14d0075e2578c3f82b5b0309382f1975107b18a549c3a6d2842811fe6717f8bd"
+      "sha256": "8d32f5d5e1ec45181f8fdd1bfce43f341014600e2e1dcc06c3e06469a8e7b602"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
+    },
+    "admin-metal.css": {
+      "sha256": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a"
+    },
+    "admin-windows.css": {
+      "sha256": "851bee641ae22f73d4995449b4f70e8b7bcf21e9931997490fd322ad753e0152"
+    },
+    "js/app.js": {
+      "sha256": "47b5f003a5836cf3a437eac23af5fe0513372bf7d94675aef6a4e57d20c9666f"
+    },
+    "js/core/admin-window-manager.js": {
+      "sha256": "c97487bc2882496ea9447462ff7184c643a3a90098add3388b6b84bd72f8b8dc"
     }
   },
   "notes": [
-    "Built directly from validated Build 38.15.10 CLASSIC FINAL · CANONICAL LOCK.",
-    "No functional market, chart, Atlas, NØX, Aerith, CURRENT, Journal, Memory, IndexedDB, Bridge or Ollama behavior changed in this freeze build.",
-    "Preserves the validated Target Top 5 24h Binance EUR direct path: 5/5 series, 300 points per series.",
-    "Preserves Firefox end-of-cycle stability, Atlas AUTO/MANUAL control, workspace A/B/C and the live tooltip percentage correction from Build 38.15.10.",
-    "Known architectural debt documented only: Memory Intelligence 3/5/10 currently follows closed analytical CURRENT units; the Market Memory versus Analytical Memory split is deferred to Administrator 39.x.",
-    "This build is the frozen Classic reference before the separate Administrator line."
+    "Global Agent-Crypto version control now uses Build 39.2.4 in Administrator instead of presenting the inherited Classic engine build as the application version.",
+    "Market Core 38.15.11 remains explicitly identified as an engine/reference component.",
+    "Graphique and its technical/metals reading stay one native window.",
+    "Target Top, Market Flow, Market Snapshot and Atlas Math Core are independent operational windows so the operator can compose only the workspace needed now.",
+    "Crypto and precious-metals variants are preserved without cloning business data.",
+    "Missions de vie is restored as one coherent window containing its native subsections.",
+    "Minimize masks presentation only and does not suspend market, WebSocket, timers or analytical logic."
   ]
 }

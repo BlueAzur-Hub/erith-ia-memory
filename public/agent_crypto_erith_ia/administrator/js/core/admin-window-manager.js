@@ -16,6 +16,7 @@
     const definitions = Array.isArray(options.definitions) ? options.definitions : [];
     const defaultFree = options.defaultFree !== false;
     const layoutKey = `${storagePrefix}:layout-free`;
+    const domainKey = `${storagePrefix}:domain`;
     const statePrefix = `${storagePrefix}:window:`;
 
     const windows = new Map();
@@ -23,7 +24,7 @@
     let deck = null;
     let deckList = null;
     let deckCount = null;
-    let stateCallback = null;
+    let activeDomain = clean(options.domain || document.documentElement.dataset.atlasMarketDomain || "crypto") || "crypto";
 
     const readStorage = (key, fallback = null) => {
       try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
@@ -40,7 +41,6 @@
       const next = { ...getState(id), ...patch };
       writeStorage(stateKey(id), JSON.stringify(next));
       updateDeck();
-      stateCallback?.(id, next);
       return next;
     };
 
@@ -67,6 +67,20 @@
       };
     }
 
+    function entryNode(entry) {
+      return entry?.node instanceof HTMLElement ? entry.node : null;
+    }
+
+    function normalizeEntries(raw) {
+      return (Array.isArray(raw) ? raw : [])
+        .map(item => item instanceof HTMLElement ? { node: item, domain: "all" } : item)
+        .map(item => ({
+          node: entryNode(item),
+          domain: clean(item?.domain || "all") || "all"
+        }))
+        .filter(item => item.node);
+    }
+
     function createButton(className, text, title) {
       const button = document.createElement("button");
       button.type = "button";
@@ -81,26 +95,38 @@
       return button;
     }
 
-    function createControls(win) {
+    function visibleEntry(win) {
+      return win.entries.find(entry => entry.domain === "all" || entry.domain === activeDomain)
+        || win.entries[0]
+        || null;
+    }
+
+    function domainMask(win) {
+      win.entries.forEach(entry => {
+        const inactive = win.floating && entry.domain !== "all" && entry.domain !== activeDomain;
+        entry.node.classList.toggle("admin-native-domain-inactive", inactive);
+      });
+    }
+
+    function resolveHomeTarget(win) {
+      const preferred = visibleEntry(win)?.node || win.anchor;
+      if (preferred?.parentElement) return preferred;
+      return win.entries.map(entry => entry.node).find(node => node?.parentElement) || null;
+    }
+
+    function createControlSet(win, host, mini = false) {
+      if (!(host instanceof HTMLElement)) return null;
       const controls = document.createElement("div");
-      controls.className = "admin-native-controls";
+      controls.className = mini ? "admin-native-controls admin-native-mini-controls" : "admin-native-controls";
       controls.setAttribute("role", "group");
       controls.setAttribute("aria-label", `Fenêtre Administrator · ${win.title}`);
 
       const drag = createButton("admin-native-drag", "⠿", `Déplacer ${win.title}`);
-      const minimize = createButton("admin-native-minimize", "—", `Réduire ${win.title}`);
-      const float = createButton("admin-native-float", "□", `Détacher ${win.title}`);
-      const maximize = createButton("admin-native-maximize", "⤢", `Agrandir ${win.title}`);
+      const minimize = createButton("admin-native-minimize", win.minimized ? "+" : "—", win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`);
+      const float = createButton("admin-native-float", win.floating ? "▣" : "□", win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`);
+      const maximize = createButton("admin-native-maximize", win.maximized ? "↙" : "⤢", win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`);
       controls.append(drag, minimize, float, maximize);
 
-      if (win.anchor.tagName === "DETAILS") {
-        const summary = win.anchor.querySelector(":scope > summary");
-        (summary || win.anchor).appendChild(controls);
-      } else {
-        win.anchor.appendChild(controls);
-      }
-
-      win.controls = { root: controls, drag, minimize, float, maximize };
       drag.addEventListener("pointerdown", event => dragStart(event, win));
       drag.addEventListener("dblclick", event => {
         event.preventDefault();
@@ -110,243 +136,355 @@
       minimize.addEventListener("click", () => setMinimized(win, !win.minimized));
       float.addEventListener("click", () => setFloating(win, !win.floating));
       maximize.addEventListener("click", () => setMaximized(win, !win.maximized));
+
+      host.appendChild(controls);
+      const set = { root: controls, drag, minimize, float, maximize, mini };
+      win.controlSets.push(set);
+      return set;
+    }
+
+    function refreshControlState(win) {
+      win.controlSets.forEach(set => {
+        const { minimize, float, maximize } = set;
+        if (minimize) {
+          minimize.textContent = win.minimized ? "+" : "—";
+          minimize.title = win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`;
+          minimize.setAttribute("aria-label", minimize.title);
+        }
+        if (float) {
+          float.textContent = win.floating ? "▣" : "□";
+          float.title = win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`;
+          float.setAttribute("aria-label", float.title);
+        }
+        if (maximize) {
+          maximize.textContent = win.maximized ? "↙" : "⤢";
+          maximize.title = win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`;
+          maximize.setAttribute("aria-label", maximize.title);
+        }
+      });
+      if (win.miniTitle) win.miniTitle.textContent = win.title;
     }
 
     function resolveDefinition(def) {
-      const nodes = (typeof def.resolveNodes === "function" ? def.resolveNodes() : [])
-        .filter(node => node instanceof HTMLElement);
-      if (!nodes.length) return null;
-
-      const parent = nodes[0].parentElement;
-      if (!parent || nodes.some(node => node.parentElement !== parent)) return null;
-
-      const anchor = typeof def.resolveAnchor === "function" ? def.resolveAnchor(nodes) : nodes[0];
+      const entries = normalizeEntries(typeof def.resolveEntries === "function" ? def.resolveEntries() : (typeof def.resolveNodes === "function" ? def.resolveNodes() : []));
+      if (!entries.length) return null;
+      const nodes = entries.map(entry => entry.node);
+      const anchor = typeof def.resolveAnchor === "function" ? def.resolveAnchor(nodes, entries) : nodes[0];
       if (!(anchor instanceof HTMLElement) || !nodes.includes(anchor)) return null;
 
       const win = {
-        id: def.id,
-        title: clean(def.title) || def.id,
-        tone: def.tone || "neutral",
-        compactMinimize: def.compactMinimize === true,
-        nodes: [...nodes],
-        parent,
+        id: clean(def.id),
+        title: clean(def.title) || clean(def.id) || "Fenêtre",
+        tone: clean(def.tone || "neutral") || "neutral",
+        entries,
+        nodes,
         anchor,
-        placeholder: null,
+        directFixed: def.directFixed === true,
+        controlSets: [],
+        placeholders: new Map(),
         shell: null,
-        controls: null,
+        miniBar: null,
+        miniTitle: null,
         floating: false,
         minimized: false,
         maximized: false,
+        geometry: null,
         restoreGeometry: null,
-        restoreFloating: false
+        restoreFloating: false,
+        directPointerUp: null
       };
 
-      win.nodes.forEach(node => {
-        node.dataset.adminNativeWindow = win.id;
-      });
+      win.nodes.forEach(node => node.dataset.adminNativeWindow = win.id);
       win.anchor.classList.add("admin-native-anchor", `admin-native-window-${win.id}`, `admin-native-tone-${win.tone}`);
       win.anchor.dataset.adminNativeTitle = win.title;
-      createControls(win);
+
+      let controlHosts = typeof def.resolveControlHosts === "function"
+        ? def.resolveControlHosts(nodes, entries)
+        : [anchor];
+      controlHosts = [...new Set((Array.isArray(controlHosts) ? controlHosts : [controlHosts]).filter(node => node instanceof HTMLElement))];
+      if (!controlHosts.length) controlHosts = [anchor];
+      controlHosts.forEach(host => createControlSet(win, host, false));
       return win;
     }
 
-    function ensurePlaceholder(win) {
-      if (win.placeholder?.isConnected) return win.placeholder;
-      const placeholder = document.createElement("div");
-      placeholder.className = "admin-native-placeholder";
-      placeholder.dataset.adminNativePlaceholder = win.id;
-      placeholder.hidden = true;
-      win.parent.insertBefore(placeholder, win.nodes[0]);
-      win.placeholder = placeholder;
-      return placeholder;
-    }
-
-    function geometryForWindow(win) {
-      const target = win.shell || win.anchor;
-      const rect = target.getBoundingClientRect();
-      return {
+    function currentRect(win) {
+      const target = win.directFixed && win.floating && win.minimized && win.miniBar?.isConnected
+        ? win.miniBar
+        : (win.directFixed && win.floating ? win.anchor : (win.shell || win.anchor));
+      const rect = target?.getBoundingClientRect?.();
+      if (!rect) return clampGeometry(win.geometry || {});
+      return clampGeometry({
         x: rect.left,
         y: rect.top,
-        width: Math.max(MIN_WIDTH, rect.width),
-        height: Math.max(MIN_HEIGHT, rect.height)
-      };
+        width: rect.width,
+        height: win.minimized && win.geometry?.height ? win.geometry.height : rect.height
+      });
+    }
+
+    function setGeometryOnTarget(win, geometry) {
+      const safe = clampGeometry(geometry);
+      win.geometry = { ...safe };
+      const target = win.directFixed ? win.anchor : win.shell;
+      if (target) {
+        target.style.left = `${safe.x}px`;
+        target.style.top = `${safe.y}px`;
+        target.style.width = `${safe.width}px`;
+        if (!win.minimized) target.style.height = `${safe.height}px`;
+      }
+      if (win.miniBar?.isConnected && win.floating && win.directFixed) {
+        win.miniBar.style.left = `${safe.x}px`;
+        win.miniBar.style.top = `${safe.y}px`;
+        win.miniBar.style.width = `${safe.width}px`;
+      }
+      return safe;
     }
 
     function persistGeometry(win) {
-      if (!win?.floating || !win.shell || win.maximized || win.minimized) return;
-      const safe = clampGeometry(geometryForWindow(win));
+      if (!win?.floating || win.maximized) return;
+      const rect = currentRect(win);
+      const safe = {
+        ...rect,
+        height: win.geometry?.height || rect.height
+      };
+      win.geometry = { ...safe };
       patchState(win.id, {
         floating: true,
-        ...safe,
-        z: Number(win.shell.style.zIndex) || zCounter
+        x: safe.x,
+        y: safe.y,
+        width: safe.width,
+        height: safe.height,
+        z: Number((win.directFixed ? win.anchor : win.shell)?.style.zIndex) || zCounter
+      });
+    }
+
+    function createPlaceholders(win) {
+      win.placeholders.clear();
+      win.nodes.forEach(node => {
+        if (!node.parentNode) return;
+        const marker = document.createElement("span");
+        marker.className = "admin-native-placeholder";
+        marker.dataset.adminNativePlaceholder = win.id;
+        marker.hidden = true;
+        node.parentNode.insertBefore(marker, node);
+        win.placeholders.set(node, marker);
       });
     }
 
     function buildShell(win, geometry) {
       if (win.shell?.isConnected) return win.shell;
-      const placeholder = ensurePlaceholder(win);
+      createPlaceholders(win);
       const shell = document.createElement("section");
       shell.className = `admin-native-floating-shell admin-native-tone-${win.tone}`;
       shell.dataset.adminNativeShell = win.id;
       shell.setAttribute("aria-label", `Fenêtre flottante ${win.title}`);
-      placeholder.after(shell);
+      document.body.appendChild(shell);
       win.nodes.forEach(node => shell.appendChild(node));
       win.shell = shell;
-
-      const safe = clampGeometry(geometry);
-      Object.assign(shell.style, {
-        left: `${safe.x}px`,
-        top: `${safe.y}px`,
-        width: `${safe.width}px`,
-        height: `${safe.height}px`
-      });
-
+      domainMask(win);
+      setGeometryOnTarget(win, geometry || currentRect(win));
       shell.addEventListener("pointerdown", () => bringToFront(win, false), { passive: true });
       shell.addEventListener("pointerup", () => persistGeometry(win), { passive: true });
       return shell;
     }
 
-    function restoreToFlow(win) {
+    function restoreShellNodes(win) {
       if (!win.shell) return;
-      const shell = win.shell;
-      const placeholder = win.placeholder;
-      if (placeholder?.isConnected) {
-        win.nodes.forEach(node => win.parent.insertBefore(node, placeholder));
-        placeholder.remove();
-      }
-      shell.remove();
+      win.nodes.forEach(node => {
+        const marker = win.placeholders.get(node);
+        if (marker?.parentNode) marker.parentNode.insertBefore(node, marker);
+        marker?.remove();
+        node.classList.remove("admin-native-domain-inactive");
+      });
+      win.placeholders.clear();
+      win.shell.remove();
       win.shell = null;
-      win.placeholder = null;
+    }
+
+    function setDirectFloating(win, floating, geometry) {
+      const node = win.anchor;
+      if (!node) return;
+      if (floating) {
+        node.classList.add("admin-native-direct-floating");
+        setGeometryOnTarget(win, geometry || currentRect(win));
+        if (!win.directPointerUp) {
+          win.directPointerUp = () => persistGeometry(win);
+          node.addEventListener("pointerup", win.directPointerUp, { passive: true });
+        }
+      } else {
+        node.classList.remove("admin-native-direct-floating", "admin-native-maximized");
+        ["left", "top", "width", "height", "zIndex"].forEach(key => { node.style[key] = ""; });
+      }
     }
 
     function bringToFront(win, persist = true) {
-      if (!win.floating || !win.shell) return;
+      if (!win?.floating) return;
+      const target = win.directFixed ? (win.minimized && win.miniBar?.isConnected ? win.miniBar : win.anchor) : win.shell;
+      if (!target) return;
       zCounter += 1;
-      win.shell.style.zIndex = String(zCounter);
+      target.style.zIndex = String(zCounter);
+      if (win.directFixed && win.miniBar?.isConnected) win.anchor.style.zIndex = String(zCounter);
       if (persist) patchState(win.id, { z: zCounter });
     }
 
-    function updateControlState(win) {
-      const { minimize, float, maximize } = win.controls || {};
-      if (minimize) {
-        minimize.textContent = win.minimized ? "+" : "—";
-        minimize.title = win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`;
-        minimize.setAttribute("aria-label", minimize.title);
-      }
-      if (float) {
-        float.textContent = win.floating ? "▣" : "□";
-        float.title = win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`;
-        float.setAttribute("aria-label", float.title);
-      }
-      if (maximize) {
-        maximize.textContent = win.maximized ? "↙" : "⤢";
-        maximize.title = win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`;
-        maximize.setAttribute("aria-label", maximize.title);
-      }
+    function removeMiniBar(win) {
+      if (!win.miniBar) return;
+      const root = win.miniBar;
+      win.controlSets = win.controlSets.filter(set => !set.mini || set.root.parentElement !== root);
+      root.remove();
+      win.miniBar = null;
+      win.miniTitle = null;
     }
 
-    function applyMinimizeVisual(win) {
-      win.nodes.forEach(node => {
-        if (node === win.anchor) return;
-        node.classList.toggle("admin-native-hidden-by-window", win.minimized);
-      });
+    function positionDockedMiniBar(win) {
+      if (!win.miniBar || win.floating) return;
+      const target = resolveHomeTarget(win);
+      if (!target?.parentNode) return;
+      target.parentNode.insertBefore(win.miniBar, target);
+    }
 
-      win.anchor.classList.toggle("admin-native-minimized", win.minimized);
-      win.anchor.classList.toggle("admin-native-compact-minimized", win.minimized && win.compactMinimize);
-      if (win.anchor.tagName === "DETAILS") {
-        win.anchor.classList.toggle("admin-native-details-minimized", win.minimized);
+    function ensureMiniBar(win) {
+      if (win.miniBar?.isConnected) return win.miniBar;
+      const bar = document.createElement("section");
+      bar.className = `admin-native-mini-bar admin-native-tone-${win.tone}`;
+      bar.dataset.adminNativeMini = win.id;
+      const label = document.createElement("strong");
+      label.className = "admin-native-mini-title";
+      label.textContent = win.title;
+      bar.appendChild(label);
+      win.miniBar = bar;
+      win.miniTitle = label;
+      createControlSet(win, bar, true);
+
+      if (win.floating) {
+        if (win.directFixed) {
+          document.body.appendChild(bar);
+          bar.classList.add("admin-native-mini-floating");
+          const safe = clampGeometry(win.geometry || currentRect(win));
+          Object.assign(bar.style, {
+            left: `${safe.x}px`,
+            top: `${safe.y}px`,
+            width: `${safe.width}px`,
+            zIndex: String(Number(win.anchor.style.zIndex) || ++zCounter)
+          });
+        } else if (win.shell) {
+          win.shell.prepend(bar);
+        }
+      } else {
+        const target = resolveHomeTarget(win);
+        if (target?.parentNode) target.parentNode.insertBefore(bar, target);
+        else document.body.appendChild(bar);
       }
-      if (win.shell) win.shell.classList.toggle("admin-native-shell-minimized", win.minimized);
+      return bar;
+    }
+
+    function applyMinimized(win) {
+      win.nodes.forEach(node => node.classList.toggle("admin-native-window-suppressed", win.minimized));
+      if (win.minimized) {
+        ensureMiniBar(win);
+        if (win.shell) win.shell.classList.add("admin-native-shell-minimized");
+      } else {
+        if (win.shell) win.shell.classList.remove("admin-native-shell-minimized");
+        if (win.floating && win.directFixed && win.geometry) setGeometryOnTarget(win, win.geometry);
+        removeMiniBar(win);
+      }
+      refreshControlState(win);
     }
 
     function setMinimized(win, minimized, persist = true) {
       if (!win) return;
       if (minimized && win.maximized) setMaximized(win, false, false);
       win.minimized = !!minimized;
-      applyMinimizeVisual(win);
-      updateControlState(win);
+      if (win.floating && !win.geometry) win.geometry = currentRect(win);
+      applyMinimized(win);
       if (persist) patchState(win.id, { minimized: win.minimized });
       updateDeck();
     }
 
     function setFloating(win, floating, persist = true, geometry = null) {
       if (!win) return;
+      if (!!floating === win.floating && (floating ? (win.directFixed || win.shell) : true)) return;
 
       if (!floating) {
-        if (win.maximized) setMaximized(win, false, false);
-        restoreToFlow(win);
+        if (win.maximized) {
+          win.maximized = false;
+          const target = win.directFixed ? win.anchor : win.shell;
+          target?.classList.remove("admin-native-maximized");
+        }
+        if (win.minimized) removeMiniBar(win);
+        if (win.directFixed) setDirectFloating(win, false);
+        else restoreShellNodes(win);
         win.floating = false;
-        applyMinimizeVisual(win);
-        updateControlState(win);
+        domainMask(win);
+        if (win.minimized) ensureMiniBar(win);
+        refreshControlState(win);
         if (persist) patchState(win.id, { floating: false, maximized: false });
         updateDeck();
         return;
       }
 
-      if (win.floating && win.shell) return;
-      const rect = geometry || geometryForWindow(win);
-      buildShell(win, rect);
+      const baseGeometry = clampGeometry(geometry || win.geometry || currentRect(win));
+      win.geometry = { ...baseGeometry };
+      if (win.minimized) removeMiniBar(win);
+      if (win.directFixed) setDirectFloating(win, true, baseGeometry);
+      else buildShell(win, baseGeometry);
       win.floating = true;
-      applyMinimizeVisual(win);
+      domainMask(win);
+      if (win.minimized) ensureMiniBar(win);
       bringToFront(win, false);
-      updateControlState(win);
-
+      refreshControlState(win);
       if (persist) {
-        const safe = clampGeometry(geometryForWindow(win));
         patchState(win.id, {
           floating: true,
-          ...safe,
-          z: Number(win.shell.style.zIndex) || zCounter
+          x: baseGeometry.x,
+          y: baseGeometry.y,
+          width: baseGeometry.width,
+          height: baseGeometry.height,
+          z: Number((win.directFixed ? win.anchor : win.shell)?.style.zIndex) || zCounter
         });
       }
       updateDeck();
     }
 
-    function setMaximized(win, maximized, persist = true, restoreOverride = null) {
+    function setMaximized(win, maximized, persist = true) {
       if (!win) return;
-
       if (!maximized) {
         if (!win.maximized) return;
         win.maximized = false;
-        win.shell?.classList.remove("admin-native-maximized");
-        if (win.restoreFloating) {
-          if (!win.floating) setFloating(win, true, false, win.restoreGeometry);
-          if (win.shell && win.restoreGeometry) {
-            const safe = clampGeometry(win.restoreGeometry);
-            Object.assign(win.shell.style, {
-              left: `${safe.x}px`,
-              top: `${safe.y}px`,
-              width: `${safe.width}px`,
-              height: `${safe.height}px`
-            });
-          }
+        const target = win.directFixed ? win.anchor : win.shell;
+        target?.classList.remove("admin-native-maximized");
+        const restoreFloating = win.restoreFloating;
+        const restoreGeometry = win.restoreGeometry;
+        if (restoreFloating) {
+          if (!win.floating) setFloating(win, true, false, restoreGeometry);
+          setGeometryOnTarget(win, restoreGeometry || win.geometry || currentRect(win));
         } else {
           setFloating(win, false, false);
         }
-        updateControlState(win);
+        win.restoreFloating = false;
+        win.restoreGeometry = null;
+        refreshControlState(win);
         if (persist) patchState(win.id, { maximized: false, restoreFloating: null, restoreGeometry: null });
         updateDeck();
         return;
       }
 
-      win.restoreFloating = restoreOverride ? !!restoreOverride.restoreFloating : win.floating;
-      win.restoreGeometry = restoreOverride
-        ? (restoreOverride.restoreGeometry || null)
-        : (win.floating ? geometryForWindow(win) : null);
-
-      if (!win.floating) setFloating(win, true, false, geometryForWindow(win));
-      setMinimized(win, false, false);
+      win.restoreFloating = win.floating;
+      win.restoreGeometry = win.floating ? { ...(win.geometry || currentRect(win)) } : null;
+      if (win.minimized) setMinimized(win, false, false);
+      if (!win.floating) setFloating(win, true, false, currentRect(win));
       win.maximized = true;
-      win.shell.classList.add("admin-native-maximized");
-      Object.assign(win.shell.style, {
-        left: `${VIEWPORT_MARGIN}px`,
-        top: `${VIEWPORT_MARGIN}px`,
-        width: `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`,
-        height: `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`
-      });
+      const target = win.directFixed ? win.anchor : win.shell;
+      target?.classList.add("admin-native-maximized");
+      if (target) {
+        Object.assign(target.style, {
+          left: `${VIEWPORT_MARGIN}px`,
+          top: `${VIEWPORT_MARGIN}px`,
+          width: `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`,
+          height: `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`
+        });
+      }
       bringToFront(win, false);
-      updateControlState(win);
-
+      refreshControlState(win);
       if (persist) {
         patchState(win.id, {
           maximized: true,
@@ -366,17 +504,19 @@
       event.preventDefault();
       event.stopPropagation();
 
-      if (!win.floating) setFloating(win, true, true, geometryForWindow(win));
+      if (!win.floating) setFloating(win, true, true, currentRect(win));
       bringToFront(win);
 
-      const shell = win.shell;
-      if (!shell) return;
-      const rect = shell.getBoundingClientRect();
+      const target = win.directFixed && win.minimized && win.miniBar?.isConnected
+        ? win.miniBar
+        : (win.directFixed ? win.anchor : win.shell);
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
       const startX = event.clientX;
       const startY = event.clientY;
-      const button = win.controls?.drag;
+      const button = event.currentTarget;
       document.body.classList.add("admin-native-dragging");
-      shell.classList.add("admin-native-moving");
+      target.classList.add("admin-native-moving");
       button?.setPointerCapture?.(event.pointerId);
 
       const move = moveEvent => {
@@ -384,10 +524,13 @@
           x: rect.left + (moveEvent.clientX - startX),
           y: rect.top + (moveEvent.clientY - startY),
           width: rect.width,
-          height: rect.height
+          height: win.geometry?.height || rect.height
         });
-        shell.style.left = `${safe.x}px`;
-        shell.style.top = `${safe.y}px`;
+        target.style.left = `${safe.x}px`;
+        target.style.top = `${safe.y}px`;
+        if (win.directFixed && win.minimized) {
+          win.geometry = { ...(win.geometry || safe), x: safe.x, y: safe.y, width: safe.width };
+        }
       };
 
       const end = endEvent => {
@@ -396,29 +539,19 @@
         button?.removeEventListener("pointerup", end);
         button?.removeEventListener("pointercancel", end);
         document.body.classList.remove("admin-native-dragging");
-        shell.classList.remove("admin-native-moving");
+        target.classList.remove("admin-native-moving");
+        if (win.directFixed && win.minimized) {
+          const r = target.getBoundingClientRect();
+          win.geometry = { ...(win.geometry || clampGeometry({})), x: r.left, y: r.top, width: r.width };
+        } else {
+          win.geometry = currentRect(win);
+        }
         persistGeometry(win);
       };
 
       button?.addEventListener("pointermove", move);
       button?.addEventListener("pointerup", end);
       button?.addEventListener("pointercancel", end);
-    }
-
-    function renameWindow(id, title) {
-      const win = windows.get(id);
-      if (!win) return false;
-      const next = clean(title);
-      if (!next || next === win.title) return true;
-      win.title = next;
-      win.anchor.dataset.adminNativeTitle = next;
-      if (win.shell) win.shell.setAttribute("aria-label", `Fenêtre flottante ${next}`);
-      const controls = win.controls;
-      if (controls?.root) controls.root.setAttribute("aria-label", `Fenêtre Administrator · ${next}`);
-      if (controls?.drag) { controls.drag.title = `Déplacer ${next}`; controls.drag.setAttribute("aria-label", controls.drag.title); }
-      updateControlState(win);
-      updateDeck();
-      return true;
     }
 
     function stateLabel(win) {
@@ -432,12 +565,16 @@
       if (!win) return;
       if (win.minimized) setMinimized(win, false);
       if (win.floating) bringToFront(win);
-      else win.anchor.scrollIntoView({ behavior: "smooth", block: "center" });
-      const target = win.shell || win.anchor;
-      target.classList.remove("admin-native-focus-pulse");
-      void target.offsetWidth;
-      target.classList.add("admin-native-focus-pulse");
-      target.addEventListener("animationend", () => target.classList.remove("admin-native-focus-pulse"), { once: true });
+      else {
+        const target = visibleEntry(win)?.node || win.anchor;
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+        target?.classList.remove("admin-native-focus-pulse");
+        if (target) {
+          void target.offsetWidth;
+          target.classList.add("admin-native-focus-pulse");
+          target.addEventListener("animationend", () => target.classList.remove("admin-native-focus-pulse"), { once: true });
+        }
+      }
     }
 
     function updateDeck() {
@@ -445,27 +582,22 @@
       deckList.innerHTML = "";
       const entries = [...windows.values()];
       if (deckCount) deckCount.textContent = String(entries.length);
-
       entries.forEach(win => {
         const row = document.createElement("div");
         row.className = "admin-window-deck-row";
-
         const name = document.createElement("span");
         name.className = "admin-window-deck-name";
         name.textContent = win.title;
-
         const state = document.createElement("span");
         state.className = "admin-window-deck-state";
         state.textContent = stateLabel(win);
-
-        const focusButton = createButton("admin-window-deck-action", "◎", `Afficher ${win.title}`);
-        const dock = createButton("admin-window-deck-action", "⌂", `Raccrocher ${win.title}`);
-        const min = createButton("admin-window-deck-action", win.minimized ? "+" : "—", `Réduire ou restaurer ${win.title}`);
-        focusButton.addEventListener("click", () => focusWindow(win));
+        const focus = createButton("admin-window-deck-action", "◎", "Afficher / mettre au premier plan");
+        const dock = createButton("admin-window-deck-action", "⌂", "Raccrocher");
+        const min = createButton("admin-window-deck-action", win.minimized ? "+" : "—", "Réduire / restaurer");
+        focus.addEventListener("click", () => focusWindow(win));
         dock.addEventListener("click", () => setFloating(win, false));
         min.addEventListener("click", () => setMinimized(win, !win.minimized));
-
-        row.append(name, state, focusButton, dock, min);
+        row.append(name, state, focus, dock, min);
         deckList.appendChild(row);
       });
     }
@@ -475,18 +607,16 @@
       deck = document.createElement("aside");
       deck.className = "admin-window-deck";
       deck.hidden = true;
-      deck.setAttribute("aria-label", "Gestionnaire de fenêtres natives Administrator");
-
+      deck.setAttribute("aria-label", "Gestionnaire de fenêtres Administrator");
       const head = document.createElement("div");
       head.className = "admin-window-deck-head";
       const title = document.createElement("strong");
       title.textContent = "WINDOW DECK";
       deckCount = document.createElement("span");
       deckCount.className = "admin-window-deck-count";
-      const close = createButton("admin-window-deck-close", "×", "Fermer le gestionnaire");
+      const close = createButton("admin-window-deck-close", "×", "Fermer le gestionnaire de fenêtres");
       close.addEventListener("click", () => setDeckOpen(false));
       head.append(title, deckCount, close);
-
       deckList = document.createElement("div");
       deckList.className = "admin-window-deck-list";
       deck.append(head, deckList);
@@ -498,7 +628,7 @@
     function setDeckOpen(open) {
       installDeck();
       deck.hidden = !open;
-      document.body.classList.toggle("admin-window-deck-open", !!open);
+      document.body.classList.toggle("admin-window-deck-open", open);
       updateDeck();
     }
 
@@ -508,76 +638,103 @@
     }
 
     function setFree(free) {
-      document.body.classList.toggle("admin-native-free", !!free);
-      writeStorage(layoutKey, free ? "1" : "0");
-      document.dispatchEvent(new CustomEvent("erith:admin-native-layout", { detail: { free: !!free } }));
-      return !!free;
+      const enabled = !!free;
+      document.body.classList.toggle("admin-native-free", enabled);
+      writeStorage(layoutKey, enabled ? "1" : "0");
+      document.dispatchEvent(new CustomEvent("erith:admin-window-layout", { detail: { free: enabled } }));
+      return enabled;
     }
 
     function isFree() {
       return document.body.classList.contains("admin-native-free");
     }
 
+    function setDomain(domain) {
+      activeDomain = clean(domain || "crypto") || "crypto";
+      writeStorage(domainKey, activeDomain);
+      windows.forEach(win => {
+        domainMask(win);
+        if (win.minimized && !win.floating) positionDockedMiniBar(win);
+      });
+      updateDeck();
+      return activeDomain;
+    }
+
+    function renameWindow(id, title) {
+      const win = windows.get(id);
+      if (!win) return false;
+      win.title = clean(title) || win.title;
+      win.anchor.dataset.adminNativeTitle = win.title;
+      refreshControlState(win);
+      updateDeck();
+      return true;
+    }
+
     function reset() {
       windows.forEach(win => {
         removeStorage(stateKey(win.id));
-        if (win.maximized) setMaximized(win, false, false);
-        if (win.floating) setFloating(win, false, false);
-        win.minimized = false;
-        win.maximized = false;
-        win.floating = false;
+        if (win.maximized) {
+          win.maximized = false;
+          const target = win.directFixed ? win.anchor : win.shell;
+          target?.classList.remove("admin-native-maximized");
+        }
+        if (win.minimized) {
+          win.minimized = false;
+          win.nodes.forEach(node => node.classList.remove("admin-native-window-suppressed"));
+          removeMiniBar(win);
+        }
+        if (win.floating) {
+          if (win.directFixed) setDirectFloating(win, false);
+          else restoreShellNodes(win);
+          win.floating = false;
+        }
+        win.entries.forEach(entry => entry.node.classList.remove("admin-native-domain-inactive"));
+        win.geometry = null;
         win.restoreGeometry = null;
         win.restoreFloating = false;
-        win.nodes.forEach(node => node.classList.remove("admin-native-hidden-by-window"));
-        win.anchor.classList.remove("admin-native-minimized", "admin-native-compact-minimized", "admin-native-details-minimized");
-        updateControlState(win);
+        refreshControlState(win);
       });
       updateDeck();
-      document.dispatchEvent(new CustomEvent("erith:admin-native-reset"));
+      document.dispatchEvent(new CustomEvent("erith:admin-window-reset"));
     }
 
     function cascade() {
-      const floating = [...windows.values()].filter(win => win.floating && win.shell && !win.maximized);
+      const floating = [...windows.values()].filter(win => win.floating && !win.maximized);
       if (!floating.length) return 0;
-
       const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const width = Math.min(780, Math.max(MIN_WIDTH, vw * .58));
-      const height = Math.min(580, Math.max(240, vh * .62));
-      const step = 30;
-
+      const width = Math.min(760, Math.max(MIN_WIDTH, vw * .56));
+      const height = Math.min(560, Math.max(220, vh * .60));
       floating.forEach((win, index) => {
-        const maxCols = Math.max(1, Math.floor((vw - width - VIEWPORT_MARGIN * 2) / step) + 1);
-        const col = index % maxCols;
-        const row = Math.floor(index / maxCols);
-        const safe = clampGeometry({
-          x: VIEWPORT_MARGIN + col * step,
-          y: VIEWPORT_MARGIN + row * step,
-          width,
-          height
-        });
-        Object.assign(win.shell.style, {
-          left: `${safe.x}px`,
-          top: `${safe.y}px`,
-          width: `${safe.width}px`,
-          height: `${safe.height}px`
-        });
+        const step = 30;
+        const x = VIEWPORT_MARGIN + (index % 7) * step;
+        const y = VIEWPORT_MARGIN + (index % 7) * step;
+        const safe = clampGeometry({ x, y, width, height: win.geometry?.height || height });
+        win.geometry = safe;
+        if (win.directFixed && win.minimized && win.miniBar?.isConnected) {
+          win.miniBar.style.left = `${safe.x}px`;
+          win.miniBar.style.top = `${safe.y}px`;
+          win.miniBar.style.width = `${safe.width}px`;
+        } else {
+          setGeometryOnTarget(win, safe);
+        }
         bringToFront(win, false);
-        patchState(win.id, { floating: true, ...safe, z: Number(win.shell.style.zIndex) || zCounter });
+        persistGeometry(win);
       });
-      updateDeck();
       return floating.length;
     }
 
     function init() {
+      const storedFree = readStorage(layoutKey, defaultFree ? "1" : "0") !== "0";
+      setFree(storedFree);
       definitions.forEach(def => {
         const win = resolveDefinition(def);
-        if (win) windows.set(win.id, win);
+        if (!win?.id || windows.has(win.id)) return;
+        windows.set(win.id, win);
       });
 
-      installDeck();
-      const storedFree = readStorage(layoutKey, defaultFree ? "1" : "0") === "1";
-      setFree(storedFree);
+      const storedDomain = readStorage(domainKey, activeDomain);
+      setDomain(storedDomain || activeDomain);
 
       windows.forEach(win => {
         const state = getState(win.id);
@@ -588,48 +745,48 @@
             width: Number(state.width),
             height: Number(state.height)
           });
-          if (Number.isFinite(Number(state.z)) && win.shell) {
+          if (Number.isFinite(Number(state.z))) {
             zCounter = Math.max(zCounter, Number(state.z));
-            win.shell.style.zIndex = String(Number(state.z));
+            const target = win.directFixed ? win.anchor : win.shell;
+            if (target) target.style.zIndex = String(Number(state.z));
           }
         }
         if (state.minimized === true) setMinimized(win, true, false);
-        if (state.maximized === true) {
-          setMaximized(win, true, false, {
-            restoreFloating: state.restoreFloating === true,
-            restoreGeometry: state.restoreGeometry || null
-          });
-        }
+        if (state.maximized === true) setMaximized(win, true, false);
       });
-
       updateDeck();
-
-      window.addEventListener("keydown", event => {
-        if (event.key !== "Escape") return;
-        const maximized = [...windows.values()].reverse().find(win => win.maximized);
-        if (maximized) {
-          setMaximized(maximized, false);
-          return;
-        }
-        if (deck && !deck.hidden) setDeckOpen(false);
-      });
-
-      return { count: windows.size, free: isFree() };
+      return { count: windows.size, free: isFree(), domain: activeDomain };
     }
+
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Escape") return;
+      const maximized = [...windows.values()].reverse().find(win => win.maximized);
+      if (maximized) {
+        event.preventDefault();
+        setMaximized(maximized, false);
+        return;
+      }
+      if (deck && !deck.hidden) setDeckOpen(false);
+    });
 
     return {
       init,
+      get count() { return windows.size; },
+      isFree,
+      setFree,
+      setDomain,
+      renameWindow,
       reset,
       cascade,
       toggleDeck,
-      setFree,
-      isFree,
-      renameWindow,
-      get count() { return windows.size; },
-      get onStateChange() { return stateCallback; },
-      set onStateChange(callback) { stateCallback = typeof callback === "function" ? callback : null; }
+      setDeckOpen,
+      getWindow: id => windows.get(id) || null,
+      minimize: (id, value = true) => setMinimized(windows.get(id), value),
+      float: (id, value = true) => setFloating(windows.get(id), value),
+      maximize: (id, value = true) => setMaximized(windows.get(id), value),
+      focus: id => focusWindow(windows.get(id))
     };
   }
 
-  window.ErithAdminWindowManager = { create: createManager };
+  window.ErithAdminWindowManager = Object.freeze({ create: createManager });
 })();
