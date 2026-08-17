@@ -1,18 +1,35 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v20",
-  "build": "39.2.20R1",
-  "release": "ADMINISTRATOR MIRROR · METALS INTRADAY RESTORE LOCK",
-  "published_at": "2026-08-17T14:41:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v21",
+  "build": "39.2.20R2",
+  "release": "ADMINISTRATOR MIRROR · PUBLICATION IDENTITY RECOVERY LOCK",
+  "published_at": "2026-08-17T15:20:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.20R1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20R1",
+    "primary_build": "39.2.20R2",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20R2",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
+  "publication_identity_contract": {
+    "canonical_build": "39.2.20R2",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.2.20R2",
+    "case_sensitive": true,
+    "sources_required_to_match": [
+      "app.js ATLAS_BUILD",
+      "app.js ATLAS_ASSET_TOKEN",
+      "ATLAS_RUNTIME_TRUTH_3813",
+      "index.html atlas-build",
+      "index.html atlas-asset-token",
+      "index.html app.js cache token",
+      "version.json build",
+      "version.json asset_token",
+      "js/app.js ADMIN_BUILD"
+    ],
+    "historical_lock": "Recovery Publication Identity methodology reused from prior stable update-control repairs"
+  },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "preserved; no visual change in 39.2.20R1"
+    "status": "preserved; no visual change in 39.2.20R2"
   },
   "operational_windows": {
     "count": 12,
@@ -55,46 +72,36 @@
     "abc_slots": "unchanged"
   },
   "metals_history_contract": {
+    "base": "39.2.20R1",
     "current_quotes": "public Metals snapshot when reachable; IndexedDB report only as fallback",
     "daily_history": "public/agent_crypto_erith_ia/data/metals/history/public_1y.json",
     "intraday_24h": "public/agent_crypto_erith_ia/data/metals/history/intraday_24h.json",
     "spot_history": "public/agent_crypto_erith_ia/data/metals/history/spot_48h.json",
-    "load_order": "restore report fallback → load public archive → keep public state when reachable",
-    "retry_origins": [
-      "github_archive",
-      "book_memory",
-      "interface_memory"
-    ],
-    "no_fabrication": true,
-    "boot_retry": "one bounded retry of intraday_24h.json only when the initial public archive load does not yield the complete 5-series intraday basket"
+    "adapter_contract": "../web/metals_quote_adapter_contract.json",
+    "no_fabrication": true
   },
   "supersedes": {
-    "39.2.19": "direct base; Crypto workspace boot hydration fix preserved",
-    "39.2.18": "workspace authority correction preserved through 39.2.19",
+    "39.2.20R1": "direct base; Metals 5/5 restoration preserved; publication identity corrected only",
+    "39.2.19": "Crypto workspace boot hydration preserved",
     "39.2.17": "Math Core host-width fix preserved",
     "39.2.16": "chart visual experiment remains separate and is not merged"
   },
   "integrity": {
     "files": {
-      "app.js": "260d422c1210b2e93c36993e7d5ba72e818866c2214deb26ea63f2cf50b79db3",
-      "index.html": "e29487884625a673977ae400d3f0d8fcbebd06297ca66c9ea34593c0fdc4194f",
+      "app.js": "876de75b530223173dafcb7419668a201203f760e24328c5e4ffd1ebf955123b",
+      "index.html": "7183fa915cd824eaf657da1967a5abc71fff9cfe72bae413cb61e6888a5f3185",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "a9ba927177e326e0b3efa66bffdda779496be29a2bb0a0026a2b2b5417a0df9c",
+      "js/app.js": "46ce21cf7ce1237612ee8b498fc41f44bebb982468751ceb503b55da41c64570",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "version.json": "6937f11588abff967812e583ba013b09d000d97d8efdad43e3676f7557730ba3"
+    "version.json": "da9dce0d54882b071aeb88ef153c4a4bda5e125ee835da8c1de259b7f3214be4"
   },
   "validation_contract": {
-    "metals_24h": "XAU/XAG/XPT/XPD/HG public intraday file may repopulate after boot and after a retry from a memory-restored state",
-    "metals_long_horizons": "daily Futures history preserved",
-    "crypto_workspace": "39.2.19 F5 restoration preserved",
-    "visual": "no visual CSS change"
-  },
-  "metals_contract_path_hotfix": {
-    "state": "locked",
-    "path": "../web/metals_quote_adapter_contract.json",
-    "reason": "administrator/metals_quote_adapter_contract.json does not exist; canonical contract is stored under web/"
+    "publication_identity": "Build/token/runtime/meta/script/hash must agree exactly before publication is considered coherent",
+    "metals_24h": "39.2.20R1 XAU/XAG/XPT/XPD/HG 5/5 path unchanged",
+    "crypto_workspace": "39.2.19 F5 restoration unchanged",
+    "visual": "no visual CSS behavior change"
   }
 }
