@@ -1,26 +1,26 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.9 · Classic 24H Raw Binance EUR Source Truth",
-  "build": "38.15.9",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.9",
-  "published_at": "2026-08-17T06:25:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.10 · CLASSIC FINAL · CANONICAL LOCK",
+  "build": "38.15.10",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.10",
+  "published_at": "2026-08-17T07:16:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "17454edf7f8d6a1d981f8e952eeb7570bea1bde067c249c9c0aa8c18c1547095"
+      "sha256": "821288ef891b8db6dbda259f8a85e8a7a679df2f7895fa7d93a2fe383d33e25e"
     },
     "index.html": {
-      "sha256": "1ed430688445c4573061db3f1e62caed95dba6d5578942aa2d81fbb1945fd1f4"
+      "sha256": "9a126e9f8c0a847c0333623338140676d194f520efcd1423f0dcc70dd1b7de9d"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Built from Build 38.15.6; no reset of CURRENT, Journal, Memory, IndexedDB or workspace preferences.",
-    "Corrects the incomplete 38.15.6 transplantation: atlasFetchComparisonSeriesResilient and fetchChartSeries are now restored exactly from canonical Build 38.15.",
-    "All four canonical graph acquisition/resilience functions are hash-verified against Build 38.15: atlasChartPreferredSourceFamily, atlasComparisonPreferredSourceFamily, atlasFetchComparisonSeriesResilient, fetchChartSeries.",
-    "Preserves the Build 38.15.2 Firefox end-of-cycle stability code unchanged.",
-    "Preserves the Build 38.15.5 Atlas AUTO/MANUAL operator control unchanged.",
-    "Does not claim to fix the known 24h visual discontinuity; it removes the hybrid graph-engine state before further diagnosis."
+    "Built directly from validated Build 38.15.9.",
+    "Preserves the validated Target Top 5 24h Binance EUR direct path: 5/5 series, 300 points per series.",
+    "Preserves Build 38.15.2 Firefox end-of-cycle stability and Build 38.15.5 Atlas AUTO/MANUAL control.",
+    "Fixes only the live chart tooltip percentage metadata in Price EUR view so the live endpoint uses normalized period variation instead of the raw EUR price.",
+    "No change to historical acquisition, alignment, Base 100, Chart.js rendering, workspace A/B/C, CURRENT, Journal, Memory, IndexedDB, Bridge V1.9.5 or Ollama contract.",
+    "Classic interface frozen as CLASSIC FINAL · CANONICAL LOCK before the separate metallic Administrator interface line."
   ]
 }
