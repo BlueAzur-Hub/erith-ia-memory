@@ -1,33 +1,30 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.5R1 · ADMINISTRATOR MIRROR · VISUAL ASSET LAYER REBASE LOCK",
-  "build": "39.4.5R1",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.5R1",
-  "published_at": "2026-08-17T21:12:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.5R2 · ADMINISTRATOR MIRROR · VISUAL VISIBILITY LOCK",
+  "build": "39.4.5R2",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.5R2",
+  "published_at": "2026-08-17T21:36:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.4.4R1 Market Memory single-truth counters preserved exactly; visual layer added externally only."
+    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.5R2 only exposes already-installed visual assets above opaque UI layers."
   },
   "files": {
     "app.js": {
-      "sha256": "2e5f35ba1ada8afd219ddf33d334183a3ebcb85873eafcb7c6c7256ae76a97cb"
+      "sha256": "2143c40dbc683ac0b5e2b6652ef7215f298d1c240485b99e08640c35085df1cb"
     },
     "index.html": {
-      "sha256": "cb519ef24472b1e06b64c8c4e332ad8ba36dbc45e45f341d842c12341cb060c5"
+      "sha256": "8ffcc0851aa41abeaedc0613bc40b2ea89d89ad90093176553eefd805fb8a380"
     },
     "js/app.js": {
-      "sha256": "c6f38ebc470ae234565663586a577bd8e8acd4a9f8b9a8b21d9ddd7abc37e8dd"
+      "sha256": "2c1fef2bffff87f4267d6d70fa54402c7f123acf795e2b59e2af135965a4585b"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
     },
     "admin-visual-assets.css": {
-      "sha256": "b5a2e1d94bbbab8c64e70b43748f4681848e141bfa13d49f9534071878d451fe"
-    },
-    "js/admin-visual-assets-39.4.5R1.js": {
-      "sha256": "bf0b878d0e7c15b10daa5baa71e60e0abcfc13326c538846e4838381b4063c06"
+      "sha256": "5f634390fffbcc237123acdd427868157cd9504a40989e378352c003668a51d5"
     },
     "assets/visual/admin-analytical-memory.png": {
       "sha256": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d"
@@ -67,16 +64,18 @@
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
+    },
+    "js/admin-visual-assets-39.4.5R2.js": {
+      "sha256": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "2e5f35ba1ada8afd219ddf33d334183a3ebcb85873eafcb7c6c7256ae76a97cb",
-      "index.html": "cb519ef24472b1e06b64c8c4e332ad8ba36dbc45e45f341d842c12341cb060c5",
-      "js/app.js": "c6f38ebc470ae234565663586a577bd8e8acd4a9f8b9a8b21d9ddd7abc37e8dd",
+      "app.js": "2143c40dbc683ac0b5e2b6652ef7215f298d1c240485b99e08640c35085df1cb",
+      "index.html": "8ffcc0851aa41abeaedc0613bc40b2ea89d89ad90093176553eefd805fb8a380",
+      "js/app.js": "2c1fef2bffff87f4267d6d70fa54402c7f123acf795e2b59e2af135965a4585b",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
-      "admin-visual-assets.css": "b5a2e1d94bbbab8c64e70b43748f4681848e141bfa13d49f9534071878d451fe",
-      "js/admin-visual-assets-39.4.5R1.js": "bf0b878d0e7c15b10daa5baa71e60e0abcfc13326c538846e4838381b4063c06",
+      "admin-visual-assets.css": "5f634390fffbcc237123acdd427868157cd9504a40989e378352c003668a51d5",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -89,16 +88,17 @@
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
+      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
+      "js/admin-visual-assets-39.4.5R2.js": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
     },
     "publication_identity": {
-      "build": "39.4.5R1",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.5R1",
+      "build": "39.4.5R2",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.5R2",
       "rule": "exact case"
     }
   },
   "protected_code": {
-    "application_core": "CODE FINALISÉ — recovered 39.4.3R1 core; no functional edit in 39.4.5R1 except publication identity",
+    "application_core": "CODE FINALISÉ — inherited from 39.4.5R1 / 39.4.4R1; identity-only edit in app.js",
     "market_memory": "CODE FINALISÉ — 39.4.4R1; do not edit except explicit operator request",
     "workspace_f5": "CODE FINALISÉ — 39.2.19",
     "math_core": "CODE FINALISÉ — 39.2.17",
@@ -113,8 +113,10 @@
     "functional_delta_in_39_4_5R1": false
   },
   "visual_layer": {
-    "module": "js/admin-visual-assets-39.4.5R1.js",
+    "module": "js/admin-visual-assets-39.4.5R2.js",
     "stylesheet": "admin-visual-assets.css",
+    "assets": "pre-installed on GitHub; deliberately omitted from patch ZIP",
+    "strategy": "explicit visible strips / hero / direct graph panorama replacement; no buried backgrounds",
     "private_image_storage": "agent_crypto_private_visuals / visual_slots / technical-reading",
     "core_rewrite": false,
     "market_memory_write": false,
@@ -124,11 +126,11 @@
     "starts_atlas": false
   },
   "notes": [
-    "This build is rebased directly on 39.4.4R1. The older prebuilt 39.4.5 is obsolete and must not be uploaded.",
-    "Market Memory 39.4.4R1 script is preserved byte-for-byte.",
-    "Only visual CSS/JS/assets plus publication identity are added.",
-    "Future 39.5+ candidates prepared before this rebase are quarantined and must be rebuilt from this lineage after browser validation."
+    "39.4.5R2 is a corrective visual patch rebased on the active 39.4.5R1 lineage.",
+    "The seven image assets are already installed on GitHub and are NOT included in this ZIP.",
+    "Market Memory 39.4.4R1 remains the locked module and is not shipped or edited by this patch.",
+    "R1 visual failure cause: images were placed under existing opaque/recollapsed surfaces; R2 uses explicit visible UI strips and the existing graph panorama layer."
   ],
-  "parent_build": "39.4.4R1",
-  "lineage": "39.4.4R1 -> 39.4.5R1"
+  "parent_build": "39.4.5R1",
+  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R2"
 }
