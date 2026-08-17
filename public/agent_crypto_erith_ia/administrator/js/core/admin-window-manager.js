@@ -174,6 +174,7 @@
         });
         target.style.left = `${safe.x}px`;
         target.style.top = `${safe.y}px`;
+        queueVisualBackdropSync(win);
       };
 
       const end = endEvent => {
@@ -289,7 +290,11 @@
         restoreFloating: false,
         directPointerUp: null,
         minimizeBar: null,
-        minimizeBarTitle: null
+        minimizeBarTitle: null,
+        visualBackdrop: null,
+        visualBackdropRaf: 0,
+        visualBackdropResizeObserver: null,
+        visualBackdropMutationObserver: null
       };
 
       win.nodes.forEach(node => node.dataset.adminNativeWindow = win.id);
@@ -326,6 +331,7 @@
         target.style.top = `${safe.y}px`;
         target.style.width = `${safe.width}px`;
         if (!win.minimized) target.style.height = `${safe.height}px`;
+        queueVisualBackdropSync(win);
       }
       return safe;
     }
@@ -417,6 +423,130 @@
       win.shellTitle = null;
     }
 
+
+    /* Administrator 39.2.14 — visual backdrop only.
+       Math Core stays in its original DOM parent and keeps its native geometry.
+       The backdrop follows the visual overflow of the detached instrument so the
+       whole visible tableau has one continuous metal surface. */
+    function isVisualBackdropWindow(win) {
+      return !!win && win.id === "math-core" && win.directFixed === true;
+    }
+
+    function removeVisualBackdrop(win) {
+      if (!win) return;
+      if (win.visualBackdropRaf) {
+        cancelAnimationFrame(win.visualBackdropRaf);
+        win.visualBackdropRaf = 0;
+      }
+      try { win.visualBackdropResizeObserver?.disconnect?.(); } catch {}
+      try { win.visualBackdropMutationObserver?.disconnect?.(); } catch {}
+      win.visualBackdropResizeObserver = null;
+      win.visualBackdropMutationObserver = null;
+      win.visualBackdrop?.remove?.();
+      win.visualBackdrop = null;
+    }
+
+    function measureVisualBackdrop(win) {
+      const node = win?.anchor;
+      if (!(node instanceof HTMLElement)) return null;
+      const base = node.getBoundingClientRect();
+      if (!(base.width > 0) || !(base.height > 0)) return null;
+
+      let right = base.right;
+      let bottom = base.bottom;
+
+      /* scrollWidth/scrollHeight catch normal overflow; descendant rectangles
+         also catch positioned native panes that visually escape the host box. */
+      right = Math.max(right, base.left + Math.max(node.clientWidth || 0, node.scrollWidth || 0));
+      bottom = Math.max(bottom, base.top + Math.max(node.clientHeight || 0, node.scrollHeight || 0));
+
+      node.querySelectorAll("*").forEach(child => {
+        if (!(child instanceof HTMLElement)) return;
+        const rect = child.getBoundingClientRect();
+        if (!(rect.width > 0) || !(rect.height > 0)) return;
+        if (rect.right < base.left || rect.bottom < base.top) return;
+        right = Math.max(right, rect.right);
+        bottom = Math.max(bottom, rect.bottom);
+      });
+
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const left = Math.max(0, base.left);
+      const top = Math.max(0, base.top);
+      right = Math.min(vw - 2, Math.max(base.right, right));
+      bottom = Math.min(vh - 2, Math.max(base.bottom, bottom));
+
+      return {
+        left,
+        top,
+        width: Math.max(base.width, right - left),
+        height: Math.max(base.height, bottom - top)
+      };
+    }
+
+    function syncVisualBackdrop(win) {
+      if (!isVisualBackdropWindow(win)) return;
+      const node = win.anchor;
+      if (!win.floating || win.hidden || win.minimized || node.classList.contains("is-rail")) {
+        if (win.visualBackdrop) win.visualBackdrop.hidden = true;
+        return;
+      }
+
+      if (!win.visualBackdrop?.isConnected) {
+        const backdrop = document.createElement("div");
+        backdrop.className = `admin-native-visual-backdrop admin-native-math-backdrop admin-native-tone-${win.tone}`;
+        backdrop.dataset.adminNativeBackdrop = win.id;
+        backdrop.setAttribute("aria-hidden", "true");
+        document.body.appendChild(backdrop);
+        win.visualBackdrop = backdrop;
+      }
+
+      const bounds = measureVisualBackdrop(win);
+      if (!bounds) {
+        win.visualBackdrop.hidden = true;
+        return;
+      }
+
+      const backdrop = win.visualBackdrop;
+      backdrop.hidden = false;
+      backdrop.style.left = `${bounds.left}px`;
+      backdrop.style.top = `${bounds.top}px`;
+      backdrop.style.width = `${bounds.width}px`;
+      backdrop.style.height = `${bounds.height}px`;
+      const z = Number(node.style.zIndex) || FLOAT_Z_BASE;
+      backdrop.style.zIndex = String(Math.max(1, z - 1));
+    }
+
+    function queueVisualBackdropSync(win) {
+      if (!isVisualBackdropWindow(win)) return;
+      if (win.visualBackdropRaf) cancelAnimationFrame(win.visualBackdropRaf);
+      win.visualBackdropRaf = requestAnimationFrame(() => {
+        win.visualBackdropRaf = 0;
+        syncVisualBackdrop(win);
+      });
+    }
+
+    function armVisualBackdropObservers(win) {
+      if (!isVisualBackdropWindow(win)) return;
+      const node = win.anchor;
+      if (!win.visualBackdropResizeObserver && typeof ResizeObserver === "function") {
+        win.visualBackdropResizeObserver = new ResizeObserver(() => queueVisualBackdropSync(win));
+        win.visualBackdropResizeObserver.observe(node);
+        Array.from(node.children).forEach(child => {
+          if (child instanceof HTMLElement) win.visualBackdropResizeObserver.observe(child);
+        });
+      }
+      if (!win.visualBackdropMutationObserver && typeof MutationObserver === "function") {
+        win.visualBackdropMutationObserver = new MutationObserver(() => queueVisualBackdropSync(win));
+        win.visualBackdropMutationObserver.observe(node, {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["class", "style", "open", "hidden"]
+        });
+      }
+      queueVisualBackdropSync(win);
+    }
+
     function setDirectFloating(win, floating, geometry) {
       const node = win.anchor;
       if (!node) return;
@@ -424,10 +554,16 @@
         node.classList.add("admin-native-direct-floating");
         setGeometryOnTarget(win, geometry || currentRect(win));
         if (!win.directPointerUp) {
-          win.directPointerUp = () => persistGeometry(win);
+          win.directPointerUp = () => {
+            persistGeometry(win);
+            queueVisualBackdropSync(win);
+          };
           node.addEventListener("pointerup", win.directPointerUp, { passive: true });
         }
+        armVisualBackdropObservers(win);
+        queueVisualBackdropSync(win);
       } else {
+        removeVisualBackdrop(win);
         node.classList.remove("admin-native-direct-floating", "admin-native-maximized");
         ["left", "top", "width", "height", "zIndex"].forEach(key => { node.style[key] = ""; });
       }
@@ -439,6 +575,7 @@
       if (!target) return;
       zCounter += 1;
       target.style.zIndex = String(zCounter);
+      queueVisualBackdropSync(win);
       if (persist) patchState(win.id, { z: zCounter });
     }
 
@@ -493,6 +630,7 @@
       }
 
       refreshControlState(win);
+      queueVisualBackdropSync(win);
     }
 
     function setMinimized(win, minimized, persist = true) {
