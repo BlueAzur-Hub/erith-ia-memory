@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.4.5R2";
+  const ADMIN_BUILD = "39.4.5R3";
   const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · VISUAL ASSET LAYER REBASE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

@@ -1,220 +1,285 @@
 /* ============================================================
-   Agent-Crypto Administrator 39.4.5R2 — VISUAL VISIBILITY LOCK
-   VISUAL ONLY. Assets are already installed on GitHub and are NOT
-   shipped in this patch. No Market / Atlas / Memory / Math logic.
+   Agent-Crypto Administrator 39.4.5R3 — VISUAL COMPOSITION LOCK
+   VISUAL ONLY. Images already live on GitHub and are NOT shipped.
+   Protected: Market Memory 39.4.4R1 / Atlas / Math / Binance.
    ============================================================ */
 
 :root {
-  --admin-vis-cyan: rgba(87, 226, 255, .84);
-  --admin-vis-gold: rgba(239, 194, 107, .92);
-  --admin-vis-border: rgba(90, 220, 242, .28);
-  --admin-vis-panel: rgba(5, 14, 25, .72);
+  --admin-r3-cyan: rgba(87, 226, 255, .88);
+  --admin-r3-gold: rgba(239, 194, 107, .94);
+  --admin-r3-ink: rgba(3, 10, 18, .86);
 }
 
 /* ------------------------------------------------------------
-   GRAPH — replace the old Classic lounge directly at the layer
-   that already owns the graph panorama. Do not bury a background
-   under chart-shell or under an opaque glass panel.
+   GRAPH — keep the office visible, but restore line readability.
+   The background is scenery; the chart remains the foreground.
    ------------------------------------------------------------ */
 body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::before {
   background-image: url("./assets/visual/admin-chart-office.png") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
-  opacity: .94 !important;
-  filter: saturate(.96) brightness(.82) contrast(1.03) !important;
+  opacity: .72 !important;
+  filter: saturate(.90) brightness(.72) contrast(1.03) !important;
 }
 body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::after {
   background:
-    linear-gradient(90deg, rgba(2,8,17,.20), rgba(2,8,17,.06) 48%, rgba(2,8,17,.18)),
-    linear-gradient(180deg, rgba(2,8,17,.05), rgba(2,8,17,.22)) !important;
+    radial-gradient(ellipse at 51% 52%, rgba(2,8,17,.38) 0 32%, rgba(2,8,17,.22) 57%, rgba(2,8,17,.08) 82%),
+    linear-gradient(180deg, rgba(2,8,17,.08), rgba(2,8,17,.26)) !important;
   opacity: 1 !important;
 }
 body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-shell {
-  background: rgba(2, 8, 17, .10) !important;
+  background: rgba(2, 8, 17, .06) !important;
 }
 body.atlas-administrator-mirror #analyste.champagne-clean-lens #mainChart {
   background: transparent !important;
 }
 
 /* ------------------------------------------------------------
-   TECHNICAL READING — explicit default/private portrait surface.
+   TECHNICAL READING — portrait FIRST.
+   No permanent dark veil, no permanent "private" label over face.
    ------------------------------------------------------------ */
-body.atlas-administrator-mirror #detailPanel .detail-project-visual {
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 {
   position: relative !important;
-  display: block;
-  min-height: clamp(240px, 29vh, 390px) !important;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 4 / 5 !important;
+  height: auto !important;
+  min-height: 340px !important;
+  max-height: 520px !important;
   overflow: hidden !important;
-  cursor: pointer;
-  background-color: #091421 !important;
-  background-image:
-    linear-gradient(180deg, rgba(2,7,14,.01) 0%, rgba(2,7,14,.08) 58%, rgba(2,7,14,.42) 100%),
-    var(--admin-private-tech-image, url("./assets/visual/admin-technical-reading-default.png")) !important;
-  background-size: cover !important;
-  background-position: var(--admin-private-tech-x, 50%) var(--admin-private-tech-y, 18%) !important;
-  background-repeat: no-repeat !important;
-  border-block: 1px solid rgba(80,219,239,.25) !important;
-  box-shadow: inset 0 0 0 1px rgba(240,196,109,.08) !important;
+  cursor: pointer !important;
+  background: #07111d !important;
+  border-block: 1px solid rgba(80,219,239,.30) !important;
+  box-shadow: inset 0 0 0 1px rgba(240,196,109,.10) !important;
 }
-body.atlas-administrator-mirror #detailPanel .detail-project-visual > span {
-  position: absolute;
-  left: 11px;
-  bottom: 10px;
-  z-index: 2;
-  padding: 4px 7px;
-  border-radius: 999px;
-  background: rgba(2,8,17,.68);
-  color: #f6dfaa;
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3 {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: var(--admin-tech-x, 50%) var(--admin-tech-y, 12%) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  pointer-events: none !important;
+  user-select: none !important;
 }
-body.atlas-administrator-mirror #detailPanel .detail-project-visual::after {
-  content: "✎ Image privée";
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 > span {
+  position: absolute !important;
+  left: 11px !important;
+  bottom: 10px !important;
+  z-index: 3 !important;
+  padding: 4px 7px !important;
+  border: 1px solid rgba(239,194,107,.26) !important;
+  border-radius: 999px !important;
+  background: rgba(2,8,17,.68) !important;
+  color: #f6dfaa !important;
+  font-size: 9px !important;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after {
+  content: "✎ changer l’image" !important;
+  position: absolute !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  top: auto !important;
+  z-index: 4 !important;
+  padding: 5px 8px !important;
+  border: 1px solid rgba(92,225,239,.40) !important;
+  border-radius: 999px !important;
+  color: #dcfbff !important;
+  background: rgba(3,12,22,.74) !important;
+  font: 800 9px/1 system-ui, sans-serif !important;
+  letter-spacing: .03em !important;
+  opacity: 0 !important;
+  transition: opacity .14s ease !important;
+  pointer-events: none !important;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3:hover::after,
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3:focus-visible::after {
+  opacity: .96 !important;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3:focus-visible {
+  outline: 2px solid rgba(91,225,239,.72) !important;
+  outline-offset: -2px !important;
+}
+.admin-tech-reset-r3 {
   position: absolute;
-  right: 10px;
   top: 10px;
-  z-index: 3;
-  padding: 5px 8px;
-  border: 1px solid rgba(92,225,239,.42);
+  right: 10px;
+  z-index: 5;
+  appearance: none;
+  border: 1px solid rgba(239,194,107,.34);
   border-radius: 999px;
-  color: #dcfbff;
-  background: rgba(3,12,22,.82);
-  font: 800 10px/1 system-ui, sans-serif;
-  letter-spacing: .04em;
-  opacity: .92;
-  pointer-events: none;
+  padding: 5px 8px;
+  color: #f6dfaa;
+  background: rgba(2,8,17,.72);
+  font: 800 9px/1 system-ui,sans-serif;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity .14s ease;
 }
+.admin-tech-r3:hover .admin-tech-reset-r3,
+.admin-tech-r3:focus-within .admin-tech-reset-r3 { opacity: .94; }
+
+/* R2 generated controls are intentionally removed in R3. */
+.admin-private-visual-tools,
+.admin-visual-strip,
+.admin-visual-command-hero,
+.admin-visual-summary-thumb { display: none !important; }
 
 /* ------------------------------------------------------------
-   EXPLICIT VISUAL STRIPS — visible even on opaque glass sections.
+   FAMILY EMBLEMS — one large identity per family, never tiny icons
+   scattered under accordion labels.
    ------------------------------------------------------------ */
-.admin-visual-strip {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0,1fr) clamp(112px, 15vw, 184px);
-  align-items: center;
-  min-height: 132px;
-  margin: 10px 0 16px;
-  padding: 14px 16px;
-  overflow: hidden;
-  border: 1px solid var(--admin-vis-border);
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at 86% 48%, rgba(34,149,214,.16), transparent 34%),
-    linear-gradient(105deg, rgba(8,20,34,.94), rgba(5,13,24,.72));
-  box-shadow: inset 0 0 0 1px rgba(239,194,107,.06), 0 12px 30px rgba(0,0,0,.18);
+.atlas-layout-family.admin-family-emblem-host-r3 {
+  position: relative !important;
+  min-height: 108px !important;
+  padding-right: 126px !important;
+  overflow: hidden !important;
 }
-.admin-visual-strip-copy {
-  min-width: 0;
-  max-width: 680px;
-}
-.admin-visual-strip-copy small {
-  display: block;
-  margin-bottom: 5px;
-  color: #84e9f6;
-  font: 900 9px/1.1 system-ui, sans-serif;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
-.admin-visual-strip-copy b {
-  display: block;
-  color: #f7e2ae;
-  font: 900 clamp(15px,1.4vw,20px)/1.15 system-ui, sans-serif;
-}
-.admin-visual-strip-copy span {
-  display: block;
-  margin-top: 6px;
-  color: rgba(207,224,238,.82);
-  font: 650 11px/1.45 system-ui, sans-serif;
-}
-.admin-visual-strip img {
-  justify-self: end;
-  width: min(100%, 172px);
-  max-height: 122px;
+.admin-family-emblem-r3 {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  width: 88px;
+  height: 88px;
+  transform: translateY(-50%);
   object-fit: contain;
-  filter: drop-shadow(0 9px 18px rgba(0,0,0,.46));
-  opacity: .98;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.48));
+  opacity: .96;
   pointer-events: none;
   user-select: none;
 }
-.admin-visual-strip.is-analytical img {
-  max-height: 126px;
-  width: min(100%, 132px);
-}
-
-/* Small visual signature remains visible on collapsed section summaries. */
-.admin-visual-summary-thumb {
-  width: 34px;
-  height: 34px;
-  margin-left: auto;
-  object-fit: contain;
-  flex: 0 0 34px;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,.4));
-  opacity: .90;
+.atlas-layout-family.admin-family-emblem-host-r3::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 114px;
+  height: 86px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,163,225,.13), transparent 70%);
   pointer-events: none;
 }
 
-/* ------------------------------------------------------------
-   COMMAND OBSERVATORY — explicit banner, not a hidden ::before.
-   ------------------------------------------------------------ */
-.admin-visual-command-hero {
-  position: relative;
-  min-height: clamp(150px, 17vw, 220px);
-  margin: 10px 0 16px;
-  overflow: hidden;
-  border: 1px solid rgba(238,191,101,.25);
-  border-radius: 16px;
-  background-image:
-    linear-gradient(90deg, rgba(2,8,16,.26), rgba(2,8,16,.08) 55%, rgba(2,8,16,.24)),
-    url("./assets/visual/admin-command-observatory.png");
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  box-shadow: inset 0 -55px 80px rgba(2,8,16,.20);
+/* Sources gets one clean emblem integrated into its actual collapsed row. */
+#liveSourcesCollapse > summary.atlas-collapse-summary.admin-summary-emblem-host-r3 {
+  position: relative !important;
+  min-height: 78px !important;
+  padding-right: 96px !important;
 }
-.admin-visual-command-hero::after {
-  content: "COMMAND CENTER · OBSERVATOIRE";
+.admin-summary-emblem-r3 {
   position: absolute;
-  left: 14px;
-  bottom: 12px;
-  padding: 6px 9px;
-  border: 1px solid rgba(94,222,239,.32);
-  border-radius: 999px;
-  background: rgba(2,8,17,.72);
-  color: #f5dda6;
-  font: 900 9px/1 system-ui, sans-serif;
-  letter-spacing: .14em;
+  right: 18px;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translateY(-50%);
+  object-fit: contain;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,.48));
+  opacity: .94;
+  pointer-events: none;
 }
 
-/* Remove the R1 buried/dark command background if cached CSS survives. */
-body.atlas-administrator-mirror #commandes::before {
-  content: none !important;
-  display: none !important;
+/* Analytical Memory: visible watermark, large enough to read as identity. */
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 {
+  position: relative !important;
+  overflow: hidden !important;
+}
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 > .admin-analytical-emblem-r3 {
+  position: absolute;
+  right: 24px;
+  top: 64px;
+  width: 112px;
+  height: 150px;
+  object-fit: contain;
+  opacity: .32;
+  filter: drop-shadow(0 12px 25px rgba(0,0,0,.58));
+  pointer-events: none;
+  z-index: 0;
+}
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 > :not(.admin-analytical-emblem-r3) {
+  position: relative;
+  z-index: 1;
 }
 
-.admin-private-visual-tools {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  padding: 7px 10px 0;
+/* ------------------------------------------------------------
+   MISSIONS DE VIE — use the existing Classic asset. In Administrator
+   the original ./assets path is absent, so the image was black/404.
+   ------------------------------------------------------------ */
+body.atlas-administrator-mirror #missions-vie.life-missions-intro {
+  position: relative !important;
+  min-height: 270px !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
 }
-.admin-private-visual-tools button {
-  appearance: none;
-  border: 1px solid rgba(89,222,239,.30);
-  border-radius: 8px;
-  background: rgba(3,12,22,.86);
-  color: #d8f8ff;
-  padding: 5px 8px;
-  font-size: 10px;
-  cursor: pointer;
+body.atlas-administrator-mirror #missions-vie .life-missions-atmosphere {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  opacity: .52 !important;
+  filter: saturate(.92) brightness(.72) contrast(1.04) !important;
+  z-index: -2 !important;
 }
-.admin-private-visual-tools button:hover { border-color: rgba(238,191,101,.58); }
+body.atlas-administrator-mirror #missions-vie::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(3,10,18,.86) 0 33%, rgba(3,10,18,.42) 68%, rgba(3,10,18,.24));
+  pointer-events: none;
+}
+body.atlas-administrator-mirror #missions-vie .life-missions-copy {
+  position: relative !important;
+  z-index: 1 !important;
+  max-width: 820px !important;
+}
+body.atlas-administrator-mirror #missions-vie > .pill {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Command Center keeps the observatory as a background only when open. */
+#atlasAdminCenterDrawer.admin-command-observatory-r3 {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+#atlasAdminCenterDrawer.admin-command-observatory-r3::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: url("./assets/visual/admin-command-observatory.png") center / cover no-repeat;
+  opacity: .22;
+  filter: brightness(.68) saturate(.82);
+}
+#atlasAdminCenterDrawer.admin-command-observatory-r3::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(3,10,18,.68), rgba(3,10,18,.90));
+}
 
 @media (max-width: 900px) {
-  .admin-visual-strip {
-    grid-template-columns: minmax(0,1fr) 96px;
-    min-height: 112px;
-    padding: 11px 12px;
+  body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 {
+    min-height: 300px !important;
+    max-height: 440px !important;
   }
-  .admin-visual-strip img { max-height: 92px; }
-  .admin-visual-summary-thumb { width: 28px; height: 28px; flex-basis: 28px; }
-  body.atlas-administrator-mirror #detailPanel .detail-project-visual { min-height: 230px !important; }
+  .atlas-layout-family.admin-family-emblem-host-r3 {
+    min-height: 94px !important;
+    padding-right: 96px !important;
+  }
+  .admin-family-emblem-r3 { width: 68px; height: 68px; right: 16px; }
+  #liveSourcesCollapse > summary.atlas-collapse-summary.admin-summary-emblem-host-r3 {
+    padding-right: 78px !important;
+  }
+  .admin-summary-emblem-r3 { width: 48px; height: 48px; right: 14px; }
 }

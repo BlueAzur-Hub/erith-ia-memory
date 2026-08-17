@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.5R2 · ADMINISTRATOR MIRROR · VISUAL VISIBILITY LOCK",
-  "build": "39.4.5R2",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.5R2",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.5R3 · ADMINISTRATOR MIRROR · VISUAL VISIBILITY LOCK",
+  "build": "39.4.5R3",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.5R3",
   "published_at": "2026-08-17T21:36:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.5R2 only exposes already-installed visual assets above opaque UI layers."
+    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.5R3 only exposes already-installed visual assets above opaque UI layers."
   },
   "files": {
     "app.js": {
@@ -65,7 +65,7 @@
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "js/admin-visual-assets-39.4.5R2.js": {
+    "js/admin-visual-assets-39.4.5R3.js": {
       "sha256": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
     }
   },
@@ -89,11 +89,11 @@
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "js/admin-visual-assets-39.4.5R2.js": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
+      "js/admin-visual-assets-39.4.5R3.js": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
     },
     "publication_identity": {
-      "build": "39.4.5R2",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.5R2",
+      "build": "39.4.5R3",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.5R3",
       "rule": "exact case"
     }
   },
@@ -113,7 +113,7 @@
     "functional_delta_in_39_4_5R1": false
   },
   "visual_layer": {
-    "module": "js/admin-visual-assets-39.4.5R2.js",
+    "module": "js/admin-visual-assets-39.4.5R3.js",
     "stylesheet": "admin-visual-assets.css",
     "assets": "pre-installed on GitHub; deliberately omitted from patch ZIP",
     "strategy": "explicit visible strips / hero / direct graph panorama replacement; no buried backgrounds",
@@ -126,11 +126,11 @@
     "starts_atlas": false
   },
   "notes": [
-    "39.4.5R2 is a corrective visual patch rebased on the active 39.4.5R1 lineage.",
+    "39.4.5R3 is a corrective visual patch rebased on the active 39.4.5R1 lineage.",
     "The seven image assets are already installed on GitHub and are NOT included in this ZIP.",
     "Market Memory 39.4.4R1 remains the locked module and is not shipped or edited by this patch.",
     "R1 visual failure cause: images were placed under existing opaque/recollapsed surfaces; R2 uses explicit visible UI strips and the existing graph panorama layer."
   ],
   "parent_build": "39.4.5R1",
-  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R2"
+  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R3"
 }
