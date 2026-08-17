@@ -1,18 +1,18 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v21",
-  "build": "39.2.20R2",
-  "release": "ADMINISTRATOR MIRROR · PUBLICATION IDENTITY RECOVERY LOCK",
-  "published_at": "2026-08-17T15:20:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v22",
+  "build": "39.2.21",
+  "release": "ADMINISTRATOR MIRROR · CHART METAL VISUAL POLISH LOCK",
+  "published_at": "2026-08-17T15:27:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.20R2",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20R2",
+    "primary_build": "39.2.21",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.21",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "publication_identity_contract": {
-    "canonical_build": "39.2.20R2",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.2.20R2",
+    "canonical_build": "39.2.21",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.2.21",
     "case_sensitive": true,
     "sources_required_to_match": [
       "app.js ATLAS_BUILD",
@@ -25,11 +25,12 @@
       "version.json asset_token",
       "js/app.js ADMIN_BUILD"
     ],
-    "historical_lock": "Recovery Publication Identity methodology reused from prior stable update-control repairs"
+    "historical_lock": "39.2.20R2 publication identity recovery preserved"
   },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "preserved; no visual change in 39.2.20R2"
+    "status": "Crypto canvas polished only; Administrator CSS and window chrome unchanged",
+    "chart_direction": "graphite / blue-black field; cold-steel structural bars; vivid crypto lines preserved"
   },
   "operational_windows": {
     "count": 12,
@@ -80,28 +81,40 @@
     "adapter_contract": "../web/metals_quote_adapter_contract.json",
     "no_fabrication": true
   },
+  "chart_visual_contract": {
+    "scope": "Crypto Chart.js canvas paint only",
+    "line_colors": "unchanged crypto palettes",
+    "solo_fill": "cold steel low opacity",
+    "solo_bars": "#5f7f92 low opacity",
+    "comparison_bars": "#587488 low opacity",
+    "data_geometry": "unchanged",
+    "tooltip": "unchanged",
+    "periods": "unchanged",
+    "price_base100": "unchanged"
+  },
   "supersedes": {
-    "39.2.20R1": "direct base; Metals 5/5 restoration preserved; publication identity corrected only",
+    "39.2.20R2": "direct base; canonical publication identity preserved",
+    "39.2.20R1": "Metals 5/5 restoration preserved",
     "39.2.19": "Crypto workspace boot hydration preserved",
     "39.2.17": "Math Core host-width fix preserved",
-    "39.2.16": "chart visual experiment remains separate and is not merged"
+    "39.2.16": "visual idea selectively reapplied on the current safe base; old branch itself is not merged"
   },
   "integrity": {
     "files": {
-      "app.js": "876de75b530223173dafcb7419668a201203f760e24328c5e4ffd1ebf955123b",
-      "index.html": "7183fa915cd824eaf657da1967a5abc71fff9cfe72bae413cb61e6888a5f3185",
+      "app.js": "8d9e8b45afd443549dbfa873e7bd3f024f024b973f5d8d0ac972d957cd0658ae",
+      "index.html": "fbf3ab15773d88624907e55ac7c2f0e7217d28e2f8c403765a6170557b0c2f2d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "46ce21cf7ce1237612ee8b498fc41f44bebb982468751ceb503b55da41c64570",
+      "js/app.js": "5d4620632e729472e7b0f076a8ac3bf0b427069daef1693dd8af76e8c1b042cb",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "version.json": "da9dce0d54882b071aeb88ef153c4a4bda5e125ee835da8c1de259b7f3214be4"
+    "version.json": "8779f21868db894365d878b26f5726a225c996eb39d17a5fb8d01359cfe47e96"
   },
   "validation_contract": {
     "publication_identity": "Build/token/runtime/meta/script/hash must agree exactly before publication is considered coherent",
     "metals_24h": "39.2.20R1 XAU/XAG/XPT/XPD/HG 5/5 path unchanged",
     "crypto_workspace": "39.2.19 F5 restoration unchanged",
-    "visual": "no visual CSS behavior change"
+    "visual": "only four Chart.js canvas paint parameter groups differ from 39.2.20R2"
   }
 }

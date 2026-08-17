@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.20R2";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · BOOT HYDRATION PERSISTENCE LOCK";
+  const ADMIN_BUILD = "39.2.21";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · CHART METAL VISUAL POLISH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 

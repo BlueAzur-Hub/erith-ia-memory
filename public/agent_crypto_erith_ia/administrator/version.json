@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.20R2 · ADMINISTRATOR MIRROR · PUBLICATION IDENTITY RECOVERY LOCK",
-  "build": "39.2.20R2",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.20R2",
-  "published_at": "2026-08-17T15:20:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.21 · ADMINISTRATOR MIRROR · CHART METAL VISUAL POLISH LOCK",
+  "build": "39.2.21",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.21",
+  "published_at": "2026-08-17T15:27:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.2.17 Math Core host-width preserved; 39.2.19 workspace boot hydration preserved; 39.2.20R1 Metals 5/5 restore preserved; R2 repairs publication identity only"
+    "status": "39.2.17 Math Core host-width preserved; 39.2.19 workspace boot hydration preserved; 39.2.20R1 Metals 5/5 restore preserved; 39.2.20R2 publication identity preserved; 39.2.21 changes Crypto chart paint only"
   },
   "files": {
     "app.js": {
-      "sha256": "876de75b530223173dafcb7419668a201203f760e24328c5e4ffd1ebf955123b"
+      "sha256": "8d9e8b45afd443549dbfa873e7bd3f024f024b973f5d8d0ac972d957cd0658ae"
     },
     "index.html": {
-      "sha256": "7183fa915cd824eaf657da1967a5abc71fff9cfe72bae413cb61e6888a5f3185"
+      "sha256": "fbf3ab15773d88624907e55ac7c2f0e7217d28e2f8c403765a6170557b0c2f2d"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -27,7 +27,7 @@
       "sha256": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39"
     },
     "js/app.js": {
-      "sha256": "46ce21cf7ce1237612ee8b498fc41f44bebb982468751ceb503b55da41c64570"
+      "sha256": "5d4620632e729472e7b0f076a8ac3bf0b427069daef1693dd8af76e8c1b042cb"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
@@ -35,26 +35,27 @@
   },
   "integrity": {
     "files": {
-      "app.js": "876de75b530223173dafcb7419668a201203f760e24328c5e4ffd1ebf955123b",
-      "index.html": "7183fa915cd824eaf657da1967a5abc71fff9cfe72bae413cb61e6888a5f3185",
+      "app.js": "8d9e8b45afd443549dbfa873e7bd3f024f024b973f5d8d0ac972d957cd0658ae",
+      "index.html": "fbf3ab15773d88624907e55ac7c2f0e7217d28e2f8c403765a6170557b0c2f2d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "46ce21cf7ce1237612ee8b498fc41f44bebb982468751ceb503b55da41c64570",
+      "js/app.js": "5d4620632e729472e7b0f076a8ac3bf0b427069daef1693dd8af76e8c1b042cb",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
     "publication_identity": {
-      "build": "39.2.20R2",
-      "asset_token": "market-core-v2.0-alpha-build-39.2.20R2",
+      "build": "39.2.21",
+      "asset_token": "market-core-v2.0-alpha-build-39.2.21",
       "rule": "asset_token == market-core-v2.0-alpha-build-<build> with exact case"
     }
   },
   "notes": [
-    "39.2.20R2 is built directly from 39.2.20R1. No Market, Crypto renderer, Metals data logic, Atlas, Memory Intelligence, Math Core, Window Manager or visual CSS behavior is changed.",
-    "39.2.20R1 Metals restoration is preserved exactly: canonical adapter contract remains ../web/metals_quote_adapter_contract.json and Yahoo Finance Futures intraday 5/5 logic is unchanged.",
-    "R2 restores one canonical publication identity across ATLAS_BUILD, HTML meta build/token, app.js cache token, Runtime Truth, version.json and Administrator build markers.",
-    "The canonical asset token is case-sensitive and is exactly market-core-v2.0-alpha-build-39.2.20R2.",
-    "version.json exposes integrity.files.app.js so the existing publication verifier can SHA-256-check the remotely served app.js before offering an update.",
-    "A/B/C presets and automatic Crypto workspace restoration from 39.2.19 remain unchanged."
+    "39.2.21 is built directly from 39.2.20R2. Workspace F5, A/B/C, Metals 5/5, Math Core, Window Manager, Atlas, Memory Intelligence and all market data logic are preserved.",
+    "Crypto chart line colors, data, periods, Price/Base100 behavior, tooltip, axes geometry and volume geometry are unchanged.",
+    "Solo chart floor fill is neutralized from crypto-colored orange/brown to a low-opacity cold steel gradient.",
+    "Solo vertical volume/shadow bars use low-opacity cold steel instead of the active crypto color.",
+    "Comparison Top3/Top5/scanner vertical structural bars use low-opacity cold steel instead of repeating each crypto color beneath the curves.",
+    "No visual CSS file is modified; the change is restricted to Chart.js canvas paint parameters in app.js.",
+    "The canonical asset token is case-sensitive and is exactly market-core-v2.0-alpha-build-39.2.21."
   ]
 }

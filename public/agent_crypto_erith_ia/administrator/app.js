@@ -5673,9 +5673,11 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   if (window.Chart) {
     const ctx = canvas.getContext("2d");
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight || 400);
-    gradient.addColorStop(0, `${palette.primary}33`);
-    gradient.addColorStop(0.55, `${palette.primary}10`);
-    gradient.addColorStop(1, `${palette.primary}02`);
+    // Administrator 39.2.21: keep the crypto line vivid, but neutralize the
+    // plot floor so BTC/BNB no longer flood the graph with brown/orange.
+    gradient.addColorStop(0, "rgba(91,123,145,.14)");
+    gradient.addColorStop(0.55, "rgba(73,102,122,.055)");
+    gradient.addColorStop(1, "rgba(52,75,92,.008)");
 
     const datasets = [{
       type: "line",
@@ -5710,8 +5712,9 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
 
     const shadowSeries = [{
       rows: volumeRows,
-      color: palette.primary,
-      opacity: 0.22,
+      // Cold-steel bars: geometry and real-volume modulation remain unchanged.
+      color: "#5f7f92",
+      opacity: 0.115,
       heightRatio: 0.88
     }];
 
@@ -5738,7 +5741,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             volumeAxisId: null,
             volumeVisible: showVolume,
             volumeRows,
-            volumeColor: palette.primary,
+            volumeColor: "#5f7f92",
             shadowSeries
           },
           legend: { display: false },
@@ -6380,17 +6383,15 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
                       price: point.y,
                       y: 1
                     })),
-                  color:
-                    atlasCryptoPalette(
-                      entry.coin,
-                      index
-                    ).primary,
+                  // Comparison shadow bars are structural, not a second set of
+                  // crypto-colored curves. Keep them steel-neutral and quiet.
+                  color: "#587488",
                   opacity:
                     index === 0
-                      ? 0.16
+                      ? 0.085
                       : Math.max(
-                          0.065,
-                          0.12 - index * 0.012
+                          0.038,
+                          0.065 - index * 0.006
                         ),
                   heightRatio: 0.88
                 })
@@ -12125,7 +12126,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 39.2.20R2",
+  interface: "Build 39.2.21",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40316,7 +40317,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "39.2.20R2";
+const ATLAS_BUILD = "39.2.21";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46987,8 +46988,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "39.2.20R2",
-  asset_token: "market-core-v2.0-alpha-build-39.2.20R2"
+  build: "39.2.21",
+  asset_token: "market-core-v2.0-alpha-build-39.2.21"
 });
 
 function atlasRuntimeTruth3813() {
