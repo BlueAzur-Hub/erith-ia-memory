@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — Build 39.2.4 · Administrator Operational Windows
-   UI-only window layer. Reduce = presentation only; no business runtime suspension. */
+/* Agent-Crypto @erith.IA — Build 39.2.5 · Administrator Portal Windows · No Duplicates
+   UI-only window layer. Reduce = park in Window Deck; no business runtime suspension. No docked mini-bars. */
 
 :root{
   --native-edge:rgba(205,220,232,.25);
@@ -57,7 +57,6 @@
 details.admin-native-anchor > summary:hover .admin-native-controls,
 .admin-native-floating-shell .admin-native-controls,
 .admin-native-direct-floating > .admin-native-controls,
-.admin-native-mini-bar .admin-native-controls{opacity:1;}
 
 details.admin-native-anchor > summary{position:relative;}
 details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;transform:translateY(-50%);}
@@ -96,41 +95,10 @@ body.admin-native-dragging .admin-native-drag{cursor:grabbing!important;}
 .atlas-layout-family.admin-native-anchor > .admin-native-controls{top:50%;right:16px;transform:translateY(-50%);}
 #missions-vie.admin-native-anchor > .admin-native-controls{top:14px;right:16px;}
 
-/* Minimize is now explicit and robust: native business nodes are masked and a temporary mini-bar appears. */
-.admin-native-mini-bar{
-  position:relative;
-  min-height:48px;
-  width:100%;
-  margin:8px 0;
-  display:flex;
-  align-items:center;
-  padding:0 132px 0 16px;
-  border:1px solid color-mix(in srgb,var(--native-accent,#72d8ff) 34%,rgba(205,220,232,.16));
-  border-radius:11px;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
-    linear-gradient(145deg,rgba(36,43,49,.96),rgba(11,15,19,.98));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 9px 28px rgba(0,0,0,.24);
-}
-.admin-native-mini-title{
-  display:block;
-  min-width:0;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  color:#e8edf0;
-  font:900 12px/1.15 Inter,ui-sans-serif,system-ui,sans-serif;
-  letter-spacing:.045em;
-}
-.admin-native-mini-controls{top:50%!important;right:8px!important;transform:translateY(-50%)!important;}
-.admin-native-mini-floating{
-  position:fixed!important;
-  z-index:2147482200;
-  margin:0!important;
-  max-width:calc(100vw - 24px);
-}
+/* Minimize / Hide: the native content leaves the cockpit and is recalled from WINDOW DECK.
+   No secondary bar is inserted into the page, preventing visual duplication. */
 
-/* Floating shell is created only when a multi-node window is detached. */
+/* Floating shell is created only when a multi-node window is detached. It contains the real DOM nodes, never clones. */
 .admin-native-floating-shell{
   position:fixed!important;
   z-index:2147481800;
@@ -149,15 +117,45 @@ body.admin-native-dragging .admin-native-drag{cursor:grabbing!important;}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 38px 130px rgba(0,0,0,.76),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 12%,transparent);
   backdrop-filter:blur(18px) saturate(108%);
 }
-.admin-native-floating-shell > [data-admin-native-window]{margin-left:0!important;margin-right:0!important;}
-.admin-native-floating-shell.admin-native-shell-minimized{
-  height:64px!important;
-  min-height:64px!important;
-  max-height:64px!important;
-  resize:none!important;
-  overflow:hidden!important;
-}
 
+.admin-native-floating-titlebar{
+  position:sticky;
+  top:0;
+  z-index:2147482500;
+  min-height:42px;
+  margin:-2px -2px 8px;
+  padding:0 170px 0 12px;
+  display:flex;
+  align-items:center;
+  border:1px solid rgba(215,226,234,.16);
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(7,11,15,.90));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 22px rgba(0,0,0,.22);
+  backdrop-filter:blur(12px);
+}
+.admin-native-floating-title{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  color:#eef2f4;
+  font:900 12px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.045em;
+}
+.admin-native-floating-titlebar > .admin-native-controls{
+  top:50%!important;
+  right:7px!important;
+  transform:translateY(-50%)!important;
+  opacity:1!important;
+}
+/* Once a real panel is detached, only the floating chrome remains visible. */
+.admin-native-floating-shell .admin-native-controls-native{display:none!important;}
+.admin-native-floating-shell .admin-native-controls-floating{display:flex!important;}
+.admin-native-hide:hover{
+  border-color:rgba(255,153,105,.55)!important;
+  color:#ffd9c9!important;
+}
+.admin-native-floating-shell > [data-admin-native-window]{margin-left:0!important;margin-right:0!important;}
 /* Single complex workspaces stay in their original DOM parent while floating.
    This is critical for Graphique/Lecture and the domain-moving Math Core. */
 .admin-native-direct-floating{
@@ -218,20 +216,20 @@ body.admin-native-dragging .admin-native-drag{cursor:grabbing!important;}
 .admin-window-deck-head{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;min-height:44px;padding:8px 10px 8px 13px;border-bottom:1px solid rgba(215,225,235,.15);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(0,0,0,.12));letter-spacing:.12em;font:900 10px/1 Inter,ui-sans-serif,system-ui,sans-serif;}
 .admin-window-deck-count{min-width:26px;padding:4px 7px;border:1px solid rgba(114,216,255,.30);border-radius:999px;color:#bcefff;text-align:center;}
 .admin-window-deck-list{max-height:calc(min(68vh,720px) - 45px);overflow:auto;padding:7px;}
-.admin-window-deck-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 28px 28px 28px;align-items:center;gap:5px;min-height:40px;padding:4px 5px 4px 9px;border:1px solid transparent;border-radius:8px;}
+.admin-window-deck-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 28px 28px 28px 28px;align-items:center;gap:5px;min-height:40px;padding:4px 5px 4px 9px;border:1px solid transparent;border-radius:8px;}
 .admin-window-deck-row:hover{border-color:rgba(114,216,255,.15);background:rgba(114,216,255,.035);}
 .admin-window-deck-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#dce4e9;font:750 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;}
 .admin-window-deck-state{color:#8fa4b3;font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-align:right;}
 .admin-window-deck .admin-native-control{width:27px!important;height:25px!important;}
 
-.admin-mirror-bar-39-2-4{gap:5px;}
-.admin-mirror-bar-39-2-4 .admin-window-deck-toggle b,
-.admin-mirror-bar-39-2-4 .admin-mirror-brand b{color:#bcefff;font-weight:950;}
+.admin-mirror-bar-39-2-5{gap:5px;}
+.admin-mirror-bar-39-2-5 .admin-window-deck-toggle b,
+.admin-mirror-bar-39-2-5 .admin-mirror-brand b{color:#bcefff;font-weight:950;}
 
 @media (max-width:900px){
   .admin-native-controls{opacity:1;}
   .admin-native-floating-shell,.admin-native-direct-floating{min-width:calc(100vw - 24px)!important;}
   .admin-window-deck{left:8px;right:8px;bottom:104px;width:auto;max-height:60vh;}
   .admin-window-deck-list{max-height:calc(60vh - 45px);}
-  .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px;}
+  .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px 28px;}
 }

@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.4 · ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS",
-  "build": "39.2.4",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.4",
-  "published_at": "2026-08-17T09:44:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.5 · ADMINISTRATOR MIRROR · PORTAL WINDOWS · NO DUPLICATES",
+  "build": "39.2.5",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.5",
+  "published_at": "2026-08-17T10:17:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "business behavior preserved; global application version is 39.2.4"
+    "status": "business behavior preserved; global application version is 39.2.5"
   },
   "files": {
     "app.js": {
-      "sha256": "874c4a764b47d08717cd8f25f712b2ae2e27da0903aa612fa5b20c71290cb195"
+      "sha256": "229d219d3ae5b0b613ae80516863a027ce97a980a1dabc2ba2d788f79b295767"
     },
     "index.html": {
-      "sha256": "8d32f5d5e1ec45181f8fdd1bfce43f341014600e2e1dcc06c3e06469a8e7b602"
+      "sha256": "a375e791de2ba733ed55041d7a299ce9fbf5ee630dfe10b0da6ff9d1a2e944ef"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -24,22 +24,22 @@
       "sha256": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a"
     },
     "admin-windows.css": {
-      "sha256": "851bee641ae22f73d4995449b4f70e8b7bcf21e9931997490fd322ad753e0152"
+      "sha256": "19938277281a391def70338d2c8717514f14690cf9121a702b1c90873e308194"
     },
     "js/app.js": {
-      "sha256": "47b5f003a5836cf3a437eac23af5fe0513372bf7d94675aef6a4e57d20c9666f"
+      "sha256": "89550a76985f4aeea7d4df3941a014e72e2d8e6d7a66e8479d95afc5162e6c0e"
     },
     "js/core/admin-window-manager.js": {
-      "sha256": "c97487bc2882496ea9447462ff7184c643a3a90098add3388b6b84bd72f8b8dc"
+      "sha256": "d86cec82d0a49cba0d3435a1c26933476b3181b933b885668e5aa750cd3b84fe"
     }
   },
   "notes": [
-    "Global Agent-Crypto version control now uses Build 39.2.4 in Administrator instead of presenting the inherited Classic engine build as the application version.",
-    "Market Core 38.15.11 remains explicitly identified as an engine/reference component.",
-    "Graphique and its technical/metals reading stay one native window.",
-    "Target Top, Market Flow, Market Snapshot and Atlas Math Core are independent operational windows so the operator can compose only the workspace needed now.",
-    "Crypto and precious-metals variants are preserved without cloning business data.",
-    "Missions de vie is restored as one coherent window containing its native subsections.",
-    "Minimize masks presentation only and does not suspend market, WebSocket, timers or analytical logic."
+    "Administrator docked layout no longer inserts compact mini-bars when a window is reduced; minimized windows are parked in WINDOW DECK, eliminating the visual double/chrome reported on Graphique and the market units.",
+    "Graphique + Lecture technique/Lecture Métaux remains the original #analyste DOM and is hidden/restored as one unit; no graph clone is created.",
+    "Detached multi-node windows use a floating shell containing the original DOM nodes and a single floating title bar; native duplicate controls are hidden while floating.",
+    "Target Top, Market Flow and Market Snapshot keep domain-aware portal hosts so Crypto and Métaux preserve their native visual context.",
+    "A dedicated × Masquer action removes a window from the cockpit and keeps it recallable from WINDOW DECK; hiding or minimizing never suspends business runtime.",
+    "The twelve operational units and the validated Metal Base 39.1 theme are preserved.",
+    "Global Agent-Crypto version remains distinct from Engine Market Core 38.15.11."
   ]
 }

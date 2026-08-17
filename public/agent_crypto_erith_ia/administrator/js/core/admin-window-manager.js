@@ -25,6 +25,7 @@
     let deckList = null;
     let deckCount = null;
     let activeDomain = clean(options.domain || document.documentElement.dataset.atlasMarketDomain || "crypto") || "crypto";
+    const displayBackups = new WeakMap();
 
     const readStorage = (key, fallback = null) => {
       try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
@@ -81,6 +82,30 @@
         .filter(item => item.node);
     }
 
+    function setNodeSuppressed(node, suppressed) {
+      if (!(node instanceof HTMLElement)) return;
+      if (suppressed) {
+        if (!displayBackups.has(node)) {
+          displayBackups.set(node, {
+            value: node.style.getPropertyValue("display"),
+            priority: node.style.getPropertyPriority("display")
+          });
+        }
+        node.classList.add("admin-native-window-suppressed");
+        node.style.setProperty("display", "none", "important");
+        return;
+      }
+      node.classList.remove("admin-native-window-suppressed");
+      const backup = displayBackups.get(node);
+      if (backup) {
+        if (backup.value) node.style.setProperty("display", backup.value, backup.priority || "");
+        else node.style.removeProperty("display");
+        displayBackups.delete(node);
+      } else if (node.style.getPropertyValue("display") === "none" && node.style.getPropertyPriority("display") === "important") {
+        node.style.removeProperty("display");
+      }
+    }
+
     function createButton(className, text, title) {
       const button = document.createElement("button");
       button.type = "button";
@@ -114,10 +139,12 @@
       return win.entries.map(entry => entry.node).find(node => node?.parentElement) || null;
     }
 
-    function createControlSet(win, host, mini = false) {
+    function createControlSet(win, host, mini = false, floatingChrome = false) {
       if (!(host instanceof HTMLElement)) return null;
       const controls = document.createElement("div");
       controls.className = mini ? "admin-native-controls admin-native-mini-controls" : "admin-native-controls";
+      controls.classList.add(floatingChrome ? "admin-native-controls-floating" : "admin-native-controls-native");
+      host.classList.add("admin-native-control-host");
       controls.setAttribute("role", "group");
       controls.setAttribute("aria-label", `Fenêtre Administrator · ${win.title}`);
 
@@ -125,7 +152,8 @@
       const minimize = createButton("admin-native-minimize", win.minimized ? "+" : "—", win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`);
       const float = createButton("admin-native-float", win.floating ? "▣" : "□", win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`);
       const maximize = createButton("admin-native-maximize", win.maximized ? "↙" : "⤢", win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`);
-      controls.append(drag, minimize, float, maximize);
+      const hide = createButton("admin-native-hide", "×", `Masquer ${win.title} · rappel via WINDOWS`);
+      controls.append(drag, minimize, float, maximize, hide);
 
       drag.addEventListener("pointerdown", event => dragStart(event, win));
       drag.addEventListener("dblclick", event => {
@@ -136,9 +164,10 @@
       minimize.addEventListener("click", () => setMinimized(win, !win.minimized));
       float.addEventListener("click", () => setFloating(win, !win.floating));
       maximize.addEventListener("click", () => setMaximized(win, !win.maximized));
+      hide.addEventListener("click", () => setHidden(win, true));
 
       host.appendChild(controls);
-      const set = { root: controls, drag, minimize, float, maximize, mini };
+      const set = { root: controls, drag, minimize, float, maximize, hide, mini, floatingChrome };
       win.controlSets.push(set);
       return set;
     }
@@ -162,7 +191,7 @@
           maximize.setAttribute("aria-label", maximize.title);
         }
       });
-      if (win.miniTitle) win.miniTitle.textContent = win.title;
+      if (win.shellTitle) win.shellTitle.textContent = win.title;
     }
 
     function resolveDefinition(def) {
@@ -180,13 +209,14 @@
         nodes,
         anchor,
         directFixed: def.directFixed === true,
+        resolvePortalHost: typeof def.resolvePortalHost === "function" ? def.resolvePortalHost : null,
         controlSets: [],
         placeholders: new Map(),
         shell: null,
-        miniBar: null,
-        miniTitle: null,
+        shellTitle: null,
         floating: false,
         minimized: false,
+        hidden: false,
         maximized: false,
         geometry: null,
         restoreGeometry: null,
@@ -208,9 +238,7 @@
     }
 
     function currentRect(win) {
-      const target = win.directFixed && win.floating && win.minimized && win.miniBar?.isConnected
-        ? win.miniBar
-        : (win.directFixed && win.floating ? win.anchor : (win.shell || win.anchor));
+      const target = win.directFixed && win.floating ? win.anchor : (win.shell || win.anchor);
       const rect = target?.getBoundingClientRect?.();
       if (!rect) return clampGeometry(win.geometry || {});
       return clampGeometry({
@@ -230,11 +258,6 @@
         target.style.top = `${safe.y}px`;
         target.style.width = `${safe.width}px`;
         if (!win.minimized) target.style.height = `${safe.height}px`;
-      }
-      if (win.miniBar?.isConnected && win.floating && win.directFixed) {
-        win.miniBar.style.left = `${safe.x}px`;
-        win.miniBar.style.top = `${safe.y}px`;
-        win.miniBar.style.width = `${safe.width}px`;
       }
       return safe;
     }
@@ -270,6 +293,12 @@
       });
     }
 
+    function resolvePortalHost(win) {
+      const requested = win.resolvePortalHost?.(activeDomain, win);
+      if (requested instanceof HTMLElement) return requested;
+      return win.anchor?.parentElement || document.body;
+    }
+
     function buildShell(win, geometry) {
       if (win.shell?.isConnected) return win.shell;
       createPlaceholders(win);
@@ -277,14 +306,31 @@
       shell.className = `admin-native-floating-shell admin-native-tone-${win.tone}`;
       shell.dataset.adminNativeShell = win.id;
       shell.setAttribute("aria-label", `Fenêtre flottante ${win.title}`);
-      document.body.appendChild(shell);
-      win.nodes.forEach(node => shell.appendChild(node));
+
+      const titlebar = document.createElement("header");
+      titlebar.className = "admin-native-floating-titlebar";
+      const title = document.createElement("strong");
+      title.className = "admin-native-floating-title";
+      title.textContent = win.title;
+      titlebar.appendChild(title);
+      shell.appendChild(titlebar);
+      win.shellTitle = title;
       win.shell = shell;
+      createControlSet(win, titlebar, false, true);
+
+      resolvePortalHost(win).appendChild(shell);
+      win.nodes.forEach(node => shell.appendChild(node));
       domainMask(win);
       setGeometryOnTarget(win, geometry || currentRect(win));
       shell.addEventListener("pointerdown", () => bringToFront(win, false), { passive: true });
       shell.addEventListener("pointerup", () => persistGeometry(win), { passive: true });
       return shell;
+    }
+
+    function syncPortalHost(win) {
+      if (!win?.shell?.isConnected) return;
+      const host = resolvePortalHost(win);
+      if (host && win.shell.parentElement !== host) host.appendChild(win.shell);
     }
 
     function restoreShellNodes(win) {
@@ -296,8 +342,11 @@
         node.classList.remove("admin-native-domain-inactive");
       });
       win.placeholders.clear();
-      win.shell.remove();
+      const oldShell = win.shell;
+      win.controlSets = win.controlSets.filter(set => !set.floatingChrome || !oldShell?.contains(set.root));
+      oldShell.remove();
       win.shell = null;
+      win.shellTitle = null;
     }
 
     function setDirectFloating(win, floating, geometry) {
@@ -318,85 +367,49 @@
 
     function bringToFront(win, persist = true) {
       if (!win?.floating) return;
-      const target = win.directFixed ? (win.minimized && win.miniBar?.isConnected ? win.miniBar : win.anchor) : win.shell;
+      const target = win.directFixed ? win.anchor : win.shell;
       if (!target) return;
       zCounter += 1;
       target.style.zIndex = String(zCounter);
-      if (win.directFixed && win.miniBar?.isConnected) win.anchor.style.zIndex = String(zCounter);
       if (persist) patchState(win.id, { z: zCounter });
     }
 
-    function removeMiniBar(win) {
-      if (!win.miniBar) return;
-      const root = win.miniBar;
-      win.controlSets = win.controlSets.filter(set => !set.mini || set.root.parentElement !== root);
-      root.remove();
-      win.miniBar = null;
-      win.miniTitle = null;
-    }
-
-    function positionDockedMiniBar(win) {
-      if (!win.miniBar || win.floating) return;
-      const target = resolveHomeTarget(win);
-      if (!target?.parentNode) return;
-      target.parentNode.insertBefore(win.miniBar, target);
-    }
-
-    function ensureMiniBar(win) {
-      if (win.miniBar?.isConnected) return win.miniBar;
-      const bar = document.createElement("section");
-      bar.className = `admin-native-mini-bar admin-native-tone-${win.tone}`;
-      bar.dataset.adminNativeMini = win.id;
-      const label = document.createElement("strong");
-      label.className = "admin-native-mini-title";
-      label.textContent = win.title;
-      bar.appendChild(label);
-      win.miniBar = bar;
-      win.miniTitle = label;
-      createControlSet(win, bar, true);
-
-      if (win.floating) {
-        if (win.directFixed) {
-          document.body.appendChild(bar);
-          bar.classList.add("admin-native-mini-floating");
-          const safe = clampGeometry(win.geometry || currentRect(win));
-          Object.assign(bar.style, {
-            left: `${safe.x}px`,
-            top: `${safe.y}px`,
-            width: `${safe.width}px`,
-            zIndex: String(Number(win.anchor.style.zIndex) || ++zCounter)
-          });
-        } else if (win.shell) {
-          win.shell.prepend(bar);
-        }
+    function applyPresentationState(win) {
+      const suppressed = win.minimized || win.hidden;
+      if (win.floating && !win.directFixed && win.shell) {
+        win.nodes.forEach(node => setNodeSuppressed(node, false));
+        win.shell.hidden = suppressed;
+      } else if (win.floating && win.directFixed) {
+        setNodeSuppressed(win.anchor, suppressed);
       } else {
-        const target = resolveHomeTarget(win);
-        if (target?.parentNode) target.parentNode.insertBefore(bar, target);
-        else document.body.appendChild(bar);
+        win.nodes.forEach(node => setNodeSuppressed(node, suppressed));
       }
-      return bar;
-    }
 
-    function applyMinimized(win) {
-      win.nodes.forEach(node => node.classList.toggle("admin-native-window-suppressed", win.minimized));
-      if (win.minimized) {
-        ensureMiniBar(win);
-        if (win.shell) win.shell.classList.add("admin-native-shell-minimized");
-      } else {
-        if (win.shell) win.shell.classList.remove("admin-native-shell-minimized");
-        if (win.floating && win.directFixed && win.geometry) setGeometryOnTarget(win, win.geometry);
-        removeMiniBar(win);
-      }
       refreshControlState(win);
     }
 
     function setMinimized(win, minimized, persist = true) {
       if (!win) return;
       if (minimized && win.maximized) setMaximized(win, false, false);
+      if (minimized && win.hidden) win.hidden = false;
       win.minimized = !!minimized;
       if (win.floating && !win.geometry) win.geometry = currentRect(win);
-      applyMinimized(win);
-      if (persist) patchState(win.id, { minimized: win.minimized });
+      applyPresentationState(win);
+      if (persist) patchState(win.id, { minimized: win.minimized, hidden: win.hidden });
+      updateDeck();
+    }
+
+    function setHidden(win, hidden, persist = true) {
+      if (!win) return;
+      const next = !!hidden;
+      if (next) {
+        if (win.maximized) setMaximized(win, false, false);
+        if (win.floating) setFloating(win, false, false);
+        win.minimized = false;
+      }
+      win.hidden = next;
+      applyPresentationState(win);
+      if (persist) patchState(win.id, { hidden: win.hidden, minimized: win.minimized, floating: win.floating });
       updateDeck();
     }
 
@@ -410,12 +423,11 @@
           const target = win.directFixed ? win.anchor : win.shell;
           target?.classList.remove("admin-native-maximized");
         }
-        if (win.minimized) removeMiniBar(win);
         if (win.directFixed) setDirectFloating(win, false);
         else restoreShellNodes(win);
         win.floating = false;
         domainMask(win);
-        if (win.minimized) ensureMiniBar(win);
+        applyPresentationState(win);
         refreshControlState(win);
         if (persist) patchState(win.id, { floating: false, maximized: false });
         updateDeck();
@@ -424,12 +436,12 @@
 
       const baseGeometry = clampGeometry(geometry || win.geometry || currentRect(win));
       win.geometry = { ...baseGeometry };
-      if (win.minimized) removeMiniBar(win);
       if (win.directFixed) setDirectFloating(win, true, baseGeometry);
       else buildShell(win, baseGeometry);
       win.floating = true;
+      if (!win.directFixed) syncPortalHost(win);
       domainMask(win);
-      if (win.minimized) ensureMiniBar(win);
+      applyPresentationState(win);
       bringToFront(win, false);
       refreshControlState(win);
       if (persist) {
@@ -507,9 +519,7 @@
       if (!win.floating) setFloating(win, true, true, currentRect(win));
       bringToFront(win);
 
-      const target = win.directFixed && win.minimized && win.miniBar?.isConnected
-        ? win.miniBar
-        : (win.directFixed ? win.anchor : win.shell);
+      const target = win.directFixed ? win.anchor : win.shell;
       if (!target) return;
       const rect = target.getBoundingClientRect();
       const startX = event.clientX;
@@ -528,9 +538,6 @@
         });
         target.style.left = `${safe.x}px`;
         target.style.top = `${safe.y}px`;
-        if (win.directFixed && win.minimized) {
-          win.geometry = { ...(win.geometry || safe), x: safe.x, y: safe.y, width: safe.width };
-        }
       };
 
       const end = endEvent => {
@@ -540,12 +547,7 @@
         button?.removeEventListener("pointercancel", end);
         document.body.classList.remove("admin-native-dragging");
         target.classList.remove("admin-native-moving");
-        if (win.directFixed && win.minimized) {
-          const r = target.getBoundingClientRect();
-          win.geometry = { ...(win.geometry || clampGeometry({})), x: r.left, y: r.top, width: r.width };
-        } else {
-          win.geometry = currentRect(win);
-        }
+        win.geometry = currentRect(win);
         persistGeometry(win);
       };
 
@@ -555,6 +557,7 @@
     }
 
     function stateLabel(win) {
+      if (win.hidden) return "MASQ";
       if (win.maximized) return "MAX";
       if (win.minimized) return "MIN";
       if (win.floating) return "LIBRE";
@@ -563,6 +566,7 @@
 
     function focusWindow(win) {
       if (!win) return;
+      if (win.hidden) setHidden(win, false);
       if (win.minimized) setMinimized(win, false);
       if (win.floating) bringToFront(win);
       else {
@@ -594,10 +598,12 @@
         const focus = createButton("admin-window-deck-action", "◎", "Afficher / mettre au premier plan");
         const dock = createButton("admin-window-deck-action", "⌂", "Raccrocher");
         const min = createButton("admin-window-deck-action", win.minimized ? "+" : "—", "Réduire / restaurer");
+        const hide = createButton("admin-window-deck-action", win.hidden ? "↥" : "×", win.hidden ? "Rappeler" : "Masquer");
         focus.addEventListener("click", () => focusWindow(win));
         dock.addEventListener("click", () => setFloating(win, false));
         min.addEventListener("click", () => setMinimized(win, !win.minimized));
-        row.append(name, state, focus, dock, min);
+        hide.addEventListener("click", () => setHidden(win, !win.hidden));
+        row.append(name, state, focus, dock, min, hide);
         deckList.appendChild(row);
       });
     }
@@ -654,7 +660,8 @@
       writeStorage(domainKey, activeDomain);
       windows.forEach(win => {
         domainMask(win);
-        if (win.minimized && !win.floating) positionDockedMiniBar(win);
+        if (win.floating && !win.directFixed) syncPortalHost(win);
+        applyPresentationState(win);
       });
       updateDeck();
       return activeDomain;
@@ -678,10 +685,10 @@
           const target = win.directFixed ? win.anchor : win.shell;
           target?.classList.remove("admin-native-maximized");
         }
-        if (win.minimized) {
+        if (win.minimized || win.hidden) {
           win.minimized = false;
-          win.nodes.forEach(node => node.classList.remove("admin-native-window-suppressed"));
-          removeMiniBar(win);
+          win.hidden = false;
+          win.nodes.forEach(node => setNodeSuppressed(node, false));
         }
         if (win.floating) {
           if (win.directFixed) setDirectFloating(win, false);
@@ -692,6 +699,7 @@
         win.geometry = null;
         win.restoreGeometry = null;
         win.restoreFloating = false;
+        applyPresentationState(win);
         refreshControlState(win);
       });
       updateDeck();
@@ -711,13 +719,7 @@
         const y = VIEWPORT_MARGIN + (index % 7) * step;
         const safe = clampGeometry({ x, y, width, height: win.geometry?.height || height });
         win.geometry = safe;
-        if (win.directFixed && win.minimized && win.miniBar?.isConnected) {
-          win.miniBar.style.left = `${safe.x}px`;
-          win.miniBar.style.top = `${safe.y}px`;
-          win.miniBar.style.width = `${safe.width}px`;
-        } else {
-          setGeometryOnTarget(win, safe);
-        }
+        setGeometryOnTarget(win, safe);
         bringToFront(win, false);
         persistGeometry(win);
       });
@@ -753,6 +755,7 @@
         }
         if (state.minimized === true) setMinimized(win, true, false);
         if (state.maximized === true) setMaximized(win, true, false);
+        if (state.hidden === true) setHidden(win, true, false);
       });
       updateDeck();
       return { count: windows.size, free: isFree(), domain: activeDomain };
@@ -782,6 +785,7 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       minimize: (id, value = true) => setMinimized(windows.get(id), value),
+      hide: (id, value = true) => setHidden(windows.get(id), value),
       float: (id, value = true) => setFloating(windows.get(id), value),
       maximize: (id, value = true) => setMaximized(windows.get(id), value),
       focus: id => focusWindow(windows.get(id))

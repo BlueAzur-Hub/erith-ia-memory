@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v6",
-  "build": "39.2.4",
-  "release": "ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS",
-  "published_at": "2026-08-17T09:44:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v7",
+  "build": "39.2.5",
+  "release": "ADMINISTRATOR MIRROR · PORTAL WINDOWS · NO DUPLICATES",
+  "published_at": "2026-08-17T10:17:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.4",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.4",
+    "primary_build": "39.2.5",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.5",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -33,54 +33,44 @@
     "operator_compositions": [
       "Graphique + Target Top + Market Flow",
       "Target Top + Market Flow + Market + Math Core",
-      "Any subset of the twelve windows can be minimized, detached or restored without stopping its business runtime."
+      "Any subset can be parked/hidden and recalled from WINDOW DECK without stopping its business runtime."
     ]
+  },
+  "window_contract": {
+    "docked": "native Classic/Mirror layout; no generated docked title bars",
+    "minimize": "park entire operational unit in WINDOW DECK; no in-page mini-bar",
+    "hide": "remove entire operational unit from cockpit; recall through WINDOW DECK",
+    "detach": "move/use the original DOM presentation; never clone business content",
+    "floating_multi_node": "one floating shell + one chrome bar + original nodes",
+    "suspend_runtime": "false",
+    "storage_namespace": "erith_admin_portal_39_2_5"
   },
   "domain_contract": {
     "crypto_and_metals": "same business cockpit, two domains",
-    "graph": "Graphique carries the active technical reading panel with it",
-    "target": "one operational window switches visual content between Target Top 5 and Target Métaux",
-    "flow": "one operational window switches visual content between Market Flow and Metals Flow",
-    "market": "one operational window switches visual content between crypto Market Snapshot and the metals market snapshot/registry",
-    "math": "the same Math Core DOM is preserved and follows the Classic domain placement logic",
+    "graph": "same #analyste surface carries active Crypto or Métaux reading",
+    "target": "portal host follows Crypto/Metals native ribbon container",
+    "flow": "portal host follows Crypto/Metals native ribbon container",
+    "market": "portal host follows Crypto/Metals native market grid",
+    "math": "same Math Core DOM and Classic placement logic preserved",
     "business_clone": "false"
   },
-  "minimize_contract": {
-    "behavior": "hide presentation only",
-    "suspends_runtime": "false",
-    "implementation": "native nodes are masked and replaced temporarily by a compact Administrator mini-bar; restore reveals the same original nodes",
-    "graph_fix": "Graphique is now fully masked on minimize; Lecture technique/Lecture Métaux is included with it",
-    "missions_fix": "Missions de vie and all native child programs are hidden/restored as one coherent window"
-  },
-  "window_features": [
-    "free/locked movement mode",
-    "minimize/restore without suspend",
-    "detach/dock",
-    "maximize/restore",
-    "floating resize",
-    "z-order",
-    "localStorage geometry/state persistence",
-    "Window Deck",
-    "cascade",
-    "global reset",
-    "domain-aware window labels"
-  ],
   "supersedes": {
     "39.2": "rejected: automatic DOM slicing",
-    "39.2.1": "rejected: semantic wrappers altered the native docked layout",
-    "39.2.2": "superseded: window granularity and minimize behavior incomplete",
-    "39.2.3": "superseded before canonical validation: dual-domain identity added but operational window split/version truth still incomplete"
+    "39.2.1": "rejected: semantic wrappers altered native docked layout",
+    "39.2.2": "superseded: window granularity/minimize incomplete",
+    "39.2.3": "superseded: dual-domain identity but operational split incomplete",
+    "39.2.4": "superseded: operational split validated, but docked mini-bars caused duplicate-looking Graphique/market chrome and clutter"
   },
   "integrity": {
     "files": {
-      "app.js": "874c4a764b47d08717cd8f25f712b2ae2e27da0903aa612fa5b20c71290cb195",
-      "index.html": "8d32f5d5e1ec45181f8fdd1bfce43f341014600e2e1dcc06c3e06469a8e7b602",
+      "app.js": "229d219d3ae5b0b613ae80516863a027ce97a980a1dabc2ba2d788f79b295767",
+      "index.html": "a375e791de2ba733ed55041d7a299ce9fbf5ee630dfe10b0da6ff9d1a2e944ef",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "851bee641ae22f73d4995449b4f70e8b7bcf21e9931997490fd322ad753e0152",
-      "version.json": "26716d8071025ad798df8d855b1a3a7971477e4152f1b94d0a0a97b73282cced",
-      "js/app.js": "47b5f003a5836cf3a437eac23af5fe0513372bf7d94675aef6a4e57d20c9666f",
-      "js/core/admin-window-manager.js": "c97487bc2882496ea9447462ff7184c643a3a90098add3388b6b84bd72f8b8dc"
+      "admin-windows.css": "19938277281a391def70338d2c8717514f14690cf9121a702b1c90873e308194",
+      "js/app.js": "89550a76985f4aeea7d4df3941a014e72e2d8e6d7a66e8479d95afc5162e6c0e",
+      "js/core/admin-window-manager.js": "d86cec82d0a49cba0d3435a1c26933476b3181b933b885668e5aa750cd3b84fe",
+      "version.json": "10356797185098c3afe48e00668db36004509d66d5f401707b8f7933a61a81b8"
     }
   }
 }

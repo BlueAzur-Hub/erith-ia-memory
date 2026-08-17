@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.4";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS";
+  const ADMIN_BUILD = "39.2.5";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · PORTAL WINDOWS · NO DUPLICATES";
   const ENGINE_BUILD = "38.15.11";
-  const STORAGE_PREFIX = "erith_admin_operational_39_2_4";
+  const STORAGE_PREFIX = "erith_admin_portal_39_2_5";
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
@@ -36,6 +36,21 @@
       : "crypto";
   }
 
+  function portalHost(kind, domain = currentDomain()) {
+    const metals = domain === "metals";
+    if (kind === "target" || kind === "flow") {
+      return metals
+        ? (q("#atlasMetalsMarketArea .atlas-metals-market-ribbons") || byId("atlasMetalsMarketArea"))
+        : byId("market-workspace");
+    }
+    if (kind === "market") {
+      return metals
+        ? (q("#atlasMetalsMarketArea .atlas-metals-market-grid") || byId("atlasMetalsMarketArea"))
+        : byId("marketWorkspaceGrid");
+    }
+    return null;
+  }
+
   function nativeDefinitions() {
     return [
       {
@@ -55,6 +70,7 @@
           entry(q("#atlasMetalsMarketArea .atlas-metals-target-ribbon"), "metals")
         ].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
+        resolvePortalHost: domain => portalHost("target", domain),
         resolveControlHosts: (nodes, entries) => entries.map(item => item.node)
       },
       {
@@ -66,6 +82,7 @@
           entry(q("#atlasMetalsMarketArea .atlas-metals-flow-ribbon"), "metals")
         ].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
+        resolvePortalHost: domain => portalHost("flow", domain),
         resolveControlHosts: (nodes, entries) => entries.map(item => item.node)
       },
       {
@@ -78,6 +95,7 @@
           entry(byId("atlasMetalsMarketRegistry"), "metals")
         ].filter(Boolean),
         resolveAnchor: nodes => byId("marketSnapshotPanel") || nodes[0],
+        resolvePortalHost: domain => portalHost("market", domain),
         resolveControlHosts: (nodes, entries) => entries
           .filter(item => item.node.id === "marketSnapshotPanel" || item.node.id === "atlasMetalsMarketSnapshot")
           .map(item => item.node)
@@ -178,7 +196,7 @@
       const identity = document.createElement("p");
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · OPERATIONAL WINDOWS · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · PORTAL WINDOWS · NO DUPLICATES · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
       hero.appendChild(identity);
     }
 
@@ -197,8 +215,8 @@
   function installAdminBar(manager) {
     q(".admin-mirror-bar")?.remove();
     const bar = document.createElement("aside");
-    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-4";
-    bar.setAttribute("aria-label", "Administrator Operational Windows controls");
+    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-5";
+    bar.setAttribute("aria-label", "Administrator Portal Windows controls");
 
     const brand = document.createElement("span");
     brand.className = "admin-mirror-brand";
