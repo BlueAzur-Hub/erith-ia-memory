@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.4.5R3";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · VISUAL ASSET LAYER REBASE LOCK";
+  const ADMIN_BUILD = "39.4.6";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · TARGET TOP + MARKET FLOW NATIVE RIBBON LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -60,30 +60,6 @@
         directFixed: true,
         resolveEntries: () => [entry(byId("analyste"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0]
-      },
-      {
-        id: "target-top",
-        title: "Target Top 5 · Crypto",
-        tone: "gold",
-        resolveEntries: () => [
-          entry(q("#market-workspace .top5-ribbon"), "crypto"),
-          entry(q("#atlasMetalsMarketArea .atlas-metals-target-ribbon"), "metals")
-        ].filter(Boolean),
-        resolveAnchor: nodes => nodes[0],
-        resolvePortalHost: domain => portalHost("target", domain),
-        resolveControlHosts: (nodes, entries) => entries.map(item => item.node)
-      },
-      {
-        id: "market-flow",
-        title: "Market Flow · Crypto",
-        tone: "cyan",
-        resolveEntries: () => [
-          entry(q("#market-workspace .market-flow-ribbon"), "crypto"),
-          entry(q("#atlasMetalsMarketArea .atlas-metals-flow-ribbon"), "metals")
-        ].filter(Boolean),
-        resolveAnchor: nodes => nodes[0],
-        resolvePortalHost: domain => portalHost("flow", domain),
-        resolveControlHosts: (nodes, entries) => entries.map(item => item.node)
       },
       {
         id: "market",
@@ -268,8 +244,6 @@
     manager.setDomain(domain);
     const metals = domain === "metals";
     manager.renameWindow("graphique", metals ? "Graphique + Lecture Métaux" : "Graphique + Lecture technique");
-    manager.renameWindow("target-top", metals ? "Target Métaux" : "Target Top 5");
-    manager.renameWindow("market-flow", metals ? "Metals Flow" : "Market Flow");
     manager.renameWindow("market", metals ? "Market Métaux" : "Market Snapshot");
     manager.renameWindow("math-core", metals ? "Math Core Métaux" : "Atlas Math Core");
   }

@@ -1,0 +1,215 @@
+/* ========================================================================== 
+   Agent-Crypto Administrator · Build 39.4.6
+   TARGET TOP + MARKET FLOW NATIVE RIBBON LOCK
+
+   Canonical contract recovered from Classic / Crypto thread:
+   - Target Top and Market Flow are native Market Workspace ribbons, not windows.
+   - Target cartouche cycles: Top 5 -> Hausses 5 -> Baisses 5 -> Volumes 5 -> Top 3.
+   - Individual coins keep their existing comparison behavior.
+   - Market Flow cartouche cycles: normal -> hausses -> baisses -> normal.
+   - No data source, Market Memory, Atlas, Math Core or chart engine change here.
+   ========================================================================== */
+
+/* Native ribbons: never inherit floating-window geometry/chrome. */
+#market-workspace .top5-ribbon,
+#market-workspace .market-flow-ribbon {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  min-width: 0 !important;
+  transform: none !important;
+  z-index: 6 !important;
+}
+
+#market-workspace .top5-ribbon > .admin-native-controls,
+#market-workspace .market-flow-ribbon > .admin-native-controls {
+  display: none !important;
+}
+
+/* TARGET TOP — preserve five visible cards without clipping. */
+#market-workspace .top5-ribbon {
+  display: grid !important;
+  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 62px !important;
+  padding: 7px 8px !important;
+  overflow: hidden !important;
+}
+
+#market-workspace #targetTop5Cycle.target-top5-cycle-control {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  overflow: hidden !important;
+  outline-offset: 2px !important;
+}
+
+#market-workspace #targetTop5Cycle:focus-visible {
+  outline: 2px solid rgba(98,236,255,.88) !important;
+  outline-offset: 2px !important;
+}
+
+#market-workspace #targetTop5CycleLabel,
+#market-workspace #targetTop5CycleSymbols {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+#market-workspace .top5-track {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+}
+
+#market-workspace .top5-track::-webkit-scrollbar { display: none !important; }
+
+#market-workspace .top5-item {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+#market-workspace .top5-price,
+#market-workspace .top5-change,
+#market-workspace .top5-identity b {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* MARKET FLOW — fixed cartouche + independently clipped moving viewport. */
+#market-workspace .market-flow-ribbon {
+  display: grid !important;
+  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  min-height: 54px !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+}
+
+#market-workspace #marketFlowCycle.market-flow-label {
+  position: relative !important;
+  z-index: 3 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  outline-offset: -2px !important;
+}
+
+#market-workspace #marketFlowCycle:focus-visible {
+  outline: 2px solid rgba(98,236,255,.88) !important;
+  outline-offset: -3px !important;
+}
+
+#market-workspace .market-flow-viewport {
+  position: relative !important;
+  z-index: 1 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  contain: paint !important;
+  isolation: isolate !important;
+}
+
+/* Existing renderer already duplicates the sequence exactly twice.
+   A single -50% traversal is therefore seamless. 155 s was visually almost
+   static on a wide desktop; 58 s stays calm but visibly flows. */
+#market-workspace .market-flow-viewport .ticker-track {
+  position: relative !important;
+  z-index: 1 !important;
+  display: inline-flex !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  transform: translate3d(0,0,0);
+  animation-name: atlasAdminMarketFlow !important;
+  animation-duration: 52s !important;
+  animation-timing-function: linear !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  will-change: transform !important;
+}
+
+@keyframes atlasAdminMarketFlow {
+  0%, 1.5% { transform: translate3d(0,0,0); }
+  100% { transform: translate3d(-50%,0,0); }
+}
+
+/* A moving target stops while the operator points, focuses or clicks it. */
+#market-workspace .market-flow-viewport:hover .ticker-track,
+#market-workspace .market-flow-viewport:focus-within .ticker-track {
+  animation-play-state: paused !important;
+}
+
+#market-workspace .ticker-item {
+  flex: 0 0 auto !important;
+  transform: none !important;
+}
+
+#market-workspace .ticker-item:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--crypto-color) 78%, white) !important;
+  outline-offset: -2px !important;
+}
+
+/* Transformer / touch: manual pan replaces autonomous movement. */
+@media (hover: none), (pointer: coarse) {
+  #market-workspace .market-flow-viewport {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain !important;
+    touch-action: pan-x !important;
+    scrollbar-width: thin !important;
+  }
+  #market-workspace .market-flow-viewport .ticker-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #market-workspace .market-flow-viewport .ticker-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* On narrower desktops the ribbons stay one component and pan instead of
+   squeezing cards into unreadable fragments. */
+@media (max-width: 1180px) {
+  #market-workspace .top5-ribbon {
+    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) !important;
+  }
+  #market-workspace .top5-track {
+    display: flex !important;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain !important;
+    scrollbar-width: thin !important;
+  }
+  #market-workspace .top5-item {
+    flex: 0 0 190px !important;
+  }
+  #market-workspace .market-flow-ribbon {
+    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  #market-workspace .top5-ribbon,
+  #market-workspace .market-flow-ribbon {
+    grid-template-columns: 1fr !important;
+  }
+  #market-workspace .market-flow-label {
+    display: grid !important;
+    min-height: 38px !important;
+  }
+}

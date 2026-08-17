@@ -1,30 +1,30 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.5R3 · ADMINISTRATOR MIRROR · VISUAL VISIBILITY LOCK",
-  "build": "39.4.5R3",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.5R3",
-  "published_at": "2026-08-17T21:36:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.6 · ADMINISTRATOR MIRROR · TARGET TOP + MARKET FLOW NATIVE RIBBON LOCK",
+  "build": "39.4.6",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.6",
+  "published_at": "2026-08-17T23:10:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.5R3 only exposes already-installed visual assets above opaque UI layers."
+    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.6 restores Target Top and Market Flow as native Market Workspace ribbons and removes Administrator window wrapping from those two components."
   },
   "files": {
     "app.js": {
-      "sha256": "2143c40dbc683ac0b5e2b6652ef7215f298d1c240485b99e08640c35085df1cb"
+      "sha256": "3e5070dc12198dd14a5ca570b059e4d0dcda958ecb6807bcd87e5041d05c50be"
     },
     "index.html": {
-      "sha256": "8ffcc0851aa41abeaedc0613bc40b2ea89d89ad90093176553eefd805fb8a380"
+      "sha256": "f7aeb18509831e755a6ecdcf607e27967cfdf009ea9ae5baf60040c7d3d93fbc"
     },
     "js/app.js": {
-      "sha256": "2c1fef2bffff87f4267d6d70fa54402c7f123acf795e2b59e2af135965a4585b"
+      "sha256": "cd414a3f1ca8b0e6060bec679758b3cffc258feefdf1abc18141e3ba50a7ded4"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
     },
     "admin-visual-assets.css": {
-      "sha256": "5f634390fffbcc237123acdd427868157cd9504a40989e378352c003668a51d5"
+      "sha256": "37e9cd3919c213e9594114ecc9946193776b496bede6df971d5ec8b65bad3e84"
     },
     "assets/visual/admin-analytical-memory.png": {
       "sha256": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d"
@@ -66,16 +66,19 @@
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
     "js/admin-visual-assets-39.4.5R3.js": {
-      "sha256": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
+      "sha256": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca"
+    },
+    "admin-ribbons.css": {
+      "sha256": "bcb59767770d432181c2e7b465e507cbc3bc1ebb76cdb7fdd527446e7ab96def"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "2143c40dbc683ac0b5e2b6652ef7215f298d1c240485b99e08640c35085df1cb",
-      "index.html": "8ffcc0851aa41abeaedc0613bc40b2ea89d89ad90093176553eefd805fb8a380",
-      "js/app.js": "2c1fef2bffff87f4267d6d70fa54402c7f123acf795e2b59e2af135965a4585b",
+      "app.js": "3e5070dc12198dd14a5ca570b059e4d0dcda958ecb6807bcd87e5041d05c50be",
+      "index.html": "f7aeb18509831e755a6ecdcf607e27967cfdf009ea9ae5baf60040c7d3d93fbc",
+      "js/app.js": "cd414a3f1ca8b0e6060bec679758b3cffc258feefdf1abc18141e3ba50a7ded4",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
-      "admin-visual-assets.css": "5f634390fffbcc237123acdd427868157cd9504a40989e378352c003668a51d5",
+      "admin-visual-assets.css": "37e9cd3919c213e9594114ecc9946193776b496bede6df971d5ec8b65bad3e84",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -89,22 +92,23 @@
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "js/admin-visual-assets-39.4.5R3.js": "34cb195ecca4ce0aa758e8fbfa7629711f8ffeb20b0112aaa19a7b6d56af9103"
+      "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
+      "admin-ribbons.css": "bcb59767770d432181c2e7b465e507cbc3bc1ebb76cdb7fdd527446e7ab96def"
     },
     "publication_identity": {
-      "build": "39.4.5R3",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.5R3",
+      "build": "39.4.6",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.6",
       "rule": "exact case"
     }
   },
   "protected_code": {
-    "application_core": "CODE FINALISÉ — inherited from 39.4.5R1 / 39.4.4R1; identity-only edit in app.js",
+    "application_core": "CODE FINALISÉ — inherited from 39.4.5R3 / 39.4.4R1; identity-only edit in app.js",
     "market_memory": "CODE FINALISÉ — 39.4.4R1; do not edit except explicit operator request",
     "workspace_f5": "CODE FINALISÉ — 39.2.19",
     "math_core": "CODE FINALISÉ — 39.2.17",
     "metals_5_5": "CODE FINALISÉ — 39.2.20R1",
     "chart_metal": "CODE FINALISÉ — 39.2.21",
-    "windows": "CODE FINALISÉ — existing protected window manager"
+    "windows": "CODE FINALISÉ — manager byte-for-byte preserved; Target Top and Market Flow are no longer registered as windows by js/app.js"
   },
   "market_memory_contract": {
     "module": "js/market-memory-39.4.4R1.js",
@@ -132,5 +136,15 @@
     "R1 visual failure cause: images were placed under existing opaque/recollapsed surfaces; R2 uses explicit visible UI strips and the existing graph panorama layer."
   ],
   "parent_build": "39.4.5R1",
-  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R3"
+  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R3",
+  "ribbon_lock": {
+    "build": "39.4.6",
+    "stylesheet": "admin-ribbons.css",
+    "window_manager_modified": false,
+    "target_top": "native Market Workspace control; cycle semantics preserved; Binance live patch preserved",
+    "market_flow": "native Market Workspace control; CoinGecko renderer preserved; clipped viewport + 52 s visible flow with 0.78 s safe start; pause on hover/focus",
+    "new_fetch": false,
+    "new_timer": false,
+    "data_sources_modified": false
+  }
 }
