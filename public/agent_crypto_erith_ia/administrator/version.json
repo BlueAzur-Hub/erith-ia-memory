@@ -1,30 +1,33 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.3R1 · ADMINISTRATOR MIRROR · BOOT RECOVERY REVERT LOCK",
-  "build": "39.4.3R1",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.3R1",
-  "published_at": "2026-08-17T18:18:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.4 · ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTOR INDEXEDDB BRIDGE LOCK",
+  "build": "39.4.4",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.4",
+  "published_at": "2026-08-17T18:33:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "Emergency recovery: exact 39.4.2 functional application core restored; 39.4.3 IndexedDB Market Memory experiment rejected after boot regression."
+    "status": "Recovered 39.4.3R1 application core protected; Market Memory is restored only through an external bridge to the existing verified Collector IndexedDB."
   },
   "files": {
     "app.js": {
-      "sha256": "f7166ce929ccf13ac47155203da05c923dcde4ec2d1762a067f8c15febfccf36"
+      "sha256": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051"
     },
     "index.html": {
-      "sha256": "5ace49c97053758ad01db9e76520abdd168afc341719b49019edc8b7446eec07"
+      "sha256": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf"
     },
     "js/app.js": {
-      "sha256": "84405e87a9ccc9be3484e62f7d8beed6be54d755808a081c4da8ba5251bbc55f"
+      "sha256": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916"
+    },
+    "js/market-memory-39.4.4.js": {
+      "sha256": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be"
     },
     "js/market-memory-39.3.js": {
       "sha256": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded"
     },
-    "js/market-memory-39.4.2.js": {
-      "sha256": "3740994023611d3d2e744314774fd8b251049e3035e8d35a0308bb42dbeb2e5a"
+    "js/analytical-memory-39.4.js": {
+      "sha256": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -37,44 +40,55 @@
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
-    },
-    "js/analytical-memory-39.4.js": {
-      "sha256": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "f7166ce929ccf13ac47155203da05c923dcde4ec2d1762a067f8c15febfccf36",
-      "index.html": "5ace49c97053758ad01db9e76520abdd168afc341719b49019edc8b7446eec07",
-      "js/app.js": "84405e87a9ccc9be3484e62f7d8beed6be54d755808a081c4da8ba5251bbc55f",
+      "app.js": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051",
+      "index.html": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf",
+      "js/app.js": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916",
+      "js/market-memory-39.4.4.js": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
-      "js/market-memory-39.4.2.js": "3740994023611d3d2e744314774fd8b251049e3035e8d35a0308bb42dbeb2e5a",
+      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
+      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
     "publication_identity": {
-      "build": "39.4.3R1",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.3R1",
+      "build": "39.4.4",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.4",
       "rule": "exact case"
     }
   },
-  "recovery_contract": {
-    "functional_core": "39.4.2 exact source + identity-only bump",
-    "rejected_build": "39.4.3",
-    "reason": "39.4.3 lost unrelated stable runtime functions and regressed Livecheck/Market/Math boot",
-    "market_memory_fix": "DEFERRED — no new storage change in this recovery build",
-    "storage_deletion": false,
-    "protected_areas_modified": false
+  "protected_code": {
+    "application_core": "CODE FINALISÉ — recovered 39.4.3R1 core; do not edit except explicit operator request / publication identity",
+    "workspace_f5": "CODE FINALISÉ — 39.2.19",
+    "math_core": "CODE FINALISÉ — 39.2.17",
+    "metals_5_5": "CODE FINALISÉ — 39.2.20R1",
+    "chart_metal": "CODE FINALISÉ — 39.2.21",
+    "windows": "CODE FINALISÉ — existing protected window manager"
+  },
+  "market_memory_contract": {
+    "reader_model": "39.3.0 3/5/10 semantic model",
+    "storage_backend": "existing Collector IndexedDB: agent_crypto_local_memory / memory / collector_memory_primary",
+    "canonical_identity": "collector_id + market_snapshot_id",
+    "same_snapshot": "update last_seen_at + increment observation_count; no new distinct observation",
+    "new_snapshot": "append one MARKET observation then write + reread verification",
+    "analytical_current": "separate existing CURRENT/Analytical Memory path",
+    "atlas_trigger": false,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_websocket": false,
+    "core_app_rewrite": false,
+    "data_deletion": false
   },
   "notes": [
-    "39.4.3 is rejected as a boot regression, not a candidate to wait on.",
-    "This R1 restores the exact 39.4.2 app.js, index.html and Administrator runtime behavior, changing only publication identity.",
-    "The 39.4.2 Market Memory wrapper is loaded again exactly as before.",
-    "The original 39.3 Market Memory reader file is restored to its pre-39.4.3 SHA-256.",
-    "No IndexedDB, LocalStorage, CURRENT, Journal, workspace, graph, Math Core, Metals or window data is erased.",
-    "Market Memory remains an open defect after boot recovery; do not declare it finalized."
+    "39.4.3R1 remains the recovered functional application core and is not functionally rewritten in this build.",
+    "The missing market-memory-39.4.3R1 script reference is replaced by the real market-memory-39.4.4 bridge file included in this upload.",
+    "Market observations are no longer dependent on free localStorage capacity for the new 39.4.4 path.",
+    "Historical valid Collector market observations are read from the existing IndexedDB cache and adapted into the 3/5/10 Market Memory reader.",
+    "No CURRENT record is converted into a MARKET record.",
+    "Market Memory is not yet declared CODE FINALISÉ until Firefox/Ryzen shows persistence across F5 and at least 3 distinct canonical snapshots."
   ]
 }

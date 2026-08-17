@@ -1,22 +1,22 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v27",
-  "build": "39.4.3R1",
-  "release": "ADMINISTRATOR MIRROR · BOOT RECOVERY REVERT LOCK",
-  "published_at": "2026-08-17T18:18:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v28",
+  "build": "39.4.4",
+  "release": "ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTOR INDEXEDDB BRIDGE LOCK",
+  "published_at": "2026-08-17T18:33:00+02:00",
   "global_versioning": {
-    "primary_build": "39.4.3R1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.3R1",
+    "primary_build": "39.4.4",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.4",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.4.3R1",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.3R1",
+    "canonical_build": "39.4.4",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.4",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
   "protected_base": {
-    "direct_functional_base": "39.4.2",
+    "direct_functional_base": "39.4.3R1 recovered 39.4.2 core — CODE FINALISÉ / no functional edits",
     "workspace_f5": "39.2.19",
     "metals_5_5": "39.2.20R1",
     "publication_identity": "39.2.20R2",
@@ -25,25 +25,27 @@
     "market_memory_model": "39.3.0",
     "analytical_memory": "39.4.0"
   },
-  "recovery_contract": {
-    "rejected": "39.4.3",
-    "restore": "39.4.2 application core",
-    "identity_only_changes": true,
-    "no_data_reset": true,
-    "market_memory_repair_deferred": true
+  "market_memory_bridge": {
+    "module": "./js/market-memory-39.4.4.js",
+    "storage": "existing Collector IndexedDB",
+    "automatic_boundary": "final atlasAfterLivecheck wrapper + already hydrated valid state",
+    "canonical_dedupe": "collector_id + market_snapshot_id",
+    "verified_write": "writeCollectorMemory -> atlasCollectorPersistNow -> readCollectorMemory canonical reread",
+    "current_separation": true,
+    "core_rewrite": false
   },
   "integrity": {
     "files": {
-      "app.js": "f7166ce929ccf13ac47155203da05c923dcde4ec2d1762a067f8c15febfccf36",
-      "index.html": "5ace49c97053758ad01db9e76520abdd168afc341719b49019edc8b7446eec07",
-      "js/app.js": "84405e87a9ccc9be3484e62f7d8beed6be54d755808a081c4da8ba5251bbc55f",
+      "app.js": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051",
+      "index.html": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf",
+      "js/app.js": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916",
+      "js/market-memory-39.4.4.js": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
-      "js/market-memory-39.4.2.js": "3740994023611d3d2e744314774fd8b251049e3035e8d35a0308bb42dbeb2e5a",
+      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
+      "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   }
 }
