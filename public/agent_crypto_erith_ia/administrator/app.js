@@ -12125,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 39.2.18",
+  interface: "Build 39.2.19",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -33923,7 +33923,7 @@ function atlasWorkspaceRead() {
   const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
   if (!current && !lastValid) return null;
 
-  /* Build 39.2.18 — Workspace Persistence Truth Lock
+  /* Build 39.2.19 — Boot Hydration Persistence Lock
      The current workspace is the operator's preference truth.
      last_valid_graph is only a recovery fallback when no current workspace exists;
      it must never overwrite a newer Solo/Top/Scanner preset, period or chart options. */
@@ -34493,9 +34493,12 @@ function atlasWorkspaceSlotsInit() {
 }
 
 function atlasWorkspaceWrite() {
-  /* Build 39.2.18 — persist operator intent independently from graph readiness.
-     A stale/previous ready chart may remain visible while a new preset or period is
-     loading. That must not prevent the current workspace from being saved. */
+  /* Build 39.2.19 — Boot Hydration Persistence Lock.
+     Never persist the JavaScript boot defaults before the stored workspace has
+     been hydrated (or the absence of a stored workspace has been established).
+     This prevents the initial Solo state from overwriting a saved Top/Scanner view. */
+  if (!atlasWorkspaceRestored) return null;
+
   const snapshot = atlasWorkspaceCapture();
 
   try {
@@ -34554,8 +34557,13 @@ function atlasWorkspaceWrite() {
 }
 
 function atlasWorkspaceScheduleSave(delay = 240) {
+  /* Ignore all boot-time UI events until workspace hydration is complete.
+     In particular, the initial atlas:v2mode event must never schedule a default
+     Solo write before atlasWorkspaceRestoreAfterMarket() has read localStorage. */
+  if (!atlasWorkspaceRestored) return false;
   window.clearTimeout(atlasWorkspaceSaveTimer);
   atlasWorkspaceSaveTimer = window.setTimeout(atlasWorkspaceWrite, Math.max(0, Number(delay) || 0));
+  return true;
 }
 
 function atlasWorkspacePresetLabel() {
@@ -40284,7 +40292,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "39.2.18";
+const ATLAS_BUILD = "39.2.19";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46955,8 +46963,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "39.2.18",
-  asset_token: "market-core-v2.0-alpha-build-39.2.18"
+  build: "39.2.19",
+  asset_token: "market-core-v2.0-alpha-build-39.2.19"
 });
 
 function atlasRuntimeTruth3813() {

@@ -1,18 +1,18 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v18",
-  "build": "39.2.18",
-  "release": "ADMINISTRATOR MIRROR · WORKSPACE PERSISTENCE TRUTH LOCK",
-  "published_at": "2026-08-17T14:13:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v19",
+  "build": "39.2.19",
+  "release": "ADMINISTRATOR MIRROR · BOOT HYDRATION PERSISTENCE LOCK",
+  "published_at": "2026-08-17T14:23:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.18",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.18",
+    "primary_build": "39.2.19",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.19",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "preserved; no visual change in 39.2.18"
+    "status": "preserved; no visual change in 39.2.19"
   },
   "operational_windows": {
     "count": 12,
@@ -50,10 +50,11 @@
     "last_valid_key": "agent_crypto_erith_ia_workspace_last_valid_graph_v1",
     "authority": "current workspace wins on reload",
     "fallback": "last_valid_graph only if current workspace is absent",
-    "write_rule": "operator preferences are persisted independently from graph readiness",
+    "write_rule": "no workspace write is allowed before initial hydration completes; after hydration operator preferences persist independently from graph readiness",
     "last_valid_rule": "only a coherent ready graph may update last_valid_graph; in-flight Scanner work never does",
     "preset_rule": "a saved preset is never silently rewritten into another preset by atlasWorkspaceRead",
-    "abc_slots": "unchanged"
+    "abc_slots": "unchanged",
+    "boot_rule": "initial UI/mode events cannot persist default Solo before atlasWorkspaceRestoreAfterMarket has read the saved workspace"
   },
   "supersedes": {
     "39.2.17": "direct functional/UI base; Math Core host-width fix preserved",
@@ -61,32 +62,34 @@
     "39.2.15": "rejected Math Core pseudo-background experiment",
     "39.2.14": "rejected external dynamic backdrop experiment",
     "39.2.13": "rejected capped-host background experiment",
-    "39.2.12": "rejected forced Math Core geometry experiment"
+    "39.2.12": "rejected forced Math Core geometry experiment",
+    "39.2.18": "workspace authority correction retained; boot-time overwrite race fixed in 39.2.19"
   },
   "integrity": {
     "files": {
-      "app.js": "fdb95b60a92e26b6b48794f24daf2284796523695da3bb90ff9447abd06256f7",
-      "index.html": "6110352981b2ae8eaddea5286a44c34ffa0085ea9e997c558a0e68731b000479",
+      "app.js": "18785792eb5ddba5e75393ef6ee05221e9826f2d741c424e9985b2eebde5e614",
+      "index.html": "0df624ab18a6ec07ec6b533dc76cfe54b1120a5c89226cac1d9538d5cf7c780c",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "7b92f6371297e4425a2211699c87842dfb51746df4480900fb6d0ef11957a4e9",
+      "js/app.js": "bd285127c9c91df1b18f75e6837d0abd4264c1ae16bd7b5449acbed71b188490",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "version.json": "62fc47fda01a7832bd1d7f6149843a7f1a273a2d1c25c4c5cefbc9de157ae8ae"
+    "version.json": "c89d28ffa5fdd0fa447e6b8709aafff9d8339c8a7cdf7ea309a7275bba52a6f0"
   },
   "validation_contract": {
     "required_firefox_reload_cases": [
+      "Top 5 -> wait -> F5 -> Top 5 (cold and warm cache)",
       "Solo -> F5 -> Solo",
       "Top 3 -> F5 -> Top 3",
-      "Top 5 -> F5 -> Top 5",
       "Hausses 5 -> F5 -> Hausses 5",
       "Baisses 5 -> F5 -> Baisses 5",
       "Volumes 5 -> F5 -> Volumes 5",
       "24h/7j/30j/90j preserved",
       "Prix/Base 100 preserved",
       "Volume/Légende/Analyse preserved",
-      "A/B/C slots unchanged"
+      "A/B/C slots unchanged",
+      "reload before market hydration never rewrites stored workspace to Solo"
     ]
   }
 }
