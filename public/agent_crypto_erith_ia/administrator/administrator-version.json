@@ -1,58 +1,82 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v2",
-  "build": "39.2",
-  "release": "ADMINISTRATOR MIRROR · FREE WINDOWS",
-  "published_at": "2026-08-17T08:28:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v3",
+  "build": "39.2.1",
+  "release": "ADMINISTRATOR MIRROR · SEMANTIC WINDOWS",
+  "published_at": "2026-08-17T09:00:00+02:00",
   "classic_engine": {
     "build": "38.15.11",
     "release": "CLASSIC FINAL · FROZEN REFERENCE",
-    "status": "runtime mirror preserved; app.js, style.css and version.json unchanged from Administrator 39.1 / Classic mirror"
+    "status": "runtime mirror preserved; app.js, style.css and version.json unchanged"
   },
   "theme": {
-    "base": "Metal Base 39.1 preserved unchanged",
-    "decoration": "deferred; no marble, gold or ornamental pass in 39.2"
+    "base": "Metal Base 39.1 preserved",
+    "status": "validated; no decorative pass in 39.2.1"
   },
-  "window_system": {
-    "scope": "32 curated top-level Administrator workspaces; no business runtime rewrite",
-    "default_mode": "FREE WINDOWS",
-    "features": [
-      "drag by dedicated handle",
-      "detach and dock without moving DOM ownership",
-      "minimize and restore",
-      "maximize and restore",
-      "resize floating windows",
-      "front-to-back z-order",
-      "viewport clamping and edge snapping",
-      "localStorage geometry/state persistence",
-      "Window Deck overview and focus controls",
-      "cascade floating windows",
-      "global reset to canonical Classic flow",
-      "Escape restores maximized window or closes Window Deck"
+  "semantic_windows": {
+    "count": 9,
+    "windows": [
+      "Graphique",
+      "Marché",
+      "Analyse & décision",
+      "Intelligence, mémoire & création",
+      "Préparation & opérations",
+      "Expérimentation & système",
+      "Missions de vie",
+      "Mesure d’audience",
+      "Sources"
+    ],
+    "rules": [
+      "Graphique and Marché are independent windows",
+      "colored Administrator sections are one window each and keep their subsections inside",
+      "Missions de vie is one block containing Fonds ERITH.IA, Association, Aerith Enfance, Aerith Animaux and Aerith Terre Vivante",
+      "subsections keep their native accordion behavior and receive no global window controls",
+      "reduce masks a semantic window without suspending its runtime logic",
+      "floating moves the original DOM nodes; no business content is cloned",
+      "Window Deck lists semantic workspaces only"
     ]
   },
+  "window_features": [
+    "drag when free mode is enabled",
+    "minimize/restore without suspend",
+    "detach/dock",
+    "maximize/restore",
+    "floating resize",
+    "z-order",
+    "localStorage state/geometry persistence",
+    "cascade floating semantic windows",
+    "global reset to canonical flow",
+    "Escape restores maximized window or closes Window Deck"
+  ],
+  "suspension_contract": {
+    "implemented": "false",
+    "reason": "Classic 38.15.11 business runtime is still monolithic; 39.2.1 refuses to fake module suspension.",
+    "current_behavior": "minimize/hide only changes presentation; market, WebSocket, timers and analytical runtime keep their existing behavior.",
+    "future": "true per-module suspend can be added only when the relevant runtime is explicitly separable and lifecycle-safe."
+  },
   "contracts": {
-    "reduce_is_not_suspend": "true",
     "window_operations_trigger_market": "false",
     "window_operations_trigger_atlas": "false",
     "window_operations_trigger_bridge_or_ollama": "false",
     "classic_web_path": "untouched",
-    "market_memory_refactor": "deferred to next bounded Administrator migration"
+    "market_memory_refactor": "deferred",
+    "no_subsection_auto_windowing": "true"
   },
   "notes": [
-    "39.2 is a UI-only window manager layered over the validated 39.1 Metal Base mirror.",
-    "No new fetch, WebSocket, IndexedDB migration, Atlas/NØX/Aerith execution, Bridge/Ollama call, timer or financial logic is introduced by the Administrator window layer.",
-    "Floating a workspace keeps the original DOM node in place and uses fixed positioning; docking simply restores the original Classic flow.",
-    "Classic /web remains the stable public reference while /administrator is the operator cockpit."
+    "39.2 Free Windows V1 is superseded because it treated arbitrary top-level SECTION/DETAILS nodes as windows.",
+    "39.2.1 replaces automatic DOM slicing with an explicit semantic map based on the real Administrator hierarchy.",
+    "Only nine coherent workspaces receive global window controls.",
+    "The original content is moved when detached, never duplicated; docking restores it to its original parent/order.",
+    "Classic /web remains the stable public reference; /administrator remains the operator cockpit."
   ],
   "integrity": {
     "files": {
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "b6c4957cce5fdc19180df0622c160c2a42ec8727c58797aaaf597b993033da46",
+      "admin-windows.css": "146270a9eac68f1953b1d8de55fe23c6def532fecaa4b77ee0088e05b2751e0a",
       "app.js": "576d267f2fed6548dde4dd0e0f619802008f19562f650bdf104e3fe1482ab07e",
-      "index.html": "b850ab0e60ac7cbae8a9cd3bb8630c5caaed434ffe3c516b3b4cb8ae9b925852",
-      "js/app.js": "9f69c72ef57968da241d3ce7733857961074eb5475fb128bb0b341de5c9324b4",
+      "index.html": "cabd8a0ab4395e6330fa8a6f6b7aa51243a7fd9f29eb409774d338e96ca94b8c",
+      "js/app.js": "4d996cd682310c22aa76d14cdb11b3b62cfc577829adf647675b411234934a53",
       "js/core/admin-layout.js": "1783e2f64b2c759284cf91b202424fa6bc4fb156e33ed2a23059c7bb5f965435",
-      "js/core/admin-window-manager.js": "cd7fb32cf9621ebff96beea918bac26bf1b6895b8096adcb54a50ed834ba52a9",
+      "js/core/admin-window-manager.js": "24d8cd6bf1c3a7c3c2f065bb76e974325044af9bc3785e959424d6ddb831d982",
       "js/core/event-bus.js": "de2b920bf1f60c2421ead2ac3d02914ef8bce6584daf4406cfea3bf32f0b0a82",
       "js/core/module-manager.js": "392a5c19e8ff6940443bd4251543e5223364104d27f19d94bb59aa9388a05e6d",
       "js/modules/analysis.js": "2abd263032fb92e42a2e7eced5f1fc5762ebf4801d93fc73b7663f3460e5d31e",

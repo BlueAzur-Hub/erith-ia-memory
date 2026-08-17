@@ -1,246 +1,191 @@
-/* Agent-Crypto @erith.IA — Administrator 39.2 · Free Windows
-   UI-only layer. No market, Atlas, Bridge, Ollama or IndexedDB business logic. */
+/* Agent-Crypto @erith.IA — Administrator 39.2.1 · Semantic Windows
+   UI-only layer. The Classic engine keeps running; reduce/hide never means suspend. */
 
 :root{
-  --admin-window-edge:rgba(206,220,231,.26);
-  --admin-window-focus:rgba(114,216,255,.58);
-  --admin-window-bg:rgba(13,17,21,.97);
-  --admin-window-dock-bg:rgba(18,23,28,.985);
+  --semantic-edge:rgba(205,220,232,.25);
+  --semantic-bg:rgba(11,15,19,.985);
+  --semantic-cyan:#72d8ff;
+  --semantic-gold:#e8c66e;
+  --semantic-violet:#a675ff;
+  --semantic-orange:#ff9969;
+  --semantic-green:#74e7bd;
+  --semantic-silver:#c8d3dc;
 }
 
-/* 39.2 keeps the 39.1 Metal Base untouched and adds a stronger window hierarchy. */
-body.atlas-administrator-mirror .admin-window-ready{
-  position:relative;
-  isolation:isolate;
-  transition:box-shadow .18s ease,border-color .18s ease,transform .18s ease,opacity .18s ease;
-}
+.admin-semantic-member{position:relative;}
+.admin-semantic-anchor{position:relative!important;}
+.admin-semantic-hidden-by-window{display:none!important;}
 
-body.atlas-administrator-mirror.admin-layout-free .admin-window-ready:hover{
-  border-color:rgba(183,204,219,.31);
-}
-
-.admin-window-controls{
-  gap:4px;
-  opacity:.30;
-}
-
-.admin-window-ready:hover > .admin-window-controls,
-.admin-window-ready:focus-within > .admin-window-controls,
-details.admin-window-ready > summary:hover .admin-window-controls,
-.admin-floating > .admin-window-controls,
-.admin-floating > summary .admin-window-controls{
-  opacity:1;
-}
-
-.admin-window-control{
-  width:25px;
-  height:23px;
-  border-color:rgba(216,226,234,.22)!important;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025) 42%,rgba(0,0,0,.24))!important;
-}
-
-.admin-window-control:hover{
-  transform:translateY(-1px);
-  border-color:rgba(114,216,255,.56)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 15px rgba(114,216,255,.09)!important;
-}
-
-.admin-window-drag{cursor:not-allowed!important;touch-action:none;}
-body.admin-layout-free .admin-window-drag{
-  cursor:grab!important;
-  color:#b8edff!important;
-  border-color:rgba(114,216,255,.42)!important;
-}
-body.admin-window-dragging .admin-window-drag{cursor:grabbing!important;}
-
-.admin-floating{
-  position:fixed!important;
-  margin:0!important;
-  min-width:360px!important;
-  min-height:80px;
-  max-width:calc(100vw - 20px)!important;
-  max-height:calc(100vh - 20px)!important;
-  overflow:auto!important;
-  resize:both;
-  border:1px solid var(--admin-window-edge)!important;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.011) 0,rgba(255,255,255,.011) 1px,rgba(0,0,0,.016) 1px,rgba(0,0,0,.016) 3px),
-    linear-gradient(145deg,rgba(36,42,48,.985),var(--admin-window-bg) 48%,rgba(23,28,33,.985))!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 34px 110px rgba(0,0,0,.72),
-    0 0 0 1px rgba(114,216,255,.07)!important;
-  backdrop-filter:blur(18px) saturate(110%);
-}
-
-.admin-floating::after{
-  content:"";
+/* Controls exist only on nine coherent workspaces, never on every subsection. */
+.admin-semantic-controls{
   position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  border-radius:inherit;
-  background:linear-gradient(116deg,rgba(255,255,255,.055),transparent 18%,transparent 76%,rgba(114,216,255,.025));
+  top:10px;
+  right:12px;
+  z-index:40;
+  display:flex;
+  gap:5px;
+  padding:4px;
+  border:1px solid rgba(214,226,235,.12);
+  border-radius:9px;
+  background:rgba(7,11,15,.68);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 8px 22px rgba(0,0,0,.24);
+  backdrop-filter:blur(10px);
+  opacity:.24;
+  transition:opacity .16s ease,border-color .16s ease;
 }
+.admin-semantic-anchor:hover > .admin-semantic-controls,
+.admin-semantic-anchor:focus-within > .admin-semantic-controls,
+details.admin-semantic-anchor > summary:hover .admin-semantic-controls,
+.admin-semantic-floating-shell .admin-semantic-controls{opacity:1;}
 
-.admin-window-moving{
-  opacity:.94;
-  box-shadow:0 42px 130px rgba(0,0,0,.78),0 0 0 1px rgba(114,216,255,.22)!important;
+details.admin-semantic-anchor > summary{position:relative;}
+details.admin-semantic-anchor > summary .admin-semantic-controls{top:50%;transform:translateY(-50%);}
+
+.admin-semantic-control{
+  width:27px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(215,226,234,.20)!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(0,0,0,.20))!important;
+  color:#dce5eb!important;
+  font:800 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+  cursor:pointer;
 }
-
-.admin-maximized{
-  position:fixed!important;
-  max-width:none!important;
-  max-height:none!important;
-  resize:none!important;
-  overflow:auto!important;
-  border-color:rgba(114,216,255,.42)!important;
-  box-shadow:0 42px 140px rgba(0,0,0,.82),0 0 0 1px rgba(114,216,255,.14)!important;
+.admin-semantic-control:hover{
+  transform:translateY(-1px);
+  border-color:rgba(114,216,255,.48)!important;
+  color:#dff7ff!important;
+  box-shadow:0 0 15px rgba(114,216,255,.08)!important;
 }
+.admin-semantic-drag{cursor:not-allowed!important;touch-action:none;}
+body.admin-semantic-free .admin-semantic-drag{cursor:grab!important;color:#bfefff!important;border-color:rgba(114,216,255,.42)!important;}
+body.admin-semantic-dragging .admin-semantic-drag{cursor:grabbing!important;}
 
-section.admin-minimized{
-  min-height:42px!important;
-  height:42px!important;
+/* Graphique / Marché receive a dedicated small chrome instead of controls stamped over their content. */
+.admin-semantic-external-chrome{
+  position:relative;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  padding:6px 140px 6px 14px;
+  margin:8px 0 6px;
+  border:1px solid rgba(205,220,232,.18);
+  border-radius:10px;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.010) 0,rgba(255,255,255,.010) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
+    linear-gradient(180deg,rgba(33,39,45,.88),rgba(12,16,20,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.admin-semantic-window-label{display:flex;align-items:center;gap:10px;min-width:0;}
+.admin-semantic-window-label span{font:900 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.18em;color:#7f929f;}
+.admin-semantic-window-label b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:900 11px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.06em;color:#e2e8ec;}
+.admin-semantic-external-chrome .admin-semantic-controls{top:50%;transform:translateY(-50%);right:7px;}
+
+.admin-semantic-tone-cyan{--semantic-accent:var(--semantic-cyan);}
+.admin-semantic-tone-gold{--semantic-accent:var(--semantic-gold);}
+.admin-semantic-tone-violet{--semantic-accent:var(--semantic-violet);}
+.admin-semantic-tone-orange{--semantic-accent:var(--semantic-orange);}
+.admin-semantic-tone-green{--semantic-accent:var(--semantic-green);}
+.admin-semantic-tone-silver{--semantic-accent:var(--semantic-silver);}
+.admin-semantic-external-chrome{border-left:3px solid color-mix(in srgb,var(--semantic-accent,#72d8ff) 78%,transparent);}
+
+/* Minimize means mask only: no fetch/timer/WebSocket/Atlas state is changed. */
+.admin-semantic-anchor-minimized{
+  min-height:48px!important;
+  height:48px!important;
   overflow:hidden!important;
-  padding:0 124px 0 14px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
   display:flex!important;
   align-items:center!important;
-  resize:none!important;
 }
-section.admin-minimized > *:not(.admin-window-controls){display:none!important;}
-section.admin-minimized::before{
-  content:attr(data-admin-window-title);
+.admin-semantic-anchor-minimized > *:not(.admin-semantic-controls):not(.admin-semantic-window-label){display:none!important;}
+.admin-semantic-anchor-minimized::before{
+  content:attr(data-admin-semantic-title);
   display:block;
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#dce4e9;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.035em;
+  padding-left:14px;
+  color:#e3e9ed;
+  font:900 12px/1.1 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.045em;
 }
+.admin-semantic-external-chrome.admin-semantic-anchor-minimized::before{display:none;}
+.admin-semantic-external-chrome.admin-semantic-anchor-minimized .admin-semantic-window-label{display:flex!important;}
 
-details.admin-minimized{
-  min-height:42px!important;
-  height:42px!important;
-  overflow:hidden!important;
+details.admin-semantic-anchor-minimized > summary{width:100%;min-height:48px!important;}
+details.admin-semantic-anchor-minimized > summary > *:not(.admin-semantic-controls){opacity:.52;}
+
+.admin-semantic-floating-shell{
+  position:fixed!important;
+  z-index:2147481800;
+  min-width:min(420px,calc(100vw - 24px));
+  min-height:90px;
+  max-width:calc(100vw - 24px);
+  max-height:calc(100vh - 24px);
+  overflow:auto;
+  resize:both;
+  padding:8px;
+  border:1px solid color-mix(in srgb,var(--semantic-accent,#72d8ff) 42%,rgba(205,220,232,.18));
+  border-radius:15px;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
+    linear-gradient(145deg,rgba(40,47,53,.99),var(--semantic-bg) 44%,rgba(20,25,30,.99));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 38px 130px rgba(0,0,0,.76),0 0 0 1px color-mix(in srgb,var(--semantic-accent,#72d8ff) 12%,transparent);
+  backdrop-filter:blur(18px) saturate(108%);
+}
+.admin-semantic-floating-shell > .admin-semantic-member{margin-left:0!important;margin-right:0!important;}
+.admin-semantic-floating-shell.admin-semantic-shell-minimized{
+  height:58px!important;
+  min-height:58px!important;
+  max-height:58px!important;
   resize:none!important;
+  overflow:hidden!important;
 }
-details.admin-minimized > :not(summary){display:none!important;}
-details.admin-minimized > summary{min-height:42px!important;}
-.admin-floating.admin-minimized{height:42px!important;min-height:42px!important;max-height:42px!important;}
+.admin-semantic-maximized{resize:none!important;max-width:none!important;max-height:none!important;}
+.admin-semantic-moving{opacity:.94;box-shadow:0 44px 145px rgba(0,0,0,.82),0 0 0 1px color-mix(in srgb,var(--semantic-accent,#72d8ff) 34%,transparent)!important;}
+.admin-semantic-placeholder{height:0!important;margin:0!important;padding:0!important;border:0!important;}
 
-.admin-window-ready[data-admin-window-state="floating"] .admin-window-float,
-.admin-window-ready[data-admin-window-state="maximized"] .admin-window-maximize{
-  color:#bcefff!important;
-  border-color:rgba(114,216,255,.50)!important;
+@keyframes admin-semantic-focus-pulse{
+  0%{box-shadow:0 0 0 1px rgba(114,216,255,.03),0 0 0 rgba(114,216,255,0)}
+  35%{box-shadow:0 0 0 2px rgba(114,216,255,.42),0 0 38px rgba(114,216,255,.18)}
+  100%{box-shadow:0 0 0 1px rgba(114,216,255,.03),0 0 0 rgba(114,216,255,0)}
 }
+.admin-semantic-focus-pulse{animation:admin-semantic-focus-pulse .72s ease-out;}
 
-@keyframes admin-window-focus-pulse{
-  0%{box-shadow:0 0 0 1px rgba(114,216,255,.05),0 0 0 rgba(114,216,255,0)}
-  35%{box-shadow:0 0 0 2px rgba(114,216,255,.48),0 0 38px rgba(114,216,255,.20)}
-  100%{box-shadow:0 0 0 1px rgba(114,216,255,.05),0 0 0 rgba(114,216,255,0)}
-}
-.admin-window-focus-pulse{animation:admin-window-focus-pulse .72s ease-out;}
-
-/* Window Deck: on-demand overview. It never touches business state. */
+/* Window Deck: only the nine semantic workspaces. */
 .admin-window-deck{
   position:fixed;
   right:14px;
   bottom:62px;
   z-index:2147483000;
-  width:min(510px,calc(100vw - 28px));
+  width:min(520px,calc(100vw - 28px));
   max-height:min(68vh,720px);
   overflow:hidden;
   border:1px solid rgba(215,225,235,.30);
   border-radius:12px;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,rgba(0,0,0,.018) 1px,rgba(0,0,0,.018) 3px),
-    linear-gradient(155deg,rgba(46,53,60,.985),rgba(14,18,22,.99) 46%,rgba(27,32,37,.985));
+  background:linear-gradient(155deg,rgba(46,53,60,.985),rgba(14,18,22,.99) 46%,rgba(27,32,37,.985));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 30px 90px rgba(0,0,0,.70);
   backdrop-filter:blur(20px) saturate(110%);
   color:#dce4ea;
 }
 .admin-window-deck[hidden]{display:none!important;}
-.admin-window-deck-head{
-  position:sticky;
-  top:0;
-  z-index:2;
-  display:grid;
-  grid-template-columns:1fr auto auto;
-  align-items:center;
-  gap:8px;
-  min-height:44px;
-  padding:8px 10px 8px 13px;
-  border-bottom:1px solid rgba(215,225,235,.15);
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(0,0,0,.12));
-  letter-spacing:.12em;
-  font:900 10px/1 Inter,ui-sans-serif,system-ui,sans-serif;
-}
-.admin-window-deck-count{
-  min-width:26px;
-  padding:4px 7px;
-  border:1px solid rgba(114,216,255,.30);
-  border-radius:999px;
-  color:#bcefff;
-  text-align:center;
-}
-.admin-window-deck-list{
-  max-height:calc(min(68vh,720px) - 45px);
-  overflow:auto;
-  padding:7px;
-}
-.admin-window-deck-row{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 62px 28px 28px 28px;
-  align-items:center;
-  gap:5px;
-  min-height:38px;
-  padding:4px 5px 4px 9px;
-  border:1px solid transparent;
-  border-radius:8px;
-}
-.admin-window-deck-row:hover{
-  border-color:rgba(114,216,255,.15);
-  background:rgba(114,216,255,.035);
-}
-.admin-window-deck-name{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#dce4e9;
-  font:750 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;
-}
-.admin-window-deck-state{
-  color:#8fa4b3;
-  font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
-  letter-spacing:.08em;
-  text-align:right;
-}
-.admin-window-deck .admin-window-control{
-  width:27px!important;
-  height:25px!important;
-}
-.admin-window-deck-close{color:#e2e8ec!important;}
+.admin-window-deck-head{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;min-height:44px;padding:8px 10px 8px 13px;border-bottom:1px solid rgba(215,225,235,.15);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(0,0,0,.12));letter-spacing:.12em;font:900 10px/1 Inter,ui-sans-serif,system-ui,sans-serif;}
+.admin-window-deck-count{min-width:26px;padding:4px 7px;border:1px solid rgba(114,216,255,.30);border-radius:999px;color:#bcefff;text-align:center;}
+.admin-window-deck-list{max-height:calc(min(68vh,720px) - 45px);overflow:auto;padding:7px;}
+.admin-window-deck-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 28px 28px 28px;align-items:center;gap:5px;min-height:40px;padding:4px 5px 4px 9px;border:1px solid transparent;border-radius:8px;}
+.admin-window-deck-row:hover{border-color:rgba(114,216,255,.15);background:rgba(114,216,255,.035);}
+.admin-window-deck-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#dce4e9;font:750 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;}
+.admin-window-deck-state{color:#8fa4b3;font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-align:right;}
+.admin-window-deck .admin-semantic-control{width:27px!important;height:25px!important;}
 
-.admin-mirror-bar-39-2{
-  gap:5px;
-}
-.admin-mirror-bar-39-2 .admin-window-deck-toggle b{
-  color:#bcefff;
-  font-weight:950;
-}
-.admin-mirror-bar-39-2 [data-admin-layout-toggle][aria-pressed="true"]{
-  color:#d8f5ff;
-  border-color:rgba(114,216,255,.50);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 18px rgba(114,216,255,.08);
-}
+.admin-mirror-bar-39-2-1{gap:5px;}
+.admin-mirror-bar-39-2-1 .admin-window-deck-toggle b{color:#bcefff;font-weight:950;}
 
 @media (max-width:900px){
+  .admin-semantic-controls{opacity:1;}
+  .admin-semantic-floating-shell{min-width:calc(100vw - 24px);}
   .admin-window-deck{left:8px;right:8px;bottom:104px;width:auto;max-height:60vh;}
   .admin-window-deck-list{max-height:calc(60vh - 45px);}
   .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px;}
-  .admin-floating{min-width:min(360px,calc(100vw - 20px))!important;}
 }
