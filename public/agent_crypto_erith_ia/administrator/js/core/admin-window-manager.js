@@ -405,6 +405,22 @@
       button?.addEventListener("pointercancel", end);
     }
 
+    function renameWindow(id, title) {
+      const win = windows.get(id);
+      if (!win) return false;
+      const next = clean(title);
+      if (!next || next === win.title) return true;
+      win.title = next;
+      win.anchor.dataset.adminNativeTitle = next;
+      if (win.shell) win.shell.setAttribute("aria-label", `Fenêtre flottante ${next}`);
+      const controls = win.controls;
+      if (controls?.root) controls.root.setAttribute("aria-label", `Fenêtre Administrator · ${next}`);
+      if (controls?.drag) { controls.drag.title = `Déplacer ${next}`; controls.drag.setAttribute("aria-label", controls.drag.title); }
+      updateControlState(win);
+      updateDeck();
+      return true;
+    }
+
     function stateLabel(win) {
       if (win.maximized) return "MAX";
       if (win.minimized) return "MIN";
@@ -608,6 +624,7 @@
       toggleDeck,
       setFree,
       isFree,
+      renameWindow,
       get count() { return windows.size; },
       get onStateChange() { return stateCallback; },
       set onStateChange(callback) { stateCallback = typeof callback === "function" ? callback : null; }

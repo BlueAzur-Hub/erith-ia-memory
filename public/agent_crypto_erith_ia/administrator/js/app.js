@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.2";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · NATIVE WINDOWS";
+  const ADMIN_BUILD = "39.2.3";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · NATIVE WINDOWS · DUAL DOMAIN LOCK";
   const CLASSIC_BUILD = "38.15.11";
-  const STORAGE_PREFIX = "erith_admin_native_39_2_2";
+  const STORAGE_PREFIX = "erith_admin_native_39_2_3";
 
   function siblingRange(start, endExclusive) {
     if (!(start instanceof HTMLElement)) return [];
@@ -33,7 +33,7 @@
     return [
       {
         id: "graphique",
-        title: "Graphique",
+        title: "Graphique · Crypto",
         tone: "cyan",
         compactMinimize: true,
         resolveNodes: () => [document.getElementById("analyste")].filter(Boolean),
@@ -41,7 +41,7 @@
       },
       {
         id: "marche",
-        title: "Marché",
+        title: "Marché · Crypto",
         tone: "gold",
         compactMinimize: true,
         resolveNodes: marketNodes,
@@ -111,10 +111,29 @@
     ];
   }
 
+  function installDomainWindowTitles(manager) {
+    if (!manager?.renameWindow) return null;
+
+    const sync = () => {
+      const domain = document.documentElement.dataset.atlasMarketDomain === "metals" ? "metals" : "crypto";
+      const suffix = domain === "metals" ? "Métaux précieux" : "Crypto";
+      manager.renameWindow("graphique", `Graphique · ${suffix}`);
+      manager.renameWindow("marche", `Marché · ${suffix}`);
+    };
+
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-atlas-market-domain"]
+    });
+    return observer;
+  }
+
   function installIdentity() {
     document.documentElement.dataset.administratorBuild = ADMIN_BUILD;
     document.body.dataset.administratorRelease = ADMIN_RELEASE;
-    document.title = `Agent-Crypto @erith.IA — Native Windows · Build ${ADMIN_BUILD}`;
+    document.title = `Agent-Crypto @erith.IA — Native Windows · Dual Domain · Build ${ADMIN_BUILD}`;
 
     const footer = document.getElementById("footerRelease");
     if (footer) {
@@ -128,7 +147,7 @@
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow";
       identity.style.marginTop = "7px";
-      identity.textContent = `ADMINISTRATOR MIRROR · NATIVE WINDOWS · Build ${ADMIN_BUILD} · moteur Classic ${CLASSIC_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · NATIVE WINDOWS · DUAL DOMAIN · Build ${ADMIN_BUILD} · moteur Classic ${CLASSIC_BUILD}`;
       hero.appendChild(identity);
     }
   }
@@ -145,7 +164,7 @@
     document.querySelector(".admin-mirror-bar")?.remove();
 
     const bar = document.createElement("aside");
-    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-2";
+    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-3";
     bar.setAttribute("aria-label", "Administrator Native Windows controls");
 
     const brand = document.createElement("span");
@@ -192,7 +211,7 @@
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
-      console.error("Administrator 39.2.2: native window manager unavailable.");
+      console.error("Administrator 39.2.3: native window manager unavailable.");
       return;
     }
 
@@ -205,6 +224,7 @@
     const state = manager.init();
     window.ErithAdministratorWindows = manager;
     installAdminBar(manager);
+    window.ErithAdministratorDomainObserver = installDomainWindowTitles(manager);
 
     window.dispatchEvent(new CustomEvent("erith:administrator-mirror-ready", {
       detail: {
