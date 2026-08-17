@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.19 · ADMINISTRATOR MIRROR · BOOT HYDRATION PERSISTENCE LOCK",
-  "build": "39.2.19",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.19",
-  "published_at": "2026-08-17T14:23:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.20 · ADMINISTRATOR MIRROR · METALS INTRADAY RESTORE LOCK",
+  "build": "39.2.20",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.20",
+  "published_at": "2026-08-17T14:41:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.2.17 UI/Math Core host-width behavior preserved; workspace truth fix from 39.2.18 retained; boot-time persistence race locked in 39.2.19"
+    "status": "39.2.17 Math Core host-width preserved; 39.2.19 workspace boot hydration preserved; Metals public-history hydration race fixed in 39.2.20"
   },
   "files": {
     "app.js": {
-      "sha256": "18785792eb5ddba5e75393ef6ee05221e9826f2d741c424e9985b2eebde5e614"
+      "sha256": "260d422c1210b2e93c36993e7d5ba72e818866c2214deb26ea63f2cf50b79db3"
     },
     "index.html": {
-      "sha256": "0df624ab18a6ec07ec6b533dc76cfe54b1120a5c89226cac1d9538d5cf7c780c"
+      "sha256": "e29487884625a673977ae400d3f0d8fcbebd06297ca66c9ea34593c0fdc4194f"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -27,18 +27,18 @@
       "sha256": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39"
     },
     "js/app.js": {
-      "sha256": "bd285127c9c91df1b18f75e6837d0abd4264c1ae16bd7b5449acbed71b188490"
+      "sha256": "a9ba927177e326e0b3efa66bffdda779496be29a2bb0a0026a2b2b5417a0df9c"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   },
   "notes": [
-    "39.2.19 is built directly from 39.2.18 and preserves the 39.2.17 Math Core host-width correction plus the 39.2.18 current-workspace authority rule.",
-    "Workspace writes and scheduled saves are blocked until atlasWorkspaceRestoreAfterMarket() has completed the initial hydration decision.",
-    "The initial atlas:v2mode event can no longer schedule a default Solo workspace write before the saved preset is read from localStorage.",
-    "beforeunload/pagehide during an unfinished boot cannot overwrite the previously saved workspace with JavaScript defaults.",
-    "After hydration, operator choices remain persistable independently from graph readiness; only coherent ready graphs may update last_valid_graph.",
-    "No chart renderer, historical acquisition, Market, Atlas, NØX, Aerith, Memory Intelligence, Math Core, Window Manager, Metal CSS or A/B/C slot behavior is modified."
+    "39.2.20 is built directly from 39.2.19. No chart styling, Crypto renderer, Atlas, Memory Intelligence, Math Core or Window Manager change is merged.",
+    "Metals report memory is restored before the public Metals archive is loaded, so reachable GitHub data becomes the final state instead of being able to win the race afterward.",
+    "If the first public intraday Futures request returns no validated 5/5 basket, one bounded direct retry of intraday_24h.json is attempted during boot; no data is fabricated.",
+    "If the public Metals archive is unavailable at boot, the previous IndexedDB report remains the fallback and is restored without fabricating data.",
+    "Metals history reload permits github_archive, book_memory and interface_memory origins to retry the public daily, intraday 24 h and spot history files.",
+    "A/B/C presets and automatic Crypto workspace restoration from 39.2.19 are unchanged."
   ]
 }

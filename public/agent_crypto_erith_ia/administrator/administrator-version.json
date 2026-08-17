@@ -1,18 +1,18 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v19",
-  "build": "39.2.19",
-  "release": "ADMINISTRATOR MIRROR · BOOT HYDRATION PERSISTENCE LOCK",
-  "published_at": "2026-08-17T14:23:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v20",
+  "build": "39.2.20",
+  "release": "ADMINISTRATOR MIRROR · METALS INTRADAY RESTORE LOCK",
+  "published_at": "2026-08-17T14:41:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.19",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.19",
+    "primary_build": "39.2.20",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "preserved; no visual change in 39.2.19"
+    "status": "preserved; no visual change in 39.2.20"
   },
   "operational_windows": {
     "count": 12,
@@ -46,50 +46,50 @@
     "geometry_engine": "unchanged"
   },
   "workspace_persistence_contract": {
+    "base": "39.2.19",
     "current_key": "agent_crypto_erith_ia_workspace_state_v2",
     "last_valid_key": "agent_crypto_erith_ia_workspace_last_valid_graph_v1",
     "authority": "current workspace wins on reload",
     "fallback": "last_valid_graph only if current workspace is absent",
-    "write_rule": "no workspace write is allowed before initial hydration completes; after hydration operator preferences persist independently from graph readiness",
-    "last_valid_rule": "only a coherent ready graph may update last_valid_graph; in-flight Scanner work never does",
-    "preset_rule": "a saved preset is never silently rewritten into another preset by atlasWorkspaceRead",
-    "abc_slots": "unchanged",
-    "boot_rule": "initial UI/mode events cannot persist default Solo before atlasWorkspaceRestoreAfterMarket has read the saved workspace"
+    "boot_rule": "no default Solo write before initial hydration",
+    "abc_slots": "unchanged"
+  },
+  "metals_history_contract": {
+    "current_quotes": "public Metals snapshot when reachable; IndexedDB report only as fallback",
+    "daily_history": "public/agent_crypto_erith_ia/data/metals/history/public_1y.json",
+    "intraday_24h": "public/agent_crypto_erith_ia/data/metals/history/intraday_24h.json",
+    "spot_history": "public/agent_crypto_erith_ia/data/metals/history/spot_48h.json",
+    "load_order": "restore report fallback → load public archive → keep public state when reachable",
+    "retry_origins": [
+      "github_archive",
+      "book_memory",
+      "interface_memory"
+    ],
+    "no_fabrication": true,
+    "boot_retry": "one bounded retry of intraday_24h.json only when the initial public archive load does not yield the complete 5-series intraday basket"
   },
   "supersedes": {
-    "39.2.17": "direct functional/UI base; Math Core host-width fix preserved",
-    "39.2.16": "chart visual experiment remains separate and is not merged",
-    "39.2.15": "rejected Math Core pseudo-background experiment",
-    "39.2.14": "rejected external dynamic backdrop experiment",
-    "39.2.13": "rejected capped-host background experiment",
-    "39.2.12": "rejected forced Math Core geometry experiment",
-    "39.2.18": "workspace authority correction retained; boot-time overwrite race fixed in 39.2.19"
+    "39.2.19": "direct base; Crypto workspace boot hydration fix preserved",
+    "39.2.18": "workspace authority correction preserved through 39.2.19",
+    "39.2.17": "Math Core host-width fix preserved",
+    "39.2.16": "chart visual experiment remains separate and is not merged"
   },
   "integrity": {
     "files": {
-      "app.js": "18785792eb5ddba5e75393ef6ee05221e9826f2d741c424e9985b2eebde5e614",
-      "index.html": "0df624ab18a6ec07ec6b533dc76cfe54b1120a5c89226cac1d9538d5cf7c780c",
+      "app.js": "260d422c1210b2e93c36993e7d5ba72e818866c2214deb26ea63f2cf50b79db3",
+      "index.html": "e29487884625a673977ae400d3f0d8fcbebd06297ca66c9ea34593c0fdc4194f",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "bd285127c9c91df1b18f75e6837d0abd4264c1ae16bd7b5449acbed71b188490",
+      "js/app.js": "a9ba927177e326e0b3efa66bffdda779496be29a2bb0a0026a2b2b5417a0df9c",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "version.json": "c89d28ffa5fdd0fa447e6b8709aafff9d8339c8a7cdf7ea309a7275bba52a6f0"
+    "version.json": "6937f11588abff967812e583ba013b09d000d97d8efdad43e3676f7557730ba3"
   },
   "validation_contract": {
-    "required_firefox_reload_cases": [
-      "Top 5 -> wait -> F5 -> Top 5 (cold and warm cache)",
-      "Solo -> F5 -> Solo",
-      "Top 3 -> F5 -> Top 3",
-      "Hausses 5 -> F5 -> Hausses 5",
-      "Baisses 5 -> F5 -> Baisses 5",
-      "Volumes 5 -> F5 -> Volumes 5",
-      "24h/7j/30j/90j preserved",
-      "Prix/Base 100 preserved",
-      "Volume/Légende/Analyse preserved",
-      "A/B/C slots unchanged",
-      "reload before market hydration never rewrites stored workspace to Solo"
-    ]
+    "metals_24h": "XAU/XAG/XPT/XPD/HG public intraday file may repopulate after boot and after a retry from a memory-restored state",
+    "metals_long_horizons": "daily Futures history preserved",
+    "crypto_workspace": "39.2.19 F5 restoration preserved",
+    "visual": "no visual CSS change"
   }
 }

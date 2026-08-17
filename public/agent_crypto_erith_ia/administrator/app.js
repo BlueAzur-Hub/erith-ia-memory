@@ -12125,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 39.2.19",
+  interface: "Build 39.2.20",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -30446,7 +30446,9 @@ async function atlasMetalsQuoteFoundationReloadHistoryCore() {
     let history = null;
     let intradayHistory = null;
     let spotHistory = null;
-    if (atlasMetalsQuoteFoundationState.origin === "github_archive") {
+    if (["github_archive", "book_memory", "interface_memory"].includes(
+      atlasMetalsQuoteFoundationState.origin
+    )) {
       [history, intradayHistory, spotHistory] = await Promise.all([
         atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.historyResponse)
           .then(atlasMetalsQuoteFoundationValidateHistoryResponse),
@@ -32141,14 +32143,36 @@ function atlasMetalsQuoteFoundationSummary() {
 }
 
 async function atlasMetalsQuoteFoundationLoad() {
-  const status = await atlasMetalsQuoteFoundationLoadCore();
+  // Restore the local report first, then let the public archive win when it is reachable.
+  // This prevents an IndexedDB hydration finishing after the network load from downgrading
+  // the Metals state to book_memory and stranding the 24 h intraday Futures series.
   await atlasMetalsReportState.restorePromise;
+  const fallbackPackage = atlasMetalsReportState.package;
+  const status = await atlasMetalsQuoteFoundationLoadCore();
+
+  // The 24 h Futures archive is an independent public asset. A transient failure
+  // on the first fetch must not leave a 5/5 Metals workspace stranded at 0/5.
+  if (atlasMetalsQuoteFoundationState.origin === "github_archive"
+      && atlasMetalsQuoteFoundationArray(atlasMetalsQuoteFoundationState.intradayHistory?.series).length !== ATLAS_METALS_ASSETS.length) {
+    try {
+      atlasMetalsQuoteFoundationState.intradayHistory =
+        atlasMetalsQuoteFoundationValidateIntradayHistory(
+          await atlasMarketRegistryFetchJson(ATLAS_METALS_QUOTE_FOUNDATION_PATHS.intradayHistory)
+        );
+      atlasMetalsQuoteFoundationState.error = null;
+      atlasMetalsQuoteFoundationRenderAnalysisHorizons();
+      atlasMetalsQuoteFoundationRenderChart();
+    } catch (error) {
+      console.warn("Nouvelle tentative intraday Futures Métaux non disponible :", error);
+    }
+  }
+
   if (["local_bridge", "github_archive"].includes(atlasMetalsQuoteFoundationState.origin)
       && atlasMetalsQuoteFoundationSummary().quoteCount === 5) {
     await atlasMetalsReportProduceFromCurrent();
-  } else if (atlasMetalsReportState.package
+  } else if (fallbackPackage
       && atlasMetalsQuoteFoundationSummary().quoteCount === 0) {
-    atlasMetalsReportHydrateQuoteState(atlasMetalsReportState.package, "book_memory");
+    atlasMetalsReportHydrateQuoteState(fallbackPackage, "book_memory");
   }
   return status;
 }
@@ -40292,7 +40316,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "39.2.19";
+const ATLAS_BUILD = "39.2.20";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46963,8 +46987,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "39.2.19",
-  asset_token: "market-core-v2.0-alpha-build-39.2.19"
+  build: "39.2.20",
+  asset_token: "market-core-v2.0-alpha-build-39.2.20"
 });
 
 function atlasRuntimeTruth3813() {
