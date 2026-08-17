@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.4",
+  build: "38.15.5",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1382,7 +1382,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.4 CLASSIC GRAPH COMPARISON RECOVERY · CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.15.5 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -6017,12 +6017,6 @@ function atlasPatchVisibleChartLiveEndpoints(changedIds = []) {
   const chart = state.chartEngineV2?.realChart;
   if (!chart || !Array.isArray(chart.data?.datasets) || !chart.data.datasets.length) return false;
 
-  /* 38.15.4 CLASSIC GRAPH COMPARISON RECOVERY
-     Historical CoinGecko datasets are immutable once rendered.
-     Binance LIVE still feeds cards/table/detail, but it never appends a
-     synthetic terminal point into Solo, Top 3 or Top 5 history. */
-  if (chart.$atlasMode === "comparison" || chart.$atlasMode === "single") return false;
-
   const datasets = atlasChartPriceDatasets(chart);
   if (!datasets.length) return false;
 
@@ -8199,11 +8193,7 @@ function atlasChartOverlayUpdate() {
 
 const atlasChartOverlayCaption = document.getElementById("chartCaption");
 
-const ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY = "agent_crypto_erith_ia_workspace_last_valid_graph_v38_15_4_comparison_recovery";
-
-/* 38.15.4: only the serialized visual workspace gets a fresh key.
-   The shared chart cache key is deliberately preserved so scanner histories
-   and already qualified CoinGecko series are not wiped or made cold. */
+const ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY = "agent_crypto_erith_ia_workspace_last_valid_graph_v1";
 
 function atlasWorkspaceCurrentGraphMode() {
   const mode = document.getElementById("market-zone")?.dataset?.graphMode;
@@ -8212,8 +8202,11 @@ function atlasWorkspaceCurrentGraphMode() {
 
 function atlasWorkspaceStoredChartResult(coin, period) {
   if (!coin?.id) return null;
-  // Analyst workspace history is CoinGecko-only. Scanner acquisition remains unchanged.
-  return atlasGetStoredChartResult(coin, period, "coingecko") || null;
+  const preferred = atlasChartPreferredSourceFamily(coin);
+  const alternate = preferred === "binance" ? "coingecko" : "binance";
+  return atlasGetStoredChartResult(coin, period, preferred)
+    || atlasGetStoredChartResult(coin, period, alternate)
+    || null;
 }
 
 function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {
@@ -12132,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.4",
+  interface: "Build 38.15.5",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -33492,7 +33485,7 @@ function atlasSharedSynthesisActivateCore(pkg, source) {
   atlasSharedSynthesisState.package = active;
   atlasSharedSynthesisState.source = source;
 
-  // 38.15.4 CLASSIC STABILITY FREEZE:
+  // 38.15.5 CLASSIC STABILITY FREEZE:
   // During a freshly completed local Atlas → NØX → Aerith cycle, the four Atlas
   // reports and the Aerith answer are already visible. Re-hydrating every report
   // and re-rendering the complete shared synthesis here duplicates a large amount
@@ -33625,7 +33618,7 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
       atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée · IndexedDB impossible : ${saved.error}.`, "Produite sans mémoire");
     }
 
-    // 38.15.4: one persistence completion → one canonical finalization.
+    // 38.15.5: one persistence completion → one canonical finalization.
     // No reconciliation train, no repeated delayed renders.
     atlasClassicFinalizeSynthesis38152(pkg, saved);
   })();
@@ -35125,7 +35118,7 @@ const ATLAS_CANONICAL_MARKET_SOURCE = "CoinGecko";
 const ATLAS_NETWORK_WAIT_TIMEOUT_MS = 45 * 1000;
 
 function atlasChartPreferredSourceFamily(coinOrId) {
-  /* 38.15.4 — Classic Graph Comparison Recovery
+  /* 38.15.5 — Graph History Recovery + Classic Stability Freeze
      Analyst historical charts return to one homogeneous source family:
      CoinGecko market_chart EUR. Binance remains available for LIVE/scanners. */
   return "coingecko";
@@ -35147,21 +35140,6 @@ function atlasChartResultSourceFamily(result = null) {
 function atlasComparisonPreferredSourceFamily() {
   /* Comparison history follows the same homogeneous CoinGecko EUR contract. */
   return "coingecko";
-}
-
-function atlasClassicComparisonTrustedCoinGecko(result = null) {
-  if (!result || result.blocked || !Array.isArray(result.series) || !result.series.length) return false;
-  const family = String(result.sourceFamily || "").toLowerCase();
-  const mode = String(result.sourceMode || "").toLowerCase();
-  const originalMode = String(result.originalSourceMode || "").toLowerCase();
-  const bridgeProvider = String(result.bridgeHistory?.provider || "").toLowerCase();
-
-  if (family && family !== "coingecko") return false;
-  if (mode === "coingecko-direct" || originalMode === "coingecko-direct") return true;
-  if ((mode.startsWith("bridge-") || originalMode.startsWith("bridge-")) && bridgeProvider === "coingecko") return true;
-
-  // Do not guess that an unlabeled legacy cache belongs to CoinGecko.
-  return false;
 }
 
 function atlasChartSourceMode(result = null) {
@@ -36512,57 +36490,33 @@ function atlasWaitWithSignal(ms, signal = null) {
 
 async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const signal = options.signal || null;
-  const storedCandidate = atlasGetStoredChartResult(coin, period, "coingecko");
-  const stored = atlasClassicComparisonTrustedCoinGecko(storedCandidate) ? storedCandidate : null;
-
-  // Reuse a qualified fresh CoinGecko series first. This prevents five needless
-  // public API requests on every F5 and keeps Top 3 / Top 5 responsive.
+  const stored = atlasGetStoredChartResult(coin, period, "coingecko");
   if (stored && !atlasChartNeedsRefresh(stored, period)) {
     return { coin, result: stored, attempts: 0, source: "fresh-coingecko-cache" };
   }
 
   let lastError = null;
   let attempts = 0;
-
-  // Browser CoinGecko direct: one clean attempt.
-  try {
+  for (let attempt = 0; attempt < Math.min(2, ATLAS_COMPARISON_RETRY_DELAYS_MS.length); attempt += 1) {
     if (signal?.aborted) throw atlasChartAbortError();
+    const retryDelay = ATLAS_COMPARISON_RETRY_DELAYS_MS[attempt];
+    if (retryDelay) await atlasWaitWithSignal(retryDelay, signal);
     await atlasRespectComparisonRequestSpacing(signal, period);
-    attempts += 1;
-    const result = await fetchCoinGeckoChartDirect(coin, period, {
-      signal,
-      timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
-    });
-    atlasStoreChartResult(coin, period, result, "coingecko");
-    return { coin, result, attempts, source: "coingecko-direct" };
-  } catch (error) {
-    if (atlasComparisonAbortError(error)) throw error;
-    lastError = error;
-  }
-
-  // Ryzen fallback: Bridge V1.9.5 is allowed only as a CoinGecko proxy here.
-  // allowBinance=false preserves one historical source family for Analyst charts.
-  try {
-    if (signal?.aborted) throw atlasChartAbortError();
-    const result = await atlasFetchBridgeHistory(coin, period, {
-      signal,
-      timeoutMs: 12000,
-      allowBinance: false
-    });
-    const provider = String(result?.bridgeHistory?.provider || "").toLowerCase();
-    if (provider && provider !== "coingecko") {
-      throw new Error(`Bridge historique rejeté pour Analyst · provider ${provider}`);
+    try {
+      attempts += 1;
+      const result = await fetchCoinGeckoChartDirect(coin, period, {
+        signal,
+        timeoutMs: ATLAS_COMPARISON_DIRECT_TIMEOUT_MS
+      });
+      atlasStoreChartResult(coin, period, result, "coingecko");
+      return { coin, result, attempts, source: "coingecko-direct" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error)) throw error;
+      lastError = error;
+      if (!atlasComparisonRetryableError(error)) break;
     }
-    atlasStoreChartResult(coin, period, result, "coingecko");
-    return { coin, result, attempts, source: "bridge-coingecko" };
-  } catch (error) {
-    if (atlasComparisonAbortError(error)) throw error;
-    lastError = error;
   }
 
-  // A stale but explicitly qualified CoinGecko cache is preferable to a blank
-  // graph. Direct + cache may coexist in the same comparison because the
-  // provider family remains CoinGecko.
   if (stored) {
     return {
       coin,
@@ -40239,7 +40193,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.4";
+const ATLAS_BUILD = "38.15.5";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -42974,7 +42928,7 @@ document.addEventListener("click", event => {
 // Reconcile when CURRENT state or shared synthesis changes. Retries are bounded;
 // they only wait for the already produced synthesis package and never restart GPT-OSS.
 function atlasCurrentMemoryScheduleReconcile34() {
-  // 38.15.4: legacy retry train disabled. CURRENT memory is finalized once,
+  // 38.15.5: legacy retry train disabled. CURRENT memory is finalized once,
   // after the shared synthesis has been written and verified in IndexedDB.
   return { scheduled:false, owner:"classic-stability-38152" };
 }
@@ -43201,7 +43155,7 @@ atlasAfterLivecheck = function atlasAfterLivecheck341(options = {}) {
 // diagnostic only, but it is never required for normal operation.
 const atlasSharedSynthesisBuildAndStore341Base = atlasSharedSynthesisBuildAndStore;
 atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore341(snapshot, fingerprint) {
-  // 38.15.4: keep the historical wrapper name for compatibility, but do not
+  // 38.15.5: keep the historical wrapper name for compatibility, but do not
   // perform an immediate Memory/Decision render while Aerith is completing.
   return atlasSharedSynthesisBuildAndStore341Base(snapshot, fingerprint);
 };
@@ -44830,7 +44784,7 @@ function atlasCurrentMemoryReconcile384(options = {}) {
 }
 
 function atlasCurrentMemorySchedule384(reason = "runtime") {
-  // 38.15.4: the old 80/350/900/2200/5000 ms convergence train is disabled.
+  // 38.15.5: the old 80/350/900/2200/5000 ms convergence train is disabled.
   // One verified post-persistence finalization now owns CURRENT memory commit.
   atlasCurrentMemory384RetryTimers.forEach(timer => window.clearTimeout(timer));
   atlasCurrentMemory384RetryTimers = [];
@@ -46865,7 +46819,7 @@ atlasCurrentMemoryRecordFromJournal387 = function atlasCurrentMemoryRecordFromJo
 let atlasCurrentMemoryJournalCommitQueued3812 = false;
 const atlasCurrentJournalWrite333812Base = atlasCurrentJournalWrite33;
 atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite333812(records) {
-  // 38.15.4: preserve journal persistence; postpone Memory UI convergence to
+  // 38.15.5: preserve journal persistence; postpone Memory UI convergence to
   // the single post-IndexedDB finalization path.
   return atlasCurrentJournalWrite333812Base(records);
 };
@@ -46910,8 +46864,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.4",
-  asset_token: "market-core-v2.0-alpha-build-38.15.4"
+  build: "38.15.5",
+  asset_token: "market-core-v2.0-alpha-build-38.15.5"
 });
 
 function atlasRuntimeTruth3813() {
@@ -47239,7 +47193,7 @@ function atlasCurrentJournalHydrate3814(reason = "hydrate") {
 const atlasSharedSynthesisActivateBase3814 = atlasSharedSynthesisActivate;
 atlasSharedSynthesisActivate = function atlasSharedSynthesisActivate3814(pkg, source) {
   const clean = atlasSharedSynthesisActivateBase3814(pkg, source);
-  // 38.15.4: a freshly produced local synthesis is finalized only after the
+  // 38.15.5: a freshly produced local synthesis is finalized only after the
   // IndexedDB write has completed. Restore/import may still heal the journal.
   if (clean && source !== "local") {
     queueMicrotask(() => { try { atlasCurrentJournalHydrate3814(`synthesis-${String(source || "activate")}`); } catch (_) {} });
@@ -47277,7 +47231,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3814() {
 
 
 /* ============================================================
-   38.15.4 — CANONICAL CURRENT MEMORY COMMIT + RESTORE TRUTH LOCK
+   38.15.5 — CANONICAL CURRENT MEMORY COMMIT + RESTORE TRUTH LOCK
    Scope chirurgical après preuve live 38.14 :
    - le Journal contient un CURRENT réel mais Memory Intelligence reste à 0 ;
    - le CURRENT restauré peut perdre le compteur Binance snapshot (0/5 affiché)
@@ -47421,7 +47375,7 @@ function atlasCurrentCanonicalCommit3815(reason = "canonical-commit") {
 // do not add another timeout/interval merely for Memory.
 const atlasCanonicalCurrentUiTruth389Base3815 = atlasCanonicalCurrentUiTruth389;
 atlasCanonicalCurrentUiTruth389 = function atlasCanonicalCurrentUiTruth3815(reason = "ui-truth-3815") {
-  // 38.15.4: UI truth remains a pure UI/state convergence step.
+  // 38.15.5: UI truth remains a pure UI/state convergence step.
   // It no longer commits Memory or redraws five heavy panels as a side effect.
   return atlasCanonicalCurrentUiTruth389Base3815(reason);
 };
@@ -47454,19 +47408,19 @@ atlasCanonicalCurrentStateFromProof389 = function atlasCanonicalCurrentStateFrom
 
 const atlasMemoryIntelligenceRender3815Base = atlasMemoryIntelligenceRender;
 atlasMemoryIntelligenceRender = function atlasMemoryIntelligenceRender3815() {
-  // 38.15.4 invariant: rendering is read-only; it never writes CURRENT memory.
+  // 38.15.5 invariant: rendering is read-only; it never writes CURRENT memory.
   return atlasMemoryIntelligenceRender3815Base();
 };
 
 const atlasCurrentJournalRender33Base3815 = atlasCurrentJournalRender33;
 atlasCurrentJournalRender33 = function atlasCurrentJournalRender3815() {
-  // 38.15.4 invariant: Journal render is read-only; commit happens once after persistence.
+  // 38.15.5 invariant: Journal render is read-only; commit happens once after persistence.
   return atlasCurrentJournalRender33Base3815();
 };
 
 
 /* ============================================================
-   38.15.4 — CLASSIC STABILITY FREEZE
+   38.15.5 — CLASSIC STABILITY FREEZE
 
    Goal: keep the Classic interface and its data contracts intact while removing
    the end-of-cycle UI storm observed after Atlas → NØX → Aerith.
@@ -47593,4 +47547,120 @@ queueMicrotask(() => {
     const commit = atlasCurrentCanonicalCommit3815("boot-final-38152");
     if (commit?.record) atlasClassicRenderMemory38152();
   } catch (_) {}
+});
+
+
+/* ============================================================
+   38.15.5 — CLASSIC ATLAS AUTO / MANUAL CONTROL
+
+   Built from runtime-stable 38.15.2.
+
+   Contract:
+   - MANUAL is the default for a fresh browser profile.
+   - MANUAL keeps Market, Binance LIVE, CoinGecko, chart and Math Core alive.
+   - MANUAL blocks every automatic Atlas CURRENT scheduler entry.
+   - "Analyse complète" still runs one complete Atlas -> NØX -> Aerith cycle.
+   - AUTO restores the existing canonical-snapshot automation.
+   - The choice is stored only as a local UI/operator preference.
+   - No chart acquisition, transformation or rendering code is changed here.
+   ============================================================ */
+
+const ATLAS_CLASSIC_ANALYSIS_MODE_KEY_38155 = "agent_crypto_classic_atlas_mode_v38_15_5";
+
+function atlasClassicAnalysisModeRead38155() {
+  try {
+    return localStorage.getItem(ATLAS_CLASSIC_ANALYSIS_MODE_KEY_38155) === "auto" ? "auto" : "manual";
+  } catch (_) {
+    return "manual";
+  }
+}
+
+let atlasClassicAnalysisMode38155 = atlasClassicAnalysisModeRead38155();
+
+function atlasClassicAnalysisIsAuto38155() {
+  return atlasClassicAnalysisMode38155 === "auto";
+}
+
+function atlasClassicAnalysisModeRender38155() {
+  const auto = atlasClassicAnalysisIsAuto38155();
+  const badge = document.getElementById("atlasClassicAnalysisModeBadge");
+  const autoButton = document.getElementById("btnAtlasClassicModeAuto");
+  const manualButton = document.getElementById("btnAtlasClassicModeManual");
+
+  if (badge) {
+    badge.textContent = auto ? "Atlas · AUTO" : "Atlas · MANUEL";
+    badge.classList.toggle("ready", auto);
+    badge.classList.toggle("warn", !auto);
+  }
+  if (autoButton) {
+    autoButton.classList.toggle("primary", auto);
+    autoButton.setAttribute("aria-pressed", auto ? "true" : "false");
+  }
+  if (manualButton) {
+    manualButton.classList.toggle("primary", !auto);
+    manualButton.setAttribute("aria-pressed", !auto ? "true" : "false");
+  }
+}
+
+function atlasClassicAnalysisModeSet38155(mode, options = {}) {
+  const next = String(mode || "manual").toLowerCase() === "auto" ? "auto" : "manual";
+  atlasClassicAnalysisMode38155 = next;
+  try { localStorage.setItem(ATLAS_CLASSIC_ANALYSIS_MODE_KEY_38155, next); } catch (_) {}
+
+  if (next === "manual") {
+    try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
+    try {
+      atlasLocalReportsState.deferredRetryReason = "";
+      atlasLocalReportsState.deferredRetryDelayMs = 0;
+      atlasLocalReportsState.deferredRetryRequestedAt = 0;
+      atlasLocalReportsState.pendingReason = "";
+      atlasLocalReportsState.pendingSince = 0;
+    } catch (_) {}
+    if (options.silent !== true) {
+      try {
+        atlasLocalReportsSetSuiteStatus(
+          "Mode MANUEL · Market et graphique continuent · Atlas reste au repos jusqu’à « Analyse complète ».",
+          "ready"
+        );
+      } catch (_) {}
+    }
+  } else if (options.schedule !== false) {
+    try {
+      atlasLocalReportsOpenAutomaticCycle("operator-auto-mode");
+      atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 500 });
+    } catch (_) {}
+  }
+
+  atlasClassicAnalysisModeRender38155();
+  return next;
+}
+
+// Final scheduler owner for Classic 38.15.5. Every legacy automatic entry point
+// passes through this guard, including snapshot, Bridge, Binance and refresh paths.
+const atlasLocalReportsScheduleAutomatic38152Base38155 = atlasLocalReportsScheduleAutomatic;
+atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic38155(reason = "snapshot", options = {}) {
+  if (!atlasClassicAnalysisIsAuto38155()) {
+    try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
+    return false;
+  }
+  return atlasLocalReportsScheduleAutomatic38152Base38155(reason, options);
+};
+
+function atlasClassicAnalysisModeInit38155() {
+  document.getElementById("btnAtlasClassicModeAuto")?.addEventListener("click", () => {
+    atlasClassicAnalysisModeSet38155("auto", { schedule: true });
+  });
+  document.getElementById("btnAtlasClassicModeManual")?.addEventListener("click", () => {
+    atlasClassicAnalysisModeSet38155("manual");
+  });
+
+  // A fresh profile starts in MANUAL. Existing operator choice is restored.
+  atlasClassicAnalysisModeRender38155();
+  if (!atlasClassicAnalysisIsAuto38155()) {
+    try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
+  }
+}
+
+queueMicrotask(() => {
+  try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
 });

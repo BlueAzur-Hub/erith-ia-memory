@@ -1,30 +1,28 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.4 · Classic Graph Comparison Recovery",
-  "build": "38.15.4",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.4",
-  "published_at": "2026-08-17T05:31:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.5 · Classic Atlas Auto Manual Control",
+  "build": "38.15.5",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.5",
+  "published_at": "2026-08-17T05:40:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "b48775dddb50ad8ac897afe5abbd9503c7cd1f69838766c258241189ec24321c"
+      "sha256": "dd16dccacfdbc35857fe04a28988b6875c2ab131eb0f2126884a3c60761dce50"
     },
     "index.html": {
-      "sha256": "273e1711b1e58a856d77f0e3e898b0a2628425480f49c36f065da19f00982bb5"
+      "sha256": "d2f832c5ab06d882e9dbbe0d05e0779061df082e11c9b3bdfbad6e7d00219a06"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Built from the runtime-stable Build 38.15.2, not from rejected Build 38.15.3.",
-    "Build 38.15.2 Atlas → NØX → Aerith end-of-cycle stability fix preserved.",
-    "Global chart cache preserved so Top 3 / Top 5 / Gainers / Losers / Volume histories are not emptied.",
-    "Old serialized workspace graph is not replayed.",
-    "Analyst workspace restore is CoinGecko-only; Binance historical fallback is excluded there.",
-    "Solo and comparison historical datasets no longer receive a synthetic Binance LIVE terminal point.",
-    "Top 3 / Top 5 may combine CoinGecko direct, Bridge-CoinGecko and qualified CoinGecko cache series; acquisition mode need not be identical.",
-    "Bridge fallback uses allowBinance=false and accepts only CoinGecko provider for Analyst comparison.",
-    "Scanner acquisition code and Market data pipeline are unchanged.",
-    "AUTO/MANUAL Atlas mode remains deferred until Classic graph behavior is validated."
+    "Built directly from runtime-stable Build 38.15.2.",
+    "Adds persistent Atlas AUTO / MANUAL operator control.",
+    "Fresh profiles default to MANUAL to prevent Atlas from starting on every page load or canonical refresh.",
+    "MANUAL blocks automatic Atlas scheduling while Market, Binance LIVE, CoinGecko, chart and Math Core continue normally.",
+    "The existing Analyse complète button still starts one complete Atlas -> NØX -> Aerith cycle in MANUAL mode.",
+    "AUTO restores the existing canonical-snapshot automation.",
+    "Build 38.15.2 Firefox end-of-cycle stability fix is preserved.",
+    "Graph code is intentionally unchanged from 38.15.2; the visible graph discontinuity remains a known unresolved defect across graph views."
   ]
 }
