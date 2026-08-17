@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — Build 39.2.14 · Administrator Math Core Full Backdrop Fit
+/* Agent-Crypto @erith.IA — Build 39.2.11 · Administrator Workspace Freedom Lock
    UI-only window layer. One stable handle; reduce keeps a visible restore bar; hide is recallable from WINDOW DECK. */
 
 :root{
@@ -508,56 +508,3 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
   z-index:2147481200!important;
 }
 #math.score-panel.admin-native-anchor{padding-bottom:max(12px,var(--math-admin-bottom-reserve,12px));}
-
-/* ============================================================================
-   BUILD 39.2.14 — MATH CORE FULL VISUAL BACKDROP
-   Base: validated 39.2.11. Builds 39.2.12 and 39.2.13 are rejected.
-   The detached Math Core keeps its exact native geometry and interaction.
-   A pointer-transparent Administrator backdrop is measured from the REAL visual
-   bounds (host + native overflow) so the dark metal tableau covers the complete
-   instrument instead of stopping at the direct-fixed host box.
-   ============================================================================ */
-.admin-native-visual-backdrop{
-  position:fixed!important;
-  display:block;
-  pointer-events:none!important;
-  box-sizing:border-box!important;
-  margin:0!important;
-}
-
-.admin-native-math-backdrop{
-  border:1px solid color-mix(in srgb,var(--native-gold,#e8c66e) 40%,rgba(205,220,232,.18));
-  border-radius:15px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,.010) 0,
-      rgba(255,255,255,.010) 1px,
-      rgba(0,0,0,.018) 1px,
-      rgba(0,0,0,.018) 3px
-    ),
-    linear-gradient(
-      145deg,
-      rgba(19,25,31,.995) 0%,
-      rgba(5,13,24,.998) 48%,
-      rgba(11,17,23,.998) 100%
-    );
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.075),
-    0 38px 130px rgba(0,0,0,.72),
-    0 0 0 1px rgba(232,198,110,.07);
-  backdrop-filter:blur(18px) saturate(108%);
-}
-
-.admin-native-math-backdrop::before{
-  content:"";
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:0;
-  height:2px;
-  border-radius:999px;
-  background:var(--crypto-gradient,linear-gradient(90deg,#72d8ff,#e8c66e));
-  opacity:.82;
-}
-

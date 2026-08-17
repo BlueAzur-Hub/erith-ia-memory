@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.14 · ADMINISTRATOR MIRROR · MATH CORE FULL BACKDROP FIT",
-  "build": "39.2.14",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.14",
-  "published_at": "2026-08-17T12:54:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.11 · ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK",
+  "build": "39.2.11",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.11",
+  "published_at": "2026-08-17T11:40:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "business behavior preserved; global application version is 39.2.14"
+    "status": "business behavior preserved; global application version is 39.2.11"
   },
   "files": {
     "app.js": {
-      "sha256": "803de269b01269bb3897d48682e16bb9179cb678c0f010caeae22a093769dd26"
+      "sha256": "8599e634f536581d62d070bae72e28ba11ffa14e91ec8bb310120ac8f7e71018"
     },
     "index.html": {
-      "sha256": "5ac12055263d2a95bfa9df20925c6e90922d2692164d926d1fed17538654fd93"
+      "sha256": "63ab0ce8a4f44d7f5bf7fe01e21750b3650f4197c8bdf1fa656db185a0c9242b"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -24,21 +24,22 @@
       "sha256": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a"
     },
     "admin-windows.css": {
-      "sha256": "4535ab9b93e2eafaa1a375fe011c481491128e65619a2a33d5fd87af2e4fcd45"
+      "sha256": "eb4248c4b301e45d18a9b8af37e2ef5593ff8f6e789ebea063fa3dd8c08e8438"
     },
     "js/app.js": {
-      "sha256": "42e0cdfa7200b571b98a509234baf7d49fe95159b4a88aad6366012dd31cfd64"
+      "sha256": "75dba3215fb57230f5e4c68a48ac3c9df6808741e041ec0df13e80190254b206"
     },
     "js/core/admin-window-manager.js": {
-      "sha256": "bd43d06ef161fba2dd9bf7b9e8dafc08a8564fbec494389f636924be3d411725"
+      "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   },
   "notes": [
-    "39.2.14 is built directly from validated 39.2.11; rejected 39.2.12 geometry and 39.2.13 host-background experiments are not used as functional bases.",
-    "Math Core detached geometry, drag, resize, native Dessus/Latéral/Réduire controls and business content are unchanged.",
-    "The only functional UI addition is a pointer-transparent Administrator visual backdrop measured from the detached Math Core real visual bounds, including native overflow, so the dark metal tableau covers the complete visible instrument.",
-    "The backdrop follows move/resize/native mode changes and disappears when the Math Core is docked, hidden, minimized or reduced to its native rail.",
-    "Window layout storage intentionally remains erith_admin_portal_39_2_9 so the operator layout is not reset.",
+    "39.2.11 is the workspace-freedom freeze candidate built on the validated 39.2.10 ghost-dock and 39.2.9 hover-chrome behavior.",
+    "The operator can compose the cockpit around the current task: show, reduce, hide, detach or restore operational surfaces without suspending their business runtime.",
+    "Math Core remains a single instrument with Classic docked behavior and native Dessus/Latéral/Réduire controls; its Administrator chrome is now explicitly anchored to the far-right lower edge to prevent the orphan-left close control seen in 39.2.8/39.2.10 testing.",
+    "Global bottom dock ghost behavior is preserved: very faint at rest, readable on dock hover/focus, full contrast on direct control hover.",
+    "Local operational controls remain faint at rest and reveal on parent hover with unchanged hit targets.",
+    "Window layout storage intentionally remains erith_admin_portal_39_2_9 because this build is a visual/control-anchor polish and must not reset the operator layout.",
     "No market, chart, Atlas, NØX, Aerith, Memory, Bridge, Ollama, WebSocket, timer or business-state behavior is changed by this build."
   ]
 }
