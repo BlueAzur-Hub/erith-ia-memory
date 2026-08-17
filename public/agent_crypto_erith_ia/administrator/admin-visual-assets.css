@@ -624,3 +624,198 @@ body.atlas-administrator-mirror #detailPanel p{
     max-height:none!important;
   }
 }
+
+/* ==========================================================================\n   39.4.6R5 — TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK\n\n   Operator contract:\n   - desktop restores the canonical Graphique | Lecture technique side-by-side layout;\n   - the selected/default Aerith image still fills the whole Technical Reading frame;\n   - existing Classic functional DOM remains over the image on <=10% alpha surfaces;\n   - decorative emblems are background accents only: small, <=10% opacity, no layout reservation;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
+
+/* DESKTOP: hard-lock the two-column composition. The old Classic rule that
+   placed Detail below the chart is intentionally superseded only here. */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) clamp(318px,22vw,366px)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:0!important;
+    align-items:stretch!important;
+    width:100%!important;
+    overflow:visible!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    width:100%!important;
+    height:auto!important;
+    align-self:stretch!important;
+    margin:0!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:2!important;
+    grid-row:1!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    align-self:stretch!important;
+    overflow:hidden!important;
+    scrollbar-gutter:auto!important;
+  }
+
+  /* Expanded Detail owns the second column; the narrow vertical rail is only
+     useful while Detail is collapsed. */
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
+    display:none!important;
+  }
+}
+
+/* SMALLER VIEWPORTS: stack cleanly instead of allowing the panel to become a
+   tiny orphaned card. */
+@media (max-width:1080px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto minmax(420px,72vh)!important;
+    row-gap:8px!important;
+    column-gap:0!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:1!important;
+    grid-row:2!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:420px!important;
+    max-height:none!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
+    display:none!important;
+  }
+}
+
+/* Keep R4 full-frame Aerith behaviour once the panel is back in its column. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.clean-lens-detail-panel{
+  background:rgba(2,8,16,.02)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel .detail-project-visual.admin-tech-r3{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:none!important;
+  margin:0!important;
+}
+
+/* --------------------------------------------------------------------------
+   DECORATIVE EMBLEMS — no more layout distortion.
+   They are now small background marks, never structural content.
+   -------------------------------------------------------------------------- */
+.atlas-layout-family.admin-family-emblem-host-r3{
+  min-height:0!important;
+  padding-right:28px!important;
+  overflow:hidden!important;
+}
+.atlas-layout-family.admin-family-emblem-host-r3 > :not(.admin-family-emblem-r3){
+  position:relative!important;
+  z-index:1!important;
+}
+.admin-family-emblem-r3{
+  position:absolute!important;
+  right:12px!important;
+  top:auto!important;
+  bottom:10px!important;
+  width:72px!important;
+  height:72px!important;
+  max-width:72px!important;
+  max-height:72px!important;
+  transform:none!important;
+  object-fit:contain!important;
+  opacity:.10!important;
+  filter:none!important;
+  z-index:0!important;
+  pointer-events:none!important;
+}
+.atlas-layout-family.admin-family-emblem-host-r3::after{
+  display:none!important;
+  content:none!important;
+}
+
+#liveSourcesCollapse>summary.atlas-collapse-summary.admin-summary-emblem-host-r3{
+  min-height:0!important;
+  padding-right:26px!important;
+  overflow:hidden!important;
+}
+#liveSourcesCollapse>summary.atlas-collapse-summary.admin-summary-emblem-host-r3 > :not(.admin-summary-emblem-r3){
+  position:relative!important;
+  z-index:1!important;
+}
+.admin-summary-emblem-r3{
+  position:absolute!important;
+  right:10px!important;
+  top:auto!important;
+  bottom:8px!important;
+  width:54px!important;
+  height:54px!important;
+  max-width:54px!important;
+  max-height:54px!important;
+  transform:none!important;
+  object-fit:contain!important;
+  opacity:.10!important;
+  filter:none!important;
+  z-index:0!important;
+  pointer-events:none!important;
+}
+
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3{
+  padding-right:24px!important;
+  overflow:hidden!important;
+}
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3>.admin-analytical-emblem-r3{
+  position:absolute!important;
+  right:12px!important;
+  top:auto!important;
+  bottom:10px!important;
+  width:58px!important;
+  height:88px!important;
+  max-width:58px!important;
+  max-height:88px!important;
+  transform:none!important;
+  object-fit:contain!important;
+  opacity:.10!important;
+  filter:none!important;
+  z-index:0!important;
+  pointer-events:none!important;
+}
+
+/* Mobile accents stay even smaller. */
+@media (max-width:760px){
+  .admin-family-emblem-r3{width:54px!important;height:54px!important;max-width:54px!important;max-height:54px!important;}
+  .admin-summary-emblem-r3{width:44px!important;height:44px!important;max-width:44px!important;max-height:44px!important;}
+  #atlasAnalyticalMemory394.admin-analytical-emblem-host-r3>.admin-analytical-emblem-r3{
+    width:46px!important;height:70px!important;max-width:46px!important;max-height:70px!important;
+  }
+}
+
