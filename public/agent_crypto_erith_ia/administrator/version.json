@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.11 · ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK",
-  "build": "39.2.11",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.11",
-  "published_at": "2026-08-17T11:40:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.15 · ADMINISTRATOR MIRROR · MATH CORE GRID BACKGROUND LOCK",
+  "build": "39.2.15",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.15",
+  "published_at": "2026-08-17T13:27:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "business behavior preserved; global application version is 39.2.11"
+    "status": "business behavior preserved from validated 39.2.11; global application version is 39.2.15"
   },
   "files": {
     "app.js": {
-      "sha256": "8599e634f536581d62d070bae72e28ba11ffa14e91ec8bb310120ac8f7e71018"
+      "sha256": "e4788eea63f2803ee203340adf89673f1e0419eff4cac25c10df4647d1f34156"
     },
     "index.html": {
-      "sha256": "63ab0ce8a4f44d7f5bf7fe01e21750b3650f4197c8bdf1fa656db185a0c9242b"
+      "sha256": "9f6ad8cbce0268e606bd8a360618aae56a47dab0142a096eebbcbe9d27d4880c"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -24,22 +24,22 @@
       "sha256": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a"
     },
     "admin-windows.css": {
-      "sha256": "eb4248c4b301e45d18a9b8af37e2ef5593ff8f6e789ebea063fa3dd8c08e8438"
+      "sha256": "487705e27e904518f8db4516762395e43b0c4d8336f9d68f7acd8e6d7aa806d5"
     },
     "js/app.js": {
-      "sha256": "75dba3215fb57230f5e4c68a48ac3c9df6808741e041ec0df13e80190254b206"
+      "sha256": "cbf292d73d981cd9643fae6929b526e72939495761818fb12d32528001428ef7"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   },
   "notes": [
-    "39.2.11 is the workspace-freedom freeze candidate built on the validated 39.2.10 ghost-dock and 39.2.9 hover-chrome behavior.",
-    "The operator can compose the cockpit around the current task: show, reduce, hide, detach or restore operational surfaces without suspending their business runtime.",
-    "Math Core remains a single instrument with Classic docked behavior and native Dessus/Latéral/Réduire controls; its Administrator chrome is now explicitly anchored to the far-right lower edge to prevent the orphan-left close control seen in 39.2.8/39.2.10 testing.",
-    "Global bottom dock ghost behavior is preserved: very faint at rest, readable on dock hover/focus, full contrast on direct control hover.",
-    "Local operational controls remain faint at rest and reveal on parent hover with unchanged hit targets.",
-    "Window layout storage intentionally remains erith_admin_portal_39_2_9 because this build is a visual/control-anchor polish and must not reset the operator layout.",
+    "39.2.15 is built directly from validated 39.2.11. Builds 39.2.12, 39.2.13 and 39.2.14 are explicitly rejected and are not functional bases.",
+    "The only functional UI change is a CSS-only Math Core grid-attached visual plane used while the Math Core is detached in native Dessus/top mode.",
+    "The Math Core geometry, preferred 520-760 px detached width, drag, resize, native Dessus/Latéral/Réduire controls, runtime and business content remain exactly the 39.2.11 behavior.",
+    "No external backdrop DOM node, ResizeObserver, MutationObserver, geometry widening or descendant measurement is introduced.",
+    "The grid-attached plane is scoped to #math only and cannot become a Market Snapshot or Graphique window overlay.",
+    "Window layout storage intentionally remains erith_admin_portal_39_2_9; if a rejected 39.2.12 geometry was previously persisted, the existing RESET FENÊTRES control can clear that operator layout state.",
     "No market, chart, Atlas, NØX, Aerith, Memory, Bridge, Ollama, WebSocket, timer or business-state behavior is changed by this build."
   ]
 }
