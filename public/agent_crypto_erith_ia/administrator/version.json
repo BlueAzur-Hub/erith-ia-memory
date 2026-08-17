@@ -1,82 +1,26 @@
 {
-  "schema": "agent_crypto_administrator_version_manifest_v1",
-  "release": "Administrator Core · Build 39.0 · CORE SKELETON",
-  "build": "39.0",
-  "asset_token": "agent-crypto-administrator-build-39.0-core-skeleton",
-  "published_at": "2026-08-17T07:32:00+02:00",
-  "classic_reference": {
-    "build": "38.15.11",
-    "release": "CLASSIC FINAL · FROZEN REFERENCE",
-    "relative_url": "../web/index.html",
-    "status": "untouched"
-  },
-  "architecture": {
-    "market_memory": "3/5/10 market observations independent from Atlas",
-    "analytical_memory": "closed CURRENT Atlas 4/4 -> NØX -> Aerith only",
-    "decision_board": "may read both memories but must never merge their units",
-    "module_states": [
-      "active",
-      "minimized",
-      "suspended",
-      "closed"
-    ],
-    "layout_persistence": "localStorage only"
-  },
-  "notes": [
-    "Parallel Administrator path; does not replace or modify Classic web/.",
-    "No market fetch, WebSocket, Bridge, Ollama, IndexedDB migration, Atlas run, NØX run or Aerith run is triggered by this skeleton.",
-    "Pointer-based module reordering, minimize, suspend/resume, close/restore and layout persistence are active.",
-    "Market Memory and Analytical Memory are separated at architecture level before any business logic migration.",
-    "Metal visual theme is intentionally deferred until the modular skeleton is validated."
-  ],
+  "schema": "agent_crypto_version_manifest_v2",
+  "release": "Market Core V2.0-Alpha · Build 38.15.11 · CLASSIC FINAL · FROZEN REFERENCE",
+  "build": "38.15.11",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.11",
+  "published_at": "2026-08-17T07:26:00+02:00",
   "files": {
+    "app.js": {
+      "sha256": "576d267f2fed6548dde4dd0e0f619802008f19562f650bdf104e3fe1482ab07e"
+    },
     "index.html": {
-      "sha256": "fd45ae79fe699dd22ce0cda083348f6d6825fe8e94031feef0ffed8c08b6fb4c"
-    },
-    "js/app.js": {
-      "sha256": "c171ba90b6a227d95113b5347157a5e628f7d20f578e7078f8dff418b2b2fb6f"
-    },
-    "js/core/admin-layout.js": {
-      "sha256": "1783e2f64b2c759284cf91b202424fa6bc4fb156e33ed2a23059c7bb5f965435"
-    },
-    "js/core/event-bus.js": {
-      "sha256": "de2b920bf1f60c2421ead2ac3d02914ef8bce6584daf4406cfea3bf32f0b0a82"
-    },
-    "js/core/module-manager.js": {
-      "sha256": "392a5c19e8ff6940443bd4251543e5223364104d27f19d94bb59aa9388a05e6d"
-    },
-    "js/modules/analysis.js": {
-      "sha256": "2abd263032fb92e42a2e7eced5f1fc5762ebf4801d93fc73b7663f3460e5d31e"
-    },
-    "js/modules/analytical-memory.js": {
-      "sha256": "e943526d599adbf84c6b4fb49885bc168cff2a8a6b6df9c3508bb53836f7b4fc"
-    },
-    "js/modules/decision-board.js": {
-      "sha256": "59f3527e08b4a7dd60e593ff310c057ad2b150bad1fb6f54158b5f06d90ebead"
-    },
-    "js/modules/erith.js": {
-      "sha256": "2992c51b806cf2f7ba001855eaf37c9f732c5b5ba9999d73c5e1fadb6c944360"
-    },
-    "js/modules/market-memory.js": {
-      "sha256": "7a7593821384520fae175cc5030ce3a2cc64d91e847c60545c46ce5eac2bf247"
-    },
-    "js/modules/market.js": {
-      "sha256": "56bcde61591022f6fd2e98142cbc42bfe88aa4baf3a45c1246a8683f2cf96dcc"
-    },
-    "js/modules/module-utils.js": {
-      "sha256": "482dec2028faeecde33d042889e60375c8cdcef5eaa95014ad2dad07c43b6df9"
-    },
-    "js/modules/observability.js": {
-      "sha256": "e1350fcd2c9a232f794669f75a04790dc1da1f5f19bf9e61547c3927c563ae8d"
-    },
-    "js/modules/simulation.js": {
-      "sha256": "c67abfc18e638d646659daa2e6823c1f3c6a7ac48f95999f6c7e18709b25a5ff"
-    },
-    "js/modules/system.js": {
-      "sha256": "1cfefac3e349a2039d6f55e8d3d4cb3691c9454f9a9f003829cb236cd1e33394"
+      "sha256": "14d0075e2578c3f82b5b0309382f1975107b18a549c3a6d2842811fe6717f8bd"
     },
     "style.css": {
-      "sha256": "163b3be776335e308d2b24c6a745da82f88f989c90868b3bdc282f709d79b8b6"
+      "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
-  }
+  },
+  "notes": [
+    "Built directly from validated Build 38.15.10 CLASSIC FINAL · CANONICAL LOCK.",
+    "No functional market, chart, Atlas, NØX, Aerith, CURRENT, Journal, Memory, IndexedDB, Bridge or Ollama behavior changed in this freeze build.",
+    "Preserves the validated Target Top 5 24h Binance EUR direct path: 5/5 series, 300 points per series.",
+    "Preserves Firefox end-of-cycle stability, Atlas AUTO/MANUAL control, workspace A/B/C and the live tooltip percentage correction from Build 38.15.10.",
+    "Known architectural debt documented only: Memory Intelligence 3/5/10 currently follows closed analytical CURRENT units; the Market Memory versus Analytical Memory split is deferred to Administrator 39.x.",
+    "This build is the frozen Classic reference before the separate Administrator line."
+  ]
 }
