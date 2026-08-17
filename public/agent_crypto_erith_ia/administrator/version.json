@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.1 · ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTION RECOVERY LOCK",
-  "build": "39.4.1",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.1",
-  "published_at": "2026-08-17T16:38:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.2 · ADMINISTRATOR MIRROR · MARKET MEMORY LEXICAL STATE BINDING LOCK",
+  "build": "39.4.2",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.2",
+  "published_at": "2026-08-17T16:56:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.2.21 visual/workspace/metals base preserved; 39.3.0 Market Memory model preserved; 39.4.0 Analytical Memory preserved; 39.4.1 repairs Market Memory write boundary"
+    "status": "39.2.21 visual/workspace/metals base preserved; 39.3.0 Market Memory model preserved; 39.4.0 Analytical Memory preserved; 39.4.2 fixes the actual lexical state binding at Market Memory capture"
   },
   "files": {
     "app.js": {
-      "sha256": "d118657699b8f9e2fb2304779299e914029f7887f95bb5599454b7e9ce56503e"
+      "sha256": "02a34130d29eb482e65c0f326a1d69fa0e3197a42b191aa9b1063ea7d1c92324"
     },
     "index.html": {
-      "sha256": "ca5ad581b86ac10ae1a3bd3a8a76ad4e6798a96c0aae88b160d842bcf8097da7"
+      "sha256": "8fd06fb326f5fc6492071f7d36e34e64461ad9913bc0d01d867671f0546120f9"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -27,7 +27,7 @@
       "sha256": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39"
     },
     "js/app.js": {
-      "sha256": "9c87280483261c297de929355b684967010f4ba5becabd3c5e35d1e6047c0eb4"
+      "sha256": "e39792bc6887992e7fb25b496346bd7321cf80b8b43f318dcfb98e303ba8b00f"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
@@ -40,33 +40,37 @@
     },
     "js/market-memory-39.4.1.js": {
       "sha256": "71b181a55dfc8ff18f6c9df52e248fe06b905b46f92750cc405d49c044280f13"
+    },
+    "js/market-memory-39.4.2.js": {
+      "sha256": "3740994023611d3d2e744314774fd8b251049e3035e8d35a0308bb42dbeb2e5a"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "d118657699b8f9e2fb2304779299e914029f7887f95bb5599454b7e9ce56503e",
-      "index.html": "ca5ad581b86ac10ae1a3bd3a8a76ad4e6798a96c0aae88b160d842bcf8097da7",
+      "app.js": "02a34130d29eb482e65c0f326a1d69fa0e3197a42b191aa9b1063ea7d1c92324",
+      "index.html": "8fd06fb326f5fc6492071f7d36e34e64461ad9913bc0d01d867671f0546120f9",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "9c87280483261c297de929355b684967010f4ba5becabd3c5e35d1e6047c0eb4",
+      "js/app.js": "e39792bc6887992e7fb25b496346bd7321cf80b8b43f318dcfb98e303ba8b00f",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
       "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
-      "js/market-memory-39.4.1.js": "71b181a55dfc8ff18f6c9df52e248fe06b905b46f92750cc405d49c044280f13"
+      "js/market-memory-39.4.1.js": "71b181a55dfc8ff18f6c9df52e248fe06b905b46f92750cc405d49c044280f13",
+      "js/market-memory-39.4.2.js": "3740994023611d3d2e744314774fd8b251049e3035e8d35a0308bb42dbeb2e5a"
     },
     "publication_identity": {
-      "build": "39.4.1",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.1",
+      "build": "39.4.2",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.2",
       "rule": "exact case"
     }
   },
   "notes": [
-    "Direct base: validated 39.4.0.",
-    "Market Memory capture is repaired at the existing saveAutoSnapshot boundary.",
-    "Each successful canonical market refresh persists one MARKET observation; identical canonical snapshots update last_seen instead of creating false 3/5/10 progress.",
-    "CURRENT analytical records are never overwritten or counted as Market Memory.",
-    "No new timer, fetch, WebSocket, Atlas, NØX, Aerith, Bridge, Ollama call or storage namespace.",
-    "Analytical Memory 39.4.0 remains unchanged; Decision Board dual-memory integration remains deferred."
+    "Direct base: 39.4.1, itself based on validated 39.4.0.",
+    "Root cause confirmed: app.js declares `const state`; classic-script global lexical bindings are not properties of globalThis/window.",
+    "39.4.1 incorrectly tested globalThis.state, so its capture returned null before reading the valid market.",
+    "39.4.2 resolves the real lexical `state` identifier and keeps the existing saveAutoSnapshot boundary.",
+    "The old js/market-memory-39.4.1.js asset may remain in the repository but is no longer loaded by index.html.",
+    "CURRENT analytical records remain separate; no new timer, fetch, WebSocket, Atlas, NØX, Aerith, Bridge, Ollama call or storage namespace."
   ]
 }

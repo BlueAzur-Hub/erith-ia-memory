@@ -12126,7 +12126,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 39.4.1",
+  interface: "Build 39.4.2",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40317,7 +40317,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "39.4.1";
+const ATLAS_BUILD = "39.4.2";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46988,8 +46988,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "39.4.1",
-  asset_token: "market-core-v2.0-alpha-build-39.4.1"
+  build: "39.4.2",
+  asset_token: "market-core-v2.0-alpha-build-39.4.2"
 });
 
 function atlasRuntimeTruth3813() {
