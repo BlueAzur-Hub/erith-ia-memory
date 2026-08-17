@@ -1,53 +1,53 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v24",
-  "build": "39.4.0",
-  "release": "ADMINISTRATOR MIRROR · ANALYTICAL MEMORY SEPARATION LOCK",
-  "published_at": "2026-08-17T16:12:00+02:00",
+  "build": "39.4.1",
+  "release": "ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTION RECOVERY LOCK",
+  "published_at": "2026-08-17T16:38:00+02:00",
   "global_versioning": {
-    "primary_build": "39.4.0",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.0",
+    "primary_build": "39.4.1",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.1",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.4.0",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.0",
+    "canonical_build": "39.4.1",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.1",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
   "protected_base": {
-    "direct_base": "39.3.0",
+    "direct_base": "39.4.0",
     "workspace_f5": "39.2.19",
     "metals_5_5": "39.2.20R1",
     "publication_identity": "39.2.20R2",
     "chart_metal": "39.2.21",
     "math_core": "39.2.17",
-    "market_memory": "39.3.0"
+    "market_memory_model": "39.3.0",
+    "analytical_memory": "39.4.0"
   },
-  "analytical_memory_contract": {
-    "schema": "atlas_analytical_memory_v394",
-    "unit": "one closed CURRENT Atlas 4/4 -> NOX -> Aerith",
-    "source": "existing persisted CURRENT memory records + verified CURRENT journal",
-    "market_memory": "strictly separate",
-    "journal_only_rows": "visible but never fabricated into detailed payloads",
+  "market_memory_collection_contract": {
+    "schema": "atlas_market_memory_v3941",
+    "trigger": "existing successful canonical market refresh -> saveAutoSnapshot",
+    "dedupe": "collector + canonical market snapshot",
+    "current_memory": "strictly separate",
     "starts_atlas": false,
     "new_timer": false,
     "new_fetch": false,
-    "new_storage_namespace": false,
-    "decision_board": "dual-memory evaluation deferred"
+    "new_websocket": false,
+    "new_storage_namespace": false
   },
   "integrity": {
     "files": {
-      "app.js": "bbb768fcecbb79a9f6dd76f1caee45bcff18b02d61d5fdd4924b4e93c42e2cbe",
-      "index.html": "8f012023a2cda09491b853f2341142b4d4157513ec85ef58a42cb2cebab34def",
+      "app.js": "d118657699b8f9e2fb2304779299e914029f7887f95bb5599454b7e9ce56503e",
+      "index.html": "ca5ad581b86ac10ae1a3bd3a8a76ad4e6798a96c0aae88b160d842bcf8097da7",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "ee4e04b78d5610992967436751d0ad96ddf79271fe2579b846645a270d3bb21b",
+      "js/app.js": "9c87280483261c297de929355b684967010f4ba5becabd3c5e35d1e6047c0eb4",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
-      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
-    },
-    "version.json": "80a109bd68df52e90ce5fadc3571dccec8e5171f2cdc09e1f42a171caf9f101a"
+      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
+      "js/market-memory-39.4.1.js": "71b181a55dfc8ff18f6c9df52e248fe06b905b46f92750cc405d49c044280f13"
+    }
   }
 }
