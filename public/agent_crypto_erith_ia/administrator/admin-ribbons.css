@@ -1,6 +1,6 @@
 /* ========================================================================== 
-   Agent-Crypto Administrator · Build 39.4.6
-   TARGET TOP + MARKET FLOW NATIVE RIBBON LOCK
+   Agent-Crypto Administrator · Build 39.4.6R1
+   TARGET TOP + MARKET FLOW RIBBON FREEDOM + CLASSIC SPEED LOCK
 
    Canonical contract recovered from Classic / Crypto thread:
    - Target Top and Market Flow are native Market Workspace ribbons, not windows.
@@ -19,7 +19,7 @@
   max-width: none !important;
   height: auto !important;
   min-width: 0 !important;
-  transform: none !important;
+  transform: translate3d(var(--ribbon-drag-x,0px),var(--ribbon-drag-y,0px),0) !important;
   z-index: 6 !important;
 }
 
@@ -123,8 +123,8 @@
 }
 
 /* Existing renderer already duplicates the sequence exactly twice.
-   A single -50% traversal is therefore seamless. 155 s was visually almost
-   static on a wide desktop; 58 s stays calm but visibly flows. */
+   Restore the Classic cadence exactly: one seamless -50% traversal in 115 s.
+   Hover/focus pause remains available without altering the renderer. */
 #market-workspace .market-flow-viewport .ticker-track {
   position: relative !important;
   z-index: 1 !important;
@@ -133,7 +133,7 @@
   min-width: max-content !important;
   transform: translate3d(0,0,0);
   animation-name: atlasAdminMarketFlow !important;
-  animation-duration: 52s !important;
+  animation-duration: 115s !important;
   animation-timing-function: linear !important;
   animation-iteration-count: infinite !important;
   animation-play-state: running !important;
@@ -141,7 +141,7 @@
 }
 
 @keyframes atlasAdminMarketFlow {
-  0%, 1.5% { transform: translate3d(0,0,0); }
+  0% { transform: translate3d(0,0,0); }
   100% { transform: translate3d(-50%,0,0); }
 }
 
@@ -213,3 +213,81 @@
     min-height: 38px !important;
   }
 }
+
+/* 39.4.6R1 — Ribbon Freedom Lock
+   The ribbons remain native Market Workspace components. Only a dedicated
+   handle may translate the complete ribbon; no resize/minimize/hide/window shell. */
+#market-workspace.market-ribbon-stack {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+#market-workspace .top5-ribbon,
+#market-workspace .market-flow-ribbon {
+  transition: box-shadow .12s ease, border-color .12s ease !important;
+}
+
+#market-workspace .top5-ribbon.market-ribbon-is-dragging,
+#market-workspace .market-flow-ribbon.market-ribbon-is-dragging {
+  z-index: 80 !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.56), 0 0 0 1px rgba(98,236,255,.20) !important;
+}
+
+#market-workspace .market-ribbon-drag-handle {
+  position: absolute !important;
+  top: 50% !important;
+  left: clamp(148px, calc(clamp(184px, 13.5vw, 222px) - 38px), 190px) !important;
+  transform: translateY(-50%) !important;
+  z-index: 12 !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(98,236,255,.28) !important;
+  border-radius: 8px !important;
+  background: linear-gradient(180deg,rgba(20,36,44,.94),rgba(5,12,18,.96)) !important;
+  color: #bfeeff !important;
+  font: 900 14px/1 ui-monospace,SFMono-Regular,Consolas,monospace !important;
+  cursor: grab !important;
+  touch-action: none !important;
+  user-select: none !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.22) !important;
+}
+
+#market-workspace .market-ribbon-drag-handle:hover,
+#market-workspace .market-ribbon-drag-handle:focus-visible {
+  border-color: rgba(98,236,255,.72) !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: 0 0 18px rgba(98,236,255,.16), inset 0 1px 0 rgba(255,255,255,.09) !important;
+}
+
+#market-workspace .market-ribbon-drag-handle:active,
+#market-workspace .market-ribbon-is-dragging .market-ribbon-drag-handle {
+  cursor: grabbing !important;
+}
+
+body:not(.admin-native-free) #market-workspace .market-ribbon-drag-handle,
+#market-workspace .market-ribbon-drag-handle:disabled {
+  opacity: .34 !important;
+  cursor: not-allowed !important;
+}
+
+@media (max-width: 1180px) {
+  #market-workspace .market-ribbon-drag-handle {
+    left: 158px !important;
+  }
+}
+
+@media (max-width: 680px) {
+  #market-workspace .market-ribbon-drag-handle {
+    top: 19px !important;
+    left: auto !important;
+    right: 8px !important;
+    transform: none !important;
+  }
+}
+

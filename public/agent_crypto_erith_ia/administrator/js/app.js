@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.4.6";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · TARGET TOP + MARKET FLOW NATIVE RIBBON LOCK";
+  const ADMIN_BUILD = "39.4.6R1";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · RIBBON FREEDOM + CLASSIC SPEED LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -263,6 +263,144 @@
     sync();
   }
 
+  const RIBBON_POSITION_STORAGE = "erith_admin_native_ribbon_positions_v1";
+
+  function readRibbonPositions() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(RIBBON_POSITION_STORAGE) || "{}");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function writeRibbonPositions(state) {
+    try { localStorage.setItem(RIBBON_POSITION_STORAGE, JSON.stringify(state)); } catch {}
+  }
+
+  function installRibbonFreedom() {
+    const definitions = [
+      {
+        id: "target-top",
+        node: q("#market-workspace .top5-ribbon"),
+        label: "Target Top",
+        handleSide: "target"
+      },
+      {
+        id: "market-flow",
+        node: q("#market-workspace .market-flow-ribbon"),
+        label: "Market Flow",
+        handleSide: "flow"
+      }
+    ].filter(item => item.node instanceof HTMLElement);
+
+    if (!definitions.length) return;
+
+    const saved = readRibbonPositions();
+    const applyOffset = (item, x = 0, y = 0, persist = false) => {
+      const safeX = Number.isFinite(Number(x)) ? Math.round(Number(x)) : 0;
+      const safeY = Number.isFinite(Number(y)) ? Math.round(Number(y)) : 0;
+      item.node.style.setProperty("--ribbon-drag-x", `${safeX}px`);
+      item.node.style.setProperty("--ribbon-drag-y", `${safeY}px`);
+      item.node.dataset.ribbonOffsetX = String(safeX);
+      item.node.dataset.ribbonOffsetY = String(safeY);
+      if (persist) {
+        const next = readRibbonPositions();
+        next[item.id] = { x: safeX, y: safeY };
+        writeRibbonPositions(next);
+      }
+    };
+
+    const resetItem = (item, persist = true) => applyOffset(item, 0, 0, persist);
+
+    definitions.forEach(item => {
+      const previous = saved[item.id] || {};
+      applyOffset(item, Number(previous.x) || 0, Number(previous.y) || 0, false);
+      item.node.dataset.ribbonFreedom = "true";
+
+      const handle = document.createElement("button");
+      handle.type = "button";
+      handle.className = `market-ribbon-drag-handle market-ribbon-drag-handle-${item.handleSide}`;
+      handle.textContent = "⠿";
+      handle.title = `Déplacer ${item.label} · double-clic : recentrer`;
+      handle.setAttribute("aria-label", handle.title);
+      item.node.appendChild(handle);
+
+      handle.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+
+      handle.addEventListener("dblclick", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        resetItem(item, true);
+      });
+
+      handle.addEventListener("pointerdown", event => {
+        if (!document.body.classList.contains("admin-native-free")) return;
+        if (event.button !== 0 && event.pointerType === "mouse") return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        const startX = event.clientX;
+        const startY = event.clientY;
+        const startOffsetX = Number(item.node.dataset.ribbonOffsetX || 0);
+        const startOffsetY = Number(item.node.dataset.ribbonOffsetY || 0);
+        const startRect = item.node.getBoundingClientRect();
+        const minVisibleX = Math.min(180, Math.max(96, startRect.width * .18));
+        const minVisibleY = Math.min(44, Math.max(30, startRect.height * .55));
+        let moved = false;
+
+        handle.setPointerCapture?.(event.pointerId);
+        item.node.classList.add("market-ribbon-is-dragging");
+
+        const move = moveEvent => {
+          let dx = moveEvent.clientX - startX;
+          let dy = moveEvent.clientY - startY;
+          if (!moved && Math.hypot(dx, dy) < 4) return;
+          moved = true;
+
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          dx = Math.min(vw - minVisibleX - startRect.left, Math.max(minVisibleX - startRect.right, dx));
+          dy = Math.min(vh - minVisibleY - startRect.top, Math.max(minVisibleY - startRect.bottom, dy));
+          applyOffset(item, startOffsetX + dx, startOffsetY + dy, false);
+        };
+
+        const end = endEvent => {
+          handle.releasePointerCapture?.(endEvent.pointerId);
+          handle.removeEventListener("pointermove", move);
+          handle.removeEventListener("pointerup", end);
+          handle.removeEventListener("pointercancel", end);
+          item.node.classList.remove("market-ribbon-is-dragging");
+          if (moved) applyOffset(item, Number(item.node.dataset.ribbonOffsetX || 0), Number(item.node.dataset.ribbonOffsetY || 0), true);
+        };
+
+        handle.addEventListener("pointermove", move);
+        handle.addEventListener("pointerup", end);
+        handle.addEventListener("pointercancel", end);
+      });
+    });
+
+    document.addEventListener("erith:admin-window-reset", () => {
+      definitions.forEach(item => resetItem(item, true));
+    });
+
+    document.addEventListener("erith:admin-window-layout", event => {
+      const free = !!event.detail?.free;
+      definitions.forEach(item => {
+        const handle = item.node.querySelector(".market-ribbon-drag-handle");
+        if (!(handle instanceof HTMLButtonElement)) return;
+        handle.disabled = !free;
+        handle.title = free
+          ? `Déplacer ${item.label} · double-clic : recentrer`
+          : `${item.label} verrouillé · active FENÊTRES LIBRES pour déplacer`;
+        handle.setAttribute("aria-label", handle.title);
+      });
+    });
+  }
+
   function keepGlobalVersionVisible() {
     const versionText = byId("atlasVersionControlText");
     const observer = versionText ? new MutationObserver(() => {
@@ -293,6 +431,7 @@
 
     const state = manager.init();
     window.ErithAdministratorWindows = manager;
+    installRibbonFreedom();
     installAdminBar(manager);
     installDomainObserver(manager);
     syncDomainWindows(manager);
