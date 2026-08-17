@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v12",
-  "build": "39.2.10",
-  "release": "ADMINISTRATOR MIRROR · GHOST DOCK LOCK",
-  "published_at": "2026-08-17T11:32:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v13",
+  "build": "39.2.11",
+  "release": "ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK",
+  "published_at": "2026-08-17T11:40:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.10",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.10",
+    "primary_build": "39.2.11",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.11",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -45,14 +45,15 @@
     "floating_multi_node": "one floating shell + original nodes",
     "suspend_runtime": "false",
     "storage_namespace": "erith_admin_portal_39_2_9",
-    "storage_note": "preserved intentionally across 39.2.10 visual-only ghost-dock polish"
+    "storage_note": "preserved intentionally across 39.2.11 freeze-candidate polish; operator layout is not reset"
   },
   "math_core_contract": {
     "docked": "Classic Math Core behavior preserved exactly",
     "detached": "medium right-side instrument on first detach; preferred width about 42% of viewport, clamped 520-760 px",
     "native_modes": "Dessus / Latéral / Réduire remain native Math Core controls",
     "maximize": "explicit Administrator action only",
-    "internal_split": "none"
+    "internal_split": "none",
+    "administrator_chrome": "compact hover chrome pinned to the far-right lower edge while docked; no orphan-left × control"
   },
   "domain_contract": {
     "crypto_and_metals": "same business cockpit, two domains",
@@ -82,18 +83,26 @@
     "39.2.6": "superseded: persistent dropdown menu was functionally reachable but visually rejected",
     "39.2.7": "functionally validated base; superseded only by 39.2.8 visual/control-size and Math Core detached-window polish",
     "39.2.8": "functionally validated polish base; superseded only by 39.2.9 discreet hover-reveal chrome with no semantic or business changes",
-    "39.2.9": "validated hover-chrome base; superseded only by 39.2.10 ghost treatment of the global bottom dock"
+    "39.2.9": "validated hover-chrome base; superseded only by 39.2.10 ghost treatment of the global bottom dock",
+    "39.2.10": "validated ghost-dock base; superseded only by Math Core chrome anchor correction and workspace-freedom freeze candidate"
   },
   "integrity": {
     "files": {
-      "app.js": "a8d0f9a3ce33dcbcd4965e231b6ef820db44ee11f52bff5a1545f767567f5318",
-      "index.html": "8cf6ed740646a2714a9248c8a13a4bb5138734c2c68bf40a9f0e27a3af4b8f7a",
+      "app.js": "8599e634f536581d62d070bae72e28ba11ffa14e91ec8bb310120ac8f7e71018",
+      "index.html": "63ab0ce8a4f44d7f5bf7fe01e21750b3650f4197c8bdf1fa656db185a0c9242b",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "844f43e399d3ba9bb25e894c8879c440f53db872ca53d87ff51b2a7227c892d5",
-      "js/app.js": "b73070676503e2baedaf0949daa330a9d5f97f2909be8982bbbad1350a04208e",
+      "admin-windows.css": "eb4248c4b301e45d18a9b8af37e2ef5593ff8f6e789ebea063fa3dd8c08e8438",
+      "js/app.js": "75dba3215fb57230f5e4c68a48ac3c9df6808741e041ec0df13e80190254b206",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "version.json": "8ca1b7d0f2d1fa8a378fb6779b47c36431a03dbc2b1133700bfcb5e5b672e890"
+      "version.json": "21f6a5f171a46cc37ffd93524d33e5b40092b265d7990de1abc1c1abbae2d562"
     }
+  },
+  "workspace_principle": {
+    "operator_model": "show only the operational surfaces needed for the task in progress",
+    "composition": "Graphique, Target, Flow, Market, Math Core and Administrator workspaces can be composed freely",
+    "minimize_hide_runtime": "visual state only; business runtime continues unless a future module exposes an explicit real suspend lifecycle",
+    "business_clone": "never clone business DOM/data to create a window",
+    "freeze_intent": "if validated, Windows/Metal/Chrome becomes frozen and 39.3 moves to Market Memory"
   }
 }
