@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v7",
-  "build": "39.2.5",
-  "release": "ADMINISTRATOR MIRROR · PORTAL WINDOWS · NO DUPLICATES",
-  "published_at": "2026-08-17T10:17:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v8",
+  "build": "39.2.6",
+  "release": "ADMINISTRATOR MIRROR · CONTROL CHROME LOCK",
+  "published_at": "2026-08-17T10:36:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.5",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.5",
+    "primary_build": "39.2.6",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.6",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -33,17 +33,18 @@
     "operator_compositions": [
       "Graphique + Target Top + Market Flow",
       "Target Top + Market Flow + Market + Math Core",
-      "Any subset can be parked/hidden and recalled from WINDOW DECK without stopping its business runtime."
+      "Any subset can be reduced, hidden, detached or restored without stopping its business runtime."
     ]
   },
   "window_contract": {
-    "docked": "native Classic/Mirror layout; no generated docked title bars",
-    "minimize": "park entire operational unit in WINDOW DECK; no in-page mini-bar",
-    "hide": "remove entire operational unit from cockpit; recall through WINDOW DECK",
+    "docked": "native Classic/Mirror layout; exactly one persistent window handle per operational unit",
+    "window_handle": "single stable ⠿ control; click opens a persistent labelled menu; drag detaches/moves when Free Windows is active",
+    "minimize": "collapse the entire operational unit to one compact visible restore bar in its native location",
+    "hide": "remove the entire operational unit from cockpit; recall through WINDOW DECK",
     "detach": "move/use the original DOM presentation; never clone business content",
-    "floating_multi_node": "one floating shell + one chrome bar + original nodes",
+    "floating_multi_node": "one floating shell + one menu handle + original nodes",
     "suspend_runtime": "false",
-    "storage_namespace": "erith_admin_portal_39_2_5"
+    "storage_namespace": "erith_admin_portal_39_2_6"
   },
   "domain_contract": {
     "crypto_and_metals": "same business cockpit, two domains",
@@ -59,18 +60,19 @@
     "39.2.1": "rejected: semantic wrappers altered native docked layout",
     "39.2.2": "superseded: window granularity/minimize incomplete",
     "39.2.3": "superseded: dual-domain identity but operational split incomplete",
-    "39.2.4": "superseded: operational split validated, but docked mini-bars caused duplicate-looking Graphique/market chrome and clutter"
+    "39.2.4": "superseded: operational split validated, but docked mini-bars caused duplicate-looking Graphique/market chrome and clutter",
+    "39.2.5": "superseded: five tiny hover controls had unstable hit zones and minimize-to-deck semantics made panels appear to vanish"
   },
   "integrity": {
     "files": {
-      "app.js": "229d219d3ae5b0b613ae80516863a027ce97a980a1dabc2ba2d788f79b295767",
-      "index.html": "a375e791de2ba733ed55041d7a299ce9fbf5ee630dfe10b0da6ff9d1a2e944ef",
+      "app.js": "86d3e138dbd302be00510fe0d9f29451b6746cb03e71dfbe8dddd0bfbdebf056",
+      "index.html": "61a3ac50f665f47cb02b879334b96af577d0b869ff3294ff2f1e132898744eaf",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "19938277281a391def70338d2c8717514f14690cf9121a702b1c90873e308194",
-      "js/app.js": "89550a76985f4aeea7d4df3941a014e72e2d8e6d7a66e8479d95afc5162e6c0e",
-      "js/core/admin-window-manager.js": "d86cec82d0a49cba0d3435a1c26933476b3181b933b885668e5aa750cd3b84fe",
-      "version.json": "10356797185098c3afe48e00668db36004509d66d5f401707b8f7933a61a81b8"
+      "admin-windows.css": "8b6e708f448349ee71aea431ac5c54036e1904badd0354dc96a067f1663f2f7b",
+      "js/app.js": "a8b9d946306db18118b00ef74ac06002bdf7e3fe3f050480d63b6d0c9d6bedbf",
+      "js/core/admin-window-manager.js": "30b5441e69be2ca57d157771bd2369c3588a69be23bc056d75c1fb7045f02375",
+      "version.json": "94962949bb338f0548a53daadb8d1b0bd19f6f5f8892ef231a4abeda392e0c45"
     }
   }
 }

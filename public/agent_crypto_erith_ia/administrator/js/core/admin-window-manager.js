@@ -139,6 +139,89 @@
       return win.entries.map(entry => entry.node).find(node => node?.parentElement) || null;
     }
 
+    let openMenuSet = null;
+
+    function closeWindowMenu(set = openMenuSet) {
+      if (!set?.menu) return;
+      set.menu.hidden = true;
+      set.toggle?.setAttribute("aria-expanded", "false");
+      if (openMenuSet === set) openMenuSet = null;
+    }
+
+    function toggleWindowMenu(set) {
+      if (!set?.menu) return;
+      const opening = set.menu.hidden;
+      if (openMenuSet && openMenuSet !== set) closeWindowMenu(openMenuSet);
+      set.menu.hidden = !opening;
+      set.toggle?.setAttribute("aria-expanded", String(opening));
+      openMenuSet = opening ? set : null;
+    }
+
+    function createMenuAction(className, label, title) {
+      const button = createButton(className, label, title);
+      button.classList.add("admin-native-menu-action");
+      return button;
+    }
+
+    function armControlDrag(event, win, set) {
+      if (!document.body.classList.contains("admin-native-free")) return;
+      if (win.maximized) return;
+      if (event.button !== 0 && event.pointerType === "mouse") return;
+
+      const button = event.currentTarget;
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const initial = currentRect(win);
+      let moved = false;
+      let target = null;
+      button?.setPointerCapture?.(event.pointerId);
+
+      const move = moveEvent => {
+        const dx = moveEvent.clientX - startX;
+        const dy = moveEvent.clientY - startY;
+        if (!moved && Math.hypot(dx, dy) < 6) return;
+        if (!moved) {
+          moved = true;
+          closeWindowMenu(set);
+          if (!win.floating) setFloating(win, true, true, initial);
+          bringToFront(win);
+          target = win.directFixed ? win.anchor : win.shell;
+          if (!target) return;
+          document.body.classList.add("admin-native-dragging");
+          target.classList.add("admin-native-moving");
+        }
+        if (!target) return;
+        const safe = clampGeometry({
+          x: initial.x + dx,
+          y: initial.y + dy,
+          width: initial.width,
+          height: win.geometry?.height || initial.height
+        });
+        target.style.left = `${safe.x}px`;
+        target.style.top = `${safe.y}px`;
+      };
+
+      const end = endEvent => {
+        button?.releasePointerCapture?.(endEvent.pointerId);
+        button?.removeEventListener("pointermove", move);
+        button?.removeEventListener("pointerup", end);
+        button?.removeEventListener("pointercancel", end);
+        if (target) {
+          document.body.classList.remove("admin-native-dragging");
+          target.classList.remove("admin-native-moving");
+        }
+        if (moved) {
+          set.suppressNextClick = true;
+          win.geometry = currentRect(win);
+          persistGeometry(win);
+        }
+      };
+
+      button?.addEventListener("pointermove", move);
+      button?.addEventListener("pointerup", end);
+      button?.addEventListener("pointercancel", end);
+    }
+
     function createControlSet(win, host, mini = false, floatingChrome = false) {
       if (!(host instanceof HTMLElement)) return null;
       const controls = document.createElement("div");
@@ -148,26 +231,37 @@
       controls.setAttribute("role", "group");
       controls.setAttribute("aria-label", `Fenêtre Administrator · ${win.title}`);
 
-      const drag = createButton("admin-native-drag", "⠿", `Déplacer ${win.title}`);
-      const minimize = createButton("admin-native-minimize", win.minimized ? "+" : "—", win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`);
-      const float = createButton("admin-native-float", win.floating ? "▣" : "□", win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`);
-      const maximize = createButton("admin-native-maximize", win.maximized ? "↙" : "⤢", win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`);
-      const hide = createButton("admin-native-hide", "×", `Masquer ${win.title} · rappel via WINDOWS`);
-      controls.append(drag, minimize, float, maximize, hide);
+      const toggle = createButton("admin-native-menu-toggle", "⠿", `Menu fenêtre · ${win.title}`);
+      toggle.setAttribute("aria-haspopup", "menu");
+      toggle.setAttribute("aria-expanded", "false");
 
-      drag.addEventListener("pointerdown", event => dragStart(event, win));
-      drag.addEventListener("dblclick", event => {
-        event.preventDefault();
-        event.stopPropagation();
-        setMaximized(win, !win.maximized);
+      const menu = document.createElement("div");
+      menu.className = "admin-native-menu";
+      menu.hidden = true;
+      menu.setAttribute("role", "menu");
+      const minimize = createMenuAction("admin-native-minimize", "—  Réduire", `Réduire ${win.title}`);
+      const float = createMenuAction("admin-native-float", "□  Détacher", `Détacher ${win.title}`);
+      const maximize = createMenuAction("admin-native-maximize", "⤢  Agrandir", `Agrandir ${win.title}`);
+      const hide = createMenuAction("admin-native-hide", "×  Masquer", `Masquer ${win.title} · rappel via WINDOWS`);
+      menu.append(minimize, float, maximize, hide);
+      controls.append(toggle, menu);
+
+      const set = { root: controls, toggle, menu, minimize, float, maximize, hide, mini, floatingChrome, suppressNextClick: false };
+      toggle.addEventListener("pointerdown", event => armControlDrag(event, win, set));
+      toggle.addEventListener("click", () => {
+        if (set.suppressNextClick) {
+          set.suppressNextClick = false;
+          return;
+        }
+        if (win.floating) bringToFront(win, false);
+        toggleWindowMenu(set);
       });
-      minimize.addEventListener("click", () => setMinimized(win, !win.minimized));
-      float.addEventListener("click", () => setFloating(win, !win.floating));
-      maximize.addEventListener("click", () => setMaximized(win, !win.maximized));
-      hide.addEventListener("click", () => setHidden(win, true));
+      minimize.addEventListener("click", () => { closeWindowMenu(set); setMinimized(win, !win.minimized); });
+      float.addEventListener("click", () => { closeWindowMenu(set); setFloating(win, !win.floating); });
+      maximize.addEventListener("click", () => { closeWindowMenu(set); setMaximized(win, !win.maximized); });
+      hide.addEventListener("click", () => { closeWindowMenu(set); setHidden(win, true); });
 
       host.appendChild(controls);
-      const set = { root: controls, drag, minimize, float, maximize, hide, mini, floatingChrome };
       win.controlSets.push(set);
       return set;
     }
@@ -176,22 +270,23 @@
       win.controlSets.forEach(set => {
         const { minimize, float, maximize } = set;
         if (minimize) {
-          minimize.textContent = win.minimized ? "+" : "—";
+          minimize.textContent = win.minimized ? "+  Restaurer" : "—  Réduire";
           minimize.title = win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`;
           minimize.setAttribute("aria-label", minimize.title);
         }
         if (float) {
-          float.textContent = win.floating ? "▣" : "□";
+          float.textContent = win.floating ? "▣  Raccrocher" : "□  Détacher";
           float.title = win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`;
           float.setAttribute("aria-label", float.title);
         }
         if (maximize) {
-          maximize.textContent = win.maximized ? "↙" : "⤢";
+          maximize.textContent = win.maximized ? "↙  Taille normale" : "⤢  Agrandir";
           maximize.title = win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`;
           maximize.setAttribute("aria-label", maximize.title);
         }
       });
       if (win.shellTitle) win.shellTitle.textContent = win.title;
+      if (win.minimizeBarTitle) win.minimizeBarTitle.textContent = win.title;
     }
 
     function resolveDefinition(def) {
@@ -221,7 +316,9 @@
         geometry: null,
         restoreGeometry: null,
         restoreFloating: false,
-        directPointerUp: null
+        directPointerUp: null,
+        minimizeBar: null,
+        minimizeBarTitle: null
       };
 
       win.nodes.forEach(node => node.dataset.adminNativeWindow = win.id);
@@ -374,8 +471,47 @@
       if (persist) patchState(win.id, { z: zCounter });
     }
 
+    function removeMinimizeBar(win) {
+      if (!win?.minimizeBar) return;
+      win.minimizeBar.remove();
+      win.minimizeBar = null;
+      win.minimizeBarTitle = null;
+    }
+
+    function ensureMinimizeBar(win) {
+      if (win?.minimizeBar?.isConnected) return win.minimizeBar;
+      const active = visibleEntry(win)?.node || win.anchor;
+      let parent = active?.parentNode || null;
+      let before = active || null;
+      const marker = win.placeholders.get(active);
+      if (marker?.parentNode) {
+        parent = marker.parentNode;
+        before = marker;
+      }
+      if (!parent) return null;
+
+      const bar = document.createElement("div");
+      bar.className = `admin-native-minibar admin-native-tone-${win.tone}`;
+      bar.dataset.adminNativeMinibar = win.id;
+      const title = document.createElement("strong");
+      title.className = "admin-native-minibar-title";
+      title.textContent = win.title;
+      const restore = createButton("admin-native-minibar-restore", "+  Restaurer", `Restaurer ${win.title}`);
+      const hide = createButton("admin-native-minibar-hide", "×", `Masquer ${win.title}`);
+      restore.addEventListener("click", () => setMinimized(win, false));
+      hide.addEventListener("click", () => setHidden(win, true));
+      bar.append(title, restore, hide);
+      parent.insertBefore(bar, before);
+      win.minimizeBar = bar;
+      win.minimizeBarTitle = title;
+      return bar;
+    }
+
     function applyPresentationState(win) {
       const suppressed = win.minimized || win.hidden;
+      if (win.minimized && !win.hidden) ensureMinimizeBar(win);
+      else removeMinimizeBar(win);
+
       if (win.floating && !win.directFixed && win.shell) {
         win.nodes.forEach(node => setNodeSuppressed(node, false));
         win.shell.hidden = suppressed;
@@ -406,6 +542,7 @@
         if (win.maximized) setMaximized(win, false, false);
         if (win.floating) setFloating(win, false, false);
         win.minimized = false;
+        removeMinimizeBar(win);
       }
       win.hidden = next;
       applyPresentationState(win);
@@ -507,53 +644,6 @@
         });
       }
       updateDeck();
-    }
-
-    function dragStart(event, win) {
-      if (!document.body.classList.contains("admin-native-free")) return;
-      if (win.maximized) return;
-      if (event.button !== 0 && event.pointerType === "mouse") return;
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (!win.floating) setFloating(win, true, true, currentRect(win));
-      bringToFront(win);
-
-      const target = win.directFixed ? win.anchor : win.shell;
-      if (!target) return;
-      const rect = target.getBoundingClientRect();
-      const startX = event.clientX;
-      const startY = event.clientY;
-      const button = event.currentTarget;
-      document.body.classList.add("admin-native-dragging");
-      target.classList.add("admin-native-moving");
-      button?.setPointerCapture?.(event.pointerId);
-
-      const move = moveEvent => {
-        const safe = clampGeometry({
-          x: rect.left + (moveEvent.clientX - startX),
-          y: rect.top + (moveEvent.clientY - startY),
-          width: rect.width,
-          height: win.geometry?.height || rect.height
-        });
-        target.style.left = `${safe.x}px`;
-        target.style.top = `${safe.y}px`;
-      };
-
-      const end = endEvent => {
-        button?.releasePointerCapture?.(endEvent.pointerId);
-        button?.removeEventListener("pointermove", move);
-        button?.removeEventListener("pointerup", end);
-        button?.removeEventListener("pointercancel", end);
-        document.body.classList.remove("admin-native-dragging");
-        target.classList.remove("admin-native-moving");
-        win.geometry = currentRect(win);
-        persistGeometry(win);
-      };
-
-      button?.addEventListener("pointermove", move);
-      button?.addEventListener("pointerup", end);
-      button?.addEventListener("pointercancel", end);
     }
 
     function stateLabel(win) {
@@ -688,6 +778,7 @@
         if (win.minimized || win.hidden) {
           win.minimized = false;
           win.hidden = false;
+          removeMinimizeBar(win);
           win.nodes.forEach(node => setNodeSuppressed(node, false));
         }
         if (win.floating) {
@@ -761,7 +852,17 @@
       return { count: windows.size, free: isFree(), domain: activeDomain };
     }
 
+    document.addEventListener("pointerdown", event => {
+      if (!openMenuSet || openMenuSet.root?.contains(event.target)) return;
+      closeWindowMenu(openMenuSet);
+    }, { capture: true });
+
     document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && openMenuSet) {
+        closeWindowMenu(openMenuSet);
+        event.preventDefault();
+        return;
+      }
       if (event.key !== "Escape") return;
       const maximized = [...windows.values()].reverse().find(win => win.maximized);
       if (maximized) {
