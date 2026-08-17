@@ -1,26 +1,26 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.7 · Classic Graph Engine Canonical Restore Verified",
-  "build": "38.15.7",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.7",
-  "published_at": "2026-08-17T06:25:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.8 · Classic 24h Pre-Binance Route Restore",
+  "build": "38.15.8",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.8",
+  "published_at": "2026-08-17T06:30:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "17454edf7f8d6a1d981f8e952eeb7570bea1bde067c249c9c0aa8c18c1547095"
+      "sha256": "a9620884230b5941858e8bc2fd936bf462db513c59226d81e515f859cc85d08e"
     },
     "index.html": {
-      "sha256": "1ed430688445c4573061db3f1e62caed95dba6d5578942aa2d81fbb1945fd1f4"
+      "sha256": "0727c5889b3964584aa00f3da2f643bea497a4acd7b2f3d7dd7c3530b4e5806c"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Built from Build 38.15.6; no reset of CURRENT, Journal, Memory, IndexedDB or workspace preferences.",
-    "Corrects the incomplete 38.15.6 transplantation: atlasFetchComparisonSeriesResilient and fetchChartSeries are now restored exactly from canonical Build 38.15.",
-    "All four canonical graph acquisition/resilience functions are hash-verified against Build 38.15: atlasChartPreferredSourceFamily, atlasComparisonPreferredSourceFamily, atlasFetchComparisonSeriesResilient, fetchChartSeries.",
-    "Preserves the Build 38.15.2 Firefox end-of-cycle stability code unchanged.",
-    "Preserves the Build 38.15.5 Atlas AUTO/MANUAL operator control unchanged.",
-    "Does not claim to fix the known 24h visual discontinuity; it removes the hybrid graph-engine state before further diagnosis."
+    "Built from verified Build 38.15.7; no reset of CURRENT, Journal, Memory, IndexedDB or workspace preferences.",
+    "24h historical graphs only are routed back to CoinGecko market_chart EUR, matching the pre-28.1.74 path before Binance Klines entered the main graph.",
+    "Solo, Top 3, Top 5, Hausses 5, Baisses 5 and Volumes 5 use the same CoinGecko-only 24h history route.",
+    "7d and longer periods retain the complete canonical 38.15 graph engine restored in 38.15.7.",
+    "A new non-destructive 24h CoinGecko cache key isolates this route from older 24h graph caches without deleting them.",
+    "Build 38.15.2 Firefox stability and Build 38.15.5 Atlas AUTO/MANUAL control are preserved."
   ]
 }
