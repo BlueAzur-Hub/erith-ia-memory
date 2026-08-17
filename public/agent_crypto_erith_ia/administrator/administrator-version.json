@@ -1,56 +1,53 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v23",
-  "build": "39.3.0",
-  "release": "ADMINISTRATOR MIRROR · MARKET MEMORY RESTORATION LOCK",
-  "published_at": "2026-08-17T15:40:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v24",
+  "build": "39.4.0",
+  "release": "ADMINISTRATOR MIRROR · ANALYTICAL MEMORY SEPARATION LOCK",
+  "published_at": "2026-08-17T16:12:00+02:00",
   "global_versioning": {
-    "primary_build": "39.3.0",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.3.0",
+    "primary_build": "39.4.0",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.0",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.3.0",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.3.0",
+    "canonical_build": "39.4.0",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.0",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
   "protected_base": {
-    "direct_base": "39.2.21",
+    "direct_base": "39.3.0",
     "workspace_f5": "39.2.19",
     "metals_5_5": "39.2.20R1",
     "publication_identity": "39.2.20R2",
     "chart_metal": "39.2.21",
-    "math_core": "39.2.17"
+    "math_core": "39.2.17",
+    "market_memory": "39.3.0"
   },
-  "market_memory_contract": {
-    "schema": "atlas_market_memory_v390",
-    "unit": "ordinary canonical market observation",
-    "horizons": [
-      3,
-      5,
-      10
-    ],
-    "basis": "market observations only",
-    "current_records": "preserved and excluded",
-    "collection": "existing saveAutoSnapshot market pulse",
+  "analytical_memory_contract": {
+    "schema": "atlas_analytical_memory_v394",
+    "unit": "one closed CURRENT Atlas 4/4 -> NOX -> Aerith",
+    "source": "existing persisted CURRENT memory records + verified CURRENT journal",
+    "market_memory": "strictly separate",
+    "journal_only_rows": "visible but never fabricated into detailed payloads",
     "starts_atlas": false,
     "new_timer": false,
     "new_fetch": false,
     "new_storage_namespace": false,
-    "decision_board": "Market Memory first; Analytical Memory deferred"
+    "decision_board": "dual-memory evaluation deferred"
   },
   "integrity": {
     "files": {
-      "app.js": "e585e2a0aa4c6bf42c59d5095d340d44a4ef9419587f2aaa72978eca535b0ad4",
-      "index.html": "4578033edc0ff54492c8d6656f6bcfaa555e97c7278e6709ab26067909f73a7b",
+      "app.js": "bbb768fcecbb79a9f6dd76f1caee45bcff18b02d61d5fdd4924b4e93c42e2cbe",
+      "index.html": "8f012023a2cda09491b853f2341142b4d4157513ec85ef58a42cb2cebab34def",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "be7989017a0f147ae66fa78c649de118516438ec5ca7e56e12ca618fae4899c1",
+      "js/app.js": "ee4e04b78d5610992967436751d0ad96ddf79271fe2579b846645a270d3bb21b",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded"
+      "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
+      "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d"
     },
-    "version.json": "48ba7bde43792d7f81b09d45fe49dd22b8bea7c67faf1fe0186b1d9da7e9cb48"
+    "version.json": "80a109bd68df52e90ce5fadc3571dccec8e5171f2cdc09e1f42a171caf9f101a"
   }
 }
