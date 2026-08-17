@@ -170,7 +170,8 @@
     if (exportButton) exportButton.textContent = "Exporter Market Memory .md";
     if (status && data) {
       const latest = data.latest_at ? new Date(data.latest_at).toLocaleString("fr-FR") : "aucune";
-      status.textContent = `${split.marketRecords.length} observation(s) marché distincte(s) · fil principal ${data.primary_records || 0} relevé(s) · ${split.currentRecords.length} CURRENT analytique(s) conservé(s) à part · dernier marché ${latest}. Market Memory ne déclenche jamais Atlas.`;
+      const storageTruth = typeof atlasAutoMemoryStorageSummary === "function" ? atlasAutoMemoryStorageSummary() : "stockage non exposé";
+      status.textContent = `${split.marketRecords.length} observation(s) marché distincte(s) · fil principal ${data.primary_records || 0} relevé(s) · ${split.currentRecords.length} CURRENT analytique(s) conservé(s) à part · dernier marché ${latest} · stockage ${storageTruth}. Market Memory ne déclenche jamais Atlas.`;
     }
     if (root) {
       root.dataset.memoryBasis = "market";
@@ -255,7 +256,7 @@
       starts_atlas: false,
       new_timer: false,
       new_fetch: false,
-      storage: "existing AUTO_MEMORY_KEY; CURRENT preserved separately"
+      storage: "IndexedDB typed Auto Memory; legacy AUTO_MEMORY_KEY migration-only; CURRENT preserved separately"
     });
   } catch (_) {}
 
