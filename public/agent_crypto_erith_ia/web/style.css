@@ -23948,16 +23948,16 @@ html[data-atlas-market-domain="metals"]
 }
 
 /* ==========================================================================
-   BUILD 28.2.72 — STABLE RECOVERY & UPDATE CONTROL REPAIR
+   BUILD 32.0 — CONSOLIDATED CURRENT TRUTH + GRAPHIC PEDAGOGY + STOP-ONCE 32K
    Visual workspace remains Build 28.2.43. Only the update control behavior
    is extended. These markers are verified before installation.
-   ATLAS_ASSET_BUILD: 28.2.72
-   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-28.2.72
+   ATLAS_ASSET_BUILD: 32.0
+   ATLAS_ASSET_TOKEN: market-core-v2.0-alpha-build-32.0
    ========================================================================== */
 
 :root {
-  --atlas-asset-build: "28.2.72";
-  --atlas-asset-token: "market-core-v2.0-alpha-build-28.2.72";
+  --atlas-asset-build: "38.12";
+  --atlas-asset-token: "market-core-v2.0-alpha-build-38.12";
 }
 
 .atlas-version-control[data-state="current"],
@@ -25067,4 +25067,742 @@ html[data-atlas-market-domain="metals"]
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.02em;
+}
+
+
+/* ==========================================================================
+   BUILD 32.0 — CONSOLIDATED ATLAS → NØX → AERITH PROGRESS
+   Scoped to the local analysis chamber. No global dashboard geometry change.
+   ========================================================================== */
+.atlas-analysis-progress{
+  display:grid;gap:10px;margin:12px 0 14px;padding:14px 16px;
+  border:1px solid rgba(98,236,255,.22);border-radius:16px;
+  background:linear-gradient(135deg,rgba(7,28,43,.88),rgba(15,17,37,.84));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.atlas-analysis-progress-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.atlas-analysis-progress-head>div:first-child{display:grid;gap:4px}
+.atlas-analysis-progress-head b{color:#ffe7ad;font-size:15px}
+.atlas-analysis-progress-readout{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.atlas-analysis-progress-readout strong{color:#8ff3ff;font-size:16px}
+.atlas-analysis-progress-readout span{padding:4px 8px;border:1px solid rgba(143,243,255,.25);border-radius:999px;color:#9db4c8;font-size:9px;font-weight:900;letter-spacing:.1em}
+.atlas-analysis-progress-track{height:7px;overflow:hidden;border-radius:999px;background:rgba(95,128,156,.16);border:1px solid rgba(98,236,255,.10)}
+.atlas-analysis-progress-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#4dbbff,#61efdf,#ffe190);transition:width .32s ease}
+.atlas-analysis-progress-nodes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.atlas-analysis-progress-nodes>span{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px;min-width:0;padding:8px;border:1px solid rgba(98,236,255,.12);border-radius:11px;background:rgba(3,17,29,.58);color:#8198ad}
+.atlas-analysis-progress-nodes i{display:grid;place-items:center;min-width:27px;height:27px;padding:0 4px;border-radius:8px;border:1px solid rgba(255,216,135,.16);color:#d8c48e;font-style:normal;font-size:9px;font-weight:950}
+.atlas-analysis-progress-nodes b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+.atlas-analysis-progress-nodes>span.is-active{border-color:rgba(98,236,255,.52);background:rgba(31,119,145,.16);color:#dffaff;box-shadow:0 0 0 1px rgba(98,236,255,.06) inset}
+.atlas-analysis-progress-nodes>span.is-active i{border-color:rgba(98,236,255,.5);color:#8ff3ff}
+.atlas-analysis-progress-nodes>span.is-done{border-color:rgba(91,225,174,.28);color:#c5f8e4}
+.atlas-analysis-progress-nodes>span.is-done i{border-color:rgba(91,225,174,.38);color:#79edbd}
+.atlas-analysis-progress[data-phase="done"]{border-color:rgba(91,225,174,.34)}
+.atlas-analysis-progress[data-phase="error"]{border-color:rgba(255,153,117,.34)}
+.atlas-analysis-progress[data-phase="history"]{border-color:rgba(255,216,135,.24)}
+.atlas-analysis-progress p{margin:0;color:#9db3c7;font-size:10px;line-height:1.45}
+@media(max-width:1050px){.atlas-analysis-progress-nodes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.atlas-analysis-progress-head{align-items:flex-start;flex-direction:column}.atlas-analysis-progress-nodes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* ============================================================
+   BUILD 32.0 — DEVICE ROLE GATE · TRANSFORMER BOOK STOP
+   Localized control only. No dashboard geometry rewrite.
+   ============================================================ */
+.atlas-device-compute-control{
+  margin-top:14px;
+  padding:12px 14px;
+  border:1px solid rgba(105,205,235,.28);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  background:rgba(3,20,31,.5);
+}
+.atlas-device-compute-copy{display:grid;gap:4px;min-width:0}
+.atlas-device-compute-copy b{color:#eaf8ff;font-size:.92rem}
+.atlas-device-compute-copy small{color:#8fa8b9;line-height:1.35}
+.atlas-device-compute-actions{display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end}
+.atlas-device-compute-actions button{
+  min-height:34px;padding:7px 12px;border-radius:10px;
+  border:1px solid rgba(90,195,225,.35);background:rgba(8,34,48,.9);color:#cde9f4;font-weight:750;
+}
+.atlas-device-compute-actions button.is-active{border-color:rgba(85,220,170,.72);box-shadow:0 0 0 1px rgba(85,220,170,.15) inset;color:#e9fff6}
+.atlas-device-compute-control[data-compute-role="observer"]{border-color:rgba(255,185,72,.52);background:rgba(42,29,8,.35)}
+.atlas-device-compute-control[data-compute-role="observer"] .atlas-device-compute-actions button[data-atlas-compute-role="observer"].is-active{border-color:rgba(255,185,72,.85);color:#ffe4a5}
+#atlasDeviceComputeStatus[data-tone="stop"]{color:#ffd88b}
+#atlasDeviceComputeStatus[data-tone="ready"]{color:#99efd0}
+.atlas-analysis-progress[data-phase="observer"] .atlas-analysis-progress-track span{width:0!important}
+@media (max-width:900px){.atlas-device-compute-control{align-items:stretch;flex-direction:column}.atlas-device-compute-actions{justify-content:flex-start}}
+
+
+/* =========================================================
+   BUILD 32.0 — ATLAS CURRENT STATUS RELOCATION
+   The CURRENT/live qualification banner belongs to the local
+   Atlas section, below the pipeline/device-role card.
+   ========================================================= */
+.atlas-current-analysis-banner-mount:empty{display:none}
+.atlas-current-analysis-banner-mount:not(:empty){display:block}
+
+
+/* ============================================================
+   BUILD 32.0 — COHERENCE & OPERATOR POLISH
+   Snapshot/LIVE truth, deterministic Top 5, diagnostics.
+   ============================================================ */
+.atlas-frame-truth{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(96,210,226,.26);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(4,25,34,.78),rgba(12,22,42,.72));
+}
+.atlas-frame-truth-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+.atlas-frame-truth-head h5{margin:2px 0 0;font-size:1rem}
+.atlas-frame-truth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.atlas-frame-truth-grid article{padding:12px;border:1px solid rgba(116,190,215,.18);border-radius:12px;background:rgba(2,13,23,.48)}
+.atlas-frame-truth-grid span,.atlas-frame-truth-grid small{display:block;color:var(--muted,#9db2c6)}
+.atlas-frame-truth-grid b{display:block;margin:4px 0 5px;color:#dffdf6}
+.atlas-frame-truth[data-state="advanced"]{border-color:rgba(255,204,98,.42)}
+.atlas-frame-truth[data-state="current"]{border-color:rgba(76,220,160,.42)}
+#atlasFrameTruthStatus{margin:10px 0 0;color:#9ec8cf;font-size:.86rem}
+#btnAtlasDiagnosticBundle{border-color:rgba(94,220,190,.35)}
+@media (max-width:760px){.atlas-frame-truth-grid{grid-template-columns:1fr}.atlas-frame-truth-head{flex-direction:column}}
+
+
+/* ============================================================
+   BUILD 32.0 — MEMORY INTELLIGENCE
+   3/5/10 snapshots · persistence · multi-collector confirmation.
+   ============================================================ */
+.atlas-memory-intelligence{margin-top:14px;padding:15px;border:1px solid rgba(150,122,255,.28);border-radius:16px;background:linear-gradient(135deg,rgba(16,17,42,.82),rgba(5,31,39,.72))}
+.atlas-memory-intelligence[data-state="ready"]{border-color:rgba(88,220,181,.42)}
+.atlas-memory-intelligence-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:13px}
+.atlas-memory-intelligence-head h5{margin:2px 0 4px;font-size:1rem}.atlas-memory-intelligence-head p{margin:0;color:#9fb7c8;font-size:.86rem}
+.atlas-memory-horizon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:9px}
+.atlas-memory-intelligence-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.atlas-memory-horizon-grid article,.atlas-memory-intelligence-grid article{padding:11px;border:1px solid rgba(128,164,216,.18);border-radius:12px;background:rgba(3,13,25,.48);min-width:0}
+.atlas-memory-horizon-grid span,.atlas-memory-intelligence-grid span,.atlas-memory-horizon-grid small,.atlas-memory-intelligence-grid small{display:block;color:#9eb1c4}
+.atlas-memory-horizon-grid b,.atlas-memory-intelligence-grid b{display:block;margin:4px 0 5px;color:#e4fff7;overflow-wrap:anywhere}
+.atlas-memory-confidence{grid-column:span 3}
+.atlas-memory-intelligence-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+#atlasMemoryIntelligenceStatus{margin:10px 0 0;color:#9ec8cf;font-size:.86rem}
+@media(max-width:980px){.atlas-memory-intelligence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-memory-confidence{grid-column:span 2}}
+@media(max-width:720px){.atlas-memory-horizon-grid,.atlas-memory-intelligence-grid{grid-template-columns:1fr}.atlas-memory-confidence{grid-column:auto}.atlas-memory-intelligence-head{flex-direction:column}}
+
+
+/* ============================================================
+   BUILD 32.0 — TRUTH POLISH + VISUAL STATE
+   Visual-only feedback for a qualified/active CURRENT pipeline.
+   No dashboard geometry or engine behavior is changed here.
+   ============================================================ */
+#atlasCurrentAnalysisBanner[data-tone="active"],
+#atlasCurrentAnalysisBanner[data-tone="ready"]{
+  color:#e8fff6;
+}
+.atlas-analysis-progress[data-phase="atlas"],
+.atlas-analysis-progress[data-phase="nox"],
+.atlas-analysis-progress[data-phase="aerith"],
+.atlas-analysis-progress[data-phase="done"]{
+  border-color:rgba(91,225,174,.38);
+  box-shadow:0 0 0 1px rgba(91,225,174,.035) inset;
+}
+.atlas-analysis-progress[data-phase="atlas"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="nox"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="aerith"] .atlas-analysis-progress-readout span,
+.atlas-analysis-progress[data-phase="done"] .atlas-analysis-progress-readout span{
+  border-color:rgba(91,225,174,.34);
+  color:#a7f4d3;
+}
+
+
+/* ============================================================
+   BUILD 32.0 — SHARED READ-ONLY KNOWLEDGE
+   Permanent dictionary + explicit Ryzen -> Book handoff.
+   No change to Atlas/NØX/Aerith pipeline geometry.
+   ============================================================ */
+.atlas-knowledge-library,
+.atlas-book-readonly{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(106,223,208,.26);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(7,28,42,.93),rgba(11,25,43,.88));
+}
+.atlas-knowledge-library-head,
+.atlas-book-readonly-head{
+  display:flex;
+  gap:16px;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+.atlas-knowledge-library-head h5,
+.atlas-book-readonly-head h5{margin:.2rem 0 .35rem;font-size:1.05rem}
+.atlas-knowledge-library-head p,
+.atlas-book-readonly-head p{margin:.2rem 0;color:var(--muted,#9fb1c4);max-width:980px}
+.atlas-knowledge-library-controls{
+  display:grid;
+  grid-template-columns:auto minmax(220px,1fr) auto auto;
+  gap:10px;
+  align-items:center;
+  margin:14px 0 10px;
+}
+.atlas-knowledge-library-controls label{font-weight:800;color:#d8f8f1}
+.atlas-knowledge-library-controls input{
+  width:100%;
+  border:1px solid rgba(105,223,208,.32);
+  border-radius:12px;
+  background:rgba(3,18,29,.9);
+  color:inherit;
+  padding:10px 12px;
+}
+.atlas-knowledge-library-controls button,
+.atlas-book-readonly-actions button{
+  border:1px solid rgba(105,223,208,.35);
+  border-radius:12px;
+  background:rgba(9,45,59,.75);
+  color:inherit;
+  padding:9px 12px;
+  font-weight:800;
+}
+.atlas-knowledge-library-controls span{font-weight:800;color:#9cf4df;white-space:nowrap}
+.atlas-knowledge-library-details{margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+.atlas-knowledge-library-details>summary{cursor:pointer;font-weight:900;color:#ffe7a3}
+.atlas-knowledge-library-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+  max-height:620px;
+  overflow:auto;
+  padding-right:4px;
+}
+.atlas-knowledge-library-grid article{
+  border:1px solid rgba(125,210,226,.16);
+  border-radius:12px;
+  background:rgba(3,17,29,.7);
+  padding:10px 12px;
+}
+.atlas-knowledge-library-grid article b{display:block;color:#90efe0;margin-bottom:4px}
+.atlas-knowledge-library-grid article p{margin:0;line-height:1.45;color:#d8e0e8}
+.atlas-knowledge-library-status,
+#atlasBookReadOnlyStatus{margin:10px 0 0;color:#8fdacb;font-size:.9rem}
+.atlas-book-readonly-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.atlas-book-readonly-grid article{
+  min-width:0;
+  padding:11px 12px;
+  border-radius:12px;
+  border:1px solid rgba(125,210,226,.16);
+  background:rgba(3,17,29,.68);
+}
+.atlas-book-readonly-grid span{display:block;color:#9fb1c4;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-book-readonly-grid b{display:block;margin:5px 0;color:#e8f8f5}
+.atlas-book-readonly-grid small{color:#9fb1c4;line-height:1.35}
+.atlas-book-readonly-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.atlas-book-readonly[data-state="ready"]{border-color:rgba(84,231,176,.45);box-shadow:0 0 0 1px rgba(84,231,176,.08) inset}
+.atlas-book-readonly[data-state="observer"]{border-color:rgba(85,214,233,.38)}
+@media (max-width:1100px){
+  .atlas-book-readonly-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .atlas-knowledge-library-grid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .atlas-knowledge-library-head,.atlas-book-readonly-head{flex-direction:column}
+  .atlas-knowledge-library-controls{grid-template-columns:1fr}
+  .atlas-book-readonly-grid{grid-template-columns:1fr}
+}
+
+
+/* ============================================================
+   BUILD 32.0 — DECISION BOARD V2 + SHARED MEMORY HANDOFF
+   Memory Intelligence is descriptive only. No trading action.
+   ============================================================ */
+.decision-memory-v2{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.decision-memory-v2 article{
+  min-width:0;
+  padding:12px 13px;
+  border-radius:13px;
+  border:1px solid rgba(100,220,205,.20);
+  background:rgba(4,21,33,.72);
+}
+.decision-memory-v2 article span{display:block;color:#93a8bb;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}
+.decision-memory-v2 article b{display:block;margin:5px 0;color:#dffaf3;font-size:1rem}
+.decision-memory-v2 article small{display:block;color:#9eb1c3;line-height:1.35}
+.decision-memory-v2-action[data-state="ready"]{border-color:rgba(83,231,174,.48);box-shadow:0 0 0 1px rgba(83,231,174,.08) inset}
+.decision-memory-v2-action[data-state="warn"]{border-color:rgba(255,205,93,.40)}
+.decision-memory-compare{
+  margin-top:12px;
+  border:1px solid rgba(112,191,229,.20);
+  border-radius:14px;
+  background:rgba(3,17,29,.62);
+  padding:12px 13px;
+}
+.decision-memory-compare-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.decision-memory-compare-head b{display:block;color:#f9e4aa}
+.decision-memory-compare-head span{display:block;color:#9fb1c4;margin-top:3px;font-size:.86rem}
+.decision-memory-compare-actions{display:flex;flex-wrap:wrap;gap:8px}
+.decision-memory-compare-actions button{
+  border:1px solid rgba(104,215,208,.30);border-radius:10px;background:rgba(9,42,57,.72);color:inherit;padding:8px 10px;font-weight:800
+}
+.decision-memory-timeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:11px}
+.decision-memory-timeline article{padding:9px 10px;border-radius:10px;border:1px solid rgba(125,210,226,.14);background:rgba(5,23,35,.72)}
+.decision-memory-timeline article b{display:block;color:#9ff0dd;font-size:.86rem}
+.decision-memory-timeline article span,.decision-memory-timeline article small{display:block;color:#99aabd;font-size:.76rem;margin-top:2px}
+.decision-memory-deltas{margin-top:10px;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,.12);color:#d6e4ec;line-height:1.5}
+#decision-board[data-v2-mode="memory-only"]{border-color:rgba(92,207,225,.34)}
+@media (max-width:1100px){.decision-memory-v2{grid-template-columns:repeat(2,minmax(0,1fr))}.decision-memory-timeline{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){.decision-memory-v2{grid-template-columns:1fr}.decision-memory-compare-head{flex-direction:column}.decision-memory-timeline{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   BUILD 32.1 — EVIDENCE & LANGUAGE CONSISTENCY
+   - no Bridge or pipeline change
+   - canonical News evidence vocabulary
+   - French-only bounded Atlas comments
+   - precise human-validation wording
+   - explicit LIVE vs frozen CURRENT readiness labels
+   ============================================================ */
+
+
+/* ============================================================
+   33.0 — MULTI-COLLECTOR & OPERATOR CONSOLE
+   Additive UI only. No Bridge, pipeline or execution changes.
+   ============================================================ */
+.atlas-multi-collector-panel{border-color:rgba(92,225,214,.38)}
+.atlas-multi-collector-panel[data-state="ready"]{box-shadow:inset 0 0 0 1px rgba(86,225,170,.08)}
+.atlas-operator-local-grid{display:grid;grid-template-columns:minmax(190px,1.2fr) minmax(190px,1fr) auto auto auto;gap:10px;align-items:end;margin:14px 0}
+.atlas-operator-field{min-width:0}
+.atlas-operator-field input,.atlas-operator-field select{width:100%;min-height:40px;border:1px solid rgba(94,210,224,.28);border-radius:12px;background:rgba(3,20,31,.72);color:inherit;padding:8px 10px}
+.atlas-multi-collector-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.atlas-multi-collector-kpis article,.atlas-multi-collector-assets article,.atlas-multi-collector-list article{border:1px solid rgba(94,210,224,.20);border-radius:14px;background:rgba(3,20,31,.52);padding:12px;min-width:0}
+.atlas-multi-collector-kpis span,.atlas-multi-collector-list span{display:block;color:var(--muted,#8fa7b8);font-size:.82rem}
+.atlas-multi-collector-kpis b,.atlas-multi-collector-list b{display:block;margin-top:4px;color:var(--cream,#fff0bf)}
+.atlas-multi-collector-kpis small,.atlas-multi-collector-list small{display:block;margin-top:5px;color:var(--muted,#8fa7b8);line-height:1.35}
+.atlas-multi-collector-assets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
+.atlas-multi-collector-assets article b{display:block;color:#8df0df}
+.atlas-multi-collector-assets article span{display:block;margin-top:4px;font-weight:700}
+.atlas-multi-collector-assets article small{display:block;margin-top:4px;color:var(--muted,#8fa7b8)}
+.atlas-multi-collector-assets article[data-state="coherent"]{border-color:rgba(81,218,164,.48)}
+.atlas-multi-collector-assets article[data-state="divergent"]{border-color:rgba(244,190,76,.55)}
+.atlas-multi-collector-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.atlas-multi-collector-list article[data-recency="recent"]{border-color:rgba(81,218,164,.42)}
+.atlas-multi-collector-list article[data-recency="aged"]{border-color:rgba(244,190,76,.34)}
+@media (max-width:1100px){.atlas-operator-local-grid{grid-template-columns:1fr 1fr}.atlas-multi-collector-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-multi-collector-assets{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-multi-collector-list{grid-template-columns:1fr}}
+@media (max-width:700px){.atlas-operator-local-grid,.atlas-multi-collector-kpis,.atlas-multi-collector-assets{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   33.0 FINAL — DECISION WORKSPACE + CURRENT TRUTH + CURRENT JOURNAL
+   Layout / read-only intelligence only. No Bridge or pipeline change.
+   ============================================================ */
+.atlas-current-truth-33,
+.atlas-current-journal-33{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(93,218,207,.28);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(7,28,42,.94),rgba(10,23,40,.90));
+}
+.atlas-current-truth-33[data-state="current"],
+.atlas-current-journal-33[data-state="ready"]{border-color:rgba(73,231,168,.50);box-shadow:inset 0 0 0 1px rgba(73,231,168,.07)}
+.atlas-current-truth-33[data-state="active"]{border-color:rgba(89,214,232,.46)}
+.atlas-current-truth-33-head,
+.atlas-current-journal-33-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.atlas-current-truth-33-head h5,
+.atlas-current-journal-33-head h5{margin:.2rem 0 .35rem;font-size:1.05rem;color:var(--cream,#fff0bf)}
+.atlas-current-truth-33-head p,
+.atlas-current-journal-33-head p{margin:.2rem 0;color:var(--muted,#9fb1c4);max-width:1020px}
+.atlas-current-truth-33-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.atlas-current-truth-33-grid article{min-width:0;padding:11px 12px;border:1px solid rgba(109,211,224,.17);border-radius:12px;background:rgba(3,17,29,.68)}
+.atlas-current-truth-33-grid span{display:block;color:#91a8ba;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-current-truth-33-grid b{display:block;margin:5px 0;color:#e8f8f5;overflow-wrap:anywhere}
+.atlas-current-truth-33-grid small{display:block;color:#9fb1c4;line-height:1.35}
+.atlas-current-truth-33-status,.atlas-current-journal-33-status{margin:11px 0 0;color:#8fdacb;font-size:.9rem}
+.atlas-current-journal-33-actions{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0 10px}
+.atlas-current-journal-33-actions button{border:1px solid rgba(104,215,208,.30);border-radius:10px;background:rgba(9,42,57,.72);color:inherit;padding:8px 10px;font-weight:800}
+.atlas-current-journal-33-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.atlas-current-journal-33-list article{min-width:0;padding:11px 12px;border:1px solid rgba(125,210,226,.16);border-radius:12px;background:rgba(3,17,29,.68)}
+.atlas-current-journal-33-list article[data-state="current"]{border-color:rgba(76,225,166,.38)}
+.atlas-current-journal-33-list b{display:block;color:#9ff0dd}
+.atlas-current-journal-33-list span,.atlas-current-journal-33-list small,.atlas-current-journal-33-list code{display:block;margin-top:4px;color:#9fb1c4;font-size:.8rem;overflow-wrap:anywhere}
+.atlas-current-journal-33-list code{color:#d7e5ed;background:rgba(0,0,0,.12);padding:4px 6px;border-radius:6px}
+
+/* Decision Board now belongs to the Atlas/Memory workspace, not to News Sentinel. */
+#atlasSharedSynthesisCard #decision-board{margin-top:18px}
+.atlas-decision-detail{margin:12px 0;border:1px solid rgba(104,194,225,.18);border-radius:13px;background:rgba(2,15,25,.32)}
+.atlas-decision-detail>summary{cursor:pointer;padding:10px 12px;font-weight:900;color:#f7dda1;list-style:none}
+.atlas-decision-detail>summary::-webkit-details-marker{display:none}
+.atlas-decision-detail>summary::before{content:"▸ ";color:#75e1d2}
+.atlas-decision-detail[open]>summary::before{content:"▾ "}
+.atlas-decision-detail-body{padding:0 10px 10px}
+
+.atlas-current-compare-table-33{width:100%;border-collapse:collapse;font-size:.85rem}
+.atlas-current-compare-table-33 th,.atlas-current-compare-table-33 td{padding:8px 9px;border-bottom:1px solid rgba(120,200,218,.12);text-align:right}
+.atlas-current-compare-table-33 th:first-child,.atlas-current-compare-table-33 td:first-child{text-align:left}
+.atlas-current-compare-table-33 thead th{color:#95abbd;font-size:.73rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-current-compare-table-33 tbody th{color:#dffaf3}
+.atlas-current-compare-table-33 td[data-delta="up"]{color:#78e4b2}
+.atlas-current-compare-table-33 td[data-delta="down"]{color:#ff9a9a}
+.atlas-current-compare-table-33 td[data-delta="flat"]{color:#d7e2e8}
+
+/* Integrated console: keep the moved multi-collector block visually subordinate to the decision workspace. */
+#atlasSharedSynthesisCard [data-collapse-key="multi-collector-operator"]{margin-top:18px;border-color:rgba(92,225,214,.28)}
+#atlasSharedSynthesisCard .atlas-book-readonly{margin-top:18px}
+#atlasSharedSynthesisCard .atlas-knowledge-library{margin-top:18px}
+
+@media (max-width:1100px){
+  .atlas-current-truth-33-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .atlas-current-journal-33-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .atlas-current-truth-33-head,.atlas-current-journal-33-head{flex-direction:column}
+  .atlas-current-truth-33-grid,.atlas-current-journal-33-list{grid-template-columns:1fr}
+}
+
+
+/* ============================================================
+   BOOK ONE-SHOT — INHERITED COMPATIBILITY BLOCK
+   Imported Ryzen Aerith synthesis remains visible on the Book without
+   promoting HISTORIQUE content to CURRENT or calling the local Bridge.
+   ============================================================ */
+.atlas-book-readonly[data-state="ready"] #btnAtlasBookReadSynthesis:not([disabled]){
+  font-weight:800;
+  box-shadow:0 0 0 1px rgba(98,230,198,.16) inset;
+}
+.atlas-local-response-panel[data-atlas-response-view="conclusion"] #atlasLocalResponseMeta{
+  overflow-wrap:anywhere;
+}
+
+
+/* ============================================================
+   CURRENT MEMORY LEDGER — INHERITED COMPATIBILITY BLOCK
+   ============================================================ */
+.atlas-memory-ledger-34 {
+  position: relative;
+  border-color: rgba(92, 236, 190, .34) !important;
+}
+.atlas-memory-ledger-34 > em.pill {
+  display: inline-flex;
+  width: max-content;
+  margin-top: .5rem;
+  font-style: normal;
+}
+.atlas-memory-intelligence[data-state="ready"] .atlas-memory-ledger-34 {
+  box-shadow: inset 0 0 0 1px rgba(92, 236, 190, .08);
+}
+
+
+/* ============================================================
+   BUILD 34.2 — OPERATOR CLARITY
+   Decision Board open/readable by default + guided Ryzen → Book handoff.
+   Presentation only: Bridge / Atlas / NØX / Aerith / CURRENT logic unchanged.
+   ============================================================ */
+#atlasSharedSynthesisCard #decision-board{
+  display:grid !important;
+  grid-template-columns:minmax(0,1.65fr) minmax(360px,.85fr) !important;
+  grid-template-areas:
+    "decision-head decision-rule"
+    "decision-detail decision-memory"
+    "decision-verdict decision-verdict"
+    "decision-compare decision-compare" !important;
+  gap:12px !important;
+  padding:14px !important;
+}
+#atlasSharedSynthesisCard #decision-board > .section-head{grid-area:decision-head}
+#atlasSharedSynthesisCard #decision-board > .decision-board-rule{grid-area:decision-rule}
+#atlasSharedSynthesisCard #decision-board > .atlas-decision-detail{
+  grid-area:decision-detail;
+  margin:0 !important;
+  min-width:0;
+  align-self:start;
+  border-color:rgba(105,218,225,.28);
+  background:linear-gradient(145deg,rgba(4,20,33,.76),rgba(5,15,29,.70));
+}
+#atlasSharedSynthesisCard #decision-board > .decision-memory-v2{
+  grid-area:decision-memory;
+  margin:0 !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  align-content:start;
+  align-self:start;
+}
+#atlasSharedSynthesisCard #decision-board > .decision-board-verdict{grid-area:decision-verdict}
+#atlasSharedSynthesisCard #decision-board > .decision-memory-compare{grid-area:decision-compare}
+#atlasSharedSynthesisCard #decision-board .atlas-decision-detail>summary{
+  padding:12px 14px;
+  font-size:.92rem;
+  background:rgba(12,42,53,.34);
+  border-radius:12px 12px 0 0;
+}
+#atlasSharedSynthesisCard #decision-board .atlas-decision-detail[open]>summary{
+  border-bottom:1px solid rgba(105,218,225,.18);
+}
+#atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body{
+  padding:12px !important;
+}
+#atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:10px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+}
+#atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:10px !important;
+  margin-top:10px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+}
+#atlasSharedSynthesisCard #decision-board .decision-card,
+#atlasSharedSynthesisCard #decision-board .decision-news-bridge>div,
+#atlasSharedSynthesisCard #decision-board .decision-memory-v2 article{
+  min-height:0 !important;
+  padding:11px 12px !important;
+}
+#atlasSharedSynthesisCard #decision-board .decision-card b{font-size:.82rem !important}
+#atlasSharedSynthesisCard #decision-board .decision-card span{font-size:.78rem !important;line-height:1.42 !important}
+#atlasSharedSynthesisCard #decision-board .decision-news-bridge span{font-size:.68rem !important}
+#atlasSharedSynthesisCard #decision-board .decision-news-bridge b{font-size:.78rem !important;line-height:1.34 !important}
+
+.atlas-book-transfer-guide-342{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  gap:12px;
+  align-items:stretch;
+  margin:14px 0 10px;
+}
+.atlas-book-transfer-guide-342 article{
+  min-width:0;
+  padding:14px 15px;
+  border:1px solid rgba(103,219,215,.24);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(6,26,39,.78),rgba(4,17,31,.72));
+}
+.atlas-book-transfer-guide-342 article span{
+  display:block;
+  color:#81ead9;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.atlas-book-transfer-guide-342 article b{display:block;margin:6px 0;color:#fff0bf;font-size:1rem}
+.atlas-book-transfer-guide-342 article small{display:block;color:#a4b7c8;line-height:1.45}
+.atlas-book-transfer-arrow-342{display:grid;place-items:center;color:#80e6d8;font-size:1.5rem;font-weight:900}
+.atlas-book-transfer-role-342{
+  margin:0 0 12px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(113,203,224,.20);
+  background:rgba(6,21,34,.58);
+  color:#c9dae5;
+  font-weight:800;
+}
+.atlas-book-readonly[data-transfer-role="ryzen"] #btnAtlasBookExport,
+.atlas-book-readonly[data-transfer-role="book"] #btnAtlasBookImport,
+.atlas-book-readonly[data-transfer-role="book"] #btnAtlasBookReadSynthesis:not([disabled]){
+  border-color:rgba(82,230,184,.68) !important;
+  background:linear-gradient(135deg,rgba(20,101,91,.88),rgba(20,64,89,.88)) !important;
+  box-shadow:0 0 0 1px rgba(82,230,184,.14) inset,0 0 18px rgba(43,217,181,.08);
+}
+.atlas-book-readonly[data-transfer-role="ryzen"] #btnAtlasBookImport,
+.atlas-book-readonly[data-transfer-role="book"] #btnAtlasBookExport{
+  opacity:.72;
+}
+@media(max-width:1180px){
+  #atlasSharedSynthesisCard #decision-board{
+    grid-template-columns:1fr !important;
+    grid-template-areas:"decision-head" "decision-rule" "decision-detail" "decision-memory" "decision-verdict" "decision-compare" !important;
+  }
+  #atlasSharedSynthesisCard #decision-board > .decision-memory-v2{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
+}
+@media(max-width:820px){
+  #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid,
+  #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge,
+  #atlasSharedSynthesisCard #decision-board > .decision-memory-v2{grid-template-columns:1fr !important}
+  .atlas-book-transfer-guide-342{grid-template-columns:1fr}
+  .atlas-book-transfer-arrow-342{transform:rotate(90deg);min-height:20px}
+}
+
+
+/* BUILD 34.3 — Transformer Book read-only truth */
+html[data-atlas-device-role="book-readonly"] #btnLocalBridgeProbe,
+html[data-atlas-device-role="book-readonly"] [data-atlas-local-summary],
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalAsk,
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalRunAll,
+html[data-atlas-device-role="book-readonly"] #btnAtlasLocalConclusion {
+  display: none !important;
+}
+html[data-atlas-device-role="book-readonly"] .atlas-local-runtime-grid article {
+  border-color: rgba(86, 214, 205, .30);
+  background: rgba(7, 31, 43, .72);
+}
+html[data-atlas-device-role="book-readonly"] #atlasDeviceComputeControl {
+  border-color: rgba(86, 214, 205, .38);
+  box-shadow: inset 0 0 0 1px rgba(86, 214, 205, .08);
+}
+html[data-atlas-device-role="book-readonly"] #atlasBookReadOnlyKnowledge {
+  border-color: rgba(86, 214, 205, .52);
+}
+
+/* ============================================================
+   BUILD 35.0 UI/MEMORY — 38.6 BRIDGE HEALTH STABILITY
+   ============================================================ */
+.atlas-memory-ledger-35{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.atlas-memory-ledger-35 article,.atlas-operator-summary-35-grid article{min-width:0;padding:12px 13px;border:1px solid rgba(96,216,212,.22);border-radius:13px;background:rgba(4,20,32,.68)}
+.atlas-memory-ledger-35 span,.atlas-operator-summary-35-grid span{display:block;color:#91a8ba;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.atlas-memory-ledger-35 b,.atlas-operator-summary-35-grid b{display:block;margin:5px 0;color:#e8fbf5;overflow-wrap:anywhere}
+.atlas-memory-ledger-35 small,.atlas-operator-summary-35-grid small{display:block;color:#a4b6c5;line-height:1.42}
+.atlas-operator-summary-35{grid-column:1/-1;padding:13px;border:1px solid rgba(84,223,185,.30);border-radius:15px;background:linear-gradient(145deg,rgba(5,28,38,.82),rgba(5,18,31,.72))}
+.atlas-operator-summary-35[data-state="current"]{border-color:rgba(79,235,168,.55);box-shadow:inset 0 0 0 1px rgba(79,235,168,.08)}
+.atlas-operator-summary-35[data-state="active"]{border-color:rgba(92,220,231,.46)}
+.atlas-operator-summary-35-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.atlas-operator-summary-35-head b{display:block;margin-top:3px;color:#fff0bf}
+.atlas-operator-summary-35-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:11px}
+#atlasSharedSynthesisCard #decision-board{grid-template-areas:"decision-head decision-rule" "operator-summary operator-summary" "decision-detail decision-memory" "decision-verdict decision-verdict" "decision-compare decision-compare" !important}
+#atlasSharedSynthesisCard #decision-board > .atlas-operator-summary-35{grid-area:operator-summary}
+.atlas-current-journal-33-list article[data-fingerprint]{cursor:pointer;transition:border-color .16s ease,transform .16s ease,background .16s ease}
+.atlas-current-journal-33-list article[data-fingerprint]:hover,.atlas-current-journal-33-list article[data-fingerprint]:focus-visible{border-color:rgba(86,230,191,.58);background:rgba(7,35,43,.82);outline:none;transform:translateY(-1px)}
+.atlas-current-journal-open-hint-35{display:inline-flex;margin-top:8px;color:#77e6cc;font-size:.72rem;font-style:normal;font-weight:900}
+.atlas-current-journal-detail-35{margin-top:12px;border:1px solid rgba(91,218,210,.32);border-radius:14px;background:rgba(2,14,25,.78);overflow:hidden}
+.atlas-current-journal-detail-35[hidden]{display:none!important}
+.atlas-current-journal-detail-35-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(91,218,210,.16)}
+.atlas-current-journal-detail-35-head b{display:block;color:#fff0bf;margin:3px 0}
+.atlas-current-journal-detail-35-head small{color:#9eb2c3}
+.atlas-current-journal-detail-35-head button{border:1px solid rgba(98,218,210,.28);border-radius:9px;background:rgba(8,38,50,.7);color:inherit;padding:7px 10px;font-weight:800}
+.atlas-current-journal-detail-35-body{max-height:720px;overflow:auto;padding:14px}
+@media(max-width:1100px){.atlas-memory-ledger-35{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-operator-summary-35-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#atlasSharedSynthesisCard #decision-board{grid-template-areas:"decision-head" "decision-rule" "operator-summary" "decision-detail" "decision-memory" "decision-verdict" "decision-compare" !important}}
+@media(max-width:720px){.atlas-memory-ledger-35,.atlas-operator-summary-35-grid{grid-template-columns:1fr}.atlas-operator-summary-35-head,.atlas-current-journal-detail-35-head{flex-direction:column}}
+
+/* ============================================================
+   BUILD 36.0 — BOOK MIRROR READ-ONLY
+   ============================================================ */
+.atlas-book-mirror-36{
+  margin:12px 0 14px;
+  padding:13px;
+  border:1px solid rgba(95,217,214,.28);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(4,23,34,.82),rgba(5,16,29,.74));
+}
+.atlas-book-mirror-36[data-state="ready"],.atlas-book-mirror-36[data-state="readonly"]{border-color:rgba(78,231,170,.48)}
+.atlas-book-mirror-36-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.atlas-book-mirror-36-head b{display:block;margin:4px 0;color:#fff0bf}
+.atlas-book-mirror-36-head small{display:block;color:#9fb2c2;line-height:1.4}
+.atlas-book-mirror-36-head code{color:#8fead6}
+.atlas-book-mirror-36-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:11px}
+.atlas-book-mirror-36-grid article{min-width:0;padding:11px 12px;border:1px solid rgba(105,211,221,.18);border-radius:12px;background:rgba(3,18,29,.67)}
+.atlas-book-mirror-36-grid span{display:block;color:#91a8ba;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800}
+.atlas-book-mirror-36-grid b{display:block;margin:5px 0;color:#e8fbf5;overflow-wrap:anywhere}
+.atlas-book-mirror-36-grid small{display:block;color:#9fb2c2;line-height:1.38}
+.atlas-book-mirror-36-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.atlas-book-mirror-36-actions button{border:1px solid rgba(99,215,211,.27);border-radius:9px;background:rgba(7,39,51,.72);color:inherit;padding:8px 10px;font-weight:800}
+#atlasBookMirrorStatus36{margin:10px 0 0;color:#9fd7ce}
+html[data-atlas-device-role="book-readonly"] #btnAtlasBookMirrorExport36{display:none!important}
+@media(max-width:850px){.atlas-book-mirror-36-grid{grid-template-columns:1fr}.atlas-book-mirror-36-head{flex-direction:column}}
+
+/* ============================================================
+   BUILD 37.0 — FREE QUESTION ROUTER + SCANNER TRUTH
+   ============================================================ */
+.atlas-question-router-37{display:flex;flex-wrap:wrap;gap:8px}
+.atlas-question-router-37 #btnAtlasQuestionChain37{border-color:rgba(91,224,195,.52);background:linear-gradient(135deg,rgba(14,82,78,.88),rgba(17,55,84,.88))}
+.atlas-question-scope-37{margin:9px 0 0;padding:9px 10px;border-left:3px solid rgba(85,221,188,.58);background:rgba(5,27,37,.45);color:#a9c3cc;font-size:.82rem;line-height:1.45}
+html[data-atlas-device-role="book-readonly"] #btnAtlasQuestionAtlas37,
+html[data-atlas-device-role="book-readonly"] #btnAtlasQuestionAerith37,
+html[data-atlas-device-role="book-readonly"] #btnAtlasQuestionChain37{display:none!important}
+
+.atlas-scanner-truth-37{
+  margin-top:18px;
+  padding:15px;
+  border:1px solid rgba(99,216,215,.28);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(5,25,37,.90),rgba(6,18,31,.82));
+}
+.atlas-scanner-truth-37[data-state="ready"]{border-color:rgba(78,230,168,.46)}
+.atlas-scanner-truth-37-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.atlas-scanner-truth-37-head h5{margin:.2rem 0 .35rem;color:#fff0bf;font-size:1.05rem}
+.atlas-scanner-truth-37-head p{margin:.2rem 0;color:#9fb2c3;max-width:1050px}
+.atlas-scanner-truth-37-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.atlas-scanner-truth-37-meta article{min-width:0;padding:10px 11px;border:1px solid rgba(105,210,220,.17);border-radius:12px;background:rgba(3,18,29,.66)}
+.atlas-scanner-truth-37-meta span{display:block;color:#91a8ba;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.atlas-scanner-truth-37-meta b{display:block;margin:4px 0;color:#e8fbf5;overflow-wrap:anywhere}
+.atlas-scanner-truth-37-meta small{display:block;color:#9fb2c3;line-height:1.38}
+.atlas-scanner-truth-37-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.atlas-scanner-truth-37-grid>article{min-width:0;padding:12px;border:1px solid rgba(99,214,218,.20);border-radius:13px;background:rgba(2,16,28,.72)}
+.atlas-scanner-truth-37-grid>article>span{display:block;color:#7ee4d3;font-size:.72rem;font-weight:900;letter-spacing:.06em}
+.atlas-scanner-truth-37-grid>article>b{display:block;margin:4px 0 8px;color:#fff0bf}
+.atlas-scanner-truth-rows{display:grid;gap:7px}
+.atlas-scanner-truth-row{padding:8px 9px;border:1px solid rgba(115,203,218,.14);border-radius:9px;background:rgba(5,31,42,.48)}
+.atlas-scanner-truth-row strong{display:block;color:#e9faf5;font-size:.84rem}
+.atlas-scanner-truth-row span{display:block;margin-top:2px;color:#c9dbe2;font-size:.78rem}
+.atlas-scanner-truth-row small{display:block;margin-top:3px;color:#91a8ba;line-height:1.35}
+.atlas-scanner-truth-37-actions{display:flex;gap:8px;margin-top:10px}
+.atlas-scanner-truth-37-actions button{border:1px solid rgba(98,215,211,.26);border-radius:9px;background:rgba(7,38,50,.72);color:inherit;padding:8px 10px;font-weight:800}
+#atlasScannerTruthStatus37{margin:10px 0 0;color:#9fd8cf}
+@media(max-width:1050px){.atlas-scanner-truth-37-grid,.atlas-scanner-truth-37-meta{grid-template-columns:1fr}.atlas-scanner-truth-37-head{flex-direction:column}}
+
+
+/* 38.6 · Question router clarity only — no pipeline behavior */
+.atlas-question-router-note-386 {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted, #9fb5c8);
+  line-height: 1.45;
+}
+
+
+/* ============================================================
+   BUILD 38.12 — TRANSFORMER BOOK RESPONSIVE DECISION LOCK
+   Specificity intentionally exceeds the legacy #atlasSharedSynthesisCard
+   two-ID desktop rules so Book read-only can never be squeezed at 110% zoom.
+   Ryzen desktop layout is untouched.
+   ============================================================ */
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board {
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-template-areas:
+    "decision-head"
+    "decision-rule"
+    "operator-summary"
+    "decision-detail"
+    "decision-memory"
+    "decision-verdict"
+    "decision-compare" !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .atlas-decision-detail,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .atlas-operator-summary-35 {
+  min-width:0 !important;
+  width:100% !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2 {
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr)) !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail > summary {
+  width:100% !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-card,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-news-bridge > div,
+html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .decision-memory-v2 article {
+  min-width:0 !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+@media (max-width:760px) {
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-board-grid,
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board .atlas-decision-detail-body .decision-news-bridge,
+  html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision-board > .decision-memory-v2 {
+    grid-template-columns:minmax(0,1fr) !important;
+  }
 }
