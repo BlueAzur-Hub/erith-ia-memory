@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.8 · ADMINISTRATOR MIRROR · POLISH LOCK",
-  "build": "39.2.8",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.8",
-  "published_at": "2026-08-17T11:14:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.9 · ADMINISTRATOR MIRROR · HOVER CHROME LOCK",
+  "build": "39.2.9",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.9",
+  "published_at": "2026-08-17T11:29:14+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "business behavior preserved; global application version is 39.2.8"
+    "status": "business behavior preserved; global application version is 39.2.9"
   },
   "files": {
     "app.js": {
-      "sha256": "4b2c32dae370891c52b6c17ff3a808939512e3bc939637aaf82365709af0e17b"
+      "sha256": "e124134912a5777d41b325740e2e1c6e1372b736289f368dddb7da1e62bcb03b"
     },
     "index.html": {
-      "sha256": "c51995b25504acf0b1adb785e66abf6040bc216a58ef723b56311d6d7d6059a1"
+      "sha256": "94074720f7d349684e597cf08819aa7210050b728de7b44177a340886e6aeaf9"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -24,21 +24,21 @@
       "sha256": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a"
     },
     "admin-windows.css": {
-      "sha256": "552b13c9691f8c3efec46593884ad7c7cb3012687952d8b2b78338c1f4d7054e"
+      "sha256": "fb088b40ff796d866182c4948bde5b2563c594cb1a6b232a426cae55a6e0d5a0"
     },
     "js/app.js": {
-      "sha256": "a235a112daf5f76dac03fb982dea2c63cced8934e52772aad57ebae67477d6e6"
+      "sha256": "1754222a62e600f7b7ba1cec2bdd14a8dd55c90fab9517b8091adeb3f40c0605"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   },
   "notes": [
-    "39.2.8 is a polish-only follow-up to the functionally validated 39.2.7 window model.",
-    "Administrator window controls are visually smaller and less intrusive while preserving direct always-visible actions and the same semantics.",
-    "Reduced restore bars keep + Restaurer followed by × pinned at the far right; reduce still does not suspend runtime.",
-    "Atlas Math Core keeps its Classic docked behavior. On first detach it opens as a medium right-side instrument (about 42% viewport width, capped), while Latéral/Dessus/Réduire remain native Math Core controls and maximize stays explicit.",
-    "Graphique, Target Top, Market Flow, Market Snapshot, Math Core and the other operational windows keep the same 12-unit contract and no business DOM clone is introduced.",
-    "Metal Base 39.1, Market Engine 38.15.11 and all market/Atlas/NØX/Aerith/Memory/Bridge/Ollama business logic remain unchanged by this polish layer."
+    "39.2.9 is a visual-only hover-chrome polish on the functionally validated 39.2.8 window model.",
+    "Administrator controls keep the same positions, hit targets and actions, but recede at rest and reveal when the pointer enters their operational window; direct control hover gives full contrast.",
+    "Target Top, Market Flow and Market Snapshot receive the strongest at-rest attenuation so the live data remains visually dominant without making the controls unavailable.",
+    "Reduced restore bars keep their title readable while their chrome is quieter at rest and reveals on hover; + Restaurer and × behavior is unchanged.",
+    "Atlas Math Core retains the 39.2.8 contract: Classic docked behavior, medium right-side detached window, native Dessus/Latéral/Réduire controls and explicit maximize.",
+    "No market, chart, Atlas, NØX, Aerith, Memory, Bridge, Ollama, WebSocket, timer or business-state behavior is changed by this build."
   ]
 }

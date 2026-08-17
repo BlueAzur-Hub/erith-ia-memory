@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.8";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · POLISH LOCK";
+  const ADMIN_BUILD = "39.2.9";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · HOVER CHROME LOCK";
   const ENGINE_BUILD = "38.15.11";
-  const STORAGE_PREFIX = "erith_admin_portal_39_2_8";
+  const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
@@ -204,7 +204,7 @@
       const identity = document.createElement("p");
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · POLISH LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · HOVER CHROME LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
       hero.appendChild(identity);
     }
 

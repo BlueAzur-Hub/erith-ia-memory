@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v10",
-  "build": "39.2.8",
-  "release": "ADMINISTRATOR MIRROR · POLISH LOCK",
-  "published_at": "2026-08-17T11:14:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v11",
+  "build": "39.2.9",
+  "release": "ADMINISTRATOR MIRROR · HOVER CHROME LOCK",
+  "published_at": "2026-08-17T11:29:14+02:00",
   "global_versioning": {
-    "primary_build": "39.2.8",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.8",
+    "primary_build": "39.2.9",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.9",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -38,13 +38,13 @@
   },
   "window_contract": {
     "docked": "native Classic/Mirror layout; exactly one persistent window handle per operational unit",
-    "window_handle": "five direct compact controls: ⠿ move, — reduce, □ detach/dock, ⤢ maximize/restore, × hide; visually reduced in 39.2.8 while semantics stay unchanged",
+    "window_handle": "five direct compact controls: ⠿ move, — reduce, □ detach/dock, ⤢ maximize/restore, × hide; same hit targets as 39.2.8, visually attenuated at rest and revealed by parent hover in 39.2.9",
     "minimize": "collapse the entire operational unit to one compact visible restore bar in its native location; + Restaurer then × at the far right; runtime continues",
     "hide": "remove the entire operational unit from cockpit; recall through WINDOW DECK; runtime continues",
     "detach": "move/use the original DOM presentation; never clone business content",
     "floating_multi_node": "one floating shell + original nodes",
     "suspend_runtime": "false",
-    "storage_namespace": "erith_admin_portal_39_2_8"
+    "storage_namespace": "erith_admin_portal_39_2_9"
   },
   "math_core_contract": {
     "docked": "Classic Math Core behavior preserved exactly",
@@ -70,18 +70,27 @@
     "39.2.4": "superseded: operational split validated, but docked mini-bars caused duplicate-looking Graphique/market chrome and clutter",
     "39.2.5": "superseded: five tiny hover controls had unstable hit zones and minimize-to-deck semantics made panels appear to vanish",
     "39.2.6": "superseded: persistent dropdown menu was functionally reachable but visually rejected",
-    "39.2.7": "functionally validated base; superseded only by 39.2.8 visual/control-size and Math Core detached-window polish"
+    "39.2.7": "functionally validated base; superseded only by 39.2.8 visual/control-size and Math Core detached-window polish",
+    "39.2.8": "functionally validated polish base; superseded only by 39.2.9 discreet hover-reveal chrome with no semantic or business changes"
   },
   "integrity": {
     "files": {
-      "app.js": "4b2c32dae370891c52b6c17ff3a808939512e3bc939637aaf82365709af0e17b",
-      "index.html": "c51995b25504acf0b1adb785e66abf6040bc216a58ef723b56311d6d7d6059a1",
+      "app.js": "e124134912a5777d41b325740e2e1c6e1372b736289f368dddb7da1e62bcb03b",
+      "index.html": "94074720f7d349684e597cf08819aa7210050b728de7b44177a340886e6aeaf9",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "552b13c9691f8c3efec46593884ad7c7cb3012687952d8b2b78338c1f4d7054e",
-      "js/app.js": "a235a112daf5f76dac03fb982dea2c63cced8934e52772aad57ebae67477d6e6",
+      "admin-windows.css": "fb088b40ff796d866182c4948bde5b2563c594cb1a6b232a426cae55a6e0d5a0",
+      "js/app.js": "1754222a62e600f7b7ba1cec2bdd14a8dd55c90fab9517b8091adeb3f40c0605",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "version.json": "636d714f58c26018f9c0341b330166f132d4922610e3d28f72c685b188d17892"
+      "version.json": "39531b29f2f1620f23b785e395b1057052e201cd50cfbcacab5724bb118eea73"
     }
+  },
+  "hover_chrome_contract": {
+    "rest": "controls remain present and clickable but visually attenuated; live data remains dominant",
+    "parent_hover": "controls reveal when the pointer enters the operational window/ribbon",
+    "direct_hover": "full contrast and focus feedback",
+    "layout_shift": "none",
+    "hit_targets": "unchanged from 39.2.8",
+    "touch": "controls remain explicit because hover is unavailable"
   }
 }

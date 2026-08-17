@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — Build 39.2.8 · Administrator Control Chrome Lock
+/* Agent-Crypto @erith.IA — Build 39.2.9 · Administrator Hover Chrome Lock
    UI-only window layer. One stable handle; reduce keeps a visible restore bar; hide is recallable from WINDOW DECK. */
 
 :root{
@@ -299,4 +299,110 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
   .admin-window-deck{left:8px;right:8px;bottom:104px;width:auto;max-height:60vh;}
   .admin-window-deck-list{max-height:calc(60vh - 45px);}
   .admin-window-deck-row{grid-template-columns:minmax(0,1fr) 48px 28px 28px 28px 28px;}
+}
+
+
+/* ============================================================================
+   BUILD 39.2.9 — HOVER CHROME LOCK
+   Visual polish only: controls stay in the exact same position and keep the
+   same hit targets/semantics. At rest they recede into the metal; hovering the
+   parent operational window reveals them, direct hover gives full contrast.
+   ============================================================================ */
+.admin-native-controls{
+  opacity:.16;
+  background:linear-gradient(90deg,rgba(8,12,16,.015),rgba(13,18,22,.16));
+  box-shadow:none;
+  backdrop-filter:blur(5px) saturate(102%);
+  transition:opacity .14s ease,background .14s ease,box-shadow .14s ease;
+}
+.admin-native-controls .admin-native-control{
+  border-color:rgba(215,226,234,.10)!important;
+  background:linear-gradient(180deg,rgba(36,47,55,.30),rgba(6,11,15,.38))!important;
+  color:rgba(220,231,238,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+.admin-native-control-host:hover > .admin-native-controls,
+.admin-native-control-host:focus-within > .admin-native-controls,
+.admin-native-controls:hover,
+.admin-native-controls:focus-within{
+  opacity:.82;
+  background:linear-gradient(90deg,rgba(8,12,16,.10),rgba(13,18,22,.62));
+  box-shadow:0 8px 22px rgba(0,0,0,.16);
+}
+.admin-native-control-host:hover > .admin-native-controls .admin-native-control,
+.admin-native-control-host:focus-within > .admin-native-controls .admin-native-control{
+  border-color:rgba(215,226,234,.17)!important;
+  background:linear-gradient(180deg,rgba(36,47,55,.66),rgba(6,11,15,.76))!important;
+  color:rgba(232,241,246,.88)!important;
+}
+.admin-native-controls:hover,
+.admin-native-controls:focus-within{
+  opacity:1;
+  background:linear-gradient(90deg,rgba(8,12,16,.17),rgba(13,18,22,.88));
+  box-shadow:0 10px 26px rgba(0,0,0,.26);
+}
+.admin-native-controls:hover .admin-native-control,
+.admin-native-controls:focus-within .admin-native-control{
+  color:#eaf3f8!important;
+}
+
+/* The narrow live ribbons were the visually busiest areas: quieter at rest,
+   but the whole ribbon remains the reveal zone so the controls are easy to find. */
+.top5-ribbon > .admin-native-controls,
+.atlas-metals-target-ribbon > .admin-native-controls,
+.market-flow-ribbon > .admin-native-controls,
+.atlas-metals-flow-ribbon > .admin-native-controls{
+  opacity:.09;
+  background:linear-gradient(90deg,transparent,rgba(13,18,22,.10));
+}
+.top5-ribbon:hover > .admin-native-controls,
+.atlas-metals-target-ribbon:hover > .admin-native-controls,
+.market-flow-ribbon:hover > .admin-native-controls,
+.atlas-metals-flow-ribbon:hover > .admin-native-controls{
+  opacity:.72;
+}
+
+/* Market/Graph chrome should be known to exist without sitting on top of data. */
+#analyste.admin-native-anchor > .admin-native-controls,
+#marketSnapshotPanel > .admin-native-controls,
+#atlasMetalsMarketSnapshot > .admin-native-controls{
+  opacity:.12;
+}
+#analyste.admin-native-anchor:hover > .admin-native-controls,
+#marketSnapshotPanel:hover > .admin-native-controls,
+#atlasMetalsMarketSnapshot:hover > .admin-native-controls{
+  opacity:.78;
+}
+
+/* Reduced bars keep their title readable but the metal/chrome recedes until
+   the operator points at the bar. No layout shift, no semantic change. */
+.admin-native-minibar{
+  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 18%,rgba(205,220,232,.12));
+  background:linear-gradient(100deg,color-mix(in srgb,var(--native-accent,#72d8ff) 4%,rgba(28,34,39,.58)),rgba(10,14,18,.58) 58%,rgba(28,33,38,.60));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 5px 15px rgba(0,0,0,.12);
+  transition:background .14s ease,border-color .14s ease,box-shadow .14s ease;
+}
+.admin-native-minibar .admin-native-control{opacity:.34;transition:opacity .14s ease,border-color .14s ease,background .14s ease;}
+.admin-native-minibar:hover,
+.admin-native-minibar:focus-within{
+  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 32%,rgba(205,220,232,.18));
+  background:linear-gradient(100deg,color-mix(in srgb,var(--native-accent,#72d8ff) 8%,rgba(28,34,39,.90)),rgba(10,14,18,.90) 58%,rgba(28,33,38,.90));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 7px 20px rgba(0,0,0,.20);
+}
+.admin-native-minibar:hover .admin-native-control,
+.admin-native-minibar:focus-within .admin-native-control{opacity:.88;}
+.admin-native-minibar .admin-native-control:hover,
+.admin-native-minibar .admin-native-control:focus-visible{opacity:1;}
+
+/* Touch layouts cannot rely on hover: keep controls explicit there. */
+@media (hover:none),(pointer:coarse){
+  .admin-native-controls,
+  .top5-ribbon > .admin-native-controls,
+  .atlas-metals-target-ribbon > .admin-native-controls,
+  .market-flow-ribbon > .admin-native-controls,
+  .atlas-metals-flow-ribbon > .admin-native-controls,
+  #analyste.admin-native-anchor > .admin-native-controls,
+  #marketSnapshotPanel > .admin-native-controls,
+  #atlasMetalsMarketSnapshot > .admin-native-controls{opacity:.88;}
+  .admin-native-minibar .admin-native-control{opacity:.88;}
 }
