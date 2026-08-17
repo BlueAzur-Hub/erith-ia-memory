@@ -1,6 +1,6 @@
 /* ========================================================================== 
-   Agent-Crypto Administrator · Build 39.4.6R1
-   TARGET TOP + MARKET FLOW RIBBON FREEDOM + CLASSIC SPEED LOCK
+   Agent-Crypto Administrator · Build 39.4.6R2
+   TARGET TOP + MARKET FLOW NATIVE WINDOW MENU + CLASSIC SPEED LOCK
 
    Canonical contract recovered from Classic / Crypto thread:
    - Target Top and Market Flow are native Market Workspace ribbons, not windows.
@@ -10,22 +10,35 @@
    - No data source, Market Memory, Atlas, Math Core or chart engine change here.
    ========================================================================== */
 
-/* Native ribbons: never inherit floating-window geometry/chrome. */
-#market-workspace .top5-ribbon,
-#market-workspace .market-flow-ribbon {
+/* Docked ribbons keep their native geometry. When the SAME Administrator
+   menu detaches/moves them, admin-native-direct-floating owns position/size. */
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating),
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) {
   position: relative !important;
   inset: auto !important;
   width: 100% !important;
   max-width: none !important;
   height: auto !important;
   min-width: 0 !important;
-  transform: translate3d(var(--ribbon-drag-x,0px),var(--ribbon-drag-y,0px),0) !important;
+  transform: none !important;
   z-index: 6 !important;
 }
 
+/* Same five-button Administrator menu as the other windows, anchored at the
+   far right. Reserve its width so it never sits between title and market data. */
 #market-workspace .top5-ribbon > .admin-native-controls,
 #market-workspace .market-flow-ribbon > .admin-native-controls {
-  display: none !important;
+  display: flex !important;
+  top: 50% !important;
+  right: 8px !important;
+  transform: translateY(-50%) !important;
+  opacity: .82 !important;
+}
+#market-workspace .top5-ribbon > .admin-native-controls:hover,
+#market-workspace .top5-ribbon > .admin-native-controls:focus-within,
+#market-workspace .market-flow-ribbon > .admin-native-controls:hover,
+#market-workspace .market-flow-ribbon > .admin-native-controls:focus-within {
+  opacity: 1 !important;
 }
 
 /* TARGET TOP — preserve five visible cards without clipping. */
@@ -35,7 +48,7 @@
   align-items: center !important;
   gap: 8px !important;
   min-height: 62px !important;
-  padding: 7px 8px !important;
+  padding: 7px 158px 7px 8px !important;
   overflow: hidden !important;
 }
 
@@ -93,6 +106,7 @@
   grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) !important;
   align-items: stretch !important;
   min-height: 54px !important;
+  padding-right: 158px !important;
   overflow: hidden !important;
   isolation: isolate !important;
 }
@@ -214,80 +228,20 @@
   }
 }
 
-/* 39.4.6R1 — Ribbon Freedom Lock
-   The ribbons remain native Market Workspace components. Only a dedicated
-   handle may translate the complete ribbon; no resize/minimize/hide/window shell. */
-#market-workspace.market-ribbon-stack {
-  position: relative !important;
-  overflow: visible !important;
-}
+/* R2 HEADER COMPACT LOCK — the brand already exists at left. */
+#atlasVersionControlText::after { content: none !important; display: none !important; }
+#atlasVersionControl { white-space: nowrap !important; }
 
-#market-workspace .top5-ribbon,
-#market-workspace .market-flow-ribbon {
-  transition: box-shadow .12s ease, border-color .12s ease !important;
-}
+/* Floating ribbons keep the same full Administrator menu and never inherit
+   the old R1 translation handle. */
+#market-workspace .top5-ribbon .market-ribbon-drag-handle,
+#market-workspace .market-flow-ribbon .market-ribbon-drag-handle { display:none !important; }
 
-#market-workspace .top5-ribbon.market-ribbon-is-dragging,
-#market-workspace .market-flow-ribbon.market-ribbon-is-dragging {
-  z-index: 80 !important;
-  box-shadow: 0 24px 70px rgba(0,0,0,.56), 0 0 0 1px rgba(98,236,255,.20) !important;
+/* Direct floating mode: the window manager owns fixed geometry. Keep the
+   ribbon contents readable and the menu on the right edge. */
+#market-workspace .top5-ribbon.admin-native-direct-floating,
+#market-workspace .market-flow-ribbon.admin-native-direct-floating {
+  z-index: 2147481800 !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
 }
-
-#market-workspace .market-ribbon-drag-handle {
-  position: absolute !important;
-  top: 50% !important;
-  left: clamp(148px, calc(clamp(184px, 13.5vw, 222px) - 38px), 190px) !important;
-  transform: translateY(-50%) !important;
-  z-index: 12 !important;
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  padding: 0 !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid rgba(98,236,255,.28) !important;
-  border-radius: 8px !important;
-  background: linear-gradient(180deg,rgba(20,36,44,.94),rgba(5,12,18,.96)) !important;
-  color: #bfeeff !important;
-  font: 900 14px/1 ui-monospace,SFMono-Regular,Consolas,monospace !important;
-  cursor: grab !important;
-  touch-action: none !important;
-  user-select: none !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.22) !important;
-}
-
-#market-workspace .market-ribbon-drag-handle:hover,
-#market-workspace .market-ribbon-drag-handle:focus-visible {
-  border-color: rgba(98,236,255,.72) !important;
-  color: #fff !important;
-  outline: none !important;
-  box-shadow: 0 0 18px rgba(98,236,255,.16), inset 0 1px 0 rgba(255,255,255,.09) !important;
-}
-
-#market-workspace .market-ribbon-drag-handle:active,
-#market-workspace .market-ribbon-is-dragging .market-ribbon-drag-handle {
-  cursor: grabbing !important;
-}
-
-body:not(.admin-native-free) #market-workspace .market-ribbon-drag-handle,
-#market-workspace .market-ribbon-drag-handle:disabled {
-  opacity: .34 !important;
-  cursor: not-allowed !important;
-}
-
-@media (max-width: 1180px) {
-  #market-workspace .market-ribbon-drag-handle {
-    left: 158px !important;
-  }
-}
-
-@media (max-width: 680px) {
-  #market-workspace .market-ribbon-drag-handle {
-    top: 19px !important;
-    left: auto !important;
-    right: 8px !important;
-    transform: none !important;
-  }
-}
-

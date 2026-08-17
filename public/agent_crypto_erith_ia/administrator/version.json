@@ -1,24 +1,24 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.6R1 · ADMINISTRATOR MIRROR · RIBBON FREEDOM + CLASSIC SPEED LOCK",
-  "build": "39.4.6R1",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.6R1",
-  "published_at": "2026-08-17T23:48:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.6R2 · ADMINISTRATOR MIRROR · RIBBON WINDOW MENU + CLASSIC SPEED LOCK",
+  "build": "39.4.6R2",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.6R2",
+  "published_at": "2026-08-18T00:04:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.6R1 keeps Target Top and Market Flow native, restores Classic 115 s flow cadence, preserves hover/focus pause, and adds dedicated whole-ribbon drag handles without window wrapping."
+    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.6R2 restores the existing full Administrator window menu for Target Top and Market Flow, keeps Classic 115 s flow cadence and hover/focus pause, and removes the R1 standalone drag handles."
   },
   "files": {
     "app.js": {
-      "sha256": "5903fae8f4b9ce923c72eda0c7aa18785a9bb28258748fa04b06ea9a2ecf98d2"
+      "sha256": "ee8210339880af8ab22adf872f2ee70d93749de1a6970586499a2021129da326"
     },
     "index.html": {
-      "sha256": "5fdb456bc50defc8b8acf97e4ee845541b31b99801d34cb49257dd460072a3cd"
+      "sha256": "1b0cbfd20e8d1826fa0a1a6948569e79aa3aef080d201682a04e161b62a526a2"
     },
     "js/app.js": {
-      "sha256": "fbfef4c4bd4f3e23e306ec316d0775b08029a857915756a6c8edd25cd7adcb4a"
+      "sha256": "970b388deb1de3025de9b598a7691a7e349b3f6528fc6a1f5a4ec4dcd90b9283"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
@@ -69,14 +69,14 @@
       "sha256": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca"
     },
     "admin-ribbons.css": {
-      "sha256": "2656baedbd1591c265bb6a0233cd0ac81f9a621b328cdceb8491293e3ce0d9b8"
+      "sha256": "37d7788830a8cac08d428a906b544b76ef81ed7c2ca81dcf4ed6f46a8d1a2f49"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "5903fae8f4b9ce923c72eda0c7aa18785a9bb28258748fa04b06ea9a2ecf98d2",
-      "index.html": "5fdb456bc50defc8b8acf97e4ee845541b31b99801d34cb49257dd460072a3cd",
-      "js/app.js": "fbfef4c4bd4f3e23e306ec316d0775b08029a857915756a6c8edd25cd7adcb4a",
+      "app.js": "ee8210339880af8ab22adf872f2ee70d93749de1a6970586499a2021129da326",
+      "index.html": "1b0cbfd20e8d1826fa0a1a6948569e79aa3aef080d201682a04e161b62a526a2",
+      "js/app.js": "970b388deb1de3025de9b598a7691a7e349b3f6528fc6a1f5a4ec4dcd90b9283",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "37e9cd3919c213e9594114ecc9946193776b496bede6df971d5ec8b65bad3e84",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -93,11 +93,11 @@
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
-      "admin-ribbons.css": "2656baedbd1591c265bb6a0233cd0ac81f9a621b328cdceb8491293e3ce0d9b8"
+      "admin-ribbons.css": "37d7788830a8cac08d428a906b544b76ef81ed7c2ca81dcf4ed6f46a8d1a2f49"
     },
     "publication_identity": {
-      "build": "39.4.6R1",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.6R1",
+      "build": "39.4.6R2",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.6R2",
       "rule": "exact case"
     }
   },
@@ -133,22 +133,24 @@
     "39.4.5R3 is a corrective visual patch rebased on the active 39.4.5R1 lineage.",
     "The seven image assets are already installed on GitHub and are NOT included in this ZIP.",
     "Market Memory 39.4.4R1 remains the locked module and is not shipped or edited by this patch.",
-    "R1 visual failure cause: images were placed under existing opaque/recollapsed surfaces; R2 uses explicit visible UI strips and the existing graph panorama layer."
+    "R1 visual failure cause: images were placed under existing opaque/recollapsed surfaces; R2 uses explicit visible UI strips and the existing graph panorama layer.",
+    "39.4.6R2 replaces the R1 standalone drag handles with the existing Administrator window-manager menu for Target Top and Market Flow; controls are reserved at the far right.",
+    "Classic Market Flow speed is 115 s and remains unchanged; hover/focus pause remains enabled.",
+    "The version pill is compact because Agent-Crypto @erith.IA is already the main page brand; the old CSS VISUAL R4 suffix is explicitly suppressed by admin-ribbons.css."
   ],
-  "parent_build": "39.4.6",
-  "lineage": "39.4.4R1 -> 39.4.5R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1",
+  "parent_build": "39.4.6R1",
+  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1 -> 39.4.6R2",
   "ribbon_lock": {
-    "build": "39.4.6R1",
+    "build": "39.4.6R2",
     "stylesheet": "admin-ribbons.css",
-    "controller": "js/app.js (Administrator shell only)",
     "window_manager_modified": false,
-    "target_top": "native ribbon; cycle semantics preserved; whole ribbon draggable only from dedicated handle",
-    "market_flow": "native ribbon; Classic 115 s cadence; pause on hover/focus; whole ribbon draggable only from dedicated handle",
-    "drag_storage": "localStorage erith_admin_native_ribbon_positions_v1",
-    "reset": "double-click handle or RESET FENÊTRES",
+    "window_manager_reused": true,
+    "target_top": "native ribbon + full existing Administrator 5-button menu at far right; canonical Target cycles preserved",
+    "market_flow": "native ribbon + full existing Administrator 5-button menu at far right; Classic 115 s speed + hover/focus pause preserved",
+    "first_boot_migration": "clears only legacy Target/Flow window geometry and R1 custom translation store once",
+    "header": "compact Build + Administrator; duplicate brand and VISUAL R4 suffix removed from version pill",
     "new_fetch": false,
     "new_timer": false,
-    "new_websocket": false,
     "data_sources_modified": false,
     "market_memory_modified": false
   }

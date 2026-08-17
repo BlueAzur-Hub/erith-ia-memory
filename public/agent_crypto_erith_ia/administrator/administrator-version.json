@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.4.6R1",
-  "release": "ADMINISTRATOR MIRROR · RIBBON FREEDOM + CLASSIC SPEED LOCK",
-  "published_at": "2026-08-17T23:48:00+02:00",
+  "build": "39.4.6R2",
+  "release": "ADMINISTRATOR MIRROR · RIBBON WINDOW MENU + CLASSIC SPEED LOCK",
+  "published_at": "2026-08-18T00:04:00+02:00",
   "global_versioning": {
-    "primary_build": "39.4.6R1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.6R1",
+    "primary_build": "39.4.6R2",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.6R2",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.4.6R1",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.6R1",
+    "canonical_build": "39.4.6R2",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.6R2",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -41,9 +41,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "5903fae8f4b9ce923c72eda0c7aa18785a9bb28258748fa04b06ea9a2ecf98d2",
-      "index.html": "5fdb456bc50defc8b8acf97e4ee845541b31b99801d34cb49257dd460072a3cd",
-      "js/app.js": "fbfef4c4bd4f3e23e306ec316d0775b08029a857915756a6c8edd25cd7adcb4a",
+      "app.js": "ee8210339880af8ab22adf872f2ee70d93749de1a6970586499a2021129da326",
+      "index.html": "1b0cbfd20e8d1826fa0a1a6948569e79aa3aef080d201682a04e161b62a526a2",
+      "js/app.js": "970b388deb1de3025de9b598a7691a7e349b3f6528fc6a1f5a4ec4dcd90b9283",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "37e9cd3919c213e9594114ecc9946193776b496bede6df971d5ec8b65bad3e84",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -60,27 +60,23 @@
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
-      "admin-ribbons.css": "2656baedbd1591c265bb6a0233cd0ac81f9a621b328cdceb8491293e3ce0d9b8"
+      "admin-ribbons.css": "37d7788830a8cac08d428a906b544b76ef81ed7c2ca81dcf4ed6f46a8d1a2f49"
     }
   },
-  "parent_build": "39.4.6",
-  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1",
+  "parent_build": "39.4.6R1",
+  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1 -> 39.4.6R2",
   "ribbon_lock": {
-    "target_top_window_managed": false,
-    "market_flow_window_managed": false,
-    "native_ribbons": true,
-    "dedicated_drag_handles": true,
-    "drag_persistence": "localStorage erith_admin_native_ribbon_positions_v1",
-    "double_click_reset": true,
-    "global_window_reset_integration": true,
-    "market_flow_speed": "115s Classic cadence restored",
-    "market_flow_pause_hover_focus": true,
-    "classic_semantics_preserved": true,
-    "style": "./admin-ribbons.css",
-    "market_memory_modified": false,
+    "build": "39.4.6R2",
+    "stylesheet": "admin-ribbons.css",
     "window_manager_modified": false,
+    "window_manager_reused": true,
+    "target_top": "native ribbon + full existing Administrator 5-button menu at far right; canonical Target cycles preserved",
+    "market_flow": "native ribbon + full existing Administrator 5-button menu at far right; Classic 115 s speed + hover/focus pause preserved",
+    "first_boot_migration": "clears only legacy Target/Flow window geometry and R1 custom translation store once",
+    "header": "compact Build + Administrator; duplicate brand and VISUAL R4 suffix removed from version pill",
     "new_fetch": false,
     "new_timer": false,
-    "new_websocket": false
+    "data_sources_modified": false,
+    "market_memory_modified": false
   }
 }
