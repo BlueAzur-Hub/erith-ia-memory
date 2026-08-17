@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.20 · ADMINISTRATOR MIRROR · METALS INTRADAY RESTORE LOCK",
-  "build": "39.2.20",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.20",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.20R1 · ADMINISTRATOR MIRROR · METALS CONTRACT PATH RESTORE LOCK",
+  "build": "39.2.20R1",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.20r1",
   "published_at": "2026-08-17T14:41:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.2.17 Math Core host-width preserved; 39.2.19 workspace boot hydration preserved; Metals public-history hydration race fixed in 39.2.20"
+    "status": "39.2.17 Math Core host-width preserved; 39.2.19 workspace boot hydration preserved; Metals public-history hydration race fixed in 39.2.20R1"
   },
   "files": {
     "app.js": {
@@ -34,11 +34,12 @@
     }
   },
   "notes": [
-    "39.2.20 is built directly from 39.2.19. No chart styling, Crypto renderer, Atlas, Memory Intelligence, Math Core or Window Manager change is merged.",
+    "39.2.20R1 is built directly from 39.2.19. No chart styling, Crypto renderer, Atlas, Memory Intelligence, Math Core or Window Manager change is merged.",
     "Metals report memory is restored before the public Metals archive is loaded, so reachable GitHub data becomes the final state instead of being able to win the race afterward.",
     "If the first public intraday Futures request returns no validated 5/5 basket, one bounded direct retry of intraday_24h.json is attempted during boot; no data is fabricated.",
     "If the public Metals archive is unavailable at boot, the previous IndexedDB report remains the fallback and is restored without fabricating data.",
     "Metals history reload permits github_archive, book_memory and interface_memory origins to retry the public daily, intraday 24 h and spot history files.",
-    "A/B/C presets and automatic Crypto workspace restoration from 39.2.19 are unchanged."
+    "A/B/C presets and automatic Crypto workspace restoration from 39.2.19 are unchanged.",
+    "R1 restores the canonical Metals adapter contract from ../web/metals_quote_adapter_contract.json; the Administrator directory does not contain a local contract file. This prevents a mandatory Promise.all 404 from discarding the otherwise valid public Metals archive before intraday_24h.json can be committed."
   ]
 }

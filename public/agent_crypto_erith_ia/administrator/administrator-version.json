@@ -1,18 +1,18 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v20",
-  "build": "39.2.20",
+  "build": "39.2.20R1",
   "release": "ADMINISTRATOR MIRROR · METALS INTRADAY RESTORE LOCK",
   "published_at": "2026-08-17T14:41:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.20",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20",
+    "primary_build": "39.2.20R1",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.20R1",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "preserved; no visual change in 39.2.20"
+    "status": "preserved; no visual change in 39.2.20R1"
   },
   "operational_windows": {
     "count": 12,
@@ -91,5 +91,10 @@
     "metals_long_horizons": "daily Futures history preserved",
     "crypto_workspace": "39.2.19 F5 restoration preserved",
     "visual": "no visual CSS change"
+  },
+  "metals_contract_path_hotfix": {
+    "state": "locked",
+    "path": "../web/metals_quote_adapter_contract.json",
+    "reason": "administrator/metals_quote_adapter_contract.json does not exist; canonical contract is stored under web/"
   }
 }
