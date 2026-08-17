@@ -1,6 +1,6 @@
 /* ========================================================================== 
-   Agent-Crypto Administrator · Build 39.4.6R2
-   TARGET TOP + MARKET FLOW NATIVE WINDOW MENU + CLASSIC SPEED LOCK
+   Agent-Crypto Administrator · Build 39.4.6R3
+   TARGET TOP + MARKET FLOW RIGHT CONTROL DECK + CLASSIC SPEED LOCK
 
    Canonical contract recovered from Classic / Crypto thread:
    - Target Top and Market Flow are native Market Workspace ribbons, not windows.
@@ -24,35 +24,48 @@
   z-index: 6 !important;
 }
 
-/* Same five-button Administrator menu as the other windows, anchored at the
-   far right. Reserve its width so it never sits between title and market data. */
+/* Same five-button Administrator control deck as the other windows.
+   It is a real third grid column at the far right: no overlay on title/cards. */
 #market-workspace .top5-ribbon > .admin-native-controls,
 #market-workspace .market-flow-ribbon > .admin-native-controls {
+  position: relative !important;
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  align-self: center !important;
+  justify-self: end !important;
   display: flex !important;
-  top: 50% !important;
-  right: 8px !important;
-  transform: translateY(-50%) !important;
-  opacity: .82 !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: 40 !important;
+  width: max-content !important;
+  max-width: none !important;
+  margin: 0 !important;
+  opacity: .10 !important;
 }
+#market-workspace .top5-ribbon:hover > .admin-native-controls,
+#market-workspace .market-flow-ribbon:hover > .admin-native-controls { opacity: .72 !important; }
 #market-workspace .top5-ribbon > .admin-native-controls:hover,
 #market-workspace .top5-ribbon > .admin-native-controls:focus-within,
 #market-workspace .market-flow-ribbon > .admin-native-controls:hover,
-#market-workspace .market-flow-ribbon > .admin-native-controls:focus-within {
-  opacity: 1 !important;
-}
+#market-workspace .market-flow-ribbon > .admin-native-controls:focus-within { opacity: 1 !important; }
 
 /* TARGET TOP — preserve five visible cards without clipping. */
 #market-workspace .top5-ribbon {
   display: grid !important;
-  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) !important;
+  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) 154px !important;
   align-items: center !important;
   gap: 8px !important;
   min-height: 62px !important;
-  padding: 7px 158px 7px 8px !important;
+  padding: 7px 8px !important;
   overflow: hidden !important;
 }
 
 #market-workspace #targetTop5Cycle.target-top5-cycle-control {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
   min-width: 0 !important;
   width: 100% !important;
   max-width: none !important;
@@ -74,6 +87,8 @@
 }
 
 #market-workspace .top5-track {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
   display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   align-items: stretch !important;
@@ -103,15 +118,17 @@
 /* MARKET FLOW — fixed cartouche + independently clipped moving viewport. */
 #market-workspace .market-flow-ribbon {
   display: grid !important;
-  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) !important;
+  grid-template-columns: clamp(184px, 13.5vw, 222px) minmax(0, 1fr) 154px !important;
   align-items: stretch !important;
   min-height: 54px !important;
-  padding-right: 158px !important;
+  padding-right: 0 !important;
   overflow: hidden !important;
   isolation: isolate !important;
 }
 
 #market-workspace #marketFlowCycle.market-flow-label {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
   position: relative !important;
   z-index: 3 !important;
   min-width: 0 !important;
@@ -126,6 +143,8 @@
 }
 
 #market-workspace .market-flow-viewport {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
   position: relative !important;
   z-index: 1 !important;
   min-width: 0 !important;
@@ -201,7 +220,7 @@
    squeezing cards into unreadable fragments. */
 @media (max-width: 1180px) {
   #market-workspace .top5-ribbon {
-    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) 154px !important;
   }
   #market-workspace .top5-track {
     display: flex !important;
@@ -213,19 +232,23 @@
     flex: 0 0 190px !important;
   }
   #market-workspace .market-flow-ribbon {
-    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) !important;
+    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) 154px !important;
   }
 }
 
 @media (max-width: 680px) {
   #market-workspace .top5-ribbon,
   #market-workspace .market-flow-ribbon {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0,1fr) 154px !important;
+    grid-template-rows: auto auto !important;
   }
-  #market-workspace .market-flow-label {
-    display: grid !important;
-    min-height: 38px !important;
-  }
+  #market-workspace #targetTop5Cycle,
+  #market-workspace #marketFlowCycle { grid-column:1!important; grid-row:1!important; }
+  #market-workspace .top5-ribbon > .admin-native-controls,
+  #market-workspace .market-flow-ribbon > .admin-native-controls { grid-column:2!important; grid-row:1!important; }
+  #market-workspace .top5-track,
+  #market-workspace .market-flow-viewport { grid-column:1 / -1!important; grid-row:2!important; }
+  #market-workspace .market-flow-label { display:grid!important; min-height:38px!important; }
 }
 
 /* R2 HEADER COMPACT LOCK — the brand already exists at left. */
@@ -244,4 +267,10 @@
   z-index: 2147481800 !important;
   max-width: calc(100vw - 24px) !important;
   max-height: calc(100vh - 24px) !important;
+}
+
+/* R3: keep the exact Administrator button family; only placement changes. */
+#market-workspace .top5-ribbon > .admin-native-controls .admin-native-control,
+#market-workspace .market-flow-ribbon > .admin-native-controls .admin-native-control {
+  width:26px!important; height:26px!important; min-width:26px!important; min-height:26px!important; padding:0!important;
 }

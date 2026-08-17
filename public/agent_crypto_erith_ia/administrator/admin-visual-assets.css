@@ -393,3 +393,53 @@ body.atlas-administrator-mirror .atlas-collapse-summary:hover{
     padding:26px 22px!important;
   }
 }
+
+
+/* ==========================================================================
+   39.4.6R3 — CLASSIC TECHNICAL READING RESTORE + CLEAN CHROME LOCK
+   ========================================================================== */
+#atlasVersionControlText::after{content:none!important;display:none!important;}
+
+/* Image remains clickable for the private local picker, but the function is invisible. */
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after{
+  content:none!important;display:none!important;opacity:0!important;
+}
+body.atlas-administrator-mirror #detailPanel .admin-tech-reset-r3{display:none!important;}
+
+/* Restore Classic proportions: image as a compact visual header, functions below. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel .detail-project-visual.admin-tech-r3{
+  display:block!important;
+  flex:0 0 clamp(190px,24vh,250px)!important;
+  width:100%!important;
+  height:clamp(190px,24vh,250px)!important;
+  min-height:0!important;
+  max-height:250px!important;
+  aspect-ratio:auto!important;
+  margin:0 0 6px!important;
+  overflow:hidden!important;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
+  inset:0!important;width:100%!important;height:100%!important;
+  object-fit:cover!important;
+  object-position:var(--admin-tech-x,50%) var(--admin-tech-y,12%)!important;
+}
+
+/* Original Classic functional body remains original DOM: compact strip, Fiche active,
+   Source Dock, Sources/data state, Network/cache/latency and Chart integrity. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) #detailPanel.clean-lens-detail-panel{
+  display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) #detailPanel .detail-panel-body{
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;width:100%!important;overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain!important;scrollbar-gutter:auto!important;gap:5px!important;padding:0!important;margin:0!important;
+}
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
+  width:100%!important;min-width:0!important;flex:0 0 auto!important;
+}
+
+/* Remove the unsolicited coarse Administrator chrome over Graphique/Lecture technique.
+   The native Classic "Réduire" detail control remains. Window Deck can still manage the surface. */
+body.atlas-administrator-mirror #analyste.admin-native-anchor>.admin-native-controls{display:none!important;}
