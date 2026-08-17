@@ -1,18 +1,18 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v17",
-  "build": "39.2.17",
-  "release": "ADMINISTRATOR MIRROR · MATH CORE HOST WIDTH FIT LOCK",
-  "published_at": "2026-08-17T13:53:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v18",
+  "build": "39.2.18",
+  "release": "ADMINISTRATOR MIRROR · WORKSPACE PERSISTENCE TRUTH LOCK",
+  "published_at": "2026-08-17T14:13:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.17",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.17",
+    "primary_build": "39.2.18",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.18",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
   },
   "theme": {
     "base": "Metal Base 39.1",
-    "status": "validated and preserved"
+    "status": "preserved; no visual change in 39.2.18"
   },
   "operational_windows": {
     "count": 12,
@@ -33,40 +33,60 @@
   },
   "window_contract": {
     "storage_namespace": "erith_admin_portal_39_2_9",
-    "manager": "unchanged from validated 39.2.11",
+    "manager": "unchanged from 39.2.17 / validated 39.2.11 behavior",
     "detach": "original DOM; no clone",
     "runtime": "minimize/hide remain visual only"
   },
   "math_core_contract": {
+    "base": "39.2.17",
     "docked": "Classic Math Core behavior preserved exactly",
-    "detached": "existing Administrator inline geometry is honored; no 760px CSS ceiling; viewport remains the only max-width bound",
+    "detached": "Administrator inline geometry honored; viewport is the max-width bound",
     "native_modes": "Dessus / Latéral / Réduire unchanged",
-    "background": "native #math host background/border/atmospheric layer follows the same real width as the host; no added backdrop or pseudo-plane",
-    "geometry_engine": "unchanged from 39.2.11"
+    "background": "native #math host background/border follows host width; no added backdrop",
+    "geometry_engine": "unchanged"
+  },
+  "workspace_persistence_contract": {
+    "current_key": "agent_crypto_erith_ia_workspace_state_v2",
+    "last_valid_key": "agent_crypto_erith_ia_workspace_last_valid_graph_v1",
+    "authority": "current workspace wins on reload",
+    "fallback": "last_valid_graph only if current workspace is absent",
+    "write_rule": "operator preferences are persisted independently from graph readiness",
+    "last_valid_rule": "only a coherent ready graph may update last_valid_graph; in-flight Scanner work never does",
+    "preset_rule": "a saved preset is never silently rewritten into another preset by atlasWorkspaceRead",
+    "abc_slots": "unchanged"
   },
   "supersedes": {
-    "39.2.11": "validated functional/UI base used for 39.2.17",
-    "39.2.12": "rejected: forced special Math Core geometry",
-    "39.2.13": "rejected: painted only the capped host background",
-    "39.2.14": "rejected: external dynamic backdrop escaped the Math Core surface",
-    "39.2.15": "rejected: pseudo background still inherited the capped host box",
-    "39.2.16": "chart visual experiment kept separate and not merged into this Math Core recovery build"
+    "39.2.17": "direct functional/UI base; Math Core host-width fix preserved",
+    "39.2.16": "chart visual experiment remains separate and is not merged",
+    "39.2.15": "rejected Math Core pseudo-background experiment",
+    "39.2.14": "rejected external dynamic backdrop experiment",
+    "39.2.13": "rejected capped-host background experiment",
+    "39.2.12": "rejected forced Math Core geometry experiment"
   },
   "integrity": {
     "files": {
-      "app.js": "137f2dd888231a81b8d224803379516217547744d3b659e047011f407d1d9cd8",
-      "index.html": "bc4b7787eba060dd0f47ffa08d2c06ae004413aad368e1f97718451188b259c5",
+      "app.js": "fdb95b60a92e26b6b48794f24daf2284796523695da3bb90ff9447abd06256f7",
+      "index.html": "6110352981b2ae8eaddea5286a44c34ffa0085ea9e997c558a0e68731b000479",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
-      "js/app.js": "873c160de6376d90d2a1c59f4508bb043811c2e018627ac4af2547231e651e19",
+      "js/app.js": "7b92f6371297e4425a2211699c87842dfb51746df4480900fb6d0ef11957a4e9",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
-    "version.json": "6ebb0436d1d0c9dced0f98f6e518bc4b1c8fada4dd4e3661fc051c2482c9f202"
+    "version.json": "62fc47fda01a7832bd1d7f6149843a7f1a273a2d1c25c4c5cefbc9de157ae8ae"
   },
-  "workspace_principle": {
-    "operator_model": "show only the operational surfaces needed for the task in progress",
-    "business_clone": "never clone business DOM/data to create a window",
-    "freeze_intent": "validate Math Core host-width/background in Firefox before any further UI work"
+  "validation_contract": {
+    "required_firefox_reload_cases": [
+      "Solo -> F5 -> Solo",
+      "Top 3 -> F5 -> Top 3",
+      "Top 5 -> F5 -> Top 5",
+      "Hausses 5 -> F5 -> Hausses 5",
+      "Baisses 5 -> F5 -> Baisses 5",
+      "Volumes 5 -> F5 -> Volumes 5",
+      "24h/7j/30j/90j preserved",
+      "Prix/Base 100 preserved",
+      "Volume/Légende/Analyse preserved",
+      "A/B/C slots unchanged"
+    ]
   }
 }

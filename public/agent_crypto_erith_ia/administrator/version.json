@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.2.17 · ADMINISTRATOR MIRROR · MATH CORE HOST WIDTH FIT LOCK",
-  "build": "39.2.17",
-  "asset_token": "market-core-v2.0-alpha-build-39.2.17",
-  "published_at": "2026-08-17T13:53:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.2.18 · ADMINISTRATOR MIRROR · WORKSPACE PERSISTENCE TRUTH LOCK",
+  "build": "39.2.18",
+  "asset_token": "market-core-v2.0-alpha-build-39.2.18",
+  "published_at": "2026-08-17T14:13:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "business behavior preserved from validated 39.2.11; global application version is 39.2.17"
+    "status": "39.2.17 UI/Math Core host-width behavior preserved; workspace preference persistence corrected in 39.2.18"
   },
   "files": {
     "app.js": {
-      "sha256": "137f2dd888231a81b8d224803379516217547744d3b659e047011f407d1d9cd8"
+      "sha256": "fdb95b60a92e26b6b48794f24daf2284796523695da3bb90ff9447abd06256f7"
     },
     "index.html": {
-      "sha256": "bc4b7787eba060dd0f47ffa08d2c06ae004413aad368e1f97718451188b259c5"
+      "sha256": "6110352981b2ae8eaddea5286a44c34ffa0085ea9e997c558a0e68731b000479"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
@@ -27,17 +27,19 @@
       "sha256": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39"
     },
     "js/app.js": {
-      "sha256": "873c160de6376d90d2a1c59f4508bb043811c2e018627ac4af2547231e651e19"
+      "sha256": "7b92f6371297e4425a2211699c87842dfb51746df4480900fb6d0ef11957a4e9"
     },
     "js/core/admin-window-manager.js": {
       "sha256": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     }
   },
   "notes": [
-    "39.2.17 returns to the validated 39.2.11 Math Core window behavior; rejected 39.2.12–39.2.16 Math Core background experiments are not used as functional bases.",
-    "The only functional UI change is removal of the Math Core floating 760px !important max-width ceiling; the existing Administrator inline width may now size the real #math host up to the viewport limit.",
-    "This makes the native #math background, border and atmospheric layer cover the same real width as the Math Core content instead of stopping at 760px.",
-    "No extra backdrop, pseudo background, ResizeObserver, MutationObserver, DOM clone, chart change, Atlas change or Memory change is introduced.",
-    "The generic Administrator window manager and its storage namespace erith_admin_portal_39_2_9 remain unchanged."
+    "39.2.18 is built directly from 39.2.17 and preserves its validated Math Core host-width correction and Administrator window behavior.",
+    "Current workspace state (agent_crypto_erith_ia_workspace_state_v2) is now the authoritative source for operator preferences on reload; last_valid_graph is used only when no current workspace exists.",
+    "A stale last_valid_graph can no longer overwrite Solo/Top 3/Top 5/Hausses 5/Baisses 5/Volumes 5, period, selected assets or chart view options during F5 restoration.",
+    "Workspace preferences are saved even while a previous ready graph is temporarily displayed during a new selection/period load; graph incoherence only prevents promotion to last_valid_graph.",
+    "Scanner transactions can no longer block saving the current workspace; they still cannot promote an in-flight graph to last_valid_graph.",
+    "The historical silent conversion of an invalid Scanner workspace preset into rank-5 is removed from atlasWorkspaceRead; a saved preset is not rewritten into another preset during read.",
+    "No chart renderer, historical acquisition, Market, Atlas, NØX, Aerith, Memory Intelligence, Math Core, Window Manager, Metal CSS or A/B/C slot storage behavior is modified by this build."
   ]
 }

@@ -12125,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 39.2.17",
+  interface: "Build 39.2.18",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -33923,29 +33923,11 @@ function atlasWorkspaceRead() {
   const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
   if (!current && !lastValid) return null;
 
-  const parsed = lastValid
-    ? {
-        ...(current || {}),
-        period: lastValid.period,
-        selectedCoinId: lastValid.selectedCoinId,
-        comparisonIds: lastValid.comparisonIds,
-        comparisonPreset: lastValid.comparisonPreset,
-        selectionCleared: lastValid.selectionCleared,
-        chartView: lastValid.chartView || current?.chartView,
-      }
-    : current;
-
-  const preset = String(parsed?.comparisonPreset || "");
-  const ids = Array.isArray(parsed?.comparisonIds) ? parsed.comparisonIds.filter(Boolean) : [];
-  if (["gainers", "losers", "volume"].includes(preset) && (ids.length < 1 || ids.length > 5)) {
-    return {
-      ...parsed,
-      comparisonPreset: "rank-5",
-      comparisonIds: ["bitcoin", "ethereum", "binancecoin", "ripple", "solana"],
-      selectedCoinId: "bitcoin"
-    };
-  }
-  return parsed;
+  /* Build 39.2.18 — Workspace Persistence Truth Lock
+     The current workspace is the operator's preference truth.
+     last_valid_graph is only a recovery fallback when no current workspace exists;
+     it must never overwrite a newer Solo/Top/Scanner preset, period or chart options. */
+  return current || lastValid;
 }
 
 function atlasWorkspaceCapture() {
@@ -34511,16 +34493,16 @@ function atlasWorkspaceSlotsInit() {
 }
 
 function atlasWorkspaceWrite() {
-  if (atlasScannerTransaction) return null;
+  /* Build 39.2.18 — persist operator intent independently from graph readiness.
+     A stale/previous ready chart may remain visible while a new preset or period is
+     loading. That must not prevent the current workspace from being saved. */
+  const snapshot = atlasWorkspaceCapture();
+
+  try {
+    localStorage.setItem(ATLAS_WORKSPACE_STATE_KEY, JSON.stringify(snapshot));
+  } catch {}
 
   if (atlasParallelMarketDomain() === "metals") {
-    const snapshot = atlasWorkspaceCapture();
-    try {
-      localStorage.setItem(
-        ATLAS_WORKSPACE_STATE_KEY,
-        JSON.stringify(snapshot)
-      );
-    } catch {}
     atlasWorkspaceRenderStrip();
     return snapshot;
   }
@@ -34528,16 +34510,16 @@ function atlasWorkspaceWrite() {
   const chart = state.dataBroker?.chart;
   const ids = atlasComparisonIds();
   const chartReady = chart?.status === "ready";
+  let graphSnapshotCoherent = chartReady && atlasChartContextMatches(chart);
 
-  if (chartReady && !atlasChartContextMatches(chart)) {
-    console.warn("Workspace non sauvegardé : contexte graphique incohérent.", {
+  if (chartReady && !graphSnapshotCoherent) {
+    console.warn("Workspace sauvegardé ; dernier graphe valide inchangé : contexte graphique incohérent.", {
       expected: atlasExpectedChartContextKey(ids, Number(state.chartPeriodDays || 1)),
       actual: chart?.contextKey || null
     });
-    return null;
   }
 
-  if (chartReady && chart?.result?.comparison && Array.isArray(chart.result.entries)) {
+  if (graphSnapshotCoherent && chart?.result?.comparison && Array.isArray(chart.result.entries)) {
     const chartIds = chart.result.entries.map(entry => entry?.coin?.id).filter(Boolean);
     const preset = String(state.dataBroker?.comparison?.preset || "manual");
     const strictWorkspacePreset = ATLAS_SCANNER_PRESETS.has(preset);
@@ -34547,23 +34529,26 @@ function atlasWorkspaceWrite() {
     const coherent = strictWorkspacePreset
       ? chartIds.length === ids.length && chartIds.every((id, index) => id === ids[index])
       : chartIdsAreSelected;
+
     if (!coherent || chart.coinId !== ids[0]) {
-      console.warn("Workspace non sauvegardé : sélection et graphique divergent.", {
+      graphSnapshotCoherent = false;
+      console.warn("Workspace sauvegardé ; dernier graphe valide inchangé : sélection et graphique divergent.", {
         selection: ids,
         chartIds,
         chartCoinId: chart.coinId || null
       });
-      return null;
     }
   }
 
-  const snapshot = atlasWorkspaceCapture();
-  try {
-    localStorage.setItem(ATLAS_WORKSPACE_STATE_KEY, JSON.stringify(snapshot));
-    if (chartReady && atlasChartContextMatches(chart)) {
+  /* Never promote an in-flight Scanner transaction to last_valid_graph.
+     The current workspace is still saved above; last_valid_graph remains a
+     recovery snapshot of a fully coherent graph only. */
+  if (graphSnapshotCoherent && !atlasScannerTransaction) {
+    try {
       localStorage.setItem(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY, JSON.stringify(snapshot));
-    }
-  } catch {}
+    } catch {}
+  }
+
   atlasWorkspaceRenderStrip();
   return snapshot;
 }
@@ -40299,7 +40284,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "39.2.17";
+const ATLAS_BUILD = "39.2.18";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46970,8 +46955,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "39.2.17",
-  asset_token: "market-core-v2.0-alpha-build-39.2.17"
+  build: "39.2.18",
+  asset_token: "market-core-v2.0-alpha-build-39.2.18"
 });
 
 function atlasRuntimeTruth3813() {
