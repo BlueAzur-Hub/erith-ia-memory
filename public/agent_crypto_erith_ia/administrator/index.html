@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Agent-Crypto @erith.IA · Administrator 39.0</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="admin-shell-header">
+    <div class="admin-brand">
+      <p class="eyebrow">ERITH.IA · MARKETS OBSERVATORY</p>
+      <h1>Agent-Crypto <strong>@erith.IA</strong></h1>
+      <p class="release-line">ADMINISTRATOR CORE · Build 39.0 · architecture modulaire</p>
+    </div>
+
+    <div class="admin-header-actions" aria-label="Actions administrateur">
+      <a class="admin-button" href="../web/index.html" target="_blank" rel="noopener">Classic 38.15.11</a>
+      <button class="admin-button" id="reset-layout" type="button">Réinitialiser le layout</button>
+    </div>
+
+    <section class="architecture-contract" aria-labelledby="architecture-contract-title">
+      <h2 id="architecture-contract-title">Contrat 39.0</h2>
+      <div class="contract-flow" aria-label="Architecture fonctionnelle">
+        <span>MARKET</span><b>→</b><span>MARKET MEMORY</span><b>→</b><span>DECISION BOARD</span>
+        <i>et</i>
+        <span>SNAPSHOT</span><b>→</b><span>ATLAS</span><b>→</b><span>NØX</span><b>→</b><span>AERITH</span><b>→</b><span>ANALYTICAL MEMORY</span>
+      </div>
+      <p>Market Memory mémorise le marché sans lancer Atlas. Analytical Memory conserve uniquement les CURRENT fermés. Decision Board peut lire les deux sans les fusionner.</p>
+    </section>
+
+    <section class="closed-modules" aria-labelledby="closed-modules-title">
+      <h2 id="closed-modules-title">Modules fermés</h2>
+      <div id="closed-modules-tray" class="closed-modules-tray">
+        <span class="closed-modules-empty">Aucun</span>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="admin-grid" id="admin-grid" aria-label="Modules Administrator"></section>
+  </main>
+
+  <footer class="admin-footer">
+    <span>Agent-Crypto @erith.IA · Administrator Core · Build 39.0</span>
+    <span>Classic Final 38.15.11 conservée séparément · aucune logique marché branchée dans ce squelette</span>
+  </footer>
+
+  <template id="module-card-template">
+    <article class="admin-module-card" data-state="active">
+      <header class="module-card-header">
+        <button class="module-drag-handle" type="button" title="Déplacer le module" aria-label="Déplacer le module">⋮⋮</button>
+        <div class="module-title-block">
+          <p class="module-kicker"></p>
+          <h2 class="module-title"></h2>
+        </div>
+        <span class="module-status" data-role="status">ACTIVE</span>
+        <div class="module-actions">
+          <button type="button" data-action="minimize" title="Réduire">—</button>
+          <button type="button" data-action="suspend" title="Suspendre">Ⅱ</button>
+          <button type="button" data-action="close" title="Fermer">×</button>
+        </div>
+      </header>
+      <div class="module-card-body" data-role="body"></div>
+    </article>
+  </template>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
