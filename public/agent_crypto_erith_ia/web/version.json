@@ -1,27 +1,29 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.2 · Classic Stability Freeze",
-  "build": "38.15.2",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.2",
-  "published_at": "2026-08-17T04:43:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.3 · Classic Graph Truth Lock",
+  "build": "38.15.3",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.3",
+  "published_at": "2026-08-17T05:01:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "98fb897fa4c1d5dfd7bd8ad9d797fccacbf37cced8a5c997061dc2d38981da65"
+      "sha256": "c93c56f31224985f00fb99253302ca698201eed814425edfa8d3abd867a21cdf"
     },
     "index.html": {
-      "sha256": "affd14301fefadb97387b6b65b78929d21dcfbeebeec0bb20078da852c5e499e"
+      "sha256": "80537b5e41215d2510a86a49019cab76dabfc0dddaff3a70739d58d0acbf2b4e"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Classic interface stability freeze.",
-    "Single post-IndexedDB CURRENT/Memory finalization after Atlas → NØX → Aerith.",
-    "Legacy 34.x/38.4 reconciliation retry trains disabled.",
-    "Shared synthesis and heavy Memory dashboards rendered later during browser idle time.",
-    "Rendering no longer commits CURRENT memory as a side effect.",
-    "Graph History 38.15.1 behavior preserved; known graph defect is not claimed fixed.",
-    "Control Center V2.3.2R5, Bridge V1.9.5 and gpt-oss:20b-32k unchanged."
+    "Classic stability behavior from Build 38.15.2 preserved.",
+    "Graph-only recovery step: no Atlas/NØX/Aerith/Memory pipeline rewrite.",
+    "Fresh isolated chart cache namespace; previous chart caches remain untouched but are not replayed.",
+    "Workspace historical restore is CoinGecko-only; alternate Binance graph fallback removed.",
+    "Multi-series Classic comparisons are atomic and reject mixed direct/cache cohorts.",
+    "CoinGecko direct is attempted before browser cache for comparison history.",
+    "Binance LIVE no longer appends a terminal point into historical graph datasets.",
+    "Control Center V2.3.2R5, Bridge V1.9.5 and gpt-oss:20b-32k unchanged.",
+    "AUTO/MANUAL Atlas mode intentionally deferred to the next Classic build so graph repair can be tested alone."
   ]
 }

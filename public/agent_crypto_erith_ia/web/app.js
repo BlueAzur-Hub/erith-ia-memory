@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.2",
+  build: "38.15.3",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1382,7 +1382,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.2 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.15.3 CLASSIC GRAPH TRUTH LOCK · CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -3052,6 +3052,26 @@ function atlasChartPreferredProviderLabel(coinOrId) {
   return atlasChartPreferredSourceFamily(coinOrId) === "binance" ? "Binance" : "CoinGecko";
 }
 
+function atlasClassicGraphTrustedCoinGecko(result = null) {
+  if (!result || result.blocked || !Array.isArray(result.series) || !result.series.length) return false;
+
+  const family = String(result.sourceFamily || "").toLowerCase();
+  const mode = String(result.sourceMode || "").toLowerCase();
+  const originalMode = String(result.originalSourceMode || "").toLowerCase();
+
+  // 38.15.3: an unlabelled legacy cache is never guessed to be CoinGecko.
+  if (family && family !== "coingecko") return false;
+  return mode.includes("coingecko")
+    || originalMode.includes("coingecko")
+    || (family === "coingecko" && mode === "browser-cache" && originalMode.includes("coingecko"));
+}
+
+function atlasClassicGraphAcquisitionKind(result = null) {
+  if (!atlasClassicGraphTrustedCoinGecko(result)) return "untrusted";
+  const mode = String(result.sourceMode || "").toLowerCase();
+  return mode === "coingecko-direct" ? "direct" : mode === "browser-cache" ? "cache" : "untrusted";
+}
+
 function atlasChartStorageKey(c, days, family = atlasChartPreferredSourceFamily(c)) {
   return `${String(c?.id || "unknown").toLowerCase()}:${Number(days || 1)}:${family}`;
 }
@@ -3981,7 +4001,11 @@ function atlasChartSetPeriodButtons(days, loading = false) {
   });
 }
 
-const ATLAS_CHART_LOCAL_CACHE_KEY = "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50";
+const ATLAS_CHART_LOCAL_CACHE_KEY = "agent_crypto_erith_ia_real_charts_v38_15_3_coingecko_truth";
+
+/* 38.15.3 CLASSIC GRAPH TRUTH LOCK
+   Historical chart data has its own fresh namespace.
+   Older chart caches remain untouched in localStorage but are never replayed here. */
 
 const ATLAS_CHART_MAX_FUTURE_MS = 5 * 60 * 1000;
 
@@ -6017,6 +6041,12 @@ function atlasPatchVisibleChartLiveEndpoints(changedIds = []) {
   const chart = state.chartEngineV2?.realChart;
   if (!chart || !Array.isArray(chart.data?.datasets) || !chart.data.datasets.length) return false;
 
+  /* 38.15.3 CLASSIC GRAPH TRUTH LOCK
+     The historical graph is immutable once rendered.
+     Binance LIVE continues in cards/table/detail but never appends or rewrites
+     a point inside the historical CoinGecko series. */
+  if (chart.$atlasMode === "comparison" || chart.$atlasMode === "single") return false;
+
   const datasets = atlasChartPriceDatasets(chart);
   if (!datasets.length) return false;
 
@@ -6623,7 +6653,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   const ids = coins.map(coin => coin.id);
   const chartKey = `comparison:${ids.join(",")}:${period}`;
   const comparisonPreset = String(state.dataBroker?.comparison?.preset || "manual");
-  const strictAtomicComparison = ATLAS_SCANNER_PRESETS.has(comparisonPreset);
+  const strictAtomicComparison = coins.length > 1; // 38.15.3: no partial/mixed Classic comparison.
   const requiredSeriesCount = strictAtomicComparison ? coins.length : 1;
   const previousChartState = state.dataBroker.chart;
   const previousComparisonState = {
@@ -6738,6 +6768,50 @@ async function renderComparisonAnalystPanel(options = {}) {
   }
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
+
+  if (coins.length > 1) {
+    const validRows = fetched.filter(item =>
+      item?.coin
+      && item?.result
+      && !item.result.blocked
+      && Array.isArray(item.result.series)
+      && item.result.series.length
+    );
+    const acquisitionKinds = new Set(
+      validRows.map(item => atlasClassicGraphAcquisitionKind(item.result))
+    );
+    const homogeneous = validRows.length === coins.length
+      && acquisitionKinds.size === 1
+      && !acquisitionKinds.has("untrusted");
+
+    if (!homogeneous) {
+      state.dataBroker.comparison.status = "blocked";
+      state.dataBroker.comparison.pendingIds = [];
+      state.dataBroker.comparison.unavailableIds = coins.map(coin => coin.id);
+      state.dataBroker.comparison.error = "Cohorte historique mixte ou incomplète refusée.";
+      state.dataBroker.chart = {
+        ...state.dataBroker.chart,
+        status: "blocked",
+        source: "CoinGecko",
+        error: "Historique non affiché : les séries direct/cache ne sont pas mélangées."
+      };
+      atlasDestroyRealChart();
+      drawChartLoading(
+        els.mainChart,
+        `Comparaison ${periodLabel} indisponible`,
+        "38.15.3 refuse une cohorte partielle ou mixte. Relancer lorsque les 5 séries CoinGecko sont homogènes."
+      );
+      if (els.chartCaption) {
+        atlasSetChartCaptionText(
+          `Comparaison ${periodLabel} non remplacée · cohorte CoinGecko homogène requise (${coins.length}/${coins.length}).`
+        );
+      }
+      atlasRenderComparisonControls();
+      renderMarketTable();
+      state.chartEngineV2.loading = false;
+      return;
+    }
+  }
 
   const rawEntries = fetched.filter(item =>
     item?.coin
@@ -8193,7 +8267,7 @@ function atlasChartOverlayUpdate() {
 
 const atlasChartOverlayCaption = document.getElementById("chartCaption");
 
-const ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY = "agent_crypto_erith_ia_workspace_last_valid_graph_v1";
+const ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY = "agent_crypto_erith_ia_workspace_last_valid_graph_v38_15_3_coingecko_truth";
 
 function atlasWorkspaceCurrentGraphMode() {
   const mode = document.getElementById("market-zone")?.dataset?.graphMode;
@@ -8202,11 +8276,11 @@ function atlasWorkspaceCurrentGraphMode() {
 
 function atlasWorkspaceStoredChartResult(coin, period) {
   if (!coin?.id) return null;
-  const preferred = atlasChartPreferredSourceFamily(coin);
-  const alternate = preferred === "binance" ? "coingecko" : "binance";
-  return atlasGetStoredChartResult(coin, period, preferred)
-    || atlasGetStoredChartResult(coin, period, alternate)
-    || null;
+
+  // 38.15.3: the Classic Analyst workspace restores only explicitly
+  // identified CoinGecko history from the new chart namespace.
+  const result = atlasGetStoredChartResult(coin, period, "coingecko");
+  return atlasClassicGraphTrustedCoinGecko(result) ? result : null;
 }
 
 function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {
@@ -8244,7 +8318,7 @@ function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {
     };
   }).filter(Boolean);
 
-  const strictWorkspacePreset = ATLAS_SCANNER_PRESETS.has(preset);
+  const strictWorkspacePreset = coins.length > 1; // 38.15.3: every multi-series Classic graph is atomic.
   if (strictWorkspacePreset && rawEntries.length !== coins.length) return false;
   const aligned = (strictWorkspacePreset
     ? atlasBuildAlignedComparisonEntries(rawEntries, period)
@@ -12125,7 +12199,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.2",
+  interface: "Build 38.15.3",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -35118,7 +35192,7 @@ const ATLAS_CANONICAL_MARKET_SOURCE = "CoinGecko";
 const ATLAS_NETWORK_WAIT_TIMEOUT_MS = 45 * 1000;
 
 function atlasChartPreferredSourceFamily(coinOrId) {
-  /* 38.15.2 — Graph History Recovery + Classic Stability Freeze
+  /* 38.15.3 — Classic Graph Truth Lock
      Analyst historical charts return to one homogeneous source family:
      CoinGecko market_chart EUR. Binance remains available for LIVE/scanners. */
   return "coingecko";
@@ -36490,11 +36564,11 @@ function atlasWaitWithSignal(ms, signal = null) {
 
 async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
   const signal = options.signal || null;
-  const stored = atlasGetStoredChartResult(coin, period, "coingecko");
-  if (stored && !atlasChartNeedsRefresh(stored, period)) {
-    return { coin, result: stored, attempts: 0, source: "fresh-coingecko-cache" };
-  }
+  const storedCandidate = atlasGetStoredChartResult(coin, period, "coingecko");
+  const stored = atlasClassicGraphTrustedCoinGecko(storedCandidate) ? storedCandidate : null;
 
+  // 38.15.3: direct CoinGecko is attempted first on every Classic comparison.
+  // Cache is a fail-closed fallback, never the first choice.
   let lastError = null;
   let attempts = 0;
   for (let attempt = 0; attempt < Math.min(2, ATLAS_COMPARISON_RETRY_DELAYS_MS.length); attempt += 1) {
@@ -40193,7 +40267,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.2";
+const ATLAS_BUILD = "38.15.3";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46864,8 +46938,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.2",
-  asset_token: "market-core-v2.0-alpha-build-38.15.2"
+  build: "38.15.3",
+  asset_token: "market-core-v2.0-alpha-build-38.15.3"
 });
 
 function atlasRuntimeTruth3813() {
