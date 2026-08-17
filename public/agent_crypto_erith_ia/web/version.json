@@ -1,29 +1,30 @@
 {
   "schema": "agent_crypto_version_manifest_v2",
-  "release": "Market Core V2.0-Alpha · Build 38.15.3 · Classic Graph Truth Lock",
-  "build": "38.15.3",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.3",
-  "published_at": "2026-08-17T05:01:00+02:00",
+  "release": "Market Core V2.0-Alpha · Build 38.15.4 · Classic Graph Comparison Recovery",
+  "build": "38.15.4",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.4",
+  "published_at": "2026-08-17T05:31:00+02:00",
   "files": {
     "app.js": {
-      "sha256": "c93c56f31224985f00fb99253302ca698201eed814425edfa8d3abd867a21cdf"
+      "sha256": "b48775dddb50ad8ac897afe5abbd9503c7cd1f69838766c258241189ec24321c"
     },
     "index.html": {
-      "sha256": "80537b5e41215d2510a86a49019cab76dabfc0dddaff3a70739d58d0acbf2b4e"
+      "sha256": "273e1711b1e58a856d77f0e3e898b0a2628425480f49c36f065da19f00982bb5"
     },
     "style.css": {
       "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
     }
   },
   "notes": [
-    "Classic stability behavior from Build 38.15.2 preserved.",
-    "Graph-only recovery step: no Atlas/NØX/Aerith/Memory pipeline rewrite.",
-    "Fresh isolated chart cache namespace; previous chart caches remain untouched but are not replayed.",
-    "Workspace historical restore is CoinGecko-only; alternate Binance graph fallback removed.",
-    "Multi-series Classic comparisons are atomic and reject mixed direct/cache cohorts.",
-    "CoinGecko direct is attempted before browser cache for comparison history.",
-    "Binance LIVE no longer appends a terminal point into historical graph datasets.",
-    "Control Center V2.3.2R5, Bridge V1.9.5 and gpt-oss:20b-32k unchanged.",
-    "AUTO/MANUAL Atlas mode intentionally deferred to the next Classic build so graph repair can be tested alone."
+    "Built from the runtime-stable Build 38.15.2, not from rejected Build 38.15.3.",
+    "Build 38.15.2 Atlas → NØX → Aerith end-of-cycle stability fix preserved.",
+    "Global chart cache preserved so Top 3 / Top 5 / Gainers / Losers / Volume histories are not emptied.",
+    "Old serialized workspace graph is not replayed.",
+    "Analyst workspace restore is CoinGecko-only; Binance historical fallback is excluded there.",
+    "Solo and comparison historical datasets no longer receive a synthetic Binance LIVE terminal point.",
+    "Top 3 / Top 5 may combine CoinGecko direct, Bridge-CoinGecko and qualified CoinGecko cache series; acquisition mode need not be identical.",
+    "Bridge fallback uses allowBinance=false and accepts only CoinGecko provider for Analyst comparison.",
+    "Scanner acquisition code and Market data pipeline are unchanged.",
+    "AUTO/MANUAL Atlas mode remains deferred until Classic graph behavior is validated."
   ]
 }
