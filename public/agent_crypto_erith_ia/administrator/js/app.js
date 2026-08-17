@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.11";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK";
+  const ADMIN_BUILD = "39.2.13";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · MATH CORE BACKGROUND FIT";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -204,7 +204,7 @@
       const identity = document.createElement("p");
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · MATH CORE BACKGROUND FIT · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
       hero.appendChild(identity);
     }
 

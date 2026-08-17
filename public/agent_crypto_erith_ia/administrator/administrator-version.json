@@ -1,11 +1,11 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v13",
-  "build": "39.2.11",
-  "release": "ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK",
-  "published_at": "2026-08-17T11:40:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v14",
+  "build": "39.2.13",
+  "release": "ADMINISTRATOR MIRROR · MATH CORE BACKGROUND FIT",
+  "published_at": "2026-08-17T12:38:00+02:00",
   "global_versioning": {
-    "primary_build": "39.2.11",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.11",
+    "primary_build": "39.2.13",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.2.13",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11",
     "rule": "The application build is global. Classic/Market engine versions are component references, not the Administrator application version."
@@ -45,15 +45,16 @@
     "floating_multi_node": "one floating shell + original nodes",
     "suspend_runtime": "false",
     "storage_namespace": "erith_admin_portal_39_2_9",
-    "storage_note": "preserved intentionally across 39.2.11 freeze-candidate polish; operator layout is not reset"
+    "storage_note": "preserved intentionally from validated 39.2.11; this visual-only background fit must not reset operator layout"
   },
   "math_core_contract": {
     "docked": "Classic Math Core behavior preserved exactly",
-    "detached": "medium right-side instrument on first detach; preferred width about 42% of viewport, clamped 520-760 px",
+    "detached": "free Administrator window; native size/position/drag/resize behavior preserved from 39.2.11",
     "native_modes": "Dessus / Latéral / Réduire remain native Math Core controls",
     "maximize": "explicit Administrator action only",
     "internal_split": "none",
-    "administrator_chrome": "compact hover chrome pinned to the far-right lower edge while docked; no orphan-left × control"
+    "administrator_chrome": "validated 39.2.11 hover chrome preserved; no geometry or control changes",
+    "administrator_background": "detached metal base fills the complete Math Core floating-window bounds; no geometry change"
   },
   "domain_contract": {
     "crypto_and_metals": "same business cockpit, two domains",
@@ -84,18 +85,20 @@
     "39.2.7": "functionally validated base; superseded only by 39.2.8 visual/control-size and Math Core detached-window polish",
     "39.2.8": "functionally validated polish base; superseded only by 39.2.9 discreet hover-reveal chrome with no semantic or business changes",
     "39.2.9": "validated hover-chrome base; superseded only by 39.2.10 ghost treatment of the global bottom dock",
-    "39.2.10": "validated ghost-dock base; superseded only by Math Core chrome anchor correction and workspace-freedom freeze candidate"
+    "39.2.10": "validated ghost-dock base; superseded only by Math Core chrome anchor correction and workspace-freedom freeze candidate",
+    "39.2.11": "validated base used directly for 39.2.13",
+    "39.2.12": "rejected: corrected the wrong layer by changing Math Core window geometry; not used as base"
   },
   "integrity": {
     "files": {
-      "app.js": "8599e634f536581d62d070bae72e28ba11ffa14e91ec8bb310120ac8f7e71018",
-      "index.html": "63ab0ce8a4f44d7f5bf7fe01e21750b3650f4197c8bdf1fa656db185a0c9242b",
+      "app.js": "642050d0ef960a812f68f00efeac03dbd4a998e37dae7e1332da029f7f079226",
+      "index.html": "97959acc83328617fbd764145bff2d5977fde23af279696b3f9aa9e9fee71930",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
       "admin-metal.css": "921ad0f3fd019c27e2689e5b8a72c6609f783620c14e236325c219af2484694a",
-      "admin-windows.css": "eb4248c4b301e45d18a9b8af37e2ef5593ff8f6e789ebea063fa3dd8c08e8438",
-      "js/app.js": "75dba3215fb57230f5e4c68a48ac3c9df6808741e041ec0df13e80190254b206",
+      "admin-windows.css": "df2e23516e66c5588a6cf12fd139bf058ccebbe0747b4ab3363dfa476ccf2e1c",
+      "js/app.js": "375028dd88b1f5be31708ce64515dfaf5110bc5c11dfee6c3f27e598eeb6bdae",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
-      "version.json": "21f6a5f171a46cc37ffd93524d33e5b40092b265d7990de1abc1c1abbae2d562"
+      "version.json": "24feb4d89f9db1f0afe3cc8847317b7259b0cb13252d334c9c29152d67cecc2b"
     }
   },
   "workspace_principle": {
@@ -103,6 +106,6 @@
     "composition": "Graphique, Target, Flow, Market, Math Core and Administrator workspaces can be composed freely",
     "minimize_hide_runtime": "visual state only; business runtime continues unless a future module exposes an explicit real suspend lifecycle",
     "business_clone": "never clone business DOM/data to create a window",
-    "freeze_intent": "if validated, Windows/Metal/Chrome becomes frozen and 39.3 moves to Market Memory"
+    "freeze_intent": "39.2.13 is a bounded visual fix on the validated 39.2.11 workspace; validate before Windows/Metal/Chrome freeze and 39.3 Market Memory."
   }
 }

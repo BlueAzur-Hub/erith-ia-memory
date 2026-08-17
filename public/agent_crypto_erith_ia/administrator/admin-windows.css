@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — Build 39.2.11 · Administrator Workspace Freedom Lock
+/* Agent-Crypto @erith.IA — Build 39.2.13 · Administrator Math Core Background Fit
    UI-only window layer. One stable handle; reduce keeps a visible restore bar; hide is recallable from WINDOW DECK. */
 
 :root{
@@ -508,3 +508,39 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
   z-index:2147481200!important;
 }
 #math.score-panel.admin-native-anchor{padding-bottom:max(12px,var(--math-admin-bottom-reserve,12px));}
+
+
+/* ============================================================================
+   BUILD 39.2.13 — MATH CORE FLOATING BACKGROUND FIT
+   Base: validated 39.2.11. 39.2.12 geometry experiment rejected.
+   Scope is intentionally visual only: when Math Core is detached as a direct
+   Administrator window, its metal background must fill the complete window
+   bounds. Native size, position, drag, resize and Dessus/Latéral/Réduire logic
+   are untouched.
+   ============================================================================ */
+#math.score-panel.admin-native-direct-floating{
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.010) 0,
+      rgba(255,255,255,.010) 1px,
+      rgba(0,0,0,.018) 1px,
+      rgba(0,0,0,.018) 3px
+    ),
+    linear-gradient(
+      145deg,
+      rgba(20,27,34,.995) 0%,
+      rgba(5,13,24,.995) 46%,
+      rgba(12,18,25,.995) 100%
+    ) !important;
+  background-color:rgba(5,13,24,.995)!important;
+  background-clip:padding-box!important;
+  border-radius:15px!important;
+  isolation:isolate!important;
+}
+
+/* Keep the historical Math Core atmosphere as decoration above the fitted
+   metal base, without changing its native layout or interaction model. */
+#math.score-panel.admin-native-direct-floating::after{
+  border-radius:inherit!important;
+}
