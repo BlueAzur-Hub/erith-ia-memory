@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.4.6R5",
-  "release": "ADMINISTRATOR MIRROR · TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK",
-  "published_at": "2026-08-18T01:15:00+02:00",
+  "build": "39.4.6R6",
+  "release": "ADMINISTRATOR MIRROR · FULL-WIDTH TECHNICAL READING + LOW-GLASS VISIBILITY LOCK",
+  "published_at": "2026-08-18T01:32:00+02:00",
   "global_versioning": {
-    "primary_build": "39.4.6R5",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.6R5",
+    "primary_build": "39.4.6R6",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.6R6",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.4.6R5",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.6R5",
+    "canonical_build": "39.4.6R6",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.6R6",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -34,18 +34,18 @@
     "module": "./js/admin-visual-assets-39.4.5R3.js",
     "stylesheet": "./admin-visual-assets.css",
     "assets_delivery": "already present on GitHub; omitted from update ZIP",
-    "visibility_strategy": "Technical Reading full-frame Aerith image locked in a desktop right-side dock; Classic functions overlaid on <=10% alpha surfaces; decorative emblems reduced to <=10% opacity background accents with zero layout reservation",
+    "visibility_strategy": "Full-width docked Graphique + Technical Reading; Aerith full-frame image; Classic functions on 3–6% alpha surfaces; Source Dock collapsed by default; decorative emblems <=8% opacity with zero layout reservation",
     "private_slot": "technical-reading",
     "private_storage": "IndexedDB agent_crypto_private_visuals",
     "core_rewrite": false
   },
   "integrity": {
     "files": {
-      "app.js": "20fe72a30593bad9890deb7ee02e4b635b33fec78eebc1c62129cb91de980e30",
-      "index.html": "2e18d41090f948f92de1d6f0af5ea8cb6ed1f2db390ef9aeb55a95ad9665c5e6",
-      "js/app.js": "d7545004e92ba3203523b432498868eb7db09cf2d208cc45f3d04c97e7b8915f",
+      "app.js": "f5341fb73ebe799398724870aee970e5709e5ea6787cece69812572997112da1",
+      "index.html": "d0fcd35232f82366f32978c9589875e54dec3c9cef811adca965674998618aa9",
+      "js/app.js": "158f322b4b8717497cff423630aa4eb8eec2e9735c3721cb28d9cce00f9b10c5",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
-      "admin-visual-assets.css": "a3753b8001c348073323149cd2e181eda200f9f36f153757c6187c80d97a676f",
+      "admin-visual-assets.css": "6469a1068a983b7734d6619a7e145b659113410499cea7705ccb1bc2b0ca35ae",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -63,10 +63,10 @@
       "admin-ribbons.css": "7e9b982dba8f4a3fdb76f8e736e5c56d2427ea258bbac046f1816c0ff4510ca4"
     }
   },
-  "parent_build": "39.4.6R4",
-  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1 -> 39.4.6R2 -> 39.4.6R3 -> 39.4.6R4 -> 39.4.6R5",
+  "parent_build": "39.4.6R5",
+  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1 -> 39.4.6R2 -> 39.4.6R3 -> 39.4.6R4 -> 39.4.6R5 -> 39.4.6R6",
   "ribbon_lock": {
-    "build": "39.4.6R5",
+    "build": "39.4.6R6",
     "stylesheet": "admin-ribbons.css",
     "target_top": "native ribbon + full Administrator control deck in dedicated far-right grid column",
     "market_flow": "native ribbon + full Administrator control deck in dedicated far-right grid column; Classic 115 s cadence; hover/focus pause",
@@ -78,10 +78,10 @@
   "technical_reading_restore": {
     "classic_dom_preserved": true,
     "image_strategy": "full-frame background-like Aerith image across the complete Technical Reading side dock",
-    "functional_surface_background_alpha_max": 0.1,
+    "functional_surface_background_alpha_max": 0.06,
     "private_picker_visible_label": false,
     "private_picker_click_surface": "exposed image / transparent gaps; existing IndexedDB picker preserved",
-    "source_dock_default_open": true,
+    "source_dock_default_open": false,
     "functional_sections": [
       "detailAssetWindow",
       "source-dock",
@@ -91,14 +91,14 @@
     ],
     "graph_window_chrome_visible": false,
     "engine_modified": false,
-    "desktop_layout": "Graphique left + Lecture technique fixed right column; no below-chart orphan panel"
+    "desktop_layout": "Full Market width: Graphique left + Lecture technique right; stale Graphique floating geometry reset once"
   },
   "decorative_emblem_lock": {
     "layout_reservation": false,
-    "opacity_max": 0.1,
-    "family_emblem_max_px": 72,
-    "source_emblem_max_px": 54,
-    "analytical_emblem_max_px": "58x88",
+    "opacity_max": 0.08,
+    "family_emblem_max_px": 56,
+    "source_emblem_max_px": 44,
+    "analytical_emblem_max_px": "44x64",
     "position": "absolute bottom-right background accent",
     "engine_modified": false
   }

@@ -819,3 +819,156 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-colla
   }
 }
 
+
+
+/* ==========================================================================\n   39.4.6R6 — FULL-WIDTH TECHNICAL READING + LOW-GLASS VISIBILITY LOCK\n\n   Operator contract:\n   - docked Graphique + Lecture technique spans the complete Market zone width;\n   - a one-time JS migration clears only stale Graphique floating geometry;\n   - Aerith remains the full-frame Technical Reading background;\n   - secondary functional surfaces are 3–6% dark alpha (never above 10%);\n   - Source Dock starts collapsed but remains fully functional/openable;\n   - decorative emblems stay small background accents and never reserve layout.\n   ========================================================================== */
+
+/* DOCKED DESKTOP — occupy the complete available Market width. */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror #market-zone > #analyste.champagne-clean-lens:not(.admin-native-direct-floating),
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.admin-native-direct-floating){
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:auto!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    justify-self:stretch!important;
+    align-self:stretch!important;
+    grid-column:1 / -1!important;
+    box-sizing:border-box!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) clamp(330px,22vw,380px)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:0!important;
+    align-items:stretch!important;
+    overflow:visible!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+    align-self:stretch!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:2!important;
+    grid-row:1!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    align-self:stretch!important;
+    overflow:hidden!important;
+  }
+}
+
+/* TECHNICAL READING — keep Aerith visually dominant. */
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
+  background:rgba(2,8,16,.01)!important;
+}
+body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
+  background:rgba(2,8,17,.035)!important;
+  border-color:rgba(98,236,255,.12)!important;
+}
+body.atlas-administrator-mirror #detailPanel>.detail-panel-body{
+  gap:3px!important;
+  background:transparent!important;
+}
+
+/* Top four facts stay readable without becoming a dark band. */
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span{
+  background:rgba(2,8,17,.055)!important;
+  border-color:rgba(98,236,255,.13)!important;
+  box-shadow:none!important;
+}
+
+/* Secondary Classic controls are deliberately almost transparent. */
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary,
+body.atlas-administrator-mirror #detailPanel .detail-grid>div,
+body.atlas-administrator-mirror #detailPanel .why-box,
+body.atlas-administrator-mirror #detailPanel .source-dock-command,
+body.atlas-administrator-mirror #detailPanel .source-dock-status,
+body.atlas-administrator-mirror #detailPanel .source-portal,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
+body.atlas-administrator-mirror #detailPanel .broker-strip>div,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
+body.atlas-administrator-mirror #detailPanel .clean-lens-integrity>p,
+body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #detailPanel .source-dock-refresh{
+  background:rgba(2,8,17,.035)!important;
+  border-color:rgba(98,236,255,.11)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Compact rows = more exposed image, especially the lower half of the portrait. */
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary{
+  min-height:34px!important;
+  padding:5px 7px!important;
+}
+body.atlas-administrator-mirror #detailPanel .source-dock-body,
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow-body{
+  padding-top:3px!important;
+  padding-bottom:3px!important;
+  background:transparent!important;
+}
+body.atlas-administrator-mirror #detailPanel .source-dock-portals{
+  gap:3px!important;
+  background:transparent!important;
+}
+body.atlas-administrator-mirror #detailPanel .source-portal{
+  padding:4px 5px!important;
+}
+
+/* Decorative emblems: even more discreet than R5, still outside normal flow. */
+.admin-family-emblem-r3{
+  width:56px!important;
+  height:56px!important;
+  max-width:56px!important;
+  max-height:56px!important;
+  opacity:.08!important;
+  right:10px!important;
+  bottom:8px!important;
+}
+.admin-summary-emblem-r3{
+  width:44px!important;
+  height:44px!important;
+  max-width:44px!important;
+  max-height:44px!important;
+  opacity:.08!important;
+  right:8px!important;
+  bottom:7px!important;
+}
+#atlasAnalyticalMemory394.admin-analytical-emblem-host-r3>.admin-analytical-emblem-r3{
+  width:44px!important;
+  height:64px!important;
+  max-width:44px!important;
+  max-height:64px!important;
+  opacity:.08!important;
+  right:10px!important;
+  bottom:8px!important;
+}

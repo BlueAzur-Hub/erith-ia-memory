@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.4.6R5";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK";
+  const ADMIN_BUILD = "39.4.6R6";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · FULL-WIDTH TECHNICAL READING + LOW-GLASS VISIBILITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -295,6 +295,20 @@
     } catch {}
   }
 
+  const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
+
+  function migrateGraphWindowStateR6() {
+    try {
+      if (localStorage.getItem(GRAPH_R6_MIGRATION_KEY) === "1") return;
+      // R5 could inherit an old detached/floating geometry for the Graphique
+      // workspace. Reset ONLY this window once so the canonical full-width
+      // dock can be measured from its real parent. Future operator moves stay
+      // persistent normally after this one-time migration.
+      localStorage.removeItem(`${STORAGE_PREFIX}:window:graphique`);
+      localStorage.setItem(GRAPH_R6_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
   function keepGlobalVersionVisible() {
     const versionText = byId("atlasVersionControlText");
     const observer = versionText ? new MutationObserver(() => {
@@ -311,6 +325,7 @@
     keepGlobalVersionVisible();
 
     migrateRibbonWindowStateR2();
+    migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
