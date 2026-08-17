@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.1",
+  build: "38.15.2",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1382,7 +1382,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.1 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.15.2 CANONICAL CURRENT MEMORY COMMIT · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12125,7 +12125,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.1",
+  interface: "Build 38.15.2",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -33484,8 +33484,17 @@ function atlasSharedSynthesisActivateCore(pkg, source) {
     : clean;
   atlasSharedSynthesisState.package = active;
   atlasSharedSynthesisState.source = source;
-  atlasSharedSynthesisHydrateReports(active, source);
-  atlasSharedSynthesisRender();
+
+  // 38.15.2 CLASSIC STABILITY FREEZE:
+  // During a freshly completed local Atlas → NØX → Aerith cycle, the four Atlas
+  // reports and the Aerith answer are already visible. Re-hydrating every report
+  // and re-rendering the complete shared synthesis here duplicates a large amount
+  // of DOM work on the exact frame where Ollama has just returned.
+  // Stored/imported packages still hydrate immediately because they need it.
+  if (source !== "local") {
+    atlasSharedSynthesisHydrateReports(active, source);
+    atlasSharedSynthesisRender();
+  }
   return active;
 }
 
@@ -33606,8 +33615,12 @@ function atlasSharedSynthesisBuildAndStore(snapshot, fingerprint) {
     if (saved.ok) {
       atlasSharedSynthesisSetStatus("ready", `Synthèse Ryzen créée · 4/4 rapports Atlas · conclusion Aerith · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko).`, "Produite");
     } else {
-      atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée et affichée · IndexedDB impossible : ${saved.error}.`, "Produite sans mémoire");
+      atlasSharedSynthesisSetStatus("warning", `Synthèse Ryzen créée · IndexedDB impossible : ${saved.error}.`, "Produite sans mémoire");
     }
+
+    // 38.15.2: one persistence completion → one canonical finalization.
+    // No reconciliation train, no repeated delayed renders.
+    atlasClassicFinalizeSynthesis38152(pkg, saved);
   })();
   return pkg;
 }
@@ -35105,7 +35118,7 @@ const ATLAS_CANONICAL_MARKET_SOURCE = "CoinGecko";
 const ATLAS_NETWORK_WAIT_TIMEOUT_MS = 45 * 1000;
 
 function atlasChartPreferredSourceFamily(coinOrId) {
-  /* 38.15.1 — Graph History Recovery
+  /* 38.15.2 — Graph History Recovery + Classic Stability Freeze
      Analyst historical charts return to one homogeneous source family:
      CoinGecko market_chart EUR. Binance remains available for LIVE/scanners. */
   return "coingecko";
@@ -40180,7 +40193,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.1";
+const ATLAS_BUILD = "38.15.2";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -42915,13 +42928,9 @@ document.addEventListener("click", event => {
 // Reconcile when CURRENT state or shared synthesis changes. Retries are bounded;
 // they only wait for the already produced synthesis package and never restart GPT-OSS.
 function atlasCurrentMemoryScheduleReconcile34() {
-  [0, 350, 1200, 3000].forEach(delay => window.setTimeout(() => {
-    const result = atlasCurrentMemoryReconcile34({ silent:true });
-    if (result?.changed) {
-      try { atlasMemoryIntelligenceRender(); } catch (_) {}
-      try { renderDecisionBoard(); } catch (_) {}
-    }
-  }, delay));
+  // 38.15.2: legacy retry train disabled. CURRENT memory is finalized once,
+  // after the shared synthesis has been written and verified in IndexedDB.
+  return { scheduled:false, owner:"classic-stability-38152" };
 }
 
 const atlasCurrentRenderBanner34Base = atlasCurrentRenderBanner;
@@ -43146,16 +43155,9 @@ atlasAfterLivecheck = function atlasAfterLivecheck341(options = {}) {
 // diagnostic only, but it is never required for normal operation.
 const atlasSharedSynthesisBuildAndStore341Base = atlasSharedSynthesisBuildAndStore;
 atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore341(snapshot, fingerprint) {
-  const result = atlasSharedSynthesisBuildAndStore341Base(snapshot, fingerprint);
-  try {
-    const reconciled = atlasCurrentMemoryReconcile34({ silent:true });
-    if (reconciled?.changed || reconciled?.record) {
-      atlasMemoryIntelligenceRender();
-      renderDecisionBoard();
-      atlasMemoryLedgerRender34();
-    }
-  } catch (_) {}
-  return result;
+  // 38.15.2: keep the historical wrapper name for compatibility, but do not
+  // perform an immediate Memory/Decision render while Aerith is completing.
+  return atlasSharedSynthesisBuildAndStore341Base(snapshot, fingerprint);
 };
 
 function atlasAutomation341BookIdentity() {
@@ -43713,13 +43715,7 @@ async function atlasCurrentArchiveRead35(fingerprint) {
 const atlasSharedSynthesisBuildAndStore35Base = atlasSharedSynthesisBuildAndStore;
 atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore35(snapshot, fingerprint) {
   const pkg = atlasSharedSynthesisBuildAndStore35Base(snapshot, fingerprint);
-  if (pkg) {
-    void atlasCurrentArchiveSave35(pkg, "ryzen-current");
-    queueMicrotask(() => {
-      try { atlasCurrentJournalRender33(); } catch (_) {}
-      try { atlasOperatorSummaryRender35(); } catch (_) {}
-    });
-  }
+  if (pkg) void atlasCurrentArchiveSave35(pkg, "ryzen-current");
   return pkg;
 };
 
@@ -44788,32 +44784,24 @@ function atlasCurrentMemoryReconcile384(options = {}) {
 }
 
 function atlasCurrentMemorySchedule384(reason = "runtime") {
+  // 38.15.2: the old 80/350/900/2200/5000 ms convergence train is disabled.
+  // One verified post-persistence finalization now owns CURRENT memory commit.
   atlasCurrentMemory384RetryTimers.forEach(timer => window.clearTimeout(timer));
-  atlasCurrentMemory384RetryTimers = ATLAS_CURRENT_MEMORY_384_RETRY_DELAYS.map(delay => window.setTimeout(() => {
-    const result = atlasCurrentMemoryReconcile384({ render:true });
-    if (result?.record) {
-      atlasCurrentMemory384RetryTimers.forEach(timer => window.clearTimeout(timer));
-      atlasCurrentMemory384RetryTimers = [];
-    }
-  }, delay));
-  return reason;
+  atlasCurrentMemory384RetryTimers = [];
+  return { scheduled:false, reason, owner:"classic-stability-38152" };
 }
 
 // Journal-first healing: as soon as CURRENT #N is really written, reconcile its
 // analytical memory record. The upsert remains idempotent by fingerprint.
 const atlasCurrentJournalWrite384Base = atlasCurrentJournalWrite33;
 atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite384(records) {
-  const saved = atlasCurrentJournalWrite384Base(records);
-  if (saved?.length) atlasCurrentMemorySchedule384("journal-write");
-  return saved;
+  return atlasCurrentJournalWrite384Base(records);
 };
 
 // Heal after local creation and after IndexedDB restore/import activation.
 const atlasSharedSynthesisBuildAndStore384Base = atlasSharedSynthesisBuildAndStore;
 atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore384(snapshot, fingerprint) {
-  const pkg = atlasSharedSynthesisBuildAndStore384Base(snapshot, fingerprint);
-  if (pkg) atlasCurrentMemorySchedule384("synthesis-build");
-  return pkg;
+  return atlasSharedSynthesisBuildAndStore384Base(snapshot, fingerprint);
 };
 
 const atlasSharedSynthesisActivate384Base = atlasSharedSynthesisActivate;
@@ -46831,31 +46819,9 @@ atlasCurrentMemoryRecordFromJournal387 = function atlasCurrentMemoryRecordFromJo
 let atlasCurrentMemoryJournalCommitQueued3812 = false;
 const atlasCurrentJournalWrite333812Base = atlasCurrentJournalWrite33;
 atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite333812(records) {
-  const saved = atlasCurrentJournalWrite333812Base(records);
-  if (typeof atlasDeviceComputeAllowed !== "function" || !atlasDeviceComputeAllowed()) return saved;
-  const rows = Array.isArray(saved) ? saved : [];
-  const latest = [...rows].reverse().find(row => {
-    try { return row?.indexeddb_verified === true && (typeof atlasCurrentMemoryJournalRowValid387 === "function" ? atlasCurrentMemoryJournalRowValid387(row) : !!(row?.fingerprint && Number(row?.atlas_reports || 0) >= 4 && row?.nox === true && row?.aerith === true)); }
-    catch (_) { return false; }
-  });
-  if (!latest || atlasCurrentMemoryJournalCommitQueued3812) return saved;
-  const fp = typeof atlasCurrentMemoryNormalizeFingerprint387 === "function" ? atlasCurrentMemoryNormalizeFingerprint387(latest.fingerprint) : String(latest.fingerprint || "").trim();
-  try { if (typeof atlasCurrentMemoryStoredForFingerprint387 === "function" && atlasCurrentMemoryStoredForFingerprint387(fp)) return saved; } catch (_) {}
-  atlasCurrentMemoryJournalCommitQueued3812 = true;
-  queueMicrotask(() => {
-    atlasCurrentMemoryJournalCommitQueued3812 = false;
-    try {
-      const result = atlasCurrentMemoryRepair3811("journal-write-3812");
-      if (result?.record) {
-        try { atlasMemoryLedgerRender34(); } catch (_) {}
-        try { atlasMemoryLedgerRender35(); } catch (_) {}
-        try { atlasMemoryIntelligenceRender(); } catch (_) {}
-        try { renderDecisionBoard(); } catch (_) {}
-        try { atlasDecisionWorkspaceRender33(); } catch (_) {}
-      }
-    } catch (_) {}
-  });
-  return saved;
+  // 38.15.2: preserve journal persistence; postpone Memory UI convergence to
+  // the single post-IndexedDB finalization path.
+  return atlasCurrentJournalWrite333812Base(records);
 };
 
 // Finite UI convergence only; no polling loop.
@@ -46898,8 +46864,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.1",
-  asset_token: "market-core-v2.0-alpha-build-38.15.1"
+  build: "38.15.2",
+  asset_token: "market-core-v2.0-alpha-build-38.15.2"
 });
 
 function atlasRuntimeTruth3813() {
@@ -47206,9 +47172,7 @@ function atlasCurrentMemoryQueue3814(reason = "event") {
 const atlasCurrentJournalWrite33Base3814 = atlasCurrentJournalWrite33;
 atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite333814(records) {
   const merged = atlasCurrentJournalMergeAppendOnly3814(records, atlasSharedSynthesisState?.package || null);
-  const saved = atlasCurrentJournalWrite33Base3814(merged);
-  atlasCurrentMemoryQueue3814("journal-write");
-  return saved;
+  return atlasCurrentJournalWrite33Base3814(merged);
 };
 
 function atlasCurrentJournalHydrate3814(reason = "hydrate") {
@@ -47229,15 +47193,17 @@ function atlasCurrentJournalHydrate3814(reason = "hydrate") {
 const atlasSharedSynthesisActivateBase3814 = atlasSharedSynthesisActivate;
 atlasSharedSynthesisActivate = function atlasSharedSynthesisActivate3814(pkg, source) {
   const clean = atlasSharedSynthesisActivateBase3814(pkg, source);
-  if (clean) queueMicrotask(() => { try { atlasCurrentJournalHydrate3814(`synthesis-${String(source || "activate")}`); } catch (_) {} });
+  // 38.15.2: a freshly produced local synthesis is finalized only after the
+  // IndexedDB write has completed. Restore/import may still heal the journal.
+  if (clean && source !== "local") {
+    queueMicrotask(() => { try { atlasCurrentJournalHydrate3814(`synthesis-${String(source || "activate")}`); } catch (_) {} });
+  }
   return clean;
 };
 
 const atlasSharedSynthesisBuildAndStoreBase3814 = atlasSharedSynthesisBuildAndStore;
 atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore3814(snapshot, fingerprint) {
-  const pkg = atlasSharedSynthesisBuildAndStoreBase3814(snapshot, fingerprint);
-  if (pkg) queueMicrotask(() => { try { atlasCurrentJournalHydrate3814("synthesis-build"); } catch (_) {} });
-  return pkg;
+  return atlasSharedSynthesisBuildAndStoreBase3814(snapshot, fingerprint);
 };
 
 queueMicrotask(() => { try { atlasCurrentJournalHydrate3814("boot"); } catch (_) {} });
@@ -47265,7 +47231,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3814() {
 
 
 /* ============================================================
-   38.15.1 — CANONICAL CURRENT MEMORY COMMIT + RESTORE TRUTH LOCK
+   38.15.2 — CANONICAL CURRENT MEMORY COMMIT + RESTORE TRUTH LOCK
    Scope chirurgical après preuve live 38.14 :
    - le Journal contient un CURRENT réel mais Memory Intelligence reste à 0 ;
    - le CURRENT restauré peut perdre le compteur Binance snapshot (0/5 affiché)
@@ -47409,20 +47375,9 @@ function atlasCurrentCanonicalCommit3815(reason = "canonical-commit") {
 // do not add another timeout/interval merely for Memory.
 const atlasCanonicalCurrentUiTruth389Base3815 = atlasCanonicalCurrentUiTruth389;
 atlasCanonicalCurrentUiTruth389 = function atlasCanonicalCurrentUiTruth3815(reason = "ui-truth-3815") {
-  const result = atlasCanonicalCurrentUiTruth389Base3815(reason);
-  queueMicrotask(() => {
-    try {
-      const commit = atlasCurrentCanonicalCommit3815(`ui-truth:${String(reason || "")}`);
-      if (commit?.record) {
-        try { atlasMemoryLedgerRender34(); } catch (_) {}
-        try { atlasMemoryLedgerRender35(); } catch (_) {}
-        try { atlasMemoryIntelligenceRender3815Base(); } catch (_) {}
-        try { renderDecisionBoard(); } catch (_) {}
-        try { atlasDecisionWorkspaceRender33(); } catch (_) {}
-      }
-    } catch (_) {}
-  });
-  return result;
+  // 38.15.2: UI truth remains a pure UI/state convergence step.
+  // It no longer commits Memory or redraws five heavy panels as a side effect.
+  return atlasCanonicalCurrentUiTruth389Base3815(reason);
 };
 
 // Correct restored snapshot counters only from frozen package/journal evidence;
@@ -47453,16 +47408,120 @@ atlasCanonicalCurrentStateFromProof389 = function atlasCanonicalCurrentStateFrom
 
 const atlasMemoryIntelligenceRender3815Base = atlasMemoryIntelligenceRender;
 atlasMemoryIntelligenceRender = function atlasMemoryIntelligenceRender3815() {
-  try { atlasCurrentCanonicalCommit3815("memory-render"); } catch (_) {}
+  // 38.15.2 invariant: rendering is read-only; it never writes CURRENT memory.
   return atlasMemoryIntelligenceRender3815Base();
 };
 
 const atlasCurrentJournalRender33Base3815 = atlasCurrentJournalRender33;
 atlasCurrentJournalRender33 = function atlasCurrentJournalRender3815() {
-  const result = atlasCurrentJournalRender33Base3815();
-  queueMicrotask(() => { try { atlasCurrentCanonicalCommit3815("journal-render"); } catch (_) {} });
-  return result;
+  // 38.15.2 invariant: Journal render is read-only; commit happens once after persistence.
+  return atlasCurrentJournalRender33Base3815();
 };
+
+
+/* ============================================================
+   38.15.2 — CLASSIC STABILITY FREEZE
+
+   Goal: keep the Classic interface and its data contracts intact while removing
+   the end-of-cycle UI storm observed after Atlas → NØX → Aerith.
+
+   One completed synthesis now follows this explicit path:
+     1. package already exists in memory;
+     2. IndexedDB write + verification;
+     3. one Journal CURRENT refresh;
+     4. one canonical Memory commit;
+     5. heavy Classic panels render later, during browser idle time.
+
+   Important:
+   - no market/chart source change in this build;
+   - no Bridge/Ollama change;
+   - no CURRENT/HISTORIQUE rule change;
+   - rendering never writes Memory;
+   - legacy reconciliation timer trains stay disabled.
+   ============================================================ */
+
+const atlasClassicStabilityState38152 = {
+  finalizingFingerprint: "",
+  finalizedFingerprint: "",
+  synthesisRenderQueued: false,
+  memoryRenderQueued: false
+};
+
+function atlasClassicRunWhenIdle38152(task, timeout = 1800) {
+  if (typeof task !== "function") return false;
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(() => task(), { timeout });
+  } else {
+    window.setTimeout(() => task(), 0);
+  }
+  return true;
+}
+
+function atlasClassicRenderSynthesis38152() {
+  if (atlasClassicStabilityState38152.synthesisRenderQueued) return false;
+  atlasClassicStabilityState38152.synthesisRenderQueued = true;
+  return atlasClassicRunWhenIdle38152(() => {
+    atlasClassicStabilityState38152.synthesisRenderQueued = false;
+    try { atlasSharedSynthesisHydrateReports(atlasSharedSynthesisState.package, "local"); } catch (_) {}
+    try { atlasSharedSynthesisRender(); } catch (_) {}
+  }, 2200);
+}
+
+function atlasClassicRenderMemory38152() {
+  if (atlasClassicStabilityState38152.memoryRenderQueued) return false;
+  atlasClassicStabilityState38152.memoryRenderQueued = true;
+  return atlasClassicRunWhenIdle38152(() => {
+    atlasClassicStabilityState38152.memoryRenderQueued = false;
+
+    // Render sequentially, once. These functions are now read-only with respect
+    // to the canonical CURRENT commit.
+    try { atlasCurrentJournalRender33(); } catch (_) {}
+    try { atlasMemoryLedgerRender34(); } catch (_) {}
+    try { atlasMemoryLedgerRender35(); } catch (_) {}
+    try { atlasMemoryIntelligenceRender(); } catch (_) {}
+    try { renderDecisionBoard(); } catch (_) {}
+    try { atlasDecisionWorkspaceRender33(); } catch (_) {}
+    try { atlasOperatorSummaryRender35(); } catch (_) {}
+  }, 3200);
+}
+
+function atlasClassicFinalizeSynthesis38152(pkg, saved) {
+  const fingerprint = String(pkg?.fingerprint || "").trim();
+  if (!fingerprint) return { finalized:false, reason:"missing-fingerprint" };
+  if (atlasClassicStabilityState38152.finalizedFingerprint === fingerprint) {
+    return { finalized:false, reason:"already-finalized", fingerprint };
+  }
+  if (atlasClassicStabilityState38152.finalizingFingerprint === fingerprint) {
+    return { finalized:false, reason:"already-finalizing", fingerprint };
+  }
+
+  atlasClassicStabilityState38152.finalizingFingerprint = fingerprint;
+  try {
+    // Persistence status must be visible to the Journal row before the commit.
+    try { atlasCurrentJournalMaybeRecord33(atlasCurrentStateRead()); } catch (_) {}
+
+    const commit = saved?.ok
+      ? atlasCurrentCanonicalCommit3815("synthesis-persisted-38152")
+      : { changed:false, skipped:"indexeddb-not-verified" };
+
+    atlasClassicStabilityState38152.finalizedFingerprint = fingerprint;
+
+    // The duplicated long synthesis and the secondary Memory dashboards are not
+    // allowed to compete with the final Aerith frame. They render later and once.
+    atlasClassicRenderSynthesis38152();
+    atlasClassicRenderMemory38152();
+
+    try {
+      document.dispatchEvent(new CustomEvent("agentcrypto:current-finalized", {
+        detail: { fingerprint, indexeddb: saved?.ok === true, memory: !!commit?.record }
+      }));
+    } catch (_) {}
+
+    return { finalized:true, fingerprint, commit };
+  } finally {
+    atlasClassicStabilityState38152.finalizingFingerprint = "";
+  }
+}
 
 const atlasRcStaticAudit3814Base3815 = atlasRcStaticAudit;
 atlasRcStaticAudit = function atlasRcStaticAudit3815() {
@@ -47481,15 +47540,11 @@ atlasRcStaticAudit = function atlasRcStaticAudit3815() {
   return report;
 };
 
-// Immediate finite attempt after the complete script has installed every wrapper.
+// One finite recovery attempt after boot. Secondary Classic dashboards are
+// coalesced into a single idle render instead of being redrawn synchronously.
 queueMicrotask(() => {
   try {
-    const commit = atlasCurrentCanonicalCommit3815("boot-final");
-    if (commit?.record) {
-      try { atlasMemoryLedgerRender34(); } catch (_) {}
-      try { atlasMemoryLedgerRender35(); } catch (_) {}
-      try { atlasMemoryIntelligenceRender3815Base(); } catch (_) {}
-      try { renderDecisionBoard(); } catch (_) {}
-    }
+    const commit = atlasCurrentCanonicalCommit3815("boot-final-38152");
+    if (commit?.record) atlasClassicRenderMemory38152();
   } catch (_) {}
 });
