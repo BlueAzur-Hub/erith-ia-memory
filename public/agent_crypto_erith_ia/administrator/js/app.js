@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.4.4";
+  const ADMIN_BUILD = "39.4.4R1";
   const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTOR INDEXEDDB BRIDGE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

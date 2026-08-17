@@ -1,27 +1,27 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.4 · ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTOR INDEXEDDB BRIDGE LOCK",
-  "build": "39.4.4",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.4",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.4R1 · ADMINISTRATOR MIRROR · MARKET MEMORY SINGLE TRUTH COUNTERS LOCK",
+  "build": "39.4.4R1",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.4R1",
   "published_at": "2026-08-17T18:33:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "Recovered 39.4.3R1 application core protected; Market Memory is restored only through an external bridge to the existing verified Collector IndexedDB."
+    "status": "Recovered application core protected; Market Memory collection preserved; only canonical/source/collector counter semantics are consolidated."
   },
   "files": {
     "app.js": {
-      "sha256": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051"
+      "sha256": "3d9d225d204c68a7722f2a269ba176a896d1a2c2eda8e13bfd243f6c50e713de"
     },
     "index.html": {
-      "sha256": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf"
+      "sha256": "970b5112fedf1c8ed92df72eab248cd0925ffb56fa9bd681b07f4fbca801a444"
     },
     "js/app.js": {
-      "sha256": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916"
+      "sha256": "e4cc1e7a0ca8f655a8492d7c383d90ce20df8c0710b7bdac30dc95f856bbf210"
     },
-    "js/market-memory-39.4.4.js": {
-      "sha256": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be"
+    "js/market-memory-39.4.4R1.js": {
+      "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
     },
     "js/market-memory-39.3.js": {
       "sha256": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded"
@@ -44,10 +44,10 @@
   },
   "integrity": {
     "files": {
-      "app.js": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051",
-      "index.html": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf",
-      "js/app.js": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916",
-      "js/market-memory-39.4.4.js": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be",
+      "app.js": "3d9d225d204c68a7722f2a269ba176a896d1a2c2eda8e13bfd243f6c50e713de",
+      "index.html": "970b5112fedf1c8ed92df72eab248cd0925ffb56fa9bd681b07f4fbca801a444",
+      "js/app.js": "e4cc1e7a0ca8f655a8492d7c383d90ce20df8c0710b7bdac30dc95f856bbf210",
+      "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
       "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
@@ -56,8 +56,8 @@
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
     "publication_identity": {
-      "build": "39.4.4",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.4",
+      "build": "39.4.4R1",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.4R1",
       "rule": "exact case"
     }
   },
@@ -81,14 +81,14 @@
     "new_timer": false,
     "new_websocket": false,
     "core_app_rewrite": false,
-    "data_deletion": false
+    "data_deletion": false,
+    "counter_truth": "one canonical snapshot count shared by Market Memory and Decision Board; source records and collectors remain separate facts"
   },
   "notes": [
-    "39.4.3R1 remains the recovered functional application core and is not functionally rewritten in this build.",
-    "The missing market-memory-39.4.3R1 script reference is replaced by the real market-memory-39.4.4 bridge file included in this upload.",
-    "Market observations are no longer dependent on free localStorage capacity for the new 39.4.4 path.",
-    "Historical valid Collector market observations are read from the existing IndexedDB cache and adapted into the 3/5/10 Market Memory reader.",
-    "No CURRENT record is converted into a MARKET record.",
-    "Market Memory is not yet declared CODE FINALISÉ until Firefox/Ryzen shows persistence across F5 and at least 3 distinct canonical snapshots."
+    "39.4.4 collection path is preserved; this R1 does not change market capture or IndexedDB write semantics.",
+    "Market Memory and Decision Board now use the same canonical snapshot count.",
+    "Source records and collectors are shown separately instead of being called distinct market snapshots.",
+    "CURRENT ledger no longer reports zero market observations from the separate Auto Memory store.",
+    "Application core remains protected; only publication identity changed in core files."
   ]
 }

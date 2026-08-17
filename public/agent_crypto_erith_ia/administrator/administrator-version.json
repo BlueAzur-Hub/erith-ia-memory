@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.4.4",
-  "release": "ADMINISTRATOR MIRROR · MARKET MEMORY COLLECTOR INDEXEDDB BRIDGE LOCK",
+  "build": "39.4.4R1",
+  "release": "ADMINISTRATOR MIRROR · MARKET MEMORY SINGLE TRUTH COUNTERS LOCK",
   "published_at": "2026-08-17T18:33:00+02:00",
   "global_versioning": {
-    "primary_build": "39.4.4",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.4",
+    "primary_build": "39.4.4R1",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.4.4R1",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.4.4",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.4",
+    "canonical_build": "39.4.4R1",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.4.4R1",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -26,20 +26,21 @@
     "analytical_memory": "39.4.0"
   },
   "market_memory_bridge": {
-    "module": "./js/market-memory-39.4.4.js",
+    "module": "./js/market-memory-39.4.4R1.js",
     "storage": "existing Collector IndexedDB",
     "automatic_boundary": "final atlasAfterLivecheck wrapper + already hydrated valid state",
     "canonical_dedupe": "collector_id + market_snapshot_id",
     "verified_write": "writeCollectorMemory -> atlasCollectorPersistNow -> readCollectorMemory canonical reread",
     "current_separation": true,
-    "core_rewrite": false
+    "core_rewrite": false,
+    "counter_truth": "canonical snapshots / source records / collectors are separate counters with one shared canonical snapshot truth"
   },
   "integrity": {
     "files": {
-      "app.js": "7573fee7b041e6077e8f047a44b0ccf3dbcbcff6fad3a4d9c35ce0e5935d6051",
-      "index.html": "b031cdabbfec3ca0b8f413e12f6fb3a94cef58d2200d72e4b1afe20745421dbf",
-      "js/app.js": "7f437418d2b7803defefa6c1cfc3c0ac38dbd32ae0a663639281bf59f32d2916",
-      "js/market-memory-39.4.4.js": "c2079ae1a01def97bbc9fc549b55953570ec527e6f4bfbba8b28560e211042be",
+      "app.js": "3d9d225d204c68a7722f2a269ba176a896d1a2c2eda8e13bfd243f6c50e713de",
+      "index.html": "970b5112fedf1c8ed92df72eab248cd0925ffb56fa9bd681b07f4fbca801a444",
+      "js/app.js": "e4cc1e7a0ca8f655a8492d7c383d90ce20df8c0710b7bdac30dc95f856bbf210",
+      "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
       "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
