@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.2.6";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · CONTROL CHROME LOCK";
+  const ADMIN_BUILD = "39.2.7";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · COMPACT CONTROL LOCK";
   const ENGINE_BUILD = "38.15.11";
-  const STORAGE_PREFIX = "erith_admin_portal_39_2_6";
+  const STORAGE_PREFIX = "erith_admin_portal_39_2_7";
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
@@ -196,7 +196,7 @@
       const identity = document.createElement("p");
       identity.id = "administratorMirrorIdentity";
       identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · CONTROL CHROME LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
+      identity.textContent = `ADMINISTRATOR MIRROR · COMPACT CONTROL LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
       hero.appendChild(identity);
     }
 
@@ -215,7 +215,7 @@
   function installAdminBar(manager) {
     q(".admin-mirror-bar")?.remove();
     const bar = document.createElement("aside");
-    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-6";
+    bar.className = "admin-mirror-bar admin-mirror-bar-39-2-7";
     bar.setAttribute("aria-label", "Administrator Portal Windows controls");
 
     const brand = document.createElement("span");

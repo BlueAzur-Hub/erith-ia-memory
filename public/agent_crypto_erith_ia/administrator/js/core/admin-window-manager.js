@@ -139,30 +139,6 @@
       return win.entries.map(entry => entry.node).find(node => node?.parentElement) || null;
     }
 
-    let openMenuSet = null;
-
-    function closeWindowMenu(set = openMenuSet) {
-      if (!set?.menu) return;
-      set.menu.hidden = true;
-      set.toggle?.setAttribute("aria-expanded", "false");
-      if (openMenuSet === set) openMenuSet = null;
-    }
-
-    function toggleWindowMenu(set) {
-      if (!set?.menu) return;
-      const opening = set.menu.hidden;
-      if (openMenuSet && openMenuSet !== set) closeWindowMenu(openMenuSet);
-      set.menu.hidden = !opening;
-      set.toggle?.setAttribute("aria-expanded", String(opening));
-      openMenuSet = opening ? set : null;
-    }
-
-    function createMenuAction(className, label, title) {
-      const button = createButton(className, label, title);
-      button.classList.add("admin-native-menu-action");
-      return button;
-    }
-
     function armControlDrag(event, win, set) {
       if (!document.body.classList.contains("admin-native-free")) return;
       if (win.maximized) return;
@@ -182,7 +158,6 @@
         if (!moved && Math.hypot(dx, dy) < 6) return;
         if (!moved) {
           moved = true;
-          closeWindowMenu(set);
           if (!win.floating) setFloating(win, true, true, initial);
           bringToFront(win);
           target = win.directFixed ? win.anchor : win.shell;
@@ -229,37 +204,28 @@
       controls.classList.add(floatingChrome ? "admin-native-controls-floating" : "admin-native-controls-native");
       host.classList.add("admin-native-control-host");
       controls.setAttribute("role", "group");
-      controls.setAttribute("aria-label", `Fenêtre Administrator · ${win.title}`);
+      controls.setAttribute("aria-label", `Commandes fenêtre Administrator · ${win.title}`);
 
-      const toggle = createButton("admin-native-menu-toggle", "⠿", `Menu fenêtre · ${win.title}`);
-      toggle.setAttribute("aria-haspopup", "menu");
-      toggle.setAttribute("aria-expanded", "false");
+      const move = createButton("admin-native-move", "⠿", `Déplacer ${win.title}`);
+      const minimize = createButton("admin-native-minimize", "—", `Réduire ${win.title}`);
+      const float = createButton("admin-native-float", "□", `Détacher ${win.title}`);
+      const maximize = createButton("admin-native-maximize", "⤢", `Agrandir ${win.title}`);
+      const hide = createButton("admin-native-hide", "×", `Masquer ${win.title} · rappel via WINDOWS`);
+      controls.append(move, minimize, float, maximize, hide);
 
-      const menu = document.createElement("div");
-      menu.className = "admin-native-menu";
-      menu.hidden = true;
-      menu.setAttribute("role", "menu");
-      const minimize = createMenuAction("admin-native-minimize", "—  Réduire", `Réduire ${win.title}`);
-      const float = createMenuAction("admin-native-float", "□  Détacher", `Détacher ${win.title}`);
-      const maximize = createMenuAction("admin-native-maximize", "⤢  Agrandir", `Agrandir ${win.title}`);
-      const hide = createMenuAction("admin-native-hide", "×  Masquer", `Masquer ${win.title} · rappel via WINDOWS`);
-      menu.append(minimize, float, maximize, hide);
-      controls.append(toggle, menu);
-
-      const set = { root: controls, toggle, menu, minimize, float, maximize, hide, mini, floatingChrome, suppressNextClick: false };
-      toggle.addEventListener("pointerdown", event => armControlDrag(event, win, set));
-      toggle.addEventListener("click", () => {
+      const set = { root: controls, move, minimize, float, maximize, hide, mini, floatingChrome, suppressNextClick: false };
+      move.addEventListener("pointerdown", event => armControlDrag(event, win, set));
+      move.addEventListener("click", () => {
         if (set.suppressNextClick) {
           set.suppressNextClick = false;
           return;
         }
         if (win.floating) bringToFront(win, false);
-        toggleWindowMenu(set);
       });
-      minimize.addEventListener("click", () => { closeWindowMenu(set); setMinimized(win, !win.minimized); });
-      float.addEventListener("click", () => { closeWindowMenu(set); setFloating(win, !win.floating); });
-      maximize.addEventListener("click", () => { closeWindowMenu(set); setMaximized(win, !win.maximized); });
-      hide.addEventListener("click", () => { closeWindowMenu(set); setHidden(win, true); });
+      minimize.addEventListener("click", () => setMinimized(win, !win.minimized));
+      float.addEventListener("click", () => setFloating(win, !win.floating));
+      maximize.addEventListener("click", () => setMaximized(win, !win.maximized));
+      hide.addEventListener("click", () => setHidden(win, true));
 
       host.appendChild(controls);
       win.controlSets.push(set);
@@ -268,19 +234,23 @@
 
     function refreshControlState(win) {
       win.controlSets.forEach(set => {
-        const { minimize, float, maximize } = set;
+        const { minimize, float, maximize, move } = set;
+        if (move) {
+          move.title = win.floating ? `Déplacer ${win.title}` : `Détacher et déplacer ${win.title}`;
+          move.setAttribute("aria-label", move.title);
+        }
         if (minimize) {
-          minimize.textContent = win.minimized ? "+  Restaurer" : "—  Réduire";
+          minimize.textContent = win.minimized ? "+" : "—";
           minimize.title = win.minimized ? `Restaurer ${win.title}` : `Réduire ${win.title}`;
           minimize.setAttribute("aria-label", minimize.title);
         }
         if (float) {
-          float.textContent = win.floating ? "▣  Raccrocher" : "□  Détacher";
+          float.textContent = win.floating ? "▣" : "□";
           float.title = win.floating ? `Raccrocher ${win.title}` : `Détacher ${win.title}`;
           float.setAttribute("aria-label", float.title);
         }
         if (maximize) {
-          maximize.textContent = win.maximized ? "↙  Taille normale" : "⤢  Agrandir";
+          maximize.textContent = win.maximized ? "↙" : "⤢";
           maximize.title = win.maximized ? `Restaurer la taille de ${win.title}` : `Agrandir ${win.title}`;
           maximize.setAttribute("aria-label", maximize.title);
         }
@@ -852,17 +822,7 @@
       return { count: windows.size, free: isFree(), domain: activeDomain };
     }
 
-    document.addEventListener("pointerdown", event => {
-      if (!openMenuSet || openMenuSet.root?.contains(event.target)) return;
-      closeWindowMenu(openMenuSet);
-    }, { capture: true });
-
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && openMenuSet) {
-        closeWindowMenu(openMenuSet);
-        event.preventDefault();
-        return;
-      }
       if (event.key !== "Escape") return;
       const maximized = [...windows.values()].reverse().find(win => win.maximized);
       if (maximized) {

@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — Build 39.2.6 · Administrator Control Chrome Lock
+/* Agent-Crypto @erith.IA — Build 39.2.7 · Administrator Control Chrome Lock
    UI-only window layer. One stable handle; reduce keeps a visible restore bar; hide is recallable from WINDOW DECK. */
 
 :root{
@@ -33,81 +33,70 @@
 }
 .administrator-mirror-identity{margin-top:7px!important;}
 
-/* Controls attach to native panels only. One stable handle opens a persistent menu.
-   No hover-only chrome: the control remains reachable while the pointer moves. */
+/* Controls attach to native panels only. Compact direct chrome, always reachable.
+   No dropdown, no hover-only disappearance: five stable actions with generous hit targets. */
 .admin-native-control-host{position:relative;}
 .admin-native-controls{
   position:absolute;
   top:8px;
   right:10px;
   z-index:2147481200;
-  display:block;
-  padding:0;
-  background:transparent;
-  opacity:1;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:3px;
+  min-height:38px;
+  padding:5px 6px 5px 10px;
+  border-radius:11px;
+  background:linear-gradient(90deg,rgba(8,12,16,.12),rgba(13,18,22,.80));
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+  backdrop-filter:blur(8px) saturate(105%);
+  opacity:.84;
   pointer-events:auto;
+  transition:opacity .12s ease,background .12s ease,box-shadow .12s ease;
 }
-.admin-native-menu-toggle{
-  width:32px!important;
-  height:28px!important;
+.admin-native-controls:hover,
+.admin-native-controls:focus-within{
+  opacity:1;
+  background:linear-gradient(90deg,rgba(8,12,16,.20),rgba(13,18,22,.94));
+  box-shadow:0 10px 26px rgba(0,0,0,.30);
+}
+.admin-native-controls .admin-native-control{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  min-height:30px!important;
+  padding:0!important;
   display:grid!important;
   place-items:center!important;
-  border:1px solid rgba(215,226,234,.28)!important;
+  border:1px solid rgba(215,226,234,.20)!important;
   border-radius:8px!important;
-  background:linear-gradient(180deg,rgba(34,45,53,.96),rgba(7,12,16,.96))!important;
+  background:linear-gradient(180deg,rgba(36,47,55,.88),rgba(6,11,15,.94))!important;
   color:#dce7ee!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 7px 18px rgba(0,0,0,.34)!important;
-  font:900 13px/1 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055)!important;
+  font:900 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace!important;
   cursor:pointer!important;
   touch-action:none;
 }
-.admin-native-menu-toggle:hover,
-.admin-native-menu-toggle[aria-expanded="true"]{
-  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 64%,rgba(215,226,234,.24))!important;
-  color:#f3fbff!important;
-  box-shadow:0 0 18px color-mix(in srgb,var(--native-accent,#72d8ff) 16%,transparent)!important;
-}
-body.admin-native-free .admin-native-menu-toggle{cursor:grab!important;}
-body.admin-native-dragging .admin-native-menu-toggle{cursor:grabbing!important;}
-
-.admin-native-menu{
-  position:absolute;
-  top:calc(100% + 6px);
-  right:0;
-  z-index:2147482600;
-  width:188px;
-  padding:6px;
-  border:1px solid rgba(215,226,234,.24);
-  border-radius:10px;
-  background:linear-gradient(155deg,rgba(42,49,55,.99),rgba(10,14,18,.995) 55%,rgba(24,29,34,.99));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 22px 55px rgba(0,0,0,.64);
-  backdrop-filter:blur(18px) saturate(108%);
-}
-.admin-native-menu[hidden]{display:none!important;}
-.admin-native-menu-action{
-  width:100%!important;
-  min-height:32px!important;
-  height:auto!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  padding:7px 10px!important;
-  margin:0!important;
-  border:0!important;
-  border-radius:7px!important;
-  background:transparent!important;
-  color:#dbe5eb!important;
-  font:800 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif!important;
-  text-align:left!important;
-  white-space:nowrap;
-  cursor:pointer!important;
-}
-.admin-native-menu-action:hover{
-  transform:none!important;
-  background:color-mix(in srgb,var(--native-accent,#72d8ff) 12%,rgba(255,255,255,.025))!important;
+.admin-native-controls .admin-native-control:hover,
+.admin-native-controls .admin-native-control:focus-visible{
+  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 64%,rgba(215,226,234,.22))!important;
   color:#fff!important;
+  box-shadow:0 0 15px color-mix(in srgb,var(--native-accent,#72d8ff) 14%,transparent)!important;
+  outline:none!important;
 }
-.admin-native-hide:hover{color:#ffd4c0!important;background:rgba(255,123,78,.10)!important;}
+.admin-native-controls .admin-native-move{
+  color:#bfeeff!important;
+  border-color:rgba(114,216,255,.30)!important;
+}
+body.admin-native-free .admin-native-move{cursor:grab!important;}
+body.admin-native-dragging .admin-native-move{cursor:grabbing!important;}
+.admin-native-controls .admin-native-hide:hover,
+.admin-native-controls .admin-native-hide:focus-visible{
+  color:#ffd5c2!important;
+  border-color:rgba(255,143,94,.48)!important;
+  box-shadow:0 0 15px rgba(255,127,74,.11)!important;
+}
 
 /* Native control placement tuned for the actual cockpit. */
 #analyste.admin-native-anchor > .admin-native-controls{top:8px;right:9px;}
@@ -194,7 +183,7 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
   z-index:2147482500;
   min-height:42px;
   margin:-2px -2px 8px;
-  padding:0 54px 0 12px;
+  padding:0 184px 0 12px;
   display:flex;
   align-items:center;
   border:1px solid rgba(215,226,234,.16);
@@ -288,9 +277,9 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
 .admin-window-deck-state{color:#8fa4b3;font:850 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-align:right;}
 .admin-window-deck .admin-native-control{width:27px!important;height:25px!important;}
 
-.admin-mirror-bar-39-2-6{gap:5px;}
-.admin-mirror-bar-39-2-6 .admin-window-deck-toggle b,
-.admin-mirror-bar-39-2-6 .admin-mirror-brand b{color:#bcefff;font-weight:950;}
+.admin-mirror-bar-39-2-7{gap:5px;}
+.admin-mirror-bar-39-2-7 .admin-window-deck-toggle b,
+.admin-mirror-bar-39-2-7 .admin-mirror-brand b{color:#bcefff;font-weight:950;}
 
 @media (max-width:900px){
   .admin-native-controls{opacity:1;}
